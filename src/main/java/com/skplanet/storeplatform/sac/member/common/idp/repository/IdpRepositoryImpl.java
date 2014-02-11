@@ -62,13 +62,10 @@ public class IdpRepositoryImpl implements IdpRepository {
 
 		SendReq sendReq = new SendReq();
 		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
-		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
-		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
 		if (StringUtil.equalsIgnoreCase(sendReq.getMethod().GET.name(), httpMethod)) {
 			sendReq.setMethod(sendReq.getMethod().GET);
 		} else if (StringUtil.equalsIgnoreCase(sendReq.getMethod().POST.name(), httpMethod)) {
-			// sendReq.setMethod(sendReq.getMethod().POST);
-			sendReq.setMethod(sendReq.getMethod().GET);
+			sendReq.setMethod(sendReq.getMethod().POST);
 		}
 		sendReq.setIm(false);
 		sendReq.setUrl(sendData.getUrl());
@@ -93,13 +90,10 @@ public class IdpRepositoryImpl implements IdpRepository {
 	public ImIdpReceiverM sendImIDP(ImIdpSenderM sendData, String httpMethod) {
 		SendReq sendReq = new SendReq();
 		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
-		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
-		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
 		if (StringUtil.equalsIgnoreCase(sendReq.getMethod().GET.name(), httpMethod)) {
 			sendReq.setMethod(sendReq.getMethod().GET);
 		} else if (StringUtil.equalsIgnoreCase(sendReq.getMethod().POST.name(), httpMethod)) {
-			sendReq.setMethod(sendReq.getMethod().GET);
-			// sendReq.setMethod(sendReq.getMethod().POST);
+			sendReq.setMethod(sendReq.getMethod().POST);
 		}
 		sendReq.setIm(true);
 		sendReq.setUrl(sendData.getUrl());
@@ -117,8 +111,6 @@ public class IdpRepositoryImpl implements IdpRepository {
 		for (int i = 0; i < hash.length; i++) {
 			int intVal = hash[i] & 0xff;
 			if (intVal < 0x10) {
-				// append a zero before a one digit hex
-				// number to make it two digits.
 				buf.append("0");
 			}
 			buf.append(Integer.toHexString(intVal));
