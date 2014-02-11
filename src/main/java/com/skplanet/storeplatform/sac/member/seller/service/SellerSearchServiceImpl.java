@@ -34,7 +34,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListR
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.BanksByCountry;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
@@ -262,12 +261,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req) {
 
-		SearchAccountSellerResponse schRes = new SearchAccountSellerResponse();
 		SearchAccountSellerRequest schReq = new SearchAccountSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq.setSellerKey(req.getSellerKey());
 
-		schRes = this.sellerSCI.searchAccountSeller(schReq);
+		SearchAccountSellerResponse schRes = this.sellerSCI.searchAccountSeller(schReq);
 		// 판매자 문서정보
 		List<Document> dList = new ArrayList<Document>();
 		Document document = null;
@@ -383,34 +381,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) {
 
-		SearchIDSellerResponse schRes = new SearchIDSellerResponse();
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
-		boolean reqStat = false;
-		if (req.getSellerBizNumber() != null)
-			if (!req.getSellerBizNumber().isEmpty()) {
-				schReq.setSellerBizNumber(req.getSellerBizNumber());
-				reqStat = true;
-			}
-		if (req.getSellerCompany() != null)
-			if (!req.getSellerCompany().isEmpty()) {
-				schReq.setSellerCompany(req.getSellerCompany());
-				reqStat = true;
-			}
-		if (req.getSellerEmail() != null)
-			if (!req.getSellerEmail().isEmpty()) {
-				schReq.setSellerEmail(req.getSellerEmail());
-				reqStat = true;
-			}
-		if (req.getSellerPhone() != null)
-			if (!req.getSellerPhone().isEmpty()) {
-				schReq.setSellerPhone(req.getSellerPhone());
-				reqStat = true;
-			}
-
-		if (reqStat)
-			schRes = this.sellerSCI.searchIDSeller(schReq);
+		SearchIDSellerResponse schRes = this.sellerSCI.searchIDSeller(schReq);
 
 		List<SellerMbr> sList = new ArrayList<SellerMbr>();
 		SellerMbr sellerMbrRes = null;
@@ -440,13 +414,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
 			ListPasswordReminderQuestionReq req) {
 
-		SearchPwdHintListResponse schRes = new SearchPwdHintListResponse();
 		SearchPwdHintListRequest schReq = new SearchPwdHintListRequest();
 
 		schReq.setSellerKey(req.getSellerKey());
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
-		schRes = this.sellerSCI.searchPwdHintList(schReq);
+		SearchPwdHintListResponse schRes = this.sellerSCI.searchPwdHintList(schReq);
 
 		List<SellerMbrPwdHint> sList = new ArrayList<SellerMbrPwdHint>();
 		SellerMbrPwdHint sellerMbrPwdHint = null;
@@ -478,7 +451,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			CheckPasswordReminderQuestionReq req) {
 
-		CheckPasswordReminderSellerResponse schRes = new CheckPasswordReminderSellerResponse();
 		CheckPasswordReminderSellerRequest schReq = new CheckPasswordReminderSellerRequest();
 
 		schReq.setSellerID(req.getSellerID());
@@ -500,7 +472,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		/** 보안질문 리스트 주입 - [끝]. */
 
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
-		schRes = this.sellerSCI.checkPasswordReminderSeller(schReq);
+		CheckPasswordReminderSellerResponse schRes = this.sellerSCI.checkPasswordReminderSeller(schReq);
 
 		CheckPasswordReminderQuestionRes response = new CheckPasswordReminderQuestionRes();
 		response.setIsCorrect(schRes.getIsCorrect());
@@ -519,7 +491,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) {
 
-		ResetPasswordSellerResponse schRes = new ResetPasswordSellerResponse();
 		ResetPasswordSellerRequest schReq = new ResetPasswordSellerRequest();
 
 		MbrPwd mbrPwd = new MbrPwd();
@@ -530,7 +501,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		/** TODO 2. 테스트용 if 헤더 셋팅 */
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
-		schRes = this.sellerSCI.resetPasswordSeller(schReq);
+		ResetPasswordSellerResponse schRes = this.sellerSCI.resetPasswordSeller(schReq);
 
 		SearchPasswordRes response = new SearchPasswordRes();
 		response.setNewPassword(schRes.getSellerPW());
@@ -550,14 +521,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public DetailInformationRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) {
 
-		SearchLoginInfoResponse schRes = new SearchLoginInfoResponse();
 		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq.setSessionKey(req.getSessionKey());
-		schRes = this.sellerSCI.searchLoginInfo(schReq);
+		SearchLoginInfoResponse schRes = this.sellerSCI.searchLoginInfo(schReq);
 
 		if (Integer.parseInt(req.getExtraDate()) > 0) {
-			UpdateLoginInfoResponse schRes2 = new UpdateLoginInfoResponse();
 			UpdateLoginInfoRequest schReq2 = new UpdateLoginInfoRequest();
 			schReq2.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 			LoginInfo loginInfo = new LoginInfo();
@@ -565,10 +534,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			loginInfo.setSessionKey(req.getSessionKey());
 			loginInfo.setExpireDate(this.commonComponent.getExpirationTime(Integer.parseInt(req.getExtraDate())));
 			schReq2.setLoginInfo(loginInfo);
-			schRes2 = this.sellerSCI.updateLoginInfo(schReq2);
+			this.sellerSCI.updateLoginInfo(schReq2);
 		}
 
-		SearchSellerResponse schRes3 = new SearchSellerResponse();
 		SearchSellerRequest schReq3 = new SearchSellerRequest();
 		schReq3.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		KeySearch keySearch = new KeySearch();
@@ -578,7 +546,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		list.add(keySearch);
 		schReq3.setKeySearchList(list);
 
-		schRes3 = this.sellerSCI.searchSeller(schReq3);
+		SearchSellerResponse schRes3 = this.sellerSCI.searchSeller(schReq3);
 
 		DetailInformationRes response = new DetailInformationRes();
 
