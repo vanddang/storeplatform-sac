@@ -12,6 +12,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
+/**
+ * 판매자 회원 서브계정 등록/수정/삭제/조회 기능 항목들.
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 한서구, 부르칸.
+ */
 public interface SellerSubService {
 
 	/** 판매자 서브계정 등록/수정. */

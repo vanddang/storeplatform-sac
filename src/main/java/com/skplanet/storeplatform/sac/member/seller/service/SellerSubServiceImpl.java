@@ -36,6 +36,11 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
+/**
+ * 판매자 회원 서브계정 등록/수정/삭제/조회 기능 항목들.
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 한서구, 부르칸.
+ */
 @Service
 public class SellerSubServiceImpl implements SellerSubService {
 
