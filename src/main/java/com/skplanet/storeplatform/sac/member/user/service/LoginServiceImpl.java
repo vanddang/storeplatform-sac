@@ -33,7 +33,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
@@ -726,7 +725,7 @@ public class LoginServiceImpl implements LoginService {
 		UpdateUserRequest updUserReq = new UpdateUserRequest();
 		updUserReq.setCommonRequest(commonRequest);
 		updUserReq.setUserMbr(userMbr);
-		UpdateUserResponse updUserRes = this.userSCI.updateUser(updUserReq);
+		this.userSCI.updateUser(updUserReq);
 
 		/* 3. svcMangNum 부가속성 추가 */
 		DeviceInfo deviceInfo = new DeviceInfo();

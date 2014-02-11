@@ -315,9 +315,8 @@ public class DeviceServiceImpl implements DeviceService {
 			res.setUserKey(schDeviceListRes.getUserKey());
 
 			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
-			DeviceInfo deviceInfo = null;
 			for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
-				deviceInfo = new DeviceInfo();
+				DeviceInfo deviceInfo = new DeviceInfo();
 				deviceInfo = DeviceUtil.getConverterDeviceInfo(userMbrDevice);
 
 				/* 폰정보 DB 조회하여 추가 정보 반영 */
@@ -369,10 +368,10 @@ public class DeviceServiceImpl implements DeviceService {
 		searchDeviceRequest.setKeySearchList(keySearchList);
 
 		DeviceInfo deviceInfo = null;
-		SearchDeviceResponse schDeviceRes = null;
 
 		try {
-			schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
+			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
 			if (schDeviceRes != null) {
 				deviceInfo = new DeviceInfo();
@@ -391,7 +390,7 @@ public class DeviceServiceImpl implements DeviceService {
 			throw ex;
 		}
 
-		LOGGER.info("######################## DeviceServiceImpl searchDevice start ############################");
+		LOGGER.info("######################## DeviceServiceImpl searchDevice end ############################");
 
 		return deviceInfo;
 	}
@@ -1164,5 +1163,4 @@ public class DeviceServiceImpl implements DeviceService {
 	public void insertGameCenterIF(@Valid @RequestBody GameCenter gameCenter) {
 
 	}
-
 }
