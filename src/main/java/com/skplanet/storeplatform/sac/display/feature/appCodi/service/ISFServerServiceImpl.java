@@ -137,6 +137,105 @@ public class ISFServerServiceImpl implements ISFServerService {
 		return response;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuReq
+	 * requestVO)
+	 */
+	@Override
+	public Response makeThemeRecommendList(Request request) throws IOException, Exception {
+
+		this.log.debug("ISFServerServiceImpl.makeAppCodiList start !!");
+		this.log.debug("request {}", request);
+
+		Response response = new Response();
+		Response.Service service = new Response.Service();
+		PropsType prop = new PropsType();
+		SingleValuesType singles = new SingleValuesType();
+		SingleValueType single = new SingleValueType();
+		MultiValuesType multis = new MultiValuesType();
+		MultiValueType multi = new MultiValueType();
+
+		response.setMbn(request.getMbn());
+		response.setMdn(request.getMdn());
+		service.setChCode(request.getService().getChCode());
+		service.setId(request.getService().getId());
+		response.setService(service);
+
+		if ("SVC_MAIN_0002".equals(request.getService().getId())) {
+			prop.setCount(2);
+			singles.setCount(2);
+			single.setName("recId");
+			single.setValue("000000000002");
+			singles.addSingleValue(single);
+			single.setName("reason");
+			single.setValue("20대 여성 / 생활/위치 위주 구매 /가입 후 6개월이 경과 되셨습니다.");
+			singles.addSingleValue(single);
+			prop.setSingleValues(singles);
+
+			multis.setCount(3);
+			multi.setId("1234");
+			multi.setName("패키지명1");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("5678");
+			multi.setName("패키지명2");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("9625");
+			multi.setName("패키지명3");
+			multis.addMultiValue(multi);
+			prop.setMultiValues(multis);
+		} else { // SVC_MAIN_0004
+			prop.setCount(2);
+			singles.setCount(2);
+			single.setName("recId");
+			single.setValue("IW142335067932014011611260920140116134738791");
+			single.setName("reason");
+			single.setValue("요즘 인기있는 테마 추천");
+			singles.addSingleValue(single);
+			prop.setSingleValues(singles);
+
+			multis.setCount(4);
+			multi.setId("2424");
+			multi.setName("Tstore 명예의 전당");
+			multi.setOrder(1);
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("2426");
+			multi.setName("시청률 고공행진 인기 드라마");
+			multi.setOrder(2);
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("2443");
+			multi.setName("쇼핑은 모바일이 대세");
+			multi.setOrder(3);
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("2503");
+			multi.setName("시뮬레이션 스포츠 게임 ");
+			multi.setOrder(4);
+			multis.addMultiValue(multi);
+
+			prop.setMultiValues(multis);
+		}
+		response.setProps(prop);
+
+		JAXBContext jc = JAXBContext.newInstance(Response.class);
+		Marshaller m1 = jc.createMarshaller();
+		m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		m1.marshal(response, System.out);
+		// this.log.debug("response {}", response);
+
+		return response;
+	}
+
 	@Override
 	public String makeAppCodiXML() {
 		StringBuffer xml = new StringBuffer();

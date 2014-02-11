@@ -64,6 +64,8 @@ public class MultiValueType {
 	protected String reason;
 	@XmlAttribute(name = "relId")
 	protected String relId;
+	@XmlAttribute(name = "name")
+	protected String name;
 	@XmlAttribute(name = "order")
 	protected Integer order;
 
@@ -114,6 +116,21 @@ public class MultiValueType {
 	 */
 	public void setId(String value) {
 		this.id = value;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**

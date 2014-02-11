@@ -23,5 +23,7 @@ public interface ISFServerService {
 	 */
 	public Response makeAppCodiList(Request requestVO) throws IOException, Exception;
 
+	public Response makeThemeRecommendList(Request request) throws IOException, Exception;
+
 	public String makeAppCodiXML();
 }

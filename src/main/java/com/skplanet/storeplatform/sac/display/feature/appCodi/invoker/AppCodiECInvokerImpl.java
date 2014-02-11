@@ -21,8 +21,13 @@ import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiReq;
 
+/**
+ * App Codi EC Invoker Interface 구현체
+ * 
+ * Updated on : 2014. 01. 28. Updated by : 윤주영, SK 플래닛.
+ */
 @Component
-public class ECInvokerImpl implements ECInvoker {
+public class AppCodiECInvokerImpl implements AppCodiECInvoker {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 

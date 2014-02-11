@@ -35,11 +35,6 @@ public class ISFServerController {
 	 * ISF TSTORE LOCAL SERVER METHOD.
 	 * </pre>
 	 * 
-	 * @param AppCodiReq
-	 *            requestVO
-	 * @param SacRequestHeader
-	 *            requestHeader
-	 * @return AppCodiListRes
 	 */
 	@RequestMapping(value = "/appCodi", method = RequestMethod.POST)
 	@ResponseBody
@@ -49,6 +44,28 @@ public class ISFServerController {
 		this.logger.debug("request {}", requestVO);
 
 		Response response = this.isfServerService.makeAppCodiList(requestVO);
+		JAXBContext jc = JAXBContext.newInstance(Response.class);
+		Marshaller m1 = jc.createMarshaller();
+		m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		m1.marshal(response, System.out);
+
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * ISF TSTORE LOCAL SERVER METHOD.
+	 * </pre>
+	 * 
+	 */
+	@RequestMapping(value = "/theme/recommend", method = RequestMethod.POST)
+	@ResponseBody
+	public Response makeThemeRecommendList(@RequestBody Request requestVO) throws Exception {
+
+		this.logger.debug("ISFServerController.makeThemeRecommendList start !!");
+		this.logger.debug("request {}", requestVO);
+
+		Response response = this.isfServerService.makeThemeRecommendList(requestVO);
 		JAXBContext jc = JAXBContext.newInstance(Response.class);
 		Marshaller m1 = jc.createMarshaller();
 		m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);

@@ -56,7 +56,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.appCodi.invoker.ECInvokerImpl;
+import com.skplanet.storeplatform.sac.display.feature.appCodi.invoker.AppCodiECInvokerImpl;
 import com.skplanet.storeplatform.sac.display.feature.appCodi.vo.AppCodiRes;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -76,7 +76,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 	private static final Map<String, String> mapReasonCode = new HashMap<String, String>();
 
 	@Autowired
-	private ECInvokerImpl ecInvoker;
+	private AppCodiECInvokerImpl ecInvoker;
 
 	@Autowired
 	@Qualifier("sac")
@@ -104,9 +104,12 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 		boolean isExists = true;
 
+		TenantHeader tenantHeader = requestHeader.getTenantHeader();
+		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
+
 		Map<String, Object> mapReq = new HashMap<String, Object>();
-		mapReq.put("tenantHeader", requestHeader.getTenantHeader());
-		mapReq.put("deviceHeader", requestHeader.getDeviceHeader());
+		mapReq.put("tenantHeader", tenantHeader);
+		mapReq.put("deviceHeader", deviceHeader);
 
 		// 상품 아이디
 		String sPid = "";
@@ -128,9 +131,6 @@ public class AppCodiServiceImpl implements AppCodiService {
 		Map<String, Integer> mapRank = new HashMap<String, Integer>();
 		// 순서 체크용 임시 변수 - 나중에 최종 개수로 사용함
 		int idx = 0;
-
-		TenantHeader tenantHeader = requestHeader.getTenantHeader();
-		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
 
 		AppCodiListRes responseVO = new AppCodiListRes();
 
@@ -182,8 +182,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 			// 앱코디 상품 리스트 조회
 			mapReq.put("pidList", listProdParam);
 			// 상품 기본 정보 List 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("isf.getAppCodiProdList", mapReq,
-					ProductBasicInfo.class);
+			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Isf.AppCodi.getAppCodiProdList",
+					mapReq, ProductBasicInfo.class);
 
 			Product product = null;
 			MetaInfo metaInfo = null;
@@ -263,7 +263,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 							paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
 							this.log.debug("##### Search for music meta info product");
-							metaInfo = this.commonDAO.queryForObject("isf.getMusicMetaInfo", paramMap, MetaInfo.class);
+							metaInfo = this.commonDAO.queryForObject("Isf.AppCodi.getMusicMetaInfo", paramMap,
+									MetaInfo.class);
 							if (metaInfo != null) {
 								product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
 								productList.add(product);
@@ -294,7 +295,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 					mapRel.put("tenantHeader", tenantHeader);
 					mapRel.put("pidList", listRelProdParam);
 
-					listRelProd = this.commonDAO.queryForList("isf.getRelProdList", mapRel, HashMap.class);
+					listRelProd = this.commonDAO.queryForList("Isf.AppCodi.getRelProdList", mapRel, HashMap.class);
 				}
 
 				// 추천사유코드 Mapping
@@ -478,8 +479,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 				Object value = m.getValue();
 				this.log.debug("Key :" + key + "  Value :" + value.toString());
 			}
-			List<AppCodiRes> appCodiResultList = this.commonDAO.queryForList("isf.getAdminRecommandProdList", mapReq,
-					AppCodiRes.class);
+			List<AppCodiRes> appCodiResultList = this.commonDAO.queryForList("Isf.AppCodi.getAdminRecommandProdList",
+					mapReq, AppCodiRes.class);
 			this.log.debug("appCodiResultList : {}", appCodiResultList);
 
 			productList = this.makeResultList(appCodiResultList);
