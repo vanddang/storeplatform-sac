@@ -502,8 +502,8 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtils.equals(keyType, MemberConstants.KEY_TYPE_DEVICE_ID)) {
 			listDeviceReq.setUserKey(userKey);
 			listDeviceReq.setDeviceId(keyString);
-		} else if (StringUtils.equals(keyType, MemberConstants.KEY_TYPE_INSD_USERMBR_NO)) {
-			listDeviceReq.setUserKey(userKey);
+		} else if (StringUtils.equals(keyType, MemberConstants.KEY_TYPE_INSD_USERMBR_NO)) { //아이디 로그인시에는 대표기기의 deviceKey 조회
+			listDeviceReq.setUserKey(keyString);
 			listDeviceReq.setIsMainDevice("Y");
 		}
 
@@ -595,7 +595,7 @@ public class LoginServiceImpl implements LoginService {
 			AuthorizeByIdReq req = new AuthorizeByIdReq();
 			req = (AuthorizeByIdReq) obj;
 
-			if (req.getDeviceId() != null) { // deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 merge 요청
+			if (req.getDeviceId() != null) { // deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 update 요청
 
 				deviceInfo.setDeviceId(req.getDeviceId());
 				deviceInfo.setDeviceIdType(req.getDeviceIdType());
