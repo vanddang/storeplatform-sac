@@ -475,13 +475,12 @@
 				SELECT 
 				       COUNT(B.PART_PROD_ID)  
 				FROM   TB_DP_SHPG_PROD A 
-				      ,TB_DP_PROD_RSHP B
+				      ,(SELECT PART_PROD_ID FROM TB_DP_PROD_RSHP WHERE PROD_ID =  #{prodId} ) B
 				      ,TB_DP_TENANT_PROD C
-				WHERE A.PROD_ID = B.PROD_ID
+				WHERE A.PROD_ID = B.PART_PROD_ID
 				  AND A.PROD_ID =C.PROD_ID
 				  AND C.PROD_STATUS_CD = 'PD000403'
 				  AND C.EXPO_YN ='Y'
-				  AND A.PROD_ID =  #{prodId}      
         )
         WHERE PROD_ID = #{prodId}
     </update>    
