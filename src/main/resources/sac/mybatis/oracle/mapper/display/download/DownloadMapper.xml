@@ -46,6 +46,10 @@
 			      , KA.PROD_GRD_CD
 			      , KA.CONTENTS_TYPE_CD
 			      , KA.META_CLSF_CD
+                  , KA.SELLER_MBR_NO
+                  , KA.EXPO_SELLER_NM
+                  , KA.EXPO_SELLER_TELNO
+                  , KA.EXPO_SELLER_EMAIL			      
 			      , KA.PART_PARENT_CLSF_CD
 			      , DECODE( KA.PROD_CLSF_CD , 'PD000601', 'paid' , 'PD000602', 'library' , 'PD000603', 'vm' , 'PD000604', 'free' , 'PD000605', 'paid-rss' , 'PD000606', 'free-rss' , 'paid' ) AS PROD_CLSF_CD
 			--      , KA.PROD_CLSF_CD
@@ -88,6 +92,10 @@
 			               , D.CONTENTS_TYPE_CD
 			               , D.META_CLSF_CD
 			               , D.REG_DT
+                           , D.SELLER_MBR_NO
+                           , D.EXPO_SELLER_NM
+                           , D.EXPO_SELLER_TELNO
+                           , D.EXPO_SELLER_EMAIL 			               
 			               , E.AID
 			               , E.VER_MAJOR
 			               , E.VER_MINOR
@@ -160,7 +168,7 @@
     </select>
     
     <!-- 상품정보요청(for download) Vod -->
-    <select id="getDownloadVodInfo" parameterType="DownloadVodSacReq" resultType="DownloadVod">
+    <select id="getDownloadVodInfo" parameterType="DownloadVodSacReq" resultType="MetaInfo">
     SELECT /* DownloadMapper.xml, getDownloadVodInfo, SAC : 이석희 , 2014-01-25 */
                MENU_ID
              , MENU_NM
@@ -177,7 +185,7 @@
              , NVL(STORE_PROD_AMT, 0) AS STORE_PROD_AMT
              , NVL(PLAY_PROD_AMT, 0) AS PLAY_PROD_AMT
              , DECODE( STORE_DRM_YN, 'Y', STORE_DRM_YN, 'N' ) AS STORE_DRM_YN
-             , DECODE( PLAY_DRM_YN, 'Y', STORE_DRM_YN, 'N' ) AS PLAY_DRM_YN  
+             , DECODE( PLAY_DRM_YN, 'Y', PLAY_DRM_YN, 'N' ) AS PLAY_DRM_YN  
              , DECODE( BTV_YN, 'Y', BTV_YN, 'N' ) AS BTV_YN
              , DECODE( HDCP_YN, 'Y', HDCP_YN, 'N' ) AS HDCP_YN
              , DECODE( HDV_YN, 'Y', HDV_YN, 'N' ) AS HDV_YN
@@ -186,9 +194,9 @@
              , ( CASE WHEN CHAPTER IS NOT NULL THEN '회' END ) AS CHAPTER_UNIT
              , DECODE( USE_PERIOD_UNIT_CD
                      , 'PD00310', NULL
-                     , CONCAT( USE_PERIOD, USE_PERIOD_UNIT_CD_NM ) ) AS USAGE_PERIOD_NM
+                     , CONCAT( USE_PERIOD, USE_PERIOD_UNIT_CD_NM ) ) AS USE_PERIOD_NM
              , USE_PERIOD_UNIT_CD            
-             , DWLD_AREA_LIMT_YN 
+             , NVL(DWLD_AREA_LIMT_YN , 'N') AS DWLD_AREA_LIMT_YN 
              , EPSD_PLAY_TM
              , PROD_GRD_CD
              , SELLER_MBR_NO
@@ -217,7 +225,7 @@
              , REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,6) AS HD_BTV_CID
              , DECODE( DWLD_NETWORK_CD , 'DP004402', 'restrict', NULL ) AS DWLD_NETWORK_CD
              , DECODE( STRM_NETWORK_CD , 'DP004402', 'restrict', NULL ) AS STRM_NETWORK_CD
-             , TB.FILE_PATH  AS IMAGE_PATH
+             , CONCAT(TB.FILE_PATH, TB.FILE_NM)  AS IMAGE_PATH
              , TB.FILE_NM AS IMAGE_NM
              , TB.FILE_SIZE AS IMAGE_SIZE
              , TA.FILE_PATH
@@ -371,7 +379,7 @@
                                              , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', NULL, O.PROD_AMT ) AS PLAY_PROD_AMT
                                              , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', J.DRM_YN ) AS STORE_DRM_YN
                                              , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', NULL, J.DRM_YN ) AS PLAY_DRM_YN              
-                                             ,( SELECT CHAPTER FROM TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID) AS CHAPTER     
+                                             ,( SELECT CHAPTER FROM UV_TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID) AS CHAPTER     
                                              , J.USE_PERIOD
                                              , J.PROD_GRD_CD 
                                              , J.SELLER_MBR_NO
@@ -402,7 +410,7 @@
                                           FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
                                              , TB_DP_MENU_CATEGORY           B
                                              , TB_DP_PROD                    D
-                                             , TB_DP_MULTIMDA_PROD           E
+                                             , UV_TB_DP_MULTIMDA_PROD        E
                                              , TB_DP_TENANT_PROD             G
                                              , TB_DP_PROD_RSHP               I
                                              , TB_DP_PROD                    J
@@ -411,7 +419,7 @@
                                              , TB_DP_SUB_CONTENTS            M
                                              , TB_DP_TENANT_PROD             N
                                              , TB_DP_TENANT_PROD_PRICE       O
-                                             , TB_DP_MULTIMDA_PROD           P
+                                             , UV_TB_DP_MULTIMDA_PROD        P
                                              , TB_DP_PROD_DESC               Q
                                          WHERE A.MENU_ID = B.MENU_ID
                                            AND A.PROD_ID = D.PROD_ID
@@ -754,7 +762,7 @@
 		          FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
 		             , TB_DP_MENU_CATEGORY           B
 		             , TB_DP_PROD                    D
-		             , TB_DP_MULTIMDA_PROD           E
+		             , UV_TB_DP_MULTIMDA_PROD        E
 		             , TB_DP_TENANT_PROD             G
 		             , TB_DP_PROD_RSHP               I
 		             , TB_DP_PROD                    J
@@ -763,7 +771,7 @@
 		             , TB_DP_SUB_CONTENTS            M
 		             , TB_DP_TENANT_PROD             N
 		             , TB_DP_TENANT_PROD_PRICE       O
-		             , TB_DP_MULTIMDA_PROD           P
+		             , UV_TB_DP_MULTIMDA_PROD        P
 		             , TB_DP_PROD_DESC               Q
 		         WHERE A.MENU_ID = B.MENU_ID
 		           AND A.PROD_ID = D.PROD_ID
