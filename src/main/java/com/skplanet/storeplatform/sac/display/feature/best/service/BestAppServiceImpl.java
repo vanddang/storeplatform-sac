@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacRes;
@@ -100,12 +101,29 @@ public class BestAppServiceImpl implements BestAppService {
 		List<Source> sourceList = null;
 		List<Identifier> identifierList = null;
 
-		if (StringUtils.isEmpty(bestAppReq.getListId())) {
-			this.log.error("필수 파라미터(listId)값이 없음");
-			commonResponse.setTotalCount(0);
-			response.setCommonResponse(commonResponse);
-			response.setProductList(productList);
-			return response;
+		String listId = bestAppReq.getListId();
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(listId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
+		}
+
+		// 파라미터 유효값 체크
+		if (StringUtils.isNotEmpty(bestAppReq.getProdGradeCd())) {
+			String[] arrayProdGradeCd = bestAppReq.getProdGradeCd().split("\\+");
+			for (int i = 0; i < arrayProdGradeCd.length; i++) {
+				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
+						this.log.debug("----------------------------------------------------------------");
+
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+								arrayProdGradeCd[i]);
+					}
+				}
+			}
 		}
 
 		int offset = 1; // default
@@ -122,158 +140,164 @@ public class BestAppServiceImpl implements BestAppService {
 		count = offset + count - 1;
 		bestAppReq.setCount(count); // set count
 
-		String stdDt = this.commonService
-				.getBatchStandardDateString(tenantHeader.getTenantId(), bestAppReq.getListId());
-		bestAppReq.setStdDt(stdDt); // 2014.01.28 이석희 수정 S01 하드코딩에서 헤더에서 get 한 TenantId
+		try {
+			String stdDt = this.commonService.getBatchStandardDateString(tenantHeader.getTenantId(),
+					bestAppReq.getListId());
+			bestAppReq.setStdDt(stdDt); // 2014.01.28 이석희 수정 S01 하드코딩에서 헤더에서 get 한 TenantId
 
-		// '+'로 연결 된 상품등급코드를 배열로 전달
-		if (StringUtils.isNotEmpty(bestAppReq.getProdGradeCd())) {
-			String[] arrayProdGradeCd = bestAppReq.getProdGradeCd().split("\\+");
-			bestAppReq.setArrayProdGradeCd(arrayProdGradeCd);
-		}
-
-		// BEST 앱 상품 조회
-		List<ProductBasicInfo> appList = null;
-
-		if (bestAppReq.getDummy() == null) {
-			// dummy 호출이 아닐때
-
-			if (!"ADM000000001".equals(bestAppReq.getListId())) {
-				// 추천, 인기(매출), 인기신규 상품 조회
-				appList = this.commonDAO.queryForList("BestApp.selectBestAppList", bestAppReq, ProductBasicInfo.class);
-			} else {
-				// 신규 상품조회
-				appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq,
-						ProductBasicInfo.class);
+			// '+'로 연결 된 상품등급코드를 배열로 전달
+			if (StringUtils.isNotEmpty(bestAppReq.getProdGradeCd())) {
+				String[] arrayProdGradeCd = bestAppReq.getProdGradeCd().split("\\+");
+				bestAppReq.setArrayProdGradeCd(arrayProdGradeCd);
 			}
 
-			if (!appList.isEmpty()) {
-				Map<String, Object> reqMap = new HashMap<String, Object>();
-				reqMap.put("tenantHeader", tenantHeader);
-				reqMap.put("deviceHeader", deviceHeader);
-				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-				for (ProductBasicInfo productBasicInfo : appList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
-					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-					MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+			// BEST 앱 상품 조회
+			List<ProductBasicInfo> appList = null;
 
-					if (retMetaInfo != null) {
-						Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
-						productList.add(product);
-					}
+			if (bestAppReq.getDummy() == null) {
+				// dummy 호출이 아닐때
+
+				if (!"ADM000000001".equals(bestAppReq.getListId())) {
+					// 추천, 인기(매출), 인기신규 상품 조회
+					appList = this.commonDAO.queryForList("BestApp.selectBestAppList", bestAppReq,
+							ProductBasicInfo.class);
+				} else {
+					// 신규 상품조회
+					appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq,
+							ProductBasicInfo.class);
 				}
-				commonResponse.setTotalCount(appList.get(0).getTotalCount());
-				response.setProductList(productList);
-				response.setCommonResponse(commonResponse);
+
+				if (!appList.isEmpty()) {
+					Map<String, Object> reqMap = new HashMap<String, Object>();
+					reqMap.put("tenantHeader", tenantHeader);
+					reqMap.put("deviceHeader", deviceHeader);
+					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+					for (ProductBasicInfo productBasicInfo : appList) {
+						reqMap.put("productBasicInfo", productBasicInfo);
+						reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+						MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+
+						if (retMetaInfo != null) {
+							Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+							productList.add(product);
+						}
+					}
+					commonResponse.setTotalCount(appList.get(0).getTotalCount());
+					response.setProductList(productList);
+					response.setCommonResponse(commonResponse);
+				} else {
+					// 조회 결과 없음
+					commonResponse.setTotalCount(0);
+					response.setProductList(productList);
+					response.setCommonResponse(commonResponse);
+				}
+
 			} else {
-				// 조회 결과 없음
-				commonResponse.setTotalCount(0);
-				response.setProductList(productList);
-				response.setCommonResponse(commonResponse);
+				// dummy data를 호출할때
+				Product product = null;
+				Identifier identifier = null;
+				App app = null;
+				Accrual accrual = null;
+				Rights rights = null;
+				Source source = null;
+				Price price = null;
+				Title title = null;
+				Support support = null;
+				Menu menu = null;
+
+				menuList = new ArrayList<Menu>();
+				supportList = new ArrayList<Support>();
+				sourceList = new ArrayList<Source>();
+
+				product = new Product();
+				identifier = new Identifier();
+				app = new App();
+				accrual = new Accrual();
+				rights = new Rights();
+				source = new Source();
+				price = new Price();
+				title = new Title();
+				support = new Support();
+
+				// 상품ID
+				identifierList = new ArrayList<Identifier>();
+				identifier = new Identifier();
+				identifier.setType("episode");
+				identifier.setText("0000643818");
+				identifierList.add(identifier);
+
+				support.setType("Y");
+				support.setText("iab");
+				supportList.add(support);
+
+				/*
+				 * Menu(메뉴정보) Id, Name, Type
+				 */
+				menu = new Menu();
+				menu.setId("DP000501");
+				menu.setName("게임");
+				menu.setType("topClass");
+				menuList.add(menu);
+				menu = new Menu();
+				menu.setId("DP01004");
+				menu.setName("RPG");
+				menuList.add(menu);
+
+				/*
+				 * App aid, packagename, versioncode, version
+				 */
+				app.setAid("OA00643818");
+				app.setPackageName("proj.syjt.tstore");
+				app.setVersionCode("11000");
+				app.setVersion("1.1");
+				app.setSize(5908912);
+
+				/*
+				 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
+				 */
+				accrual.setVoterCount(14305);
+				accrual.setDownloadCount(513434);
+				accrual.setScore(4.8);
+
+				/*
+				 * Rights grade
+				 */
+				rights.setGrade("0");
+
+				title.setText("워밸리 온라인");
+
+				/*
+				 * source mediaType, size, type, url
+				 */
+				source.setMediaType("image/png");
+				source.setSize(1234);
+				source.setType("thumbnail");
+				source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
+				sourceList.add(source);
+
+				/*
+				 * Price text
+				 */
+				price.setText(0);
+
+				product = new Product();
+				product.setIdentifierList(identifierList);
+				product.setSupportList(supportList);
+				product.setMenuList(menuList);
+				product.setApp(app);
+				product.setAccrual(accrual);
+				product.setRights(rights);
+				product.setTitle(title);
+				product.setSourceList(sourceList);
+				product.setProductExplain("★이벤트★세상에 없던 모바일 MMORPG!");
+				product.setPrice(price);
+
+				productList.add(product);
 			}
-
-		} else {
-			// dummy data를 호출할때
-			Product product = null;
-			Identifier identifier = null;
-			App app = null;
-			Accrual accrual = null;
-			Rights rights = null;
-			Source source = null;
-			Price price = null;
-			Title title = null;
-			Support support = null;
-			Menu menu = null;
-
-			menuList = new ArrayList<Menu>();
-			supportList = new ArrayList<Support>();
-			sourceList = new ArrayList<Source>();
-
-			product = new Product();
-			identifier = new Identifier();
-			app = new App();
-			accrual = new Accrual();
-			rights = new Rights();
-			source = new Source();
-			price = new Price();
-			title = new Title();
-			support = new Support();
-
-			// 상품ID
-			identifierList = new ArrayList<Identifier>();
-			identifier = new Identifier();
-			identifier.setType("episode");
-			identifier.setText("0000643818");
-			identifierList.add(identifier);
-
-			support.setType("Y");
-			support.setText("iab");
-			supportList.add(support);
-
-			/*
-			 * Menu(메뉴정보) Id, Name, Type
-			 */
-			menu = new Menu();
-			menu.setId("DP000501");
-			menu.setName("게임");
-			menu.setType("topClass");
-			menuList.add(menu);
-			menu = new Menu();
-			menu.setId("DP01004");
-			menu.setName("RPG");
-			menuList.add(menu);
-
-			/*
-			 * App aid, packagename, versioncode, version
-			 */
-			app.setAid("OA00643818");
-			app.setPackageName("proj.syjt.tstore");
-			app.setVersionCode("11000");
-			app.setVersion("1.1");
-			app.setSize(5908912);
-
-			/*
-			 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
-			 */
-			accrual.setVoterCount(14305);
-			accrual.setDownloadCount(513434);
-			accrual.setScore(4.8);
-
-			/*
-			 * Rights grade
-			 */
-			rights.setGrade("0");
-
-			title.setText("워밸리 온라인");
-
-			/*
-			 * source mediaType, size, type, url
-			 */
-			source.setMediaType("image/png");
-			source.setSize(1234);
-			source.setType("thumbnail");
-			source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
-			sourceList.add(source);
-
-			/*
-			 * Price text
-			 */
-			price.setText(0);
-
-			product = new Product();
-			product.setIdentifierList(identifierList);
-			product.setSupportList(supportList);
-			product.setMenuList(menuList);
-			product.setApp(app);
-			product.setAccrual(accrual);
-			product.setRights(rights);
-			product.setTitle(title);
-			product.setSourceList(sourceList);
-			product.setProductExplain("★이벤트★세상에 없던 모바일 MMORPG!");
-			product.setPrice(price);
-
-			productList.add(product);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_DSP_0001", "");
 		}
+
 		response.setCommonResponse(commonResponse);
 		response.setProductList(productList);
 		return response;
