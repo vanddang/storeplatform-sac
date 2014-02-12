@@ -1,8 +1,5 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 
@@ -17,40 +14,23 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 
 @Component
 public class DownloadAES128Helper {
-	final private int KEY_SIZE = 16; // 128bit
-
 	@Value("#{propertiesForSac['display.forDownload.encrypt.key'].split(',')}")
 	private List<String> SAC_KEY;
 
 	@Value("#{propertiesForSac['display.forDownload.encrypt.dl.iv']}")
 	private String SAC_DL_IV;
 
-	private int RANDOM_NUMBER;
+	private int SAC_RANDOM_NUMBER;
 
-	public byte[] genRandomKey() {
-		final byte[] key = new byte[this.KEY_SIZE];
-		SecureRandom sr = new SecureRandom();
-		sr.nextBytes(key);
-		return key;
-	}
-
-	public String toHexString(byte[] b) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < b.length; i++) {
-			sb.append(Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1));
-		}
-		return sb.toString();
-	}
-
-	public byte[] convertBytes(String hex) {
-		return new java.math.BigInteger(hex, 16).toByteArray();
-	}
-
-	public byte[] getDigest(byte[] b) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("SHA-1");
-		return md.digest(b);
-	}
-
+	/**
+	 * <pre>
+	 * AES128-CTR 암호화.
+	 * </pre>
+	 * 
+	 * @param b
+	 *            b
+	 * @return byte[]
+	 */
 	public byte[] encryption(byte[] b) {
 		byte[] row = null;
 		byte[] iv = null;
@@ -63,7 +43,7 @@ public class DownloadAES128Helper {
 		try {
 			Random random = new Random();
 			int randomNumber = random.nextInt(20);
-			this.setRANDOM_NUMBER(randomNumber);
+			this.setSAC_RANDOM_NUMBER(randomNumber);
 
 			row = this.convertBytes(this.SAC_KEY.get(randomNumber));
 			iv = this.convertBytes(this.SAC_DL_IV);
@@ -86,6 +66,15 @@ public class DownloadAES128Helper {
 
 	}
 
+	/**
+	 * <pre>
+	 * AES128-CTR 복호화.
+	 * </pre>
+	 * 
+	 * @param b
+	 *            b
+	 * @return byte[]
+	 */
 	public byte[] decryption(byte[] b) {
 		byte[] row = null;
 		byte[] iv = null;
@@ -96,7 +85,7 @@ public class DownloadAES128Helper {
 		Cipher cipher = null;
 
 		try {
-			row = this.convertBytes(this.SAC_KEY.get(this.getRANDOM_NUMBER()));
+			row = this.convertBytes(this.SAC_KEY.get(this.getSAC_RANDOM_NUMBER()));
 			iv = this.convertBytes(this.SAC_DL_IV);
 
 			ivSpec = new IvParameterSpec(iv);
@@ -113,17 +102,30 @@ public class DownloadAES128Helper {
 	}
 
 	/**
-	 * @return the rANDOM_NUMBER
+	 * <pre>
+	 * String to Byte.
+	 * </pre>
+	 * 
+	 * @param hex
+	 *            hex
+	 * @return byte[]
 	 */
-	public int getRANDOM_NUMBER() {
-		return this.RANDOM_NUMBER;
+	public byte[] convertBytes(String hex) {
+		return new java.math.BigInteger(hex, 16).toByteArray();
 	}
 
 	/**
-	 * @param rANDOM_NUMBER
-	 *            the rANDOM_NUMBER to set
+	 * @return the sAC_RANDOM_NUMBER
 	 */
-	public void setRANDOM_NUMBER(int rANDOM_NUMBER) {
-		this.RANDOM_NUMBER = rANDOM_NUMBER;
+	public int getSAC_RANDOM_NUMBER() {
+		return this.SAC_RANDOM_NUMBER;
+	}
+
+	/**
+	 * @param sAC_RANDOM_NUMBER
+	 *            the sAC_RANDOM_NUMBER to set
+	 */
+	public void setSAC_RANDOM_NUMBER(int sAC_RANDOM_NUMBER) {
+		this.SAC_RANDOM_NUMBER = sAC_RANDOM_NUMBER;
 	}
 }

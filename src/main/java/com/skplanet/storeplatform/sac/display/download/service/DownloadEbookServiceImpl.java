@@ -272,8 +272,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
 
 				Encryption encryption = new Encryption();
-				encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE
-						+ DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY);
+				encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE + "/"
+						+ this.downloadAES128Helper.getSAC_RANDOM_NUMBER());
 
 				// JSON 암호화값을 BASE64 Encoding
 				Base64Encoder encoder = new Base64Encoder();
