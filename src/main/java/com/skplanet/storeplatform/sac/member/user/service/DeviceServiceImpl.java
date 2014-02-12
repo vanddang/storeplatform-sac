@@ -1191,7 +1191,7 @@ public class DeviceServiceImpl implements DeviceService {
 		gameCenterSc.setPreUserKey(gameCenterSacReq.getPreUserKey());
 		gameCenterSc.setRequestDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
 		gameCenterSc.setWorkCode(gameCenterSacReq.getWorkCd());
-		gameCenterSc.setRequestType(gameCenterSacReq.getSystemId());
+		gameCenterSc.setRequestType("0001");
 		//gameCenterSc.setFileDate(fileDate);
 		updGameCenterReq.setGameCenter(gameCenterSc);
 
