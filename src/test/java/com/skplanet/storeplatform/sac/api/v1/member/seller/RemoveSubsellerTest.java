@@ -67,7 +67,7 @@ public class RemoveSubsellerTest {
 	@Test
 	public void removeSubseller() {
 
-		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_LOCAL_PATH + "/removeSubseller/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/removeSubseller2/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
@@ -77,7 +77,7 @@ public class RemoveSubsellerTest {
 
 						List<String> removeKeyList;
 						removeKeyList = new ArrayList<String>();
-						removeKeyList.add("SS201402061427346800000640");
+						removeKeyList.add("SS201402121759021740000769");
 						req.setSubSellerKey(removeKeyList);
 
 						LOGGER.debug("request param : {}", req.toString());
