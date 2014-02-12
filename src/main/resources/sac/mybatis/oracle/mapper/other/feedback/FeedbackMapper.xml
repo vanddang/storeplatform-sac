@@ -67,6 +67,7 @@
                                      , TITLE
                                      </if>
                                      , NOTI_DSCR
+                                     , NOTI_SCORE
                                      , SPAM_YN
                                      , BAD_NOTI_YN
                                      , DEL_YN
@@ -99,6 +100,7 @@
                                      , #{title}
                                      </if>
                                      , #{notiDscr}
+                                     , 0
                                      , 'N'
                                      , 'N'
                                      , 'N'
