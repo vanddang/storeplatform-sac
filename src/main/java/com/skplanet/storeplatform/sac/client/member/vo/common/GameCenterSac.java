@@ -54,17 +54,6 @@ public class GameCenterSac extends CommonInfo {
 	private String preDeviceId;
 
 	/**
-	 * 상태_코드.
-	 */
-	private String statusCd;
-
-	/**
-	 * 요청_타입.
-	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
-	private String reqType;
-
-	/**
 	 * 작업_코드.
 	 */
 	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
@@ -158,36 +147,6 @@ public class GameCenterSac extends CommonInfo {
 	 */
 	public void setPreDeviceId(String preDeviceId) {
 		this.preDeviceId = preDeviceId;
-	}
-
-	/**
-	 * @return statusCd
-	 */
-	public String getStatusCd() {
-		return this.statusCd;
-	}
-
-	/**
-	 * @param statusCd
-	 *            String
-	 */
-	public void setStatusCd(String statusCd) {
-		this.statusCd = statusCd;
-	}
-
-	/**
-	 * @return reqType
-	 */
-	public String getReqType() {
-		return this.reqType;
-	}
-
-	/**
-	 * @param reqType
-	 *            String
-	 */
-	public void setReqType(String reqType) {
-		this.reqType = reqType;
 	}
 
 	/**
