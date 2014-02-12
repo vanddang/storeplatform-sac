@@ -195,6 +195,8 @@
 		--         , ( CASE WHEN PLAY_PROD_ID IS NOT NULL THEN '/'||C.CAT_DESC||'/'||PLAY_PROD_ID END  ) AS PLAY_PROD_ID
 		         , NVL(STORE_PROD_AMT, 0) AS STORE_PROD_AMT
 		         , NVL(PLAY_PROD_AMT, 0) AS PLAY_PROD_AMT
+		         , STORE_PROD_CHRG
+		         , PLAY_PROD_CHRG
 		         , DECODE( STORE_DRM_YN, 'Y', STORE_DRM_YN, 'N' ) AS STORE_DRM_YN
 		         , DECODE( PLAY_DRM_YN, 'Y', PLAY_DRM_YN, 'N' ) AS PLAY_DRM_YN  
 		         , DECODE( BTV_YN, 'Y', BTV_YN, 'N' ) AS BTV_YN
@@ -254,6 +256,8 @@
 		                 , PLAY_PROD_ID
 		                 , STORE_PROD_AMT
 		                 , PLAY_PROD_AMT
+		                 , STORE_PROD_CHRG
+		                 , PLAY_PROD_CHRG
 		                 , STORE_DRM_YN
 		                 , PLAY_DRM_YN
 		                 , BTV_YN
