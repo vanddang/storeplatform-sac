@@ -663,15 +663,11 @@ public class IdpServiceImpl implements IdpService {
 
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
-		SearchUserResponse searchUserRespnse = new SearchUserResponse();
 		try {
-			searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
-
-			UserMbr userMbr = new UserMbr();
+			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
 			// 회원 수정 정보 세팅
-			UserMbr getUserMbr = new UserMbr();
-			getUserMbr = searchUserRespnse.getUserMbr();
+			UserMbr getUserMbr = searchUserRespnse.getUserMbr();
 
 			if (getUserMbr != null) {
 				getUserMbr.setUserPhone((String) map.get("user_tn"));
