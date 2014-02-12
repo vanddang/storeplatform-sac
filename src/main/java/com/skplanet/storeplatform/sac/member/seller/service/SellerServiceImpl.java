@@ -38,6 +38,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
@@ -726,6 +727,41 @@ public class SellerServiceImpl implements SellerService {
 		AbrogationAuthKeyRes response = new AbrogationAuthKeyRes();
 
 		response.setSellerKey(loginInfo.getSellerKey());
+
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.4. 판매자회원 단순 인증.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return AuthorizeRes
+	 */
+	@Override
+	public AuthorizeRes authorizeSample(SacRequestHeader header, AuthorizeSimpleReq req) {
+
+		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
+		// SC 공통 헤더 생성
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+		/** 1. SC회원 Req 생성 및 주입. */
+		LoginSellerRequest loginSellerRequest = new LoginSellerRequest();
+		loginSellerRequest.setSellerID(req.getSellerId());
+		loginSellerRequest.setSellerPW(req.getSellerPW());
+
+		LOGGER.debug("==>>[SC] LoginSellerRequest.toString() : {}", loginSellerRequest.toString());
+
+		// SC공통 헤더 정보 주입
+		loginSellerRequest.setCommonRequest(commonRequest);
+
+		/** 1-1. SC-로그인인증 Call. */
+		LoginSellerResponse schRes = this.sellerSCI.loginSeller(loginSellerRequest);
+
+		AuthorizeRes response = new AuthorizeRes();
+
+		response.setIsLoginSuccess(schRes.getIsLoginSuccess());
 
 		return response;
 	}

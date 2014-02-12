@@ -4,6 +4,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
@@ -32,6 +33,9 @@ public interface SellerService {
 
 	/** 2.2.3. 판매자 회원 인증. */
 	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req);
+
+	/** 2.2.4. 판매자 회원 단순 인증. */
+	public AuthorizeRes authorizeSample(SacRequestHeader header, AuthorizeSimpleReq req);
 
 	/** 2.2.10. 판매자 회원 기본정보 수정 */
 	public ModifyInformationSacRes modifyInformation(SacRequestHeader header, ModifyInformationSacReq req);

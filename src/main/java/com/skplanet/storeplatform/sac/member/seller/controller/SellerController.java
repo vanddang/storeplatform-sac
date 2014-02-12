@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
@@ -81,6 +82,21 @@ public class SellerController {
 	@ResponseBody
 	public AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) {
 		return this.sellerService.authorize(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.5. 판매자 회원 단순 인증.
+	 * </pre>
+	 * 
+	 * @param AuthorizeReq
+	 * @return AuthorizeRes : JSON
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/authorizeSimple/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeRes authorizeSample(SacRequestHeader header, @RequestBody @Validated AuthorizeSimpleReq req) {
+		return this.sellerService.authorizeSample(header, req);
 	}
 
 	/**
