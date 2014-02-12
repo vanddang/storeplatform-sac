@@ -87,7 +87,6 @@ public class UserSearchController {
 		LOGGER.info("####################################################");
 
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-		String workCode = StringUtil.nvl(req.getWorkCode(), "");
 
 		if (deviceId.equals("")) {
 			new StorePlatformException("SAC_MEM_0001", req.toString());
