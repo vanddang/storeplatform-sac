@@ -228,7 +228,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			contributor.setAlbum(metaInfo.getArtist3Nm());
 
 			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_DOWNLOAD_IDENTIFIER_CD);
+			identifier.setType(DisplayConstants.DP_SONG_IDENTIFIER_CD);
 			identifier.setText(metaInfo.getMusicId());
 			List<Source> mussicSourceList = new ArrayList<Source>();
 			source = new Source();
