@@ -16,7 +16,6 @@ public class GetProvisioningHistoryReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String deviceId;
-	private String userKey;
 	private String workCode;
 
 	public String getDeviceId() {
@@ -25,14 +24,6 @@ public class GetProvisioningHistoryReq extends CommonInfo {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
-	}
-
-	public String getUserKey() {
-		return this.userKey;
-	}
-
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
 	}
 
 	public String getWorkCode() {
