@@ -52,8 +52,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmai
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
@@ -76,10 +74,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRe
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -611,29 +605,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		}
 
 		return response;
-	}
-
-	@Override
-	public SendSmsForRealNameAuthorizationRes sendSmsForRealNameAuthorization(SendSmsForRealNameAuthorizationReq request) {
-		// TODO 1. 모번호 조회 UAPS 연동
-		// TODO 2. 실명인증 SMS 발송 요청 - EC (KMC 연동)
-		// TODO 3. EC 발송 결과 Response
-		return null;
-	}
-
-	@Override
-	public ConfirmRealNameAuthorizationRes confirmRealNameAuthorization(ConfirmRealNameAuthorizationReq request) {
-		// TODO 1. 인증코드 확인 요청 - EC (KMD 연동)
-		// TODO 2. 인증코드 확인 리턴값 Response
-		return null;
-	}
-
-	@Override
-	public ResendSmsForRealNameAuthorizationRes resendSmsForRealNameAuthorization(
-			ResendSmsForRealNameAuthorizationReq request) {
-		// TODO 1. EC (KMD 연동)에 SMS 재발송 요청
-		// TODO 2. EC 발송 결과 Response
-		return null;
 	}
 
 	@Override

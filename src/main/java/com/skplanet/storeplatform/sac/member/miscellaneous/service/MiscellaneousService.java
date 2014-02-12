@@ -8,8 +8,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmai
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
@@ -31,10 +29,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRe
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -178,40 +172,6 @@ public interface MiscellaneousService {
 	 * @return GetModelCodeRes
 	 */
 	public GetModelCodeRes getModelCode(GetModelCodeReq request);
-
-	/**
-	 * <pre>
-	 * 실명인증용 휴대폰 인증 SMS 발송.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            SendSmsForRealNameAuthorizationReq
-	 * @return SendSmsForRealNameAuthorizationRes
-	 */
-	public SendSmsForRealNameAuthorizationRes sendSmsForRealNameAuthorization(SendSmsForRealNameAuthorizationReq request);
-
-	/**
-	 * <pre>
-	 * 실명인증용 휴대폰 인증 코드 확인.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            ConfirmRealNameAuthorizationReq
-	 * @return ConfirmRealNameAuthorizationRes
-	 */
-	public ConfirmRealNameAuthorizationRes confirmRealNameAuthorization(ConfirmRealNameAuthorizationReq request);
-
-	/**
-	 * <pre>
-	 * 실명인증용 휴대폰 인증 SMS 재발송.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            ResendSmsForRealNameAuthorizationReq
-	 * @return ResendSmsForRealNameAuthorizationRes
-	 */
-	public ResendSmsForRealNameAuthorizationRes resendSmsForRealNameAuthorization(
-			ResendSmsForRealNameAuthorizationReq request);
 
 	/**
 	 * <pre>
