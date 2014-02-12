@@ -446,16 +446,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 			SearchAgreementListResponse schAgreeListRes = null;
 			try {
+
 				schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
-			} catch (StorePlatformException ex) {
-				/* 약관 조회 결과 없는경우를 제외하고 throw */
-				if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-					throw ex;
-				}
-			}
-
-			if (schAgreeListRes != null) {
-
 				List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
 				for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
 					agreeInfo.setMemberKey(userKey);
@@ -467,6 +459,11 @@ public class DeviceServiceImpl implements DeviceService {
 				updAgreeReq.setMbrClauseAgreeList(agreeList);
 				this.userSCI.updateAgreement(updAgreeReq);
 
+			} catch (StorePlatformException ex) {
+				/* 약관 조회 결과 없는경우를 제외하고 throw */
+				if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+					throw ex;
+				}
 			}
 
 			/* 5. 통합회원인 경우 무선회원 해지 */
@@ -494,12 +491,16 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 6. 게임센터 연동 */
 		GameCenterSac gameCenterSac = new GameCenterSac();
 		gameCenterSac.setUserKey(userKey);
-		gameCenterSac.setPreUserKey(previousUserKey);
 		gameCenterSac.setDeviceId(deviceInfo.getDeviceId());
-		gameCenterSac.setPreDeviceId(null);
 		gameCenterSac.setSystemId(systemId);
 		gameCenterSac.setTenantId(tenantId);
-		gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+		if (previousUserKey == null) {
+			gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+		} else {
+			gameCenterSac.setPreUserKey(previousUserKey);
+			gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
+		}
+
 		this.insertGameCenterIF(gameCenterSac);
 
 		LOGGER.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
@@ -1189,13 +1190,13 @@ public class DeviceServiceImpl implements DeviceService {
 		gameCenterSc.setPreDeviceID(gameCenterSac.getPreDeviceId());
 		gameCenterSc.setUserKey(gameCenterSac.getUserKey());
 		gameCenterSc.setPreUserKey(gameCenterSac.getPreUserKey());
-		gameCenterSc.setRequestType(gameCenterSac.getReqType());
 		gameCenterSc.setRequestDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-		gameCenterSc.setStatusCode("0000");
 		gameCenterSc.setWorkCode(gameCenterSac.getWorkCd());
+		gameCenterSc.setRequestType(gameCenterSac.getSystemId());
 		//gameCenterSc.setFileDate(fileDate);
 
 		updGameCenterReq.setGameCenter(gameCenterSc);
+
 		this.userSCI.updateGameCenter(updGameCenterReq);
 	}
 }

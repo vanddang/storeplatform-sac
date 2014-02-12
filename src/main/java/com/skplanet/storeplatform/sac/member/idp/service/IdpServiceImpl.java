@@ -587,12 +587,6 @@ public class IdpServiceImpl implements IdpService {
 			}
 		}
 		/* 게임센터 연동 */
-		GameCenterSac gameCenterSac = new GameCenterSac();
-		gameCenterSac.setUserKey(user_key);
-		gameCenterSac.setSystemId(systemId);
-		gameCenterSac.setTenantId(tenantId);
-		gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
-		this.deviceService.insertGameCenterIF(gameCenterSac);
 
 		return this.SUCCESS_STR;
 	}
@@ -644,7 +638,9 @@ public class IdpServiceImpl implements IdpService {
 			}
 
 		} catch (StorePlatformException ex) {
-			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				return this.FAIL_NODATA_STR;
+			} else {
 				return this.FAIL_STR;
 			}
 		}
@@ -769,8 +765,7 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
 		} catch (StorePlatformException spe) {
-			LOGGER.debug("RXSetLoginConditionIDP ------- update state excetion error code = "
-					+ spe.getErrorInfo().getCode());
+			LOGGER.debug("RXSetLoginConditionIDP ------- update state excetion error code = " + spe.getErrorInfo().getCode());
 		}
 
 		// 미동의 회원 정보 수정
@@ -2166,8 +2161,7 @@ public class IdpServiceImpl implements IdpService {
 		updatePasswordUserRequest.setMbrPwd(mbrPwd);
 
 		try {
-			UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI
-					.updatePasswordUser(updatePasswordUserRequest);
+			UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI.updatePasswordUser(updatePasswordUserRequest);
 
 			if (updatePasswordUserResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
