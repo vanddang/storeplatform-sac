@@ -34,18 +34,19 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.GameCenter;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserkeyTrackRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserkeyTrackResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
@@ -61,6 +62,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
@@ -164,14 +166,14 @@ public class UserSearchServiceImpl implements UserSearchService {
 		logger.info("============================================ userInfo Request : {}", detailReq.toString());
 		logger.info("============================================ userInfo Response : {}", userInfo.toString());
 
-		result.setUserKey(userInfo.getUserKey());
-		result.setUserType(userInfo.getUserType());
-		result.setUserId(userInfo.getUserId());
-		result.setIsRealName(userInfo.getIsRealName());
-		result.setAgencyYn(userInfo.getIsParent());
-		result.setUserEmail(userInfo.getUserEmail());
-		result.setUserMainStatus(userInfo.getUserMainStatus());
-		result.setUserSubStatus(userInfo.getUserSubStatus());
+		result.setUserKey(StringUtil.setTrim(userInfo.getUserKey()));
+		result.setUserType(StringUtil.setTrim(userInfo.getUserType()));
+		result.setUserId(StringUtil.setTrim(userInfo.getUserId()));
+		result.setIsRealName(StringUtil.setTrim(userInfo.getIsRealName()));
+		result.setAgencyYn(StringUtil.setTrim(userInfo.getIsParent()));
+		result.setUserEmail(StringUtil.setTrim(userInfo.getUserEmail()));
+		result.setUserMainStatus(StringUtil.setTrim(userInfo.getUserMainStatus()));
+		result.setUserSubStatus(StringUtil.setTrim(userInfo.getUserSubStatus()));
 
 		return result;
 	}
@@ -256,6 +258,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String workCode = StringUtil.nvl(req.getWorkCode(), "");
+
 		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
@@ -266,19 +272,49 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		/* 회원 기본 정보 */
-		this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
 
-		SearchUserkeyTrackRequest scReq = new SearchUserkeyTrackRequest();
-		SearchUserkeyTrackResponse scRes = new SearchUserkeyTrackResponse();
-		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
-
+		SearchGameCenterRequest scReq = new SearchGameCenterRequest();
 		scReq.setCommonRequest(commonRequest);
-		scReq.setDeviceID(req.getDeviceId());
-		scRes = this.userSCI.searchUserkeyTrack(scReq);
+		if (!userKey.equals("")) {
+			scReq.setUserKey(req.getUserKey());
+			this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+		}
 
-		res.setWorkdCd("US003206");
-		res.setAfterUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getAfterUserKey()));
-		res.setPreUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getPreUserKey()));
+		if (!deviceId.equals("")) {
+			scReq.setDeviceID(req.getDeviceId());
+			this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
+		}
+
+		if (!workCode.equals("")) {
+			scReq.setWorkCode(req.getWorkCode());
+		}
+
+		logger.info("SearchGameCenterRequest : {}", scReq.toString());
+
+		SearchGameCenterResponse scRes = new SearchGameCenterResponse();
+		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
+		scRes = this.userSCI.searchGameCenter(scReq);
+		List<GameCenterSacRes> gameCenterList = new ArrayList<GameCenterSacRes>();
+
+		for (GameCenter gameCenter : scRes.getGameCenterList()) {
+			GameCenterSacRes gameCenterRes = new GameCenterSacRes();
+			gameCenterRes.setDeviceId(StringUtil.setTrim(gameCenter.getDeviceID()));
+			gameCenterRes.setFileDate(StringUtil.setTrim(gameCenter.getFileDate()));
+			gameCenterRes.setGameCenterNo(StringUtil.setTrim(gameCenter.getGameCenterNo()));
+			gameCenterRes.setPreDeviceId(StringUtil.setTrim(gameCenter.getPreDeviceID()));
+			gameCenterRes.setPreUserKey(StringUtil.setTrim(gameCenter.getPreUserKey()));
+			gameCenterRes.setRegDate(StringUtil.setTrim(gameCenter.getRegDate()));
+			gameCenterRes.setRequestDate(StringUtil.setTrim(gameCenter.getRequestDate()));
+			gameCenterRes.setRequestType(StringUtil.setTrim(gameCenter.getRequestType()));
+			gameCenterRes.setStatusCode(StringUtil.setTrim(gameCenter.getStatusCode()));
+			gameCenterRes.setUpdateDate(StringUtil.setTrim(gameCenter.getUpdateDate()));
+			gameCenterRes.setUserKey(StringUtil.setTrim(gameCenter.getUserKey()));
+			gameCenterRes.setWorkCode(StringUtil.setTrim(gameCenter.getWorkCode()));
+
+			gameCenterList.add(gameCenterRes);
+		}
+
+		res.setGameCenterList(gameCenterList);
 
 		return res;
 	}

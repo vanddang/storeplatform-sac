@@ -79,30 +79,25 @@ public class UserSearchController {
 		return res;
 	}
 
-	@RequestMapping(value = "/member/user/getProvisioningHistory/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/member/user/getProvisioningHistory/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetProvisioningHistoryRes getProvisioningHistory(GetProvisioningHistoryReq req, SacRequestHeader sacHeader) {
+	public GetProvisioningHistoryRes getProvisioningHistory(@RequestBody GetProvisioningHistoryReq req, SacRequestHeader sacHeader) {
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.12. 회원 프로비저닝 이력 조회 #####");
 		LOGGER.info("####################################################");
 
-		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String workCode = StringUtil.nvl(req.getWorkCode(), "");
 
-		/**
-		 * 회원기본정보 조회 Biz
-		 */
-		int paramCnt = 0;
-		if (!"".equals(req.getDeviceId()) && req.getDeviceId() != null) {
-			paramCnt += 1;
+		if (userKey.equals("") && deviceId.equals("") && workCode.equals("")) {
+			new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
 		LOGGER.info("============================================ GetProvisioningHistoryReq : {}", req.toString());
 
-		if (paramCnt > 0) {
-			res = this.svc.getProvisioningHistory(sacHeader, req);
-		} else {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
-		}
+		GetProvisioningHistoryRes res = this.svc.getProvisioningHistory(sacHeader, req);
+
 		LOGGER.info("Final Response : {}", res.toString());
 
 		return res;
