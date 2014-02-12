@@ -52,10 +52,11 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		data.setTitle(metaInfo.getProdNm());
 		data.setTopCatCd(metaInfo.getTopMenuId());
 		data.setCatCd(metaInfo.getMenuId());
-		data.setPacketFee(metaInfo.getProdClsfCd());
+		data.setPacketFee(this.isEmpty(metaInfo.getProdClsfCd()));
 		data.setProductFee(metaInfo.getProdChrg());
 		data.setProductId(metaInfo.getPurchaseProdId());
 		data.setPurchaseId(metaInfo.getPurchaseId());
+		data.setUserKey(metaInfo.getUserKey());
 
 		date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getPurchaseDt());
 		data.setPurchaseDate(date.getText());
@@ -89,11 +90,15 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 
 		// 사용 정책
 		usagePolicy.setApplyDrm(metaInfo.getDrmYn());
-		date = new Date();
-		date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getDwldExprDt());
-		usagePolicy.setExpirationDate(date.getText());
-		usagePolicy.setBpCode(metaInfo.getBpJoinFileType());
-		usagePolicy.setCertKey(metaInfo.getBpJoinFileNo());
+		if (StringUtils.isNotEmpty(metaInfo.getDwldExprDt())) {
+			date = new Date();
+			date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getDwldExprDt());
+			usagePolicy.setExpirationDate(date.getText());
+		} else {
+			usagePolicy.setExpirationDate("");
+		}
+		usagePolicy.setBpCode(this.isEmpty(metaInfo.getBpJoinFileType()));
+		usagePolicy.setCertKey(this.isEmpty(metaInfo.getBpJoinFileNo()));
 		data.setUsagePolicy(usagePolicy);
 
 		// 기기 정보
@@ -104,5 +109,12 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 
 		contents.setData(data);
 		return contents;
+	}
+
+	private String isEmpty(String str) {
+		if (StringUtils.isEmpty(str)) {
+			return "";
+		}
+		return str;
 	}
 }

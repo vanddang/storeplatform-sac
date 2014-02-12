@@ -522,6 +522,8 @@
                       , NVL(MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.DRM_YN)), 'N') AS PLAY_DRM_YN
                       , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PROD_STATUS_CD)) AS STORE_PROD_STATUS_CD
                       , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PROD_STATUS_CD)) AS PLAY_PROD_STATUS_CD
+                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS STORE_PROD_CHRG
+                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG
                       , MAX(JA.USE_PERIOD_UNIT_CD) AS USE_PERIOD_UNIT_CD
                       , MAX(JA.USE_PERIOD) AS USE_PERIOD
                       , MAX(JA.SUB_CONTENTS_ID) AS SUB_CONTENTS_ID
@@ -557,6 +559,7 @@
                                       , D.DRM_YN
                                       , D.USE_PERIOD_UNIT_CD
                                       , D.USE_PERIOD
+                                      , D.PROD_CHRG_YN
                                       , E.PROD_NM
                                       , F.BOOK_CLSF_CD
                                       , G.PROD_STATUS_CD
