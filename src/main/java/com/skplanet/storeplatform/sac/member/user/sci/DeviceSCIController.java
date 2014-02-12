@@ -14,8 +14,6 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDevi
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceMdnSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceMdnSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -32,7 +30,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 public class DeviceSCIController implements DeviceSCI {
 
 	@Autowired
-	private DeviceService deviceService;
+	private DeviceService deviceService; // 휴대기기 관련 인터페이스.
 
 	/*
 	 * (non-Javadoc)
@@ -70,18 +68,6 @@ public class DeviceSCIController implements DeviceSCI {
 	 */
 	@Override
 	public ChangedDeviceSacRes searchChangedDeviceList(ChangedDeviceSacReq requestVO) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI#SearchUserByUserKey(com.skplanet.
-	 * storeplatform.sac.client.internal.member.user.sci.SearchUserSacReq)
-	 */
-	@Override
-	public SearchUserSacRes SearchUserByUserKey(SearchUserSacReq request) {
 		// TODO Auto-generated method stub
 		return null;
 	}
