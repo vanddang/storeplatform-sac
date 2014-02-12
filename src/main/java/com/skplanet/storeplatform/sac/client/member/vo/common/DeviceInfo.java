@@ -150,7 +150,7 @@ public class DeviceInfo extends CommonInfo {
 	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회.
 	 */
-	private List<DeviceExtraInfo> userDeviceExtraInfo;
+	private List<DeviceExtraInfo> deviceExtraInfoList;
 
 	/**
 	 * @return deviceKey
@@ -348,18 +348,18 @@ public class DeviceInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return userDeviceExtraInfo
+	 * @return deviceExtraInfoList
 	 */
-	public List<DeviceExtraInfo> getUserDeviceExtraInfo() {
-		return this.userDeviceExtraInfo;
+	public List<DeviceExtraInfo> getDeviceExtraInfoList() {
+		return this.deviceExtraInfoList;
 	}
 
 	/**
-	 * @param userDeviceExtraInfo
+	 * @param deviceExtraInfoList
 	 *            List<DeviceExtraInfo>
 	 */
-	public void setUserDeviceExtraInfo(List<DeviceExtraInfo> userDeviceExtraInfo) {
-		this.userDeviceExtraInfo = userDeviceExtraInfo;
+	public void setDeviceExtraInfoList(List<DeviceExtraInfo> deviceExtraInfoList) {
+		this.deviceExtraInfoList = deviceExtraInfoList;
 	}
 
 	/**

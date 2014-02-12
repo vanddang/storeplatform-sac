@@ -23,7 +23,7 @@ public class DetailRepresentationDeviceRes extends CommonInfo {
 	private DeviceInfo userDeviceInfo;
 
 	/* 사용자 단말 부가 정보 */
-	private List<DeviceExtraInfo> userDeviceExtraInfo;
+	private List<DeviceExtraInfo> deviceExtraInfoList;
 
 	public DeviceInfo getUserDeviceInfo() {
 		return this.userDeviceInfo;
@@ -33,12 +33,12 @@ public class DetailRepresentationDeviceRes extends CommonInfo {
 		this.userDeviceInfo = userDeviceInfo;
 	}
 
-	public List<DeviceExtraInfo> getUserDeviceExtraInfo() {
-		return this.userDeviceExtraInfo;
+	public List<DeviceExtraInfo> getDeviceExtraInfoList() {
+		return this.deviceExtraInfoList;
 	}
 
-	public void setUserDeviceExtraInfo(List<DeviceExtraInfo> userDeviceExtraInfo) {
-		this.userDeviceExtraInfo = userDeviceExtraInfo;
+	public void setDeviceExtraInfoList(List<DeviceExtraInfo> deviceExtraInfoList) {
+		this.deviceExtraInfoList = deviceExtraInfoList;
 	}
 
 	public static long getSerialversionuid() {

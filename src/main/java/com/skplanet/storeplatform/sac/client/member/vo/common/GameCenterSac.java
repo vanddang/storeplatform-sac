@@ -12,7 +12,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 2. 10. Updated by : 반범진, 지티소프트.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class GameCenter extends CommonInfo {
+public class GameCenterSac extends CommonInfo {
 
 	/**
 	 * 
@@ -26,10 +26,10 @@ public class GameCenter extends CommonInfo {
 	private String systemId;
 
 	/**
-	 * tenanId.
+	 * tenantId.
 	 */
 	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
-	private String tenanId;
+	private String tenantId;
 
 	/**
 	 * 내부_사용자회원_번호.
@@ -56,7 +56,6 @@ public class GameCenter extends CommonInfo {
 	/**
 	 * 상태_코드.
 	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String statusCd;
 
 	/**
@@ -87,18 +86,18 @@ public class GameCenter extends CommonInfo {
 	}
 
 	/**
-	 * @return tenanId
+	 * @return tenantId
 	 */
-	public String getTenanId() {
-		return this.tenanId;
+	public String getTenantId() {
+		return this.tenantId;
 	}
 
 	/**
-	 * @param tenanId
+	 * @param tenantId
 	 *            String
 	 */
-	public void setTenanId(String tenanId) {
-		this.tenanId = tenanId;
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	/**

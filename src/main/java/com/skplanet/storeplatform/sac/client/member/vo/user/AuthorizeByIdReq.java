@@ -72,7 +72,7 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	/**
 	 * 휴대기기 부가정보 리스트.
 	 */
-	private List<DeviceExtraInfo> userDeviceExtraInfo;
+	private List<DeviceExtraInfo> deviceExtraInfoList;
 
 	/**
 	 * @return deviceId
@@ -165,18 +165,18 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return userDeviceExtraInfo
+	 * @return deviceExtraInfoList
 	 */
-	public List<DeviceExtraInfo> getUserDeviceExtraInfo() {
-		return this.userDeviceExtraInfo;
+	public List<DeviceExtraInfo> getDeviceExtraInfoList() {
+		return this.deviceExtraInfoList;
 	}
 
 	/**
-	 * @param userDeviceExtraInfo
+	 * @param deviceExtraInfoList
 	 *            List<DeviceExtraInfo>
 	 */
-	public void setUserDeviceExtraInfo(List<DeviceExtraInfo> userDeviceExtraInfo) {
-		this.userDeviceExtraInfo = userDeviceExtraInfo;
+	public void setDeviceExtraInfoList(List<DeviceExtraInfo> deviceExtraInfoList) {
+		this.deviceExtraInfoList = deviceExtraInfoList;
 	}
 
 	/**
