@@ -282,6 +282,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				product.setEncryption(encryption);
 			}
 
+			// 테스트를 위한 복호화 확인
 			try {
 				Encryption testEn = new Encryption();
 				testEn = product.getEncryption();
