@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq;
@@ -230,7 +229,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 			identifier = new Identifier();
 			identifier.setType(DisplayConstants.DP_DOWNLOAD_IDENTIFIER_CD);
-			identifier.setText(StringUtil.isEmpty(metaInfo.getOutsdContentsId()) ? "" : metaInfo.getOutsdContentsId());
+			identifier.setText(metaInfo.getMusicId());
 			List<Source> mussicSourceList = new ArrayList<Source>();
 			source = new Source();
 			source.setSize(metaInfo.getFileSize());

@@ -145,6 +145,7 @@ public class MetaInfo {
 	private String updDt;
 
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
+	private String musicId;
 	private String rankChgCnt;
 	private String mp3SprtYn;
 	private String bellSprtYn;
@@ -2084,6 +2085,21 @@ public class MetaInfo {
 	 */
 	public void setIconYn(String iconYn) {
 		this.iconYn = iconYn;
+	}
+
+	/**
+	 * @return the musicId
+	 */
+	public String getMusicId() {
+		return this.musicId;
+	}
+
+	/**
+	 * @param musicId
+	 *            the musicId to set
+	 */
+	public void setMusicId(String musicId) {
+		this.musicId = musicId;
 	}
 
 	/**

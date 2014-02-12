@@ -43,7 +43,7 @@
 			      , KA.AID
 			      , KA.PROD_NM
 			      , KA.PROD_BASE_DESC
-			      , KA.PROD_CHRG_YN AS PROD_CHRG
+			      , DECODE(KA.PROD_CHRG_YN, 'Y', 'paid', 'free') AS PROD_CHRG
 			      , KA.PROD_GRD_CD
 			      , KA.CONTENTS_TYPE_CD
 			      , KA.META_CLSF_CD
@@ -295,6 +295,8 @@
 		                          , MAX( JA.PLAY_PROD_AMT ) AS PLAY_PROD_AMT
 		                          , MAX( JA.STORE_DRM_YN ) AS STORE_DRM_YN
 		                          , MAX( JA.PLAY_DRM_YN ) AS PLAY_DRM_YN
+			                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS STORE_PROD_CHRG
+			                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG		                          
 		                          , MAX( JA.BTV_YN ) AS BTV_YN
 		                          , MAX( JA.HDCP_YN ) AS HDCP_YN
 		                          , MAX( JA.HDV_YN ) AS HDV_YN
@@ -351,7 +353,8 @@
 		                                  , IA.SELLER_MBR_NO
 		                                  , IA.EXPO_SELLER_NM
 		                                  , IA.EXPO_SELLER_TELNO
-		                                  , IA.EXPO_SELLER_EMAIL                                  
+		                                  , IA.EXPO_SELLER_EMAIL 
+		                                  , IA.PROD_CHRG_YN                                 
 		                                  , IA.DOLBY_SPRT_YN
 		                                  , IA.DOLBY_YN
 		                                  , IA.NM_SUB_CONTS_DB
@@ -368,13 +371,13 @@
 		                                    SELECT A.MENU_ID
 		                                         , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC T WHERE T.MENU_ID = A.MENU_ID AND LANG_CD=#{langCd}) AS MENU_NM                                    
 		                                         , D.PROD_ID AS CHNL_PROD_ID
-		                                         , E.BTV_YN
-		                                         , E.HDCP_YN
-		                                         , E.HDV_YN
-		                                         , E.DWLD_AREA_LIMT_YN
-		                                         , E.DOLBY_SPRT_YN                                         
-		                                         , E.DWLD_NETWORK_CD 
-		                                         , E.STRM_NETWORK_CD                                          
+                                                 , P.BTV_YN
+                                                 , E.HDCP_YN
+                                                 , E.HDV_YN
+                                                 , P.DWLD_AREA_LIMT_YN
+                                                 , E.DOLBY_SPRT_YN                                         
+                                                 , E.DWLD_NETWORK_CD 
+                                                 , E.STRM_NETWORK_CD                                          
 		                                         , Q.PROD_NM 
 		                                         , J.CID
 		                                         , J.PROD_ID                           
@@ -397,6 +400,7 @@
 		                                         , J.EXPO_SELLER_NM
 		                                         , J.EXPO_SELLER_TELNO
 		                                         , J.EXPO_SELLER_EMAIL  
+		                                         , J.PROD_CHRG_YN
 		                                         , L.DOLBY_SPRT_YN AS DOLBY_YN
 		                                         , ( CASE WHEN ( M.AUDIO_TYPE_CD = 'PD002215' AND M.DP_PG_QULT_CD = 'PD009701' ) THEN
 		                                                  M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||M.BTV_CID
@@ -738,6 +742,7 @@
     <select id="getDownloadMusicInfo" parameterType="DownloadMusicSacReq" resultType="MetaInfo">
 		SELECT /* DownloadMapper.xml, getDownloadMusicInfo, SAC : 이석희 , 2014-02-03 */
 		        TA.PROD_ID
+		      , TA.MUSIC_ID
 		      , TA.OUTSD_CONTENTS_ID
 		      , TA.PROD_NM
 		      , TA.PROD_GRD_CD
@@ -780,10 +785,10 @@
 		             , MAX(DECODE( M.DP_PG_QULT_CD, 'PD009711', M.FILE_SIZE ) ) AS FILE_SIZE_H
 		             , MAX(DECODE( M.DP_PG_QULT_CD, 'PD009712', M.FILE_SIZE ) ) AS FILE_SIZE                  
 		             , MAX(Q.PROD_NM) AS PROD_NM
+		             , MAX(R.MUSIC_ID) AS MUSIC_ID
 		          FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
 		             , TB_DP_MENU_CATEGORY           B
 		             , TB_DP_PROD                    D
-		             , UV_TB_DP_MULTIMDA_PROD        E
 		             , TB_DP_TENANT_PROD             G
 		             , TB_DP_PROD_RSHP               I
 		             , TB_DP_PROD                    J
@@ -794,9 +799,9 @@
 		             , TB_DP_TENANT_PROD_PRICE       O
 		             , UV_TB_DP_MULTIMDA_PROD        P
 		             , TB_DP_PROD_DESC               Q
+		             , TB_DP_CHART_PROD_MAPG         R
 		         WHERE A.MENU_ID = B.MENU_ID
 		           AND A.PROD_ID = D.PROD_ID
-		           AND D.PROD_ID = E.PROD_ID  
 		           AND D.PROD_ID = G.PROD_ID                                                                              
 		           AND D.PROD_ID = I.PROD_ID
 		           AND I.PART_PROD_ID = J.PROD_ID
@@ -808,7 +813,8 @@
 		           AND N.TENANT_ID = #{tenantId}
 		           AND N.TENANT_ID = O.TENANT_ID                                         
 		           AND J.PROD_ID = P.PROD_ID
-		           AND J.PROD_ID = Q.PROD_ID                                     
+		           AND J.PROD_ID = Q.PROD_ID 
+		           AND J.PROD_ID = R.PROD_ID                                    
 		           AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
 		           AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
 		           AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
