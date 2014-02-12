@@ -43,6 +43,7 @@
 			      , KA.AID
 			      , KA.PROD_NM
 			      , KA.PROD_BASE_DESC
+			      , KA.PROD_CHRG_YN AS PROD_CHRG
 			      , KA.PROD_GRD_CD
 			      , KA.CONTENTS_TYPE_CD
 			      , KA.META_CLSF_CD
@@ -51,6 +52,7 @@
                   , KA.EXPO_SELLER_TELNO
                   , KA.EXPO_SELLER_EMAIL			      
 			      , KA.PART_PARENT_CLSF_CD
+			      , KA.DRM_YN
 			      , DECODE( KA.PROD_CLSF_CD , 'PD000601', 'paid' , 'PD000602', 'library' , 'PD000603', 'vm' , 'PD000604', 'free' , 'PD000605', 'paid-rss' , 'PD000606', 'free-rss' , 'paid' ) AS PROD_CLSF_CD
 			--      , KA.PROD_CLSF_CD
 			      , KA.VER_MAJOR || '.' || KA.VER_MINOR AS PROD_VER
@@ -95,7 +97,8 @@
                            , D.SELLER_MBR_NO
                            , D.EXPO_SELLER_NM
                            , D.EXPO_SELLER_TELNO
-                           , D.EXPO_SELLER_EMAIL 			               
+                           , D.EXPO_SELLER_EMAIL
+                           , D.DRM_YN 			               
 			               , E.AID
 			               , E.VER_MAJOR
 			               , E.VER_MINOR
@@ -159,7 +162,8 @@
 			   AND  KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID(+)
 			   AND  KA.PROD_ID = KC.PROD_ID
                AND  KB.SALE_YN = 'Y'
-			   
+               AND  KB.VM_VER  LIKE '%'||#{osVersion}||'%' /* Provisioning OS VERSION 체크 */
+               AND  KB.LCD_SIZE LIKE '%'|| (SELECT REPLACE(#{lcdSize}, '*', 'X') FROM DUAL) ||'%' /* Provisioning  LCD SIZE 체크 */			   
 			   AND  KC.EXPO_ORD = '1'
 			   AND  KC.LANG_CD = #{langCd}
 			   AND  KC.IMG_CD = #{imageCd} 
