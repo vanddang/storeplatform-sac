@@ -37,7 +37,7 @@
               AND TP.PROD_ID = P.PROD_ID
               AND P2.PROD_ID = PR.PART_PROD_ID -- EPISODE
               AND TP2.PROD_ID = P2.PROD_ID
-              AND SH.PROD_ID = P.PROD_ID  -- AND SH.PROD_ID = P2.PART_PROD_ID <![CDATA[<-]]> AS IS 쿼리 기준으로 EPISODE PROD ID 로 연결되어야 하나, 데이타가 한건도 나오지 않음...
+              AND SH.PROD_ID = P2.PROD_ID
               AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
               AND CP.USE_YN = 'Y'
               AND C.USE_YN = 'Y'
@@ -99,6 +99,7 @@
  
      <select id="getRelProdList" resultType="java.util.HashMap" parameterType="java.util.Map">
 		    SELECT /* IsfAppCodiMapper.xml, getRelProdList, Yun JuYoung, 2014-02-06 */
+		           DISTINCT 
 		           P.TOP_MENU_ID
 		         , CP.PROD_ID
 		         , PD.PROD_NM
