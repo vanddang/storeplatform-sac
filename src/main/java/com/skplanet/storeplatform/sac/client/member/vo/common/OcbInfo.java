@@ -1,56 +1,47 @@
-package com.skplanet.storeplatform.sac.client.member.vo.user;
-
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.NotEmpty;
+package com.skplanet.storeplatform.sac.client.member.vo.common;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [REQUEST] 회원 OCB 정보 등록/수정
+ * OCB 정보
  * 
- * Updated on : 2014. 1. 6. Updated by : 심대진, 다모아 솔루션.
+ * Updated on : 2014. 2. 12. Updated by : 심대진, 다모아 솔루션.
  */
-public class CreateOcbInformationReq extends CommonInfo {
+public class OcbInfo extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 사용자 고유 Key.
-	 */
-	@NotEmpty
 	private String userKey = "";
 
 	/**
 	 * 인증방법 코드.
 	 */
-	@NotEmpty
 	private String authMethodCode = "";
 
 	/**
 	 * 카드 번호.
 	 */
-	@NotEmpty
 	private String cardNumber = "";
 
 	/**
 	 * 사용시작 일시.
 	 */
-	@NotEmpty
 	private String startDate = "";
 
 	/**
 	 * 사용종료 일시.
 	 */
-	@NotEmpty
 	private String endDate = "";
 
 	/**
 	 * 사용여부 (Y/N).
 	 */
-	@Pattern(regexp = "^Y|N")
-	@NotEmpty
 	private String isUsed = "";
+
+	/**
+	 * 등록 일시.
+	 */
+	private String regDate = "";
 
 	/**
 	 * @return String : userKey
@@ -140,6 +131,21 @@ public class CreateOcbInformationReq extends CommonInfo {
 	 */
 	public void setIsUsed(String isUsed) {
 		this.isUsed = isUsed;
+	}
+
+	/**
+	 * @return String : regDate
+	 */
+	public String getRegDate() {
+		return this.regDate;
+	}
+
+	/**
+	 * @param regDate
+	 *            String : the regDate to set
+	 */
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
 	}
 
 }

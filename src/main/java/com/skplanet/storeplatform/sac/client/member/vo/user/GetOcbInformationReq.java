@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -10,5 +12,23 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class GetOcbInformationReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+
+	@NotEmpty
+	private String userKey = "";
+
+	/**
+	 * @return String : userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            String : the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
 
 }

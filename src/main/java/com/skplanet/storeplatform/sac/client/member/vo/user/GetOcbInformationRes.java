@@ -1,9 +1,12 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
 
 /**
  * [RESPONSE] 회원 OCB 정보 조회
@@ -15,82 +18,20 @@ public class GetOcbInformationRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 사용자 고유 Key
-	 */
-	private String userKey;
+	private List<OcbInfo> ocbInfoList = null;
 
 	/**
-	 * 인증수단 코드 - OR003400 : 비인증 - OR003401 : 카드번호인증 - OR003402 : 주민번호인증
+	 * @return List<OcbInfo> : ocbInfoList
 	 */
-	private String ocbAuthMtdCd;
+	public List<OcbInfo> getOcbInfoList() {
+		return this.ocbInfoList;
+	}
 
 	/**
-	 * 사용 여부
+	 * @param ocbInfoList
+	 *            List<OcbInfo> : the ocbInfoList to set
 	 */
-	private String useYn;
-
-	/**
-	 * 암호화된 OCB 번호
-	 */
-	private String ocbNo;
-
-	/**
-	 * 사용자 시작일자 (YYYYMMDD)
-	 */
-	private String useStartDt;
-
-	/**
-	 * 사용 종료일자 (YYYYMMDD)
-	 */
-	private String useEndDt;
-
-	public String getUserKey() {
-		return this.userKey;
+	public void setOcbInfoList(List<OcbInfo> ocbInfoList) {
+		this.ocbInfoList = ocbInfoList;
 	}
-
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
-	}
-
-	public String getOcbAuthMtdCd() {
-		return this.ocbAuthMtdCd;
-	}
-
-	public void setOcbAuthMtdCd(String ocbAuthMtdCd) {
-		this.ocbAuthMtdCd = ocbAuthMtdCd;
-	}
-
-	public String getUseYn() {
-		return this.useYn;
-	}
-
-	public void setUseYn(String useYn) {
-		this.useYn = useYn;
-	}
-
-	public String getOcbNo() {
-		return this.ocbNo;
-	}
-
-	public void setOcbNo(String ocbNo) {
-		this.ocbNo = ocbNo;
-	}
-
-	public String getUseStartDt() {
-		return this.useStartDt;
-	}
-
-	public void setUseStartDt(String useStartDt) {
-		this.useStartDt = useStartDt;
-	}
-
-	public String getUseEndDt() {
-		return this.useEndDt;
-	}
-
-	public void setUseEndDt(String useEndDt) {
-		this.useEndDt = useEndDt;
-	}
-
 }
