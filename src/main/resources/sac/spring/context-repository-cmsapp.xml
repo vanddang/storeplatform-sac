@@ -17,6 +17,18 @@
                            http://www.springframework.org/schema/aop
                            http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
 
+    <tx:advice id="transactionAdviceForCmsApp" transaction-manager="transactionManagerForCmsApp" >
+        <tx:attributes>
+           <tx:method name="create*" propagation="REQUIRED" read-only="false" />
+           <tx:method name="update*" propagation="REQUIRED" read-only="false" />
+           <tx:method name="remove*" propagation="REQUIRED" read-only="false" />
+           <tx:method name="*"       propagation="REQUIRED" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+       <aop:pointcut id="requiredTransactionForCmsApp" expression="execution(* com.skplanet.storeplatform.sac..*ServiceImpl.*(..))" />
+       <aop:advisor advice-ref="transactionAdviceForCmsApp" pointcut-ref="requiredTransactionForCmsApp"  />
+    </aop:config>
     
     <bean id="transactionManagerForCmsApp" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="defaultDataSourceForCmsApp" />
