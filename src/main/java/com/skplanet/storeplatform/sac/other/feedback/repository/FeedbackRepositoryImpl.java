@@ -160,8 +160,18 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	}
 
 	@Override
+	public ProdNoti getProdNoti(ProdNoti prodNoti) {
+		return this.commonDAO.queryForObject("Feedback.getProdNotiList", prodNoti, ProdNoti.class);
+	}
+
+	@Override
 	public Object getProdNotiCount(ProdNoti prodNoti) {
 		return this.commonDAO.queryForInt("Feedback.getProdNotiCount", prodNoti);
+	}
+
+	@Override
+	public List<ProdNoti> getMyProdNotiList(ProdNoti prodNoti) {
+		return this.commonDAO.queryForList("Feedback.getMyProdNotiList", prodNoti, ProdNoti.class);
 	}
 
 	@Override
@@ -173,4 +183,5 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	public Object updateSellerRespWD(ProdNoti prodNoti) {
 		return this.commonDAO.update("Feedback.updateSellerRespWD", prodNoti);
 	}
+
 }

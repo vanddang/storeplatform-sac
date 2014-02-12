@@ -291,30 +291,6 @@ public interface FeedbackRepository {
 	/**
 	 * 
 	 * <pre>
-	 * 판매자 댓글 등록/수정/삭제.
-	 * </pre>
-	 * 
-	 * @param prodNoti
-	 *            prodNoti
-	 * @return Object
-	 */
-	public Object updateSellerResp(ProdNoti prodNoti);
-
-	/**
-	 * 
-	 * <pre>
-	 * 탈퇴회원 판매자 댓글 등록/수정/삭제.
-	 * </pre>
-	 * 
-	 * @param prodNoti
-	 *            prodNoti
-	 * @return Object
-	 */
-	public Object updateSellerRespWD(ProdNoti prodNoti);
-
-	/**
-	 * 
-	 * <pre>
 	 * (일반회원 사용후기) 기 추천 여부.
 	 * </pre>
 	 * 
@@ -351,6 +327,18 @@ public interface FeedbackRepository {
 	/**
 	 * 
 	 * <pre>
+	 * 사용후기 추천후 상품정보 조회.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return ProdNoti
+	 */
+	public ProdNoti getProdNoti(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
 	 * 사용후기 리스트 카운트 조회.
 	 * </pre>
 	 * 
@@ -359,5 +347,41 @@ public interface FeedbackRepository {
 	 * @return prodNoti
 	 */
 	public Object getProdNotiCount(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 자기가 작성한 사용후기.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return List<ProdNoti>
+	 */
+	public List<ProdNoti> getMyProdNotiList(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 판매자 댓글 등록/수정/삭제.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object updateSellerResp(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 탈퇴회원 판매자 댓글 등록/수정/삭제.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object updateSellerRespWD(ProdNoti prodNoti);
 
 }

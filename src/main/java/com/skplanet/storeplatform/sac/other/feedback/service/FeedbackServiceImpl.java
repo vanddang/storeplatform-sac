@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFe
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.Feedback;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.FeedbackMy;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacReq;
@@ -180,7 +182,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		prodNoti.setNotiSeq(removeFeedbackSacReq.getNotiSeq());
-		prodNoti.setNotiDscr(StringUtils.EMPTY);
+		// 삭제는 DEL_YN만 셋팅해준다.
+		// prodNoti.setNotiDscr(StringUtils.EMPTY);
 		prodNoti.setMbrNo(removeFeedbackSacReq.getUserKey());
 		int affectedRow = (Integer) this.feedbackRepository.deleteProdNoti(prodNoti);
 		if (affectedRow <= 0) {
@@ -197,68 +200,80 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public CreateRecommendFeedbackSacRes createRecommend(CreateRecommendFeedbackSacReq createRecommendFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
 
-		// ProdNoti prodNoti = new ProdNoti();
-		// prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		// prodNoti.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
-		// prodNoti.setProdId(createRecommendFeedbackReq.getProdId());
-		// prodNoti.setMbrNo(createRecommendFeedbackReq.getUserKey());
-		// // 탈퇴회원 사용후기 여부 조회
-		// int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
-		//
-		// if (count > 0) {
-		// // 기 추천여부
-		// count = (Integer) this.feedbackRepository.getProdNotiWDGoodCount(prodNoti);
-		//
-		// if (count > 0) {
-		// throw new StorePlatformException("SAC_OTH_1001");
-		// }
-		//
-		// ProdNotiGood prodNotiGood = new ProdNotiGood();
-		// prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		// prodNotiGood.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
-		// prodNotiGood.setMbrNo(createRecommendFeedbackReq.getUserKey());
-		// prodNotiGood.setRegId(createRecommendFeedbackReq.getUserId());
-		// int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1001");
-		// }
-		//
-		// prodNotiGood.setAction("create");
-		// affectedRow = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1002");
-		// }
-		// } else {
-		//
-		// count = (Integer) this.feedbackRepository.getProdNotiGoodCount(prodNoti);
-		//
-		// if (count > 0) {
-		// throw new StorePlatformException("SAC_OTH_1001");
-		// }
-		//
-		// ProdNotiGood prodNotiGood = new ProdNotiGood();
-		// prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		// prodNotiGood.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
-		// prodNotiGood.setMbrNo(createRecommendFeedbackReq.getUserKey());
-		// prodNotiGood.setRegId(createRecommendFeedbackReq.getUserId());
-		// int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1001");
-		// }
-		//
-		// prodNotiGood.setAction("create");
-		// affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1002");
-		// }
-		// }
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNoti.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
+		prodNoti.setProdId(createRecommendFeedbackReq.getProdId());
+		prodNoti.setMbrNo(createRecommendFeedbackReq.getUserKey());
+		// 탈퇴회원 사용후기 여부 조회
+		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+
+		if (count > 0) {
+			// 기 추천여부
+			count = (Integer) this.feedbackRepository.getProdNotiWDGoodCount(prodNoti);
+
+			if (count > 0) {
+				throw new StorePlatformException("SAC_OTH_1001");
+			}
+
+			ProdNotiGood prodNotiGood = new ProdNotiGood();
+			prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+			prodNotiGood.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
+			prodNotiGood.setMbrNo(createRecommendFeedbackReq.getUserKey());
+			prodNotiGood.setRegId(createRecommendFeedbackReq.getUserId());
+			int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
+
+			if (affectedRow <= 0) {
+				throw new StorePlatformException("SAC_OTH_1001");
+			}
+
+			prodNotiGood.setAction("create");
+			affectedRow = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
+
+			if (affectedRow <= 0) {
+				throw new StorePlatformException("SAC_OTH_1002");
+			}
+		} else {
+
+			count = (Integer) this.feedbackRepository.getProdNotiGoodCount(prodNoti);
+
+			if (count > 0) {
+				throw new StorePlatformException("SAC_OTH_1001");
+			}
+
+			ProdNotiGood prodNotiGood = new ProdNotiGood();
+			prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+			prodNotiGood.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
+			prodNotiGood.setMbrNo(createRecommendFeedbackReq.getUserKey());
+			prodNotiGood.setRegId(createRecommendFeedbackReq.getUserId());
+			int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
+
+			if (affectedRow <= 0) {
+				throw new StorePlatformException("SAC_OTH_1001");
+			}
+
+			prodNotiGood.setAction("create");
+			affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
+
+			if (affectedRow <= 0) {
+				throw new StorePlatformException("SAC_OTH_1002");
+			}
+		}
+
+		// 추천은 현재 수정 반영된 1건만 조회.
+		prodNoti.setStartRow("1");
+		prodNoti.setEndRow("1");
+		ProdNoti res = this.feedbackRepository.getProdNoti(prodNoti);
+
+		if (res == null) {
+			throw new StorePlatformException("SAC_OTH_9001");
+		}
+
+		Feedback feedback = this.setFeedback(res);
 
 		CreateRecommendFeedbackSacRes createRecommendFeedbackSacRes = new CreateRecommendFeedbackSacRes();
-		createRecommendFeedbackSacRes.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
+		BeanUtils.copyProperties(feedback, createRecommendFeedbackSacRes);
+
 		return createRecommendFeedbackSacRes;
 	}
 
@@ -266,79 +281,160 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public RemoveRecommendFeedbackSacRes removeRecommend(RemoveRecommendFeedbackSacReq removeRecommendFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
 
-		// ProdNoti prodNoti = new ProdNoti();
-		// prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		// prodNoti.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
-		// prodNoti.setProdId(removeRecommendFeedbackSacReq.getProdId());
-		// prodNoti.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
-		// // 탈퇴회원 사용후기 여부 조회
-		// int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
-		//
-		// if (count > 0) {
-		// ProdNotiGood prodNotiGood = new ProdNotiGood();
-		// prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		// prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
-		// int affectedRow = (Integer) this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1003");
-		// }
-		//
-		// prodNotiGood.setAction("remove");
-		// affectedRow = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1002");
-		// }
-		//
-		// } else {
-		// ProdNotiGood prodNotiGood = new ProdNotiGood();
-		// prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		// prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
-		// int affectedRow = (Integer) this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1003");
-		// }
-		//
-		// prodNotiGood.setAction("remove");
-		// affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1002");
-		// }
-		// }
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNoti.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
+		prodNoti.setProdId(removeRecommendFeedbackSacReq.getProdId());
+		prodNoti.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
+		// 탈퇴회원 사용후기 여부 조회
+		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+
+		if (count > 0) {
+			ProdNotiGood prodNotiGood = new ProdNotiGood();
+			prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+			prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
+			int affectedRow = (Integer) this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
+
+			if (affectedRow <= 0) {
+				throw new StorePlatformException("SAC_OTH_1003");
+			}
+
+			prodNotiGood.setAction("remove");
+			affectedRow = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
+
+			if (affectedRow <= 0) {
+				throw new StorePlatformException("SAC_OTH_1002");
+			}
+
+		} else {
+			ProdNotiGood prodNotiGood = new ProdNotiGood();
+			prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+			prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
+			int affectedRow = (Integer) this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
+
+			if (affectedRow <= 0) {
+				throw new StorePlatformException("SAC_OTH_1003");
+			}
+
+			prodNotiGood.setAction("remove");
+			affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
+
+			if (affectedRow <= 0) {
+				throw new StorePlatformException("SAC_OTH_1002");
+			}
+		}
+
+		// 추천 취소는 현재 수정된 1건만 조회.
+		prodNoti.setStartRow("1");
+		prodNoti.setEndRow("1");
+		ProdNoti res = this.feedbackRepository.getProdNoti(prodNoti);
+
+		if (res == null) {
+			throw new StorePlatformException("SAC_OTH_9001");
+		}
+
+		Feedback feedback = this.setFeedback(res);
 
 		RemoveRecommendFeedbackSacRes removeRecommendFeedbackSacRes = new RemoveRecommendFeedbackSacRes();
-		removeRecommendFeedbackSacRes.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
+		BeanUtils.copyProperties(feedback, removeRecommendFeedbackSacRes);
+
 		return removeRecommendFeedbackSacRes;
 	}
 
 	@Override
 	public ListFeedbackSacRes list(ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
-		// totcal count
-		// offset
-		// count
-
-		// 페이징 계산식?
+		// ProdNoti prodNoti = new ProdNoti();
+		//
+		// prodNoti.setProdId(listFeedbackSacReq.getProdId());
+		// prodNoti.setMbrNo(listFeedbackSacReq.getUserKey());
+		// prodNoti.setOrderedBy(listFeedbackSacReq.getOrderedBy());
+		// prodNoti.setChnlId(listFeedbackSacReq.getChnlId());
+		// prodNoti.setProdType(listFeedbackSacReq.getProdType());
+		//
+		// // ?? 남과장님 평점 호출하기.
+		// // 평점, 다운로드, 사용후기 갯수 정보
+		// // Map<String, String> mapProd = (Map<String, String>) queryForObject("common.getProdEvalInfo", param);
+		// ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
+		// listFeedbackRes.setAvgEvluScorePct("80.00");
+		// listFeedbackRes.setAvgEvluScore("2");
+		// listFeedbackRes.setDwldCnt("11103");
+		// listFeedbackRes.setParticpersCnt("105");
+		//
+		// int offset = listFeedbackSacReq.getOffset() == 0 ? 1 : listFeedbackSacReq.getOffset();
+		// int count = listFeedbackSacReq.getCount() == 0 ? 10 : (offset + listFeedbackSacReq.getCount()) - 1;
+		//
+		// prodNoti.setStartRow(String.valueOf(offset));
+		// prodNoti.setEndRow(String.valueOf(count));
+		//
+		// List<ProdNoti> prodNotiList = this.feedbackRepository.getProdNotiList(prodNoti);
+		//
+		// if (CollectionUtils.isEmpty(prodNotiList)) {
+		// throw new StorePlatformException("SAC_OTH_9001");
+		// }
+		//
+		// List<Feedback> notiList = new ArrayList<Feedback>();
+		//
+		// for (ProdNoti res : prodNotiList) {
+		// notiList.add(this.setFeedback(res));
+		// }
+		//
+		// int totalCount = (Integer) this.feedbackRepository.getProdNotiCount(prodNoti);
+		// listFeedbackRes.setNotiTot(String.valueOf(totalCount));
+		// listFeedbackRes.setNotiList(notiList);
 
 		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
 		listFeedbackRes.setAvgEvluScorePct("80.00");
-		listFeedbackRes.setNotiTot("10");
+		listFeedbackRes.setNotiTot("100");
 		listFeedbackRes.setAvgEvluScore("2");
 		listFeedbackRes.setDwldCnt("11103");
 		listFeedbackRes.setParticpersCnt("105");
+
 		listFeedbackRes.setNotiList(this.getFeedbackList());
+
 		return listFeedbackRes;
 	}
 
 	@Override
 	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
+
+		// ProdNoti prodNoti = new ProdNoti();
+		//
+		// prodNoti.setProdIds(Arrays.asList((StringUtils.split(listMyFeedbackSacReq.getProdIds(), ","))));
+		// prodNoti.setMbrNo(listMyFeedbackSacReq.getUserKey());
+		// prodNoti.setChnlId(listMyFeedbackSacReq.getChnlId());
+		// prodNoti.setProdType(listMyFeedbackSacReq.getProdType());
+		//
+		// int offset = listMyFeedbackSacReq.getOffset() == 0 ? 1 : listMyFeedbackSacReq.getOffset();
+		// int count = listMyFeedbackSacReq.getCount() == 0 ? 100 : (offset + listMyFeedbackSacReq.getCount()) - 1;
+		//
+		// prodNoti.setStartRow(String.valueOf(offset));
+		// prodNoti.setEndRow(String.valueOf(count));
+		//
+		// List<ProdNoti> prodNotiList = this.feedbackRepository.getMyProdNotiList(prodNoti);
+		//
+		// List<FeedbackMy> notiList = new ArrayList<FeedbackMy>();
+		//
+		// for (ProdNoti res : prodNotiList) {
+		// Feedback feedback = this.setFeedback(res);
+		// FeedbackMy feedbackMy = new FeedbackMy();
+		// feedbackMy.setTotalCount(res.getTotalCount());
+		// BeanUtils.copyProperties(feedback, feedbackMy);
+		// notiList.add(feedbackMy);
+		// }
+
+		List<Feedback> notiList = this.getFeedbackList();
+		List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
+		for (Feedback res : notiList) {
+			FeedbackMy feedbackMy = new FeedbackMy();
+			feedbackMy.setTotalCount("10");
+			BeanUtils.copyProperties(res, feedbackMy);
+			notiMyList.add(feedbackMy);
+		}
+
 		ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
-		listMyFeedbackRes.setNotiTot("10");
-		listMyFeedbackRes.setNotiList(this.getFeedbackList());
+		listMyFeedbackRes.setNotiList(notiMyList);
 		return listMyFeedbackRes;
 	}
 
@@ -611,5 +707,61 @@ public class FeedbackServiceImpl implements FeedbackService {
 				this.feedbackRepository.mergeTenantProdStats(updateTenantProdStats);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 * @return
+	 */
+	private Feedback setFeedback(ProdNoti prodNoti) {
+		Feedback feedback = new Feedback();
+		feedback.setNotiSeq(prodNoti.getNotiSeq());
+		feedback.setUserKey(prodNoti.getMbrNo());
+		feedback.setSellerKey(prodNoti.getSellerMbrNo());
+		feedback.setNotiTitle(prodNoti.getTitle());
+		feedback.setNotiDscr(prodNoti.getNotiDscr());
+		feedback.setNotiScore(String.valueOf(prodNoti.getNotiScore()));
+
+		// ?? 회원 SCI 연동후, 해당 ID가 기기사용자일경우, mdn을 별표처리한다. 그외는 regId를 셋팅한다.
+		String regId = "";
+		if (StringUtils.contains(prodNoti.getMbrNo(), "IW") && StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
+			String telNo = prodNoti.getMbrTelno();
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append(StringUtils.substring(telNo, 0, 3));
+			if (telNo.length() < 11) {
+				stringBuffer.append("***");
+			} else {
+				stringBuffer.append("****");
+			}
+			regId = stringBuffer.append(StringUtils.substring(telNo, telNo.length() - 4, telNo.length())).toString();
+		} else {
+			regId = prodNoti.getRegId();
+		}
+
+		feedback.setRegId(regId);
+		feedback.setRegDt(prodNoti.getRegDt());
+		feedback.setSellerRespTitle(prodNoti.getSellerRespTitle());
+		feedback.setSellerRespOpin(prodNoti.getSellerRespOpin());
+		feedback.setSellerRespRegDt(prodNoti.getSellerRespRegDt());
+		feedback.setCid(prodNoti.getCid());
+		feedback.setSelfYn(prodNoti.getSelfYn());
+		feedback.setSaleYn(prodNoti.getSaleYn());
+		feedback.setWhose(prodNoti.getWhose());
+		feedback.setSelfRecomYn(prodNoti.getNotiYn());
+		feedback.setAvgScore(prodNoti.getAvgScore());
+
+		// ?? 판매자 회원 SCI 연동.
+		feedback.setNickNm("회원SCI 연동준비.");
+		feedback.setFbPostYn(prodNoti.getFbPostYn());
+		feedback.setProdId(prodNoti.getProdId());
+		// ?? 판매자 회원 SCI 연동
+		feedback.setCompNm("회원SCI 연동준비.");
+
+		return feedback;
 	}
 }

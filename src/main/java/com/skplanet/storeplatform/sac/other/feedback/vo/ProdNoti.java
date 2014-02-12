@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.other.feedback.vo;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -67,6 +69,7 @@ public class ProdNoti extends CommonInfo {
 	private String chnlId;
 	private String prodType;
 	private String orderedBy;
+	private List<String> prodIds;
 
 	// 리스트 추가.
 	private String sellerMbrNo; // SELLER_MBR_NO
@@ -76,6 +79,8 @@ public class ProdNoti extends CommonInfo {
 	private String whose; // WHOSE
 	private String notiYn; // NOTI_YN
 	private String avgScore; // AVG_SCORE
+	private String expoSellerNm;
+	private String totalCount;
 
 	// paging
 	private String startRow;
@@ -697,6 +702,21 @@ public class ProdNoti extends CommonInfo {
 	}
 
 	/**
+	 * @return List<String>
+	 */
+	public List<String> getProdIds() {
+		return this.prodIds;
+	}
+
+	/**
+	 * @param prodIds
+	 *            prodIds
+	 */
+	public void setProdIds(List<String> prodIds) {
+		this.prodIds = prodIds;
+	}
+
+	/**
 	 * @return String
 	 */
 	public String getSellerMbrNo() {
@@ -804,6 +824,21 @@ public class ProdNoti extends CommonInfo {
 	/**
 	 * @return String
 	 */
+	public String getExpoSellerNm() {
+		return this.expoSellerNm;
+	}
+
+	/**
+	 * @param expoSellerNm
+	 *            expoSellerNm
+	 */
+	public void setExpoSellerNm(String expoSellerNm) {
+		this.expoSellerNm = expoSellerNm;
+	}
+
+	/**
+	 * @return String
+	 */
 	public String getStartRow() {
 		return this.startRow;
 	}
@@ -829,6 +864,21 @@ public class ProdNoti extends CommonInfo {
 	 */
 	public void setEndRow(String endRow) {
 		this.endRow = endRow;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getTotalCount() {
+		return this.totalCount;
+	}
+
+	/**
+	 * @param totalCount
+	 *            totalCount
+	 */
+	public void setTotalCount(String totalCount) {
+		this.totalCount = totalCount;
 	}
 
 }
