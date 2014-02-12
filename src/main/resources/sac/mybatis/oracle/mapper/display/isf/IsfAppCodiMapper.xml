@@ -242,7 +242,7 @@
 		                          END )
 		                    ELSE P.PROD_AMT
 		               END ) AS PROD_AMT
-		          , P.PROD_NET_AMT
+		          , NVL(P.PROD_NET_AMT, 0) AS PROD_NET_AMT
 		          , DECODE( P.PROD_GRD_CD
 		                  , 'PD004401', 0
 		                  , 'PD004402', 1
