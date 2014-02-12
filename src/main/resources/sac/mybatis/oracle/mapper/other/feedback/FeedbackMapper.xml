@@ -144,7 +144,7 @@
         /* FeedbackMapper.xml, updateProdNoti, SAC : 김현일 , 2014-02-04 */
         UPDATE 
                TB_DP_PROD_NOTI
-           SET NOTI_DSCR = #{notiDscr}
+           SET
              , DEL_DT = SYSDATE
              , DEL_YN = 'Y'
          WHERE TENANT_ID = #{tenantId}
@@ -220,7 +220,7 @@
 	           </if>
 	           <if test="action == 'remove'">
 	           , PATICPERS_CNT = PATICPERS_CNT -1
-	           , AVG_EVLU_SCORE = ( ( TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore} ) / PATICPERS_CNT - 1 )
+	           , AVG_EVLU_SCORE = ( ( TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore} ) / (PATICPERS_CNT - 1) )
 	           </if>
 	     WHERE TENANT_ID = #{tenantId}
 	       AND PROD_ID = #{prodId}
@@ -422,10 +422,9 @@
            )              
     </select>
     
-    <!-- 사용후기 목록 조회 -->
+    <!-- 사용후기 전체 목록 조회 -->
     <select id="getProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
-    
-	    SELECT /* TStore_Common_SqlMap.xml, getFeedbackList, Lee Su Min, 2013-10-04 */
+	    SELECT /* FeedbackMapper.xml, getProdNotiList, SAC : 김현일 , 2014-02-04 */
 	            N.NOTI_SEQ
 	          , N.MBR_NO
 	          , N.SELLER_MBR_NO
@@ -453,6 +452,7 @@
 	          , ( SELECT AVG_SCORE FROM TB_DP_MBR_AVG WHERE PROD_ID = N.PROD_ID AND MBR_NO = N.MBR_NO ) AS AVG_SCORE
 	          , N.FB_POST_YN
 	          , N.PROD_ID
+	          , N.EXPO_SELLER_NM
 	       FROM
 	          (
 	          SELECT A.*
@@ -624,6 +624,171 @@
 	                 ) A
 	           WHERE A.RNUM BETWEEN #{startRow} AND #{endRow}
 	           ) N
+    </select>
+    
+    <!-- 자기가작성한 사용후기.  -->
+    <select id="getMyProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
+	    SELECT /* FeedbackMapper.xml, getProdNotiList, SAC : 김현일 , 2014-02-04 */
+	           N.TOTAL_COUNT
+	         , N.NOTI_SEQ
+	         , N.MBR_NO
+	         , N.SELLER_MBR_NO
+	         , NVL2( N.TITLE, N.TITLE, NVL2( N.NOTI_DSCR, NULL, DEFAULT_MSG ) ) AS TITLE
+	         , NVL2( N.NOTI_DSCR, N.NOTI_DSCR, DEFAULT_MSG ) AS NOTI_DSCR
+	         , NVL( N.NOTI_SCORE, 0 ) AS NOTI_SCORE
+	         , ( CASE WHEN INSTR( N.MBR_NO, 'IW' ) > 0 AND N.MBR_TELNO > ' ' THEN
+	                       SUBSTR( N.MBR_TELNO, 0, 3 )||( CASE WHEN LENGTH(N.MBR_TELNO) <![CDATA[<]]> 11 THEN '***' ELSE '****' END )||SUBSTR( N.MBR_TELNO, -4 )
+	                  ELSE N.REG_ID
+	              END ) AS REG_ID
+	         , TO_CHAR(N.REG_DT,'YYYYMMDDHH24MISS') AS REG_DT
+	         , N.SELLER_RESP_TITLE
+	         , N.SELLER_RESP_OPIN
+	         , NVL2( N.SELLER_RESP_OPIN, TO_CHAR(N.SELLER_RESP_REG_DT,'YYYYMMDDHH24MISS'), NULL ) AS SELLER_RESP_REG_DT
+	         , N.CID
+	         , 'mine' AS WHOSE
+	         , ( CASE WHEN ( SELECT COUNT(*)
+	                           FROM TB_DP_PROD_NOTIGOOD NG
+	                          WHERE NG.MBR_NO = #{mbrNo}
+	                            AND NG.NOTI_SEQ = N.NOTI_SEQ ) > 0 THEN 'Y'
+	                  ELSE 'N'
+	              END ) AS NOTI_YN
+	         , N.AVG_SCORE
+	         , N.FB_POST_YN
+	         , N.PROD_ID
+	         , N.EXPO_SELLER_NM
+	      FROM
+	         (
+	         SELECT N.*
+	              , DECODE( N.AVG_SCORE
+	                      , 1, 'A'
+	                      , 2, 'B'
+	                      , 3, 'C'
+	                      , 4, 'D'
+	                      , 5, 'E'
+	                      , NULL ) AS DEFAULT_MSG
+	           FROM
+	              (
+	              SELECT NOTI.*
+	                   , ROWNUM AS RNUM
+	                FROM
+	                   (
+	                   SELECT COUNT(*) OVER() AS TOTAL_COUNT
+	                        , MAX( NOTI_SEQ ) AS NOTI_SEQ
+	                        , MAX( TITLE ) AS TITLE
+	                        , MAX( NOTI_DSCR ) AS NOTI_DSCR
+	                        , MAX( REG_DT ) AS REG_DT
+	                        , MAX( MBR_NO ) AS MBR_NO
+	                        , MAX( REG_ID ) AS REG_ID
+	                        , MAX( MBR_TELNO ) AS MBR_TELNO
+	                        , MAX( NOTI_SCORE ) AS NOTI_SCORE
+	                        , MAX( SELLER_RESP_TITLE ) AS SELLER_RESP_TITLE
+	                        , MAX( SELLER_RESP_OPIN ) AS SELLER_RESP_OPIN
+	                        , MAX( SELLER_RESP_REG_DT ) AS SELLER_RESP_REG_DT
+	                        , MAX( FB_POST_YN ) AS FB_POST_YN
+	                        , MAX( PROD_ID ) AS PROD_ID
+	                        , MAX( SELLER_MBR_NO ) AS SELLER_MBR_NO
+	                        , MAX( CID ) AS CID
+	                        , MAX( SVC_GRP_CD ) AS SVC_GRP_CD
+	                        , MAX( AVG_SCORE ) AS AVG_SCORE
+	                        , MAX( EXPO_SELLER_NM ) AS EXPO_SELLER_NM
+	                     FROM
+	                        (
+	                        SELECT
+	                        <!-- Shopping -->
+	                        <if test="prodType == 'shopping'">
+	                            /*+ leading(N) use_nl(P) index_desc(N IDX_DP_PROD_NOTI_10) */
+	                        </if>
+	                        <!-- Shopping 외 -->
+	                        <if test="prodType != 'shopping'">
+	                            /*+ leading(P) use_nl(N) index(N IDX_DP_PROD_NOTI_06) */
+	                        </if>
+	                               N.NOTI_SEQ
+	                             , N.TITLE
+	                             , N.NOTI_DSCR
+	                             , N.REG_DT
+	                             , N.MBR_NO
+	                             , N.REG_ID
+	                             , N.MBR_TELNO
+	                             , N.NOTI_SCORE
+	                             , N.SELLER_RESP_TITLE
+	                             , N.SELLER_RESP_OPIN
+	                             , N.SELLER_RESP_REG_DT
+	                             , N.FB_POST_YN
+	                             , N.PROD_ID
+	                             , P.SELLER_MBR_NO AS SELLER_MBR_NO
+	                             , P.CID
+	                             , P.SVC_GRP_CD
+	                             , P.EXPO_SELLER_NM
+	                             , NULL AVG_SCORE
+	                          FROM TB_DP_PROD_NOTI  N
+	                             , TB_DP_PROD  P
+	                         WHERE P.PROD_ID = N.PROD_ID
+	                           AND N.MBR_NO = #{mbrNo}
+	                    <!-- Shopping -->
+	                    <if test="prodType == 'shopping'">
+	                        <if test="prodIds != null">
+	                           AND N.CATALOG_ID IN
+	                           <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+	                               #{prodId}
+	                           </foreach>
+	                        </if>
+	                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+	                            AND N.PROD_ID = #{chnlId}
+	                       </if>
+	                    </if>
+	                    <!-- Shopping 외 -->
+	                    <if test="prodType != 'shopping'">
+	                        <if test="prodIds != null">
+                               AND N.PROD_ID IN
+                               <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                                   #{prodId}
+                               </foreach>
+                            </if>
+	                    </if>
+	                           AND N.NOTI_TYPE_CD = 'DP000401'
+	                           AND N.DEL_YN = 'N'
+	                           AND N.BAD_NOTI_YN IN ( 'N', 'R' )
+	                           AND N.SPAM_YN = 'N'
+	                    <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
+	                    <if test="prodType != 'shopping'">
+	                        UNION ALL
+	                        SELECT NULL AS NOTI_SEQ
+	                             , NULL AS TITLE
+	                             , NULL AS NOTI_DSCR
+	                             , MA.REG_DT AS REG_DT
+	                             , MA.MBR_NO AS MBR_NO
+	                             , NULL AS REG_ID
+	                             , NULL AS MBR_TELNO
+	                             , NULL AS NOTI_SCORE
+	                             , NULL AS SELLER_RESP_TITLE
+	                             , NULL AS SELLER_RESP_OPIN
+	                             , NULL AS SELLER_RESP_REG_DT
+	                             , NULL AS FB_POST_YN
+	                             , MA.PROD_ID
+	                             , NULL AS SELLER_MBR_NO
+	                             , NULL AS CID
+	                             , NULL AS SVC_GRP_CD
+	                             , NULL AS EXPO_SELLER_NM
+	                             , MA.AVG_SCORE
+	                        FROM TB_DP_MBR_AVG MA
+	                       WHERE MA.MBR_NO = #{mbrNo} 
+	                        <if test="prodType != 'shopping'">
+	                            <if test="prodIds != null">
+	                               AND MA.PROD_ID IN
+	                               <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+	                                   #{prodId}
+	                               </foreach>
+	                            </if>
+	                        </if>
+	                      </if>
+	                        )
+	                    GROUP BY PROD_ID
+	                    ORDER BY REG_DT DESC
+	                   ) NOTI
+	               WHERE ROWNUM <![CDATA[<=]]> #{endRow}
+	              ) N
+	          WHERE N.RNUM BETWEEN #{startRow} AND #{endRow}
+	         ) N
     </select>
     
     <!-- 판매자 댓글 -->
