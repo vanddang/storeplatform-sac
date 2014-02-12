@@ -253,7 +253,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 이용권한 정보
 				date.setType("duration/salePeriod");
-				date.setText("2013-03-05 00:00:00/2014-03-25 23:59:59");
+				date.setText("20121017T132615+0900/20121017T132615+0900");
 				rights.setGrade("PD004401");
 				rights.setDate(date);
 
@@ -448,7 +448,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 이용권한 정보
 				date.setType("duration/salePeriod");
-				date.setText("2013-03-05 00:00:00/2014-03-25 23:59:59");
+				date.setText("20121017T132615+0900/20121017T132615+0900");
 				rights.setGrade("PD004401");
 				rights.setDate(date);
 
@@ -667,7 +667,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 이용권한 정보
 				date.setType("duration/salePeriod");
-				date.setText("2013-03-05 00:00:00/2014-03-25 23:59:59");
+				date.setText("20121017T132615+0900/20121017T132615+0900");
 				rights.setGrade("PD004401");
 				rights.setDate(date);
 
@@ -1670,7 +1670,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 이용권한 정보
 				date.setType("duration/salePeriod");
-				date.setText("2013-03-05 00:00:00/2014-03-25 23:59:59");
+				date.setText("20121017T132615+0900/20121017T132615+0900");
 				rights.setGrade("PD004401");
 				rights.setDate(date);
 
@@ -1892,7 +1892,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 이용권한 정보
 				date.setType("duration/salePeriod");
-				date.setText("2013-03-05 00:00:00/2014-03-25 23:59:59");
+				date.setText("20121017T132615+0900/20121017T132615+0900");
 				rights.setGrade("PD004401");
 				rights.setDate(date);
 
