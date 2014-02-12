@@ -767,9 +767,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (StringUtils.equals(gameCenterYn, "Y")) {
 			GameCenterSac gameCenterSac = new GameCenterSac();
 			gameCenterSac.setUserKey(userKey);
-			gameCenterSac.setPreUserKey(null);
 			gameCenterSac.setDeviceId(deviceId);
-			gameCenterSac.setPreDeviceId(null);
 			gameCenterSac.setSystemId(requestHeader.getTenantHeader().getSystemId());
 			gameCenterSac.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
