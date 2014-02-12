@@ -33,7 +33,7 @@ public class ClauseController {
 	@Autowired
 	private ClauseService svc;
 
-	@RequestMapping(value = "/member/user/listClause/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/listClause/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListClauseSacRes listClause() {
 		LOGGER.info("####################################################");
