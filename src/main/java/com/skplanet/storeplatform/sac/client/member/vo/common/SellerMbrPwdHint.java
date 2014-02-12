@@ -34,7 +34,7 @@ public class SellerMbrPwdHint extends CommonInfo {
 	private String isDisplay;
 
 	/** 전시 순서. */
-	private int displayOrder;
+	private String displayOrder;
 
 	/** 등록 ID. */
 	private String regID; // REG_ID
@@ -96,11 +96,11 @@ public class SellerMbrPwdHint extends CommonInfo {
 		this.isDisplay = isDisplay;
 	}
 
-	public int getDisplayOrder() {
+	public String getDisplayOrder() {
 		return this.displayOrder;
 	}
 
-	public void setDisplayOrder(int displayOrder) {
+	public void setDisplayOrder(String displayOrder) {
 		this.displayOrder = displayOrder;
 	}
 
