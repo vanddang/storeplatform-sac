@@ -238,8 +238,7 @@ public class UserJoinController {
 		 */
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		CreateBySimpleRes res = new CreateBySimpleRes();
-		res = this.svc.createBySimpleId(sacHeader, req);
+		CreateBySimpleRes res = this.svc.createBySimpleId(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.toString());
 
