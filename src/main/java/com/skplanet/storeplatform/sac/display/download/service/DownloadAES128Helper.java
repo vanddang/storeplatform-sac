@@ -48,12 +48,8 @@ public class DownloadAES128Helper {
 			row = this.convertBytes(this.SAC_KEY.get(randomNumber));
 			iv = this.convertBytes(this.SAC_DL_IV);
 
-			System.out.println(row);
-
 			ivSpec = new IvParameterSpec(iv);
 			key = new SecretKeySpec(row, "AES");
-
-			System.out.println(key);
 
 			cipher = Cipher.getInstance("AES/CTR/NoPadding");
 			cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);

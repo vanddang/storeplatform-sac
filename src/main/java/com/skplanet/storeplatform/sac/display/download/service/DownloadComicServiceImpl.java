@@ -9,10 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xmlbeans.impl.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
+import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
@@ -30,12 +34,16 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
+import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
+import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 /**
  * DownloadComic Service 인터페이스(CoreStoreBusiness) 구현체
@@ -60,8 +68,21 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 	@Autowired
 	private EbookComicGenerator ebookComicGenerator;
 
+	@Autowired
+	private EncryptionGenerator encryptionGenerator;
+
+	@Autowired
+	private DownloadAES128Helper downloadAES128Helper;
+
 	@Override
 	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader, DownloadComicSacReq downloadComicReq) {
+		// 현재일시 및 만료일시 조회
+		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
+
+		String sysDate = metaInfo.getSysDate();
+		String expireDate = metaInfo.getExpiredDate();
+		metaInfo = null;
+
 		DownloadComicSacRes comicRes = new DownloadComicSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
@@ -93,12 +114,12 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		downloadComicReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
 		// comic 상품 정보 조회(for download)
-		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadComicInfo",
-				downloadComicReq);
+		metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadComicInfo", downloadComicReq);
 
 		if (metaInfo != null) {
 			String prchsId = null; // 구매ID
 			String prchsDt = null; // 구매일시
+			String dwldExprDt = null; // 다운로드 만료일시
 			String prchsState = null; // 구매상태
 			String prchsProdId = null; // 구매 상품ID
 
@@ -116,7 +137,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				historyListSacReq.setDeviceKey(downloadComicReq.getDeviceKey());
 				historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
 				historyListSacReq.setStartDt("19000101000000");
-				historyListSacReq.setEndDt(metaInfo.getSysDate());
+				historyListSacReq.setEndDt(sysDate);
 				historyListSacReq.setOffset(1);
 				historyListSacReq.setCount(1);
 				historyListSacReq.setProductList(productList);
@@ -131,6 +152,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				if (historyListSacRes.getTotalCnt() > 0) {
 					prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 					prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
+					dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
 					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 					prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
 
@@ -182,14 +204,58 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			// 저작자 정보
 			product.setDistributor(this.commonMetaInfoGenerator.generateDistributor(metaInfo));
 
-			// 구매 정보
+			// 구매 여부 확인
 			if (StringUtils.isNotEmpty(prchsId)) {
+				metaInfo.setExpiredDate(expireDate);
 				metaInfo.setPurchaseId(prchsId);
 				metaInfo.setPurchaseProdId(prchsProdId);
 				metaInfo.setPurchaseDt(prchsDt);
 				metaInfo.setPurchaseState(prchsState);
+				metaInfo.setDwldExprDt(dwldExprDt);
+				metaInfo.setUserKey(userKey);
+				metaInfo.setDeviceKey(deviceKey);
+				metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
 
+				// 구매 정보
 				product.setPurchase(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
+
+				// 암호화 정보
+				EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+
+				// JSON 파싱
+				MarshallingHelper marshaller = new JacksonMarshallingHelper();
+				byte[] jsonData = marshaller.marshal(contents);
+
+				// JSON 암호화
+				byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+
+				Encryption encryption = new Encryption();
+				encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE + "/"
+						+ this.downloadAES128Helper.getSAC_RANDOM_NUMBER());
+
+				// JSON 암호화값을 BASE64 Encoding
+				Base64Encoder encoder = new Base64Encoder();
+				String encryptString = encoder.encode(encryptByte);
+				encryption.setText(encryptString);
+
+				product.setEncryption(encryption);
+			}
+
+			// 테스트를 위한 복호화 확인
+			try {
+				Encryption testEn = new Encryption();
+				testEn = product.getEncryption();
+
+				byte[] testValue = Base64.decode(testEn.getText().getBytes());
+				byte[] dec = this.downloadAES128Helper.decryption(testValue);
+
+				this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("Encryption Type : {}", testEn.getType());
+				this.logger.debug("Encryption Text : {}", testEn.getText());
+				this.logger.debug("Decryption Text : {}", new String(dec, "UTF-8"));
+				this.logger.debug("----------------------------------------------------------------");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
 			}
 
 			comicRes.setProduct(product);
