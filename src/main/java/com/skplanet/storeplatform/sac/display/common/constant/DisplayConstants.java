@@ -338,6 +338,8 @@ public class DisplayConstants {
 
 	public static final String DP_FORDOWNLOAD_ENCRYPT_KEY = "00";
 
+	public static final String DP_FORDOWNLOAD_ENCRYPT_TYPE = "AES128/";
+
 	/*
 	 * 배너 타입 코드
 	 */
