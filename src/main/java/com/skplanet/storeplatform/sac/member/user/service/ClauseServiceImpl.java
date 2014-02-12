@@ -17,15 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
-import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListClauseSacRes;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 
 /**
