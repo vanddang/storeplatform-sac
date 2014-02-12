@@ -7,6 +7,9 @@
         <dependent-module archiveName="storeplatform-sac-client-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-sac-client/storeplatform-sac-client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="storeplatform-sac-client-internal-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-sac-client-internal/storeplatform-sac-client-internal">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="external-component-client-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/external-component-client/external-component-client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
