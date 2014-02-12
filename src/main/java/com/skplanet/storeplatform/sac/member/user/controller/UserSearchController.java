@@ -86,11 +86,10 @@ public class UserSearchController {
 		LOGGER.info("##### 5.1.12. 회원 프로비저닝 이력 조회 #####");
 		LOGGER.info("####################################################");
 
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 		String workCode = StringUtil.nvl(req.getWorkCode(), "");
 
-		if (userKey.equals("") && deviceId.equals("") && workCode.equals("")) {
+		if (deviceId.equals("")) {
 			new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 

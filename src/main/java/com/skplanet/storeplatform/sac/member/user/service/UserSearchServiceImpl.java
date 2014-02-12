@@ -62,7 +62,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
@@ -258,9 +257,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-		String workCode = StringUtil.nvl(req.getWorkCode(), "");
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -275,46 +272,24 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		SearchGameCenterRequest scReq = new SearchGameCenterRequest();
 		scReq.setCommonRequest(commonRequest);
-		if (!userKey.equals("")) {
-			scReq.setUserKey(req.getUserKey());
-			this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
-		}
-
 		if (!deviceId.equals("")) {
+			String workCd = "US003206";
+			scReq.setWorkCode(workCd);
 			scReq.setDeviceID(req.getDeviceId());
 			this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
 		}
 
-		if (!workCode.equals("")) {
-			scReq.setWorkCode(req.getWorkCode());
-		}
-
 		logger.info("SearchGameCenterRequest : {}", scReq.toString());
 
-		SearchGameCenterResponse scRes = new SearchGameCenterResponse();
+		SearchGameCenterResponse scRes = this.userSCI.searchGameCenter(scReq);
 		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
-		scRes = this.userSCI.searchGameCenter(scReq);
-		List<GameCenterSacRes> gameCenterList = new ArrayList<GameCenterSacRes>();
 
 		for (GameCenter gameCenter : scRes.getGameCenterList()) {
-			GameCenterSacRes gameCenterRes = new GameCenterSacRes();
-			gameCenterRes.setDeviceId(StringUtil.setTrim(gameCenter.getDeviceID()));
-			gameCenterRes.setFileDate(StringUtil.setTrim(gameCenter.getFileDate()));
-			gameCenterRes.setGameCenterNo(StringUtil.setTrim(gameCenter.getGameCenterNo()));
-			gameCenterRes.setPreDeviceId(StringUtil.setTrim(gameCenter.getPreDeviceID()));
-			gameCenterRes.setPreUserKey(StringUtil.setTrim(gameCenter.getPreUserKey()));
-			gameCenterRes.setRegDate(StringUtil.setTrim(gameCenter.getRegDate()));
-			gameCenterRes.setRequestDate(StringUtil.setTrim(gameCenter.getRequestDate()));
-			gameCenterRes.setRequestType(StringUtil.setTrim(gameCenter.getRequestType()));
-			gameCenterRes.setStatusCode(StringUtil.setTrim(gameCenter.getStatusCode()));
-			gameCenterRes.setUpdateDate(StringUtil.setTrim(gameCenter.getUpdateDate()));
-			gameCenterRes.setUserKey(StringUtil.setTrim(gameCenter.getUserKey()));
-			gameCenterRes.setWorkCode(StringUtil.setTrim(gameCenter.getWorkCode()));
-
-			gameCenterList.add(gameCenterRes);
+			res.setOldUserKey(StringUtil.setTrim(gameCenter.getPreUserKey()));
+			res.setUserKey(StringUtil.setTrim(gameCenter.getUserKey()));
+			res.setWorkCd(StringUtil.setTrim(gameCenter.getWorkCode()));
+			res.setRegDate(StringUtil.setTrim(gameCenter.getRegDate()));
 		}
-
-		res.setGameCenterList(gameCenterList);
 
 		return res;
 	}
