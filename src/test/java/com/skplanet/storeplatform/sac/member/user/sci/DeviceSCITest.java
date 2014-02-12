@@ -18,8 +18,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GetDeviceMdnSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GetDeviceMdnSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceMdnSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceMdnSacRes;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
@@ -46,10 +46,10 @@ public class DeviceSCITest {
 	 */
 	@Test
 	public void testGetDeviceMdn() {
-		GetDeviceMdnSacReq request = new GetDeviceMdnSacReq();
+		SearchDeviceMdnSacReq request = new SearchDeviceMdnSacReq();
 		request.setUserKey("US201402110557052730002230");
 		request.setDeviceKey("DE201402120409541480001552");
-		GetDeviceMdnSacRes result = this.deviceSCI.getDeviceMdn(request);
+		SearchDeviceMdnSacRes result = this.deviceSCI.searchDeviceMdn(request);
 		assertThat(result.getMsisdn(), notNullValue());
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
@@ -63,10 +63,10 @@ public class DeviceSCITest {
 	 */
 	@Test(expected = StorePlatformException.class)
 	public void testExceptGetDeviceMdn() {
-		GetDeviceMdnSacReq request = new GetDeviceMdnSacReq();
+		SearchDeviceMdnSacReq request = new SearchDeviceMdnSacReq();
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceKey("DE201401241840125800000296");
-		GetDeviceMdnSacRes result = this.deviceSCI.getDeviceMdn(request);
+		SearchDeviceMdnSacRes result = this.deviceSCI.searchDeviceMdn(request);
 		assertThat(result.getMsisdn(), notNullValue());
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));

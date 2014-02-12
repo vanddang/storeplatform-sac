@@ -12,8 +12,10 @@ import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GetDeviceMdnSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GetDeviceMdnSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceMdnSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceMdnSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -41,8 +43,9 @@ public class DeviceSCIController implements DeviceSCI {
 	 */
 
 	@Override
-	@RequestMapping(value = "/getDeviceMdn", method = RequestMethod.POST)
-	public GetDeviceMdnSacRes getDeviceMdn(/* SacRequestHeader requestHeader, */@Validated GetDeviceMdnSacReq requestVO) {
+	@RequestMapping(value = "/searchDeviceMdn", method = RequestMethod.POST)
+	public SearchDeviceMdnSacRes searchDeviceMdn(
+	/* SacRequestHeader requestHeader, */@Validated SearchDeviceMdnSacReq requestVO) {
 
 		SacRequestHeader requestHeader = new SacRequestHeader(); // client-internal에 공통으로 생성되면 삭제 후 Bypass 예정.
 		TenantHeader tenantHeader = new TenantHeader();
@@ -53,7 +56,7 @@ public class DeviceSCIController implements DeviceSCI {
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				requestVO.getDeviceKey(), requestVO.getUserKey());
 
-		GetDeviceMdnSacRes responseVO = new GetDeviceMdnSacRes();
+		SearchDeviceMdnSacRes responseVO = new SearchDeviceMdnSacRes();
 		responseVO.setMsisdn(deviceInfo.getDeviceId());
 
 		return responseVO;
@@ -67,6 +70,18 @@ public class DeviceSCIController implements DeviceSCI {
 	 */
 	@Override
 	public ChangedDeviceSacRes searchChangedDeviceList(ChangedDeviceSacReq requestVO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI#SearchUserByUserKey(com.skplanet.
+	 * storeplatform.sac.client.internal.member.user.sci.SearchUserSacReq)
+	 */
+	@Override
+	public SearchUserSacRes SearchUserByUserKey(SearchUserSacReq request) {
 		// TODO Auto-generated method stub
 		return null;
 	}
