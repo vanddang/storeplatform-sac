@@ -141,11 +141,11 @@
 	
 	<!-- 사용후기 삭제 -->
 	<update id="deleteProdNoti" parameterType="ProdNoti">
-        /* FeedbackMapper.xml, updateProdNoti, SAC : 김현일 , 2014-02-04 */
+        /* FeedbackMapper.xml, deleteProdNoti, SAC : 김현일 , 2014-02-04 */
         UPDATE 
                TB_DP_PROD_NOTI
            SET
-             , DEL_DT = SYSDATE
+               DEL_DT = SYSDATE
              , DEL_YN = 'Y'
          WHERE TENANT_ID = #{tenantId}
            AND NOTI_SEQ = #{notiSeq}
@@ -219,7 +219,7 @@
 	           , AVG_EVLU_SCORE = ( ( TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore} ) / PATICPERS_CNT )
 	           </if>
 	           <if test="action == 'remove'">
-	           , PATICPERS_CNT = PATICPERS_CNT -1
+	           , PATICPERS_CNT = PATICPERS_CNT - 1
 	           , AVG_EVLU_SCORE = ( ( TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore} ) / (PATICPERS_CNT - 1) )
 	           </if>
 	     WHERE TENANT_ID = #{tenantId}
@@ -431,10 +431,8 @@
 	          , N.TITLE
 	          , N.NOTI_DSCR
 	          , NVL( N.NOTI_SCORE, 0 ) AS NOTI_SCORE
-	          , ( CASE WHEN INSTR( N.MBR_NO, 'IW' ) > 0 AND N.MBR_TELNO > ' ' THEN
-	                        SUBSTR( N.MBR_TELNO, 0, 3 )||( CASE WHEN LENGTH(N.MBR_TELNO) <![CDATA[<]]> 11 THEN '***' ELSE '****' END )||SUBSTR( N.MBR_TELNO, -4 )
-	                   ELSE N.REG_ID
-	               END ) AS REG_ID
+	          , N.MBR_TELNO
+	          , N.REG_ID
 	          , TO_CHAR(N.REG_DT,'YYYYMMDDHH24MISS') AS REG_DT
 	          , N.SELLER_RESP_TITLE
 	          , N.SELLER_RESP_OPIN
