@@ -25,6 +25,10 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -34,12 +38,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Component;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -48,8 +51,7 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
-import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
+import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -67,18 +69,16 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 	private CommonDAO commonDAO;
 	@Autowired
 	private DisplayCommonService commonService;
-
 	@Autowired
-	ExistenceSacService existenceSacService;
-
-	@Autowired
-	HistoryListService historyListService;
-
+	HistoryInternalSCI historyInternalSCI;
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
-
 	@Autowired
 	private AppInfoGenerator appInfoGenerator;
+	@Autowired
+	private EncryptionGenerator encryptionGenerator;
+	@Autowired
+	private DownloadAES128Helper downloadAES128Helper;
 
 	/*
 	 * (non-Javadoc)
@@ -90,6 +90,18 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 	public DownloadAppSacRes searchDownloadApp(SacRequestHeader requestheader, DownloadAppSacReq downloadAppSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+
+		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
+				MetaInfo.class);
+
+		// Calendar cal = Calendar.getInstance();
+		// cal.add(cal.HOUR, 1);
+		//
+		// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		//
+		// this.log.debug("##################################################################");
+		// this.log.debug("now Time	:	" + dateFormat.format(cal.getTime()));
+		// this.log.debug("##################################################################");
 
 		// OS VERSION 가공
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -196,16 +208,17 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				String prchsDt = null;
 				String prchsState = null;
 				String prchsProdId = null;
+				String dwldExprDt = null;
 
 				try {
 					// 구매내역 조회를 위한 생성자
-					ProductListSac productListSac = new ProductListSac();
-					productListSac.setProdId(metaInfo.getProdId());
+					ProductListSacIn productListSacIn = new ProductListSacIn();
+					List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
 
-					List<ProductListSac> productList = new ArrayList<ProductListSac>();
-					productList.add(productListSac);
+					productListSacIn.setProdId(metaInfo.getProdId());
+					productList.add(productListSacIn);
 
-					HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+					HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
 					historyListSacReq.setTenantId(downloadAppSacReq.getTenantId());
 					historyListSacReq.setUserKey(downloadAppSacReq.getUserKey());
 					historyListSacReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
@@ -217,13 +230,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					historyListSacReq.setProductList(productList);
 
 					// 구매내역 조회 실행
-					HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
+					HistoryListSacInRes historyListSacRes = this.historyInternalSCI
+							.searchHistoryList(historyListSacReq);
 
 					if (historyListSacRes.getTotalCnt() > 0) {
 						prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 						prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
 						prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 						prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
+						dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
 
 						if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 							prchsState = "payment";
@@ -269,6 +284,26 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					metaInfo.setPurchaseState(prchsState);
 					metaInfo.setPurchaseProdId(prchsProdId);
 					product.setPurchase(this.commonGenerator.generatePurchase(metaInfo));
+
+					metaInfo.setExpiredDate(downloadSystemDate.getExpiredDate());
+					// metaInfo.setDwldExprDt(dwldExprDt);
+					metaInfo.setUserKey(downloadAppSacReq.getUserKey());
+					metaInfo.setDeviceKey(downloadAppSacReq.getDeviceKey());
+					metaInfo.setDeviceType("");
+					metaInfo.setDeviceSubKey("");
+
+					// 암호화 정보
+					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+					// contents를 JSON 형태로 파싱
+					String jsonContents = "";
+
+					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonContents.getBytes());
+
+					Encryption encryption = new Encryption();
+					encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE
+							+ DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY);
+					encryption.setText(new String(encryptByte));
+					product.setEncryption(encryption);
 				}
 
 				product.setPacketFee(metaInfo.getProdClsfCd());
@@ -279,125 +314,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				commonResponse.setTotalCount(0);
 			}
 
-		} else {
-			// dummy data를 호출할때
-			menuList = new ArrayList<Menu>();
-			sourceList = new ArrayList<Source>();
-			identifierList = new ArrayList<Identifier>();
-
-			product = new Product();
-			identifier = new Identifier();
-			app = new App();
-			rights = new Rights();
-			source = new Source();
-			title = new Title();
-			purchase = new Purchase();
-			distributor = new Distributor();
-			component = new Component(); // Seed App 정보
-
-			identifier = new Identifier();
-			List<Identifier> seedIdentifierList = new ArrayList<Identifier>();
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText("0000395599");
-			seedIdentifierList.add(identifier);
-
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_GAMECENTER_IDENTIFIER_CD);
-			identifier.setText("0000395599");
-
-			seedIdentifierList.add(identifier);
-
-			component.setIdentifierList(seedIdentifierList);
-			component.setIdentifierList(seedIdentifierList);
-			component.setGameCenterVerCd("3.1");
-			component.setUseYn("Y");
-			component.setCaseRefCd("PD013018");
-
-			// 상품ID
-			identifier = new Identifier();
-			identifier.setType("episode");
-			identifier.setText("0000395599");
-			identifierList.add(identifier);
-
-			title.setText("아스팔트 8: 에어본");
-
-			/*
-			 * source mediaType, size, type, url
-			 */
-			source.setMediaType("image/png");
-			source.setType("thumbnail");
-			source.setUrl("http://wap.tstore.co.kr/android6/201401/08/IF142815953620090820155126/0000395599/img/thumbnail/0000395599_130_130_0_91_20140108180415.PNG");
-			sourceList.add(source);
-
-			/*
-			 * Menu(메뉴정보) Id, Name, Type
-			 */
-			menu = new Menu();
-			menu.setId("DP000501");
-			menu.setName("게임");
-			menu.setType("topClass");
-			menuList.add(menu);
-			menu = new Menu();
-			menu.setId("DP01006");
-			menu.setName("스포츠");
-			menuList.add(menu);
-
-			/*
-			 * App aid, packagename, versioncode, version
-			 */
-			app.setScId("0000392242");
-			app.setSupportedOs("Android 2.3~4.4");
-			app.setPackageName("com.gameloft.android.SKTS.GloftA8SK");
-			app.setVersionCode("12006");
-			app.setSize(14910670);
-			app.setFilePath("/data4/android/201207/03/IF102158942020090723111912/0000065195/0000033618/sbinary/0000033618_20120703171604.apk");
-
-			/*
-			 * Rights grade
-			 */
-			rights.setGrade("PD004401");
-
-			distributor.setName("오재환");
-			distributor.setTel("07000000000");
-			distributor.setEmail("SEO-OperatorInfo@gameloft.com");
-			distributor.setRegNo("2009-서울강남-03038");
-
-			purchase.setState("payment");
-			List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
-
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-			identifier.setText("MI100000000000044286");
-			purchaseIdentifierList.add(identifier);
-
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText("0000395599");
-			purchaseIdentifierList.add(identifier);
-
-			purchase.setIdentifierList(purchaseIdentifierList);
-
-			date = new Date();
-			date.setType("date/purchase");
-			date.setText("20130701165632");
-			purchase.setDate(date);
-
-			product.setPurchase(purchase);
-
-			product = new Product();
-			product.setIdentifierList(identifierList);
-			product.setPacketFee("paid");
-			product.setTitle(title);
-			product.setSourceList(sourceList);
-			product.setMenuList(menuList);
-			product.setApp(app);
-			product.setRights(rights);
-			product.setDistributor(distributor);
-			product.setPurchase(purchase);
-			product.setPlatClsfCd("PD005606");
-
-			commonResponse.setTotalCount(1);
 		}
 		response.setCommonResponse(commonResponse);
 		response.setComponent(component);

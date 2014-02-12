@@ -38,6 +38,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
@@ -53,6 +55,7 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
 import com.skplanet.storeplatform.sac.display.response.VodGenerator;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
@@ -72,15 +75,16 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	private CommonDAO commonDAO;
 	@Autowired
 	private DisplayCommonService commonService;
-
 	@Autowired
 	HistoryInternalSCI historyInternalSCI;
-
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
-
 	@Autowired
 	private VodGenerator vodGenerator;
+	@Autowired
+	private EncryptionGenerator encryptionGenerator;
+	@Autowired
+	private DownloadAES128Helper downloadAES128Helper;
 
 	/*
 	 * (non-Javadoc)
@@ -92,6 +96,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	public DownloadVodSacRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodSacReq downloadVodSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+
+		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
+				MetaInfo.class);
 
 		downloadVodSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadVodSacReq.setDeviceModelCd(deviceHeader.getModel());
@@ -219,12 +226,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 						// 소장
 						if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+							metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
 							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 								prchsState = "payment";
 							} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
 								prchsState = "gift";
 							}
 						} else {
+							metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
 							downloadVodSacReq.setPrchsDt(prchsDt);
 							downloadVodSacReq.setDwldExprDt(dwldExprDt);
 
@@ -267,6 +276,26 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					metaInfo.setPurchaseState(prchsState);
 					metaInfo.setPurchaseProdId(prchsProdId);
 					product.setPurchase(this.commonGenerator.generatePurchase(metaInfo));
+
+					metaInfo.setExpiredDate(downloadSystemDate.getExpiredDate());
+					// metaInfo.setDwldExprDt(dwldExprDt);
+					metaInfo.setUserKey(downloadVodSacReq.getUserKey());
+					metaInfo.setDeviceKey(downloadVodSacReq.getDeviceKey());
+					metaInfo.setDeviceType("");
+					metaInfo.setDeviceSubKey("");
+
+					// 암호화 정보
+					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+					// contents를 JSON 형태로 파싱
+					String jsonContents = "";
+
+					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonContents.getBytes());
+
+					Encryption encryption = new Encryption();
+					encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE
+							+ DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY);
+					encryption.setText(new String(encryptByte));
+					product.setEncryption(encryption);
 				}
 
 				commonResponse.setTotalCount(1);

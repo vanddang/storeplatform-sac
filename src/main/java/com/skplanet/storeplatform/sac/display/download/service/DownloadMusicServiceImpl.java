@@ -25,6 +25,10 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -36,9 +40,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Musi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -47,8 +48,6 @@ import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
-import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -66,12 +65,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 	private CommonDAO commonDAO;
 	@Autowired
 	private DisplayCommonService commonService;
-
 	@Autowired
-	ExistenceSacService existenceSacService;
-
-	@Autowired
-	HistoryListService historyListService;
+	HistoryInternalSCI historyInternalSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -138,13 +133,13 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 			try {
 				// 구매내역 조회를 위한 생성자
-				ProductListSac productListSac = new ProductListSac();
-				productListSac.setProdId(metaInfo.getProdId());
+				ProductListSacIn productListSacIn = new ProductListSacIn();
+				List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
 
-				List<ProductListSac> productList = new ArrayList<ProductListSac>();
-				productList.add(productListSac);
+				productListSacIn.setProdId(metaInfo.getProdId());
+				productList.add(productListSacIn);
 
-				HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+				HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
 				historyListSacReq.setTenantId(downloadMusicSacReq.getTenantId());
 				historyListSacReq.setUserKey(downloadMusicSacReq.getUserKey());
 				historyListSacReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
@@ -156,7 +151,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				historyListSacReq.setProductList(productList);
 
 				// 구매내역 조회 실행
-				HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
+				HistoryListSacInRes historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
 
 				this.log.debug("----------------------------------------------------------------");
 				this.log.debug("[getDownloadMusicInfo] purchase count : {}", historyListSacRes.getTotalCnt());
@@ -277,13 +272,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				product.setPurchase(purchase);
 
 			}
-
-			// identifier = new Identifier();
-			// identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-			// identifier.setText(prchsId);
-			// purchase.setIdentifier(identifier);
-			// purchase.setPurchaseFlag(StringUtils.isNotEmpty(prchsId) ? "payment" : "nonPayment");
-			// product.setPurchase(purchase);
 
 			product = new Product();
 			product.setIdentifierList(identifierList);
