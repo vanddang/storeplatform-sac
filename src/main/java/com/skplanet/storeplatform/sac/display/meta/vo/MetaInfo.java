@@ -59,6 +59,7 @@ public class MetaInfo {
 	private String deviceKey;
 	private String deviceType;
 	private String deviceSubKey;
+	private String userKey;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -1016,6 +1017,21 @@ public class MetaInfo {
 	 */
 	public void setDeviceSubKey(String deviceSubKey) {
 		this.deviceSubKey = deviceSubKey;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 	/**
