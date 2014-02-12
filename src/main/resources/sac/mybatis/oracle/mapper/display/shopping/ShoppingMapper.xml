@@ -1633,7 +1633,7 @@
                        AND SP.CPN_ID IS NOT NULL
                        AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
                        AND SP.PROD_ID = B.PROD_ID
-                    ), D.PROD_AMT) AS DC_AMT    
+                    ), D.PROD_AMT) AS PROD_AMT    
                ,D.PROD_NET_AMT
                ,D.DC_AFT_PROD_AMT
                ,B.FIRST_MAX_PRCHS_QTY     
