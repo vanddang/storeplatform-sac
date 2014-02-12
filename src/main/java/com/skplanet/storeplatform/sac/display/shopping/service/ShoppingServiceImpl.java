@@ -1078,7 +1078,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 	@Override
 	public ShoppingRes getBrandshopMainList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
-		ShoppingRes responseVO = null;
+		ShoppingRes res = null;
+		CommonResponse commonResponse = new CommonResponse();
+		Integer totalCount = 0;
 		List<Shopping> resultList = new ArrayList<Shopping>();
 		List<Shopping> hotBrandList = new ArrayList<Shopping>();
 		List<Shopping> detailList = new ArrayList<Shopping>();
@@ -1175,12 +1177,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setTitle(title);
 				product.setSourceList(sourceList);
 				productList.add(i, product);
+				commonResponse.setTotalCount(totalCount);
 			}
 
-			responseVO = new ShoppingRes();
-			responseVO.setProductList(productList);
+			res = new ShoppingRes();
+			res.setProductList(productList);
+			commonResponse.setTotalCount(resultList.size());
+			res.setCommonResponse(commonResponse);
 		}
-		return responseVO;
+		return res;
 	}
 
 	/**
