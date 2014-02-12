@@ -59,6 +59,7 @@
     <!-- 서비스 로그 -->
     <logger name="com.skplanet.storeplatform.sac" additivity="false">
         <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
         <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
