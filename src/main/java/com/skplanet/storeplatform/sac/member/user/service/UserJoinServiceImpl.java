@@ -231,7 +231,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
+		 * findCommonProfileForServerIDP)
 		 */
 		ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
 
@@ -341,7 +342,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
+		 * findCommonProfileForServerIDP)
 		 */
 		ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
 
@@ -739,7 +741,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday()); // 인증 일시
 			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
-			deviceInfo.setUserDeviceExtraInfo(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
+			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
 		} else if (obj instanceof CreateByAgreementReq) {
 
@@ -761,7 +763,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss")); // 인증 일시
 			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
-			deviceInfo.setUserDeviceExtraInfo(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
+			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
 		} else if (obj instanceof CreateBySimpleReq) {
 
@@ -783,7 +785,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss")); // 인증 일시
 			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
-			deviceInfo.setUserDeviceExtraInfo(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
+			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
 		}
 

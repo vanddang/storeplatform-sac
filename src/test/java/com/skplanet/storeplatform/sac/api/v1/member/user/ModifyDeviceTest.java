@@ -130,7 +130,7 @@ public class ModifyDeviceTest {
 							deviceExtraInfo.setExtraProfileValue("N");
 							deviceExtraInfoList.add(deviceExtraInfo);
 
-							deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
+							deviceInfo.setDeviceExtraInfoList(deviceExtraInfoList);
 							req.setDeviceInfo(deviceInfo);
 
 							try {

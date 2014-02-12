@@ -90,7 +90,7 @@ public class DeviceUtil {
 	 */
 	public static List<DeviceExtraInfo> setDeviceExtraValue(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
 
-		List<DeviceExtraInfo> deviceExtraInfoList = deviceInfo.getUserDeviceExtraInfo();
+		List<DeviceExtraInfo> deviceExtraInfoList = deviceInfo.getDeviceExtraInfoList();
 
 		if (deviceExtraInfoList != null) {
 
@@ -143,7 +143,7 @@ public class DeviceUtil {
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
 		if (userMbrDevice.getUserMbrDeviceDetail() != null) {
-			deviceInfo.setUserDeviceExtraInfo(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
+			deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 		}
 
 		return deviceInfo;
@@ -225,9 +225,9 @@ public class DeviceUtil {
 		List<UserMbrDeviceDetail> userMbrDeviceDetailList = null;
 		UserMbrDeviceDetail userMbrDeviceDetail = null;
 
-		if (deviceInfo.getUserDeviceExtraInfo() != null && deviceInfo.getUserDeviceExtraInfo().size() > 0) {
+		if (deviceInfo.getDeviceExtraInfoList() != null && deviceInfo.getDeviceExtraInfoList().size() > 0) {
 			userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
-			for (DeviceExtraInfo deviceExtraInfo : deviceInfo.getUserDeviceExtraInfo()) {
+			for (DeviceExtraInfo deviceExtraInfo : deviceInfo.getDeviceExtraInfoList()) {
 				userMbrDeviceDetail = new UserMbrDeviceDetail();
 				userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
 				userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());

@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
 			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
 
 				String imMngNum = deviceInfo.getSvcMangNum();
-				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getUserDeviceExtraInfo());
+				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
 
 				sbUserPhone.append(deviceInfo.getDeviceId());
 				sbUserPhone.append(",");

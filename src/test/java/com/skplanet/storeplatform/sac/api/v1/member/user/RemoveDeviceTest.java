@@ -89,8 +89,7 @@ public class RemoveDeviceTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders(
-							"x-planet-device-info",
+					.addHeaders("x-planet-device-info",
 							"model=\"SHW-M220L\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -141,7 +140,7 @@ public class RemoveDeviceTest {
 							deviceExtraInfo.setExtraProfileValue("N");
 							deviceExtraInfoList.add(deviceExtraInfo);
 
-							deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
+							deviceInfo.setDeviceExtraInfoList(deviceExtraInfoList);
 							req.setDeviceInfo(deviceInfo);
 
 							try {
@@ -177,24 +176,23 @@ public class RemoveDeviceTest {
 	@Test
 	public void bRemoveDevice() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						RemoveDeviceReq req = new RemoveDeviceReq();
-						req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
-						req.setDeviceId("01036903690");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(RemoveDeviceRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						RemoveDeviceRes res = (RemoveDeviceRes) result;
-						assertThat(res.getDeviceKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				RemoveDeviceReq req = new RemoveDeviceReq();
+				req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
+				req.setDeviceId("01036903690");
+				logger.debug("request param : {}", req.toString());
+				return req;
+			}
+		}).success(RemoveDeviceRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				RemoveDeviceRes res = (RemoveDeviceRes) result;
+				assertThat(res.getDeviceKey(), notNullValue());
+				logger.debug("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
@@ -208,24 +206,23 @@ public class RemoveDeviceTest {
 	@Test(expected = RuntimeException.class)
 	public void cRemoveDeviceError1() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						RemoveDeviceReq req = new RemoveDeviceReq();
-						req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
-						req.setDeviceId("01020284280");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(RemoveDeviceRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						RemoveDeviceRes res = (RemoveDeviceRes) result;
-						assertThat(res.getDeviceKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				RemoveDeviceReq req = new RemoveDeviceReq();
+				req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
+				req.setDeviceId("01020284280");
+				logger.debug("request param : {}", req.toString());
+				return req;
+			}
+		}).success(RemoveDeviceRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				RemoveDeviceRes res = (RemoveDeviceRes) result;
+				assertThat(res.getDeviceKey(), notNullValue());
+				logger.debug("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
@@ -239,24 +236,23 @@ public class RemoveDeviceTest {
 	@Test(expected = RuntimeException.class)
 	public void cRemoveDeviceError2() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						RemoveDeviceReq req = new RemoveDeviceReq();
-						req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
-						req.setDeviceId("0102028428011");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(RemoveDeviceRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						RemoveDeviceRes res = (RemoveDeviceRes) result;
-						assertThat(res.getDeviceKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				RemoveDeviceReq req = new RemoveDeviceReq();
+				req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
+				req.setDeviceId("0102028428011");
+				logger.debug("request param : {}", req.toString());
+				return req;
+			}
+		}).success(RemoveDeviceRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				RemoveDeviceRes res = (RemoveDeviceRes) result;
+				assertThat(res.getDeviceKey(), notNullValue());
+				logger.debug("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
@@ -270,24 +266,23 @@ public class RemoveDeviceTest {
 	@Test(expected = RuntimeException.class)
 	public void cRemoveDeviceError3() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						RemoveDeviceReq req = new RemoveDeviceReq();
-						req.setUserAuthKey("");
-						req.setDeviceId("");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(RemoveDeviceRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						RemoveDeviceRes res = (RemoveDeviceRes) result;
-						assertThat(res.getDeviceKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				RemoveDeviceReq req = new RemoveDeviceReq();
+				req.setUserAuthKey("");
+				req.setDeviceId("");
+				logger.debug("request param : {}", req.toString());
+				return req;
+			}
+		}).success(RemoveDeviceRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				RemoveDeviceRes res = (RemoveDeviceRes) result;
+				assertThat(res.getDeviceKey(), notNullValue());
+				logger.debug("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 

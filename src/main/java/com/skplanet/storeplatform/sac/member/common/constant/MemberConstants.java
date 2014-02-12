@@ -188,6 +188,12 @@ public final class MemberConstants {
 	public static final String GAMECENTER_WORK_CD_USER_CHANGE = "US003206"; // 회원전환
 	public static final String GAMECENTER_WORK_CD_IMUSER_CHANGE = "US003207"; // 통합회원전환
 
+	public static final String GAMECENTER_REQ_TYPE_USER = "0001";//USER_POC
+	public static final String GAMECENTER_REQ_TYPE_DEV = "0002";//DEV_POC
+	public static final String GAMECENTER_REQ_TYPE_IF = "0003";//IF
+	public static final String GAMECENTER_REQ_TYPE_ADMIN = "0004";//ADMIN_POC
+	public static final String GAMECENTER_REQ_TYPE_BATCH = "0005";//BATCH
+
 	/**
 	 * 판매자 회원 상수들.
 	 * 

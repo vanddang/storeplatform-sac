@@ -99,7 +99,7 @@ public class AuthorizeByIdTest {
 							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
 							deviceExtraInfo.setExtraProfileValue("N");
 							deviceExtraInfoList.add(deviceExtraInfo);
-							req.setUserDeviceExtraInfo(deviceExtraInfoList);
+							req.setDeviceExtraInfoList(deviceExtraInfoList);
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
@@ -152,7 +152,7 @@ public class AuthorizeByIdTest {
 		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
 		deviceExtraInfo.setExtraProfileValue("N");
 		deviceExtraInfoList.add(deviceExtraInfo);
-		req.setUserDeviceExtraInfo(deviceExtraInfoList);
+		req.setDeviceExtraInfoList(deviceExtraInfoList);
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
 			logger.info("Request : {}", objMapper.writeValueAsString(req));

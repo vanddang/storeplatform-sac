@@ -5,7 +5,7 @@ import javax.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.GameCenter;
+import com.skplanet.storeplatform.sac.client.member.vo.common.GameCenterSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
@@ -163,9 +163,9 @@ public interface DeviceService {
 	/**
 	 * 게임센터 연동.
 	 * 
-	 * @param gameCenter
-	 *            GameCenter
+	 * @param gameCenterSac
+	 *            GameCenterSac
 	 */
-	public void insertGameCenterIF(@Valid @RequestBody GameCenter gameCenter);
+	public void insertGameCenterIF(@Valid @RequestBody GameCenterSac gameCenterSac);
 
 }

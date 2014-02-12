@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -32,6 +33,7 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.GameCenter;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
@@ -45,11 +47,13 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateGameCenterRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.GameCenter;
+import com.skplanet.storeplatform.sac.client.member.vo.common.GameCenterSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
@@ -426,17 +430,12 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setUserMbrDevice(DeviceUtil.getConverterUserMbrDeviceInfo(deviceInfo));
 		createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
-		GameCenter gameCenter = new GameCenter();
 		/* 2. 기등록된 회원이 존재하는지 확인 */
-		if (createDeviceRes.getPreviousUserKey() != null) {
+		String previousUserKey = createDeviceRes.getPreviousUserKey();
+		if (previousUserKey != null) {
 
-			LOGGER.info(":::: [PreviousUserKey] {}", createDeviceRes.getPreviousUserKey());
-			LOGGER.info(":::: [NowUserKey] {}", createDeviceRes.getUserKey());
-
-			String previousUserKey = createDeviceRes.getPreviousUserKey();
-			String nowUserKey = createDeviceRes.getUserKey();
-			gameCenter.setPreUserKey(previousUserKey);
-			gameCenter.setUserKey(nowUserKey);
+			LOGGER.info(":::: [PreviousUserKey] {}", previousUserKey);
+			LOGGER.info(":::: [NowUserKey] {}", userKey);
 
 			/* 3. 구매이력 이관요청 */
 
@@ -459,12 +458,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 				List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
 				for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
-					agreeInfo.setMemberKey(nowUserKey);
+					agreeInfo.setMemberKey(userKey);
 					agreeList.add(agreeInfo);
 				}
 				UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
 				updAgreeReq.setCommonRequest(commonRequest);
-				updAgreeReq.setUserKey(nowUserKey);
+				updAgreeReq.setUserKey(userKey);
 				updAgreeReq.setMbrClauseAgreeList(agreeList);
 				this.userSCI.updateAgreement(updAgreeReq);
 
@@ -493,7 +492,15 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 6. 게임센터 연동 */
-		//		this.insertGameCenterIF(gameCenter);
+		GameCenterSac gameCenterSac = new GameCenterSac();
+		gameCenterSac.setUserKey(userKey);
+		gameCenterSac.setPreUserKey(previousUserKey);
+		gameCenterSac.setDeviceId(deviceInfo.getDeviceId());
+		gameCenterSac.setPreDeviceId(null);
+		gameCenterSac.setSystemId(systemId);
+		gameCenterSac.setTenantId(tenantId);
+		gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+		this.insertGameCenterIF(gameCenterSac);
 
 		LOGGER.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
 
@@ -521,7 +528,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String userKey = deviceInfo.getUserKey();
 		String deviceId = deviceInfo.getDeviceId();
 		String deviceKey = deviceInfo.getDeviceKey();
-		String gameCenterYn = "";
+		String gameCenterYn = null;
 
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
@@ -568,7 +575,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String authenticationDate = deviceInfo.getAuthenticationDate(); // 인증일자
 		String isUsed = deviceInfo.getIsUsed(); // 사용여부
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
-		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getUserDeviceExtraInfo()); // rooting 여부
+		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getDeviceExtraInfoList()); // rooting 여부
 
 		LOGGER.info(":::::::::::::::::: device update field start ::::::::::::::::::");
 
@@ -601,7 +608,7 @@ public class DeviceServiceImpl implements DeviceService {
 						}
 
 						// uacd 부가속성 추가
-						deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId, deviceInfo));
+						deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId, deviceInfo));
 
 						LOGGER.info("[change uacd] {}", idpModelId);
 					}
@@ -756,12 +763,17 @@ public class DeviceServiceImpl implements DeviceService {
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		/* 게임센터 연동 */
-		//		if (StringUtils.equals(gameCenterYn, "Y")) {
-		//			GameCenter gameCenter = new GameCenter();
-		//			gameCenter.setDeviceId(deviceId);
-		//			gameCenter.setUserKey(userKey);
-		//			this.insertGameCenterIF(gameCenter);
-		//		}
+		if (StringUtils.equals(gameCenterYn, "Y")) {
+			GameCenterSac gameCenterSac = new GameCenterSac();
+			gameCenterSac.setUserKey(userKey);
+			gameCenterSac.setPreUserKey(null);
+			gameCenterSac.setDeviceId(deviceId);
+			gameCenterSac.setPreDeviceId(null);
+			gameCenterSac.setSystemId(requestHeader.getTenantHeader().getSystemId());
+			gameCenterSac.setTenantId(requestHeader.getTenantHeader().getTenantId());
+			gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+			this.insertGameCenterIF(gameCenterSac);
+		}
 
 		LOGGER.info("################ updateDeviceInfo end ##################");
 
@@ -809,13 +821,13 @@ public class DeviceServiceImpl implements DeviceService {
 
 		String osVersion = deviceheader.getOsVersion();
 		if (osVersion != null) { // OS버젼
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
 					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo));
 		}
 
 		String svcVersion = deviceheader.getSvcVersion();
 		if (svcVersion != null) { //SC버젼
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
 					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo));
 		}
 
@@ -845,10 +857,10 @@ public class DeviceServiceImpl implements DeviceService {
 		/* <NODATA> 적용요부 확인필요 */
 		deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum());
 
-		deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd() == null ? ""
+		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd() == null ? ""
 				: majorDeviceInfo.getUacd(), deviceInfo));
 
-		deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
+		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
 				majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
 
 		return deviceInfo;
@@ -902,14 +914,14 @@ public class DeviceServiceImpl implements DeviceService {
 				addData.setDeviceAccount(StringUtil.setTrim(info.getDeviceAccount()));
 				addData.setJoinId(StringUtil.setTrim(info.getJoinId()));
 
-				for (DeviceExtraInfo extraInfo : info.getUserDeviceExtraInfo()) {
+				for (DeviceExtraInfo extraInfo : info.getDeviceExtraInfoList()) {
 					DeviceExtraInfo addExtraInfo = new DeviceExtraInfo();
 					addExtraInfo.setExtraProfile(extraInfo.getExtraProfile());
 					addExtraInfo.setExtraProfileValue(extraInfo.getExtraProfileValue());
 					listExtraInfo.add(addExtraInfo);
 				}
 
-				addData.setUserDeviceExtraInfo(listExtraInfo);
+				addData.setDeviceExtraInfoList(listExtraInfo);
 
 				res.setUserDeviceInfo(addData);
 			}
@@ -1163,7 +1175,27 @@ public class DeviceServiceImpl implements DeviceService {
 	 * (com.skplanet.storeplatform.sac.client.member.vo.common.GameCenter)
 	 */
 	@Override
-	public void insertGameCenterIF(@Valid @RequestBody GameCenter gameCenter) {
+	public void insertGameCenterIF(@Valid @RequestBody GameCenterSac gameCenterSac) {
 
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(gameCenterSac.getSystemId());
+		commonRequest.setTenantID(gameCenterSac.getTenantId());
+
+		UpdateGameCenterRequest updGameCenterReq = new UpdateGameCenterRequest();
+		updGameCenterReq.setCommonRequest(commonRequest);
+
+		GameCenter gameCenterSc = new GameCenter();
+		gameCenterSc.setDeviceID(gameCenterSac.getDeviceId());
+		gameCenterSc.setPreDeviceID(gameCenterSac.getPreDeviceId());
+		gameCenterSc.setUserKey(gameCenterSac.getUserKey());
+		gameCenterSc.setPreUserKey(gameCenterSac.getPreUserKey());
+		gameCenterSc.setRequestType(gameCenterSac.getReqType());
+		gameCenterSc.setRequestDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
+		gameCenterSc.setStatusCode("0000");
+		gameCenterSc.setWorkCode(gameCenterSac.getWorkCd());
+		//gameCenterSc.setFileDate(fileDate);
+
+		updGameCenterReq.setGameCenter(gameCenterSc);
+		this.userSCI.updateGameCenter(updGameCenterReq);
 	}
 }

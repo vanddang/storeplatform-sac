@@ -125,8 +125,8 @@ public class ListDeviceTest {
 						public Object requestBody() {
 
 							ListDeviceReq req = new ListDeviceReq();
-							req.setUserId("tlaeowlsuser1");
-							req.setIsMainDevice("N");
+							req.setUserId("watermin0210");
+							req.setIsMainDevice("Y");
 
 							ObjectMapper objMapper = new ObjectMapper();
 

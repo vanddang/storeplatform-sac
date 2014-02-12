@@ -593,7 +593,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setNativeId(req.getNativeId());
 			deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth());
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
-			deviceInfo.setUserDeviceExtraInfo(req.getUserDeviceExtraInfo());
+			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 		} else if (obj instanceof AuthorizeByIdReq) { // id인증
@@ -609,7 +609,7 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setNativeId(req.getNativeId());
 				deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth());
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
-				deviceInfo.setUserDeviceExtraInfo(req.getUserDeviceExtraInfo());
+				deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 				this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 				/* 변경된 휴대기기 정보 IDP도 변경 */
