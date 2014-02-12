@@ -48,6 +48,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		data.setPacketFee(metaInfo.getProdClsfCd());
 		data.setProductFee(metaInfo.getProdChrg());
 		data.setProductId(metaInfo.getPurchaseProdId());
+		data.setPurchaseId(metaInfo.getPurchaseId());
 		data.setPurchaseDate(metaInfo.getPurchaseDt());
 
 		// 서브 컨텐츠 정보
