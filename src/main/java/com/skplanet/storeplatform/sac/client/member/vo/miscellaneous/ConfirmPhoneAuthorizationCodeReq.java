@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.miscellaneous;
 
-import javax.validation.constraints.Pattern;
-
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
@@ -22,7 +20,6 @@ public class ConfirmPhoneAuthorizationCodeReq extends CommonInfo {
 	 * 인증코드 수신 휴대폰 번호.
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
-	@Pattern(regexp = "[0-9]{10,11}", message = "유효하지 않은 휴대폰 번호입니다.")
 	private String userPhone;
 
 	/**
@@ -40,7 +37,7 @@ public class ConfirmPhoneAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 인증 코드 유효시간 (분).
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String timeToLive;
 
 	public String getUserPhone() {

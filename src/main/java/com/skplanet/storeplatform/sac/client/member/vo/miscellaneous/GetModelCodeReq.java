@@ -3,8 +3,6 @@
  */
 package com.skplanet.storeplatform.sac.client.member.vo.miscellaneous;
 
-import javax.validation.constraints.Pattern;
-
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -23,7 +21,6 @@ public class GetModelCodeReq extends CommonInfo {
 	/**
 	 * MDN
 	 */
-	@Pattern(regexp = "[0-9]{10,11}", message = "유효하지 않은 휴대폰 번호입니다.")
 	private String msisdn;
 
 	/**
