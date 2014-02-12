@@ -9,10 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xmlbeans.impl.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
+import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
@@ -58,6 +62,7 @@ import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
 import com.skplanet.storeplatform.sac.display.response.VodGenerator;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -226,14 +231,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 						// 소장
 						if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-							metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
 							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 								prchsState = "payment";
 							} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
 								prchsState = "gift";
 							}
 						} else {
-							metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
 							downloadVodSacReq.setPrchsDt(prchsDt);
 							downloadVodSacReq.setDwldExprDt(dwldExprDt);
 
@@ -279,23 +282,57 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 					metaInfo.setExpiredDate(downloadSystemDate.getExpiredDate());
 					metaInfo.setDwldExprDt(dwldExprDt);
+					metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
+
 					metaInfo.setUserKey(downloadVodSacReq.getUserKey());
 					metaInfo.setDeviceKey(downloadVodSacReq.getDeviceKey());
 					metaInfo.setDeviceType("");
 					metaInfo.setDeviceSubKey("");
 
+					// 소장, 대여 구분(Store : 소장, Play : 대여)
+					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+						metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+						metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+					} else {
+						metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+						metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+					}
+
 					// 암호화 정보
 					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
-					// contents를 JSON 형태로 파싱
-					String jsonContents = "";
 
-					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonContents.getBytes());
+					MarshallingHelper marshaller = new JacksonMarshallingHelper();
+					byte[] jsonData = marshaller.marshal(contents);
+
+					// JSON 암호화
+					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
 
 					Encryption encryption = new Encryption();
-					// encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE
-					// + DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY);
-					encryption.setText(new String(encryptByte));
+					encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE + "/"
+							+ this.downloadAES128Helper.getSAC_RANDOM_NUMBER());
+
+					// JSON 암호화값을 BASE64 Encoding
+					Base64Encoder encoder = new Base64Encoder();
+					String encryptString = encoder.encode(encryptByte);
+					encryption.setText(encryptString);
+
 					product.setEncryption(encryption);
+
+					try {
+						Encryption testEn = new Encryption();
+						testEn = product.getEncryption();
+
+						byte[] testValue = Base64.decode(testEn.getText().getBytes());
+						byte[] dec = this.downloadAES128Helper.decryption(testValue);
+
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("Encryption Type : {}", testEn.getType());
+						this.log.debug("Encryption Text : {}", testEn.getText());
+						this.log.debug("Decryption Text : {}", new String(dec, "UTF-8"));
+						this.log.debug("----------------------------------------------------------------");
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
 				}
 
 				commonResponse.setTotalCount(1);

@@ -62,21 +62,21 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		data.setPurchaseDate(date.getText());
 
 		// 서브 컨텐츠 정보
-		if (StringUtils.isNotEmpty(metaInfo.getNmBtvCid())) {
+		if (StringUtils.isNotEmpty(metaInfo.getNmSubContsId())) {
 			subContents = new EncryptionSubContents();
-			subContents.setScid(metaInfo.getNmBtvCid());
+			subContents.setScid(metaInfo.getNmSubContsId());
 			subContents.setPath(metaInfo.getNmFilePath());
 			subContentsList.add(subContents);
 		}
-		if (StringUtils.isNotEmpty(metaInfo.getSdBtvCid())) {
+		if (StringUtils.isNotEmpty(metaInfo.getSdSubContsId())) {
 			subContents = new EncryptionSubContents();
-			subContents.setScid(metaInfo.getSdBtvCid());
+			subContents.setScid(metaInfo.getSdSubContsId());
 			subContents.setPath(metaInfo.getSdFilePath());
 			subContentsList.add(subContents);
 		}
-		if (StringUtils.isNotEmpty(metaInfo.getHdBtvCid())) {
+		if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
 			subContents = new EncryptionSubContents();
-			subContents.setScid(metaInfo.getHdBtvCid());
+			subContents.setScid(metaInfo.getHdSubContsId());
 			subContents.setPath(metaInfo.getHdFilePath());
 			subContentsList.add(subContents);
 		}
