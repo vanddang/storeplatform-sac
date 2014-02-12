@@ -761,7 +761,10 @@ public class SellerServiceImpl implements SellerService {
 
 		AuthorizeRes response = new AuthorizeRes();
 
-		response.setIsLoginSuccess(schRes.getIsLoginSuccess());
+		if (schRes.getIsLoginSuccess() == null)
+			response.setIsLoginSuccess("N");
+		else
+			response.setIsLoginSuccess(schRes.getIsLoginSuccess());
 
 		return response;
 	}
