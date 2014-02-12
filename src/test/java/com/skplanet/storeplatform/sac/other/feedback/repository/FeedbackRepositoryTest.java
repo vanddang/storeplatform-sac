@@ -3,6 +3,8 @@ package com.skplanet.storeplatform.sac.other.feedback.repository;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
@@ -331,7 +334,10 @@ public class FeedbackRepositoryTest {
 		prodNoti.setEndRow("10");
 		prodNoti.setProdId("0000000020");
 		prodNoti.setMbrNo("IF110007722009061100144459");
-		prodNoti.setOrderedBy("recent");
+		prodNoti.setProdType("shopping");
+		prodNoti.setOrderedBy("recommend");
+		// prodNoti.setNotiSeq("300000055");
+		prodNoti.setChnlId("0000000020");
 		this.feedbackRepository.getProdNotiList(prodNoti);
 	}
 
@@ -347,8 +353,39 @@ public class FeedbackRepositoryTest {
 		prodNoti.setEndRow("10");
 		prodNoti.setProdId("0000000020");
 		prodNoti.setMbrNo("IF110007722009061100144459");
-		prodNoti.setOrderedBy("recent");
+		prodNoti.setProdType("shopping");
+		prodNoti.setOrderedBy("recommend");
+		prodNoti.setNotiSeq("300000055");
+		prodNoti.setChnlId("0000000020");
 		this.feedbackRepository.getProdNotiCount(prodNoti);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 자기가 작성한 사용후기 조회.
+	 * </pre>
+	 */
+	@Test
+	public void testGetMyProdNotiList() {
+
+		// notiSeq
+		// prodType
+		// mbrNo
+		// chnlId
+		// startRow, endRow
+		String prodIds = "11111,22222,33333,44444";
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setProdIds(Arrays.asList(StringUtils.split(prodIds, ",")));
+		prodNoti.setStartRow("1");
+		prodNoti.setEndRow("10");
+		// prodNoti.setProdId("0000000020");
+		prodNoti.setMbrNo("IF110007722009061100144459");
+		prodNoti.setProdType("shopping");
+		// prodNoti.setChnlId("0000000020");
+		// prodNoti.setOrderedBy("recommend");
+		// prodNoti.setNotiSeq("300000055");
+		this.feedbackRepository.getMyProdNotiList(prodNoti);
 	}
 
 	/**
