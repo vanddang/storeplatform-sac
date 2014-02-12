@@ -20,17 +20,17 @@ public class DetailRepresentationDeviceRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/* 자용자 단말 정보 */
-	private DeviceInfo userDeviceInfo;
+	private DeviceInfo deviceInfo;
 
 	/* 사용자 단말 부가 정보 */
 	private List<DeviceExtraInfo> deviceExtraInfoList;
 
-	public DeviceInfo getUserDeviceInfo() {
-		return this.userDeviceInfo;
+	public DeviceInfo getDeviceInfo() {
+		return this.deviceInfo;
 	}
 
-	public void setUserDeviceInfo(DeviceInfo userDeviceInfo) {
-		this.userDeviceInfo = userDeviceInfo;
+	public void setDeviceInfo(DeviceInfo deviceInfo) {
+		this.deviceInfo = deviceInfo;
 	}
 
 	public List<DeviceExtraInfo> getDeviceExtraInfoList() {

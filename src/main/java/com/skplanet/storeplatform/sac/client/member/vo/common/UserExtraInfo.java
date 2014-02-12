@@ -19,7 +19,7 @@ public class UserExtraInfo extends CommonInfo {
 	/**
 	 * 관리항목 코드
 	 */
-	private String extraProfileCode;
+	private String extraProfile;
 
 	/*
 	 * 관리항목 값
@@ -36,12 +36,12 @@ public class UserExtraInfo extends CommonInfo {
 	 */
 	private String userKey;
 
-	public String getExtraProfileCode() {
-		return this.extraProfileCode;
+	public String getExtraProfile() {
+		return this.extraProfile;
 	}
 
-	public void setExtraProfileCode(String extraProfileCode) {
-		this.extraProfileCode = extraProfileCode;
+	public void setExtraProfile(String extraProfile) {
+		this.extraProfile = extraProfile;
 	}
 
 	public String getExtraProfileValue() {

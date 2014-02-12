@@ -203,7 +203,7 @@ public class UserInfo extends CommonInfo {
 	private String imSiteCode;
 
 	/* 사용자 부가정보 */
-	private List<UserExtraInfo> userExtraInfo;
+	private List<UserExtraInfo> userExtraInfoList;
 
 	public String getDeviceCount() {
 		return this.deviceCount;
@@ -493,12 +493,12 @@ public class UserInfo extends CommonInfo {
 		this.imSiteCode = imSiteCode;
 	}
 
-	public List<UserExtraInfo> getUserExtraInfo() {
-		return this.userExtraInfo;
+	public List<UserExtraInfo> getUserExtraInfoList() {
+		return this.userExtraInfoList;
 	}
 
-	public void setUserExtraInfo(List<UserExtraInfo> userExtraInfo) {
-		this.userExtraInfo = userExtraInfo;
+	public void setUserExtraInfoList(List<UserExtraInfo> userExtraInfoList) {
+		this.userExtraInfoList = userExtraInfoList;
 	}
 
 	public static long getSerialversionuid() {
