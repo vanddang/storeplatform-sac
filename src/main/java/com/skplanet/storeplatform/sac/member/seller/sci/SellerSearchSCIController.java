@@ -17,14 +17,14 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchFlurryListRe
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchFlurryListResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
-import com.skplanet.storeplatform.sac.client.internal.member.sci.SellerSearchSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.DetailInformationReq;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.DetailInformationRes;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.ExtraRight;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.FlurryAuth;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.MbrLglAgent;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.SellerMbr;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.TabAuth;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.ExtraRightSac;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.FlurryAuthSac;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.MbrLglAgentSac;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.TabAuthSac;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
@@ -60,7 +60,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 	 * @return DetailInformationRes
 	 */
 	@Override
-	public DetailInformationRes detailInformation(DetailInformationReq req) {
+	public DetailInformationSacRes detailInformation(DetailInformationSacReq req) {
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID("S01");
@@ -78,8 +78,8 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 			keySearch.setKeyString(req.getSellerId());
 			keySearch.setKeyType("SELLERMBR_ID");
 		} else {
-			DetailInformationReq sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", req,
-					DetailInformationReq.class);
+			DetailInformationSacReq sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", req,
+					DetailInformationSacReq.class);
 			keySearch.setKeyString(sellerDTO.getSellerKey());
 			keySearch.setKeyType("INSD_SELLERMBR_NO");
 		}
@@ -97,11 +97,11 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		SearchFlurryListResponse schRes2 = this.sellerSCI.searchFlurryList(schReq2);
 
 		// 판매자 멀티미디어정보
-		List<ExtraRight> eList = new ArrayList<ExtraRight>();
-		ExtraRight extraRightList = null;
+		List<ExtraRightSac> eList = new ArrayList<ExtraRightSac>();
+		ExtraRightSac extraRightList = null;
 		if (schRes.getExtraRightList() != null)
 			for (int i = 0; i < schRes.getExtraRightList().size(); i++) {
-				extraRightList = new ExtraRight();
+				extraRightList = new ExtraRightSac();
 				// extraRightList.setEndDate(schRes.getExtraRightList().get(i).getEndDate());
 				// extraRightList.setRegDate(schRes.getExtraRightList().get(i).getRegDate());
 				extraRightList.setRegID(schRes.getExtraRightList().get(i).getRegID());
@@ -118,7 +118,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 			}
 
 		// 법정대리인정보
-		MbrLglAgent mbrLglAgent = new MbrLglAgent();
+		MbrLglAgentSac mbrLglAgent = new MbrLglAgentSac();
 		if (schRes.getMbrLglAgent() != null) {
 			mbrLglAgent.setMemberKey(schRes.getMbrLglAgent().getMemberKey());
 			mbrLglAgent.setParentBirthDay(schRes.getMbrLglAgent().getParentBirthDay());
@@ -136,21 +136,21 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		}
 
 		// 판매자 탭권한
-		List<TabAuth> tList = new ArrayList<TabAuth>();
-		TabAuth tabAuthList = null;
+		List<TabAuthSac> tList = new ArrayList<TabAuthSac>();
+		TabAuthSac tabAuthList = null;
 		if (schRes.getTabAuthList() != null)
 			for (int i = 0; i < schRes.getTabAuthList().size(); i++) {
-				tabAuthList = new TabAuth();
+				tabAuthList = new TabAuthSac();
 				tabAuthList.setTabCode(schRes.getTabAuthList().get(i).getTabCode());
 				tList.add(tabAuthList);
 			}
 
 		// 판매자 플러리 인증정보
-		List<FlurryAuth> fList = new ArrayList<FlurryAuth>();
-		FlurryAuth flurryAuthList = null;
+		List<FlurryAuthSac> fList = new ArrayList<FlurryAuthSac>();
+		FlurryAuthSac flurryAuthList = null;
 		if (schRes2.getFlurryAuthList() != null)
 			for (int i = 0; i < schRes2.getFlurryAuthList().size(); i++) {
-				flurryAuthList = new FlurryAuth();
+				flurryAuthList = new FlurryAuthSac();
 				flurryAuthList.setAccessCode(schRes2.getFlurryAuthList().get(i).getAccessCode());
 				flurryAuthList.setAuthToken(schRes2.getFlurryAuthList().get(i).getAuthToken());
 				flurryAuthList.setRegDate(schRes2.getFlurryAuthList().get(i).getRegDate());
@@ -159,7 +159,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 				fList.add(flurryAuthList);
 			}
 
-		DetailInformationRes response = new DetailInformationRes();
+		DetailInformationSacRes response = new DetailInformationSacRes();
 		response.setExtraRightList(eList);// 판매자 멀티미디어정보
 		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
 		response.setSellerKey(schRes.getSellerKey());// 판매자Key
@@ -177,9 +177,9 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 	 * 
 	 * @return
 	 */
-	private SellerMbr sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr) {
+	private SellerMbrSac sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr) {
 		// 판매자 정보
-		SellerMbr sellerMbrRes = new SellerMbr();
+		SellerMbrSac sellerMbrRes = new SellerMbrSac();
 		if (sellerMbr != null) {
 			sellerMbrRes.setApproveDate(sellerMbr.getApproveDate());
 			sellerMbrRes.setBizGrade(sellerMbr.getBizGrade());
