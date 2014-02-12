@@ -53,7 +53,6 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.GameCenterSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
@@ -62,6 +61,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentation
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
@@ -489,19 +490,19 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 6. 게임센터 연동 */
-		GameCenterSac gameCenterSac = new GameCenterSac();
-		gameCenterSac.setUserKey(userKey);
-		gameCenterSac.setDeviceId(deviceInfo.getDeviceId());
-		gameCenterSac.setSystemId(systemId);
-		gameCenterSac.setTenantId(tenantId);
+		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+		gameCenterSacReq.setUserKey(userKey);
+		gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
+		gameCenterSacReq.setSystemId(systemId);
+		gameCenterSacReq.setTenantId(tenantId);
 		if (previousUserKey == null) {
-			gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 		} else {
-			gameCenterSac.setPreUserKey(previousUserKey);
-			gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
+			gameCenterSacReq.setPreUserKey(previousUserKey);
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
 		}
 
-		this.insertGameCenterIF(gameCenterSac);
+		this.insertGameCenterIF(gameCenterSacReq);
 
 		LOGGER.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
 
@@ -765,13 +766,13 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 게임센터 연동 */
 		if (StringUtils.equals(gameCenterYn, "Y")) {
-			GameCenterSac gameCenterSac = new GameCenterSac();
-			gameCenterSac.setUserKey(userKey);
-			gameCenterSac.setDeviceId(deviceId);
-			gameCenterSac.setSystemId(requestHeader.getTenantHeader().getSystemId());
-			gameCenterSac.setTenantId(requestHeader.getTenantHeader().getTenantId());
-			gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-			this.insertGameCenterIF(gameCenterSac);
+			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			gameCenterSacReq.setUserKey(userKey);
+			gameCenterSacReq.setDeviceId(deviceId);
+			gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+			this.insertGameCenterIF(gameCenterSacReq);
 		}
 
 		LOGGER.info("################ updateDeviceInfo end ##################");
@@ -1174,27 +1175,31 @@ public class DeviceServiceImpl implements DeviceService {
 	 * (com.skplanet.storeplatform.sac.client.member.vo.common.GameCenter)
 	 */
 	@Override
-	public void insertGameCenterIF(@Valid @RequestBody GameCenterSac gameCenterSac) {
+	public GameCenterSacRes insertGameCenterIF(@Valid @RequestBody GameCenterSacReq gameCenterSacReq) {
 
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(gameCenterSac.getSystemId());
-		commonRequest.setTenantID(gameCenterSac.getTenantId());
+		commonRequest.setSystemID(gameCenterSacReq.getSystemId());
+		commonRequest.setTenantID(gameCenterSacReq.getTenantId());
 
 		UpdateGameCenterRequest updGameCenterReq = new UpdateGameCenterRequest();
 		updGameCenterReq.setCommonRequest(commonRequest);
 
 		GameCenter gameCenterSc = new GameCenter();
-		gameCenterSc.setDeviceID(gameCenterSac.getDeviceId());
-		gameCenterSc.setPreDeviceID(gameCenterSac.getPreDeviceId());
-		gameCenterSc.setUserKey(gameCenterSac.getUserKey());
-		gameCenterSc.setPreUserKey(gameCenterSac.getPreUserKey());
+		gameCenterSc.setDeviceID(gameCenterSacReq.getDeviceId());
+		gameCenterSc.setPreDeviceID(gameCenterSacReq.getPreDeviceId());
+		gameCenterSc.setUserKey(gameCenterSacReq.getUserKey());
+		gameCenterSc.setPreUserKey(gameCenterSacReq.getPreUserKey());
 		gameCenterSc.setRequestDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-		gameCenterSc.setWorkCode(gameCenterSac.getWorkCd());
-		gameCenterSc.setRequestType(gameCenterSac.getSystemId());
+		gameCenterSc.setWorkCode(gameCenterSacReq.getWorkCd());
+		gameCenterSc.setRequestType(gameCenterSacReq.getSystemId());
 		//gameCenterSc.setFileDate(fileDate);
-
 		updGameCenterReq.setGameCenter(gameCenterSc);
 
 		this.userSCI.updateGameCenter(updGameCenterReq);
+
+		GameCenterSacRes gameCenterSacRes = new GameCenterSacRes();
+		gameCenterSacRes.setUserKey(gameCenterSacReq.getUserKey());
+		return gameCenterSacRes;
+
 	}
 }

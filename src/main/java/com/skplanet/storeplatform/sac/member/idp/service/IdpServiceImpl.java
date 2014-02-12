@@ -53,7 +53,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.common.GameCenterSac;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
@@ -1327,12 +1327,12 @@ public class IdpServiceImpl implements IdpService {
 			this.userSCI.remove(removeUserReq);
 
 			/* 게임센터 연동 */
-			GameCenterSac gameCenterSac = new GameCenterSac();
-			gameCenterSac.setUserKey(user_key);
-			gameCenterSac.setSystemId(systemId);
-			gameCenterSac.setTenantId(tenantId);
-			gameCenterSac.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
-			this.deviceService.insertGameCenterIF(gameCenterSac);
+			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			gameCenterSacReq.setUserKey(user_key);
+			gameCenterSacReq.setSystemId(systemId);
+			gameCenterSacReq.setTenantId(tenantId);
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
+			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
 		} catch (StorePlatformException ex) {
 
