@@ -32,14 +32,12 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 /**
- * 회원 OCB 정보 등록/수정 테스트.
+ * 회원 OCB 정보 삭제 테스트.
  * 
  * Updated on : 2014. 2. 12. Updated by : 심대진, 다모아 솔루션.
  */
@@ -48,7 +46,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class CreateOcbInformationTest {
+public class RemoveOcbInformationTest {
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -67,37 +65,31 @@ public class CreateOcbInformationTest {
 
 	/**
 	 * <pre>
-	 * 회원 OCB 정보 등록/수정.
+	 * 회원 OCB 정보 삭제.
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
 	@Test
-	public void test1_createOcbInformation() throws Exception {
+	public void test1_removeOcbInformation() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createOcbInformation/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/removeOcbInformation/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 
-						CreateOcbInformationReq reqJson = new CreateOcbInformationReq();
+						RemoveOcbInformationReq reqJson = new RemoveOcbInformationReq();
 
 						reqJson.setUserKey("US201401241550022950000616");
-						reqJson.setCardNumber("3306-3306-3306-33-6"); // 카드 번호 (암호화..??)
-						/* 인증수단 코드 (OR003400 비인증, OR003401 카드번호인증, OR003402 주민번호인증) */
-						reqJson.setAuthMethodCode("OR003401");
-						reqJson.setStartDate(DateUtil.getToday("yyyyMMddHHmmss")); // YYYYMMDDHH24MISS
-						reqJson.setEndDate(DateUtil.getToday("99991231235959")); // YYYYMMDDHH24MISS
-						reqJson.setIsUsed(MemberConstants.USE_Y);
 
 						return reqJson;
 					}
-				}).success(CreateOcbInformationRes.class, new SuccessCallback() {
+				}).success(RemoveOcbInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateOcbInformationRes res = (CreateOcbInformationRes) result;
+						RemoveOcbInformationRes res = (RemoveOcbInformationRes) result;
 						assertThat(res.getUserKey(), notNullValue());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
