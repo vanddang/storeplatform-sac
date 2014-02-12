@@ -1002,6 +1002,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			Identifier identifier = null;
 			Title title = null;
 			Source source = null;
+			Date date = null;
 			List<Promotion> promotionList = new ArrayList<Promotion>();
 
 			for (int i = 0; i < resultList.size(); i++) {
@@ -1021,11 +1022,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 				source.setUrl(shopping.getFilePos());
 
+				date = new Date();
+				date.setText(DateUtils.parseDate(shopping.getPlanStartDt()),
+						DateUtils.parseDate(shopping.getPlanEndDt()));
 				// 데이터 매핑
 				promotion.setIdentifier(identifier);
 				promotion.setTitle(title);
 				promotion.setPromotionExplain(shopping.getSubTitleName());
-				promotion.setUsagePeriod(shopping.getPlanStartDt() + "/" + shopping.getPlanEndDt());
+				promotion.setUsagePeriod(date.getText());
 				promotion.setSource(source);
 				promotionList.add(i, promotion);
 			}
