@@ -86,7 +86,7 @@ public class SellerController {
 
 	/**
 	 * <pre>
-	 * 2.2.5. 판매자 회원 단순 인증.
+	 * 2.2.4. 판매자 회원 단순 인증.
 	 * </pre>
 	 * 
 	 * @param AuthorizeReq
