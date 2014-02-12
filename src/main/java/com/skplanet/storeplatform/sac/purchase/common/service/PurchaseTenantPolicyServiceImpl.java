@@ -46,9 +46,30 @@ public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyServ
 	 */
 	@Override
 	public List<PurchaseTenantPolicy> searchPurchaseTenantPolicyList(String tenantId, String tenantProdGrpCd) {
+		return this.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd, null);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 해당 테넌트의 구매Part 정책 중 특정 정책만 조회한다.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            정책을 조회할 대상 테넌트 ID
+	 * @param tenantProdGrpCd
+	 *            정책 기준이 되는 테넌트 상품 그룹 코드
+	 * @param policyId
+	 *            조회할 정책ID
+	 * @return 해당 테넌트의 구매Part 정책 목록
+	 */
+	@Override
+	public List<PurchaseTenantPolicy> searchPurchaseTenantPolicyList(String tenantId, String tenantProdGrpCd,
+			String policyId) {
 		PurchaseTenantPolicy qryParam = new PurchaseTenantPolicy();
 		qryParam.setTenantId(tenantId);
 		qryParam.setTenantProdGrpCd(tenantProdGrpCd);
+		qryParam.setPolicyId(policyId);
 
 		return this.commonDao.queryForList("PurchaseSacCommon.searchPurchaseTenantPolicyList", qryParam,
 				PurchaseTenantPolicy.class);
