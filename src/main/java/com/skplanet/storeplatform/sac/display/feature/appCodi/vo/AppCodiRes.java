@@ -2,7 +2,8 @@ package com.skplanet.storeplatform.sac.display.feature.appCodi.vo;
 
 public class AppCodiRes {
 
-	private String totalCount;
+	private int totalCount;
+
 	private String topMenuId;
 	private String topMenuNm;
 	private String menuId;
@@ -51,7 +52,7 @@ public class AppCodiRes {
 	/**
 	 * @return the totalCount
 	 */
-	public String getTotalCount() {
+	public int getTotalCount() {
 		return this.totalCount;
 	}
 
@@ -59,7 +60,7 @@ public class AppCodiRes {
 	 * @param totalCount
 	 *            the totalCount to set
 	 */
-	public void setTotalCount(String totalCount) {
+	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
 	}
 
