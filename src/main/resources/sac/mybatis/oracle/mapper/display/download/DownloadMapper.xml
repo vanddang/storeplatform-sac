@@ -648,6 +648,7 @@
     <select id="selectDownloadComicInfo" parameterType="DownloadComicSacReq" resultType="MetaInfo">
         SELECT  /* DownloadMapper.xml, selectDownloadComicInfo, tae hee Lee, 2014-02-03 */
                 JA.*
+              , DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free') AS PROD_CHRG
               , CONCAT(JB.FILE_PATH, JB.FILE_NM) AS IMAGE_PATH
               , JB.FILE_SIZE AS IMAGE_SIZE
               , (SELECT MENU_NM
@@ -674,6 +675,7 @@
                               , D.DRM_YN
                               , D.USE_PERIOD_UNIT_CD
                               , D.USE_PERIOD
+                              , D.PROD_CHRG_YN
                               , E.PROD_NM
                               , F.BOOK_CLSF_CD
                               , G.PROD_STATUS_CD
