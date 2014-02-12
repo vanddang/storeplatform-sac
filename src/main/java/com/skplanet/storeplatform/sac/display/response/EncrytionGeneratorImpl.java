@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionData;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionDeviceKey;
@@ -29,6 +31,9 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
  */
 @Component
 public class EncrytionGeneratorImpl implements EncryptionGenerator {
+	@Autowired
+	CommonMetaInfoGenerator commonMetaInfoGenerator;
+
 	@Override
 	public EncryptionContents generateEncryptionContents(MetaInfo metaInfo) {
 		EncryptionContents contents = new EncryptionContents();
@@ -36,6 +41,8 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		EncryptionSubContents subContents = null;
 		EncryptionUsagePolicy usagePolicy = new EncryptionUsagePolicy();
 		EncryptionDeviceKey deviceKey = new EncryptionDeviceKey();
+		Date date = new Date();
+
 		List<EncryptionSubContents> subContentsList = new ArrayList<EncryptionSubContents>();
 
 		// 요청 만료 정보
@@ -49,7 +56,9 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		data.setProductFee(metaInfo.getProdChrg());
 		data.setProductId(metaInfo.getPurchaseProdId());
 		data.setPurchaseId(metaInfo.getPurchaseId());
-		data.setPurchaseDate(metaInfo.getPurchaseDt());
+
+		date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getPurchaseDt());
+		data.setPurchaseDate(date.getText());
 
 		// 서브 컨텐츠 정보
 		if (StringUtils.isNotEmpty(metaInfo.getNmBtvCid())) {
@@ -80,7 +89,9 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 
 		// 사용 정책
 		usagePolicy.setApplyDrm(metaInfo.getDrmYn());
-		usagePolicy.setExpirationDate(metaInfo.getDwldExprDt()); // 확인필요
+		date = new Date();
+		date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getDwldExprDt());
+		usagePolicy.setExpirationDate(date.getText());
 		usagePolicy.setBpCode(metaInfo.getBpJoinFileType());
 		usagePolicy.setCertKey(metaInfo.getBpJoinFileNo());
 		data.setUsagePolicy(usagePolicy);
