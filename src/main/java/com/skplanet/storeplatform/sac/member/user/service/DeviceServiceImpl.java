@@ -378,18 +378,16 @@ public class DeviceServiceImpl implements DeviceService {
 
 			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
-			if (schDeviceRes != null) {
-				deviceInfo = new DeviceInfo();
-				deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
-				deviceInfo.setUserId(schDeviceRes.getUserID());
-				deviceInfo.setUserKey(schDeviceRes.getUserKey());
+			deviceInfo = new DeviceInfo();
+			deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
+			deviceInfo.setUserId(schDeviceRes.getUserID());
+			deviceInfo.setUserKey(schDeviceRes.getUserKey());
 
-				/* 폰정보 DB 조회하여 추가 정보 반영 */
-				Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
-				deviceInfo.setMakeComp(device.getMnftCompCd());
-				deviceInfo.setModelNm(device.getModelNm());
-				deviceInfo.setVmType(device.getVmTypeCd());
-			}
+			/* 폰정보 DB 조회하여 추가 정보 반영 */
+			Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
+			deviceInfo.setMakeComp(device.getMnftCompCd());
+			deviceInfo.setModelNm(device.getModelNm());
+			deviceInfo.setVmType(device.getVmTypeCd());
 
 		} catch (StorePlatformException ex) {
 			throw ex;
