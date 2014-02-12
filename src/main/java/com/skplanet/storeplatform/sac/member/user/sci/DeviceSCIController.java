@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.ChangedDeviceReq;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.ChangedDeviceRes;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnReq;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnRes;
+import com.skplanet.storeplatform.sac.client.internal.member.vo.ChangedDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.vo.ChangedDeviceSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -42,7 +42,7 @@ public class DeviceSCIController implements DeviceSCI {
 
 	@Override
 	@RequestMapping(value = "/getDeviceMdn", method = RequestMethod.POST)
-	public GetMdnRes getDeviceMdn(/* SacRequestHeader requestHeader, */@Validated GetMdnReq requestVO) {
+	public GetMdnSacRes getDeviceMdn(/* SacRequestHeader requestHeader, */@Validated GetMdnSacReq requestVO) {
 
 		SacRequestHeader requestHeader = new SacRequestHeader(); // client-internal에 공통으로 생성되면 삭제 후 Bypass 예정.
 		TenantHeader tenantHeader = new TenantHeader();
@@ -53,7 +53,7 @@ public class DeviceSCIController implements DeviceSCI {
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				requestVO.getDeviceKey(), requestVO.getUserKey());
 
-		GetMdnRes responseVO = new GetMdnRes();
+		GetMdnSacRes responseVO = new GetMdnSacRes();
 		responseVO.setMsisdn(deviceInfo.getDeviceId());
 
 		return responseVO;
@@ -66,7 +66,7 @@ public class DeviceSCIController implements DeviceSCI {
 	 * storeplatform.sac.client.internal.member.vo.ChangedDeviceReq)
 	 */
 	@Override
-	public ChangedDeviceRes searchChangedDeviceList(ChangedDeviceReq request) {
+	public ChangedDeviceSacRes searchChangedDeviceList(ChangedDeviceSacReq requestVO) {
 		// TODO Auto-generated method stub
 		return null;
 	}

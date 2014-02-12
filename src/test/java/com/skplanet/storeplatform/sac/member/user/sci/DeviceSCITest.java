@@ -18,8 +18,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.internal.member.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnReq;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnRes;
+import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnSacRes;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
@@ -46,10 +46,10 @@ public class DeviceSCITest {
 	 */
 	@Test
 	public void testGetDeviceMdn() {
-		GetMdnReq request = new GetMdnReq();
+		GetMdnSacReq request = new GetMdnSacReq();
 		request.setUserKey("US201402110557052730002230");
 		request.setDeviceKey("DE201402120409541480001552");
-		GetMdnRes result = this.deviceSCI.getDeviceMdn(request);
+		GetMdnSacRes result = this.deviceSCI.getDeviceMdn(request);
 		assertThat(result.getMsisdn(), notNullValue());
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
@@ -63,10 +63,10 @@ public class DeviceSCITest {
 	 */
 	@Test(expected = StorePlatformException.class)
 	public void testExceptGetDeviceMdn() {
-		GetMdnReq request = new GetMdnReq();
+		GetMdnSacReq request = new GetMdnSacReq();
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceKey("DE201401241840125800000296");
-		GetMdnRes result = this.deviceSCI.getDeviceMdn(request);
+		GetMdnSacRes result = this.deviceSCI.getDeviceMdn(request);
 		assertThat(result.getMsisdn(), notNullValue());
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
