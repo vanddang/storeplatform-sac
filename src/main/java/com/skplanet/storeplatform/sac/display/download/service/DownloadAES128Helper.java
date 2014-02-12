@@ -1,9 +1,10 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.List;
+import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -13,17 +14,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 @Component
 public class DownloadAES128Helper {
 	final private int KEY_SIZE = 16; // 128bit
 
-	@Value("#{propertiesForSac['display.forDownload.encrypt.key." + DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY + "']}")
-	private String SAC_KEY;
+	@Value("#{propertiesForSac['display.forDownload.encrypt.key'].split(',')}")
+	private List<String> SAC_KEY;
 
 	@Value("#{propertiesForSac['display.forDownload.encrypt.dl.iv']}")
 	private String SAC_DL_IV;
+
+	private int RANDOM_NUMBER;
 
 	public byte[] genRandomKey() {
 		final byte[] key = new byte[this.KEY_SIZE];
@@ -50,15 +52,29 @@ public class DownloadAES128Helper {
 	}
 
 	public byte[] encryption(byte[] b) {
+		byte[] row = null;
+		byte[] iv = null;
 		byte[] rtnStrByte = null;
-		byte[] row = this.convertBytes(this.SAC_KEY);
-		byte[] iv = this.convertBytes(this.SAC_DL_IV);
 
-		IvParameterSpec ivSpec = new IvParameterSpec(iv);
-		SecretKeySpec key = new SecretKeySpec(row, "AES");
-		Cipher cipher;
+		IvParameterSpec ivSpec = null;
+		SecretKeySpec key = null;
+		Cipher cipher = null;
 
 		try {
+			Random random = new Random();
+			int randomNumber = random.nextInt(20);
+			this.setRANDOM_NUMBER(randomNumber);
+
+			row = this.convertBytes(this.SAC_KEY.get(randomNumber));
+			iv = this.convertBytes(this.SAC_DL_IV);
+
+			System.out.println(row);
+
+			ivSpec = new IvParameterSpec(iv);
+			key = new SecretKeySpec(row, "AES");
+
+			System.out.println(key);
+
 			cipher = Cipher.getInstance("AES/CTR/NoPadding");
 			cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
 			rtnStrByte = cipher.doFinal(b);
@@ -71,15 +87,21 @@ public class DownloadAES128Helper {
 	}
 
 	public byte[] decryption(byte[] b) {
+		byte[] row = null;
+		byte[] iv = null;
 		byte[] rtnStrByte = null;
-		byte[] row = this.convertBytes(this.SAC_KEY);
-		byte[] iv = this.convertBytes(this.SAC_DL_IV);
 
-		IvParameterSpec ivSpec = new IvParameterSpec(iv);
-		SecretKeySpec key = new SecretKeySpec(row, "AES");
-		Cipher cipher;
+		IvParameterSpec ivSpec = null;
+		SecretKeySpec key = null;
+		Cipher cipher = null;
 
 		try {
+			row = this.convertBytes(this.SAC_KEY.get(this.getRANDOM_NUMBER()));
+			iv = this.convertBytes(this.SAC_DL_IV);
+
+			ivSpec = new IvParameterSpec(iv);
+			key = new SecretKeySpec(row, "AES");
+
 			cipher = Cipher.getInstance("AES/CTR/NoPadding");
 			cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
 			rtnStrByte = cipher.doFinal(b);
@@ -91,23 +113,17 @@ public class DownloadAES128Helper {
 	}
 
 	/**
-	 * @param args
-	 * @throws UnsupportedEncodingException
-	 * @throws NoSuchAlgorithmException
+	 * @return the rANDOM_NUMBER
 	 */
-	public void main(String[] args) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-		String json = "{\"expired\": \"{YYYYMMDDThhmmssZ}\",\"data\": {\"title\": \"{title}\",\"topCatCd\": \"\",\"catCd\": \"\",\"packetFee\": \"{paid|free}\",\"prodFee\": \"{paid|free}\",\"productId\": \"{product ID}\",\"purchaseId\": \"{purchase ID}\",\"purchaseDate\": \"{YYYYMMDDThhmmssZ}\",\"subContents\" : [{\"scid\": \"{SCID}\",\"path\": \"{NAS path}\"}],\"applyDrm\": \"Y\",\"expirationDate\": \"{YYYYMMDDThhmmssZ}\",\"extrainfo\" : {\"pcPlay\": \"y\",\"bpCode\" : \"00\",\"certKey\":\"xxxxxxx\"},\"userKey\": \"{user ID}\",\"deviceKey\": {\"key\": \"{Device Key}\",\"type\": \"{msisdn|uuid|mac}\",\"subKey\": \"{msisdn | UUID | MAC}\",}}}";
-		byte[] digest = this.getDigest(json.getBytes());
-		this.toHexString(digest);
-		System.out.println("digest: " + this.toHexString(digest));
+	public int getRANDOM_NUMBER() {
+		return this.RANDOM_NUMBER;
+	}
 
-		try {
-			byte[] encrypt = this.encryption(json.getBytes());
-			byte[] decrypt = this.decryption(encrypt);
-			String j = new String(decrypt, "UTF-8");
-			System.out.print(j);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	/**
+	 * @param rANDOM_NUMBER
+	 *            the rANDOM_NUMBER to set
+	 */
+	public void setRANDOM_NUMBER(int rANDOM_NUMBER) {
+		this.RANDOM_NUMBER = rANDOM_NUMBER;
 	}
 }
