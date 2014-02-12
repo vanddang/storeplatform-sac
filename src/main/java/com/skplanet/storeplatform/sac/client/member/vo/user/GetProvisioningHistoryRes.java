@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -15,45 +17,14 @@ public class GetProvisioningHistoryRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/* 프로비저닝 구분 */
-	private String workdCd;
-	/* 사용자 신규 Key */
-	private String afterUserKey;
-	/* 사용자 기존 Key */
-	private String preUserKey;
-	/* 수정일시 */
-	private String updateDate;
+	List<GameCenterSacRes> gameCenterList;
 
-	public String getWorkdCd() {
-		return this.workdCd;
+	public List<GameCenterSacRes> getGameCenterList() {
+		return this.gameCenterList;
 	}
 
-	public void setWorkdCd(String workdCd) {
-		this.workdCd = workdCd;
-	}
-
-	public String getAfterUserKey() {
-		return this.afterUserKey;
-	}
-
-	public void setAfterUserKey(String afterUserKey) {
-		this.afterUserKey = afterUserKey;
-	}
-
-	public String getPreUserKey() {
-		return this.preUserKey;
-	}
-
-	public void setPreUserKey(String preUserKey) {
-		this.preUserKey = preUserKey;
-	}
-
-	public String getUpdateDate() {
-		return this.updateDate;
-	}
-
-	public void setUpdateDate(String updateDate) {
-		this.updateDate = updateDate;
+	public void setGameCenterList(List<GameCenterSacRes> gameCenterList) {
+		this.gameCenterList = gameCenterList;
 	}
 
 	public static long getSerialversionuid() {
