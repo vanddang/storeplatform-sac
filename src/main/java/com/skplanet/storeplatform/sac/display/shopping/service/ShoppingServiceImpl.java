@@ -53,6 +53,7 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -820,11 +821,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 이용권한 정보
 				rights = new Rights();
-				date = new Date();
-				date.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM);
-				date.setText(shopping.getApplyStartDt() + "/" + shopping.getApplyEndDt());
-				rights.setGrade(shopping.getProdGrdCd());
+				date = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM, DateUtils.parseDate(shopping
+						.getApplyStartDt()), DateUtils.parseDate(shopping.getApplyEndDt()));
 				rights.setDate(date);
+				rights.setGrade(shopping.getProdGrdCd());
 
 				// contributor
 				contributor = new Contributor();
@@ -928,11 +928,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 				source.setUrl(shopping.getFilePos());
 
+				Date date = new Date();
+				date.setText(DateUtils.parseDate(shopping.getPlanStartDt()),
+						DateUtils.parseDate(shopping.getPlanEndDt()));
+
 				// 데이터 매핑
 				promotion.setIdentifier(identifier);
 				promotion.setTitle(title);
 				promotion.setPromotionExplain(shopping.getSubTitleName());
-				promotion.setUsagePeriod(shopping.getPlanStartDt() + "/" + shopping.getPlanEndDt());
+				promotion.setUsagePeriod(date.getText());
 				promotion.setSource(source);
 				promotionList.add(i, promotion);
 				totalCount = shopping.getTotalCount();
@@ -2188,9 +2192,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 							purchaseIdentifierList.add(purchaseIdentifier);
 							purchase.setIdentifierList(purchaseIdentifierList);
 							purchase.setState(prchsState);
-							purchaseDate = new Date();
-							purchaseDate.setType(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM);
-							purchaseDate.setText(prchsDt);
+							if (prchsDt != null) {
+								purchaseDate = new Date(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM,
+										DateUtils.parseDate(prchsDt));
+							}
 							purchase.setDate(purchaseDate);
 							if (purchseCount > 0) {// 구매 건수가 있을 경우
 								episodeProduct.setPurchase(purchase);
@@ -2199,10 +2204,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 							// 에피소드 날짜 권한 정보
 							episodeDateList = new ArrayList<Date>();
 							episodeRights = new Rights();
-							episodeDate = new Date();
-							episodeDate.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM);
-							episodeDate.setText(episodeShopping.getApplyStartDt() + "/"
-									+ episodeShopping.getApplyEndDt());
+
+							episodeDate = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM,
+									DateUtils.parseDate(episodeShopping.getApplyStartDt()),
+									DateUtils.parseDate(episodeShopping.getApplyEndDt()));
 							episodeDateList.add(episodeDate);
 
 							episodeDate = new Date();
