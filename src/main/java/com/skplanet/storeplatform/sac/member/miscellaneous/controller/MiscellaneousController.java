@@ -1,8 +1,5 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRe
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 
 /**
@@ -79,6 +77,11 @@ public class MiscellaneousController {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceModel 또는 msisdn");
 		}
 
+		if (request.getMsisdn() != null) {
+			if (!ValidationCheckUtils.isMdn(request.getMsisdn()))
+				throw new StorePlatformException("SAC_MEM_3004");
+		}
+
 		GetUaCodeRes response = this.service.getUaCode(requestHeader, request);
 
 		return response;
@@ -100,10 +103,7 @@ public class MiscellaneousController {
 	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Validated @RequestBody GetOpmdReq request) {
 
 		// CommonComponent 호출 시에는 mdn Check 불필요하므로, Controller에서 유효성 검사.
-		Pattern pattern = Pattern.compile("[0-9]{10,11}");
-		Matcher matcher = pattern.matcher(request.getMsisdn());
-		boolean isMdn = matcher.matches();
-		if (!isMdn) {
+		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
 
@@ -127,7 +127,9 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetPhoneAuthorizationCodeRes getPhoneAutorizationCode(SacRequestHeader requestHeader,
 			@Validated @RequestBody GetPhoneAuthorizationCodeReq request) {
-
+		if (!ValidationCheckUtils.isMdn(request.getRecvMdn())) {
+			throw new StorePlatformException("SAC_MEM_3004");
+		}
 		GetPhoneAuthorizationCodeRes response = this.service.getPhoneAuthorizationCode(requestHeader, request);
 
 		return response;
@@ -150,6 +152,9 @@ public class MiscellaneousController {
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(SacRequestHeader requestHeader,
 			@Validated @RequestBody ConfirmPhoneAuthorizationCodeReq request) {
 
+		if (!ValidationCheckUtils.isMdn(request.getUserPhone())) {
+			throw new StorePlatformException("SAC_MEM_3004");
+		}
 		ConfirmPhoneAuthorizationCodeRes response = this.service.confirmPhoneAutorizationCode(request);
 
 		return response;
@@ -236,6 +241,9 @@ public class MiscellaneousController {
 	@RequestMapping(value = "/createAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request) {
+		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
+			throw new StorePlatformException("SAC_MEM_3004");
+		}
 		return this.service.createAdditionalService(request);
 	}
 
@@ -252,6 +260,9 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetAdditionalServiceRes getAdditionalService(@Validated @RequestBody GetAdditionalServiceReq request) {
 
+		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
+			throw new StorePlatformException("SAC_MEM_3004");
+		}
 		return this.service.getAdditionalService(request);
 	}
 
@@ -270,6 +281,10 @@ public class MiscellaneousController {
 		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
 		if ((request.getUaCd() == null || "".equals(request.getUaCd())) && request.getMsisdn() == null) {
 			throw new StorePlatformException("SAC_MEM_0001", "uaCd 또는 msisdn");
+		}
+		if (request.getMsisdn() != null) {
+			if (!ValidationCheckUtils.isMdn(request.getMsisdn()))
+				throw new StorePlatformException("SAC_MEM_3004");
 		}
 		return this.service.getModelCode(request);
 	}

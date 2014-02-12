@@ -429,7 +429,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		LOGGER.info("## 인증코드 신규 발급 여부 : {}", isAuthEmail);
 
-		if (isAuthEmail.equals("N")) { // 기존 인증코드 발급고 인증하지 않은 경우.
+		if (isAuthEmail.equals("N")) { // 기존 인증코드 발급하고 인증하지 않은 경우.
 			LOGGER.info("이미 발급된 회원 입니다. 동일 인증코드 전달.");
 			LOGGER.info("## authCode : {}", authCode);
 		} else if (isAuthEmail.equals("Y") || serviceAuthList == null) { // 신규 인증 - NULL 또는 기존에 인증했으나 무효화된 값들을 가지고 있는경우.
