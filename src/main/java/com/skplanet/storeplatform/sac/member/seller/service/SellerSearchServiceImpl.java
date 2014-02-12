@@ -437,7 +437,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrPwdHint = new SellerMbrPwdHint();
 				sellerMbrPwdHint.setQuestionID(schRes.getPWReminderList().get(i).getQuestionID());
 				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderList().get(i).getQuestionMessage());
-				sellerMbrPwdHint.setUpdateDate(schRes.getPWReminderList().get(i).getUpdateDate());
 				sList.add(sellerMbrPwdHint);
 			}
 
@@ -472,7 +471,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrPwdHint = new SellerMbrPwdHint();
 				sellerMbrPwdHint.setQuestionID(schRes.getPWReminderAllList().get(i).getQuestionID());
 				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderAllList().get(i).getQuestionMessage());
-				sellerMbrPwdHint.setUpdateDate(schRes.getPWReminderAllList().get(i).getUpdateDate());
+				sellerMbrPwdHint.setDisplayOrder(schRes.getPWReminderAllList().get(i).getDisplayOrder());
 				sList.add(sellerMbrPwdHint);
 			}
 
