@@ -2194,7 +2194,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 							}
 
 							purchase = new Purchase();
+							purchaseDate = new Date();
 							purchaseIdentifier = new Identifier();
+							purchaseIdentifierList = new ArrayList<Identifier>();
 							purchaseIdentifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 							purchaseIdentifier.setText(prchsId);
 							purchaseIdentifierList.add(purchaseIdentifier);
