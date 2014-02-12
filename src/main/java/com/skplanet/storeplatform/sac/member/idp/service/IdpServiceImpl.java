@@ -2232,7 +2232,9 @@ public class IdpServiceImpl implements IdpService {
 				userMbr.setUserPhone(map.get("user_tn").toString());
 				userMbr.setUserKey(searchUserResponse.getUserMbr().getUserKey());
 				updateUserRequest.setUserMbr(userMbr);
-				updateUserRequest.setMbrLglAgent(searchUserResponse.getMbrLglAgent());
+				if (searchUserResponse.getMbrLglAgent().getIsParent().equals(MemberConstants.USE_Y)) { // 법정대리인 정보가 있는경우만 셋팅
+					updateUserRequest.setMbrLglAgent(searchUserResponse.getMbrLglAgent());
+				}
 
 				this.userSCI.updateUser(updateUserRequest);
 			}
