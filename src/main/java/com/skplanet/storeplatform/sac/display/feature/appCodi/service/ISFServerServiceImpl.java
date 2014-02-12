@@ -107,23 +107,222 @@ public class ISFServerServiceImpl implements ISFServerService {
 			prop.setSingleValues(singles);
 
 			multis.setCount(3);
-			multi.setId("0000028070");
+			multi.setId("0000256625");
 			multi.setScore(10);
 			multi.setReasonCode("01");
-			multi.setRelId("3576");
+			multi.setRelId("0000266015");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000256708");
+			multi.setScore(50);
+			multi.setReasonCode("02");
+			multi.setRelId("0000266071");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000025013");
+			multi.setScore(90);
+			multi.setReasonCode("03");
+			multi.setRelId("0000256771");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000028070");
+			multi.setScore(90);
+			multi.setReasonCode("04");
+			multi.setRelId("0000257158");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000029096");
+			multi.setScore(90);
+			multi.setReasonCode("1191");
+			multi.setRelId("0000257655");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000029241");
+			multi.setScore(90);
+			multi.setReasonCode("1191");
+			multi.setRelId("0000258003");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000029677");
+			multi.setScore(90);
+			multi.setReasonCode("1191");
+			multi.setRelId("0000258031");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000029727");
+			multi.setScore(90);
+			multi.setReasonCode("1191");
+			multi.setRelId("0000258193");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000033523");
+			multi.setScore(90);
+			multi.setReasonCode("1191");
+			multi.setRelId("0000258263");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000033534");
+			multi.setScore(90);
+			multi.setReasonCode("2191");
+			multi.setRelId("8856");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000033972");
+			multi.setScore(90);
+			multi.setReasonCode("2191");
+			multi.setRelId("0000258335");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000035676");
+			multi.setScore(90);
+			multi.setReasonCode("2191");
+			multi.setRelId("0000258420");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000035937");
+			multi.setScore(90);
+			multi.setReasonCode("2191");
+			multi.setRelId("0000258524");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000039768");
+			multi.setScore(90);
+			multi.setReasonCode("2191");
+			multi.setRelId("0000259193");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000039810");
+			multi.setScore(90);
+			multi.setReasonCode("2191");
+			multi.setRelId("0000259418");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000043782");
+			multi.setScore(90);
+			multi.setReasonCode("2191");
+			multi.setRelId("0000259756");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044486");
+			multi.setScore(90);
+			multi.setReasonCode("2191");
+			multi.setRelId("0000260475");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044488");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000260476");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044622");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000261102");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044629");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000261877");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044636");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000262173");
 			multis.addMultiValue(multi);
 
 			multi = new MultiValueType();
 			multi.setId("0000044665");
-			multi.setScore(50);
-			multi.setReasonCode("08");
-			multi.setRelId("8856");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000262572");
 			multis.addMultiValue(multi);
 
-			/*
-			 * multi = new MultiValueType(); multi.setId("9625"); multi.setScore(90); multi.setReasonCode("06");
-			 * multi.setRelId("7474"); multis.addMultiValue(multi);
-			 */
+			multi = new MultiValueType();
+			multi.setId("0000044668");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000262790");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044674");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000263957");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044717");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000264085");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044733");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000264220");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044745");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000264264");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044756");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000264699");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044786");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000264849");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044788");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000265203");
+			multis.addMultiValue(multi);
+
+			multi = new MultiValueType();
+			multi.setId("0000044793");
+			multi.setScore(90);
+			multi.setReasonCode("9299");
+			multi.setRelId("0000265223");
+			multis.addMultiValue(multi);
+
 			prop.setMultiValues(multis);
 		}
 		response.setProps(prop);

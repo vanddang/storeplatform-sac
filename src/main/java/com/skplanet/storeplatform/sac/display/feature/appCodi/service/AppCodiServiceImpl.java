@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.external.client.isf.vo.MultiValueType;
 import com.skplanet.storeplatform.external.client.isf.vo.MultiValuesType;
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -148,8 +149,6 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 		int multiCount = response.getProps().getMultiValues().getCount();
 		if (multiCount > 0) {
-			mapReq.put("MDN", response.getMdn()); // 모번호 세팅
-
 			MultiValuesType multis = new MultiValuesType();
 			MultiValueType multi = new MultiValueType();
 
@@ -188,8 +187,10 @@ public class AppCodiServiceImpl implements AppCodiService {
 			Product product = null;
 			MetaInfo metaInfo = null;
 
-			this.log.debug("##### parameter cnt : {}", listProdParam.size());
-			this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
+			if (this.log.isDebugEnabled()) {
+				this.log.debug("##### parameter cnt : {}", listProdParam.size());
+				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
+			}
 			if (productBasicInfoList != null) {
 
 				Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -203,9 +204,10 @@ public class AppCodiServiceImpl implements AppCodiService {
 					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
 					paramMap.put("productBasicInfo", productBasicInfo);
 
-					this.log.debug("##### Top Menu Id : {}", topMenuId);
-					this.log.debug("##### Service Group Cd : {}", svcGrpCd);
-
+					if (this.log.isDebugEnabled()) {
+						this.log.debug("##### Top Menu Id : {}", topMenuId);
+						this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+					}
 					// 상품 SVC_GRP_CD 조회
 					// DP000203 : 멀티미디어
 					// DP000206 : Tstore 쇼핑
@@ -215,7 +217,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 					// APP 상품의 경우
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						this.log.debug("##### Search for app  meta info product");
+						if (this.log.isDebugEnabled()) {
+							this.log.debug("##### Search for app  meta info product");
+						}
 						metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
@@ -227,7 +231,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-							this.log.debug("##### Search for Vod  meta info product");
+							if (this.log.isDebugEnabled()) {
+								this.log.debug("##### Search for Vod  meta info product");
+							}
 							metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap,
 									MetaInfo.class);
 							if (metaInfo != null) {
@@ -244,8 +250,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
-							this.log.debug("##### Search for EbookComic specific product");
-
+							if (this.log.isDebugEnabled()) {
+								this.log.debug("##### Search for EbookComic specific product");
+							}
 							metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap,
 									MetaInfo.class);
 							if (metaInfo != null) {
@@ -262,7 +269,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 							paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 							paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
-							this.log.debug("##### Search for music meta info product");
+							if (this.log.isDebugEnabled()) {
+								this.log.debug("##### Search for music meta info product");
+							}
 							metaInfo = this.commonDAO.queryForObject("Isf.AppCodi.getMusicMetaInfo", paramMap,
 									MetaInfo.class);
 							if (metaInfo != null) {
@@ -274,7 +283,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 						paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
-						this.log.debug("##### Search for Shopping  meta info product");
+						if (this.log.isDebugEnabled()) {
+							this.log.debug("##### Search for Shopping  meta info product");
+						}
 						metaInfo = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap,
 								MetaInfo.class);
 						if (metaInfo != null) {
@@ -283,6 +294,10 @@ public class AppCodiServiceImpl implements AppCodiService {
 						}
 					}
 				}
+			}
+
+			if (this.log.isDebugEnabled()) {
+				this.log.debug("product count : " + productList.size());
 			}
 
 			if (productList.isEmpty()) {
@@ -314,14 +329,13 @@ public class AppCodiServiceImpl implements AppCodiService {
 				Iterator<Product> iterator = productList.iterator();
 				while (iterator.hasNext()) {
 					product = iterator.next();
-
 					Identifier id = new Identifier();
 					Iterator<Identifier> idIterator = product.getIdentifierList().iterator();
 					while (idIterator.hasNext()) {
 						id = idIterator.next();
-						if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equalsIgnoreCase(id.getType())) {
-							sPid = id.getText();
-						}
+						sPid = id.getText();
+						if (StringUtil.isNotEmpty(sPid))
+							break;
 					}
 					sRelId = mapRelProd.get(sPid);
 					sReasonCode = mapReason.get(sPid);
@@ -347,22 +361,24 @@ public class AppCodiServiceImpl implements AppCodiService {
 						// 대상상품 대분류 카테고리명
 						// 대상상품은 연관상품과 별개로 처리함
 						String top_cat_nm_pid = "";
-						List<Menu> menuList = product.getMenuList();
-						Iterator<Menu> mnIterator = menuList.iterator();
+						Iterator<Menu> mnIterator = product.getMenuList().iterator();
 						Menu menu = new Menu();
 						while (mnIterator.hasNext()) {
 							menu = mnIterator.next();
-							if (DisplayConstants.DP_MENU_TOPCLASS_TYPE.equals(menu.getType())) {
+							if (!StringUtils.isEmpty(menu.getType())
+									&& DisplayConstants.DP_MENU_TOPCLASS_TYPE.equals(menu.getType())) {
 								top_cat_nm_pid = menu.getName();
 							}
 						}
 
 						reasonMessage = StringUtils.replace(reasonMessage, "$4", top_cat_nm_pid);
+
 						// 연관상품 정보가 있을 경우에 치환처리함
-						if (listRelProd != null) {
-							for (int j = 0; j < listRelProd.size(); j++) {
-								mapRelProdTemp = listRelProd.get(j);
-								if (sRelId != null
+						if (!listRelProd.isEmpty()) {
+							Iterator<HashMap> riterator = listRelProd.iterator();
+							while (iterator.hasNext()) {
+								mapRelProdTemp = riterator.next();
+								if (StringUtil.isNotEmpty(sRelId)
 										&& sRelId.equals(ObjectUtils.toString(mapRelProdTemp.get("PROD_ID")))) {
 									// 연관상품명
 									String prod_nm = (String) mapRelProdTemp.get("PROD_NM");
@@ -397,6 +413,11 @@ public class AppCodiServiceImpl implements AppCodiService {
 					} else {
 						product.setRecommendedReason(reasonMessage);
 					}
+
+					if (this.log.isDebugEnabled()) {
+						this.log.debug("reasonMessage : " + product.getRecommendedReason());
+					}
+
 					// ISF연동 정보시 저장한 순서를 가져와서 최종 List에 해당 Index로 add 한다.
 					int index = mapRank.get(sPid);
 					listAppCodiReason.set(index, product);
@@ -411,7 +432,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 				// Range 가 정의된 경우
 				if ("long".equals(requestVO.getFilteredBy())) {
-					sStartRow = StringUtils.defaultIfEmpty(ObjectUtils.toString(requestVO.getCount()), "1");
+					sStartRow = StringUtils.defaultIfEmpty(ObjectUtils.toString(requestVO.getOffset()), "1");
 					sEndRow = ObjectUtils.toString(requestVO.getCount() + requestVO.getOffset() - 1);
 				}
 
@@ -421,6 +442,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 					int iEndRow = NumberUtils.toInt(sEndRow);
 					if (iEndRow > iStartRow) {
 						int iAppCodeReasonSize = listAppCodiReason.size();
+
 						iStartRow = (iStartRow < 0) ? 0 : iStartRow;
 						iEndRow = (iEndRow > iAppCodeReasonSize) ? iAppCodeReasonSize : iEndRow;
 
@@ -446,8 +468,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 		// ISF 연동 실패나 Data 가 없는 경우( 운영자 추천으로 대체 )
 		if (!isExists) {
-			this.log.debug("ISF 연동 실패나 Data 가 없는 경우( 운영자 추천으로 대체 )");
-
+			if (this.log.isDebugEnabled()) {
+				this.log.debug("ISF 연동 실패나 Data 가 없는 경우 - 운영자 추천으로 대체");
+			}
 			mapReq = new HashMap<String, Object>();
 
 			if (!"long".equalsIgnoreCase(requestVO.getFilteredBy())) {
@@ -464,24 +487,10 @@ public class AppCodiServiceImpl implements AppCodiService {
 			mapReq.put("listId", "ADM000000012"); // 운영자 추천
 			mapReq.put("imageCd", "DP000167");
 
-			// Get Map in Set interface to get key and value
-			Set<Entry<String, Object>> s = mapReq.entrySet();
-			// Move next key and value of Map by iterator
-			Iterator<Entry<String, Object>> it = s.iterator();
-			while (it.hasNext()) {
-				// key=value separator this by Map.Entry to get key and value
-				Entry<String, Object> m = it.next();
+			this.mapPrint(mapReq);
 
-				// getKey is used to get key of Map
-				String key = m.getKey();
-
-				// getValue is used to get value of key in Map
-				Object value = m.getValue();
-				this.log.debug("Key :" + key + "  Value :" + value.toString());
-			}
 			List<AppCodiRes> appCodiResultList = this.commonDAO.queryForList("Isf.AppCodi.getAdminRecommandProdList",
 					mapReq, AppCodiRes.class);
-			this.log.debug("appCodiResultList : {}", appCodiResultList);
 
 			productList = this.makeResultList(appCodiResultList);
 
@@ -865,6 +874,25 @@ public class AppCodiServiceImpl implements AppCodiService {
 		response.setProductList(listVO);
 
 		return response;
+	}
+
+	private void mapPrint(Map<String, Object> mapReq) {
+		// Get Map in Set interface to get key and value
+		Set<Entry<String, Object>> s = mapReq.entrySet();
+		// Move next key and value of Map by iterator
+		Iterator<Entry<String, Object>> it = s.iterator();
+		while (it.hasNext()) {
+			// key=value separator this by Map.Entry to get key and value
+			Entry<String, Object> m = it.next();
+
+			// getKey is used to get key of Map
+			String key = m.getKey();
+
+			// getValue is used to get value of key in Map
+			Object value = m.getValue();
+
+			this.log.debug(key + ":[" + value.toString() + "]");
+		}
 	}
 
 	private String cutStringLimit(String str, int limit) {
