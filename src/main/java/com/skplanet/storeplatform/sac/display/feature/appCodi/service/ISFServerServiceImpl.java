@@ -327,11 +327,12 @@ public class ISFServerServiceImpl implements ISFServerService {
 		}
 		response.setProps(prop);
 
-		JAXBContext jc = JAXBContext.newInstance(Response.class);
-		Marshaller m1 = jc.createMarshaller();
-		m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m1.marshal(response, System.out);
-		// this.log.debug("response {}", response);
+		if (this.log.isDebugEnabled()) {
+			JAXBContext jc = JAXBContext.newInstance(Response.class);
+			Marshaller m1 = jc.createMarshaller();
+			m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			m1.marshal(response, System.out);
+		}
 
 		return response;
 	}
@@ -426,11 +427,12 @@ public class ISFServerServiceImpl implements ISFServerService {
 		}
 		response.setProps(prop);
 
-		JAXBContext jc = JAXBContext.newInstance(Response.class);
-		Marshaller m1 = jc.createMarshaller();
-		m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m1.marshal(response, System.out);
-		// this.log.debug("response {}", response);
+		if (this.log.isDebugEnabled()) {
+			JAXBContext jc = JAXBContext.newInstance(Response.class);
+			Marshaller m1 = jc.createMarshaller();
+			m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			m1.marshal(response, System.out);
+		}
 
 		return response;
 	}

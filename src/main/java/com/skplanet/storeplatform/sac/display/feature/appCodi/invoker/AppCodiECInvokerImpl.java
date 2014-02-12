@@ -58,10 +58,12 @@ public class AppCodiECInvokerImpl implements AppCodiECInvoker {
 				throw new StorePlatformException("SAC_DSP_0010");
 			}
 
-			JAXBContext jc = JAXBContext.newInstance(ISFRes.class);
-			Marshaller m1 = jc.createMarshaller();
-			m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			m1.marshal(response, System.out);
+			if (this.log.isDebugEnabled()) {
+				JAXBContext jc = JAXBContext.newInstance(ISFRes.class);
+				Marshaller m1 = jc.createMarshaller();
+				m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+				m1.marshal(response, System.out);
+			}
 		} catch (StorePlatformException se) {
 			throw se;
 		} catch (Exception e) {

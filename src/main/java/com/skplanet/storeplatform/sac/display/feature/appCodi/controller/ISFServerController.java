@@ -44,11 +44,13 @@ public class ISFServerController {
 		this.logger.debug("request {}", requestVO);
 
 		Response response = this.isfServerService.makeAppCodiList(requestVO);
-		JAXBContext jc = JAXBContext.newInstance(Response.class);
-		Marshaller m1 = jc.createMarshaller();
-		m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m1.marshal(response, System.out);
 
+		if (this.logger.isDebugEnabled()) {
+			JAXBContext jc = JAXBContext.newInstance(Response.class);
+			Marshaller m1 = jc.createMarshaller();
+			m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			m1.marshal(response, System.out);
+		}
 		return response;
 	}
 
@@ -66,11 +68,13 @@ public class ISFServerController {
 		this.logger.debug("request {}", requestVO);
 
 		Response response = this.isfServerService.makeThemeRecommendList(requestVO);
-		JAXBContext jc = JAXBContext.newInstance(Response.class);
-		Marshaller m1 = jc.createMarshaller();
-		m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		m1.marshal(response, System.out);
 
+		if (this.logger.isDebugEnabled()) {
+			JAXBContext jc = JAXBContext.newInstance(Response.class);
+			Marshaller m1 = jc.createMarshaller();
+			m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			m1.marshal(response, System.out);
+		}
 		return response;
 	}
 }
