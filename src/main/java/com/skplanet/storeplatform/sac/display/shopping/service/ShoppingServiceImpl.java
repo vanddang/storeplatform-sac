@@ -2257,6 +2257,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeSaleOption.setRefundUsage(episodeShopping.getPrchsCancelDrbkReason()); // 구매_취소_환불_사유
 							episodeProduct.setSalesOption(episodeSaleOption);
 							boolean nextFlag = false;
+							int indexOption = 1;
 							// Option 정보조회( 배송상품일 경우만 존재 )
 							if (deliveryValue.equals("delivery")) {
 								reqMap.put("chnlProdId", episodeShopping.getProdId());
@@ -2270,7 +2271,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 											selectOption = new SelectOption();
 											// 옵션1 상품 ID
 											selectOption.setId(optionShopping.getPartProdId());
-											selectOption.setIndex(optionShopping.getExpoOrd());
+											if (optionShopping.getExpoOrd().equals("1")) {
+												selectOption.setIndex(String.valueOf(indexOption));
+												indexOption++;
+											}
 
 											// 옵션1 상품 정보 (상품명)
 											option1Title = new Title();
