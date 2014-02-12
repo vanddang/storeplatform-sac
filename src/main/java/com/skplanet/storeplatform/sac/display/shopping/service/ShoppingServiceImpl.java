@@ -876,6 +876,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
 		ShoppingThemeRes res = null;
+		CommonResponse commonResponse = new CommonResponse();
+		Integer totalCount = 0;
 		List<Shopping> resultList = new ArrayList<Shopping>();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
@@ -933,10 +935,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 				promotion.setUsagePeriod(shopping.getPlanStartDt() + "/" + shopping.getPlanEndDt());
 				promotion.setSource(source);
 				promotionList.add(i, promotion);
+				totalCount = shopping.getTotalCount();
 			}
 
 			res = new ShoppingThemeRes();
 			res.setPromotionList(promotionList);
+
+			commonResponse.setTotalCount(totalCount);
+			res.setCommonResponse(commonResponse);
 		}
 		return res;
 	}
@@ -1299,7 +1305,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 	@Override
 	public ShoppingRes getThemeList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
-		ShoppingRes responseVO = null;
+		ShoppingRes res = null;
+		CommonResponse commonResponse = new CommonResponse();
+		Integer totalCount = 0;
 		List<Shopping> resultList = new ArrayList<Shopping>();
 
 		TenantHeader tenantHeader = header.getTenantHeader();
@@ -1361,12 +1369,16 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setTitle(title);
 				product.setSourceList(sourceList);
 				productList.add(i, product);
+				totalCount = shopping.getTotalCount();
 			}
 
-			responseVO = new ShoppingRes();
-			responseVO.setProductList(productList);
+			res = new ShoppingRes();
+			res.setProductList(productList);
+
+			commonResponse.setTotalCount(totalCount);
+			res.setCommonResponse(commonResponse);
 		}
-		return responseVO;
+		return res;
 	}
 
 	/**
