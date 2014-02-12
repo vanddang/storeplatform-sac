@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
@@ -71,10 +72,9 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	@Override
 	public Rights generateRights(MetaInfo metaInfo) {
 		Rights rights = new Rights();
-		Date date = new Date();
 		rights.setGrade(metaInfo.getProdGrdCd());
-		date.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM);
-		date.setText(metaInfo.getApplyStartDt() + "/" + metaInfo.getApplyEndDt());
+		Date date = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM, DateUtils.parseDate(metaInfo
+				.getApplyStartDt()), DateUtils.parseDate(metaInfo.getApplyEndDt()));
 		rights.setDate(date);
 		return rights;
 	}
