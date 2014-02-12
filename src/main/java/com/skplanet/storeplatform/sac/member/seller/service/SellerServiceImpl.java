@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.Document;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginInfo;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerResponse;
@@ -27,6 +28,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerAccount;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerResponse;
@@ -364,6 +366,10 @@ public class SellerServiceImpl implements SellerService {
 						res.setSessionKey(loginInfo.getSessionKey());
 						res.setExpireDate(expireDate);
 						sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
+						// 서브 계정 Key
+						if (StringUtils.equals(MemberConstants.USE_Y, logInSellerResponse.getIsSubSeller())) {
+							res.setSubSellerKey(logInSellerResponse.getSubSellerKey());
+						}
 					} else {
 						isLoginSuccess = MemberConstants.USE_N;
 					}
@@ -629,6 +635,37 @@ public class SellerServiceImpl implements SellerService {
 		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
 
 		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
+
+		SellerAccount sellerAccount = new SellerAccount();
+		sellerAccount.setAbaCode(req.getAbaCode());
+		sellerAccount.setAccountRealDate(req.getAccountRealDate());
+		sellerAccount.setBankAccount(req.getBankAccount());
+		sellerAccount.setBankAcctName(req.getBankAcctName());
+		// sellerAccount.setBankAddress(req.getBa)
+		sellerAccount.setBankBranch(req.getBankBranch());
+		sellerAccount.setBankBranchCode(req.getBankBranchCode());
+		sellerAccount.setBankCode(req.getBankCode());
+		// sellerAccount.setBankLocation(req.getBa)
+		sellerAccount.setBankName(req.getBankName());
+		sellerAccount.setIbanCode(req.getIbanCode());
+		// sellerAccount.setIsUsed(req.getIs)
+		// sellerAccount.setReason(req.getRe)
+		sellerAccount.setSellerKey(req.getSellerKey());
+		sellerAccount.setSwiftCode(req.getSwiftCode());
+		sellerAccount.setTpinCode(req.getTpinCode());
+
+		List<Document> documentList = null;
+		if (req.getExtraDocumentList() != null) {
+			documentList = new ArrayList<Document>();
+			for (int i = 0; i < req.getExtraDocumentList().size(); i++) {
+				Document document = new Document();
+				// document.setAccountChangeKey(req.getExtraDocumentList().get(i).get)
+				document.setDocumentCode(req.getExtraDocumentList().get(i).getDocumentCode());
+				document.setDocumentName(req.getExtraDocumentList().get(i).getDocumentName());
+				document.setDocumentPath(req.getExtraDocumentList().get(i).getDocumentPath());
+				document.setDocumentSize(req.getExtraDocumentList().get(i).getDocumentSize());
+			}
+		}
 
 		updateAccountSellerRequest.setSellerKey(req.getSellerKey());
 

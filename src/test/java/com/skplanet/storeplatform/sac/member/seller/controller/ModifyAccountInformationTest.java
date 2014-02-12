@@ -31,47 +31,46 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
- * 2.2.10. 판매자 회원 기본정보 수정 ,before - 로그인 [sellerId, sellerPW, expireDate] 필요
+ * 2.2.11. 판매자 회원 정산 정보 수정
  * 
- * Updated on : 2014. 2. 3. Updated by : 김경복, 부르칸
+ * Updated on : 2014. 2. 10. Updated by : 김경복, 부르칸
  */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class ModifyInformationTest {
+public class ModifyAccountInformationTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ModifyInformationTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ModifyAccountInformationTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
 
 	private MockMvc mockMvc;
 
-	/** [REQUEST]. */
-	public static ModifyInformationSacReq req;
-
-	/** [RESPONSE]. */
-	public static ModifyInformationSacRes res;
-
 	/** LOGIN-[REQUEST]. */
 	public static AuthorizeReq authorizeReq;
 	/** LOGIN-[RESPONSE]. */
 	public static AuthorizeRes authorizeRes;
-
 	/** [HEADER]. */
 	private static String xStoreAuthInfo;
 
+	/** [REQUEST]. */
+	public static ModifyAccountInformationSacReq req;
+
+	/** [RESPONSE]. */
+	public static ModifyAccountInformationSacRes res;
+
 	/**
 	 * <pre>
-	 * before method.
+	 * 정보 수정을 위해 로그인 사전 작업.
 	 * </pre>
 	 */
 	@Before
@@ -81,7 +80,7 @@ public class ModifyInformationTest {
 		xStoreAuthInfo = "authKey=114127c7ef42667669819dad5df8d820c;ist=N";
 
 		// [REQUEST] 초기화
-		req = new ModifyInformationSacReq();
+		req = new ModifyAccountInformationSacReq();
 		authorizeReq = new AuthorizeReq();
 
 		// 로그인 데이터 주입
@@ -117,19 +116,19 @@ public class ModifyInformationTest {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * Test 결과 Debug Log.
+	 * </pre>
+	 */
 	@After
 	public void after() {
 		// Debug
-		LOGGER.debug("[RESPONSE(SAC)-회원기본정보 수정] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.debug("[RESPONSE(SAC)-회원정산정보 수정] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
 	}
 
-	/**
-	 * <pre>
-	 * 기본정보 수정.
-	 * </pre>
-	 */
 	@Test
-	public void modifyInformationTest() {
+	public void testModifyAccountInformation() {
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/modifyInformation/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
@@ -139,35 +138,6 @@ public class ModifyInformationTest {
 						req.setSellerCategory("US011301");
 						req.setSellerMainStatus("US010201");
 						req.setSellerSubStatus("US010301");
-						req.setSellerTelecom("US001201");
-						req.setSellerEmail("test@testgmail.com");
-						req.setSellerCountry("ko");
-						req.setSellerLanguage("ko");
-						req.setSellerBirthDay("19900325");
-						req.setIsDomestic("Y");
-						req.setIsParent("Y");
-						req.setIsRealName("Y");
-						req.setParentType("abc");
-						req.setSellerCI("XXXXXXXGGXXXXX");
-						req.setSellerDI("GGGGGGXXXXXGGG");
-						req.setRealNameMethod("US011101");
-						req.setSellerPhone("010XXXX2345");
-						req.setSellerSex("M");
-						req.setSellerName("국내개인무료사용자2");
-						req.setRealNameSystemId("S01");
-						req.setParentRealNameMethod("US011101");
-						req.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1");
-						req.setParentBirthDay("19750325");
-						req.setParentRealNameSystemId("S01");
-						req.setParentTelecom("US001202");
-						req.setParentEmail("parent_test@test.com");
-						req.setParentRealNameDate("20140206000000");
-						req.setParentMDN("0102904XXXX");
-						req.setParentName("딘윈체스터");
-						req.setParentDate("20140205230000");
-						req.setSellerCompany("Supernatural");
-						req.setIsRecvSMS("Y");
-						req.setIsRecvEmail("Y");
 
 						// Debug
 						LOGGER.debug("[REQUEST (SAC)-회원기본정보 수정] : \n{}",
@@ -177,7 +147,7 @@ public class ModifyInformationTest {
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						res = (ModifyInformationSacRes) result;
+						res = (ModifyAccountInformationSacRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
 						assertEquals(res.getSellerKey(), req.getSellerKey());
 					}

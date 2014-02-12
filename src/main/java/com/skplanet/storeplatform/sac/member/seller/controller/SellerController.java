@@ -20,6 +20,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassResSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassResSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
@@ -125,7 +127,7 @@ public class SellerController {
 	 * @param req
 	 * @return ModifyAccountInformationRes
 	 */
-	// @RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/dev/modifyAccountInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
 			@RequestBody @Validated ModifyAccountInformationSacReq req) {
@@ -146,6 +148,22 @@ public class SellerController {
 	@ResponseBody
 	public ConfirmRes confirm(SacRequestHeader header, @RequestBody @Validated ConfirmReq req) {
 		return this.sellerService.confirm(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.15. 판매자 회원 전환 신청.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ConversionClassResSacRes
+	 */
+	@RequestMapping(value = "/dev/conversionClassRes/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ConversionClassResSacRes conversionClassRes(SacRequestHeader header,
+			@RequestBody @Validated ConversionClassResSacReq req) {
+		return null;
 	}
 
 	/**
