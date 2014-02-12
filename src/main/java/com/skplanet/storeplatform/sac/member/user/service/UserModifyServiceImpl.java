@@ -471,6 +471,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 * 실명인증 (본인)
 			 */
 			MbrAuth mbrAuth = new MbrAuth();
+			mbrAuth.setIsRealName(MemberConstants.USE_Y); // 실명인증 여부
 			mbrAuth.setTenantID(sacHeader.getTenantHeader().getTenantId()); // 테넌트 아이디
 			mbrAuth.setBirthDay(req.getUserBirthDay()); // 생년월일
 			mbrAuth.setTelecom(req.getDeviceTelecom()); // 이동 통신사
@@ -491,6 +492,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 * 실명인증 (법정대리인)
 			 */
 			MbrLglAgent mbrLglAgent = new MbrLglAgent();
+			mbrLglAgent.setIsParent(MemberConstants.USE_Y); // 법정대리인 여부
 			mbrLglAgent.setParentBirthDay(req.getUserBirthDay()); // 법정대리인 생년월일
 			mbrLglAgent.setParentMDN(req.getUserPhone()); // 법정대리인 전화번호
 			mbrLglAgent.setParentTelecom(req.getDeviceTelecom()); // 법정대리인 이동 통신사

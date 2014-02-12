@@ -73,7 +73,6 @@ public class CreateRealNameTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test1_createRealName() throws Exception {
 
@@ -150,7 +149,7 @@ public class CreateRealNameTest {
 						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
 						reqJson.setUserPhone("0101231232"); // 법정대리인 전화번호
 						reqJson.setDeviceTelecom("US001201"); // 이동 통신사
-						reqJson.setUserName("태백산"); // 사용자 이름
+						reqJson.setUserName("태백산2"); // 사용자 이름
 						reqJson.setUserBirthDay("19870506"); // 법정대리인 생년월일
 
 						return reqJson;
@@ -174,6 +173,7 @@ public class CreateRealNameTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
 	public void test3_createRealName() throws Exception {
 
