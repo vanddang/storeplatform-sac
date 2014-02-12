@@ -412,6 +412,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 		scReq.setUserKey(info.getUserKey());
 		scReq.setDeviceId(req.getDeviceId());
 		scRes = this.deviceService.listDevice(sacHeader, scReq);
+		if (scRes.getDeviceInfoList() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", req.getDeviceId());
+		}
 		DeviceInfo deviceInfo = scRes.getDeviceInfoList().get(0);
 		SearchIdSacRes res = new SearchIdSacRes();
 
@@ -1002,14 +1005,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 			listDeviceReq.setIsMainDevice("N");
 		}
 
-		ListDeviceRes listDeviceRes = null;
-		try {
-			listDeviceRes = this.deviceService.listDevice(sacHeader, listDeviceReq);
+		ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, listDeviceReq);
+		if (listDeviceRes.getDeviceInfoList() != null) {
 			listDeviceRes.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
-		} catch (StorePlatformException ex) {
-			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				throw ex;
-			}
 		}
 
 		return listDeviceRes;

@@ -22,8 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
+import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -77,6 +80,12 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private ImIdpService imIdpService;
+
+	@Autowired
+	private IdpSCI idpSCI;
+
+	@Autowired
+	private ImIdpSCI imIdpSCI;
 
 	@Value("#{propertiesForSac['idp.user.auth.key']}")
 	private String tempUserAuthKey;
@@ -373,7 +382,13 @@ public class LoginServiceImpl implements LoginService {
 
 			try {
 
-				ImIdpReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
+				//ImIdpReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
+
+				AuthForIdEcReq authForIdEcReq = new AuthForIdEcReq();
+				authForIdEcReq.setKey_type("2");
+				authForIdEcReq.setKey(userId);
+				authForIdEcReq.setUser_passwd(userPw);
+				AuthForIdEcRes authForIdEcRes = this.imIdpSCI.authForId(authForIdEcReq);
 
 				/* 잠금해지 요청인 경우 처리 */
 				if (StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
@@ -386,13 +401,13 @@ public class LoginServiceImpl implements LoginService {
 				}
 
 				/* 단말정보 update */
-				this.updateDeviceInfo(requestHeader, userKey, imIdpReceiver.getResponseBody().getUser_auth_key(), req);
+				this.updateDeviceInfo(requestHeader, userKey, authForIdEcRes.getUser_auth_key(), req);
 
 				/* 로그인 성공이력 저장 */
 				LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
 
 				/* 로그인 결과 */
-				res.setUserAuthKey(imIdpReceiver.getResponseBody().getUser_auth_key());
+				res.setUserAuthKey(authForIdEcRes.getUser_auth_key());
 				res.setUserKey(userKey);
 				res.setUserType(userType);
 				res.setUserMainStatus(userMainStatus);
@@ -513,13 +528,9 @@ public class LoginServiceImpl implements LoginService {
 			listDeviceReq.setIsMainDevice("Y");
 		}
 
-		try {
-			ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
+		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
+		if (listDeviceRes.getDeviceInfoList() != null) {
 			deviceKey = listDeviceRes.getDeviceInfoList().get(0).getDeviceKey();
-		} catch (StorePlatformException ex) {
-			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				throw ex;
-			}
 		}
 
 		return deviceKey;
