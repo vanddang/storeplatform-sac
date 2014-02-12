@@ -29,6 +29,8 @@ public class AuthorizeRes extends CommonInfo {
 	private String isSubSeller;
 	/** 로그인 상태. */
 	private String loginStatusCode;
+	/** Sub Seller Key */
+	private String subSellerKey;
 
 	public SellerMbr getSellerMbr() {
 		return this.sellerMbr;
@@ -85,4 +87,13 @@ public class AuthorizeRes extends CommonInfo {
 	public void setLoginStatusCode(String loginStatusCode) {
 		this.loginStatusCode = loginStatusCode;
 	}
+
+	public String getSubSellerKey() {
+		return this.subSellerKey;
+	}
+
+	public void setSubSellerKey(String subSellerKey) {
+		this.subSellerKey = subSellerKey;
+	}
+
 }

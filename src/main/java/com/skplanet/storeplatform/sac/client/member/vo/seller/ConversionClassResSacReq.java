@@ -2,52 +2,46 @@ package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
 import java.util.List;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq.ExtraDocument;
 
 /**
- * 2.2.11. 판매자 회원 정산 정보 수정 [REQUEST]
+ * 2.2.15. 판매자 회원 전환 신청 [REQUEST]
  * 
- * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
+ * Updated on : 2014. 2. 10. Updated by : 김경복, 부르칸
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class ModifyAccountInformationSacReq extends CommonInfo {
+public class ConversionClassResSacReq extends CommonInfo {
 
-	private static final long serialVersionUID = -4035947141521875296L;
+	private static final long serialVersionUID = 1L;
 
-	/** 인증키. */
-	@NotBlank
+	/** 인증 키. */
 	private String sessionKey;
 	/** 판매자 key. */
-	@NotBlank
 	private String sellerKey;
-	/** 판매자 구분코드. */
-	@NotBlank
+	/** 현재 구분코드. */
 	private String sellerClass;
 	/** 판매자 분류코드. */
-	@NotBlank
 	private String sellerCategory;
+	/** 신청 구분코드. */
+	private String sellerClassTo;
+	/** 판매자 분류코드. */
+	private String sellerCategoryTo;
 	/** 판매자 main 상태코드. */
-	@NotBlank
 	private String sellerMainStatus;
 	/** 판매자 sub 상태코드. */
-	@NotBlank
 	private String sellerSubStatus;
 	/** 판매자 ID. */
-	@NotBlank
 	private String sellerId;
-	/** 법인등록번호. */
-	private String sellerBizCorpNumber;
 	/** 종목. */
 	private String sellerBizType;
 	/** 업태. */
 	private String sellerBizCategory;
+	/** 법인등록번호. */
+	private String sellerBizCorpNumber;
 	/** 대표전화번호 국가코드. */
 	private String repPhoneArea;
 	/** 대표전화번호. */
@@ -57,7 +51,6 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	/** 대표팩스번호. */
 	private String repFax;
 	/** 대표 이메일. */
-	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String repEmail;
 	/** 사업장 우편번호. */
 	private String sellerZip;
@@ -66,26 +59,20 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	/** 사업장 상세주소. */
 	private String sellerDetailAddress;
 	/** BP 정산률. */
-	private String bpRate;
+	private String bp_rate;
 	/** 벤더 코드. */
-	private String vendorCode;
+	private String vendor_code;
 	/** 통신판매업 신고여부. */
-	@NotBlank
-	@Pattern(regexp = "^Y|^N")
 	private String isBizRegistered;
 	/** 통신판매업 신고번호. */
 	private String bizRegNumber;
 	/** 통신판매업 미신고사유. */
 	private String bizUnregReason;
 	/** 간이과세여부. */
-	@NotBlank
-	@Pattern(regexp = "^Y|^N")
 	private String isBizTaxable;
 	/** 심의등급코드. */
 	private String bizGrade;
 	/** 자동차감가능대상여부. */
-	@NotBlank
-	@Pattern(regexp = "^Y|^N")
 	private String isDeductible;
 	/** 입점상점코드. */
 	private String marketCode;
@@ -96,11 +83,8 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	/** 은행명. */
 	private String bankName;
 	/** 계좌인증여부. */
-	// @NotBlank
-	@Pattern(regexp = "^Y|^N")
 	private String isAccountReal;
 	/** 계좌인증일시. */
-	@Size(max = 14)
 	private String accountRealDate;
 	/** 은행지점명. */
 	private String bankBranch;
@@ -118,7 +102,7 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	private String bankAccount;
 	/** 예금자명. */
 	private String bankAcctName;
-	/** 서류 관련 리스트. */
+	/** 서류 리스트. */
 	private List<ExtraDocument> extraDocumentList;
 
 	public String getSessionKey() {
@@ -153,6 +137,22 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 		this.sellerCategory = sellerCategory;
 	}
 
+	public String getSellerClassTo() {
+		return this.sellerClassTo;
+	}
+
+	public void setSellerClassTo(String sellerClassTo) {
+		this.sellerClassTo = sellerClassTo;
+	}
+
+	public String getSellerCategoryTo() {
+		return this.sellerCategoryTo;
+	}
+
+	public void setSellerCategoryTo(String sellerCategoryTo) {
+		this.sellerCategoryTo = sellerCategoryTo;
+	}
+
 	public String getSellerMainStatus() {
 		return this.sellerMainStatus;
 	}
@@ -177,14 +177,6 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 		this.sellerId = sellerId;
 	}
 
-	public String getSellerBizCorpNumber() {
-		return this.sellerBizCorpNumber;
-	}
-
-	public void setSellerBizCorpNumber(String sellerBizCorpNumber) {
-		this.sellerBizCorpNumber = sellerBizCorpNumber;
-	}
-
 	public String getSellerBizType() {
 		return this.sellerBizType;
 	}
@@ -199,6 +191,14 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 
 	public void setSellerBizCategory(String sellerBizCategory) {
 		this.sellerBizCategory = sellerBizCategory;
+	}
+
+	public String getSellerBizCorpNumber() {
+		return this.sellerBizCorpNumber;
+	}
+
+	public void setSellerBizCorpNumber(String sellerBizCorpNumber) {
+		this.sellerBizCorpNumber = sellerBizCorpNumber;
 	}
 
 	public String getRepPhoneArea() {
@@ -265,12 +265,20 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 		this.sellerDetailAddress = sellerDetailAddress;
 	}
 
-	public String getBpRate() {
-		return this.bpRate;
+	public String getBp_rate() {
+		return this.bp_rate;
 	}
 
-	public String getVendorCode() {
-		return this.vendorCode;
+	public void setBp_rate(String bp_rate) {
+		this.bp_rate = bp_rate;
+	}
+
+	public String getVendor_code() {
+		return this.vendor_code;
+	}
+
+	public void setVendor_code(String vendor_code) {
+		this.vendor_code = vendor_code;
 	}
 
 	public String getIsBizRegistered() {
@@ -417,14 +425,6 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 		this.tpinCode = tpinCode;
 	}
 
-	public void setBpRate(String bpRate) {
-		this.bpRate = bpRate;
-	}
-
-	public void setVendorCode(String vendorCode) {
-		this.vendorCode = vendorCode;
-	}
-
 	public String getBankAccount() {
 		return this.bankAccount;
 	}
@@ -447,54 +447,5 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 
 	public void setExtraDocumentList(List<ExtraDocument> extraDocumentList) {
 		this.extraDocumentList = extraDocumentList;
-	}
-
-	/**
-	 * 서류관련 객체
-	 * 
-	 * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
-	 */
-	public static class ExtraDocument {
-
-		/** 서류코드. */
-		public String documentCode;
-		/** 서류경로. */
-		public String documentPath;
-		/** 서류명. */
-		public String documentName;
-		/** 서류사이즈. */
-		public String documentSize;
-
-		public String getDocumentCode() {
-			return this.documentCode;
-		}
-
-		public void setDocumentCode(String documentCode) {
-			this.documentCode = documentCode;
-		}
-
-		public String getDocumentPath() {
-			return this.documentPath;
-		}
-
-		public void setDocumentPath(String documentPath) {
-			this.documentPath = documentPath;
-		}
-
-		public String getDocumentName() {
-			return this.documentName;
-		}
-
-		public void setDocumentName(String documentName) {
-			this.documentName = documentName;
-		}
-
-		public String getDocumentSize() {
-			return this.documentSize;
-		}
-
-		public void setDocumentSize(String documentSize) {
-			this.documentSize = documentSize;
-		}
 	}
 }
