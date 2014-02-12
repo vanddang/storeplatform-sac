@@ -46,12 +46,10 @@ public class ListFeedbackSacReq extends CommonInfo {
 	/**
 	 * 채널 ID.
 	 */
-	@NotBlank
 	private String chnlId;
 	/**
 	 * 상품 타입.
 	 */
-	@NotBlank
 	private String prodType;
 	/**
 	 * 페이징 시작위치.
