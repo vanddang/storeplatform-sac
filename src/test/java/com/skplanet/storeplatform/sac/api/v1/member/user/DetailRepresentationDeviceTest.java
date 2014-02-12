@@ -80,7 +80,7 @@ public class DetailRepresentationDeviceTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailRepresentationDeviceRes res = (DetailRepresentationDeviceRes) result;
-						assertThat(res.getUserDeviceInfo().getDeviceKey(), notNullValue());
+						assertThat(res.getDeviceInfo().getDeviceKey(), notNullValue());
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -106,7 +106,7 @@ public class DetailRepresentationDeviceTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailRepresentationDeviceRes res = (DetailRepresentationDeviceRes) result;
-						assertThat(res.getUserDeviceInfo().getDeviceKey(), notNullValue());
+						assertThat(res.getDeviceInfo().getDeviceKey(), notNullValue());
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -132,7 +132,7 @@ public class DetailRepresentationDeviceTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailRepresentationDeviceRes res = (DetailRepresentationDeviceRes) result;
-						assertThat(res.getUserDeviceInfo().getDeviceKey(), notNullValue());
+						assertThat(res.getDeviceInfo().getDeviceKey(), notNullValue());
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);

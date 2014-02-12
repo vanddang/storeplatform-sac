@@ -70,8 +70,8 @@ public class UserExtraInfoRemoveTest {
 	@Test
 	public void aRemoveUserExtraInfo() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/removeAdditionalInformation/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/removeAdditionalInformation/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						UserExtraInfoReq req = new UserExtraInfoReq();
@@ -81,11 +81,11 @@ public class UserExtraInfoRemoveTest {
 						List<UserExtraInfo> userExtraList = new ArrayList<UserExtraInfo>();
 
 						UserExtraInfo user1 = new UserExtraInfo();
-						user1.setExtraProfileCode("US010905");
+						user1.setExtraProfile("US010905");
 						// user1.setExtraProfileValue("");
 
 						UserExtraInfo user2 = new UserExtraInfo();
-						user2.setExtraProfileCode("US010906");
+						user2.setExtraProfile("US010906");
 						// user2.setExtraProfileValue("");
 
 						// UserExtraInfo user3 = new UserExtraInfo();
@@ -96,7 +96,7 @@ public class UserExtraInfoRemoveTest {
 						userExtraList.add(user2);
 						// userExtraList.add(user3);
 
-						req.setAddInfoList(userExtraList);
+						req.setUserExtraInfoList(userExtraList);
 
 						logger.debug("request param : {}", req.toString());
 						return req;
