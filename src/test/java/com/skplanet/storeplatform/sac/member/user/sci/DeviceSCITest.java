@@ -17,9 +17,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.internal.member.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GetDeviceMdnSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GetDeviceMdnSacRes;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
@@ -46,10 +46,10 @@ public class DeviceSCITest {
 	 */
 	@Test
 	public void testGetDeviceMdn() {
-		GetMdnSacReq request = new GetMdnSacReq();
+		GetDeviceMdnSacReq request = new GetDeviceMdnSacReq();
 		request.setUserKey("US201402110557052730002230");
 		request.setDeviceKey("DE201402120409541480001552");
-		GetMdnSacRes result = this.deviceSCI.getDeviceMdn(request);
+		GetDeviceMdnSacRes result = this.deviceSCI.getDeviceMdn(request);
 		assertThat(result.getMsisdn(), notNullValue());
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
@@ -63,10 +63,10 @@ public class DeviceSCITest {
 	 */
 	@Test(expected = StorePlatformException.class)
 	public void testExceptGetDeviceMdn() {
-		GetMdnSacReq request = new GetMdnSacReq();
+		GetDeviceMdnSacReq request = new GetDeviceMdnSacReq();
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceKey("DE201401241840125800000296");
-		GetMdnSacRes result = this.deviceSCI.getDeviceMdn(request);
+		GetDeviceMdnSacRes result = this.deviceSCI.getDeviceMdn(request);
 		assertThat(result.getMsisdn(), notNullValue());
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));

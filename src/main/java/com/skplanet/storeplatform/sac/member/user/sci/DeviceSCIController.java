@@ -5,15 +5,13 @@ package com.skplanet.storeplatform.sac.member.user.sci;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.ChangedDeviceSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.ChangedDeviceSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.GetMdnSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GetDeviceMdnSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GetDeviceMdnSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -26,7 +24,6 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
  * Updated on : 2014. 2. 11. Updated by : 김다슬, 인크로스.
  */
 @LocalSCI
-@RequestMapping(value = "/user")
 public class DeviceSCIController implements DeviceSCI {
 
 	@Autowired
@@ -41,8 +38,7 @@ public class DeviceSCIController implements DeviceSCI {
 	 */
 
 	@Override
-	@RequestMapping(value = "/getDeviceMdn", method = RequestMethod.POST)
-	public GetMdnSacRes getDeviceMdn(/* SacRequestHeader requestHeader, */@Validated GetMdnSacReq requestVO) {
+	public GetDeviceMdnSacRes getDeviceMdn(/* SacRequestHeader requestHeader, */@Validated GetDeviceMdnSacReq requestVO) {
 
 		SacRequestHeader requestHeader = new SacRequestHeader(); // client-internal에 공통으로 생성되면 삭제 후 Bypass 예정.
 		TenantHeader tenantHeader = new TenantHeader();
@@ -53,7 +49,7 @@ public class DeviceSCIController implements DeviceSCI {
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				requestVO.getDeviceKey(), requestVO.getUserKey());
 
-		GetMdnSacRes responseVO = new GetMdnSacRes();
+		GetDeviceMdnSacRes responseVO = new GetDeviceMdnSacRes();
 		responseVO.setMsisdn(deviceInfo.getDeviceId());
 
 		return responseVO;
