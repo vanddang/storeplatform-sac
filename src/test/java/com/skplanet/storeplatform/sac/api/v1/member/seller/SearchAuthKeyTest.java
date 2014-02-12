@@ -62,7 +62,7 @@ public class SearchAuthKeyTest {
 
 		new TestCaseTemplate(this.mockMvc)
 				.url(TestMemberConstant.PREFIX_SELLER_PATH
-						+ "/detailInfomationByAuthorizationKey/v1?sessionKey=e1accab6d371409ea8bb1c8dae5de5c5&extraDate=1")
+						+ "/detailInfomationByAuthorizationKey/v1?sessionKey=6188cc12179046148c506d979f38e8f5&extraDate=1")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
