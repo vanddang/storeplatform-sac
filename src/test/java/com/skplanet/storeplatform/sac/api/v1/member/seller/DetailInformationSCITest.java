@@ -19,9 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.sac.client.internal.member.sci.SellerSearchSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.DetailInformationReq;
-import com.skplanet.storeplatform.sac.client.internal.member.vo.DetailInformationRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -59,13 +59,13 @@ public class DetailInformationSCITest {
 
 	@Test
 	public void shouldOptianUserCarrer() {
-		DetailInformationReq req = new DetailInformationReq();
+		DetailInformationSacReq req = new DetailInformationSacReq();
 
 		req.setAid("OA00049881");
 		req.setSellerId("qatest123");
 		req.setSellerKey("IF1023501629320130913143329");
 
-		DetailInformationRes res = this.sellerSearchSCI.detailInformation(req);
+		DetailInformationSacRes res = this.sellerSearchSCI.detailInformation(req);
 
 		assertThat(res.getSellerKey(), notNullValue());
 		LOGGER.debug("response param : {}", res.toString());
