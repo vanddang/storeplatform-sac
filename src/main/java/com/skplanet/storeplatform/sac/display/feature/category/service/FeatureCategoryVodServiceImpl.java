@@ -27,25 +27,13 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppServiceImpl;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryVod;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -163,82 +151,27 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 					this.logger.debug("----------------------------------------------------------------");
 					this.logger.debug("영화 > 추천 상품 조회");
 					this.logger.debug("----------------------------------------------------------------");
-
-					productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureMovieList", req,
-							ProductBasicInfo.class);
-
-					// vodRes = this.generateVO("movieRecommend", vodList);
 				} else if ("movie1000".equals(filteredBy)) {
 					this.logger.debug("----------------------------------------------------------------");
 					this.logger.debug("영화 > 1000원관 상품 조회");
 					this.logger.debug("----------------------------------------------------------------");
-
-					productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureMovieList", req,
-							ProductBasicInfo.class);
-
-					// vodRes = this.generateVO("movie1000", vodList);
 				} else {
 					this.logger.debug("----------------------------------------------------------------");
 					this.logger.debug("유효하지않은 조회유형");
 					this.logger.debug("----------------------------------------------------------------");
 
-					vodRes = new FeatureCategoryVodSacRes();
-					vodRes.setCommonResponse(new CommonResponse());
-					return vodRes;
+					throw new StorePlatformException("SAC_DSP_0003", "listId", listId, "topMenuId", topMenuId,
+							"filteredBy", filteredBy);
 				}
 			} else {
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("방송 > 카테고리별 추천 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
-
-				// List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
-				// "FeatureCategory.selectFeatureBroadcastList", req, FeatureCategoryVod.class);
-
-				productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureMovieList", req,
-						ProductBasicInfo.class);
-
-				// vodRes = this.generateVO("broadcastRecommend", vodList);
 			}
 
-			List<Product> productList = new ArrayList<Product>();
-
-			// Meta DB 조회 파라미터 생성
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			TenantHeader tenantHeader = header.getTenantHeader();
-			DeviceHeader deviceHeader = header.getDeviceHeader();
-			reqMap.put("req", req);
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("stdDt", stdDt);
-			reqMap.put("lang", tenantHeader.getLangCd());
-
-			reqMap.put("svcGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
-			// reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-
-			if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
-
-					// Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-
-					if (retMetaInfo != null) {
-						// Response Generate
-						Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
-						productList.add(product);
-					}
-				}
-				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-				vodRes.setProductList(productList);
-				vodRes.setCommonResponse(commonResponse);
-			} else {
-				// 조회 결과 없음
-				commonResponse.setTotalCount(0);
-				vodRes.setProductList(productList);
-				vodRes.setCommonResponse(commonResponse);
-			}
+			// 추천 리스트 조회
+			productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureVodList", req,
+					ProductBasicInfo.class);
 
 		} else {
 			if (!"".equals(filteredBy) && filteredBy != null) {
@@ -246,161 +179,74 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				this.logger.debug("방송 > 방송사별 최신 UP 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
 
-				List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
-						"FeatureCategory.selectFeatureMovieListDummy", req, FeatureCategoryVod.class);
+				// 배치완료 기준일시 조회
+				// 최신 Up 상품의 경우 방송 카테고리별 추천 상품 제외하기 때문에 운영자추천 배치완료 일자 조회함
+				String subStdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(),
+						"ADM000000008");
 
-				vodRes = this.generateVO("broadcastNew", vodList);
+				// 기준일시 체크
+				if (StringUtils.isEmpty(subStdDt)) {
+					throw new StorePlatformException("SAC_DSP_0002", "subStdDt", subStdDt);
+				} else {
+					req.setSubStdDt(subStdDt);
+				}
+
+				// 리스트 조회
+				productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureNewUpTvList", req,
+						ProductBasicInfo.class);
+
 			} else {
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("영화/방송 > 신규 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
 
-				List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
-						"FeatureCategory.selectFeatureMovieListDummy", req, FeatureCategoryVod.class);
-
-				vodRes = this.generateVO("broadcastNew", vodList);
+				// 신규 리스트 조회
+				productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureNewVodist", req,
+						ProductBasicInfo.class);
 			}
-
 		}
 
-		return vodRes;
-	}
+		List<Product> productList = new ArrayList<Product>();
 
-	/*
-	 * Feature VOD 카테고리 상품 VO 생성 Method.
-	 */
-	private FeatureCategoryVodSacRes generateVO(String apiGb, List<FeatureCategoryVod> vodList) {
-		FeatureCategoryVodSacRes vodRes = new FeatureCategoryVodSacRes();
-		CommonResponse commonRes = new CommonResponse();
+		// Meta DB 조회 파라미터 생성
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		reqMap.put("req", req);
+		reqMap.put("tenantHeader", tenantHeader);
+		reqMap.put("deviceHeader", deviceHeader);
+		reqMap.put("stdDt", stdDt);
+		reqMap.put("lang", tenantHeader.getLangCd());
 
-		if (!vodList.isEmpty()) {
-			FeatureCategoryVod vodDto = null;
+		reqMap.put("svcGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
+		// reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 
-			Identifier identifier = null;
-			Support support = null;
-			Menu menu = null;
-			Contributor contributor = null;
-			Date date = null;
-			Accrual accrual = null;
-			Rights rights = null;
-			Title title = null;
-			Source source = null;
-			Source source1 = null;
-			Price price = null;
-			Product product = null;
+		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+				reqMap.put("productBasicInfo", productBasicInfo);
 
-			List<Menu> menuList = null;
-			List<Source> sourceList = null;
-			List<Support> supportList = null;
-			List<Product> productList = new ArrayList<Product>();
-			List<Identifier> identifierList;
+				// Meta 정보 조회
+				MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
 
-			for (int i = 0; i < vodList.size(); i++) {
-				product = new Product();
-				identifierList = new ArrayList<Identifier>();
-				vodDto = vodList.get(i);
-
-				// 상품 정보 (상품ID)
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-				identifier.setText(vodDto.getProdId());
-				identifierList.add(identifier);
-				product.setIdentifierList(identifierList);
-
-				// 상품 지원 정보
-				support = new Support();
-				supportList = new ArrayList<Support>();
-				support.setType("hd");
-				support.setText(vodDto.getHdvYn());
-				supportList.add(support);
-				product.setSupportList(supportList);
-
-				// 메뉴 정보
-				menu = new Menu();
-				menuList = new ArrayList<Menu>();
-				menu.setType("topClass");
-				menu.setId(vodDto.getTopMenuId());
-				menu.setName(vodDto.getTopMenuNm());
-				menuList.add(menu);
-
-				menu = new Menu();
-				menu.setId(vodDto.getMenuId());
-				menu.setName(vodDto.getMenuNm());
-				menuList.add(menu);
-
-				menu = new Menu();
-				menu.setType("metaClass");
-				menu.setId(vodDto.getMetaClsfCd());
-				menuList.add(menu);
-				product.setMenuList(menuList);
-
-				// 저작자 정보
-				contributor = new Contributor();
-				contributor.setArtist(vodDto.getArtist1Nm());
-				contributor.setDirector(vodDto.getArtist2Nm());
-
-				date = new Date();
-				date.setText(vodDto.getIssueDay());
-				contributor.setDate(date);
-				product.setContributor(contributor);
-
-				// 평점 정보
-				accrual = new Accrual();
-				accrual.setDownloadCount(vodDto.getPrchsCnt());
-				accrual.setScore(vodDto.getAvgEvluScore());
-				accrual.setVoterCount(vodDto.getPaticpersCnt());
-				product.setAccrual(accrual);
-
-				// 이용권한 정보
-				rights = new Rights();
-				rights.setGrade(vodDto.getProdGrdCd());
-				product.setRights(rights);
-
-				// 상품 정보 (상품명)
-				title = new Title();
-				title.setPrefix(vodDto.getVodTitlNm());
-				title.setText(vodDto.getProdNm());
-				title.setPostfix(vodDto.getChapter());
-				product.setTitle(title);
-
-				// 이미지 정보
-				source = new Source();
-				sourceList = new ArrayList<Source>();
-				source.setType("thumbnail");
-				source.setMediaType(DisplayCommonUtil.getMimeType(vodDto.getImgPath()));
-				source.setUrl(vodDto.getImgPath());
-				sourceList.add(source);
-
-				// 미리보기 url
-				source1 = new Source();
-				source1.setType("preview");
-				source1.setUrl(vodDto.getSamplUrl());
-				sourceList.add(source1);
-				product.setSourceList(sourceList);
-
-				// 상품 유무료 여부
-				product.setProdChrgYn(vodDto.getProdChrgYn());
-
-				// 상품 정보 (상품설명)
-				product.setProductExplain(vodDto.getProdBaseDesc());
-
-				// 상품 정보 (상품가격)
-				price = new Price();
-				price.setText(vodDto.getProdAmt());
-				product.setPrice(price);
-
-				// 데이터 매핑
-				productList.add(i, product);
+				if (retMetaInfo != null) {
+					// Response Generate
+					Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+					productList.add(product);
+				}
 			}
-
-			commonRes.setTotalCount(vodDto.getTotalCount());
+			commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
 			vodRes.setProductList(productList);
-			vodRes.setCommonResponse(commonRes);
+			vodRes.setCommonResponse(commonResponse);
 		} else {
 			// 조회 결과 없음
-			vodRes.setCommonResponse(commonRes);
+			commonResponse.setTotalCount(0);
+			vodRes.setProductList(productList);
+			vodRes.setCommonResponse(commonResponse);
 		}
 
 		return vodRes;
 	}
+
 }
