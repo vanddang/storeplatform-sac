@@ -170,12 +170,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchSellerResponse schRes = this.sellerSCI.searchSeller(schReq);
 
-		SearchFlurryListResponse schRes2 = new SearchFlurryListResponse();
 		SearchFlurryListRequest schReq2 = new SearchFlurryListRequest();
 		schReq2.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq2.setSellerKey(schRes.getSellerKey());
 
-		schRes2 = this.sellerSCI.searchFlurryList(schReq2);
+		SearchFlurryListResponse schRes2 = this.sellerSCI.searchFlurryList(schReq2);
 
 		// 판매자 멀티미디어정보
 		List<ExtraRight> eList = new ArrayList<ExtraRight>();
