@@ -231,7 +231,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			// 저작자 정보
 			product.setDistributor(this.commonMetaInfoGenerator.generateDistributor(metaInfo));
 
-			// 구매 정보
+			// 구매 여부 확인
 			if (StringUtils.isNotEmpty(prchsId)) {
 				metaInfo.setExpiredDate(expireDate);
 				metaInfo.setPurchaseId(prchsId);
@@ -258,6 +258,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
 				}
 
+				// 구매 정보
 				product.setPurchase(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
 
 				// 암호화 정보
