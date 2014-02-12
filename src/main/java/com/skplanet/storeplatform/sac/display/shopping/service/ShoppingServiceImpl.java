@@ -23,10 +23,13 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -47,9 +50,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SelectOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SubSelectOption;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -62,7 +62,6 @@ import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 import com.skplanet.storeplatform.sac.display.shopping.vo.Shopping;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
-import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
  * ShoppingList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -88,7 +87,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	@Autowired
-	HistoryListService historyListService;
+	HistoryInternalSCI historyInternalSCI;
 
 	@Autowired
 	private SellerSearchService sellerSearchService;
@@ -2146,30 +2145,29 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 							try {
 								// 구매내역 조회를 위한 생성자
-								ProductListSac productListSac = new ProductListSac();
-								productListSac.setProdId(episodeShopping.getPartProdId());
+								ProductListSacIn productListSacIn = new ProductListSacIn();
+								List<ProductListSacIn> productEpisodeList = new ArrayList<ProductListSacIn>();
 
-								List<ProductListSac> productEpisodeList = new ArrayList<ProductListSac>();
-								productEpisodeList.add(productListSac);
+								productListSacIn.setProdId(episodeShopping.getPartProdId());
+								productEpisodeList.add(productListSacIn);
 
-								HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+								HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
 								historyListSacReq.setTenantId(req.getTenantId());
 								historyListSacReq.setUserKey(req.getUserKey());
 								historyListSacReq.setDeviceKey(req.getDeviceKey());
-								historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+								historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
 								historyListSacReq.setStartDt("19000101000000");
 								historyListSacReq.setEndDt(episodeShopping.getSysDate());
 								historyListSacReq.setOffset(1);
 								historyListSacReq.setCount(1);
 								historyListSacReq.setProductList(productEpisodeList);
-
 								// 구매내역 조회 실행
-								if (req.getUserKey() != null) {// userKey 가 없을 경우
-									HistoryListSacRes historyListSacRes = this.historyListService
+								if (!StringUtils.isEmpty(req.getUserKey())) {
+									HistoryListSacInRes historyListSacRes = this.historyInternalSCI
 											.searchHistoryList(historyListSacReq);
 
 									this.log.debug("----------------------------------------------------------------");
-									this.log.debug("[getDownloadComicInfo] purchase count : {}",
+									this.log.debug("[getShoppingInfo] purchase count : {}",
 											historyListSacRes.getTotalCnt());
 									this.log.debug("----------------------------------------------------------------");
 									purchseCount = historyListSacRes.getTotalCnt();
@@ -2178,11 +2176,17 @@ public class ShoppingServiceImpl implements ShoppingService {
 										prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
 										prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 
-										if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+										if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 											prchsState = "payment";
-										} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+										} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
 											prchsState = "gift";
 										}
+
+										this.log.debug("----------------------------------------------------------------");
+										this.log.debug("[getShoppingInfo] prchsId : {}", prchsId);
+										this.log.debug("[getShoppingInfo] prchsDt : {}", prchsDt);
+										this.log.debug("[getShoppingInfo] prchsState : {}", prchsState);
+										this.log.debug("----------------------------------------------------------------");
 									}
 								}
 							} catch (Exception ex) {
@@ -2201,7 +2205,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 										DateUtils.parseDate(prchsDt));
 							}
 							purchase.setDate(purchaseDate);
-							if (purchseCount > 0) {// 구매 건수가 있을 경우
+							if (!StringUtils.isEmpty(req.getUserKey())) {// 사용자키가 있을 경우
 								episodeProduct.setPurchase(purchase);
 							}
 
