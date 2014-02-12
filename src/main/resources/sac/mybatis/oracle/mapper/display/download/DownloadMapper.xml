@@ -483,11 +483,17 @@
 	      ) XA                         
     </select>
     
+    <!-- for download 현재일시 및 만료일시 조회 -->
+    <select id="selectDownloadSystemDate" resultType="MetaInfo">
+		SELECT  TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
+		     ,  TO_CHAR(SYSDATE + 1 / 24, 'YYYYMMDDHH24MISS') AS EXPIRED_DATE
+		  FROM  DUAL
+    </select>
+    
     <!-- ebook 상품 정보 조회(for download) -->
     <select id="selectDownloadEbookInfo" parameterType="DownloadEbookSacReq" resultType="MetaInfo">
         SELECT  /* DownloadMapper.xml, selectDownloadEbookInfo, tae hee Lee, 2014-01-28 */
                 KA.*
-              , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
               , CONCAT(KB.FILE_PATH, KB.FILE_NM) AS IMAGE_PATH
               , KB.FILE_SIZE AS IMAGE_SIZE
               , (SELECT MENU_NM
@@ -631,7 +637,6 @@
     <select id="selectDownloadComicInfo" parameterType="DownloadComicSacReq" resultType="MetaInfo">
         SELECT  /* DownloadMapper.xml, selectDownloadComicInfo, tae hee Lee, 2014-02-03 */
                 JA.*
-              , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
               , CONCAT(JB.FILE_PATH, JB.FILE_NM) AS IMAGE_PATH
               , JB.FILE_SIZE AS IMAGE_SIZE
               , (SELECT MENU_NM
