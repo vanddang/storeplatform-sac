@@ -336,9 +336,13 @@ public class DisplayConstants {
 
 	public static final String DP_USE_PERIOD_UNIT_CD_NONE = "PD00310"; // 사용기간 단위 코드 (무제한)
 
-	public static final String DP_FORDOWNLOAD_ENCRYPT_KEY = "00";
+	public static final String DP_FORDOWNLOAD_ENCRYPT_KEY = "00"; // for download 암호화키
 
-	public static final String DP_FORDOWNLOAD_ENCRYPT_TYPE = "AES128/";
+	public static final String DP_FORDOWNLOAD_ENCRYPT_TYPE = "AES128/"; // for download 암호화 방식
+
+	public static final String DP_FORDOWNLOAD_BP_DEFAULT_TYPE = "00"; // for download 기본 DRM 타입
+
+	public static final String DP_FORDOWNLOAD_BP_EBOOK_TYPE = "01"; // for download 인터파크 DRM 타입
 
 	/*
 	 * 배너 타입 코드
