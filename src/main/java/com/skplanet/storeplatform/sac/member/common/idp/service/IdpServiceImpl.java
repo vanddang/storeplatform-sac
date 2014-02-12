@@ -210,6 +210,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @param queryKeyValue
 	 * @return IdpReceiverM
 	 */
+	@Deprecated
 	@Override
 	public IdpReceiverM searchUserCommonInfo(String queryKeyType, String queryKeyValue) {
 		IdpSenderM sendData = new IdpSenderM();
@@ -576,6 +577,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @param svcMngNum
 	 * @return IdpReceiverM
 	 */
+	@Deprecated
 	@Override
 	public IdpReceiverM joinSupService(String mdn, String svcCd, String svcMngNum) {
 		IdpSenderM sendData = new IdpSenderM();
