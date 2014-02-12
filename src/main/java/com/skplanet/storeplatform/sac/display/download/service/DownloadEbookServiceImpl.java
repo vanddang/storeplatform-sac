@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xmlbeans.impl.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
 import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
+import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 /**
  * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
@@ -266,14 +268,16 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				byte[] jsonData = marshaller.marshal(contents);
 
 				// JSON 암호화
-				byte[] encryptData = this.downloadAES128Helper.encryption(jsonData);
+				byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
 
 				Encryption encryption = new Encryption();
 				encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE
 						+ DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY);
 
-				// 스트링형태로 세팅해야할텐데....
-				encryption.setText(new String(encryptData.toString()));
+				// JSON 암호화값을 BASE64 Encoding
+				Base64Encoder encoder = new Base64Encoder();
+				String encryptString = encoder.encode(encryptByte);
+				encryption.setText(encryptString);
 
 				product.setEncryption(encryption);
 			}
@@ -281,7 +285,9 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			try {
 				Encryption testEn = new Encryption();
 				testEn = product.getEncryption();
-				byte[] dec = this.downloadAES128Helper.decryption(testEn.getText().getBytes());
+
+				byte[] testValue = Base64.decode(testEn.getText().getBytes());
+				byte[] dec = this.downloadAES128Helper.decryption(testValue);
 
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("Encryption Type : {}", testEn.getType());
