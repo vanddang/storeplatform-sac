@@ -49,4 +49,11 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 		return (Device) this.commonDAO.queryForObject("MemberCommon.getPhoneInfo", dto);
 	}
 
+	@Override
+	public List<Clause> searchClauseList() {
+		Clause dto = new Clause();
+		dto.setDpYn("Y");
+		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getClauseList", dto);
+	}
+
 }

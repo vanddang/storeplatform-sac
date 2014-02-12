@@ -26,6 +26,15 @@ public interface MemberCommonRepository {
 
 	/**
 	 * <pre>
+	 * 약관 목록 조회.
+	 * </pre>
+	 * 
+	 * @return List<ClauseDTO>
+	 */
+	public List<Clause> searchClauseList();
+
+	/**
+	 * <pre>
 	 * 폰 정보 조회.
 	 * </pre>
 	 * 
