@@ -26,34 +26,14 @@ public class ListMyFeedbackSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 사용후기 전체개수.
-	 */
-	private String notiTot;
-
-	/**
 	 * 사용후기 리스트.
 	 */
-	private List<Feedback> notiList;
+	private List<FeedbackMy> notiList;
 
 	/**
-	 * @return String
+	 * @return List<FeedbackMy>
 	 */
-	public String getNotiTot() {
-		return this.notiTot;
-	}
-
-	/**
-	 * @param notiTot
-	 *            notiTot
-	 */
-	public void setNotiTot(String notiTot) {
-		this.notiTot = notiTot;
-	}
-
-	/**
-	 * @return List<Feedback>
-	 */
-	public List<Feedback> getNotiList() {
+	public List<FeedbackMy> getNotiList() {
 		return this.notiList;
 	}
 
@@ -61,7 +41,7 @@ public class ListMyFeedbackSacRes extends CommonInfo {
 	 * @param notiList
 	 *            notiList
 	 */
-	public void setNotiList(List<Feedback> notiList) {
+	public void setNotiList(List<FeedbackMy> notiList) {
 		this.notiList = notiList;
 	}
 

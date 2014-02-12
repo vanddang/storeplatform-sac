@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
@@ -17,26 +16,10 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 23. Updated by : 김현일, 인크로스.
  */
-public class CreateRecommendFeedbackSacRes extends CommonInfo {
+public class CreateRecommendFeedbackSacRes extends Feedback {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String notiSeq;
-
-	/**
-	 * @return String
-	 */
-	public String getNotiSeq() {
-		return this.notiSeq;
-	}
-
-	/**
-	 * @param notiSeq
-	 *            notiSeq
-	 */
-	public void setNotiSeq(String notiSeq) {
-		this.notiSeq = notiSeq;
-	}
 }
