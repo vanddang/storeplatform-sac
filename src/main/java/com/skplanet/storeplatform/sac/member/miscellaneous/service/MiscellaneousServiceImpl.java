@@ -530,10 +530,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
 
-		SearchUserResponse searchUserResponse = new SearchUserResponse();
-
 		/** 2. deviceId(msisdn)로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
-		searchUserResponse = this.userSCI.searchUser(searchUserRequest);
+		SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
 		if (searchUserResponse == null || searchUserResponse.getUserMbr() == null) {
 			throw new StorePlatformException("SAC_MEM_0003", "deviceId", msisdn);
