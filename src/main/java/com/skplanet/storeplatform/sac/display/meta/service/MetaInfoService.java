@@ -77,4 +77,15 @@ public interface MetaInfoService {
 	 * @return MetaInfo
 	 */
 	public MetaInfo getShoppingMetaInfo(Map<String, Object> paramMap);
+	
+	/**
+	 * <pre>
+	 * 정액제 Meta 정보 조회.
+	 * </pre>
+	 * 
+	 * @param paramMap
+	 *            paramMap
+	 * @return MetaInfo
+	 */
+	public MetaInfo getFreepassMetaInfo(Map<String, Object> paramMap);
 }

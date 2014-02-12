@@ -22,8 +22,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
@@ -57,6 +59,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 	@Autowired
 	private ShoppingInfoGenerator shoppingGenerator;
+	
+	@Autowired
+	private FreepassInfoGenerator freepassGenerator;
 
 	/*
 	 * (non-Javadoc)
@@ -614,4 +619,40 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		return product;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateFreepassProduct(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Coupon generateFreepassProduct(MetaInfo metaInfo) {
+		Coupon coupon = new Coupon();
+		
+		//Identifier 생성
+		coupon.setIdentifierList(this.freepassGenerator.generateIdentifierList(metaInfo));
+		// Title 생성
+		Title title = this.freepassGenerator.generateTitle(metaInfo);
+		// Price 생성
+		Price price = this.commonGenerator.generatePrice(metaInfo);
+		// MenuList 생성
+		AutoPay autoPay = this.freepassGenerator.generateAutoPay(metaInfo);
+		// SourceList 생성
+		coupon.setSourceList(this.freepassGenerator.generateSourceList(metaInfo));
+		// Date 생성
+		Date date = this.freepassGenerator.generateDate(metaInfo);
+		
+		coupon.setKind(metaInfo.getCmpxProdClsfCd());
+		coupon.setCouponExplain(metaInfo.getProdIntrDscr());
+		
+		coupon.setTitle(title);
+		coupon.setPrice(price);
+		coupon.setAutopay(autoPay);
+		coupon.setDate(date);
+		
+		return coupon;
+	}
+	
 }

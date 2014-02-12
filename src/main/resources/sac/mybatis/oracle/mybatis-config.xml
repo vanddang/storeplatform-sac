@@ -217,6 +217,9 @@
         <typeAlias alias="AppzineAppList"  type="com.skplanet.storeplatform.sac.display.appzine.vo.AppzineAppList" />
         
         <!-- OpenApi Download Best 상품 조회 -->
-        <typeAlias alias="DownloadBestSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq" />        
+        <typeAlias alias="DownloadBestSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq" />
+        
+        <!-- 정액제 상품 조회 -->
+        <typeAlias alias="FreepassListSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq" />        
     </typeAliases>
 </configuration>

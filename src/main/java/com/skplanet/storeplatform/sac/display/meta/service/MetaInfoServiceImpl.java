@@ -85,5 +85,15 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	public MetaInfo getShoppingMetaInfo(Map<String, Object> paramMap) {
 		return this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getFreepassMetaInfo(java.util.Map)
+	 */
+	@Override
+	public MetaInfo getFreepassMetaInfo(Map<String, Object> paramMap) {
+		return this.commonDAO.queryForObject("MetaInfo.getFreepassMetaInfo", paramMap, MetaInfo.class);
+	}
 
 }

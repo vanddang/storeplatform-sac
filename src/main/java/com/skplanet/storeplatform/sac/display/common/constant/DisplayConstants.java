@@ -84,6 +84,7 @@ public class DisplayConstants {
 	public static final String DP_PURCHASE_IDENTIFIER_CD = "purchase";
 	public static final String DP_DOWNLOAD_IDENTIFIER_CD = "download";
 	public static final String DP_GAMECENTER_IDENTIFIER_CD = "gamecenter";
+	public static final String DP_FREEPASS_IDENTIFIER_CD = "freepass";
 
 	// //////////////////////////////////// TOP MENU ID //////////////////////////////////////////
 	/**
@@ -286,6 +287,10 @@ public class DisplayConstants {
 	public static final String DP_SHOPPING_THEME_REPRESENT_IMAGE_CD = "DP0001A7";
 
 	public static final String DP_OPENAPI_APP_REPRESENT_IMAGE_CD = "DP000125";
+	//정액제 배너이미지
+	public static final String DP_FREEPASS_BANNER_IMAGE_CD = "DP000197";
+	//정액제 썸네일이미지
+	public static final String DP_FREEPASS_THUMBNAIL_IMAGE_CD = "DP000199";
 
 	// //////////////////////////////////// VOD 화질 유형 //////////////////////////////////////////
 	public static final String DP_VOD_QUALITY_NORMAL = "normal";
@@ -431,4 +436,8 @@ public class DisplayConstants {
 	// 구매유형코드: 구매 / 선물 - OR0017S / OR0017G 사용 결정 필요
 	public static final String PRCHS_CASE_PURCHASE_CD = "OR0017S"; // 구매
 	public static final String PRCHS_CASE_GIFT_CD = "OR0017G"; // 선물
+	
+	// 정액제 상품 자동결제 구분
+	public static final String DP_AUTOPAY_AUTO = "auto"; // 자동결제
+	public static final String DP_AUTOPAY_NORMAL = "normal"; // 일반결제
 }

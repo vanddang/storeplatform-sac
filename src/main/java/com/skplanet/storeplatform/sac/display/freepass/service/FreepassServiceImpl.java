@@ -15,9 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
@@ -53,6 +56,10 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
 public class FreepassServiceImpl implements FreepassService {
 
 	@Autowired
+	@Qualifier("sac")
+	private CommonDAO commonDAO;
+	
+	@Autowired
 	private MetaInfoService metaInfoService;
 	
 	@Autowired
@@ -69,16 +76,64 @@ public class FreepassServiceImpl implements FreepassService {
 		// 공통 응답 변수 선언
 		int totalCount = 0;
 		FreepassListRes responseVO = null;
-		CommonResponse commonResponse = null;
-
+		CommonResponse commonResponse = new CommonResponse();
+		
+		Coupon coupon = null;
 		List<Coupon> couponList = new ArrayList<Coupon>();
 		
-		couponList = getDummyCoupon();
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		List<ProductBasicInfo> productBasicInfoList = null;
+		MetaInfo retMetaInfo = null;
 		
-		responseVO = new FreepassListRes();
-		commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(couponList.size());
+		if (StringUtil.nvl(req.getDummy(), "").equals("")) {
+			
+			//정액제 상품 목록 조회
+			req.setTenantId(header.getTenantHeader().getTenantId());
+			req.setLangCd(header.getTenantHeader().getLangCd());
+			req.setDeviceModelCd(header.getDeviceHeader().getModel());
+			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+			req.setProdStatusCd(DisplayConstants.DP_SALE_STAT_ING);
+			req.setStandardModelCd(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			
+			// 시작점 ROW Default 세팅
+			if (req.getOffset() == 0) {
+				req.setOffset(1);
+			}
+			// 페이지당 노출될 ROW 개수 Default 세팅
+			if (req.getCount() == 0) {
+				req.setCount(20);
+			}
+			
+			// 페이지당 노출될 ROW 개수 Default 세팅
+			if ("All".equals(req.getKind())) {
+				req.setKind("");
+			}
+			
+			productBasicInfoList = this.commonDAO.queryForList("Freepass.selectFreepassList",
+					req, ProductBasicInfo.class);
+			
+			//정액제 상품 메타 조회
+			if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+				reqMap.put("tenantHeader", header.getTenantHeader());
+				reqMap.put("deviceHeader", header.getDeviceHeader());
+				reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+				reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
 
+				for ( ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
+					coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
+					couponList.add(coupon);
+					commonResponse.setTotalCount(productBasicInfo.getTotalCount());
+				}
+			}
+			
+		} else {
+			couponList = getDummyCoupon();
+			commonResponse.setTotalCount(couponList.size());
+		}
+		responseVO = new FreepassListRes();
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setCouponList(couponList);
 		return responseVO;

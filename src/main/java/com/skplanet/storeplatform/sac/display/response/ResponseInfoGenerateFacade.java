@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
@@ -196,4 +197,15 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Product
 	 */
 	public Product generateSpecificShoppingProduct(MetaInfo metaInfo);
+	
+	/**
+	 * <pre>
+	 * 정액제 상품 Coupon 객체생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Coupon
+	 */
+	public Coupon generateFreepassProduct(MetaInfo metaInfo);
 }
