@@ -26,7 +26,6 @@ import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScRes;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistorySc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ProductCountSc;
-import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
@@ -35,6 +34,9 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistorySac;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductCountSac;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService;
+import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * 구매내역 Implements
@@ -51,6 +53,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 	@Autowired
 	private CategorySpecificProductService productService;
+
+	@Autowired
+	private PurchaseTenantPolicyService purchaseTenantPolicyService;
 
 	/**
 	 * 구매내역 조회 기능을 제공한다.
@@ -99,6 +104,18 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// 보유상품 조회일 때만 해당값이 조회 조건으로 사용된다.
 		if (PurchaseConstants.PRCHS_PROD_TYPE_OWN.equals(request.getPrchsProdType())) {
 			scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
+		}
+
+		// TenantProdGrpCd가 요청값으로 전달되면 구매 정책을 확인한다. (Device기반 구매내역관리)
+		// TenantProdGrpCd가 Device기반 정책이면 device_key를 세팅하고 아니면 공백처리하여 쿼리 조건으로 사용되지 않게 처리됨
+		if (StringUtils.isNotBlank(request.getTenantProdGrpCd())) {
+			List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
+					.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
+							PurchaseConstants.POLICY_ID_008);
+
+			if (purchaseTenantPolicyList.size() <= 0) {
+				scRequest.setDeviceKey("");
+			}
 		}
 
 		scRequest.setProductList(prodList);
