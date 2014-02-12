@@ -924,7 +924,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 				addData.setDeviceExtraInfoList(listExtraInfo);
 
-				res.setUserDeviceInfo(addData);
+				res.setDeviceInfo(addData);
 			}
 		}
 

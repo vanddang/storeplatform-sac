@@ -900,13 +900,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 					logger.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
 
 					UserExtraInfo extra = new UserExtraInfo();
-					extra.setExtraProfileCode(StringUtil.setTrim(ptcr.getExtraProfile()));
+					extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
 					extra.setExtraProfileValue(StringUtil.setTrim(ptcr.getExtraProfileValue()));
 
 					listExtraInfo.add(extra);
 				}
 
-				userInfo.setUserExtraInfo(listExtraInfo);
+				userInfo.setUserExtraInfoList(listExtraInfo);
 			}
 
 		}
@@ -951,12 +951,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 			logger.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
 
 			UserExtraInfo extra = new UserExtraInfo();
-			extra.setExtraProfileCode(StringUtil.setTrim(ptcr.getExtraProfile()));
+			extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
 			extra.setExtraProfileValue(StringUtil.setTrim(ptcr.getExtraProfileValue()));
 
 			listExtraInfo.add(extra);
 
-			extraRes.setAddInfoList(listExtraInfo);
+			extraRes.setUserExtraInfoList(listExtraInfo);
 
 		}
 		return extraRes;

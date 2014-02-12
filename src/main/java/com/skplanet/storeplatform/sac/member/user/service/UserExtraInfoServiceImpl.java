@@ -147,11 +147,11 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 
 		LOGGER.debug("###### removeUserExtra Req : {}", req.getUserKey());
-		LOGGER.debug("###### removeUserExtra Req : {}", req.getAddInfoList().toString());
+		LOGGER.debug("###### removeUserExtra Req : {}", req.getUserExtraInfoList().toString());
 
-		for (UserExtraInfo info : req.getAddInfoList()) {
+		for (UserExtraInfo info : req.getUserExtraInfoList()) {
 			MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
-			ptcr.setExtraProfile(info.getExtraProfileCode());
+			ptcr.setExtraProfile(info.getExtraProfile());
 			ptcr.setExtraProfileValue(info.getExtraProfileValue());
 			ptcr.setUserKey(req.getUserKey());
 			ptcr.setTenantID(sacHeader.getTenantHeader().getTenantId());
@@ -186,9 +186,9 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 
-		for (UserExtraInfo info : req.getAddInfoList()) {
+		for (UserExtraInfo info : req.getUserExtraInfoList()) {
 			MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
-			ptcr.setExtraProfile(info.getExtraProfileCode());
+			ptcr.setExtraProfile(info.getExtraProfile());
 			ptcr.setExtraProfileValue(info.getExtraProfileValue());
 			ptcr.setUserKey(req.getUserKey());
 			ptcr.setTenantID(sacHeader.getTenantHeader().getTenantId());
@@ -220,21 +220,21 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	public String validProfileCode(UserExtraInfoReq req) {
 		String validProfileCode = "";
 
-		for (UserExtraInfo info : req.getAddInfoList()) {
-			if (info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_CERTIFICATION)
-					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_SKTBILLSEPARATION)
-					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_FACEBOOKACCESSTOKEN)
-					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_FACEBOOKPURCHASE)
-					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_FACEBOOKRATING)
-					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_FACEBOOKREVIEW)
-					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_MEMBERPOINTJOIN)) {
+		for (UserExtraInfo info : req.getUserExtraInfoList()) {
+			if (info.getExtraProfile().equals(MemberConstants.USER_EXTRA_CERTIFICATION)
+					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_SKTBILLSEPARATION)
+					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKACCESSTOKEN)
+					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKPURCHASE)
+					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKRATING)
+					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKREVIEW)
+					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_MEMBERPOINTJOIN)) {
 
 				validProfileCode = "Y";
 
 			} else {
 				validProfileCode = "N";
-				LOGGER.debug("###### inValid ProfileCode : {}", info.getExtraProfileCode());
-				throw new StorePlatformException("SAC_MEM_0002", info.getExtraProfileCode());
+				LOGGER.debug("###### inValid Profile : {}", info.getExtraProfile());
+				throw new StorePlatformException("SAC_MEM_0002", info.getExtraProfile());
 			}
 		}
 
@@ -244,15 +244,15 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	/* 입력받은 profileCode 가 등록이 되어 있는지 확인 : 등록이 되어 있어야 삭제가 가능. */
 	@Override
 	public String registeredProfileCode(UserInfo searchUser, UserExtraInfoReq req) {
-		List<UserExtraInfo> extraInfo = searchUser.getUserExtraInfo();
-		List<UserExtraInfo> reqInfo = req.getAddInfoList();
+		List<UserExtraInfo> extraInfo = searchUser.getUserExtraInfoList();
+		List<UserExtraInfo> reqInfo = req.getUserExtraInfoList();
 		String registeredProfileCode = "";
 		int checkCount = 0;
 
 		for (UserExtraInfo infoSearchUser : extraInfo) {
 			for (UserExtraInfo infoReqUser : reqInfo) {
 
-				if (infoSearchUser.getExtraProfileCode().equals(infoReqUser.getExtraProfileCode())) {
+				if (infoSearchUser.getExtraProfile().equals(infoReqUser.getExtraProfile())) {
 					checkCount += 1;
 				}
 			}
