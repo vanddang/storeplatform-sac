@@ -731,12 +731,11 @@ public class IdpServiceImpl implements IdpService {
 		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
-		UpdateStatusUserResponse updateStatusResponse = new UpdateStatusUserResponse();
-
 		try {
-			updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
+			UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
 		} catch (StorePlatformException spe) {
-
+			LOGGER.debug("RXSetLoginConditionIDP ------- update state excetion error code = "
+					+ spe.getErrorInfo().getCode());
 		}
 
 		// 미동의 회원 정보 수정
@@ -785,7 +784,6 @@ public class IdpServiceImpl implements IdpService {
 
 		// Service Method이름은 Provisioning 및 Rx 기능의 'cmd' 값과 동일 해야 함.
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
-		UpdateUserRequest userVo = new UpdateUserRequest();
 		IdpConstants idpConstant = new IdpConstants();
 		MemberConstants memberConstant = new MemberConstants();
 		ImResult imResult = new ImResult();
@@ -808,17 +806,16 @@ public class IdpServiceImpl implements IdpService {
 		}
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
-		SearchUserResponse searchUserRespnse = new SearchUserResponse();
 
 		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
 		try {
-			searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
+			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 		} catch (StorePlatformException spe) {
 
 			// 회원 존재 여부 확인
-			if (null == searchUserRespnse.getUserMbr()) {
+			if (spe.getErrorInfo().getCode().endsWith(memberConstant.RESULT_NOT_FOUND_USER_KEY)) {
 				// one id 가입 정보 등록
 				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
 				updateMbrOneIDRequest.setCommonRequest(commonRequest);
@@ -1724,7 +1721,6 @@ public class IdpServiceImpl implements IdpService {
 	@Override
 	public ImResult rXPreCheckDeleteUserIDP(HashMap map) {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
-		UpdateUserRequest userVo = new UpdateUserRequest();
 		IdpConstants idpConstant = new IdpConstants();
 		ImResult imResult = new ImResult();
 		MemberConstants memberConstant = new MemberConstants();
@@ -1753,8 +1749,7 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-			UserMbr getUserMbr = new UserMbr();
-			getUserMbr = searchUserRespnse.getUserMbr();
+			UserMbr getUserMbr = searchUserRespnse.getUserMbr();
 
 			// 회원 정보 존재
 			if (getUserMbr != null) {
@@ -1806,7 +1801,6 @@ public class IdpServiceImpl implements IdpService {
 	@Override
 	public ImResult rXPreCheckDisagreeUserIDP(HashMap map) {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
-		UpdateUserRequest userVo = new UpdateUserRequest();
 		IdpConstants idpConstant = new IdpConstants();
 		ImResult imResult = new ImResult();
 		MemberConstants memberConstant = new MemberConstants();
@@ -1835,8 +1829,7 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-			UserMbr getUserMbr = new UserMbr();
-			getUserMbr = searchUserRespnse.getUserMbr();
+			UserMbr getUserMbr = searchUserRespnse.getUserMbr();
 
 			// 회원 정보 존재
 			if (getUserMbr != null) {
@@ -2118,7 +2111,6 @@ public class IdpServiceImpl implements IdpService {
 	public ImResult rXChangePWDIDP(HashMap map) {
 
 		UpdatePasswordUserRequest updatePasswordUserRequest = new UpdatePasswordUserRequest();
-		UpdatePasswordUserResponse updatePasswordUserResponse = new UpdatePasswordUserResponse();
 		IdpConstants idpConstant = new IdpConstants();
 		MemberConstants memberConstant = new MemberConstants();
 
@@ -2141,7 +2133,8 @@ public class IdpServiceImpl implements IdpService {
 		updatePasswordUserRequest.setMbrPwd(mbrPwd);
 
 		try {
-			updatePasswordUserResponse = this.userSCI.updatePasswordUser(updatePasswordUserRequest);
+			UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI
+					.updatePasswordUser(updatePasswordUserRequest);
 
 			if (updatePasswordUserResponse.getCommonResponse().getResultCode()
 					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
