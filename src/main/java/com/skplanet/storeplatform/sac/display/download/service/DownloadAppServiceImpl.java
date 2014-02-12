@@ -9,10 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xmlbeans.impl.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
+import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
@@ -52,6 +56,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
+import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -295,15 +300,37 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					// 암호화 정보
 					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
 					// contents를 JSON 형태로 파싱
-					String jsonContents = "";
+					// JSON 파싱
+					MarshallingHelper marshaller = new JacksonMarshallingHelper();
+					byte[] jsonData = marshaller.marshal(contents);
 
-					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonContents.getBytes());
+					// JSON 암호화
+					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
 
 					Encryption encryption = new Encryption();
-					encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE
-							+ DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY);
-					encryption.setText(new String(encryptByte));
+					// encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE + "/"
+					// + DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY);
+					Base64Encoder encoder = new Base64Encoder();
+					String encryptString = encoder.encode(encryptByte);
+					encryption.setText(encryptString);
+
 					product.setEncryption(encryption);
+				}
+
+				try {
+					Encryption testEn = new Encryption();
+					testEn = product.getEncryption();
+
+					byte[] testValue = Base64.decode(testEn.getText().getBytes());
+					byte[] dec = this.downloadAES128Helper.decryption(testValue);
+
+					this.log.debug("----------------------------------------------------------------");
+					this.log.debug("Encryption Type : {}", testEn.getType());
+					this.log.debug("Encryption Text : {}", testEn.getText());
+					this.log.debug("Decryption Text : {}", new String(dec, "UTF-8"));
+					this.log.debug("----------------------------------------------------------------");
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
 				}
 
 				product.setPacketFee(metaInfo.getProdClsfCd());

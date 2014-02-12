@@ -278,7 +278,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					product.setPurchase(this.commonGenerator.generatePurchase(metaInfo));
 
 					metaInfo.setExpiredDate(downloadSystemDate.getExpiredDate());
-					// metaInfo.setDwldExprDt(dwldExprDt);
+					metaInfo.setDwldExprDt(dwldExprDt);
 					metaInfo.setUserKey(downloadVodSacReq.getUserKey());
 					metaInfo.setDeviceKey(downloadVodSacReq.getDeviceKey());
 					metaInfo.setDeviceType("");
@@ -292,8 +292,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonContents.getBytes());
 
 					Encryption encryption = new Encryption();
-					encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE
-							+ DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY);
+					// encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE
+					// + DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY);
 					encryption.setText(new String(encryptByte));
 					product.setEncryption(encryption);
 				}
