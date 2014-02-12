@@ -60,7 +60,12 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// TODO 3. 파라미터 셋팅해서 Response.
 		SearchUserSacRes searchUserSacRes = new SearchUserSacRes();
+		// TODO searchUserSacRes.setDeviceId(deviceId);
+		// TODO searchUserSacRes.setUserId(userId);
+		searchUserSacRes.setUserType(userInfo.getUserType());
+		searchUserSacRes.setUserMainStatus(userInfo.getUserMainStatus());
+		searchUserSacRes.setUserSubStatus(userInfo.getUserSubStatus());
 
-		return null;
+		return searchUserSacRes;
 	}
 }
