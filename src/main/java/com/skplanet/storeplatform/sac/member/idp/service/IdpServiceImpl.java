@@ -112,7 +112,7 @@ public class IdpServiceImpl implements IdpService {
 
 		String tenantID = "";
 		String systemID = "";
-
+		String userKey = ""; // 내부사용자키
 		String imIntSvcNo = ""; // 통합서비스번호
 		String userId = ""; // 사용자 ID
 		String ocbJoinCodeYn = ""; // 통합포인트 가입여부
@@ -288,6 +288,7 @@ public class IdpServiceImpl implements IdpService {
 			createUserRequest.setMbrClauseAgreeList(mbrClauseAgreeList);
 			try {
 				create = this.userSCI.create(createUserRequest); // 가입정보 등록
+				userKey = create.getUserKey();
 			} catch (StorePlatformException spe) {
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
@@ -304,7 +305,7 @@ public class IdpServiceImpl implements IdpService {
 			MbrOneID mbrOneID = new MbrOneID();
 			mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
 			mbrOneID.setIntgSvcNumber(imIntSvcNo);
-			mbrOneID.setUserKey(create.getUserKey()); // 신규가입때 생성된 내부사용자키를 셋팅
+			mbrOneID.setUserKey(userKey); // 신규가입때 생성된 내부사용자키를 셋팅
 			mbrOneID.setUserID(userId); // userID
 			mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
 			mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
@@ -331,7 +332,7 @@ public class IdpServiceImpl implements IdpService {
 			commonRequest.setTenantID(tenantID);
 			commonRequest.setSystemID(systemID);
 			map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
-			String updateUserKey = "";
+
 			if (userId.equals(oldId)) { // 전환가입 userId - oldId 비교시 같은경우
 				LOGGER.debug("전환가입 정보 입력 시작");
 				SearchUserRequest searchUserRequest = new SearchUserRequest();
@@ -367,7 +368,7 @@ public class IdpServiceImpl implements IdpService {
 					return imResult;
 				}
 
-				updateUserKey = updateUserResponse.getUserKey();
+				userKey = updateUserResponse.getUserKey();
 
 			} else if (!userId.equals(oldId)) { // 변경가입, 변경전환
 				LOGGER.debug("변경가입,변경전환 정보 입력 시작");
@@ -405,7 +406,7 @@ public class IdpServiceImpl implements IdpService {
 					return imResult;
 				}
 
-				updateUserKey = updateUserResponse.getUserKey();
+				userKey = updateUserResponse.getUserKey();
 			}
 
 			LOGGER.debug("ONEID DATA UPDATE START");
@@ -417,7 +418,7 @@ public class IdpServiceImpl implements IdpService {
 				MbrOneID mbrOneID = new MbrOneID();
 				mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
 				mbrOneID.setIntgSvcNumber(imIntSvcNo);
-				mbrOneID.setUserKey(updateUserKey); // 내부사용자키를 셋팅
+				mbrOneID.setUserKey(userKey); // 내부사용자키를 셋팅
 				mbrOneID.setUserID(userId); // 사용자 ID 셋팅
 				mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
 				mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
@@ -438,6 +439,20 @@ public class IdpServiceImpl implements IdpService {
 			}
 
 			LOGGER.debug("ONEID DATA UPDATE COMPLETE");
+		}
+
+		try {
+			/* 게임센터 연동 */
+			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			gameCenterSacReq.setUserKey(userKey);
+			gameCenterSacReq.setSystemId(systemID);
+			gameCenterSacReq.setTenantId(tenantID);
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
+			this.deviceService.insertGameCenterIF(gameCenterSacReq);
+		} catch (StorePlatformException spe) {
+			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+			return imResult;
 		}
 
 		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
@@ -1818,7 +1833,7 @@ public class IdpServiceImpl implements IdpService {
 		ImResult imResult = new ImResult();
 		String imIntSvcNo = map.get("im_int_svc_no").toString(); // 통합 서비스 번호
 		String userId = map.get("user_id").toString(); // 회원 ID
-
+		String userKey = "";
 		imResult.setCmd("RXDeleteUserIdIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userId);
@@ -1847,6 +1862,7 @@ public class IdpServiceImpl implements IdpService {
 
 		try {
 			searchUserResponse = this.userSCI.searchUser(searchUserRequest);
+			userKey = searchUserResponse.getUserKey();
 		} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
 			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
@@ -1875,6 +1891,20 @@ public class IdpServiceImpl implements IdpService {
 		}
 
 		// TO DO... 회원 탈퇴 정보를 전달 하는 TSTORE-TANENT-API가 추가되면 PARAMETER 셋팅해서 호출해야함.
+
+		try {
+			/* 게임센터 연동 */
+			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			gameCenterSacReq.setUserKey(userKey);
+			gameCenterSacReq.setSystemId(map.get("systemID").toString());
+			gameCenterSacReq.setTenantId(map.get("tenantID").toString());
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
+			this.deviceService.insertGameCenterIF(gameCenterSacReq);
+		} catch (StorePlatformException spe) {
+			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+			return imResult;
+		}
 
 		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
 		imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
