@@ -128,6 +128,8 @@
 
         <!--  feature app App Codi 상품 조회 -->
         <typeAlias alias="AppCodiRes"  type="com.skplanet.storeplatform.sac.display.feature.appCodi.vo.AppCodiRes" />
+        
+        <!--  feature 테마 추천 상품 조회 -->
         <typeAlias alias="ThemeRecommend"  type="com.skplanet.storeplatform.sac.display.feature.theme.recommend.vo.ThemeRecommend" />
         
         <!-- feature app 카테고리 상품 조회 -->
