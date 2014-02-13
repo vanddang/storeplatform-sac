@@ -24,36 +24,52 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class Encryption extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String type; // 암호화 방식
-	private String text; // 암호화 값
+	private String digest;
+	private String keyIndex;
+	private String token;
 
 	/**
-	 * @return the type
+	 * @return the digest
 	 */
-	public String getType() {
-		return this.type;
+	public String getDigest() {
+		return this.digest;
 	}
 
 	/**
-	 * @param type
-	 *            the type to set
+	 * @param digest
+	 *            the digest to set
 	 */
-	public void setType(String type) {
-		this.type = type;
+	public void setDigest(String digest) {
+		this.digest = digest;
 	}
 
 	/**
-	 * @return the text
+	 * @return the keyIndex
 	 */
-	public String getText() {
-		return this.text;
+	public String getKeyIndex() {
+		return this.keyIndex;
 	}
 
 	/**
-	 * @param text
-	 *            the text to set
+	 * @param keyIndex
+	 *            the keyIndex to set
 	 */
-	public void setText(String text) {
-		this.text = text;
+	public void setKeyIndex(String keyIndex) {
+		this.keyIndex = keyIndex;
+	}
+
+	/**
+	 * @return the token
+	 */
+	public String getToken() {
+		return this.token;
+	}
+
+	/**
+	 * @param token
+	 *            the token to set
+	 */
+	public void setToken(String token) {
+		this.token = token;
 	}
 }
