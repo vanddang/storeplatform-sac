@@ -275,7 +275,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				product.setEncryption(encryption);
 
 				// JSON 복호화
-				byte[] decryptString = CipherTest.convertBytes(encryptString);
+				byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
 				byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
 
 				try {
