@@ -118,6 +118,11 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	private String bankAccount;
 	/** 예금자명. */
 	private String bankAcctName;
+	/** 외국 은행주소. */
+	private String bankAddress;
+	/** 외국 은행 위치. */
+	private String bankLocation;
+
 	/** 서류 관련 리스트. */
 	private List<ExtraDocument> extraDocumentList;
 
@@ -439,6 +444,22 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 
 	public void setBankAcctName(String bankAcctName) {
 		this.bankAcctName = bankAcctName;
+	}
+
+	public String getBankAddress() {
+		return this.bankAddress;
+	}
+
+	public void setBankAddress(String bankAddress) {
+		this.bankAddress = bankAddress;
+	}
+
+	public String getBankLocation() {
+		return this.bankLocation;
+	}
+
+	public void setBankLocation(String bankLocation) {
+		this.bankLocation = bankLocation;
 	}
 
 	public List<ExtraDocument> getExtraDocumentList() {
