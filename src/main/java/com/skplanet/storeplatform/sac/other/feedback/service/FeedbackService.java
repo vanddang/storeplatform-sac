@@ -216,9 +216,9 @@ public interface FeedbackService {
 	 *            ListScorePaticpersSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return ListScoreParticpersSacRes
+	 * @return ListScorePaticpersSacRes
 	 */
-	public ListScorePaticpersSacRes listScoreParticpers(ListScorePaticpersSacReq ListScorePaticpersSacReq,
+	public ListScorePaticpersSacRes listScoreParticpers(ListScorePaticpersSacReq listScorePaticpersSacReq,
 			SacRequestHeader sacRequestHeader);
 
 	/**

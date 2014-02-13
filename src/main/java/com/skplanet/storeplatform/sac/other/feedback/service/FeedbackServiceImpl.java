@@ -367,7 +367,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// // 평점, 다운로드, 사용후기 갯수 정보
 		// // Map<String, String> mapProd = (Map<String, String>) queryForObject("common.getProdEvalInfo", param);
 		// ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
-		// listFeedbackRes.setAvgEvluScorePct("80.00");
+		// listFeedbackRes.setAvgEvluScorePcts("80,40,20,10,30");
 		// listFeedbackRes.setAvgEvluScore("2");
 		// listFeedbackRes.setDwldCnt("11103");
 		// listFeedbackRes.setPaticpersCnt("105");
@@ -393,7 +393,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// int totalCount = (Integer) this.feedbackRepository.getProdNotiCount(prodNoti);
 		// listFeedbackRes.setNotiTot(String.valueOf(totalCount));
 		// listFeedbackRes.setNotiList(notiList);
-
+		// return listFeedbackRes;
 		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
 		listFeedbackRes.setAvgEvluScorePcts("80,100,20,10,50");
 		listFeedbackRes.setNotiTot("2");
@@ -404,12 +404,13 @@ public class FeedbackServiceImpl implements FeedbackService {
 		listFeedbackRes.setNotiList(this.getFeedbackList());
 
 		return listFeedbackRes;
+
 	}
 
 	@Override
 	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-
+		//
 		// ProdNoti prodNoti = new ProdNoti();
 		//
 		// prodNoti.setProdIds(Arrays.asList((StringUtils.split(listMyFeedbackSacReq.getProdIds(), ","))));
@@ -425,29 +426,32 @@ public class FeedbackServiceImpl implements FeedbackService {
 		//
 		// List<ProdNoti> prodNotiList = this.feedbackRepository.getMyProdNotiList(prodNoti);
 		//
-		// List<FeedbackMy> notiList = new ArrayList<FeedbackMy>();
+		// List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
 		//
 		// for (ProdNoti res : prodNotiList) {
 		// Feedback feedback = this.setFeedback(res);
 		// FeedbackMy feedbackMy = new FeedbackMy();
 		// BeanUtils.copyProperties(feedback, feedbackMy);
-		// notiList.add(feedbackMy);
+		// notiMyList.add(feedbackMy);
 		// }
-
+		// int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
+		//
+		// ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
+		// listMyFeedbackRes.setNotiTot(String.valueOf(notiTot));
+		// listMyFeedbackRes.setNotiList(notiMyList);
+		// return listMyFeedbackRes;
 		List<Feedback> notiList = this.getFeedbackList();
 		List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
 		for (Feedback res : notiList) {
-			FeedbackMy feedbackMy = new FeedbackMy();
-			// feedbackMy.setTotalCount("10");
+			FeedbackMy feedbackMy = new FeedbackMy(); // feedbackMy.setTotalCount("10");
 			BeanUtils.copyProperties(res, feedbackMy);
 			notiMyList.add(feedbackMy);
 		}
-		// int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
-
 		ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
 		listMyFeedbackRes.setNotiTot("2");
 		listMyFeedbackRes.setNotiList(notiMyList);
 		return listMyFeedbackRes;
+
 	}
 
 	@Override
@@ -573,7 +577,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	}
 
 	@Override
-	public ListScorePaticpersSacRes listScoreParticpers(ListScorePaticpersSacReq ListScorePaticpersSacReq,
+	public ListScorePaticpersSacRes listScoreParticpers(ListScorePaticpersSacReq listScorePaticpersSacReq,
 			SacRequestHeader sacRequestHeader) {
 		ListScorePaticpersSacRes listScoreRes = new ListScorePaticpersSacRes();
 		List<AvgScore> avgScoreList = new ArrayList<AvgScore>();

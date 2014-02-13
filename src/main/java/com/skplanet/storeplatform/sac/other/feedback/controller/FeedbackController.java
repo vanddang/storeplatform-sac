@@ -309,10 +309,10 @@ public class FeedbackController {
 	 */
 	@RequestMapping(value = "/listScorePaticpers/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListScorePaticpersSacRes listScoreParticpers(@Validated ListScorePaticpersSacReq ListScorePaticpersSacReq,
+	public ListScorePaticpersSacRes listScoreParticpers(@Validated ListScorePaticpersSacReq listScorePaticpersSacReq,
 			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 평점별 참여수 조회. ##");
-		LOGGER.info("### req : {}", ListScorePaticpersSacReq);
-		return this.feedbackService.listScoreParticpers(ListScorePaticpersSacReq, sacRequestHeader);
+		LOGGER.info("### req : {}", listScorePaticpersSacReq);
+		return this.feedbackService.listScoreParticpers(listScorePaticpersSacReq, sacRequestHeader);
 	}
 }
