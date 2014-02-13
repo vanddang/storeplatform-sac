@@ -14,13 +14,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -101,12 +101,12 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		CommonResponse commonResponse = new CommonResponse();
 
 		// filteredBy 필수 파라미터 체크
-		if (StringUtils.isEmpty(filteredBy)) {
+		if (StringUtil.isEmpty(filteredBy)) {
 			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
 		}
 
 		// tenantId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTenantId())) {
+		if (StringUtil.isEmpty(requestVO.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
 		}
 
@@ -134,7 +134,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 				requestVO.getBatchId());
 
 		// 기준일시 체크
-		if (StringUtils.isEmpty(stdDt)) {
+		if (StringUtil.isEmpty(stdDt)) {
 			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
 		} else {
 			// 뮤직 배치일자는 년월일만 필요

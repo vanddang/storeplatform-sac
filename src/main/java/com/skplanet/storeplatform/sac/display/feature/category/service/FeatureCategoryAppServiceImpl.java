@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -243,12 +242,12 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
 		// tenantId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTenantId())) {
+		if (StringUtil.isEmpty(requestVO.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
 		}
 
 		// listId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getListId())) {
+		if (StringUtil.isEmpty(requestVO.getListId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", requestVO.getListId());
 		}
 
@@ -271,14 +270,14 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 				requestVO.getListId());
 
 		// 기준일시 체크
-		if (StringUtils.isEmpty(stdDt)) {
+		if (StringUtil.isEmpty(stdDt)) {
 			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
 		} else {
 			requestVO.setStdDt(stdDt);
 		}
 
 		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
-		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
+		if (!StringUtil.isEmpty(requestVO.getProdGradeCd())) {
 			try {
 				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
 			} catch (Exception ex) {

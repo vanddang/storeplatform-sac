@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -70,17 +70,17 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
 		// tenantId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTenantId())) {
+		if (StringUtil.isEmpty(requestVO.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
 		}
 
 		// listId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getListId())) {
+		if (StringUtil.isEmpty(requestVO.getListId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", requestVO.getListId());
 		}
 
 		// topMenuId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTopMenuId())) {
+		if (StringUtil.isEmpty(requestVO.getTopMenuId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", requestVO.getTopMenuId());
 		}
 
@@ -98,7 +98,7 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 				requestVO.getListId());
 
 		// 기준일시 체크
-		if (StringUtils.isEmpty(stdDt)) {
+		if (StringUtil.isEmpty(stdDt)) {
 			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
 		} else {
 			if ("DP16".equals(requestVO.getTopMenuId())) {
@@ -111,7 +111,7 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 		}
 
 		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
-		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
+		if (!StringUtil.isEmpty(requestVO.getProdGradeCd())) {
 			try {
 				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
 			} catch (Exception ex) {
