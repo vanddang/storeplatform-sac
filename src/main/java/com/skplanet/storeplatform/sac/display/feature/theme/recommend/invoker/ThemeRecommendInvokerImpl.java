@@ -52,7 +52,7 @@ public class ThemeRecommendInvokerImpl implements ThemeRecommendInvoker {
 			if (res.getStatusCode().equals(HttpStatus.OK)) {
 				response = res.getBody();
 			} else {
-				throw new StorePlatformException("SAC_DSP_0010");
+				throw new StorePlatformException("SAC_DSP_0008");
 			}
 
 			JAXBContext jc = JAXBContext.newInstance(ISFRes.class);
@@ -62,7 +62,7 @@ public class ThemeRecommendInvokerImpl implements ThemeRecommendInvoker {
 		} catch (StorePlatformException se) {
 			throw se;
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0010", e);
+			throw new StorePlatformException("SAC_DSP_0008", e);
 		}
 
 		return response;

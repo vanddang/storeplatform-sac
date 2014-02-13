@@ -10,10 +10,14 @@
 package com.skplanet.storeplatform.sac.display.feature.appCodi.service;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -349,6 +353,14 @@ public class ISFServerServiceImpl implements ISFServerService {
 		this.log.debug("ISFServerServiceImpl.makeAppCodiList start !!");
 		this.log.debug("request {}", request);
 
+		String PKG_ID = "227,243,302,54,26,81,85,72,282,27";
+		String PKG_NM = "패키지60,패키지100,강성근패키지,버스 지하철 어디쯤 오고있나?,정말 심심할때? 킬링타임 App,내일 날씨를 말씀 드리겠습니다,우리 오늘 어디서 만날까?,바쁜 나의 일정관리,해외여행 시 꼭 필요한 앱,부작용 없는 수면 도우미";
+		String PKG_ORD = "2,3,3,4,2,1,5,7,9,8";
+
+		List<String> pkgIdList = Arrays.asList(StringUtils.split(PKG_ID, ","));
+		List<String> pkgNmList = Arrays.asList(StringUtils.split(PKG_NM, ","));
+		List<String> pkgordList = Arrays.asList(StringUtils.split(PKG_ORD, ","));
+
 		Response response = new Response();
 		Response.Service service = new Response.Service();
 		PropsType prop = new PropsType();
@@ -374,20 +386,17 @@ public class ISFServerServiceImpl implements ISFServerService {
 			singles.addSingleValue(single);
 			prop.setSingleValues(singles);
 
-			multis.setCount(3);
-			multi.setId("1234");
-			multi.setName("패키지명1");
-			multis.addMultiValue(multi);
+			multis.setCount(pkgIdList.size());
 
-			multi = new MultiValueType();
-			multi.setId("5678");
-			multi.setName("패키지명2");
-			multis.addMultiValue(multi);
+			Iterator<String> pit = pkgIdList.iterator();
+			Iterator<String> pmit = pkgNmList.iterator();
+			while (pit.hasNext()) {
+				multi.setId(pit.next());
+				multi.setName(pmit.next());
+				multis.addMultiValue(multi);
+				multi = new MultiValueType();
+			}
 
-			multi = new MultiValueType();
-			multi.setId("9625");
-			multi.setName("패키지명3");
-			multis.addMultiValue(multi);
 			prop.setMultiValues(multis);
 		} else { // SVC_MAIN_0004
 			prop.setCount(2);
@@ -400,28 +409,26 @@ public class ISFServerServiceImpl implements ISFServerService {
 			prop.setSingleValues(singles);
 
 			multis.setCount(4);
-			multi.setId("2424");
-			multi.setName("Tstore 명예의 전당");
-			multi.setOrder(1);
-			multis.addMultiValue(multi);
 
-			multi = new MultiValueType();
-			multi.setId("2426");
-			multi.setName("시청률 고공행진 인기 드라마");
-			multi.setOrder(2);
-			multis.addMultiValue(multi);
+			int i = 1;
 
-			multi = new MultiValueType();
-			multi.setId("2443");
-			multi.setName("쇼핑은 모바일이 대세");
-			multi.setOrder(3);
-			multis.addMultiValue(multi);
+			Iterator<String> pit = pkgIdList.iterator();
+			Iterator<String> pmit = pkgNmList.iterator();
+			Iterator<String> oit = pkgordList.iterator();
+			while (pit.hasNext()) {
 
-			multi = new MultiValueType();
-			multi.setId("2503");
-			multi.setName("시뮬레이션 스포츠 게임 ");
-			multi.setOrder(4);
-			multis.addMultiValue(multi);
+				if (i >= 5)
+					break;
+
+				multi.setId(pit.next());
+				multi.setName(pmit.next());
+				multi.setOrder(Integer.valueOf(oit.next()));
+				multis.addMultiValue(multi);
+				multi = new MultiValueType();
+
+				i++;
+
+			}
 
 			prop.setMultiValues(multis);
 		}

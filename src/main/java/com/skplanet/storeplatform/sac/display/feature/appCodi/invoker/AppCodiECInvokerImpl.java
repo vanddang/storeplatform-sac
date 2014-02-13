@@ -40,8 +40,6 @@ public class AppCodiECInvokerImpl implements AppCodiECInvoker {
 	@Override
 	public ISFRes invoke(AppCodiReq requestVO) throws StorePlatformException {
 
-		this.log.debug("AppCodiECInvokerImpl.invoke start !! ", requestVO);
-
 		ISFRes response = new ISFRes();
 
 		HttpHeaders headers = new HttpHeaders();
@@ -55,7 +53,7 @@ public class AppCodiECInvokerImpl implements AppCodiECInvoker {
 			if (res.getStatusCode().equals(HttpStatus.OK)) {
 				response = res.getBody();
 			} else {
-				throw new StorePlatformException("SAC_DSP_0010");
+				throw new StorePlatformException("SAC_DSP_0008");
 			}
 
 			if (this.log.isDebugEnabled()) {
@@ -67,9 +65,8 @@ public class AppCodiECInvokerImpl implements AppCodiECInvoker {
 		} catch (StorePlatformException se) {
 			throw se;
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0010", e);
+			throw new StorePlatformException("SAC_DSP_0008", e);
 		}
-		this.log.debug("AppCodiECInvokerImpl.invoke end !! ");
 
 		return response;
 	}
