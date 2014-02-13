@@ -70,8 +70,6 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 	@Override
 	public CategoryWebtoonSacRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonSacReq req) {
 
-		// Integer totalCount = 0;
-
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 
@@ -120,39 +118,35 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 		count = offset + count - 1;
 		req.setCount(count);
 
-		try {
-			// 웹툰 Top Menu ID.
-			req.setTopMenuId(DisplayConstants.DP_WEBTOON_TOP_MENU_ID);
+		// 웹툰 Top Menu ID.
+		req.setTopMenuId(DisplayConstants.DP_WEBTOON_TOP_MENU_ID);
 
-			List<ProductBasicInfo> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
-					ProductBasicInfo.class);
+		List<ProductBasicInfo> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
+				ProductBasicInfo.class);
 
-			if (!resultList.isEmpty()) {
-				Map<String, Object> reqMap = new HashMap<String, Object>();
-				reqMap.put("tenantHeader", tenantHeader);
-				reqMap.put("deviceHeader", deviceHeader);
-				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-				for (ProductBasicInfo productBasicInfo : resultList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
-					reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-					MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+		if (!resultList.isEmpty()) {
+			Map<String, Object> reqMap = new HashMap<String, Object>();
+			reqMap.put("tenantHeader", tenantHeader);
+			reqMap.put("deviceHeader", deviceHeader);
+			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+			for (ProductBasicInfo productBasicInfo : resultList) {
+				reqMap.put("productBasicInfo", productBasicInfo);
+				reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
+				MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
 
-					if (retMetaInfo != null) {
-						Product product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
-						productList.add(product);
-					}
+				if (retMetaInfo != null) {
+					Product product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
+					productList.add(product);
 				}
-				commonResponse.setTotalCount(resultList.get(0).getTotalCount());
-				responseVO.setProductList(productList);
-				responseVO.setCommonResponse(commonResponse);
-			} else {
-				// 조회 결과 없음
-				commonResponse.setTotalCount(0);
-				responseVO.setProductList(productList);
-				responseVO.setCommonResponse(commonResponse);
 			}
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0001", "");
+			commonResponse.setTotalCount(resultList.get(0).getTotalCount());
+			responseVO.setProductList(productList);
+			responseVO.setCommonResponse(commonResponse);
+		} else {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			responseVO.setProductList(productList);
+			responseVO.setCommonResponse(commonResponse);
 		}
 
 		return responseVO;

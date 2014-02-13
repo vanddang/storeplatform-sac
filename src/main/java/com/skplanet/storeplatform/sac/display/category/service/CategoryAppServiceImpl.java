@@ -147,60 +147,56 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
 
-		try {
-			if (req.getDummy() == null) { // Dummy 가 아닐 경우
-				// 일반 카테고리 앱 상품 조회
-				List<ProductBasicInfo> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
-						ProductBasicInfo.class);
+		if (req.getDummy() == null) { // Dummy 가 아닐 경우
+			// 일반 카테고리 앱 상품 조회
+			List<ProductBasicInfo> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
+					ProductBasicInfo.class);
 
-				if (!appList.isEmpty()) {
-					Map<String, Object> reqMap = new HashMap<String, Object>();
-					reqMap.put("tenantHeader", tenantHeader);
-					reqMap.put("deviceHeader", deviceHeader);
-					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-					for (ProductBasicInfo productBasicInfo : appList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
-
-						if (retMetaInfo != null) {
-							Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
-							productList.add(product);
-						}
-					}
-					commonResponse.setTotalCount(appList.get(0).getTotalCount());
-					appRes.setProductList(productList);
-					appRes.setCommonResponse(commonResponse);
-				} else {
-					// 조회 결과 없음
-					commonResponse.setTotalCount(0);
-					appRes.setProductList(productList);
-					appRes.setCommonResponse(commonResponse);
-				}
-			} else {
-				// Dummy 일 경우
+			if (!appList.isEmpty()) {
 				Map<String, Object> reqMap = new HashMap<String, Object>();
 				reqMap.put("tenantHeader", tenantHeader);
 				reqMap.put("deviceHeader", deviceHeader);
 				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				for (ProductBasicInfo productBasicInfo : appList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+					MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 
-				ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-				productBasicInfo.setProdId("0000142301");
-
-				reqMap.put("productBasicInfo", productBasicInfo);
-				reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-				MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
-
-				if (retMetaInfo != null) {
-					Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
-					productList.add(product);
+					if (retMetaInfo != null) {
+						Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+						productList.add(product);
+					}
 				}
-				commonResponse.setTotalCount(1);
+				commonResponse.setTotalCount(appList.get(0).getTotalCount());
+				appRes.setProductList(productList);
+				appRes.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
 				appRes.setProductList(productList);
 				appRes.setCommonResponse(commonResponse);
 			}
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0001", "");
+		} else {
+			// Dummy 일 경우
+			Map<String, Object> reqMap = new HashMap<String, Object>();
+			reqMap.put("tenantHeader", tenantHeader);
+			reqMap.put("deviceHeader", deviceHeader);
+			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+
+			ProductBasicInfo productBasicInfo = new ProductBasicInfo();
+			productBasicInfo.setProdId("0000142301");
+
+			reqMap.put("productBasicInfo", productBasicInfo);
+			reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+			MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+
+			if (retMetaInfo != null) {
+				Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+				productList.add(product);
+			}
+			commonResponse.setTotalCount(1);
+			appRes.setProductList(productList);
+			appRes.setCommonResponse(commonResponse);
 		}
 
 		return appRes;

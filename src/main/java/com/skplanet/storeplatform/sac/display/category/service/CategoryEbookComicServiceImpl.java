@@ -151,255 +151,251 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
 
-		try {
-			// 일반 카테고리 이북/코믹 상품 조회
-			List<ProductBasicInfo> ebookComicList = this.commonDAO.queryForList(
-					"Category.selectCategoryEbookComicList", req, ProductBasicInfo.class);
+		// 일반 카테고리 이북/코믹 상품 조회
+		List<ProductBasicInfo> ebookComicList = this.commonDAO.queryForList("Category.selectCategoryEbookComicList",
+				req, ProductBasicInfo.class);
 
-			if (req.getDummy() == null) { // Dummy 가 아닐 경우
+		if (req.getDummy() == null) { // Dummy 가 아닐 경우
 
-				if (!ebookComicList.isEmpty()) {
-					Map<String, Object> reqMap = new HashMap<String, Object>();
-					reqMap.put("tenantHeader", tenantHeader);
-					reqMap.put("deviceHeader", deviceHeader);
-					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-					for (ProductBasicInfo productBasicInfo : ebookComicList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-						MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+			if (!ebookComicList.isEmpty()) {
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				for (ProductBasicInfo productBasicInfo : ebookComicList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+					MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
 
-						if (retMetaInfo != null) {
-							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
-								Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
-								productList.add(product);
-							} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
-								Product product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
-								productList.add(product);
-							}
+					if (retMetaInfo != null) {
+						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
+							Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+							productList.add(product);
+						} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
+							Product product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+							productList.add(product);
 						}
 					}
-					commonResponse.setTotalCount(ebookComicList.get(0).getTotalCount());
-					caegoryEbookComicRes.setProductList(productList);
-					caegoryEbookComicRes.setCommonResponse(commonResponse);
-				} else {
-					// 조회 결과 없음
-					commonResponse.setTotalCount(0);
-					caegoryEbookComicRes.setProductList(productList);
-					caegoryEbookComicRes.setCommonResponse(commonResponse);
 				}
-
+				commonResponse.setTotalCount(ebookComicList.get(0).getTotalCount());
+				caegoryEbookComicRes.setProductList(productList);
+				caegoryEbookComicRes.setCommonResponse(commonResponse);
 			} else {
-				// Dummy Data
-				Identifier identifier = null;
-				Menu menu = null;
-				Contributor contributor = null;
-				Date date = null;
-				Accrual accrual = null;
-				Rights rights = null;
-				Title title = null;
-				Source source = null;
-				Price price = null;
-				Book book = null;
-				Support support = null;
-				Product product = null;
-
-				List<Identifier> identifierList = null;
-				List<Menu> menuList = null;
-				List<Source> sourceList = null;
-				List<Support> supportList = new ArrayList<Support>();
-
-				for (int i = 0; i < 1; i++) {
-					product = new Product();
-
-					// DP13 : ebook, DP14 : 만화
-					if ("DP13".equals(req.getTopMenuId())) {
-						// 상품 정보 (상품ID)
-						identifierList = new ArrayList<Identifier>();
-						identifier = new Identifier();
-						identifier.setType("channel");
-						identifier.setText("H001579466");
-						identifierList.add(identifier);
-						product.setIdentifierList(identifierList);
-
-						// 메뉴 정보
-						menu = new Menu();
-						menuList = new ArrayList<Menu>();
-						menu.setType("topClass");
-						menu.setId("DP13");
-						menu.setName("ebook");
-						menuList.add(menu);
-
-						menu = new Menu();
-						menu.setId("DP13003001");
-						menu.setName("한국소설");
-						menuList.add(menu);
-
-						menu = new Menu();
-						menu.setType("metaClass");
-						menu.setId("CT19");
-						menuList.add(menu);
-						product.setMenuList(menuList);
-
-						// 저작권 정보
-						contributor = new Contributor();
-						contributor.setName("이원호");
-						contributor.setPublisher("네오픽션");
-
-						date = new Date();
-						date.setType("date/publish");
-						date.setText("20120730");
-						contributor.setDate(date);
-						product.setContributor(contributor);
-
-						// 평점 정보
-						accrual = new Accrual();
-						accrual.setDownloadCount(10);
-						accrual.setScore(4.5);
-						accrual.setVoterCount(123);
-						product.setAccrual(accrual);
-
-						// 이용권한 정보
-						rights = new Rights();
-						rights.setGrade("PD004401");
-						product.setRights(rights);
-
-						// 상품 정보 (상품명)
-						title = new Title();
-						title.setText("작전명 KT");
-						product.setTitle(title);
-
-						// 이미지 정보
-						source = new Source();
-						sourceList = new ArrayList<Source>();
-						source.setMediaType("image/png");
-						source.setSize(1234);
-						source.setType("thumbnail");
-						source.setUrl("/SMILE_DATA7/PEBOOK/201401/06/0002092536/1/0003917513/1/01_0002092536_480_679_1539_130x186.PNG");
-						sourceList.add(source);
-						product.setSourceList(sourceList);
-
-						// 상품 정보 (상품설명)
-						product.setProductExplain("500만 부 작가 이원호의 신작 장편소설 남한과 북한, 미국, 일본 정보기관의 치열한 첩보전 40년간 베일에 싸인 납치 사건의 전모를 파헤친다!");
-
-						// 상품 정보 (상품가격)
-						price = new Price();
-						price.setFixedPrice(8100);
-						price.setText(8100);
-						product.setPrice(price);
-
-						book = new Book();
-						Chapter chapter = new Chapter();
-						chapter.setUnit("3");
-						book.setChapter(chapter);
-						book.setTotalCount(10);
-						book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
-						book.setStatus(DisplayConstants.DP_EBOOK_COMPLETED_NM);
-
-						support = new Support();
-						support.setType("store");
-						supportList.add(support);
-						book.setSupportList(supportList);
-						product.setBook(book);
-					} else if ("DP14".equals(req.getTopMenuId())) {
-						// 상품 정보 (상품ID)
-						identifierList = new ArrayList<Identifier>();
-						identifier = new Identifier();
-						identifier.setType("channel");
-						identifier.setText("H001579674");
-						identifierList.add(identifier);
-						product.setIdentifierList(identifierList);
-
-						// 메뉴 정보
-						menu = new Menu();
-						menuList = new ArrayList<Menu>();
-						menu.setType("topClass");
-						menu.setId("DP14");
-						menu.setName("만화");
-						menuList.add(menu);
-
-						menu = new Menu();
-						menu.setId("DP14001");
-						menu.setName("무협");
-						menuList.add(menu);
-
-						menu = new Menu();
-						menu.setType("metaClass");
-						menu.setId("CT21");
-						menuList.add(menu);
-						product.setMenuList(menuList);
-
-						// 저작권 정보
-						contributor = new Contributor();
-						contributor.setName("최봉학");
-						contributor.setPainter("최봉학");
-						contributor.setPublisher("코리아컨텐츠네트워크");
-
-						date = new Date();
-						date.setType("date/publish");
-						date.setText("20140106");
-						contributor.setDate(date);
-						product.setContributor(contributor);
-
-						// 평점 정보
-						accrual = new Accrual();
-						accrual.setDownloadCount(3);
-						accrual.setScore(4.0);
-						accrual.setVoterCount(18);
-						product.setAccrual(accrual);
-
-						// 이용권한 정보
-						rights = new Rights();
-						rights.setGrade("PD004401");
-						product.setRights(rights);
-
-						// 상품 정보 (상품명)
-						title = new Title();
-						title.setText("[최봉학]천리장검 12권");
-						product.setTitle(title);
-
-						// 이미지 정보
-						source = new Source();
-						sourceList = new ArrayList<Source>();
-						source.setMediaType("image/png");
-						source.setSize(1234);
-						source.setType("thumbnail");
-						source.setUrl("/SMILE_DATA7/PEBOOK/201401/06/0002092536/1/0003917513/1/01_0002092536_480_679_1539_130x186.PNG");
-						sourceList.add(source);
-						product.setSourceList(sourceList);
-
-						// 상품 정보 (상품설명)
-						product.setProductExplain("달밤 아래 고요해야 할 무덤가에선 때 아닌 난투가 벌어지고 있었다.");
-
-						// 상품 정보 (상품가격)
-						price = new Price();
-						price.setFixedPrice(8100);
-						price.setText(8100);
-						product.setPrice(price);
-
-						book = new Book();
-						Chapter chapter = new Chapter();
-						chapter.setUnit("3");
-						book.setChapter(chapter);
-						book.setTotalCount(10);
-						book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
-						book.setStatus(DisplayConstants.DP_EBOOK_COMPLETED_NM);
-
-						support = new Support();
-						support.setType("store");
-						supportList.add(support);
-						book.setSupportList(supportList);
-						product.setBook(book);
-					}
-
-					// 데이터 매핑
-					productList.add(i, product);
-				}
-				commonResponse.setTotalCount(1);
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
 				caegoryEbookComicRes.setProductList(productList);
 				caegoryEbookComicRes.setCommonResponse(commonResponse);
 			}
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0001", "");
+
+		} else {
+			// Dummy Data
+			Identifier identifier = null;
+			Menu menu = null;
+			Contributor contributor = null;
+			Date date = null;
+			Accrual accrual = null;
+			Rights rights = null;
+			Title title = null;
+			Source source = null;
+			Price price = null;
+			Book book = null;
+			Support support = null;
+			Product product = null;
+
+			List<Identifier> identifierList = null;
+			List<Menu> menuList = null;
+			List<Source> sourceList = null;
+			List<Support> supportList = new ArrayList<Support>();
+
+			for (int i = 0; i < 1; i++) {
+				product = new Product();
+
+				// DP13 : ebook, DP14 : 만화
+				if ("DP13".equals(req.getTopMenuId())) {
+					// 상품 정보 (상품ID)
+					identifierList = new ArrayList<Identifier>();
+					identifier = new Identifier();
+					identifier.setType("channel");
+					identifier.setText("H001579466");
+					identifierList.add(identifier);
+					product.setIdentifierList(identifierList);
+
+					// 메뉴 정보
+					menu = new Menu();
+					menuList = new ArrayList<Menu>();
+					menu.setType("topClass");
+					menu.setId("DP13");
+					menu.setName("ebook");
+					menuList.add(menu);
+
+					menu = new Menu();
+					menu.setId("DP13003001");
+					menu.setName("한국소설");
+					menuList.add(menu);
+
+					menu = new Menu();
+					menu.setType("metaClass");
+					menu.setId("CT19");
+					menuList.add(menu);
+					product.setMenuList(menuList);
+
+					// 저작권 정보
+					contributor = new Contributor();
+					contributor.setName("이원호");
+					contributor.setPublisher("네오픽션");
+
+					date = new Date();
+					date.setType("date/publish");
+					date.setText("20120730");
+					contributor.setDate(date);
+					product.setContributor(contributor);
+
+					// 평점 정보
+					accrual = new Accrual();
+					accrual.setDownloadCount(10);
+					accrual.setScore(4.5);
+					accrual.setVoterCount(123);
+					product.setAccrual(accrual);
+
+					// 이용권한 정보
+					rights = new Rights();
+					rights.setGrade("PD004401");
+					product.setRights(rights);
+
+					// 상품 정보 (상품명)
+					title = new Title();
+					title.setText("작전명 KT");
+					product.setTitle(title);
+
+					// 이미지 정보
+					source = new Source();
+					sourceList = new ArrayList<Source>();
+					source.setMediaType("image/png");
+					source.setSize(1234);
+					source.setType("thumbnail");
+					source.setUrl("/SMILE_DATA7/PEBOOK/201401/06/0002092536/1/0003917513/1/01_0002092536_480_679_1539_130x186.PNG");
+					sourceList.add(source);
+					product.setSourceList(sourceList);
+
+					// 상품 정보 (상품설명)
+					product.setProductExplain("500만 부 작가 이원호의 신작 장편소설 남한과 북한, 미국, 일본 정보기관의 치열한 첩보전 40년간 베일에 싸인 납치 사건의 전모를 파헤친다!");
+
+					// 상품 정보 (상품가격)
+					price = new Price();
+					price.setFixedPrice(8100);
+					price.setText(8100);
+					product.setPrice(price);
+
+					book = new Book();
+					Chapter chapter = new Chapter();
+					chapter.setUnit("3");
+					book.setChapter(chapter);
+					book.setTotalCount(10);
+					book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
+					book.setStatus(DisplayConstants.DP_EBOOK_COMPLETED_NM);
+
+					support = new Support();
+					support.setType("store");
+					supportList.add(support);
+					book.setSupportList(supportList);
+					product.setBook(book);
+				} else if ("DP14".equals(req.getTopMenuId())) {
+					// 상품 정보 (상품ID)
+					identifierList = new ArrayList<Identifier>();
+					identifier = new Identifier();
+					identifier.setType("channel");
+					identifier.setText("H001579674");
+					identifierList.add(identifier);
+					product.setIdentifierList(identifierList);
+
+					// 메뉴 정보
+					menu = new Menu();
+					menuList = new ArrayList<Menu>();
+					menu.setType("topClass");
+					menu.setId("DP14");
+					menu.setName("만화");
+					menuList.add(menu);
+
+					menu = new Menu();
+					menu.setId("DP14001");
+					menu.setName("무협");
+					menuList.add(menu);
+
+					menu = new Menu();
+					menu.setType("metaClass");
+					menu.setId("CT21");
+					menuList.add(menu);
+					product.setMenuList(menuList);
+
+					// 저작권 정보
+					contributor = new Contributor();
+					contributor.setName("최봉학");
+					contributor.setPainter("최봉학");
+					contributor.setPublisher("코리아컨텐츠네트워크");
+
+					date = new Date();
+					date.setType("date/publish");
+					date.setText("20140106");
+					contributor.setDate(date);
+					product.setContributor(contributor);
+
+					// 평점 정보
+					accrual = new Accrual();
+					accrual.setDownloadCount(3);
+					accrual.setScore(4.0);
+					accrual.setVoterCount(18);
+					product.setAccrual(accrual);
+
+					// 이용권한 정보
+					rights = new Rights();
+					rights.setGrade("PD004401");
+					product.setRights(rights);
+
+					// 상품 정보 (상품명)
+					title = new Title();
+					title.setText("[최봉학]천리장검 12권");
+					product.setTitle(title);
+
+					// 이미지 정보
+					source = new Source();
+					sourceList = new ArrayList<Source>();
+					source.setMediaType("image/png");
+					source.setSize(1234);
+					source.setType("thumbnail");
+					source.setUrl("/SMILE_DATA7/PEBOOK/201401/06/0002092536/1/0003917513/1/01_0002092536_480_679_1539_130x186.PNG");
+					sourceList.add(source);
+					product.setSourceList(sourceList);
+
+					// 상품 정보 (상품설명)
+					product.setProductExplain("달밤 아래 고요해야 할 무덤가에선 때 아닌 난투가 벌어지고 있었다.");
+
+					// 상품 정보 (상품가격)
+					price = new Price();
+					price.setFixedPrice(8100);
+					price.setText(8100);
+					product.setPrice(price);
+
+					book = new Book();
+					Chapter chapter = new Chapter();
+					chapter.setUnit("3");
+					book.setChapter(chapter);
+					book.setTotalCount(10);
+					book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
+					book.setStatus(DisplayConstants.DP_EBOOK_COMPLETED_NM);
+
+					support = new Support();
+					support.setType("store");
+					supportList.add(support);
+					book.setSupportList(supportList);
+					product.setBook(book);
+				}
+
+				// 데이터 매핑
+				productList.add(i, product);
+			}
+			commonResponse.setTotalCount(1);
+			caegoryEbookComicRes.setProductList(productList);
+			caegoryEbookComicRes.setCommonResponse(commonResponse);
 		}
 
 		return caegoryEbookComicRes;
