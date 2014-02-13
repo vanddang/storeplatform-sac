@@ -86,7 +86,11 @@ public class UserOcbServiceImpl implements UserOcbService {
 
 		List<MemberPoint> memberPointList = new ArrayList<MemberPoint>();
 		MemberPoint memberPoint = new MemberPoint();
-		memberPoint.setUserKey(req.getUserKey());
+		memberPoint.setUserKey(req.getUserKey()); // 사용자 Key
+		memberPoint.setAuthMethodCode(req.getAuthMethodCode()); // 인증방법 코드
+		memberPoint.setCardNumber(req.getCardNumber()); // 카드번호
+		memberPoint.setStartDate(req.getStartDate()); // 사용시작 일시
+		memberPoint.setIsUsed(req.getIsUsed()); // 사용여부 (Y/N)
 
 		memberPointList.add(memberPoint);
 		removeMemberPointRequest.setMemberPointList(memberPointList);
