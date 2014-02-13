@@ -90,9 +90,9 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 
 		// 사용 정책
 		usagePolicy.setApplyDrm(metaInfo.getDrmYn());
-		if (StringUtils.isNotEmpty(metaInfo.getDwldExprDt())) {
+		if (StringUtils.isNotEmpty(metaInfo.getUseExprDt())) {
 			date = new Date();
-			date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getDwldExprDt());
+			date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getUseExprDt());
 			usagePolicy.setExpirationDate(date.getText());
 		} else {
 			usagePolicy.setExpirationDate("");
