@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -242,12 +242,12 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
 		// tenantId 필수 파라미터 체크
-		if (StringUtil.isEmpty(requestVO.getTenantId())) {
+		if (StringUtils.isEmpty(requestVO.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
 		}
 
 		// listId 필수 파라미터 체크
-		if (StringUtil.isEmpty(requestVO.getListId())) {
+		if (StringUtils.isEmpty(requestVO.getListId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", requestVO.getListId());
 		}
 
@@ -270,14 +270,14 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 				requestVO.getListId());
 
 		// 기준일시 체크
-		if (StringUtil.isEmpty(stdDt)) {
+		if (StringUtils.isEmpty(stdDt)) {
 			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
 		} else {
 			requestVO.setStdDt(stdDt);
 		}
 
 		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
-		if (!StringUtil.isEmpty(requestVO.getProdGradeCd())) {
+		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
 			try {
 				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
 			} catch (Exception ex) {
@@ -291,12 +291,17 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 
 		List<ProductBasicInfo> productBasicInfoList;
 
+		String menuId = requestVO.getMenuId();
+		if (StringUtils.isEmpty(menuId)) {
+			menuId = "";
+		}
+
 		// 메인의 최신일 경우 BP별로 2개씩만 노출되는 정책 적용
-		if ("ADM000000001".equals(requestVO.getListId()) && StringUtil.nvl(requestVO.getMenuId(), "").length() == 4) {
+		if ("ADM000000001".equals(requestVO.getListId()) && menuId.length() == 4) {
 			productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectTopMenuAppListByRecent",
 					requestVO, ProductBasicInfo.class);
 		} else {
-			if (StringUtil.nvl(requestVO.getMenuId(), "").length() == 4) {
+			if (menuId.length() == 4) {
 				productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectTopMenuAppList", requestVO,
 						ProductBasicInfo.class);
 			} else {

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -79,12 +79,12 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		String filteredBy = req.getFilteredBy();
 
 		// topMenuId 필수 파라미터 체크
-		if (StringUtil.isEmpty(topMenuId)) {
+		if (StringUtils.isEmpty(topMenuId)) {
 			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", topMenuId);
 		}
 
 		// listId 필수 파라미터 체크
-		if (StringUtil.isEmpty(listId)) {
+		if (StringUtils.isEmpty(listId)) {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
 		}
 
@@ -99,7 +99,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		}
 
 		// 영화>추천, 영화>1000원관, 방송>카테고리별 추천, 방송>방송사별 최신Up API는 filteredBy 필수
-		if (StringUtil.isEmpty(req.getMenuId()) && StringUtil.isEmpty(filteredBy)) {
+		if (StringUtils.isEmpty(req.getMenuId()) && StringUtils.isEmpty(filteredBy)) {
 			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
 		}
 
@@ -122,14 +122,14 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), listId);
 
 		// 기준일시 체크
-		if (StringUtil.isEmpty(stdDt)) {
+		if (StringUtils.isEmpty(stdDt)) {
 			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
 		} else {
 			req.setStdDt(stdDt);
 		}
 
 		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
-		if (!StringUtil.isEmpty(req.getProdGradeCd())) {
+		if (!StringUtils.isEmpty(req.getProdGradeCd())) {
 			try {
 				req.setProdGradeCd(URLEncoder.encode(req.getProdGradeCd(), "UTF-8"));
 			} catch (Exception ex) {
@@ -185,7 +185,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 						"ADM000000008");
 
 				// 기준일시 체크
-				if (StringUtil.isEmpty(subStdDt)) {
+				if (StringUtils.isEmpty(subStdDt)) {
 					throw new StorePlatformException("SAC_DSP_0002", "subStdDt", subStdDt);
 				} else {
 					req.setSubStdDt(subStdDt);

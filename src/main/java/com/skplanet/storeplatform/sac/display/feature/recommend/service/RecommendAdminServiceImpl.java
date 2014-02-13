@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -79,25 +79,25 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
 		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
-		if (StringUtil.isEmpty(requestVO.getTenantId()))
+		if (StringUtils.isEmpty(requestVO.getTenantId()))
 			requestVO.setTenantId("S01");
-		if (StringUtil.isEmpty(requestVO.getDeviceModelCd()))
+		if (StringUtils.isEmpty(requestVO.getDeviceModelCd()))
 			requestVO.setDeviceModelCd("SHW-M180L");
-		if (StringUtil.isEmpty(requestVO.getListId()))
+		if (StringUtils.isEmpty(requestVO.getListId()))
 			requestVO.setListId("ADM000000013");
-		if (StringUtil.isEmpty(requestVO.getTopMenuId()))
-			requestVO.setTopMenuId(StringUtil.nvl(requestVO.getTopMenuId(), "DP01"));
+		if (StringUtils.isEmpty(requestVO.getTopMenuId()))
+			requestVO.setTopMenuId("DP01");
 
 		// tenantId 필수 파라미터 체크
-		if (StringUtil.isEmpty(requestVO.getTenantId())) {
+		if (StringUtils.isEmpty(requestVO.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
 		}
 		// listId 필수 파라미터 체크
-		if (StringUtil.isEmpty(requestVO.getListId())) {
+		if (StringUtils.isEmpty(requestVO.getListId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", requestVO.getListId());
 		}
 		// topMenuId 필수 파라미터 체크
-		if (StringUtil.isEmpty(requestVO.getTopMenuId())) {
+		if (StringUtils.isEmpty(requestVO.getTopMenuId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", requestVO.getTopMenuId());
 		}
 
@@ -120,14 +120,14 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 				requestVO.getListId());
 
 		// 기준일시 체크
-		if (StringUtil.isEmpty(stdDt)) {
+		if (StringUtils.isEmpty(stdDt)) {
 			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
 		} else {
 			requestVO.setStdDt(stdDt);
 		}
 
 		// topMenuId encode 처리(테넌트에서 인코딩하여 넘길 시 encode 제거 필요)
-		if (!StringUtil.isEmpty(requestVO.getTopMenuId())) {
+		if (!StringUtils.isEmpty(requestVO.getTopMenuId())) {
 			try {
 				requestVO.setTopMenuId(URLEncoder.encode(requestVO.getTopMenuId(), "UTF-8"));
 			} catch (Exception ex) {
@@ -140,7 +140,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		}
 
 		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 encode 제거 필요)
-		if (!StringUtil.isEmpty(requestVO.getProdGradeCd())) {
+		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
 			try {
 				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
 			} catch (Exception ex) {

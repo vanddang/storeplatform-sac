@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -95,12 +95,12 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 		}
 
 		// tenantId 필수 파라미터 체크
-		if (StringUtil.isEmpty(req.getTenantId())) {
+		if (StringUtils.isEmpty(req.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
 
 		// listId 필수 파라미터 체크
-		if (StringUtil.isEmpty(req.getListId())) {
+		if (StringUtils.isEmpty(req.getListId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
 		}
 
@@ -108,7 +108,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 		String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
 
 		// 기준일시 체크
-		if (StringUtil.isEmpty(stdDt)) {
+		if (StringUtils.isEmpty(stdDt)) {
 			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
 		} else {
 			req.setStdDt(stdDt);
