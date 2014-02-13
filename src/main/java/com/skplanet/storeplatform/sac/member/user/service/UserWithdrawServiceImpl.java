@@ -32,7 +32,6 @@ import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -155,15 +154,15 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		}
 
 		/* 게임센터 연동 */
-		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-		gameCenterSacReq.setUserKey(schUserRes.getUserKey());
-		if (!deviceId.equals("")) {
-			gameCenterSacReq.setDeviceId(req.getDeviceId());
-		}
-		gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-		gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
-		this.deviceService.insertGameCenterIF(gameCenterSacReq);
+		//		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+		//		gameCenterSacReq.setUserKey(schUserRes.getUserKey());
+		//		if (!deviceId.equals("")) {
+		//			gameCenterSacReq.setDeviceId(req.getDeviceId());
+		//		}
+		//		gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+		//		gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		//		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
+		//		this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
 		return withdrawRes;
 
