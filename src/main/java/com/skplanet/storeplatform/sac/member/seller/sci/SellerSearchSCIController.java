@@ -72,7 +72,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		String sellerBizNumber = StringUtil.nvl(req.getSellerBizNumber(), "");
 
 		if (sellerId.equals("") && sellerKey.equals("") && sellerBizNumber.equals(""))
-			throw new StorePlatformException("SAC_MEM_0001", "aid,sellerKey,sellerId");
+			throw new StorePlatformException("SAC_MEM_0001", "sellerBizNumber,sellerKey,sellerId");
 
 		if (!sellerKey.equals("")) {
 			keySearch.setKeyString(req.getSellerKey());
