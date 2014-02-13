@@ -1,12 +1,7 @@
-/**
- * 
- */
 package com.skplanet.storeplatform.sac.member.user.sci;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
@@ -27,7 +22,6 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
  * Updated on : 2014. 2. 11. Updated by : 김다슬, 인크로스.
  */
 @LocalSCI
-@RequestMapping(value = "/user")
 public class DeviceSCIController implements DeviceSCI {
 
 	@Autowired
@@ -42,7 +36,6 @@ public class DeviceSCIController implements DeviceSCI {
 	 */
 
 	@Override
-	@RequestMapping(value = "/searchDeviceMdn", method = RequestMethod.POST)
 	public @ResponseBody
 	SearchDeviceIdSacRes searchDeviceId(@Validated SearchDeviceIdSacReq requestVO) {
 
@@ -53,6 +46,7 @@ public class DeviceSCIController implements DeviceSCI {
 
 		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
 		responseVO.setDeviceId(deviceInfo.getDeviceId());
+		responseVO.setDeviceIdType(deviceInfo.getDeviceIdType());
 
 		return responseVO;
 	}
