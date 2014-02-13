@@ -102,6 +102,11 @@ public class ConversionClassResSacReq extends CommonInfo {
 	private String bankAccount;
 	/** 예금자명. */
 	private String bankAcctName;
+	/** 외국 은행주소. */
+	private String bankAddress;
+	/** 외국 은행 위치. */
+	private String bankLocation;
+
 	/** 서류 리스트. */
 	private List<ExtraDocument> extraDocumentList;
 
@@ -448,4 +453,21 @@ public class ConversionClassResSacReq extends CommonInfo {
 	public void setExtraDocumentList(List<ExtraDocument> extraDocumentList) {
 		this.extraDocumentList = extraDocumentList;
 	}
+
+	public String getBankAddress() {
+		return this.bankAddress;
+	}
+
+	public void setBankAddress(String bankAddress) {
+		this.bankAddress = bankAddress;
+	}
+
+	public String getBankLocation() {
+		return this.bankLocation;
+	}
+
+	public void setBankLocation(String bankLocation) {
+		this.bankLocation = bankLocation;
+	}
+
 }
