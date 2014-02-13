@@ -175,6 +175,11 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	}
 
 	@Override
+	public Object getMyProdNotiCount(ProdNoti prodNoti) {
+		return this.commonDAO.queryForInt("Feedback.getMyProdNotiCount", prodNoti);
+	}
+
+	@Override
 	public Object updateSellerResp(ProdNoti prodNoti) {
 		return this.commonDAO.update("Feedback.updateSellerResp", prodNoti);
 	}

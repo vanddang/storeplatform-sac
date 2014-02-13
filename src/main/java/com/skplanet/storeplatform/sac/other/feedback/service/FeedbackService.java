@@ -25,8 +25,8 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacRe
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackSacRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersSacReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScorePaticpersSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScorePaticpersSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackSacReq;
@@ -212,13 +212,13 @@ public interface FeedbackService {
 	 * 평점별 참여수 조회.
 	 * </pre>
 	 * 
-	 * @param listScoreParticpersSacReq
-	 *            listScoreParticpersSacReq
+	 * @param ListScorePaticpersSacReq
+	 *            ListScorePaticpersSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
 	 * @return ListScoreParticpersSacRes
 	 */
-	public ListScoreParticpersSacRes listScoreParticpers(ListScoreParticpersSacReq listScoreParticpersSacReq,
+	public ListScorePaticpersSacRes listScoreParticpers(ListScorePaticpersSacReq ListScorePaticpersSacReq,
 			SacRequestHeader sacRequestHeader);
 
 	/**

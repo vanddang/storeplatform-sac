@@ -31,8 +31,8 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacRe
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackSacRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersSacReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScorePaticpersSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScorePaticpersSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackSacReq;
@@ -301,18 +301,18 @@ public class FeedbackController {
 	 * 평점별 참여수 조회.
 	 * </pre>
 	 * 
-	 * @param listScoreParticpersSacReq
-	 *            listScoreParticpersSacReq
+	 * @param ListScorePaticpersSacReq
+	 *            ListScorePaticpersSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
 	 * @return ListScoreParticpersSacRes
 	 */
-	@RequestMapping(value = "/listScoreParticpers/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listScorePaticpers/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListScoreParticpersSacRes listScoreParticpers(
-			@Validated ListScoreParticpersSacReq listScoreParticpersSacReq, SacRequestHeader sacRequestHeader) {
+	public ListScorePaticpersSacRes listScoreParticpers(@Validated ListScorePaticpersSacReq ListScorePaticpersSacReq,
+			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 평점별 참여수 조회. ##");
-		LOGGER.info("### req : {}", listScoreParticpersSacReq);
-		return this.feedbackService.listScoreParticpers(listScoreParticpersSacReq, sacRequestHeader);
+		LOGGER.info("### req : {}", ListScorePaticpersSacReq);
+		return this.feedbackService.listScoreParticpers(ListScorePaticpersSacReq, sacRequestHeader);
 	}
 }

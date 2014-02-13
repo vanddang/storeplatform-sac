@@ -42,8 +42,8 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacRe
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackSacRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersSacReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScorePaticpersSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScorePaticpersSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackSacReq;
@@ -79,6 +79,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
+		// ?? 회원 정보 조회 회원SCI 조회.
+
 		// 평점 저장
 		this.setMbrAvgTenantProdStats(createFeedbackSacReq, sacRequestHeader);
 
@@ -113,6 +115,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Override
 	public ModifyFeedbackSacRes modify(ModifyFeedbackSacReq modifyFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+
+		// ?? 회원 정보 조회 회원SCI 조회.
 
 		// 평점 저장.
 		this.setMbrAvgTenantProdStats(modifyFeedbackSacReq, sacRequestHeader);
@@ -151,6 +155,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Override
 	public RemoveFeedbackSacRes remove(RemoveFeedbackSacReq removeFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+
+		// ?? 회원 정보 조회 회원SCI 조회.
+
 		// 기 평가여부 조회
 		MbrAvg mbrAvg = new MbrAvg();
 		mbrAvg.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
@@ -199,6 +206,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public CreateRecommendFeedbackSacRes createRecommend(CreateRecommendFeedbackSacReq createRecommendFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
+
+		// ?? 회원 정보 조회 회원SCI 조회.
 
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
@@ -281,6 +290,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public RemoveRecommendFeedbackSacRes removeRecommend(RemoveRecommendFeedbackSacReq removeRecommendFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
 
+		// ?? 회원 정보 조회 회원SCI 조회.
+
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		prodNoti.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
@@ -359,7 +370,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// listFeedbackRes.setAvgEvluScorePct("80.00");
 		// listFeedbackRes.setAvgEvluScore("2");
 		// listFeedbackRes.setDwldCnt("11103");
-		// listFeedbackRes.setParticpersCnt("105");
+		// listFeedbackRes.setPaticpersCnt("105");
 		//
 		// int offset = listFeedbackSacReq.getOffset() == 0 ? 1 : listFeedbackSacReq.getOffset();
 		// int count = listFeedbackSacReq.getCount() == 0 ? 10 : (offset + listFeedbackSacReq.getCount()) - 1;
@@ -384,11 +395,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// listFeedbackRes.setNotiList(notiList);
 
 		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
-		listFeedbackRes.setAvgEvluScorePct("80.00");
-		listFeedbackRes.setNotiTot("100");
+		listFeedbackRes.setAvgEvluScorePcts("80,100,20,10,50");
+		listFeedbackRes.setNotiTot("2");
 		listFeedbackRes.setAvgEvluScore("2");
 		listFeedbackRes.setDwldCnt("11103");
-		listFeedbackRes.setParticpersCnt("105");
+		listFeedbackRes.setPaticpersCnt("105");
 
 		listFeedbackRes.setNotiList(this.getFeedbackList());
 
@@ -419,7 +430,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// for (ProdNoti res : prodNotiList) {
 		// Feedback feedback = this.setFeedback(res);
 		// FeedbackMy feedbackMy = new FeedbackMy();
-		// feedbackMy.setTotalCount(res.getTotalCount());
 		// BeanUtils.copyProperties(feedback, feedbackMy);
 		// notiList.add(feedbackMy);
 		// }
@@ -428,12 +438,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
 		for (Feedback res : notiList) {
 			FeedbackMy feedbackMy = new FeedbackMy();
-			feedbackMy.setTotalCount("10");
+			// feedbackMy.setTotalCount("10");
 			BeanUtils.copyProperties(res, feedbackMy);
 			notiMyList.add(feedbackMy);
 		}
+		// int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
 
 		ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
+		listMyFeedbackRes.setNotiTot("2");
 		listMyFeedbackRes.setNotiList(notiMyList);
 		return listMyFeedbackRes;
 	}
@@ -441,8 +453,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public CreateSellerFeedbackSacRes createSellerFeedback(CreateSellerFeedbackSacReq createSellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-		ProdNoti prodNoti = new ProdNoti();
 
+		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		prodNoti.setNotiSeq(createSellerFeedbackSacReq.getNotiSeq());
 		prodNoti.setSellerRespTitle(createSellerFeedbackSacReq.getSellerRespTitle());
@@ -478,8 +490,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public ModifySellerFeedbackSacRes modifySellerFeedback(ModifySellerFeedbackSacReq modifySellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-		ProdNoti prodNoti = new ProdNoti();
 
+		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		prodNoti.setNotiSeq(modifySellerFeedbackSacReq.getNotiSeq());
 		prodNoti.setSellerRespTitle(modifySellerFeedbackSacReq.getSellerRespTitle());
@@ -556,39 +568,39 @@ public class FeedbackServiceImpl implements FeedbackService {
 		getScoreRes.setTotEvluScore("20");
 		getScoreRes.setAvgEvluScore("4.0");
 		getScoreRes.setAvgEvluScorePct("80.00");
-		getScoreRes.setParticpersCnt("5");
+		getScoreRes.setPaticpersCnt("5");
 		return getScoreRes;
 	}
 
 	@Override
-	public ListScoreParticpersSacRes listScoreParticpers(ListScoreParticpersSacReq listScoreParticpersSacReq,
+	public ListScorePaticpersSacRes listScoreParticpers(ListScorePaticpersSacReq ListScorePaticpersSacReq,
 			SacRequestHeader sacRequestHeader) {
-		ListScoreParticpersSacRes listScoreRes = new ListScoreParticpersSacRes();
+		ListScorePaticpersSacRes listScoreRes = new ListScorePaticpersSacRes();
 		List<AvgScore> avgScoreList = new ArrayList<AvgScore>();
 		AvgScore avgScore1 = new AvgScore();
 		avgScore1.setAvgScore("5");
 		avgScore1.setAvgScorePct("0");
-		avgScore1.setParticpersCnt("0");
+		avgScore1.setPaticpersCnt("0");
 
 		AvgScore avgScore2 = new AvgScore();
 		avgScore2.setAvgScore("4");
 		avgScore2.setAvgScorePct("100");
-		avgScore2.setParticpersCnt("1");
+		avgScore2.setPaticpersCnt("1");
 
 		AvgScore avgScore3 = new AvgScore();
 		avgScore3.setAvgScore("3");
 		avgScore3.setAvgScorePct("0");
-		avgScore3.setParticpersCnt("0");
+		avgScore3.setPaticpersCnt("0");
 
 		AvgScore avgScore4 = new AvgScore();
 		avgScore4.setAvgScore("2");
 		avgScore4.setAvgScorePct("100");
-		avgScore4.setParticpersCnt("1");
+		avgScore4.setPaticpersCnt("1");
 
 		AvgScore avgScore5 = new AvgScore();
 		avgScore5.setAvgScore("1");
 		avgScore5.setAvgScorePct("0");
-		avgScore5.setParticpersCnt("0");
+		avgScore5.setPaticpersCnt("0");
 
 		avgScoreList.add(avgScore1);
 		avgScoreList.add(avgScore2);

@@ -351,7 +351,7 @@ public interface FeedbackRepository {
 	/**
 	 * 
 	 * <pre>
-	 * 자기가 작성한 사용후기.
+	 * 자기가 작성한 사용후기 리스트.
 	 * </pre>
 	 * 
 	 * @param prodNoti
@@ -359,6 +359,19 @@ public interface FeedbackRepository {
 	 * @return List<ProdNoti>
 	 */
 	public List<ProdNoti> getMyProdNotiList(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 자기가 작성한 사용후기 리스트 카운트 조회.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * 
+	 * @return Object
+	 */
+	public Object getMyProdNotiCount(ProdNoti prodNoti);
 
 	/**
 	 * 
