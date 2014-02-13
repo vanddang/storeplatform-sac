@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -66,10 +67,17 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 
 		KeySearch keySearch = new KeySearch();
 
-		if (!StringUtil.nvl(req.getSellerKey(), "").equals("")) {
+		String sellerId = StringUtil.nvl(req.getSellerId(), "");
+		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
+		String sellerBizNumber = StringUtil.nvl(req.getSellerBizNumber(), "");
+
+		if (sellerId.equals("") && sellerKey.equals("") && sellerBizNumber.equals(""))
+			throw new StorePlatformException("SAC_MEM_0001", "aid,sellerKey,sellerId");
+
+		if (!sellerKey.equals("")) {
 			keySearch.setKeyString(req.getSellerKey());
 			keySearch.setKeyType("INSD_SELLERMBR_NO");
-		} else if (!StringUtil.nvl(req.getSellerId(), "").equals("")) {
+		} else if (!sellerId.equals("")) {
 			keySearch.setKeyString(req.getSellerId());
 			keySearch.setKeyType("SELLERMBR_ID");
 		} else {
