@@ -7,10 +7,12 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.display.vo.vod;
+package com.skplanet.storeplatform.sac.client.display.vo.category;
 
 import java.io.Serializable;
 import java.util.List;
+
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -19,9 +21,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 /**
  * Interface Message VodBox List Value Object.
  * 
- * Updated on : 2013. 12. 24 Updated by : 윤주영, SK 플래닛.
+ * Updated on : 2014. 02. 12. Updated by : 유시혁.
  */
-public class VodBoxListRes extends CommonInfo implements Serializable {
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+public class CategoryVodBoxSacRes extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123142L;
 
