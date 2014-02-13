@@ -1419,7 +1419,7 @@
                          ,(SELECT  PROD_ID
                                   ,PRCHS_CNT
                              FROM TB_DP_TENANT_PROD_STATS 
-                            WHERE TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
+                            WHERE TENANT_ID = #{req.tenantId}    /* INPUT 테넌트ID */
                            ) M
                 WHERE 1=1
                 AND A.BRAND_ID = B.BRAND_ID
@@ -1439,8 +1439,8 @@
                 AND I.PROD_ID = M.PROD_ID(+)                           
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                 AND NVL(B.CHNL_CNT, 0) > 0          
-                AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
-                AND F.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
+                AND C.LANG_CD= #{req.langCd}          /* ko : 한국어 */
+                AND F.LANG_CD= #{req.langCd}          /* ko : 한국어 */
                 AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
                 AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
@@ -1450,7 +1450,7 @@
                 AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
-                AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+                AND K.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */
                 AND B.CATALOG_ID = #{req.prodId}
                 <if test="req.specialProdId != null">
                 AND I.PROD_ID = #{req.specialProdId}
@@ -1491,7 +1491,7 @@
                         ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
                         ,J.PROD_GRD_CD
                         ,J.USE_PERIOD_UNIT_CD
-                        ,J.USE_PERIOD||FN_COMM_CD_NM(J.USE_PERIOD_UNIT_CD,#{tenantHeader.langCd}) as USE_PERIOD
+                        ,J.USE_PERIOD||FN_COMM_CD_NM(J.USE_PERIOD_UNIT_CD,#{req.langCd}) as USE_PERIOD
                         ,DECODE(I.PROD_CASE_CD
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
@@ -1521,7 +1521,7 @@
                          
                              AND PD.NOTI_TYPE_CD = 'DP000401'
                              AND PD.DEL_YN = 'N'                            
-                             AND PD.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+                             AND PD.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */
                          )AS ALLOW
                          </if>
                         ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
@@ -1586,8 +1586,8 @@
                 AND I.PROD_ID = N.PROD_ID(+)
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                 AND NVL(B.CHNL_CNT, 0) > 0          
-                AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
-                AND F.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
+                AND C.LANG_CD= #{req.langCd}          /* ko : 한국어 */
+                AND F.LANG_CD= #{req.langCd}          /* ko : 한국어 */
                 AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
                 AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
@@ -1597,7 +1597,7 @@
                 AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
-                AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+                AND K.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */
                 AND B.CATALOG_ID = #{req.prodId}
                 <if test="req.specialProdId != null">
                 AND I.PROD_ID = #{req.specialProdId}
@@ -1650,8 +1650,8 @@
 		  AND A.CHNL_PROD_ID =#{chnlProdId}
 		  AND NVL(B.B2B_PROD_YN, 'N') != 'Y'
           AND E.EXPO_YN ='Y'                                /* Y : 기본(기본여부) */
-          AND E.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
-          AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */	  
+          AND E.TENANT_ID  =#{req.tenantId}        /* INPUT 테넌트ID */
+          AND D.TENANT_ID  =#{req.tenantId}        /* INPUT 테넌트ID */	  
           AND DECODE( A.EXPO_ORD, 1, NVL( A.EXPO_YN, 'N' )
                                    ,( SELECT TPO2.EXPO_YN
                                         FROM TB_DP_PROD_OPT TPO2
