@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.display.download.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -43,7 +45,6 @@ import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
 import com.skplanet.storeplatform.sac.display.response.VodGenerator;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 //import org.apache.commons.lang3.StringUtils;
 
@@ -56,7 +57,7 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
 @Transactional
 public class DownloadVodServiceImpl implements DownloadVodService {
 
-	// private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -258,15 +259,26 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 					// JSON 암호화
 					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-
-					// JSON 암호화값을 BASE64 Encoding
-					Base64Encoder encoder = new Base64Encoder();
-					String encryptString = encoder.encode(encryptByte);
+					String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
 
 					Encryption encryption = new Encryption();
 					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
 					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
 					encryption.setToken(encryptString);
+					product.setEncryption(encryption);
+
+					// // JSON 복호화
+					// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+					// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+					//
+					// try {
+					// String decData = new String(decrypt, "UTF-8");
+					// this.log.debug("----------------------------------------------------------------");
+					// this.log.debug("[getDownloadEbookInfo] decData : {}", decData);
+					// this.log.debug("----------------------------------------------------------------");
+					// } catch (UnsupportedEncodingException e) {
+					// e.printStackTrace();
+					// }
 
 					product.setEncryption(encryption);
 
