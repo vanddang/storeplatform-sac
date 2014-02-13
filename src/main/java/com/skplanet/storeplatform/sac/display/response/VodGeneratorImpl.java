@@ -84,7 +84,8 @@ public class VodGeneratorImpl implements VodGenerator {
 		Chapter chapter = new Chapter();
 		Time time = new Time();
 		time.setText(metaInfo.getEpsdPlayTm());
-		chapter.setUnit(metaInfo.getChapter());
+		chapter.setUnit(metaInfo.getChapterUnit());
+		chapter.setText(Integer.parseInt(metaInfo.getChapter()));
 		vod.setChapter(chapter);
 		vod.setRunningTime(time);
 		vod.setVideoInfoList(this.generateVideoInfoList(metaInfo));
