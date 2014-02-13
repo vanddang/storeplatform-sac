@@ -72,10 +72,8 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 			keySearch.setKeyString(req.getSellerId());
 			keySearch.setKeyType("SELLERMBR_ID");
 		} else {
-			DetailInformationSacReq sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", req,
-					DetailInformationSacReq.class);
-			keySearch.setKeyString(sellerDTO.getSellerKey());
-			keySearch.setKeyType("INSD_SELLERMBR_NO");
+			keySearch.setKeyString(req.getSellerBizNumber());
+			keySearch.setKeyType("BIZ_REG_NO");
 		}
 
 		List<KeySearch> list = new ArrayList<KeySearch>();
