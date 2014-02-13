@@ -321,6 +321,11 @@ public class DisplayConstants {
 	public static final String DP_DATE_RELEASE = "date/release";
 	/** 출판일 */
 	public static final String DP_DATE_PUBLISH = "date/publish";
+	/** 방송 날짜 */
+	public static final String DP_DATE_BROADCAST = "date/broadcast";
+	/** 발행일 */
+	public static final String DP_DATE_ISSUE = "date/issue";
+
 	// ////////////////////////////////// 도서 유형 //////////////////////////////////////////
 	/** 단행본 */
 	public static final String DP_BOOK_BOOK = "DP004301";
