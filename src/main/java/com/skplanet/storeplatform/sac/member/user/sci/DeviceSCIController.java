@@ -44,8 +44,7 @@ public class DeviceSCIController implements DeviceSCI {
 	@Override
 	@RequestMapping(value = "/searchDeviceMdn", method = RequestMethod.POST)
 	public @ResponseBody
-	SearchDeviceIdSacRes searchDeviceId(
-	/* SacRequestHeader requestHeader, */@Validated SearchDeviceIdSacReq requestVO) {
+	SearchDeviceIdSacRes searchDeviceId(@Validated SearchDeviceIdSacReq requestVO) {
 
 		SacRequestHeader requestHeader = new SacRequestHeader(); // client-internal에 공통으로 생성되면 삭제 후 Bypass 예정.
 		TenantHeader tenantHeader = new TenantHeader();

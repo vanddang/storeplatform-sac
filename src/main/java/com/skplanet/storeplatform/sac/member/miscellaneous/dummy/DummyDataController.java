@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAc
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
@@ -29,6 +30,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAut
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationRes;
 
 /**
  * 
@@ -43,7 +46,77 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.1. 휴대폰 인증 SMS 발송.
+	 * 2.3.1. 실명 인증용 휴대폰 인증 SMS 발송. - 기능 삭제 2014-02-12
+	 * </pre>
+	 * 
+	 * @return SendSmsForRealNameAuthorizationRes
+	 */
+	@Deprecated
+	// @RequestMapping(value = "/sendSmsForRealNameAuthorization/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public SendSmsForRealNameAuthorizationRes sendSmsForRealNameAuthorization() {
+		LOGGER.info("####################################################");
+		LOGGER.info("####### 2.3.1. 실명 인증용 휴대폰 인증 SMS 발송 ########");
+		LOGGER.info("####################################################");
+
+		SendSmsForRealNameAuthorizationRes response = new SendSmsForRealNameAuthorizationRes();
+		response.setKmcSmsAuth("IW102158844420091030165015");
+		response.setCheckParam1("");
+		response.setCheckParam2("");
+		response.setCheckParam3("");
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * 2.3.2. 실명 인증용 휴대폰 인증 코드 확인. - 기능 삭제 2014-02-12
+	 * </pre>
+	 * 
+	 * @param ConfirmRealNameAuthorizationReq
+	 * @return ConfirmRealNameAuthorizationRes
+	 */
+	@Deprecated
+	// @RequestMapping(value = "/confirmRealNameAuthorization/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ConfirmRealNameAuthorizationRes confirmRealNameAuthorization() {
+		LOGGER.info("####################################################");
+		LOGGER.info("####### 2.3.2. 실명 인증용 휴대폰 인증 코드 확인 ########");
+		LOGGER.info("####################################################");
+
+		ConfirmRealNameAuthorizationRes response = new ConfirmRealNameAuthorizationRes();
+		response.setUserCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1B9A3z5zrVHettHzKa5dpJA==");
+		response.setUserDI("skpone000012902JAyEAPgMkfp3WL1 caEThzSSWjsOXQCfONIbAJgSFvitpjcQ=");
+
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * 2.3.3. 실명 인증용 휴대폰 인증 SMS 재발송. - 기능 삭제 2014-02-12
+	 * </pre>
+	 * 
+	 * @param ResendSmsForRealNameAuthorizationReq
+	 * @return ResendSmsForRealNameAuthorizationRes
+	 */
+	@Deprecated
+	// @RequestMapping(value = "/resendSmsForRealNameAuthorization/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ResendSmsForRealNameAuthorizationRes resendSmsForRealNameAuthorization() {
+
+		LOGGER.info("####################################################");
+		LOGGER.info("####### 2.3.3. 실명 인증용 휴대폰 인증 SMS 재발송  ######");
+		LOGGER.info("####################################################");
+
+		ResendSmsForRealNameAuthorizationRes response = new ResendSmsForRealNameAuthorizationRes();
+		response.setCheckParam1("");
+		response.setCheckParam2("");
+		response.setCheckParam3("");
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * 2.3.4. 휴대폰 인증 SMS 발송.
 	 * </pre>
 	 * 
 	 * @param GetPhoneAuthorizationCodeReq
@@ -54,7 +127,7 @@ public class DummyDataController {
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.1. 휴대폰 인증 SMS 발송   #################");
+		LOGGER.info("####### 2.3.4. 휴대폰 인증 SMS 발송   #################");
 		LOGGER.info("####################################################");
 
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
@@ -65,7 +138,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.2. 휴대폰 인증 코드 확인.
+	 * 2.3.5. 휴대폰 인증 코드 확인.
 	 * </pre>
 	 * 
 	 * @return ConfirmPhoneAuthorizationCodeRes
@@ -75,7 +148,7 @@ public class DummyDataController {
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAuthorizationCode() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.2. 휴대폰 인증 코드 확인  #################");
+		LOGGER.info("####### 2.3.5. 휴대폰 인증 코드 확인  #################");
 		LOGGER.info("####################################################");
 
 		ConfirmPhoneAuthorizationCodeRes response = new ConfirmPhoneAuthorizationCodeRes();
@@ -86,7 +159,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.3. 이메일 인증 코드 생성.
+	 * 2.3.6. 이메일 인증 코드 생성.
 	 * </pre>
 	 * 
 	 * @return GetEmailAuthorizationCodeRes
@@ -96,7 +169,7 @@ public class DummyDataController {
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.3. 이메일 인증 코드 생성  #################");
+		LOGGER.info("####### 2.3.6. 이메일 인증 코드 생성  #################");
 		LOGGER.info("####################################################");
 
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
@@ -106,7 +179,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.4. 이메일 인증 코드 확인.
+	 * 2.3.7. 이메일 인증 코드 확인.
 	 * </pre>
 	 * 
 	 * @return ConfirmEmailAuthorizationCodeRes
@@ -116,7 +189,7 @@ public class DummyDataController {
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.4. 이메일 인증 코드 확인  #################");
+		LOGGER.info("####### 2.3.7. 이메일 인증 코드 확인  #################");
 		LOGGER.info("####################################################");
 
 		ConfirmEmailAuthorizationCodeRes response = new ConfirmEmailAuthorizationCodeRes();
@@ -128,7 +201,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.5. 사용자별 정책 조회.
+	 * 2.3.8. 사용자별 정책 조회.
 	 * </pre>
 	 * 
 	 * @return GetIndividualPolicyRes
@@ -138,7 +211,7 @@ public class DummyDataController {
 	public GetIndividualPolicyRes getIndividualPolicy() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.5. 사용자별 정책 조회     #################");
+		LOGGER.info("####### 2.3.8. 사용자별 정책 조회     #################");
 		LOGGER.info("####################################################");
 
 		GetIndividualPolicyRes response = new GetIndividualPolicyRes();
@@ -157,7 +230,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.6. 사용자별 정책 등록/수정.
+	 * 2.3.9. 사용자별 정책 등록/수정.
 	 * </pre>
 	 * 
 	 * @return CreateIndividualPolicyRes
@@ -167,7 +240,7 @@ public class DummyDataController {
 	public CreateIndividualPolicyRes createIndividualPolicy() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.6. 사용자별 정책 등록/수정#################");
+		LOGGER.info("####### 2.3.9. 사용자별 정책 등록/수정#################");
 		LOGGER.info("####################################################");
 
 		CreateIndividualPolicyRes response = new CreateIndividualPolicyRes();
@@ -180,7 +253,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.7. 사용자별 정책 삭제.
+	 * 2.3.10. 사용자별 정책 삭제.
 	 * </pre>
 	 * 
 	 * @return RemoveIndividualPolicyRes
@@ -190,7 +263,7 @@ public class DummyDataController {
 	public RemoveIndividualPolicyRes removeIndividualPolicy() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.7. 사용자별 정책 삭제    #################");
+		LOGGER.info("####### 2.3.10. 사용자별 정책 삭제    #################");
 		LOGGER.info("####################################################");
 
 		RemoveIndividualPolicyRes response = new RemoveIndividualPolicyRes();
@@ -202,7 +275,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.8. UA 코드 정보 조회.
+	 * 2.3.11. UA 코드 정보 조회.
 	 * </pre>
 	 * 
 	 * @param GetUaCodeReq
@@ -214,7 +287,7 @@ public class DummyDataController {
 	public GetUaCodeRes getUaCode() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.8. UA 코드 정보 조회     #################");
+		LOGGER.info("####### 2.3.11. UA 코드 정보 조회     #################");
 		LOGGER.info("####################################################");
 
 		GetUaCodeRes response = new GetUaCodeRes();
@@ -224,7 +297,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.9. OPMD 모회선 번호 조회.
+	 * 2.3.12. OPMD 모회선 번호 조회.
 	 * </pre>
 	 * 
 	 * @param GetOpmdReq
@@ -235,7 +308,7 @@ public class DummyDataController {
 	public GetOpmdRes getOpmd() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.9. OPMD 모회선 번호 조회 ################");
+		LOGGER.info("####### 2.3.12. OPMD 모회선 번호 조회 ################");
 		LOGGER.info("####################################################");
 
 		GetOpmdRes response = new GetOpmdRes();
@@ -246,7 +319,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.10. 부가서비스 가입.
+	 * 2.3.13. 부가서비스 가입.
 	 * </pre>
 	 * 
 	 * @return CreateAdditionalServiceRes
@@ -256,7 +329,7 @@ public class DummyDataController {
 	public CreateAdditionalServiceRes createAdditionalService() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.10. 부가서비스 가입        ################");
+		LOGGER.info("####### 2.3.13. 부가서비스 가입        ################");
 		LOGGER.info("####################################################");
 
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
@@ -268,7 +341,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.11. 부가서비스 가입 조회.
+	 * 2.3.14. 부가서비스 가입 조회.
 	 * </pre>
 	 * 
 	 * @return GetAdditionalServiceRes
@@ -278,11 +351,11 @@ public class DummyDataController {
 	public GetAdditionalServiceRes getAdditionalService() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.11. 부가서비스 가입 조회   ################");
+		LOGGER.info("####### 2.3.14. 부가서비스 가입 조회   ################");
 		LOGGER.info("####################################################");
 
 		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
-		response.setMsisdn("01032954056");
+		response.setMsisdn("01012345678");
 		response.setSvcJoinResult("NA00004184=T");
 
 		return response;
@@ -290,7 +363,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.12. 결제 계좌 정보 인증.
+	 * 2.3.15. 결제 계좌 정보 인증.
 	 * </pre>
 	 * 
 	 * @return AuthorizeAccountRes
@@ -300,7 +373,7 @@ public class DummyDataController {
 	public AuthorizeAccountRes authorizeAccount() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.12. 결제 계좌 정보 인증    ################");
+		LOGGER.info("####### 2.3.15. 결제 계좌 정보 인증    ################");
 		LOGGER.info("####################################################");
 
 		AuthorizeAccountRes response = new AuthorizeAccountRes();
@@ -310,7 +383,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.13. Captcha 문자 발급.
+	 * 2.3.16. Captcha 문자 발급.
 	 * </pre>
 	 * 
 	 * @return GetCaptchaRes
@@ -320,7 +393,7 @@ public class DummyDataController {
 	public GetCaptchaRes getCaptcha() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.13. Captcha 문자 발급     ################");
+		LOGGER.info("####### 2.3.16. Captcha 문자 발급     ################");
 		LOGGER.info("####################################################");
 
 		GetCaptchaRes response = new GetCaptchaRes();
@@ -332,7 +405,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.14. Captcha 문자 확인.
+	 * 2.3.16. Captcha 문자 확인.
 	 * </pre>
 	 * 
 	 * @return ConfirmCaptchaRes
@@ -342,7 +415,7 @@ public class DummyDataController {
 	public ConfirmCaptchaRes confirmCaptcha() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.14. Captcha 문자 확인     ################");
+		LOGGER.info("####### 2.3.17. Captcha 문자 확인     ################");
 		LOGGER.info("####################################################");
 
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
@@ -351,7 +424,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 2.3.15. 단말 모델코드 조회.
+	 * 2.3.18. 단말 모델코드 조회.
 	 * </pre>
 	 * 
 	 * @param req
@@ -363,7 +436,7 @@ public class DummyDataController {
 	public GetModelCodeRes getModelCode(@Validated @RequestBody GetModelCodeReq req) {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.15. 단말 모델코드 조회     ################");
+		LOGGER.info("####### 2.3.18. 단말 모델코드 조회     ################");
 		LOGGER.info("####################################################");
 		LOGGER.info("[SAC] Request : {}", req);
 		GetModelCodeRes response = new GetModelCodeRes();
