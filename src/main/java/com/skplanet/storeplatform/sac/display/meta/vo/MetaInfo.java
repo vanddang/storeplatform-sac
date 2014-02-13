@@ -55,6 +55,7 @@ public class MetaInfo {
 	private String bpJoinFileType;
 	private String expiredDate;
 	private String prodChrg;
+	private String useExprDt;
 	private String dwldExprDt;
 	private String deviceKey;
 	private String deviceType;
@@ -181,17 +182,17 @@ public class MetaInfo {
 	private String tagCd;
 	private String tagNm;
 	private String tagTypeCd;
-	
-	////////////////////////////정액제 상품 변수 ////////////////////////////
-	private String prodAlias;				//상품별명
-	private String cmpxProdClsfCd;			//복함상품구분코드
-	private String autoApprYn;				//자동결제여부
-	private String maxSaleCnt;				//최대판매수량
-	private String salePocCd;				//판매POC코드
-	private String dupPrchsLimtYn;			//중복구매제한여부
-	private String bannerFilePath;			//배너이미지
-	private String thumbnailFilePath;		//썸네일이미지
-	private String prodIntrDscr;			//정액제 상품 설명
+
+	// //////////////////////////정액제 상품 변수 ////////////////////////////
+	private String prodAlias; // 상품별명
+	private String cmpxProdClsfCd; // 복함상품구분코드
+	private String autoApprYn; // 자동결제여부
+	private String maxSaleCnt; // 최대판매수량
+	private String salePocCd; // 판매POC코드
+	private String dupPrchsLimtYn; // 중복구매제한여부
+	private String bannerFilePath; // 배너이미지
+	private String thumbnailFilePath; // 썸네일이미지
+	private String prodIntrDscr; // 정액제 상품 설명
 
 	/**
 	 * @return the topMenuId
@@ -971,6 +972,21 @@ public class MetaInfo {
 	 */
 	public void setProdChrg(String prodChrg) {
 		this.prodChrg = prodChrg;
+	}
+
+	/**
+	 * @return the useExprDt
+	 */
+	public String getUseExprDt() {
+		return this.useExprDt;
+	}
+
+	/**
+	 * @param useExprDt
+	 *            the useExprDt to set
+	 */
+	public void setUseExprDt(String useExprDt) {
+		this.useExprDt = useExprDt;
 	}
 
 	/**
@@ -2590,11 +2606,12 @@ public class MetaInfo {
 	 * @return the prodAlias
 	 */
 	public String getProdAlias() {
-		return prodAlias;
+		return this.prodAlias;
 	}
 
 	/**
-	 * @param prodAlias the prodAlias to set
+	 * @param prodAlias
+	 *            the prodAlias to set
 	 */
 	public void setProdAlias(String prodAlias) {
 		this.prodAlias = prodAlias;
@@ -2604,11 +2621,12 @@ public class MetaInfo {
 	 * @return the cmpxProdClsfCd
 	 */
 	public String getCmpxProdClsfCd() {
-		return cmpxProdClsfCd;
+		return this.cmpxProdClsfCd;
 	}
 
 	/**
-	 * @param cmpxProdClsfCd the cmpxProdClsfCd to set
+	 * @param cmpxProdClsfCd
+	 *            the cmpxProdClsfCd to set
 	 */
 	public void setCmpxProdClsfCd(String cmpxProdClsfCd) {
 		this.cmpxProdClsfCd = cmpxProdClsfCd;
@@ -2618,11 +2636,12 @@ public class MetaInfo {
 	 * @return the autoApprYn
 	 */
 	public String getAutoApprYn() {
-		return autoApprYn;
+		return this.autoApprYn;
 	}
 
 	/**
-	 * @param autoApprYn the autoApprYn to set
+	 * @param autoApprYn
+	 *            the autoApprYn to set
 	 */
 	public void setAutoApprYn(String autoApprYn) {
 		this.autoApprYn = autoApprYn;
@@ -2632,11 +2651,12 @@ public class MetaInfo {
 	 * @return the maxSaleCnt
 	 */
 	public String getMaxSaleCnt() {
-		return maxSaleCnt;
+		return this.maxSaleCnt;
 	}
 
 	/**
-	 * @param maxSaleCnt the maxSaleCnt to set
+	 * @param maxSaleCnt
+	 *            the maxSaleCnt to set
 	 */
 	public void setMaxSaleCnt(String maxSaleCnt) {
 		this.maxSaleCnt = maxSaleCnt;
@@ -2646,11 +2666,12 @@ public class MetaInfo {
 	 * @return the salePocCd
 	 */
 	public String getSalePocCd() {
-		return salePocCd;
+		return this.salePocCd;
 	}
 
 	/**
-	 * @param salePocCd the salePocCd to set
+	 * @param salePocCd
+	 *            the salePocCd to set
 	 */
 	public void setSalePocCd(String salePocCd) {
 		this.salePocCd = salePocCd;
@@ -2660,11 +2681,12 @@ public class MetaInfo {
 	 * @return the dupPrchsLimtYn
 	 */
 	public String getDupPrchsLimtYn() {
-		return dupPrchsLimtYn;
+		return this.dupPrchsLimtYn;
 	}
 
 	/**
-	 * @param dupPrchsLimtYn the dupPrchsLimtYn to set
+	 * @param dupPrchsLimtYn
+	 *            the dupPrchsLimtYn to set
 	 */
 	public void setDupPrchsLimtYn(String dupPrchsLimtYn) {
 		this.dupPrchsLimtYn = dupPrchsLimtYn;
@@ -2674,11 +2696,12 @@ public class MetaInfo {
 	 * @return the bannerFilePath
 	 */
 	public String getBannerFilePath() {
-		return bannerFilePath;
+		return this.bannerFilePath;
 	}
 
 	/**
-	 * @param bannerFilePath the bannerFilePath to set
+	 * @param bannerFilePath
+	 *            the bannerFilePath to set
 	 */
 	public void setBannerFilePath(String bannerFilePath) {
 		this.bannerFilePath = bannerFilePath;
@@ -2688,11 +2711,12 @@ public class MetaInfo {
 	 * @return the thumbnailFilePath
 	 */
 	public String getThumbnailFilePath() {
-		return thumbnailFilePath;
+		return this.thumbnailFilePath;
 	}
 
 	/**
-	 * @param thumbnailFilePath the thumbnailFilePath to set
+	 * @param thumbnailFilePath
+	 *            the thumbnailFilePath to set
 	 */
 	public void setThumbnailFilePath(String thumbnailFilePath) {
 		this.thumbnailFilePath = thumbnailFilePath;
@@ -2702,11 +2726,12 @@ public class MetaInfo {
 	 * @return the prodIntrDscr
 	 */
 	public String getProdIntrDscr() {
-		return prodIntrDscr;
+		return this.prodIntrDscr;
 	}
 
 	/**
-	 * @param prodIntrDscr the prodIntrDscr to set
+	 * @param prodIntrDscr
+	 *            the prodIntrDscr to set
 	 */
 	public void setProdIntrDscr(String prodIntrDscr) {
 		this.prodIntrDscr = prodIntrDscr;
