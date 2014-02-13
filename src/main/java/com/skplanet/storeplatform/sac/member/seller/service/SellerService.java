@@ -35,7 +35,7 @@ public interface SellerService {
 	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req);
 
 	/** 2.2.4. 판매자 회원 단순 인증. */
-	public AuthorizeRes authorizeSample(SacRequestHeader header, AuthorizeSimpleReq req);
+	public AuthorizeRes authorizeSimple(SacRequestHeader header, AuthorizeSimpleReq req);
 
 	/** 2.2.10. 판매자 회원 기본정보 수정 */
 	public ModifyInformationSacRes modifyInformation(SacRequestHeader header, ModifyInformationSacReq req);

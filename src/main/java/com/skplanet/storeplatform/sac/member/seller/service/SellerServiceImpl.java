@@ -778,7 +778,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return AuthorizeRes
 	 */
 	@Override
-	public AuthorizeRes authorizeSample(SacRequestHeader header, AuthorizeSimpleReq req) {
+	public AuthorizeRes authorizeSimple(SacRequestHeader header, AuthorizeSimpleReq req) {
 
 		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
 		// SC 공통 헤더 생성
