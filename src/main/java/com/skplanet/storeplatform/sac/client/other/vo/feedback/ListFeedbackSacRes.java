@@ -27,7 +27,7 @@ public class ListFeedbackSacRes extends CommonInfo {
 	/**
 	 * 평균평점 퍼센트.
 	 */
-	private String avgEvluScorePct;
+	private String avgEvluScorePcts;
 	/**
 	 * 사용후기 전체개수.
 	 */
@@ -43,7 +43,7 @@ public class ListFeedbackSacRes extends CommonInfo {
 	/**
 	 * 참여자수.
 	 */
-	private String particpersCnt;
+	private String paticpersCnt;
 	/**
 	 * 사용후기 리스트.
 	 */
@@ -52,16 +52,16 @@ public class ListFeedbackSacRes extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getAvgEvluScorePct() {
-		return this.avgEvluScorePct;
+	public String getAvgEvluScorePcts() {
+		return this.avgEvluScorePcts;
 	}
 
 	/**
-	 * @param avgEvluScorePct
-	 *            avgEvluScorePct
+	 * @param avgEvluScorePcts
+	 *            avgEvluScorePcts
 	 */
-	public void setAvgEvluScorePct(String avgEvluScorePct) {
-		this.avgEvluScorePct = avgEvluScorePct;
+	public void setAvgEvluScorePcts(String avgEvluScorePcts) {
+		this.avgEvluScorePcts = avgEvluScorePcts;
 	}
 
 	/**
@@ -112,16 +112,16 @@ public class ListFeedbackSacRes extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getParticpersCnt() {
-		return this.particpersCnt;
+	public String getPaticpersCnt() {
+		return this.paticpersCnt;
 	}
 
 	/**
-	 * @param particpersCnt
-	 *            particpersCnt
+	 * @param paticpersCnt
+	 *            paticpersCnt
 	 */
-	public void setParticpersCnt(String particpersCnt) {
-		this.particpersCnt = particpersCnt;
+	public void setPaticpersCnt(String paticpersCnt) {
+		this.paticpersCnt = paticpersCnt;
 	}
 
 	/**
@@ -138,4 +138,5 @@ public class ListFeedbackSacRes extends CommonInfo {
 	public void setNotiList(List<Feedback> notiList) {
 		this.notiList = notiList;
 	}
+
 }

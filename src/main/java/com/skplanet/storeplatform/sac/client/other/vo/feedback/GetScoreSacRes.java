@@ -42,7 +42,7 @@ public class GetScoreSacRes extends CommonInfo {
 	/**
 	 * 참여자 수.
 	 */
-	private String particpersCnt;
+	private String paticpersCnt;
 
 	/**
 	 * @return String
@@ -107,16 +107,16 @@ public class GetScoreSacRes extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getParticpersCnt() {
-		return this.particpersCnt;
+	public String getPaticpersCnt() {
+		return this.paticpersCnt;
 	}
 
 	/**
-	 * @param particpersCnt
-	 *            particpersCnt
+	 * @param paticpersCnt
+	 *            paticpersCnt
 	 */
-	public void setParticpersCnt(String particpersCnt) {
-		this.particpersCnt = particpersCnt;
+	public void setPaticpersCnt(String paticpersCnt) {
+		this.paticpersCnt = paticpersCnt;
 	}
 
 }

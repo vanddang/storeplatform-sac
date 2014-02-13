@@ -15,11 +15,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * ListScoreReq Value Object
+ * ListScorePaticpersSacReq Value Object
  * 
  * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스.
  */
-public class ListScoreParticpersSacReq extends CommonInfo {
+public class ListScorePaticpersSacReq extends CommonInfo {
 	/**
 	 *
 	 */
