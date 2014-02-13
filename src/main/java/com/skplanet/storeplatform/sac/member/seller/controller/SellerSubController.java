@@ -100,7 +100,7 @@ public class SellerSubController {
 	 * @return RemoveSubsellerRes
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/removeSubseller2/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req,
 			BindingResult result) {
@@ -122,7 +122,7 @@ public class SellerSubController {
 	 * @return ListSubsellerRes
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/listSubseller2/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req, BindingResult result) {
 		/**
@@ -144,7 +144,7 @@ public class SellerSubController {
 	 * @return DetailSubsellerRes
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/detailSubseller2/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req, BindingResult result) {
 		/**
@@ -166,7 +166,7 @@ public class SellerSubController {
 	 * @return DuplicateByIdEmailRes
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/duplicateBySubsellerId2/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/duplicateBySubsellerId/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	DuplicateBySubsellerIdRes duplicateBySubsellerId(SacRequestHeader header,
 			@RequestBody @Validated DuplicateBySubsellerIdReq req, BindingResult result) throws Exception {

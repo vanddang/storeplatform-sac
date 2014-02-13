@@ -631,7 +631,7 @@ public class DummySellerController {
 	 * 
 	 * @return RemoveSubsellerRes
 	 */
-	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveSubsellerRes removeSubseller() {
 
@@ -648,7 +648,7 @@ public class DummySellerController {
 	 * 
 	 * @return ListSubsellerRes
 	 */
-	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListSubsellerRes listSubseller() {
 
@@ -681,7 +681,7 @@ public class DummySellerController {
 	 * 
 	 * @return DetailSubsellerRes
 	 */
-	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailSubsellerRes detailSubseller() {
 
