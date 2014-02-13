@@ -1041,6 +1041,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* SC 회원 정보 여부 */
 		RemoveDeviceReq removeDeviceReq = new RemoveDeviceReq();
 		removeDeviceReq.setUserKey(req.getUserKey());
+		removeDeviceReq.setDeviceId(req.getDeviceId());
 		UserInfo userInfo = this.searchUser(removeDeviceReq, requestHeader);
 
 		/* 휴대기기 조회 */
@@ -1084,14 +1085,14 @@ public class DeviceServiceImpl implements DeviceService {
 		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
 		/* 게임센터 연동 */
-		//		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-		//		gameCenterSacReq.setUserKey(req.getUserKey());
-		//		gameCenterSacReq.setDeviceId(req.getDeviceId());
-		//		gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-		//		gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		//		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
-		//		this.insertGameCenterIF(gameCenterSacReq);
-		//
+		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+		gameCenterSacReq.setUserKey(req.getUserKey());
+		gameCenterSacReq.setDeviceId(req.getDeviceId());
+		gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+		gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
+		this.insertGameCenterIF(gameCenterSacReq);
+
 		RemoveDeviceRes removeDeviceRes = new RemoveDeviceRes();
 		removeDeviceRes.setDeviceKey(deviceKey);
 		/*
