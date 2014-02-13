@@ -26,15 +26,19 @@ import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM.Response
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
+import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
@@ -224,7 +228,16 @@ public class UserModifyServiceImpl implements UserModifyService {
 	@Override
 	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req) {
 
+		/**
+		 * SC Store 약관동의 등록/수정 연동.
+		 */
+		this.updateAgreement(sacHeader, req.getUserKey(), req.getAgreementList());
+
+		/**
+		 * 결과 setting.
+		 */
 		CreateTermsAgreementRes response = new CreateTermsAgreementRes();
+		response.setUserKey(req.getUserKey());
 
 		return response;
 	}
@@ -232,7 +245,16 @@ public class UserModifyServiceImpl implements UserModifyService {
 	@Override
 	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req) {
 
+		/**
+		 * SC Store 약관동의 등록/수정 연동.
+		 */
+		this.updateAgreement(sacHeader, req.getUserKey(), req.getAgreementList());
+
+		/**
+		 * 결과 setting.
+		 */
 		ModifyTermsAgreementRes response = new ModifyTermsAgreementRes();
+		response.setUserKey(req.getUserKey());
 
 		return response;
 	}
@@ -614,5 +636,44 @@ public class UserModifyServiceImpl implements UserModifyService {
 		LOGGER.info("### oneIdRealNameType : {}", oneIdRealNameType);
 
 		return oneIdRealNameType;
+	}
+
+	/**
+	 * <pre>
+	 * 약관동의 정보를 등록 또는 수정하는 기능을 제공한다.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param userKey
+	 *            사용자 Key
+	 * @param agreementList
+	 *            약관 동의 정보 리스트
+	 */
+	private void updateAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreementList) {
+
+		UpdateAgreementRequest updateAgreementRequest = new UpdateAgreementRequest();
+		updateAgreementRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		updateAgreementRequest.setUserKey(userKey);
+
+		/**
+		 * 약관 동의 리스트 setting.
+		 */
+		List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+		for (AgreementInfo info : agreementList) {
+			MbrClauseAgree mbrClauseAgree = new MbrClauseAgree();
+			mbrClauseAgree.setExtraAgreementID(info.getExtraAgreementId());
+			mbrClauseAgree.setExtraAgreementVersion(info.getExtraAgreementVersion());
+			mbrClauseAgree.setIsExtraAgreement(info.getIsExtraAgreement());
+			mbrClauseAgree.setRegDate(DateUtil.getToday());
+			mbrClauseAgreeList.add(mbrClauseAgree);
+		}
+		updateAgreementRequest.setMbrClauseAgreeList(mbrClauseAgreeList);
+
+		/**
+		 * SC 약관동의 정보를 등록 또는 수정 연동.
+		 */
+		this.userSCI.updateAgreement(updateAgreementRequest);
+
 	}
 }

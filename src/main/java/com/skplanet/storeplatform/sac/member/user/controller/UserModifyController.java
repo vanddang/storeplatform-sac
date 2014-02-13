@@ -21,12 +21,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserModifyService;
@@ -148,6 +152,80 @@ public class UserModifyController {
 		 * 이메일 주소 Biz
 		 */
 		ModifyEmailRes res = this.svc.modifyEmail(sacHeader, req);
+
+		LOGGER.info("Response : {}", res.toString());
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * Store 약관 동의 등록.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	@RequestMapping(value = "/member/user/createTermsAgreement/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateTermsAgreementReq req) {
+
+		LOGGER.info("#####################################");
+		LOGGER.info("##### 2.1.16 Store 약관 동의 등록 #####");
+		LOGGER.info("#####################################");
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		/**
+		 * Header 정보
+		 */
+		LOGGER.info("Headers : {}", sacHeader.toString());
+
+		/**
+		 * Store 약관 동의 등록 Biz
+		 */
+		CreateTermsAgreementRes res = this.svc.createTermsAgreement(sacHeader, req);
+
+		LOGGER.info("Response : {}", res.toString());
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * Store 약관 동의 수정.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	@RequestMapping(value = "/member/user/modifyTermsAgreement/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader, @Validated @RequestBody ModifyTermsAgreementReq req) {
+
+		LOGGER.info("#####################################");
+		LOGGER.info("##### 2.1.17 Store 약관 동의 수정 #####");
+		LOGGER.info("#####################################");
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		/**
+		 * Header 정보
+		 */
+		LOGGER.info("Headers : {}", sacHeader.toString());
+
+		/**
+		 * Store 약관 동의 수정 Biz
+		 */
+		ModifyTermsAgreementRes res = this.svc.modifyTermsAgreement(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.toString());
 
