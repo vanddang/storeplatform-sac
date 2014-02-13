@@ -12,16 +12,17 @@ package com.skplanet.storeplatform.sac.client.purchase.cancel.vo;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 구매 취소 요청 상세 VO.
+ * 구매 취소(사용자) 응답 상세 VO.
  * 
- * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
+ * Updated on : 2014. 2. 12. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelReqDetail extends CommonInfo {
+public class PurchaseCancelByUserDetailSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
 	private String prchsId;
-	private String cancelReqPathCd;
+	private String resultCd;
+	private String resultMsg;
 
 	/**
 	 * @return the prchsId
@@ -39,18 +40,33 @@ public class PurchaseCancelReqDetail extends CommonInfo {
 	}
 
 	/**
-	 * @return the cancelReqPathCd
+	 * @return the resultCd
 	 */
-	public String getCancelReqPathCd() {
-		return this.cancelReqPathCd;
+	public String getResultCd() {
+		return this.resultCd;
 	}
 
 	/**
-	 * @param cancelReqPathCd
-	 *            the cancelReqPathCd to set
+	 * @param resultCd
+	 *            the resultCd to set
 	 */
-	public void setCancelReqPathCd(String cancelReqPathCd) {
-		this.cancelReqPathCd = cancelReqPathCd;
+	public void setResultCd(String resultCd) {
+		this.resultCd = resultCd;
+	}
+
+	/**
+	 * @return the resultMsg
+	 */
+	public String getResultMsg() {
+		return this.resultMsg;
+	}
+
+	/**
+	 * @param resultMsg
+	 *            the resultMsg to set
+	 */
+	public void setResultMsg(String resultMsg) {
+		this.resultMsg = resultMsg;
 	}
 
 }

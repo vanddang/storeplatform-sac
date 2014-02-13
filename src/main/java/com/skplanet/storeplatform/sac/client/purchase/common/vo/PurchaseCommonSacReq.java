@@ -24,6 +24,7 @@ public class PurchaseCommonSacReq extends CommonInfo {
 
 	@NotBlank
 	private String userKey;
+	@NotBlank
 	private String deviceKey;
 
 	/**
