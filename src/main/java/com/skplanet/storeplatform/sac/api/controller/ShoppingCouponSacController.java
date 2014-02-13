@@ -370,12 +370,10 @@ public class ShoppingCouponSacController {
 			if (couponReq == null) {
 				result = false;
 				sb.append("Parameter정보가 없습니다.");
-			}
-			if (!couponReq.checkTX_ID()) {
+			} else if (!couponReq.checkTX_ID()) {
 				result = false;
 				sb.append("TX_ID 형식에 맞지 않습니다. [22자리]\n");
-			}
-			if (!couponReq.checkTX_TYPE()) {
+			} else if (!couponReq.checkTX_TYPE()) {
 				result = false;
 				sb.append("TX_TYPE 형식에 맞지 않습니다. [2자리]\n");
 			}

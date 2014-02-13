@@ -290,15 +290,15 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 								}
 
-							} catch (Exception e) {
-								this.log.info("파일 다운로드 중 오류 발생!!");
+							} catch (CouponException e) {
+								// this.log.info("파일 다운로드 중 오류 발생!!");
 								// this.message = "파일 다운로드 중 오류 발생!!";
 								throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR,
 										"파일 다운로드 중 오류 발생!!", null);
 
 							}
 
-						} catch (Exception e) {
+						} catch (CouponException e) {
 							// this.log.error(e);
 							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, this.message,
 									null);
