@@ -9,16 +9,27 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
+import static org.junit.Assert.assertNotSame;
+
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
@@ -60,26 +71,16 @@ public class GetOcbInformationTest {
 	@Test
 	public void test1_getOcbInformation() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/getOcbInformation/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/getOcbInformation/v1?userKey=US201401241550022950000616").httpMethod(HttpMethod.GET)
 				.addHeaders("Accept", "application/json")
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-
-						GetOcbInformationReq reqJson = new GetOcbInformationReq();
-
-						reqJson.setUserKey("US201401241550022950000616");
-
-						return reqJson;
-					}
-				}).success(GetOcbInformationRes.class, new SuccessCallback() {
+				.success(GetOcbInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetOcbInformationRes res = (GetOcbInformationRes) result;
-						assertThat(res.getUserKey(), notNullValue());
+
+						assertNotSame(res.getOcbInfoList().size(), 0);
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
-
 }
