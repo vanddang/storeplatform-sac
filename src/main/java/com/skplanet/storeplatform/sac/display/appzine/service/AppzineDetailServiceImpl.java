@@ -62,20 +62,23 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 
 		CommonResponse commonResponse = new CommonResponse();
 		AppzineDetailSacRes appzineDetailSacRes = new AppzineDetailSacRes();
+		Appzine appzine = new Appzine();
+		Date date;
+		List<Date> dateList;
+		Title title;
 
 		// Appzine 상세정보 조회
 		AppzineDetail appzineDetail = this.commonDAO.queryForObject("AppzineDetail.selectAppzineDetail", requestVO,
 				AppzineDetail.class);
 
 		if (appzineDetail != null) {
-			Appzine appzine = new Appzine();
-			Date date;
-			List<Date> dateList;
-			Title title;
 
 			appzine.setAppzineNumber(appzineDetail.getAppznNo());
 			appzine.setAppzineVol(appzineDetail.getAppznVol());
 
+			/*
+			 * DateList
+			 */
 			dateList = new ArrayList<Date>();
 			date = new Date();
 			date.setType("date/issue");
@@ -86,9 +89,17 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 			date.setText(appzineDetail.getRegDt());
 			dateList.add(date);
 			appzine.setDateList(dateList);
+
+			/*
+			 * Title
+			 */
 			title = new Title();
 			title.setText(appzineDetail.getTitle());
 			appzine.setTitle(title);
+
+			/*
+			 * ETC
+			 */
 			appzine.setBackgroundImagePath(appzineDetail.getBgImgPath());
 			appzine.setThemeUpImage(appzineDetail.getExpoYn());
 			appzine.setPopularTitleImage480(appzineDetail.getPopularTitlImg480());
@@ -103,7 +114,10 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 
 			appzineDetailSacRes.setAppzineDetail(appzine);
 			commonResponse.setTotalCount(1);
+		} else {
+			commonResponse.setTotalCount(0);
 		}
+
 		appzineDetailSacRes.setCommonResponse(commonResponse);
 
 		return appzineDetailSacRes;

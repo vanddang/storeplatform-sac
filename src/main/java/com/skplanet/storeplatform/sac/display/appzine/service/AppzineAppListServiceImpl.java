@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.display.appzine.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -72,20 +71,20 @@ public class AppzineAppListServiceImpl implements AppzineAppListService {
 
 		CommonResponse commonResponse = new CommonResponse();
 		AppzineAppListSacRes appzineAppListSacRes = new AppzineAppListSacRes();
+		Appzine appzine = null;
+		List<Appzine> appzineList = new ArrayList<Appzine>();
 
 		List<AppzineAppList> resultList = this.commonDAO.queryForList("AppzineAppList.selectAppzineAppList", requestVO,
 				AppzineAppList.class);
-		if (resultList != null) {
+		if (!resultList.isEmpty()) {
 
-			AppzineAppList appzineAppList = null;
-			Appzine appzine = null;
-			List<Appzine> appzineList = new ArrayList<Appzine>();
-
-			Iterator<AppzineAppList> iterator = resultList.iterator();
-			while (iterator.hasNext()) {
-				appzineAppList = iterator.next();
+			for (AppzineAppList appzineAppList : resultList) {
 
 				appzine = new Appzine();
+
+				/*
+				 * ETC
+				 */
 				appzine.setSeq(appzineAppList.getSeq());
 				appzine.setAppzineNumber(appzineAppList.getAppznNo());
 				appzine.setAppType(appzineAppList.getAppType());
@@ -100,9 +99,12 @@ public class AppzineAppListServiceImpl implements AppzineAppListService {
 			}
 			appzineAppListSacRes.setAppzineAppList(appzineList);
 			commonResponse.setTotalCount(resultList.get(0).getTotalCount());
-			appzineAppListSacRes.setCommonResponse(commonResponse);
-
+		} else {
+			commonResponse.setTotalCount(0);
 		}
+
+		appzineAppListSacRes.setCommonResponse(commonResponse);
+
 		return appzineAppListSacRes;
 	}
 

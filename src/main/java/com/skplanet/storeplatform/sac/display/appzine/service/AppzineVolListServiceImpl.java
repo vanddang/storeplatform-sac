@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.display.appzine.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -59,32 +58,38 @@ public class AppzineVolListServiceImpl implements AppzineVolListService {
 
 		// 요청값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 0);
+		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
 
 		CommonResponse commonResponse = new CommonResponse();
 		AppzineVolListSacRes appzineVolListSacRes = new AppzineVolListSacRes();
 
+		Appzine appzine = null;
+		List<Appzine> appzineList = new ArrayList<Appzine>();
+		Title title;
+
 		// Appzine 회차별 목록 조회
 		List<AppzineVolList> resultList = this.commonDAO.queryForList("AppzineVolList.selectAppzineVolList", requestVO,
 				AppzineVolList.class);
-		if (resultList != null) {
+		if (!resultList.isEmpty()) {
 
-			AppzineVolList appzineVolList = null;
-			Appzine appzine = null;
-			List<Appzine> appzineList = new ArrayList<Appzine>();
-			Title title;
-
-			Iterator<AppzineVolList> iterator = resultList.iterator();
-			while (iterator.hasNext()) {
-				appzineVolList = iterator.next();
+			for (AppzineVolList appzineVolList : resultList) {
 
 				appzine = new Appzine();
-				// AppzineNumber
+
+				/*
+				 * AppzineNumber
+				 */
 				appzine.setAppzineNumber(appzineVolList.getAppznNo());
-				// AppzineVol
+
+				/*
+				 * AppzineVol
+				 */
 				appzine.setAppzineVol(appzineVolList.getAppznVol());
-				// Title
+
+				/*
+				 * Title
+				 */
 				title = new Title();
 				title.setText(appzineVolList.getTitle());
 				appzine.setTitle(title);
@@ -93,9 +98,13 @@ public class AppzineVolListServiceImpl implements AppzineVolListService {
 			}
 			appzineVolListSacRes.setAppzineVolList(appzineList);
 			commonResponse.setTotalCount(resultList.get(0).getTotalCount());
-			appzineVolListSacRes.setCommonResponse(commonResponse);
 
+		} else {
+			commonResponse.setTotalCount(0);
 		}
+
+		appzineVolListSacRes.setCommonResponse(commonResponse);
+
 		return appzineVolListSacRes;
 	}
 
