@@ -100,7 +100,7 @@ public class ImageUtil {
 
 			ImageIO.write(bufImage2, "jpg", output);
 			fos.write(output.toByteArray());
-
+			fos.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
