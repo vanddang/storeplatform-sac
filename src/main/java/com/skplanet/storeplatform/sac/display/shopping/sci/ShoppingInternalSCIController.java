@@ -63,6 +63,7 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 		sacReq.setDeviceModelCd(request.getDeviceModelCd());
 		sacReq.setLangCd(request.getLangCd());
 		sacReq.setImageCd(request.getImageCd());
+		sacReq.setProdId(request.getChannelId());
 		sacReq.setSpecialProdId(request.getEpisodeId());
 
 		sacRes = this.service.searchShoppingInternal(sacReq);
