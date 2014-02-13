@@ -81,6 +81,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 			keySearch.setKeyString(req.getSellerId());
 			keySearch.setKeyType("SELLERMBR_ID");
 		} else {
+			this.LOGGER.debug("==>>[SAC] getSellerBizNumber.toString() : {}", req.getSellerBizNumber());
 			keySearch.setKeyString(req.getSellerBizNumber());
 			keySearch.setKeyType("BIZ_REG_NO");
 		}
