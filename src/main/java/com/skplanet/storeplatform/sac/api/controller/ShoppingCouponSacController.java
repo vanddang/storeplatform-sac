@@ -114,7 +114,7 @@ public class ShoppingCouponSacController {
 
 	}
 
-	public boolean dePloy(CouponReq couponReq, CouponRes couponRes) throws Exception {
+	private boolean dePloy(CouponReq couponReq, CouponRes couponRes) throws Exception {
 
 		this.log.info("<CouponControl> dePloy...");
 
@@ -541,7 +541,6 @@ public class ShoppingCouponSacController {
 		}
 		couponInfo.setProdId(couponProdId);
 
-		int kk = 0;
 		for (DpItemInfo itemInfo : itemInfoList) {
 			if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
 				itemProdId = this.couponItemService.itemGenerateId(); // 아이템 prodId 생성
@@ -554,7 +553,6 @@ public class ShoppingCouponSacController {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 						"[ITEM_PRODUCT_ID]를 생성하지 못했습니다.", "");
 			}
-			kk++;
 		}
 
 		if (!this.doValidateCouponInfo(couponInfo, errorData)) {
