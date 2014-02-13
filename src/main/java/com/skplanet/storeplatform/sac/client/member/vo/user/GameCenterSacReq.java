@@ -45,7 +45,6 @@ public class GameCenterSacReq extends CommonInfo {
 	/**
 	 * 기기_ID.
 	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String deviceId;
 
 	/**
