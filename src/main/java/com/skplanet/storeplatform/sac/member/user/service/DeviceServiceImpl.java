@@ -24,7 +24,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
+import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.DeviceCompareEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.DeviceCompareEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -79,8 +84,6 @@ import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
@@ -104,10 +107,10 @@ public class DeviceServiceImpl implements DeviceService {
 	private DeviceSCI deviceSCI; // 회원 콤포넌트 휴대기기 기능 인터페이스
 
 	@Autowired
-	private IdpService idpService; // IDP 연동 클래스
+	private ImIdpSCI imIdpSCI;
 
 	@Autowired
-	private ImIdpService imIdpService; // 통합 IDP 연동 클래스
+	private IdpSCI idpSCI;
 
 	@Autowired
 	private UserService userService;
@@ -464,16 +467,20 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 
-			/* 5. 통합회원인 경우 무선회원 해지 */
+			/* 5. 통합회원에 휴대기기 등록시 무선회원 해지 */
 			SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
 			if (schUserRes.getUserMbr().getImSvcNo() != null) {
 
 				try {
 
-					this.idpService.authForWap(deviceInfo.getDeviceId());
+					AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+					authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
+					this.idpSCI.authForWap(authForWapEcReq);
 
-					this.idpService.secedeUser4Wap(deviceInfo.getDeviceId());
+					SecedeForWapEcReq secedeForWapEcReq = new SecedeForWapEcReq();
+					secedeForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
+					this.idpSCI.secedeForWap(secedeForWapEcReq);
 
 				} catch (StorePlatformException ex) {
 					if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
@@ -492,12 +499,10 @@ public class DeviceServiceImpl implements DeviceService {
 		gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
 		gameCenterSacReq.setSystemId(systemId);
 		gameCenterSacReq.setTenantId(tenantId);
-		if (previousUserKey == null) {
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-		} else {
+		if (previousUserKey != null) {
 			gameCenterSacReq.setPreUserKey(previousUserKey);
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
 		}
+		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 
 		this.insertGameCenterIF(gameCenterSacReq);
 
@@ -596,8 +601,11 @@ public class DeviceServiceImpl implements DeviceService {
 					// OMD 단말이 아닐 경우만
 					if (!StringUtils.equals(MemberConstants.DEVICE_TELECOM_OMD, device.getCmntCompCd())) {
 
-						IdpReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
-						String idpModelId = idpReceiver.getResponseBody().getModel_id();
+						DeviceCompareEcReq deviceCompareEcReq = new DeviceCompareEcReq();
+						deviceCompareEcReq.setUserMdn(deviceId);
+						DeviceCompareEcRes deviceCompareEcRes = this.idpSCI.deviceCompare(deviceCompareEcReq);
+
+						String idpModelId = deviceCompareEcRes.getModelId();
 
 						// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
 						if (StringUtils.equals(idpModelId, "SSNU")) { // SHW-M200K->SHW-M200S

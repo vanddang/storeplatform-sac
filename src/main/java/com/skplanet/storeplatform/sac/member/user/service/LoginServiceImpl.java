@@ -24,7 +24,9 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
@@ -51,8 +53,6 @@ import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIdpConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * 회원 로그인 관련 인터페이스 구현체.
@@ -75,12 +75,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private DeviceService deviceService;
-
-	@Autowired
-	private IdpService idpService;
-
-	@Autowired
-	private ImIdpService imIdpService;
 
 	@Autowired
 	private ImIdpSCI imIdpSCI;
@@ -190,7 +184,9 @@ public class LoginServiceImpl implements LoginService {
 			try {
 
 				/* 무선회원 인증 */
-				this.idpService.authForWap(deviceId);
+				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+				authForWapEcReq.setUserMdn(deviceId);
+				this.idpSCI.authForWap(authForWapEcReq);
 
 				/* 단말정보 update */
 				this.updateDeviceInfo(requestHeader, userKey, null, req);
@@ -453,6 +449,7 @@ public class LoginServiceImpl implements LoginService {
 
 			try {
 
+				/* 인증요청 */
 				com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq AuthForIdEcReq = new com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq();
 				AuthForIdEcReq.setUserId(userId);
 				AuthForIdEcReq.setUserPasswd(userPw);
@@ -738,10 +735,13 @@ public class LoginServiceImpl implements LoginService {
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		/* 1. 무선회원 가입 */
+		JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
+		joinForWapEcReq.setUserMdn(deviceId);
+		joinForWapEcReq.setMdnCorp(this.commService.convertDeviceTelecom(deviceTelecom));
+		JoinForWapEcRes joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
 
-		IdpReceiverM idpReceiver = this.idpService.join4Wap(deviceId, this.commService.convertDeviceTelecom(deviceTelecom));
-		String imMbrNo = idpReceiver.getResponseBody().getUser_key(); // IDP 관리번호
-		String imMngNum = idpReceiver.getResponseBody().getSvc_mng_num(); // SKT사용자의 경우 사용자 관리번호
+		String imMbrNo = joinForWapEcRes.getUserKey(); // IDP 관리번호
+		String imMngNum = joinForWapEcRes.getSvcMngNum(); // SKT사용자의 경우 사용자 관리번호
 
 		LOGGER.info("[deviceId] {}, [imMbrNo] {}, imMngNum {}", deviceId, imMbrNo, imMngNum);
 
