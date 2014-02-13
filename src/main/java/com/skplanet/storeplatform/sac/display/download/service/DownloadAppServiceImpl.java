@@ -264,7 +264,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 					// 암호화 정보
 					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
-					// contents를 JSON 형태로 파싱
+
 					// JSON 파싱
 					MarshallingHelper marshaller = new JacksonMarshallingHelper();
 					byte[] jsonData = marshaller.marshal(contents);
@@ -272,12 +272,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					// JSON 암호화
 					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
 
-					Encryption encryption = new Encryption();
-					encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE + "/"
-							+ this.downloadAES128Helper.getSAC_RANDOM_NUMBER());
+					// JSON 암호화값을 BASE64 Encoding
 					Base64Encoder encoder = new Base64Encoder();
 					String encryptString = encoder.encode(encryptByte);
-					encryption.setText(encryptString);
+
+					Encryption encryption = new Encryption();
+					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+					encryption.setToken(encryptString);
+					;
 
 					product.setEncryption(encryption);
 
