@@ -70,7 +70,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 	@Override
 	public CategoryWebtoonSacRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonSacReq req) {
 
-		Integer totalCount = 0;
+		// Integer totalCount = 0;
 
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
