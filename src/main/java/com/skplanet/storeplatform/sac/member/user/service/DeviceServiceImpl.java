@@ -648,19 +648,11 @@ public class DeviceServiceImpl implements DeviceService {
 				// 루팅 단말이고 OPMD 단말이 아닌 경우만 nativeId 체크
 				if (StringUtils.equals(rooting, "Y") && !isOpmd) {
 
-					String paramType = null;
-					if (StringUtils.equals(deviceInfo.getDeviceIdType(), "msisdn")) {
-						paramType = "11";
-					} else if (StringUtils.equals(deviceInfo.getDeviceIdType(), "uuid")) {
-						paramType = "12";
-					} else {
-						paramType = "13";
-					}
-					LOGGER.info("::::  ICAS 연동 :::: deviceType {}, paramType {}", deviceInfo.getDeviceIdType(), paramType);
-
 					String icasImei = null;
 
-					if (!StringUtils.equals(this.commService.getMappingInfo(deviceId, paramType).getMvnoCD(), "0")) { // MVNO
+					LOGGER.info("::::  ICAS 연동 :::: deviceId : {}", deviceId);
+
+					if (!StringUtils.equals(this.commService.getMappingInfo(deviceId, "mdn").getMvnoCD(), "0")) { // MVNO
 
 						GetMvnoEcRes mvnoRes = this.commService.getMvService(deviceId);
 						icasImei = mvnoRes.getImeiNum();
@@ -671,6 +663,8 @@ public class DeviceServiceImpl implements DeviceService {
 						icasImei = costomerRes.getImeiNum();
 
 					}
+
+					LOGGER.info("::::  ICAS 연동 :::: icasImei : {}", icasImei);
 
 					if (StringUtils.equals(icasImei, nativeId)) {
 						throw new StorePlatformException("SAC_MEM_1503");
