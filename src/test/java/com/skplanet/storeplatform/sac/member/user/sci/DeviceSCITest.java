@@ -6,6 +6,7 @@ package com.skplanet.storeplatform.sac.member.user.sci;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -20,6 +21,9 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.util.MockRequestAttributeInitializer;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
@@ -37,6 +41,18 @@ public class DeviceSCITest {
 
 	@Autowired
 	private DeviceSCI deviceSCI;
+
+	@Before
+	public void before() {
+		SacRequestHeader sacRequestHeader = new SacRequestHeader();
+		TenantHeader tenant = new TenantHeader();
+		tenant.setTenantId("S01");
+		tenant.setSystemId("S001");
+		sacRequestHeader.setTenantHeader(tenant);
+
+		MockRequestAttributeInitializer.init(SacRequestHeader.class.getName(), sacRequestHeader);
+
+	}
 
 	/**
 	 * <pre>
