@@ -10,9 +10,7 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
+import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.SecedeUserEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcReq;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -87,6 +88,12 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Value("#{propertiesForSac['idp.im.request.operation']}")
 	public String IDP_OPERATION_MODE;
 
+	@Autowired
+	private IdpSCI idpSCI;
+
+	@Autowired
+	private ImIdpSCI imIdpSCI;
+
 	/**
 	 * 
 	 * 회원탈퇴
@@ -120,6 +127,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 		/* SC 회원 존재 여부 */
 		SearchUserResponse schUserRes = this.searchUser(requestHeader, req);
+		logger.info("schUserRes ", schUserRes.toString());
 
 		/* Return Value */
 		WithdrawRes withdrawRes = new WithdrawRes();
@@ -128,20 +136,20 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		if (schUserRes.getUserMbr().getImSvcNo() != null) {
 			this.oneIdUser(requestHeader, schUserRes, req);
 
-			logger.info("IMIDP Success Response ", schUserRes.toString());
+			logger.info("oneIdUser Discard Success req : ", req.toString());
 			withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 		} else {
 			if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
 				this.idpMobileUser(requestHeader, schUserRes, req);
 
-				logger.info("IDP MDN Success Response ", schUserRes.toString());
+				logger.info("secedeUser4Wap Success req : ", req.toString());
 				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 			}
 			/* IDP 아이디 회원 */
 			else if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
 				this.idpIdUser(requestHeader, schUserRes, req);
 
-				logger.info("IDP ID Success Response ", schUserRes.toString());
+				logger.info("secedeUser Success req ", req.toString());
 				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 			}
 		}
@@ -208,18 +216,13 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 * IMIDP 연동(통합회원)
 	 */
 	@Override
-	public ImIdpReceiverM oneIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
+	public void oneIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
+		DiscardUserEcReq ecReq = new DiscardUserEcReq();
+		ecReq.setKey(schUserRes.getUserMbr().getImSvcNo());
+		ecReq.setKeyType("1");
+		ecReq.setUserAuthKey(req.getUserAuthKey());
 
-		Map<String, Object> param = new HashMap<String, Object>();
-
-		param.put("key", schUserRes.getUserMbr().getImSvcNo());
-		param.put("key_type", "1");
-		param.put("user_auth_key", req.getUserAuthKey());
-		// param.put("term_reason_cd", "1"); // 1=IM통합서비스번호, 2=IM통합ID
-
-		ImIdpReceiverM imIdpReceiver = this.imIdpService.discardUser(param);
-
-		return imIdpReceiver;
+		this.imIdpSCI.discardUser(ecReq);
 
 	}
 
@@ -227,22 +230,26 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 * IDP 모바일 회원(무선)
 	 */
 	@Override
-	public IdpReceiverM idpMobileUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
+	public void idpMobileUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
+		SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+		ecReq.setUserMdn(req.getDeviceId());
 
-		IdpReceiverM idpReceiver = this.idpService.secedeUser4Wap(req.getDeviceId());
+		this.idpSCI.secedeForWap(ecReq);
 
-		return idpReceiver;
 	}
 
 	/**
 	 * IDP 아이디 회원
 	 */
 	@Override
-	public IdpReceiverM idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
+	public void idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
+		SecedeUserEcReq ecReq = new SecedeUserEcReq();
+		ecReq.setKey(schUserRes.getUserMbr().getUserID());
+		ecReq.setUserAuthKey(req.getUserAuthKey());
+		ecReq.setKeyType("1");
 
-		IdpReceiverM idpReceiver = this.idpService.secedeUser(req.getUserAuthKey(), "1", schUserRes.getUserMbr().getUserID());
+		this.idpSCI.secedeUser(ecReq);
 
-		return idpReceiver;
 	}
 
 }

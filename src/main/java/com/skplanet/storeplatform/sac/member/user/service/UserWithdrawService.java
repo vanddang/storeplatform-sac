@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
@@ -42,7 +40,7 @@ public interface UserWithdrawService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ImIdpReceiverM oneIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req);
+	public void oneIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req);
 
 	/**
 	 * IDP 연동 모바일회원(무선)
@@ -53,7 +51,7 @@ public interface UserWithdrawService {
 	 * @return
 	 * @throws Exception
 	 */
-	public IdpReceiverM idpMobileUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req);
+	public void idpMobileUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req);
 
 	/**
 	 * IDP 연동 아이디회원
@@ -64,6 +62,6 @@ public interface UserWithdrawService {
 	 * @return
 	 * @throws Exception
 	 */
-	public IdpReceiverM idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req);
+	public void idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req);
 
 }
