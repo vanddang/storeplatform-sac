@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -175,6 +176,8 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setSellerKey(req.getSellerKey());
 
 		SearchSubSellerResponse schRes = this.sellerSCI.searchSubSeller(schReq);
+		if (schRes.getSellerMbr().getParentSellerKey() == null)
+			throw new StorePlatformException("SAC_MEM_2201");
 
 		DetailSubsellerRes response = new DetailSubsellerRes();
 		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
@@ -220,7 +223,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 				.getResultCode())) {
 			response.setIsRegistered("N");
 		} else {
-			throw new RuntimeException(checkDuplicationSellerResponse.getCommonResponse().getResultMessage());
+			// throw new RuntimeException(checkDuplicationSellerResponse.getCommonResponse().getResultMessage());
 		}
 
 		return response;
@@ -323,71 +326,10 @@ public class SellerSubServiceImpl implements SellerSubService {
 		// 판매자 정보
 		SellerMbr sellerMbrRes = new SellerMbr();
 		if (sellerMbr != null) {
-			sellerMbrRes.setApproveDate(sellerMbr.getApproveDate());
-			sellerMbrRes.setBizGrade(sellerMbr.getBizGrade());
-			sellerMbrRes.setBizKindCd(sellerMbr.getBizKindCd());
-			sellerMbrRes.setBizRegNumber(sellerMbr.getBizRegNumber());
-			sellerMbrRes.setBizUnregReason(sellerMbr.getBizUnregReason());
-			sellerMbrRes.setCeoBirthDay(sellerMbr.getCeoBirthDay());
-			sellerMbrRes.setCeoName(sellerMbr.getCeoName());
-			sellerMbrRes.setCharger(sellerMbr.getCharger());
-			sellerMbrRes.setCordedTelephone(sellerMbr.getCordedTelephone());
-			sellerMbrRes.setCordedTelephoneCountry(sellerMbr.getCordedTelephoneCountry());
-			sellerMbrRes.setCustomerEmail(sellerMbr.getCustomerEmail());
-			sellerMbrRes.setCustomerPhone(sellerMbr.getCustomerPhone());
-			sellerMbrRes.setCustomerPhoneCountry(sellerMbr.getCustomerPhoneCountry());
-			sellerMbrRes.setIsAccountReal(sellerMbr.getIsAccountReal());
-			sellerMbrRes.setIsBizRegistered(sellerMbr.getIsBizRegistered());
-			sellerMbrRes.setIsBizTaxable(sellerMbr.getIsBizTaxable());
-			sellerMbrRes.setIsDeductible(sellerMbr.getIsDeductible());
-			sellerMbrRes.setIsDomestic(sellerMbr.getIsDomestic());
-			sellerMbrRes.setIsParent(sellerMbr.getIsParent());
-			sellerMbrRes.setIsRealName(sellerMbr.getIsRealName());
-			sellerMbrRes.setIsRecvEmail(sellerMbr.getIsRecvEmail());
-			sellerMbrRes.setIsRecvSMS(sellerMbr.getIsRecvSMS());
-			sellerMbrRes.setMarketCode(sellerMbr.getMarketCode());
-			sellerMbrRes.setMarketStatus(sellerMbr.getMarketStatus());
-			sellerMbrRes.setParentSellerKey(sellerMbr.getParentSellerKey());
-			sellerMbrRes.setRegDate(sellerMbr.getRegDate());
-			sellerMbrRes.setRepEmail(sellerMbr.getRepEmail());
-			sellerMbrRes.setRepFax(sellerMbr.getRepFax());
-			sellerMbrRes.setRepFaxArea(sellerMbr.getRepFaxArea());
-			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
-			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
-			sellerMbrRes.setRightProfile(sellerMbr.getRightProfileList());
-			sellerMbrRes.setSecedeDate(sellerMbr.getSecedeDate());
-			sellerMbrRes.setSecedePathCd(sellerMbr.getSecedePathCd());
-			sellerMbrRes.setSecedeReasonCode(sellerMbr.getSecedeReasonCode());
-			sellerMbrRes.setSecedeReasonMessage(sellerMbr.getSecedeReasonMessage());
-			sellerMbrRes.setSellerAddress(sellerMbr.getSellerAddress());
-			sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
-			sellerMbrRes.setSellerBizCategory(sellerMbr.getSellerBizCategory());
-			sellerMbrRes.setSellerBizCorpNumber(sellerMbr.getSellerBizCorpNumber());
-			sellerMbrRes.setSellerBizNumber(sellerMbr.getSellerBizNumber());
-			sellerMbrRes.setSellerBizType(sellerMbr.getSellerBizType());
-			sellerMbrRes.setSellerCategory(sellerMbr.getSellerCategory());
-			sellerMbrRes.setSellerCity(sellerMbr.getSellerCity());
-			sellerMbrRes.setSellerClass(sellerMbr.getSellerClass());
-			sellerMbrRes.setSellerCompany(sellerMbr.getSellerCompany());
-			sellerMbrRes.setSellerCountry(sellerMbr.getSellerCountry());
-			sellerMbrRes.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
-			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
 			sellerMbrRes.setSellerId(sellerMbr.getSellerID());
-			sellerMbrRes.setSellerKey(sellerMbr.getSellerKey());
-			sellerMbrRes.setSellerLanguage(sellerMbr.getSellerLanguage());
-			sellerMbrRes.setSellerMainStatus(sellerMbr.getSellerMainStatus());
-			sellerMbrRes.setSellerName(sellerMbr.getSellerName());
-			sellerMbrRes.setSellerNickName(sellerMbr.getSellerNickName());
-			sellerMbrRes.setSellerPhone(sellerMbr.getSellerPhone());
-			sellerMbrRes.setSellerPhoneCountry(sellerMbr.getSellerPhoneCountry());
-			sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
-			sellerMbrRes.setSellerSSNumber(sellerMbr.getSellerSSNumber());
-			sellerMbrRes.setSellerState(sellerMbr.getSellerState());
-			sellerMbrRes.setSellerSubStatus(sellerMbr.getSellerSubStatus());
-			sellerMbrRes.setSellerTelecom(sellerMbr.getSellerTelecom());
-			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
-			sellerMbrRes.setTenantID(sellerMbr.getTenantID());
-			sellerMbrRes.setVendorCode(sellerMbr.getVendorCode());
+			sellerMbrRes.setRegDate(sellerMbr.getRegDate());
+			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
+			sellerMbrRes.setRightProfile(sellerMbr.getRightProfileList());
 		}
 		return sellerMbrRes;
 	}
