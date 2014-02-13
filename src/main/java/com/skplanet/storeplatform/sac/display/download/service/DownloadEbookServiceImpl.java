@@ -9,21 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.xmlbeans.impl.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
 import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
@@ -50,7 +47,6 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
  * Updated on : 2014. 1. 28. Updated by : 이태희.
  */
 @Service
-@Transactional
 public class DownloadEbookServiceImpl implements DownloadEbookService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -271,33 +267,15 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				// JSON 암호화
 				byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
 
-				Encryption encryption = new Encryption();
-				encryption.setType(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_TYPE + "/"
-						+ this.downloadAES128Helper.getSAC_RANDOM_NUMBER());
-
 				// JSON 암호화값을 BASE64 Encoding
 				Base64Encoder encoder = new Base64Encoder();
 				String encryptString = encoder.encode(encryptByte);
-				encryption.setText(encryptString);
 
+				Encryption encryption = new Encryption();
+				encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+				encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+				encryption.setToken(encryptString);
 				product.setEncryption(encryption);
-			}
-
-			// 테스트를 위한 복호화 확인
-			try {
-				Encryption testEn = new Encryption();
-				testEn = product.getEncryption();
-
-				byte[] testValue = Base64.decode(testEn.getText().getBytes());
-				byte[] dec = this.downloadAES128Helper.decryption(testValue);
-
-				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("Encryption Type : {}", testEn.getType());
-				this.logger.debug("Encryption Text : {}", testEn.getText());
-				this.logger.debug("Decryption Text : {}", new String(dec, "UTF-8"));
-				this.logger.debug("----------------------------------------------------------------");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
 			}
 
 			ebookRes.setProduct(product);

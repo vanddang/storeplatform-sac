@@ -287,9 +287,9 @@ public class DisplayConstants {
 	public static final String DP_SHOPPING_THEME_REPRESENT_IMAGE_CD = "DP0001A7";
 
 	public static final String DP_OPENAPI_APP_REPRESENT_IMAGE_CD = "DP000125";
-	//정액제 배너이미지
+	// 정액제 배너이미지
 	public static final String DP_FREEPASS_BANNER_IMAGE_CD = "DP000197";
-	//정액제 썸네일이미지
+	// 정액제 썸네일이미지
 	public static final String DP_FREEPASS_THUMBNAIL_IMAGE_CD = "DP000199";
 
 	// //////////////////////////////////// VOD 화질 유형 //////////////////////////////////////////
@@ -345,6 +345,8 @@ public class DisplayConstants {
 	public static final String DP_SHOPPING_DOWNLOAD_DEFAULT_ORDERED_OPTION = "download";
 
 	public static final String DP_USE_PERIOD_UNIT_CD_NONE = "PD00310"; // 사용기간 단위 코드 (무제한)
+
+	public static final String DP_FORDOWNLOAD_ENCRYPT_DIGEST = "HexString"; // for download 암호화 digest
 
 	public static final String DP_FORDOWNLOAD_ENCRYPT_TYPE = "AES128"; // for download 암호화 방식
 
@@ -441,7 +443,7 @@ public class DisplayConstants {
 	// 구매유형코드: 구매 / 선물 - OR0017S / OR0017G 사용 결정 필요
 	public static final String PRCHS_CASE_PURCHASE_CD = "OR0017S"; // 구매
 	public static final String PRCHS_CASE_GIFT_CD = "OR0017G"; // 선물
-	
+
 	// 정액제 상품 자동결제 구분
 	public static final String DP_AUTOPAY_AUTO = "auto"; // 자동결제
 	public static final String DP_AUTOPAY_NORMAL = "normal"; // 일반결제
