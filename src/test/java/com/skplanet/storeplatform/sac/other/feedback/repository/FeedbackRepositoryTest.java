@@ -29,6 +29,8 @@ import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @WebAppConfiguration
+// @TransactionConfiguration
+// @Transactional
 public class FeedbackRepositoryTest {
 
 	@Autowired
