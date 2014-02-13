@@ -16,11 +16,15 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_METHOD;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_PROTOCOL;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageRes;
+import com.skplanet.storeplatform.external.client.idp.vo.JoinSupServiceRequestEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.JoinSupServiceRequestEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.ServiceSubscriptionCheckEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.ServiceSubscriptionCheckEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthImageEcRes;
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
@@ -79,7 +83,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndiv
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 
@@ -106,7 +109,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private DeviceSCI deviceSCI; // 회원 Component 휴대기기 기능 Interface.
 
 	@Autowired
-	private IdpService idpService; // IDP 연동 class.
+	private IdpSCI idpSCI;// IDP 연동 Interface.
 
 	@Autowired
 	private MessageSCI messageSCI; // 기타 Component 메시지전송 기능 Interface.
@@ -119,9 +122,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	@Autowired
 	private MemberCommonComponent commonComponent; // MemberCommon
-
-	@Autowired
-	private IdpSCI idpSCI;
 
 	@Autowired
 	@Qualifier("sac")
@@ -345,17 +345,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		LOGGER.info("## IDP Service 호출.");
 		// IdpReceiverM idpReciver = this.idpService.warterMarkImageUrl();
-
 		WaterMarkAuthImageEcRes waterMarkAuthImageEcRes = this.idpSCI.warterMarkImageUrl();
+
 		if (waterMarkAuthImageEcRes != null && waterMarkImageUrl != null) {
-			waterMarkImageUrl = waterMarkAuthImageEcRes.getImage_url();
-			waterMarkImageSign = waterMarkAuthImageEcRes.getImage_sign();
-			signData = waterMarkAuthImageEcRes.getSign_data();
+			waterMarkImageUrl = waterMarkAuthImageEcRes.getImageUrl();
+			waterMarkImageSign = waterMarkAuthImageEcRes.getImageSign();
+			signData = waterMarkAuthImageEcRes.getSignData();
 
 			LOGGER.info("## IDP Service 결과.");
-			// LOGGER.debug("## >> Image_url : {} ", idpReciver.getResponseBody().getImage_url());
-			// LOGGER.debug("## >> Image_sign : {} ", idpReciver.getResponseBody().getImage_sign());
-			// LOGGER.debug("## >> Sign_data : {} ", idpReciver.getResponseBody().getSign_data());
+			LOGGER.debug("## >> Image_url : {} ", waterMarkAuthImageEcRes.getImageUrl());
+			LOGGER.debug("## >> Image_sign : {} ", waterMarkAuthImageEcRes.getImageSign());
+			LOGGER.debug("## >> Sign_data : {} ", waterMarkAuthImageEcRes.getSignData());
 
 			LOGGER.info("## waterMarkImageUrl 정상 발급.");
 			HTTP_PROTOCOL protocol = null;
@@ -377,11 +377,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			req.setMethod(method); // GET or POST
 			req.setProtocol(protocol); // HTTP or HTTPS
 			req.setUrlPath(urlPath);
-			ImageRes res = this.imageSCI.convert(req);
+			ImageRes imageRes = this.imageSCI.convert(req);
 
-			waterMarkImageString = res.getImgData();
-			LOGGER.debug("## >> WaterMark ImageString : {}", waterMarkImageString);
-			LOGGER.info("## Captcha 문자 발급 완료.");
+			if (imageRes != null && imageRes.getImgData() != null) {
+				waterMarkImageString = imageRes.getImgData();
+				LOGGER.info("## Captcha 문자 발급 성공.");
+				LOGGER.debug("## >> WaterMark ImageString : {}", waterMarkImageString);
+			}
 		}
 
 		// warterMarkImageString 를 다음 태그의 물음표(???)에 넣으면 이미지 확인 가능
@@ -399,12 +401,21 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/* IDP 호출 ( Request 파라미터 전달 ) */
 		LOGGER.info("## IDP Service 호출.");
-		IdpReceiverM idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(),
-				request.getSignData());
 
-		LOGGER.info("## IDP Service 결과. Response{}", idpReciver);
+		WaterMarkAuthEcReq waterMarkAuthEcReq = new WaterMarkAuthEcReq();
+		waterMarkAuthEcReq.setUserCode(request.getAuthCode());
+		waterMarkAuthEcReq.setImageSign(request.getImageSign());
+		waterMarkAuthEcReq.setSignData(request.getSignData());
+		try {
+			this.idpSCI.waterMarkAuth(waterMarkAuthEcReq);
+			LOGGER.info("Captcha 문자 확인 성공.");
+		} catch (Exception e) {
+			throw new StorePlatformException("Captcha 문자 확인 실패." + e.toString());
+		}
+		// IdpReceiverM idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(),
+		// request.getSignData());
+
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
-
 		LOGGER.info("## Captcha 문자 인증 Service 종료.");
 		return response;
 	}
@@ -546,18 +557,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) {
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
 
-		// // TEST를 위해 기존 가입된 부가서비스 탈퇴
-		// IdpReceiverM secede = this.idpService.secedeSupService(request.getMsisdn(), request.getSvcCode(),
-		// request.getSvcMngNum());
-		// LOGGER.info("부가서비스 탈퇴 완료. : secede {}", secede);
+		LOGGER.info("## 부가서비스 가입 요청 - IDP 연동.");
+		JoinSupServiceRequestEcReq joinSupServiceEcReq = new JoinSupServiceRequestEcReq();
+		joinSupServiceEcReq.setSvcCode(request.getSvcCode());
+		joinSupServiceEcReq.setUserMdn(request.getMsisdn());
+		joinSupServiceEcReq.setUserSvcMngNum(request.getSvcMngNum());
 
-		// IdpServie joinSupService 호출해서 부가서비스 가입 요청
-		IdpReceiverM idpReciver = this.idpService.joinSupService(request.getMsisdn(), request.getSvcCode(),
-				request.getSvcMngNum());
-		LOGGER.info("## 부가서비스 가입 요청 - IDP 연동. response {}", idpReciver);
+		JoinSupServiceRequestEcRes joinSupServiceEcRes = this.idpSCI.joinSupServiceRequest(joinSupServiceEcReq);
 
-		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
-		response.setMsisdn(idpReciver.getResponseBody().getUser_mdn()); // 사용자 휴대폰번호
+		LOGGER.info("## 부가서비스 가입 요청 - IDP 연동. response {}", joinSupServiceEcRes);
+
+		response.setSvcCode(joinSupServiceEcRes.getSvcCode()); // 부가서비스 코드
+		response.setMsisdn(joinSupServiceEcRes.getUserMdn()); // 사용자 휴대폰번호
 
 		return response;
 	}
@@ -567,14 +578,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
 
-		// IDP 호출해서 부가서비스 가입여부 조회 요청
-		IdpReceiverM idpReciver = this.idpService.serviceSubscriptionCheck(request.getMsisdn(), request.getSvcCode());
-		LOGGER.info("## 부가서비스 가입여부 조회 - IDP 연동. response {}", idpReciver);
+		LOGGER.info("## 부가서비스 가입여부 조회 요청 - IDP 연동.");
+		ServiceSubscriptionCheckEcReq serviceSubscriptionCheckEcReq = new ServiceSubscriptionCheckEcReq();
+		serviceSubscriptionCheckEcReq.setUserMdn(request.getMsisdn());
+		serviceSubscriptionCheckEcReq.setSvcCode(request.getSvcCode());
+		ServiceSubscriptionCheckEcRes serviceSubscriptionCheckEcRes = this.idpSCI
+				.serviceSubscriptionCheck(serviceSubscriptionCheckEcReq);
 
-		response.setMsisdn(idpReciver.getResponseBody().getUser_mdn());
-		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
-		response.setSvcJoinResult(idpReciver.getResponseBody().getSvc_result()); // 부가서비스 결과 : 하나 또는 복수 파이프(|)로 구분함 /
-																				 // 결과는 (=) 로 구분
+		LOGGER.info("## 부가서비스 가입여부 조회 - IDP 연동. response {}", serviceSubscriptionCheckEcRes);
+
+		response.setMsisdn(serviceSubscriptionCheckEcRes.getUserMdn());
+		response.setSvcCode(serviceSubscriptionCheckEcRes.getSvcCode());
+		response.setSvcJoinResult(serviceSubscriptionCheckEcRes.getSvcResult());
 
 		return response;
 	}
