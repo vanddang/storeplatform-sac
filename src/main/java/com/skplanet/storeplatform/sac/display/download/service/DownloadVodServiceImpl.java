@@ -267,19 +267,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					encryption.setToken(encryptString);
 					product.setEncryption(encryption);
 
-					// // JSON 복호화
-					// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-					// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-					//
-					// try {
-					// String decData = new String(decrypt, "UTF-8");
-					// this.log.debug("----------------------------------------------------------------");
-					// this.log.debug("[getDownloadEbookInfo] decData : {}", decData);
-					// this.log.debug("----------------------------------------------------------------");
-					// } catch (UnsupportedEncodingException e) {
-					// e.printStackTrace();
-					// }
-
 					product.setEncryption(encryption);
 
 				}
