@@ -78,7 +78,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 	 */
 	@Override
 	public CategorySpecificSacRes getSpecificProductList(CategorySpecificSacReq req, SacRequestHeader header) {
-		String tenantId = header.getTenantHeader().getTenantId();
+		// String tenantId = header.getTenantHeader().getTenantId();
 
 		CategorySpecificSacRes res = new CategorySpecificSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -169,8 +169,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 							// 배치완료 기준일시 조회
 							// TODO osm1021 기준 ListID가 없기 때문에 일단 멜론 Top 100으로 고정
-							String stdDt = this.displayCommonService.getBatchStandardDateString(tenantId,
-									"MELON_DP004901");
+							// String stdDt = this.displayCommonService.getBatchStandardDateString(tenantId,
+							// "MELON_DP004901");
 							// paramMap.put("stdDt", stdDt);
 							productBasicInfo.setMenuId("DP004901");
 							paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
@@ -220,8 +220,6 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		Identifier identifier = null;
 		Support support = null;
 		Menu menu = null;
-		Contributor contributor = null;
-		Date date = null;
 		Accrual accrual = null;
 		Rights rights = null;
 		Title title = null;
@@ -238,7 +236,6 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		CommonResponse commonResponse = new CommonResponse();
 		CategorySpecificSacRes res = new CategorySpecificSacRes();
 
-		productList = new ArrayList<Product>();
 		menuList = new ArrayList<Menu>();
 		sourceList = new ArrayList<Source>();
 		supportList = new ArrayList<Support>();
@@ -311,7 +308,6 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
 		product = new Product();
 		identifier = new Identifier();
-		contributor = new Contributor();
 		accrual = new Accrual();
 		rights = new Rights();
 		title = new Title();
@@ -381,7 +377,6 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 	 */
 	private Product generateShoppingProduct() {
 		Identifier identifier = new Identifier();
-		Support support = new Support();
 		Menu menu = new Menu();
 		Contributor contributor = new Contributor();
 		Date date = new Date();
@@ -392,45 +387,33 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		Price price = new Price();
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
-		List<Support> supportList = new ArrayList<Support>();
 		Product product = new Product();
 
-		identifier = new Identifier();
 		identifier.setType("catalog");
 		identifier.setText("1234");
 
 		// 메뉴 정보
-		menuList = new ArrayList<Menu>();
-		menu = new Menu();
 		menu.setType("menuId");
 		menu.setId("DP28013");
 		menu.setName("버거/치킨/피자");
 		menuList.add(menu);
 
 		// 상품 정보 (상품명)
-		title = new Title();
 		title.setText("커피/음료/아이스크림");
 
 		// 상품 정보 (상품가격)
-		price = new Price();
 		price.setFixedPrice(17500);
 		price.setDiscountRate(10d);
 		price.setText(15750);
 
-		// 이미지 정보
-		sourceList = new ArrayList<Source>();
-		source = new Source();
 		source.setType("thumbnail");
 		source.setUrl("inst_thumbnail_20111216154840.jpg");
 		sourceList.add(source);
 
 		// 다운로드 수
-		accrual = new Accrual();
 		accrual.setDownloadCount(3000);
 
 		// 이용권한 정보
-		rights = new Rights();
-		date = new Date();
 		date.setType("duration/salePeriod");
 		date.setText("20130820190000/20131231235959");
 		rights.setGrade("0");

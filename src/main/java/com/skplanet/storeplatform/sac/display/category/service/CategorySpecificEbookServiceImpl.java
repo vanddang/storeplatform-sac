@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +22,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -79,8 +79,6 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 	@Override
 	public CategorySpecificSacRes getSpecificEbookList(CategorySpecificSacReq req, SacRequestHeader header) {
 
-		String tenantId = header.getTenantHeader().getTenantId();
-
 		CategorySpecificSacRes res = new CategorySpecificSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Product product = null;
@@ -91,73 +89,76 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(req.getList())) {
-				this.log.debug("----------------------------------------------------------------");
-				this.log.debug("필수 파라미터 부족");
-				this.log.debug("----------------------------------------------------------------");
-
-				res.setCommonResponse(commonResponse);
-				return res;
+				throw new StorePlatformException("SAC_DSP_0002", "pid", req.getList());
 			}
 
 			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
-			if (prodIdList.size() > 50) {
-				// TODO osm1021 에러 처리 추가 필요
-				this.log.error("## prod id over 50 : {}" + prodIdList.size());
+			if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
+				throw new StorePlatformException("SAC_DSP_0004", "list",
+						DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
 			}
 
-			// 상품 기본 정보 List 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
+			try {
+				// 상품 기본 정보 List 조회
+				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+						"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
 
-			this.log.debug("##### parameter cnt : {}", prodIdList.size());
-			this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
-			if (productBasicInfoList != null) {
-				Map<String, Object> paramMap = new HashMap<String, Object>();
-				paramMap.put("tenantHeader", header.getTenantHeader());
-				paramMap.put("deviceHeader", header.getDeviceHeader());
-				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-				paramMap.put("lang", "ko");
+				this.log.debug("##### parameter cnt : {}", prodIdList.size());
+				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
+				if (productBasicInfoList != null) {
+					Map<String, Object> paramMap = new HashMap<String, Object>();
+					paramMap.put("tenantHeader", header.getTenantHeader());
+					paramMap.put("deviceHeader", header.getDeviceHeader());
+					paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+					paramMap.put("lang", "ko");
 
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					String topMenuId = productBasicInfo.getTopMenuId();
-					String svcGrpCd = productBasicInfo.getSvcGrpCd();
-					paramMap.put("productBasicInfo", productBasicInfo);
+					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+						String topMenuId = productBasicInfo.getTopMenuId();
+						String svcGrpCd = productBasicInfo.getSvcGrpCd();
+						paramMap.put("productBasicInfo", productBasicInfo);
 
-					this.log.debug("##### Top Menu Id : {}", topMenuId);
-					this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+						this.log.debug("##### Top Menu Id : {}", topMenuId);
+						this.log.debug("##### Service Group Cd : {}", svcGrpCd);
 
-					// 상품 SVC_GRP_CD 조회
-					// DP000203 : 멀티미디어
-					// DP000206 : Tstore 쇼핑
-					// DP000205 : 소셜쇼핑
-					// DP000204 : 폰꾸미기
-					// DP000201 : 애플리캐이션
+						// 상품 SVC_GRP_CD 조회
+						// DP000203 : 멀티미디어
+						// DP000206 : Tstore 쇼핑
+						// DP000205 : 소셜쇼핑
+						// DP000204 : 폰꾸미기
+						// DP000201 : 애플리캐이션
 
-					// ebook/코믹 상품의 경우
-					if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
+						// ebook/코믹 상품의 경우
+						if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+									|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
+																								  // 경우
 
-							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-							this.log.debug("##### Search for EbookComic specific product");
-							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
-									paramMap, MetaInfo.class);
-							if (metaInfo != null) {
-								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
-								} else {
-									product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
+								paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+								this.log.debug("##### Search for EbookComic specific product");
+								metaInfo = this.commonDAO.queryForObject(
+										"CategorySpecificProduct.getEbookComicMetaInfo", paramMap, MetaInfo.class);
+								if (metaInfo != null) {
+									if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+										product = this.responseInfoGenerateFacade
+												.generateSpecificEbookProduct(metaInfo);
+									} else {
+										product = this.responseInfoGenerateFacade
+												.generateSpecificComicProduct(metaInfo);
+									}
+									productList.add(product);
 								}
-								productList.add(product);
 							}
 						}
 					}
 				}
+				commonResponse.setTotalCount(productList.size());
+				res.setCommonResponse(commonResponse);
+				res.setProductList(productList);
+				return res;
+
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_DSP_0001", "");
 			}
-			commonResponse.setTotalCount(productList.size());
-			res.setCommonResponse(commonResponse);
-			res.setProductList(productList);
-			return res;
 		} else {
 			return this.generateDummy();
 		}
@@ -172,11 +173,10 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 	 */
 	private CategorySpecificSacRes generateDummy() {
 		Identifier identifier = null;
-		List<Identifier> identifierList;
+		List<Identifier> identifierList = new ArrayList<Identifier>();
 		Support support = null;
 		Menu menu = null;
 		Contributor contributor = null;
-		Date date = null;
 		Accrual accrual = null;
 		Rights rights = null;
 		Title title = null;
@@ -190,17 +190,15 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 		List<Menu> menuList = null;
 		List<Source> sourceList = null;
 		List<Support> supportList = null;
-		Product product = null;
+		Product product = new Product();
 		List<Product> productList = new ArrayList<Product>();
 		CommonResponse commonResponse = new CommonResponse();
 		CategorySpecificSacRes res = new CategorySpecificSacRes();
 
-		productList = new ArrayList<Product>();
 		menuList = new ArrayList<Menu>();
 		sourceList = new ArrayList<Source>();
 		supportList = new ArrayList<Support>();
 
-		product = new Product();
 		identifier = new Identifier();
 		app = new App();
 		accrual = new Accrual();
@@ -215,8 +213,6 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 		contributor = new Contributor();
 
 		// Identifier 설정
-		identifierList = new ArrayList<Identifier>();
-		identifier = new Identifier();
 		identifier.setType("episodeId");
 		identifier.setText("H900063306");
 		identifierList.add(identifier);
@@ -280,7 +276,6 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 		book.setChapter(chapter);
 		book.setSupportList(supportList);
 
-		product = new Product();
 		product.setIdentifierList(identifierList);
 		product.setSupportList(supportList);
 		product.setMenuList(menuList);

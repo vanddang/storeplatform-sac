@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -78,8 +79,6 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 	@Override
 	public CategorySpecificSacRes getSpecificVodList(CategorySpecificSacReq req, SacRequestHeader header) {
 
-		String tenantId = header.getTenantHeader().getTenantId();
-
 		CategorySpecificSacRes res = new CategorySpecificSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Product product = null;
@@ -90,74 +89,75 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(req.getList())) {
-				this.log.debug("----------------------------------------------------------------");
-				this.log.debug("필수 파라미터 부족");
-				this.log.debug("----------------------------------------------------------------");
-
-				res.setCommonResponse(commonResponse);
-				return res;
+				throw new StorePlatformException("SAC_DSP_0002", "pid", req.getList());
 			}
 
 			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
-			if (prodIdList.size() > 50) {
-				// TODO osm1021 에러 처리 추가 필요
-				this.log.error("## prod id over 50 : {}" + prodIdList.size());
+			if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
+				throw new StorePlatformException("SAC_DSP_0004", "list",
+						DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
 			}
 
-			// 상품 기본 정보 List 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
+			try {
+				// 상품 기본 정보 List 조회
+				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+						"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
 
-			this.log.debug("##### parameter cnt : {}", prodIdList.size());
-			this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
-			if (productBasicInfoList != null) {
-				Map<String, Object> paramMap = new HashMap<String, Object>();
-				paramMap.put("tenantHeader", header.getTenantHeader());
-				paramMap.put("deviceHeader", header.getDeviceHeader());
-				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-				paramMap.put("lang", "ko");
+				this.log.debug("##### parameter cnt : {}", prodIdList.size());
+				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
+				if (productBasicInfoList != null) {
+					Map<String, Object> paramMap = new HashMap<String, Object>();
+					paramMap.put("tenantHeader", header.getTenantHeader());
+					paramMap.put("deviceHeader", header.getDeviceHeader());
+					paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+					paramMap.put("lang", "ko");
 
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					String topMenuId = productBasicInfo.getTopMenuId();
-					String svcGrpCd = productBasicInfo.getSvcGrpCd();
-					paramMap.put("productBasicInfo", productBasicInfo);
+					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+						String topMenuId = productBasicInfo.getTopMenuId();
+						String svcGrpCd = productBasicInfo.getSvcGrpCd();
+						paramMap.put("productBasicInfo", productBasicInfo);
 
-					this.log.debug("##### Top Menu Id : {}", topMenuId);
-					this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+						this.log.debug("##### Top Menu Id : {}", topMenuId);
+						this.log.debug("##### Service Group Cd : {}", svcGrpCd);
 
-					// 상품 SVC_GRP_CD 조회
-					// DP000203 : 멀티미디어
-					// DP000206 : Tstore 쇼핑
-					// DP000205 : 소셜쇼핑
-					// DP000204 : 폰꾸미기
-					// DP000201 : 애플리캐이션
+						// 상품 SVC_GRP_CD 조회
+						// DP000203 : 멀티미디어
+						// DP000206 : Tstore 쇼핑
+						// DP000205 : 소셜쇼핑
+						// DP000204 : 폰꾸미기
+						// DP000201 : 애플리캐이션
 
-					// vod 상품의 경우
-					if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-						// 영화/방송 상품의 경우
-						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-							this.log.debug("##### Search for Vod specific product");
-							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo",
-									paramMap, MetaInfo.class);
-							if (metaInfo != null) {
-								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.responseInfoGenerateFacade.generateSpecificMovieProduct(metaInfo);
-								} else {
-									product = this.responseInfoGenerateFacade
-											.generateSpecificBroadcastProduct(metaInfo);
+						// vod 상품의 경우
+						if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+							// 영화/방송 상품의 경우
+							paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+									|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+								this.log.debug("##### Search for Vod specific product");
+								metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo",
+										paramMap, MetaInfo.class);
+								if (metaInfo != null) {
+									if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+										product = this.responseInfoGenerateFacade
+												.generateSpecificMovieProduct(metaInfo);
+									} else {
+										product = this.responseInfoGenerateFacade
+												.generateSpecificBroadcastProduct(metaInfo);
+									}
+									productList.add(product);
 								}
-								productList.add(product);
 							}
 						}
 					}
 				}
+				commonResponse.setTotalCount(productList.size());
+				res.setCommonResponse(commonResponse);
+				res.setProductList(productList);
+				return res;
+
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_DSP_0001", "");
 			}
-			commonResponse.setTotalCount(productList.size());
-			res.setCommonResponse(commonResponse);
-			res.setProductList(productList);
-			return res;
 		} else {
 			return this.generateDummy();
 		}
@@ -171,7 +171,7 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 	 * @return CategorySpecificSacRes
 	 */
 	private CategorySpecificSacRes generateDummy() {
-		Identifier identifier = null;
+		Identifier identifier = new Identifier();
 		List<Identifier> identifierList;
 		Support support = null;
 		Menu menu = null;
@@ -186,25 +186,14 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 		Date date = null;
 		Distributor distributor = null;
 
-		List<Menu> menuList = null;
-		List<Source> sourceList = null;
-		List<Support> supportList = null;
-		Product product = null;
+		List<Menu> menuList = new ArrayList<Menu>();
+		List<Source> sourceList = new ArrayList<Source>();
+		List<Support> supportList = new ArrayList<Support>();
+		Product product = new Product();
 		List<Product> productList = new ArrayList<Product>();
 		CommonResponse commonResponse = new CommonResponse();
 		CategorySpecificSacRes res = new CategorySpecificSacRes();
 
-		productList = new ArrayList<Product>();
-		menuList = new ArrayList<Menu>();
-		sourceList = new ArrayList<Source>();
-		supportList = new ArrayList<Support>();
-
-		menuList = new ArrayList<Menu>();
-		sourceList = new ArrayList<Source>();
-		supportList = new ArrayList<Support>();
-
-		product = new Product();
-		identifier = new Identifier();
 		contributor = new Contributor();
 		accrual = new Accrual();
 		rights = new Rights();
@@ -214,13 +203,10 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 		support = new Support();
 		play = new Play();
 		store = new Store();
-		date = new Date();
 		distributor = new Distributor();
 
-		System.out.println("===========111111111==========");
 		// Identifier 설정
 		identifierList = new ArrayList<Identifier>();
-		identifier = new Identifier();
 		identifier.setType("channelId");
 		identifier.setText("H001540562");
 		identifierList.add(identifier);
@@ -281,7 +267,6 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 		// price 설정
 		price.setText(3200);
 
-		product = new Product();
 		product.setIdentifier(identifier);
 		product.setSupportList(supportList);
 		product.setMenuList(menuList);
