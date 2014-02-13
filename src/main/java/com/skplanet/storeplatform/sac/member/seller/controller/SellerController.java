@@ -97,8 +97,8 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/authorizeSimple/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeRes authorizeSample(SacRequestHeader header, @RequestBody @Validated AuthorizeSimpleReq req) {
-		return this.sellerService.authorizeSample(header, req);
+	public AuthorizeRes authorizeSimple(SacRequestHeader header, @RequestBody @Validated AuthorizeSimpleReq req) {
+		return this.sellerService.authorizeSimple(header, req);
 	}
 
 	/**
