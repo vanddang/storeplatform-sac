@@ -14,12 +14,14 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_METHOD;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_PROTOCOL;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageRes;
+import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthImageEcRes;
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
@@ -117,6 +119,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	@Autowired
 	private MemberCommonComponent commonComponent; // MemberCommon
+
+	@Autowired
+	private IdpSCI idpSCI;
 
 	@Autowired
 	@Qualifier("sac")
@@ -339,17 +344,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
 
 		LOGGER.info("## IDP Service 호출.");
-		IdpReceiverM idpReciver = this.idpService.warterMarkImageUrl();
+		// IdpReceiverM idpReciver = this.idpService.warterMarkImageUrl();
 
-		if (idpReciver != null && waterMarkImageUrl != null) {
-			waterMarkImageUrl = idpReciver.getResponseBody().getImage_url();
-			waterMarkImageSign = idpReciver.getResponseBody().getImage_sign();
-			signData = idpReciver.getResponseBody().getSign_data();
+		WaterMarkAuthImageEcRes waterMarkAuthImageEcRes = this.idpSCI.warterMarkImageUrl();
+		if (waterMarkAuthImageEcRes != null && waterMarkImageUrl != null) {
+			waterMarkImageUrl = waterMarkAuthImageEcRes.getImage_url();
+			waterMarkImageSign = waterMarkAuthImageEcRes.getImage_sign();
+			signData = waterMarkAuthImageEcRes.getSign_data();
 
 			LOGGER.info("## IDP Service 결과.");
-			LOGGER.debug("## >> Image_url : {} ", idpReciver.getResponseBody().getImage_url());
-			LOGGER.debug("## >> Image_sign : {} ", idpReciver.getResponseBody().getImage_sign());
-			LOGGER.debug("## >> Sign_data : {} ", idpReciver.getResponseBody().getSign_data());
+			// LOGGER.debug("## >> Image_url : {} ", idpReciver.getResponseBody().getImage_url());
+			// LOGGER.debug("## >> Image_sign : {} ", idpReciver.getResponseBody().getImage_sign());
+			// LOGGER.debug("## >> Sign_data : {} ", idpReciver.getResponseBody().getSign_data());
 
 			LOGGER.info("## waterMarkImageUrl 정상 발급.");
 			HTTP_PROTOCOL protocol = null;
