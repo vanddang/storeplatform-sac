@@ -48,8 +48,8 @@ public class DeviceSCIController implements DeviceSCI {
 
 		SacRequestHeader requestHeader = new SacRequestHeader(); // client-internal에 공통으로 생성되면 삭제 후 Bypass 예정.
 		TenantHeader tenantHeader = new TenantHeader();
-		tenantHeader.setSystemId(requestVO.getSystemId());
-		tenantHeader.setTenantId(requestVO.getTenantId());
+		tenantHeader.setSystemId("S01-01001");
+		tenantHeader.setTenantId("S01");
 		requestHeader.setTenantHeader(tenantHeader);
 
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
