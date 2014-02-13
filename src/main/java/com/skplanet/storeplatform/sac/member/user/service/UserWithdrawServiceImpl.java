@@ -30,6 +30,8 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -65,6 +67,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	private DeviceSCI deviceSCI; // 회원 콤포넌트 휴대기기 기능 인터페이스
 
 	@Autowired
+	private DeviceService deviceService;
+
+	@Autowired
 	private IdpService idpService; // IDP 연동 클래스
 
 	@Autowired
@@ -96,10 +101,18 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+
+		req.setUserId(userId);
+		req.setUserAuthKey(userAuthKey);
+		req.setDeviceId(deviceId);
+
 		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
-		if (req.getDeviceId() != null) {
+		if (!deviceId.equals("")) {
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
@@ -132,7 +145,17 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 			}
 		}
-		/* IDP 모바일 회원 */
+
+		/* 게임센터 연동 */
+		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+		gameCenterSacReq.setUserKey(schUserRes.getUserKey());
+		if (!deviceId.equals("")) {
+			gameCenterSacReq.setDeviceId(req.getDeviceId());
+		}
+		gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+		gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
+		this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
 		return withdrawRes;
 
@@ -143,9 +166,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 */
 	@Override
 	public SearchUserResponse searchUser(SacRequestHeader requestHeader, WithdrawReq req) {
-		String userAuthKey = req.getUserAuthKey();
-		String userId = req.getUserId();
-		String deviceId = req.getDeviceId();
+
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
 		logger.info("###### 회원정보조회 SearchUser Request : {}", req.toString());
 
