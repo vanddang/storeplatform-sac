@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -273,19 +272,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
 				encryption.setToken(encryptString);
 				product.setEncryption(encryption);
-
-				// JSON 복호화
-				byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-				byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-
-				try {
-					String decData = new String(decrypt, "UTF-8");
-					this.logger.debug("----------------------------------------------------------------");
-					this.logger.debug("[getDownloadEbookInfo] decData : {}", decData);
-					this.logger.debug("----------------------------------------------------------------");
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
 			}
 
 			ebookRes.setProduct(product);
