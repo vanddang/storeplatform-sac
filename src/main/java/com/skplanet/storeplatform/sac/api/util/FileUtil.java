@@ -127,11 +127,7 @@ public class FileUtil {
 		} catch (IOException ioe) {
 			throw new Exception(ioe);
 		} finally {
-			try {
-				_bufferedReader.close();
-			} catch (IOException ioe) {
-				throw new Exception(ioe);
-			}
+			_bufferedReader.close();
 		}
 
 		return result.toString();
@@ -225,19 +221,15 @@ public class FileUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static int fileCopy(String src, String target) throws IOException {
-		try {
-			FileInputStream fis = new FileInputStream(src);
-			int len = fis.available();
-			byte buf[] = new byte[len];
-			fis.read(buf, 0, len);
-			fis.close();
-			FileOutputStream fos = new FileOutputStream(target);
-			fos.write(buf, 0, len);
-			fos.close();
-		} catch (Exception e) {
-			return 0;
-		}
+	public static int fileCopy(String src, String target) throws Exception {
+		FileInputStream fis = new FileInputStream(src);
+		int len = fis.available();
+		byte buf[] = new byte[len];
+		fis.read(buf, 0, len);
+		fis.close();
+		FileOutputStream fos = new FileOutputStream(target);
+		fos.write(buf, 0, len);
+		fos.close();
 		return 1;
 	}
 
