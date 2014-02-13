@@ -24,7 +24,6 @@ import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
 import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.sci.SearchSellerKeySCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
@@ -74,8 +73,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	private EncryptionGenerator encryptionGenerator;
 	@Autowired
 	private DownloadAES128Helper downloadAES128Helper;
-	@Autowired
-	private SearchSellerKeySCI searchSellerKeySCI;
 
 	/*
 	 * (non-Javadoc)
