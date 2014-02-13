@@ -26,12 +26,13 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -61,7 +62,6 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 import com.skplanet.storeplatform.sac.display.shopping.vo.Shopping;
-import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
 /**
  * ShoppingList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -90,7 +90,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	HistoryInternalSCI historyInternalSCI;
 
 	@Autowired
-	private SellerSearchService sellerSearchService;
+	private SellerSearchSCI sellerSearchSCI;
 
 	/**
 	 * <pre>
@@ -2327,12 +2327,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setSelectOptionList(selectOptionList);
 
 							// 판매자정보 셋팅
-							DetailInformationReq memberReq = new DetailInformationReq();
-							DetailInformationRes memberRes = new DetailInformationRes();
+							DetailInformationSacReq memberReq = new DetailInformationSacReq();
+							DetailInformationSacRes memberRes = new DetailInformationSacRes();
 							try {
 								memberReq.setSellerKey(episodeShopping.getSellerMbrNo());
 								memberReq.setSellerId("");
-								memberRes = this.sellerSearchService.detailInformation(header, memberReq);
+								memberRes = this.sellerSearchSCI.detailInformation(memberReq);
 								if (memberRes != null) {
 									memberRes.getSellerMbr().getSellerCompany();
 									distributor = new Distributor();
