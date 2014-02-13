@@ -15,6 +15,7 @@ import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
@@ -65,10 +66,10 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 
 		KeySearch keySearch = new KeySearch();
 
-		if (!req.getSellerKey().equals("")) {
+		if (!StringUtil.nvl(req.getSellerKey(), "").equals("")) {
 			keySearch.setKeyString(req.getSellerKey());
 			keySearch.setKeyType("INSD_SELLERMBR_NO");
-		} else if (!req.getSellerId().equals("")) {
+		} else if (!StringUtil.nvl(req.getSellerId(), "").equals("")) {
 			keySearch.setKeyString(req.getSellerId());
 			keySearch.setKeyType("SELLERMBR_ID");
 		} else {
