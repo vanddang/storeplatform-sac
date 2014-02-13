@@ -12,23 +12,27 @@ package com.skplanet.storeplatform.sac.purchase.cancel.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelReq;
-import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelRes;
-import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelResDetail;
+import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserDetailSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserDetailSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.cancel.service.PurchaseCancelService;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResult;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResultDetail;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacResult;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
+import com.skplanet.storeplatform.sac.purchase.common.util.ConvertVO;
 
 /**
  * 구매 취소 Controller.
@@ -39,60 +43,166 @@ import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResultDet
 @RequestMapping(value = "/purchase/cancel")
 public class PurchaseCancelController {
 
-	private static final Logger logger = LoggerFactory.getLogger(PurchaseCancelController.class);
-
 	@Autowired
 	private PurchaseCancelService purchaseCancelService;
 
 	/**
+	 * 
 	 * <pre>
-	 * 구매 취소 요청 Controller.
+	 * 구매 취소(사용자) 요청.
 	 * </pre>
 	 * 
 	 * @param sacRequestHeader
 	 * @param purchaseCancelReq
 	 * @return
 	 */
-	@RequestMapping(value = "/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/user/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public PurchaseCancelRes cancelPurchase(SacRequestHeader sacRequestHeader,
-			@RequestBody PurchaseCancelReq purchaseCancelReq) {
+	public PurchaseCancelByUserSacRes cancelPurchaseByUser(SacRequestHeader sacRequestHeader,
+			@RequestBody @Validated PurchaseCancelByUserSacReq purchaseCancelByUserSacReq, BindingResult bindingResult) {
 
-		logger.debug("PurchaseCancelController.cancelPurchase request : {}", purchaseCancelReq);
+		// TODO : Request Validation
 
-		PurchaseCancelParam purchaseCancelParam = new PurchaseCancelParam(sacRequestHeader, purchaseCancelReq);
+		PurchaseCancelSacParam purchaseCancelSacParam = this.convertReqForCancelPurchaseByUser(sacRequestHeader,
+				purchaseCancelByUserSacReq);
 
-		PurchaseCancelResult purchaseCancelResult = this.purchaseCancelService.cancelPurchaseList(purchaseCancelParam);
+		this.purchaseCancelService.cancelPurchaseList(purchaseCancelSacParam);
 
-		PurchaseCancelRes purchaseCancelRes = this.setResponse(purchaseCancelResult);
-
-		logger.debug("PurchaseCancelController.cancelPurchase response : {}", purchaseCancelRes);
-
-		return purchaseCancelRes;
+		return null;
 
 	}
 
-	private PurchaseCancelRes setResponse(PurchaseCancelResult purchaseCancelResult) {
-		PurchaseCancelRes purchaseCancelRes = new PurchaseCancelRes();
+	/**
+	 * <pre>
+	 * 관리자 권한 구매 취소 요청.
+	 * </pre>
+	 * 
+	 * @param sacRequestHeader
+	 * @param purchaseCancelReq
+	 * @return
+	 */
+	/*
+	 * @RequestMapping(value = "/byAdmin/v1", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public PurchaseCancelRes cancelPurchaseByAdmin(SacRequestHeader sacRequestHeader,
+	 * 
+	 * @RequestBody PurchaseCancelReq purchaseCancelReq) {
+	 * 
+	 * PurchaseCancelParam purchaseCancelParam = new PurchaseCancelParam(sacRequestHeader, purchaseCancelReq);
+	 * 
+	 * PurchaseCancelResult purchaseCancelResult = null; //
+	 * this.purchaseCancelService.cancelPurchaseList(purchaseCancelParam);
+	 * 
+	 * PurchaseCancelRes purchaseCancelRes = this.setResponse(purchaseCancelResult);
+	 * 
+	 * return purchaseCancelRes;
+	 * 
+	 * }
+	 */
 
-		purchaseCancelRes.setTotCnt(purchaseCancelResult.getTotCnt());
-		purchaseCancelRes.setSuccessCnt(purchaseCancelResult.getSuccessCnt());
-		purchaseCancelRes.setFailCnt(purchaseCancelResult.getFailCnt());
+	/**
+	 * 
+	 * <pre>
+	 * convertReqForCancelPurchaseByUser
+	 * </pre>
+	 * 
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @param purchaseCancelByUserSacReq
+	 *            purchaseCancelByUserSacReq
+	 * @return PurchaseCancelSacParam
+	 */
+	private PurchaseCancelSacParam convertReqForCancelPurchaseByUser(SacRequestHeader sacRequestHeader,
+			PurchaseCancelByUserSacReq purchaseCancelByUserSacReq) {
 
-		List<PurchaseCancelResDetail> prchsCancelResultList = new ArrayList<PurchaseCancelResDetail>();
-		for (PurchaseCancelResultDetail purchaseCancelResultDetail : purchaseCancelResult.getPrchsCancelResultList()) {
-			PurchaseCancelResDetail purchaseCancelResDetail = new PurchaseCancelResDetail();
+		PurchaseCancelSacParam purchaseCancelSacParam = new PurchaseCancelSacParam();
 
-			purchaseCancelResDetail.setPrchsId(purchaseCancelResultDetail.getPrchsId());
-			purchaseCancelResDetail.setPrchsCancelResultCd(purchaseCancelResultDetail.getPrchsCancelResultCd());
-			purchaseCancelResDetail.setPrchsCancelResultMsg(purchaseCancelResultDetail.getPrchsCancelResultMsg());
+		// common parameter setting.
+		ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelByUserSacReq, purchaseCancelSacParam);
 
-			prchsCancelResultList.add(purchaseCancelResDetail);
+		// parameter setting.
+		List<PurchaseCancelDetailSacParam> prchsCancelList = new ArrayList<PurchaseCancelDetailSacParam>();
+		for (PurchaseCancelByUserDetailSacReq purchaseCancelByUserDetailSacReq : purchaseCancelByUserSacReq
+				.getPrchsCancelList()) {
+
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
+
+			purchaseCancelDetailSacParam.setPrchsId(purchaseCancelByUserDetailSacReq.getPrchsId());
+			purchaseCancelDetailSacParam.setCancelReqPathCd(purchaseCancelByUserDetailSacReq.getCancelReqPathCd());
+			purchaseCancelDetailSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_USER);
+
+			prchsCancelList.add(purchaseCancelDetailSacParam);
+
 		}
 
-		purchaseCancelRes.setPrchsCancelResultList(prchsCancelResultList);
+		purchaseCancelSacParam.setPrchsCancelList(prchsCancelList);
 
-		return purchaseCancelRes;
+		// request user type setting.
+		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_USER);
+
+		return purchaseCancelSacParam;
+
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * convertResForCancelPurchaseByUser.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelByUserSacResult
+	 *            purchaseCancelByUserSacResult
+	 * @return PurchaseCancelByUserSacRes
+	 */
+	private PurchaseCancelByUserSacRes convertResForCancelPurchaseByUser(PurchaseCancelSacResult purchaseCancelSacResult) {
+
+		PurchaseCancelByUserSacRes purchaseCancelByUserSacRes = new PurchaseCancelByUserSacRes();
+
+		// response setting.
+		purchaseCancelByUserSacRes.setTotCnt(purchaseCancelSacResult.getTotCnt());
+		purchaseCancelByUserSacRes.setSuccessCnt(purchaseCancelSacResult.getSuccessCnt());
+		purchaseCancelByUserSacRes.setFailCnt(purchaseCancelSacResult.getFailCnt());
+
+		List<PurchaseCancelByUserDetailSacRes> prchsCancelList = new ArrayList<PurchaseCancelByUserDetailSacRes>();
+		for (PurchaseCancelDetailSacResult purchaseCancelDetailSacResult : purchaseCancelSacResult.getPrchsCancelList()) {
+
+			PurchaseCancelByUserDetailSacRes purchaseCancelByUserDetailSacRes = new PurchaseCancelByUserDetailSacRes();
+
+			purchaseCancelByUserDetailSacRes.setPrchsId(purchaseCancelDetailSacResult.getPrchsId());
+			purchaseCancelByUserDetailSacRes.setResultCd(purchaseCancelDetailSacResult.getResultCd());
+			purchaseCancelByUserDetailSacRes.setResultMsg(purchaseCancelDetailSacResult.getResultMsg());
+
+			prchsCancelList.add(purchaseCancelByUserDetailSacRes);
+
+		}
+
+		purchaseCancelByUserSacRes.setPrchsCancelList(prchsCancelList);
+
+		return purchaseCancelByUserSacRes;
+
+	}
+
+	/*
+	 * private PurchaseCancelRes setResponse(PurchaseCancelResult purchaseCancelResult) { PurchaseCancelRes
+	 * purchaseCancelRes = new PurchaseCancelRes();
+	 * 
+	 * purchaseCancelRes.setTotCnt(purchaseCancelResult.getTotCnt());
+	 * purchaseCancelRes.setSuccessCnt(purchaseCancelResult.getSuccessCnt());
+	 * purchaseCancelRes.setFailCnt(purchaseCancelResult.getFailCnt());
+	 * 
+	 * List<PurchaseCancelResDetail> prchsCancelResultList = new ArrayList<PurchaseCancelResDetail>(); for
+	 * (PurchaseCancelResultDetail purchaseCancelResultDetail : purchaseCancelResult.getPrchsCancelResultList()) {
+	 * PurchaseCancelResDetail purchaseCancelResDetail = new PurchaseCancelResDetail();
+	 * 
+	 * purchaseCancelResDetail.setPrchsId(purchaseCancelResultDetail.getPrchsId());
+	 * purchaseCancelResDetail.setPrchsCancelResultCd(purchaseCancelResultDetail.getPrchsCancelResultCd());
+	 * purchaseCancelResDetail.setPrchsCancelResultMsg(purchaseCancelResultDetail.getPrchsCancelResultMsg());
+	 * 
+	 * prchsCancelResultList.add(purchaseCancelResDetail); }
+	 * 
+	 * purchaseCancelRes.setPrchsCancelResultList(prchsCancelResultList);
+	 * 
+	 * return purchaseCancelRes; }
+	 */
 
 }

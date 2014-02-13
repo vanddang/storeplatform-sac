@@ -14,18 +14,18 @@ import java.util.List;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonSacResult;
 
 /**
- * 구매 취소 Result VO.
+ * 구매 취소(사용자) 응답 VO.
  * 
- * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
+ * Updated on : 2014. 2. 12. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelResult extends PurchaseCommonSacResult {
+public class PurchaseCancelSacResult extends PurchaseCommonSacResult {
 
 	private static final long serialVersionUID = 1L;
 
 	private Integer totCnt;
 	private Integer successCnt;
 	private Integer failCnt;
-	private List<PurchaseCancelResultDetail> prchsCancelResultList;
+	private List<PurchaseCancelDetailSacResult> prchsCancelList;
 
 	/**
 	 * @return the totCnt
@@ -73,18 +73,18 @@ public class PurchaseCancelResult extends PurchaseCommonSacResult {
 	}
 
 	/**
-	 * @return the prchsCancelResultList
+	 * @return the prchsCancelList
 	 */
-	public List<PurchaseCancelResultDetail> getPrchsCancelResultList() {
-		return this.prchsCancelResultList;
+	public List<PurchaseCancelDetailSacResult> getPrchsCancelList() {
+		return this.prchsCancelList;
 	}
 
 	/**
-	 * @param prchsCancelResultList
-	 *            the prchsCancelResultList to set
+	 * @param prchsCancelList
+	 *            the prchsCancelList to set
 	 */
-	public void setPrchsCancelResultList(List<PurchaseCancelResultDetail> prchsCancelResultList) {
-		this.prchsCancelResultList = prchsCancelResultList;
+	public void setPrchsCancelList(List<PurchaseCancelDetailSacResult> prchsCancelList) {
+		this.prchsCancelList = prchsCancelList;
 	}
 
 }

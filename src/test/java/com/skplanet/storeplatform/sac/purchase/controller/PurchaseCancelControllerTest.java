@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelReq;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacReq;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,7 +39,7 @@ public class PurchaseCancelControllerTest {
 	@Test
 	public void testPurchaseCancel() throws Exception {
 
-		PurchaseCancelReq purchaseCancelReq = new PurchaseCancelReq();
+		PurchaseCancelByUserSacReq purchaseCancelByUserSacReq = new PurchaseCancelByUserSacReq();
 		/*
 		 * List<PurchaseCancel> list = new ArrayList<PurchaseCancel>();
 		 * 
@@ -52,7 +52,7 @@ public class PurchaseCancelControllerTest {
 		// purchaseCancelReq.setPrchsList(list);
 
 		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(purchaseCancelReq);
+		String json = mapper.writeValueAsString(purchaseCancelByUserSacReq);
 
 		this.mvc.perform(
 				post("/purchase/cancel/v1").accept(MediaType.parseMediaType("application/json;charset=UTF-8"))

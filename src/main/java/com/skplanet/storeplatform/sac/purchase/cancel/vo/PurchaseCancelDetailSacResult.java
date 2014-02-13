@@ -12,17 +12,17 @@ package com.skplanet.storeplatform.sac.purchase.cancel.vo;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * Class 설명
+ * 구매 취소(사용자) 응답 상세 VO.
  * 
- * Updated on : 2014. 1. 17. Updated by : nTels_cswoo81, nTels.
+ * Updated on : 2014. 2. 12. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelResultDetail extends CommonInfo {
+public class PurchaseCancelDetailSacResult extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
 	private String prchsId;
-	private String prchsCancelResultCd;
-	private String prchsCancelResultMsg;
+	private String resultCd;
+	private String resultMsg;
 
 	/**
 	 * @return the prchsId
@@ -40,33 +40,33 @@ public class PurchaseCancelResultDetail extends CommonInfo {
 	}
 
 	/**
-	 * @return the prchsCancelResultCd
+	 * @return the resultCd
 	 */
-	public String getPrchsCancelResultCd() {
-		return this.prchsCancelResultCd;
+	public String getResultCd() {
+		return this.resultCd;
 	}
 
 	/**
-	 * @param prchsCancelResultCd
-	 *            the prchsCancelResultCd to set
+	 * @param resultCd
+	 *            the resultCd to set
 	 */
-	public void setPrchsCancelResultCd(String prchsCancelResultCd) {
-		this.prchsCancelResultCd = prchsCancelResultCd;
+	public void setResultCd(String resultCd) {
+		this.resultCd = resultCd;
 	}
 
 	/**
-	 * @return the prchsCancelResultMsg
+	 * @return the resultMsg
 	 */
-	public String getPrchsCancelResultMsg() {
-		return this.prchsCancelResultMsg;
+	public String getResultMsg() {
+		return this.resultMsg;
 	}
 
 	/**
-	 * @param prchsCancelResultMsg
-	 *            the prchsCancelResultMsg to set
+	 * @param resultMsg
+	 *            the resultMsg to set
 	 */
-	public void setPrchsCancelResultMsg(String prchsCancelResultMsg) {
-		this.prchsCancelResultMsg = prchsCancelResultMsg;
+	public void setResultMsg(String resultMsg) {
+		this.resultMsg = resultMsg;
 	}
 
 }

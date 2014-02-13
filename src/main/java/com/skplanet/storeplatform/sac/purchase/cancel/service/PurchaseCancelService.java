@@ -9,10 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelParamDetail;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResult;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResultDetail;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacResult;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonSacParam;
 
 /**
@@ -24,27 +24,28 @@ public interface PurchaseCancelService {
 
 	/**
 	 * <pre>
-	 * 구매 리스트 취소 요청.
+	 * 구매 리스트 취소.
 	 * </pre>
 	 * 
-	 * @param purchaseCancelParam
-	 *            구매 취소 요청 LIST VO.
-	 * @return PurchaseCancelResult
+	 * @param purchaseCancelSacParam
+	 *            purchaseCancelSacParam
+	 * @return PurchaseCancelSacResult
 	 */
-	public PurchaseCancelResult cancelPurchaseList(PurchaseCancelParam purchaseCancelParam);
+	public PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam);
 
 	/**
 	 * <pre>
-	 * 구매 취소 요청 처리.
+	 * 구매 취소.
+	 * Transaction을 위해 함수명 update* 적용.
 	 * </pre>
 	 * 
-	 * @param purchaseCommonParam
-	 *            구매 취소 요청 공통 VO.
-	 * @param purchaseCancelParamDetail
-	 *            구매 취소 요청 VO.
-	 * @return PurchaseCancelResultDetail
+	 * @param purchaseCommonSacParam
+	 *            purchaseCommonSacParam
+	 * @param purchaseCancelDetailSacParam
+	 *            purchaseCancelDetailSacParam
+	 * @return PurchaseCancelDetailSacResult
 	 */
-	public PurchaseCancelResultDetail cancelPurchaseItem(PurchaseCommonSacParam purchaseCommonParam,
-			PurchaseCancelParamDetail purchaseCancelParamDetail);
+	public PurchaseCancelDetailSacResult updatePurchaseCancel(PurchaseCommonSacParam purchaseCommonSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
 
 }

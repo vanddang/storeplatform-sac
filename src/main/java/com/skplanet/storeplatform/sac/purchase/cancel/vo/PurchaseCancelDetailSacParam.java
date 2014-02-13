@@ -12,38 +12,39 @@ package com.skplanet.storeplatform.sac.purchase.cancel.vo;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelReqDetail;
+import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
+import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 
 /**
- * 구매 취소 요청 상세 Parameter.
+ * 구매 취소(사용자) 요청 상세 VO.
  * 
- * Updated on : 2014. 1. 17. Updated by : nTels_cswoo81, nTels.
+ * Updated on : 2014. 2. 12. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelParamDetail extends CommonInfo {
+public class PurchaseCancelDetailSacParam extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
 	private String prchsId;
 	private String cancelReqPathCd;
 
-	private List<PurchaseDetail> purchaseDetailList;
+	private Integer prchsCancelByType; // 구매 취소 요청자 구분(사용자 / 운영자).
 
-	/*
-	 * 구매 내역 DB 취소 결과 개수.
-	 */
+	/** 구매 내역. */
+	private Prchs prchs;
+
+	/** 구매 상세 내역 리스트. */
+	private List<PrchsDtl> prchsDtl;
+
+	/** 결제 내역 리스트. */
+	private List<Payment> paymentList;
+
+	/** PayPlanet 내역 리스트. */
+
+	/** 구매 내역 DB 취소 결과 개수. */
 	private Integer prchsCancelCnt;
 	private Integer prchsDtlCancelCnt;
-	private Integer prchsSendDtlCancelCnt;
 	private Integer paymentCancelCnt;
-
-	public PurchaseCancelParamDetail() {
-
-	}
-
-	public PurchaseCancelParamDetail(PurchaseCancelReqDetail purchaseCancelReqDetail) {
-		this.prchsId = purchaseCancelReqDetail.getPrchsId();
-		this.cancelReqPathCd = purchaseCancelReqDetail.getCancelReqPathCd();
-	}
 
 	/**
 	 * @return the prchsId
@@ -76,18 +77,63 @@ public class PurchaseCancelParamDetail extends CommonInfo {
 	}
 
 	/**
-	 * @return the purchaseDetailList
+	 * @return the prchsCancelByType
 	 */
-	public List<PurchaseDetail> getPurchaseDetailList() {
-		return this.purchaseDetailList;
+	public Integer getPrchsCancelByType() {
+		return this.prchsCancelByType;
 	}
 
 	/**
-	 * @param purchaseDetailList
-	 *            the purchaseDetailList to set
+	 * @param prchsCancelByType
+	 *            the prchsCancelByType to set
 	 */
-	public void setPurchaseDetailList(List<PurchaseDetail> purchaseDetailList) {
-		this.purchaseDetailList = purchaseDetailList;
+	public void setPrchsCancelByType(Integer prchsCancelByType) {
+		this.prchsCancelByType = prchsCancelByType;
+	}
+
+	/**
+	 * @return the prchs
+	 */
+	public Prchs getPrchs() {
+		return this.prchs;
+	}
+
+	/**
+	 * @param prchs
+	 *            the prchs to set
+	 */
+	public void setPrchs(Prchs prchs) {
+		this.prchs = prchs;
+	}
+
+	/**
+	 * @return the prchsDtl
+	 */
+	public List<PrchsDtl> getPrchsDtl() {
+		return this.prchsDtl;
+	}
+
+	/**
+	 * @param prchsDtl
+	 *            the prchsDtl to set
+	 */
+	public void setPrchsDtl(List<PrchsDtl> prchsDtl) {
+		this.prchsDtl = prchsDtl;
+	}
+
+	/**
+	 * @return the paymentList
+	 */
+	public List<Payment> getPaymentList() {
+		return this.paymentList;
+	}
+
+	/**
+	 * @param paymentList
+	 *            the paymentList to set
+	 */
+	public void setPaymentList(List<Payment> paymentList) {
+		this.paymentList = paymentList;
 	}
 
 	/**
@@ -118,21 +164,6 @@ public class PurchaseCancelParamDetail extends CommonInfo {
 	 */
 	public void setPrchsDtlCancelCnt(Integer prchsDtlCancelCnt) {
 		this.prchsDtlCancelCnt = prchsDtlCancelCnt;
-	}
-
-	/**
-	 * @return the prchsSendDtlCancelCnt
-	 */
-	public Integer getPrchsSendDtlCancelCnt() {
-		return this.prchsSendDtlCancelCnt;
-	}
-
-	/**
-	 * @param prchsSendDtlCancelCnt
-	 *            the prchsSendDtlCancelCnt to set
-	 */
-	public void setPrchsSendDtlCancelCnt(Integer prchsSendDtlCancelCnt) {
-		this.prchsSendDtlCancelCnt = prchsSendDtlCancelCnt;
 	}
 
 	/**
