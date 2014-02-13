@@ -1,30 +1,29 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
+import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcReq;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
-import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 
 /**
@@ -42,10 +41,10 @@ public class UserServiceImpl implements UserService {
 	private DeviceService deviceService;
 
 	@Autowired
-	private IdpService idpService;
+	private ImIdpSCI imIdpSCI;
 
 	@Autowired
-	private ImIdpService imIdpService;
+	private IdpSCI idpSCI;
 
 	@Autowired
 	private IdpRepository idpRepository;
@@ -66,37 +65,6 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public void updateProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) {
-
-		/* 회원정보 조회 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
-		SearchUserRequest schUserReq = new SearchUserRequest();
-		schUserReq.setCommonRequest(commonRequest);
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		key.setKeyString(userKey);
-		keySearchList.add(key);
-		schUserReq.setKeySearchList(keySearchList);
-		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
-
-		UserMbr userMbr = schUserRes.getUserMbr();
-
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		if (userMbr.getUserSex() != null) {
-			param.put("user_sex", userMbr.getUserSex());
-		}
-		if (userMbr.getUserBirthDay() != null) {
-			param.put("user_birthday", userMbr.getUserBirthDay());
-		}
-		if (userMbr.getUserPhone() != null) {
-			param.put("user_tel", userMbr.getUserPhone());
-		}
-		if (userMbr.getUserPhoneCountry() != null) {
-			param.put("is_foreign", (userMbr.getUserPhoneCountry().equals("82") ? "N" : "Y"));
-		}
 
 		/* 휴대기기 목록 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
@@ -126,28 +94,34 @@ public class UserServiceImpl implements UserService {
 			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
 		}
 
-		param.put("user_auth_key", userAuthKey);
+		/* 회원정보 조회 */
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
+		SearchUserRequest schUserReq = new SearchUserRequest();
+		schUserReq.setCommonRequest(commonRequest);
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		key.setKeyString(userKey);
+		keySearchList.add(key);
+		schUserReq.setKeySearchList(keySearchList);
+		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
-
-			param.put("key", schUserRes.getUserMbr().getImSvcNo());
-			param.put("operation_mode", this.idpOperationMode);
-			param.put("user_mdn", userPhoneStr);
-			param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-			param.put("modify_req_date", DateUtil.getDateString(new Date(), "yyyyMMddHH"));
-			param.put("modify_req_time", DateUtil.getDateString(new Date(), "HHmmss"));
-
-			this.imIdpService.updateAdditionalInfo(param);
-
+			UpdateAdditionalInfoEcReq req = new UpdateAdditionalInfoEcReq();
+			req.setUserAuthKey(userAuthKey);
+			req.setKey(schUserRes.getUserMbr().getImSvcNo());
+			req.setUserMdn(userPhoneStr);
+			this.imIdpSCI.updateAdditionalInfo(req);
 		} else {
-
-			param.put("key_type", "2");
-			param.put("key", schUserRes.getUserMbr().getImMbrNo());
-			param.put("user_phone", userPhoneStr);
-			param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-
-			this.idpService.modifyProfile(param);
-
+			ModifyProfileEcReq req = new ModifyProfileEcReq();
+			req.setUserAuthKey(userAuthKey);
+			req.setKeyType(IdpConstants.IDP_PARAM_KEY_SECEDE_KEY_TYPE_USERKEY);
+			req.setKey(schUserRes.getUserMbr().getImMbrNo());
+			req.setUserPhone(userPhoneStr);
+			this.idpSCI.modifyProfile(req);
 		}
 
 	}
