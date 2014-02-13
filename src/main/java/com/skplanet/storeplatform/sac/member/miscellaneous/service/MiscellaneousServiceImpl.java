@@ -406,14 +406,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		waterMarkAuthEcReq.setUserCode(request.getAuthCode());
 		waterMarkAuthEcReq.setImageSign(request.getImageSign());
 		waterMarkAuthEcReq.setSignData(request.getSignData());
-		try {
-			this.idpSCI.waterMarkAuth(waterMarkAuthEcReq);
-			LOGGER.info("Captcha 문자 확인 성공.");
-		} catch (Exception e) {
-			throw new StorePlatformException("Captcha 문자 확인 실패." + e.toString());
-		}
-		// IdpReceiverM idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(),
-		// request.getSignData());
+
+		this.idpSCI.waterMarkAuth(waterMarkAuthEcReq);
+		LOGGER.info("Captcha 문자 확인 성공.");
 
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 		LOGGER.info("## Captcha 문자 인증 Service 종료.");
