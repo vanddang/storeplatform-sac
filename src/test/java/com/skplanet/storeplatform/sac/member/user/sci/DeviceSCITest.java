@@ -18,8 +18,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceMdnSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceMdnSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
@@ -46,10 +46,10 @@ public class DeviceSCITest {
 	 */
 	@Test
 	public void testGetDeviceMdn() {
-		SearchDeviceMdnSacReq request = new SearchDeviceMdnSacReq();
+		SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
 		request.setUserKey("US201402110557052730002230");
 		request.setDeviceKey("DE201402120409541480001552");
-		SearchDeviceMdnSacRes result = this.deviceSCI.searchDeviceMdn(request);
+		SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
 		assertThat(result.getMsisdn(), notNullValue());
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
@@ -63,10 +63,10 @@ public class DeviceSCITest {
 	 */
 	@Test(expected = StorePlatformException.class)
 	public void testExceptGetDeviceMdn() {
-		SearchDeviceMdnSacReq request = new SearchDeviceMdnSacReq();
+		SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceKey("DE201401241840125800000296");
-		SearchDeviceMdnSacRes result = this.deviceSCI.searchDeviceMdn(request);
+		SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
 		assertThat(result.getMsisdn(), notNullValue());
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
