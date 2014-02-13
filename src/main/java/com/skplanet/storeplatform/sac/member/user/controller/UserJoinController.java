@@ -61,7 +61,7 @@ public class UserJoinController {
 	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnReq req) {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
+		LOGGER.info("##### 2.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
 		LOGGER.info("####################################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
@@ -102,7 +102,7 @@ public class UserJoinController {
 	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateByAgreementReq req) {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
+		LOGGER.info("##### 2.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
 		LOGGER.info("####################################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
@@ -163,7 +163,7 @@ public class UserJoinController {
 	public CreateBySimpleRes createBySimple(SacRequestHeader sacHeader, @Validated @RequestBody CreateBySimpleReq req) {
 
 		LOGGER.info("#############################################");
-		LOGGER.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
+		LOGGER.info("##### 2.1.3. ID 회원 간편 가입 (IDP 회원) #####");
 		LOGGER.info("#############################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
