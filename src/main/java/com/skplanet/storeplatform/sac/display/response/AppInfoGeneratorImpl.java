@@ -15,10 +15,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Install;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
@@ -60,15 +63,23 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 	 */
 	@Override
 	public App generateApp(MetaInfo metaInfo) {
+		return this.generateApp(metaInfo.getAid(), metaInfo.getApkPkgNm(), metaInfo.getApkVer(), metaInfo.getProdVer(),
+				metaInfo.getFileSize(), metaInfo.getSupportedOs(), metaInfo.getSubContentsId(), metaInfo.getFilePath());
+	}
+
+	@Override
+	public App generateApp(String aid, String packageNm, String apkVer, String prodVer, Integer fileSize,
+			String supportOs, String scid, String filePath) {
 		App app = new App();
-		app.setAid(metaInfo.getAid());
-		app.setPackageName(metaInfo.getApkPkgNm());
-		app.setVersionCode(metaInfo.getApkVer());
-		app.setVersion(metaInfo.getProdVer());
-		app.setSize(metaInfo.getFileSize());
-		app.setSupportedOs(metaInfo.getSupportedOs());
-		app.setScId(metaInfo.getSubContentsId());
-		app.setFilePath(metaInfo.getFilePath());
+		app.setAid(aid);
+		app.setPackageName(packageNm);
+		app.setVersionCode(apkVer);
+		app.setVersion(prodVer);
+		app.setSize(fileSize);
+		app.setSupportedOs(supportOs);
+		app.setScId(scid);
+		app.setFilePath(filePath);
+
 		return app;
 	}
 
@@ -99,6 +110,29 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateMenuList(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<Menu> generateMenuList(String topMenuId, String topMenuNm, String menuId, String menuNm) {
+		Menu menu = new Menu();
+		List<Menu> menuList = new ArrayList<Menu>();
+
+		menu.setId(menuId);
+		menu.setName(menuNm);
+		menuList.add(menu);
+
+		menu = new Menu();
+		menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+		menu.setId(topMenuId);
+		menu.setName(topMenuNm);
+		menuList.add(menu);
+		return menuList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateAppIdentifierList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -109,6 +143,22 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		List<Identifier> identifierList = new ArrayList<Identifier>();
 		identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 		identifier.setText(metaInfo.getPartProdId());
+		identifierList.add(identifier);
+		return identifierList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateIdentifierList(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public List<Identifier> generateIdentifierList(String type, String text) {
+		Identifier identifier = new Identifier();
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifier.setType(type);
+		identifier.setText(text);
 		identifierList.add(identifier);
 		return identifierList;
 	}
@@ -134,4 +184,20 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		return identifierList;
 	}
 
+	@Override
+	public Update generateUpdate(Date date, String updateExplain) {
+		Update update = new Update();
+		update.setUpdateExplain(updateExplain);
+		update.setDate(date);
+
+		return update;
+	}
+
+	@Override
+	public Install generateInstall(String caller, String upgrade) {
+		Install install = new Install();
+		install.setCaller(caller);
+		install.setUpgrade(upgrade);
+		return install;
+	}
 }

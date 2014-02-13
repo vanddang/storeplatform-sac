@@ -3,6 +3,7 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +20,30 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.History;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 
 /**
  * 업데이트 대상 목록 조회 Service 구현체
@@ -37,6 +58,15 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+	@Autowired
+	private ExistenceSacService existenceSacService;
+
+	@Autowired
+	private CommonMetaInfoGenerator commonGenerator;
+
+	@Autowired
+	private AppInfoGenerator appGenerator;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -48,13 +78,17 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 	@Override
 	public PersonalUpdateProductRes searchUpdateProductList(PersonalUpdateProductReq req, SacRequestHeader header) {
 		PersonalUpdateProductRes res = new PersonalUpdateProductRes();
-		CommonResponse commonResopnse = new CommonResponse();
+		CommonResponse commonResponse = new CommonResponse();
+		List<Product> productList = new ArrayList<Product>();
 		Map<String, Object> mapReq = new HashMap<String, Object>();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		TenantHeader tenantHeader = header.getTenantHeader();
+
 		String memberType = req.getMemberType();
 		/**************************************************************
 		 * Package 명으로 상품 조회
 		 **************************************************************/
-		String sArrPkgNm[] = StringUtils.split(req.getPackageInfo(), ",");
+		String sArrPkgNm[] = StringUtils.split(req.getPackageInfo(), ";");
 		List<String> listPkgNm = new ArrayList<String>();
 		for (String s : sArrPkgNm) {
 			listPkgNm.add(StringUtils.split(s, "/")[0]);
@@ -76,10 +110,14 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 			listPkgNm.add("");
 		}
 		mapReq.put("PKG_LIST", listPkgNm);
-
+		mapReq.put("deviceHeader", deviceHeader);
+		mapReq.put("tenantHeader", tenantHeader);
+		mapReq.put("contentsTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+		mapReq.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+		mapReq.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		// List<Object> listPkg = queryForList("updateAlarm.getRecentFromPkgNm", mapReq);
 		// TODO osm1021 ALARM_OFF_DT도 여기서 가져와야 됨.
-		List<Map> listPkg = this.commonDAO.queryForList("PersonalUpgradeProduct.searchRecentFromPkgNm", mapReq,
+		List<Map> listPkg = this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", mapReq,
 				Map.class);
 		mapReq.remove("PKG_LIST");
 
@@ -87,7 +125,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 			throw new StorePlatformException("SAC_DSP_0006");
 		} else {
 
-			List<Object> listProd = new ArrayList<Object>();
+			List<Map<String, Object>> listProd = new ArrayList<Map<String, Object>>();
 			List<String> listPid = new ArrayList<String>();
 
 			/**************************************************************
@@ -144,7 +182,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 			/**************************************************************
 			 * 업데이트 목록 가공
 			 **************************************************************/
-			List<Object> listUpdate = new ArrayList<Object>();
+			List<Map<String, Object>> listUpdate = new ArrayList<Map<String, Object>>();
 			// ◆ 회원
 			// - 구매내역 존재 : 유료상품만 포함
 			// - 구매내역 미존재 : 무료상품만 포함
@@ -155,28 +193,40 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 				if (memberType.equals("updatedList")) {
 
 					// Oracle SQL 리터럴 수행 방지를 위한 예외처리
-					int iListPidSize = listPid.size();
-					int iPidLimited = 0;
-					if (iListPidSize < 300) {
-						iPidLimited = 300;
-					} else if (iListPidSize >= 300 && iListPidSize < 500) {
-						iPidLimited = 500;
-					} else if (iListPidSize >= 500 && iListPidSize < 700) {
-						iPidLimited = 700;
-					} else if (iListPidSize >= 700 && iListPidSize < 1000) {
-						iPidLimited = 1000;
-					}
-					for (int i = iListPidSize; i < iPidLimited; i++) {
-						listPid.add("");
-					}
+					// int iListPidSize = listPid.size();
+					// int iPidLimited = 0;
+					// if (iListPidSize < 300) {
+					// iPidLimited = 300;
+					// } else if (iListPidSize >= 300 && iListPidSize < 500) {
+					// iPidLimited = 500;
+					// } else if (iListPidSize >= 500 && iListPidSize < 700) {
+					// iPidLimited = 700;
+					// } else if (iListPidSize >= 700 && iListPidSize < 1000) {
+					// iPidLimited = 1000;
+					// }
+					// for (int i = iListPidSize; i < iPidLimited; i++) {
+					// listPid.add("");
+					// }
 
 					// 회원의 업데이트 목록 가공
-					mapReq.put("PID_LIST", listPid);
+					// mapReq.put("PID_LIST", listPid);
 
-					// TODO osm1021 기구매 로직으로 변환 필요
-					// List<Object> listPrchs = queryForList("updateAlarm.getPrchsInfo", mapReq);
-					List<Object> listPrchs = null;
-					mapReq.remove("PID_LIST");
+					// TODO osm1021 추후 LocalSCI 처리로 변환 필요
+					// 기구매 체크
+					ExistenceScReq existenceScReq = new ExistenceScReq();
+					List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
+					for (String prodId : listPid) {
+						ExistenceItemSc existenceItemSc = new ExistenceItemSc();
+						existenceItemSc.setProdId(prodId);
+						existenceItemScList.add(existenceItemSc);
+					}
+					existenceScReq.setTenantId(tenantHeader.getTenantId());
+					existenceScReq.setUserKey(req.getUserKey());
+					existenceScReq.setDeviceKey(req.getDeviceKey());
+					existenceScReq.setExistenceItemSc(existenceItemScList);
+					List<ExistenceScRes> listPrchs = this.existenceSacService.searchExistenceList(existenceScReq);
+
+					// mapReq.remove("PID_LIST");
 
 					String sProdAmt = "";
 					if (!listPrchs.isEmpty()) {
@@ -187,7 +237,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 						for (int i = 0; i < listProd.size(); i++) {
 
-							mapPkg = (Map<String, Object>) listProd.get(i);
+							mapPkg = listProd.get(i);
 							sPid = ObjectUtils.toString(mapPkg.get("PROD_ID"));
 							sFakeYn = ObjectUtils.toString(mapPkg.get("FAKE_YN"));
 							sProdAmt = ObjectUtils.toString(mapPkg.get("PROD_AMT"));
@@ -198,21 +248,26 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							// 구매내역이 존재하는 경우 구매 ID Setting
 							boolean isPrchsExists = false;
 							Map<String, String> mapPrchs = null;
-							for (int j = 0; j < listPrchs.size(); j++) {
-								mapPrchs = (Map<String, String>) listPrchs.get(j);
-								if (sPid.equals(mapPrchs.get("PROD_ID"))) {
+							// for (int j = 0; j < listPrchs.size(); j++) {
+							for (ExistenceScRes prchInfo : listPrchs) {
+								// mapPrchs = (Map<String, String>) listPrchs.get(j);
+								// 구매한 상품의 상품 Id
+								String prchProdId = prchInfo.getProdId();
+								// 구매한 상품의 구매 Id
+								String prchID = prchInfo.getPrchsId();
+								if (sPid.equals(prchProdId)) {
 									// 알림설정 미해제인 경우 구매ID Setting
-									if (StringUtils.isEmpty(mapPrchs.get("ALARM_OFF_DT"))) {
+									if (StringUtils.isEmpty((String) mapPkg.get("ALARM_OFF_DT"))) {
 										// 구매내역 존재 시 업데이트 목록 가공
 										// ① 서버 Version > 단말 Version 인 경우
 										// ② 서버 Version = 단말 Version 인 경우
 										// Fake Update 상품이고 Google Play에서 설치(installer가 'com.android.vending') 했으면 업데이트
 										// 대상
 										if (iPkgVerCd > iReqPkgVerCd) {
-											mapPkg.put("PRCHS_ID", mapPrchs.get("PRCHS_ID"));
+											mapPkg.put("PRCHS_ID", prchID);
 										} else if (iPkgVerCd == iReqPkgVerCd) {
 											if (sFakeYn.equals("Y") && sInstaller.equals("com.android.vending")) {
-												mapPkg.put("PRCHS_ID", mapPrchs.get("PRCHS_ID"));
+												mapPkg.put("PRCHS_ID", prchID);
 											} else {
 											}
 											mapPkg.clear();
@@ -250,7 +305,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 						// 구매내역이 없을 경우 무료상품만 리스트에 포함
 						for (int i = 0; i < listProd.size(); i++) {
-							mapPkg = (Map<String, Object>) listProd.get(i);
+							mapPkg = listProd.get(i);
 							sProdAmt = ObjectUtils.toString(mapPkg.get("PROD_AMT"));
 							if (sProdAmt.equals("0")) {
 								sFakeYn = ObjectUtils.toString(mapPkg.get("FAKE_YN"));
@@ -265,7 +320,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					}
 
 				} else if (memberType.equals("updatedListForGuest")) {
-					// 비회원일 경우 전체 정보 리스트에 포함
+					// 비회원일 경우 구매 이력에 상관없이 update 대상 전부를 추가
 					listUpdate.addAll(listProd);
 				}
 
@@ -273,6 +328,60 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					throw new StorePlatformException("SAC_DSP_0006");
 				}
 
+				// Response 정보 가공
+				for (Map<String, Object> updateTargetApp : listUpdate) {
+					Product product = new Product();
+					History history = new History();
+					List<Update> updateList = new ArrayList<Update>();
+					List<Source> sourceList = new ArrayList<Source>();
+
+					String prchId = (String) updateTargetApp.get("PRCHS_ID");
+					List<Menu> menuList = this.appGenerator.generateMenuList(
+							(String) updateTargetApp.get("TOP_MENU_ID"), (String) updateTargetApp.get("TOP_MENU_NM"),
+							(String) updateTargetApp.get("MENU_ID"), (String) updateTargetApp.get("MENU_NM"));
+					product.setMenuList(menuList);
+					List<Identifier> identifierList = this.appGenerator.generateIdentifierList(
+							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, (String) updateTargetApp.get("PROD_ID"));
+					product.setIdentifierList(identifierList);
+
+					Source source = this.commonGenerator.generateSource(
+							ObjectUtils.toString(updateTargetApp.get("IMAGE_PATH")),
+							((BigDecimal) updateTargetApp.get("IMAGE_SIZE")).intValue());
+					sourceList.add(source);
+					product.setSourceList(sourceList);
+
+					Rights rights = new Rights();
+					rights.setGrade(ObjectUtils.toString(updateTargetApp.get("PROD_GRD_CD")));
+					product.setRights(rights);
+
+					Price price = this.commonGenerator.generatePrice(
+							((BigDecimal) updateTargetApp.get("PROD_AMT")).intValue(), null);
+					product.setPrice(price);
+					// 구매 정보는 구매 내역이 있는 App만 표시한다.
+					if (!StringUtils.isEmpty(prchId)) {
+						Purchase purchage = this.commonGenerator.generatePurchase(
+								(String) updateTargetApp.get("PRCHS_ID"), null, null);
+						product.setPurchase(purchage);
+					}
+
+					App app = this.appGenerator.generateApp((String) updateTargetApp.get("AID"),
+							(String) updateTargetApp.get("APK_PKG_NM"),
+							ObjectUtils.toString(updateTargetApp.get("APK_VER")),
+							ObjectUtils.toString(updateTargetApp.get("PROD_VER")),
+							((BigDecimal) updateTargetApp.get("FILE_SIZE")).intValue(), null, null, null);
+
+					Update update = this.appGenerator.generateUpdate(
+							new Date(null, ObjectUtils.toString(updateTargetApp.get("UPD_DT"))), null);
+					updateList.add(update);
+					history.setUpdate(updateList);
+					app.setHistory(history);
+					product.setApp(app);
+					productList.add(product);
+				}
+
+				commonResponse.setTotalCount(productList.size());
+				res.setCommonResponse(commonResponse);
+				res.setProductList(productList);
 				// TODO osm1021 range는 일단 삭제 한다.
 
 				// range 가 지정된 경우

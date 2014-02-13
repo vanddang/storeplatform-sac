@@ -82,6 +82,17 @@ public interface CommonMetaInfoGenerator {
 
 	/**
 	 * <pre>
+	 * 공통 Source 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Source
+	 */
+	public Source generateSource(String path, Integer size);
+
+	/**
+	 * <pre>
 	 * 공통 Source List 생성.
 	 * </pre>
 	 * 
@@ -147,6 +158,19 @@ public interface CommonMetaInfoGenerator {
 	 * @return Price
 	 */
 	public Price generatePrice(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 공통 Price 객체 생성.
+	 * </pre>
+	 * 
+	 * @param text
+	 *            text
+	 * @param fixedPrice
+	 *            fixedPrice
+	 * @return Price
+	 */
+	public Price generatePrice(Integer text, Integer fixedPrice);
 
 	/**
 	 * <pre>
@@ -235,4 +259,19 @@ public interface CommonMetaInfoGenerator {
 	 * @return Purchase
 	 */
 	public Purchase generatePurchase(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 구매 정보 객체 생성.
+	 * </pre>
+	 * 
+	 * @param prchId
+	 *            prchId
+	 * @param prchState
+	 *            prchState
+	 * @param prchDt
+	 *            prchDt
+	 * @return Purchase
+	 */
+	public Purchase generatePurchase(String prchId, String prchState, String prchDt);
 }

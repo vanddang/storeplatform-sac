@@ -11,10 +11,13 @@ package com.skplanet.storeplatform.sac.display.response;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Install;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -33,6 +36,23 @@ public interface AppInfoGenerator {
 	 * @return List<Menu>
 	 */
 	public List<Menu> generateMenuList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * App 상품 전용 Menu List 생성.
+	 * </pre>
+	 * 
+	 * @param topMenuId
+	 *            topMenuId
+	 * @param topMenuNm
+	 *            topMenuNm
+	 * @param menuId
+	 *            menuId
+	 * @param menuNm
+	 *            menuNm
+	 * @return
+	 */
+	public List<Menu> generateMenuList(String topMenuId, String topMenuNm, String menuId, String menuNm);
 
 	/**
 	 * <pre>
@@ -58,6 +78,32 @@ public interface AppInfoGenerator {
 
 	/**
 	 * <pre>
+	 * App 상품 전용 App 객체 생성.
+	 * </pre>
+	 * 
+	 * @param aid
+	 *            aid
+	 * @param packageNm
+	 *            packageNm
+	 * @param apkVer
+	 *            apkVer
+	 * @param prodVer
+	 *            prodVer
+	 * @param fileSize
+	 *            fileSize
+	 * @param supportOs
+	 *            supportOs
+	 * @param scid
+	 *            scid
+	 * @param filePath
+	 *            filePath
+	 * @return App
+	 */
+	public App generateApp(String aid, String packageNm, String apkVer, String prodVer, Integer fileSize,
+			String supportOs, String scid, String filePath);
+
+	/**
+	 * <pre>
 	 * App 상품 전용 Identifier 객체 생성.
 	 * </pre>
 	 * 
@@ -69,6 +115,19 @@ public interface AppInfoGenerator {
 
 	/**
 	 * <pre>
+	 * App 상품 전용 Identifier List 생성.
+	 * </pre>
+	 * 
+	 * @param type
+	 *            type
+	 * @param text
+	 *            text
+	 * @return List<Identifier>
+	 */
+	public List<Identifier> generateIdentifierList(String type, String text);
+
+	/**
+	 * <pre>
 	 * Component 전용 Identifier 객체 생성.
 	 * </pre>
 	 * 
@@ -77,4 +136,30 @@ public interface AppInfoGenerator {
 	 * @return List<Identifier>
 	 */
 	public List<Identifier> generateComponentIdentifierList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * Update 객체 생성.
+	 * </pre>
+	 * 
+	 * @param date
+	 *            date
+	 * @param updateExplain
+	 *            updateExplain
+	 * @return Update
+	 */
+	public Update generateUpdate(Date date, String updateExplain);
+
+	/**
+	 * <pre>
+	 * Isntall 객체 생성.
+	 * </pre>
+	 * 
+	 * @param caller
+	 *            caller
+	 * @param upgrade
+	 *            upgrade
+	 * @return Install
+	 */
+	public Install generateInstall(String caller, String upgrade);
 }

@@ -126,14 +126,26 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		Source source = new Source();
 		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 		if (StringUtils.isNotEmpty(metaInfo.getImagePath())) {
-			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getImagePath()));
-			source.setUrl(metaInfo.getImagePath());
-			source.setSize(metaInfo.getImageSize());
+			this.generateSource(metaInfo.getImagePath(), metaInfo.getImageSize());
 		} else {
-			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getFilePath()));
-			source.setUrl(metaInfo.getFilePath());
-			source.setSize(metaInfo.getFileSize());
+			this.generateSource(metaInfo.getFilePath(), metaInfo.getFileSize());
 		}
+		return source;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSource(java.lang.String,
+	 * java.lang.Integer)
+	 */
+	@Override
+	public Source generateSource(String path, Integer size) {
+		Source source = new Source();
+		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+		source.setMediaType(DisplayCommonUtil.getMimeType(path));
+		source.setUrl(path);
+		source.setSize(size);
 		return source;
 	}
 
@@ -217,9 +229,14 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	@Override
 	public Price generatePrice(MetaInfo metaInfo) {
+		return this.generatePrice(metaInfo.getProdAmt(), metaInfo.getProdNetAmt());
+	}
+
+	@Override
+	public Price generatePrice(Integer text, Integer fixedPrice) {
 		Price price = new Price();
-		price.setText(metaInfo.getProdAmt());
-		price.setFixedPrice(metaInfo.getProdNetAmt());
+		price.setText(text);
+		price.setFixedPrice(fixedPrice);
 		return price;
 	}
 
@@ -358,18 +375,24 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	@Override
 	public Purchase generatePurchase(MetaInfo metaInfo) {
+		return this.generatePurchase(metaInfo.getPurchaseProdId(), metaInfo.getPurchaseState(),
+				metaInfo.getPurchaseDt());
+	}
+
+	@Override
+	public Purchase generatePurchase(String prchId, String prchState, String prchDt) {
 		Purchase purchase = new Purchase();
 
-		purchase.setState(metaInfo.getPurchaseState());
+		purchase.setState(prchState);
 
 		List<Identifier> identifierList = new ArrayList<Identifier>();
-		identifierList
-				.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, metaInfo.getPurchaseId()));
-		identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-				metaInfo.getPurchaseProdId()));
+		identifierList.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, prchId));
+		identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, prchId));
 		purchase.setIdentifierList(identifierList);
 
-		purchase.setDate(this.generateDate(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM, metaInfo.getPurchaseDt()));
+		if (StringUtils.isNotEmpty(prchDt)) {
+			purchase.setDate(this.generateDate(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM, prchDt));
+		}
 
 		return purchase;
 	}
