@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
@@ -21,6 +20,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
@@ -58,12 +59,10 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 	@Override
 	public DetailInformationSacRes detailInformation(DetailInformationSacReq req) {
 
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID("S01");
-		commonRequest.setTenantID("S01-01002");
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
 		SearchSellerRequest schReq = new SearchSellerRequest();
-		schReq.setCommonRequest(commonRequest);
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(requestHeader));
 
 		KeySearch keySearch = new KeySearch();
 
