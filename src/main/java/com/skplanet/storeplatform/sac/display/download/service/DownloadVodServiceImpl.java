@@ -28,30 +28,16 @@ import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
 import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.sci.SearchSellerKeySCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -92,6 +78,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	private EncryptionGenerator encryptionGenerator;
 	@Autowired
 	private DownloadAES128Helper downloadAES128Helper;
+	@Autowired
+	private SearchSellerKeySCI searchSellerKeySCI;
 
 	/*
 	 * (non-Javadoc)
@@ -104,6 +92,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
+		String test = this.searchSellerKeySCI.searchSellerKeyForAid("OA00049881");
+
+		this.log.debug("######################################################");
+		this.log.debug("sellerKey	:	" + test);
+		this.log.debug("######################################################");
+
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
 
@@ -115,35 +109,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		DownloadVodSacRes response = new DownloadVodSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		int totalCount = 0;
 		String idType = downloadVodSacReq.getIdType();
 		String productId = downloadVodSacReq.getProductId();
 		String deviceKey = downloadVodSacReq.getDeviceKey();
 		String userKey = downloadVodSacReq.getUserKey();
 
-		List<Identifier> identifierList = null;
-		List<Menu> menuList = null;
 		List<Support> supportList = null;
-		List<Source> sourceList = null;
-		List<VideoInfo> videoInfoList = null;
 
 		Product product = null;
-		Identifier identifier = null;
-		Support support = null;
-		Rights rights = null;
-		Source source = null;
-		Title title = null;
-		Menu menu = null;
-		Purchase purchase = null;
-		Vod vod = null;
-		Time runningTime = null;
-		VideoInfo videoInfo = null;
-		Store store = null;
-		Play play = null;
-		Price price = null;
-		Chapter chapter = null;
-		Date date = null;
-		Distributor distributor = new Distributor();
 
 		if (downloadVodSacReq.getDummy() == null) {
 
@@ -170,24 +143,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq,
 					MetaInfo.class);
 
-			menuList = new ArrayList<Menu>();
-			sourceList = new ArrayList<Source>();
-			identifierList = new ArrayList<Identifier>();
-			videoInfoList = new ArrayList<VideoInfo>();
-
 			product = new Product();
-			identifier = new Identifier();
-			support = new Support();
-			rights = new Rights();
-			source = new Source();
-			title = new Title();
-			purchase = new Purchase();
-			vod = new Vod();
-			runningTime = new Time();
-			store = new Store();
-			price = new Price();
-			chapter = new Chapter();
-			play = new Play();
 
 			if (metaInfo != null) {
 
@@ -342,212 +298,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				commonResponse.setTotalCount(0);
 			}
 
-		} else {
-			// dummy data를 호출할때
-			menuList = new ArrayList<Menu>();
-			sourceList = new ArrayList<Source>();
-			identifierList = new ArrayList<Identifier>();
-			videoInfoList = new ArrayList<VideoInfo>();
-
-			product = new Product();
-			identifier = new Identifier();
-			support = new Support();
-			rights = new Rights();
-			source = new Source();
-			title = new Title();
-			purchase = new Purchase();
-			vod = new Vod();
-			runningTime = new Time();
-			store = new Store();
-			price = new Price();
-			chapter = new Chapter();
-			play = new Play();
-
-			// 상품ID
-			identifier = new Identifier();
-			identifier.setType("channel");
-			identifier.setText("H001601609");
-			identifierList.add(identifier);
-
-			supportList = new ArrayList<Support>();
-			support = new Support();
-			support = new Support();
-			support.setType("hdcp");
-			support.setText("Y");
-			supportList.add(support);
-			support = new Support();
-			support.setType("hd");
-			support.setText("N");
-			supportList.add(support);
-			support = new Support();
-			support.setType("btv");
-			support.setText("Y");
-			supportList.add(support);
-			support = new Support();
-			support.setType("dolby");
-			support.setText("N");
-			supportList.add(support);
-
-			title.setText("대지진");
-
-			/*
-			 * Menu(메뉴정보) Id, Name, Type
-			 */
-			menu = new Menu();
-			menu.setId("DP000517");
-			menu.setName("영화");
-			menu.setType("topClass");
-			menuList.add(menu);
-			menu = new Menu();
-			menu.setId("DP17004");
-			menu.setName("드라마");
-			menuList.add(menu);
-			menu = new Menu();
-			menu.setId("CT13");
-			menu.setType("metaClass");
-			menuList.add(menu);
-
-			/*
-			 * source mediaType, size, type, url
-			 */
-			source.setMediaType("image/png");
-			source.setType("thumbnail");
-			source.setUrl("http://wap.tstore.co.kr/SMILE_DATA7/PVOD/201310/31/0001747842/5/0003526438/5/RT1_00000191803_1_0346_182x261_130x186.PNG");
-			sourceList.add(source);
-
-			runningTime.setText("135");
-			vod.setRunningTime(runningTime);
-			chapter.setUnit("회");
-			chapter.setText(1);
-
-			videoInfo = new VideoInfo();
-			videoInfo.setBtvcid("2222222222");
-			videoInfo.setPictureSize("16:9");
-			videoInfo.setPixel("576x324");
-			videoInfo.setScid("0003526439");
-			videoInfo.setSize("575311754");
-			videoInfo.setType("normal");
-			videoInfo.setVersion("1");
-			videoInfoList.add(videoInfo);
-			videoInfo = new VideoInfo();
-			videoInfo.setBtvcid("2222222222");
-			videoInfo.setPictureSize("16:9");
-			videoInfo.setPixel("720x400");
-			videoInfo.setScid("0003526440");
-			videoInfo.setSize("1146264845");
-			videoInfo.setType("sd");
-			videoInfo.setVersion("1");
-			videoInfoList.add(videoInfo);
-			videoInfo = new VideoInfo();
-			videoInfo.setBtvcid("2222222222");
-			videoInfo.setPictureSize("16:9");
-			videoInfo.setPixel("1280x720");
-			videoInfo.setScid("0003526441");
-			videoInfo.setSize("2028754302");
-			videoInfo.setType("hd");
-			videoInfo.setVersion("1");
-			videoInfoList.add(videoInfo);
-			vod.setChapter(chapter);
-			vod.setVideoInfoList(videoInfoList);
-
-			/*
-			 * Rights grade
-			 */
-			rights.setAllow("Y");
-			rights.setGrade("PD004401");
-
-			Support playSupport = new Support();
-			List<Support> playSupportList = new ArrayList<Support>();
-			List<Identifier> playIdentifierList = new ArrayList<Identifier>();
-			Price playPrice = new Price();
-
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText("H001601609");
-			playIdentifierList.add(identifier);
-
-			playSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-			playSupport.setText("Y");
-			playSupportList.add(playSupport);
-
-			date = new Date();
-			date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-			date.setText("30일");
-			playPrice.setText(800);
-
-			play.setIdentifierList(playIdentifierList);
-			play.setSupportList(playSupportList);
-			play.setDate(date); // 이용기간
-			play.setPrice(playPrice); // 바로보기 상품 금액
-
-			play.setSupport(playSupport);
-			play.setDate(date); // 이용기간
-			play.setPrice(playPrice); // 바로보기 상품 금액
-			play.setNetworkRestrict("ota");
-
-			rights.setPlay(play);
-
-			Support storeSupport = new Support();
-			List<Support> storeSupportList = new ArrayList<Support>();
-			List<Identifier> storeIdentifierList = new ArrayList<Identifier>();
-			Price storePrice = new Price();
-
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText("H001601609");
-			storeIdentifierList.add(identifier);
-
-			storeSupport.setType("drm");
-			storeSupport.setText("Y");
-			storeSupportList.add(storeSupport);
-
-			storePrice.setText(1200);
-
-			store.setIdentifierList(storeIdentifierList);
-			store.setSupportList(storeSupportList);
-			store.setPrice(storePrice);
-			store.setNetworkRestrict("ota");
-
-			rights.setStore(store);
-
-			distributor.setName("서진우");
-			distributor.setTel("0215990011");
-			distributor.setEmail("skplanet_vod@tstore.co.kr");
-			distributor.setRegNo("중구-02923호");
-
-			// 구매 정보
-			purchase.setState("payment");
-			List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
-
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-			identifier.setText("MI100000000000044286");
-			purchaseIdentifierList.add(identifier);
-
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText("0000395599");
-			purchaseIdentifierList.add(identifier);
-
-			purchase.setIdentifierList(purchaseIdentifierList);
-
-			date = new Date();
-			date.setType("date/purchase");
-			date.setText("20130722143732");
-			purchase.setDate(date);
-
-			product = new Product();
-			product.setIdentifierList(identifierList);
-			product.setSupportList(supportList);
-			product.setTitle(title);
-			product.setMenuList(menuList);
-			product.setSourceList(sourceList);
-			product.setVod(vod);
-			product.setRights(rights);
-			product.setDistributor(distributor);
-			product.setPurchase(purchase);
-
-			commonResponse.setTotalCount(1);
 		}
 
 		response.setCommonResponse(commonResponse);

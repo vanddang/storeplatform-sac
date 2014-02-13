@@ -12,8 +12,6 @@ package com.skplanet.storeplatform.sac.display.download.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -32,19 +30,11 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Component;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -66,8 +56,6 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
 @Service
 @Transactional
 public class DownloadAppServiceImpl implements DownloadAppService {
-
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -127,7 +115,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		DownloadAppSacRes response = new DownloadAppSacRes();
 		CommonResponse commonResponse = new CommonResponse();
-		int totalCount = 0;
 		String filteredBy = downloadAppSacReq.getFilteredBy();
 		String productId = downloadAppSacReq.getProductId();
 		String deviceKey = downloadAppSacReq.getDeviceKey();
@@ -135,20 +122,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		String packageName = downloadAppSacReq.getPackageName();
 
 		List<Identifier> identifierList = null;
-		List<Menu> menuList = null;
-		List<Source> sourceList = null;
 
 		Product product = null;
 		Identifier identifier = null;
-		App app = null;
-		Rights rights = null;
-		Source source = null;
-		Title title = null;
-		Menu menu = null;
-		Purchase purchase = null;
-		Distributor distributor = null;
 		Component component = null;
-		Date date = null;
 
 		if (downloadAppSacReq.getDummy() == null) {
 
@@ -194,26 +171,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					MetaInfo.class);
 
 			if (metaInfo != null) {
-
-				menuList = new ArrayList<Menu>();
-				sourceList = new ArrayList<Source>();
 				identifierList = new ArrayList<Identifier>();
 
 				product = new Product();
 				identifier = new Identifier();
-				app = new App();
-				rights = new Rights();
-				source = new Source();
-				title = new Title();
-				purchase = new Purchase();
-				distributor = new Distributor();
-				date = new Date();
 
 				String prchsId = null;
 				String prchsDt = null;
 				String prchsState = null;
 				String prchsProdId = null;
-				String dwldExprDt = null;
 
 				try {
 					// 구매내역 조회를 위한 생성자
@@ -243,7 +209,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
 						prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 						prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
-						dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
 
 						if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 							prchsState = "payment";
