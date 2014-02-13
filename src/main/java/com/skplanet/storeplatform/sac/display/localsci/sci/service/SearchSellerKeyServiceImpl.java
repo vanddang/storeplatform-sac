@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -21,15 +19,13 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 
 /**
- * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
+ * SearchSellerKey Service 인터페이스(CoreStoreBusiness) 구현체
  * 
- * Updated on : 2014. 1. 21. Updated by : 이석희, 인크로스.
+ * Updated on : 2014. 2. 13. Updated by : 이석희, 아이에스플러스.
  */
 @Service
 @Transactional
 public class SearchSellerKeyServiceImpl implements SearchSellerKeyService {
-
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -38,8 +34,9 @@ public class SearchSellerKeyServiceImpl implements SearchSellerKeyService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.DownloadAppService#DownloadAppService(com.skplanet
-	 * .storeplatform.sac.client.product.vo.downloadAppSacReqVO)
+	 * @see
+	 * com.skplanet.storeplatform.sac.biz.display.localsci.sci.service.SearchSellerKeyService#SearchSellerKeyService
+	 * (String aid)
 	 */
 	@Override
 	public String searchSellerKeyForAid(String aid) {
