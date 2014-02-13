@@ -796,7 +796,8 @@
         SELECT COUNT(*) AS TOTAL_COUNT
           FROM
              (
-             SELECT MAX( NOTI_SEQ ) AS NOTI_SEQ
+             SELECT MAX( REG_DT ) AS REG_DT
+                  , MAX( PROD_ID ) AS PROD_ID
                FROM
                   (
                   SELECT
@@ -808,7 +809,8 @@
                   <if test="prodType != 'shopping'">
                       /*+ leading(P) use_nl(N) index(N IDX_DP_PROD_NOTI_06) */
                   </if>
-                         N.PROD_ID
+                         N.REG_DT
+                       , N.PROD_ID
                     FROM TB_DP_PROD_NOTI  N
                        , TB_DP_PROD  P
                    WHERE P.PROD_ID = N.PROD_ID
@@ -855,7 +857,6 @@
                 </if>
                   )
               GROUP BY PROD_ID
-              ORDER BY REG_DT DESC
              ) NOTI
     </select>
     <!-- 판매자 댓글 -->
