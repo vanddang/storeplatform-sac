@@ -679,9 +679,8 @@ public class ShoppingCouponSacController {
 					break;
 				case DT:
 					xmlSb.append("<rData>");
-					if (couponRes == null)
-						xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponReq.getCouponCode(), "")
-								+ "]]></couponCode>");
+					xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponReq.getCouponCode(), "")
+							+ "]]></couponCode>");
 					xmlSb.append("<eventName><![CDATA[" + StringUtil.nvl(couponRes.getEventName(), "")
 							+ "]]></eventName>");
 					xmlSb.append("<eventStartDate><![CDATA[" + StringUtil.nvl(couponRes.getEventStartDate(), "")
