@@ -77,7 +77,7 @@ public class RemoveSubsellerTest {
 
 						List<String> removeKeyList;
 						removeKeyList = new ArrayList<String>();
-						removeKeyList.add("SS201402121759021740000769");
+						removeKeyList.add("SS201402131048341210000772");
 						req.setSubSellerKey(removeKeyList);
 
 						LOGGER.debug("request param : {}", req.toString());

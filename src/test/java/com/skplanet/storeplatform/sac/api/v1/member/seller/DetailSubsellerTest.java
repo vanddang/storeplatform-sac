@@ -62,7 +62,7 @@ public class DetailSubsellerTest {
 
 		new TestCaseTemplate(this.mockMvc)
 				.url(TestMemberConstant.PREFIX_SELLER_PATH
-						+ "/detailSubseller/v1?sellerKey=US2013122616445132200000141").httpMethod(HttpMethod.GET)
+						+ "/detailSubseller/v1?sellerKey=IF1023501184720130823173955").httpMethod(HttpMethod.GET)
 				.success(DetailSubsellerRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {

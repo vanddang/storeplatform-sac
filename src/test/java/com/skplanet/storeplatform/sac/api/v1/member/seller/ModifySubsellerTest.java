@@ -76,7 +76,7 @@ public class ModifySubsellerTest {
 						req.setSubSellerEmail("omc97@hanmail.net");
 
 						// 새로 추가됨
-						req.setSubSellerKey("SS201402121759021740000769");
+						req.setSubSellerKey("SS201402131048341210000772");
 						req.setMemberPW("1234567999");
 						req.setOldPW("1234567999");
 
