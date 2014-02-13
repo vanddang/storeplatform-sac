@@ -15,4 +15,28 @@ public class GetSupportAomReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	private String userKey;
+
+	private String deviceId;
+
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	public String getDeviceId() {
+		return this.deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 }
