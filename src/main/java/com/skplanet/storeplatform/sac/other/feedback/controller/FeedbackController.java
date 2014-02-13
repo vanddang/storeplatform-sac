@@ -301,8 +301,8 @@ public class FeedbackController {
 	 * 평점별 참여수 조회.
 	 * </pre>
 	 * 
-	 * @param ListScorePaticpersSacReq
-	 *            ListScorePaticpersSacReq
+	 * @param listScorePaticpersSacReq
+	 *            listScorePaticpersSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
 	 * @return ListScoreParticpersSacRes
