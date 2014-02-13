@@ -266,9 +266,10 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
-		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
+		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
 				.toString());
+		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType,
+				keyValue, sacHeader.getTenantHeader().toString());
 
 		DetailReq req = new DetailReq();
 		if ("userKey".equals(keyType)) {
@@ -435,8 +436,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -552,12 +552,13 @@ public class MemberCommonComponent {
 			// 인증키가 유효하지 않습니다.
 			throw new StorePlatformException("SAC_MEM_2002");
 		}
-		Double expireDate = Double.parseDouble(res.getLoginInfo().getExpireDate());
-		Double sysdate = Double.parseDouble(this.getExpirationTime(0));
-		if (expireDate < sysdate) {
-			// 인증 만료시간 오버
-			throw new StorePlatformException("SAC_MEM_2003");
-		}
+		// TODO 만료로직 주석
+		// Double expireDate = Double.parseDouble(res.getLoginInfo().getExpireDate());
+		// Double sysdate = Double.parseDouble(this.getExpirationTime(0));
+		// if (expireDate < sysdate) {
+		// // 인증 만료시간 오버
+		// throw new StorePlatformException("SAC_MEM_2003");
+		// }
 	}
 
 	/**

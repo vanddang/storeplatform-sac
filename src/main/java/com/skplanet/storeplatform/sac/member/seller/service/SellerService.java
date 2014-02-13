@@ -7,6 +7,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassResSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassResSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
@@ -49,6 +51,9 @@ public interface SellerService {
 
 	/** 2.2.14. 판매자 회원 계정 승인. */
 	public ConfirmRes confirm(SacRequestHeader header, ConfirmReq req);
+
+	/** 2.2.16. 판매자 회원 전환 신청. */
+	public ConversionClassResSacRes conversionClassRes(SacRequestHeader header, ConversionClassResSacReq req);
 
 	/** 2.2.24. 판매자 회원 탈퇴. */
 	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req);

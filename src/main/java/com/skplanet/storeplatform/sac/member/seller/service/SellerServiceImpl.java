@@ -43,6 +43,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassResSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassResSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
@@ -444,6 +446,73 @@ public class SellerServiceImpl implements SellerService {
 		res.setSellerKey(req.getSellerKey());
 		LOGGER.debug("==>>[SAC] ConfirmRes.toString() : {}", res.toString());
 		LOGGER.debug("############ SellerServiceImpl.confirm() [START] ############");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.16. 판매자 회원 전환 신청.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ConversionClassResSacRes
+	 */
+	@Override
+	public ConversionClassResSacRes conversionClassRes(SacRequestHeader header, ConversionClassResSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.conversionClassRes() [START] ############");
+		// SC공통 헤더
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+		// SessionKey 유효성 체크
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+
+		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
+
+		// 정산정보
+		SellerAccount sellerAccount = new SellerAccount();
+		sellerAccount.setAbaCode(req.getAbaCode());
+		sellerAccount.setAccountRealDate(req.getAccountRealDate());
+		sellerAccount.setBankAccount(req.getBankAccount());
+		sellerAccount.setBankAcctName(req.getBankAcctName());
+		sellerAccount.setBankAddress(req.getBankAddress());
+		sellerAccount.setBankBranch(req.getBankBranch());
+		sellerAccount.setBankBranchCode(req.getBankBranchCode());
+		sellerAccount.setBankCode(req.getBankCode());
+		sellerAccount.setBankLocation(req.getBankLocation());
+		sellerAccount.setBankName(req.getBankName());
+		sellerAccount.setIbanCode(req.getIbanCode());
+		sellerAccount.setIsUsed(MemberConstants.USE_Y);
+		sellerAccount.setReason(MemberConstants.SellerConstants.SELLER_REASON_NEW);
+		sellerAccount.setSellerKey(req.getSellerKey());
+		sellerAccount.setSwiftCode(req.getSwiftCode());
+		sellerAccount.setTpinCode(req.getTpinCode());
+
+		// 서류
+		List<Document> documentList = null;
+		if (req.getExtraDocumentList() != null) {
+			documentList = new ArrayList<Document>();
+			for (int i = 0; i < req.getExtraDocumentList().size(); i++) {
+				Document document = new Document();
+				document.setDocumentCode(req.getExtraDocumentList().get(i).getDocumentCode());
+				document.setDocumentName(req.getExtraDocumentList().get(i).getDocumentName());
+				document.setDocumentPath(req.getExtraDocumentList().get(i).getDocumentPath());
+				document.setDocumentSize(req.getExtraDocumentList().get(i).getDocumentSize());
+			}
+		}
+
+		updateAccountSellerRequest.setSellerKey(req.getSellerKey());
+
+		/** 2. 공통 헤더 생성 및 주입. */
+		updateAccountSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
+
+		/** 3. SC회원 - 전환신청 Call. */
+		UpdateAccountSellerResponse updateAccountSellerResponse = this.sellerSCI
+				.updateAccountSeller(updateAccountSellerRequest);
+
+		/** 4. TenantRes Response 생성 및 주입 */
+		ConversionClassResSacRes res = new ConversionClassResSacRes();
+		res.setSellerKey(updateAccountSellerResponse.getSellerKey());
+		LOGGER.debug("############ SellerServiceImpl.conversionClassRes() [END] ############");
 		return res;
 	}
 

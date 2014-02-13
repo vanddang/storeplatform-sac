@@ -202,5 +202,8 @@ public final class MemberConstants {
 		public static final String SELLER_TYPE_NOPAY = "US011301"; // 무료
 		public static final String SELLER_TYPE_PAY = "US011302"; // 유료
 		public static final String SELLER_TYPE_BP = "US011303"; // BP
+
+		public static final String SELLER_REASON_CHANGE = "change"; // 변경
+		public static final String SELLER_REASON_NEW = "new"; // 신규
 	}
 }
