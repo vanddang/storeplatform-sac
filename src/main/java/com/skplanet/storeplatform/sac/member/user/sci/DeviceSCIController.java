@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceMdnSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceMdnSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -42,19 +43,20 @@ public class DeviceSCIController implements DeviceSCI {
 
 	@Override
 	@RequestMapping(value = "/searchDeviceMdn", method = RequestMethod.POST)
-	public SearchDeviceMdnSacRes searchDeviceMdn(
-	/* SacRequestHeader requestHeader, */@Validated SearchDeviceMdnSacReq requestVO) {
+	public @ResponseBody
+	SearchDeviceIdSacRes searchDeviceId(
+	/* SacRequestHeader requestHeader, */@Validated SearchDeviceIdSacReq requestVO) {
 
 		SacRequestHeader requestHeader = new SacRequestHeader(); // client-internal에 공통으로 생성되면 삭제 후 Bypass 예정.
 		TenantHeader tenantHeader = new TenantHeader();
-		tenantHeader.setSystemId("S01-01001");
-		tenantHeader.setTenantId("S01");
+		tenantHeader.setSystemId(requestVO.getSystemId());
+		tenantHeader.setTenantId(requestVO.getTenantId());
 		requestHeader.setTenantHeader(tenantHeader);
 
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				requestVO.getDeviceKey(), requestVO.getUserKey());
 
-		SearchDeviceMdnSacRes responseVO = new SearchDeviceMdnSacRes();
+		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
 		responseVO.setMsisdn(deviceInfo.getDeviceId());
 
 		return responseVO;
@@ -63,11 +65,12 @@ public class DeviceSCIController implements DeviceSCI {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.client.internal.member.sci.DeviceSCI#searchChangedDeviceList(com.skplanet.
-	 * storeplatform.sac.client.internal.member.vo.ChangedDeviceReq)
+	 * @see
+	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI#searchChangedDeviceHistoryList(com.skplanet
+	 * .storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq)
 	 */
 	@Override
-	public ChangedDeviceSacRes searchChangedDeviceList(ChangedDeviceSacReq requestVO) {
+	public ChangedDeviceHistorySacRes searchChangedDeviceHistoryList(ChangedDeviceHistorySacReq request) {
 		// TODO Auto-generated method stub
 		return null;
 	}
