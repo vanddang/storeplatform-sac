@@ -1,9 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.common;
 
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -18,7 +14,6 @@ public class AgreementInfo extends CommonInfo {
 	/**
 	 * 약관 동의 코드
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String extraAgreementId;
 
 	/**
@@ -29,30 +24,49 @@ public class AgreementInfo extends CommonInfo {
 	/**
 	 * 약관 동의 여부
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
-	@Pattern(regexp = "^Y|^N")
 	private String isExtraAgreement;
 
+	/**
+	 * @return String : extraAgreementId
+	 */
 	public String getExtraAgreementId() {
 		return this.extraAgreementId;
 	}
 
+	/**
+	 * @param extraAgreementId
+	 *            String : the extraAgreementId to set
+	 */
 	public void setExtraAgreementId(String extraAgreementId) {
 		this.extraAgreementId = extraAgreementId;
 	}
 
+	/**
+	 * @return String : extraAgreementVersion
+	 */
 	public String getExtraAgreementVersion() {
 		return this.extraAgreementVersion;
 	}
 
+	/**
+	 * @param extraAgreementVersion
+	 *            String : the extraAgreementVersion to set
+	 */
 	public void setExtraAgreementVersion(String extraAgreementVersion) {
 		this.extraAgreementVersion = extraAgreementVersion;
 	}
 
+	/**
+	 * @return String : isExtraAgreement
+	 */
 	public String getIsExtraAgreement() {
 		return this.isExtraAgreement;
 	}
 
+	/**
+	 * @param isExtraAgreement
+	 *            String : the isExtraAgreement to set
+	 */
 	public void setIsExtraAgreement(String isExtraAgreement) {
 		this.isExtraAgreement = isExtraAgreement;
 	}
