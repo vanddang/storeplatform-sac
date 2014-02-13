@@ -221,15 +221,20 @@ public class FileUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static int fileCopy(String src, String target) throws Exception {
-		FileInputStream fis = new FileInputStream(src);
-		int len = fis.available();
-		byte buf[] = new byte[len];
-		fis.read(buf, 0, len);
-		fis.close();
-		FileOutputStream fos = new FileOutputStream(target);
-		fos.write(buf, 0, len);
-		fos.close();
+	public static int fileCopy(String src, String target) {
+		try {
+			FileInputStream fis = new FileInputStream(src);
+			int len = fis.available();
+			byte buf[] = new byte[len];
+			fis.read(buf, 0, len);
+			fis.close();
+			FileOutputStream fos = new FileOutputStream(target);
+			fos.write(buf, 0, len);
+			fos.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return 1;
 	}
 

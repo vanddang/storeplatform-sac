@@ -409,45 +409,6 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * <pre>
-	 * 프로퍼티 내의 컬럼 값을 변경한다.
-	 * DESCRIPTION --> description
-	 * subMeta01 --> subMeta01
-	 * SRC_CONTENT_ID --> srcContentId
-	 * </pre>
-	 * 
-	 * @param source
-	 *            컬럼 값
-	 * @return 변경된 컬럼 값
-	 */
-	public static String convertColumnIntoProp(String source) {
-		if (source == null || source.indexOf("_") == -1) {
-			if (source.equals(source.toUpperCase())) {
-				// DESCRIPTION --> description
-				return source.toLowerCase();
-			} else {
-				// subMeta01 --> subMeta01
-				return source;
-			}
-		}
-
-		StringBuffer buffer = new StringBuffer();
-
-		source = source.toLowerCase();
-		String[] tempArr = source.split("_", -1);
-
-		for (int i = 0; i < tempArr.length; i++) {
-			if (i == 0) {
-				buffer.append(tempArr[i]);
-			} else {
-				buffer.append(capitalize(tempArr[i]));
-			}
-		}
-
-		return buffer.toString();
-	}
-
-	/**
 	 * 컬럼내의 프로퍼티 값을 변경한다.
 	 * 
 	 * @param source
