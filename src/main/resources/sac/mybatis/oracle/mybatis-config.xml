@@ -221,5 +221,9 @@
         
         <!-- 정액제 상품 조회 -->
         <typeAlias alias="FreepassListSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq" />        
+                
+        <!-- Vod 보관함 정보 조회 -->
+        <typeAlias alias="CategoryVodBoxSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq" />
+        <typeAlias alias="CategoryVodBox"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryVodBox" />
     </typeAliases>
 </configuration>

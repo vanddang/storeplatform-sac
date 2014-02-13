@@ -32,14 +32,14 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookCo
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryEbookComicService;
@@ -170,9 +170,9 @@ public class CategoryController {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param requestVO
+	 * @param CategoryVodBoxSacReq
 	 *            requestVO
-	 * @return VodBoxListRes
+	 * @return CategoryVodBoxSacRes
 	 * @throws JsonGenerationException
 	 *             JsonGenerationException
 	 * @throws JsonMappingException
@@ -184,9 +184,9 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/vodBox/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public VodBoxListRes searchVodBoxList(VodBoxReq requestVO) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception {
-		return this.categoryVodBoxService.searchVodBoxList(requestVO);
+	public CategoryVodBoxSacRes searchVodBoxList(CategoryVodBoxSacReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+		return this.categoryVodBoxService.searchVodBoxList(requestVO, requestHeader);
 	}
 
 	/**
