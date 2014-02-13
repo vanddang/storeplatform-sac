@@ -32,8 +32,7 @@ import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 
 @Service
 public class ShoppingCouponServiceImpl implements ShoppingCouponService {
-	private String errorCode = "";
-	private String message = "";
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private BrandCatalogService brandCatalogService;
@@ -48,7 +47,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	public boolean insertBrandInfo(DpBrandInfo dpBrandInfo) {
 		String BrandImgPath = null;
 		String DecodeBrandImgPath = null;
-
+		String message = "";
 		try {
 			BrandImgPath = dpBrandInfo.getBrandImgPath();
 			DecodeBrandImgPath = URLDecoder.decode(BrandImgPath, "utf-8");
@@ -60,8 +59,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				String brandId = this.brandCatalogService.searchCreateBrandId();
 
 				if (StringUtils.isBlank(brandId)) {
-					this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
-					this.message = "[COUPON_CONTENT_ID]를 생성하지 못했습니다.";
+					message = "[COUPON_CONTENT_ID]를 생성하지 못했습니다.";
 					return false;
 				}
 				dpBrandInfo.setCreateBrandId(brandId);
@@ -86,9 +84,8 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			this.brandImgResize(dpBrandInfo);
 
 		} catch (CouponException e) {
-			throw new CouponException(e.getErrCode(), e.getMessage(), null);
+			throw new CouponException(e.getErrCode(), message, null);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		} finally {
 		}
@@ -113,14 +110,13 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		String uploadPath = null;
 
 		String downloadUrl = "";
-		File downloadFile = null;
 		String orgDownloadFileName = "";
 		String renFileName = "";
 		// String downloadFilePath2 = "";
 		ArrayList<String> fileList = new ArrayList<String>();
 		File destFile = null;
 		File copyFile = null;
-
+		String message = "";
 		try {
 
 			// repositoryPath = getLabelForQuery(new String[] { CouponConstants.PCD_FOR_REPOSITORY_PATH,
@@ -165,9 +161,10 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			}
 
 			File downloadDir = new File(uploadPath);
+			boolean mkdirFlag = false;
 			// 디렉토리가 존재하지 않으면 만든다.
 			if (!downloadDir.exists()) {
-				downloadDir.mkdirs();
+				mkdirFlag = downloadDir.mkdirs();
 			}
 
 			this.log.info("BrandImgPath(downloadPath) = " + uploadPath);
@@ -300,14 +297,12 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 						} catch (CouponException e) {
 							// this.log.error(e);
-							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, this.message,
-									null);
+							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, message, null);
 
 						}
 					} else {
 						this.log.info("filePath url에 파일정보가 없습니다!");
-						this.message = "filePath url에 파일정보가 없습니다!";
-						this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR;
+						message = "filePath url에 파일정보가 없습니다!";
 						return false;
 					}
 				}
@@ -315,7 +310,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		} catch (Exception e) {
 			// 정보변경 실패 알림 페이지
 			this.log.error("브랜드,카탈로그 파일 정보 가져오기 실패", e);
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, this.message, null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, message, null);
 		}
 		return true;
 
@@ -335,7 +330,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		String DtlImgPath = null;
 		String DecodeTopImgPath = null;
 		String DecodeTopDtlImgPath = null;
-
+		String message = "";
 		try {
 
 			this.log.info("dpCatalogInfo.getCatalogId() = " + dpCatalogInfo.getCatalogId());
@@ -356,16 +351,14 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				String catalogID = this.brandCatalogService.searchCreateCatalogId();
 
 				if (StringUtils.isBlank(catalogID)) {
-					this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
-					this.message = "[COUPON_catalogId]를 생성하지 못했습니다.";
+					message = "[COUPON_catalogId]를 생성하지 못했습니다.";
 					return false;
 				}
 
 				dpCatalogInfo.setCreateCatalogId(catalogID);
 				String brandId = this.getCreateBrandId(dpCatalogInfo.getBrandId());
 				if (StringUtils.isBlank(brandId)) {
-					this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
-					this.message = "[COUPON_brandId]를 가져오지 못했습니다.";
+					message = "[COUPON_brandId]를 가져오지 못했습니다.";
 					return false;
 				}
 				this.log.info("brandId = " + brandId);
@@ -402,7 +395,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			this.catalogTagList(dpCatalogInfo);
 
 		} catch (CouponException e) {
-			throw new CouponException(e.getErrCode(), e.getMessage(), null);
+			throw new CouponException(e.getErrCode(), message, null);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} finally {
@@ -457,7 +450,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				// 이미지 리사이즈 처리
 				File srcFile = new File(uploadDir + srcFileName);
-				File destFile = new File(uploadDir + targetFileName);
 				String out_file = uploadDir + targetFileName;
 
 				// 이미지 리사이즈
@@ -563,7 +555,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				// 이미지 리사이즈 처리
 				File srcFile = new File(uploadDir + srcFileName);
-				File destFile = new File(uploadDir + targetFileName);
 				String out_file = uploadDir + targetFileName;
 
 				// 이미지 리사이즈

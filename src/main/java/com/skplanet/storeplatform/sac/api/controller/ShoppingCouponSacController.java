@@ -593,11 +593,13 @@ public class ShoppingCouponSacController {
 			xmlSb.append("<txId><![CDATA[" + couponReq.getTxId() + "]]></txId>");
 
 			this.log.debug("-------------------jade 추가 S---------------------------------------------");
-			couponRes.setRCode(map.get("ERROR_CODE"));
-			couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
-			if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals("")) {
-				couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG"))
-						+ map.get("ERROR_VALUE"));
+			if (map != null) {
+				couponRes.setRCode(map.get("ERROR_CODE"));
+				couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
+				if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals("")) {
+					couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG"))
+							+ map.get("ERROR_VALUE"));
+				}
 			}
 			this.log.debug("-------------------jade 추가 E---------------------------------------------");
 
@@ -627,26 +629,32 @@ public class ShoppingCouponSacController {
 																						   // 가포함되어 마지막에 , put
 																						   // 해준다.
 					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					couponRes.setCouponId(couponReq.getDpCouponInfo().getProdId() + ":"
-							+ couponReq.getDpCouponInfo().getCouponCode());
-					String itemProdId = "";
+					StringBuffer couponBuff = new StringBuffer();
+					couponBuff.append(couponReq.getDpCouponInfo().getProdId());
+					couponBuff.append(":");
+					couponBuff.append(couponReq.getDpCouponInfo().getCouponCode());
+					couponRes.setCouponId(couponBuff.toString());
+
+					StringBuffer itemBuff = new StringBuffer();
 					for (int i = 0; i < couponReq.getDpItemInfo().size(); i++) {
 						if (i == 0) {
-							itemProdId = itemProdId + couponReq.getDpItemInfo().get(i).getProdId() + ":"
-									+ couponReq.getDpItemInfo().get(i).getItemCode();
+							itemBuff.append(couponReq.getDpItemInfo().get(i).getProdId());
+							itemBuff.append(":");
+							itemBuff.append(couponReq.getDpItemInfo().get(i).getItemCode());
 						} else {
-							itemProdId = itemProdId + "," + couponReq.getDpItemInfo().get(i).getProdId() + ":"
-									+ couponReq.getDpItemInfo().get(i).getItemCode();
+							itemBuff.append(",");
+							itemBuff.append(couponReq.getDpItemInfo().get(i).getProdId());
+							itemBuff.append(":");
+							itemBuff.append(couponReq.getDpItemInfo().get(i).getItemCode());
 						}
 					}
-					couponRes.setItemId(itemProdId);
+					couponRes.setItemId(itemBuff.toString());
 					this.log.debug("-------------------jade 추가 E---------------------------------------------");
 					break;
 				case ST:
 					xmlSb.append("<rData>");
 					xmlSb.append("<couponCode><![CDATA[" + couponReq.getCouponCode() + "]]></couponCode>");
 					xmlSb.append("</rData>");
-					map.put("COMMON_CODE", couponReq.getCouponCode());
 				case AT:
 					break;
 				case LS:
