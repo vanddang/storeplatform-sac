@@ -791,6 +791,73 @@
 	         ) N
     </select>
     
+    <!-- 자기가 작성한 사용후기 갯수 -->
+    <select id="getMyProdNotiCount" parameterType="ProdNoti" resultType="int">
+        SELECT COUNT(*) AS TOTAL_COUNT
+          FROM
+             (
+             SELECT MAX( NOTI_SEQ ) AS NOTI_SEQ
+               FROM
+                  (
+                  SELECT
+                  <!-- Shopping -->
+                  <if test="prodType == 'shopping'">
+                      /*+ leading(N) use_nl(P) index_desc(N IDX_DP_PROD_NOTI_10) */
+                  </if>
+                  <!-- Shopping 외 -->
+                  <if test="prodType != 'shopping'">
+                      /*+ leading(P) use_nl(N) index(N IDX_DP_PROD_NOTI_06) */
+                  </if>
+                         N.PROD_ID
+                    FROM TB_DP_PROD_NOTI  N
+                       , TB_DP_PROD  P
+                   WHERE P.PROD_ID = N.PROD_ID
+                     AND N.MBR_NO = #{mbrNo}
+              <!-- Shopping -->
+              <if test="prodType == 'shopping'">
+                  <if test="prodIds != null">
+                     AND N.CATALOG_ID IN
+                     <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                         #{prodId}
+                     </foreach>
+                  </if>
+                 <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                      AND N.PROD_ID = #{chnlId}
+                 </if>
+              </if>
+              <!-- Shopping 외 -->
+              <if test="prodType != 'shopping'">
+                  <if test="prodIds != null">
+                     AND N.PROD_ID IN
+                     <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                         #{prodId}
+                     </foreach>
+                  </if>
+              </if>
+                     AND N.NOTI_TYPE_CD = 'DP000401'
+                     AND N.DEL_YN = 'N'
+                     AND N.BAD_NOTI_YN IN ( 'N', 'R' )
+                     AND N.SPAM_YN = 'N'
+              <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
+              <if test="prodType != 'shopping'">
+                  UNION ALL
+                  SELECT MA.PROD_ID
+                  FROM TB_DP_MBR_AVG MA
+                 WHERE MA.MBR_NO = #{mbrNo} 
+                  <if test="prodType != 'shopping'">
+                      <if test="prodIds != null">
+                         AND MA.PROD_ID IN
+                         <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                             #{prodId}
+                         </foreach>
+                      </if>
+                  </if>
+                </if>
+                  )
+              GROUP BY PROD_ID
+              ORDER BY REG_DT DESC
+             ) NOTI
+    </select>
     <!-- 판매자 댓글 -->
     <update id="updateSellerResp" parameterType="ProdNoti">
         UPDATE  /* FeedbackMapper.xml, updateSellerResp, SAC : 남궁석호 , 2014-02-10 */
