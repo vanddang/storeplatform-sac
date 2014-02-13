@@ -110,19 +110,19 @@ public class RecommendAdminSacReq {
 	}
 
 	public String[] getTopMenuIdArr() {
-		return this.topMenuIdArr;
+		return this.topMenuIdArr == null ? null : this.topMenuIdArr.clone();
 	}
 
 	public void setTopMenuIdArr(String[] topMenuIdArr) {
-		this.topMenuIdArr = topMenuIdArr;
+		this.topMenuIdArr = topMenuIdArr == null ? null : topMenuIdArr.clone();
 	}
 
 	public String[] getProdGradeCdArr() {
-		return this.prodGradeCdArr;
+		return this.prodGradeCdArr == null ? null : this.prodGradeCdArr.clone();
 	}
 
 	public void setProdGradeCdArr(String[] prodGradeCdArr) {
-		this.prodGradeCdArr = prodGradeCdArr;
+		this.prodGradeCdArr = prodGradeCdArr == null ? null : prodGradeCdArr.clone();
 	}
 
 }

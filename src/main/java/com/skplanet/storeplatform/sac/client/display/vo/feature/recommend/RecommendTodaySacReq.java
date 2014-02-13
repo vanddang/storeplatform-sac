@@ -108,10 +108,10 @@ public class RecommendTodaySacReq {
 	}
 
 	public String[] getProdGradeCdArr() {
-		return this.prodGradeCdArr;
+		return this.prodGradeCdArr == null ? null : this.prodGradeCdArr.clone();
 	}
 
 	public void setProdGradeCdArr(String[] prodGradeCdArr) {
-		this.prodGradeCdArr = prodGradeCdArr;
+		this.prodGradeCdArr = prodGradeCdArr == null ? null : prodGradeCdArr.clone();
 	}
 }
