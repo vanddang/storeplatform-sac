@@ -37,6 +37,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Comp
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -244,6 +245,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				product.setIdentifierList(identifierList); // 상품 Id
 				product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
 				product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
+				List<Support> supportList = new ArrayList<Support>();
+				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
+						metaInfo.getDrmYn()));
+				product.setSupportList(supportList);
 				product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));// 상품 메뉴정보
 				product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
 				product.setRights(this.commonGenerator.generateRights(metaInfo)); // 권한
