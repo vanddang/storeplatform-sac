@@ -12,4 +12,12 @@
 		                    WHERE AID=#{aid}
 		                  )                             
     </select>
+    
+    <!-- 상품 구매건수 업데이트 -->
+    <update id="updatePurchaseCount" parameterType="HashMap">
+        /* LocalSciMapper.xml, updatePurchaseCount, SAC : 이석희 , 2014-02-14 */ 
+			UPDATE TB_DP_TENANT_PROD_STATS
+			   SET PRCHS_CNT =#{purchaseCount}
+			 WHERE PROD_ID= #{productId}
+    </update>    
 </mapper>

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.sci.SearchSellerKeySCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchSellerKeySCI;
 import com.skplanet.storeplatform.sac.display.localsci.sci.service.SearchSellerKeyService;
 
 /**
