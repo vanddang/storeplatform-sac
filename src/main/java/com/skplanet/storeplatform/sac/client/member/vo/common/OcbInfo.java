@@ -11,6 +11,9 @@ public class OcbInfo extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 사용자 Key.
+	 */
 	private String userKey = "";
 
 	/**
