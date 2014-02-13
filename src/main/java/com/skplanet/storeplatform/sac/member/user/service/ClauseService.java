@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListClauseSacRes;
 
 /**
@@ -15,5 +17,12 @@ public interface ClauseService {
 	 * @return ListClauseSacRes
 	 */
 	public ListClauseSacRes listClause();
+
+	/**
+	 * 약관목록 상세 조회.
+	 * 
+	 * @return ListClauseSacRes
+	 */
+	public DetailClauseSacRes detailClauseList(DetailClauseSacReq req);
 
 }

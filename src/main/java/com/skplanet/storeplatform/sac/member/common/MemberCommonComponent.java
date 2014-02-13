@@ -173,6 +173,17 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
+	 * 약관 목록 상세 조회.
+	 * </pre>
+	 * 
+	 * @return List<ClauseDTO>
+	 */
+	public List<Clause> getDetailClauseList(String clauseItemCd) {
+		return this.repository.searchDetailClauseList(clauseItemCd);
+	}
+
+	/**
+	 * <pre>
 	 * 폰 정보 조회.
 	 * </pre>
 	 * 

@@ -9,9 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.dummy;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -19,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.member.vo.user.ClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
@@ -1068,71 +1063,71 @@ public class DummyDataController {
 	 * 
 	 * @return ListAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/member/user/detailClause/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public DetailClauseSacRes detailClause() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.32.	약관목록 상세 조회 #####");
-		LOGGER.info("####################################################");
-
-		DetailClauseSacRes res = new DetailClauseSacRes();
-		List<ClauseSacRes> clauseResList = new ArrayList<ClauseSacRes>();
-
-		ClauseSacRes clauseRes1 = new ClauseSacRes();
-		ClauseSacRes clauseRes2 = new ClauseSacRes();
-		ClauseSacRes clauseRes3 = new ClauseSacRes();
-
-		clauseRes1.setClauseId("1000000059");
-		clauseRes1.setClauseItemCd("US010601");
-		clauseRes1.setStartDay("20130527");
-		clauseRes1.setEndDay("29991231");
-		clauseRes1.setFilePath("/data/img/termsHTML/20130523225047_sample03.html");
-		clauseRes1.setFileNm("20130523225047_sample03.html");
-		clauseRes1.setClauseVer("1");
-		clauseRes1.setUpClauseId("1000000059");
-		clauseRes1.setDpYn("Y");
-		clauseRes1.setRegId("admin");
-		clauseRes1.setRegDt("20130524");
-		clauseRes1.setUpdId("admin");
-		clauseRes1.setUpdDt("20130528");
-
-		clauseRes2.setClauseId("1000000063");
-		clauseRes2.setClauseItemCd("US010601");
-		clauseRes2.setStartDay("20121130");
-		clauseRes2.setEndDay("20130430");
-		clauseRes2.setFilePath("/data/img/termsHTML/20130524111753_listNotice.htm");
-		clauseRes2.setFileNm("20130524111753_listNotice.htm");
-		clauseRes2.setClauseVer("1");
-		clauseRes2.setUpClauseId("1000000065");
-		clauseRes2.setDpYn("Y");
-		clauseRes2.setRegId("admin");
-		clauseRes2.setRegDt("20121119");
-		clauseRes2.setUpdId("admin");
-		clauseRes2.setUpdDt("20130524");
-
-		clauseRes3.setClauseId("1000000066");
-		clauseRes3.setClauseItemCd("US010601");
-		clauseRes3.setStartDay("20130502");
-		clauseRes3.setEndDay("20130430");
-		clauseRes3.setFilePath("/data/img/termsHTML/20130526125332_sample04.html");
-		clauseRes3.setFileNm("20130526125332_sample04.html");
-		clauseRes3.setClauseVer("1");
-		clauseRes3.setUpClauseId("1000000056");
-		clauseRes3.setDpYn("Y");
-		clauseRes3.setRegId("admin");
-		clauseRes3.setRegDt("20130524");
-		clauseRes3.setUpdId("admin");
-		clauseRes3.setUpdDt("20130524");
-
-		clauseResList.add(clauseRes1);
-		clauseResList.add(clauseRes2);
-		clauseResList.add(clauseRes3);
-
-		res.setDetailClauseList(clauseResList);
-
-		return res;
-	}
+	//	@RequestMapping(value = "/member/user/detailClause/v1", method = RequestMethod.POST)
+	//	@ResponseBody
+	//	public DetailClauseSacRes detailClause() {
+	//
+	//		LOGGER.info("####################################################");
+	//		LOGGER.info("##### 5.1.32.	약관목록 상세 조회 #####");
+	//		LOGGER.info("####################################################");
+	//
+	//		DetailClauseSacRes res = new DetailClauseSacRes();
+	//		List<ClauseSacRes> clauseResList = new ArrayList<ClauseSacRes>();
+	//
+	//		ClauseSacRes clauseRes1 = new ClauseSacRes();
+	//		ClauseSacRes clauseRes2 = new ClauseSacRes();
+	//		ClauseSacRes clauseRes3 = new ClauseSacRes();
+	//
+	//		clauseRes1.setClauseId("1000000059");
+	//		clauseRes1.setClauseItemCd("US010601");
+	//		clauseRes1.setStartDay("20130527");
+	//		clauseRes1.setEndDay("29991231");
+	//		clauseRes1.setFilePath("/data/img/termsHTML/20130523225047_sample03.html");
+	//		clauseRes1.setFileNm("20130523225047_sample03.html");
+	//		clauseRes1.setClauseVer("1");
+	//		clauseRes1.setUpClauseId("1000000059");
+	//		clauseRes1.setDpYn("Y");
+	//		clauseRes1.setRegId("admin");
+	//		clauseRes1.setRegDt("20130524");
+	//		clauseRes1.setUpdId("admin");
+	//		clauseRes1.setUpdDt("20130528");
+	//
+	//		clauseRes2.setClauseId("1000000063");
+	//		clauseRes2.setClauseItemCd("US010601");
+	//		clauseRes2.setStartDay("20121130");
+	//		clauseRes2.setEndDay("20130430");
+	//		clauseRes2.setFilePath("/data/img/termsHTML/20130524111753_listNotice.htm");
+	//		clauseRes2.setFileNm("20130524111753_listNotice.htm");
+	//		clauseRes2.setClauseVer("1");
+	//		clauseRes2.setUpClauseId("1000000065");
+	//		clauseRes2.setDpYn("Y");
+	//		clauseRes2.setRegId("admin");
+	//		clauseRes2.setRegDt("20121119");
+	//		clauseRes2.setUpdId("admin");
+	//		clauseRes2.setUpdDt("20130524");
+	//
+	//		clauseRes3.setClauseId("1000000066");
+	//		clauseRes3.setClauseItemCd("US010601");
+	//		clauseRes3.setStartDay("20130502");
+	//		clauseRes3.setEndDay("20130430");
+	//		clauseRes3.setFilePath("/data/img/termsHTML/20130526125332_sample04.html");
+	//		clauseRes3.setFileNm("20130526125332_sample04.html");
+	//		clauseRes3.setClauseVer("1");
+	//		clauseRes3.setUpClauseId("1000000056");
+	//		clauseRes3.setDpYn("Y");
+	//		clauseRes3.setRegId("admin");
+	//		clauseRes3.setRegDt("20130524");
+	//		clauseRes3.setUpdId("admin");
+	//		clauseRes3.setUpdDt("20130524");
+	//
+	//		clauseResList.add(clauseRes1);
+	//		clauseResList.add(clauseRes2);
+	//		clauseResList.add(clauseRes3);
+	//
+	//		res.setDetailClauseList(clauseResList);
+	//
+	//		return res;
+	//	}
 
 	/**
 	 * <pre>

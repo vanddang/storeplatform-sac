@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListClauseSacRes;
 import com.skplanet.storeplatform.sac.member.user.service.ClauseService;
 
@@ -47,4 +49,17 @@ public class ClauseController {
 		return res;
 	}
 
+	@RequestMapping(value = "/member/user/detailClause/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public DetailClauseSacRes detailClause(DetailClauseSacReq req) {
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 2.1.33. 약관목록 상세조회 #####");
+		LOGGER.info("####################################################");
+
+		DetailClauseSacRes res = this.svc.detailClauseList(req);
+
+		LOGGER.info("Final Response : {}", res.toString());
+
+		return res;
+	}
 }

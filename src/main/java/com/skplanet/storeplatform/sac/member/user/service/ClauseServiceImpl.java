@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ClauseSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListClauseSacRes;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
@@ -67,6 +69,42 @@ public class ClauseServiceImpl implements ClauseService {
 
 		ListClauseSacRes res = new ListClauseSacRes();
 		res.setClauseList(clauseSacResList);
+
+		return res;
+	}
+
+	/**
+	 * 약관목록 상세조회
+	 */
+	@Override
+	public DetailClauseSacRes detailClauseList(DetailClauseSacReq req) {
+		String clauseItemCd = req.getClauseItemCd();
+		List<Clause> clauseList = this.commService.getDetailClauseList(clauseItemCd);
+
+		LOGGER.info("ListClauseSacRes : ", clauseList.toString());
+
+		List<ClauseSacRes> detailClauseList = new ArrayList<ClauseSacRes>();
+		for (Clause clause : clauseList) {
+			ClauseSacRes clauseRes = new ClauseSacRes();
+			clauseRes.setClauseId(StringUtil.setTrim(clause.getClauseId()));
+			clauseRes.setClauseItemCd(StringUtil.setTrim(clause.getClauseItemCd()));
+			clauseRes.setClauseVer(StringUtil.setTrim(clause.getClauseVer()));
+			clauseRes.setDpYn(StringUtil.setTrim(clause.getDpYn()));
+			clauseRes.setEndDay(StringUtil.setTrim(clause.getEndDay()));
+			clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
+			clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
+			clauseRes.setRegDt(StringUtil.setTrim(clause.getRegDt()));
+			clauseRes.setRegId(StringUtil.setTrim(clause.getRegId()));
+			clauseRes.setStartDay(StringUtil.setTrim(clause.getStartDay()));
+			clauseRes.setUpClauseId(StringUtil.setTrim(clause.getUpClauseId()));
+			clauseRes.setUpdDt(StringUtil.setTrim(clause.getUpdDt()));
+			clauseRes.setUpdId(StringUtil.setTrim(clause.getUpdId()));
+
+			detailClauseList.add(clauseRes);
+		}
+
+		DetailClauseSacRes res = new DetailClauseSacRes();
+		res.setDetailClauseList(detailClauseList);
 
 		return res;
 	}

@@ -255,9 +255,9 @@ public class DeviceController {
 	 *            RemoveDeviceReq
 	 * @return RemoveDeviceRes
 	 */
-	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req) {
+	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, @RequestBody SupportAomReq req) {
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");

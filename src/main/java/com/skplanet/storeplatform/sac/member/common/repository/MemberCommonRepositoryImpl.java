@@ -56,4 +56,11 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getClauseList", dto);
 	}
 
+	@Override
+	public List<Clause> searchDetailClauseList(String clauseItemCd) {
+		Clause dto = new Clause();
+		dto.setDpYn("Y");
+		dto.setClauseItemCd(clauseItemCd);
+		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getDetailClauseList", dto);
+	}
 }
