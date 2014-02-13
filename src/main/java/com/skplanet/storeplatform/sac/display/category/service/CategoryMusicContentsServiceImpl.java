@@ -124,7 +124,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		} else if (filteredBy.equals("genre")) { // 장르별
 			requestVO.setChartClsfCd("DP004905");
 			requestVO.setBatchId("MELON_DP004905");
-			if (orderedBy.equals("") || orderedBy == null) {
+			if (null == orderedBy || "".equals(orderedBy)) {
 				requestVO.setOrderedBy("popular");
 			}
 		}
