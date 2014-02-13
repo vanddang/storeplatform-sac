@@ -161,206 +161,208 @@ public class BannerServceImpl implements BannerService {
 		this.log.debug("배너 리스트 조회");
 		List<Banner> resultList = this.commonDAO.queryForList("Banner.searchBannerList", bannerReq, Banner.class);
 
-		if (resultList != null && resultList.size() > 0) {
-			this.log.debug("배너 리스트 - 총 건수 : " + resultList.get(0).getTotalCount());
-			commonResponse.setTotalCount(resultList.get(0).getTotalCount());
-		}
-
 		Banner resultInfo = null;
 		Banner product = null;
 
-		// 배너 값 설정
-		Iterator<Banner> resultIterator = resultList.iterator();
-		while (resultIterator.hasNext()) {
+		if (!resultList.isEmpty()) {
+			this.log.debug("배너 리스트 - 총 건수 : " + resultList.get(0).getTotalCount());
+			commonResponse.setTotalCount(resultList.get(0).getTotalCount());
 
-			banner = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner();
-			resultInfo = resultIterator.next();
+			// 배너 값 설정
+			Iterator<Banner> resultIterator = resultList.iterator();
+			while (resultIterator.hasNext()) {
 
-			// 상품모바일배너의 경우 상품 메타 조회 및 설정
-			if (resultInfo.getBnrTypeCd().equals(DisplayConstants.DP_BANNER_PRODUCT_CD)) {
-				bannerReq.setProdId(resultInfo.getProdId());
-				resultInfo.setBnrInfo(resultInfo.getProdId());// 상품 메타 정보가 없을 경우 대비
+				banner = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner();
+				resultInfo = resultIterator.next();
 
-				// 상품 메타 정보 조회
-				this.log.debug("상품 메타 조회");
-				product = this.commonDAO.queryForObject("Banner.searchProductInfo", bannerReq, Banner.class);
-				if (product != null) {
-					// 상품 메타 값 설정
-					resultInfo.setTopMenuId(product.getTopMenuId());
-					resultInfo.setMenuId(product.getMenuId());
-					resultInfo.setTopMenuNm(product.getTopMenuNm());
-					resultInfo.setMenuNm(product.getMenuNm());
-					resultInfo.setMetaClsfCd(product.getMetaClsfCd());
-					resultInfo.setScSamplUrl(product.getScSamplUrl());
-					resultInfo.setSamplUrl(product.getSamplUrl());
-					resultInfo.setProdCase(product.getProdCase());
-					resultInfo.setOutsdContentsId(product.getOutsdContentsId());
-					resultInfo.setFileSize(product.getFileSize());
-					resultInfo.setFileSizeH(product.getFileSizeH());
-					resultInfo.setBnrInfo(product.getProdId());
-				} else {
-					this.log.debug("상품 메타 - 데이터 없음");
+				// 상품모바일배너의 경우 상품 메타 조회 및 설정
+				if (resultInfo.getBnrTypeCd().equals(DisplayConstants.DP_BANNER_PRODUCT_CD)) {
+					bannerReq.setProdId(resultInfo.getProdId());
+					resultInfo.setBnrInfo(resultInfo.getProdId());// 상품 메타 정보가 없을 경우 대비
+
+					// 상품 메타 정보 조회
+					this.log.debug("상품 메타 조회");
+					product = this.commonDAO.queryForObject("Banner.searchProductInfo", bannerReq, Banner.class);
+					if (product != null) {
+						// 상품 메타 값 설정
+						resultInfo.setTopMenuId(product.getTopMenuId());
+						resultInfo.setMenuId(product.getMenuId());
+						resultInfo.setTopMenuNm(product.getTopMenuNm());
+						resultInfo.setMenuNm(product.getMenuNm());
+						resultInfo.setMetaClsfCd(product.getMetaClsfCd());
+						resultInfo.setScSamplUrl(product.getScSamplUrl());
+						resultInfo.setSamplUrl(product.getSamplUrl());
+						resultInfo.setProdCase(product.getProdCase());
+						resultInfo.setOutsdContentsId(product.getOutsdContentsId());
+						resultInfo.setFileSize(product.getFileSize());
+						resultInfo.setFileSizeH(product.getFileSizeH());
+						resultInfo.setBnrInfo(product.getProdId());
+					} else {
+						this.log.debug("상품 메타 - 데이터 없음");
+					}
 				}
-			}
 
-			// 배너 규격 매핑
-			Iterator<Object> entryIterator = listEntry.iterator();
-			while (entryIterator.hasNext()) {
-				@SuppressWarnings("unchecked")
-				Map<String, String> entry = (Map<String, String>) entryIterator.next();
-				if (entry.get("BNR_TYPE").equals(resultInfo.getBnrTypeCd())) {
-					resultInfo.setType(entry.get("TYPE"));
-					resultInfo.setDescName(entry.get("DESC_NAME"));
-					resultInfo.setExternal(entry.get("EXTERNAL"));
-					resultInfo.setBase(entry.get("BASE"));
+				// 배너 규격 매핑
+				Iterator<Object> entryIterator = listEntry.iterator();
+				while (entryIterator.hasNext()) {
+					@SuppressWarnings("unchecked")
+					Map<String, String> entry = (Map<String, String>) entryIterator.next();
+					if (entry.get("BNR_TYPE").equals(resultInfo.getBnrTypeCd())) {
+						resultInfo.setType(entry.get("TYPE"));
+						resultInfo.setDescName(entry.get("DESC_NAME"));
+						resultInfo.setExternal(entry.get("EXTERNAL"));
+						resultInfo.setBase(entry.get("BASE"));
+					}
 				}
-			}
 
-			// 샵클 BEST 앱/컨텐츠 일 경우 배너 명 설정
-			if (bannerReq.getBnrGrpId().equals(DisplayConstants.DP_BANNER_MOBILE_CLIENT_CD)) {
-				resultInfo.setBnrNm(resultInfo.getBnrTitle());
-			}
+				// 샵클 BEST 앱/컨텐츠 일 경우 배너 명 설정
+				if (bannerReq.getBnrGrpId().equals(DisplayConstants.DP_BANNER_MOBILE_CLIENT_CD)) {
+					resultInfo.setBnrNm(resultInfo.getBnrTitle());
+				}
 
-			this.log.debug("Respons 값 설정 - 배너 타입 : " + resultInfo.getBnrTypeCd());
+				this.log.debug("Respons 값 설정 - 배너 타입 : " + resultInfo.getBnrTypeCd());
 
-			// sizeType 설정
-			banner.setSizeType(resultInfo.getImgCaseCd());
+				// sizeType 설정
+				banner.setSizeType(resultInfo.getImgCaseCd());
 
-			// type 설정
-			banner.setType(resultInfo.getType());
+				// type 설정
+				banner.setType(resultInfo.getType());
 
-			// base 설정
-			banner.setBase(resultInfo.getBase());
-			if (resultInfo.getBase() != null) {
+				// base 설정
 				banner.setBase(resultInfo.getBase());
-			}
+				if (resultInfo.getBase() != null) {
+					banner.setBase(resultInfo.getBase());
+				}
 
-			// Identifier 설정
-			identifierList = new ArrayList<Identifier>();
-			identifier = new Identifier();
-			identifier.setType("banner");
-			identifier.setText(resultInfo.getBnrSeq());
-			identifierList.add(identifier);
+				// Identifier 설정
+				identifierList = new ArrayList<Identifier>();
+				identifier = new Identifier();
+				identifier.setType("banner");
+				identifier.setText(resultInfo.getBnrSeq());
+				identifierList.add(identifier);
 
-			// Title 설정
-			title = new Title();
-			title.setText(resultInfo.getBnrNm());
+				// Title 설정
+				title = new Title();
+				title.setText(resultInfo.getBnrNm());
 
-			// TitleName, ThemeInfo 설정(테마일 경우에만 해당)
-			// 테마 수정 필요(DB 설계가 안됨)
-			titleName = new Title();
-			if (bannerReq.getBnrTopCd().equals(DisplayConstants.DP_COMIC_THEME_BANNER_CD)
-					|| bannerReq.getBnrTopCd().equals(DisplayConstants.DP_EBOOK_THEME_BANNER_CD)) {
-				titleName.setText(resultInfo.getBnrNm());
-				banner.setTitleName(titleName);
-				banner.setThemeInfo(resultInfo.getBnrInfo());
-			}
+				// TitleName, ThemeInfo 설정(테마일 경우에만 해당)
+				// 테마 수정 필요(DB 설계가 안됨)
+				titleName = new Title();
+				if (bannerReq.getBnrTopCd().equals(DisplayConstants.DP_COMIC_THEME_BANNER_CD)
+						|| bannerReq.getBnrTopCd().equals(DisplayConstants.DP_EBOOK_THEME_BANNER_CD)) {
+					titleName.setText(resultInfo.getBnrNm());
+					banner.setTitleName(titleName);
+					banner.setThemeInfo(resultInfo.getBnrInfo());
+				}
 
-			// menu 설정
-			menuList = new ArrayList<Menu>();
-			menu = new Menu();
-			menu.setId(resultInfo.getMenuId());
-			menu.setName(resultInfo.getMenuNm());
-			if (menu.getId() != null || menu.getName() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
-				menuList.add(menu);
-			}
-
-			// bannerExplain 설정
-			bannerExplain = new BannerExplain();
-			if (resultInfo.getDescName() != null && resultInfo.getDescName().equals("id")) {
-				bannerExplain.setId(resultInfo.getBnrInfo());
-				banner.setBannerExplain(bannerExplain);
-			} else if (resultInfo.getDescName() != null && resultInfo.getDescName().equals("url")) {
-				bannerExplain.setUrl(resultInfo.getBnrInfo());
-				banner.setBannerExplain(bannerExplain);
-			}
-
-			// Source 설정
-			sourceList = new ArrayList<Source>();
-			if (resultInfo.getImgPath() != null) {
-				source = new Source();
-				source.setUrl(resultInfo.getImgPath() + "" + resultInfo.getImgNm());
-				source.setMediaType(DisplayCommonUtil.getMimeType(resultInfo.getImgNm()));
-				sourceList.add(source);
-				banner.setSourceList(sourceList);
-			}
-
-			// 상품모바일배너 전용(BnrTypeCd : DP010303)
-			if (resultInfo.getBnrTypeCd().equals(DisplayConstants.DP_BANNER_PRODUCT_CD)) {
-
-				// Top menu 설정
+				// menu 설정
+				menuList = new ArrayList<Menu>();
 				menu = new Menu();
-				menu.setId(resultInfo.getTopMenuId());
-				menu.setName(resultInfo.getTopMenuNm());
-				menu.setType("topClass");
-				if (menu.getId() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
+				menu.setId(resultInfo.getMenuId());
+				menu.setName(resultInfo.getMenuNm());
+				if (menu.getId() != null || menu.getName() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
 					menuList.add(menu);
 				}
 
-				// MetaclsfCd 설정
-				menu = new Menu();
-				menu.setId(resultInfo.getMetaClsfCd());
-				menu.setType("metaClass");
-				if (menu.getId() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
-					menuList.add(menu);
+				// bannerExplain 설정
+				bannerExplain = new BannerExplain();
+				if (resultInfo.getDescName() != null && resultInfo.getDescName().equals("id")) {
+					bannerExplain.setId(resultInfo.getBnrInfo());
+					banner.setBannerExplain(bannerExplain);
+				} else if (resultInfo.getDescName() != null && resultInfo.getDescName().equals("url")) {
+					bannerExplain.setUrl(resultInfo.getBnrInfo());
+					banner.setBannerExplain(bannerExplain);
 				}
 
-				// music 상품일 경우 미리듣기 정보
-				if (resultInfo.getTopMenuId() != null
-						&& resultInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
-					music = new Music();
-					identifier = new Identifier();
-					identifier.setType("song");
-					identifier.setText(resultInfo.getOutsdContentsId());
-					music.setIdentifier(identifier);
-					this.log.debug("5");
-
-					sourceList = new ArrayList<Source>();
+				// Source 설정
+				sourceList = new ArrayList<Source>();
+				if (resultInfo.getImgPath() != null) {
 					source = new Source();
-					source.setType("audio/mp3-128");
-					source.setSize(resultInfo.getFileSize());
+					source.setUrl(resultInfo.getImgPath() + "" + resultInfo.getImgNm());
+					source.setMediaType(DisplayCommonUtil.getMimeType(resultInfo.getImgNm()));
 					sourceList.add(source);
-					source = new Source();
-					source.setType("audio/mp3-192");
-					source.setSize(resultInfo.getFileSizeH());
-					sourceList.add(source);
-					music.setSourceList(sourceList);
-					banner.setMusic(music);
+					banner.setSourceList(sourceList);
 				}
-				// VOD 상품일 경우 미리보기 정보
-				if (resultInfo.getTopMenuId() != null
-						&& (resultInfo.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID) || resultInfo
-								.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID))) {
-					preview = new Preview();
 
-					sourceList = new ArrayList<Source>();
-					source = new Source();
-					source.setType("video/x-freeview-lq");
-					source.setUrl(resultInfo.getScSamplUrl());
-					if (resultInfo.getScSamplUrl() != null) {
-						sourceList.add(source);
+				// 상품모바일배너 전용(BnrTypeCd : DP010303)
+				if (resultInfo.getBnrTypeCd().equals(DisplayConstants.DP_BANNER_PRODUCT_CD)) {
+
+					// Top menu 설정
+					menu = new Menu();
+					menu.setId(resultInfo.getTopMenuId());
+					menu.setName(resultInfo.getTopMenuNm());
+					menu.setType("topClass");
+					if (menu.getId() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
+						menuList.add(menu);
 					}
-					source = new Source();
-					source.setType("video/x-freeview-hq");
-					source.setUrl(resultInfo.getSamplUrl());
-					if (resultInfo.getSamplUrl() != null) {
-						sourceList.add(source);
+
+					// MetaclsfCd 설정
+					menu = new Menu();
+					menu.setId(resultInfo.getMetaClsfCd());
+					menu.setType("metaClass");
+					if (menu.getId() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
+						menuList.add(menu);
 					}
-					preview.setSourceList(sourceList);
-					if (sourceList.size() > 0) {
-						banner.setPreview(preview);
+
+					// music 상품일 경우 미리듣기 정보
+					if (resultInfo.getTopMenuId() != null
+							&& resultInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
+						music = new Music();
+						identifier = new Identifier();
+						identifier.setType("song");
+						identifier.setText(resultInfo.getOutsdContentsId());
+						music.setIdentifier(identifier);
+						this.log.debug("5");
+
+						sourceList = new ArrayList<Source>();
+						source = new Source();
+						source.setType("audio/mp3-128");
+						source.setSize(resultInfo.getFileSize());
+						sourceList.add(source);
+						source = new Source();
+						source.setType("audio/mp3-192");
+						source.setSize(resultInfo.getFileSizeH());
+						sourceList.add(source);
+						music.setSourceList(sourceList);
+						banner.setMusic(music);
+					}
+					// VOD 상품일 경우 미리보기 정보
+					if (resultInfo.getTopMenuId() != null
+							&& (resultInfo.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID) || resultInfo
+									.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID))) {
+						preview = new Preview();
+
+						sourceList = new ArrayList<Source>();
+						source = new Source();
+						source.setType("video/x-freeview-lq");
+						source.setUrl(resultInfo.getScSamplUrl());
+						if (resultInfo.getScSamplUrl() != null) {
+							sourceList.add(source);
+						}
+						source = new Source();
+						source.setType("video/x-freeview-hq");
+						source.setUrl(resultInfo.getSamplUrl());
+						if (resultInfo.getSamplUrl() != null) {
+							sourceList.add(source);
+						}
+						preview.setSourceList(sourceList);
+						if (sourceList.size() > 0) {
+							banner.setPreview(preview);
+						}
 					}
 				}
-			}
 
-			banner.setTitle(title);
-			if (menuList.size() > 0) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
-				banner.setMenuList(menuList);
+				banner.setTitle(title);
+				if (menuList.size() > 0) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
+					banner.setMenuList(menuList);
+				}
+				banner.setIdentifier(identifierList);
+				bannerList.add(banner);
 			}
-			banner.setIdentifier(identifierList);
-			bannerList.add(banner);
+			bannerRes.setBannerList(bannerList);
+		} else {
+			commonResponse.setTotalCount(0);
 		}
-		bannerRes.setBannerList(bannerList);
 		bannerRes.setCommonResponse(commonResponse);
 		return bannerRes;
 	}
