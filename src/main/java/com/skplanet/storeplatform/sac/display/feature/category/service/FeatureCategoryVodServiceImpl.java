@@ -98,8 +98,9 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			throw new StorePlatformException("SAC_DSP_0003", "listId", listId);
 		}
 
-		// 영화>추천, 영화>1000원관, 방송>카테고리별 추천, 방송>방송사별 최신Up API는 filteredBy 필수
-		if (StringUtils.isEmpty(req.getMenuId()) && StringUtils.isEmpty(filteredBy)) {
+		// 영화 추천/1000원관, 방송 카테고리별 추천 filteredBy 필수
+		// ADM000000003 신규 방송 최신 up의 경우도 filteredBy 필수이나 없는 경우 신규상품 조회
+		if ("ADM000000008".equals(listId) && StringUtils.isEmpty(filteredBy)) {
 			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
 		}
 
