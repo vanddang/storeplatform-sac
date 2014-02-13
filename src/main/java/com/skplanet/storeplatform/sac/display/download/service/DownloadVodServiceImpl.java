@@ -9,13 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.xmlbeans.impl.util.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -61,7 +57,7 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
 @Transactional
 public class DownloadVodServiceImpl implements DownloadVodService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -92,11 +88,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
-		String test = this.searchSellerKeySCI.searchSellerKeyForAid("OA00049881");
-
-		this.log.debug("######################################################");
-		this.log.debug("sellerKey	:	" + test);
-		this.log.debug("######################################################");
+		// String test = this.searchSellerKeySCI.searchSellerKeyForAid("OA00049881");
+		//
+		// this.log.debug("######################################################");
+		// this.log.debug("sellerKey	:	" + test);
+		// this.log.debug("######################################################");
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
@@ -276,21 +272,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 					product.setEncryption(encryption);
 
-					try {
-						Encryption testEn = new Encryption();
-						testEn = product.getEncryption();
-
-						byte[] testValue = Base64.decode(testEn.getText().getBytes());
-						byte[] dec = this.downloadAES128Helper.decryption(testValue);
-
-						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("Encryption Type : {}", testEn.getType());
-						this.log.debug("Encryption Text : {}", testEn.getText());
-						this.log.debug("Decryption Text : {}", new String(dec, "UTF-8"));
-						this.log.debug("----------------------------------------------------------------");
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
-					}
 				}
 
 				commonResponse.setTotalCount(1);
