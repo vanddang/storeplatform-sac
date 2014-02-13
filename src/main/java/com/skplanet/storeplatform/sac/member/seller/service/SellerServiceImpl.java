@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSe
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.Document;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.ExtraRight;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginInfo;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerResponse;
@@ -722,6 +723,8 @@ public class SellerServiceImpl implements SellerService {
 		sellerAccount.setSellerKey(req.getSellerKey());
 		sellerAccount.setSwiftCode(req.getSwiftCode());
 		sellerAccount.setTpinCode(req.getTpinCode());
+		sellerAccount.setBankAddress(req.getBankAddress());
+		sellerAccount.setBankLocation(req.getBankLocation());
 
 		List<Document> documentList = null;
 		if (req.getExtraDocumentList() != null) {
@@ -733,7 +736,11 @@ public class SellerServiceImpl implements SellerService {
 				document.setDocumentName(req.getExtraDocumentList().get(i).getDocumentName());
 				document.setDocumentPath(req.getExtraDocumentList().get(i).getDocumentPath());
 				document.setDocumentSize(req.getExtraDocumentList().get(i).getDocumentSize());
+				document.setIsUsed("Y"); // 서류사용여부 Y셋팅
+
+				documentList.add(document);
 			}
+			updateAccountSellerRequest.setDocumentList(documentList);
 		}
 
 		updateAccountSellerRequest.setSellerKey(req.getSellerKey());
@@ -742,6 +749,18 @@ public class SellerServiceImpl implements SellerService {
 		updateAccountSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		/** 3. SC회원 - 정산정보수정변경 Call. */
+		updateAccountSellerRequest.setSellerAccount(sellerAccount);
+
+		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
+				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
+
+		updateAccountSellerRequest.setSellerMbr(searchSellerResponse.getSellerMbr()); // 회원정보 정보 조회
+
+		// TO DO... SC API 에서 null 처리 로직 수정시 지움 시작
+		List<ExtraRight> extraRightList = new ArrayList<ExtraRight>();
+		updateAccountSellerRequest.setExtraRightList(extraRightList);
+		// TO DO... SC API 에서 null 처리 로직 수정시 지움 끝
+
 		UpdateAccountSellerResponse updateAccountSellerResponse = this.sellerSCI
 				.updateAccountSeller(updateAccountSellerRequest);
 
