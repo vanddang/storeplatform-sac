@@ -50,7 +50,7 @@ public class DeviceSCITest {
 		request.setUserKey("US201402110557052730002230");
 		request.setDeviceKey("DE201402120409541480001552");
 		SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
-		assertThat(result.getMsisdn(), notNullValue());
+		assertThat(result.getDeviceId(), notNullValue());
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
 	}
@@ -67,7 +67,7 @@ public class DeviceSCITest {
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceKey("DE201401241840125800000296");
 		SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
-		assertThat(result.getMsisdn(), notNullValue());
+		assertThat(result.getDeviceId(), notNullValue());
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
 	}

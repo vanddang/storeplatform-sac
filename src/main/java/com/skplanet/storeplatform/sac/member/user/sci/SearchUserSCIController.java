@@ -11,8 +11,8 @@ import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
@@ -48,7 +48,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// TODO 1. 회원 정보 조회 SC API 호출. - this.userSearchService.searchUser
 		DetailReq detailRequest = new DetailReq();
-		UserInfo userInfo = this.userSearchService.searchUser(detailRequest, requestHeader);
+		DetailRes userInfo = this.userSearchService.detail(requestHeader, detailRequest);
 
 		// TODO 2. 사용자 휴대기기 등록 대수가 1개 이상일 경우 리스트 가져오기.
 		// TODO 2-1.
@@ -62,9 +62,9 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserSacRes searchUserSacRes = new SearchUserSacRes();
 		// TODO searchUserSacRes.setDeviceId(deviceId);
 		// TODO searchUserSacRes.setUserId(userId);
-		searchUserSacRes.setUserType(userInfo.getUserType());
-		searchUserSacRes.setUserMainStatus(userInfo.getUserMainStatus());
-		searchUserSacRes.setUserSubStatus(userInfo.getUserSubStatus());
+		// searchUserSacRes.setUserType(userInfo.getUserType());
+		// searchUserSacRes.setUserMainStatus(userInfo.getUserMainStatus());
+		// searchUserSacRes.setUserSubStatus(userInfo.getUserSubStatus());
 
 		return searchUserSacRes;
 	}

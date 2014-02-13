@@ -56,7 +56,7 @@ public class DeviceSCIController implements DeviceSCI {
 				requestVO.getDeviceKey(), requestVO.getUserKey());
 
 		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
-		responseVO.setMsisdn(deviceInfo.getDeviceId());
+		responseVO.setDeviceId(deviceInfo.getDeviceId());
 
 		return responseVO;
 	}
