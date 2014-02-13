@@ -443,6 +443,7 @@ public class DisplayConstants {
 	// 구매유형코드: 구매 / 선물 - OR0017S / OR0017G 사용 결정 필요
 	public static final String PRCHS_CASE_PURCHASE_CD = "OR0017S"; // 구매
 	public static final String PRCHS_CASE_GIFT_CD = "OR0017G"; // 선물
+	public static final String PRCHS_STATE_TYPE_EXPIRED = "expired"; // 구매상태(만료)
 
 	// 정액제 상품 자동결제 구분
 	public static final String DP_AUTOPAY_AUTO = "auto"; // 자동결제
