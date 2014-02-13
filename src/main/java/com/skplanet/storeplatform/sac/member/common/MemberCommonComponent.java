@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.external.client.icas.sci.IcasSci;
+import com.skplanet.storeplatform.external.client.icas.sci.IcasSCI;
 import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerCardEcReq;
 import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerCardEcRes;
 import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcReq;
@@ -80,7 +80,7 @@ public class MemberCommonComponent {
 	private UserSCI userSCI;
 
 	@Autowired
-	private IcasSci icasSCI;
+	private IcasSCI icasSCI;
 
 	@Autowired
 	private DeviceService deviceService;
