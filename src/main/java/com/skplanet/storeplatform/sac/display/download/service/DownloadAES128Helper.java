@@ -107,7 +107,30 @@ public class DownloadAES128Helper {
 	 * @return byte[]
 	 */
 	public byte[] convertBytes(String hex) {
-		return new java.math.BigInteger(hex, 16).toByteArray();
+		int byteSize = hex.length() / 2;
+		byte[] b = new byte[byteSize];
+
+		for (int i = 0; i < hex.length() / 2; i++) {
+			b[i] = (byte) (Integer.parseInt(hex.substring(i * 2, (i * 2) + 2), 16));
+		}
+		return b;
+	}
+
+	/**
+	 * <pre>
+	 * byte to String.
+	 * </pre>
+	 * 
+	 * @param b
+	 *            b
+	 * @return String
+	 */
+	public String toHexString(byte[] b) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < b.length; i++) {
+			sb.append(Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1));
+		}
+		return sb.toString();
 	}
 
 	/**

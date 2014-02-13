@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,6 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
 import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
-import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 /**
  * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
@@ -266,16 +266,26 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 				// JSON 암호화
 				byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-
-				// JSON 암호화값을 BASE64 Encoding
-				Base64Encoder encoder = new Base64Encoder();
-				String encryptString = encoder.encode(encryptByte);
+				String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
 
 				Encryption encryption = new Encryption();
 				encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
 				encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
 				encryption.setToken(encryptString);
 				product.setEncryption(encryption);
+
+				// JSON 복호화
+				byte[] decryptString = CipherTest.convertBytes(encryptString);
+				byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+
+				try {
+					String decData = new String(decrypt, "UTF-8");
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[getDownloadEbookInfo] decData : {}", decData);
+					this.logger.debug("----------------------------------------------------------------");
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 			}
 
 			ebookRes.setProduct(product);
