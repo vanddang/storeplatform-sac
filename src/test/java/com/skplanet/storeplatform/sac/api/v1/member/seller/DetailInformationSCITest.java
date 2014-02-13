@@ -16,12 +16,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.util.MockRequestAttributeInitializer;
 
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -48,7 +50,13 @@ public class DetailInformationSCITest {
 	 */
 	@Before
 	public void before() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		SacRequestHeader sacRequestHeader = new SacRequestHeader();
+		TenantHeader tenant = new TenantHeader();
+		tenant.setTenantId("S01");
+		tenant.setSystemId("S001");
+		sacRequestHeader.setTenantHeader(tenant);
+
+		MockRequestAttributeInitializer.init(SacRequestHeader.class.getName(), sacRequestHeader);
 	}
 
 	/**
