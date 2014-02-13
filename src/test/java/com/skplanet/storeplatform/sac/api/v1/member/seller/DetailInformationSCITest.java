@@ -67,7 +67,7 @@ public class DetailInformationSCITest {
 
 		DetailInformationSacRes res = this.sellerSearchSCI.detailInformation(req);
 
-		assertThat(res.getSellerKey(), notNullValue());
+		assertThat(res.getSellerMbr(), notNullValue());
 		LOGGER.debug("response param : {}", res.toString());
 	}
 
