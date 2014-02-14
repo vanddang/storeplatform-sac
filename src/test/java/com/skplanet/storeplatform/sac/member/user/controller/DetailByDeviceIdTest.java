@@ -86,23 +86,17 @@ public class DetailByDeviceIdTest {
 
 						DetailByDeviceIdSacReq reqJson = new DetailByDeviceIdSacReq();
 
-						reqJson.setDeviceId("01076771470");
+						reqJson.setDeviceId("01022223333");
 						reqJson.setDeviceIdType("msisdn");
 
 						/**
 						 * 정책 리스트
 						 */
-						reqJson.setKey("53");
+						reqJson.setKey("01022223333");
 						List<PolicyCodeInfo> policyCodeInfoList = new ArrayList<PolicyCodeInfo>();
 						PolicyCodeInfo policyCodeInfo1 = new PolicyCodeInfo();
-						policyCodeInfo1.setPolicyCode("3");
-						PolicyCodeInfo policyCodeInfo2 = new PolicyCodeInfo();
-						policyCodeInfo2.setPolicyCode("4");
-						PolicyCodeInfo policyCodeInfo3 = new PolicyCodeInfo();
-						policyCodeInfo3.setPolicyCode("5");
+						policyCodeInfo1.setPolicyCode("OR003101");
 						policyCodeInfoList.add(policyCodeInfo1);
-						policyCodeInfoList.add(policyCodeInfo2);
-						policyCodeInfoList.add(policyCodeInfo3);
 						reqJson.setPolicyCodeList(policyCodeInfoList);
 
 						return reqJson;
