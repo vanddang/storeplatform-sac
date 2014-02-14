@@ -84,8 +84,8 @@ public class RemoveOcbInformationTest {
 
 						reqJson.setUserKey("US201401241550022950000616");
 						reqJson.setAuthMethodCode("OR003401");
-						reqJson.setCardNumber("3306-3306-3306-33");
-						reqJson.setStartDate("20140212162557");
+						reqJson.setCardNumber("3306-3306-3306-3306");
+						reqJson.setStartDate("20140214132821");
 						reqJson.setIsUsed("Y");
 
 						return reqJson;
