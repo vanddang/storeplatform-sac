@@ -41,7 +41,8 @@ public class ShoppingReq extends CommonInfo {
 	private String brandId; // 브랜드샵 ID
 	private String themeId; // 테마 ID
 	private String exceptProdId; // 제외할 메뉴ID – 지정하면 응답에서 해당 메뉴 제외
-	private String prodId; // 상품 ID
+	private String prodId; // 상품 ID (카탈로그)
+	private String partProdId; // 상품 ID( 에피소드)
 	private String specialProdId; // 특가상품 ID
 	private String deviceKey; // 디바이스키
 	private String userKey; // 사용자고유키
@@ -260,6 +261,21 @@ public class ShoppingReq extends CommonInfo {
 	 */
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
+	}
+
+	/**
+	 * @return the partProdId
+	 */
+	public String getPartProdId() {
+		return this.partProdId;
+	}
+
+	/**
+	 * @param partProdId
+	 *            the partProdId to set
+	 */
+	public void setPartProdId(String partProdId) {
+		this.partProdId = partProdId;
 	}
 
 	/**
