@@ -67,7 +67,7 @@ public class UserSearchController {
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 
 		if (deviceId.equals("") && deviceKey.equals("") && userId.equals("") && userKey.equals("")) {
-			new StorePlatformException("SAC_MEM_0001", req.toString());
+			new StorePlatformException("SAC_MEM_0001", "userId, userKey, deviceId, deviceKey");
 		}
 
 		ExistRes res = this.svc.exist(sacHeader, req);
@@ -89,7 +89,7 @@ public class UserSearchController {
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
 		if (deviceId.equals("")) {
-			new StorePlatformException("SAC_MEM_0001", req.toString());
+			new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
 
 		LOGGER.info("============================================ GetProvisioningHistoryReq : {}", req.toString());
@@ -114,7 +114,7 @@ public class UserSearchController {
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 
 		if (deviceId.equals("") && deviceKey.equals("") && userId.equals("") && userKey.equals("")) {
-			new StorePlatformException("SAC_MEM_0001", req.toString());
+			new StorePlatformException("SAC_MEM_0001", "userId, userKey, deviceId, deviceKey");
 		}
 
 		LOGGER.info("============================================ DetailReq : {}", req.toString());
