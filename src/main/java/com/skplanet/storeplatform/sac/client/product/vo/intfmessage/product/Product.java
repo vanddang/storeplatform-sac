@@ -57,6 +57,12 @@ public class Product extends CommonInfo implements Serializable {
 	 * title Message(상품명).
 	 */
 	private Title title;
+
+	/**
+	 * 채널 상품명.
+	 */
+	private String chnlProdNm;
+
 	/**
 	 * 가격정보.
 	 */
@@ -216,8 +222,6 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private Encryption encryption;
 
-	private String chnlProdNm;
-
 	/**
 	 * @return Identifier
 	 */
@@ -321,6 +325,21 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setTitle(Title title) {
 		this.title = title;
+	}
+
+	/**
+	 * @return the chnlProdNm
+	 */
+	public String getChnlProdNm() {
+		return this.chnlProdNm;
+	}
+
+	/**
+	 * @param chnlProdNm
+	 *            the chnlProdNm to set
+	 */
+	public void setChnlProdNm(String chnlProdNm) {
+		this.chnlProdNm = chnlProdNm;
 	}
 
 	/**
@@ -881,20 +900,5 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setEncryption(Encryption encryption) {
 		this.encryption = encryption;
-	}
-
-	/**
-	 * @return the chnlProdNm
-	 */
-	public String getChnlProdNm() {
-		return this.chnlProdNm;
-	}
-
-	/**
-	 * @param chnlProdNm
-	 *            the chnlProdNm to set
-	 */
-	public void setChnlProdNm(String chnlProdNm) {
-		this.chnlProdNm = chnlProdNm;
 	}
 }

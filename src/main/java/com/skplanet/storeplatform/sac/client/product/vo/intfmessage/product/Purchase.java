@@ -45,6 +45,7 @@ public class Purchase extends CommonInfo implements Serializable {
 	private AutoPay autoPay; // 자동결제 상품인 경우 정의
 	private Count count; // 구매 건수
 	private String purchaseFlag; // payment : 구매, nonPayment : 미구매
+	private String dwldExprDt; // 다운로드 만료일시
 
 	/**
 	 * @return the identifierList
@@ -239,5 +240,20 @@ public class Purchase extends CommonInfo implements Serializable {
 	 */
 	public void setPurchaseFlag(String purchaseFlag) {
 		this.purchaseFlag = purchaseFlag;
+	}
+
+	/**
+	 * @return the dwldExprDt
+	 */
+	public String getDwldExprDt() {
+		return this.dwldExprDt;
+	}
+
+	/**
+	 * @param dwldExprDt
+	 *            the dwldExprDt to set
+	 */
+	public void setDwldExprDt(String dwldExprDt) {
+		this.dwldExprDt = dwldExprDt;
 	}
 }

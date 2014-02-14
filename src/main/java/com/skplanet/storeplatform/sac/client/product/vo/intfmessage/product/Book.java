@@ -99,6 +99,11 @@ public class Book extends CommonInfo implements Serializable {
 	private String isbn;
 
 	/**
+	 * 잡지표지여부.
+	 */
+	private String mgzinCoverYn;
+
+	/**
 	 * @return the type
 	 */
 	public String getType() {
@@ -351,5 +356,20 @@ public class Book extends CommonInfo implements Serializable {
 	 */
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
+	}
+
+	/**
+	 * @return the mgzinCoverYn
+	 */
+	public String getMgzinCoverYn() {
+		return this.mgzinCoverYn;
+	}
+
+	/**
+	 * @param mgzinCoverYn
+	 *            the mgzinCoverYn to set
+	 */
+	public void setMgzinCoverYn(String mgzinCoverYn) {
+		this.mgzinCoverYn = mgzinCoverYn;
 	}
 }
