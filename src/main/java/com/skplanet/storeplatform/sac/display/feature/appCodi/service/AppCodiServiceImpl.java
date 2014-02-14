@@ -298,6 +298,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 			if (this.log.isDebugEnabled()) {
 				this.log.debug("product count : " + productList.size());
+				// productList.clear();
 			}
 
 			if (productList.isEmpty()) {
@@ -472,7 +473,6 @@ public class AppCodiServiceImpl implements AppCodiService {
 				this.log.debug("ISF 연동 실패나 Data 가 없는 경우 - 운영자 추천으로 대체");
 			}
 			mapReq = new HashMap<String, Object>();
-
 			if (!"long".equalsIgnoreCase(requestVO.getFilteredBy())) {
 				mapReq.put("START_ROW", "1");
 				mapReq.put("END_ROW", "4");
@@ -485,7 +485,14 @@ public class AppCodiServiceImpl implements AppCodiService {
 			mapReq.put("deviceHeader", requestHeader.getDeviceHeader());
 
 			mapReq.put("listId", "ADM000000012"); // 운영자 추천
-			mapReq.put("imageCd", "DP000167");
+
+			List<String> imageCodeList = new ArrayList<String>();
+			imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+			imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+			imageCodeList.add(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+			imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+			imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+			mapReq.put("imageCdList", imageCodeList);
 
 			this.mapPrint(mapReq);
 

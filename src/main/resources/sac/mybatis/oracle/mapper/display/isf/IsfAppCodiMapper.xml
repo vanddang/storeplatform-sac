@@ -448,7 +448,7 @@
 		      WHERE PI.PROD_ID(+) = P.PROD_ID
 		        AND PP.PROD_ID(+) = P.PROD_ID
 		        AND PP.TENANT_ID(+) = #{tenantHeader.tenantId}
-		        AND PI.IMG_CD(+) = #{imageCd}
+		        AND PI.IMG_CD(+) IN (<foreach collection="imageCdList" item="imgCd" separator=",">#{imgCd}</foreach>)
 		     ORDER BY P.EXPO_ORD
 		            , P.PROD_NM
     </select>

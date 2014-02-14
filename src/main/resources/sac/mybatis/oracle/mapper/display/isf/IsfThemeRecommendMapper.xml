@@ -200,7 +200,7 @@
                    ) A
                    , TB_DP_PROD_IMG PI
                WHERE PI.PROD_ID = A.PROD_ID
-                 AND PI.IMG_CD = #{imageCd}
+                 AND PI.IMG_CD IN (<foreach collection="imageCdList" item="imgCd" separator=",">#{imgCd}</foreach>)
                  AND RNUM <![CDATA[<=]]> 2
                GROUP BY A.PKG_ID
                )
