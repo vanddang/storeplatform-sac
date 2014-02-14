@@ -296,7 +296,9 @@ public class DisplayConstants {
 
 	public static final String DP_SHOPPING_THEME_REPRESENT_IMAGE_CD = "DP0001A7";
 
-	public static final String DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD = "DP0001B0";
+	public static final String DP_SHOPPING_REPRESENT_CUT_DETAIL_IMAGE_CD = "DP0001B0";
+
+	public static final String DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD = "DP0001B4";
 
 	public static final String DP_OPENAPI_APP_REPRESENT_IMAGE_CD = "DP000125";
 	// 정액제 배너이미지
