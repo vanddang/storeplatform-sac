@@ -3,71 +3,80 @@
 <mapper namespace="Freepass">
     <!-- 정액제 리스트 조회-->
     <select id="selectFreepassList" parameterType="FreepassListSacReq" resultType="ProductBasicInfo">
-		/* FreepassMapper.xml, selectFreepassList, SAC : 서영배 , 2014-02-12 */
-		SELECT *
-		FROM (
-			SELECT
-				COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
-				, ROWNUM AS RNUM
-				, TP.TENANT_ID
-				, DC.LANG_CD
-				, PD.PROD_ID
-				, PD.TOP_MENU_ID
-				, (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
-				, PD.META_CLSF_CD
-				, PD.PROD_CHRG_YN
-				, PD.SELLER_MBR_NO
-				, PD.SVC_GRP_CD
-				, PD.SVC_TYPE_CD
-				, PD.PROD_GRD_CD
-				, PD.CID
-				, PD.MALL_CD
-				, PD.FEE_CASE_CD
-				, PD.FEE_UNIT_CD
-				, PD.USE_PERIOD_UNIT_CD
-				, PD.USE_PERIOD
-				, PD.DRM_YN
-				, PD.DRM_SET_CD
-				, PD.DRM_SET_VALUE
-				, PD.CONTENTS_TYPE_CD
-				, PD.SUB_MENU_ID
+			/* FreepassMapper.xml, selectFreepassList, SAC : 서영배 , 2014-02-12 */
+			SELECT 
+				* 
 			FROM
-				TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
-  				TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR, TB_DP_PROD_IMG BIG, TB_DP_PROD_IMG TIG
-			WHERE PD.PROD_ID = CM.PROD_ID
-			AND PD.PROD_ID = DC.PROD_ID
-			AND PD.PROD_ID = TP.PROD_ID
-			AND PD.PROD_ID = PR.PROD_ID
-			AND PD.PROD_ID = BIG.PROD_ID
-			AND PD.PROD_ID = TIG.PROD_ID
-			AND DC.LANG_CD = #{langCd}
-			AND BIG.LANG_CD = DC.LANG_CD
-			AND TIG.LANG_CD = DC.LANG_CD
-			AND TP.TENANT_ID = #{tenantId}
-			AND TP.TENANT_ID = PR.TENANT_ID
-			AND BIG.IMG_CD = #{bannerImageCd}
-			AND TIG.IMG_CD = #{thumbnailImageCd}
-			AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-			AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-      		<if test='deviceModelCd != null and deviceModelCd != ""'>
-      		AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
-      		AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd}))
-      		AND EXISTS ( SELECT DV.DEVICE_MODEL_CD FROM TB_CM_DEVICE DV WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
-      		AND DV.VOD_FIXISTT_SPRT_YN = 'Y' )
-      		</if>
-      		<if test='prodStatusCd != null and prodStatusCd != ""'>
+			(
+				SELECT 
+					IV.*
+			    , ROWNUM AS RNUM
+				FROM 
+				(
+					SELECT
+						COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
+						, TP.TENANT_ID
+						, DC.LANG_CD
+						, PD.PROD_ID
+						, PD.TOP_MENU_ID
+						, (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+						, PD.META_CLSF_CD
+						, PD.PROD_CHRG_YN
+						, PD.SELLER_MBR_NO
+						, PD.SVC_GRP_CD
+						, PD.SVC_TYPE_CD
+						, PD.PROD_GRD_CD
+						, PD.CID
+						, PD.MALL_CD
+						, PD.FEE_CASE_CD
+						, PD.FEE_UNIT_CD
+						, PD.USE_PERIOD_UNIT_CD
+						, PD.USE_PERIOD
+						, PD.DRM_YN
+						, PD.DRM_SET_CD
+						, PD.DRM_SET_VALUE
+						, PD.CONTENTS_TYPE_CD
+						, PD.SUB_MENU_ID
+			      , TP.EXPO_ORD
+					FROM
+						TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
+						TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
+					WHERE PD.PROD_ID = CM.PROD_ID
+					AND PD.PROD_ID = DC.PROD_ID
+					AND PD.PROD_ID = TP.PROD_ID
+					AND PD.PROD_ID = PR.PROD_ID
+					AND DC.LANG_CD = #{langCd}
+					AND TP.TENANT_ID = #{tenantId}
+					AND TP.TENANT_ID = PR.TENANT_ID
+					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+			    		AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
+			    		AND ( SP.DEVICE_MODEL_CD = 'android_standard2' OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
+			    		AND EXISTS (
+			          	SELECT 'X' 
+			              FROM TB_CM_DEVICE DV
+			              WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+			              AND (
+			              	DV.VOD_FIXISTT_SPRT_YN = ( CASE WHEN CM.CMPX_PROD_CLSF_CD='OR004301' OR CM.CMPX_PROD_CLSF_CD='OR004302' 
+			                  						THEN 'Y' ELSE 'NOT SUPPORT' END)
+			                OR
+			                DV.EBOOK_SPRT_YN = ( CASE WHEN CM.CMPX_PROD_CLSF_CD='OR004303' OR CM.CMPX_PROD_CLSF_CD='OR004304' 
+			                  						THEN 'Y' ELSE 'NOT SUPPORT' END)
+			              )
+			          )
+			    <if test='prodStatusCd != null and prodStatusCd != ""'>
       		AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
       		</if>
-      		AND TP.EXPO_YN = 'Y'
-      		<if test='kind != null and kind != ""'>
+			    AND TP.EXPO_YN = 'Y'
+			    <if test='kind != null and kind != ""'>
       		AND CM.CMPX_PROD_CLSF_CD = #{kind}
       		</if>
       		<if test='topMenuId != null and topMenuId != ""'>
       		AND PD.TOP_MENU_ID = #{topMenuId}    /* DP13:ebook/DP14:코믹/DP17:영화/DP18:TV/방송 */
       		</if>
-      		ORDER BY TP.EXPO_ORD
-    	)
-    	WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
-		ORDER BY RNUM
+			    ORDER BY TP.EXPO_ORD
+			  ) IV
+			) OV
+			WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+			ORDER BY OV.RNUM
     </select>
  </mapper>
