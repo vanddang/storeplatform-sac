@@ -103,7 +103,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		}
 
 		// 보유상품 조회일 때만 해당값이 조회 조건으로 사용된다.
-		if (PurchaseConstants.PRCHS_PROD_TYPE_OWN.equals(request.getPrchsProdType())) {
+		if (PurchaseConstants.USE_Y.equals(request.getPrchsProdHaveYn())) {
 			scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
 		}
 
@@ -263,7 +263,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
 
 		// 보유상품 조회일 때만 해당값이 조회 조건으로 사용된다.
-		if (PurchaseConstants.PRCHS_PROD_TYPE_OWN.equals(request.getPrchsProdType())) {
+		if (PurchaseConstants.USE_Y.equals(request.getPrchsProdHaveYn())) {
 			scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
 		}
 
