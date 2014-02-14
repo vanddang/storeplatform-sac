@@ -72,7 +72,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
@@ -1050,15 +1049,13 @@ public class DeviceServiceImpl implements DeviceService {
 		DeviceInfo deviceInfo = null;
 		String isPrimary = "";
 		String deviceKey = "";
-		try {
-			deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), req.getUserKey());
-			isPrimary = deviceInfo.getIsPrimary();
-			deviceKey = deviceInfo.getDeviceKey();
-		} catch (StorePlatformException ex) {
-			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
-			}
+
+		deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), req.getUserKey());
+		if (deviceInfo == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
+		isPrimary = deviceInfo.getIsPrimary();
+		deviceKey = deviceInfo.getDeviceKey();
 
 		/* 삭제 가능여부 판단 */
 		Integer deviceCount = Integer.parseInt(userInfo.getDeviceCount());
