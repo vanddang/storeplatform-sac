@@ -69,4 +69,14 @@ public class CommonConstants {
 	 */
 	public static final String HEADER_HTTP_REQUEST_URL = "http_requestUrl";
 
+    /**
+     * 인터페이스 상태 - 사용가능
+     */
+    public static final String INTERFACE_STAT_OK = "CM010601";
+
+    /**
+     * 인터페이스 상태 - 사용불가
+     */
+    public static final String INTERFACE_STAT_CANNOT = "CM010602";
+
 }

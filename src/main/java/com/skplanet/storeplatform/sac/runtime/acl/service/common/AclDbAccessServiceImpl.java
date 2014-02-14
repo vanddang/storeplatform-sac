@@ -17,4 +17,9 @@ public class AclDbAccessServiceImpl implements AclDbAccessService {
 		return null;
 	}
 
+    @Override
+    public String selectInterfaceStatus(String tenantId, String interfaceId) {
+        // TODO Implementation.
+        return null;
+    }
 }
