@@ -790,6 +790,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
 				identifier.setText(shopping.getCatalogId());
+
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+				identifier.setText(shopping.getPartProdId());
 				identifierList.add(identifier);
 
 				// 메뉴 정보
@@ -853,7 +857,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 				}
 
 				// 데이터 매핑
-				product.setId(shopping.getPartProdId()); // 특가 상품 ID
 				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
 				product.setTitle(title);
@@ -2434,11 +2437,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 								}
 							} catch (Exception e) {
 								throw new StorePlatformException("SAC_DSP_0001", "멤버 정보 조회 ", e);
-							}
-
-							// 에피소드 특가상품
-							if (episodeShopping.getSpecialSale() != null) {
-								episodeProduct.setId(episodeShopping.getPartProdId());
 							}
 							subProductList.add(episodeProduct);
 						}
