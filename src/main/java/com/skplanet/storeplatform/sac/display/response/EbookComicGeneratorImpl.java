@@ -89,6 +89,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		book.setBpJoinFileNo(metaInfo.getBpJoinFileNo());
 		book.setTotalCount(metaInfo.getBookPageCnt());
 		book.setIsbn(metaInfo.getIsbn());
+		book.setMgzinCoverYn(metaInfo.getMgzinCoverYn());
 
 		// 완결 여부
 		if ("Y".equals(metaInfo.getComptYn())) {

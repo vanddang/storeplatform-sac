@@ -147,6 +147,7 @@ public class MetaInfo {
 	private Integer bookPageCnt;
 	private String colorSprtYn;
 	private String isbn;
+	private String mgzinCoverYn;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -2209,6 +2210,21 @@ public class MetaInfo {
 	 */
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
+	}
+
+	/**
+	 * @return the mgzinCoverYn
+	 */
+	public String getMgzinCoverYn() {
+		return this.mgzinCoverYn;
+	}
+
+	/**
+	 * @param mgzinCoverYn
+	 *            the mgzinCoverYn to set
+	 */
+	public void setMgzinCoverYn(String mgzinCoverYn) {
+		this.mgzinCoverYn = mgzinCoverYn;
 	}
 
 	/**
