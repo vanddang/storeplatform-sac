@@ -40,11 +40,9 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 
 @Service
 public class CouponProcessServiceImpl implements CouponProcessService {
@@ -62,7 +60,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private BrandCatalogService brandCatalogService;
 
 	@Autowired
-	private SellerSearchService sellerSearchService;
+	private SellerSearchSCI sellerSearchSCI;
 
 	@Override
 	public boolean insertCouponInfo(CouponReq couponReq) {
@@ -843,17 +841,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean validateBusinessPartner(DpCouponInfo couponInfo) {
 		this.log.info("■■■■■ validateBusinessPartner ■■■■■");
-		SacRequestHeader header = new SacRequestHeader();
-		TenantHeader tenantHeader = new TenantHeader();
-		tenantHeader.setTenantId(CouponConstants.TENANT_ID);
-		header.setTenantHeader(tenantHeader);
-
-		DetailInformationReq req = new DetailInformationReq();
-		DetailInformationRes res = new DetailInformationRes();
+		DetailInformationSacReq req = new DetailInformationSacReq();
+		DetailInformationSacRes res = new DetailInformationSacRes();
 		try {
 			req.setSellerKey("");
 			req.setSellerId(couponInfo.getBpId());
-			res = this.sellerSearchService.detailInformation(header, req);
+			res = this.sellerSearchSCI.detailInformation(req);
 			if (res != null) {
 				if (StringUtils.isBlank(res.getSellerMbr().getSellerCompany())) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
