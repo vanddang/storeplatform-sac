@@ -11,7 +11,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 2. 10. Updated by : 김경복, 부르칸
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class ConversionClassResSacRes extends CommonInfo {
+public class ConversionClassSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
