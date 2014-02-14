@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -19,7 +17,7 @@ public class RemoveDeviceReq extends CommonInfo {
 	private String deviceKey;
 
 	/* 기기 ID */
-	List<RemoveDeviceListSacReq> deviceIdList;
+	private String deviceId;
 
 	/* 사용자 권한 Key */
 	private String userAuthKey;
@@ -43,12 +41,12 @@ public class RemoveDeviceReq extends CommonInfo {
 		this.deviceKey = deviceKey;
 	}
 
-	public List<RemoveDeviceListSacReq> getDeviceIdList() {
-		return this.deviceIdList;
+	public String getDeviceId() {
+		return this.deviceId;
 	}
 
-	public void setDeviceIdList(List<RemoveDeviceListSacReq> deviceIdList) {
-		this.deviceIdList = deviceIdList;
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	public String getUserAuthKey() {
