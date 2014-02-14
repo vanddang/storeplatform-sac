@@ -69,6 +69,8 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		sacReq.setPrchsProdType(request.getPrchsProdType());
 		sacReq.setPrchsStatusCd(request.getPrchsStatusCd());
 		sacReq.setPrchsCaseCd(request.getPrchsCaseCd());
+		sacReq.setPrchsProdHaveYn(request.getPrchsProdHaveYn());
+		sacReq.setPrchsReqPathCd(request.getPrchsReqPathCd());
 		sacReq.setTenantProdGrpCd(request.getTenantProdGrpCd());
 
 		ProductListSac product = new ProductListSac();
@@ -109,6 +111,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 			historySacIn.setTotAmt(obj.getTotAmt());
 			historySacIn.setSendUserKey(obj.getSendUserKey());
 			historySacIn.setSendDeviceKey(obj.getSendDeviceKey());
+			historySacIn.setPrchsReqPathCd(obj.getPrchsReqPathCd());
 			historySacIn.setRecvDt(obj.getRecvDt());
 			historySacIn.setProdId(obj.getProdId());
 			historySacIn.setProdAmt(obj.getProdAmt());
@@ -182,6 +185,8 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		sacReq.setPrchsProdType(request.getPrchsProdType());
 		sacReq.setPrchsStatusCd(request.getPrchsStatusCd());
 		sacReq.setPrchsCaseCd(request.getPrchsCaseCd());
+		sacReq.setPrchsProdHaveYn(request.getPrchsProdHaveYn());
+		sacReq.setPrchsReqPathCd(request.getPrchsReqPathCd());
 		sacReq.setTenantProdGrpCd(request.getTenantProdGrpCd());
 
 		ProductListSac product = new ProductListSac();

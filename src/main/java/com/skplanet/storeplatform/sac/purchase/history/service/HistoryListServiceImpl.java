@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.history.sci.HistorySCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountScReq;
@@ -84,10 +83,12 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// SC Request Set
 		scRequest.setTenantId(request.getTenantId());
 		scRequest.setUserKey(request.getUserKey());
-		scRequest.setDeviceKey(request.getDeviceKey());
+		// scRequest.setDeviceKey(request.getDeviceKey());
 		scRequest.setStartDt(request.getStartDt());
 		scRequest.setEndDt(request.getEndDt());
 		scRequest.setPrchsProdType(request.getPrchsProdType());
+		scRequest.setPrchsProdHaveYn(request.getPrchsProdHaveYn());
+		scRequest.setPrchsReqPathCd(request.getPrchsReqPathCd());
 		scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
 		scRequest.setPrchsCaseCd(request.getPrchsCaseCd());
 		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
@@ -113,8 +114,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 					.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
 							PurchaseConstants.POLICY_ID_008);
 
-			if (purchaseTenantPolicyList.size() <= 0) {
-				scRequest.setDeviceKey("");
+			if (purchaseTenantPolicyList.size() > 0) {
+				scRequest.setDeviceKey(request.getDeviceKey());
 			}
 		}
 
@@ -123,13 +124,13 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setOffset(request.getOffset());
 		scRequest.setCount(request.getCount());
 
-		try {
-			// SC Call
-			scResponse = this.historySci.searchHistoryList(scRequest);
-		} catch (Exception ex) {
-			// TODO : 추후 메세지 추가후 처리함
-			throw new StorePlatformException("구매SC 호출중 오류발생", ex);
-		}
+		// try {
+		// SC Call
+		scResponse = this.historySci.searchHistoryList(scRequest);
+		// } catch (Exception ex) {
+		// TODO : 추후 메세지 추가후 처리함
+		// throw new StorePlatformException("구매SC 호출중 오류발생", ex);
+		// }
 
 		// SC객체를 SAC객체로 맵핑작업
 		for (HistorySc obj : scResponse.getHistoryList()) {
@@ -144,9 +145,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setUseTenantId(obj.getUseTenantId());
 			historySac.setUseUserKey(obj.getUseUserKey());
 			historySac.setUseDeviceKey(obj.getUseDeviceKey());
-
-			scRequest.setUserKey(request.getUserKey());
-			scRequest.setDeviceKey(request.getDeviceKey());
+			historySac.setPrchsReqPathCd(obj.getPrchsReqPathCd());
 
 			historySac.setPrchsDt(obj.getPrchsDt());
 			historySac.setTotAmt(obj.getTotAmt());
@@ -253,13 +252,32 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// SC Request Set
 		scRequest.setTenantId(request.getTenantId());
 		scRequest.setUserKey(request.getUserKey());
-		scRequest.setDeviceKey(request.getDeviceKey());
+		// scRequest.setDeviceKey(request.getDeviceKey());
 		scRequest.setStartDt(request.getStartDt());
 		scRequest.setEndDt(request.getEndDt());
 		scRequest.setPrchsProdType(request.getPrchsProdType());
 		scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
+		scRequest.setPrchsProdHaveYn(request.getPrchsProdHaveYn());
+		scRequest.setPrchsReqPathCd(request.getPrchsReqPathCd());
 		scRequest.setPrchsCaseCd(request.getPrchsCaseCd());
 		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
+
+		// 보유상품 조회일 때만 해당값이 조회 조건으로 사용된다.
+		if (PurchaseConstants.PRCHS_PROD_TYPE_OWN.equals(request.getPrchsProdType())) {
+			scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
+		}
+
+		// TenantProdGrpCd가 요청값으로 전달되면 구매 정책을 확인한다. (Device기반 구매내역관리)
+		// TenantProdGrpCd가 Device기반 정책이면 device_key를 세팅하고 아니면 공백처리하여 쿼리 조건으로 사용되지 않게 처리됨
+		if (StringUtils.isNotBlank(request.getTenantProdGrpCd())) {
+			List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
+					.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
+							PurchaseConstants.POLICY_ID_008);
+
+			if (purchaseTenantPolicyList.size() > 0) {
+				scRequest.setDeviceKey(request.getDeviceKey());
+			}
+		}
 
 		List<String> prodList = new ArrayList<String>();
 		if (request.getProductList() != null && request.getProductList().size() > 0) {
