@@ -216,6 +216,8 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private Encryption encryption;
 
+	private String chnlProdNm;
+
 	/**
 	 * @return Identifier
 	 */
@@ -879,5 +881,20 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setEncryption(Encryption encryption) {
 		this.encryption = encryption;
+	}
+
+	/**
+	 * @return the chnlProdNm
+	 */
+	public String getChnlProdNm() {
+		return this.chnlProdNm;
+	}
+
+	/**
+	 * @param chnlProdNm
+	 *            the chnlProdNm to set
+	 */
+	public void setChnlProdNm(String chnlProdNm) {
+		this.chnlProdNm = chnlProdNm;
 	}
 }
