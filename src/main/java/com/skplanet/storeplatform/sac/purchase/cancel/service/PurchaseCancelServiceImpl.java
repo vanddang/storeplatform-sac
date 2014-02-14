@@ -94,15 +94,13 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				purchaseCanDetailSacResult = this.updatePurchaseCancel(purchaseCancelSacParam,
 						purchaseCancelDetailSacParam);
 
-			} catch (StorePlatformException e) {
-
 			} catch (Exception e) {
-				/*
-				 * purchaseCanDetailSacResult = new PurchaseCancelResultDetail();
-				 * purchaseCancelResultDetail.setPrchsId(purchaseCancelParamDetail.getPrchsId());
-				 * purchaseCancelResultDetail.setPrchsCancelResultCd("실패");
-				 * purchaseCancelResultDetail.setPrchsCancelResultMsg("실패");
-				 */
+
+				purchaseCanDetailSacResult = new PurchaseCancelDetailSacResult();
+				purchaseCanDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+				purchaseCanDetailSacResult.setResultCd("1111");
+				purchaseCanDetailSacResult.setResultMsg("실패!");
+
 			}
 			// TODO : 성공 코드값 및 메시지 정의 필요
 			if ("0000".equals(StringUtil.setTrim(purchaseCanDetailSacResult.getResultCd()))) {
@@ -110,13 +108,15 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			} else {
 				failCnt++;
 			}
-			// prchsCancelResultList.add(purchaseCancelResultDetail);
+
+			prchsCancelList.add(purchaseCanDetailSacResult);
+
 		}
 
 		purchaseCancelSacResult.setTotCnt(totCnt);
 		purchaseCancelSacResult.setSuccessCnt(successCnt);
 		purchaseCancelSacResult.setFailCnt(failCnt);
-		// purchaseCancelResult.setPrchsCancelResultList(prchsCancelResultList);
+		purchaseCancelSacResult.setPrchsCancelList(prchsCancelList);
 
 		return purchaseCancelSacResult;
 
@@ -358,6 +358,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		 * 
 		 * 이용내역 취소는 머지?
 		 */
+
+		purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+		purchaseCancelDetailSacResult.setResultCd("0000");
+		purchaseCancelDetailSacResult.setResultMsg("성공");
 
 		this.logger.debug("구매 취소 성공!");
 
