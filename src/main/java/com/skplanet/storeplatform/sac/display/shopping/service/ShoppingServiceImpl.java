@@ -2026,6 +2026,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
+		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -2448,20 +2449,25 @@ public class ShoppingServiceImpl implements ShoppingService {
 							} catch (Exception e) {
 								throw new StorePlatformException("SAC_DSP_0001", "멤버 정보 조회 ", e);
 							}
+
 							subProductList.add(episodeProduct);
 						}
 					}
 					// 데이터 매핑
+
 					product.setIdentifierList(identifierList);
 					product.setMenuList(menuList);
 					product.setTitle(title);
 					product.setSourceList(sourceList);
 					product.setAccrual(accrual);
 					product.setContributor(contributor);
+					product.setSubProductTotalCount(subProductList.size());
 					product.setSubProductList(subProductList);
 					productList.add(i, product);
 				}
 				res.setProductList(productList);
+				commonResponse.setTotalCount(1);
+				res.setCommonResponse(commonResponse);
 			} else {
 				throw new StorePlatformException("SAC_DSP_0001", "쇼핑 상세 확인 ");
 			}
