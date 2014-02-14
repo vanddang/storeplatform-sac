@@ -69,7 +69,7 @@ public class DetailInformationTest {
 
 						req.setAid("OA00049881");
 						req.setSellerId("qatest123");
-						req.setSellerKey("IF1023501184720130823173955");
+						req.setSellerKey("IF1023229565820110106110241");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
