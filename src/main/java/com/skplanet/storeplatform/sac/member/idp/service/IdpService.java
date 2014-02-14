@@ -320,4 +320,16 @@ public interface IdpService {
 	 * @return
 	 */
 	public ImResult rXUpdateUserInfoIDP(HashMap<String, String> map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 통합 ID 변경 배포.
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request 받은 Parameter Map
+	 * @return
+	 */
+	public ImResult rXChangeUserIdIDP(HashMap<String, String> map);
 }
