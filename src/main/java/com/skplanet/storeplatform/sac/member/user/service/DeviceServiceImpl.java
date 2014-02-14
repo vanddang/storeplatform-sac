@@ -72,6 +72,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
@@ -1033,50 +1035,63 @@ public class DeviceServiceImpl implements DeviceService {
 		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
-		if (req.getDeviceId() != null) {
-			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
-			req.setDeviceId(opmdMdn);
-			LOGGER.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+		if (req.getDeviceIdList() != null) {
+			List<RemoveDeviceListSacReq> deviceIdList = new ArrayList<RemoveDeviceListSacReq>();
+			for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
+				String opmdMdn = this.commService.getOpmdMdnInfo(id.getDeviceId());
+				LOGGER.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+
+				RemoveDeviceListSacReq deviceId = new RemoveDeviceListSacReq();
+				deviceId.setDeviceId(opmdMdn);
+
+				deviceIdList.add(deviceId);
+
+			}
+			req.setDeviceIdList(deviceIdList);
 		}
 
 		/* SC 회원 정보 여부 */
-		RemoveDeviceReq removeDeviceReq = new RemoveDeviceReq();
-		removeDeviceReq.setUserKey(req.getUserKey());
-		removeDeviceReq.setDeviceId(req.getDeviceId());
-		UserInfo userInfo = this.searchUser(removeDeviceReq, requestHeader);
+		List<String> removeKeyList = new ArrayList<String>();
+		for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
+			RemoveDeviceReq removeDeviceReq = new RemoveDeviceReq();
+			removeDeviceReq.setUserKey(req.getUserKey());
+			removeDeviceReq.setDeviceId(id.getDeviceId());
+			UserInfo userInfo = this.searchUser(removeDeviceReq, requestHeader);
 
-		/* 휴대기기 조회 */
-		DeviceInfo deviceInfo = null;
-		String isPrimary = "";
-		String deviceKey = "";
+			/* 휴대기기 조회 */
+			DeviceInfo deviceInfo = null;
+			String isPrimary = "";
+			String deviceKey = "";
 
-		deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), req.getUserKey());
-		if (deviceInfo == null) {
-			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
-		}
-		isPrimary = deviceInfo.getIsPrimary();
-		deviceKey = deviceInfo.getDeviceKey();
+			deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, id.getDeviceId(), req.getUserKey());
+			if (deviceInfo == null) {
+				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+			}
+			isPrimary = deviceInfo.getIsPrimary();
+			deviceKey = deviceInfo.getDeviceKey();
 
-		/* 삭제 가능여부 판단 */
-		Integer deviceCount = Integer.parseInt(userInfo.getDeviceCount());
-		if ((userInfo.getImSvcNo() != null && !"".equals(userInfo.getImSvcNo())) || userInfo.getUserType().equals(MemberConstants.USER_TYPE_IDPID)) { // 통합/IDP 회원
+			/* 삭제 가능여부 판단 */
+			Integer deviceCount = Integer.parseInt(userInfo.getDeviceCount());
+			if ((userInfo.getImSvcNo() != null && !"".equals(userInfo.getImSvcNo()))
+					|| userInfo.getUserType().equals(MemberConstants.USER_TYPE_IDPID)) { // 통합/IDP 회원
 
-			/* 단말 1개이상 보유이고, 삭제할 단말이 대표기기인 경우 에러 */
-			if (deviceCount > 1 && isPrimary.equals("Y")) {
-				throw new StorePlatformException("SAC_MEM_1510");
+				/* 단말 1개이상 보유이고, 삭제할 단말이 대표기기인 경우 에러 */
+				if (deviceCount > 1 && isPrimary.equals("Y")) {
+					throw new StorePlatformException("SAC_MEM_1510");
+				}
+
+			} else if (userInfo.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+				/* 모바일회원 단말삭제 불가 */
+				throw new StorePlatformException("SAC_MEM_1511");
 			}
 
-		} else if (userInfo.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
-			/* 모바일회원 단말삭제 불가 */
-			throw new StorePlatformException("SAC_MEM_1511");
+			removeKeyList.add(deviceKey);
 		}
 
 		/* SC 휴대기기 삭제요청 */
 		RemoveDeviceRequest removeDeviceRequest = new RemoveDeviceRequest();
 		removeDeviceRequest.setCommonRequest(commonRequest);
 		removeDeviceRequest.setUserKey(req.getUserKey());
-		List<String> removeKeyList = new ArrayList<String>();
-		removeKeyList.add(deviceKey);
 		removeDeviceRequest.setDeviceKey(removeKeyList);
 		RemoveDeviceResponse removeDeviceResponse = this.deviceSCI.removeDevice(removeDeviceRequest);
 
@@ -1084,23 +1099,28 @@ public class DeviceServiceImpl implements DeviceService {
 		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
 		/* 게임센터 연동 */
-		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-		gameCenterSacReq.setUserKey(req.getUserKey());
-		gameCenterSacReq.setDeviceId(req.getDeviceId());
-		gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-		gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
-		this.insertGameCenterIF(gameCenterSacReq);
+		for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
+			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			gameCenterSacReq.setUserKey(req.getUserKey());
+			gameCenterSacReq.setDeviceId(id.getDeviceId());
+			gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
+			this.insertGameCenterIF(gameCenterSacReq);
+		}
 
 		RemoveDeviceRes removeDeviceRes = new RemoveDeviceRes();
-		removeDeviceRes.setDeviceKey(deviceKey);
-		/*
-		 * RemoveDeviceRes에 삭제 카운트 추가하면 어떨지..
-		 * removeDeviceRes.setDelDeviceCount(removeDeviceResponse
-		 * .getDelDeviceCount());
-		 */
+		List<RemoveDeviceListSacRes> resDeviceKeyList = new ArrayList<RemoveDeviceListSacRes>();
+		for (String str : removeKeyList) {
+			RemoveDeviceListSacRes removeListRes = new RemoveDeviceListSacRes();
+			removeListRes.setDeviceKey(str);
 
-		LOGGER.info("######################## 결과 : " + removeDeviceResponse.getDelDeviceCount());
+			resDeviceKeyList.add(removeListRes);
+		}
+		removeDeviceRes.setDeviceKeyList(resDeviceKeyList);
+		removeDeviceRes.setRemoveDeviceCount(String.valueOf(removeDeviceResponse.getDelDeviceCount()));
+
+		LOGGER.info("######################## 결과 : " + removeDeviceRes.toString());
 		LOGGER.info("######################## DeviceServiceImpl 휴대기기 삭제 End ############################");
 
 		return removeDeviceRes; // 테스트용도로 deviceInfoList 추후 deviceKey Return 으로 변경

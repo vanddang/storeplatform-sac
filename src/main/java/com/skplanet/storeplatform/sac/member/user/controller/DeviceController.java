@@ -225,28 +225,30 @@ public class DeviceController {
 
 		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		int deviceCount = 0;
+		for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
+			String deviceId = StringUtil.nvl(id.getDeviceId(), "");
+			if (!deviceId.equals("")) {
+				deviceCount += 1;
+			}
+		}
 
 		LOGGER.info("============================================ Start removeDevice Request : {}", req.toString());
 
-		if (userAuthKey.equals("")) {
+		if (userAuthKey.equals("") || userKey.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", req.toString());
-		} else if (userKey.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
-		} else if (deviceId.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
+		} else if (deviceCount == 0) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
 
 		req.setUserAuthKey(userAuthKey);
 		req.setUserKey(userKey);
-		req.setDeviceId(deviceId);
 
 		RemoveDeviceRes res = this.deviceService.removeDevice(requestHeader, req);
 
 		LOGGER.info("============================================ Final removeDevice Response : {}", res.toString());
 		return res;
 	}
-
 
 	/**
 	 * 단말 AOM 지원여부 확인.
