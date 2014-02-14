@@ -68,12 +68,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		// 상품 추가/수정 작업을 호출한다.
 		DpCouponInfo couponInfo = null; // 쿠폰 정보
 		couponInfo = new DpCouponInfo(); // 쿠폰 정보
-		if (couponInfo != null) {
-			couponInfo = couponReq.getDpCouponInfo();
-			this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
-			this.message = "쿠폰 정보가 없습니다..";
-			throw new CouponException(this.errorCode, this.message, null);
-		}
+		couponInfo = couponReq.getDpCouponInfo();
+
 		List<TbDpProdInfo> tblDpProdList = new ArrayList<TbDpProdInfo>();
 		List<TbDpShpgProdInfo> tbDpShpgProdList = new ArrayList<TbDpShpgProdInfo>();
 		List<TbDpProdDescInfo> tbDpProdDescList = new ArrayList<TbDpProdDescInfo>();
