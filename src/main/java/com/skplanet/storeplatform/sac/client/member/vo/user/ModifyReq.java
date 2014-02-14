@@ -66,16 +66,6 @@ public class ModifyReq extends CommonInfo {
 	private String userDetailAddress = "";
 
 	/**
-	 * (외국인) 도시.
-	 */
-	private String userCity = "";
-
-	/**
-	 * (외국인) 주.
-	 */
-	private String userState = "";
-
-	/**
 	 * 사용자 생일.
 	 */
 	private String userCalendar = "";
@@ -228,36 +218,6 @@ public class ModifyReq extends CommonInfo {
 	 */
 	public void setUserDetailAddress(String userDetailAddress) {
 		this.userDetailAddress = userDetailAddress;
-	}
-
-	/**
-	 * @return String : userCity
-	 */
-	public String getUserCity() {
-		return this.userCity;
-	}
-
-	/**
-	 * @param userCity
-	 *            String : the userCity to set
-	 */
-	public void setUserCity(String userCity) {
-		this.userCity = userCity;
-	}
-
-	/**
-	 * @return String : userState
-	 */
-	public String getUserState() {
-		return this.userState;
-	}
-
-	/**
-	 * @param userState
-	 *            String : the userState to set
-	 */
-	public void setUserState(String userState) {
-		this.userState = userState;
 	}
 
 	/**
