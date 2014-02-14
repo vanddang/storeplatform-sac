@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
@@ -246,6 +247,7 @@ public class DeviceController {
 		return res;
 	}
 
+
 	/**
 	 * 단말 AOM 지원여부 확인.
 	 * 
@@ -262,7 +264,7 @@ public class DeviceController {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
-		if (userKey.equals("") || deviceId.equals("")) {
+		if (userKey.equals("") && deviceId.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
