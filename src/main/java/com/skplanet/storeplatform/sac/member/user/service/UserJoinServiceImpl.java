@@ -13,9 +13,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -24,8 +22,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
+import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.CheckDupIdEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.CommonRes;
+import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.SimpleJoinEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.SimpleJoinEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.AgreeUserEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.AgreeUserEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
@@ -48,9 +57,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 
 /**
@@ -70,13 +76,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private UserSCI userSCI;
 
 	@Autowired
-	private IdpService idpService;
+	private IdpSCI idpSCI;
 
 	@Autowired
-	private ImIdpService imIdpService;
-
-	@Autowired
-	private IdpRepository idpRepository;
+	private ImIdpSCI imIdpSCI;
 
 	@Override
 	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
@@ -89,8 +92,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
-				req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 필수 약관 동의여부 체크
@@ -99,14 +101,19 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new StorePlatformException("SAC_MEM_1100");
 		}
 
-		IdpReceiverM join4WapInfo = null;
+		JoinForWapEcRes joinForWapEcRes = null;
 
 		try {
 
 			/**
 			 * (IDP 연동) 무선회원 가입 (cmd - joinForWap)
 			 */
-			join4WapInfo = this.idpService.join4Wap(req.getDeviceId(), this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
+			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
+			joinForWapEcReq.setUserMdn(req.getDeviceId());
+			joinForWapEcReq.setMdnCorp(this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
+			LOGGER.info("## IDP Request : {}", joinForWapEcReq);
+			joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
+			LOGGER.info("## IDP Response : {}", joinForWapEcRes);
 
 		} catch (StorePlatformException spe) {
 
@@ -121,17 +128,22 @@ public class UserJoinServiceImpl implements UserJoinService {
 				 * (IDP 연동) 무선회원 해지 (cmd = secedeForWap)
 				 */
 				LOGGER.info("## IDP 무선회원 해지 연동 Start =================");
-				this.idpService.secedeUser4Wap(req.getDeviceId());
+				SecedeForWapEcReq secedeForWapEcReq = new SecedeForWapEcReq();
+				secedeForWapEcReq.setUserMdn(req.getDeviceId());
+				LOGGER.info("## IDP Request  : {}", secedeForWapEcReq);
+				CommonRes commonRes = this.idpSCI.secedeForWap(secedeForWapEcReq);
+				LOGGER.info("## IDP Response : {}", commonRes);
 
 				/**
 				 * 가가입 에러 발생.
 				 */
 				throw new StorePlatformException("SAC_MEM_1101", spe);
 
+			} else {
+
+				throw spe;
+
 			}
-
-			throw spe;
-
 		}
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
@@ -155,7 +167,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * SC 사용자 기본정보 setting
 		 */
 		UserMbr userMbr = new UserMbr();
-		userMbr.setImMbrNo(join4WapInfo.getResponseBody().getUser_key()); // MBR_NO
+		userMbr.setImMbrNo(joinForWapEcRes.getUserKey()); // MBR_NO
 		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
@@ -203,20 +215,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
 		/**
-		 * 이용동의 가입 데이타 setting
-		 */
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("cmd", "TXAgreeUserIDP");
-		param.put("key_type", "2"); // 1=IM통합서비스번호, 2=IM통합ID
-		param.put("key", req.getUserId());
-		param.put("join_sst_list",
-				MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
-		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
-
-		/**
 		 * (통합 IDP 연동) 이용동의 가입 (cmd = TXAgreeUserIDP)
 		 */
-		ImIdpReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
+		AgreeUserEcReq agreeUserEcReq = new AgreeUserEcReq();
+		agreeUserEcReq.setKey(req.getUserId());
+		agreeUserEcReq.setKeyType("2"); // 1=IM통합서비스번호, 2=IM통합ID
+		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
+		agreeUserEcReq.setOcbJoinCode(MemberConstants.USE_N); // 통합포인트 가입 여부 Y=가입, N=미가입
+		LOGGER.info("## IDP Request  : {}", agreeUserEcReq);
+		AgreeUserEcRes agreeUserEcRes = this.imIdpSCI.agreeUser(agreeUserEcReq);
+		LOGGER.info("## IDP Response : {}", agreeUserEcRes);
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -231,22 +239,25 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
-		 * findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
 		 */
-		ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
+		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
+		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
+		LOGGER.info("## IDP Request : {}", userInfoIdpSearchServerEcReq);
+		UserInfoIdpSearchServerEcRes userInfoIdpSearchServerEcRes = this.imIdpSCI.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
+		LOGGER.info("## IDP Response : {}", userInfoIdpSearchServerEcRes);
 
 		/**
 		 * SC 사용자 기본정보 setting
 		 */
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserID(req.getUserId()); // 사용자 아이디
-		userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
-		userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호 (AS-IS 로직 반영.)
-		userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
-		userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday()); // 사용자 생년월일
-		userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
-		userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getIm_int_svc_no()); // OneID 통합서비스 관리번호
+		userMbr.setUserEmail(agreeUserEcRes.getUserEmail()); // 사용자 이메일
+		userMbr.setUserPhone(agreeUserEcRes.getUserTn()); // 사용자 전화번호 (AS-IS 로직 반영.)
+		userMbr.setImMbrNo(agreeUserEcRes.getUserKey()); // MBR_NO
+		userMbr.setImSvcNo(agreeUserEcRes.getImIntSvcNo()); // OneID 통합서비스 관리번호
+		userMbr.setUserName(userInfoIdpSearchServerEcRes.getUserName()); // 사용자 이름
+		userMbr.setUserBirthDay(userInfoIdpSearchServerEcRes.getUserBirthday()); // 사용자 생년월일
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // One ID 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
@@ -287,8 +298,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
-				req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 필수 약관 동의여부 체크
@@ -311,23 +321,17 @@ public class UserJoinServiceImpl implements UserJoinService {
 		LOGGER.info("## sbUserPhone : {}", sbUserPhone.toString());
 
 		/**
-		 * (OneID 연동) 이용동의 가입
-		 */
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("cmd", "TXAgreeUserIDP");
-		param.put("key_type", "2"); // 1=IM통합서비스번호, 2=IM통합ID
-		param.put("key", req.getUserId());
-		param.put("user_mdn", sbUserPhone.toString());
-		param.put("join_sst_list",
-				MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
-		param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
-		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
-		LOGGER.info("## param : {}", param.entrySet());
-
-		/**
 		 * (통합 IDP) 이용동의 가입 요청 (cmd = TXAgreeUserIDP)
 		 */
-		ImIdpReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
+		AgreeUserEcReq agreeUserEcReq = new AgreeUserEcReq();
+		agreeUserEcReq.setKey(req.getUserId());
+		agreeUserEcReq.setKeyType("2"); // 1=IM통합서비스번호, 2=IM통합ID
+		agreeUserEcReq.setUserMdn(sbUserPhone.toString());
+		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
+		agreeUserEcReq.setOcbJoinCode(MemberConstants.USE_N); // 통합포인트 가입 여부 Y=가입, N=미가입
+		LOGGER.info("## IDP Request : {}", agreeUserEcReq);
+		AgreeUserEcRes agreeUserEcRes = this.imIdpSCI.agreeUser(agreeUserEcReq);
+		LOGGER.info("## IDP Response : {}", agreeUserEcRes);
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -342,22 +346,25 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
-		 * findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
 		 */
-		ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
+		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
+		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
+		LOGGER.info("## IDP Request : {}", userInfoIdpSearchServerEcReq);
+		UserInfoIdpSearchServerEcRes userInfoIdpSearchServerEcRes = this.imIdpSCI.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
+		LOGGER.info("## IDP Response : {}", userInfoIdpSearchServerEcRes);
 
 		/**
 		 * SC 사용자 기본정보 setting
 		 */
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserID(req.getUserId()); // 사용자 아이디
-		userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
-		userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호 (AS-IS 로직 반영.)
-		userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
-		userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday()); // 사용자 생년월일
-		userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
-		userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getIm_int_svc_no()); // 통합 서비스 관리 번호
+		userMbr.setUserEmail(agreeUserEcRes.getUserEmail()); // 사용자 이메일
+		userMbr.setUserPhone(agreeUserEcRes.getUserTn()); // 사용자 전화번호 (AS-IS 로직 반영.)
+		userMbr.setUserName(userInfoIdpSearchServerEcRes.getUserName()); // 사용자 이름
+		userMbr.setUserBirthDay(userInfoIdpSearchServerEcRes.getUserBirthday()); // 사용자 생년월일
+		userMbr.setImMbrNo(agreeUserEcRes.getUserKey()); // MBR_NO
+		userMbr.setImSvcNo(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리 번호
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // One ID 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
@@ -399,21 +406,21 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * IDP 중복 아이디 체크. (cmd = duplicateIDCheck)
 		 */
-		this.idpService.checkDupID(this.getUrlEncode(req.getUserId()));
-
-		/**
-		 * IDP - 간편회원가입
-		 */
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("user_id", this.getUrlEncode(req.getUserId()));
-		param.put("user_passwd", this.getUrlEncode(req.getUserPw()));
-		param.put("user_email", this.getUrlEncode(req.getUserEmail()));
-		LOGGER.info("## param : {}", param.entrySet());
+		CheckDupIdEcReq checkDupIdEcReq = new CheckDupIdEcReq();
+		checkDupIdEcReq.setUserId(this.getUrlEncode(req.getUserId()));
+		LOGGER.info("## IDP Request : {}", checkDupIdEcReq);
+		this.idpSCI.checkDupId(checkDupIdEcReq);
 
 		/**
 		 * IDP 간편회원 가입 연동 (cmd = simpleJoinApply)
 		 */
-		IdpReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
+		SimpleJoinEcReq simpleJoinEcReq = new SimpleJoinEcReq();
+		simpleJoinEcReq.setUserId(this.getUrlEncode(req.getUserId())); // 사용자 아이디
+		simpleJoinEcReq.setUserPasswd(this.getUrlEncode(req.getUserPw())); // 사용자 패스워드
+		simpleJoinEcReq.setUserEmail(this.getUrlEncode(req.getUserEmail())); // 사용자 이메일
+		LOGGER.info("## IDP Request : {}", simpleJoinEcReq);
+		SimpleJoinEcRes simpleJoinEcRes = this.idpSCI.simpleJoin(simpleJoinEcReq);
+		LOGGER.info("## IDP Response : {}", simpleJoinEcRes);
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -427,7 +434,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserID(req.getUserId()); // 사용자 아이디
-		userMbr.setImMbrNo(simpleJoinInfo.getResponseBody().getUser_key()); // MBR_NO
+		userMbr.setImMbrNo(simpleJoinEcRes.getUserKey()); // MBR_NO
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
@@ -461,9 +468,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 	public CreateBySimpleRes createBySimpleDevice(SacRequestHeader sacHeader, CreateBySimpleReq req) {
 
 		/**
-		 * IDP 중복 아이디 체크.
+		 * IDP 중복 아이디 체크. (cmd = duplicateIDCheck)
 		 */
-		this.idpService.checkDupID(this.getUrlEncode(req.getUserId()));
+		CheckDupIdEcReq checkDupIdEcReq = new CheckDupIdEcReq();
+		checkDupIdEcReq.setUserId(this.getUrlEncode(req.getUserId()));
+		LOGGER.info("## IDP Request : {}", checkDupIdEcReq);
+		this.idpSCI.checkDupId(checkDupIdEcReq);
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -473,8 +483,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
-				req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
@@ -490,20 +499,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 		LOGGER.info("## sbUserPhone : {}", sbUserPhone.toString());
 
 		/**
-		 * IDP - 간편회원가입 setting
+		 * IDP 간편회원 가입 연동 (cmd = simpleJoinApply)
 		 */
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("user_id", this.getUrlEncode(req.getUserId()));
-		param.put("user_passwd", this.getUrlEncode(req.getUserPw()));
-		param.put("user_email", this.getUrlEncode(req.getUserEmail()));
-		param.put("user_phone", sbUserPhone.toString());
-		param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
-		LOGGER.info("## param : {}", param.entrySet());
-
-		/**
-		 * IDP 간편 회원가입 연동
-		 */
-		IdpReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
+		SimpleJoinEcReq simpleJoinEcReq = new SimpleJoinEcReq();
+		simpleJoinEcReq.setUserId(this.getUrlEncode(req.getUserId())); // 사용자 아이디
+		simpleJoinEcReq.setUserPasswd(this.getUrlEncode(req.getUserPw())); // 사용자 패스워드
+		simpleJoinEcReq.setUserEmail(this.getUrlEncode(req.getUserEmail())); // 사용자 이메일
+		simpleJoinEcReq.setUserPhone(sbUserPhone.toString());
+		LOGGER.info("## IDP Request : {}", simpleJoinEcReq);
+		SimpleJoinEcRes simpleJoinEcRes = this.idpSCI.simpleJoin(simpleJoinEcReq);
+		LOGGER.info("## IDP Response : {}", simpleJoinEcRes);
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -517,7 +522,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserID(req.getUserId()); // 사용자 아이디
-		userMbr.setImMbrNo(simpleJoinInfo.getResponseBody().getUser_key()); // MBR_NO
+		userMbr.setImMbrNo(simpleJoinEcRes.getUserKey()); // MBR_NO
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
