@@ -2035,7 +2035,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-		req.setDetailImgCd(DisplayConstants.DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
 
 		// 필수 파라미터 체크
@@ -2160,13 +2159,24 @@ public class ShoppingServiceImpl implements ShoppingService {
 					sourceList.add(source);
 
 					// 이미지 정보 (상세 이미지 가져오기)
-					List<Shopping> resultImgDetailList = this.commonDAO.queryForList(
-							"Shopping.getShoppingImgDetailList", reqMap, Shopping.class);
-					for (int pp = 0; pp < resultImgDetailList.size(); pp++) {
-						source = new Source();
-						source.setType(DisplayConstants.DP_SOURCE_TYPE_DETAIL);
-						source.setUrl(resultImgDetailList.get(i).getFilePos());
-						sourceList.add(source);
+					for (int qq = 0; qq < 2; qq++) {
+						if (qq == 0) {
+							reqMap.put("cutDetailImageCd", DisplayConstants.DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD);
+						} else {
+							reqMap.put("cutDetailImageCd", DisplayConstants.DP_SHOPPING_REPRESENT_CUT_DETAIL_IMAGE_CD);
+						}
+						List<Shopping> resultImgDetailList = this.commonDAO.queryForList(
+								"Shopping.getShoppingImgDetailList", reqMap, Shopping.class);
+						for (int pp = 0; pp < resultImgDetailList.size(); pp++) {
+							source = new Source();
+							if (qq == 0) {
+								source.setType(DisplayConstants.DP_SOURCE_TYPE_CUT_DETAIL);
+							} else {
+								source.setType(DisplayConstants.DP_SOURCE_TYPE_DETAIL);
+							}
+							source.setUrl(resultImgDetailList.get(i).getFilePos());
+							sourceList.add(source);
+						}
 					}
 
 					// 다운로드 수
