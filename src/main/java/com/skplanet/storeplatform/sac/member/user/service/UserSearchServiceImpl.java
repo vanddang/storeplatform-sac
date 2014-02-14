@@ -314,7 +314,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		UserInfo info = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
-			throw new StorePlatformException("SAC_MEM_0002", "userInfo.getImSvcNo()");
+			throw new StorePlatformException("SAC_MEM_1302", req.getUserKey());
 		}
 
 		/* OneId 정보조회 */
@@ -326,9 +326,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		/* OneId 데이터 세팅 */
 		MbrOneidSacRes res = new MbrOneidSacRes();
-		res.setIsCi(StringUtil.setTrim(scRes.getMbrOneID().getIsCi()));
-		res.setIsRealName(StringUtil.setTrim(scRes.getMbrOneID().getIsRealName()));
-		res.setIsMemberPoint(StringUtil.setTrim(scRes.getMbrOneID().getIsMemberPoint()));
+		res.setIsCi(StringUtil.setTrimYn(scRes.getMbrOneID().getIsCi()));
+		res.setIsRealName(StringUtil.setTrimYn(scRes.getMbrOneID().getIsRealName()));
+		res.setIsMemberPoint(StringUtil.setTrimYn(scRes.getMbrOneID().getIsMemberPoint()));
 
 		logger.info("MbrOneidSacRes : ", res.toString());
 
