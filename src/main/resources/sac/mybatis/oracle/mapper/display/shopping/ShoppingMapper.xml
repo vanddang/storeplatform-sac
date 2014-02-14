@@ -123,7 +123,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2') 
+                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                      
                    ) 
@@ -205,6 +205,9 @@
                         AND I.PROD_ID = L.PROD_ID
                         AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)  
+                         <if test="req.partProdId != null">
+                         AND I.PROD_ID = #{req.partProdId}
+                         </if>                        
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                         AND NVL(B.CHNL_CNT, 0) > 0          
                         AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
@@ -235,7 +238,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2') 
+                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                        
                    ) 
@@ -386,7 +389,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2')  
+                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
                               AND PROD_ID =I.PROD_ID
                             )                           
                    ) 
@@ -566,7 +569,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2') 
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                        
                    ) 
@@ -713,7 +716,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2') 
+                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                      
                    ) 
@@ -905,7 +908,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2') 
+                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID =I.PROD_ID
                             )                        
                    ) 
@@ -1043,7 +1046,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2') 
+                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                      
                    ) 
@@ -1195,7 +1198,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2')  
+                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
                               AND PROD_ID = I.PROD_ID
                             )                           
                    ) 
@@ -1352,7 +1355,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2')  
+                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
                               AND PROD_ID = I.PROD_ID
                             )                           
                    ) 
@@ -1462,7 +1465,7 @@
                     WHERE 1=1
                       AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                       AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                      AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2')  
+                      AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
                       AND PROD_ID = I.PROD_ID
                     )                                     
            ) 
