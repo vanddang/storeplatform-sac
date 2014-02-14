@@ -68,7 +68,7 @@ public class SearchIdTest {
 					public Object requestBody() {
 						SearchIdReq req = new SearchIdReq();
 
-						req.setSellerEmail("omc97@hanmail.net");
+						req.setSellerEmail("biz_300@gmail.com");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
