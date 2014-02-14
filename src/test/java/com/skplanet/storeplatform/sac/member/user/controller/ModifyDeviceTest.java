@@ -57,7 +57,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class ModifyDeviceTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(ModifyDeviceTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ModifyDeviceTest.class);
 
 	@Autowired
 	private DeviceService deviceService;
@@ -138,7 +138,7 @@ public class ModifyDeviceTest {
 
 						try {
 							ObjectMapper objMapper = new ObjectMapper();
-							logger.info("Request : {}", objMapper.writeValueAsString(req));
+							LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -149,7 +149,7 @@ public class ModifyDeviceTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateDeviceRes res = (CreateDeviceRes) result;
-						logger.info("response param : {}", res.toString());
+						LOGGER.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -216,7 +216,7 @@ public class ModifyDeviceTest {
 
 						try {
 							ObjectMapper objMapper = new ObjectMapper();
-							logger.info("Request : {}", objMapper.writeValueAsString(req));
+							LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -227,7 +227,7 @@ public class ModifyDeviceTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateDeviceRes res = (CreateDeviceRes) result;
-						logger.info("response param : {}", res.toString());
+						LOGGER.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

@@ -50,7 +50,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class ListDeviceTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(AuthorizeByIdTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizeByIdTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -98,7 +98,7 @@ public class ListDeviceTest {
 							ObjectMapper objMapper = new ObjectMapper();
 
 							try {
-								logger.info("Request : {}", objMapper.writeValueAsString(req));
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -109,7 +109,7 @@ public class ListDeviceTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							ListDeviceRes res = (ListDeviceRes) result;
-							logger.info("response param : {}", res.toString());
+							LOGGER.info("response param : {}", res.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -146,7 +146,7 @@ public class ListDeviceTest {
 							ObjectMapper objMapper = new ObjectMapper();
 
 							try {
-								logger.info("Request : {}", objMapper.writeValueAsString(req));
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -157,7 +157,7 @@ public class ListDeviceTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							ListDeviceRes res = (ListDeviceRes) result;
-							logger.info("response param : {}", res.toString());
+							LOGGER.info("response param : {}", res.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -193,7 +193,7 @@ public class ListDeviceTest {
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
-								logger.info("Request : {}", objMapper.writeValueAsString(req));
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -204,7 +204,7 @@ public class ListDeviceTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							ListDeviceRes res = (ListDeviceRes) result;
-							logger.info("response param : {}", res.toString());
+							LOGGER.info("response param : {}", res.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -240,7 +240,7 @@ public class ListDeviceTest {
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
-								logger.info("Request : {}", objMapper.writeValueAsString(req));
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -251,7 +251,7 @@ public class ListDeviceTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							ListDeviceRes res = (ListDeviceRes) result;
-							logger.info("response param : {}", res.toString());
+							LOGGER.info("response param : {}", res.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -283,9 +283,9 @@ public class ListDeviceTest {
 		//req.setIsMainDevice("Y");
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
-			logger.info("Request : {}", objMapper.writeValueAsString(req));
+			LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 			ListDeviceRes res = this.deviceService.listDevice(header, req);
-			logger.info("::: res : {}", res.toString());
+			LOGGER.info("::: res : {}", res.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
