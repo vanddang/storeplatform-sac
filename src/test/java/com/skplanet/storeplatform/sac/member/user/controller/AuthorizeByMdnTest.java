@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,10 +31,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
@@ -90,25 +95,84 @@ public class AuthorizeByMdnTest {
 						public Object requestBody() {
 
 							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-							req.setDeviceId("01093808294");
+							req.setDeviceId("01066786225");
 							req.setDeviceIdType("msisdn");
-							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-							//							req.setNativeId("358362045580842");
-							//							req.setIsAutoUpdate("N");
-							//							req.setDeviceAccount("vanddang@gmail.com");
-							//
-							//							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-							//							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-							//							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
-							//							deviceExtraInfo.setExtraProfileValue("1.0");
-							//							deviceExtraInfoList.add(deviceExtraInfo);
-							//
-							//							deviceExtraInfo = new DeviceExtraInfo();
-							//							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
-							//							deviceExtraInfo.setExtraProfileValue("N");
-							//							deviceExtraInfoList.add(deviceExtraInfo);
-							//
-							//							req.setUserDeviceExtraInfo(deviceExtraInfoList);
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
+							req.setNativeId("358362045580842");
+							req.setIsAutoUpdate("N");
+							req.setDeviceAccount("vanddang@gmail.com");
+
+							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+							deviceExtraInfo.setExtraProfileValue("1.0");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+							deviceExtraInfo.setExtraProfileValue("N");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							req.setDeviceExtraInfoList(deviceExtraInfoList);
+
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								logger.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							logger.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test(expected = StorePlatformException.class)
+	public void shouldAuthorizeByMdn02() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01066786221");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
+							req.setNativeId("358362045580842");
+							req.setIsAutoUpdate("N");
+							req.setDeviceAccount("vanddang@gmail.com");
+
+							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+							deviceExtraInfo.setExtraProfileValue("1.0");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+							deviceExtraInfo.setExtraProfileValue("N");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							req.setDeviceExtraInfoList(deviceExtraInfoList);
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
@@ -149,21 +213,21 @@ public class AuthorizeByMdnTest {
 		header.setTenantHeader(tenantHeader);
 
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-		req.setDeviceId("01093808294");
+		req.setDeviceId("01066786225");
 		req.setDeviceIdType("msisdn");
-		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-		//		req.setNativeId("358362045580842");
-		//		req.setDeviceAccount("vanddang444@gmail.com");
-		//		req.setIsAutoUpdate("N");
-		//
-		//		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-		//		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-		//		deviceExtraInfo = new DeviceExtraInfo();
-		//		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
-		//		deviceExtraInfo.setExtraProfileValue("N");
-		//		deviceExtraInfoList.add(deviceExtraInfo);
-		//
-		//		req.setUserDeviceExtraInfo(deviceExtraInfoList);
+		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
+		req.setNativeId("358362045580842");
+		req.setDeviceAccount("vanddang444@gmail.com");
+		req.setIsAutoUpdate("N");
+
+		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+		deviceExtraInfo.setExtraProfileValue("N");
+		deviceExtraInfoList.add(deviceExtraInfo);
+
+		req.setDeviceExtraInfoList(deviceExtraInfoList);
 
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
