@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.FindCommonProfileForServerEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.FindCommonProfileForServerEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateGuardianEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEcReq;
@@ -119,10 +118,9 @@ public class UserModifyServiceImpl implements UserModifyService {
 				updateUserInfoEcReq.setIsBizAuth(MemberConstants.USE_N);
 				updateUserInfoEcReq.setUdtTypeCd("4"); // 업데이트 구분 코드 (1:TN, 2:EM, 3:TN+EM, 4:부가정보)
 				updateUserInfoEcReq.setUserCalendar(req.getUserCalendar()); // 양력1, 음력2
-				updateUserInfoEcReq.setUserZipcode(req.getUserCalendar()); // 우편번호
-				updateUserInfoEcReq.setUserAddress(req.getUserCalendar()); // 주소
-				updateUserInfoEcReq.setUserAddress2(req.getUserCalendar()); // 상세주소
-				LOGGER.info("## IDP Request : {}", updateUserInfoEcReq);
+				updateUserInfoEcReq.setUserZipcode(req.getUserZip()); // 우편번호
+				updateUserInfoEcReq.setUserAddress(req.getUserAddress()); // 주소
+				updateUserInfoEcReq.setUserAddress2(req.getUserDetailAddress()); // 상세주소
 				this.imIdpSCI.updateUserInfo(updateUserInfoEcReq);
 
 				/**
@@ -130,9 +128,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 				 */
 				UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 				userInfoIdpSearchServerEcReq.setKey(userInfo.getImSvcNo()); // 통합서비스 관리번호
-				LOGGER.info("## IDP Request : {}", userInfoIdpSearchServerEcReq);
-				UserInfoIdpSearchServerEcRes userInfoIdpSearchServerEcRes = this.imIdpSCI.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
-				LOGGER.info("## IDP Response : {}", userInfoIdpSearchServerEcRes);
+				this.imIdpSCI.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
 
 			}
 
@@ -167,7 +163,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 				modifyProfileEcReq.setUserAddress(req.getUserAddress()); // 주소
 				modifyProfileEcReq.setUserAddress2(req.getUserDetailAddress()); // 상세주소
 				modifyProfileEcReq.setUserTel(req.getUserPhone()); // 사용자 연락처
-				LOGGER.info("## IDP Request :{}", modifyProfileEcReq);
 				this.idpSCI.modifyProfile(modifyProfileEcReq);
 
 				/**
@@ -176,9 +171,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 				FindCommonProfileForServerEcReq findCommonProfileForServerEcReq = new FindCommonProfileForServerEcReq();
 				findCommonProfileForServerEcReq.setKeyType("3");
 				findCommonProfileForServerEcReq.setKey(userInfo.getImMbrNo()); // MBR_NO
-				LOGGER.info("## IDP Request :{}", findCommonProfileForServerEcReq);
-				FindCommonProfileForServerEcRes findCommonProfileForServerEcRes = this.idpSCI.findCommonProfileForServer(findCommonProfileForServerEcReq);
-				LOGGER.info("## IDP Response :{}", findCommonProfileForServerEcRes);
+				this.idpSCI.findCommonProfileForServer(findCommonProfileForServerEcReq);
 
 			}
 
@@ -333,6 +326,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 					 */
 					updateGuardianEcReq.setParentType("0"); // 법정대리인관계코드 (0:부, 1:모, 2:기타)
 					updateGuardianEcReq.setParentRnameAuthKey(req.getUserCi()); // 법정대리인 실명인증 값 (CI) [외국인은 null 로....]
+					/**
+					 * TODO 코드 변경 필요.
+					 */
+					// 법정대리인실명인증수단코드 1:휴대폰 본인인증, , 3:IPIN, 6:이메일 (외국인 법정대리인 인증)
+					updateGuardianEcReq.setParentRnameAuthType("1");
+					// 법정대리인동의여부 Y=동의, N=미동의 (Y만 가능)
+					updateGuardianEcReq.setIsParentApprove(MemberConstants.USE_Y);
 					updateGuardianEcReq.setParentName(req.getUserName());
 					updateGuardianEcReq.setParentBirthday(req.getUserBirthDay());
 					updateGuardianEcReq.setParentEmail(req.getParentEmail());

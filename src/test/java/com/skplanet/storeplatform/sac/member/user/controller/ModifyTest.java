@@ -14,7 +14,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -89,21 +88,15 @@ public class ModifyTest {
 						reqJson.setUserKey("US201401231555153430000447");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
-						reqJson.setUserPhone("01011111112"); // 사용자 연락처 (Sync 대상 - IDP)
-						reqJson.setIsRecvSms("N"); // SMS 수신 여부
-						reqJson.setIsRecvEmail("N"); // 이메일 수신여부
-						reqJson.setUserSex("M"); // 성별 (Sync 대상 - IDP)
-						reqJson.setUserBirthDay("19820328"); // 사용자 생년월일 (Sync 대상 - IDP)
-						reqJson.setUserZip("123123"); // 우편번호 (Sync 대상 - IDP|통합)
-						reqJson.setUserAddress("경기도 성남시 분당구"); // 주소 (Sync 대상 - IDP|통합)
-						reqJson.setUserDetailAddress("H스퀘어"); // 상세주소 (Sync 대상 - IDP|통합)
-						reqJson.setUserCalendar("2"); // 생년월일 (1 : 양력, 2 : 음력)
-
-						/**
-						 * 외국인
-						 */
-						reqJson.setUserCity("Pittsburgh");
-						reqJson.setUserState("Pennsylvania");
+						reqJson.setUserPhone("01077778888"); // 사용자 연락처 (Sync 대상 - IDP)
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+						reqJson.setIsRecvEmail("Y"); // 이메일 수신여부
+						reqJson.setUserSex("F"); // 성별 (Sync 대상 - IDP)
+						reqJson.setUserBirthDay("19000327"); // 사용자 생년월일 (Sync 대상 - IDP)
+						reqJson.setUserZip("440880"); // 우편번호 (Sync 대상 - IDP|통합)
+						reqJson.setUserAddress("서울 특별시"); // 주소 (Sync 대상 - IDP|통합)
+						reqJson.setUserDetailAddress("낙성대"); // 상세주소 (Sync 대상 - IDP|통합)
+						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
 
 						return reqJson;
 					}
@@ -126,7 +119,6 @@ public class ModifyTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test2_modifyImIdp() throws Exception {
 
@@ -144,18 +136,15 @@ public class ModifyTest {
 						reqJson.setUserKey("US201401241550022950000616");
 						reqJson.setUserAuthKey("01f3af5e6d8f7d4643c914cf7ae42b283270b232");
 
-						reqJson.setIsRecvSms("N"); // SMS 수신 여부
-						reqJson.setIsRecvEmail("N"); // 이메일 수신여부
-						reqJson.setUserZip("123123"); // 우편번호 (Sync 대상 - IDP|통합)
-						reqJson.setUserAddress("경기도 성남시 분당구"); // 주소 (Sync 대상 - IDP|통합)
+						reqJson.setUserPhone("01077778888"); // 사용자 연락처
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+						reqJson.setIsRecvEmail("Y"); // 이메일 수신여부
+						reqJson.setUserSex("F"); // 성별 (Sync 대상 - IDP)
+						reqJson.setUserBirthDay("19000327"); // 사용자 생년월일 (Sync 대상 - IDP)
+						reqJson.setUserZip("400101"); // 우편번호 (Sync 대상 - IDP|통합)
+						reqJson.setUserAddress("경기도 성남시 수정구"); // 주소 (Sync 대상 - IDP|통합)
 						reqJson.setUserDetailAddress("H스퀘어"); // 상세주소 (Sync 대상 - IDP|통합)
-						reqJson.setUserCalendar("2"); // 생년월일 (1 : 양력, 2 : 음력)
-
-						/**
-						 * 외국인
-						 */
-						reqJson.setUserCity("Pittsburgh");
-						reqJson.setUserState("Pennsylvania");
+						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
 
 						return reqJson;
 					}
