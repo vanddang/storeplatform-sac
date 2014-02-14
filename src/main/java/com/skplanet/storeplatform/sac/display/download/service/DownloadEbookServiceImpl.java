@@ -130,6 +130,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		if (metaInfo != null) {
 			String prchsId = null; // 구매ID
 			String prchsDt = null; // 구매일시
+			String useExprDt = null; // 이용 만료일시
 			String dwldExprDt = null; // 다운로드 만료일시
 			String prchsState = null; // 구매상태
 			String prchsProdId = null; // 구매 상품ID
@@ -169,6 +170,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				if (historyListSacRes != null && historyListSacRes.getTotalCnt() > 0) {
 					prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 					prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
+					useExprDt = historyListSacRes.getHistoryList().get(0).getUseExprDt();
 					dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
 					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 					prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
@@ -176,6 +178,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					this.logger.debug("----------------------------------------------------------------");
 					this.logger.debug("[getDownloadEbookInfo] prchsId : {}", prchsId);
 					this.logger.debug("[getDownloadEbookInfo] prchsDt : {}", prchsDt);
+					this.logger.debug("[getDownloadEbookInfo] useExprDt : {}", useExprDt);
 					this.logger.debug("[getDownloadEbookInfo] dwldExprDt : {}", dwldExprDt);
 					this.logger.debug("[getDownloadEbookInfo] prchsState : {}", prchsState);
 					this.logger.debug("[getDownloadEbookInfo] prchsProdId : {}", prchsProdId);
@@ -196,7 +199,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						prchsState = (String) this.commonDAO.queryForObject("Download.getEbookPurchaseState",
 								downloadEbookReq);
 					}
-
 				}
 			} catch (Exception ex) {
 				throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
@@ -233,45 +235,48 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				metaInfo.setPurchaseProdId(prchsProdId);
 				metaInfo.setPurchaseDt(prchsDt);
 				metaInfo.setPurchaseState(prchsState);
-				metaInfo.setDwldExprDt(dwldExprDt);
+				metaInfo.setUseExprDt(useExprDt);
 				metaInfo.setUserKey(userKey);
 				metaInfo.setDeviceKey(deviceKey);
-
-				// 소장, 대여 구분(Store : 소장, Play : 대여)
-				if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-					metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-					metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
-				} else {
-					metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-					metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
-				}
-
-				// 인터파크 DRM 타입
-				if (StringUtils.isNotEmpty(metaInfo.getBpJoinFileNo())) {
-					metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_EBOOK_TYPE);
-				} else {
-					metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
-				}
 
 				// 구매 정보
 				product.setPurchase(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
 
-				// 암호화 정보
-				EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+				// 구매상태 만료 여부 확인
+				if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+					// 소장, 대여 구분(Store : 소장, Play : 대여)
+					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+						metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+						metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+					} else {
+						metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+						metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+					}
 
-				// JSON 파싱
-				MarshallingHelper marshaller = new JacksonMarshallingHelper();
-				byte[] jsonData = marshaller.marshal(contents);
+					// 인터파크 DRM 타입
+					if (StringUtils.isNotEmpty(metaInfo.getBpJoinFileNo())) {
+						metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_EBOOK_TYPE);
+					} else {
+						metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
+					}
 
-				// JSON 암호화
-				byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-				String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+					// 암호화 정보
+					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
 
-				Encryption encryption = new Encryption();
-				encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-				encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
-				encryption.setToken(encryptString);
-				product.setEncryption(encryption);
+					// JSON 파싱
+					MarshallingHelper marshaller = new JacksonMarshallingHelper();
+					byte[] jsonData = marshaller.marshal(contents);
+
+					// JSON 암호화
+					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+					String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+					Encryption encryption = new Encryption();
+					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+					encryption.setToken(encryptString);
+					product.setEncryption(encryption);
+				}
 			}
 
 			ebookRes.setProduct(product);
