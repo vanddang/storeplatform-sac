@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -33,6 +34,8 @@ public class Promotion extends CommonInfo implements Serializable {
 	 */
 	private String name;
 	private Identifier identifier; // 오퍼링ID
+
+	private List<Identifier> identifierList;
 	/*
 	 * 본인/타인 구분 (self:본인, others:타인)
 	 */
@@ -57,6 +60,7 @@ public class Promotion extends CommonInfo implements Serializable {
 	private String usagePeriod; // 이용기간
 	private String releaseDate; // 종료일자
 	private String giveaway; // 경품
+	private List<Source> sourceList;
 	private Source source; // promotion resource 정보
 	private Url url; // externalUrl
 
@@ -88,6 +92,21 @@ public class Promotion extends CommonInfo implements Serializable {
 	 */
 	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
+	}
+
+	/**
+	 * @return the identifierList
+	 */
+	public List<Identifier> getIdentifierList() {
+		return this.identifierList;
+	}
+
+	/**
+	 * @param identifierList
+	 *            the identifierList to set
+	 */
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
 	}
 
 	/**
@@ -283,6 +302,21 @@ public class Promotion extends CommonInfo implements Serializable {
 	 */
 	public void setSource(Source source) {
 		this.source = source;
+	}
+
+	/**
+	 * @return the sourceList
+	 */
+	public List<Source> getSourceList() {
+		return this.sourceList;
+	}
+
+	/**
+	 * @param sourceList
+	 *            the sourceList to set
+	 */
+	public void setSourceList(List<Source> sourceList) {
+		this.sourceList = sourceList;
 	}
 
 	/**

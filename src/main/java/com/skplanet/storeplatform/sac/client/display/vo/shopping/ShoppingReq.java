@@ -51,6 +51,10 @@ public class ShoppingReq extends CommonInfo {
 	private Integer offset; // offset
 	private Integer count; // count
 
+	private String bannerImgCd; // 배너이미지코드
+	private String promotionImgCd; // 프로모션이미지코드
+	private String detailImgCd; // 상세이미지코드
+
 	public String getTenantId() {
 		return this.tenantId;
 	}
@@ -349,6 +353,51 @@ public class ShoppingReq extends CommonInfo {
 	 */
 	public void setVirtualDeviceModelNo(String virtualDeviceModelNo) {
 		this.virtualDeviceModelNo = virtualDeviceModelNo;
+	}
+
+	/**
+	 * @return the bannerImgCd
+	 */
+	public String getBannerImgCd() {
+		return this.bannerImgCd;
+	}
+
+	/**
+	 * @param bannerImgCd
+	 *            the bannerImgCd to set
+	 */
+	public void setBannerImgCd(String bannerImgCd) {
+		this.bannerImgCd = bannerImgCd;
+	}
+
+	/**
+	 * @return the promotionImgCd
+	 */
+	public String getPromotionImgCd() {
+		return this.promotionImgCd;
+	}
+
+	/**
+	 * @param promotionImgCd
+	 *            the promotionImgCd to set
+	 */
+	public void setPromotionImgCd(String promotionImgCd) {
+		this.promotionImgCd = promotionImgCd;
+	}
+
+	/**
+	 * @return the detailImgCd
+	 */
+	public String getDetailImgCd() {
+		return this.detailImgCd;
+	}
+
+	/**
+	 * @param detailImgCd
+	 *            the detailImgCd to set
+	 */
+	public void setDetailImgCd(String detailImgCd) {
+		this.detailImgCd = detailImgCd;
 	}
 
 }
