@@ -222,6 +222,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		agreeUserEcReq.setKeyType("2"); // 1=IM통합서비스번호, 2=IM통합ID
 		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
 		agreeUserEcReq.setOcbJoinCode(MemberConstants.USE_N); // 통합포인트 가입 여부 Y=가입, N=미가입
+		agreeUserEcReq.setModifyReqDate(DateUtil.getToday("yyyyMMdd"));
+		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
 		LOGGER.info("## IDP Request  : {}", agreeUserEcReq);
 		AgreeUserEcRes agreeUserEcRes = this.imIdpSCI.agreeUser(agreeUserEcReq);
 		LOGGER.info("## IDP Response : {}", agreeUserEcRes);
@@ -329,6 +331,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		agreeUserEcReq.setUserMdn(sbUserPhone.toString());
 		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
 		agreeUserEcReq.setOcbJoinCode(MemberConstants.USE_N); // 통합포인트 가입 여부 Y=가입, N=미가입
+		agreeUserEcReq.setModifyReqDate(DateUtil.getToday("yyyyMMdd"));
+		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
 		LOGGER.info("## IDP Request : {}", agreeUserEcReq);
 		AgreeUserEcRes agreeUserEcRes = this.imIdpSCI.agreeUser(agreeUserEcReq);
 		LOGGER.info("## IDP Response : {}", agreeUserEcRes);
