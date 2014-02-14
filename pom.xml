@@ -20,6 +20,20 @@
     </repositories>  
 	<build>  
 		<plugins>   
+           
+           <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration><skipSource>true</skipSource></configuration>
+            </plugin>
+            
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
@@ -49,6 +63,7 @@
             </plugin>       			
 		</plugins>
 	</build> 
+	
 	<dependencies>
 		<!-- StorePlatform Projects -->
 		<dependency>
