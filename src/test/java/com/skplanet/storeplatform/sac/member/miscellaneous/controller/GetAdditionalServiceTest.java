@@ -81,7 +81,7 @@ public class GetAdditionalServiceTest {
 	/**
 	 * 
 	 * <pre>
-	 * 성공 CASE
+	 * 성공 CASE - 확인 2014-02-14
 	 * </pre>
 	 * 
 	 */

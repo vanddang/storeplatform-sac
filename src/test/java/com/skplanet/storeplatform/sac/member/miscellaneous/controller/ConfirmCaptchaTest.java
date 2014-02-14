@@ -79,7 +79,7 @@ public class ConfirmCaptchaTest {
 
 	/**
 	 * <pre>
-	 * 성공 CASE.
+	 * 성공 CASE. - 성공인데 Exception 발생! 확인 필요!!
 	 * </pre>
 	 */
 	@Test(expected = StorePlatformException.class)
