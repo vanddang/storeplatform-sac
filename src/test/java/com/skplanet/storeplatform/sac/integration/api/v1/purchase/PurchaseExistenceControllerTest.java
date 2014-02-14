@@ -55,24 +55,24 @@ public class PurchaseExistenceControllerTest {
 					@Override
 					public Object requestBody() {
 						ExistenceSacReq existenceReq = new ExistenceSacReq();
-						List<ExistenceItemSac> list = new ArrayList<ExistenceItemSac>();
-						ExistenceItemSac existenceList = new ExistenceItemSac();
+						List<ExistenceItemSac> productList = new ArrayList<ExistenceItemSac>();
+						ExistenceItemSac product = new ExistenceItemSac();
 
 						existenceReq.setTenantId("S01");
 						existenceReq.setUserKey("IW1023795408420101206143202");
 						existenceReq.setDeviceKey("01040449015");
 						existenceReq.setPrchsId("");
 
-						existenceList.setProdId("H900000037");
-						existenceList.setTenantProdGrpCd("");
-						list.add(existenceList);
+						product.setProdId("H900000037");
+						product.setTenantProdGrpCd("");
+						productList.add(product);
 
-						existenceList = new ExistenceItemSac();
-						existenceList.setProdId("H000044893");
-						existenceList.setTenantProdGrpCd("");
-						list.add(existenceList);
+						product = new ExistenceItemSac();
+						product.setProdId("H000044893");
+						product.setTenantProdGrpCd("");
+						productList.add(product);
 
-						// existenceReq.setExistenceList(list);
+						existenceReq.setProductList(productList);
 						return existenceReq;
 					}
 				}).success(ExistenceListSacRes.class, new SuccessCallbackForJson() {
@@ -85,13 +85,13 @@ public class PurchaseExistenceControllerTest {
 					public void success(Object result) throws Exception {
 						@SuppressWarnings("unchecked")
 						ExistenceListSacRes existenceListRes = (ExistenceListSacRes) result;
-						for (int i = 0; i < existenceListRes.getExistenceListRes().size(); i++) {
+						for (int i = 0; i < existenceListRes.getExistenceList().size(); i++) {
 							PurchaseExistenceControllerTest.this.logger.debug(
 									"@@@@@@@@@@@@ getPrchsId @@@@@@@@@@@@@@@@@@@ : {}", existenceListRes
-											.getExistenceListRes().get(i).getPrchsId());
+											.getExistenceList().get(i).getPrchsId());
 							PurchaseExistenceControllerTest.this.logger.debug(
 									"@@@@@@@@@@@@ getProdId  @@@@@@@@@@@@@@@@@@@ : {}", existenceListRes
-											.getExistenceListRes().get(i).getProdId());
+											.getExistenceList().get(i).getProdId());
 						}
 						// ExistenceRes ExistenceRes = (ExistenceRes) result;
 						// System.out.println("@@@@@@@@@@@@ getPrchsId @@@@@@@@@@@@@@@@@@@ : " +

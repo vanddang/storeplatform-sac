@@ -56,24 +56,24 @@ public class PurchaseHidingControllerTest {
 					public Object requestBody() {
 						HidingSacReq hidingSacReq = new HidingSacReq();
 						List<HidingListSac> list = new ArrayList<HidingListSac>();
-						HidingListSac hidingListSac = new HidingListSac();
+						HidingListSac hidingList = new HidingListSac();
 
 						hidingSacReq.setTenantId("S01");
 						hidingSacReq.setUserKey("IW1023795408420101206143202");
 						hidingSacReq.setDeviceKey("01040449015");
 						// 숨길 구매내역 셋팅
-						hidingListSac.setPrchsId("M1040449015716287379");
-						hidingListSac.setPrchsDtlId(1);
-						hidingListSac.setHidingYn("Y");
-						list.add(hidingListSac);
+						hidingList.setPrchsId("M1040449015716287379");
+						hidingList.setPrchsDtlId(1);
+						hidingList.setHidingYn("Y");
+						list.add(hidingList);
 
-						hidingListSac = new HidingListSac();
-						hidingListSac.setPrchsId("M1040449015716735210");
-						hidingListSac.setPrchsDtlId(1);
-						hidingListSac.setHidingYn("Y");
-						list.add(hidingListSac);
+						hidingList = new HidingListSac();
+						hidingList.setPrchsId("M1040449015716735210");
+						hidingList.setPrchsDtlId(1);
+						hidingList.setHidingYn("Y");
+						list.add(hidingList);
 
-						hidingSacReq.setHidingListSac(list);
+						hidingSacReq.setHidingList(list);
 						return hidingSacReq;
 					}
 				}).success(HidingListSacRes.class, new SuccessCallbackForJson() {
@@ -86,16 +86,16 @@ public class PurchaseHidingControllerTest {
 					public void success(Object result) throws Exception {
 						@SuppressWarnings("unchecked")
 						HidingListSacRes hidingListSacRes = (HidingListSacRes) result;
-						for (int i = 0; i < hidingListSacRes.getHidingListSacRes().size(); i++) {
+						for (int i = 0; i < hidingListSacRes.getResponseList().size(); i++) {
 							PurchaseHidingControllerTest.this.logger.debug(
 									"@@@@@@@@@@@@ getPrchsId @@@@@@@@@@@@@@@@@@@ : {}", hidingListSacRes
-											.getHidingListSacRes().get(i).getPrchsId());
+											.getResponseList().get(i).getPrchsId());
 							PurchaseHidingControllerTest.this.logger.debug(
 									"@@@@@@@@@@@@ getPrchsDtlId  @@@@@@@@@@@@@@@@@@@ : {}", hidingListSacRes
-											.getHidingListSacRes().get(i).getPrchsDtlId());
+											.getResponseList().get(i).getPrchsDtlId());
 							PurchaseHidingControllerTest.this.logger.debug(
 									"@@@@@@@@@@@@ getResultYn  @@@@@@@@@@@@@@@@@@@ : {}", hidingListSacRes
-											.getHidingListSacRes().get(i).getResultYn());
+											.getResponseList().get(i).getResultYn());
 						}
 						assertThat(hidingListSacRes, notNullValue());
 					}

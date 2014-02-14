@@ -17,14 +17,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingListSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRes;
@@ -33,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.HidingSacService;
 
 /**
@@ -48,6 +47,8 @@ public class HidingController {
 
 	@Autowired
 	private HidingSacService hidingSacService;
+	@Autowired
+	private PurchaseCommonUtils purchaseCommonUtils;
 
 	/**
 	 * 구매내역 숨김처리 SAC.
@@ -67,26 +68,17 @@ public class HidingController {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
-		if (bindingResult.hasErrors()) {
-			List<FieldError> errors = bindingResult.getFieldErrors();
-			for (FieldError error : errors) {
-				if (error.getCode().equals("Min")) {
-					throw new StorePlatformException("SAC_PUR_0005", error.getField(), error.getRejectedValue(), "1");
-				} else {
-					throw new StorePlatformException("SAC_PUR_0001", error.getField());
-				}
-			}
-		}
+		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
 		HidingScReq req = this.reqConvert(hidingSacReq, header);
 		List<HidingScRes> hidingScRes = new ArrayList<HidingScRes>();
 		List<HidingSacRes> hidingRes = new ArrayList<HidingSacRes>();
 
 		hidingScRes = this.hidingSacService.updateHiding(req);
-		HidingListSacRes hidingListSacRes = new HidingListSacRes();
+		HidingListSacRes response = new HidingListSacRes();
 		hidingRes = this.resConvert(hidingScRes);
-		hidingListSacRes.setHidingListSacRes(hidingRes);
-		return hidingListSacRes;
+		response.setResponseList(hidingRes);
+		return response;
 	}
 
 	/**
@@ -107,19 +99,19 @@ public class HidingController {
 		req.setDeviceKey(hidingSacReq.getDeviceKey());
 		this.logger.debug("@@@@@@header.getSystemId()@@@@@@@" + header.getSystemId());
 		req.setSystemId(header.getSystemId());
-		int size = hidingSacReq.getHidingListSac().size();
+		int size = hidingSacReq.getHidingList().size();
 		this.logger.debug("@@@@@@reqConvert@@@@@@@" + size);
 		for (int i = 0; i < size; i++) {
 
 			HidingListSc hidingListSc = new HidingListSc();
 
-			hidingListSc.setPrchsId(hidingSacReq.getHidingListSac().get(i).getPrchsId());
-			hidingListSc.setPrchsDtlId(hidingSacReq.getHidingListSac().get(i).getPrchsDtlId());
-			hidingListSc.setHidingYn(hidingSacReq.getHidingListSac().get(i).getHidingYn());
+			hidingListSc.setPrchsId(hidingSacReq.getHidingList().get(i).getPrchsId());
+			hidingListSc.setPrchsDtlId(hidingSacReq.getHidingList().get(i).getPrchsDtlId());
+			hidingListSc.setHidingYn(hidingSacReq.getHidingList().get(i).getHidingYn());
 
 			list.add(hidingListSc);
 		}
-		req.setHidingListSc(list);
+		req.setHidingList(list);
 
 		return req;
 	}

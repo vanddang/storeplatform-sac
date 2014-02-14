@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacR
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.GiftSacService;
 
 /**
@@ -49,6 +50,8 @@ public class GiftController {
 
 	@Autowired
 	private GiftSacService giftService;
+	@Autowired
+	private PurchaseCommonUtils purchaseCommonUtils;
 
 	/**
 	 * 선물수신확인 체크 SAC.
@@ -67,12 +70,8 @@ public class GiftController {
 			BindingResult bindingResult, SacRequestHeader requestHeader) {
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
-		if (bindingResult.hasErrors()) {
-			List<FieldError> errors = bindingResult.getFieldErrors();
-			for (FieldError error : errors) {
-				throw new StorePlatformException("SAC_PUR_0001", error.getField());
-			}
-		}
+		this.purchaseCommonUtils.getBindingValid(bindingResult);
+
 		GiftReceiveScReq req = this.reqConvert(giftReceiveSacReq, header);
 		GiftReceiveScRes giftReceiveScRes = new GiftReceiveScRes();
 		giftReceiveScRes = this.giftService.searchGiftReceive(req);
@@ -110,6 +109,7 @@ public class GiftController {
 
 			}
 		}
+		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
 		GiftConfirmScReq req = this.reqConvert(giftConfirmSacReq, header);
 		GiftConfirmScRes giftConfirmScRes = new GiftConfirmScRes();

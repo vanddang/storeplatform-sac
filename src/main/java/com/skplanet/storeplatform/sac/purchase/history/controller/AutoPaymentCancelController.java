@@ -9,27 +9,24 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
 
 /**
@@ -45,6 +42,8 @@ public class AutoPaymentCancelController {
 
 	@Autowired
 	private AutoPaymentCancelSacService autoPaymentCancelSacService;
+	@Autowired
+	private PurchaseCommonUtils purchaseCommonUtils;
 
 	/**
 	 * 자동결재해지예약/예약취소/해지 SAC.
@@ -64,12 +63,7 @@ public class AutoPaymentCancelController {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
-		if (bindingResult.hasErrors()) {
-			List<FieldError> errors = bindingResult.getFieldErrors();
-			for (FieldError error : errors) {
-				throw new StorePlatformException("SAC_PUR_0001", error.getField());
-			}
-		}
+		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
 		AutoPaymentCancelScReq rea = this.reqConvert(autoPaymentCancelSacReq, header);
 		AutoPaymentCancelScRes autoPaymentCancelRes = new AutoPaymentCancelScRes();

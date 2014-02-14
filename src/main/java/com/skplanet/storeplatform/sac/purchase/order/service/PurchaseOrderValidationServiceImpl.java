@@ -231,7 +231,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			ExistenceScReq existenceScReq = new ExistenceScReq();
 			existenceScReq.setTenantId(useTenantId);
 			existenceScReq.setUserKey(useUserKey);
-			existenceScReq.setExistenceItemSc(existenceItemScList);
+			existenceScReq.setProductList(existenceItemScList);
 
 			List<ExistenceScRes> checkPurchaseResultList = this.existenceSCI.searchExistenceList(existenceScReq);
 			for (ExistenceScRes checkRes : checkPurchaseResultList) {

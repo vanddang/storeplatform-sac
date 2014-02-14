@@ -17,14 +17,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.PaymentListSacRes;
@@ -32,6 +30,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.PaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.PaymentSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.PaymentSearchSacService;
 
 /**
@@ -47,6 +46,8 @@ public class PaymentListController {
 
 	@Autowired
 	private PaymentSearchSacService paymentSearchSacService;
+	@Autowired
+	private PurchaseCommonUtils purchaseCommonUtils;
 
 	/**
 	 * 결제내역 조회.
@@ -64,20 +65,15 @@ public class PaymentListController {
 	public PaymentListSacRes searchPaymentList(@RequestBody @Validated PaymentSacReq paymentSacReq,
 			BindingResult bindingResult, SacRequestHeader requestHeader) {
 		// 필수값 체크
-		if (bindingResult.hasErrors()) {
-			List<FieldError> errors = bindingResult.getFieldErrors();
-			for (FieldError error : errors) {
-				throw new StorePlatformException("SAC_PUR_0001", error.getField());
-			}
-		}
+		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
 		TenantHeader header = requestHeader.getTenantHeader();
-		PaymentListSacRes paymentListSacRes = new PaymentListSacRes();
-		List<PaymentScRes> paymentListScRes = new ArrayList<PaymentScRes>();
+		PaymentListSacRes response = new PaymentListSacRes();
 
-		paymentListScRes = this.paymentSearchSacService.searchPaymentList(this.reqConvert(paymentSacReq, header));
-		paymentListSacRes.setPaymentListSacRes(this.resConvert(paymentListScRes));
-		return paymentListSacRes;
+		response.setPaymentList(this.resConvert(this.paymentSearchSacService.searchPaymentList(this.reqConvert(
+				paymentSacReq, header))));
+
+		return response;
 	}
 
 	/**

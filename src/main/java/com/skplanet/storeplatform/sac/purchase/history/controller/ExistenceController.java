@@ -17,14 +17,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
@@ -33,7 +32,10 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReq
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
+
+//import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReq;
 
 /**
  * 구매 SAC 컨트롤러
@@ -42,12 +44,15 @@ import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacServi
  */
 @Controller
 @RequestMapping(value = "/purchase")
+@LocalSCI
 public class ExistenceController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private ExistenceSacService existenceSacService;
+	@Autowired
+	private PurchaseCommonUtils purchaseCommonUtils;
 
 	/**
 	 * 기구매 체크 SAC.
@@ -58,7 +63,7 @@ public class ExistenceController {
 	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
-	 * @return List<ExistenceRes> 응답정보
+	 * @return ExistenceListSacRes 응답정보
 	 */
 	@RequestMapping(value = "/history/existence/search/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -68,22 +73,12 @@ public class ExistenceController {
 		TenantHeader header = requestHeader.getTenantHeader();
 
 		// 필수값 체크
-		if (bindingResult.hasErrors()) {
-			List<FieldError> errors = bindingResult.getFieldErrors();
-			for (FieldError error : errors) {
-				throw new StorePlatformException("SAC_PUR_0001", error.getField());
-			}
-		}
+		this.purchaseCommonUtils.getBindingValid(bindingResult);
+		ExistenceListSacRes existenceListSacRes = new ExistenceListSacRes();
 
-		List<ExistenceSacRes> res = new ArrayList<ExistenceSacRes>();
-
-		ExistenceScReq req = this.reqConvert(existenceSacReq, header);
-		res = this.resConvert(this.existenceSacService.searchExistenceList(req));
-
-		ExistenceListSacRes existenceListRes = new ExistenceListSacRes();
-		existenceListRes.setExistenceListRes(res);
-
-		return existenceListRes;
+		existenceListSacRes.setExistenceList(this.resConvert(this.existenceSacService.searchExistenceList(this
+				.reqConvert(existenceSacReq, header))));
+		return existenceListSacRes;
 	}
 
 	/**
@@ -101,23 +96,23 @@ public class ExistenceController {
 		this.logger.debug("@@@@@@ Start reqConvert @@@@@@");
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		ExistenceScReq req = new ExistenceScReq();
-		List<ExistenceItemSc> existenceItemListSc = new ArrayList<ExistenceItemSc>();
+		List<ExistenceItemSc> productList = new ArrayList<ExistenceItemSc>();
 
 		req.setTenantId(header.getTenantId());
 		req.setUserKey(existenceSacReq.getUserKey());
 		req.setDeviceKey(existenceSacReq.getDeviceKey());
 		req.setPrchsId(existenceSacReq.getPrchsId());
 		// 상품리스트가 없을시 제외
-		if (existenceSacReq.getExistenceItemSac() != null) {
-			int size = existenceSacReq.getExistenceItemSac().size();
+		if (existenceSacReq.getProductList() != null) {
+			int size = existenceSacReq.getProductList().size();
 			for (int i = 0; i < size; i++) {
 				ExistenceItemSc existenceItemSc = new ExistenceItemSc();
-				existenceItemSc.setProdId(existenceSacReq.getExistenceItemSac().get(i).getProdId());
-				existenceItemSc.setTenantProdGrpCd(existenceSacReq.getExistenceItemSac().get(i).getTenantProdGrpCd());
-				existenceItemListSc.add(existenceItemSc);
+				existenceItemSc.setProdId(existenceSacReq.getProductList().get(i).getProdId());
+				existenceItemSc.setTenantProdGrpCd(existenceSacReq.getProductList().get(i).getTenantProdGrpCd());
+				productList.add(existenceItemSc);
 			}
 		}
-		req.setExistenceItemSc(existenceItemListSc);
+		req.setProductList(productList);
 
 		return req;
 	}
