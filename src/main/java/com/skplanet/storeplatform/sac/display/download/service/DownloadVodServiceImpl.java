@@ -26,6 +26,9 @@ import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
 import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
@@ -74,6 +77,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	private EncryptionGenerator encryptionGenerator;
 	@Autowired
 	private DownloadAES128Helper downloadAES128Helper;
+	@Autowired
+	private DeviceSCI deviceSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -220,19 +225,29 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 				// 구매 정보
 				if (StringUtils.isNotEmpty(prchsId)) {
+					/*
+					 * 단말 정보 조회
+					 */
+					SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
+					request.setUserKey("US201402110557052730002230");
+					request.setDeviceKey("DE201402120409541480001552");
+					SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
+					String deviceId = result.getDeviceId(); // Device Id
+					String deviceIdType = this.commonService.getDeviceIdType(deviceId); // Device Id 유형
+
 					metaInfo.setPurchaseId(prchsId);
 					metaInfo.setPurchaseDt(prchsDt);
 					metaInfo.setPurchaseState(prchsState);
 					metaInfo.setPurchaseProdId(prchsProdId);
 
 					metaInfo.setExpiredDate(downloadSystemDate.getExpiredDate());
-					metaInfo.setDwldExprDt(dwldExprDt);
+					// metaInfo.setDwldExprDt(dwldExprDt);
 					metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
 
 					metaInfo.setUserKey(downloadVodSacReq.getUserKey());
 					metaInfo.setDeviceKey(downloadVodSacReq.getDeviceKey());
-					metaInfo.setDeviceType("");
-					metaInfo.setDeviceSubKey("");
+					metaInfo.setDeviceType(deviceIdType);
+					metaInfo.setDeviceSubKey(deviceId);
 
 					product.setPurchase(this.commonGenerator.generatePurchase(metaInfo));
 

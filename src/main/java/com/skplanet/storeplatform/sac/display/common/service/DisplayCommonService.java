@@ -42,4 +42,13 @@ public interface DisplayCommonService {
 	 */
 	public String getResolutionCode(String resolution);
 
+	/**
+	 * DEVICE ID의 유형을 분류한다.
+	 * 
+	 * @param deviceId
+	 *            deviceId
+	 * @return
+	 */
+	public String getDeviceIdType(String deviceId);
+
 }

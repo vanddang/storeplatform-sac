@@ -27,6 +27,9 @@ import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
 import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
@@ -75,6 +78,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 	private EncryptionGenerator encryptionGenerator;
 	@Autowired
 	private DownloadAES128Helper downloadAES128Helper;
+	@Autowired
+	private DeviceSCI deviceSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -89,15 +94,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
-
-		// Calendar cal = Calendar.getInstance();
-		// cal.add(cal.HOUR, 1);
-		//
-		// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-		//
-		// this.log.debug("##################################################################");
-		// this.log.debug("now Time	:	" + dateFormat.format(cal.getTime()));
-		// this.log.debug("##################################################################");
 
 		// OS VERSION 가공
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -256,6 +252,16 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 				// 구매 정보
 				if (StringUtils.isNotEmpty(prchsId)) {
+					/*
+					 * 단말 정보 조회
+					 */
+					SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
+					request.setUserKey("US201402110557052730002230");
+					request.setDeviceKey("DE201402120409541480001552");
+					SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
+					String deviceId = result.getDeviceId(); // Device Id
+					String deviceIdType = this.commonService.getDeviceIdType(deviceId); // Device Id 유형
+
 					metaInfo.setPurchaseId(prchsId);
 					metaInfo.setPurchaseDt(prchsDt);
 					metaInfo.setPurchaseState(prchsState);
@@ -266,8 +272,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					// metaInfo.setDwldExprDt(dwldExprDt);
 					metaInfo.setUserKey(downloadAppSacReq.getUserKey());
 					metaInfo.setDeviceKey(downloadAppSacReq.getDeviceKey());
-					metaInfo.setDeviceType("");
-					metaInfo.setDeviceSubKey("");
+					metaInfo.setDeviceType(deviceIdType);
+					metaInfo.setDeviceSubKey(deviceId);
 
 					// 암호화 정보
 					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);

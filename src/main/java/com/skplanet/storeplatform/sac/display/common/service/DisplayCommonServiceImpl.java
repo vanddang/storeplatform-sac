@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq;
@@ -51,5 +52,24 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		paramMap.put("pixel2", resolutionTemp[1]);
 
 		return (String) this.commonDAO.queryForObject("Common.getResolutionCode", paramMap);
+	}
+
+	@Override
+	public String getDeviceIdType(String deviceId) {
+
+		String repDeviceId = deviceId.replaceAll("-", "");
+		String subStrDeviceId = repDeviceId.substring(0, 2);
+		Boolean isNum = deviceId.matches("^[0-9]+$");
+		String deviceType = "";
+
+		if (repDeviceId.length() < 12 && subStrDeviceId.equals("01")) {
+			deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN;
+		} else if (!isNum && deviceId.length() == 12) {
+			deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_MAC;
+		} else {
+			deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_UUID;
+		}
+
+		return deviceType;
 	}
 }

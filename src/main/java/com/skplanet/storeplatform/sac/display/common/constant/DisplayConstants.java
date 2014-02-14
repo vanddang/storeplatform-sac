@@ -371,6 +371,12 @@ public class DisplayConstants {
 
 	public static final String DP_FORDOWNLOAD_BP_EBOOK_TYPE = "01"; // for download 인터파크 DRM 타입
 
+	public static final String DP_DEVICE_ID_TYPE_MSISDN = "msisdn"; // device type msisdn
+
+	public static final String DP_DEVICE_ID_TYPE_MAC = "mac"; // device type mac
+
+	public static final String DP_DEVICE_ID_TYPE_UUID = "uuid"; // device type uuid
+
 	/*
 	 * 배너 타입 코드
 	 */
