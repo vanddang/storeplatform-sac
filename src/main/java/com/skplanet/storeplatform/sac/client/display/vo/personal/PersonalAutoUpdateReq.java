@@ -13,7 +13,7 @@ public class PersonalAutoUpdateReq extends CommonInfo {
 	private String policy;
 	private String digest;
 	private String packageInfo;
-	private Integer updLimitCnt;
+	private Integer updLimitCnt = 0;
 	private String deviceKey;
 	private String userKey;
 
