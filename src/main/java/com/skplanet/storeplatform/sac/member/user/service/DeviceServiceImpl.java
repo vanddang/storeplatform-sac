@@ -72,6 +72,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
@@ -888,10 +889,15 @@ public class DeviceServiceImpl implements DeviceService {
 		if (req.getUserKey() != null) {
 			listReq.setUserKey(req.getUserKey());
 			listReq.setIsMainDevice("Y");
-			listRes = this.listDevice(requestHeader, listReq);
 
-			LOGGER.info("### userKey Req : {}", listReq.toString());
-			LOGGER.info("### userKey Res : {}", listRes.toString());
+			try {
+				listRes = this.listDevice(requestHeader, listReq);
+			} catch (StorePlatformException ex) {
+				if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+					throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+				}
+			}
+
 		}
 
 		if (listRes.getDeviceInfoList() != null) {
@@ -924,6 +930,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 				res.setDeviceInfo(addData);
 			}
+		} else {
+			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
 
 		LOGGER.info("###### Start detailRepresentationDevice Request : {}", req.toString());
@@ -1101,13 +1109,8 @@ public class DeviceServiceImpl implements DeviceService {
 		return removeDeviceRes; // 테스트용도로 deviceInfoList 추후 deviceKey Return 으로 변경
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
-	 * getSupportAom
-	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq)
+	/**
+	 * 단말 AOM 지원 여부
 	 */
 	@Override
 	public SupportAomRes getSupportAom(SacRequestHeader sacHeader, SupportAomReq req) {
@@ -1119,35 +1122,49 @@ public class DeviceServiceImpl implements DeviceService {
 		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
-		if (req.getDeviceId() != null) {
+		ListDeviceRes listDeviceRes = new ListDeviceRes();
+		if (!req.getDeviceId().equals("")) {
 			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 			LOGGER.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
+			UserInfo deviceIdUser = this.commService.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
+
+			ListDeviceReq listDeviceReq = new ListDeviceReq();
+			listDeviceReq.setUserKey(deviceIdUser.getUserKey());
+			listDeviceReq.setDeviceId(req.getDeviceId());
+			listDeviceReq.setIsMainDevice("N");
+
+			LOGGER.info("============================================ listDeviceReq {}", listDeviceReq.toString());
+
+			listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
+
+			LOGGER.info("============================================ listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());
 		}
 
-		SupportAomRes res = new SupportAomRes();
-
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
-		this.commService.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
+		if (!req.getUserKey().equals("")) {
+			this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
-		/*
-		 * userKey, deviceId 두개의 코드로 디바이스 리스트 조회 --> getDeviceModelNo(휴대기기 모델
-		 * 코드)
-		 */
-		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setUserKey(req.getUserKey());
-		listDeviceReq.setDeviceId(req.getDeviceId());
-		listDeviceReq.setIsMainDevice("N");
+			// 대표단말 조회
+			DetailRepresentationDeviceReq detailRepresentationDeviceReq = new DetailRepresentationDeviceReq();
+			detailRepresentationDeviceReq.setUserKey(req.getUserKey());
+			DetailRepresentationDeviceRes detailRepresentationDeviceRes = this
+					.detailRepresentationDeviceRes(sacHeader, detailRepresentationDeviceReq);
 
-		LOGGER.info("============================================ listDeviceReq {}", listDeviceReq.toString());
+			ListDeviceReq listDeviceReq = new ListDeviceReq();
+			listDeviceReq.setUserKey(req.getUserKey());
+			listDeviceReq.setDeviceId(detailRepresentationDeviceRes.getDeviceInfo().getDeviceId());
+			listDeviceReq.setIsMainDevice("N");
 
-		ListDeviceRes listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
+			LOGGER.info("============================================ listDeviceReq {}", listDeviceReq.toString());
 
-		LOGGER.info("============================================ listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());
+			listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
+
+		}
 
 		/* PhoneInfo 조회 */
+		SupportAomRes res = new SupportAomRes();
 		if (listDeviceRes.getDeviceInfoList() != null) {
 			Device device = this.commService.getPhoneInfo(listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
 
