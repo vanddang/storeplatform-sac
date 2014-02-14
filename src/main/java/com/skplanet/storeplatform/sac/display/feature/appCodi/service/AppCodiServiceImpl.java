@@ -494,8 +494,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 			imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 			mapReq.put("imageCdList", imageCodeList);
 
-			this.mapPrint(mapReq);
-
+			if (this.log.isDebugEnabled()) {
+				this.mapPrint(mapReq);
+			}
 			List<AppCodiRes> appCodiResultList = this.commonDAO.queryForList("Isf.AppCodi.getAdminRecommandProdList",
 					mapReq, AppCodiRes.class);
 

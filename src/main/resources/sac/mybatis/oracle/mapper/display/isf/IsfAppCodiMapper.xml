@@ -445,10 +445,10 @@
 		          ) P
 		          , TB_DP_PROD_IMG PI
 		          , TB_DP_TENANT_PROD_STATS PP
-		      WHERE PI.PROD_ID(+) = P.PROD_ID
+		      WHERE PI.PROD_ID = P.PROD_ID
 		        AND PP.PROD_ID(+) = P.PROD_ID
 		        AND PP.TENANT_ID(+) = #{tenantHeader.tenantId}
-		        AND PI.IMG_CD(+) IN (<foreach collection="imageCdList" item="imgCd" separator=",">#{imgCd}</foreach>)
+		        AND PI.IMG_CD IN (<foreach collection="imageCdList" item="imgCd" separator=",">#{imgCd}</foreach>)
 		     ORDER BY P.EXPO_ORD
 		            , P.PROD_NM
     </select>
