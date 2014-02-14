@@ -35,7 +35,11 @@
 		    ALPHA2_CD alphaCode,
 		    BANK_NO bankNo,
 		    NATION_TEL_NO nationTelNo,
-		    NATION_DESC nationDesc
+		    NATION_DESC nationDesc,
+        IBAN_USE_YN ibanUseYn, 
+        ABA_USE_YN abaUseYn, 
+        SORT_USE_YN sortUseYn, 
+        BSB_USE_YN bsbUseYn
 		FROM 
 		    TB_CM_NATION
 		WHERE 
