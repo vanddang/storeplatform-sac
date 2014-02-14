@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -175,7 +174,7 @@ public class CreateDeviceTest {
 	 * 등록 후 삭제 처리.
 	 * </pre>
 	 */
-	@After
+	@Test
 	public void after() {
 		new TestCaseTemplate(this.mockMvc)
 				.url("/member/user/removeDevice/v1")
