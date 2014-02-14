@@ -85,7 +85,7 @@ public class CreateOcbInformationTest {
 						CreateOcbInformationReq reqJson = new CreateOcbInformationReq();
 
 						reqJson.setUserKey("US201401241550022950000616");
-						reqJson.setCardNumber("3306-3306-3306-33-6"); // 카드 번호 (암호화..??)
+						reqJson.setCardNumber("3306-3306-3306-3306"); // 카드 번호 (암호화..??)
 						/* 인증수단 코드 (OR003400 비인증, OR003401 카드번호인증, OR003402 주민번호인증) */
 						reqJson.setAuthMethodCode("OR003401");
 						reqJson.setStartDate(DateUtil.getToday("yyyyMMddHHmmss")); // YYYYMMDDHH24MISS

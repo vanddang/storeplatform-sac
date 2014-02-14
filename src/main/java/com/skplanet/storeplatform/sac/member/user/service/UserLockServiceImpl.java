@@ -18,7 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -30,7 +32,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.LockAccountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * 회원 계정 잠금 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -49,7 +50,7 @@ public class UserLockServiceImpl implements UserLockService {
 	private UserSCI userSCI;
 
 	@Autowired
-	private ImIdpService imIdpService;
+	private ImIdpSCI imIdpSCI;
 
 	@Override
 	public LockAccountSacRes lockAccount(SacRequestHeader sacHeader, LockAccountSacReq req) {
@@ -72,9 +73,12 @@ public class UserLockServiceImpl implements UserLockService {
 			/**
 			 * 통합IDP 로그인 상태 정보 변경 연동 (cmd = TXSetLoginConditionIDP)
 			 */
-			ImIdpReceiverM result = this.imIdpService.setLoginStatus(req.getUserId(), MemberConstants.USER_LOGIN_STATUS_PAUSE);
-			LOGGER.info("### result : {}", result.getResponseHeader().getResult());
-			LOGGER.info("### result : {}", result.getResponseHeader().getResult_text());
+			SetLoginStatusEcReq setLoginStatusEcReq = new SetLoginStatusEcReq();
+			setLoginStatusEcReq.setKey(req.getUserId());
+			setLoginStatusEcReq.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE);
+			LOGGER.info("### IDP Request : {}", setLoginStatusEcReq);
+			SetLoginStatusEcRes setLoginStatusEcRes = this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
+			LOGGER.info("### IDP Response : {}", setLoginStatusEcRes);
 
 			/**
 			 * 회원 계정 잠금
