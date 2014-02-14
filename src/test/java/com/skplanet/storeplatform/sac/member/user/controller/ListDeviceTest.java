@@ -39,7 +39,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
 /**
- * 휴대기기 목록조회 Class Test
+ * 휴대기기 목록조회 Class Test.
  * 
  * Updated on : 2014. 1. 8. Updated by : 반범진, 지티소프트
  */
@@ -57,6 +57,11 @@ public class ListDeviceTest {
 
 	private MockMvc mockMvc;
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -65,6 +70,11 @@ public class ListDeviceTest {
 	@Autowired
 	private DeviceService deviceService;
 
+	/**
+	 * <pre>
+	 * userKey로 휴대기기 리스트 조회.
+	 * </pre>
+	 */
 	@Test
 	public void shouldDeviceListByUserKey() {
 
@@ -108,6 +118,11 @@ public class ListDeviceTest {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * userId로 휴대기기 리스트 조회.
+	 * </pre>
+	 */
 	@Test
 	public void shouldDeviceListByUserId() {
 
@@ -125,7 +140,7 @@ public class ListDeviceTest {
 						public Object requestBody() {
 
 							ListDeviceReq req = new ListDeviceReq();
-							req.setUserId("watermin0210");
+							req.setUserId("vanddangtest020");
 							req.setIsMainDevice("Y");
 
 							ObjectMapper objMapper = new ObjectMapper();
@@ -151,6 +166,11 @@ public class ListDeviceTest {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * deviceId로 휴대기기 조회(단건조회).
+	 * </pre>
+	 */
 	@Test
 	public void shouldDeviceListByDeviceId() {
 
@@ -168,8 +188,8 @@ public class ListDeviceTest {
 						public Object requestBody() {
 
 							ListDeviceReq req = new ListDeviceReq();
-							req.setUserKey("US201401161113423010000110");
-							req.setDeviceId("01020284280");
+							req.setUserKey("US201401280706367180001249");
+							req.setDeviceId("01066786200");
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
@@ -193,6 +213,11 @@ public class ListDeviceTest {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * deviceKey로 휴대기기 조회(단건조회).
+	 * </pre>
+	 */
 	@Test
 	public void shouldDeviceListByDeviceKey() {
 
@@ -210,8 +235,8 @@ public class ListDeviceTest {
 						public Object requestBody() {
 
 							ListDeviceReq req = new ListDeviceReq();
-							req.setUserKey("US201401161113423010000110");
-							req.setDeviceKey("DE201401161113425370000050");
+							req.setUserKey("US201401280706367180001249");
+							req.setDeviceKey("DE201402140234115260001735");
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
@@ -235,6 +260,11 @@ public class ListDeviceTest {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * 휴대기기 목록조회 서비스 호출.
+	 * </pre>
+	 */
 	@Test
 	public void shouldDeviceListService() {
 
@@ -246,8 +276,8 @@ public class ListDeviceTest {
 		header.setTenantHeader(tenantHeader);
 
 		ListDeviceReq req = new ListDeviceReq();
-		req.setUserKey("US2014012217211685500003231");
-		req.setDeviceId("01066786220");
+		req.setUserKey("US201401280706367180001249");
+		req.setDeviceId("01066786200");
 		//req.setDeviceKey("DE201401161113425370000050");
 		//req.setUserId("01020284280");
 		//req.setIsMainDevice("Y");

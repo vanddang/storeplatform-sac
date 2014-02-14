@@ -48,7 +48,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
 /**
- * 휴대기기 등록 Class Test
+ * 휴대기기 등록 Class Test.
  * 
  * Updated on : 2014. 1. 8. Updated by : 반범진, 지티소프트
  */
@@ -59,7 +59,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class CreateDeviceTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(CreateDeviceTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CreateDeviceTest.class);
 
 	@Autowired
 	private DeviceService deviceService;
@@ -69,6 +69,11 @@ public class CreateDeviceTest {
 
 	private MockMvc mockMvc;
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -76,8 +81,13 @@ public class CreateDeviceTest {
 
 	String userAuthKey = "114127c7ef42667669819dad5df8d820c";
 	String userKey = "US201401280706367180001249";
-	String mdn = "01066786258";
+	String mdn = "01066786248";
 
+	/**
+	 * <pre>
+	 * 휴대기기 등록 정상케이스.
+	 * </pre>
+	 */
 	@Test
 	public void shouldCreateDevice() {
 
@@ -104,7 +114,7 @@ public class CreateDeviceTest {
 							deviceInfo.setDeviceId(CreateDeviceTest.this.mdn);
 							deviceInfo.setDeviceIdType("msisdn ");
 							deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
-							deviceInfo.setIsPrimary("Y");
+							deviceInfo.setIsPrimary("N");
 							deviceInfo.setIsAuthenticated("Y");
 							deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
 							deviceInfo.setIsUsed("Y");
@@ -139,7 +149,7 @@ public class CreateDeviceTest {
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
-								logger.info("Request : {}", objMapper.writeValueAsString(req));
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -150,7 +160,7 @@ public class CreateDeviceTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							CreateDeviceRes res = (CreateDeviceRes) result;
-							logger.info("response param : {}", res.toString());
+							LOGGER.info("response param : {}", res.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -160,25 +170,37 @@ public class CreateDeviceTest {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * 등록 후 삭제 처리.
+	 * </pre>
+	 */
 	@After
 	public void after() {
-		//휴대기기 삭제
-		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				RemoveDeviceReq req = new RemoveDeviceReq();
-				req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
-				req.setDeviceId(CreateDeviceTest.this.mdn);
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(RemoveDeviceRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				RemoveDeviceRes res = (RemoveDeviceRes) result;
-				logger.debug("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		new TestCaseTemplate(this.mockMvc)
+				.url("/member/user/removeDevice/v1")
+				.httpMethod(HttpMethod.POST)
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("Accept", "application/json")
+				.addHeaders("x-planet-device-info",
+						"model=\"SHW-M220L\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						RemoveDeviceReq req = new RemoveDeviceReq();
+						req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
+						req.setUserKey(CreateDeviceTest.this.userKey);
+						req.setDeviceId(CreateDeviceTest.this.mdn);
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(RemoveDeviceRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						RemoveDeviceRes res = (RemoveDeviceRes) result;
+						LOGGER.debug("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 }

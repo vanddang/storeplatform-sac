@@ -45,7 +45,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
 /**
- * ID 기반 회원 인증 (One ID, IDP 회원)
+ * ID 기반 회원 인증 (One ID, IDP 회원).
  * 
  * Updated on : 2014. 1. 8. Updated by : 반범진, 지티소프트
  */
@@ -56,7 +56,7 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class AuthorizeByIdTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(AuthorizeByIdTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizeByIdTest.class);
 
 	@Autowired
 	private LoginService loginService;
@@ -66,13 +66,24 @@ public class AuthorizeByIdTest {
 
 	private MockMvc mockMvc;
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
+	/**
+	 * <pre>
+	 * 정상케이스.
+	 * </pre>
+	 * 
+	 */
 	@Test
-	public void shouldAuthorizeById() throws Exception {
+	public void shouldAuthorizeById() {
 
 		try {
 
@@ -103,7 +114,7 @@ public class AuthorizeByIdTest {
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
-								logger.info("Request : {}", objMapper.writeValueAsString(req));
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -114,7 +125,7 @@ public class AuthorizeByIdTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							AuthorizeByIdRes res = (AuthorizeByIdRes) result;
-							logger.info("response param : {}", res.toString());
+							LOGGER.info("response param : {}", res.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -124,6 +135,11 @@ public class AuthorizeByIdTest {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * 정상 케이스 서비스호출.
+	 * </pre>
+	 */
 	@Test
 	public void shouldAuthorizeByIdService() {
 		TenantHeader tenantHeader = new TenantHeader();
@@ -155,10 +171,10 @@ public class AuthorizeByIdTest {
 		req.setDeviceExtraInfoList(deviceExtraInfoList);
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
-			logger.info("Request : {}", objMapper.writeValueAsString(req));
+			LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 
 			AuthorizeByIdRes res = this.loginService.authorizeById(header, req);
-			logger.info("res : {} " + res.toString());
+			LOGGER.info("res : {} " + res.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
