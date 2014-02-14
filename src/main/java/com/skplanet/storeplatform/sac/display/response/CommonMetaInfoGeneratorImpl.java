@@ -394,6 +394,8 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		purchase.setState(prchState);
 
 		if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchState)) {
+			purchase.setDwldExprDt(dwldExprDt);
+
 			List<Identifier> identifierList = new ArrayList<Identifier>();
 			identifierList.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, prchId));
 			identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, prchId));
@@ -401,9 +403,6 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 			if (StringUtils.isNotEmpty(prchDt)) {
 				purchase.setDate(this.generateDate(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM, prchDt));
-			}
-			if (StringUtils.isNotEmpty(dwldExprDt)) {
-				purchase.setDate(this.generateDate(DisplayConstants.DP_DATE_DOWNLOAD_EXPIRE_NM, dwldExprDt));
 			}
 		}
 

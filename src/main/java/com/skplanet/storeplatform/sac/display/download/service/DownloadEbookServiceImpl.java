@@ -238,20 +238,22 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 			// 구매 여부 확인
 			if (StringUtils.isNotEmpty(prchsId)) {
-				metaInfo.setExpiredDate(expireDate);
 				metaInfo.setPurchaseId(prchsId);
 				metaInfo.setPurchaseProdId(prchsProdId);
 				metaInfo.setPurchaseDt(prchsDt);
 				metaInfo.setPurchaseState(prchsState);
-				metaInfo.setUseExprDt(useExprDt);
-				metaInfo.setUserKey(userKey);
-				metaInfo.setDeviceKey(deviceKey);
+				metaInfo.setPurchaseDwldExprDt(dwldExprDt);
 
 				// 구매 정보
 				product.setPurchase(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
 
 				// 구매상태 만료 여부 확인
 				if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+					metaInfo.setExpiredDate(expireDate);
+					metaInfo.setUseExprDt(useExprDt);
+					metaInfo.setUserKey(userKey);
+					metaInfo.setDeviceKey(deviceKey);
+
 					// 소장, 대여 구분(Store : 소장, Play : 대여)
 					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
 						metaInfo.setDrmYn(metaInfo.getStoreDrmYn());

@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
@@ -41,9 +40,11 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		contributor.setPainter(metaInfo.getArtist2Nm()); // 그림작가
 		contributor.setTranslator(metaInfo.getArtist3Nm()); // 번역자
 		contributor.setPublisher(metaInfo.getChnlCompNm()); // 출판사
-		Date date = new Date();
-		date.setText(metaInfo.getIssueDay()); // 출판년도
-		contributor.setDate(date);
+
+		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
+			contributor.setDate(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_PUBLISHED_NM,
+					metaInfo.getIssueDay()));
+		}
 		return contributor;
 	}
 

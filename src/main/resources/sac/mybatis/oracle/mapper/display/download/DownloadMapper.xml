@@ -562,7 +562,7 @@
 		              , REGEXP_REPLACE(MAX(JA.CHAPTER), '[^[:digit:]]') AS CHAPTER
 		              , MAX(JA.COLOR_SPRT_YN) AS COLOR_SPRT_YN
 		              , MAX(JA.ISBN) AS ISBN
-		              , MAX(JA.MGZIN_COVER_YN) AS MGZIN_COVER_YN
+		              , NVL(MAX(JA.MGZIN_COVER_YN), 'N') AS MGZIN_COVER_YN
 		              , MAX(JA.ISSUE_DAY) AS ISSUE_DAY
 		              , MAX(JA.TOP_MENU_ID) AS TOP_MENU_ID
 		              , MAX(JA.MENU_ID) AS MENU_ID
