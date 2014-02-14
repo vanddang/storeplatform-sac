@@ -25,10 +25,14 @@
            <tx:method name="*"       propagation="REQUIRED" read-only="true" />
         </tx:attributes>
     </tx:advice>
+
     <aop:config>
-       <aop:pointcut id="requiredTransactionForCmsApp" expression="execution(* com.skplanet.storeplatform.sac..*ServiceImpl.*(..))" />
-       <aop:advisor advice-ref="transactionAdviceForCmsApp" pointcut-ref="requiredTransactionForCmsApp"  />
+       <aop:advisor advice-ref="transactionAdviceForCmsApp" pointcut-ref="customTransactionPointcutForCmsApp" />
     </aop:config>
+    <bean id="customTransactionPointcutForCmsApp" class="com.skplanet.storeplatform.framework.core.aop.support.CustomTransactionPointcut" >
+        <constructor-arg type="java.lang.String" value="execution(* com.skplanet.storeplatform.sac..*ServiceImpl.*(..))" />
+        <property name="qualifierName" value="cmsApp" />
+    </bean>
     
     <bean id="transactionManagerForCmsApp" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="defaultDataSourceForCmsApp" />

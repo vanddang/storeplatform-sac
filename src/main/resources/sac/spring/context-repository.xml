@@ -17,49 +17,22 @@
                            http://www.springframework.org/schema/aop
                            http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
 
-    <!-- 명시적 transaction 선언(선언적 transaction 으로 모두 변환 예정 입니다.) -->
-    <!-- <tx:annotation-driven transaction-manager="transactionManager"/> -->
-    
-    <!-- 
-    <tx:advice id="transactionAdvice" transaction-manager="transactionManager" >
-        <tx:attributes>
-           <tx:method name="create*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="update*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="remove*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="isNewTransaction*"  propagation="REQUIRES_NEW" read-only="false" />
-           <tx:method name="*"       propagation="REQUIRED" read-only="true" />
-        </tx:attributes>
-    </tx:advice>
-    <aop:config>
-       <aop:pointcut id="requiredTransaction" expression="execution(* com.skplanet.storeplatform..*ServiceImpl.*(..))" />
-       <aop:advisor advice-ref="transactionAdvice" pointcut-ref="requiredTransaction" />
-    </aop:config>    
-    <bean id="transactionManager" class="org.springframework.data.transaction.ChainedTransactionManager">
-        <constructor-arg>
-            <list>
-                <ref bean="transactionManagerForSac" />
-                <ref bean="transactionManagerForScPurchase" />
-                <ref bean="transactionManagerForScMember" />
-                <ref bean="transactionManagerForCmsApp" />
-            </list>
-        </constructor-arg>
-    </bean> 
-    -->
-    
     <tx:advice id="transactionAdviceForSac" transaction-manager="transactionManagerForSac" >
         <tx:attributes>
            <tx:method name="create*" propagation="REQUIRED" read-only="false" />
            <tx:method name="update*" propagation="REQUIRED" read-only="false" />
            <tx:method name="remove*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="*"       propagation="REQUIRED" read-only="true" />
         </tx:attributes>
     </tx:advice>
-      
-    <aop:config>
-       <aop:pointcut id="requiredTransactionForSac" expression="execution(* com.skplanet.storeplatform.sac..*ServiceImpl.*(..))" />
-       <aop:advisor advice-ref="transactionAdviceForSac" pointcut-ref="requiredTransactionForSac" />
-    </aop:config> 
     
+    <aop:config>
+        <aop:advisor advice-ref="transactionAdviceForSac" pointcut-ref="customTransactionPointcutForSac" />
+    </aop:config>
+    <bean id="customTransactionPointcutForSac" class="com.skplanet.storeplatform.framework.core.aop.support.CustomTransactionPointcut" >
+        <constructor-arg type="java.lang.String" value="execution(* com.skplanet.storeplatform.sac..*ServiceImpl.*(..))" />
+        <property name="qualifierName" value="sac" />
+    </bean>
+
     <bean id="transactionManagerForSac" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="defaultDataSourceForSac" />
         <property name="nestedTransactionAllowed" value="false" />
