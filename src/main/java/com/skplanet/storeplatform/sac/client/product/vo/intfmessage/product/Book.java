@@ -94,6 +94,11 @@ public class Book extends CommonInfo implements Serializable {
 	private String bpJoinFileNo;
 
 	/**
+	 * 국제표준도서번호.
+	 */
+	private String isbn;
+
+	/**
 	 * @return the type
 	 */
 	public String getType() {
@@ -331,5 +336,20 @@ public class Book extends CommonInfo implements Serializable {
 	 */
 	public void setBpJoinFileNo(String bpJoinFileNo) {
 		this.bpJoinFileNo = bpJoinFileNo;
+	}
+
+	/**
+	 * @return the isbn
+	 */
+	public String getIsbn() {
+		return this.isbn;
+	}
+
+	/**
+	 * @param isbn
+	 *            the isbn to set
+	 */
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
 	}
 }
