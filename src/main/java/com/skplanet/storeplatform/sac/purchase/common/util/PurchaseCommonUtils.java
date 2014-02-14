@@ -51,6 +51,11 @@ public class PurchaseCommonUtils {
 						|| error.getCode().equals("NotNull")) {
 					throw new StorePlatformException("SAC_PUR_0001", error.getField());
 
+				} else if (error.getCode().equals("Pattern")) {
+					// @Pattern 처리시 pattern의 message 셋팅
+					throw new StorePlatformException("SAC_PUR_0003", error.getField(), error.getRejectedValue(),
+							error.getDefaultMessage());
+
 				} else if (error.getCode().equals("Max")) {
 					throw new StorePlatformException("SAC_PUR_0004", error.getField(), error.getRejectedValue(), 100);
 
