@@ -112,7 +112,7 @@ public class ModifyAccountInformationTest {
 		// 로그인 결과 검증
 		if (StringUtils.equals(TestMemberConstant.USE_Y, authorizeRes.getIsLoginSuccess())) {
 			// 정보수정의 위한 데이터 주입
-			req.setSellerId(authorizeRes.getSellerMbr().getSellerId());
+			req.setSellerId(authorizeReq.getSellerId());
 			req.setSellerKey(authorizeRes.getSellerMbr().getSellerKey());
 			req.setSessionKey(authorizeRes.getSessionKey());
 		} else {

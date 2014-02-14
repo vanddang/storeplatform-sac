@@ -67,6 +67,7 @@ public class IdpServicePostTest {
 	public void testUserAuthForId() {
 		try {
 			receiverM = this.service.userAuthForId("sacsimpleuser020691", "abcd1234");
+			LOGGER.debug("[IDP-POST] Result : {}", receiverM.getResponseHeader().getResult());
 		} catch (StorePlatformException e) {
 			LOGGER.debug("ErrorInfo : \n{}", e.getErrorInfo().toString());
 		}
