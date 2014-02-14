@@ -224,7 +224,8 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					existenceScReq.setTenantId(tenantHeader.getTenantId());
 					existenceScReq.setUserKey(req.getUserKey());
 					existenceScReq.setDeviceKey(req.getDeviceKey());
-					existenceScReq.setExistenceItemSc(existenceItemScList);
+					// existenceScReq.setExistenceItemSc(existenceItemScList);
+					existenceScReq.setProductList(existenceItemScList);
 					List<ExistenceScRes> listPrchs = this.existenceSacService.searchExistenceList(existenceScReq);
 
 					// mapReq.remove("PID_LIST");

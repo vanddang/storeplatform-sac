@@ -32,6 +32,7 @@
                  ,P.PROD_ID
                  ,P.UPD_DT
                  ,P.PROD_GRD_CD
+                 ,PD.PROD_NM
                  ,SC.APK_PKG_NM
                  ,SC.APK_VER
                  ,SC.FILE_SIZE

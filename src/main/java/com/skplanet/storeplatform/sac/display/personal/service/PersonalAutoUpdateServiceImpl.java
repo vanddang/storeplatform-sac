@@ -27,13 +27,10 @@ import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpd
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.History;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -84,10 +81,10 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 
 		// 다운로드 서버 상태 조회는 & 앱 버전 정보 활용 조회 처리 & 업그레이드 관리이력 조회는 tenant 단에서 처리하기 때문에 제외
 
-		String sPkgNms = ObjectUtils.toString(mapReq.get("PKG_NM_LIST"));
+		// String sPkgNms = ObjectUtils.toString(mapReq.get("PKG_NM_LIST"));
 		// String sPolicy = ObjectUtils.toString(mapReq.get("policy"));
 		// String sDigest = ObjectUtils.toString(mapReq.get("digest"));
-		String sArrPkgNm[] = StringUtils.split(sPkgNms, ";");
+		String sArrPkgNm[] = StringUtils.split(req.getPackageInfo(), ";");
 
 		/**************************************************************
 		 * Package 명으로 상품 조회
@@ -126,7 +123,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 			throw new StorePlatformException("SAC_DSP_0006");
 		} else {
 
-			List<Object> listProd = new ArrayList<Object>();
+			List<Map<String, Object>> listProd = new ArrayList<Map<String, Object>>();
 			List<String> listPid = new ArrayList<String>();
 			List<Map<String, Object>> listUpdate = new ArrayList<Map<String, Object>>();
 
@@ -138,8 +135,8 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 			Map<String, Object> mapPkg = null;
 			for (int i = 0; i < listPkg.size(); i++) {
 				mapPkg = listPkg.get(i);
-				sPkgNm = ObjectUtils.toString(mapPkg.get("APK_PKG"));
-				iPkgVerCd = NumberUtils.toInt(ObjectUtils.toString(mapPkg.get("APK_VER_CD")));
+				sPkgNm = ObjectUtils.toString(mapPkg.get("APK_PKG_NM"));
+				iPkgVerCd = NumberUtils.toInt(ObjectUtils.toString(mapPkg.get("APK_VER")));
 				String sArrPkgInfo[] = null;
 				for (String s : sArrPkgNm) {
 					sArrPkgInfo = StringUtils.split(s, "/");
@@ -159,23 +156,6 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 			 **************************************************************/
 			if (!listPid.isEmpty()) {
 
-				// Oracle SQL 리터럴 수행 방지를 위한 예외처리
-				// int iListPidSize = listPid.size();
-				// int iPidLimited = 0;
-				// if (iListPidSize < 300) {
-				// iPidLimited = 300;
-				// } else if (iListPidSize >= 300 && iListPidSize < 500) {
-				// iPidLimited = 500;
-				// } else if (iListPidSize >= 500 && iListPidSize < 700) {
-				// iPidLimited = 700;
-				// } else if (iListPidSize >= 700 && iListPidSize < 1000) {
-				// iPidLimited = 1000;
-				// }
-				// for (int i = iListPidSize; i < iPidLimited; i++) {
-				// listPid.add("");
-				// }
-				// mapReq.put("PID_LIST", listPid);
-
 				// TODO osm1021 추후 LocalSCI 처리로 변환 필요
 				// 기구매 체크
 				ExistenceScReq existenceScReq = new ExistenceScReq();
@@ -188,7 +168,8 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				existenceScReq.setTenantId(tenantHeader.getTenantId());
 				existenceScReq.setUserKey(req.getUserKey());
 				existenceScReq.setDeviceKey(req.getDeviceKey());
-				existenceScReq.setExistenceItemSc(existenceItemScList);
+				// existenceScReq.setExistenceItemSc(existenceItemScList);
+				existenceScReq.setProductList(existenceItemScList);
 				List<ExistenceScRes> listPrchs = this.existenceSacService.searchExistenceList(existenceScReq);
 
 				// List<Object> listPrchs = queryForList("updateAlarm.getPrchsInfo", mapReq);
@@ -196,7 +177,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 					String sPid = "";
 					Map<String, Object> mapUpdate = null;
 					for (int i = 0; i < listProd.size(); i++) {
-						mapUpdate = (Map<String, Object>) listProd.get(i);
+						mapUpdate = listProd.get(i);
 						sPid = ObjectUtils.toString(mapUpdate.get("PROD_ID"));
 						// Map<String, String> mapPrchs = null;
 
@@ -227,9 +208,6 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				// Response 정보 가공
 				for (Map<String, Object> updateTargetApp : listUpdate) {
 					Product product = new Product();
-					History history = new History();
-					List<Update> updateList = new ArrayList<Update>();
-					List<Source> sourceList = new ArrayList<Source>();
 
 					String prchId = (String) updateTargetApp.get("PRCHS_ID");
 					List<Identifier> identifierList = this.appGenerator.generateIdentifierList(
@@ -253,7 +231,6 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 							ObjectUtils.toString(updateTargetApp.get("PROD_VER")),
 							((BigDecimal) updateTargetApp.get("FILE_SIZE")).intValue(), null, null, null);
 
-					app.setHistory(history);
 					product.setApp(app);
 					productList.add(product);
 				}
