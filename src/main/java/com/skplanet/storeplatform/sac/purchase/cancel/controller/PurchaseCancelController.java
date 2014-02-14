@@ -66,9 +66,10 @@ public class PurchaseCancelController {
 		PurchaseCancelSacParam purchaseCancelSacParam = this.convertReqForCancelPurchaseByUser(sacRequestHeader,
 				purchaseCancelByUserSacReq);
 
-		this.purchaseCancelService.cancelPurchaseList(purchaseCancelSacParam);
+		PurchaseCancelSacResult purchaseCancelSacResult = this.purchaseCancelService
+				.cancelPurchaseList(purchaseCancelSacParam);
 
-		return null;
+		return this.convertResForCancelPurchaseByUser(purchaseCancelSacResult);
 
 	}
 
