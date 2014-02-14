@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -104,10 +104,19 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		menu.setName(metaInfo.getTopMenuNm());
 		menuList.add(menu);
 
+		// 메타 클래스 정보
 		if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd())) {
 			menu = new Menu();
 			menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
 			menu.setId(metaInfo.getMetaClsfCd());
+			menuList.add(menu);
+		}
+
+		// 장르 정보
+		if (StringUtils.isNotEmpty(metaInfo.getGenreCd())) {
+			menu = new Menu();
+			menu.setType(DisplayConstants.DP_MENU_TYPE_GENRE);
+			menu.setId(metaInfo.getGenreCd());
 			menuList.add(menu);
 		}
 

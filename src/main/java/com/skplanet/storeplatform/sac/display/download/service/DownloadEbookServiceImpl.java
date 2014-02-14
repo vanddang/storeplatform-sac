@@ -212,6 +212,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 			// 상품명 정보
 			product.setTitle(this.commonMetaInfoGenerator.generateTitle(metaInfo));
+			product.setChnlProdNm(metaInfo.getChnlProdNm());
+
+			// 상품 설명 정보
+			product.setProductExplain(metaInfo.getProdBaseDesc());
+			product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 
 			// 이미지 정보
 			product.setSourceList(this.commonMetaInfoGenerator.generateSourceList(metaInfo));
@@ -225,8 +230,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			// 이용등급 및 소장/대여 정보
 			product.setRights(this.commonMetaInfoGenerator.generateRights(metaInfo));
 
-			// 저작자 정보
+			// 배포자 정보
 			product.setDistributor(this.commonMetaInfoGenerator.generateDistributor(metaInfo));
+
+			// 저작자 정보
+			product.setContributor(this.ebookComicGenerator.generateEbookContributor(metaInfo));
 
 			// 구매 여부 확인
 			if (StringUtils.isNotEmpty(prchsId)) {

@@ -15,6 +15,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
@@ -86,6 +87,14 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		book.setFilePath(metaInfo.getFilePath());
 		book.setSize(metaInfo.getFileSize());
 		book.setBpJoinFileNo(metaInfo.getBpJoinFileNo());
+		book.setTotalCount(metaInfo.getBookPageCnt());
+
+		// 회차 정보
+		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
+			Chapter chapter = new Chapter();
+			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
+			book.setChapter(chapter);
+		}
 
 		// 도서 연재 구분
 		if (DisplayConstants.DP_BOOK_SERIAL.equals(metaInfo.getBookClsfCd())) {
