@@ -61,7 +61,7 @@ public class ListPasswordReminderQuestionAllTest {
 	public void ListPasswordReminderQuestionAll() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/listPasswordReminderQuestionAll2/v1")
+				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/listPasswordReminderQuestionAll/v1")
 				.httpMethod(HttpMethod.GET).success(ListPasswordReminderQuestionRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
