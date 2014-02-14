@@ -75,6 +75,9 @@ public class DeviceController {
 
 		ListDeviceRes res = this.deviceService.listDevice(requestHeader, (ListDeviceReq) ConvertMapperUtils.convertObject(req));
 
+		if (res.getDeviceInfoList() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+		}
 		return res;
 	}
 
