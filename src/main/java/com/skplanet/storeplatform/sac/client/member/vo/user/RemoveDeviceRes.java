@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -14,19 +16,29 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class RemoveDeviceRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
-	/* 기기 Key */
-	private String deviceKey;
 
-	public String getDeviceKey() {
-		return this.deviceKey;
+	private String removeDeviceCount;
+	/* 기기 ID List */
+	List<RemoveDeviceListSacRes> deviceKeyList;
+
+	public List<RemoveDeviceListSacRes> getDeviceKeyList() {
+		return this.deviceKeyList;
 	}
 
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
+	public void setDeviceKeyList(List<RemoveDeviceListSacRes> deviceKeyList) {
+		this.deviceKeyList = deviceKeyList;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getRemoveDeviceCount() {
+		return this.removeDeviceCount;
+	}
+
+	public void setRemoveDeviceCount(String removeDeviceCount) {
+		this.removeDeviceCount = removeDeviceCount;
 	}
 
 }
