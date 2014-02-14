@@ -47,10 +47,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInf
 @Service
 public class CouponProcessServiceImpl implements CouponProcessService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	private final boolean result = true;
 	private String errorCode = "";
 	private String message = "";
-	private final int BUFFER_SIZE = 1024 * 8;
 	private String mbrNo = "";
 	private String compNm = "";
 	@Autowired
@@ -64,12 +62,18 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 	@Override
 	public boolean insertCouponInfo(CouponReq couponReq) {
-
+		boolean result = true;
 		// 호출
 		this.log.info("■■■■■ processForCouponCSP ■■■■■");
 		// 상품 추가/수정 작업을 호출한다.
-		DpCouponInfo couponInfo = new DpCouponInfo(); // 쿠폰 정보
-		couponInfo = couponReq.getDpCouponInfo();
+		DpCouponInfo couponInfo = null; // 쿠폰 정보
+		couponInfo = new DpCouponInfo(); // 쿠폰 정보
+		if (couponInfo != null) {
+			couponInfo = couponReq.getDpCouponInfo();
+			this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
+			this.message = "쿠폰 정보가 없습니다..";
+			throw new CouponException(this.errorCode, this.message, null);
+		}
 		List<TbDpProdInfo> tblDpProdList = new ArrayList<TbDpProdInfo>();
 		List<TbDpShpgProdInfo> tbDpShpgProdList = new ArrayList<TbDpShpgProdInfo>();
 		List<TbDpProdDescInfo> tbDpProdDescList = new ArrayList<TbDpProdDescInfo>();
@@ -82,7 +86,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		List<TbDpSprtDeviceInfo> tbDpSprtDeviceList = new ArrayList<TbDpSprtDeviceInfo>();
 
 		if (couponReq != null) {
-			List<DpItemInfo> itemInfoList = new ArrayList<DpItemInfo>(); // 아이템 정보 List;
+			List<DpItemInfo> itemInfoList = null; // 아이템 정보 List;
+			itemInfoList = new ArrayList<DpItemInfo>(); // 아이템 정보 List;
 			itemInfoList = couponReq.getDpItemInfo();
 			// 1. Validation Check
 
@@ -166,7 +171,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponReq is NULL!!", null);
 		}
 		this.log.info("◆◆◆ to TimeString... 전체 처리 완료:  ◆◆◆");
-		return this.result;
+		return result;
 	}// End processForCouponCSP
 
 	/**
@@ -485,7 +490,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setTbDpProdRshpValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpProdRshpInfo> tbDpProdRshpList, String cudType) {
-		TbDpProdRshpInfo dps = new TbDpProdRshpInfo();
+		TbDpProdRshpInfo dps = null;
+		dps = new TbDpProdRshpInfo();
 		try {
 
 			// ////////////////// Item 정보 S////////////////////////////
@@ -1211,8 +1217,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			uCon = Url.openConnection();
 			is = uCon.getInputStream();
-
-			buf = new byte[this.BUFFER_SIZE];
+			int BUFFER_SIZE = 1024 * 8;
+			buf = new byte[BUFFER_SIZE];
 			while ((byteRead = is.read(buf)) != -1) {
 				outStream.write(buf, 0, byteRead);
 				byteWritten += byteRead;
