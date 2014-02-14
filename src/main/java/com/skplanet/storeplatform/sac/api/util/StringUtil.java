@@ -445,8 +445,7 @@ public class StringUtil extends StringUtils {
 		if (str == null || (strLen = str.length()) == 0) {
 			return str;
 		}
-		return new StringBuffer(strLen).append(Character.toTitleCase(str.charAt(0))).append(str.substring(1))
-				.toString();
+		return new StringBuffer(strLen).append(Character.toTitleCase(str.charAt(0))).append(str.substring(1)).toString();
 	}
 
 	/**
@@ -519,9 +518,8 @@ public class StringUtil extends StringUtils {
 		if (checkStr == null || checkStr.equals(""))
 			return false;
 
-		int idx = StringUtils.indexOfAny(checkStr.toLowerCase(), new String[] { "\'", "\"", "\\", "/", ";", ":", "<",
-				">", "=", "%", "union ", "select ", "insert ", "delete ", "update ", "drop ", " or ", " and ", "--",
-				"create " });
+		int idx = StringUtils.indexOfAny(checkStr.toLowerCase(), new String[] { "\'", "\"", "\\", "/", ";", ":", "<", ">", "=", "%", "union ",
+				"select ", "insert ", "delete ", "update ", "drop ", " or ", " and ", "--", "create " });
 
 		if (idx > -1)
 			return true; // 검색문자열 존재
@@ -574,9 +572,8 @@ public class StringUtil extends StringUtils {
 	 */
 	public static String removeSpecialAll(String param) {
 
-		String[] filter_word = { "", "\\.", "\\?", "\\/", "\\~", "\\!", "\\@", "\\#", "\\$", "\\%", "\\^", "\\&",
-				"\\*", "\\(", "\\)", "\\_", "\\+", "\\=", "\\|", "\\\\", "\\}", "\\]", "\\{", "\\[", "\\\"", "\\'",
-				"\\:", "\\;", "\\<", "\\,", "\\>", "\\.", "\\?", "\\/", "\\-", "\\`" };
+		String[] filter_word = { "", "\\.", "\\?", "\\/", "\\~", "\\!", "\\@", "\\#", "\\$", "\\%", "\\^", "\\&", "\\*", "\\(", "\\)", "\\_", "\\+",
+				"\\=", "\\|", "\\\\", "\\}", "\\]", "\\{", "\\[", "\\\"", "\\'", "\\:", "\\;", "\\<", "\\,", "\\>", "\\.", "\\?", "\\/", "\\-", "\\`" };
 
 		String temp = "";
 
@@ -600,9 +597,8 @@ public class StringUtil extends StringUtils {
 	 */
 	public static String removeSpecialAllExceptComma(String param) {
 
-		String[] filter_word = { " ", "\\.", "\\?", "\\/", "\\~", "\\!", "\\@", "\\#", "\\$", "\\%", "\\^", "\\&",
-				"\\*", "\\(", "\\)", "\\_", "\\+", "\\=", "\\|", "\\\\", "\\}", "\\]", "\\{", "\\[", "\\\"", "\\'",
-				"\\:", "\\;", "\\<", "\\>", "\\.", "\\?", "\\/", "\\-", "\\`" };
+		String[] filter_word = { " ", "\\.", "\\?", "\\/", "\\~", "\\!", "\\@", "\\#", "\\$", "\\%", "\\^", "\\&", "\\*", "\\(", "\\)", "\\_", "\\+",
+				"\\=", "\\|", "\\\\", "\\}", "\\]", "\\{", "\\[", "\\\"", "\\'", "\\:", "\\;", "\\<", "\\>", "\\.", "\\?", "\\/", "\\-", "\\`" };
 
 		String temp = "";
 
@@ -730,6 +726,22 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
+	 * 입력받은 스트링이 null 이거나 길이가 "0" 일때 "N" 로 반환하고 아닐 경우에는 trim 을 해서 반환한다.
+	 * 
+	 * @param tmp
+	 *            string that trim
+	 * @return string
+	 */
+	public static String setTrimYn(String tmp) {
+		if (tmp != null && tmp.length() > 0) {
+			tmp = tmp.trim();
+		} else {
+			tmp = "N";
+		}
+		return tmp;
+	}
+
+	/**
 	 * 입력한 값이 "" 공백문자이거나 null 인 경우 두번째 파라메타 값으로 초기화한다.
 	 * 
 	 * @param orgStr
@@ -748,10 +760,13 @@ public class StringUtil extends StringUtils {
 	/**
 	 * 입력받은 XML 에서 특정 태그로 둘러쌓은 값을 반환한다.
 	 * 
-	 * ex) String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
-	 * "<sqlmap><simplexml>TestValue</simplexml> </sqlmap>"; String tmp = StringUtil.extractTagValue(xml, "simplexml");
-	 * log.info("TMP=" + tmp); -------------------------------------------------------------------------------- ===>
-	 * TMP=TestValue
+	 * ex) String xml =
+	 * "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
+	 * "<sqlmap><simplexml>TestValue</simplexml> </sqlmap>"; String tmp =
+	 * StringUtil.extractTagValue(xml, "simplexml"); log.info("TMP=" + tmp);
+	 * ----
+	 * ----------------------------------------------------------------------
+	 * ------ ===> TMP=TestValue
 	 * 
 	 * 
 	 * @param tagName
@@ -913,7 +928,8 @@ public class StringUtil extends StringUtils {
 	 *            원본
 	 * @param prefix
 	 *            특정
-	 * @return 원본이나 특정 문자열이 null 또는 공백이면 false, 특정 문자열로 시작하지 않아도 false, 특정 문자열로 시작하면 true
+	 * @return 원본이나 특정 문자열이 null 또는 공백이면 false, 특정 문자열로 시작하지 않아도 false, 특정 문자열로
+	 *         시작하면 true
 	 */
 	public static boolean startsWith(String str, String prefix) {
 
@@ -1095,8 +1111,7 @@ public class StringUtil extends StringUtils {
 			if (kName.length() == 2) {
 				kName = kName.substring(0, 1) + "*";
 			} else {
-				kName = kName.substring(0, 1) + convStar(kName.length() - 2)
-						+ kName.substring(kName.length() - 1, kName.length());
+				kName = kName.substring(0, 1) + convStar(kName.length() - 2) + kName.substring(kName.length() - 1, kName.length());
 				;
 			}
 		} else {
@@ -1212,8 +1227,7 @@ public class StringUtil extends StringUtils {
 		for (int i = 0; i < str.length(); i++) {
 			char ch = str.charAt(i);
 			Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(ch);
-			if (UnicodeBlock.HANGUL_SYLLABLES.equals(unicodeBlock)
-					|| UnicodeBlock.HANGUL_COMPATIBILITY_JAMO.equals(unicodeBlock)
+			if (UnicodeBlock.HANGUL_SYLLABLES.equals(unicodeBlock) || UnicodeBlock.HANGUL_COMPATIBILITY_JAMO.equals(unicodeBlock)
 					|| UnicodeBlock.HANGUL_JAMO.equals(unicodeBlock)) {
 				return true;
 			}
