@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.member.user.sci;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +25,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
  */
 @LocalSCI
 public class DeviceSCIController implements DeviceSCI {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceSCIController.class);
 
 	@Autowired
 	private DeviceService deviceService; // 휴대기기 관련 인터페이스.
@@ -41,12 +44,16 @@ public class DeviceSCIController implements DeviceSCI {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
+		LOGGER.info("[DeviceSCIController] RequestHeader : {}, \nRequestParameter : {}", requestHeader, requestVO);
+
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				requestVO.getDeviceKey(), requestVO.getUserKey());
 
+		LOGGER.info("[DeviceSCIController] SearchDevice Info : {}", deviceInfo);
+
 		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
 		responseVO.setDeviceId(deviceInfo.getDeviceId());
-		responseVO.setDeviceIdType(deviceInfo.getDeviceIdType());
+		// responseVO.setDeviceIdType(deviceInfo.getDeviceIdType());
 
 		return responseVO;
 	}
