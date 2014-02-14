@@ -733,8 +733,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
-		List<Shopping> resultList = new ArrayList<Shopping>();
-
+		List<Shopping> resultList = null;
+		Shopping shopping = null;
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
 		}
@@ -750,7 +750,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getSecialPriceProductList", req, Shopping.class);
 
 		if (resultList != null) {
-			Shopping shopping = new Shopping();
+			shopping = new Shopping();
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;
@@ -877,7 +877,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		ShoppingThemeRes res = null;
 		CommonResponse commonResponse = new CommonResponse();
 		Integer totalCount = 0;
-		List<Shopping> resultList = new ArrayList<Shopping>();
+		List<Shopping> resultList = null;
+		Shopping shopping = null;
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -901,7 +902,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, Shopping.class);
 
 		if (resultList != null) {
-			Shopping shopping = new Shopping();
+			shopping = new Shopping();
 
 			// Response VO를 만들기위한 생성자
 			Promotion promotion = null;
@@ -969,8 +970,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-		List<Shopping> resultList = new ArrayList<Shopping>();
-
+		List<Shopping> resultList = null;
+		Shopping shopping = null;
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
@@ -994,7 +995,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, Shopping.class);
 
 		if (resultList != null) {
-			Shopping shopping = new Shopping();
+			shopping = new Shopping();
 
 			// Response VO를 만들기위한 생성자
 			Promotion promotion = null;
@@ -1088,11 +1089,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 		ShoppingRes res = null;
 		CommonResponse commonResponse = new CommonResponse();
 		Integer totalCount = 0;
-		List<Shopping> resultList = new ArrayList<Shopping>();
-		List<Shopping> hotBrandList = new ArrayList<Shopping>();
-		List<Shopping> detailList = new ArrayList<Shopping>();
-		List<Shopping> menuBrandList = new ArrayList<Shopping>();
-
+		List<Shopping> resultList = null;
+		List<Shopping> hotBrandList = null;
+		List<Shopping> detailList = null;
+		List<Shopping> menuBrandList = null;
+		Shopping shopping = null;
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -1109,8 +1110,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
-
+		resultList = new ArrayList<Shopping>();
+		hotBrandList = new ArrayList<Shopping>();
+		detailList = new ArrayList<Shopping>();
+		menuBrandList = new ArrayList<Shopping>();
 		if (!StringUtils.isEmpty(req.getMenuId())) {
+
 			resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
 		} else {
 			req.setMenuId(null);
@@ -1129,7 +1134,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 
 		if (resultList != null) {
-			Shopping shopping = new Shopping();
+			shopping = new Shopping();
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;
@@ -1204,7 +1209,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
-		List<Shopping> resultList = new ArrayList<Shopping>();
+		List<Shopping> resultList = null;
+		Shopping shopping = null;
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
@@ -1242,7 +1248,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
 
 		if (resultList != null) {
-			Shopping shopping = new Shopping();
+			shopping = new Shopping();
 
 			// Response VO를 만들기위한 생성자
 			Layout layOut = null;
@@ -1320,8 +1326,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		ShoppingRes res = null;
 		CommonResponse commonResponse = new CommonResponse();
 		Integer totalCount = 0;
-		List<Shopping> resultList = new ArrayList<Shopping>();
-
+		List<Shopping> resultList = null;
+		Shopping shopping = null;
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -1343,7 +1349,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, Shopping.class);
 
 		if (resultList != null) {
-			Shopping shopping = new Shopping();
+			shopping = new Shopping();
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;
@@ -1402,8 +1408,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
-		List<Shopping> resultList = new ArrayList<Shopping>();
-
+		List<Shopping> resultList = null;
+		Shopping shopping = null;
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
@@ -1438,7 +1444,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, Shopping.class);
 
 		if (resultList != null) {
-			Shopping shopping = new Shopping();
+			shopping = new Shopping();
 
 			// Response VO를 만들기위한 생성자
 			Layout layOut = null;
@@ -2028,7 +2034,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Identifier purchaseIdentifier = null;
 				List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
 				Date purchaseDate = null;
-				List<Date> episodeDateList = new ArrayList<Date>();
+				List<Date> episodeDateList = null;
+				episodeDateList = new ArrayList<Date>();
 				SalesOption episodeSaleOption = null;
 
 				// / 옵션용
