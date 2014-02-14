@@ -146,7 +146,7 @@ public class SellerSearchController {
 	 * @param req
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = "/searchId2/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/searchId/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchIdRes searchId(SacRequestHeader header, @RequestBody @Validated SearchIdReq req) {
 
@@ -200,7 +200,7 @@ public class SellerSearchController {
 	 * @param req
 	 * @return ListPasswordReminderQuestionRes
 	 */
-	@RequestMapping(value = "/listPasswordReminderQuestionAll2/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listPasswordReminderQuestionAll/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header,
 			SacRequestHeader requestHeader) {

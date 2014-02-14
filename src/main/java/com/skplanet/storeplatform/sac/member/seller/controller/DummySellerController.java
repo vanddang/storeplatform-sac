@@ -136,7 +136,7 @@ public class DummySellerController {
 	 * 
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchIdRes searchId() {
 
