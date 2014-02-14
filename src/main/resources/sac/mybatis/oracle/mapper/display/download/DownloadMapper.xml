@@ -495,7 +495,7 @@
 	      ) XA                         
     </select>
     
-    <!-- for download 현재일시 및 만료일시 조회 -->
+    <!-- for download 현재일시 및 요청만료일시 조회 -->
     <select id="selectDownloadSystemDate" resultType="MetaInfo">
 		SELECT  TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
 		     ,  TO_CHAR(SYSDATE + 1 / 24, 'YYYYMMDDHH24MISS') AS EXPIRED_DATE

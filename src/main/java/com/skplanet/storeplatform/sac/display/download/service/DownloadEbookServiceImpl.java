@@ -78,7 +78,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	 */
 	@Override
 	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookSacReq downloadEbookReq) {
-		// 현재일시 및 만료일시 조회
+		// 현재일시 및 요청만료일시 조회
 		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
 		String sysDate = metaInfo.getSysDate();
