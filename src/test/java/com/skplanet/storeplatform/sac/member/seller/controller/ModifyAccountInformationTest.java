@@ -5,6 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -32,6 +35,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq.ExtraDocument;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
@@ -84,9 +88,9 @@ public class ModifyAccountInformationTest {
 		authorizeReq = new AuthorizeReq();
 
 		// 로그인 데이터 주입
-		authorizeReq.setSellerId("sctest5");
-		authorizeReq.setSellerPW("123456");
-		authorizeReq.setExpireDate("2");
+		authorizeReq.setSellerId("qatest023");
+		authorizeReq.setSellerPW("1234");
+		authorizeReq.setExpireDate("100");
 
 		// 로그인 콜
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
@@ -134,10 +138,54 @@ public class ModifyAccountInformationTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						req.setSellerClass("US010101");
-						req.setSellerCategory("US011301");
 						req.setSellerMainStatus("US010201");
 						req.setSellerSubStatus("US010301");
+						req.setSellerCategory("US011302");
+						req.setSellerClass("US010102");
+						req.setAbaCode("xxxx");
+						req.setAccountRealDate("20110124135542");
+						req.setBankAccount("64710101200324");
+						req.setBankAcctName("sk planet");
+						req.setBankAddress("");
+						req.setBankBranch("국민은행판교점");
+						req.setBankBranchCode("xxxx");
+						req.setBankCode("20");
+						req.setBankLocation("");
+						req.setBankName("국민은행");
+						req.setBizGrade("xxxx");
+						req.setBizRegNumber("xxxx");
+						req.setBizUnregReason("US000604");
+						req.setIbanCode("xxxx");
+						req.setIsAccountReal("Y");
+						req.setIsBizRegistered("N");
+						req.setIsBizTaxable("N");
+						req.setIsDeductible("N");
+						req.setMarketCode("US001202");
+						req.setMarketStatus("MM000201");
+						req.setRepEmail("");
+						req.setRepFax("");
+						req.setRepFaxArea("");
+						req.setRepPhone("");
+						req.setRepPhoneArea("");
+						req.setSellerAddress("");
+						req.setSellerBizCategory("업태");
+						req.setSellerBizCorpNumber("xxxx");
+						req.setSellerBizType("");
+						req.setSellerDetailAddress("");
+						req.setSellerZip("");
+						req.setSwiftCode("xxxx");
+						req.setTpinCode("xxxx");
+						req.setVendorCode("xxxx");
+
+						ExtraDocument extraDocument = new ExtraDocument();
+						extraDocument.setDocumentCode("US001903");
+						extraDocument
+								.setDocumentPath("/data/mem/IF1023139253020100810165321/20100827101614376_US001903.png");
+						extraDocument.setDocumentName("구매내역2.png");
+						extraDocument.setDocumentSize("34803");
+						List<ExtraDocument> list = new ArrayList<ExtraDocument>();
+						list.add(extraDocument);
+						req.setExtraDocumentList(list);
 
 						// Debug
 						LOGGER.debug("[REQUEST (SAC)-회원기본정보 수정] : \n{}",

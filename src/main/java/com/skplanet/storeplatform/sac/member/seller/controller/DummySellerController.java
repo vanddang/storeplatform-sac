@@ -482,7 +482,7 @@ public class DummySellerController {
 	 * 
 	 * @return ModifyAccountInformationRes
 	 */
-	@RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyAccountInformationSacRes modifyAccountInformation() {
 
@@ -550,7 +550,7 @@ public class DummySellerController {
 	 * 
 	 * @return ConversionClassRes
 	 */
-	@RequestMapping(value = "/conversionClass/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/conversionClass/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ConversionClassRes conversionClass() {
 

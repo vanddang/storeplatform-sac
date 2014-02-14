@@ -5,6 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -31,8 +34,9 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassResSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassResSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq.ExtraDocument;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
@@ -46,9 +50,9 @@ import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class ConversionClassResTest {
+public class ConversionClassTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ConversionClassResTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConversionClassTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -56,10 +60,10 @@ public class ConversionClassResTest {
 	private MockMvc mockMvc;
 
 	/** [REQUEST]. */
-	private static ConversionClassResSacReq req;
+	private static ConversionClassSacReq req;
 
 	/** [RESPONSE]. */
-	private static ConversionClassResSacRes res;
+	private static ConversionClassSacRes res;
 
 	/** LOGIN-[REQUEST]. */
 	public static AuthorizeReq authorizeReq;
@@ -81,13 +85,13 @@ public class ConversionClassResTest {
 		xStoreAuthInfo = "authKey=114127c7ef42667669819dad5df8d820c;ist=N";
 
 		// [REQUEST] 초기화
-		req = new ConversionClassResSacReq();
+		req = new ConversionClassSacReq();
 		authorizeReq = new AuthorizeReq();
 
 		// 로그인 데이터 주입
-		authorizeReq.setSellerId("sctest5");
-		authorizeReq.setSellerPW("123456");
-		authorizeReq.setExpireDate("2");
+		authorizeReq.setSellerId("rejoiceTest05");
+		authorizeReq.setSellerPW("1234");
+		authorizeReq.setExpireDate("100");
 
 		// 로그인 콜
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
@@ -125,44 +129,73 @@ public class ConversionClassResTest {
 
 	@Test
 	public void testConversionClassRes() {
-		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/dev/modifyInformation/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/conversionClass/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
+						req.setSellerKey("SE201402051029143200000587");
+						req.setSessionKey("fd6697b8e02e4d9f84d8438bf0bf7b1e");
+						req.setSellerId("sctest5");
+
 						req.setSellerClass("US010101");
 						req.setSellerCategory("US011301");
 						req.setSellerMainStatus("US010201");
 						req.setSellerSubStatus("US010301");
-						// req.setSellerTelecom("US001201");
-						// req.setSellerEmail("test@testgmail.com");
-						// req.setSellerCountry("ko");
-						// req.setSellerLanguage("ko");
-						// req.setSellerBirthDay("19900325");
-						// req.setIsDomestic("Y");
-						// req.setIsParent("Y");
-						// req.setIsRealName("Y");
-						// req.setParentType("abc");
-						// req.setSellerCI("XXXXXXXGGXXXXX");
-						// req.setSellerDI("GGGGGGXXXXXGGG");
-						// req.setRealNameMethod("US011101");
-						// req.setSellerPhone("010XXXX2345");
-						// req.setSellerSex("M");
-						// req.setSellerName("국내개인무료사용자2");
-						// req.setRealNameSystemId("S01");
-						// req.setParentRealNameMethod("US011101");
-						// req.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1");
-						// req.setParentBirthDay("19750325");
-						// req.setParentRealNameSystemId("S01");
-						// req.setParentTelecom("US001202");
-						// req.setParentEmail("parent_test@test.com");
-						// req.setParentRealNameDate("20140206000000");
-						// req.setParentMDN("0102904XXXX");
-						// req.setParentName("딘윈체스터");
-						// req.setParentDate("20140205230000");
-						// req.setSellerCompany("Supernatural");
-						// req.setIsRecvSMS("Y");
-						// req.setIsRecvEmail("Y");
+						req.setSellerClassTo("US010103"); // BIZ_KIND_CD(US000901,US000904) 신청
+						req.setRepEmail("aind050@yopmail.com"); // ("대표 이메일"); 회원 REP_EMAIL > 전환 CHRGPERS_EMAIL
+						req.setSellerBizCorpNumber("123123123");// ("법인등록번호"); CORP_REG_NO
+						req.setSellerBizType("업종"); // INDT_NM 업종명 종목 종목
+						req.setSellerBizCategory("업태"); // COND_NM 업태명 업태 업태
+						req.setBankAccount("0112233322511"); // ACCT_NO 계좌번호
+						req.setBankCode("123");// BANK_CD 은행코드
+						req.setBankAcctName("홍길동"); // DEPSTR_NM 예금자명
+						req.setIsAccountReal("Y"); // ACCT_AUTH_YN 계좌인증여부
+						req.setIsBizTaxable("N"); // EASY_TXNPERS_YN 간이과세여부
+						req.setRepPhone("0262575958"); // REP_TEL_NO 대표전화번호
+						req.setRepFax("0262575958"); // FAX_NO 팩스번호
+						req.setIsBizRegistered("Y"); // CMNT_SALBIZ_DECL_YN 통신판매업 신고여부
+						req.setBizRegNumber("11223344"); // CMNT_SALBIZ_DECL_NO 통신판매업 신고번호
+						req.setBizUnregReason("554411"); // CMNT_SALBIZ_UNDECL_REASON_CD 통신판매업 미신고사유
+						req.setBankName("우리은행"); // FR_BANK_NM 은행명
+						req.setBankBranchCode("A01"); // FR_BANK_NM 은행명
+						req.setBankBranch("반포지점"); // FR_BRCH_NM 은행지점명
+						req.setSwiftCode("A123"); // INTL_SWIFT_CD Swift 코드
+						req.setAbaCode("B12"); // ABA 코드 INTL_ABA 국제 aba
+						req.setIbanCode("C1"); // IBAN 코드 INTL_IBAN 국제 iban
+						req.setBankAddress("XXXX"); // FR_BANK_ADDR 외국은행주소
+						req.setBankLocation("XXXX"); // FR_BANK_LOC 외국은행 위치
+						req.setTpinCode("XXXX"); // FR_TIN_NO 외국 tpin 번호
+						req.setVendorCode("XXXX");// VENDOR_CD 벤더코드
+						req.setRepPhoneArea("XXXX"); // REP_TEL_NATION_NO 대표전화 국가 번호
+						req.setRepFaxArea("XXXX"); // FAX_TEL_NATION_NO member 테이블네 넣을때는 FAX_NATION_NO 넣으면 될듯
+						req.setBizGrade("XXXX"); // DELIB_GRD_CD 심의등급코드 TB_US_SELLERMBR 에만 있음 테이블에 추가됨
+						req.setIsDeductible("Y");// AUTO_DED_POSB_TARGET_YN 자동차감가능대상여부 TB_US_SELLERMBR 에만
+						req.setMarketCode("XXXX"); // LNCHG_MALL_CD 입점 상점코드 ##### 전환 쪽에서 사용
+						req.setMarketStatus("XXXX"); // LNCHG_MBR_STATUS_CD 입점 회원 상태코드 ##### 전환 쪽에서 사용
+						req.setAccountRealDate("20110124135542"); // ACCT_AUTH_DT 계좌인증일시
+						req.setSellerZip("120757"); // ENPRPL_ZIP 우편번호
+						req.setSellerAddress("서울시 서대문구 대현동");// ENPRPL_ADDR 주소 의경우
+						req.setSellerDetailAddress("럭키 아파트 101동 909호");
+						req.setCeoBirthDay("231123"); // CEO_BIRTH
+						req.setSellerLanguage("KO"); // LANG_CD
+						req.setSellerTelecom("US001201"); // MNO_CD 통신사 코드 >> api 추가 하지말고 판매자 테이블에서 가져온다.
+						req.setCeoName("심봉사"); //
+						req.setSellerCompany("호랑"); // COMP_NM 회사명 >> api 추가 하지말고 판매자 테이블에서 가져온다.
+						req.setCordedTelephone("1231231");
+						req.setSellerPhone("12312312");
+						req.setIsRecvSMS("N");
+						req.setCharger("일순");
+
+						ExtraDocument extraDocument = new ExtraDocument();
+						extraDocument.setDocumentCode("US001903");
+						extraDocument
+								.setDocumentPath("/data/mem/IF1023139253020100810165321/20100827101614376_US001903.png");
+						extraDocument.setDocumentName("구매내역2.png");
+						extraDocument.setDocumentSize("34803");
+						List<ExtraDocument> list = new ArrayList<ExtraDocument>();
+						list.add(extraDocument);
+						req.setExtraDocumentList(list);
 
 						// Debug
 						LOGGER.debug("[REQUEST (SAC)-회원전환 신청] : \n{}", TestConvertMapperUtils.convertObjectToJson(req));
@@ -171,7 +204,7 @@ public class ConversionClassResTest {
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						res = (ConversionClassResSacRes) result;
+						res = (ConversionClassSacRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
 						assertEquals(res.getSellerKey(), req.getSellerKey());
 					}
