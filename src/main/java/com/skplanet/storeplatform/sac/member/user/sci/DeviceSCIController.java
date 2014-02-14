@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
@@ -49,11 +50,14 @@ public class DeviceSCIController implements DeviceSCI {
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				requestVO.getDeviceKey(), requestVO.getUserKey());
 
+		if (deviceInfo == null) {
+			throw new StorePlatformException("Error . deviceInfo == null");
+		}
 		LOGGER.info("[DeviceSCIController] SearchDevice Info : {}", deviceInfo);
 
 		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
 		responseVO.setDeviceId(deviceInfo.getDeviceId());
-		// responseVO.setDeviceIdType(deviceInfo.getDeviceIdType());
+		responseVO.setDeviceIdType(deviceInfo.getDeviceIdType());
 
 		return responseVO;
 	}
