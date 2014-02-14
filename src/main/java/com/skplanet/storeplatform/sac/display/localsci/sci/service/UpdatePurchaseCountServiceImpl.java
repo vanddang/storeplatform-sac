@@ -44,27 +44,22 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 	 */
 	@Override
 	public void updatePurchaseCount(List<UpdatePurchaseCountSacReq> reqList) {
-		// List<ProductListSac> productList = req.getProductList();
-		// List<ProductListSac> purchaseCountList = req.getPurchaseCountList();
 		Map<String, String> map = null;
 
 		for (int i = 0; i < reqList.size(); i++) {
 			map = new HashMap<String, String>();
-
-			if (i > 100) {
+			if (i > 99) {
 				throw new StorePlatformException("SAC_DSP_0007", "100");
 			}
 
+			map.put("tenantId", reqList.get(i).getTenantId());
 			map.put("productId", reqList.get(i).getProductId());
 			map.put("purchaseCount", reqList.get(i).getPurchaseCount().toString());
 
 			if (this.commonDAO.update("LocalSci.updatePurchaseCount", map) <= 0) {
-				System.out.println("##############################################");
-				System.out.println("상품 ID : " + map.get("productId"));
-				System.out.println("업데이트 건수 : " + map.get("purchaseCount"));
-				System.out.println("##############################################");
-				// throw new StorePlatformException("SAC_DSP_0006");
+				throw new StorePlatformException("SAC_DSP_0006");
 			}
+
 		}
 		//
 	}
