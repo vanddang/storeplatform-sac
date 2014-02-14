@@ -385,11 +385,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Override
 	public Purchase generatePurchase(MetaInfo metaInfo) {
 		return this.generatePurchase(metaInfo.getPurchaseProdId(), metaInfo.getPurchaseState(),
-				metaInfo.getPurchaseDt());
+				metaInfo.getPurchaseDt(), metaInfo.getPurchaseDwldExprDt());
 	}
 
 	@Override
-	public Purchase generatePurchase(String prchId, String prchState, String prchDt) {
+	public Purchase generatePurchase(String prchId, String prchState, String prchDt, String dwldExprDt) {
 		Purchase purchase = new Purchase();
 		purchase.setState(prchState);
 
@@ -401,6 +401,9 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 			if (StringUtils.isNotEmpty(prchDt)) {
 				purchase.setDate(this.generateDate(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM, prchDt));
+			}
+			if (StringUtils.isNotEmpty(dwldExprDt)) {
+				purchase.setDate(this.generateDate(DisplayConstants.DP_DATE_DOWNLOAD_EXPIRE_NM, dwldExprDt));
 			}
 		}
 

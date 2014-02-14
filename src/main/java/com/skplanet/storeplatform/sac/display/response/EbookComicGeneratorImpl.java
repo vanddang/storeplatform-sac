@@ -88,6 +88,14 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		book.setSize(metaInfo.getFileSize());
 		book.setBpJoinFileNo(metaInfo.getBpJoinFileNo());
 		book.setTotalCount(metaInfo.getBookPageCnt());
+		book.setIsbn(metaInfo.getIsbn());
+
+		// 완결 여부
+		if ("Y".equals(metaInfo.getComptYn())) {
+			book.setStatus(DisplayConstants.DP_EBOOK_COMPLETED_NM);
+		} else {
+			book.setStatus(DisplayConstants.DP_EBOOK_CONTINUE_NM);
+		}
 
 		// 회차 정보
 		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
@@ -99,6 +107,14 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		// 도서 연재 구분
 		if (DisplayConstants.DP_BOOK_SERIAL.equals(metaInfo.getBookClsfCd())) {
 			book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
+		}
+
+		// 컬러 지원 구분
+		if (StringUtils.isNotEmpty(metaInfo.getColorSprtYn())) {
+			List<Support> supportList = new ArrayList<Support>();
+			supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_COLOR_SUPPORT_NM,
+					metaInfo.getColorSprtYn()));
+			book.setSupportList(supportList);
 		}
 
 		return book;

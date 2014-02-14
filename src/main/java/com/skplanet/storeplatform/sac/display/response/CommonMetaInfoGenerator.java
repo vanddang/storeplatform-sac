@@ -273,5 +273,5 @@ public interface CommonMetaInfoGenerator {
 	 *            prchDt
 	 * @return Purchase
 	 */
-	public Purchase generatePurchase(String prchId, String prchState, String prchDt);
+	public Purchase generatePurchase(String prchId, String prchState, String prchDt, String dwldExprDt);
 }

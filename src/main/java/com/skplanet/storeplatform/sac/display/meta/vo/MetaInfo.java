@@ -52,6 +52,7 @@ public class MetaInfo {
 	private String purchaseProdId;
 	private String purchaseDt;
 	private String purchaseState;
+	private String purchaseDwldExprDt;
 	private String bpJoinFileNo;
 	private String bpJoinFileType;
 	private String expiredDate;
@@ -144,6 +145,8 @@ public class MetaInfo {
 	private String chnlProdNm;
 	private String genreCd;
 	private Integer bookPageCnt;
+	private String colorSprtYn;
+	private String isbn;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -931,6 +934,21 @@ public class MetaInfo {
 	 */
 	public void setPurchaseState(String purchaseState) {
 		this.purchaseState = purchaseState;
+	}
+
+	/**
+	 * @return the purchaseDwldExprDt
+	 */
+	public String getPurchaseDwldExprDt() {
+		return this.purchaseDwldExprDt;
+	}
+
+	/**
+	 * @param purchaseDwldExprDt
+	 *            the purchaseDwldExprDt to set
+	 */
+	public void setPurchaseDwldExprDt(String purchaseDwldExprDt) {
+		this.purchaseDwldExprDt = purchaseDwldExprDt;
 	}
 
 	/**
@@ -2161,6 +2179,36 @@ public class MetaInfo {
 	 */
 	public void setBookPageCnt(Integer bookPageCnt) {
 		this.bookPageCnt = bookPageCnt;
+	}
+
+	/**
+	 * @return the colorSprtYn
+	 */
+	public String getColorSprtYn() {
+		return this.colorSprtYn;
+	}
+
+	/**
+	 * @param colorSprtYn
+	 *            the colorSprtYn to set
+	 */
+	public void setColorSprtYn(String colorSprtYn) {
+		this.colorSprtYn = colorSprtYn;
+	}
+
+	/**
+	 * @return the isbn
+	 */
+	public String getIsbn() {
+		return this.isbn;
+	}
+
+	/**
+	 * @param isbn
+	 *            the isbn to set
+	 */
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
 	}
 
 	/**
