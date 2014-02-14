@@ -78,19 +78,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.DownloadAppService#DownloadAppService(com.skplanet
-	 * .storeplatform.sac.client.product.vo.DownloadAppReqVO)
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.DownloadVodService#DownloadVodService(com.skplanet
+	 * .storeplatform.sac.client.product.vo.DownloadVodReqVO)
 	 */
 	@Override
 	public DownloadVodSacRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodSacReq downloadVodSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
-
-		// String test = this.searchSellerKeySCI.searchSellerKeyForAid("OA00049881");
-		//
-		// this.log.debug("######################################################");
-		// this.log.debug("sellerKey	:	" + test);
-		// this.log.debug("######################################################");
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
@@ -230,7 +224,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					metaInfo.setPurchaseDt(prchsDt);
 					metaInfo.setPurchaseState(prchsState);
 					metaInfo.setPurchaseProdId(prchsProdId);
-					product.setPurchase(this.commonGenerator.generatePurchase(metaInfo));
 
 					metaInfo.setExpiredDate(downloadSystemDate.getExpiredDate());
 					metaInfo.setDwldExprDt(dwldExprDt);
@@ -241,33 +234,37 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					metaInfo.setDeviceType("");
 					metaInfo.setDeviceSubKey("");
 
-					// 소장, 대여 구분(Store : 소장, Play : 대여)
-					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-						metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-						metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
-					} else {
-						metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-						metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+					product.setPurchase(this.commonGenerator.generatePurchase(metaInfo));
+
+					if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(metaInfo.getPurchaseState())) {
+						// 소장, 대여 구분(Store : 소장, Play : 대여)
+						if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+							metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+							metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+						} else {
+							metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+							metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+						}
+
+						// 암호화 정보
+						EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+
+						// JSON 파싱
+						MarshallingHelper marshaller = new JacksonMarshallingHelper();
+						byte[] jsonData = marshaller.marshal(contents);
+
+						// JSON 암호화
+						byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+						String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+						Encryption encryption = new Encryption();
+						encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+						encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+						encryption.setToken(encryptString);
+						product.setEncryption(encryption);
+
+						product.setEncryption(encryption);
 					}
-
-					// 암호화 정보
-					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
-
-					// JSON 파싱
-					MarshallingHelper marshaller = new JacksonMarshallingHelper();
-					byte[] jsonData = marshaller.marshal(contents);
-
-					// JSON 암호화
-					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-					String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
-
-					Encryption encryption = new Encryption();
-					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
-					encryption.setToken(encryptString);
-					product.setEncryption(encryption);
-
-					product.setEncryption(encryption);
 
 				}
 
