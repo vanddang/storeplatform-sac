@@ -43,7 +43,7 @@ public class GiftConfirmSacReq extends CommonInfo implements Serializable {
 	private String prchsId; // 구매ID
 	@NotNull
 	@NotEmpty
-	@Pattern(regexp = "(20[0-9]{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])([0-1][0-9]|2[0-3])([0-5][0-9]){2}")
+	@Pattern(regexp = "(20[0-9]{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])([0-1][0-9]|2[0-3])([0-5][0-9]){2}", message = "YYYYMMDDHH24MISS")
 	private String recvDt; // 선물수신일시
 	@NotNull
 	@NotEmpty

@@ -33,7 +33,7 @@ public class ExistenceSacReq extends CommonInfo implements Serializable {
 	private String userKey; // 내부사용자번호
 	private String deviceKey; // 내부디바이스ID
 	private String prchsId; // 구매ID
-	private List<ExistenceItemSac> existenceItemSac; // 기구매 상품 리스트
+	private List<ExistenceItemSac> productList; // 기구매 상품 리스트
 
 	/**
 	 * @return the tenantId
@@ -96,18 +96,18 @@ public class ExistenceSacReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the existenceItemSac
+	 * @return the productList
 	 */
-	public List<ExistenceItemSac> getExistenceItemSac() {
-		return this.existenceItemSac;
+	public List<ExistenceItemSac> getProductList() {
+		return this.productList;
 	}
 
 	/**
-	 * @param existenceItemSac
-	 *            the existenceItemSac to set
+	 * @param productList
+	 *            the productList to set
 	 */
-	public void setExistenceItemSac(List<ExistenceItemSac> existenceItemSac) {
-		this.existenceItemSac = existenceItemSac;
+	public void setProductList(List<ExistenceItemSac> productList) {
+		this.productList = productList;
 	}
 
 }

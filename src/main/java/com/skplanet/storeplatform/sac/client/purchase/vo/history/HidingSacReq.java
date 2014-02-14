@@ -39,7 +39,7 @@ public class HidingSacReq extends CommonInfo implements Serializable {
 	@NotEmpty
 	@NotNull
 	@Valid
-	private List<HidingListSac> hidingListSac; // 구매내역 숨김 리스트
+	private List<HidingListSac> hidingList; // 구매내역 숨김 리스트
 
 	/**
 	 * @return the tenantId
@@ -102,18 +102,18 @@ public class HidingSacReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the hidingListSac
+	 * @return the hidingList
 	 */
-	public List<HidingListSac> getHidingListSac() {
-		return this.hidingListSac;
+	public List<HidingListSac> getHidingList() {
+		return this.hidingList;
 	}
 
 	/**
-	 * @param hidingListSac
-	 *            the hidingListSac to set
+	 * @param hidingList
+	 *            the hidingList to set
 	 */
-	public void setHidingListSac(List<HidingListSac> hidingListSac) {
-		this.hidingListSac = hidingListSac;
+	public void setHidingList(List<HidingListSac> hidingList) {
+		this.hidingList = hidingList;
 	}
 
 }

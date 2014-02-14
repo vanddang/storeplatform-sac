@@ -23,21 +23,21 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class ExistenceListSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<ExistenceSacRes> existenceListRes;
+	private List<ExistenceSacRes> existenceList;
 
 	/**
-	 * @return the existenceListRes
+	 * @return the existenceList
 	 */
-	public List<ExistenceSacRes> getExistenceListRes() {
-		return this.existenceListRes;
+	public List<ExistenceSacRes> getExistenceList() {
+		return this.existenceList;
 	}
 
 	/**
-	 * @param existenceListRes
-	 *            the existenceListRes to set
+	 * @param existenceList
+	 *            the existenceList to set
 	 */
-	public void setExistenceListRes(List<ExistenceSacRes> existenceListRes) {
-		this.existenceListRes = existenceListRes;
+	public void setExistenceList(List<ExistenceSacRes> existenceList) {
+		this.existenceList = existenceList;
 	}
 
 }
