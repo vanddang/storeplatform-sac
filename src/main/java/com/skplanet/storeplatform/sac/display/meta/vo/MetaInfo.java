@@ -20,6 +20,7 @@ public class MetaInfo {
 	private String partProdId;
 	private String prodNm;
 	private String prodBaseDesc;
+	private String prodDtlDesc;
 	private Integer prodAmt;
 	private String prodGrdCd;
 	private String partParentClsfCd;
@@ -140,6 +141,9 @@ public class MetaInfo {
 	private String nmFilePath;
 	private String sdFilePath;
 	private String hdFilePath;
+	private String chnlProdNm;
+	private String genreCd;
+	private Integer bookPageCnt;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -357,6 +361,21 @@ public class MetaInfo {
 	 */
 	public void setProdBaseDesc(String prodBaseDesc) {
 		this.prodBaseDesc = prodBaseDesc;
+	}
+
+	/**
+	 * @return the prodDtlDesc
+	 */
+	public String getProdDtlDesc() {
+		return this.prodDtlDesc;
+	}
+
+	/**
+	 * @param prodDtlDesc
+	 *            the prodDtlDesc to set
+	 */
+	public void setProdDtlDesc(String prodDtlDesc) {
+		this.prodDtlDesc = prodDtlDesc;
 	}
 
 	/**
@@ -2097,6 +2116,51 @@ public class MetaInfo {
 	 */
 	public void setHdFilePath(String hdFilePath) {
 		this.hdFilePath = hdFilePath;
+	}
+
+	/**
+	 * @return the chnlProdNm
+	 */
+	public String getChnlProdNm() {
+		return this.chnlProdNm;
+	}
+
+	/**
+	 * @param chnlProdNm
+	 *            the chnlProdNm to set
+	 */
+	public void setChnlProdNm(String chnlProdNm) {
+		this.chnlProdNm = chnlProdNm;
+	}
+
+	/**
+	 * @return the genreCd
+	 */
+	public String getGenreCd() {
+		return this.genreCd;
+	}
+
+	/**
+	 * @param genreCd
+	 *            the genreCd to set
+	 */
+	public void setGenreCd(String genreCd) {
+		this.genreCd = genreCd;
+	}
+
+	/**
+	 * @return the bookPageCnt
+	 */
+	public Integer getBookPageCnt() {
+		return this.bookPageCnt;
+	}
+
+	/**
+	 * @param bookPageCnt
+	 *            the bookPageCnt to set
+	 */
+	public void setBookPageCnt(Integer bookPageCnt) {
+		this.bookPageCnt = bookPageCnt;
 	}
 
 	/**
