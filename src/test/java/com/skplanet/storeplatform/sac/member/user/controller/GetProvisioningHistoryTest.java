@@ -26,8 +26,6 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 
@@ -86,177 +84,31 @@ public class GetProvisioningHistoryTest {
 
 	/**
 	 * <pre>
-	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : userId
-	 * </pre>
-	 */
-	@Test
-	public void existUserId() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ExistReq req = new ExistReq();
-				req.setUserId("shop_3292");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ExistRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ExistRes res = (ExistRes) result;
-
-				assertThat(res.getUserKey(), notNullValue());
-				logger.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-	}
-
-	/**
-	 * <pre>
-	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : deviceId
-	 * </pre>
-	 */
-	@Test
-	public void existDeviceId() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ExistReq req = new ExistReq();
-				req.setDeviceId("01094993599");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ExistRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ExistRes res = (ExistRes) result;
-
-				assertThat(res.getUserKey(), notNullValue());
-				logger.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : deviceKey
-	 * </pre>
-	 */
-	@Test
-	public void existDeviceKey() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ExistReq req = new ExistReq();
-				req.setDeviceKey("DE201401221858516600000160");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ExistRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ExistRes res = (ExistRes) result;
-
-				assertThat(res.getUserKey(), notNullValue());
-				logger.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-	}
-
-	/* ========================= Exception ================================= */
-	/**
-	 * <pre>
-	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : userKey
+	 * 프로비저닝 이력 조회 오류
 	 * </pre>
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void existUserKeyException() {
+	public void getProvisioningHistoryErr1() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ExistReq req = new ExistReq();
-				req.setUserKey("");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ExistRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ExistRes res = (ExistRes) result;
+		new TestCaseTemplate(this.mockMvc).url("/member/user/getProvisioningHistory/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						GetProvisioningHistoryReq req = new GetProvisioningHistoryReq();
+						req.setDeviceId("");
+						logger.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(GetProvisioningHistoryRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetProvisioningHistoryRes res = (GetProvisioningHistoryRes) result;
 
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : userId
-	 * </pre>
-	 */
-	@Test(expected = StorePlatformException.class)
-	public void existUserIdException() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ExistReq req = new ExistReq();
-				req.setUserId("");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ExistRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ExistRes res = (ExistRes) result;
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-	}
-
-	/**
-	 * <pre>
-	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : deviceId
-	 * </pre>
-	 */
-	@Test(expected = StorePlatformException.class)
-	public void existDeviceIdException() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ExistReq req = new ExistReq();
-				req.setDeviceId("");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ExistRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ExistRes res = (ExistRes) result;
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						assertThat(res.getUserKey(), notNullValue());
+						logger.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
-	/**
-	 * <pre>
-	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : deviceKey
-	 * </pre>
-	 */
-	@Test(expected = StorePlatformException.class)
-	public void existDeviceKeyException() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ExistReq req = new ExistReq();
-				req.setDeviceKey("");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ExistRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ExistRes res = (ExistRes) result;
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-	}
 }
