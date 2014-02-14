@@ -11,13 +11,11 @@ package com.skplanet.storeplatform.sac.display.menu.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +23,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.MenuDetail;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.menu.vo.MenuCategory;
-import com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailInfo;
+import com.skplanet.storeplatform.sac.display.menu.vo.Menu;
 
 /**
  * Category Service 인터페이스(CoreStoreBusiness) 구현체
@@ -56,432 +51,200 @@ public class CategoryServiceImpl implements CategoryService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuReq
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuSacReq
 	 * requestVO)
 	 */
 	@Override
-	public CategoryListRes searchTopCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public MenuListSacRes searchTopCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		int totalCount = 0;
+		// 헤더 값 세팅
+		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
 
-		String tenantId = "";
-		String systemId = "";
+		MenuListSacRes menuListSacRes = new MenuListSacRes();
+		CommonResponse commonResponse = new CommonResponse();
+		List<MenuDetail> menuDetailList = new ArrayList<MenuDetail>();
+		MenuDetail menuDetail;
 
-		tenantId = requestHeader.getTenantHeader().getTenantId();
-		systemId = requestHeader.getTenantHeader().getSystemId();
+		List<Menu> resultList = this.commonDAO.queryForList("Menu.selectTopCategoryList", requestVO, Menu.class);
 
-		requestVO.setTenantId(tenantId);
-		requestVO.setSystemId(systemId);
+		if (!resultList.isEmpty()) {
 
-		CategoryListRes responseVO = null;
-		CommonResponse commonResponse = null;
+			for (Menu menu : resultList) {
+				menuDetail = new MenuDetail();
+				menuDetail.setBodyFileName(menu.getBodyFileNm());
+				menuDetail.setBodyFilePath(menu.getBodyFilePath());
+				menuDetail.setBodyFileSize(menu.getBodyFileSize());
+				menuDetail.setExposureOrder(menu.getExpoOrd());
+				menuDetail.setInfrMenuYn(menu.getInfrMenuYn());
+				menuDetail.setMainOffFileName(menu.getMainOffFileNm());
+				menuDetail.setMainOffFilePath(menu.getMainOffFilePath());
+				menuDetail.setMainOnFileName(menu.getMainOnFileNm());
+				menuDetail.setMainOnFilePath(menu.getMainOnFilePath());
+				menuDetail.setMenuDepth(menu.getMenuDepth());
+				menuDetail.setMenuDescription(menu.getMenuDesc());
+				menuDetail.setMenuEnglishName(menu.getMenuEngNm());
+				menuDetail.setMenuId(menu.getMenuId());
+				menuDetail.setMenuName(menu.getMenuNm());
+				menuDetail.setRankFileName(menu.getRankFileNm());
+				menuDetail.setRankFilePath(menu.getRankFilePath());
+				menuDetail.setSearchFileName(menu.getSearchFileNm());
+				menuDetail.setSearchFilePath(menu.getSearchFilePath());
+				menuDetail.setSystemId(menu.getSystemId());
+				menuDetail.setTargetUrl(menu.getTargetUrl());
+				menuDetail.setTenantId(menu.getTenantId());
+				menuDetail.setUpMenuId(menu.getUpMenuId());
+				menuDetail.setUseYn(menu.getUseYn());
+				menuDetail.setMenuIdType(menu.getMenuIdType());
 
-		if (null == tenantId || "".equals(tenantId)) {
-			requestVO.setTenantId("S01");
-			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-		}
-		// if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
-		if (null == systemId || "".equals(systemId)) {
-			requestVO.setSystemId("test01");
-			// throw new Exception("systemId 는 필수 파라메터 입니다.");
-		}
-		List<MenuDetailInfo> resultList = this.commonDAO.queryForList("Menu.getTopCategoryList", requestVO,
-				MenuDetailInfo.class);
-		if (resultList != null) {
-
-			// Response VO를 만들기위한 생성자
-			Menu category = null;
-			Source source = null;
-			List<Object> listVO = new ArrayList<Object>();
-
-			Iterator<MenuDetailInfo> iterator = resultList.iterator();
-			while (iterator.hasNext()) {
-				MenuDetailInfo mapperVO = iterator.next();
-
-				category = new Menu();
-				source = new Source();
-
-				totalCount = mapperVO.getTotalCount();
-
-				source.setSize(mapperVO.getBodyFileSize());
-				category.setId(mapperVO.getMenuId());
-				category.setName(mapperVO.getMenuNm());
-				category.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-
-				category.setSource(source);
-
-				listVO.add(category);
+				menuDetailList.add(menuDetail);
 			}
 
-			responseVO = new CategoryListRes();
-			commonResponse = new CommonResponse();
-			responseVO.setCategoryList(listVO);
-			commonResponse.setTotalCount(totalCount);
-			responseVO.setCommonRes(commonResponse);
+			menuListSacRes.setMenuDetailList(menuDetailList);
+			commonResponse.setTotalCount(resultList.get(0).getTotalCount());
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-			String json = objectMapper.writeValueAsString(responseVO);
-
-			this.log.debug("test json : {}", json);
-			// System.out.println(json);
-
+		} else {
+			commonResponse.setTotalCount(0);
 		}
-		return responseVO;
+		menuListSacRes.setCommonResponse(commonResponse);
+		return menuListSacRes;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchDetailCategoryList(MenuReq
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchSubCategoryList(MenuSacReq
 	 * requestVO)
 	 */
 	@Override
-	public CategoryDetailListRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public MenuListSacRes searchSubCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		int totalCount = 0;
-		boolean threeDepth = false;
+		// 헤더 값 세팅
+		this.log.debug("헤더 값 세팅");
+		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
+		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
 
-		String tenantId = "";
-		String systemId = "";
-		String menuId = "";
-		String statementId = "";
-
-		tenantId = requestHeader.getTenantHeader().getTenantId();
-		systemId = requestHeader.getTenantHeader().getSystemId();
-
-		requestVO.setTenantId(tenantId);
-		requestVO.setSystemId(systemId);
-
-		menuId = requestVO.getMenuId();
-
-		CategoryDetailListRes responseVO = null;
-		CommonResponse commonResponse = null;
-
-		if (null == tenantId || "".equals(tenantId)) {
-			requestVO.setTenantId("S01");
-			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-		}
-		// if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
-		if (null == systemId || "".equals(systemId)) {
-			requestVO.setSystemId("test01");
-			// throw new Exception("systemId 는 필수 파라메터 입니다.");
-		}
-		if (null == menuId || "".equals(menuId)) {
-			throw new Exception("menuId 는 필수 파라메터 입니다.");
+		// 필수 파라미터 체크
+		this.log.debug("필수 파라미터 체크");
+		if (StringUtils.isEmpty(requestVO.getTopMenuId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", requestVO.getTopMenuId());
 		}
 
-		statementId = "Menu.getDetailCategoryList";
+		MenuListSacRes menuListSacRes = new MenuListSacRes();
+		CommonResponse commonResponse = new CommonResponse();
+		// List<Menu> menuList = new ArrayList<Menu>();
+		// Menu menu1depth;
+		MenuDetail menuDetail2Depth;
+		MenuDetail menuDetail3Depth;
+		List<MenuDetail> menuDetail2DepthList = new ArrayList<MenuDetail>();
+		List<MenuDetail> menuDetail3DepthList = new ArrayList<MenuDetail>();
+		List<Menu> resultList = null;
 
-		List<MenuDetailInfo> resultList = this.commonDAO.queryForList(statementId, requestVO, MenuDetailInfo.class);
-		if (resultList != null) {
+		// 카테고리 조회
+		this.log.debug("카테고리 조회");
+		if (requestVO.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)
+				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)
+				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)
+				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) { // 멀티미디어 카테고리 조회
+			this.log.debug("멀티미디어 카테고리 조회");
+			resultList = this.commonDAO.queryForList("MenuCategory.selectMultiSubCategoryList", requestVO, Menu.class);
+		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) { // 뮤직 카테고리 조회
+			this.log.debug("뮤직 카테고리 조회");
+			resultList = this.commonDAO.queryForList("MenuCategory.selectMusicSubCategoryList", requestVO, Menu.class);
+		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_SHOPPING_TOP_MENU_ID)) { // 쇼핑 카테고리 조회
+			this.log.debug("쇼핑 카테고리 조회");
+			resultList = this.commonDAO.queryForList("MenuCategory.selectShoppingSubCategoryList", requestVO,
+					Menu.class);
+		} else { // 앱 카테고리 조회
+			this.log.debug("앱 카테고리 조회");
+			resultList = this.commonDAO.queryForList("MenuCategory.selectAppSubCategoryList", requestVO, Menu.class);
+		}
 
-			threeDepth = this.check3DepthMenu(requestVO);
+		if (!resultList.isEmpty()) {
 
-			// Response VO를 만들기위한 생성자
-			Menu category = null;
-			Source source = null;
-			List<Object> listVO = new ArrayList<Object>();
-			List<Object> detailListVO = new ArrayList<Object>();
+			for (Menu menu : resultList) {
 
-			boolean tg = false;
-			int count = 0;
-			int idx = 1;
+				// 2Depth
+				if (menu.getMenuDepth() == 2) {
+					menuDetail2Depth = new MenuDetail();
+					menuDetail2Depth.setMenuProductCount(menu.getMenuProdCnt());
+					menuDetail2Depth.setBodyFileName(menu.getBodyFileNm());
+					menuDetail2Depth.setBodyFilePath(menu.getBodyFilePath());
+					menuDetail2Depth.setBodyFileSize(menu.getBodyFileSize());
+					menuDetail2Depth.setExposureOrder(menu.getExpoOrd());
+					menuDetail2Depth.setInfrMenuYn(menu.getInfrMenuYn());
+					menuDetail2Depth.setMainOffFileName(menu.getMainOffFileNm());
+					menuDetail2Depth.setMainOffFilePath(menu.getMainOffFilePath());
+					menuDetail2Depth.setMainOnFileName(menu.getMainOnFileNm());
+					menuDetail2Depth.setMainOnFilePath(menu.getMainOnFilePath());
+					menuDetail2Depth.setMenuDepth(menu.getMenuDepth());
+					menuDetail2Depth.setMenuDescription(menu.getMenuDesc());
+					menuDetail2Depth.setMenuEnglishName(menu.getMenuEngNm());
+					menuDetail2Depth.setMenuId(menu.getMenuId());
+					menuDetail2Depth.setMenuName(menu.getMenuNm());
+					menuDetail2Depth.setRankFileName(menu.getRankFileNm());
+					menuDetail2Depth.setRankFilePath(menu.getRankFilePath());
+					menuDetail2Depth.setSearchFileName(menu.getSearchFileNm());
+					menuDetail2Depth.setSearchFilePath(menu.getSearchFilePath());
+					menuDetail2Depth.setSystemId(menu.getSystemId());
+					menuDetail2Depth.setTargetUrl(menu.getTargetUrl());
+					menuDetail2Depth.setTenantId(menu.getTenantId());
+					menuDetail2Depth.setUpMenuId(menu.getUpMenuId());
+					menuDetail2Depth.setUseYn(menu.getUseYn());
+					menuDetail2Depth.setMenuIdType(menu.getMenuIdType());
 
-			CategoryDetail categoryDetail = new CategoryDetail();
+					menuDetail3DepthList = new ArrayList<MenuDetail>();
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+					for (Menu subMenu : resultList) {
+						// 3Depth
+						if (subMenu.getMenuDepth() == 3 && menu.getMenuId().equals(subMenu.getUpMenuId())) {
+							menuDetail3Depth = new MenuDetail();
+							menuDetail3Depth.setMenuProductCount(menu.getMenuProdCnt());
+							menuDetail3Depth.setBodyFileName(subMenu.getBodyFileNm());
+							menuDetail3Depth.setBodyFilePath(subMenu.getBodyFilePath());
+							menuDetail3Depth.setBodyFileSize(subMenu.getBodyFileSize());
+							menuDetail3Depth.setExposureOrder(subMenu.getExpoOrd());
+							menuDetail3Depth.setInfrMenuYn(subMenu.getInfrMenuYn());
+							menuDetail3Depth.setMainOffFileName(subMenu.getMainOffFileNm());
+							menuDetail3Depth.setMainOffFilePath(subMenu.getMainOffFilePath());
+							menuDetail3Depth.setMainOnFileName(subMenu.getMainOnFileNm());
+							menuDetail3Depth.setMainOnFilePath(subMenu.getMainOnFilePath());
+							menuDetail3Depth.setMenuDepth(subMenu.getMenuDepth());
+							menuDetail3Depth.setMenuDescription(subMenu.getMenuDesc());
+							menuDetail3Depth.setMenuEnglishName(subMenu.getMenuEngNm());
+							menuDetail3Depth.setMenuId(subMenu.getMenuId());
+							menuDetail3Depth.setMenuName(subMenu.getMenuNm());
+							menuDetail3Depth.setRankFileName(subMenu.getRankFileNm());
+							menuDetail3Depth.setRankFilePath(subMenu.getRankFilePath());
+							menuDetail3Depth.setSearchFileName(subMenu.getSearchFileNm());
+							menuDetail3Depth.setSearchFilePath(subMenu.getSearchFilePath());
+							menuDetail3Depth.setSystemId(subMenu.getSystemId());
+							menuDetail3Depth.setTargetUrl(subMenu.getTargetUrl());
+							menuDetail3Depth.setTenantId(subMenu.getTenantId());
+							menuDetail3Depth.setUpMenuId(subMenu.getUpMenuId());
+							menuDetail3Depth.setUseYn(subMenu.getUseYn());
+							menuDetail3Depth.setMenuIdType(subMenu.getMenuIdType());
 
-			responseVO = new CategoryDetailListRes();
-			Iterator<MenuDetailInfo> iterator = resultList.iterator();
-			while (iterator.hasNext()) {
-				MenuDetailInfo mapperVO = iterator.next();
-
-				String mapperJson = objectMapper.writeValueAsString(mapperVO);
-				this.log.debug(mapperJson);
-
-				category = new Menu();
-				source = new Source();
-
-				totalCount = mapperVO.getTotalCount();
-				// this.log.debug("totalCount : " + totalCount);
-
-				source.setSize(mapperVO.getBodyFileSize());
-				category.setId(mapperVO.getMenuId());
-				category.setName(mapperVO.getMenuNm());
-
-				category.setSource(source);
-
-				if (threeDepth) { // => 3 DEPTH MENU
-					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						category.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-						responseVO.setCategory(category);
-					} else {
-						if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
-							if (tg == false && count > 0) {
-								categoryDetail.setSubCategoryList(listVO);
-								detailListVO.add(categoryDetail);
-
-								categoryDetail = new CategoryDetail();
-								listVO = new ArrayList<Object>();
-
-								tg = true;
-							}
-
-							categoryDetail.setCategory(category);
-							count++;
-
-							if (idx == totalCount && tg == false) {
-								categoryDetail.setSubCategoryList(listVO);
-								detailListVO.add(categoryDetail);
-							}
-						} else { // 3 depth
-							listVO.add(category);
-						}
-
-						if (tg == true && count > 0) {
-							tg = false;
-							// count = 0;
-						}
-
-						if (idx == totalCount && tg == false) {
-							categoryDetail.setSubCategoryList(listVO);
-							detailListVO.add(categoryDetail);
+							menuDetail3DepthList.add(menuDetail3Depth);
 						}
 					}
-					idx++;
-				} else { // 2depth
-					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						category.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-						responseVO.setCategory(category);
-						count++;
-					} else {
-						listVO.add(category);
-
-						count++;
-
-						if (count >= totalCount) {
-							responseVO.setCategoryList(listVO);
-						}
+					if (!menuDetail3DepthList.isEmpty()) {
+						menuDetail2Depth.setSubMenuDetailList(menuDetail3DepthList);
 					}
+					menuDetail2DepthList.add(menuDetail2Depth);
 				}
 			}
 
-			commonResponse = new CommonResponse();
-			if (threeDepth) {
-				responseVO.setCategoryList(detailListVO); // set category detail list = 3 DEPTH MENU
-			}
-			commonResponse.setTotalCount(totalCount);
-			responseVO.setCommonResponse(commonResponse);
+			menuListSacRes.setMenuDetailList(menuDetail2DepthList);
+			commonResponse.setTotalCount(resultList.get(0).getTotalCount());
 
-			String CategoryDetailList = objectMapper.writeValueAsString(responseVO);
-
-			this.log.debug("CategoryDetailList json : {}", CategoryDetailList);
-			// System.out.println(json);
-
+		} else {
+			commonResponse.setTotalCount(0);
 		}
-		return responseVO;
+		menuListSacRes.setCommonResponse(commonResponse);
+		return menuListSacRes;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchSubCategoryList(MenuReq
-	 * requestVO)
-	 */
-	@Override
-	public CategoryDetailListRes searchSubCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
-
-		int totalCount = 0;
-		boolean threeDepth = false;
-
-		String tenantId = "";
-		String systemId = "";
-		String menuId = "";
-		String deviceCd = "";
-		String langCd = "";
-
-		tenantId = requestHeader.getTenantHeader().getTenantId();
-		systemId = requestHeader.getTenantHeader().getSystemId();
-		deviceCd = requestHeader.getDeviceHeader().getModel();
-
-		requestVO.setTenantId(tenantId);
-		requestVO.setSystemId(systemId);
-		requestVO.setDeviceModelCd(deviceCd);
-
-		menuId = requestVO.getMenuId();
-		langCd = requestVO.getLangCd();
-
-		CategoryDetailListRes responseVO = null;
-		CommonResponse commonResponse = null;
-
-		if (null == tenantId || "".equals(tenantId)) {
-			requestVO.setTenantId("S01");
-		}
-		// if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
-		if (null == systemId || "".equals(systemId)) {
-			requestVO.setSystemId("test01");
-		}
-		if (null == deviceCd || "".equals(deviceCd)) {
-			requestVO.setDeviceModelCd("SHW-M250S");
-		}
-		if (null == langCd || "".equals(langCd)) {
-			requestVO.setLangCd("ko");
-		}
-
-		if (null == menuId || "".equals(menuId)) {
-			throw new Exception("menuId 는 필수 파라메터 입니다.");
-		}
-
-		List<MenuCategory> resultList = this.commonDAO.queryForList(this.getStatementId(requestVO), requestVO,
-				MenuCategory.class);
-		if (resultList != null) {
-
-			threeDepth = this.check3DepthMenu(requestVO);
-
-			// Response VO를 만들기위한 생성자
-			Menu category = null;
-			Source source = null;
-			List<Object> listVO = new ArrayList<Object>();
-			List<Object> detailListVO = new ArrayList<Object>();
-
-			boolean tg = false;
-			int count = 0;
-			int idx = 1;
-
-			CategoryDetail categoryDetail = new CategoryDetail();
-
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-
-			responseVO = new CategoryDetailListRes();
-
-			Iterator<MenuCategory> iterator = resultList.iterator();
-			while (iterator.hasNext()) {
-				MenuCategory mapperVO = iterator.next();
-
-				String mapperJson = objectMapper.writeValueAsString(mapperVO);
-				this.log.debug(mapperJson);
-
-				category = new Menu();
-				source = new Source();
-
-				totalCount = mapperVO.getTotalCount(); // 메뉴 목록 총 조회수
-
-				source.setSize(mapperVO.getFileSize());
-				source.setUrl(mapperVO.getFilePos());
-				category.setId(mapperVO.getMenuId());
-				category.setName(mapperVO.getMenuNm());
-				category.setCount(mapperVO.getMenuProdCnt()); // 전시 메뉴 상품수
-				category.setSource(source);
-
-				if (threeDepth) { // => 3 DEPTH MENU
-					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						category.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-						responseVO.setCategory(category);
-					} else {
-						if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
-							if (tg == false && count > 0) {
-								categoryDetail.setSubCategoryList(listVO);
-								detailListVO.add(categoryDetail);
-
-								categoryDetail = new CategoryDetail();
-								listVO = new ArrayList<Object>();
-
-								tg = true;
-							}
-							categoryDetail.setCategory(category);
-							count++;
-
-							if (idx == totalCount && tg == false) {
-								categoryDetail.setSubCategoryList(listVO);
-								detailListVO.add(categoryDetail);
-							}
-						} else { // 3 depth
-							listVO.add(category);
-						}
-
-						if (tg == true && count > 0) {
-							tg = false;
-							// count = 0;
-						}
-
-						if (idx == totalCount && tg == false) {
-							categoryDetail.setSubCategoryList(listVO);
-							detailListVO.add(categoryDetail);
-						}
-					}
-					idx++;
-
-				} else { // 2depth
-					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						category.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-						responseVO.setCategory(category);
-						count++;
-					} else {
-						listVO.add(category);
-
-						count++;
-
-						if (count >= totalCount) {
-							responseVO.setCategoryList(listVO);
-						}
-					}
-				}
-			} // end of while
-
-			commonResponse = new CommonResponse();
-			if (threeDepth) {
-				responseVO.setCategoryList(detailListVO); // set category detail list = 3 DEPTH MENU
-			}
-			commonResponse.setTotalCount(totalCount);
-			responseVO.setCommonResponse(commonResponse);
-
-			String CategoryDetailList = objectMapper.writeValueAsString(responseVO);
-
-			this.log.debug("searchSubCategoryList json : {}", CategoryDetailList);
-			// System.out.println(json);
-
-		}
-		return responseVO;
-	}
-
-	private String getStatementId(MenuReq requestVO) {
-
-		String statementId = "";
-		String menuId = requestVO.getMenuId();
-
-		if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(menuId)
-				|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(menuId)) { // ebook/commic
-			statementId = "MenuCategory.getEBookComicDetailCategoryList";
-		} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(menuId)) { // 음악
-			statementId = "MenuCategory.getMusicDetailCategoryList";
-		} else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(menuId)
-				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(menuId)) { // 영화/TV 방송
-			statementId = "MenuCategory.getMovieTvDetailCategoryList";
-		} else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(menuId)) { // 쇼핑 - 쿼리 검증 요망
-			statementId = "MenuCategory.getShoppingDetailCategoryList";
-		} else { // 그외 APP
-			statementId = "MenuCategory.getAppDetailCategoryList";
-		}
-		return statementId;
-	}
-
-	private boolean check3DepthMenu(MenuReq requestVO) {
-		boolean result = false;
-
-		MenuDetailInfo mapperVO = this.commonDAO.queryForObject("Menu.getTopMenu3Detph", requestVO,
-				MenuDetailInfo.class);
-
-		if (mapperVO != null && mapperVO.getMenuId().equals(requestVO.getMenuId())) {
-			result = true;
-		}
-
-		return result;
-	}
-
 }

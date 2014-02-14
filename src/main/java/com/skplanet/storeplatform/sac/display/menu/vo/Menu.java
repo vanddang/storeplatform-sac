@@ -12,35 +12,37 @@ package com.skplanet.storeplatform.sac.display.menu.vo;
 /**
  * 메뉴 조회 Default Value Object.
  * 
- * Updated on : 2013. 12. 19. Updated by : 윤주영, SK 플래닛.
+ * Updated on : 2014. 02. 12. Updated by : 유시혁.
  */
-public class MenuDetailInfo {
+public class Menu {
 
-	private int totalCount;
+	private Integer totalCount;
 
-	private String tenantId = ""; // tenant id
-	private String menuId = ""; // menu id
-	private String systemId = ""; // system id
-	private String menuNm = ""; // menu Nm
-	private String menuEngNm = ""; // menu English Nm
-	private String menuDesc = ""; // menu description
-	private String menuDepth = ""; // menu depth
-	private String infrMenuYn = "";
-	private String upMenuId = "";
-	private String expoOrd = "";
-	private String targetUrl = "";
-	private String searchFilePath = "";
-	private String searchFileNm = "";
-	private String bodyFilePath = "";
-	private String bodyFileNm = "";
+	private Integer menuProdCnt;
+	private String tenantId; // tenant id
+	private String menuId; // menu id
+	private String systemId; // system id
+	private String menuNm; // menu Nm
+	private String menuEngNm; // menu English Nm
+	private String menuDesc; // menu description
+	private Integer menuDepth; // menu depth
+	private String infrMenuYn;
+	private String upMenuId;
+	private Integer expoOrd;
+	private String targetUrl;
+	private String searchFilePath;
+	private String searchFileNm;
+	private String bodyFilePath;
+	private String bodyFileNm;
 	private Integer bodyFileSize;
-	private String mainOnFilePath = "";
-	private String mainOnFileNm = "";
-	private String mainOffFilePath = "";
-	private String mainOffFileNm = "";
-	private String rankFilePath = "";
-	private String rankFileNm = "";
-	private String useYn = "";
+	private String mainOnFilePath;
+	private String mainOnFileNm;
+	private String mainOffFilePath;
+	private String mainOffFileNm;
+	private String rankFilePath;
+	private String rankFileNm;
+	private String useYn;
+	private String menuIdType;
 
 	/**
 	 * 
@@ -48,9 +50,9 @@ public class MenuDetailInfo {
 	 * 전체건수.
 	 * </pre>
 	 * 
-	 * @return int
+	 * @return Integer
 	 */
-	public int getTotalCount() {
+	public Integer getTotalCount() {
 		return this.totalCount;
 	}
 
@@ -60,9 +62,10 @@ public class MenuDetailInfo {
 	 * 전체건수.
 	 * </pre>
 	 * 
-	 * @param int totalCount
+	 * @param Integer
+	 *            totalCount
 	 */
-	public void setTotalCount(int totalCount) {
+	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
 	}
 
@@ -188,7 +191,7 @@ public class MenuDetailInfo {
 	 *            menuEngNm
 	 */
 	public void setMenuEngNm(String menuEngNm) {
-		this.menuEngNm = this.menuEngNm;
+		this.menuEngNm = menuEngNm;
 	}
 
 	/**
@@ -222,9 +225,9 @@ public class MenuDetailInfo {
 	 * 메뉴_깊이.
 	 * </pre>
 	 * 
-	 * @return String
+	 * @return Integer
 	 */
-	public String getMenuDepth() {
+	public Integer getMenuDepth() {
 		return this.menuDepth;
 	}
 
@@ -234,10 +237,10 @@ public class MenuDetailInfo {
 	 * 메뉴_깊이.
 	 * </pre>
 	 * 
-	 * @param String
+	 * @param Integer
 	 *            menuDepth
 	 */
-	public void setMenuDepth(String menuDepth) {
+	public void setMenuDepth(Integer menuDepth) {
 		this.menuDepth = menuDepth;
 	}
 
@@ -297,9 +300,9 @@ public class MenuDetailInfo {
 	 * 노출_순서.
 	 * </pre>
 	 * 
-	 * @return String
+	 * @return Integer
 	 */
-	public String getExpoOrd() {
+	public Integer getExpoOrd() {
 		return this.expoOrd;
 	}
 
@@ -309,10 +312,10 @@ public class MenuDetailInfo {
 	 * 노출_순서.
 	 * </pre>
 	 * 
-	 * @param String
+	 * @param Integer
 	 *            expoOrd
 	 */
-	public void setExpoOrd(String expoOrd) {
+	public void setExpoOrd(Integer expoOrd) {
 		this.expoOrd = expoOrd;
 	}
 
@@ -639,5 +642,37 @@ public class MenuDetailInfo {
 	 */
 	public void setUseYn(String useYn) {
 		this.useYn = useYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 ID 타입(어플:A,멀티미디어:M).
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getMenuIdType() {
+		return this.menuIdType;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 ID 타입(어플:A,멀티미디어:M).
+	 * </pre>
+	 * 
+	 * @param menuIdType
+	 */
+	public void setMenuIdType(String menuIdType) {
+		this.menuIdType = menuIdType;
+	}
+
+	public Integer getMenuProdCnt() {
+		return this.menuProdCnt;
+	}
+
+	public void setMenuProdCnt(Integer menuProdCnt) {
+		this.menuProdCnt = menuProdCnt;
 	}
 }

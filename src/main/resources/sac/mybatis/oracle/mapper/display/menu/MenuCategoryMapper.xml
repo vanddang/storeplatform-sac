@@ -2,616 +2,355 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="MenuCategory">
 
-    <!-- 세부 카테고리정보 조회 - (카테고리별 별도의 쿼리문 존재함) - 추가 수정 필요 -->
-    <select id="getDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
-        SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT
-             , MENU_ID
-             , MENU_NM
-             , MENU_DESC
-             , INFR_MENU_YN
-             , FILE_SIZE
-             , MENU_DEPTH
-        FROM
-            (
-             SELECT TENANT_MENU_ID AS MENU_ID
-                  , MENU_NM
-                  , MENU_DESC
-                  , MENU_DEPTH
-                  , INFR_MENU_YN
-                  , BODY_FILE_SIZE AS FILE_SIZE
-                  , CONCAT( BODY_FILE_PATH, BODY_FILE_NM ) AS FILE_POS
-                  , EXPO_ORD
-              FROM TB_DP_TENANT_MENU
-             WHERE TENANT_ID = #{tenantId}
-               AND SYSTEM_ID = #{systemId}
-             START WITH TENANT_MENU_ID = #{menuId}
-             CONNECT BY PRIOR TENANT_MENU_ID = UP_MENU_ID
-            )
-        GROUP BY MENU_ID
-             , MENU_NM
-             , MENU_DESC
-             , INFR_MENU_YN
-             , FILE_SIZE
-             , MENU_DEPTH
-             , EXPO_ORD
-        ORDER BY MENU_ID, MENU_DEPTH, EXPO_ORD
+    <!-- 세부 카테고리정보 조회 - 앱 -->
+    <select id="selectAppSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
+		SELECT 
+		    COUNT(1) OVER() AS TOTAL_COUNT
+		    , A.*
+		FROM (
+		    SELECT 
+		         NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
+		        , A.TENANT_ID 
+		        , A.TENANT_MENU_ID AS MENU_ID 
+		        , A.SYSTEM_ID 
+		        , A.MENU_NM 
+		        , A.MENU_ENG_NM 
+		        , A.MENU_DESC 
+		        , A.MENU_DEPTH 
+		        , A.INFR_MENU_YN 
+		        , A.UP_MENU_ID 
+		        , A.EXPO_ORD 
+		        , A.TARGET_URL 
+		        , A.SEARCH_FILE_PATH 
+		        , A.SEARCH_FILE_NM 
+		        , A.BODY_FILE_PATH 
+		        , A.BODY_FILE_NM 
+		        , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+		        , A.MAIN_ON_FILE_PATH 
+		        , A.MAIN_ON_FILE_NM 
+		        , A.MAIN_OFF_FILE_PATH 
+		        , A.MAIN_OFF_FILE_NM 
+		        , A.RANK_FILE_PATH 
+		        , A.RANK_FILE_NM 
+		        , A.USE_YN 
+		        , A.MENU_ID_TYPE
+		        , A.REG_ID 
+		        , A.REG_DT 
+		        , A.UPD_ID 
+		        , A.UPD_DT  
+		    FROM 
+		        TB_DP_TENANT_MENU A
+		        , TB_DP_MENU_CATEGORY B
+		        , (
+		            SELECT 
+		                A.MENU_ID
+		                , COUNT(1) MENU_PROD_CNT
+		            FROM
+		                TB_DP_MENU_CATEGORY A
+		                , TB_DP_MENU_CATEGORY_PROD_MAPG B
+		                , TB_DP_PROD C
+		                , TB_DP_TENANT_PROD D
+		                , TB_DP_SPRT_DEVICE E
+		            WHERE  A.MENU_ID = B.MENU_ID
+		            AND  B.PROD_ID = C.PROD_ID
+		            AND  B.PROD_ID = D.PROD_ID
+		            AND  B.PROD_ID = E.PROD_ID
+		            AND  A.MENU_DEPTH = 2
+		            AND  A.USE_YN = 'Y' /* Y : 사용 (사용여부) */
+		            AND  B.USE_YN = 'Y' /* Y : 사용 (사용여부) */
+		            AND  D.EXPO_YN = 'Y'
+		            AND  C.SVC_GRP_CD = 'DP000201' /* DP000201 : 애플리캐이션 */
+		            AND  D.PROD_STATUS_CD = 'PD000403' /* PD000403 : 판매중 */
+		            AND  D.EXPO_YN = 'Y' /* Y : 노출 (노출여부) */
+		            AND  A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+		            AND  D.TENANT_ID = #{tenantId} /* 테넌트ID */
+		            AND  E.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+		            GROUP BY A.MENU_ID
+		        ) C
+		    WHERE A.TENANT_MENU_ID = B.MENU_ID
+		    AND A.TENANT_MENU_ID = C.MENU_ID(+)
+		    AND A.USE_YN = 'Y'
+		    AND B.USE_YN = 'Y'
+		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
+		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
+		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
+		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
+		    ORDER SIBLINGS BY EXPO_ORD
+		) A
     </select>
-    
-    <!-- Music 상세 카테고리 조회-->
-    <select id="getMusicDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
-        /* MenuCategoryMapper.xml, getMusicDetailCategoryList, JuYoungYun, 2014-01-08 */
-        SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT
-             , MENU_ID
-             , DECODE(MENU_ID,'DP16002','TOP 뮤직',MENU_NM) AS MENU_NM
-             , MENU_DESC
-             , INFR_MENU_YN
-             , DECODE(MENU_ID,'DP16003001','2',MENU_DEPTH) AS MENU_DEPTH
-             , FILE_POS
-             , FILE_SIZE
-             , NVL(CAT_PROD_CNT, 0) AS MENU_PROD_CNT
-          FROM
-             (
-              SELECT C.MENU_ID
-                   , C.MENU_NM
-                   , C.MENU_DESC
-                   , C.INFR_MENU_YN
-                   , C.UP_MENU_ID
-                   , C.EXPO_ORD
-                   , C.MENU_DEPTH
-                   , C.FILE_POS
-                   , C.FILE_SIZE
-                   , DECODE( C.INFR_MENU_YN
-                           , 'Y'
-                           , SUM( P.CAT_PROD_CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
-                           , P.CAT_PROD_CNT ) AS CAT_PROD_CNT
-                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 2, 5 )
-                                             ORDER BY C.MENU_ID
-                                                    , C.MENU_DEPTH 
-                                                    , C.EXPO_ORD
-                                                    ) AS CAT_PRIOR
-                    FROM        
-                   ( 
-                    SELECT M.MENU_ID
-                         , D.MENU_NM
-                         , D.MENU_DESC
-                         , TM.EXPO_ORD
-                         , M.MENU_DEPTH
-                         , M.UP_MENU_ID
-                         , M.INFR_MENU_YN
-                         , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
-                         , TM.BODY_FILE_SIZE AS FILE_SIZE
-                      FROM TB_DP_MENU_CATEGORY M
-                          ,TB_DP_MENU_CATEGORY_DESC D
-                          ,TB_DP_TENANT_MENU TM
-                     WHERE M.MENU_ID = D.MENU_ID
-                       AND TM.TENANT_MENU_ID = M.MENU_ID
-                       AND TM.TENANT_ID = #{tenantId}
-                       AND TM.SYSTEM_ID = #{systemId}
-                       AND M.MENU_ID LIKE #{menuId}||'%'
-                       AND M.USE_YN = 'Y'
-                       AND D.LANG_CD = #{langCd}
-                       AND TM.USE_YN = 'Y'
-                    ) C
-                    ,
-                   (
-                    SELECT  COUNT(*) AS CAT_PROD_CNT
-                         , C.MENU_ID 
-                     FROM TB_DP_MULTIMDA_PROD MP
-                        , TB_DP_PROD P
-                        , TB_DP_PROD_RSHP SP                      
-                        , TB_DP_TENANT_PROD TP
-                        , TB_DP_MENU_CATEGORY_PROD_MAPG CP
-                        , TB_DP_MENU_CATEGORY C
-                        , TB_DP_SPRT_DEVICE SH
-                        , TB_CM_DEVICE PHI    
-                        , TB_DP_CHART_PROD_MAPG MCP
-                        , TB_DP_MUSIC_CHART MCI
-                    WHERE MP.PROD_ID = P.PROD_ID
-                      AND TP.PROD_ID = P.PROD_ID
-                      AND CP.PROD_ID = P.PROD_ID
-                      AND C.MENU_ID = CP.MENU_ID
-                      AND (SP.PART_PROD_ID = P.PROD_ID OR SP.PROD_ID = P.PROD_ID)
-                      AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
-                      AND SH.PROD_ID = P.PROD_ID
-                      AND PHI.DEVICE_MODEL_CD = #{deviceModelCd}
-                      AND TP.PROD_STATUS_CD = 'PD000403'
-                      AND P.TOP_MENU_ID = #{menuId}
-                      AND PHI.USE_YN = 'Y'
-                      AND C.USE_YN = 'Y'
-                      AND PHI.MUSIC_SPRT_YN = 'Y'  
-                      AND MCP.PROD_ID = P.PROD_ID
-                      AND MCI.MUSIC_ID = MCP.MUSIC_ID
-                      AND MCI.CHART_GENRE_CD = CP.MENU_ID
-                      AND MCP.PROD_ID = CP.PROD_ID
-                      AND P.CONTENTS_TYPE_CD IN ('PD002501', 'PD002502')
-                      AND P.META_CLSF_CD = 'CT25' 
-                      AND MCI.CHART_CLSF_CD = 'DP004905'
-                      AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
-                                                FROM TB_DP_BATCH_COMPT
-                                               WHERE TENANT_ID = 'S01'
-                                                 AND BATCH_ID = 'MELON_DP004905')
-                    GROUP BY C.MENU_ID  
-                    UNION ALL
-                    SELECT
-                          NVL( COUNT(*), 0 ) AS CAT_PROD_CNT
-                        , 'DP16003001' AS MENU_ID
-                     FROM TB_DP_MULTIMDA_PROD MP
-                        , TB_DP_PROD P
-                        , TB_DP_PROD_RSHP SP                      
-                        , TB_DP_TENANT_PROD TP
-                        , TB_DP_MENU_CATEGORY_PROD_MAPG CP
-                        , TB_DP_MENU_CATEGORY C
-                        , TB_DP_SPRT_DEVICE SH
-                        , TB_CM_DEVICE PHI    
-                        , TB_DP_CHART_PROD_MAPG MCP
-                        , TB_DP_MUSIC_CHART MCI
-                    WHERE MP.PROD_ID = P.PROD_ID
-                      AND TP.PROD_ID = P.PROD_ID
-                      AND CP.PROD_ID = P.PROD_ID
-                      AND C.MENU_ID = CP.MENU_ID
-                      AND (SP.PART_PROD_ID = P.PROD_ID OR SP.PROD_ID = P.PROD_ID)
-                      AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
-                      AND SH.PROD_ID = P.PROD_ID
-                      AND PHI.DEVICE_MODEL_CD = #{deviceModelCd}
-                      AND TP.PROD_STATUS_CD = 'PD000403'
-                      AND P.TOP_MENU_ID = #{menuId}
-                      AND PHI.USE_YN = 'Y'
-                      AND C.USE_YN = 'Y'
-                      AND PHI.MUSIC_SPRT_YN = 'Y'  
-                      AND MCP.PROD_ID = P.PROD_ID
-                      AND MCI.MUSIC_ID = MCP.MUSIC_ID
-                      AND MCP.PROD_ID = CP.PROD_ID
-                      AND P.CONTENTS_TYPE_CD IN ('PD002501', 'PD002502')
-                      AND P.META_CLSF_CD = 'CT25' 
-                      AND MCI.CHART_CLSF_CD = 'DP004904'
-                      AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
-                                                FROM TB_DP_BATCH_COMPT
-                                               WHERE TENANT_ID = 'S01'
-                                                 AND BATCH_ID = 'MELON_DP004904')
-                    GROUP BY C.MENU_ID
-                   ) P
-                   WHERE C.MENU_ID = P.MENU_ID(+)
-              )
-              WHERE MENU_ID not like 'DP16001%' 
-                AND MENU_ID <![CDATA[<>]]> 'DP16003'
-              ORDER BY CAT_PRIOR
-    </select>
-    
-    
-    <!-- 영화/방송 상세 카테고리 조회-->
-    <select id="getMovieTvDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
-		    /* MenuCategoryMapper.xml, getMovieDetailCategoryList, JuYoungYun, 2014-01-09 */
-		    SELECT COUNT(C.MENU_ID) OVER() AS TOTAL_COUNT
-		         , SUM( C.MENU_PROD_CNT ) OVER ( ) AS TOTAL_PROD_CNT
-		         , C.MENU_ID
-		         , C.MENU_NM
-		         , C.INFR_MENU_YN
-		         , C.MENU_DEPTH
-		         , C.FILE_POS
-		         , C.FILE_SIZE
-		         , C.MENU_DESC
-		         , NVL(C.MENU_PROD_CNT, 0) AS MENU_PROD_CNT         
-		      FROM
-		         (
-		          SELECT C.MENU_ID
-		               , C.MENU_NM
-		               , C.MENU_DESC
-		               , C.INFR_MENU_YN
-		               , C.UP_MENU_ID
-		               , C.EXPO_ORD
-		               , C.MENU_DEPTH
-		               , C.FILE_POS
-		               , C.FILE_SIZE
-		               , DECODE( C.INFR_MENU_YN
-		                       , 'Y'
-		                       , SUM( P.MENU_PROD_CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
-		                       , P.MENU_PROD_CNT ) AS MENU_PROD_CNT
-	                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 2, 5 )
-	                                             ORDER BY C.MENU_ID
-	                                                    , C.MENU_DEPTH 
-	                                                    , C.EXPO_ORD
-	                                                    ) AS CAT_PRIOR
-		                FROM        
-		               ( 
-		                SELECT M.MENU_ID
-		                     , D.MENU_NM
-		                     , D.MENU_DESC
-		                     , TM.EXPO_ORD
-		                     , M.MENU_DEPTH
-		                     , M.UP_MENU_ID
-		                     , M.INFR_MENU_YN
-		                     , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
-		                     , TM.BODY_FILE_SIZE AS FILE_SIZE
-		                  FROM TB_DP_MENU_CATEGORY M
-		                      ,TB_DP_MENU_CATEGORY_DESC D
-		                      ,TB_DP_TENANT_MENU TM
-	                     WHERE M.MENU_ID = D.MENU_ID
-	                       AND TM.TENANT_MENU_ID = M.MENU_ID
-	                       AND TM.TENANT_ID = #{tenantId}
-	                       AND TM.SYSTEM_ID = #{systemId}
-	                       AND M.MENU_ID LIKE #{menuId}||'%'
-	                       AND M.USE_YN = 'Y'
-	                       AND D.LANG_CD = #{langCd}
-	                       AND TM.USE_YN = 'Y'
-		                ) C
-		                ,
-		               (
-		                SELECT MENU_ID
-		                    , SUM( MENU_PROD_CNT ) AS MENU_PROD_CNT
-		                 FROM
-		                    (
-		                    SELECT MENU_ID
-		                         , DECODE( MENU_ID
-		                                 , 'DP17001'
-		                                 , MENU_PROD_CNT
-		                                 , ( CASE WHEN GRP_CD NOT IN ( 'DP003700','DP003701') THEN MENU_PROD_CNT ELSE 0 END  ) ) MENU_PROD_CNT
-		                      FROM
-		                         (
-		                        SELECT ( CASE WHEN P.GRP_CD IN ( 'DP003700','DP003701' ) THEN 'DP17001'
-		                                       ELSE P.MENU_ID
-		                                   END ) AS MENU_ID
-		                              , SUBSTR( P.MENU_ID , 0, 7 ) AS UP_MENU_ID
-		                              , P.GRP_CD
-		                              , COUNT(*) AS MENU_PROD_CNT
-		                           FROM
-		                              (
-		                                  SELECT MENU_ID
-		                                       , GRP_CD
-		                                       , CONCAT( MENU_ID, GRP_CD ) CAT
-		                                   FROM (
-		                                       SELECT CAT.MENU_ID
-		                                            , GRP_CD
-		                                            , ROW_NUMBER( ) OVER( PARTITION BY CAT.MENU_ID
-		                                                                             , CAT.CHNL_PROD_ID
-		                                                                      ORDER BY CAT.REG_DT DESC )  AS RN
-		                                        FROM
-		                                           (
-		                                            SELECT C.MENU_ID
-		                                                 , CP.PROD_ID AS CHNL_PROD_ID
-		                                                 , SC.REG_DT
-		                                                 , NV.ETC_CD AS GRP_CD
-		                                              FROM TB_DP_PROD P
-		                                                 , TB_DP_PROD_RSHP CP
-		                                                 , TB_DP_TENANT_PROD TP
-		                                                 , TB_DP_MENU_CATEGORY_PROD_MAPG MP
-		                                                 , TB_DP_MENU_CATEGORY C
-		                                                 , TB_DP_SUB_CONTENTS SC
-		                                                 , (SELECT PROD_ID
-		                                                    , SD_VIDEO_SPRT_YN
-		                                                    , HDV_SPRT_YN
-		                                                    , VIDEO_DRM_SPRT_YN
-		                                                 FROM TB_DP_SPRT_DEVICE SH
-		                                                    , TB_CM_DEVICE PI 
-		                                                WHERE SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
-		                                                  AND PI.DEVICE_MODEL_CD = #{deviceModelCd}
-		                                                  AND PI.USE_YN = 'Y') SHI  
-		                                                 , TB_DP_LIST_PROD NV
-		                                                 , TB_DP_PROD P2
-		                                                 , TB_DP_TENANT_PROD TP2
-		                                             WHERE P.PROD_ID = CP.PROD_ID -- CHENAL PROD
-		                                               AND TP.PROD_ID = CP.PROD_ID
-		                                               AND TP2.PROD_ID = CP.PART_PROD_ID
-		                                               AND MP.PROD_ID = P.PROD_ID
-		                                               AND MP.MENU_ID = C.MENU_ID
-		                                               AND CP.PART_PROD_ID = SC.PROD_ID
-		                                               AND CP.PART_PROD_ID = SHI.PROD_ID
-		                                               AND CP.PART_PROD_ID = P2.PROD_ID
-		                                               AND CP.PROD_ID = NV.PROD_ID
-		                                               AND NV.MENU_ID = MP.MENU_ID
-		                                               AND NV.LIST_ID = 'ADM000000003' -- 운영자추천_신규상품_영화/방송
-		                                               AND C.MENU_ID LIKE #{menuId}||'%'
-		                                               AND C.USE_YN = 'Y'
-		                                               AND SC.SALE_YN = 'Y'
-		                                               AND DECODE( SHI.SD_VIDEO_SPRT_YN
-		                                                        , 'Y'
-		                                                        , DECODE( SC.DP_PG_QULT_CD
-		                                                                , 'PD009701', 1 -- 일반화질
-		                                                                , 'PD009702', 1 -- 고화질
-		                                                                , DECODE( SHI.HDV_SPRT_YN, 'Y', 1, 0 ) )
-		                                                        , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1 -- 일반화질
-		                                               AND DECODE( SHI.VIDEO_DRM_SPRT_YN
-		                                                        , 'N'
-		                                                        , DECODE( NVL( P2.DRM_YN, 'N' ), 'N', 1, 0 )
-		                                                        , 'Y'
-		                                                        , 1 ) = 1
-		                                               AND NV.MENU_ID LIKE #{menuId}||'%'
-		                                               AND NV.EXPO_YN = 'Y'
-		                                               AND P.SVC_GRP_CD = 'DP000203' -- 멀티미디어
-		                                               AND P2.SVC_GRP_CD = 'DP000203' -- 멀티미디어
-		                                               AND TP.PROD_STATUS_CD = 'PD000403'
-		                                               AND TP.EXPO_YN = 'Y'
-		                                               AND TP2.PROD_STATUS_CD = 'PD000403' 
-		                                               AND TP2.EXPO_YN = 'Y'
-		                                            ) CAT
-		                                   )
-		                               WHERE RN = 1
-		                              ) P
-		                          GROUP BY P.MENU_ID
-		                                 , P.GRP_CD 
-		                          )
+
+    <!-- 세부 카테고리정보 조회 - 뮤직 -->
+    <select id="selectMusicSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
+		SELECT 
+		    COUNT(1) OVER() AS TOTAL_COUNT
+		    , A.*
+		FROM (
+		    SELECT 
+		         NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
+		        , A.TENANT_ID 
+		        , A.TENANT_MENU_ID AS MENU_ID 
+		        , A.SYSTEM_ID 
+		        , A.MENU_NM 
+		        , A.MENU_ENG_NM 
+		        , A.MENU_DESC 
+		        , A.MENU_DEPTH 
+		        , A.INFR_MENU_YN 
+		        , A.UP_MENU_ID 
+		        , A.EXPO_ORD 
+		        , A.TARGET_URL 
+		        , A.SEARCH_FILE_PATH 
+		        , A.SEARCH_FILE_NM 
+		        , A.BODY_FILE_PATH 
+		        , A.BODY_FILE_NM 
+		        , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+		        , A.MAIN_ON_FILE_PATH 
+		        , A.MAIN_ON_FILE_NM 
+		        , A.MAIN_OFF_FILE_PATH 
+		        , A.MAIN_OFF_FILE_NM 
+		        , A.RANK_FILE_PATH 
+		        , A.RANK_FILE_NM 
+		        , A.USE_YN 
+		        , A.MENU_ID_TYPE
+		        , A.REG_ID 
+		        , A.REG_DT 
+		        , A.UPD_ID 
+		        , A.UPD_DT  
+		    FROM 
+		        TB_DP_TENANT_MENU A
+		        , TB_DP_MENU_CATEGORY B
+		        , (
+		                SELECT 
+		                    A.MENU_ID
+		                    , COUNT(1) MENU_PROD_CNT
+		                FROM
+		                    TB_DP_MENU_CATEGORY A
+		                    , TB_DP_MENU_CATEGORY_PROD_MAPG B
+		                    , TB_DP_MUSIC_CHART C
+		                    , TB_DP_TENANT_PROD D
+		                    , TB_DP_SPRT_DEVICE E
+		                    , TB_CM_DEVICE F
+		                WHERE A.MENU_ID = B.MENU_ID
+		                AND A.MENU_ID = C.CHART_GENRE_CD
+		                AND B.PROD_ID = C.PROD_ID
+		                AND C.PROD_ID = D.PROD_ID
+		                AND B.PROD_ID = E.PROD_ID
+		                AND E.DEVICE_MODEL_CD = F.DEVICE_MODEL_CD
+		                AND A.MENU_DEPTH IN (2, 3)
+		                AND A.USE_YN = 'Y'
+		                AND B.USE_YN = 'Y'
+		                AND D.EXPO_YN = 'Y'
+		                AND F.USE_YN = 'Y'
+		                AND F.MUSIC_SPRT_YN = 'Y'
+		                AND D.PROD_STATUS_CD = 'PD000403'
+		                AND C.RANK_START_DAY = ( 
+		                    SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD')) 
+		                    FROM TB_DP_BATCH_COMPT A1
+		                    WHERE A1.TENANT_ID = D.TENANT_ID
+		                    AND A1.BATCH_ID = CONCAT('MELON_',C.CHART_CLSF_CD)
 		                    )
-		                GROUP BY MENU_ID
-		               ) P
-		           WHERE C.MENU_ID = P.MENU_ID(+)
-		         ) C
-		---     WHERE C.MENU_PROD_CNT > 0
-		     ORDER BY C.CAT_PRIOR         
-    </select>
-    
-    
-    <!-- EBOOK/Comic 상세 카테고리 조회-->
-    <select id="getEBookComicDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
-        /* MenuCategoryMapper.xml, getEBookDetailCategoryList, JuYoungYun, 2014-01-10 */
-        SELECT COUNT(C.MENU_ID) OVER() AS TOTAL_COUNT
-             , C.MENU_ID
-             , C.MENU_NM
-             , C.MENU_DESC
-             , C.MENU_DEPTH
-             , C.INFR_MENU_YN
-             , C.UP_MENU_ID
-             , C.EXPO_ORD
-             , C.FILE_POS
-             , C.FILE_SIZE
-             , DECODE( C.INFR_MENU_YN
-                     , 'Y'
-                     , SUM( P.CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
-                     , P.CNT ) AS MENU_PROD_CNT
-          FROM
-          (
-              SELECT M.MENU_ID
-                   , D.MENU_NM
-                   , D.MENU_DESC
-                   , TM.EXPO_ORD
-                   , M.MENU_DEPTH
-                   , M.UP_MENU_ID
-                   , M.INFR_MENU_YN
-                   , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
-                   , TM.BODY_FILE_SIZE AS FILE_SIZE
-                FROM TB_DP_MENU_CATEGORY M
-                    ,TB_DP_MENU_CATEGORY_DESC D
-                    ,TB_DP_TENANT_MENU TM
-               WHERE M.MENU_ID = D.MENU_ID
-                 AND TM.TENANT_MENU_ID = M.MENU_ID
-                 AND TM.TENANT_ID = #{tenantId}
-                 AND TM.SYSTEM_ID = #{systemId}
-                 AND M.MENU_ID LIKE #{menuId}||'%'
-                 AND M.USE_YN = 'Y'
-                 AND D.LANG_CD = 'ko'
-                 AND TM.USE_YN = 'Y'
-              )  C
-              ,
-              (
-               SELECT MENU_ID
-                    , COUNT(*) AS CNT
-                 FROM
-                    (
-                      SELECT C.MENU_ID
-                           , CP.PROD_ID AS CHNL_PROD_ID
-                        FROM TB_DP_PROD P
-                           , TB_DP_PROD_RSHP CP
-                           , TB_DP_TENANT_PROD TP
-                           , TB_DP_MENU_CATEGORY_PROD_MAPG MP
-                           , TB_DP_MENU_CATEGORY C
-                           , (SELECT SH.PROD_ID
-                                   , PI.EBOOK_SPRT_YN
-                                   , PI.MAGAZINE_SPRT_YN
-                                   , PI.COMIC_SPRT_YN
-                                FROM TB_DP_SPRT_DEVICE SH
-                                   , TB_CM_DEVICE PI 
-                               WHERE SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
-                                 AND PI.DEVICE_MODEL_CD = #{deviceModelCd}
-                                 AND PI.USE_YN = 'Y') SHI  
-                           , TB_DP_PROD P2
-                           , TB_DP_TENANT_PROD TP2
-                           , TB_DP_MULTIMDA_PROD PM
-                       WHERE P.PROD_ID = CP.PROD_ID -- CHENAL PROD
-                         AND TP.PROD_ID = CP.PROD_ID
-                         AND TP2.PROD_ID = CP.PART_PROD_ID
-                         AND MP.PROD_ID = P.PROD_ID
-                         AND PM.PROD_ID = CP.PROD_ID
-                         AND MP.MENU_ID = C.MENU_ID
-                         AND CP.PART_PROD_ID = SHI.PROD_ID
-                         AND CP.PART_PROD_ID = P2.PROD_ID
-                         AND C.MENU_ID LIKE #{menuId}||'%'
-                         AND C.USE_YN = 'Y'
-                    <if test='menuId == "DP13"'>
-                         AND DECODE( SHI.EBOOK_SPRT_YN
-                                    , 'Y'
-                                    , DECODE( P.META_CLSF_CD
-                                            , 'CT24' -- 잡지
-                                            , DECODE( SHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                            , 'CT26' -- 인터렉티브 잡지
-                                            , DECODE( SHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                            , 1 )
-                                    , 0 ) = 1
-					</if>
-					<if test='menuId == "DP14"'>
-                         AND SHI.COMIC_SPRT_YN = 'Y'
-                    </if>
-                         AND P.SVC_GRP_CD = 'DP000203' -- 멀티미디어
-                         AND P2.SVC_GRP_CD = 'DP000203' -- 멀티미디어
-                         AND TP.PROD_STATUS_CD = 'PD000403'
-                         AND TP.EXPO_YN = 'Y'
-                         AND TP2.PROD_STATUS_CD = 'PD000403' 
-                         AND TP2.EXPO_YN = 'Y'
-                     )
-                 GROUP BY MENU_ID
-                ) P
-            WHERE C.MENU_ID = P.MENU_ID(+)
+		                AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
+		                AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+		                AND E.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+		                GROUP BY A.MENU_ID
+		            ) C
+		    WHERE A.TENANT_MENU_ID = B.MENU_ID
+		    AND A.TENANT_MENU_ID = C.MENU_ID(+)
+		    AND A.USE_YN = 'Y'
+		    AND B.USE_YN = 'Y'
+		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
+		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
+		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
+		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
+		    ORDER SIBLINGS BY EXPO_ORD
+		) A
     </select>
 
-
-    <!-- Shopping 상세 카테고리 조회 -->
-    <select id="getShoppingDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
-	    SELECT /* MenuCategoryMapper.xml, getShoppingDetailCategoryList, JuYoungYun, 2014-01-13 */
-	           COUNT(C.MENU_ID) OVER() AS TOTAL_COUNT
-	         , C.MENU_ID
-	         , C.MENU_NM
-	         , NVL(S.MENU_PROD_CNT,0) AS MENU_PROD_CNT
-	         , C.INFR_MENU_YN
-	         , C.MENU_DEPTH
-	         , C.MENU_DESC
-	      FROM      
-	        (     
-	        SELECT     
-	               MCM.MENU_ID
-	             , COUNT (*) AS MENU_PROD_CNT
-	          FROM TB_DP_SHPG_CATALOG SC
-	             , TB_DP_SHPG_BRAND TB
-	             , TB_DP_MENU_SHPG_MAPG MCM
-	         WHERE TB.BRAND_ID = SC.BRAND_ID
-	           AND SC.CATALOG_ID = MCM.CATALOG_ID
-	           AND SC.CHNL_CNT > 0
-	           AND EXISTS ( SELECT 'X'
-	                          FROM TB_DP_PROD_CATALOG_MAPG TCP -- 상품 카탈로그 매핑
-	                             , TB_DP_PROD_RSHP PRSH -- 상품 관계(채널,에피소드)
-	                             , TB_DP_SHPG_PROD SHP -- 쇼핑상품
-	                             , TB_DP_PROD P -- 상품 메인
-	                             , TB_DP_TENANT_PROD TP -- 테넌트 상품
-	                             , TB_DP_TENANT_PROD_PRICE TPP -- 테넌트 상품 가격
-	                             , TB_DP_SPRT_DEVICE SH -- 지원 기기
-	                             , TB_CM_DEVICE PHI -- 기기 정보
-	                        WHERE TCP.PROD_ID = PRSH.PROD_ID -- TB_DP_PROD_CATALOG_MAPG PROD_ID = CHANNEL ID
-	                           AND SHP.PROD_ID = PRSH.PART_PROD_ID
-	                           AND P.PROD_ID = SHP.PROD_ID
-	                           AND TP.PROD_ID = P.PROD_ID
-	                           AND TP.PROD_ID = TPP.PROD_ID
-	                           AND TP.TENANT_ID = TPP.TENANT_ID   
-	                           AND TCP.CATALOG_ID = SC.CATALOG_ID
-	                           AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
-	                           AND P.TOP_MENU_ID = #{menuId}
-	                           AND TP.PROD_STATUS_CD = 'PD000403' -- 판매중
-	                           AND TP.EXPO_YN = 'Y'
-	                           AND SHP.B2B_PROD_YN <![CDATA[<>]]> 'Y'
-	                           AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
-	                           AND SH.PROD_ID(+) = PRSH.PART_PROD_ID -- 지원기기 = 에피소드 상품 아이디
-	                           AND PHI.DEVICE_MODEL_CD = #{deviceModelCd} -- 지원기기 모델
-	                           AND PHI.USE_YN = 'Y' 
-	                           AND PHI.SCL_SHPG_SPRT_YN IN ( 'Y', 'S' ) -- 소설 쇼핑 지원여부    
-	                           AND ROWNUM <![CDATA[<=]]> 1 )
-	        GROUP BY MCM.MENU_ID
-	        ) S
-	        , 
-	        (
-	        SELECT M.MENU_ID
-	             , D.MENU_NM
-	             , D.MENU_DESC
-	             , TM.EXPO_ORD
-	             , M.MENU_DEPTH
-	             , M.UP_MENU_ID
-	             , M.INFR_MENU_YN
-	             , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
-	             , TM.BODY_FILE_SIZE AS FILE_SIZE
-	          FROM TB_DP_MENU_CATEGORY M
-	              ,TB_DP_MENU_CATEGORY_DESC D
-	              ,TB_DP_TENANT_MENU TM
-	         WHERE M.MENU_ID = D.MENU_ID
-	           AND TM.TENANT_MENU_ID = M.MENU_ID
-               AND TM.TENANT_ID = #{tenantId}
-               AND TM.SYSTEM_ID = #{systemId}
-               AND M.MENU_ID LIKE #{menuId}||'%'
-	           AND M.USE_YN = 'Y'
-	           AND D.LANG_CD = 'ko'
-	           AND TM.USE_YN = 'Y'
-	        ) C
-	     WHERE C.MENU_ID = S.MENU_ID(+)    
+    <!-- 세부 카테고리정보 조회 - 멀티미디어 -->
+    <select id="selectMultiSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
+		SELECT 
+		    COUNT(1) OVER() AS TOTAL_COUNT
+		    , A.*
+		FROM (
+		    SELECT 
+		         NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
+		        , A.TENANT_ID 
+		        , A.TENANT_MENU_ID AS MENU_ID 
+		        , A.SYSTEM_ID 
+		        , A.MENU_NM 
+		        , A.MENU_ENG_NM 
+		        , A.MENU_DESC 
+		        , A.MENU_DEPTH 
+		        , A.INFR_MENU_YN 
+		        , A.UP_MENU_ID 
+		        , A.EXPO_ORD 
+		        , A.TARGET_URL 
+		        , A.SEARCH_FILE_PATH 
+		        , A.SEARCH_FILE_NM 
+		        , A.BODY_FILE_PATH 
+		        , A.BODY_FILE_NM 
+		        , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+		        , A.MAIN_ON_FILE_PATH 
+		        , A.MAIN_ON_FILE_NM 
+		        , A.MAIN_OFF_FILE_PATH 
+		        , A.MAIN_OFF_FILE_NM 
+		        , A.RANK_FILE_PATH 
+		        , A.RANK_FILE_NM 
+		        , A.USE_YN 
+		        , A.MENU_ID_TYPE
+		        , A.REG_ID 
+		        , A.REG_DT 
+		        , A.UPD_ID 
+		        , A.UPD_DT  
+		    FROM 
+		        TB_DP_TENANT_MENU A
+		        , TB_DP_MENU_CATEGORY B
+		        , (
+		                SELECT 
+		                    A.MENU_ID
+		                    , COUNT(1) MENU_PROD_CNT
+		                FROM (
+		                    SELECT
+		                        DISTINCT A.MENU_ID, B.PROD_ID
+		                    FROM            
+		                        TB_DP_MENU_CATEGORY A
+		                        , TB_DP_MENU_CATEGORY_PROD_MAPG B
+		                        , TB_DP_PROD C /* 에피소드 상품 */
+		                        , TB_DP_TENANT_PROD D
+		                        , TB_DP_PROD_RSHP E
+		                        , TB_DP_SPRT_DEVICE F
+		                        , TB_CM_DEVICE G
+		                    WHERE A.MENU_ID = B.MENU_ID
+		                    AND B.PROD_ID = E.PROD_ID
+		                    AND E.PART_PROD_ID = C.PROD_ID
+		                    AND E.PART_PROD_ID = D.PROD_ID
+		                    AND E.PART_PROD_ID = F.PROD_ID
+		                    AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
+		                    AND A.USE_YN = 'Y'
+		                    AND B.USE_YN = 'Y'
+		                    AND G.USE_YN = 'Y'
+		                    AND D.EXPO_YN = 'Y'
+		                    AND C.SVC_GRP_CD = 'DP000203'
+		                    AND C.CONTENTS_TYPE_CD = 'PD002502'
+		                    AND D.PROD_STATUS_CD = 'PD000403'
+		                    AND E.PROD_RSHP_CD = 'DP010802'
+		                    
+		                    /* VOD */
+		                    <if test="topMenuId == 'DP17' or topMenuId == 'DP18'">
+		                    AND DECODE(NVL(C.DRM_YN, 'N'), 'N', 1, NVL(G.VIDEO_DRM_SPRT_YN, 'N'), 1, 0) = 1
+		                    </if>
+		                    
+		                    /* 이북 */
+		                    <if test="topMenuId == 'DP13'">
+		                    AND C.META_CLSF_CD IN ('CT19','CT20')
+		                    AND G.EBOOK_SPRT_YN = 'Y'
+		                    </if>
+		                    
+		                    /* 코믹 */
+		                    <if test="topMenuId == 'DP14'">
+		                    AND DECODE(C.META_CLSF_CD, 'CT21', G.COMIC_SPRT_YN, 'CT22', G.MAGAZINE_SPRT_YN) = 'Y'
+		                    </if>
+		                    
+		                    AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
+		                    AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+		                    AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = 'android_standard2') /* 단말모델코드 */
+		                ) A
+		                GROUP BY A.MENU_ID
+		            ) C
+		    WHERE A.TENANT_MENU_ID = B.MENU_ID
+		    AND A.TENANT_MENU_ID = C.MENU_ID(+)
+		    AND A.USE_YN = 'Y'
+		    AND B.USE_YN = 'Y'
+		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
+		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
+		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
+		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
+		    ORDER SIBLINGS BY EXPO_ORD
+		) A
     </select>
-    
-    
-    <!-- App 상세 카테고리 조회 -->
-    <select id="getAppDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
-        SELECT /* MenuCategoryMapper.xml, getAppDetailCategoryList, JuYoungYun, 2014-01-14 */
-               COUNT(MENU_ID) OVER() AS TOTAL_COUNT
-             , MENU_ID
-             , MENU_NM
-             , MENU_DESC
-             , MENU_DEPTH
-             , INFR_MENU_YN
-             , MENU_PROD_CNT
-             , SUM( MENU_PROD_CNT ) OVER () AS TOTAL_PROD_CNT
-             , FILE_POS
-             , FILE_SIZE
-          FROM
-             (
-              SELECT C.MENU_ID
-                   , C.MENU_NM
-                   , C.MENU_DESC
-                   , C.MENU_DEPTH
-                   , C.INFR_MENU_YN
-                   , C.UP_MENU_ID
-                   , C.EXPO_ORD
-                   , C.FILE_POS
-                   , C.FILE_SIZE
-                   , DECODE( C.INFR_MENU_YN
-                           , 'Y'
-                           , SUM( P.CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
-                           , P.CNT ) AS MENU_PROD_CNT
-                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 2, 5 )
-                                             ORDER BY C.MENU_ID
-                                                    , C.MENU_DEPTH 
-                                                    , C.EXPO_ORD
-                                                    ) AS CAT_PRIOR
-                FROM
-                (
-                    SELECT M.MENU_ID
-                         , D.MENU_NM
-                         , D.MENU_DESC
-                         , TM.EXPO_ORD
-                         , M.MENU_DEPTH
-                         , M.UP_MENU_ID
-                         , M.INFR_MENU_YN
-                         , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
-                         , TM.BODY_FILE_SIZE AS FILE_SIZE
-                      FROM TB_DP_MENU_CATEGORY M
-                          ,TB_DP_MENU_CATEGORY_DESC D
-                          ,TB_DP_TENANT_MENU TM
-                     WHERE M.MENU_ID = D.MENU_ID
-                       AND TM.TENANT_MENU_ID = M.MENU_ID
-	                   AND TM.TENANT_ID = #{tenantId}
-	                   AND TM.SYSTEM_ID = #{systemId}
-	                   AND M.MENU_ID LIKE #{menuId}||'%'
-                       AND M.MENU_DEPTH >= 1
-                       AND M.USE_YN = 'Y'
-                       AND D.LANG_CD = 'ko'
-                       AND TM.USE_YN = 'Y'
-                    )  C
-                    ,
-                    (
-                     SELECT MENU_ID
-                          , COUNT(*) AS CNT
-                       FROM
-                          (
-                            SELECT C.MENU_ID
-                                 , CP.PROD_ID AS PROD_ID
-                              FROM TB_DP_PROD P
-                                 , TB_DP_PROD_RSHP CP
-                                 , TB_DP_TENANT_PROD TP
-                                 , TB_DP_MENU_CATEGORY_PROD_MAPG MP
-                                 , TB_DP_MENU_CATEGORY C
-                                 , (SELECT SH.PROD_ID
-                                      FROM TB_DP_SPRT_DEVICE SH
-                                         , TB_CM_DEVICE PI 
-                                     WHERE SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
-                                       AND PI.DEVICE_MODEL_CD = #{deviceModelCd}
-                                       AND PI.USE_YN = 'Y') SHI  
-                                 , TB_DP_APP_PROD AP
-                             WHERE P.PROD_ID = CP.PART_PROD_ID -- 앱은 EPISODE 아이디만 존재
-                               AND TP.PROD_ID = CP.PART_PROD_ID
-                               AND MP.PROD_ID = P.PROD_ID
-                               AND AP.PROD_ID = CP.PART_PROD_ID
-                               AND MP.MENU_ID = C.MENU_ID
-                               AND CP.PART_PROD_ID = SHI.PROD_ID(+) -- 단말 지원 정책 확인 요망
-                               AND C.MENU_ID LIKE #{menuId}||'%'
-                               AND C.USE_YN = 'Y'
-                               AND P.SVC_GRP_CD = 'DP000201' -- 앱
-                               AND TP.PROD_STATUS_CD = 'PD000403' -- 판매중
-                               AND TP.EXPO_YN = 'Y'
-                           )
-                       GROUP BY MENU_ID
-                      ) P
-                  WHERE C.MENU_ID = P.MENU_ID(+)                       
-              )
-          ORDER BY CAT_PRIOR    
+
+    <!-- 세부 카테고리정보 조회 - 쇼핑 -->
+    <select id="selectShoppingSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
+		SELECT 
+		    COUNT(1) OVER() AS TOTAL_COUNT
+		    , A.*
+		FROM (
+		    SELECT 
+		         NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
+		        , A.TENANT_ID 
+		        , A.TENANT_MENU_ID AS MENU_ID 
+		        , A.SYSTEM_ID 
+		        , A.MENU_NM 
+		        , A.MENU_ENG_NM 
+		        , A.MENU_DESC 
+		        , A.MENU_DEPTH 
+		        , A.INFR_MENU_YN 
+		        , A.UP_MENU_ID 
+		        , A.EXPO_ORD 
+		        , A.TARGET_URL 
+		        , A.SEARCH_FILE_PATH 
+		        , A.SEARCH_FILE_NM 
+		        , A.BODY_FILE_PATH 
+		        , A.BODY_FILE_NM 
+		        , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+		        , A.MAIN_ON_FILE_PATH 
+		        , A.MAIN_ON_FILE_NM 
+		        , A.MAIN_OFF_FILE_PATH 
+		        , A.MAIN_OFF_FILE_NM 
+		        , A.RANK_FILE_PATH 
+		        , A.RANK_FILE_NM 
+		        , A.USE_YN 
+		        , A.MENU_ID_TYPE
+		        , A.REG_ID 
+		        , A.REG_DT 
+		        , A.UPD_ID 
+		        , A.UPD_DT  
+		    FROM 
+		        TB_DP_TENANT_MENU A
+		        , TB_DP_MENU_CATEGORY B
+		        , (
+		                SELECT 
+		                    A.MENU_ID
+		                    , COUNT(1) MENU_PROD_CNT
+		                FROM (
+		                    SELECT
+		                        DISTINCT A.MENU_ID, B.CATALOG_ID
+		                    FROM
+		                        TB_DP_MENU_CATEGORY A
+		                        , TB_DP_SHPG_CATALOG B
+		                        , TB_DP_MENU_SHPG_MAPG C
+		                        , TB_DP_PROD_CATALOG_MAPG D /* 채널 */
+		                        , TB_DP_PROD_RSHP E
+		                        , TB_DP_SHPG_PROD F /* 에피 */
+		                        , TB_DP_TENANT_PROD G /* 에피 */
+		                    WHERE 1=1
+		                    AND A.MENU_ID = C.MENU_ID
+		                    AND B.CATALOG_ID = C.CATALOG_ID
+		                    AND B.CATALOG_ID = D.CATALOG_ID
+		                    AND D.PROD_ID = E.PROD_ID
+		                    AND E.PART_PROD_ID = F.PROD_ID
+		                    AND E.PART_PROD_ID = G.PROD_ID
+		                    AND NVL(B.CHNL_CNT, 0) > 0
+		                    AND A.USE_YN ='Y'
+		                    AND C.USE_YN ='Y'
+		                    AND D.USE_YN ='Y'
+		                    AND G.EXPO_YN = 'Y'
+		                    AND NVL(F.B2B_PROD_YN, 'N') != 'Y'
+		                    AND G.PROD_STATUS_CD = 'PD000403'
+		                    AND G.TENANT_ID = #{tenantId} /* 테넌트ID */
+		                    AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+		                ) A
+		                GROUP BY A.MENU_ID
+		            ) C
+		    WHERE A.TENANT_MENU_ID = B.MENU_ID
+		    AND A.TENANT_MENU_ID = C.MENU_ID(+)
+		    AND A.USE_YN = 'Y'
+		    AND B.USE_YN = 'Y'
+		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
+		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
+		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
+		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
+		    ORDER SIBLINGS BY EXPO_ORD
+		) A
     </select>
          
 </mapper>

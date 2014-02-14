@@ -2,100 +2,133 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Menu">
     <!-- Menu 리스트 조회-->
-    <select id="selectMenuList" parameterType="MenuRequest" resultType="MenuDetailInfo">
-        SELECT 
-                COUNT(TENANT_MENU_ID) OVER() AS TOTAL_COUNT,
-                TENANT_ID  ,
-                TENANT_MENU_ID AS MENU_ID,           
-                SYSTEM_ID  ,          
-                MENU_NM     ,         
-                MENU_ENG_NM  ,        
-                MENU_DESC     ,       
-                MENU_DEPTH     ,      
-                INFR_MENU_YN    ,     
-                UP_MENU_ID       ,    
-                EXPO_ORD          ,   
-                TARGET_URL         ,  
-                SEARCH_FILE_PATH    , 
-                SEARCH_FILE_NM       ,
-                BODY_FILE_PATH       ,
-                BODY_FILE_NM         ,
-                NVL(BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE,
-                MAIN_ON_FILE_PATH    ,
-                MAIN_ON_FILE_NM      ,
-                MAIN_OFF_FILE_PATH   ,
-                MAIN_OFF_FILE_NM     ,
-                RANK_FILE_PATH       ,
-                RANK_FILE_NM         ,
-                USE_YN               ,
-                REG_ID               ,
-                REG_DT               ,
-                UPD_ID               ,
-                UPD_DT               
-               FROM TB_DP_TENANT_MENU
-              WHERE TENANT_ID = #{tenantId}
-                <if test="menuId != null">AND TENANT_MENU_ID = #{menuId}</if>
-                AND SYSTEM_ID = #{systemId}
-                AND USE_YN = 'Y'
+    <select id="selectMenuList" parameterType="MenuSacReq" resultType="Menu">
+		SELECT 
+		    COUNT(1) OVER() AS TOTAL_COUNT
+		    , A.*
+		FROM (
+		    SELECT 
+		          A.TENANT_ID 
+		        , A.TENANT_MENU_ID AS MENU_ID 
+		        , A.SYSTEM_ID 
+		        , A.MENU_NM 
+		        , A.MENU_ENG_NM 
+		        , A.MENU_DESC 
+		        , A.MENU_DEPTH 
+		        , A.INFR_MENU_YN 
+		        , A.UP_MENU_ID 
+		        , A.EXPO_ORD 
+		        , A.TARGET_URL 
+		        , A.SEARCH_FILE_PATH 
+		        , A.SEARCH_FILE_NM 
+		        , A.BODY_FILE_PATH 
+		        , A.BODY_FILE_NM 
+		        , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+		        , A.MAIN_ON_FILE_PATH 
+		        , A.MAIN_ON_FILE_NM 
+		        , A.MAIN_OFF_FILE_PATH 
+		        , A.MAIN_OFF_FILE_NM 
+		        , A.RANK_FILE_PATH 
+		        , A.RANK_FILE_NM 
+		        , A.USE_YN 
+		        , A.MENU_ID_TYPE
+		        , A.REG_ID 
+		        , A.REG_DT 
+		        , A.UPD_ID 
+		        , A.UPD_DT 
+		    FROM TB_DP_TENANT_MENU A
+		    WHERE A.TENANT_ID = #{tenantId}
+		    AND A.SYSTEM_ID = #{systemId}
+		    AND A.USE_YN = 'Y'
+		    START WITH UP_MENU_ID = '999999'
+		    CONNECT BY PRIOR TENANT_MENU_ID = UP_MENU_ID
+		    ORDER SIBLINGS BY EXPO_ORD
+		) A
     </select>
     
     <!-- Menu Detail 조회-->
-    <select id="selectMenu" parameterType="MenuRequest" resultType="MenuDetailInfo">
-        SELECT TENANT_ID  ,
-               TENANT_MENU_ID AS MENU_ID,           
-               SYSTEM_ID  ,          
-               MENU_NM     ,         
-               MENU_ENG_NM  ,        
-               MENU_DESC     ,       
-               MENU_DEPTH     ,      
-               INFR_MENU_YN    ,     
-               UP_MENU_ID       ,    
-               EXPO_ORD          ,   
-               TARGET_URL         ,  
-               SEARCH_FILE_PATH    , 
-               SEARCH_FILE_NM       ,
-               BODY_FILE_PATH       ,
-               BODY_FILE_NM         ,
-               NVL(BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE,
-               MAIN_ON_FILE_PATH    ,
-               MAIN_ON_FILE_NM      ,
-               MAIN_OFF_FILE_PATH   ,
-               MAIN_OFF_FILE_NM     ,
-               RANK_FILE_PATH       ,
-               RANK_FILE_NM         ,
-               USE_YN               ,
-               REG_ID               ,
-               REG_DT               ,
-               UPD_ID               ,
-               UPD_DT 
-          FROM TB_DP_TENANT_MENU
-         WHERE TENANT_ID = #{tenantId}
-           AND TENANT_MENU_ID = #{menuId}
-           AND SYSTEM_ID = #{systemId}
-           AND USE_YN = 'Y'
+    <select id="selectMenuDetail" parameterType="MenuSacReq" resultType="Menu">
+        SELECT 
+            COUNT(1) OVER() AS TOTAL_COUNT
+            , A.TENANT_ID 
+            , A.TENANT_MENU_ID AS MENU_ID 
+            , A.SYSTEM_ID 
+            , A.MENU_NM 
+            , A.MENU_ENG_NM 
+            , A.MENU_DESC 
+            , A.MENU_DEPTH 
+            , A.INFR_MENU_YN 
+            , A.UP_MENU_ID 
+            , A.EXPO_ORD 
+            , A.TARGET_URL 
+            , A.SEARCH_FILE_PATH 
+            , A.SEARCH_FILE_NM 
+            , A.BODY_FILE_PATH 
+            , A.BODY_FILE_NM 
+            , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+            , A.MAIN_ON_FILE_PATH 
+            , A.MAIN_ON_FILE_NM 
+            , A.MAIN_OFF_FILE_PATH 
+            , A.MAIN_OFF_FILE_NM 
+            , A.RANK_FILE_PATH 
+            , A.RANK_FILE_NM 
+            , A.USE_YN 
+            , A.MENU_ID_TYPE
+            , A.REG_ID 
+            , A.REG_DT 
+            , A.UPD_ID 
+            , A.UPD_DT 
+        FROM TB_DP_TENANT_MENU A
+        WHERE A.TENANT_ID = #{tenantId}
+        AND A.TENANT_MENU_ID = #{menuId}
+        AND A.SYSTEM_ID = #{systemId}
+        AND A.USE_YN = 'Y'
     </select>
 
     <!-- 대분류 카테고리정보 조회 -->
-    <select id="getTopCategoryList" parameterType="MenuRequest" resultType="MenuDetailInfo">
-        SELECT 
-               COUNT(M.MENU_ID) OVER() AS TOTAL_COUNT,
-               M.MENU_ID,
-               T.MENU_NM,
-               T.MENU_DESC,
-               NVL(T.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
-          FROM TB_DP_TENANT_MENU T,
-               TB_DP_MENU_CATEGORY M
-         WHERE M.MENU_ID = T.TENANT_MENU_ID
-           AND T.TENANT_ID = #{tenantId}
-           AND T.SYSTEM_ID = #{systemId}
-           AND M.MENU_DEPTH = 1
-           AND M.USE_YN = 'Y'
-           AND T.USE_YN = 'Y'
-         ORDER BY T.EXPO_ORD
+    <select id="selectTopCategoryList" parameterType="MenuSacReq" resultType="Menu">
+	    SELECT 
+	        COUNT(1) OVER() TOTAL_COUNT
+	        , A.TENANT_ID 
+	        , A.TENANT_MENU_ID AS MENU_ID 
+	        , A.SYSTEM_ID 
+	        , A.MENU_NM 
+	        , A.MENU_ENG_NM 
+	        , A.MENU_DESC 
+	        , A.MENU_DEPTH 
+	        , A.INFR_MENU_YN 
+	        , A.UP_MENU_ID 
+	        , A.EXPO_ORD 
+	        , A.TARGET_URL 
+	        , A.SEARCH_FILE_PATH 
+	        , A.SEARCH_FILE_NM 
+	        , A.BODY_FILE_PATH 
+	        , A.BODY_FILE_NM 
+	        , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+	        , A.MAIN_ON_FILE_PATH 
+	        , A.MAIN_ON_FILE_NM 
+	        , A.MAIN_OFF_FILE_PATH 
+	        , A.MAIN_OFF_FILE_NM 
+	        , A.RANK_FILE_PATH 
+	        , A.RANK_FILE_NM 
+	        , A.USE_YN
+	        , A.MENU_ID_TYPE
+	        , A.REG_ID 
+	        , A.REG_DT 
+	        , A.UPD_ID 
+	        , A.UPD_DT 
+        FROM TB_DP_TENANT_MENU A, TB_DP_MENU_CATEGORY B
+        WHERE A.TENANT_MENU_ID = B.MENU_ID
+        AND A.TENANT_ID = #{tenantId}
+        AND A.SYSTEM_ID = #{systemId}
+        AND B.MENU_DEPTH = 1
+        AND A.USE_YN = 'Y'
+        AND B.USE_YN = 'Y'
+		ORDER BY A.EXPO_ORD
     </select>
 
     <!-- 세부 카테고리정보 조회 - (카테고리별 별도의 쿼리문 존재함) - 추가 수정 필요 -->
-    <select id="getDetailCategoryList" parameterType="MenuRequest" resultType="MenuDetailInfo">
+    <select id="getDetailCategoryList" parameterType="MenuSacReq" resultType="Menu">
         SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT,
                MENU_ID,
                MENU_NM,
@@ -125,37 +158,6 @@
                  MENU_DEPTH,
                  EXPO_ORD
         ORDER BY MENU_ID, MENU_DEPTH, EXPO_ORD
-    </select>
-    
-    
-    <!-- 3depth 메뉴 조회 -->
-    <select id="getTopMenu3Detph" parameterType="MenuRequest" resultType="MenuDetailInfo">
-		SELECT M.TENANT_MENU_ID AS MENU_ID
-		  FROM TB_DP_TENANT_MENU M,
-		      (
-		        SELECT DISTINCT UP_MENU_ID
-		          FROM TB_DP_TENANT_MENU
-		         WHERE TENANT_MENU_ID IN (
-		            SELECT UP_MENU_ID
-		            FROM TB_DP_TENANT_MENU 
-		            WHERE MENU_DEPTH = 3
-		            AND TENANT_ID = #{tenantId}
-		            AND SYSTEM_ID = #{systemId}
-		            AND USE_YN = 'Y'
-		            )
-		       )S, 
-		       (SELECT MENU_ID 
-		          FROM TB_DP_MENU_CATEGORY 
-		         WHERE MENU_ID = #{menuId}
-		           AND USE_YN = 'Y') D
-		 WHERE M.TENANT_MENU_ID = S.UP_MENU_ID
-		   AND D.MENU_ID = M.TENANT_MENU_ID
-		   AND M.TENANT_ID = #{tenantId}
-		   AND M.TENANT_MENU_ID = #{menuId}
-		   AND M.SYSTEM_ID = #{systemId}
-		   AND M.MENU_DEPTH = 1
-		   AND M.USE_YN = 'Y'
-		   AND ROWNUM = 1
     </select>
 	    
 </mapper>

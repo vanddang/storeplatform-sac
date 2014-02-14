@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.menu.service.CategoryService;
-import com.skplanet.storeplatform.sac.display.menu.service.MenuListService;
+import com.skplanet.storeplatform.sac.display.menu.service.MenuService;
 
 /**
  * 
@@ -32,109 +31,67 @@ public class MenuController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private MenuListService menuListService;
+	private MenuService menuService;
 
 	@Autowired
 	private CategoryService categoryService;
 
 	/**
 	 * <pre>
-	 * 테넌트 (전체) 메뉴 목록 조회.
+	 * 테넌트 메뉴 조회.
 	 * </pre>
 	 * 
-	 * @param MenuReq
+	 * @param MenuSacReq
 	 *            requestVO
 	 * @param SacRequestHeader
 	 *            requestHeader
-	 * @return MenuListRes
+	 * @return MenuListSacRes
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuListRes searchMenuList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public MenuListSacRes searchMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchMenuList start !!");
 
-		return this.menuListService.searchMenuList(requestVO, requestHeader);
+		return this.menuService.searchMenuList(requestVO, requestHeader);
 	}
 
 	/**
 	 * <pre>
-	 * 테넌트 (세부) 메뉴 조회.
+	 * 테넌트 메뉴 상세 조회.
 	 * </pre>
 	 * 
-	 * @param MenuReq
+	 * @param MenuSacReq
 	 *            requestVO
 	 * @param SacRequestHeader
 	 *            requestHeader
-	 * @return MenuListRes
+	 * @return MenuListSacRes
 	 */
 	@RequestMapping(value = "/specific/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuListRes searchMenu(MenuReq requestVO, SacRequestHeader requestHeader) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
-
-		this.logger.debug("MenuController.searchMenu start !!");
-
-		return this.menuListService.searchMenuList(requestVO, requestHeader);
-	}
-
-	/**
-	 * <pre>
-	 * 대분류 카테고리(전시 메뉴) 조회 - Dummy.
-	 * </pre>
-	 * 
-	 * @param MenuReq
-	 *            requestVO
-	 * @param SacRequestHeader
-	 *            requestHeader
-	 * @return CategoryListRes
-	 */
-	@RequestMapping(value = "/category/list/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public CategoryListRes searchTopCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public MenuDetailSacRes searchMenuDetail(MenuSacReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		this.logger.debug("MenuController.searchTopCategoryList start !!");
+		this.logger.debug("MenuController.searchMenuDetail start !!");
 
-		return this.categoryService.searchTopCategoryList(requestVO, requestHeader);
+		return this.menuService.searchMenuDetail(requestVO, requestHeader);
 	}
 
 	/**
 	 * <pre>
-	 * 세분류 카테고리(전시 메뉴) 조회 - Dummy.
+	 * 대분류 전시 카테고리 조회.
 	 * </pre>
 	 * 
-	 * @param MenuReq
+	 * @param MenuSacReq
 	 *            requestVO
 	 * @param SacRequestHeader
 	 *            requestHeader
-	 * @return CategoryDetailRes
-	 */
-	@RequestMapping(value = "/category/subCategory/list/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public CategoryDetailListRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
-
-		this.logger.debug("MenuController.searchDetailCategoryList start !!");
-
-		return this.categoryService.searchDetailCategoryList(requestVO, requestHeader);
-	}
-
-	/**
-	 * <pre>
-	 * 대분류 카테고리(전시 메뉴) 조회.
-	 * </pre>
-	 * 
-	 * @param MenuReq
-	 *            requestVO
-	 * @param SacRequestHeader
-	 *            requestHeader
-	 * @return CategoryListRes
+	 * @return MenuListSacRes
 	 */
 	@RequestMapping(value = "/category/top/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryListRes searchTopMenuList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public MenuListSacRes searchTopMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchTopMenuList start !!");
@@ -144,18 +101,18 @@ public class MenuController {
 
 	/**
 	 * <pre>
-	 * 세분류 카테고리(전시 메뉴) 조회.
+	 * 세부분류 전시 카테고리 조회.
 	 * </pre>
 	 * 
-	 * @param MenuReq
+	 * @param MenuSacReq
 	 *            requestVO
 	 * @param SacRequestHeader
 	 *            requestHeader
-	 * @return CategoryDetailRes
+	 * @return MenuListSacRes
 	 */
 	@RequestMapping(value = "/category/sub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryDetailListRes searchDetailMenuList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public MenuListSacRes searchDetailMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchSubCategoryList start !!");
