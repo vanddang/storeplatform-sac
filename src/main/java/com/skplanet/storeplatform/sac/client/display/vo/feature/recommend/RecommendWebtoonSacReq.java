@@ -32,98 +32,302 @@ public class RecommendWebtoonSacReq extends CommonInfo {
 	private Integer offset = 1; // offset
 	private Integer count = 20; // count
 
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 아이디.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getTenantId() {
 		return this.tenantId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 아이디.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            tenantId
+	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시스템 아이디.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getSystemId() {
 		return this.systemId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시스템 아이디.
+	 * </pre>
+	 * 
+	 * @param systemId
+	 *            systemId
+	 */
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 이미지 코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getImageCd() {
 		return this.imageCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 이미지 코드.
+	 * </pre>
+	 * 
+	 * @param imageCd
+	 *            imageCd
+	 */
 	public void setImageCd(String imageCd) {
 		this.imageCd = imageCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 아이디.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getMenuId() {
 		return this.menuId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 아이디.
+	 * </pre>
+	 * 
+	 * @param menuId
+	 *            menuId
+	 */
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상위 메뉴 아이디.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getUpMenuId() {
 		return this.upMenuId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상위 메뉴 아이디.
+	 * </pre>
+	 * 
+	 * @param upMenuId
+	 *            upMenuId
+	 */
 	public void setUpMenuId(String upMenuId) {
 		this.upMenuId = upMenuId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 리스트 아이디.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getListId() {
 		return this.listId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 리스트 아이디.
+	 * </pre>
+	 * 
+	 * @param listId
+	 *            listId
+	 */
 	public void setListId(String listId) {
 		this.listId = listId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 요일 구분 코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getWeekDayCd() {
 		return this.weekDayCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 요일 구분 코드.
+	 * </pre>
+	 * 
+	 * @param weekDayCd
+	 *            weekDayCd
+	 */
 	public void setWeekDayCd(String weekDayCd) {
 		this.weekDayCd = weekDayCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 배치완료일자.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getStdDt() {
 		return this.stdDt;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 배치완료일자.
+	 * </pre>
+	 * 
+	 * @param stdDt
+	 *            stdDt
+	 */
 	public void setStdDt(String stdDt) {
 		this.stdDt = stdDt;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 단말모델명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getDeviceModelCd() {
 		return this.deviceModelCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 단말모델명.
+	 * </pre>
+	 * 
+	 * @param deviceModelCd
+	 *            deviceModelCd
+	 */
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 언어코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getLangCd() {
 		return this.langCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 언어코드.
+	 * </pre>
+	 * 
+	 * @param langCd
+	 *            langCd
+	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * offset.
+	 * </pre>
+	 * 
+	 * @return int
+	 */
 	public Integer getOffset() {
 		return this.offset;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * offset.
+	 * </pre>
+	 * 
+	 * @param offset
+	 *            offset
+	 */
 	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * count.
+	 * </pre>
+	 * 
+	 * @return int
+	 */
 	public Integer getCount() {
 		return this.count;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * count.
+	 * </pre>
+	 * 
+	 * @param count
+	 *            count
+	 */
 	public void setCount(Integer count) {
 		this.count = count;
 	}

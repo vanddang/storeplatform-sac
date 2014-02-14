@@ -29,18 +29,32 @@ public class RecommendWebtoonSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private List<Product> productList;
 
+	/**
+	 * @return the productList
+	 */
 	public List<Product> getProductList() {
 		return this.productList;
 	}
 
+	/**
+	 * @param productList
+	 *            the productList to set
+	 */
 	public void setProductList(List<Product> productList) {
 		this.productList = productList;
 	}
 
+	/**
+	 * @return the commonResponse
+	 */
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
+	/**
+	 * @param commonResponse
+	 *            the commonResponse to set
+	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
