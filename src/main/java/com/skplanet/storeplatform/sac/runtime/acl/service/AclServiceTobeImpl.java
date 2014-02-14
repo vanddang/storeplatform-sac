@@ -60,7 +60,7 @@ public class AclServiceTobeImpl implements AclServiceTobe {
 	 */
 	@Override
 	public void authorize(@Header("httpHeaders") HttpHeaders header) {
-		this.authorizationService.authorization(header);
+		this.authorizationService.authorize(header);
 	}
 
 }

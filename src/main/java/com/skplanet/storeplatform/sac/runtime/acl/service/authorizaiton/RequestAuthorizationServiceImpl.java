@@ -15,6 +15,7 @@ import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -29,16 +30,18 @@ public class RequestAuthorizationServiceImpl implements RequestAuthorizationServ
     private AclDbAccessService dbAccessService;
 
     @Override
-    public void authorization(HttpHeaders httpHeaders) {
+    public void authorize(HttpHeaders httpHeaders) {
         Tenant tenant = this.dbAccessService.selectTenantByAuthKey(httpHeaders.getAuthKey());
         String tenantId = tenant.getTenantId();
 
         String interfaceStatus = this.dbAccessService.selectInterfaceStatus(tenantId, httpHeaders.getInterfaceId());
 
-        if(interfaceStatus == null)
+        if(StringUtils.isEmpty(interfaceStatus))
             throw new StorePlatformException("SAC_CMN_0061");
 
         if(!StringUtil.equals(interfaceStatus, CommonConstants.INTERFACE_STAT_OK))
             throw new StorePlatformException("SAC_CMN_0062");
+
+        // TODO Flow에도 실패 케이스 명시할 것
     }
 }

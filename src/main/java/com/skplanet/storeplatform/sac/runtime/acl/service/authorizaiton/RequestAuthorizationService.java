@@ -24,5 +24,5 @@ public interface RequestAuthorizationService {
      * systemId, interfaceId에 해당하는 인가 정보를 확인하여 액세스가 가능한지 확인한다.
      * @param httpHeaders
      */
-    public void authorization(HttpHeaders httpHeaders);
+    public void authorize(HttpHeaders httpHeaders);
 }
