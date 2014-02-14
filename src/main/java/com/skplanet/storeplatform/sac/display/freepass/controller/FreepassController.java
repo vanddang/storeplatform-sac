@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
  * Updated on : 2014. 2. 07. Updated by : 서영배, GTSOFT.
  */
 @Controller
-@RequestMapping("/display/freepass")
+@RequestMapping("/display/category/freepass")
 public class FreepassController {
 	private transient Logger logger = LoggerFactory.getLogger(FreepassController.class);
 
