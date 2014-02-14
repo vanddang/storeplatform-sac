@@ -849,6 +849,9 @@
 		                   AND C.MENU_ID = D.MENU_ID
 		                   AND D.USE_YN = 'Y'
 		                   AND D.TOP_MENU_ID = #{topMenuId}
+                           <if test='menuId != null and menuId != ""'>
+                           AND D.MENU_ID = #{menuId}
+                           </if>
 		                   AND C.PROD_ID = E.PROD_ID
 		                   AND E.CONTENTS_TYPE_CD = 'PD002502'
 		                   <if test='prodCharge == "Y"'>
