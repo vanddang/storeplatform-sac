@@ -750,6 +750,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday()); // 인증 일시
 			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
+			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
 			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
 		} else if (obj instanceof CreateByAgreementReq) {
@@ -772,6 +773,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss")); // 인증 일시
 			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
+			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
 			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
 		} else if (obj instanceof CreateBySimpleReq) {
@@ -794,6 +796,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss")); // 인증 일시
 			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
+			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
 			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
 		}
