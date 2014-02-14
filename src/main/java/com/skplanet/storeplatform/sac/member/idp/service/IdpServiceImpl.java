@@ -31,6 +31,8 @@ import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
@@ -1816,32 +1818,31 @@ public class IdpServiceImpl implements IdpService {
 
 		try {
 
-			/* 회원 정보 조회 */
+			/* 회원 유무 조회 */
 			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 			KeySearch key = new KeySearch();
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			key.setKeyString(mdn);
 			keySearchList.add(key);
-			SearchUserRequest schUserReq = new SearchUserRequest();
-			schUserReq.setCommonRequest(commonRequest);
-			schUserReq.setKeySearchList(keySearchList);
-			SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
-			/* 유통망 추천앱 스케줄 저장 */
-			UpdateUserMbrSegmentRequest req = new UpdateUserMbrSegmentRequest();
-			req.setCommonRequest(commonRequest);
-			UserMbrSegment userMbrSegment = new UserMbrSegment();
-			userMbrSegment.setDeviceID(mdn);
-			userMbrSegment.setSvcMangNum(svcMngNum);
-			userMbrSegment.setUserKey(schUserRes.getUserKey());
-			userMbrSegment.setEcgNumber(min);
-			req.setUserMbrSegment(userMbrSegment);
-			this.userSCI.updateUserMbrSegment(req);
+			CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
+			chkDupReq.setCommonRequest(commonRequest);
+			chkDupReq.setKeySearchList(keySearchList);
 
-		} catch (StorePlatformException ex) {
+			CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
 
-			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-
+			if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
+				/* 유통망 추천앱 스케줄 저장 */
+				UpdateUserMbrSegmentRequest req = new UpdateUserMbrSegmentRequest();
+				req.setCommonRequest(commonRequest);
+				UserMbrSegment userMbrSegment = new UserMbrSegment();
+				userMbrSegment.setDeviceID(mdn);
+				userMbrSegment.setSvcMangNum(svcMngNum);
+				userMbrSegment.setUserKey(chkDupRes.getUserMbr().getUserKey());
+				userMbrSegment.setEcgNumber(min);
+				req.setUserMbrSegment(userMbrSegment);
+				this.userSCI.updateUserMbrSegment(req);
+			} else {
 				/* 비회원인 경우 */
 				UpdateNonMbrSegmentRequest req = new UpdateNonMbrSegmentRequest();
 				req.setCommonRequest(commonRequest);
@@ -1850,18 +1851,13 @@ public class IdpServiceImpl implements IdpService {
 				nonMbrSegment.setSvcMangNum(svcMngNum);
 				req.setNonMbrSegment(nonMbrSegment);
 				this.userSCI.updateNonMbrSegment(req);
-
-			} else {
-				return this.FAIL_STR;
 			}
 
-		}
+		} catch (StorePlatformException ex) {
 
-		// Ø 유통망 추천앱 스캐줄 저장
-		//
-		// - TBL_DIST_RECOM_APP_SCHEDULE
-		//
-		// - TBL_SEGMENT_NON_MEMBERS
+			return this.FAIL_STR;
+
+		}
 
 		return this.SUCCESS_STR;
 	}
