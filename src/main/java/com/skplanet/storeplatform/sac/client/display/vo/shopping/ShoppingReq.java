@@ -46,6 +46,7 @@ public class ShoppingReq extends CommonInfo {
 	private String specialProdId; // 특가상품 ID
 	private String deviceKey; // 디바이스키
 	private String userKey; // 사용자고유키
+	private String virtualDeviceModelNo; // android_standard2
 
 	private Integer offset; // offset
 	private Integer count; // count
@@ -333,6 +334,21 @@ public class ShoppingReq extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	/**
+	 * @return the virtualDeviceModelNo
+	 */
+	public String getVirtualDeviceModelNo() {
+		return this.virtualDeviceModelNo;
+	}
+
+	/**
+	 * @param virtualDeviceModelNo
+	 *            the virtualDeviceModelNo to set
+	 */
+	public void setVirtualDeviceModelNo(String virtualDeviceModelNo) {
+		this.virtualDeviceModelNo = virtualDeviceModelNo;
 	}
 
 }
