@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.purchase.constant;
 
+
 /**
  * 구매 관련 상수
  * 
@@ -72,6 +73,19 @@ public final class PurchaseConstants {
 	public static final String POLICY_ID_009 = "policy009"; // 유료상품유료결제구매취소정책
 	public static final String POLICY_ID_010 = "policy010"; // 유료상품무료결제구매취소정책
 	public static final String POLICY_ID_011 = "policy011"; // 무료상품구매취소정책
+
+	// 테넌트 정책 처리 패턴 코드
+	public static final String POLICY_PATTERN_SKT_PRCHS_LIMIT = "CM011601"; // SKT후불 구매결제 한도제한
+	public static final String POLICY_PATTERN_SKT_RECV_LIMIT = "CM011602"; // SKT후불 선물수신 한도제한
+	public static final String POLICY_PATTERN_CORP_DEVICE = "CM011603"; // 법인명의 제한
+	public static final String POLICY_PATTERN_SKT_TEST_DEVICE = "CM011604"; // 시험폰 결제 허용
+	public static final String POLICY_PATTERN_STORE_TEST_DEVICE = "CM011605"; // 비과금 결제 허용
+	public static final String POLICY_PATTERN_PRCHSHST_DEVICE = "CM011606"; // Device기반 구매내역 관리처리
+	public static final String POLICY_PATTERN_ADMIN_CANCEL_CHARGED = "CM011607"; // 유료상품 Admin 결제취소 허용
+	public static final String POLICY_PATTERN_USER_CANCEL_CHARGED = "CM011608"; // 유료상품 사용자 결제취소 허용
+	public static final String POLICY_PATTERN_ADMIN_CANCEL_FREE = "CM011609"; // 무료상품 Admin 결제취소 허용
+	public static final String POLICY_PATTERN_USER_CANCEL_FREE = "CM011610"; // 무료상품 사용자 결제취소 허용
+	public static final String POLICY_PATTERN_MEMBER_BLOCK_CD = "CM011611"; // 회원Part 구매차단 코드
 
 	/**
 	 * 자동 구매 해지 상태 코드

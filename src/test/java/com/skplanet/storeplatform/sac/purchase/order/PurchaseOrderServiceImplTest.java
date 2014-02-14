@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +27,11 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSac
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyMember;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
  * 
@@ -50,7 +52,7 @@ public class PurchaseOrderServiceImplTest {
 	private PurchaseOrderPolicyService purchasePolicyService;
 
 	CreatePurchaseSacReq createPurchaseReq;
-	PurchaseOrder purchaseInfo;
+	PurchaseOrderInfo purchaseInfo;
 
 	/**
 	 */
@@ -70,11 +72,11 @@ public class PurchaseOrderServiceImplTest {
 		this.createPurchaseReq.setResultUrl("http://localhost:8080/tenant/completePurchase");
 
 		List<CreatePurchaseSacReqProduct> productList = new ArrayList<CreatePurchaseSacReqProduct>();
-		productList.add(new CreatePurchaseSacReqProduct("0000044819", "DP000201", 0.0, 1));
-		productList.add(new CreatePurchaseSacReqProduct("0000044820", "DP000201", 0.0, 1));
+		productList.add(new CreatePurchaseSacReqProduct("0000044819", "DP150101", 0.0, 1));
+		productList.add(new CreatePurchaseSacReqProduct("0000044820", "DP150101", 0.0, 1));
 		this.createPurchaseReq.setProductList(productList);
 
-		this.purchaseInfo = new PurchaseOrder(this.createPurchaseReq);
+		this.purchaseInfo = new PurchaseOrderInfo(this.createPurchaseReq);
 		this.purchaseInfo.setTenantId("S01"); // 구매(선물발신) 테넌트 ID
 		this.purchaseInfo.setSystemId("S01-01002"); // 구매(선물발신) 시스템 ID
 		this.purchaseInfo.setUserKey(this.createPurchaseReq.getUserKey()); // 구매(선물발신) 내부 회원 번호
@@ -113,6 +115,43 @@ public class PurchaseOrderServiceImplTest {
 
 			dummyProductList.add(product);
 		}
+
+		DummyMember user = new DummyMember();
+		user.setTenantId(tenantId);
+		user.setSystemId(systemId);
+		user.setUserKey(this.purchaseInfo.getUserKey());
+		user.setUserId("testid01");
+		user.setDeviceKey(this.purchaseInfo.getDeviceKey());
+		user.setDeviceId("01046353524");
+		user.setDeviceModelCd("SHV-E210S");
+		user.setUserTypeCd("US011501"); // 사용자 구분 코드 - US011501 : 기기 사용자 - US011502 : IDP 사용자 - US011503 : OneID 사용자 -
+										// null : Tstore 회원 아님
+		user.setUserStatusCd("US010701"); // 회원상태코드: US010701-정상, US010702-탈퇴, US010703-대기(가가입), US010704-가입,
+										  // US010705-전환, US010706 : 탈퇴 - US010707-승인대기
+		user.setAge(20);
+		user.setbLogin(true);
+
+		this.purchaseInfo.setPurchaseMember(user);
+
+		if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, this.purchaseInfo.getPrchsCaseCd())) {
+			user = new DummyMember();
+			user.setTenantId(tenantId);
+			user.setSystemId(systemId);
+			user.setUserKey(this.purchaseInfo.getRecvUserKey());
+			user.setUserId("testid01");
+			user.setDeviceKey(this.purchaseInfo.getRecvDeviceKey());
+			user.setDeviceId("01046353524");
+			user.setDeviceModelCd("SHV-E210S");
+			user.setUserTypeCd("US011501"); // 사용자 구분 코드 - US011501 : 기기 사용자 - US011502 : IDP 사용자 - US011503 : OneID 사용자
+											// -
+											// null : Tstore 회원 아님
+			user.setUserStatusCd("US010701"); // 회원상태코드: US010701-정상, US010702-탈퇴, US010703-대기(가가입), US010704-가입,
+											  // US010705-전환, US010706 : 탈퇴 - US010707-승인대기
+			user.setAge(20);
+			user.setbLogin(true);
+
+			this.purchaseInfo.setRecvMember(user);
+		}
 	}
 
 	/**
@@ -125,7 +164,7 @@ public class PurchaseOrderServiceImplTest {
 	 */
 	@Test
 	public void checkPurchase() throws Exception {
-		this.purchasePolicyService.checkPolicy(this.purchaseInfo);
+		this.purchasePolicyService.checkTenantPolicy(this.purchaseInfo);
 
 	}
 
@@ -138,9 +177,9 @@ public class PurchaseOrderServiceImplTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Test
+	// @Test
 	public void freePurchaseInsert() throws Exception {
-		// this.purchaseOrderService.freePurchase(this.purchaseInfo);
+		this.purchaseOrderService.createFreePurchase(this.purchaseInfo);
 	}
 
 	/**
@@ -152,8 +191,8 @@ public class PurchaseOrderServiceImplTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Test
+	// @Test
 	public void reservePurchase() throws Exception {
-		// this.purchaseOrderService.reservePurchase(this.purchaseInfo);
+		this.purchaseOrderService.createReservedPurchase(this.purchaseInfo);
 	}
 }

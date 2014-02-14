@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
  * 
@@ -22,11 +22,12 @@ public interface PurchaseOrderPolicyService {
 	/**
 	 * 
 	 * <pre>
-	 * 제한정책 체크.
+	 * 테넌트 정책 체크.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매주문 정보
 	 */
-	public void checkPolicy(PurchaseOrder purchaseOrderInfo);
+	public void checkTenantPolicy(PurchaseOrderInfo purchaseOrderInfo);
+
 }

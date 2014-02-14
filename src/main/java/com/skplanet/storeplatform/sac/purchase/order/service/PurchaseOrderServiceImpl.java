@@ -46,7 +46,7 @@ import com.skplanet.storeplatform.sac.other.common.CryptUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
  * 
@@ -83,24 +83,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				+ tempProdId.substring(7) + (int) (Math.random() * 1000);
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 무료구매 처리.
-	 * </pre>
-	 * 
-	 * @param purchaseOrderInfo
-	 *            구매요청 정보
-	 */
-	@Override
-	public void createFreePurchase(PurchaseOrder purchaseOrderInfo) {
-		this.logger.debug("PRCHS,ORDER,FREE,START,{}", purchaseOrderInfo);
-
-		// 구매ID 생성
-		String prchsId = this.makePrchsId(purchaseOrderInfo.getPrchsReqPathCd(), purchaseOrderInfo.getProductList()
-				.get(0).getProdId());
-		purchaseOrderInfo.setPrchsId(prchsId);
-
+	private List<PrchsDtl> makeRequestPrchsDtlList(PurchaseOrderInfo purchaseOrderInfo) {
 		// 구매상세 이력 저장 데이터 세팅
 		List<PrchsDtl> prchsDtlList = new ArrayList<PrchsDtl>();
 		PrchsDtl prchsDtl = null;
@@ -112,79 +95,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				prchsDtl.setPrchsDtlId(prchsDtlCnt++);
 
 				prchsDtl.setTenantId(purchaseOrderInfo.getTenantId());
-				prchsDtl.setPrchsId(prchsId);
-				prchsDtl.setUseTenantId(purchaseOrderInfo.getTenantId());
-				prchsDtl.setUseInsdUsermbrNo(purchaseOrderInfo.getUserKey());
-				prchsDtl.setUseInsdDeviceId(purchaseOrderInfo.getDeviceKey());
-				prchsDtl.setTotAmt(purchaseOrderInfo.getRealTotAmt());
-				prchsDtl.setPrchsReqPathCd(purchaseOrderInfo.getPrchsReqPathCd());
-				prchsDtl.setClientIp(purchaseOrderInfo.getClientIp());
-				prchsDtl.setHidingYn("N");
-				prchsDtl.setRegId(purchaseOrderInfo.getSystemId());
-				prchsDtl.setUpdId(purchaseOrderInfo.getSystemId());
-				prchsDtl.setPrchsCaseCd(purchaseOrderInfo.getPrchsCaseCd());
-				prchsDtl.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN); // TAKTODO
-
-				prchsDtl.setProdId(product.getProdId());
-				prchsDtl.setProdAmt(product.getProdAmt());
-				prchsDtl.setProdQty(product.getProdQty());
-				prchsDtl.setTenantProdGrpCd(product.getTenantProdGrpCd());
-				prchsDtl.setRePrchsPmtYn(product.getbDupleProd() ? "Y" : "N");
-				prchsDtl.setResvCol01(product.getResvCol01());
-				prchsDtl.setResvCol02(product.getResvCol02());
-				prchsDtl.setResvCol03(product.getResvCol03());
-				prchsDtl.setResvCol04(product.getResvCol04());
-				prchsDtl.setResvCol05(product.getResvCol05());
-				prchsDtl.setUseExprDt("20991231235959");
-				prchsDtl.setDwldExprDt("20991231235959");
-
-				prchsDtlList.add(prchsDtl);
-			}
-		}
-
-		// 구매완료 생성 요청
-		CreateCompletedPurchaseScReq req = new CreateCompletedPurchaseScReq();
-		req.setNetworkTypeCd(purchaseOrderInfo.getNetworkTypeCd());
-		req.setCurrencyCd(purchaseOrderInfo.getCurrencyCd());
-		req.setPrchsDtlList(prchsDtlList);
-
-		CreateCompletedPurchaseScRes res = this.purchaseOrderSCI.createCompletedPurchase(req);
-		this.logger.debug("PRCHS,ORDER,FREE,END,{}", res.getCount());
-		if (res.getCount() < 1 || res.getCount() != prchsDtlList.size()) {
-			throw new StorePlatformException("SAC_PUR_0001", "구매요청 처리 중 에러 발생");
-		}
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 유료구매 - 구매예약.
-	 * </pre>
-	 * 
-	 * @param purchaseOrderInfo
-	 *            구매요청 정보
-	 */
-	@Override
-	public void createReservedPurchase(PurchaseOrder purchaseOrderInfo) {
-		this.logger.debug("PRCHS,ORDER,RESERVE,START,{}", purchaseOrderInfo);
-
-		// 구매ID 생성
-		String prchsId = this.makePrchsId(purchaseOrderInfo.getPrchsReqPathCd(), purchaseOrderInfo.getProductList()
-				.get(0).getProdId());
-		purchaseOrderInfo.setPrchsId(prchsId);
-
-		// 구매상세 이력 저장 데이터 세팅
-		List<PrchsDtl> prchsDtlList = new ArrayList<PrchsDtl>();
-		PrchsDtl prchsDtl = null;
-		int prchsDtlCnt = 1, i = 0;
-		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
-			for (i = 0; i < product.getProdQty(); i++) {
-				prchsDtl = new PrchsDtl();
-
-				prchsDtl.setPrchsDtlId(prchsDtlCnt++);
-
-				prchsDtl.setTenantId(purchaseOrderInfo.getTenantId());
-				prchsDtl.setPrchsId(prchsId);
+				prchsDtl.setPrchsId(purchaseOrderInfo.getPrchsId());
 				if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(purchaseOrderInfo.getPrchsCaseCd())) {
 					prchsDtl.setUseTenantId(purchaseOrderInfo.getRecvTenantId());
 					prchsDtl.setUseInsdUsermbrNo(purchaseOrderInfo.getRecvUserKey());
@@ -222,7 +133,69 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
-		// 구매예약
+		return prchsDtlList;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 무료구매 처리.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매요청 정보
+	 */
+	@Override
+	public void createFreePurchase(PurchaseOrderInfo purchaseOrderInfo) {
+		this.logger.debug("PRCHS,ORDER,FREE,START,{}", purchaseOrderInfo);
+
+		// 구매ID 생성
+		if (StringUtils.isBlank(purchaseOrderInfo.getPrchsId())) {
+			String prchsId = this.makePrchsId(purchaseOrderInfo.getPrchsReqPathCd(), purchaseOrderInfo.getProductList()
+					.get(0).getProdId());
+			purchaseOrderInfo.setPrchsId(prchsId);
+		}
+
+		// 구매상세 이력 저장 데이터 세팅
+		List<PrchsDtl> prchsDtlList = this.makeRequestPrchsDtlList(purchaseOrderInfo);
+
+		// 구매완료 생성 요청
+		CreateCompletedPurchaseScReq req = new CreateCompletedPurchaseScReq();
+		req.setNetworkTypeCd(purchaseOrderInfo.getNetworkTypeCd());
+		req.setCurrencyCd(purchaseOrderInfo.getCurrencyCd());
+		req.setPrchsDtlList(prchsDtlList);
+
+		CreateCompletedPurchaseScRes res = this.purchaseOrderSCI.createCompletedPurchase(req);
+		this.logger.debug("PRCHS,ORDER,FREE,END,{}", res.getCount());
+		if (res.getCount() < 1 || res.getCount() != prchsDtlList.size()) {
+			throw new StorePlatformException("SAC_PUR_0001", "구매요청 처리 중 에러 발생");
+		}
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 유료구매 - 구매예약.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매요청 정보
+	 */
+	@Override
+	public void createReservedPurchase(PurchaseOrderInfo purchaseOrderInfo) {
+		this.logger.debug("PRCHS,ORDER,RESERVE,START,{}", purchaseOrderInfo);
+
+		// 구매ID 생성
+		if (StringUtils.isBlank(purchaseOrderInfo.getPrchsId())) {
+			String prchsId = this.makePrchsId(purchaseOrderInfo.getPrchsReqPathCd(), purchaseOrderInfo.getProductList()
+					.get(0).getProdId());
+			purchaseOrderInfo.setPrchsId(prchsId);
+		}
+
+		// 구매상세 이력 저장 데이터 세팅
+		List<PrchsDtl> prchsDtlList = this.makeRequestPrchsDtlList(purchaseOrderInfo);
+
+		// 구매예약 생성 요청
 		ReservePurchaseScReq reservePurchaseReqSC = new ReservePurchaseScReq();
 		reservePurchaseReqSC.setPrchsDtlList(prchsDtlList);
 
@@ -423,7 +396,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 *            구매요청 정보
 	 */
 	@Override
-	public void setPaymentPageInfo(PurchaseOrder purchaseOrderInfo) {
+	public void setPaymentPageInfo(PurchaseOrderInfo purchaseOrderInfo) {
 		this.logger.debug("PRCHS,ORDER,SET_PAYPAGE,START,{}", purchaseOrderInfo);
 
 		purchaseOrderInfo.setPaymentPageUrl(DUMMY_PP_PAYMENT_PAGE_URL);
@@ -441,7 +414,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @param purchaseOrderInfo
 	 * @return
 	 */
-	private String makeEncryptedPaymentParameter(PurchaseOrder purchaseOrderInfo) {
+	private String makeEncryptedPaymentParameter(PurchaseOrderInfo purchaseOrderInfo) {
 
 		String useUserKey = null;
 		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(purchaseOrderInfo.getPrchsCaseCd())) {
@@ -494,7 +467,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		try {
 			token = Base64.encodeBase64String(MessageDigest.getInstance("MD5").digest(token.getBytes()));
 		} catch (NoSuchAlgorithmException e) {
-			// TODO::
+			// TAKTODO::
 			;
 		}
 		param.setToken(token);

@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
  * 
@@ -22,24 +22,13 @@ public interface PurchaseOrderValidationService {
 	/**
 	 * 
 	 * <pre>
-	 * 구매요청 전체적인 적합성 체크: 회원/상품/구매 적합성 체크.
-	 * </pre>
-	 * 
-	 * @param purchaseOrderInfo
-	 *            구매 주문 정보
-	 */
-	public void validate(PurchaseOrder purchaseOrderInfo);
-
-	/**
-	 * 
-	 * <pre>
 	 * 회원 적합성 체크.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
 	 */
-	public void validateMember(PurchaseOrder purchaseOrderInfo);
+	public void validateMember(PurchaseOrderInfo purchaseOrderInfo);
 
 	/**
 	 * 
@@ -50,7 +39,7 @@ public interface PurchaseOrderValidationService {
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
 	 */
-	public void validateProduct(PurchaseOrder purchaseOrderInfo);
+	public void validateProduct(PurchaseOrderInfo purchaseOrderInfo);
 
 	/**
 	 * 
@@ -61,6 +50,6 @@ public interface PurchaseOrderValidationService {
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
 	 */
-	public void validatePurchase(PurchaseOrder purchaseOrderInfo);
+	public void validatePurchase(PurchaseOrderInfo purchaseOrderInfo);
 
 }

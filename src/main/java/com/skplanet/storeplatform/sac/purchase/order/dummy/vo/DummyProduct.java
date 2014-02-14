@@ -36,6 +36,9 @@ public class DummyProduct extends CommonInfo {
 	private boolean bMdnProd; // MDN 기반 상품 여부: true-MDN기반상품, false-ID기반상품
 	private boolean bSupport; // 단말 지원 상품 여부
 
+	private String couponCode;
+	private String itemCode;
+
 	// REQ
 	private int prodQty; // 구매 수량
 	private String tenantProdGrpCd;
@@ -375,6 +378,36 @@ public class DummyProduct extends CommonInfo {
 	 */
 	public void setResvCol05(String resvCol05) {
 		this.resvCol05 = resvCol05;
+	}
+
+	/**
+	 * @return the couponCode
+	 */
+	public String getCouponCode() {
+		return this.couponCode;
+	}
+
+	/**
+	 * @param couponCode
+	 *            the couponCode to set
+	 */
+	public void setCouponCode(String couponCode) {
+		this.couponCode = couponCode;
+	}
+
+	/**
+	 * @return the itemCode
+	 */
+	public String getItemCode() {
+		return this.itemCode;
+	}
+
+	/**
+	 * @param itemCode
+	 *            the itemCode to set
+	 */
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
 	}
 
 }

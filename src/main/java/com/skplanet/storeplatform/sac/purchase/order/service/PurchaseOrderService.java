@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
  * 
@@ -31,7 +31,7 @@ public interface PurchaseOrderService {
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 */
-	public void createFreePurchase(PurchaseOrder purchaseOrderInfo);
+	public void createFreePurchase(PurchaseOrderInfo purchaseOrderInfo);
 
 	/**
 	 * 
@@ -42,7 +42,7 @@ public interface PurchaseOrderService {
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 */
-	public void createReservedPurchase(PurchaseOrder purchaseOrderInfo);
+	public void createReservedPurchase(PurchaseOrderInfo purchaseOrderInfo);
 
 	/**
 	 * 
@@ -99,5 +99,5 @@ public interface PurchaseOrderService {
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 */
-	public void setPaymentPageInfo(PurchaseOrder purchaseOrderInfo);
+	public void setPaymentPageInfo(PurchaseOrderInfo purchaseOrderInfo);
 }

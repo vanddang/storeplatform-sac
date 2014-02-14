@@ -23,7 +23,7 @@ import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
  * 
  * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
  */
-public class PurchaseOrder extends CommonInfo {
+public class PurchaseOrderInfo extends CommonInfo {
 	private static final long serialVersionUID = 201401101L;
 
 	private final CreatePurchaseSacReq createPurchaseReq;
@@ -67,7 +67,7 @@ public class PurchaseOrder extends CommonInfo {
 	 * @param createPurchaseReq
 	 *            createPurchaseReq
 	 */
-	public PurchaseOrder(CreatePurchaseSacReq createPurchaseReq) {
+	public PurchaseOrderInfo(CreatePurchaseSacReq createPurchaseReq) {
 		this.createPurchaseReq = createPurchaseReq;
 	}
 

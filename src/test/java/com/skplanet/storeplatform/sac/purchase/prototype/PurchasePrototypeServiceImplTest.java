@@ -14,8 +14,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -37,7 +35,6 @@ import com.skplanet.storeplatform.sac.purchase.prototype.service.PurchasePrototy
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class PurchasePrototypeServiceImplTest {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private PurchasePrototypeService purchasePrototypeService;
@@ -64,8 +61,6 @@ public class PurchasePrototypeServiceImplTest {
 		paramVO.setEndRow(100);
 
 		this.purchasePrototypeService.searchPurchaseList(paramVO);
-
-		this.logger.debug("dummy");
 	}
 
 	/**

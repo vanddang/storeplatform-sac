@@ -27,6 +27,7 @@ public class DummyMember extends CommonInfo {
 	private String userId; // 회원 ID
 	private String deviceKey; // 내부 디바이스 ID
 	private String deviceId; // MDN, MAC 등등
+	private String deviceModelCd; // 디바이스 모델 코드
 	private String userTypeCd; // 사용자 구분 코드: US011501-기기 사용자, US011502-IDP 사용자, US011503-OneID 사용자, null-Tstore 회원 아님
 	private String userStatusCd; // 회원상태코드: US010701-정상, US010702-탈퇴, US010703-대기(가가입), US010704-가입, US010705-전환,
 								 // US010706 : 탈퇴 - US010707-승인대기
@@ -121,6 +122,21 @@ public class DummyMember extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return the deviceModelCd
+	 */
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	/**
+	 * @param deviceModelCd
+	 *            the deviceModelCd to set
+	 */
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
 	}
 
 	/**

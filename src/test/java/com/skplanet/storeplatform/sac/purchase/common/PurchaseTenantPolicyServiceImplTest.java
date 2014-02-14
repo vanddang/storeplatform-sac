@@ -9,12 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.purchase.common;
 
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+
 import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,8 +36,6 @@ import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class PurchaseTenantPolicyServiceImplTest {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
 	@Autowired
 	private PurchaseTenantPolicyService policyService;
 
@@ -53,7 +52,10 @@ public class PurchaseTenantPolicyServiceImplTest {
 		String tenantProdGrpCd = "DP150123";
 		List<PurchaseTenantPolicy> policyList = this.policyService.searchPurchaseTenantPolicyList(tenantId,
 				tenantProdGrpCd);
+		assertThat(policyList.size(), not(0));
 
-		this.logger.debug("POLICY_LIST\n{}", policyList);
+		String policyId = "policy008";
+		policyList = this.policyService.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd, policyId);
+		assertThat(policyList.size(), not(0));
 	}
 }

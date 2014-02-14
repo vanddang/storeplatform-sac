@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,10 @@ import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseMemberPart
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyMember;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.shopping.service.ShoppingService;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
 
 /**
  * 
@@ -48,26 +52,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	@Autowired
 	private ExistenceSCI existenceSCI;
 
-	/**
-	 * 
-	 * <pre>
-	 * 구매요청 전체적인 적합성 체크: 회원/상품/구매 적합성 체크.
-	 * </pre>
-	 * 
-	 * @param purchaseOrderInfo
-	 *            구매 주문 정보
-	 */
-	@Override
-	public void validate(PurchaseOrder purchaseOrderInfo) {
-		// 회원
-		this.validateMember(purchaseOrderInfo);
-
-		// 상품
-		this.validateProduct(purchaseOrderInfo);
-
-		// 구매: 회원&상품, 기타 등등
-		this.validatePurchase(purchaseOrderInfo);
-	}
+	@Autowired
+	private ShoppingService shoppingService;
 
 	/**
 	 * 
@@ -79,7 +65,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 *            구매 주문 정보
 	 */
 	@Override
-	public void validateMember(PurchaseOrder purchaseOrderInfo) {
+	public void validateMember(PurchaseOrderInfo purchaseOrderInfo) {
 		// ----------------------------------------------------------------------------------------------
 		// 구매(선물발신) 회원
 
@@ -132,11 +118,16 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 *            구매 주문 정보
 	 */
 	@Override
-	public void validateProduct(PurchaseOrder purchaseOrderInfo) {
+	public void validateProduct(PurchaseOrderInfo purchaseOrderInfo) {
 
 		String tenantId = purchaseOrderInfo.getTenantId();
 		String systemId = purchaseOrderInfo.getSystemId();
-		String deviceModelCd = purchaseOrderInfo.getDeviceModelCd();
+		String useDeviceModelCd = null;
+		if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, purchaseOrderInfo.getPrchsCaseCd())) {
+			useDeviceModelCd = purchaseOrderInfo.getRecvMember().getDeviceModelCd();
+		} else {
+			useDeviceModelCd = purchaseOrderInfo.getPurchaseMember().getDeviceModelCd();
+		}
 		List<DummyProduct> productInfoList = purchaseOrderInfo.getProductList();
 
 		Double totAmt = 0.0;
@@ -144,7 +135,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		DummyProduct productInfo = null;
 		for (CreatePurchaseSacReqProduct reqProduct : purchaseOrderInfo.getCreatePurchaseReq().getProductList()) {
 			productInfo = this.displayPartService.searchDummyProductDetail(tenantId, systemId, reqProduct.getProdId(),
-					deviceModelCd);
+					useDeviceModelCd);
 
 			// 상품정보 조회 실패
 			if (productInfo == null) {
@@ -156,7 +147,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 			// 상품 지원 여부 체크
 			if (productInfo.getbSupport() == false) {
-				throw new StorePlatformException("SAC_PUR_0001", "지원하지 않는 상품입니다.");
+				if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, purchaseOrderInfo.getPrchsCaseCd())) {
+					throw new StorePlatformException("SAC_PUR_0001", "선물 수신 단말을 상품이 지원하지 않습니다.");
+				} else {
+					throw new StorePlatformException("SAC_PUR_0001", "해당 단말을 상품이 지원하지 않습니다.");
+				}
 			}
 
 			productInfo.setProdAmt(reqProduct.getProdAmt()); // 임시적. TAKTODO
@@ -174,7 +169,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		// 결제 총 금액 & 상품 가격 총합 체크
 		if (totAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
-			throw new StorePlatformException("SAC_PUR_0001", "구매요청 금액정보가 잘못되었습니다.(" + totAmt + ":"
+			throw new StorePlatformException("SAC_PUR_0001", "구매요청 금액이 정상적이지 않습니다.(" + totAmt + ":"
 					+ purchaseOrderInfo.getCreatePurchaseReq().getTotAmt() + ")");
 		}
 
@@ -191,7 +186,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 *            구매 주문 정보
 	 */
 	@Override
-	public void validatePurchase(PurchaseOrder purchaseOrderInfo) {
+	public void validatePurchase(PurchaseOrderInfo purchaseOrderInfo) {
 		DummyMember useUserInfo = null;
 		String useTenantId = null;
 		String useUserKey = null;
@@ -212,13 +207,16 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
 			// 연령 체크
 			if ("PD004404".equals(product) && useUserInfo.getAge() < 20) {
-				throw new StorePlatformException("SAC_PUR_0001", "이용불가한 연령입니다: " + useUserInfo.getAge());
+				throw new StorePlatformException("SAC_PUR_0001", "연령제한으로 이용할 수 없는 상품입니다: " + useUserInfo.getAge());
 			}
 
 			// TAKTODO:: 쇼핑상품 경우, 발급 가능 여부 확인
-			this.logger.debug("PRCHS,SAC,ORDER,VALID,SHOPPING,{}", true);
+			if (StringUtils.equals("SHOPPING", product.getSvcGrpCd())) {
+				this.checkAvailableCouponPublish(product.getCouponCode(), product.getItemCode(), purchaseOrderInfo
+						.getProductList().get(0).getProdQty(), purchaseOrderInfo.getPurchaseMember().getDeviceId());
+			}
 
-			// 기구매 체크 대상 add: 동일상품 중복구매 불가 상품
+			// (동일상품 중복구매 불가 상품) 기구매 체크 대상 ADD
 			if (product.getbDupleProd() == false) {
 				existenceItemSc = new ExistenceItemSc();
 				existenceItemSc.setProdId(product.getProdId());
@@ -245,6 +243,47 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 		}
 
+	}
+
+	// 쇼핑 쿠폰 발급 가능여부 확인
+	private void checkAvailableCouponPublish(String couponCode, String itemCode, int itemCount, String deviceId) {
+		CouponPublishAvailableSacResult shoppingRes = null;
+		String availCd = null;
+
+		CouponPublishAvailableSacParam shoppingReq = new CouponPublishAvailableSacParam();
+		shoppingReq.setCouponCode(couponCode);
+		shoppingReq.setItemCode(itemCode);
+		shoppingReq.setItemCount(itemCount);
+		shoppingReq.setMdn(deviceId);
+
+		try {
+			shoppingRes = this.shoppingService.getCouponPublishAvailable(shoppingReq);
+			availCd = shoppingRes.getStatusCd();
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_0001", "쇼핑 쿠폰 발급 가능여부 확인 중 에러가 발생하였습니다.");
+		}
+
+		if (availCd == null) {
+			throw new StorePlatformException("SAC_PUR_0001", "쇼핑 쿠폰 발급 가능여부 확인 중 에러가 발생하였습니다.");
+		}
+
+		this.logger.debug("PRCHS,SAC,ORDER,VALID,SHOPPING,,{},{}", shoppingRes.getStatusCd(),
+				shoppingRes.getStatusMsg());
+
+		switch (Integer.parseInt(availCd)) {
+		case 3301:
+			throw new StorePlatformException("SAC_PUR_0001", "오늘 판매 가능 수량이 모두 소진되었습니다.");
+		case 3302:
+			throw new StorePlatformException("SAC_PUR_0001", "당월 판매 가능 수량이 모두 소진되었습니다.");
+		case 3303:
+			throw new StorePlatformException("SAC_PUR_0001", "1인 일 최대 구매 가능 수량을 초과하였습니다.");
+		case 3304:
+			throw new StorePlatformException("SAC_PUR_0001", "1인 월 최대 구매 가능 수량을 초과하였습니다.");
+		default:
+			if (StringUtils.equals(availCd, "0000") == false) {
+				throw new StorePlatformException("SAC_PUR_0001", "쇼핑 쿠폰 발급 가능여부 확인 중 에러가 발생하였습니다.", availCd);
+			}
+		}
 	}
 
 }

@@ -11,14 +11,21 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyAdminServiceImpl;
-import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyMemberServiceImpl;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderPolicy;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
+import com.skplanet.storeplatform.purchase.client.order.vo.SearchSktPaymentScReq;
+import com.skplanet.storeplatform.purchase.client.order.vo.SearchSktPaymentScRes;
+import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRespository;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
  * 
@@ -30,290 +37,289 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderPolicy;
 public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private final PurchaseOrderPolicyManager policyManager = new PurchaseOrderPolicyManager();
+	@Autowired
+	private PurchaseOrderSCI purchaseOrderSCI;
 
-	private final DummyMemberServiceImpl dummyMemberService = new DummyMemberServiceImpl();
-	private final DummyAdminServiceImpl dummyAdminService = new DummyAdminServiceImpl();
+	@Autowired
+	private PurchaseTenantPolicyService policyService;
+
+	@Autowired
+	private PurchaseUapsRespository uapsRespository;
 
 	/**
 	 * 
 	 * <pre>
-	 * (임시적) 제한정책 체크.
+	 * 테넌트 정책 체크.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매주문 정보
 	 */
 	@Override
-	public void checkPolicy(PurchaseOrder purchaseOrderInfo) {
-		// List<PurchaseOrderChecker> checkerList = this.checkerManager.getCheckerList(null);
-		//
-		// for (PurchaseOrderChecker checker : checkerList) {
-		// if (checker.isTarget(purchaseOrderInfo) == false) {
-		// continue;
-		// }
-		//
-		// if (checker.checkAndSetInfo(purchaseOrderInfo) == false) {
-		// break;
-		// }
-		// }
-		// TAKTODO::
-		// - 제한정책 Rule 정의 필요 : 임시적으로 단순 ID값 비교에 따른 임시 처리
-		// - 패턴에 의한 처리 프로세스로 변경 필요
-		// - 상품 복수개 구매 시 처리
+	public void checkTenantPolicy(PurchaseOrderInfo purchaseOrderInfo) {
+		String tenantId = purchaseOrderInfo.getTenantId();
+		String tenantProdGrpCd = purchaseOrderInfo.getProductList().get(0).getTenantProdGrpCd(); // TAKTODO:: 상품군이 다른
+																								 // 복수구매 처리 필요: 일단 하나만.
 
-		boolean bCharge = purchaseOrderInfo.getRealTotAmt() > 0;
-		boolean bSktTelecom = true;
-		List<PurchaseOrderPolicy> policyList = this.policyManager.getPolicyList(bCharge, bSktTelecom);
+		List<PurchaseTenantPolicy> policyList = this.policyService.searchPurchaseTenantPolicyList(tenantId,
+				tenantProdGrpCd);
 
-		// String tenantProdGrpCd = null;
-		for (PurchaseOrderPolicy policy : policyList) {
-			switch (policy.getId()) {
-			case PurchaseOrderPolicyManager.POLICY_ID_BLOCK: // 결제제한
-				this.todo01(policy, purchaseOrderInfo);
-				break;
-			case PurchaseOrderPolicyManager.POLICY_ID_TESTMDN: // Test MDN
-				this.todo02(policy, purchaseOrderInfo);
-				break;
-			case PurchaseOrderPolicyManager.POLICY_ID_SKTTESTMDN: // SKT 시험폰
-				this.todo03(policy, purchaseOrderInfo);
-				break;
-			case PurchaseOrderPolicyManager.POLICY_ID_SKTCORPMDN: // SKT 법인폰
-				this.todo04(policy, purchaseOrderInfo);
-				break;
-			case PurchaseOrderPolicyManager.POLICY_ID_SKPCORPMDN: // SKP 법인폰
-				this.todo05(policy, purchaseOrderInfo);
-				break;
-			case PurchaseOrderPolicyManager.POLICY_ID_SKT_LIMIT: // SKT 후불 결제 한도
-				this.todo06(policy, purchaseOrderInfo);
-				break;
-			case PurchaseOrderPolicyManager.POLICY_ID_SKT_SHOPPINGLIMIT: // 쇼핑상품 SKT 후불 결제 한도
-				this.todo07(policy, purchaseOrderInfo);
-				break;
-			case PurchaseOrderPolicyManager.POLICY_ID_SKT_SENDLIMIT:
-				this.todo08(policy, purchaseOrderInfo);
-				break;
-			case PurchaseOrderPolicyManager.POLICY_ID_SKT_RECVLIMIT:
-				this.todo09(policy, purchaseOrderInfo);
-				break;
+		// TAKTODO:: 항목이 많지 않으니 문자열 비교? 아니면 정수상수 선언 후 switch?
+		for (PurchaseTenantPolicy policy : policyList) {
+			if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_STORE_TEST_DEVICE)) {
+				this.checkStoreTestMdn(purchaseOrderInfo, policy); // CM011605: 비과금 결제 허용 (Test MDN)
+
+			} else if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_MEMBER_BLOCK_CD)) {
+				this.checkBlock(purchaseOrderInfo, policy); // CM011611: 회원Part 구매 차단 정책코드
+
+			} else if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_PRCHSHST_DEVICE)) {
+				this.checkDeviceBasePurchaseHistory(purchaseOrderInfo, policy); // CM011606: Device 기반 구매내역 관리
+
+				// ///////////// TAKTODO:: 이하는 현재 위치에서 미사용, 일단 같이 작성.
+			} else if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_SKT_PRCHS_LIMIT)) {
+				this.checkSktLimit(purchaseOrderInfo, policy); // CM011601: SKT후불 결제 한도제한
+
+			} else if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_SKT_RECV_LIMIT)) {
+				this.checkSktRecvLimit(purchaseOrderInfo, policy); // CM011602: SKT후불 선물수신 한도제한
+
+			} else if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_CORP_DEVICE)) {
+				this.checkCorporation(purchaseOrderInfo, policy); // CM011603: 법인 명의 제한 (법인폰)
+
+			} else if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_SKT_TEST_DEVICE)) {
+				this.checkSktTestMdn(purchaseOrderInfo, policy); // CM011604: SKT 시험폰 결제 허용
+			}
+		}
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 정책 처리패턴 CM011601: SKT후불 구매결제 한도제한.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매진행 정보
+	 * @param policy
+	 *            테넌트 정책 정보
+	 */
+	private void checkSktLimit(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
+
+		double checkVal = 0.0;
+
+		SearchSktPaymentScReq sciReq = new SearchSktPaymentScReq();
+		SearchSktPaymentScRes sciRes = null;
+
+		sciReq.setTenantId(purchaseOrderInfo.getTenantId());
+		sciReq.setUserKey(purchaseOrderInfo.getUserKey());
+		sciReq.setDeviceKey(purchaseOrderInfo.getDeviceKey());
+		sciReq.setTenantProdGrpCd(policy.getTenantProdGrpCd());
+		sciReq.setApplyUnitCd(policy.getApplyUnitCd());
+		sciReq.setCondUnitCd(policy.getCondUnitCd());
+		sciReq.setCondValue(policy.getCondValue());
+		sciReq.setCondClsfUnitCd(policy.getCondClsfUnitCd());
+		sciReq.setCondPeriodUnitCd(policy.getCondPeriodUnitCd());
+		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
+
+		// (정책 적용조건) 과금조건 조회
+		if (StringUtils.isNotBlank(policy.getCondPeriodUnitCd())) {
+			sciRes = this.purchaseOrderSCI.searchSktLimitCondDetail(sciReq);
+			checkVal = (Double) sciRes.getVal();
+
+			if (Double.parseDouble(policy.getCondClsfValue()) == 0) {
+				if (checkVal != 0) {
+					return;
+				}
+			} else if (checkVal < Double.parseDouble(policy.getCondClsfValue())) {
+				return;
+			}
+		}
+
+		// (정책 체크 값) 정책 요소기준 조회
+		sciRes = this.purchaseOrderSCI.searchSktAmountDetail(sciReq);
+		checkVal = (Double) sciRes.getVal();
+
+		// TAKTODO:: 제한걸림
+		if ((Double.parseDouble(policy.getApplyValue()) - checkVal) < purchaseOrderInfo.getRealTotAmt()) {
+			this.logger.debug("PRCHS,ORDER,SAC,POLICY,APPLY_LIMIT,{}({}/{})", policy.getPolicyId(),
+					purchaseOrderInfo.getRealTotAmt(), (Double.parseDouble(policy.getApplyValue()) - checkVal));
+			;
+		}
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 정책 처리패턴 CM011602: SKT후불 선물수신 한도제한.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매진행 정보
+	 * @param policy
+	 *            테넌트 정책 정보
+	 */
+	private void checkSktRecvLimit(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
+
+		// 선물 여부 체크
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD) == false) {
+			return;
+		}
+
+		double checkVal = 0.0;
+
+		SearchSktPaymentScReq sciReq = new SearchSktPaymentScReq();
+		SearchSktPaymentScRes sciRes = null;
+
+		sciReq.setTenantId(purchaseOrderInfo.getRecvTenantId());
+		sciReq.setUserKey(purchaseOrderInfo.getRecvUserKey());
+		sciReq.setDeviceKey(purchaseOrderInfo.getRecvDeviceKey());
+		sciReq.setTenantProdGrpCd(policy.getTenantProdGrpCd());
+		sciReq.setApplyUnitCd(policy.getApplyUnitCd());
+		sciReq.setCondUnitCd(policy.getCondUnitCd());
+		sciReq.setCondValue(policy.getCondValue());
+		sciReq.setCondClsfUnitCd(policy.getCondClsfUnitCd());
+		sciReq.setCondPeriodUnitCd(policy.getCondPeriodUnitCd());
+		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
+
+		// (정책 체크 값) 정책 요소기준 조회
+		sciRes = this.purchaseOrderSCI.searchSktRecvAmountDetail(sciReq);
+		checkVal = (Double) sciRes.getVal();
+
+		// TAKTODO:: 제한걸림
+		if ((Double.parseDouble(policy.getApplyValue()) - checkVal) < purchaseOrderInfo.getRealTotAmt()) {
+			this.logger.debug("PRCHS,ORDER,SAC,POLICY,APPLY_LIMIT,{}({}/{})", policy.getPolicyId(),
+					purchaseOrderInfo.getRealTotAmt(), (Double.parseDouble(policy.getApplyValue()) - checkVal));
+			;
+		}
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 정책 처리패턴 CM011603: 법인명의 제한.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매진행 정보
+	 * @param policy
+	 *            테넌트 정책 정보
+	 */
+	private void checkCorporation(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
+
+		boolean bCorp = false;
+
+		try {
+			bCorp = this.uapsRespository.searchUapsAuthorizeInfoByMdn(policy.getApplyValue(), purchaseOrderInfo
+					.getPurchaseMember().getDeviceId());
+		} catch (StorePlatformException e) {
+			// 2014.02.12. 기준 : EC UAPS 에서 비정상 예외 시 9999 리턴, 그 외에는 조회결과 없음(9997) 또는 명의상태에 따른 코드.
+			if (StringUtils.equals("EC_UAPS_9999", e.getErrorInfo().getCode())) {
+				throw new StorePlatformException("SAC_PUR_0001", e);
+			}
+		}
+
+		// 법인폰 구매제한 처리
+		if (bCorp) {
+			this.logger
+					.debug("PRCHS,ORDER,SAC,POLICY,APPLY_LIMIT,{},{})", policy.getPolicyId(), policy.getApplyValue());
+			throw new StorePlatformException("SAC_PUR_0001", "법인폰으로 구매할 수 없는 상품입니다.");
+		}
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 정책 처리패턴 CM011604: SKT 시험폰 결제 허용.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매진행 정보
+	 * @param policy
+	 *            테넌트 정책 정보
+	 */
+	private void checkSktTestMdn(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
+
+		// TAKTODO:: Store에 등록된 시험폰 WhiteList 조회
+		;
+
+		// 등록된 시험폰일 경우, 실제 SKT 시험폰 여부 확인
+		if (true) {
+
+			String svcTp = null;
+
+			try {
+				svcTp = this.uapsRespository.searchUapsMappingInfoByMdn(purchaseOrderInfo.getPurchaseMember()
+						.getDeviceId());
+			} catch (StorePlatformException e) {
+				// 2014.02.12. 기준 : EC UAPS 에서 비정상 예외 시 9999 리턴, 그 외에는 조회결과 없음(9997) 또는 명의상태에 따른 코드.
+				if (StringUtils.equals("EC_UAPS_9999", e.getErrorInfo().getCode())) {
+					throw new StorePlatformException("SAC_PUR_0001", e);
+				}
+			}
+
+			// 시험폰
+			if (StringUtils.equals(svcTp, "12")) {
+				this.logger.debug("PRCHS,ORDER,SAC,POLICY,APPLY_LIMIT,{})", policy.getPolicyId());
+
+				// TAKTODO:: Setting
 			}
 		}
 	}
 
 	/**
+	 * 
 	 * <pre>
-	 * 결제 차단 여부 체크.
+	 * 테넌트 정책 처리패턴 CM011605: 비과금 결제 허용(Test MDN).
 	 * </pre>
 	 * 
+	 * @param purchaseOrderInfo
+	 *            구매진행 정보
 	 * @param policy
-	 *            제한정책 정보
-	 * @param purchaseInfo
-	 *            구매요청 정보
-	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
+	 *            테넌트 정책 정보
 	 */
-	private boolean todo01(PurchaseOrderPolicy policy, PurchaseOrder purchaseInfo) {
-		this.logger.debug("PRCHS,POLICY,DUMMY,BLOCK,START," + purchaseInfo);
+	private void checkStoreTestMdn(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
 
-		// 구매 차단 여부 조회 : 테넌트ID, 내부회원NO, 디바이스ID
-		if (this.dummyMemberService.isBlock(purchaseInfo.getTenantId(), purchaseInfo.getUserKey(),
-				purchaseInfo.getDeviceKey())) {
-
-			purchaseInfo.getPolicyInfo().setbBlock(true);
-			return false;
-		}
-
-		this.logger.debug("PRCHS,POLICY,DUMMY,BLOCK,END");
-
-		return true;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * Test MDN 여부 체크.
+	 * 테넌트 정책 처리패턴 CM011606: Device기반 구매내역 관리처리.
 	 * </pre>
 	 * 
+	 * @param purchaseOrderInfo
+	 *            구매진행 정보
 	 * @param policy
-	 *            제한정책 정보
-	 * @param purchaseInfo
-	 *            구매요청 정보
-	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
+	 *            테넌트 정책 정보
 	 */
-	private boolean todo02(PurchaseOrderPolicy policy, PurchaseOrder purchaseInfo) {
-		this.logger.debug("PRCHS,POLICY,DUMMY,TESTMDN,START," + purchaseInfo);
+	private void checkDeviceBasePurchaseHistory(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
 
-		// 테스트폰 여부 조회 : 테넌트ID, MDN
-		if (this.dummyAdminService
-				.isTestMdn(purchaseInfo.getTenantId(), purchaseInfo.getPurchaseMember().getDeviceId())) {
-
-			purchaseInfo.getPolicyInfo().setbTestMdn(true);
-			return false;
-		}
-
-		this.logger.debug("PRCHS,POLICY,DUMMY,TESTMDN,END");
-		return true;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * SKT시험폰 여부 체크.
+	 * 테넌트 정책 처리패턴 CM011611: 회원Part 구매차단 코드.
 	 * </pre>
 	 * 
+	 * @param purchaseOrderInfo
+	 *            구매진행 정보
 	 * @param policy
-	 *            제한정책 정보
-	 * @param purchaseInfo
-	 *            구매요청 정보
-	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
+	 *            테넌트 정책 정보
 	 */
-	private boolean todo03(PurchaseOrderPolicy policy, PurchaseOrder purchaseInfo) {
-		this.logger.debug("PRCHS,POLICY,DUMMY,SKTTEST,START," + purchaseInfo);
+	private void checkBlock(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
 
-		// SKT시험폰 여부 조회 : 테넌트ID, MDN
-		if (this.dummyAdminService
-				.isSktTest(purchaseInfo.getTenantId(), purchaseInfo.getPurchaseMember().getDeviceId())) {
-			purchaseInfo.getPolicyInfo().setbSktTest(true);
-			return false;
-		}
+		// TAKTODO:: 회원의 정책 코드 비교
 
-		this.logger.debug("PRCHS,POLICY,DUMMY,SKTTEST,END");
-		return true;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * SKT 법인폰 여부 체크.
-	 * </pre>
-	 * 
-	 * @param policy
-	 *            제한정책 정보
-	 * @param purchaseInfo
-	 *            구매요청 정보
-	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
-	 */
-	private boolean todo04(PurchaseOrderPolicy policy, PurchaseOrder purchaseInfo) {
-		this.logger.debug("PRCHS,POLICY,DUMMY,SKTCORP,START," + purchaseInfo);
-
-		// SKT 법인폰 여부 조회 : 테넌트ID, MDN
-		if (this.dummyAdminService.isSktCorporate(purchaseInfo.getTenantId(), purchaseInfo.getPurchaseMember()
-				.getDeviceId())) {
-			purchaseInfo.getPolicyInfo().setbSktCorp(true);
-			return false;
-		}
-
-		this.logger.debug("PRCHS,POLICY,DUMMY,SKTCORP,END");
-		return true;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * SKP 법인폰 여부 체크.
-	 * </pre>
-	 * 
-	 * @param policy
-	 *            제한정책 정보
-	 * @param purchaseInfo
-	 *            구매요청 정보
-	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
-	 */
-	private boolean todo05(PurchaseOrderPolicy policy, PurchaseOrder purchaseInfo) {
-		this.logger.debug("PRCHS,POLICY,DUMMY,SKPCORP,START," + purchaseInfo);
-
-		// SKP 법인폰 여부 조회 : 테넌트ID, MDN
-		if (this.dummyAdminService.isSkpCorporate(purchaseInfo.getTenantId(), purchaseInfo.getPurchaseMember()
-				.getDeviceId())) {
-			purchaseInfo.getPolicyInfo().setbSkpCorp(true);
-			return false;
-		}
-
-		this.logger.debug("PRCHS,POLICY,DUMMY,SKPCORP,END");
-		return true;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * SKT 후불 결제 한도 체크.
-	 * </pre>
-	 * 
-	 * @param policy
-	 *            제한정책 정보
-	 * @param purchaseInfo
-	 *            구매요청 정보
-	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
-	 */
-	private boolean todo06(PurchaseOrderPolicy policy, PurchaseOrder purchaseInfo) {
-		this.logger.debug("PRCHS,POLICY,DUMMY,SKTLIMIT,START," + purchaseInfo);
-
-		this.dummyAdminService.getSktLimit();
-
-		this.logger.debug("PRCHS,POLICY,DUMMY,SKTLIMIT,END");
-		return true;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 쇼핑상품 SKT 후불 결제 한도 체크.
-	 * </pre>
-	 * 
-	 * @param policy
-	 *            제한정책 정보
-	 * @param purchaseInfo
-	 *            구매요청 정보
-	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
-	 */
-	private boolean todo07(PurchaseOrderPolicy policy, PurchaseOrder purchaseInfo) {
-		this.logger.debug("PRCHS,POLICY,DUMMY,SHOPLIMIT,START," + purchaseInfo);
-
-		this.dummyAdminService.getShoppingLimit();
-
-		this.logger.debug("PRCHS,POLICY,DUMMY,SHOPLIMIT,END");
-		return true;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 선물 발신 SKT 후불 결제 한도 체크.
-	 * </pre>
-	 * 
-	 * @param policy
-	 *            제한정책 정보
-	 * @param purchaseInfo
-	 *            구매요청 정보
-	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
-	 */
-	private boolean todo08(PurchaseOrderPolicy policy, PurchaseOrder purchaseInfo) {
-		this.logger.debug("PRCHS,POLICY,DUMMY,SENDLIMIT,START," + purchaseInfo);
-
-		this.dummyAdminService.getGiftSendLimit();
-
-		this.logger.debug("PRCHS,POLICY,DUMMY,SENDLIMIT,END");
-		return true;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 선물 수신 한도 체크.
-	 * </pre>
-	 * 
-	 * @param policy
-	 *            제한정책 정보
-	 * @param purchaseInfo
-	 *            구매요청 정보
-	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
-	 */
-	private boolean todo09(PurchaseOrderPolicy policy, PurchaseOrder purchaseInfo) {
-		this.logger.debug("PRCHS,POLICY,DUMMY,RECVLIMIT,START," + purchaseInfo);
-
-		this.dummyAdminService.getGiftRecvLimit();
-
-		this.logger.debug("PRCHS,POLICY,DUMMY,RECVLIMIT,END");
-		return true;
 	}
 
 }

@@ -36,7 +36,7 @@ import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderValidationService;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
  * 구매 처리 컨트롤러
@@ -58,14 +58,15 @@ public class PurchaseOrderController {
 	/**
 	 * 
 	 * <pre>
-	 * 구매 요청 처리: 무료구매 경우는 구매완료 처리, 유료구매 경우는 PayPlanet 결제Page 요청을 위한 처리.
+	 * 구매 요청 처리: 무료구매 경우는 구매완료 처리, 유료구매 경우는 PayPlanet 결제Page 요청을 위한 처리
+	 * 유료상품 무료결제 구매 요청 처리: 일부 외부판매 사이트에 필요하며, 요청한 사이트에 대해 해당 요청 권한이 있는 지 체크하는 부분이 추가된다.
 	 * </pre>
 	 * 
 	 * @param req
 	 *            구매요청 정보
 	 * @return 구매요청 처리 결과: 무료구매완료 또는 결제page요청정보
 	 */
-	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
+	@RequestMapping(value = { "/create/v1", "/createFreeCharge/v1" }, method = RequestMethod.POST)
 	@ResponseBody
 	public CreatePurchaseSacRes createPurchase(@RequestBody @Validated CreatePurchaseSacReq req,
 			BindingResult bindingResult, SacRequestHeader sacRequestHeader) {
@@ -79,19 +80,14 @@ public class PurchaseOrderController {
 		}
 
 		// ------------------------------------------------------------------------------
-		// 구매정보 개체 세팅
+		// 구매진행 정보 세팅
 
-		PurchaseOrder purchaseOrderInfo = this.setPurchaseOrderInfo(req, tenantHeader);
-
-		// ------------------------------------------------------------------------------
-		// 적합성 체크
-
-		this.validationService.validate(purchaseOrderInfo);
+		PurchaseOrderInfo purchaseOrderInfo = this.setPurchaseOrderInfo(req, tenantHeader);
 
 		// ------------------------------------------------------------------------------
-		// 제한정책 체크
+		// 구매전처리: 회원 적합성 / 상품 적합성 / 구매 적합성 및 가능여부 체크 && 제한정책 체크
 
-		this.policyService.checkPolicy(purchaseOrderInfo);
+		this.prePurchaseOrder(purchaseOrderInfo);
 
 		// ------------------------------------------------------------------------------
 		// 진행 처리: 무료구매완료 처리 | 결제Page 요청 준비작업
@@ -110,59 +106,6 @@ public class PurchaseOrderController {
 			// 구매생성 (무료)
 			this.orderService.createFreePurchase(purchaseOrderInfo);
 		}
-
-		// ------------------------------------------------------------------------------
-		// 응답 세팅
-
-		CreatePurchaseSacRes res = new CreatePurchaseSacRes();
-		res.setResultType(purchaseOrderInfo.getResultType());
-		res.setPrchsId(purchaseOrderInfo.getPrchsId());
-		res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
-		res.setPaymentPageParam(purchaseOrderInfo.getPaymentPageParam());
-
-		this.logger.debug("PRCHS,INFO,CREATE,RES,{}", res);
-		return res;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 유료상품 무료결제 구매 요청 처리: 일부 외부판매 사이트에 필요하며, 요청한 사이트에 대해 해당 요청 권한이 있는 지 체크하는 부분이 추가된다.
-	 * </pre>
-	 * 
-	 * @param req
-	 *            구매요청 정보
-	 * @return 구매요청 처리 결과: 무료구매완료
-	 */
-	@RequestMapping(value = "/createFreeCharge/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreatePurchaseSacRes createFreeChargePurchase(@RequestBody CreatePurchaseSacReq req,
-			SacRequestHeader sacRequestHeader) {
-		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
-		this.logger.debug("PRCHS,INFO,CREATE_FREE,REQ,{},{}", tenantHeader, req);
-
-		// ------------------------------------------------------------------------------
-		// 구매정보 개체 세팅
-
-		PurchaseOrder purchaseOrderInfo = this.setPurchaseOrderInfo(req, tenantHeader);
-
-		// ------------------------------------------------------------------------------
-		// 적합성 체크
-
-		this.validationService.validate(purchaseOrderInfo);
-
-		// ------------------------------------------------------------------------------
-		// 제한정책 체크
-
-		this.policyService.checkPolicy(purchaseOrderInfo);
-
-		// ------------------------------------------------------------------------------
-		// TAKTODO:: 결제 내역 생성 확인 및 처리
-		// 무료구매완료 처리
-
-		purchaseOrderInfo.setResultType("free");
-		// 구매생성 (무료)
-		this.orderService.createFreePurchase(purchaseOrderInfo);
 
 		// ------------------------------------------------------------------------------
 		// 응답 세팅
@@ -226,6 +169,7 @@ public class PurchaseOrderController {
 
 		// ------------------------------------------------------------------------------
 		// TAKTODO:: 구매 후 처리- 쇼핑상품 쿠폰 발급요청, 씨네21, 인터파크, 이메일 등등
+		this.postPurchaseOrder(null);
 
 		// ------------------------------------------------------------------------------
 		// 구매 확정 및 결제 내역 저장
@@ -241,20 +185,9 @@ public class PurchaseOrderController {
 		return new NotifyPaymentSacRes("0", "SUCCESS");
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 구매요청 파라미터와 헤더 정보로 구매처리 진행을 위한 정보 개체 세팅.
-	 * </pre>
-	 * 
-	 * @param createPurchaseSacReq
-	 *            구매요청 VO
-	 * @param tenantHeader
-	 *            헤더 테넌트 정보
-	 * @return 구매처리 진행 정보 VO
-	 */
-	private PurchaseOrder setPurchaseOrderInfo(CreatePurchaseSacReq createPurchaseSacReq, TenantHeader tenantHeader) {
-		PurchaseOrder purchaseOrderInfo = new PurchaseOrder(createPurchaseSacReq);
+	// 구매요청 파라미터와 헤더 정보로 구매처리 진행을 위한 정보 개체 세팅 (구매요청 VO, 헤더 테넌트 정보 -> 구매처리 진행 정보 VO)
+	private PurchaseOrderInfo setPurchaseOrderInfo(CreatePurchaseSacReq createPurchaseSacReq, TenantHeader tenantHeader) {
+		PurchaseOrderInfo purchaseOrderInfo = new PurchaseOrderInfo(createPurchaseSacReq);
 		purchaseOrderInfo.setTenantId(tenantHeader.getTenantId()); // 구매(선물발신) 테넌트 ID
 		purchaseOrderInfo.setSystemId(tenantHeader.getSystemId()); // 구매(선물발신) 시스템 ID
 		purchaseOrderInfo.setUserKey(createPurchaseSacReq.getUserKey()); // 구매(선물발신) 내부 회원 번호
@@ -277,5 +210,31 @@ public class PurchaseOrderController {
 		purchaseOrderInfo.setRealTotAmt(createPurchaseSacReq.getTotAmt()); // 최종 결제 총 금액
 
 		return purchaseOrderInfo;
+	}
+
+	// 구매 전처리 (구매진행 정보)
+	private void prePurchaseOrder(PurchaseOrderInfo purchaseOrderInfo) {
+		// ------------------------------------------------------------------------------
+		// 적합성 체크
+
+		// 회원
+		this.validationService.validateMember(purchaseOrderInfo);
+
+		// 상품
+		this.validationService.validateProduct(purchaseOrderInfo);
+
+		// 구매
+		this.validationService.validatePurchase(purchaseOrderInfo);
+
+		// ------------------------------------------------------------------------------
+		// 제한정책 체크
+
+		this.policyService.checkTenantPolicy(purchaseOrderInfo);
+
+	}
+
+	// 구매 후처리 단계 (구매진행 정보)
+	private void postPurchaseOrder(PurchaseOrderInfo purchaseOrderInfo) {
+
 	}
 }
