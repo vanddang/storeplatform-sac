@@ -14,15 +14,17 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * 일반 상품 카테고리 리스트 조회 Input Value Object.
  * 
- * Updated on : 2013. 12. 19. Updated by : 윤주영, SK 플래닛.
+ * Updated on : 2014. 02. 12. Updated by : 유시혁.
  */
-public class MenuReq extends CommonInfo {
+public class MenuSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123129L;
 
 	private String tenantId; // 테넌트ID
 
 	private String menuId; // 메뉴ID
+
+	private String topMenuId; // 메뉴ID
 
 	private String systemId; // 시스템ID
 
@@ -68,5 +70,13 @@ public class MenuReq extends CommonInfo {
 
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
+	}
+
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 }

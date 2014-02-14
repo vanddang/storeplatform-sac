@@ -9,37 +9,40 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.menu;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.MenuDetail;
 
 /**
  * Interface Message Menu List Value Object.
  * 
- * Updated on : 2013. 12. 19 Updated by : 윤주영, SK 플래닛.
+ * Updated on : 2014. 02. 12. Updated by : 유시혁.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class MenuDetailRes extends CommonInfo {
+public class MenuListSacRes extends CommonInfo {
 
-	private static final long serialVersionUID = 11123123125L;
+	private static final long serialVersionUID = 11123123126L;
 
 	private CommonResponse commonResponse;
-	private MenuDetail menu;
+	private List<MenuDetail> menuDetailList;
 
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
-	public void setCommonRes(CommonResponse commonResponse) {
+	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
-	public MenuDetail getMenu() {
-		return this.menu;
+	public List<MenuDetail> getMenuDetailList() {
+		return this.menuDetailList;
 	}
 
-	public void setMenu(MenuDetail menu) {
-		this.menu = menu;
+	public void setMenuDetailList(List<MenuDetail> menuDetailList) {
+		this.menuDetailList = menuDetailList;
 	}
 }
