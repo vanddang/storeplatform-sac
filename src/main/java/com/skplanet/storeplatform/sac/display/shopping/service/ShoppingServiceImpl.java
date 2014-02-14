@@ -26,6 +26,9 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
+import com.skplanet.storeplatform.sac.client.internal.display.shopping.sci.ShoppingInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
@@ -91,6 +94,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 	@Autowired
 	private SellerSearchSCI sellerSearchSCI;
+
+	@Autowired
+	private ShoppingInternalSCI shoppingInternalSCI;
 
 	/**
 	 * <pre>
@@ -883,6 +889,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		Integer totalCount = 0;
 		List<Shopping> resultList = null;
 		Shopping shopping = null;
+
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -891,8 +898,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setDeviceModelCd(deviceHeader.getModel());
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
-		req.setImageCd(DisplayConstants.DP_SHOPPING_SPECIAL_REPRESENT_IMAGE_CD);
-
+		req.setBannerImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_BANNER_IMAGE_CD);
+		req.setPromotionImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD);
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(req.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
@@ -913,6 +920,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			Identifier identifier = null;
 			Title title = null;
 			Source source = null;
+			List<Identifier> identifierList = null;
+			List<Source> sourceList = null;
 			List<Promotion> promotionList = new ArrayList<Promotion>();
 
 			for (int i = 0; i < resultList.size(); i++) {
@@ -921,27 +930,37 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품ID)
 				promotion = new Promotion();
 				identifier = new Identifier();
+				identifierList = new ArrayList<Identifier>();
+				identifier.setType(DisplayConstants.DP_PROMOTION_IDENTIFIER_CD);
 				identifier.setText(shopping.getPlanId());
-
+				identifierList.add(identifier);
 				// 상품 정보 (상품명)
 				title = new Title();
 				title.setText(shopping.getPlanName());
 
 				// 이미지 정보
+				sourceList = new ArrayList<Source>();
 				source = new Source();
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_BANNER);
 				source.setUrl(shopping.getFilePos());
+				sourceList.add(source);
+
+				source = new Source();
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_PROMOTION);
+				source.setUrl(shopping.getFilePos1());
+
+				sourceList.add(source);
 
 				Date date = new Date();
 				date.setText(DateUtils.parseDate(shopping.getPlanStartDt()),
 						DateUtils.parseDate(shopping.getPlanEndDt()));
 
 				// 데이터 매핑
-				promotion.setIdentifier(identifier);
+				promotion.setIdentifierList(identifierList);
 				promotion.setTitle(title);
 				promotion.setPromotionExplain(shopping.getSubTitleName());
 				promotion.setUsagePeriod(date.getText());
-				promotion.setSource(source);
+				promotion.setSourceList(sourceList);
 				promotionList.add(i, promotion);
 				totalCount = shopping.getTotalCount();
 			}
@@ -974,6 +993,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		req.setBannerImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_BANNER_IMAGE_CD);
+		req.setPromotionImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
 
 		List<Shopping> resultList = null;
@@ -1008,6 +1029,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			Identifier identifier = null;
 			Title title = null;
 			Source source = null;
+			List<Identifier> identifierList = null;
+			List<Source> sourceList = null;
 			Date date = null;
 			List<Promotion> promotionList = new ArrayList<Promotion>();
 
@@ -1016,27 +1039,37 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 상품 정보 (상품ID)
 				promotion = new Promotion();
+				identifierList = new ArrayList<Identifier>();
 				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_PROMOTION_IDENTIFIER_CD);
 				identifier.setText(shopping.getPlanId());
+				identifierList.add(identifier);
 
 				// 상품 정보 (상품명)
 				title = new Title();
 				title.setText(shopping.getPlanName());
 
 				// 이미지 정보
+				sourceList = new ArrayList<Source>();
 				source = new Source();
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_BANNER);
 				source.setUrl(shopping.getFilePos());
+				sourceList.add(source);
+
+				source = new Source();
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_PROMOTION);
+				source.setUrl(shopping.getFilePos());
+				sourceList.add(source);
 
 				date = new Date();
 				date.setText(DateUtils.parseDate(shopping.getPlanStartDt()),
 						DateUtils.parseDate(shopping.getPlanEndDt()));
 				// 데이터 매핑
-				promotion.setIdentifier(identifier);
+				promotion.setIdentifierList(identifierList);
 				promotion.setTitle(title);
 				promotion.setPromotionExplain(shopping.getSubTitleName());
 				promotion.setUsagePeriod(date.getText());
-				promotion.setSource(source);
+				promotion.setSourceList(sourceList);
 				promotionList.add(i, promotion);
 			}
 			res.setPromotionList(promotionList);
@@ -1349,6 +1382,27 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
+		}
+
+		// 판매자정보 셋팅
+		ShoppingSacInReq shoppingReq = new ShoppingSacInReq();
+		ShoppingSacInRes shoppingRes = new ShoppingSacInRes();
+		try {
+			shoppingReq.setTenantId(req.getTenantId());
+			shoppingReq.setChannelId("CL00000566");
+			shoppingReq.setDeviceModelCd(req.getDeviceModelCd());
+			shoppingReq.setEpisodeId("S900000962");
+			shoppingReq.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+			shoppingReq.setLangCd(req.getLangCd());
+
+			shoppingRes = this.shoppingInternalSCI.searchShoppingList(shoppingReq);
+			// if (shoppingRes != null) {
+			// System.out.println("identifier++" + shoppingRes.getIdentifierList().get(0).getText());
+			// System.out.println("identifier++" + shoppingRes.getPrice().toString());
+			//
+			// }
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_DSP_0001", "쇼핑 판매 건수 정보 조회 ", e);
 		}
 
 		// offset, Count default setting
@@ -1978,6 +2032,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		req.setDetailImgCd(DisplayConstants.DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
 
 		// 필수 파라미터 체크
@@ -2100,6 +2155,16 @@ public class ShoppingServiceImpl implements ShoppingService {
 					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 					source.setUrl(shopping.getFilePos());
 					sourceList.add(source);
+
+					// 이미지 정보 (상세 이미지 가져오기)
+					List<Shopping> resultImgDetailList = this.commonDAO.queryForList(
+							"Shopping.getShoppingImgDetailList", reqMap, Shopping.class);
+					for (int pp = 0; pp < resultImgDetailList.size(); pp++) {
+						source = new Source();
+						source.setType(DisplayConstants.DP_SOURCE_TYPE_DETAIL);
+						source.setUrl(resultImgDetailList.get(i).getFilePos());
+						sourceList.add(source);
+					}
 
 					// 다운로드 수
 					accrual = new Accrual();

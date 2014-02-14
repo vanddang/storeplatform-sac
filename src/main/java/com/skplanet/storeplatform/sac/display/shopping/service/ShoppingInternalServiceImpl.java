@@ -78,6 +78,7 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 		req.setDeviceModelCd(req.getDeviceModelCd());
 		req.setLangCd(req.getLangCd());
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(req.getTenantId())) {

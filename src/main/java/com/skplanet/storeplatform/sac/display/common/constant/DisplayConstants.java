@@ -85,6 +85,7 @@ public class DisplayConstants {
 	public static final String DP_DOWNLOAD_IDENTIFIER_CD = "download";
 	public static final String DP_GAMECENTER_IDENTIFIER_CD = "gamecenter";
 	public static final String DP_FREEPASS_IDENTIFIER_CD = "freepass";
+	public static final String DP_PROMOTION_IDENTIFIER_CD = "promotion";
 
 	// //////////////////////////////////// TOP MENU ID //////////////////////////////////////////
 	/**
@@ -261,6 +262,10 @@ public class DisplayConstants {
 	public static final String DP_SOURCE_TYPE_BARCODE = "barcode";
 	/** 배너이미지 */
 	public static final String DP_SOURCE_TYPE_BANNER = "banner";
+	/** 프로모션이미지 */
+	public static final String DP_SOURCE_TYPE_PROMOTION = "promotion";
+	/** 프로모션이미지 */
+	public static final String DP_SOURCE_TYPE_DETAIL = "detail";
 	/** 음악 mp3-192 */
 	public static final String DP_SOURCE_TYPE_AUDIO_MP3_192 = "audio/mp3-192";
 	/** 음악 mp3-128 */
@@ -283,11 +288,15 @@ public class DisplayConstants {
 
 	public static final String DP_SHOPPING_REPRESENT_IMAGE_CD = "DP0001A3";
 
-	public static final String DP_SHOPPING_SPECIAL_REPRESENT_IMAGE_CD = "DP0001A8";
+	public static final String DP_SHOPPING_SPECIAL_BANNER_IMAGE_CD = "DP0001A8";
+
+	public static final String DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD = "DP0001A6";
 
 	public static final String DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD = "DP0001B9";
 
 	public static final String DP_SHOPPING_THEME_REPRESENT_IMAGE_CD = "DP0001A7";
+
+	public static final String DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD = "DP0001B0";
 
 	public static final String DP_OPENAPI_APP_REPRESENT_IMAGE_CD = "DP000125";
 	// 정액제 배너이미지

@@ -12,8 +12,10 @@ package com.skplanet.storeplatform.sac.display.shopping.sci;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -24,12 +26,16 @@ import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.sci.ShoppingInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.IdentifierSac;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.PriceSac;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.SalesOptionSac;
+import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.SelectOptionSac;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SelectOption;
 import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingInternalService;
 
 /**
@@ -68,14 +74,37 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 
 		sacRes = this.service.searchShoppingInternal(sacReq);
 		ShoppingSacInRes response = new ShoppingSacInRes();
+		SalesOptionSac aa = new SalesOptionSac();
 		if (sacRes != null) {
-			if (sacRes.getProductList().size() > 1) {
-				response.setSalesOption(this.setSaleOption(sacRes.getProductList().get(0).getSalesOption()));
-				response.setPrice(this.setPricet(sacRes.getProductList().get(0).getPrice()));
+
+			if (sacRes.getProductList().size() > 0) {
+				SalesOption vo1 = new SalesOption(); // 쿠폰 정보
+				vo1.setBtob("11123423423");
+				SalesOptionSac vo = new SalesOptionSac(); // 쿠폰 정보
+				// this.voCopy(vo1, vo);
+
+				this.voCopy(sacRes.getProductList().get(0), response);
+				this.voCopy(sacRes.getProductList().get(0).getSubProductList().get(0).getPrice(), response.getPrice());
+				// System.out.println("+123++++" + sacRes.getProductList().get(0).getSalesOption().getBtob());
+				// aa = this.setSaleOption(sacRes.getProductList().get(0).getSalesOption());
+				System.out.println("ss");
 			}
+
 		}
 		return response;
 
+	}
+
+	/**
+	 * @param List
+	 *            <Identifier> reqVo
+	 * @return List<IdentifierSac>
+	 */
+	private List<IdentifierSac> setIdentifierList(List<Identifier> reqVo) {
+		List<IdentifierSac> resVo = new ArrayList<IdentifierSac>();
+		this.voCopy(reqVo, resVo);
+		System.out.println("sdjfakjadflds++" + resVo.toString());
+		return resVo;
 	}
 
 	/**
@@ -92,8 +121,19 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 	 * @param Price
 	 * @return PriceSac
 	 */
-	private PriceSac setPricet(Price reqVo) {
+	private PriceSac setPrice(Price reqVo) {
 		PriceSac resVo = new PriceSac();
+		this.voCopy(reqVo, resVo);
+		return resVo;
+	}
+
+	/**
+	 * @param List
+	 *            <SelectOption> reqVo
+	 * @return List<SelectOptionSac>
+	 */
+	private List<SelectOptionSac> setSelectOptionList(List<SelectOption> reqVo) {
+		List<SelectOptionSac> resVo = new ArrayList<SelectOptionSac>();
 		this.voCopy(reqVo, resVo);
 		return resVo;
 	}
@@ -118,9 +158,13 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 				fields[i].setAccessible(true);
 				resultMap.put(fields[i].getName(), fields[i].get(obj1));
 			}
+
 			Iterator<String> keys = resultMap.keySet().iterator();
 			while (keys.hasNext()) {
+
 				String entry = keys.next();
+				System.out.println("entry::" + entry);
+				System.out.println("resultMap.get(entry)::" + resultMap.get(entry));
 				this.invoke(obj2, "set" + entry.substring(0, 1).toUpperCase() + entry.substring(1),
 						new Object[] { resultMap.get(entry) });
 			}

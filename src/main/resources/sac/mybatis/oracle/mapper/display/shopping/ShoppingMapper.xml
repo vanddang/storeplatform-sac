@@ -596,7 +596,12 @@
                       ,PLAN_END_DT as planEndDt
                       ,PRZWNER_ANNO_DT przwnerAnnoDt
                       ,PLAN_GIFT_NM as planGiftName
-                      ,FN_GETIMAGE(PLAN_ID, #{imageCd}) filePos
+					  ,(SELECT FILE_PATH||FILE_NM FROM TB_DP_PROD_IMG
+						 WHERE PROD_ID = PLAN_ID AND IMG_CD =#{bannerImgCd}
+					   )filePos
+                      ,(SELECT FILE_PATH||FILE_NM FROM TB_DP_PROD_IMG
+                         WHERE PROD_ID = PLAN_ID AND IMG_CD =#{promotionImgCd}
+                       )filePos1					   
                  FROM TB_DP_PLAN_INFO_MANG
                 WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN PLAN_START_DT AND PLAN_END_DT
                   AND PLAN_STATUS_CD = 'DP006501'
@@ -766,8 +771,10 @@
                              WHERE MENU_ID = TOP_MENU_ID
                                AND LANG_CD = #{langCd}          /* ko : 한국어 */
                                AND ROWNUM = 1
-                           ) AS upMenuName                        
-                         ,FN_GETIMAGE(BRAND_ID, #{imageCd}) filePos 
+                           ) AS upMenuName                      
+	                     ,(SELECT FILE_PATH||FILE_NM FROM TB_DP_PROD_IMG
+	                        WHERE PROD_ID = BRAND_ID AND IMG_CD =#{imageCd}
+	                      )filePos
                  FROM (
                     SELECT *
                     FROM (
@@ -930,7 +937,9 @@
                 SELECT THEME_ID as themeId
                      , THEME_NM as themeName
                      , LINK_URL as linkUrl
-                     , FN_GETIMAGE(THEME_ID, #{imageCd}) filePos
+                     ,(SELECT FILE_PATH||FILE_NM FROM TB_DP_PROD_IMG
+                        WHERE PROD_ID = THEME_ID AND IMG_CD =#{imageCd}
+                      )filePos                     
                   FROM TB_DP_THEME_INFO
                  WHERE EXPO_YN = 'Y'
                    AND THEME_STATUS_CD = 'DP006501'
@@ -1394,7 +1403,7 @@
                         ,(SELECT MENU_NM
                             FROM TB_DP_MENU_CATEGORY_DESC
                            WHERE MENU_ID = J.TOP_MENU_ID
-                             AND LANG_CD = #{tenantHeader.langCd}
+                             AND LANG_CD = #{req.langCd}
                              AND ROWNUM = 1
                          ) AS upMenuName                                   
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY L.PROD_AMT ASC) as NO
@@ -1669,5 +1678,17 @@
 		ORDER BY A.CHNL_PROD_ID
    		        ,A.OPT1_NM
 		        ,A.EXPO_ORD
+    </select>        
+    
+  <!-- 쇼핑상세(이미지) 조회-->
+    <select id="getShoppingImgDetailList" parameterType="Map" resultType="Shopping">
+     /* ShoppingMapper.xml.getShoppingImgDetailList,쇼핑상세(이미지) 조회, 김형식/SK플래닛 , 2014-02-04 */
+        SELECT 
+               (FILE_PATH||FILE_NM) filePos  
+          FROM TB_DP_PROD_IMG
+         WHERE PROD_ID = #{req.prodId} 
+           AND IMG_CD =#{req.detailImgCd}
+           AND LANG_CD= #{req.langCd}          /* ko : 한국어 */
+         ORDER BY EXPO_ORD            
     </select>            
 </mapper>

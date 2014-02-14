@@ -83,6 +83,8 @@ public class Shopping extends CommonInfo {
 	private String optPdNm;// 옵션 값
 	private String subYn;// 옵션 하위 여부
 
+	private String filePos1;// 프로모션 이미지
+
 	public String getUpMenuId() {
 		return this.upMenuId;
 	}
@@ -677,6 +679,21 @@ public class Shopping extends CommonInfo {
 	 */
 	public void setSubYn(String subYn) {
 		this.subYn = subYn;
+	}
+
+	/**
+	 * @return the filePos1
+	 */
+	public String getFilePos1() {
+		return this.filePos1;
+	}
+
+	/**
+	 * @param filePos1
+	 *            the filePos1 to set
+	 */
+	public void setFilePos1(String filePos1) {
+		this.filePos1 = filePos1;
 	}
 
 }
