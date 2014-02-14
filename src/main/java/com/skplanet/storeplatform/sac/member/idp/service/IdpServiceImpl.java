@@ -34,26 +34,28 @@ import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.NonMbrSegment;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateNonMbrSegmentRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserMbrSegmentRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrSegment;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -1825,25 +1827,30 @@ public class IdpServiceImpl implements IdpService {
 			schUserReq.setKeySearchList(keySearchList);
 			SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
-			/* 휴대기기 정보 조회 */
-			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-			searchDeviceRequest.setCommonRequest(commonRequest);
-			keySearchList = new ArrayList<KeySearch>();
-			key = new KeySearch();
-			//key.setKeyType(keyType);
-			key.setKeyString(svcMngNum);
-			keySearchList.add(key);
-
-			searchDeviceRequest.setUserKey(schUserRes.getUserKey());
-			searchDeviceRequest.setKeySearchList(keySearchList);
-
-			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 			/* 유통망 추천앱 스케줄 저장 */
+			UpdateUserMbrSegmentRequest req = new UpdateUserMbrSegmentRequest();
+			req.setCommonRequest(commonRequest);
+			UserMbrSegment userMbrSegment = new UserMbrSegment();
+			userMbrSegment.setDeviceID(mdn);
+			userMbrSegment.setSvcMangNum(svcMngNum);
+			userMbrSegment.setUserKey(schUserRes.getUserKey());
+			userMbrSegment.setEcgNumber(min);
+			req.setUserMbrSegment(userMbrSegment);
+			this.userSCI.updateUserMbrSegment(req);
+
 		} catch (StorePlatformException ex) {
 
 			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 
 				/* 비회원인 경우 */
+				UpdateNonMbrSegmentRequest req = new UpdateNonMbrSegmentRequest();
+				req.setCommonRequest(commonRequest);
+				NonMbrSegment nonMbrSegment = new NonMbrSegment();
+				nonMbrSegment.setDeviceID(mdn);
+				nonMbrSegment.setSvcMangNum(svcMngNum);
+				req.setNonMbrSegment(nonMbrSegment);
+				this.userSCI.updateNonMbrSegment(req);
+
 			} else {
 				return this.FAIL_STR;
 			}
