@@ -18,6 +18,7 @@ public class FeatureCategoryEpubSacReq extends CommonInfo {
 	private Integer offset; // offset
 	private Integer count; // count
 	private String filteredBy; // 필터 조건
+	private String menuId; // 메뉴ID
 
 	// common req 전까지 임시
 	private String tenantId; // 메뉴ID
@@ -365,6 +366,31 @@ public class FeatureCategoryEpubSacReq extends CommonInfo {
 	 */
 	public void setProdGradeCdArr(String[] prodGradeCdArr) {
 		this.prodGradeCdArr = prodGradeCdArr == null ? null : prodGradeCdArr.clone();
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 아이디.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getMenuId() {
+		return this.menuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 아이디.
+	 * </pre>
+	 * 
+	 * @param menuId
+	 *            menuId
+	 */
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
 	}
 
 }
