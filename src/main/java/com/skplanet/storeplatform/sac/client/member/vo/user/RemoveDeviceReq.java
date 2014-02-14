@@ -1,7 +1,6 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -10,7 +9,6 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */
-@JsonSerialize(include = Inclusion.NON_NULL)
 public class RemoveDeviceReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
@@ -21,25 +19,13 @@ public class RemoveDeviceReq extends CommonInfo {
 	private String deviceKey;
 
 	/* 기기 ID */
-	private String deviceId;
+	List<RemoveDeviceListSacReq> deviceIdList;
 
 	/* 사용자 권한 Key */
 	private String userAuthKey;
 
 	/* 사용자 아이디 */
 	private String userId;
-
-	public String getDeviceKey() {
-		return this.deviceKey;
-	}
-
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
 	public String getUserKey() {
 		return this.userKey;
@@ -49,12 +35,20 @@ public class RemoveDeviceReq extends CommonInfo {
 		this.userKey = userKey;
 	}
 
-	public String getDeviceId() {
-		return this.deviceId;
+	public String getDeviceKey() {
+		return this.deviceKey;
 	}
 
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+
+	public List<RemoveDeviceListSacReq> getDeviceIdList() {
+		return this.deviceIdList;
+	}
+
+	public void setDeviceIdList(List<RemoveDeviceListSacReq> deviceIdList) {
+		this.deviceIdList = deviceIdList;
 	}
 
 	public String getUserAuthKey() {
@@ -71,6 +65,10 @@ public class RemoveDeviceReq extends CommonInfo {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }
