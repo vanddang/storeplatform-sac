@@ -402,7 +402,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			for (int i = 0; i < schRes.getSellerMbr().size(); i++) {
 				sellerMbrRes = new SellerMbr();
 				sellerMbrRes.setSellerId(schRes.getSellerMbr().get(i).getSellerID());
-				sellerMbrRes.setRegDate(schRes.getSellerMbr().get(i).getRegDate());
+				sellerMbrRes.setRegDate(schRes.getSellerMbr().get(i).getRegDate() + "000000");
 				sList.add(sellerMbrRes);
 			}
 
