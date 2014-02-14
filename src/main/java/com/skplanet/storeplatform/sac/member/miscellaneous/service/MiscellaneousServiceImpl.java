@@ -133,24 +133,25 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		GetOpmdRes res = new GetOpmdRes();
 		res.setMsisdn(msisdn);
+		LOGGER.info("[MiscellaneousService.getOpmd] Request : {}", req);
 
 		/** 1. OPMD번호(989)여부 검사 */
 		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
 			UapsEcReq uapsReq = new UapsEcReq();
 			uapsReq.setDeviceId(msisdn);
-			LOGGER.info("## [SAC] Request : {}", uapsReq);
+			LOGGER.info("[MiscellaneousService.getOpmd] UPAS Request : {}", uapsReq);
 			OpmdEcRes opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
 			if (opmdRes != null) {
 				res.setMsisdn(opmdRes.getMobileMdn());
 				res.setOpmdMdn(opmdRes.getOpmdMdn());
 				res.setMobileSvcMngNum(opmdRes.getMobileSvcMngNum());
 				res.setPauseYN(opmdRes.getPauseYN());
-				LOGGER.info("## [SAC] Response {}", opmdRes);
+				LOGGER.info("[MiscellaneousService.getOpmd] UPAS Response : {}", opmdRes);
 			}
 		} else {
 			/** 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 */
 			res.setMsisdn(msisdn);
-			LOGGER.info("OPMD 번호 아님, Request값 그대로 내려줌.");
+			LOGGER.info("[MiscellaneousService.getOpmd] Non OPMD Number, Request값 그대로 내려줌.");
 		}
 
 		return res;
@@ -166,18 +167,16 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		CommonRequest commonRequest = this.commonComponent.getSCCommonRequest(requestHeader);
 
 		GetUaCodeRes response = new GetUaCodeRes();
-		LOGGER.debug("## [SAC] GetUaCodeReq {}", req);
+		LOGGER.debug("[MiscellaneousService.getUaCode] Request {}", req);
 
-		/** 파라미터로 MSISDN만 넘어온 경우 */
+		/* 파라미터로 MSISDN만 넘어온 경우 */
 		if (msisdn != null && (deviceModelNo == null || deviceModelNo.equals(""))) {
 
-			/* deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
-			userKey = this.searchUserKey(commonRequest, msisdn);
-
-			/* SC 회원 Request 생성 */
+			SearchUserRequest searchUserRequest = new SearchUserRequest();
 			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 
-			/* 공통헤더 Request 파라미터 셋팅 */
+			/* SC 공통헤더 Request 파라미터 셋팅 */
+			searchUserRequest.setCommonRequest(commonRequest);
 			searchDeviceRequest.setCommonRequest(commonRequest);
 
 			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -185,6 +184,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			keySearch.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			keySearch.setKeyString(msisdn);
 			keySearchList.add(keySearch);
+			searchUserRequest.setKeySearchList(keySearchList);
+
+			/* deviceId(msisdn)로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
+			LOGGER.debug("[MiscellaneousService.getUaCode] SC Member Request {}");
+			SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
+
+			if (searchUserResponse == null || searchUserResponse.getUserMbr() == null) {
+				throw new StorePlatformException("SAC_MEM_0003", "deviceId", msisdn);
+			} else {
+				userKey = searchUserResponse.getUserMbr().getUserKey();
+				LOGGER.debug("[MiscellaneousService.getUaCode] SC S Response : {}", searchUserResponse.getUserMbr());
+			}
 
 			searchDeviceRequest.setKeySearchList(keySearchList);
 			searchDeviceRequest.setUserKey(userKey);
@@ -194,7 +205,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			/* deviceModelNo 조회 결과 확인 */
 			if (searchDeviceResult != null && searchDeviceResult.getUserMbrDevice() != null) {
-				LOGGER.debug("## [SAC] UserMbrDeviceDetail : {}", searchDeviceResult.getUserMbrDevice()
+				LOGGER.debug("[MiscellaneousService.getUaCode] : {}", searchDeviceResult.getUserMbrDevice()
 						.getUserMbrDeviceDetail());
 
 				// DB 접속(TB_CM_DEVICE) - UaCode 조회
@@ -571,17 +582,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) {
 
-		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
-
-		LOGGER.info("## 부가서비스 가입여부 조회 요청 - IDP 연동.");
+		LOGGER.info("[MiscellaneousService.getAdditionalService] IDP Request {}", request);
 		ServiceSubscriptionCheckEcReq serviceSubscriptionCheckEcReq = new ServiceSubscriptionCheckEcReq();
 		serviceSubscriptionCheckEcReq.setUserMdn(request.getMsisdn());
 		serviceSubscriptionCheckEcReq.setSvcCode(request.getSvcCode());
 		ServiceSubscriptionCheckEcRes serviceSubscriptionCheckEcRes = this.idpSCI
 				.serviceSubscriptionCheck(serviceSubscriptionCheckEcReq);
+		LOGGER.info("[MiscellaneousService.getAdditionalService] IDP Response {}", serviceSubscriptionCheckEcRes);
 
-		LOGGER.info("## 부가서비스 가입여부 조회 - IDP 연동. response {}", serviceSubscriptionCheckEcRes);
-
+		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
 		response.setMsisdn(serviceSubscriptionCheckEcRes.getUserMdn());
 		response.setSvcCode(serviceSubscriptionCheckEcRes.getSvcCode());
 		response.setSvcJoinResult(serviceSubscriptionCheckEcRes.getSvcResult());

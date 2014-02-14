@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.DeviceIdInfo;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
@@ -59,14 +58,11 @@ public class SearchUserSCIController implements SearchUserSCI {
 		/* 2. 사용자 휴대기기 등록 대수가 1개 이상일 경우 리스트 가져오기. */
 		// 등록기기 없는경우, size=0 인 List 내려주기.
 		List<DeviceInfo> deviceList = userDetail.getDeviceInfoList();
-		List<DeviceIdInfo> deviceIdList = new ArrayList<DeviceIdInfo>();
-		DeviceIdInfo deviceIdInfo = new DeviceIdInfo();
+		List<String> deviceIdList = new ArrayList<String>();
 
 		// MDN 정보 리스트 셋팅
 		for (int i = 0; i < deviceList.size(); i++) {
-			deviceIdInfo.setDeviceId(deviceList.get(i).getDeviceId());
-			deviceIdInfo.setDeviceIdType(deviceList.get(i).getDeviceType());
-			deviceIdList.set(i, deviceIdInfo);
+			// deviceIdList.set(i, element)
 		}
 
 		/* 3. 파라미터 셋팅해서 Response. */
