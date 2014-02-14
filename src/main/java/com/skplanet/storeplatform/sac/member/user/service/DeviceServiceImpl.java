@@ -221,6 +221,11 @@ public class DeviceServiceImpl implements DeviceService {
 
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
+		/* 수정할 데이터 존재유무 확인 */
+		if (this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, deviceKey, userKey) == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+		}
+
 		/* 모번호 조회 */
 		deviceInfo.setDeviceId(this.commService.getOpmdMdnInfo(deviceInfo.getDeviceId()));
 
@@ -577,7 +582,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
 		String isPrimary = deviceInfo.getIsPrimary(); // 대표폰 여부
 		String isRecvSms = deviceInfo.getIsRecvSms(); // sms 수신여부
-		String isAuthenticate = deviceInfo.getIsAuthenticated(); // 인증여부
+		String isAuthenticated = deviceInfo.getIsAuthenticated(); // 인증여부
 		String authenticationDate = deviceInfo.getAuthenticationDate(); // 인증일자
 		String isUsed = deviceInfo.getIsUsed(); // 사용여부
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
@@ -726,10 +731,10 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (isAuthenticate != null && !StringUtils.equals(isAuthenticate, userMbrDevice.getIsAuthenticated())) {
+		if (isAuthenticated != null && !StringUtils.equals(isAuthenticated, userMbrDevice.getIsAuthenticated())) {
 
-			LOGGER.info("[isAuthenticate] {} -> {}", userMbrDevice.getIsAuthenticated(), isAuthenticate);
-			userMbrDevice.setIsAuthenticated(isAuthenticate);
+			LOGGER.info("[isAuthenticate] {} -> {}", userMbrDevice.getIsAuthenticated(), isAuthenticated);
+			userMbrDevice.setIsAuthenticated(isAuthenticated);
 
 		}
 
