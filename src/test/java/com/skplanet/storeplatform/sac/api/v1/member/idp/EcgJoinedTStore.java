@@ -39,18 +39,18 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 
 /**
  * 
- * 가입 승인 만료 정보 Provisioning (유선, 통합 회원) 테스트.
+ * 가서비스 가입 Provisioning 테스트.
  * 
- * Updated on : 2014. 2. 7. Updated by : 반범진, 지티소프트
+ * Updated on : 2014. 2. 14. Updated by : 반범진, 지티소프트
  */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class JoinCompleteTest {
+public class EcgJoinedTStore {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(JoinCompleteTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EcgJoinedTStore.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -75,18 +75,20 @@ public class JoinCompleteTest {
 	 * 가입 승인 만료 정보 Provisioning (유선, 통합 회원).
 	 */
 	@Test
-	public void joinCompleteTest01() {
+	public void ecgJoinedTStore() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
 			public Object requestBody() {
 				ProvisioningReq req = new ProvisioningReq();
-				req.setCmd("joinComplete");
+				req.setCmd("ecgJoinedTStore");
 				HashMap map = new HashMap();
 				map.put("systemID", "W");
 				map.put("tenantID", "S01");
-				;
-				map.put("user_key", "IF1526967420140128135555");
+				map.put("mdn", "01071117908");
+				map.put("min", "1071117908");
+				map.put("svc_mng_num", "7211418980");
+
 				req.setReqParam(map);
 
 				LOGGER.info("request param : {}", req.toString());
@@ -108,13 +110,15 @@ public class JoinCompleteTest {
 	 * 가입 승인 만료 정보 Provisioning (유선, 통합 회원).
 	 */
 	@Test
-	public void joinCompleteTest02() {
+	public void ecgJoinedTStore02() {
 
 		try {
 			HashMap map = new HashMap();
 			map.put("systemID", "W");
 			map.put("tenantID", "S01");
-			map.put("user_key", "IF1526967420140128135555");
+			map.put("mdn", "01071117908");
+			map.put("min", "1071117908");
+			map.put("svc_mng_num", "7211418980");
 			this.idpService.joinComplete(map);
 
 		} catch (Exception e) {
