@@ -93,23 +93,23 @@ public class ModifyTermsAgreementTest {
 						 */
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
 						AgreementInfo agreementInfo1 = new AgreementInfo();
-						agreementInfo1.setExtraAgreementId("US010609"); // 약관코드
-						agreementInfo1.setExtraAgreementVersion("0.3"); // 약관 버전
+						agreementInfo1.setExtraAgreementId("US010601"); // 약관코드
+						agreementInfo1.setExtraAgreementVersion("0.4"); // 약관 버전
 						agreementInfo1.setIsExtraAgreement("N"); // 약관 동의 여부
 						agreementList.add(agreementInfo1);
 						AgreementInfo agreementInfo2 = new AgreementInfo();
-						agreementInfo2.setExtraAgreementId("US010606"); // 약관코드
-						agreementInfo2.setExtraAgreementVersion("0.3"); // 약관 버전
+						agreementInfo2.setExtraAgreementId("US010602"); // 약관코드
+						agreementInfo2.setExtraAgreementVersion("0.4"); // 약관 버전
 						agreementInfo2.setIsExtraAgreement("N"); // 약관 동의 여부
 						agreementList.add(agreementInfo2);
 						AgreementInfo agreementInfo3 = new AgreementInfo();
-						agreementInfo3.setExtraAgreementId("US010607"); // 약관코드
-						agreementInfo3.setExtraAgreementVersion("0.3"); // 약관 버전
+						agreementInfo3.setExtraAgreementId("US010603"); // 약관코드
+						agreementInfo3.setExtraAgreementVersion("0.4"); // 약관 버전
 						agreementInfo3.setIsExtraAgreement("N"); // 약관 동의 여부
 						agreementList.add(agreementInfo3);
 						AgreementInfo agreementInfo4 = new AgreementInfo();
-						agreementInfo4.setExtraAgreementId("US010610"); // 약관코드
-						agreementInfo4.setExtraAgreementVersion("0.3"); // 약관 버전
+						agreementInfo4.setExtraAgreementId("US010604"); // 약관코드
+						agreementInfo4.setExtraAgreementVersion("0.4"); // 약관 버전
 						agreementInfo4.setIsExtraAgreement("N"); // 약관 동의 여부
 						agreementList.add(agreementInfo4);
 						reqJson.setAgreementList(agreementList);

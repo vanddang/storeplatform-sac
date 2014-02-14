@@ -93,12 +93,12 @@ public class CreateTermsAgreementTest {
 						 */
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
 						AgreementInfo agreementInfo1 = new AgreementInfo();
-						agreementInfo1.setExtraAgreementId("US010605"); // 약관코드
+						agreementInfo1.setExtraAgreementId("US010601"); // 약관코드
 						agreementInfo1.setExtraAgreementVersion("0.3"); // 약관 버전
 						agreementInfo1.setIsExtraAgreement("Y"); // 약관 동의 여부
 						agreementList.add(agreementInfo1);
 						AgreementInfo agreementInfo2 = new AgreementInfo();
-						agreementInfo2.setExtraAgreementId("US010606"); // 약관코드
+						agreementInfo2.setExtraAgreementId("US010602"); // 약관코드
 						agreementInfo2.setExtraAgreementVersion("0.3"); // 약관 버전
 						agreementInfo2.setIsExtraAgreement("Y"); // 약관 동의 여부
 						agreementList.add(agreementInfo2);
