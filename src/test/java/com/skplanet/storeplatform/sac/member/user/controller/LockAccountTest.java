@@ -73,6 +73,7 @@ public class LockAccountTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test(expected = StorePlatformException.class)
 	public void test1_lockAccount() throws Exception {
 
@@ -148,7 +149,6 @@ public class LockAccountTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test3_lockAccount() throws Exception {
 
