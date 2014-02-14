@@ -66,7 +66,7 @@ public class DetailInformationSCITest {
 	public void shouldOptianUserCarrer() {
 		DetailInformationSacReq req = new DetailInformationSacReq();
 
-		req.setSellerKey("IF1023501184720130823173955");
+		req.setSellerBizNumber("2432412");
 
 		DetailInformationSacRes res = this.sellerSearchSCI.detailInformation(req);
 
