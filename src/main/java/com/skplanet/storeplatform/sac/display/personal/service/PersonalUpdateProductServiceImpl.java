@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Ident
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.History;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -343,6 +344,10 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					List<Identifier> identifierList = this.appGenerator.generateIdentifierList(
 							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, (String) updateTargetApp.get("PROD_ID"));
 					product.setIdentifierList(identifierList);
+
+					Title title = new Title();
+					title.setText((String) updateTargetApp.get("PROD_NM"));
+					product.setTitle(title);
 
 					Source source = this.commonGenerator.generateSource(
 							ObjectUtils.toString(updateTargetApp.get("IMAGE_PATH")),

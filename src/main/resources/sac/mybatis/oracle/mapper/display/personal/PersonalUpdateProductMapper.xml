@@ -40,6 +40,7 @@
                  ,TPP.PROD_AMT
                  ,ROW_NUMBER() OVER (PARTITION BY SC.APK_PKG_NM ORDER BY APK_VER DESC) AS RNUM 
               FROM   TB_DP_PROD P
+                    ,TB_DP_PROD_DESC PD
                     ,TB_DP_APP_PROD AP
                     ,TB_DP_SPRT_DEVICE SD
                     ,TB_DP_SUB_CONTENTS SC
@@ -55,6 +56,7 @@
                AND   P.PROD_ID = AP.PROD_ID
                AND   P.PROD_ID = SD.PROD_ID
                AND   P.PROD_ID = PI.PROD_ID
+               AND   P.PROD_ID = PD.PROD_ID
                AND   SD.DEVICE_MODEL_CD = #{deviceHeader.model}
                AND   SD.PROD_ID = SC.PROD_ID
                AND   SD.SUB_CONTENTS_ID = SC.SUB_CONTENTS_ID
@@ -75,6 +77,7 @@
                AND   PI.IMG_CD = #{imageCd}           /* 이미지코드 */
                AND   PI.EXPO_ORD = 1                  /* 노출순서 */
                AND   PI.LANG_CD = #{tenantHeader.langCd}                /* ko : 한국어 */
+               AND   PD.LANG_CD = #{tenantHeader.langCd}                /* ko : 한국어 */
                AND   SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
         ) LA
         WHERE RNUM = 1
