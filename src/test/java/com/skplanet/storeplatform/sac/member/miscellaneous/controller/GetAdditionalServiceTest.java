@@ -81,19 +81,20 @@ public class GetAdditionalServiceTest {
 	/**
 	 * 
 	 * <pre>
-	 * 성공 CASE - 확인 2014-02-14
+	 * 부가서비스 가입 조회.
+	 * - 가입된 회원.
 	 * </pre>
 	 * 
 	 */
 	@Test
-	public void requestMsisdnTest() {
+	public void testJoinedAdditionalService() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getAdditionalService/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 					@Override
 					public Object requestBody() {
-						request.setMsisdn("");
-						request.setSvcCode("");
+						request.setMsisdn("01020284280");
+						request.setSvcCode("NA00004184");
 						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
@@ -105,4 +106,34 @@ public class GetAdditionalServiceTest {
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 부가서비스 가입 조회.
+	 * - 미가입 회원.
+	 * </pre>
+	 * 
+	 */
+	@Test
+	public void testNotJoinedAdditionalService() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getAdditionalService/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+
+					@Override
+					public Object requestBody() {
+						request.setMsisdn("01032954056");
+						request.setSvcCode("NA00004184");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetAdditionalServiceRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetAdditionalServiceRes response = (GetAdditionalServiceRes) result;
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	}
+
 }

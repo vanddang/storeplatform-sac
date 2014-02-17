@@ -104,5 +104,4 @@ public class GetModelCodeTest {
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
-	// (expected = StorePlatformException.class)
 }

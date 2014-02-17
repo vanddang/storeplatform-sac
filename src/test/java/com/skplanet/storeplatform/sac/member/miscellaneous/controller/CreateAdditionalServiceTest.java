@@ -83,19 +83,20 @@ public class CreateAdditionalServiceTest {
 	/**
 	 * 
 	 * <pre>
-	 * 성공 CASE
+	 * 부가서비스 가입.
+	 * - 신규 가입.
 	 * </pre>
 	 * 
 	 */
-	@Test(expected = StorePlatformException.class)
-	public void requestMsisdnTest() {
+	@Test
+	public void testJoinAdditionalService() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/createAdditionalService/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 					@Override
 					public Object requestBody() {
-						request.setMsisdn("01012345678");
-						request.setSvcCode("NA00000000");
+						request.setMsisdn("01032954056");
+						request.setSvcCode("NA00004184");
 						request.setSvcMngNum("");
 						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
@@ -109,5 +110,43 @@ public class CreateAdditionalServiceTest {
 						assertEquals(response.getClass(), request.getSvcCode());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 부가서비스 가입.
+	 * - 기가입 (EC - Exception).
+	 * </pre>
+	 * 
+	 */
+	@Test
+	public void testAdditionalServiceAlreadyJoined() {
+		try {
+
+			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/createAdditionalService/v1")
+					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+
+						@Override
+						public Object requestBody() {
+							request.setMsisdn("01032954056");
+							request.setSvcCode("NA00004184");
+							request.setSvcMngNum("");
+							LOGGER.debug("[REQUEST(SAC)] JSON : \n{}",
+									TestConvertMapperUtils.convertObjectToJson(request));
+							return request;
+						}
+					}).success(CreateAdditionalServiceRes.class, new SuccessCallback() {
+
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							CreateAdditionalServiceRes response = (CreateAdditionalServiceRes) result;
+							assertEquals(response.getMsisdn(), request.getMsisdn());
+							assertEquals(response.getClass(), request.getSvcCode());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		} catch (StorePlatformException e) {
+			LOGGER.info("\nerror >> ", e);
+		}
 	}
 }

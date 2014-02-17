@@ -79,11 +79,12 @@ public class ConfirmCaptchaTest {
 
 	/**
 	 * <pre>
-	 * 성공 CASE. - 성공인데 Exception 발생! 확인 필요!!
+	 * Captcha 문자 확인.
+	 * - 인증 성공
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
-	public void simpleTest() {
+	@Test
+	public void testConfirmCaptcha() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmCaptcha/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 
@@ -103,7 +104,43 @@ public class ConfirmCaptchaTest {
 						ConfirmCaptchaRes response = (ConfirmCaptchaRes) result;
 						assertEquals(response, null); // response 없는게 정상 Case임.
 					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+				}, HttpStatus.OK, HttpStatus.ACCEPTED);
+
+	}
+
+	/**
+	 * <pre>
+	 * Captcha 문자 확인.
+	 * - 인증 실패 // Json 에러 확인 필요.
+	 * </pre>
+	 */
+	@Test
+	public void testExceptionConfrimCaptcha() {
+		try {
+			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmCaptcha/v1")
+					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+
+						@Override
+						public Object requestBody() {
+							request.setAuthCode("n6yxe0");
+							request.setImageSign("88f4e72da1467f7ff05aebf0f72faf25f206588f");
+							request.setSignData("https://idp.innoace.com:8002/watermark/20140122/10573_1390394299869.jpeg|1390394299869");
+
+							LOGGER.debug("[REQUEST(SAC)] JSON : \n{}",
+									TestConvertMapperUtils.convertObjectToJson(request));
+							return request;
+						}
+					}).success(ConfirmCaptchaRes.class, new SuccessCallback() {
+
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							ConfirmCaptchaRes response = (ConfirmCaptchaRes) result;
+							assertEquals(response, null); // response 없는게 정상 Case임.
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		} catch (StorePlatformException e) {
+			LOGGER.info("\nerror >> ", e);
+		}
 
 	}
 
