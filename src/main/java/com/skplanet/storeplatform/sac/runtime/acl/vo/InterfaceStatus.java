@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.vo;
 
+import org.apache.commons.lang3.StringUtils;
+
 
 /**
 *
@@ -21,14 +23,23 @@ public enum InterfaceStatus {
 
 	AVALIABLE("CM010601"), UNAVAILABLE("CM010602"), DEPRECATED("CM010603");
 
-	private final String value;
+	private final String code;
 
-	InterfaceStatus(String value) {
-		this.value = value;
+	InterfaceStatus(String code) {
+		this.code = code;
 	}
 
-	public String getValue() {
-		return this.value;
+	public String getCode() {
+		return this.code;
+	}
+
+	public static InterfaceStatus fromCode(String code) {
+		for (InterfaceStatus status : values()) {
+			if (StringUtils.equalsIgnoreCase(status.getCode(), code)) {
+				return status;
+			}
+		}
+		return null;
 	}
 
 }
