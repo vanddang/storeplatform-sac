@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
+import com.skplanet.storeplatform.sac.display.app.vo.*;
+import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -38,10 +39,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Hist
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
-import com.skplanet.storeplatform.sac.display.app.vo.AppDetail;
-import com.skplanet.storeplatform.sac.display.app.vo.ImageSource;
-import com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq;
-import com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -76,7 +73,7 @@ public class AppServiceImpl implements AppService {
 	private DisplayCommonService commonService;
 
 	@Override
-	public AppDetailRes getAppDetail(AppDetailReq request) {
+	public AppDetailRes getAppDetail(AppDetailParam request) {
 
 		// TODO Provisioning - 단말기, 운영체제 버전
 		AppDetail appDetail = this.commonDAO.queryForObject("AppDetail.getAppDetail", request, AppDetail.class);
@@ -84,37 +81,39 @@ public class AppServiceImpl implements AppService {
 			throw new StorePlatformException("SAC_DSP_9999");
 		AppDetailRes res = new AppDetailRes();
 
-		// Product Basic info
-		Product product = new Product();
-		product.setIdentifier(new Identifier("episode", request.getEpisodeId()));
-		product.setPacketFee(appDetail.getProdGbn());
+        // Product Basic info
+        Product product = new Product();
+        product.setIdentifier(new Identifier("episode", request.getChannelId()));
+        product.setPacketFee(appDetail.getProdGbn());
 
 		product.setTitle(new Title(appDetail.getWapProdNm()));
 		Price price = new Price();
 		price.setFixedPrice(appDetail.getProdAmt());
 		product.setPrice(price);
 
-		// Menu
-		List<MenuItem> menuList = this.commonService.getMenuItemList(request.getEpisodeId(), request.getLangCd());
-		product.setMenuList(new ArrayList<Menu>());
-		for (MenuItem mi : menuList) {
-			Menu menu = new Menu();
-			menu.setId(mi.getMenuId());
-			menu.setName(mi.getMenuNm());
-			if (mi.isInfrMenu())
-				menu.setType("topClass");
+        // TODO 구매 메소드 호출하여 판매상태 반영
+        product.setSalesStatus("PD000403");
+
+        // Menu
+        List<MenuItem> menuList = commonService.getMenuItemList(request.getChannelId(), request.getLangCd());
+        product.setMenuList(new ArrayList<Menu>());
+        for (MenuItem mi : menuList) {
+            Menu menu = new Menu();
+            menu.setId(mi.getMenuId());
+            menu.setName(mi.getMenuNm());
+            if(mi.isInfrMenu())
+                menu.setType("topClass");
 
 			product.getMenuList().add(menu);
 		}
 
-		// Source
-		List<ImageSource> imageSourceList = this.commonDAO.queryForList("AppDetail.getSourceList", new ImageSourceReq(
-				request.getEpisodeId(), SOURCE_REQUEST, request.getLangCd()), ImageSource.class);
-		List<Source> sourceList = new ArrayList<Source>();
-		for (ImageSource imgSrc : imageSourceList) {
-			Source source = new Source();
-			source.setMediaType(DisplayCommonUtil.getMimeType(imgSrc.getFileNm()));
-			source.setUrl(imgSrc.getFilePath());
+        // Source
+        List<ImageSource> imageSourceList = commonDAO.queryForList("AppDetail.getSourceList", new ImageSourceReq(request.getChannelId(), SOURCE_REQUEST, request.getLangCd()), ImageSource.class);
+        List<Source> sourceList = new ArrayList<Source>();
+        for (ImageSource imgSrc : imageSourceList) {
+            Source source = new Source();
+            source.setMediaType(DisplayCommonUtil.getMimeType(imgSrc.getFileNm()));
+            source.setUrl(imgSrc.getFilePath());
 
 			if (SOURCE_LIST_SCREENSHOT_ORIGINAL.contains(imgSrc.getImgCd()))
 				source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);

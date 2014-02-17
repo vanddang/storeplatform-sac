@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.display.app.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
+import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
 
 /**
@@ -10,6 +10,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
  */
 public interface AppService {
 
-    public AppDetailRes getAppDetail(AppDetailReq request);
+    public AppDetailRes getAppDetail(AppDetailParam request);
 
 }

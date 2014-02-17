@@ -10,14 +10,17 @@
 package com.skplanet.storeplatform.sac.display.app.controller;
 
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
+import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.app.service.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -31,15 +34,17 @@ public class AppController {
     @Autowired
     private AppService appService;
 
-    @RequestMapping(value = "/app/detail/v1", method = RequestMethod.GET)
+    @RequestMapping(value = "/app/detail/v1", method = RequestMethod.POST)
     @ResponseBody
-    public AppDetailRes getAppDetail(String episodeId, SacRequestHeader header) {
+    public AppDetailRes getAppDetail(SacRequestHeader header, @Validated @RequestBody AppDetailReq req) {
 
-        AppDetailReq request = new AppDetailReq();
-        request.setEpisodeId(episodeId);
-        request.setLangCd("ko");
+        AppDetailParam request = new AppDetailParam();
+        request.setChannelId(req.getChannelId());
+        request.setLangCd(header.getTenantHeader().getLangCd());
         request.setTenantId(header.getTenantHeader().getTenantId());
         request.setDeviceModelCd(header.getDeviceHeader().getModel());
+        request.setUserKey(req.getUserKey());
+        request.setDeviceKey(req.getDeviceKey());
 
         return appService.getAppDetail(request);
     }

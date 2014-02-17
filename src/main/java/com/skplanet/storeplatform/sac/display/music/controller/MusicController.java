@@ -9,21 +9,23 @@
  */
 package com.skplanet.storeplatform.sac.display.music.controller;
 
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.music.controller.binder.MusicDetailBinder;
+import com.skplanet.storeplatform.sac.display.music.service.MusicService;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetail;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetailComposite;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetailParam;
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.music.service.MusicService;
 import com.skplanet.storeplatform.sac.display.music.vo.SubContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -43,11 +45,14 @@ public class MusicController {
     @Autowired
     private MusicDetailBinder musicDetailBinder;
 
-    @RequestMapping(value = "/music/detail/v1", method = RequestMethod.GET)
+    @RequestMapping(value = "/music/detail/v1", method = RequestMethod.POST)
     @ResponseBody
-    public MusicDetailRes getMusicDetail(@RequestParam String channelId, SacRequestHeader header) {
+    public MusicDetailRes getMusicDetail(@Validated @RequestBody MusicDetailReq req, SacRequestHeader header) {
         MusicDetailParam param = new MusicDetailParam();
-        param.setChannelId(channelId);
+        param.setChannelId(req.getChannelId());
+        param.setUserKey(req.getUserKey());
+        param.setDeviceKey(req.getDeviceKey());
+
         param.setTenantId(header.getTenantHeader().getTenantId());
         param.setLangCd(header.getTenantHeader().getLangCd());
         param.setDeviceModelCd(header.getDeviceHeader().getModel());

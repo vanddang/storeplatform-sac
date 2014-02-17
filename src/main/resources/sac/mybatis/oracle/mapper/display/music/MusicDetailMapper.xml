@@ -35,6 +35,10 @@
                 ON RS.PROD_ID = CPD.PROD_ID
             INNER JOIN TB_DP_PROD EPD
                 ON EPD.PROD_ID = RS.PART_PROD_ID
+            INNER JOIN TB_DP_SPRT_DEVICE SD
+                ON SD.PROD_ID = EPD.PROD_ID
+            INNER JOIN TB_CM_DEVICE DEV
+                ON DEV.DEVICE_MODEL_CD = SD.DEVICE_MODEL_CD
             INNER JOIN TB_DP_MULTIMDA_PROD MM
                 ON EPD.PROD_ID = MM.PROD_ID
             INNER JOIN TB_DP_PROD_DESC PDESC
@@ -49,8 +53,12 @@
                 ON TS.PROD_ID = CPD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
         WHERE CPD.META_CLSF_CD = 'CT25'
               AND CPD.CONTENTS_TYPE_CD = 'PD002501'
+              AND RS.PROD_RSHP_CD = 'DP010802'
               AND EPD.META_CLSF_CD = 'CT25'
               AND EPD.CONTENTS_TYPE_CD = 'PD002502'
+              AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = #{standardModel})
+              AND DEV.USE_YN = 'Y'
+              AND DEV.MUSIC_SPRT_YN = 'Y'
               AND TP.TENANT_ID = #{tenantId}
               AND PDESC.LANG_CD = #{langCd}
               AND CPD.PROD_ID = #{channelId}

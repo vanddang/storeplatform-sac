@@ -2,76 +2,80 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="AppDetail">
     
-    <select id="getAppDetail" parameterType="com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.AppDetail">
+    <select id="getAppDetail" parameterType="com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam" resultType="com.skplanet.storeplatform.sac.display.app.vo.AppDetail">
         /* AppDetailMapper.xml, getAppDetail, SAC : 정희원 , 2014-01-24 */
         SELECT
-        PD.PROD_ID,
-        SC.SUB_CONTENTS_ID,
-        APP.WAP_PROD_NM,
-        TPRC.PROD_AMT,
-        nvl(TS.AVG_EVLU_SCORE, 0.0) as AVG_EVLU_SCORE,
-        nvl(TS.DWLD_CNT, 0) as DWLD_CNT,
-        nvl(TS.PATICPERS_CNT, 0) as PATICPERS_CNT,
-        APP.AID,
-        SC.APK_PKG_NM,
-        SC.APK_VER,
-        SC.APK_VER_NM,
-        SC.VM_VER,
-        SC.FILE_SIZE,
-        DECODE( NVL( APP.PROD_CLSF_CD, 'PD000601' )
-        , 'PD000601', 'PAID'
-        , 'PD000602', 'LIBRARY'
-        , 'PD000603', 'VM'
-        , 'PD000604', 'FREE'
-        , 'PD000605', 'PAID-RSS'
-        , 'PD000606', 'FREE-RSS' )  AS PROD_GBN,
-        DECODE( PD.PROD_GRD_CD
-        , 'PD004401', 0
-        , 'PD004402', 1
-        , 'PD004403', 2
-        , 'PD004404', 4 ) AS PROD_GRD,
-        PD.SELLER_MBR_NO,
-        PD.EXPO_SELLER_EMAIL,
-        PD.EXPO_SELLER_NM,
-        PD.EXPO_SELLER_TELNO
+            PD.PROD_ID,
+            SC.SUB_CONTENTS_ID,
+            APP.WAP_PROD_NM,
+            TPRC.PROD_AMT,
+            nvl(TS.AVG_EVLU_SCORE, 0.0) as AVG_EVLU_SCORE,
+            nvl(TS.DWLD_CNT, 0) as DWLD_CNT,
+            nvl(TS.PATICPERS_CNT, 0) as PATICPERS_CNT,
+            APP.AID,
+            SC.APK_PKG_NM,
+            SC.APK_VER,
+            SC.APK_VER_NM,
+            SC.VM_VER,
+            SC.FILE_SIZE,
+            DECODE( NVL( APP.PROD_CLSF_CD, 'PD000601' )
+            , 'PD000601', 'PAID'
+            , 'PD000602', 'LIBRARY'
+            , 'PD000603', 'VM'
+            , 'PD000604', 'FREE'
+            , 'PD000605', 'PAID-RSS'
+            , 'PD000606', 'FREE-RSS' )  AS PROD_GBN,
+            DECODE( PD.PROD_GRD_CD
+            , 'PD004401', 0
+            , 'PD004402', 1
+            , 'PD004403', 2
+            , 'PD004404', 4 ) AS PROD_GRD,
+            PD.SELLER_MBR_NO,
+            PD.EXPO_SELLER_EMAIL,
+            PD.EXPO_SELLER_NM,
+            PD.EXPO_SELLER_TELNO
         FROM
-            TB_DP_PROD PD INNER JOIN TB_DP_APP_PROD APP
-            ON PD.PROD_ID = APP.PROD_ID
-            INNER JOIN TB_DP_SPRT_DEVICE SD
-            ON SD.PROD_ID = PD.PROD_ID
-            INNER JOIN TB_DP_SUB_CONTENTS SC
-            ON SC.PROD_ID = PD.PROD_ID AND SC.SUB_CONTENTS_ID = SD.SUB_CONTENTS_ID
-            INNER JOIN TB_DP_TENANT_PROD TP
-            ON TP.PROD_ID= PD.PROD_ID
-            LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
-            ON TS.PROD_ID = PD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
-            INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
-            ON TPRC.PROD_ID = PD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+                TB_DP_PROD PD
+                INNER JOIN TB_DP_APP_PROD APP
+                    ON PD.PROD_ID = APP.PROD_ID
+                INNER JOIN TB_DP_SPRT_DEVICE SD
+                    ON SD.PROD_ID = PD.PROD_ID
+                INNER JOIN TB_CM_DEVICE DEV
+                    ON DEV.DEVICE_MODEL_CD = SD.DEVICE_MODEL_CD
+                INNER JOIN TB_DP_SUB_CONTENTS SC
+                    ON SC.PROD_ID = PD.PROD_ID AND SC.SUB_CONTENTS_ID = SD.SUB_CONTENTS_ID
+                INNER JOIN TB_DP_TENANT_PROD TP
+                    ON TP.PROD_ID= PD.PROD_ID
+                LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
+                    ON TS.PROD_ID = PD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
+                INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+                    ON TPRC.PROD_ID = PD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
         WHERE 1 = 1
-            AND PD.PROD_ID = #{episodeId}
-            AND TP.TENANT_ID = #{tenantId}
-            AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
-            AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
+              AND PD.PROD_ID = #{channelId}
+              AND TP.TENANT_ID = #{tenantId}
+              AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = #{standardModel})
+              AND DEV.USE_YN = 'Y'
+              AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
     </select>
 
     <select id="getSourceList" parameterType="com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.ImageSource">
         /* AppDetailMapper.xml, getSourceList, SAC : 정희원 , 2014-01-24 */
         SELECT FILE_PATH, FILE_NM, IMG_CD
         FROM TB_DP_PROD_IMG
-        WHERE PROD_ID = #{episodeId}
+        WHERE PROD_ID = #{channelId}
         AND IMG_CD IN
             <foreach collection="imgCds" separator="," item="v" open="(" close=")">#{v}</foreach>
         AND LANG_CD = #{langCd}
         ORDER BY EXPO_ORD
     </select>
 
-    <select id="getUpdateHistoryList" parameterType="com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory">
+    <select id="getUpdateHistoryList" parameterType="com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam" resultType="com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory">
         /* AppDetailMapper.xml, getUpdateHistoryList, SAC : 정희원 , 2014-01-24 */
         SELECT
             PROD_UPD_DT,
             UPDT_TEXT
         FROM TB_DP_PROD_UPDT_HIS
-        WHERE PROD_ID = #{episodeId}
+        WHERE PROD_ID = #{channelId}
         ORDER BY UPDT_SEQ DESC
     </select>
 

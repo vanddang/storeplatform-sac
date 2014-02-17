@@ -96,6 +96,9 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         rights.setGrade(musicDetail.getProdGrd());
         product.setRights(rights);
 
+        // TODO 구매 메소드 호출하여 판매상태 반영
+        product.setSalesStatus("PD000403");
+
         // Contributor
         Contributor contributor = new Contributor();
         contributor.setIdentifier(new Identifier("contributorId", musicDetail.getArtist1Id()));

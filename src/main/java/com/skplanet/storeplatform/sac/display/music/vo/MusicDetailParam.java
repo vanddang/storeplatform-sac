@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.music.vo;
 
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+
 import java.util.List;
 
 /**
@@ -22,7 +24,25 @@ public class MusicDetailParam {
     private String langCd;
     private String tenantId;
     private String deviceModelCd;
+    private String userKey;
+    private String deviceKey;
     private List<String> prodStatusCdList;
+
+    public String getUserKey() {
+        return userKey;
+    }
+
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
+    }
+
+    public String getDeviceKey() {
+        return deviceKey;
+    }
+
+    public void setDeviceKey(String deviceKey) {
+        this.deviceKey = deviceKey;
+    }
 
     public List<String> getProdStatusCdList() {
         return prodStatusCdList;
@@ -62,5 +82,9 @@ public class MusicDetailParam {
 
     public void setChannelId(String channelId) {
         this.channelId = channelId;
+    }
+
+    public String getStandardModel() {
+        return DisplayConstants.DP_ANDROID_STANDARD2_NM;
     }
 }
