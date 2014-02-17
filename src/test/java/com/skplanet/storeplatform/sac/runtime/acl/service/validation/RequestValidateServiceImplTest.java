@@ -26,11 +26,60 @@ public class RequestValidateServiceImplTest {
 	private AclDataAccessService dbAccessMock;
 
 	@Test
+	public void testValidateHeaders() {
+		HttpHeaders headers = new HttpHeaders();
+
+		try {
+			this.validatService.validateHeaders(headers);
+		} catch (StorePlatformException e) {
+			assertEquals("SAC_CMN_0001", e.getErrorInfo().getCode());
+		}
+
+		headers.setAuthKey("kasdlkjfsladk;jfskl;adjfk;lasfj");
+
+		try {
+			this.validatService.validateHeaders(headers);
+		} catch (StorePlatformException e) {
+			assertEquals("SAC_CMN_0001", e.getErrorInfo().getCode());
+		}
+
+		headers.setSystemId("S01-01002");
+		headers.setInterfaceId("I01000001");
+
+		try {
+			this.validatService.validateHeaders(headers);
+		} catch (StorePlatformException e) {
+			assertEquals("SAC_CMN_0001", e.getErrorInfo().getCode());
+		}
+
+		headers.setGuid("asdfsadsadfsadfsadfwaef");
+
+		this.validatService.validateHeaders(headers);
+	}
+
+	@Test(expected=StorePlatformException.class)
+	public void testValidateTimestampForException() throws InterruptedException {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setTimestamp(AclUtils.getTimestamp() + "");
+		this.validatService.validateTimestamp(headers); // Success
+
+		Thread.sleep(11000); // Wait 11 sec (Timeout = 10 sec)
+		try {
+			this.validatService.validateTimestamp(headers);
+		} catch (StorePlatformException e) {
+			assertEquals("SAC_CMN_0002", e.getErrorInfo().getCode());
+			throw e;
+		}
+	}
+
+	@Test
 	public void testValidateInterface() {
 		String id = "I01000001";
 		Interface obj = new Interface();
 		obj.setInterfaceId(id);
 		obj.setUrl("/member/user/createByMdn/v1");
+		obj.setStatusCd("CM010601");
 
 		when(this.dbAccessMock.selectInterfaceById(id)).thenReturn(obj);
 
@@ -44,7 +93,7 @@ public class RequestValidateServiceImplTest {
 	}
 
 	@Test(expected=StorePlatformException.class)
-	public void testValidateInterfaceForInvalidInterfaceID() {
+	public void testValidateInterfaceForNonexistentInterfaceID() {
 		String id = "I01000002";
 		when(this.dbAccessMock.selectInterfaceById(id)).thenReturn(null);
 
@@ -55,7 +104,7 @@ public class RequestValidateServiceImplTest {
 		try {
 			this.validatService.validateInterface(headers);
 		} catch (StorePlatformException e) {
-			assertEquals("SAC_CMN_0001", e.getErrorInfo().getCode());
+			assertEquals("SAC_CMN_0003", e.getErrorInfo().getCode());
 			throw e;
 		} finally {
 			verify(this.dbAccessMock).selectInterfaceById(id);
@@ -78,30 +127,34 @@ public class RequestValidateServiceImplTest {
 		try {
 			this.validatService.validateInterface(headers);
 		} catch (StorePlatformException e) {
-			assertEquals("SAC_CMN_0002", e.getErrorInfo().getCode());
+			assertEquals("SAC_CMN_0004", e.getErrorInfo().getCode());
 			throw e;
 		} finally {
 			verify(this.dbAccessMock).selectInterfaceById(id);
 		}
 	}
 
-	@Test
-	public void testValidateTimestamp() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setTimestamp(AclUtils.getTimestamp() + "");
-		this.validatService.validateTimestamp(headers);
-	}
-
 	@Test(expected=StorePlatformException.class)
-	public void testValidateTimestampForException() throws InterruptedException {
+	public void testValidateInterfaceForUnavailableInterface() {
+		String id = "I01000001";
+		Interface obj = new Interface();
+		obj.setInterfaceId(id);
+		obj.setUrl("/member/user/createByMdn/v1");
+		obj.setStatusCd("CM010602");
+
+		when(this.dbAccessMock.selectInterfaceById(id)).thenReturn(obj);
+
 		HttpHeaders headers = new HttpHeaders();
-		headers.setTimestamp(AclUtils.getTimestamp() + "");
-		Thread.sleep(11000); // Wait 11 sec (Timeout = 10 sec)
+		headers.setInterfaceId("I01000001");
+		headers.setRequestUrl("/abcde");
+
 		try {
-			this.validatService.validateTimestamp(headers);
+			this.validatService.validateInterface(headers);
 		} catch (StorePlatformException e) {
-			assertEquals("SAC_CMN_0003", e.getErrorInfo().getCode());
+			assertEquals("SAC_CMN_0004", e.getErrorInfo().getCode());
 			throw e;
+		} finally {
+			verify(this.dbAccessMock).selectInterfaceById(id);
 		}
 	}
 
