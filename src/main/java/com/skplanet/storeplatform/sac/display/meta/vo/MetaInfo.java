@@ -103,12 +103,14 @@ public class MetaInfo {
 	private String storeDrmYn;
 	private String storeProdStatusCd;
 	private String storeProdChrg;
+	private String storeUsePeriodUnitCd;
 	private String playProdId;
 	private Integer playProdAmt;
 	private Integer playProdNetAmt;
 	private String playDrmYn;
 	private String playProdStatusCd;
 	private String playProdChrg;
+	private String playUsePeriodUnitCd;
 	private String usePeriodUnitCd;
 	private String usePeriod;
 	private String usePeriodNm;
@@ -1553,6 +1555,21 @@ public class MetaInfo {
 	}
 
 	/**
+	 * @return the storeUsePeriodUnitCd
+	 */
+	public String getStoreUsePeriodUnitCd() {
+		return this.storeUsePeriodUnitCd;
+	}
+
+	/**
+	 * @param storeUsePeriodUnitCd
+	 *            the storeUsePeriodUnitCd to set
+	 */
+	public void setStoreUsePeriodUnitCd(String storeUsePeriodUnitCd) {
+		this.storeUsePeriodUnitCd = storeUsePeriodUnitCd;
+	}
+
+	/**
 	 * @return the playProdId
 	 */
 	public String getPlayProdId() {
@@ -1640,6 +1657,21 @@ public class MetaInfo {
 	 */
 	public void setPlayProdChrg(String playProdChrg) {
 		this.playProdChrg = playProdChrg;
+	}
+
+	/**
+	 * @return the playUsePeriodUnitCd
+	 */
+	public String getPlayUsePeriodUnitCd() {
+		return this.playUsePeriodUnitCd;
+	}
+
+	/**
+	 * @param playUsePeriodUnitCd
+	 *            the playUsePeriodUnitCd to set
+	 */
+	public void setPlayUsePeriodUnitCd(String playUsePeriodUnitCd) {
+		this.playUsePeriodUnitCd = playUsePeriodUnitCd;
 	}
 
 	/**
