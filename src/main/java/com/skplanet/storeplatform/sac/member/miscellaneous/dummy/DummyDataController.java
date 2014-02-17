@@ -346,7 +346,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetAdditionalServiceRes
 	 */
-	@RequestMapping(value = "/getAdditionalService/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/getAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetAdditionalServiceRes getAdditionalService() {
 
