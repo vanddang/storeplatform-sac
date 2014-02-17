@@ -266,10 +266,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						deviceIdType = this.commonService.getDeviceIdType(deviceId); // Device Id 유형
 					}
 
-					this.log.debug("###############################################################");
-					this.log.debug("deviceId	:	" + result.getDeviceId());
-					this.log.debug("###############################################################");
-
 					metaInfo.setPurchaseId(prchsId);
 					metaInfo.setPurchaseDt(prchsDt);
 					metaInfo.setPurchaseState(prchsState);
