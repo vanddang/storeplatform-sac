@@ -54,19 +54,18 @@ public class UserExtraInfoController {
 		logger.debug("###### modifyAdditionalInformation Req Object : {}", req.getUserKey());
 		logger.debug("###### modifyAdditionalInformation Req List : {}", req.getUserExtraInfoList().toString());
 
+		if (userKey.equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
+		}
+
 		for (UserExtraInfo infoReq : req.getUserExtraInfoList()) {
 			extraProfile = StringUtil.nvl(infoReq.getExtraProfile(), "");
 			extraProfilValue = StringUtil.nvl(infoReq.getExtraProfileValue(), "");
 
 			if (extraProfile.equals("") || extraProfilValue.equals("")) {
-				throw new StorePlatformException("SAC_MEM_0001", infoReq.toString());
+				throw new StorePlatformException("SAC_MEM_0001", "extraProfile, extraProfileValue");
 			}
-		}
 
-		if (userKey.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.getUserKey());
-		} else if (req.getUserExtraInfoList() == null) {
-			throw new StorePlatformException("SAC_MEM_0001" + req.getUserExtraInfoList().toString());
 		}
 
 		UserExtraInfoRes res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
@@ -84,6 +83,10 @@ public class UserExtraInfoController {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String extraProfile = "";
 
+		if (userKey.equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
+		}
+
 		logger.debug("###### removeAdditionalInformation Req Object : {}", req.getUserKey());
 		logger.debug("###### removeAdditionalInformation Req List : {}", req.getUserExtraInfoList().toString());
 
@@ -91,14 +94,8 @@ public class UserExtraInfoController {
 			extraProfile = StringUtil.nvl(infoReq.getExtraProfile(), "");
 
 			if (extraProfile.equals("")) {
-				throw new StorePlatformException("SAC_MEM_0001", extraProfile);
+				throw new StorePlatformException("SAC_MEM_0001", "extraProfile");
 			}
-		}
-
-		if (userKey.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.getUserKey());
-		} else if (req.getUserExtraInfoList() == null) {
-			throw new StorePlatformException("SAC_MEM_0001", req.getUserExtraInfoList().toString());
 		}
 
 		UserExtraInfoRes res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
@@ -116,7 +113,7 @@ public class UserExtraInfoController {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
 		if (userKey.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.getUserKey());
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
 		UserExtraInfoRes res = this.userExtraService.listAdditionalInformation(req, sacHeader);

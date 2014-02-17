@@ -215,7 +215,7 @@ public class UserSearchController {
 		String userPhone = StringUtil.nvl(req.getUserPhone(), "");
 
 		if (userId.equals("") || userEmail.equals("") || userPhone.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
+			throw new StorePlatformException("SAC_MEM_0001", "userId, userEmail, userPhone");
 		}
 
 		SearchPasswordSacRes res = this.svc.searchPassword(sacHeader, req);

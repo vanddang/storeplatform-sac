@@ -56,8 +56,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
-		UserExtraInfoRes res = new UserExtraInfoRes();
-
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
 		UserInfo searchUser = this.searchUser(req, sacHeader);
 
@@ -65,6 +63,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		String validProfileCode = this.validProfileCode(req);
 
 		/* 정상회원이면 SC 회원 부가 정보 등록/수정 호출 */
+		UserExtraInfoRes res = new UserExtraInfoRes();
 		if (searchUser != null && "Y".equals(validProfileCode)) {
 			res = this.modifyUserExtra(req, sacHeader);
 		}
@@ -102,8 +101,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
-		UserExtraInfoRes res = new UserExtraInfoRes();
-
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
 		UserInfo searchUser = this.searchUser(req, sacHeader);
 
@@ -113,6 +110,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		/* 입력받은 profileCode 가 등록이 되어 있는지 확인 : 등록이 되어 있어야 삭제가 가능. */
 		String registerdProfileCode = this.registeredProfileCode(searchUser, req);
 
+		UserExtraInfoRes res = new UserExtraInfoRes();
 		/* 정상회원이면 SC 회원 부가 정보 삭제 호출 */
 		if (searchUser != null && "Y".equals(validProfileCode) && "Y".equals(registerdProfileCode)) {
 			res = this.removeUserExtra(req, sacHeader);
@@ -141,7 +139,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	/* SC API 회원부가정보 삭제 */
 	@Override
 	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
-		UserExtraInfoRes res = new UserExtraInfoRes();
+
 		RemoveManagementRequest removeReq = new RemoveManagementRequest();
 
 		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
@@ -173,6 +171,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		LOGGER.debug("###### removeUserExtra SC API Success Res : {}", removeRes.getCommonResponse().getResultMessage());
 		LOGGER.debug("###### removeUserExtra SC API Success Res : {}", removeRes.getUserKey());
 
+		UserExtraInfoRes res = new UserExtraInfoRes();
 		res.setUserKey(removeRes.getUserKey());
 
 		return res;
@@ -181,7 +180,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	/* SC API 회원부가정보 등록/수정 */
 	@Override
 	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
-		UserExtraInfoRes res = new UserExtraInfoRes();
+
 		UpdateManagementRequest updateReq = new UpdateManagementRequest();
 
 		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
@@ -210,6 +209,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		LOGGER.debug("###### SC API Success Msg : {}", updateRes.getCommonResponse().getResultMessage());
 		LOGGER.debug("###### SC API Success Res : {}", updateRes.getUserKey());
 
+		UserExtraInfoRes res = new UserExtraInfoRes();
 		res.setUserKey(updateRes.getUserKey());
 
 		return res;
