@@ -21,8 +21,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
-import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 
 /**
@@ -57,8 +57,10 @@ public class UserServiceImpl implements UserService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.UserService# modifyProfileIdp
-	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserService#
+	 * modifyProfileIdp
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public void updateProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) {
@@ -76,8 +78,7 @@ public class UserServiceImpl implements UserService {
 			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
 
 				String imMngNum = deviceInfo.getSvcMangNum();
-				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-						deviceInfo.getDeviceExtraInfoList());
+				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
 
 				sbUserPhone.append(deviceInfo.getDeviceId());
 				sbUserPhone.append(",");
@@ -116,7 +117,6 @@ public class UserServiceImpl implements UserService {
 		} else {
 			ModifyProfileEcReq req = new ModifyProfileEcReq();
 			req.setUserAuthKey(userAuthKey);
-			req.setKeyType(IdpConstants.IDP_PARAM_KEY_SECEDE_KEY_TYPE_USERKEY);
 			req.setKey(schUserRes.getUserMbr().getImMbrNo());
 			req.setUserPhone(userPhoneStr);
 			this.idpSCI.modifyProfile(req);
