@@ -33,8 +33,10 @@
         <typeAlias alias="AclAuthKeyInfo"     type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo" />
         <typeAlias alias="AclAuthInfo"        type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo" />
         <typeAlias alias="InterfaceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo" />
-        <typeAlias alias="ServiceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo" />
-        <typeAlias alias="BypassInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo" />
+        <typeAlias alias="ServiceInfo"      	type="com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo" />
+        <typeAlias alias="BypassInfo"      		type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo" />
+        <typeAlias alias="Tenant"      			type="com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant" />
+        <typeAlias alias="AuthKey"      		type="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey" />
         
         <!-- ################################################# -->
         <!-- 기타                                            -->

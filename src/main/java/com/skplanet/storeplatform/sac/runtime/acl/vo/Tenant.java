@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.runtime.acl.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.runtime.acl.constant.AclConstant;
 
 /**
 *
@@ -22,8 +23,14 @@ public class Tenant extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** Tenant ID */
 	private String tenantId;
+	/** Tenant Name */
 	private String tenantNm;
+	/**
+	 * Authentication Type {@link AclConstant.AuthType}
+	 */
+	private String authTypeCd;
 
 	public Tenant() {
 	}
@@ -44,5 +51,24 @@ public class Tenant extends CommonInfo {
 	public void setTenantNm(String tenantNm) {
 		this.tenantNm = tenantNm;
 	}
+
+	/**
+	 * Authentication Type {@link AclConstant.AuthType}
+	 * @return String
+	 * 			Authentication Type
+	 */
+	public String getAuthTypeCd() {
+		return this.authTypeCd;
+	}
+
+	/**
+	 * Authentication Type {@link AclConstant.AuthType}
+	 * @param authTypeCd
+	 * 			Authentication Type
+	 */
+	public void setAuthTypeCd(String authTypeCd) {
+		this.authTypeCd = authTypeCd;
+	}
+
 
 }

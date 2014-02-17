@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
@@ -39,6 +40,14 @@ public class AclDataAccessServiceBatis implements AclDataAccessService {
 	@Override
 	public Interface selectInterfaceById(String interfaceId) {
 		return this.commonDAO.queryForObject("Interface.detail", interfaceId, Interface.class);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService#selectAuthInfoByAuthKey(java.lang.String)
+	 */
+	@Override
+	public AuthKey selectAuthKey(String authKey) {
+		return this.commonDAO.queryForObject("AuthKey.selectAuthKey", authKey, AuthKey.class);
 	}
 
 	@Override

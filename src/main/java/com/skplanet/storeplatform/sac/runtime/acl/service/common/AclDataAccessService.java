@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service.common;
 
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
@@ -42,6 +43,17 @@ public interface AclDataAccessService {
 	 * Tenant 객체
 	 */
 	Tenant selectTenantByAuthKey(String authKey);
+
+	/**
+	 * <pre>
+	 * Header AuthKey 로 DB AuthKey 정보 조회
+	 * </pre>
+	 * @param authKey
+	 * 		인증키
+	 * @return
+	 * 		AuthKey
+	 */
+	AuthKey selectAuthKey(String authKey);
 
     /**
      * <pre>

@@ -10,9 +10,9 @@
 package com.skplanet.storeplatform.sac.runtime.acl.constant;
 
 /**
- * 
- * Calss 설명
- * 
+ *
+ * Class 설명
+ *
  * Updated on : 2013. 11. 26. Updated by : 김현일, 인크로스.
  */
 public class AclConstant {
@@ -20,4 +20,7 @@ public class AclConstant {
 	public static final String HEADER_IST = "ist";
 	public static final String HEADER_AUTHKEY = "authKey";
 	public static final String HEADER_HTTP_REQUEST_URL = "http_requestUrl";
+
+
+
 }

@@ -9,12 +9,19 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service.authentication;
 
+import java.security.SignatureException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
+import com.skplanet.storeplatform.sac.runtime.acl.util.HmacSha1Util;
+import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthType;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.TenantStatus;
 
 /**
  *
@@ -31,14 +38,58 @@ public class AuthenticationServiceImpl implements AuthenticateService {
 	private AclDataAccessService service;
 
 
+	/**
+	 * 인증 처리
+	 * TODO : 개발 중..
+	 * @param headers
+	 * 			Http Header
+	 */
 	@Override
-	public void authenticate(HttpHeaders header) {
-		// TODO : Tenant 인증 처리
-		String authKey = header.getAuthKey();
+	public void authenticate(HttpHeaders headers) {
+		String pAuthKey = headers.getAuthKey();
 
-		Tenant tenant = this.service.selectTenantByAuthKey(authKey);
-		logger.debug("tenant={}", tenant);
+		//FIXME: AclAuthKeyInfo -> AuthKey
+		// 1. AuthKey 로 Tenant 정보 조회
+		AuthKey authKeyInfo = this.service.selectAuthKey(pAuthKey);
+		logger.debug("authKeyInfo={}", authKeyInfo);
 
+
+		// 2. TENANT 상태 체크
+		String tenantStatusCd = authKeyInfo.getTenantStatusCd();
+
+		if(!tenantStatusCd.equals(TenantStatus.AVALIABLE.getCode())) {
+			throw new StorePlatformException("SAC_CMN_0031");
+		}
+
+
+		// 3. authTypeCd 값에 따라 인증 처리
+		//  KEY : AuthKey, Secret 값으로 MAC 인증
+		// 	IP : System IP 체크
+		boolean isValid = false;
+		String authTypeCd  = authKeyInfo.getAuthTypeCd();
+		if(authTypeCd.equals(AuthType.KEY.name())) {
+			//TODO : MAC 인증
+			try {
+				String data = SacAuthUtil.getMessageForAuth(headers.getRequestUrl(), headers.getAuthKey(), headers.getTimestamp(), headers.getNonce());
+				String signature = HmacSha1Util.getSignature(data, authKeyInfo.getSecret());
+				if(signature.equals(headers.getSignature())) {
+					isValid = true;
+				}
+			} catch (SignatureException e) {
+				logger.error(e.getMessage());
+				isValid = false;
+			}
+
+			if(!isValid) {
+				throw new StorePlatformException("SAC_CMN_0032");
+			}
+		} else if(authTypeCd.equals(AuthType.IP.name())) {
+			//TODO: IP 체크
+			isValid = true;
+			if(!isValid) {
+				throw new StorePlatformException("SAC_CMN_0033");
+			}
+		}
 
 	}
 }

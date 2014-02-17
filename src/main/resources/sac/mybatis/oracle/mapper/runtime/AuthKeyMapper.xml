@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AuthKey">
+    
+    <!-- AuthKey 정보 조회  -->
+    <select id="selectAuthKey" parameterType="string" resultType="AuthKey">
+     	  SELECT 
+		        A.TENANT_ID
+		      , A.AUTH_KEY
+		      , A.AUTH_KEY_CD
+		      , A.ISSU_DT
+		      , A.EXPR_DT
+		      , A.STATUS_CD
+		      , B.STATUS_CD AS TENANT_STATUS_CD
+		FROM TB_FW_AUTH_KEY A
+		  INNER JOIN TB_FW_TENANT B ON A.TENANT_ID = B.TENANT_ID
+		WHERE 1=1
+		   AND A.AUTH_KEY = #{authKey}
+    
+    </select>
+ 
+    
+</mapper>
