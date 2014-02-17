@@ -103,6 +103,7 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 		menu.setId(metaInfo.getTopMenuId());
 		menu.setName(metaInfo.getTopMenuNm());
+		menu.setDesc(metaInfo.getMenuDesc());
 		menuList.add(menu);
 		return menuList;
 	}
