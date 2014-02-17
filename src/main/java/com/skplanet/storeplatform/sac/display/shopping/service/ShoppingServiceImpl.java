@@ -1392,9 +1392,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		ShoppingSacInRes shoppingRes = new ShoppingSacInRes();
 		try {
 			shoppingReq.setTenantId(req.getTenantId());
-			shoppingReq.setChannelId("CL00000566");
+			shoppingReq.setChannelId("CL00000683");
 			shoppingReq.setDeviceModelCd(req.getDeviceModelCd());
-			shoppingReq.setEpisodeId("S900000962");
+			shoppingReq.setEpisodeId("S900000764");
 			shoppingReq.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 			shoppingReq.setLangCd(req.getLangCd());
 

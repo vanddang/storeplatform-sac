@@ -26,28 +26,14 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SelectOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SubSelectOption;
-import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.shopping.vo.Shopping;
 
@@ -121,30 +107,16 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 				// Response VO를 만들기위한 생성자
 				Product product = null;
 				Identifier identifier = null;
-				Identifier identifier1 = null;
-				Menu menu = null;
-				Title title = null;
-				Source source = null;
-				Contributor contributor = null;
-				Accrual accrual = null;
 
 				List<Identifier> identifierList = null;
 
 				// / 에피소드용
-				Product episodeProduct = null;
 				Identifier episodeIdentifier = null;
 				List<Identifier> episodeIdentifierList = null;
-				Menu episodeMenu = null;
-				List<Menu> episodeMenuList = new ArrayList<Menu>();
+
+				Product episodeProduct = null;
 				Price episodePrice = null;
-				Rights episodeRights = null;
-				Date episodeDate = null;
-				Distributor distributor = null;
-				Purchase purchase = null;
-				Identifier purchaseIdentifier = null;
-				List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
-				Date purchaseDate = null;
-				List<Date> episodeDateList = new ArrayList<Date>();
+
 				SalesOption episodeSaleOption = null;
 
 				// / 옵션용
@@ -157,8 +129,6 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 				Title option2Title = null;
 				Price option2Price = null;
 
-				List<Menu> menuList = null;
-				List<Source> sourceList = null;
 				List<Product> subProductList = new ArrayList<Product>();
 
 				List<Product> productList = new ArrayList<Product>();
@@ -173,42 +143,6 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 					identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
 					identifier.setText(shopping.getCatalogId());
 					identifierList.add(identifier);
-
-					// 메뉴 정보
-					menuList = new ArrayList<Menu>();
-					menu = new Menu();
-					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-					menu.setId(shopping.getUpMenuId());
-					menu.setName(shopping.getUpMenuName());
-					menuList.add(menu);
-
-					menu = new Menu();
-					menu.setId(shopping.getMenuId());
-					menu.setName(shopping.getMenuName());
-					menuList.add(menu);
-
-					// 상품 정보 (상품명)
-					title = new Title();
-					title.setText(shopping.getCatalogName());
-
-					// 이미지 정보
-					sourceList = new ArrayList<Source>();
-					source = new Source();
-					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(shopping.getFilePos());
-					sourceList.add(source);
-
-					// 다운로드 수
-					accrual = new Accrual();
-					accrual.setDownloadCount(shopping.getPrchsQty());
-
-					// contributor
-					contributor = new Contributor();
-					identifier1 = new Identifier();
-					identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
-					identifier1.setText(shopping.getBrandId());
-					contributor.setName(shopping.getBrandName());
-					contributor.setIdentifier(identifier1);
 
 					String deliveryValue = shopping.getProdCaseCd();
 					// 배송상품은 단품이며 기본정보는 동일
@@ -225,12 +159,6 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 
 							episodeProduct = new Product();
 
-							// 특가 상품일 경우
-							episodeMenu = new Menu();
-							episodeMenu.setType(episodeShopping.getSpecialSale());
-							episodeMenuList.add(episodeMenu);
-							episodeProduct.setMenuList(episodeMenuList);
-
 							// 채널 상품 정보 (상품ID)
 							episodeIdentifierList = new ArrayList<Identifier>();
 							episodeIdentifier = new Identifier();
@@ -244,112 +172,12 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 							episodeIdentifier.setText(episodeShopping.getPartProdId());
 							episodeIdentifierList.add(episodeIdentifier);
 
-							episodeProduct.setIdentifierList(episodeIdentifierList);
-
 							// 에피소드 상품 가격 정보
 							episodePrice = new Price();
 							episodePrice.setFixedPrice(episodeShopping.getProdNetAmt());
 							episodePrice.setDiscountRate(episodeShopping.getDcRate());
 							episodePrice.setText(episodeShopping.getProdAmt());
 							episodeProduct.setPrice(episodePrice);
-
-							// 에피소드 구매내역 정보
-							String prchsId = null;
-							String prchsDt = null;
-							String prchsState = null;
-							int purchseCount = 0;
-
-							try {
-								// 구매내역 조회를 위한 생성자
-								ProductListSacIn productListSacIn = new ProductListSacIn();
-								List<ProductListSacIn> productEpisodeList = new ArrayList<ProductListSacIn>();
-
-								productListSacIn.setProdId(episodeShopping.getPartProdId());
-								productEpisodeList.add(productListSacIn);
-
-								HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
-								historyListSacReq.setTenantId(req.getTenantId());
-								historyListSacReq.setUserKey(req.getUserKey());
-								historyListSacReq.setDeviceKey(req.getDeviceKey());
-								historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
-								historyListSacReq.setStartDt("19000101000000");
-								historyListSacReq.setEndDt(episodeShopping.getSysDate());
-								historyListSacReq.setOffset(1);
-								historyListSacReq.setCount(1);
-								historyListSacReq.setProductList(productEpisodeList);
-								// 구매내역 조회 실행
-								if (!StringUtils.isEmpty(req.getUserKey())) {
-									HistoryListSacInRes historyListSacRes = this.historyInternalSCI
-											.searchHistoryList(historyListSacReq);
-
-									this.log.debug("----------------------------------------------------------------");
-									this.log.debug("[getShoppingInfo] purchase count : {}",
-											historyListSacRes.getTotalCnt());
-									this.log.debug("----------------------------------------------------------------");
-									purchseCount = historyListSacRes.getTotalCnt();
-									if (historyListSacRes.getTotalCnt() > 0) {
-										prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
-										prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
-										prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
-
-										if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
-											prchsState = "payment";
-										} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
-											prchsState = "gift";
-										}
-
-										this.log.debug("----------------------------------------------------------------");
-										this.log.debug("[getShoppingInfo] prchsId : {}", prchsId);
-										this.log.debug("[getShoppingInfo] prchsDt : {}", prchsDt);
-										this.log.debug("[getShoppingInfo] prchsState : {}", prchsState);
-										this.log.debug("----------------------------------------------------------------");
-									}
-								}
-							} catch (Exception ex) {
-								throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
-							}
-
-							purchase = new Purchase();
-							purchaseDate = new Date();
-							purchaseIdentifier = new Identifier();
-							purchaseIdentifierList = new ArrayList<Identifier>();
-							purchaseIdentifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-							purchaseIdentifier.setText(prchsId);
-							purchaseIdentifierList.add(purchaseIdentifier);
-							purchase.setIdentifierList(purchaseIdentifierList);
-							purchase.setState(prchsState);
-							if (prchsDt != null) {
-								purchaseDate = new Date(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM,
-										DateUtils.parseDate(prchsDt));
-							}
-							purchase.setDate(purchaseDate);
-							if (!StringUtils.isEmpty(req.getUserKey())) {// 사용자키가 있을 경우
-								episodeProduct.setPurchase(purchase);
-							}
-
-							// 에피소드 날짜 권한 정보
-							episodeDateList = new ArrayList<Date>();
-							episodeRights = new Rights();
-
-							episodeDate = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM,
-									DateUtils.parseDate(episodeShopping.getApplyStartDt()),
-									DateUtils.parseDate(episodeShopping.getApplyEndDt()));
-							episodeDateList.add(episodeDate);
-
-							episodeDate = new Date();
-							episodeDate.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_UNIT_NM);
-							episodeDate.setText(episodeShopping.getUsePeriod());
-
-							episodeDateList.add(episodeDate);
-
-							// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
-							if (purchseCount > 0) {
-								episodeRights.setAllow(episodeShopping.getAllow());
-							}
-
-							episodeRights.setGrade(episodeShopping.getProdGrdCd());
-							episodeRights.setDateList(episodeDateList);
-							episodeProduct.setRights(episodeRights);
 
 							// saleOption 셋팅
 							episodeSaleOption = new SalesOption();
@@ -439,50 +267,14 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 									}
 								}
 							}
-
-							episodeProduct.setSelectOptionList(selectOptionList);
-
-							// 판매자정보 셋팅
-							DetailInformationSacReq memberReq = new DetailInformationSacReq();
-							DetailInformationSacRes memberRes = new DetailInformationSacRes();
-							try {
-								memberReq.setSellerKey(episodeShopping.getSellerMbrNo());
-								memberReq.setSellerId("");
-								memberRes = this.sellerSearchSCI.detailInformation(memberReq);
-								if (memberRes != null) {
-									memberRes.getSellerMbr().getSellerCompany();
-									distributor = new Distributor();
-									distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
-									distributor.setIdentifier(memberRes.getSellerMbr().getSellerId());
-									distributor.setName(memberRes.getSellerMbr().getSellerName());
-									distributor.setCompany(memberRes.getSellerMbr().getSellerCompany());
-									distributor.setTel(memberRes.getSellerMbr().getRepPhone());
-									distributor.setEmail(memberRes.getSellerMbr().getSellerEmail());
-									distributor.setAddress(memberRes.getSellerMbr().getSellerAddress()
-											+ memberRes.getSellerMbr().getSellerDetailAddress());
-									distributor.setRegNo(memberRes.getSellerMbr().getBizRegNumber());
-									episodeProduct.setDistributor(distributor);
-
-								}
-							} catch (Exception e) {
-								throw new StorePlatformException("SAC_DSP_0001", "멤버 정보 조회 ", e);
-							}
-
-							// 에피소드 특가상품
-							if (episodeShopping.getSpecialSale() != null) {
-								episodeProduct.setId(episodeShopping.getPartProdId());
-							}
 							subProductList.add(episodeProduct);
 						}
 					}
 					// 데이터 매핑
-					product.setIdentifierList(identifierList);
-					product.setMenuList(menuList);
-					product.setTitle(title);
-					product.setSourceList(sourceList);
-					product.setAccrual(accrual);
-					product.setContributor(contributor);
-					product.setSubProductList(subProductList);
+					product.setPrice(episodePrice);
+					product.setSalesOption(episodeSaleOption);
+					product.setSelectOptionList(selectOptionList);
+					product.setIdentifierList(episodeIdentifierList);
 					productList.add(i, product);
 				}
 				res.setProductList(productList);
