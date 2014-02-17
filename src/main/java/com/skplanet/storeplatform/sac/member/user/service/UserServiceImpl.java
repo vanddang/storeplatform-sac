@@ -3,6 +3,8 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,8 @@ import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
  */
 @Service
 public class UserServiceImpl implements UserService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Autowired
 	private MemberCommonComponent commService;
@@ -105,12 +109,14 @@ public class UserServiceImpl implements UserService {
 			req.setUserAuthKey(userAuthKey);
 			req.setKey(schUserRes.getUserMbr().getImSvcNo());
 			req.setUserMdn(userPhoneStr);
+			LOGGER.info(req.toString());
 			this.imIdpSCI.updateAdditionalInfo(req);
 		} else {
 			ModifyProfileEcReq req = new ModifyProfileEcReq();
 			req.setUserAuthKey(userAuthKey);
 			req.setKey(schUserRes.getUserMbr().getImMbrNo());
 			req.setUserPhone(userPhoneStr);
+			LOGGER.info(req.toString());
 			this.idpSCI.modifyProfile(req);
 		}
 
