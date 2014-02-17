@@ -60,7 +60,7 @@ public class UserWithdrawController {
 		logger.info("###### Start UserWithdraw Request : {}", req.toString());
 
 		if (userId.equals("") && userAuthKey.equals("") && deviceId.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
+			throw new StorePlatformException("SAC_MEM_0001", "userId, userAuthKey, deviceId");
 		}
 
 		WithdrawRes res = this.svc.withdraw(sacHeader, req);

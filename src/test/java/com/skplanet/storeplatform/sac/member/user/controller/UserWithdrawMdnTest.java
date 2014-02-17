@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -72,7 +73,7 @@ public class UserWithdrawMdnTest {
 	 *             Exception
 	 */
 	@Test
-	public void atest1_createByMdn() throws Exception {
+	public void a_createByMdn() throws Exception {
 
 		new TestCaseTemplate(this.mockMvc)
 				.url("/member/user/createByMdn/v1")
@@ -159,211 +160,99 @@ public class UserWithdrawMdnTest {
 	 * </pre>
 	 */
 	@Test
-	public void buserWithdrawMdn() {
+	public void b_userWithdrawMdn() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						WithdrawReq req = new WithdrawReq();
-						req.setDeviceId("01012346488");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(WithdrawRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						WithdrawRes res = (WithdrawRes) result;
-						assertThat(res.getUserKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				WithdrawReq req = new WithdrawReq();
+				req.setDeviceId("01032641287");
+				logger.debug("request param : {}", req.toString());
+				return req;
+			}
+		}).success(WithdrawRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				WithdrawRes res = (WithdrawRes) result;
+				assertThat(res.getUserKey(), notNullValue());
+				logger.debug("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	/**
 	 * deviceId is null
 	 */
-	@Test(expected = RuntimeException.class)
-	public void cuserWithdrawError1() {
+	@Test(expected = StorePlatformException.class)
+	public void c_userWithdrawError1() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						WithdrawReq req = new WithdrawReq();
-						req.setDeviceId("");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(WithdrawRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						WithdrawRes res = (WithdrawRes) result;
-						assertThat(res.getUserKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * userId && userAuthKey - both NULL
-	 */
-	@Test(expected = RuntimeException.class)
-	public void cuserWithdrawError2() {
-
-		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						WithdrawReq req = new WithdrawReq();
-						req.setUserId("");
-						req.setUserAuthKey("");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(WithdrawRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						WithdrawRes res = (WithdrawRes) result;
-						assertThat(res.getUserKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * userId && userAuthKey - usrId is NULL
-	 */
-	@Test(expected = RuntimeException.class)
-	public void cuserWithdrawError3() {
-
-		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						WithdrawReq req = new WithdrawReq();
-						req.setUserId("");
-						req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(WithdrawRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						WithdrawRes res = (WithdrawRes) result;
-						assertThat(res.getUserKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * userId && userAuthKey - userAuthKey is Null
-	 */
-	@Test(expected = RuntimeException.class)
-	public void cuserWithdrawError4() {
-
-		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						WithdrawReq req = new WithdrawReq();
-						req.setUserId("tstore44");
-						req.setUserAuthKey("");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(WithdrawRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						WithdrawRes res = (WithdrawRes) result;
-						assertThat(res.getUserKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				WithdrawReq req = new WithdrawReq();
+				req.setDeviceId("");
+				logger.debug("request param : {}", req.toString());
+				return req;
+			}
+		}).success(WithdrawRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				WithdrawRes res = (WithdrawRes) result;
+				assertThat(res.getUserKey(), notNullValue());
+				logger.debug("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	/**
 	 * deviceId is inValid
 	 */
-	@Test(expected = RuntimeException.class)
-	public void cuserWithdrawError5() {
+	@Test(expected = StorePlatformException.class)
+	public void d_userWithdrawError5() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						WithdrawReq req = new WithdrawReq();
-						req.setDeviceId("0101234648011");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(WithdrawRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						WithdrawRes res = (WithdrawRes) result;
-						assertThat(res.getUserKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * userId && userAuthKey is inValid
-	 */
-	@Test(expected = RuntimeException.class)
-	public void cuserWithdrawError6() {
-
-		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						WithdrawReq req = new WithdrawReq();
-						req.setUserId("tstore44");
-						req.setUserAuthKey("114127a7ff42667669819dad5df8d820c");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(WithdrawRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						WithdrawRes res = (WithdrawRes) result;
-						assertThat(res.getUserKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				WithdrawReq req = new WithdrawReq();
+				req.setDeviceId("0101234648011");
+				logger.debug("request param : {}", req.toString());
+				return req;
+			}
+		}).success(WithdrawRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				WithdrawRes res = (WithdrawRes) result;
+				assertThat(res.getUserKey(), notNullValue());
+				logger.debug("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	/**
 	 * inValid UUID
 	 */
-	@Test(expected = RuntimeException.class)
-	public void cuserWithdrawError7() {
+	@Test(expected = StorePlatformException.class)
+	public void e_userWithdrawError7() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						WithdrawReq req = new WithdrawReq();
-						req.setDeviceId("E621E1F8-C36C-495A-93FC-0C247A3E6E5F");
-						logger.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(WithdrawRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						WithdrawRes res = (WithdrawRes) result;
-						assertThat(res.getUserKey(), notNullValue());
-						logger.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				WithdrawReq req = new WithdrawReq();
+				req.setDeviceId("E621E1F8-C36C-495A-93FC-0C247A3E6E5F");
+				logger.debug("request param : {}", req.toString());
+				return req;
+			}
+		}).success(WithdrawRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				WithdrawRes res = (WithdrawRes) result;
+				assertThat(res.getUserKey(), notNullValue());
+				logger.debug("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 }
