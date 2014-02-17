@@ -72,7 +72,7 @@ public class RXActivateUserIdIDPTest {
 						ProvisioningReq req = new ProvisioningReq();
 						req.setCmd("RXActivateUserIdIDP");
 						/* 활성화된 통합회원 통합ID 가입자 상태 정보 배포 시작 */
-						HashMap resultMap = new HashMap();
+						HashMap<String, String> resultMap = new HashMap<String, String>();
 
 						resultMap.put("tenantID", "S01"); // 현재 하드코딩 파라미터가 정상으로 전달되어지면 지워야함.
 						resultMap.put("systemID", "S001");
