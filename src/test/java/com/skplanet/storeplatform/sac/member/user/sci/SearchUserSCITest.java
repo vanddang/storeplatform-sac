@@ -6,9 +6,7 @@ package com.skplanet.storeplatform.sac.member.user.sci;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +40,6 @@ public class SearchUserSCITest {
 
 	@Autowired
 	private SearchUserSCI searchUserSCI;
-
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
 
 	@Before
 	public void before() {
