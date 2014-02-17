@@ -2243,7 +2243,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 							String prchsDt = null;
 							String prchsState = null;
 							int purchseCount = 0;
-
 							try {
 								// 구매내역 조회를 위한 생성자
 								ProductListSacIn productListSacIn = new ProductListSacIn();
@@ -2256,17 +2255,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 								historyListSacReq.setTenantId(req.getTenantId());
 								historyListSacReq.setUserKey(req.getUserKey());
 								historyListSacReq.setDeviceKey(req.getDeviceKey());
-								historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
-								historyListSacReq.setStartDt("19000101000000");
+								historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+								historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+								historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 								historyListSacReq.setEndDt(episodeShopping.getSysDate());
 								historyListSacReq.setOffset(1);
 								historyListSacReq.setCount(1);
 								historyListSacReq.setProductList(productEpisodeList);
+
 								// 구매내역 조회 실행
 								if (!StringUtils.isEmpty(req.getUserKey())) {
 									HistoryListSacInRes historyListSacRes = this.historyInternalSCI
 											.searchHistoryList(historyListSacReq);
-
 									this.log.debug("----------------------------------------------------------------");
 									this.log.debug("[getShoppingInfo] purchase count : {}",
 											historyListSacRes.getTotalCnt());
@@ -2290,6 +2290,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 										this.log.debug("----------------------------------------------------------------");
 									}
 								}
+								System.out.println("log4");
 							} catch (Exception ex) {
 								throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 							}
