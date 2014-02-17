@@ -30,6 +30,7 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String sendDeviceKey;
 	private String recvDt;
 	private String recvConfPathCd;
+	private String prchsReqPathCd;
 	private String tenantProdGrpCd;
 	private String prodId;
 	private String prodAmt;
@@ -90,6 +91,21 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public String getTenantId() {
 		return this.tenantId;
+	}
+
+	/**
+	 * @return the prchsReqPathCd
+	 */
+	public String getPrchsReqPathCd() {
+		return this.prchsReqPathCd;
+	}
+
+	/**
+	 * @param prchsReqPathCd
+	 *            the prchsReqPathCd to set
+	 */
+	public void setPrchsReqPathCd(String prchsReqPathCd) {
+		this.prchsReqPathCd = prchsReqPathCd;
 	}
 
 	/**

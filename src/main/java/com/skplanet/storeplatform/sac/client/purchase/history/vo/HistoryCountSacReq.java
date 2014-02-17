@@ -25,11 +25,45 @@ public class HistoryCountSacReq extends PurchaseHeaderSacReq {
 	private String tenantProdGrpCd; // 테넌트상품분류코드
 	private List<ProductListSac> productList; // 조회 상품PID LIST
 	private String prchsCaseCd; // 구매유형코드
-	@NotBlank
 	private String prchsProdType; // 구매상품타입
 	private String hidingYn; // 숨김여부
 	private String prchsStatusCd; // 구매상태
 	private String useFixrateProdId; // 정액권ID
+
+	@NotBlank
+	private String prchsProdHaveYn; // 상품보유여부
+
+	private String prchsReqPathCd; // 구매요청경로코드
+
+	/**
+	 * @return the prchsReqPathCd
+	 */
+	public String getPrchsReqPathCd() {
+		return this.prchsReqPathCd;
+	}
+
+	/**
+	 * @param prchsReqPathCd
+	 *            the prchsReqPathCd to set
+	 */
+	public void setPrchsReqPathCd(String prchsReqPathCd) {
+		this.prchsReqPathCd = prchsReqPathCd;
+	}
+
+	/**
+	 * @return the prchsProdHaveYn
+	 */
+	public String getPrchsProdHaveYn() {
+		return this.prchsProdHaveYn;
+	}
+
+	/**
+	 * @param prchsProdHaveYn
+	 *            the prchsProdHaveYn to set
+	 */
+	public void setPrchsProdHaveYn(String prchsProdHaveYn) {
+		this.prchsProdHaveYn = prchsProdHaveYn;
+	}
 
 	/**
 	 * @return the userKey
