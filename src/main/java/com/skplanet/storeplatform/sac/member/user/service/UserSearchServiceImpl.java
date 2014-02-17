@@ -319,10 +319,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		/* OneId 정보조회 */
 		SearchAgreeSiteRequest scReq = new SearchAgreeSiteRequest();
-		SearchAgreeSiteResponse scRes = new SearchAgreeSiteResponse();
 		scReq.setCommonRequest(commonRequest);
 		scReq.setImSvcNo(info.getImSvcNo());
-		scRes = this.userSCI.searchAgreeSite(scReq);
+		SearchAgreeSiteResponse scRes = this.userSCI.searchAgreeSite(scReq);
 
 		/* OneId 데이터 세팅 */
 		MbrOneidSacRes res = new MbrOneidSacRes();
@@ -408,10 +407,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		/* 디바이스 단건 조회 */
 		ListDeviceReq scReq = new ListDeviceReq();
-		ListDeviceRes scRes = new ListDeviceRes();
 		scReq.setUserKey(info.getUserKey());
 		scReq.setDeviceId(req.getDeviceId());
-		scRes = this.deviceService.listDevice(sacHeader, scReq);
+		ListDeviceRes scRes = this.deviceService.listDevice(sacHeader, scReq);
 		if (scRes.getDeviceInfoList() == null) {
 			throw new StorePlatformException("SAC_MEM_0002", req.getDeviceId());
 		}

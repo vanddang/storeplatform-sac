@@ -182,7 +182,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		logger.info("###### 회원정보조회 SearchUser Request : {}", req.toString());
 
 		SearchUserRequest schUserReq = new SearchUserRequest();
-		SearchUserResponse schUserRes = new SearchUserResponse();
 		schUserReq.setCommonRequest(commonRequest);
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
@@ -204,7 +203,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
-		schUserRes = this.userSCI.searchUser(schUserReq);
+		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		logger.info("###### SearchUser.deviceId req : {}", schUserReq.toString());
 
