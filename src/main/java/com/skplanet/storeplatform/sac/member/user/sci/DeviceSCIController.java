@@ -7,7 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
@@ -24,18 +25,21 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
  * Updated on : 2014. 2. 11. Updated by : 김다슬, 인크로스.
  */
 @LocalSCI
-public class DeviceSCIController implements DeviceSCI {
+public class DeviceSCIController implements DeviceInternalSCI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceSCIController.class);
 
 	@Autowired
-	private DeviceService deviceService; // 휴대기기 관련 인터페이스.
+	private DeviceService deviceService; // 휴대기기 관련 내부 인터페이스.
+
+	@Autowired
+	private DeviceSCI deviceSCI; // 회원 콤포넌트 휴대기기 기능 인터페이스.
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.skplanet.storeplatform.sac.client.internal.member.sci.DeviceSCI#getDeviceMdn(com.skplanet.storeplatform.sac
-	 * .client.internal.member.vo.GetMdnReq)
+	 * com.skplanet.storeplatform.sac.client.internal.member.sci.DeviceInternalSCI#getDeviceMdn(com.skplanet.storeplatform
+	 * .sac .client.internal.member.vo.GetMdnReq)
 	 */
 
 	@Override
@@ -61,12 +65,20 @@ public class DeviceSCIController implements DeviceSCI {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI#searchChangedDeviceHistoryList(com.skplanet
-	 * .storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq)
+	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceInternalSCI#searchChangedDeviceHistoryList
+	 * (com.skplanet .storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq)
 	 */
 	@Override
 	public ChangedDeviceHistorySacRes searchChangedDeviceHistoryList(ChangedDeviceHistorySacReq request) {
-		// TODO Auto-generated method stub
+		// TODO 1. SC 회원 기기변경이력 조회 기능 호출.
+		// ChangedDeviceListRes changedDeviceList = this.deviceSCI.searchChangedDeviceList(request);
+		// changedDeviceList.get~
+
+		// ChangedDeviceHistorySacRes changedDeviceHistorySacRes = new ChangedDeviceHistorySacRes();
+		// changedDeviceHistorySacRes.setDeviceKey(deviceKey);
+		// changedDeviceHistorySacRes.setIsChanged(isChanged);
+
+		// return changedDeviceHistorySacRes;
 		return null;
 	}
 

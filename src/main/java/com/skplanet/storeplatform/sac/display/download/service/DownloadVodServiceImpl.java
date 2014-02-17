@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
 import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
@@ -78,7 +78,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	@Autowired
 	private DownloadAES128Helper downloadAES128Helper;
 	@Autowired
-	private DeviceSCI deviceSCI;
+	private DeviceInternalSCI deviceSCI;
 
 	/*
 	 * (non-Javadoc)
