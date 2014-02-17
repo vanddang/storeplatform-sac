@@ -128,6 +128,10 @@ public final class MemberConstants {
 	public static final String DEVICE_ID_TYPE_UUID = "uuid";
 	public static final String DEVICE_ID_TYPE_MACADDRESS = "mac";
 
+	/** 실명인증 수단 코드 */
+	public static final String REAL_NAME_AUTH_MOBILE = "US011101"; // 휴대폰인증
+	public static final String REAL_NAME_AUTH_IPIN = "US011102"; // IPIN인증
+
 	/** 통합회원. */
 	public static final String SSO_SST_CD_TSTORE = "41100";
 

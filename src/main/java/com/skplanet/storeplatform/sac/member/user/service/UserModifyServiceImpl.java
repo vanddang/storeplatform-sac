@@ -297,14 +297,10 @@ public class UserModifyServiceImpl implements UserModifyService {
 						updateUserNameEcReq.setUserName(req.getUserName()); // 이름
 						updateUserNameEcReq.setUserBirthday(req.getUserBirthDay()); // 생년월일
 						updateUserNameEcReq.setUserSex(req.getUserSex()); // 성별 (M=남자, F=여자, N:미확인)
-						/**
-						 * TODO 코드 변경 필요
-						 */
-						updateUserNameEcReq.setRnameAuthMnsCode("1"); // 실명인증 수단 코드 1: 휴대폰, 2: 아이핀, 9:기타
-						/**
-						 * TODO 코드 변경 필요
-						 */
-						updateUserNameEcReq.setRnameAuthMbrCode("10"); // 실명인증 회원 코드 10 :내국인, 20: 외국인
+						// 실명인증 수단 코드 1: 휴대폰, 2: 아이핀, 9:기타
+						updateUserNameEcReq.setRnameAuthMnsCode(this.convertRealNameMethod(req.getRealNameMethod(), req.getIsOwn()));
+						// 실명인증 회원 코드 10 : 내국인, 20 : 외국인
+						updateUserNameEcReq.setRnameAuthMbrCode(this.convertResident(req.getResident()));
 						updateUserNameEcReq.setRnameAuthTypeCd(oneIdRealNameType); // 실명 인증 유형 코드 R=회원 개명 E=CI 기보유
 						updateUserNameEcReq.setUserCi(req.getUserCi());
 						updateUserNameEcReq.setUserDi(req.getUserDi());
@@ -321,22 +317,17 @@ public class UserModifyServiceImpl implements UserModifyService {
 					UpdateGuardianEcReq updateGuardianEcReq = new UpdateGuardianEcReq();
 					updateGuardianEcReq.setKey(userInfo.getImSvcNo());
 					updateGuardianEcReq.setUserAuthKey(req.getUserAuthKey());
-					/**
-					 * TODO 코드 변경 필요.
-					 */
-					updateGuardianEcReq.setParentType("0"); // 법정대리인관계코드 (0:부, 1:모, 2:기타)
+					// 법정대리인관계코드 (0:부, 1:모, 2:기타)
+					updateGuardianEcReq.setParentType(this.convertParentType(req.getParentType()));
 					updateGuardianEcReq.setParentRnameAuthKey(req.getUserCi()); // 법정대리인 실명인증 값 (CI) [외국인은 null 로....]
-					/**
-					 * TODO 코드 변경 필요.
-					 */
 					// 법정대리인실명인증수단코드 1:휴대폰 본인인증, , 3:IPIN, 6:이메일 (외국인 법정대리인 인증)
-					updateGuardianEcReq.setParentRnameAuthType("1");
+					updateGuardianEcReq.setParentRnameAuthType(this.convertRealNameMethod(req.getRealNameMethod(), req.getIsOwn()));
 					// 법정대리인동의여부 Y=동의, N=미동의 (Y만 가능)
 					updateGuardianEcReq.setIsParentApprove(MemberConstants.USE_Y);
 					updateGuardianEcReq.setParentName(req.getUserName());
 					updateGuardianEcReq.setParentBirthday(req.getUserBirthDay());
 					updateGuardianEcReq.setParentEmail(req.getParentEmail());
-					updateGuardianEcReq.setParentApproveDate(req.getRealNameDate());
+					updateGuardianEcReq.setParentApproveDate(req.getRealNameDate()); // 법정대리인동의일자 (YYYYMMDD)
 					LOGGER.info("## IDP Request : {}", updateGuardianEcReq);
 					this.imIdpSCI.updateGuardian(updateGuardianEcReq);
 
@@ -666,5 +657,81 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 */
 		this.userSCI.updateAgreement(updateAgreementRequest);
 
+	}
+
+	/**
+	 * <pre>
+	 * 실명인증 수단코드를 통합 IDP 규격에 맞게 Converting.
+	 * </pre>
+	 * 
+	 * @param realNameMethod
+	 *            실명인증 수단 코드 (US011101 : 휴대폰 인증, US011102 : IPIN 인증)
+	 * @param isOwn
+	 *            실명인증 대상 여부. (OWN=본인, PARENT=법정대리인)
+	 * @return 통합 IDP 코드[본인] (1 : 휴대폰, 2 : 아이핀, 9 : 기타)
+	 * 
+	 *         통합 IDP 코드[법정대리인] (1 : 휴대폰, 3 : 아이핀, 6 : 이메일(외국인 법정대리인 인증))
+	 */
+	private String convertRealNameMethod(String realNameMethod, String isOwn) {
+
+		if (StringUtils.equals(isOwn, MemberConstants.AUTH_TYPE_OWN)) { // 본인
+
+			if (StringUtils.equals(realNameMethod, MemberConstants.REAL_NAME_AUTH_MOBILE)) {
+				return "1"; // 휴대폰 인증
+			} else if (StringUtils.equals(realNameMethod, MemberConstants.REAL_NAME_AUTH_IPIN)) {
+				return "2"; // IPIN 인증
+			} else {
+				return "9"; // 기타
+			}
+
+		} else { // 법정대리인
+
+			if (StringUtils.equals(realNameMethod, MemberConstants.REAL_NAME_AUTH_MOBILE)) {
+				return "1"; // 휴대폰 인증
+			} else if (StringUtils.equals(realNameMethod, MemberConstants.REAL_NAME_AUTH_IPIN)) {
+				return "3"; // IPIN 인증
+			} else {
+				return "6"; // 이메일(외국인 법정대리인 인증)
+			}
+
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 실명인증 회원코드를 통합 IDP 규격에 맞게 Converting.
+	 * </pre>
+	 * 
+	 * @param resident
+	 *            실명인증 회원코드 (local : 내국인, foreign : 외국인)
+	 * @return 통합 IDP 코드 (10 : 내국인, 20 : 외국인)
+	 */
+	private String convertResident(String resident) {
+		if (StringUtils.equals(resident, "local")) {
+			return "10"; // 내국인
+		} else if (StringUtils.equals(resident, "foreign")) {
+			return "20"; // 외국인
+		} else {
+			return "";
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 법정대리인관계코드를 통합 IDP 규격에 맞게 Converting.
+	 * </pre>
+	 * 
+	 * @param parentType
+	 *            실명인증 회원코드 (local : 내국인, foreign : 외국인)
+	 * @return 통합 IDP 코드 (10 : 내국인, 20 : 외국인)
+	 */
+	private String convertParentType(String parentType) {
+		if (StringUtils.equals(parentType, "F")) {
+			return "0"; // 부
+		} else if (StringUtils.equals(parentType, "M")) {
+			return "1"; // 모
+		} else {
+			return "2"; // 기타
+		}
 	}
 }
