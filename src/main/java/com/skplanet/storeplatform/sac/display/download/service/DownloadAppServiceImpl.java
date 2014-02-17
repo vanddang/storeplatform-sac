@@ -94,11 +94,11 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		// OS VERSION 가공
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+
 		String osVersion = temp[1];
 		String sysDate = downloadSystemDate.getSysDate();
-
 		String osVersionOrginal = osVersion;
-		String[] osVersionTemp = osVersionOrginal.split(".");
+		String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
 		if (osVersionTemp.length == 3) {
 			osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
 		}
@@ -265,6 +265,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						deviceId = result.getDeviceId(); // Device Id
 						deviceIdType = this.commonService.getDeviceIdType(deviceId); // Device Id 유형
 					}
+
+					this.log.debug("###############################################################");
+					this.log.debug("deviceId	:	" + result.getDeviceId());
+					this.log.debug("###############################################################");
 
 					metaInfo.setPurchaseId(prchsId);
 					metaInfo.setPurchaseDt(prchsDt);
