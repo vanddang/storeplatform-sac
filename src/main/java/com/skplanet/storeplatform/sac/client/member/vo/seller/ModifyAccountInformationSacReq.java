@@ -495,6 +495,8 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 		public String documentName;
 		/** 서류사이즈. */
 		public String documentSize;
+		/** 사용유무. */
+		public String isUsed;
 
 		public String getDocumentCode() {
 			return this.documentCode;
@@ -527,5 +529,14 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 		public void setDocumentSize(String documentSize) {
 			this.documentSize = documentSize;
 		}
+
+		public String getIsUsed() {
+			return this.isUsed;
+		}
+
+		public void setIsUsed(String isUsed) {
+			this.isUsed = isUsed;
+		}
+
 	}
 }
