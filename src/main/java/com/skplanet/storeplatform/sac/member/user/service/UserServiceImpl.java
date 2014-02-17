@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
@@ -22,7 +21,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 
 /**
@@ -46,13 +44,7 @@ public class UserServiceImpl implements UserService {
 	private IdpSCI idpSCI;
 
 	@Autowired
-	private IdpRepository idpRepository;
-
-	@Autowired
 	private UserSCI userSCI;
-
-	@Value("#{propertiesForSac['idp.im.request.operation']}")
-	public String idpOperationMode;
 
 	/*
 	 * (non-Javadoc)
