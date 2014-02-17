@@ -31,7 +31,7 @@ public class CreateRealNameReq extends CommonInfo {
 	 * 실명인증 대상 (OWN/PARENT)
 	 */
 	@NotEmpty
-	@Pattern(regexp = "^OWN|PARENT")
+	@Pattern(regexp = "^OWN|PARENT|CORP")
 	private String isOwn = "";
 
 	/**
@@ -52,7 +52,6 @@ public class CreateRealNameReq extends CommonInfo {
 	/**
 	 * CI
 	 */
-	@NotEmpty
 	private String userCi = "";
 
 	/**
