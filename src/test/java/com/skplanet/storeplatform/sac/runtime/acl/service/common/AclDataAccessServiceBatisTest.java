@@ -16,12 +16,14 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath*:/spring-test/context-repository.xml"})
+@ContextConfiguration({ "classpath*:/spring-test/context-repository.xml" })
 @WebAppConfiguration
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
@@ -33,12 +35,10 @@ public class AclDataAccessServiceBatisTest {
 	@Qualifier("sac")
 	private CommonDAO commonDao;
 
-
 	@Before
 	public void setUp() {
 		this.service = new AclDataAccessServiceBatis(this.commonDao);
 	}
-
 
 	@Test
 	public void test() {
@@ -47,6 +47,13 @@ public class AclDataAccessServiceBatisTest {
 		System.out.println("# intf : " + intf);
 		assertEquals("I03000001", intf.getInterfaceId());
 		assertTrue(StringUtils.isNotBlank(intf.getUrl()));
+	}
+
+	@Test(expected = StorePlatformException.class)
+	public void testValidateInterfaceForInvalidInterfaceID() {
+		String authKey = "25f9aabf90acf38aa2e6d0da49e9eee75";
+		Tenant tenant = this.service.selectTenantByAuthKey(authKey);
+		System.out.println("tenant=" + tenant);
 	}
 
 }

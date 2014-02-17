@@ -80,7 +80,7 @@ public class RequestValidateServiceImplTest {
 		Interface obj = new Interface();
 		obj.setInterfaceId(id);
 		obj.setUrl("/member/user/createByMdn/v1");
-		obj.setStatus(InterfaceStatus.AVALIABLE);
+		obj.setStatus(InterfaceStatus.AVAILABLE);
 
 		when(this.dbAccessMock.selectInterfaceById(id)).thenReturn(obj);
 
