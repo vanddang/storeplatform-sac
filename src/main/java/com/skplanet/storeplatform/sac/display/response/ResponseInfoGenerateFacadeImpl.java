@@ -59,7 +59,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 	@Autowired
 	private ShoppingInfoGenerator shoppingGenerator;
-	
+
 	@Autowired
 	private FreepassInfoGenerator freepassGenerator;
 
@@ -95,6 +95,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		// App 상품설명
 		product.setProductExplain(metaInfo.getProdBaseDesc());
+		// App 상품상세설명
+		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 
 		product.setSupportList(supportList);
 		product.setTitle(title);
@@ -619,7 +621,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		return product;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -630,8 +632,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	@Override
 	public Coupon generateFreepassProduct(MetaInfo metaInfo) {
 		Coupon coupon = new Coupon();
-		
-		//Identifier 생성
+
+		// Identifier 생성
 		coupon.setIdentifierList(this.freepassGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
 		Title title = this.freepassGenerator.generateTitle(metaInfo);
@@ -643,16 +645,16 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		coupon.setSourceList(this.freepassGenerator.generateSourceList(metaInfo));
 		// Date 생성
 		Date date = this.freepassGenerator.generateDate(metaInfo);
-		
+
 		coupon.setKind(metaInfo.getCmpxProdClsfCd());
 		coupon.setCouponExplain(metaInfo.getProdIntrDscr());
-		
+
 		coupon.setTitle(title);
 		coupon.setPrice(price);
 		coupon.setAutopay(autoPay);
 		coupon.setDate(date);
-		
+
 		return coupon;
 	}
-	
+
 }
