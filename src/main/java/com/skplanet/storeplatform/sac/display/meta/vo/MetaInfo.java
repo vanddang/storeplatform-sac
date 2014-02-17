@@ -178,7 +178,7 @@ public class MetaInfo {
 	private String prchsQty;
 	private String expoOrd;
 	private String brandId;
-	private String brandName;
+	private String brandNm;
 	private String no;
 	private String newYn;
 	private String regDt;
@@ -188,6 +188,8 @@ public class MetaInfo {
 	private Integer prodNetAmt;
 	private String catalogId;
 	private String catalogNm;
+	private String specialSale;
+	private String soldOut;
 
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
@@ -2576,18 +2578,18 @@ public class MetaInfo {
 	}
 
 	/**
-	 * @return the brandName
+	 * @return the brandNm
 	 */
-	public String getBrandName() {
-		return this.brandName;
+	public String getBrandNm() {
+		return this.brandNm;
 	}
 
 	/**
-	 * @param brandName
-	 *            the brandName to set
+	 * @param brandNm
+	 *            the brandNm to set
 	 */
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+	public void setBrandNm(String brandNm) {
+		this.brandNm = brandNm;
 	}
 
 	/**
@@ -2911,6 +2913,36 @@ public class MetaInfo {
 	 */
 	public void setProdIntrDscr(String prodIntrDscr) {
 		this.prodIntrDscr = prodIntrDscr;
+	}
+
+	/**
+	 * @return the specialSale
+	 */
+	public String getSpecialSale() {
+		return this.specialSale;
+	}
+
+	/**
+	 * @param specialSale
+	 *            the specialSale to set
+	 */
+	public void setSpecialSale(String specialSale) {
+		this.specialSale = specialSale;
+	}
+
+	/**
+	 * @return the soldOut
+	 */
+	public String getSoldOut() {
+		return this.soldOut;
+	}
+
+	/**
+	 * @param soldOut
+	 *            the soldOut to set
+	 */
+	public void setSoldOut(String soldOut) {
+		this.soldOut = soldOut;
 	}
 
 }

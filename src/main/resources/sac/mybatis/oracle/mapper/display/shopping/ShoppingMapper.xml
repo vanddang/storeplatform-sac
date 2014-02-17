@@ -405,38 +405,38 @@
     </select>            
     
     <!-- 특가 상품 리스트 조회-->
-    <select id="getSecialPriceProductList"  parameterType="ShoppingReq" resultType="Shopping">
+    <select id="getSecialPriceProductList"  parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getSecialPriceProductList,특가 상품 리스트 조회, 김형식/SK플래닛 , 2014-02-04 */
        SELECT *
          FROM ( 
              SELECT 
                     ROW_NUMBER()OVER(ORDER BY REG_DT DESC, CATALOG_NM ) AS RNUM        
                    ,COUNT(CATALOG_ID) OVER() AS TOTALCOUNT      
-                   ,CATALOG_ID AS catalogId
-                   ,PROD_NET_AMT AS prodNetAmt
-                   ,PROD_AMT AS prodAmt
-                   ,DC_RATE AS dcRate
-                   ,DC_AMT AS dcAmt
-                   ,DLV_PROD_YN AS dlvProdYn
-                   ,BRAND_ID AS brandId
-                   ,BRAND_NM AS brandName
-                   ,MENU_ID AS menuId
-                   ,MENU_NM AS menuName
-                   ,TOP_MENU_ID as upMenuId
+                   ,CATALOG_ID 
+                   ,PROD_NET_AMT
+                   ,PROD_AMT 
+                   ,DC_RATE 
+                   ,DC_AMT 
+                   ,DLV_PROD_YN
+                   ,BRAND_ID 
+                   ,BRAND_NM 
+                   ,MENU_ID 
+                   ,MENU_NM 
+                   ,TOP_MENU_ID 
                    ,(SELECT MENU_NM
                         FROM TB_DP_MENU_CATEGORY_DESC
                        WHERE MENU_ID = TOP_MENU_ID
                          AND LANG_CD = #{langCd}          /* ko : 한국어 */
                          AND ROWNUM = 1
-                     ) AS upMenuName                        
+                     ) AS TOP_MENU_NM                        
                    ,NO AS no
-                   ,NEW_YN AS newYn
-                   ,REG_DT AS regDt
-                   ,TENANT_ID AS tenentId
-                   ,PROD_ID as prodId
-                   ,PART_PROD_ID as partProdId
-                   ,PROD_NM AS catalogName
-                   ,PRCHS_CNT as prchsQty
+                   ,NEW_YN 
+                   ,REG_DT 
+                   ,TENANT_ID
+                   ,PROD_ID 
+                   ,PART_PROD_ID 
+                   ,PROD_NM AS catalogNm
+                   ,PRCHS_CNT 
                    ,PROD_GRD_CD as prodGrdCd
                    ,SPRC_APPLY_START_DT as applyStartDt   
                    ,SPRC_APPLY_END_DT as applyEndDt 
@@ -444,7 +444,7 @@
                      , 'DP006301', 'giftcard'
                      , 'DP006302', 'exchange'
                      , 'DP006303', 'delivery' ) AS prodCaseCd
-                   ,CONCAT(FILE_PATH,FILE_NM) as filePos
+                   ,CONCAT(FILE_PATH,FILE_NM) AS FILE_PATH
                    ,'specialSale' AS specialSale
    	               ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
 		                             ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY ) ) THEN 'Y' ELSE 'N'

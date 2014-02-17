@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
+import java.util.List;
+
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
@@ -76,4 +80,26 @@ public interface ShoppingInfoGenerator {
 	 * @return Price
 	 */
 	public Price generatePrice(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 쇼핑 특가 Identifier 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Identifier
+	 */
+	public List<Identifier> generateSpecialIdentifier(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 쇼핑 특가 Menu List 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Menu>
+	 */
+	public List<Menu> generateSpecialMenuList(MetaInfo metaInfo);
 }

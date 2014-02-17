@@ -63,7 +63,9 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator;
 import com.skplanet.storeplatform.sac.display.shopping.vo.Shopping;
 
 /**
@@ -97,6 +99,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 	@Autowired
 	private ShoppingInternalSCI shoppingInternalSCI;
+
+	@Autowired
+	private CommonMetaInfoGenerator commonGenerator;
+
+	@Autowired
+	private ShoppingInfoGenerator shoppingGenerator;
 
 	/**
 	 * <pre>
@@ -743,8 +751,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
 
-		List<Shopping> resultList = null;
-		Shopping shopping = null;
+		List<MetaInfo> resultList = null;
+		MetaInfo shopping = null;
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
 		}
@@ -757,108 +765,39 @@ public class ShoppingServiceImpl implements ShoppingService {
 		this.commonOffsetCount(req);
 
 		Integer totalCount = 0;
-		resultList = this.commonDAO.queryForList("Shopping.getSecialPriceProductList", req, Shopping.class);
+		resultList = this.commonDAO.queryForList("Shopping.getSecialPriceProductList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new Shopping();
+			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;
-			Identifier identifier = null;
-			Identifier identifier1 = null;
-			Menu menu = null;
-			Rights rights = null;
-			Title title = null;
-			Source source = null;
-			Price price = null;
-			Contributor contributor = null;
-			Accrual accrual = null;
-			Date date = null;
-			SalesOption saleoption = null;
-			List<Identifier> identifierList = null;
-
-			List<Menu> menuList = null;
-			List<Source> sourceList = null;
 			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < resultList.size(); i++) {
 				shopping = resultList.get(i);
-
-				// 상품 정보 (상품ID)
 				product = new Product();
-				identifierList = new ArrayList<Identifier>();
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
-				identifier.setText(shopping.getCatalogId());
-				identifierList.add(identifier);
+				// 특가 상품 정보 (상품ID)
+				product.setIdentifierList(this.shoppingGenerator.generateSpecialIdentifier(shopping));
 
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-				identifier.setText(shopping.getPartProdId());
-				identifierList.add(identifier);
-
-				// 메뉴 정보
-				menuList = new ArrayList<Menu>();
-				menu = new Menu();
-				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-				menu.setId(shopping.getUpMenuId());
-				menu.setName(shopping.getUpMenuName());
-				menuList.add(menu);
-
-				menu = new Menu();
-				menu.setType(shopping.getSpecialSale());
-				menu.setId(shopping.getMenuId());
-				menu.setName(shopping.getMenuName());
-				menuList.add(menu);
-
-				// 상품 정보 (상품명)
-				title = new Title();
-				title.setText(shopping.getCatalogName());
-
-				// 상품 정보 (상품가격)
-				price = new Price();
-
-				price.setFixedPrice(shopping.getProdNetAmt());
-				price.setDiscountRate(shopping.getDcRate());
-				price.setText(shopping.getProdAmt());
-
-				// 이미지 정보
-				sourceList = new ArrayList<Source>();
-				source = new Source();
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-				source.setUrl(shopping.getFilePos());
-				sourceList.add(source);
-
-				// 다운로드 수
-				accrual = new Accrual();
-				accrual.setDownloadCount(shopping.getPrchsQty());
-
-				// 이용권한 정보
-				rights = new Rights();
-				date = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM, DateUtils.parseDate(shopping
-						.getApplyStartDt()), DateUtils.parseDate(shopping.getApplyEndDt()));
-				rights.setDate(date);
-				rights.setGrade(shopping.getProdGrdCd());
-
-				// contributor
-				contributor = new Contributor();
-				identifier1 = new Identifier();
-				identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
-				identifier1.setText(shopping.getBrandId());
-				contributor.setName(shopping.getBrandName());
-				contributor.setIdentifier(identifier1);
-
-				// saleoption
-				saleoption = new SalesOption();
-				saleoption.setType(shopping.getProdCaseCd());
-				if (shopping.getSoldOut().equals("Y")) {
-					saleoption.setSatus(DisplayConstants.DP_SOLDOUT);
-				} else {
-					saleoption.setSatus(DisplayConstants.DP_CONTINUE);
-				}
+				// Title 생성
+				Title title = this.commonGenerator.generateTitle(shopping);
+				// Price 생성
+				Price price = this.shoppingGenerator.generatePrice(shopping);
+				// MenuList 생성
+				List<Menu> menuList = this.shoppingGenerator.generateSpecialMenuList(shopping);
+				// SourceList 생성
+				List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
+				// Accrual 생성
+				Accrual accrual = this.shoppingGenerator.generateAccrual(shopping);
+				// Rights 생성
+				Rights rights = this.shoppingGenerator.generateRights(shopping);
+				// Shopping용 Contributor 생성
+				Contributor contributor = this.shoppingGenerator.generateContributor(shopping);
+				// SalesOption 생성
+				SalesOption salesOption = this.shoppingGenerator.generateSalesOption(shopping);
 
 				// 데이터 매핑
-				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
 				product.setTitle(title);
 				product.setPrice(price);
@@ -866,7 +805,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setAccrual(accrual);
 				product.setRights(rights);
 				product.setContributor(contributor);
-				product.setSalesOption(saleoption);
+				product.setSalesOption(salesOption);
 				totalCount = shopping.getTotalCount();
 				productList.add(i, product);
 			}
