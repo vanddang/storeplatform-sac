@@ -48,7 +48,6 @@ public class AuthenticationServiceImpl implements AuthenticateService {
 	public void authenticate(HttpHeaders headers) {
 		String pAuthKey = headers.getAuthKey();
 
-		//FIXME: AclAuthKeyInfo -> AuthKey
 		// 1. AuthKey 로 Tenant 정보 조회
 		AuthKey authKeyInfo = this.service.selectAuthKey(pAuthKey);
 		logger.debug("authKeyInfo={}", authKeyInfo);
@@ -67,11 +66,18 @@ public class AuthenticationServiceImpl implements AuthenticateService {
 		boolean isValid = false;
 		String authTypeCd  = authKeyInfo.getAuthTypeCd();
 		if(authTypeCd.equals(AuthType.KEY.name())) {
-			//TODO : MAC 인증
+			String requestUri = headers.getRequestUrl();
+			String authKey = headers.getAuthKey();
+			String timestamp = headers.getTimestamp();
+			String nonce = headers.getNonce();
+			String signature = headers.getSignature();
+			//MAC 인증
 			try {
-				String data = SacAuthUtil.getMessageForAuth(headers.getRequestUrl(), headers.getAuthKey(), headers.getTimestamp(), headers.getNonce());
-				String signature = HmacSha1Util.getSignature(data, authKeyInfo.getSecret());
-				if(signature.equals(headers.getSignature())) {
+				logger.debug("timestamp={}, nonce={}", timestamp, nonce);
+				String data = SacAuthUtil.getMessageForAuth(requestUri, authKey, timestamp, nonce);
+				String newSignature = HmacSha1Util.getSignature(data, authKeyInfo.getSecret());
+				logger.debug("signature={}, newSignature={}", signature, newSignature);
+				if(newSignature.equals(signature)) {
 					isValid = true;
 				}
 			} catch (SignatureException e) {
