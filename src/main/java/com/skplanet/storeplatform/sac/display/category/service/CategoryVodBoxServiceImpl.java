@@ -75,17 +75,20 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		// 헤더 값 세팅
+		this.log.debug("헤더 값 세팅");
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setLangCd(requestHeader.getTenantHeader().getLangCd());
 		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
 
 		// 요청 값 세팅
+		this.log.debug("요청 값 세팅");
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
 		requestVO.setDuration(requestVO.getDuration() != null ? requestVO.getDuration() : 30);
 		requestVO.setChapter(requestVO.getChapter() != null ? requestVO.getChapter() : 0);
 
 		// 필수 파라미터 체크
+		this.log.debug("필수 파라미터 체크");
 		if (StringUtils.isEmpty(requestVO.getChannelId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "channelId", requestVO.getChannelId());
 		} else if (StringUtils.isEmpty(requestVO.getFilteredBy())) {
@@ -125,6 +128,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		Chapter chapter;
 
 		// VOD 보관함 조회
+		this.log.debug("VOD 보관함 조회");
 		List<CategoryVodBox> categoryVodBoxList = this.commonDAO.queryForList("CategoryVodBox.selectCategoryVodBox",
 				requestVO, CategoryVodBox.class);
 

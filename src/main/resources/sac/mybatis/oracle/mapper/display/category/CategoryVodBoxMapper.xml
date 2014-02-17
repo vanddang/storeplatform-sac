@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CategoryVodBox">
+    <!-- VOD 보관함 -->
+    <select id="selectCategoryVodBox" parameterType="CategoryVodBoxSacReq" resultType="CategoryVodBox">
+		SELECT  /* CategoryVodBoxMapper.XML, selectCategoryVodBox, si-hyuk you, 2014-02-17 */
+		      A.TOTAL_COUNT
+		    , A.TOP_MENU_ID
+		    , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC A1 WHERE A1.MENU_ID = A.TOP_MENU_ID AND A1.LANG_CD = A.LANG_CD AND ROWNUM = 1) TOP_MENU_NM
+		    , A.MENU_ID
+		    , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC A1 WHERE A1.MENU_ID = A.MENU_ID AND A1.LANG_CD = A.LANG_CD AND ROWNUM = 1) MENU_NM
+		    , A.META_CLSF_CD
+		    , A.CID
+		    , A.CHNL_PROD_ID
+		    , A.PROD_ID
+		    , A.NM_SUB_CONTENTS_ID
+		    , A.SD_SUB_CONTENTS_ID
+		    , A.HD_SUB_CONTENTS_ID
+		    , A.NM_PROD_VER
+		    , A.SD_PROD_VER
+		    , A.HD_PROD_VER
+		    , A.NM_FILE_SIZE
+		    , A.SD_FILE_SIZE
+		    , A.HD_FILE_SIZE
+		    , A.NM_RSLTN_CD
+		    , FN_COMM_CD_NM(A.NM_RSLTN_CD, A.LANG_CD) AS NM_RSLTN_NM
+		    , A.SD_RSLTN_CD
+		    , FN_COMM_CD_NM(A.SD_RSLTN_CD, A.LANG_CD) AS SD_RSLTN_NM
+		    , A.HD_RSLTN_CD
+		    , FN_COMM_CD_NM(A.HD_RSLTN_CD, A.LANG_CD) AS HD_RSLTN_NM
+		    , A.NM_DP_PG_RATIO_CD
+		    , FN_COMM_CD_NM(A.NM_DP_PG_RATIO_CD, A.LANG_CD) AS NM_DP_PG_RATIO_NM
+		    , A.SD_DP_PG_RATIO_CD
+		    , FN_COMM_CD_NM(A.SD_DP_PG_RATIO_CD, A.LANG_CD) AS SD_DP_PG_RATIO_NM
+		    , A.HD_DP_PG_RATIO_CD
+		    , FN_COMM_CD_NM(A.HD_DP_PG_RATIO_CD, A.LANG_CD) AS HD_DP_PG_RATIO_NM
+		    , A.NM_BTV_CID
+		    , A.SD_BTV_CID
+		    , A.HD_BTV_CID
+		    , A.PROD_AMT
+		    , A.DRM_YN
+		    , A.PROD_STATUS_CD
+		    , A.BTV_YN
+		    , A.PROD_NM
+		    , REGEXP_REPLACE( CHAPTER, '[^[:digit:]]' ) AS CHAPTER
+		    , TO_CHAR(A.ISSUE_DAY,'YYYYMMDDHH24MISS') ISSUE_DAY
+		    , A.PROD_BASE_DESC
+		    , A.USE_PERIOD_UNIT_CD
+		    , FN_COMM_CD_NM(A.USE_PERIOD_UNIT_CD, A.LANG_CD) AS USE_PERIOD_UNIT_NM
+		    , A.USE_PERIOD
+		    , A.SAMPL_URL
+		    , A.SC_SAMPL_URL
+		    , A.EPSD_PLAY_TM
+		    , DECODE(A.PROD_GRD_CD
+		    , 'PD004401', 0
+		    , 'PD004402', 1
+		    , 'PD004403', 2
+		    , 'PD004404', 4 ) AS PROD_GRD_CD
+		    , A.HDV_YN
+		    , A.ARTIST1_NM
+		    , A.ARTIST2_NM
+		    , A.BRDC_COMP_CD
+		    , FN_COMM_CD_NM(A.BRDC_COMP_CD, A.LANG_CD) AS BRDC_COMP_NM
+		    , A.CHNL_COMP_NM
+		    , A.AGENCY_NM
+		    , TO_CHAR(A.REG_DT,'YYYYMMDDHH24MISS') REG_DT
+		FROM (
+		    SELECT 
+		    COUNT(1) OVER () AS TOTAL_COUNT
+		    , ROW_NUMBER() OVER(ORDER BY A.CHNL_REG_DT, TO_NUMBER(REGEXP_REPLACE(CHAPTER, '[^[:digit:]]')) ASC, A.UPD_DT DESC) RNK
+		    , A.*
+		    FROM (
+		    SELECT 
+		        ROW_NUMBER() OVER(PARTITION BY A.CID ORDER BY 1) RNUM
+		        , A.*
+                , D.LANG_CD
+		        , E.MENU_ID
+		        , C.PROD_AMT
+		        , D.PROD_NM
+		        , D.PROD_BASE_DESC
+		        , F.META_CLSF_CD
+		        , F.PROD_GRD_CD
+		        , G.HDV_YN
+		        , H.ARTIST1_NM
+		        , H.ARTIST2_NM
+		        , G.BRDC_COMP_CD
+		        , G.CHNL_COMP_NM
+		        , G.AGENCY_NM
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.FILE_SIZE)) OVER(PARTITION BY A.CID) NM_FILE_SIZE
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.RSLTN_CD)) OVER(PARTITION BY A.CID) NM_RSLTN_CD
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.DP_PG_RATIO_CD)) OVER(PARTITION BY A.CID) NM_DP_PG_RATIO_CD
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.PROD_VER)) OVER(PARTITION BY A.CID) NM_PROD_VER
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) NM_BTV_CID
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.FILE_SIZE)) OVER(PARTITION BY A.CID) SD_FILE_SIZE
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.RSLTN_CD)) OVER(PARTITION BY A.CID) SD_RSLTN_CD
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.DP_PG_RATIO_CD)) OVER(PARTITION BY A.CID) SD_DP_PG_RATIO_CD
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.PROD_VER)) OVER(PARTITION BY A.CID) SD_PROD_VER
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) SD_BTV_CID
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.FILE_SIZE)) OVER(PARTITION BY A.CID) HD_FILE_SIZE
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.RSLTN_CD)) OVER(PARTITION BY A.CID) HD_RSLTN_CD
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.DP_PG_RATIO_CD)) OVER(PARTITION BY A.CID) HD_DP_PG_RATIO_CD
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.PROD_VER)) OVER(PARTITION BY A.CID) HD_PROD_VER
+		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) HD_BTV_CID
+		        , F.REG_DT CHNL_REG_DT
+		    FROM (
+		        SELECT 
+		         C.PROD_ID AS CHNL_PROD_ID
+		        , A.TOP_MENU_ID
+		        , A.PROD_ID
+		        , A.CID
+		        , A.USE_PERIOD_UNIT_CD
+		        , A.USE_PERIOD
+		        , A.DRM_YN
+		        , B.PROD_STATUS_CD
+		        , E.DOLBY_SPRT_YN
+		        , G.BTV_YN
+		        , G.CHAPTER
+		        , G.ISSUE_DAY
+		        , G.SC_SAMPL_URL
+		        , G.SAMPL_URL
+		        , A.REG_DT
+		        , A.UPD_DT
+		        , B.TENANT_ID
+		        , F.SUB_CONTENTS_ID
+		        , F.FILE_SIZE
+		        , F.RSLTN_CD
+		        , F.DP_PG_RATIO_CD
+		        , F.PROD_VER
+		        , F.BTV_CID
+		        , MAX(F.EPSD_PLAY_TM) OVER(PARTITION BY A.CID) EPSD_PLAY_TM
+		        , MAX(( CASE WHEN E.DOLBY_SPRT_YN ='Y' AND F.AUDIO_TYPE_CD = 'PD002215' AND F.DP_PG_QULT_CD = 'PD009701' THEN F.SUB_CONTENTS_ID 
+		            WHEN NVL(F.AUDIO_TYPE_CD,'0') != 'PD002215' AND F.DP_PG_QULT_CD = 'PD009701' THEN F.SUB_CONTENTS_ID 
+		            END )) OVER (PARTITION BY A.CID) AS NM_SUB_CONTENTS_ID
+		        , MAX(( CASE WHEN E.DOLBY_SPRT_YN ='Y' AND F.AUDIO_TYPE_CD = 'PD002215' AND F.DP_PG_QULT_CD = 'PD009702' THEN F.SUB_CONTENTS_ID 
+		            WHEN NVL(F.AUDIO_TYPE_CD,'0') != 'PD002215' AND F.DP_PG_QULT_CD = 'PD009702' THEN F.SUB_CONTENTS_ID 
+		            END )) OVER (PARTITION BY A.CID) AS SD_SUB_CONTENTS_ID
+		        , MAX(( CASE WHEN E.DOLBY_SPRT_YN ='Y' AND F.AUDIO_TYPE_CD = 'PD002215' AND F.DP_PG_QULT_CD = 'PD009703' AND G.HDV_YN = 'Y' THEN F.SUB_CONTENTS_ID 
+		            WHEN NVL(F.AUDIO_TYPE_CD,'0') != 'PD002215' AND F.DP_PG_QULT_CD = 'PD009703' AND G.HDV_YN = 'Y' THEN F.SUB_CONTENTS_ID 
+		            END )) OVER (PARTITION BY A.CID) AS HD_SUB_CONTENTS_ID
+		        FROM 
+			        TB_DP_PROD A /* 에피소드 기준 */
+			        , TB_DP_TENANT_PROD B
+			        , TB_DP_PROD_RSHP C
+			        , TB_DP_SPRT_DEVICE D
+			        , TB_CM_DEVICE E
+			        , TB_DP_SUB_CONTENTS F 
+			        , TB_DP_MULTIMDA_PROD G /* 에피소드 기준 */
+		        WHERE A.PROD_ID = B.PROD_ID
+		        AND A.PROD_ID = C.PART_PROD_ID
+		        AND A.PROD_ID = D.PROD_ID
+		        AND D.DEVICE_MODEL_CD = E.DEVICE_MODEL_CD
+		        AND A.PROD_ID = F.PROD_ID
+		        AND A.PROD_ID = G.PROD_ID
+		
+		        AND A.TOP_MENU_ID IN ('DP17','DP18') /* 탑 메뉴 ID */
+		        AND A.CONTENTS_TYPE_CD = 'PD002502' /* 컨텐츠 타입 코드 */
+		        AND B.TENANT_ID = #{tenantId} /* 테넌트 ID */
+		        AND B.PROD_STATUS_CD = 'PD000403' /* 상품 상태 코드 */
+		        AND C.PROD_RSHP_CD = 'DP010802' /* 상품 관계 코드 */
+		        AND F.SALE_YN = 'Y' /* 판매 여부 */
+		        AND D.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말 모델 코드 */
+		        AND E.USE_YN = 'Y' /* 사용 여부 */
+                AND C.PROD_ID = #{channelId} /* 채널 ID(테스트 : H000047216) */
+		    
+                <if test="filteredBy == 'duration'">
+                /* 특정기간 이내 등록된 컨텐츠 */
+                AND A.REG_DT > SYSDATE - #{duration}
+                </if>
+                
+                <if test="filteredBy == 'chapter'">
+                /* 특정 회차(chapter)기준 이후 회차 컨텐츠 */
+                AND TO_NUMBER( REGEXP_REPLACE( NVL( G.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{chapter}
+                </if>
+                
+                <if test="filteredBy == 'regDate'">
+                /* 등록일 (regdate)이후 등록된 컨텐츠 */
+                AND A.REG_DT > TO_DATE( #{regDate},'YYYYMMDDHH24MISS')
+                </if>
+		     
+		    ) A
+		        , TB_DP_TENANT_PROD_PRICE C
+		        , TB_DP_PROD_DESC D /* 에피소드 기준 */
+		        , TB_DP_MENU_CATEGORY_PROD_MAPG E
+		        , TB_DP_PROD F /* 채널 기준 */
+		        , TB_DP_MULTIMDA_PROD G /* 채널 기준 */
+		        , TB_DP_PROD_DESC H /* 채널 기준 */
+		    WHERE 1=1
+		    AND A.TENANT_ID = C.TENANT_ID
+		    AND A.PROD_ID = C.PROD_ID
+		    AND A.PROD_ID = D.PROD_ID
+		    AND A.CHNL_PROD_ID = E.PROD_ID
+		    AND A.CHNL_PROD_ID = F.PROD_ID
+		    AND A.CHNL_PROD_ID = G.PROD_ID
+		    AND A.CHNL_PROD_ID = H.PROD_ID
+		    AND D.LANG_CD = H.LANG_CD
+		    AND D.LANG_CD = #{langCd} /* 언어 코드 */
+		    ) A
+		    WHERE A.RNUM = 1
+		) A
+        WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
+		ORDER BY A.RNK
+    </select>
+    
+</mapper>
