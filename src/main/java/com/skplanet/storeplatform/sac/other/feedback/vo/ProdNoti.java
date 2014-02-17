@@ -70,6 +70,11 @@ public class ProdNoti extends CommonInfo {
 	private String prodType;
 	private String orderedBy;
 	private List<String> prodIds;
+	private String defaultMsg1;
+	private String defaultMsg2;
+	private String defaultMsg3;
+	private String defaultMsg4;
+	private String defaultMsg5;
 
 	// 리스트 추가.
 	private String sellerMbrNo; // SELLER_MBR_NO
@@ -719,6 +724,81 @@ public class ProdNoti extends CommonInfo {
 	/**
 	 * @return String
 	 */
+	public String getDefaultMsg1() {
+		return this.defaultMsg1;
+	}
+
+	/**
+	 * @param defaultMsg1
+	 *            defaultMsg1
+	 */
+	public void setDefaultMsg1(String defaultMsg1) {
+		this.defaultMsg1 = defaultMsg1;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getDefaultMsg2() {
+		return this.defaultMsg2;
+	}
+
+	/**
+	 * @param defaultMsg2
+	 *            defaultMsg2
+	 */
+	public void setDefaultMsg2(String defaultMsg2) {
+		this.defaultMsg2 = defaultMsg2;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getDefaultMsg3() {
+		return this.defaultMsg3;
+	}
+
+	/**
+	 * @param defaultMsg3
+	 *            defaultMsg3
+	 */
+	public void setDefaultMsg3(String defaultMsg3) {
+		this.defaultMsg3 = defaultMsg3;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getDefaultMsg4() {
+		return this.defaultMsg4;
+	}
+
+	/**
+	 * @param defaultMsg4
+	 *            defaultMsg4
+	 */
+	public void setDefaultMsg4(String defaultMsg4) {
+		this.defaultMsg4 = defaultMsg4;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getDefaultMsg5() {
+		return this.defaultMsg5;
+	}
+
+	/**
+	 * @param defaultMsg5
+	 *            defaultMsg5
+	 */
+	public void setDefaultMsg5(String defaultMsg5) {
+		this.defaultMsg5 = defaultMsg5;
+	}
+
+	/**
+	 * @return String
+	 */
 	public String getSellerMbrNo() {
 		return this.sellerMbrNo;
 	}
@@ -839,6 +919,21 @@ public class ProdNoti extends CommonInfo {
 	/**
 	 * @return String
 	 */
+	public String getTotalCount() {
+		return this.totalCount;
+	}
+
+	/**
+	 * @param totalCount
+	 *            totalCount
+	 */
+	public void setTotalCount(String totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	/**
+	 * @return String
+	 */
 	public String getStartRow() {
 		return this.startRow;
 	}
@@ -864,21 +959,6 @@ public class ProdNoti extends CommonInfo {
 	 */
 	public void setEndRow(String endRow) {
 		this.endRow = endRow;
-	}
-
-	/**
-	 * @return String
-	 */
-	public String getTotalCount() {
-		return this.totalCount;
-	}
-
-	/**
-	 * @param totalCount
-	 *            totalCount
-	 */
-	public void setTotalCount(String totalCount) {
-		this.totalCount = totalCount;
 	}
 
 }

@@ -71,6 +71,12 @@ import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 public class FeedbackServiceImpl implements FeedbackService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeedbackController.class);
 
+	private static final String DEFAULT_MSG1 = "별로에요";
+	private static final String DEFAULT_MSG2 = "그저 그래요";
+	private static final String DEFAULT_MSG3 = "좋아요";
+	private static final String DEFAULT_MSG4 = "만족해요";
+	private static final String DEFAULT_MSG5 = "아주 좋아요";
+
 	@Autowired
 	private FeedbackRepository feedbackRepository;
 
@@ -83,7 +89,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 		this.setMbrAvgTenantProdStats(createFeedbackSacReq, sacRequestHeader);
 
 		String notiSeq = "";
+
 		if (StringUtils.isNotEmpty(createFeedbackSacReq.getNotiDscr())) {
+
 			ProdNoti prodNoti = new ProdNoti();
 			prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 			prodNoti.setMbrNo(createFeedbackSacReq.getUserKey());
@@ -108,6 +116,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			notiSeq = prodNoti.getNotiSeq();
 
 		}
+
 		CreateFeedbackSacRes createFeedbackSacRes = new CreateFeedbackSacRes();
 		createFeedbackSacRes.setProdId(createFeedbackSacReq.getProdId());
 		createFeedbackSacRes.setNotiSeq(notiSeq);
@@ -368,22 +377,17 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// TenantProdStats tenantProdStats = new TenantProdStats();
 		// tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		// tenantProdStats.setProdId(listFeedbackSacReq.getProdId());
-		//
 		// TenantProdStats getProdEvalInfo = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
-		//
 		// if (getProdEvalInfo == null) {
 		// throw new StorePlatformException("SAC_OTH_9001");
 		// }
-		//
 		// ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
 		// listFeedbackRes.setAvgEvluScorePcts(getProdEvalInfo.getAvgEvluScorePcts());
 		// listFeedbackRes.setAvgEvluScore(getProdEvalInfo.getAvgEvluScore());
 		// listFeedbackRes.setDwldCnt(getProdEvalInfo.getDwldCnt());
 		// listFeedbackRes.setPaticpersCnt(getProdEvalInfo.getPaticpersCnt());
-		//
 		// int offset = listFeedbackSacReq.getOffset() == 0 ? 1 : listFeedbackSacReq.getOffset();
 		// int count = listFeedbackSacReq.getCount() == 0 ? 10 : (offset + listFeedbackSacReq.getCount()) - 1;
-		//
 		// ProdNoti prodNoti = new ProdNoti();
 		// prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		// prodNoti.setProdId(listFeedbackSacReq.getProdId());
@@ -393,21 +397,19 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// prodNoti.setProdType(listFeedbackSacReq.getProdType());
 		// prodNoti.setStartRow(String.valueOf(offset));
 		// prodNoti.setEndRow(String.valueOf(count));
-		//
+		// int totalCount = (Integer) this.feedbackRepository.getProdNotiCount(prodNoti);
+		// if (totalCount <= 0) {
+		// throw new StorePlatformException("SAC_OTH_9001");
+		// }
+		// listFeedbackRes.setNotiTot(String.valueOf(totalCount));
 		// List<ProdNoti> getProdnotiList = this.feedbackRepository.getProdNotiList(prodNoti);
-		//
 		// if (CollectionUtils.isEmpty(getProdnotiList)) {
 		// throw new StorePlatformException("SAC_OTH_9001");
 		// }
-		//
 		// List<Feedback> notiList = new ArrayList<Feedback>();
-		//
 		// for (ProdNoti res : getProdnotiList) {
 		// notiList.add(this.setFeedback(res));
 		// }
-		//
-		// int totalCount = (Integer) this.feedbackRepository.getProdNotiCount(prodNoti);
-		// listFeedbackRes.setNotiTot(String.valueOf(totalCount));
 		// listFeedbackRes.setNotiList(notiList);
 		// return listFeedbackRes;
 		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
@@ -427,19 +429,31 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
 
-		// ProdNoti prodNoti = new ProdNoti();
+		// int offset = listMyFeedbackSacReq.getOffset() == 0 ? 1 : listMyFeedbackSacReq.getOffset();
+		// int count = listMyFeedbackSacReq.getCount() == 0 ? 100 : (offset + listMyFeedbackSacReq.getCount()) - 1;
 		//
+		// ProdNoti prodNoti = new ProdNoti();
 		// prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		// prodNoti.setProdIds(Arrays.asList((StringUtils.split(listMyFeedbackSacReq.getProdIds(), ","))));
 		// prodNoti.setMbrNo(listMyFeedbackSacReq.getUserKey());
 		// prodNoti.setChnlId(listMyFeedbackSacReq.getChnlId());
 		// prodNoti.setProdType(listMyFeedbackSacReq.getProdType());
-		//
-		// int offset = listMyFeedbackSacReq.getOffset() == 0 ? 1 : listMyFeedbackSacReq.getOffset();
-		// int count = listMyFeedbackSacReq.getCount() == 0 ? 100 : (offset + listMyFeedbackSacReq.getCount()) - 1;
-		//
+		// prodNoti.setDefaultMsg1(DEFAULT_MSG1);
+		// prodNoti.setDefaultMsg2(DEFAULT_MSG2);
+		// prodNoti.setDefaultMsg3(DEFAULT_MSG3);
+		// prodNoti.setDefaultMsg4(DEFAULT_MSG4);
+		// prodNoti.setDefaultMsg5(DEFAULT_MSG5);
 		// prodNoti.setStartRow(String.valueOf(offset));
 		// prodNoti.setEndRow(String.valueOf(count));
+		//
+		// int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
+		//
+		// if (notiTot <= 0) {
+		// throw new StorePlatformException("SAC_OTH_9001");
+		// }
+		//
+		// ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
+		// listMyFeedbackRes.setNotiTot(String.valueOf(notiTot));
 		//
 		// List<ProdNoti> getMyProdNotiList = this.feedbackRepository.getMyProdNotiList(prodNoti);
 		//
@@ -455,10 +469,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// BeanUtils.copyProperties(feedback, feedbackMy);
 		// notiMyList.add(feedbackMy);
 		// }
-		// int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
 		//
-		// ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
-		// listMyFeedbackRes.setNotiTot(String.valueOf(notiTot));
 		// listMyFeedbackRes.setNotiList(notiMyList);
 		// return listMyFeedbackRes;
 		List<Feedback> notiList = this.getFeedbackList();
