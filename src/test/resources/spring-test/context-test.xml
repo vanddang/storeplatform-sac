@@ -17,4 +17,16 @@
     <import resource="classpath:sac/spring/context-*.xml"/> 
     <import resource="classpath:sac/runtime/context-*.xml"/> 
     
+    <!-- JUnit Test TransactionManager -->
+    <bean id="transactionManager" class="org.springframework.data.transaction.ChainedTransactionManager">
+        <constructor-arg>
+            <list>
+                <ref bean="transactionManagerForSac" />
+                <ref bean="transactionManagerForScPurchase" />
+                <ref bean="transactionManagerForScMember" />
+                <ref bean="transactionManagerForCmsApp" />
+            </list>
+        </constructor-arg>
+    </bean>
+    
 </beans>
