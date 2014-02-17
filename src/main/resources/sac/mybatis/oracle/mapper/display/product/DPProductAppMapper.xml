@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DP_APP_PRODUCT">
+
+	<resultMap id="dpAppProductMap" type="com.skplanet.icms.refactoring.deploy.DPAppProductVO">
+			<result property="prodId"			column="PROD_ID"				/>
+			<result property="aid"              column="AID"					/>
+			<result property="wapProdNm"        column="WAP_PROD_NM"			/>
+			<result property="platClsfCd"       column="PLAT_CLSF_CD"			/>
+			<result property="useManuFilePath"  column="USE_MANU_FILE_PATH"		/>
+			<result property="useManuFileNm"    column="USE_MANU_FILE_NM"		/>
+			<result property="verMajor"         column="VER_MAJOR"				/>
+			<result property="verMinor"         column="VER_MINOR"				/>
+			<result property="sktOpenApiUseYn"  column="SKT_OPEN_API_USE_YN"	/>
+			<result property="sdkVer"           column="SDK_VER"				/>
+			<result property="regId"            column="REG_ID"					/>
+			<result property="regDt"            column="REG_DT"					/>
+			<result property="updId"            column="UPD_ID"					/>
+			<result property="updDt"            column="UPD_DT"					/>
+			<result property="devCmpyNm"        column="DEV_CMPY_NM"			/>
+			<result property="prodSpec"         column="PROD_SPEC"				/>
+			<result property="prodClsfCd"       column="PROD_CLSF_CD"			/>
+			<result property="pkgNm"            column="PKG_NM"					/>
+			<result property="descVideoUrl"     column="DESC_VIDEO_URL"			/>
+			<result property="dclb"             column="DCLB"					/>
+			<result property="contentsTypeCd"   column="CONTENTS_TYPE_CD"		/>
+			<result property="partParentClsfCd" column="PART_PARENT_CLSF_CD"	/>
+			<result property="dgreCd"           column="DGRE_CD"				/>  
+			<result property="pkgVerCd"         column="PKG_VER_CD"				/>
+			<result property="dbmUpdtDt"   		column="DBM_UPDT_DT"			/>
+			<result property="gameCentrId" 		column="GAME_CENTR_ID"			/>
+			<result property="gameCentrVerCd"   column="GAME_CENTR_VER_CD"		/> 			
+	</resultMap>
+
+
+  	<select id="selectDPAppProduct" parameterType="dpAppProductVO" resultMap="dpAppProductMap">
+  	
+		SELECT  /* DP_APP_PRODUCT-selectDPAppProduct : mhcha123 (2014-01-03) */
+			PROD_ID
+			,AID
+			,WAP_PROD_NM
+			,PLAT_CLSF_CD
+			,USE_MANU_FILE_PATH
+			,USE_MANU_FILE_NM
+			,VER_MAJOR
+			,VER_MINOR
+			,SKT_OPEN_API_USE_YN
+			,SDK_VER
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+			,DEV_CMPY_NM
+			,PROD_SPEC
+			,PROD_CLSF_CD
+			,PKG_NM
+			,DESC_VIDEO_URL
+			,DCLB
+			,CONTENTS_TYPE_CD
+			,PART_PARENT_CLSF_CD
+			,DGRE_CD
+			,PKG_VER_CD
+			,DBM_UPDT_DT
+			,GAME_CENTR_ID
+			,GAME_CENTR_VER_CD  
+	  	FROM TB_DP_APP_PROD
+		WHERE PROD_ID = #{prodId}
+  	</select>
+  	
+	<insert id="insertDPAppProduct" parameterType="dpAppProductVO">
+		INSERT    /* DP_APP_PRODUCT-insertDPAppProduct : mhcha123 (2014-01-03) */
+		INTO TB_DP_APP_PROD (
+			PROD_ID
+			,AID
+			,WAP_PROD_NM
+			,PLAT_CLSF_CD
+			,USE_MANU_FILE_PATH
+			,USE_MANU_FILE_NM
+			,VER_MAJOR
+			,VER_MINOR
+			,SKT_OPEN_API_USE_YN
+			,SDK_VER
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+			,DEV_CMPY_NM
+			,PROD_SPEC
+			,PROD_CLSF_CD
+			,PKG_NM
+			,DESC_VIDEO_URL
+			,DCLB
+			,CONTENTS_TYPE_CD
+			,PART_PARENT_CLSF_CD
+			,DGRE_CD
+			,PKG_VER_CD
+			,DBM_UPDT_DT
+			,GAME_CENTR_ID
+			,GAME_CENTR_VER_CD  			
+		)
+		VALUES(
+			#{prodId}
+			,#{aid, jdbcType=VARCHAR}
+			,#{wapProdNm, jdbcType=VARCHAR}
+			,#{platClsfCd, jdbcType=VARCHAR}
+			,#{useManuFilePath, jdbcType=VARCHAR}
+			,#{useManuFileNm, jdbcType=VARCHAR}
+			,#{verMajor, jdbcType=INTEGER}
+			,#{verMinor, jdbcType=INTEGER}
+			,#{sktOpenApiUseYn, jdbcType=VARCHAR}
+			,#{sdkVer, jdbcType=VARCHAR}
+			,#{regId, jdbcType=VARCHAR}
+			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{updId, jdbcType=VARCHAR}
+			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{devCmpyNm, jdbcType=VARCHAR}
+			,#{prodSpec, jdbcType=VARCHAR}
+			,#{prodClsfCd, jdbcType=VARCHAR}
+			,#{pkgNm, jdbcType=VARCHAR}
+			,#{descVideoUrl, jdbcType=VARCHAR}
+			,#{dclb, jdbcType=VARCHAR}
+			,#{contentsTypeCd, jdbcType=VARCHAR}
+			,#{partParentClsfCd, jdbcType=VARCHAR}
+			,#{dgreCd, jdbcType=VARCHAR}
+			,#{pkgVerCd, jdbcType=INTEGER}
+			,TO_DATE(#{dbmUpdtDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{gameCentrId, jdbcType=VARCHAR}
+			,#{gameCentrVerCd, jdbcType=VARCHAR}      
+		 )
+	</insert>
+    	
+	<delete id="deleteDPAppProduct"  parameterType="dpAppProductVO" >
+		DELETE  /* DP_APP_PRODUCT-deleteDPAppProduct : mhcha123 (2014-01-03) */
+		  FROM TB_DP_APP_PROD
+      	  WHERE PROD_ID = #{prodId}
+	</delete>	
+	
+</mapper>

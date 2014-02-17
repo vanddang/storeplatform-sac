@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- TBL_PD_Seed_App TABLE SQL-MAP -->
+
+<mapper namespace="DP_SEED_MAPP">
+
+	 <resultMap id="dpSeedMappMap" type="com.skplanet.icms.refactoring.deploy.DPSeedMappVO">
+		<result property="prodId"				column="PROD_ID" 			/>
+		<result property="caseRefCd" 			column="CASE_REF_CD" 		/>
+		<result property="useYn" 				column="USE_YN" 			/>		
+		<result property="regId"      			column="REG_ID"       		/>   
+		<result property="regDt"          		column="REG_DT"            	/>   
+		<result property="updId"      			column="UPD_ID"       		/>   
+		<result property="updDt"       			column="UPD_DT"        		/>   
+	 </resultMap>
+
+	<select id="selectDPSeedMapp" parameterType="dpSeedMappVO" resultMap="dpSeedMappMap" >
+		SELECT /* DP_SEED_MAPP-selectDPSeedMapp : mhcha123 (2014-01-03) */  
+			PROD_ID
+			,CASE_REF_CD
+			,USE_YN
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+		  FROM TB_DP_SEED_MAPP
+		  WHERE PROD_ID = #{prodId}
+		<if test="@org.springframework.util.StringUtils@hasText(caseRefCd)">
+			AND CASE_REF_CD = #{caseRefCd}
+		</if>	
+		<if test="@org.springframework.util.StringUtils@hasText(useYn)">
+			AND USE_YN = #{useYn}
+		</if>				  
+  	</select>
+	
+  	<insert id="insertDPSeedMapp" parameterType="dpSeedMappVO">
+  	<![CDATA[
+  		/* DP_SEED_MAPP-insertDPSeedMapp : mhcha123 (2014-01-03) */  
+  		INSERT INTO TB_DP_SEED_MAPP
+        (
+			PROD_ID
+			,CASE_REF_CD
+			,USE_YN
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+		)
+        VALUES 
+        (
+			#{prodId, jdbcType=VARCHAR}
+			,#{caseRefCd, jdbcType=VARCHAR}
+			,#{useYn, jdbcType=VARCHAR}
+			,#{regId, jdbcType=VARCHAR}
+			,SYSDATE
+			,#{updId, jdbcType=VARCHAR}
+			,SYSDATE			
+
+        ) 
+  	]]>
+  	</insert>
+  	
+
+	<delete id="deleteDPSeedMapp" parameterType="dpSeedMappVO" >
+		/* DP_SEED_MAPP-deleteDPSeedMapp : mhcha123 (2014-01-03) */  
+		DELETE FROM TB_DP_SEED_MAPP
+		WHERE PROD_ID = #{prodId}
+		<if test="@org.springframework.util.StringUtils@hasText(caseRefCd)">
+			AND CASE_REF_CD = #{caseRefCd}
+		</if>	
+		<if test="@org.springframework.util.StringUtils@hasText(useYn)">
+			AND USE_YN = #{useYn}
+		</if>				
+	</delete>
+  	
+</mapper>

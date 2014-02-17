@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DP_PRODUCT_SUBCONTS">
+
+	<resultMap id="dpProductSubContsMap" type="com.skplanet.icms.refactoring.deploy.DPProductSubContsVO">
+		<result property="prodId"				column="PROD_ID"					/>
+		<result property="subContentsId"		column="SUB_CONTENTS_ID"			/>
+		<result property="lcdSize"				column="LCD_SIZE"					/>
+		<result property="colorDepthCd"			column="COLOR_DEPTH_CD"				/>
+		<result property="audioTypeCd"			column="AUDIO_TYPE_CD"				/>
+		<result property="touchscreenSprtYn"	column="TOUCHSCREEN_SPRT_YN"		/>
+		<result property="itoppSprtYn"			column="ITOPP_SPRT_YN"				/>
+		<result property="bluetoothSprtYn"		column="BLUETOOTH_SPRT_YN"			/>
+		<result property="gpsSprtYn"			column="GPS_SPRT_YN"				/>
+		<result property="epsdPlayTm"			column="EPSD_PLAY_TM"				/>
+		<result property="saleYn"				column="SALE_YN"					/>
+		<result property="vmTypeCd"				column="VM_TYPE_CD"					/>
+		<result property="vmVer"				column="VM_VER"						/>
+		<result property="gigaVer"				column="GIGA_VER"					/>
+		<result property="sound3DSprtYn"		column="SOUND_3D_SPRT_YN"			/>
+		<result property="vitlKeySprtYn"		column="VITL_KEY_SPRT_YN"			/>
+		<result property="cpuTypeCd"			column="CPU_TYPE_CD"				/>
+		<result property="tPlayerSprtYn"		column="T_PLAYER_SPRT_YN"			/>
+		<result property="drmVerCd"				column="DRM_VER_CD"					/>
+		<result property="cfmSprtYn"			column="CFM_SPRT_YN"				/>	
+		<result property="videoFileTypeCd"		column="VIDEO_FILE_TYPE_CD"			/>
+		<result property="rsltnCd"				column="RSLTN_CD"					/>
+		<result property="dpPgRatioCd"			column="DP_PG_RATIO_CD"				/>
+		<result property="dpPgQultCd"			column="DP_PG_QULT_CD"				/>
+		<result property="btvCid"				column="BTV_CID"					/>
+		<result property="fileClsfCd"			column="FILE_CLSF_CD"				/>
+		<result property="filePath"				column="FILE_PATH"					/>
+		<result property="fileSize"				column="FILE_SIZE"					/>
+		<result property="apkVer"				column="APK_VER"					/>
+		<result property="apkVerNm"				column="APK_VER_NM"					/>
+		<result property="apkPkgNm"				column="APK_PKG_NM"					/>
+		<result property="apkApiLevelCd"		column="APK_API_LEVEL_CD"			/>
+		<result property="apkLabelNm"			column="APK_LABEL_NM"				/>
+		<result property="regId"				column="REG_ID"						/>
+		<result property="regDt"				column="REG_DT"						/>
+		<result property="updId"				column="UPD_ID"						/>
+		<result property="updDt"				column="UPD_DT"						/>
+	</resultMap>
+
+
+  	<select id="selectDPProductSubconts" parameterType="dpProductSubContsVO" resultMap="dpProductSubContsMap">
+  	
+		SELECT  /* DP_PRODUCT_SUBCONTS-selectDPProductSubconts : mhcha123 (2014-01-03) */
+			PROD_ID
+			,SUB_CONTENTS_ID
+			,LCD_SIZE
+			,COLOR_DEPTH_CD
+			,AUDIO_TYPE_CD
+			,TOUCHSCREEN_SPRT_YN
+			,ITOPP_SPRT_YN
+			,BLUETOOTH_SPRT_YN
+			,GPS_SPRT_YN
+			,EPSD_PLAY_TM
+			,SALE_YN
+			,VM_TYPE_CD
+			,VM_VER
+			,GIGA_VER
+			,SOUND_3D_SPRT_YN
+			,VITL_KEY_SPRT_YN
+			,CPU_TYPE_CD
+			,T_PLAYER_SPRT_YN
+			,DRM_VER_CD
+			,CFM_SPRT_YN
+			,VIDEO_FILE_TYPE_CD
+			,RSLTN_CD
+			,DP_PG_RATIO_CD
+			,DP_PG_QULT_CD
+			,BTV_CID
+			,FILE_CLSF_CD
+			,FILE_PATH
+			,FILE_SIZE
+			,APK_VER
+			,APK_VER_NM
+			,APK_PKG_NM
+			,APK_API_LEVEL_CD
+			,APK_LABEL_NM
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT	
+	  	FROM TB_DP_SUB_CONTENTS
+		WHERE PROD_ID = #{prodId}
+  	</select>
+  		
+	<insert id="insertDPProductSubconts" parameterType="dpProductSubContsVO">
+		INSERT    /* DP_PRODUCT_SUBCONTS-insertDPProductSubconts : mhcha123 (2014-01-03) */
+		INTO TB_DP_SUB_CONTENTS (
+			PROD_ID
+			,SUB_CONTENTS_ID
+			,LCD_SIZE
+			,COLOR_DEPTH_CD
+			,AUDIO_TYPE_CD
+			,TOUCHSCREEN_SPRT_YN
+			,ITOPP_SPRT_YN
+			,BLUETOOTH_SPRT_YN
+			,GPS_SPRT_YN
+			,EPSD_PLAY_TM
+			,SALE_YN
+			,VM_TYPE_CD
+			,VM_VER
+			,GIGA_VER
+			,SOUND_3D_SPRT_YN
+			,VITL_KEY_SPRT_YN
+			,CPU_TYPE_CD
+			,T_PLAYER_SPRT_YN
+			,DRM_VER_CD
+			,CFM_SPRT_YN
+			,VIDEO_FILE_TYPE_CD
+			,RSLTN_CD
+			,DP_PG_RATIO_CD
+			,DP_PG_QULT_CD
+			,BTV_CID
+			,FILE_CLSF_CD
+			,FILE_PATH
+			,FILE_SIZE
+			,APK_VER
+			,APK_VER_NM
+			,APK_PKG_NM
+			,APK_API_LEVEL_CD
+			,APK_LABEL_NM
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT	
+		)
+		VALUES(
+			#{prodId, jdbcType=VARCHAR}
+			,#{subContentsId, jdbcType=VARCHAR}
+			,#{lcdSize, jdbcType=VARCHAR}
+			,#{colorDepthCd, jdbcType=VARCHAR}
+			,#{audioTypeCd, jdbcType=VARCHAR}
+			,#{touchscreenSprtYn, jdbcType=VARCHAR}
+			,#{itoppSprtYn, jdbcType=VARCHAR}
+			,#{bluetoothSprtYn, jdbcType=VARCHAR}
+			,#{gpsSprtYn, jdbcType=VARCHAR}
+			,#{epsdPlayTm, jdbcType=VARCHAR}
+			,#{saleYn, jdbcType=VARCHAR}
+			,#{vmTypeCd, jdbcType=VARCHAR}
+			,#{vmVer, jdbcType=VARCHAR}
+			,#{gigaVer, jdbcType=VARCHAR}
+			,#{sound3DSprtYn, jdbcType=VARCHAR}
+			,#{vitlKeySprtYn, jdbcType=VARCHAR}
+			,#{cpuTypeCd, jdbcType=VARCHAR}
+			,#{tPlayerSprtYn, jdbcType=VARCHAR}
+			,#{drmVerCd, jdbcType=VARCHAR}
+			,#{cfmSprtYn, jdbcType=VARCHAR}
+			,#{videoFileTypeCd, jdbcType=VARCHAR}
+			,#{rsltnCd, jdbcType=VARCHAR}
+			,#{dpPgRatioCd, jdbcType=VARCHAR}
+			,#{dpPgQultCd, jdbcType=VARCHAR}
+			,#{btvCid, jdbcType=VARCHAR}
+			,#{fileClsfCd, jdbcType=VARCHAR}
+			,#{filePath, jdbcType=VARCHAR}
+			,#{fileSize, jdbcType=INTEGER}
+			,#{apkVer, jdbcType=INTEGER}
+			,#{apkVerNm, jdbcType=VARCHAR}
+			,#{apkPkgNm, jdbcType=VARCHAR}
+			,#{apkApiLevelCd, jdbcType=VARCHAR}
+			,#{apkLabelNm, jdbcType=VARCHAR}
+			,#{regId, jdbcType=VARCHAR}
+			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{updId, jdbcType=VARCHAR}
+			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')     
+		 )
+	</insert>
+	
+	<delete id="deleteDPProductSubconts"  parameterType="dpProductSubContsVO" >
+		DELETE  /* DP_PRODUCT_SUBCONTS-deleteDPProductSubconts : mhcha123 (2014-01-03) */
+		  FROM TB_DP_SUB_CONTENTS
+      	  WHERE PROD_ID = #{prodId}
+	</delete>	
+	
+</mapper>

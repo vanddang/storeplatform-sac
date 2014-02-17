@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DP_PRODUCT_IMG">
+
+	<resultMap id="dpProductImgMap" type="com.skplanet.icms.refactoring.deploy.DPProductImgVO">
+		<result property="prodId"   column="PROD_ID"    />
+		<result property="imgCd"    column="IMG_CD"    	/>
+		<result property="langCd"    column="LANG_CD"    	/>
+		<result property="filePath" column="FILE_PATH"  />
+		<result property="fileNm"   column="FILE_NM"    />
+		<result property="fileSize" column="FILE_SIZE"  />
+		<result property="expoOrd"  column="EXPO_ORD"   />
+		<result property="regId"    column="REG_ID"   	/>
+		<result property="regDt"    column="REG_DT"     />
+		<result property="updId"    column="UPD_ID"    	/>
+		<result property="updDt"   	column="UPD_DT"  	/>	
+	</resultMap>
+	
+	<select id="selectDPProductImg" parameterType="dpProductImgVO" resultMap="dpProductImgMap">
+        SELECT /* DP_PRODUCT_IMG-selectDPProductImg : mhcha123 (2014-01-03) */
+			PROD_ID
+			,LANG_CD
+			,IMG_CD
+			,FILE_PATH
+			,FILE_NM
+			,FILE_SIZE
+			,EXPO_ORD
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+        FROM TB_DP_PROD_IMG
+		WHERE PROD_ID = #{prodId}
+		<if test="@org.springframework.util.StringUtils@hasText(imgCd)">
+			AND IMG_CD = #{imgCd}
+		</if>   
+		<if test="@org.springframework.util.StringUtils@hasText(expoOrd)">
+			AND EXPO_ORD = #{expoOrd}
+		</if>  		
+	</select>
+	
+		
+	<insert id="insertDPProductImg" parameterType="dpProductImgVO" >
+		INSERT /* DP_PRODUCT_IMG-insertDPProductImg : mhcha123 (2014-01-03) */
+		INTO TB_DP_PROD_IMG (
+			PROD_ID
+			,LANG_CD
+			,IMG_CD
+			,FILE_PATH
+			,FILE_NM
+			,FILE_SIZE
+			,EXPO_ORD
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+		)
+   		VALUES (
+			#{prodId, jdbcType=VARCHAR}
+			,#{langCd, jdbcType=VARCHAR} 
+			,#{imgCd, jdbcType=VARCHAR}  
+			,#{filePath, jdbcType=VARCHAR}
+			,#{fileNm, jdbcType=VARCHAR} 
+			,#{fileSize, jdbcType=INTEGER}
+			,#{expoOrd, jdbcType=INTEGER}
+			,#{regId, jdbcType=VARCHAR} 
+			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{updId, jdbcType=VARCHAR}
+			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+		)	
+	</insert>
+
+
+	<delete id="deleteDPProductImg"  parameterType="dpProductImgVO" >
+        DELETE /* DP_PRODUCT_IMG-deleteDPProductImg : mhcha123 (2014-01-03) */ 
+        FROM TB_DP_PROD_IMG
+         WHERE PROD_ID = #{prodId}
+		<if test="@org.springframework.util.StringUtils@hasText(imgCd)">
+			AND IMG_CD = #{imgCd}
+		</if>   
+		<if test="@org.springframework.util.StringUtils@hasText(expoOrd)">
+			AND EXPO_ORD = #{expoOrd}
+		</if>  		      
+	</delete> 
+		
+
+  	
+</mapper>

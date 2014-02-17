@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DP_PRODUCT_CAT">
+
+	<resultMap id="dpProductCatMap" type="com.skplanet.icms.refactoring.deploy.DPProductCatMapVO">
+		<result property="prodId"     	column="PROD_ID"     	/>     
+		<result property="categoryNo"  	column="MENU_ID"  	/>
+		<result property="baseYn"  		column="BASE_YN"  		/>
+		<result property="regId"        column="REG_ID"         />
+		<result property="regDt"     	column="REG_DT"      	/>
+		<result property="updId"       	column="UPD_ID"        	/>
+		<result property="updDt"       	column="UPD_DT"        	/>
+		<result property="useYn"       	column="USE_YN"        	/>
+	</resultMap>
+	
+	
+	<select id="selectDPProductCat" parameterType="dpProductCatMapVO" resultMap="dpProductCatMap">
+		SELECT  /* DP_PRODUCT_CAT-selectDPProductCat : mhcha123 (2014-01-03) */
+			 PROD_ID
+			,MENU_ID
+			,BASE_YN
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+			,USE_YN
+		FROM TB_DP_MENU_CATEGORY_PROD_MAPG	
+		<where>
+			<if test="@org.springframework.util.StringUtils@hasText(prodId)">
+				PROD_ID = #{prodId}
+			</if>
+			<if test="@org.springframework.util.StringUtils@hasText(useYn)">
+				AND USE_YN = #{useYn}
+			</if>	
+			<if test="@org.springframework.util.StringUtils@hasText(categoryNo)">
+				AND MENU_ID = #{categoryNo}
+			</if>									
+		</where>
+	</select>	
+	
+	
+	<insert id="insertDPProductCat" parameterType="dpProductCatMapVO" >
+		INSERT /* DP_PRODUCT_CAT-insertDPProductCat : mhcha123 (2014-01-03) */
+		INTO TB_DP_MENU_CATEGORY_PROD_MAPG
+		(
+			 PROD_ID
+			,MENU_ID
+			,BASE_YN
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+			,USE_YN
+		)	
+		VALUES
+		(
+			#{prodId, jdbcType=VARCHAR}
+	 		,#{categoryNo, jdbcType=VARCHAR}
+	 		,#{baseYn, jdbcType=VARCHAR}
+	 		,#{regId, jdbcType=VARCHAR}
+			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+		 	,'SYSTEM'
+			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{useYn, jdbcType=VARCHAR}
+		)
+	</insert>
+
+
+	<delete id="deleteDPProductCat"  parameterType="dpProductCatMapVO" >
+		DELETE /* DP_PRODUCT_CAT-deleteDPProductCat : mhcha123 (2014-01-03) */
+		  FROM TB_DP_MENU_CATEGORY_PROD_MAPG
+      	  WHERE PROD_ID = #{prodId}
+			<if test="@org.springframework.util.StringUtils@hasText(categoryNo)">
+				AND MENU_ID = #{categoryNo}
+			</if>			
+	</delete>    
+</mapper>

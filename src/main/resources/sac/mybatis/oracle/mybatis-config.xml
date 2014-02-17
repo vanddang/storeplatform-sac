@@ -231,5 +231,23 @@
         
         <!-- ACL -->
         <typeAlias alias="Interface" type="com.skplanet.storeplatform.sac.runtime.acl.vo.Interface" />
+        
+        <!-- ################################################# -->
+        <!-- CMS 상품 배포 정보 및 단말 리맵핑                             -->
+        <!-- ################################################# -->
+        <typeAlias alias="dpProductVO"     			type="com.skplanet.icms.refactoring.deploy.DPProductVO" />
+		<typeAlias alias="dpAppProductVO"     		type="com.skplanet.icms.refactoring.deploy.DPAppProductVO" />
+		<typeAlias alias="dpProductCatMapVO"     	type="com.skplanet.icms.refactoring.deploy.DPProductCatMapVO" />
+		<typeAlias alias="dpProductDescVO"     		type="com.skplanet.icms.refactoring.deploy.DPProductDescVO" />
+		<typeAlias alias="dpProductImgVO"     		type="com.skplanet.icms.refactoring.deploy.DPProductImgVO" />
+		<typeAlias alias="dpProductRshpVO"     		type="com.skplanet.icms.refactoring.deploy.DPProductRshpVO" />
+		<typeAlias alias="dpProductSubContsVO"     	type="com.skplanet.icms.refactoring.deploy.DPProductSubContsVO" />
+		<typeAlias alias="dpProductUpdVO"     		type="com.skplanet.icms.refactoring.deploy.DPProductUpdVO" />
+		<typeAlias alias="dpSeedMappVO"     		type="com.skplanet.icms.refactoring.deploy.DPSeedMappVO" />
+		<typeAlias alias="dpSprtDeviceVO"     		type="com.skplanet.icms.refactoring.deploy.DPSprtDeviceVO" />
+		<typeAlias alias="dpTagInfoVO"     			type="com.skplanet.icms.refactoring.deploy.DPTagInfoVO" />
+		<typeAlias alias="dpTenantProductVO"     	type="com.skplanet.icms.refactoring.deploy.DPTenantProductVO" />
+		<typeAlias alias="dpTenantProductPriceVO"   type="com.skplanet.icms.refactoring.deploy.DPTenantProductPriceVO" />
+		<typeAlias alias="ProductVo" 				type="com.skplanet.storeplatform.sac.display.product.vo.ProductVo"/>        
     </typeAliases>
 </configuration>

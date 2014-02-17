@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Display_Product">
+
+    <select id="Display_Product.selectNewFreeDataCnt" parameterType="ProductVo" resultType="java.lang.Long">
+		SELECT 
+			COUNT(*) as prodCount 
+		FROM 
+			TB_DP_LIST_PROD 
+		WHERE 
+			PROD_ID = '0000633377' 
+			AND TENANT_ID = 'S01'
+			AND LIST_ID = 'ADM000000001'
+    </select> 
+    
+    <select id="Display_Product.selectDpProd" parameterType="ProductVo" resultType="java.util.Map">
+		SELECT /* DisplayProductMapper.xml, Display_Product.selectDpProd, mhcha123, 2014-01-24 */
+			(SELECT 
+				COUNT(*) 
+			FROM 
+				TB_DP_PROD 
+			WHERE 
+				PROD_ID =#{prodId}) AS prodCount
+			,DPTENANT.TENANT_ID AS tenantId
+			,DPPROD.PROD_ID AS prodId
+			,DPPROD.TOP_MENU_ID AS topMenuId
+			,DPTENANT.PROD_STATUS_CD AS prodStatusCd
+		FROM
+			TB_DP_PROD DPPROD,
+			TB_DP_TENANT_PROD DPTENANT
+		WHERE 
+			DPPROD.PROD_ID = DPTENANT.PROD_ID 
+			AND DPPROD.PROD_ID =#{prodId}
+			AND DPTENANT.TENANT_ID = #{tenantId}
+    </select>     
+
+    <insert id="Display_Product.insertNewFreeData" parameterType="ProductVo">
+		INSERT INTO TB_DP_LIST_PROD (
+			SELECT 
+				TP.TENANT_ID
+				, 'ADM000000001' AS LIST_ID
+				, MCP.MENU_ID
+				, P.PROD_ID
+				, TO_DATE( TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'), 'YYYYMMDDHH24MISS') AS STD_DT
+                , NULL AS EXPO_ORD_ALWAYS_YN --
+				, (SELECT MAX(EXPO_ORD)+1 FROM TB_DP_LIST_PROD WHERE LIST_ID = 'ADM000000001')AS EXPO_ORD
+                , NULL AS EXPO_ORD_SUB --
+				, 'Y' AS EXPO_YN
+				, NULL AS ETC_CLSF_CD
+				, NULL AS ETC_CD -- 변경
+				, NULL AS PRCHS_QTY
+				, NULL AS PRCHS_AMT
+				, NULL AS DWLD_QTY
+				, TO_DATE( TO_CHAR(P.REG_DT,'YYYYMMDD'),'YYYYMMDD') AS EXPO_START_DT
+				, TO_DATE( '99991231','YYYYMMDD') AS EXPO_END_DT
+                , NULL AS IMG_PATH --
+				, P.REG_ID
+				, TO_DATE( TO_CHAR(P.REG_DT,'YYYYMMDD'),'YYYYMMDD') AS REG_DT
+				, P.UPD_ID
+				, TO_DATE( TO_CHAR(P.UPD_DT,'YYYYMMDDHH24MISS'),'YYYYMMDDHH24MISS') AS UPD_DT
+			FROM
+				TB_DP_PROD P, TB_DP_TENANT_PROD TP, TB_DP_MENU_CATEGORY_PROD_MAPG MCP
+			WHERE MCP.USE_YN = 'Y' 
+				AND P.PROD_ID = TP.PROD_ID
+			    AND P.PROD_ID = MCP.PROD_ID
+				AND P.PROD_ID = #{prodId}
+				AND TP.TENANT_ID = #{tenantId}
+		)
+    </insert> 
+    
+    <!-- 판매상태 변경 이력 등록 -->
+	<insert id="Display_Product.insertSaleStatHis" parameterType="ProductVo">
+		INSERT /* DisplayProductMapper.xml, Display_Product.insertSaleStatHis, mhcha123, 2014-01-24 */ 
+		INTO TB_DP_TENANT_PROD_HIS (
+            TENANT_ID
+            ,PROD_ID
+            ,HIS_DT
+            ,PROD_STATUS_CD
+            ,REG_ID
+            ,REG_DT
+		) VALUES (
+            #{tenantId}
+            ,#{prodId}
+            ,SYSDATE
+            ,#{prodStatCd}
+            ,#{mbrId}
+            ,TO_DATE(#{regDt}, 'YYYYMMDDHH24MISS')
+        )
+	</insert>
+    
+     <!-- 회원정보 조회 -->
+	<select id="Display_Product.selectMemberInfo" parameterType="ProductVo" resultType="ProductVo">
+		SELECT /* DisplayProductMapper.xml, Display_Product.selectMemberInfo, mhcha123, 2014-01-24 */ 
+            T1.INSD_SELLERMBR_NO AS "mbrNo"
+            , T1.SELLERMBR_ID AS "mbrId"
+		FROM TB_US_SELLERMBR T1
+		WHERE T1.INSD_SELLERMBR_NO = #{mbrNo}
+	</select>
+    
+    <!-- 정산율 처리 -->
+<!-- 	<parameterMap id="SpRegistProdMap" class="java.util.HashMap">
+		<parameter property="p_prod_id" jdbcType="VARCHAR"  javaType="java.lang.String" mode="IN" />
+		<parameter property="p_settl_rt" jdbcType="INTEGER"  javaType="java.lang.String" mode="IN" />
+		<parameter property="p_reg_id" jdbcType="VARCHAR"  javaType="java.lang.String" mode="IN" />
+		<parameter property="rtn" jdbcType="VARCHAR"  javaType="java.lang.String" mode="OUT" />
+	</parameterMap>   
+    
+	<procedure id="Display_Product.sp_regist_prod" parameterType="SpRegistProdMap">
+	    CALL SP_REGIST_PROD(?,?,null,null,null,?,?)
+	</procedure>
+	
+	  
+	  
+	<resultMap id="SpRegistProdMap" type="hashmap"></resultMap>
+     
+    <select id="Display_Product.sp_regist_prod" statementType="CALLABLE">
+        { 
+            CALL SP_REGIST_PROD(
+                #{p_prod_id},
+                #{p_settl_rt},
+                null,
+                null,
+                null,
+                #{p_reg_id},
+                #{rtn, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String, resultMap=SpRegistProdMap}
+            )
+        }
+    </select>
+	  
+	  -->
+	
+    <!-- 운영자 추천상품 삭제 -->
+    <delete id="Display_Product.deleteAdminRecommand" parameterType="ProductVo">
+		DELETE /* DisplayProductMapper.xml, Display_Product.deleteAdminRecommand, mhcha123, 2014-01-24 */ 
+		FROM 
+			TB_DP_LIST_PROD
+		WHERE 
+			TENANT_ID =#{tenantId}
+			AND PROD_ID = #{prodId}
+			AND LIST_ID IN ('ADM000000012','ADM000000013')
+    </delete>
+    
+    <!-- 행안부 연동 -->
+    <update id="Display_Product.insertWhiteList" parameterType="String" >
+		INSERT /** DisplayProductMapper.xml, Display_Product.insertWhiteList, mhcha123, 2014-01-24 */ 
+		INTO 
+			TB_PD_MOSPA_JOIN_PROD 
+		(
+			PROD_ID
+			,SUB_CONTENTS_ID
+			,VERIFY_VER_SEQ
+			,REG_CLSF
+			,DEPLOY_YN
+			,DEPLOY_FAIL_CNT
+			,REG_DT
+		)
+		SELECT
+			SC.PROD_ID
+			, SC.SUB_CONTENTS_ID
+			, (
+				SELECT 
+					(NVL(MAX(VERIFY_VER_SEQ), 0) + 1) AS SEQ 
+				FROM 
+					TB_PD_MOSPA_JOIN_PROD
+				WHERE 
+					PROD_ID = #{prodId}
+				)
+			, 'A'
+			, 'N'
+			, 0
+			, TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')			
+		FROM 
+			TB_DP_SUB_CONTENTS SC
+		WHERE 
+			SC.PROD_ID = #{prodId}
+    </update>
+    
+    <!-- 통합정산 연동 -->
+    <insert id="Display_Product.insertTotalSalesHis" parameterType="ProductVo">
+        INSERT /* DisplayProductMapper.xml, Display_Product.insertTotalSalesHis, mhcha123, 2014-01-24 */ 
+        INTO TBL_TOTAL_SALES_HIS (
+            PROD_ID, DEPLOY_YN, INS_DTTM
+        ) VALUES (
+            #{prodId}, 'N', TO_CHAR (SYSDATE, 'yyyyMMddhh24MISS')
+        )
+    </insert>
+    
+    <update id="Display_Product.updateTotalSalesHis" parameterType="ProductVo">
+        MERGE /* DisplayProductMapper.xml, Display_Product.updateTotalSalesHis, mhcha123, 2014-01-24 */ 
+        INTO TBL_TOTAL_SALES_HIS
+        USING DUAL
+        ON (
+            PROD_ID = #{prodId}
+        )
+        WHEN NOT MATCHED THEN
+            INSERT (
+                PROD_ID, DEPLOY_YN, DEPLOY_CNT, INS_DTTM
+            ) VALUES ( 
+                #{prodId}, 'N', 0, TO_CHAR (SYSDATE, 'yyyyMMddhh24MISS')
+            )
+        WHEN MATCHED THEN
+            UPDATE SET
+	            DEPLOY_YN = 'N'
+	            , UPD_DTTM = TO_CHAR (SYSDATE, 'yyyyMMddhh24MISS')
+    </update> 
+    
+</mapper>

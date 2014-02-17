@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DP_PRODUCT_RSHP">
+
+	<resultMap id="dPProductRshpMap" type="com.skplanet.icms.refactoring.deploy.DPProductRshpVO">
+		<result property="prodId"           column="PROD_ID"        	/>   
+		<result property="partProdId"       column="PART_PROD_ID"       />   
+		<result property="prodRshpCd"       column="PROD_RSHP_CD"       />
+		<result property="regId"         	column="REG_ID"           	/>   
+		<result property="regDt"      		column="REG_DT"       		/>   
+	</resultMap>
+	
+  	<select id="selectDPProductRshp" parameterType="dPProductRshpVO" resultMap="dPProductRshpMap">
+  	
+		SELECT  /* DP_PRODUCT_RSHP-selectDPProductRshp : mhcha123 (2014-01-03) */
+			 PROD_ID            
+			,PART_PROD_ID    
+			,PROD_RSHP_CD        
+			,REG_ID             
+			,REG_DT             
+	  	FROM TB_DP_PROD_RSHP
+		WHERE PROD_ID = #{prodId}
+  	</select>
+  	  		
+	<insert id="insertDPProductRshp" parameterType="dPProductRshpVO">
+		INSERT    /* DP_PRODUCT_RSHP-insertDPProductRshp : mhcha123 (2014-01-03) */
+		INTO TB_DP_PROD_RSHP (
+			PROD_ID,
+			PART_PROD_ID,
+			PROD_RSHP_CD,
+			REG_ID,
+			REG_DT
+		)
+		VALUES(
+			 #{prodId, jdbcType=VARCHAR}         
+			,#{partProdId, jdbcType=VARCHAR}
+			,#{prodRshpCd, jdbcType=VARCHAR}
+			,'SYSTEM'
+			,SYSDATE    
+		 )
+	</insert>
+
+	<delete id="deleteDPProductRshp"  parameterType="dPProductRshpVO" >
+		DELETE  /* DP_PRODUCT_RSHP-deleteDPProductRshp : mhcha123 (2014-01-03) */
+		  FROM TB_DP_PROD_RSHP
+      	  WHERE PROD_ID = #{prodId}
+	</delete>	
+				
+</mapper>

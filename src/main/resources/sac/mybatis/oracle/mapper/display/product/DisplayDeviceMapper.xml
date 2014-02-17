@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Display_Device">
+
+    <select id="Display_Device.selectDpProdCount" parameterType="ProductVo" resultType="Integer">
+		SELECT /* DisplayDeviceMapper.xml, Display_Device.selectDpProdCount, mhcha123, 2014-02-12 */
+        	COUNT(*) AS prodCount  
+		FROM TB_DP_PROD
+		WHERE PROD_ID = #{prodId}
+    </select>     
+
+    <delete id="Display_Device.deleteDpSprtHp" parameterType="dpSprtDeviceVO">
+        DELETE /* DisplayDeviceMapper.xml, Display_Device.deleteDpSprtHp, mhcha123, 2014-02-12 */
+        FROM 
+        	TB_DP_SPRT_DEVICE
+        WHERE 
+        	PROD_ID = #{prodId}
+        	AND DEVICE_MODEL_CD = #{deviceModelCd}
+    </delete>
+
+    <insert id="Display_Device.insertDpSprtHp" parameterType="dpSprtDeviceVO">
+		INSERT /* DisplayDeviceMapper.xml, Display_Device.insertDpSprtHp, mhcha123, 2014-02-12 */ 
+		INTO TB_DP_SPRT_DEVICE 
+		(
+            PROD_ID
+            ,SUB_CONTENTS_ID
+            ,DEVICE_MODEL_CD
+            ,UPD_DT
+		) VALUES (
+		    #{prodId}
+		    ,#{subContentsId}
+		    ,#{deviceModelCd}
+		    ,SYSDATE
+		)
+    </insert>
+
+    <update id="Display_Device.updateDpSubConts" parameterType="dpProductSubContsVO">
+        UPDATE /* DisplayDeviceMapper.xml, Display_Device.updateDpSubConts, mhcha123, 2014-02-12 */
+            TBL_DP_SUB_CONTS
+        SET
+            UPD_DT = SYSDATE
+            <if test="lcdSize != null">
+            ,LCD_SIZE = #{lcdSize}
+            </if>
+            <if test="vmVer != null">
+            ,VM_VER = #{vmVer}
+            </if>
+        WHERE PROD_ID = #{prodId}
+        AND SUB_CONTS_ID = #{subContentsId}
+    </update>
+
+</mapper>

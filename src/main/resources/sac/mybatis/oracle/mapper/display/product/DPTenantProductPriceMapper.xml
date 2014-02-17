@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DP_TENANT_PRICE">
+
+	<resultMap id="dpTenantProductPriceMap" type="com.skplanet.icms.refactoring.deploy.DPTenantProductPriceVO">
+		<result property="prodId"           column="PROD_ID"            />   
+		<result property="tenantId"         column="TENANT_ID"          />   
+		<result property="prodAmt"         	column="PROD_AMT"           />   
+		<result property="chnlUnlmtAmt"     column="CHNL_UNLMT_AMT"     />   
+		<result property="chnlPeriodAmt"    column="CHNL_PERIOD_AMT"    />   
+		<result property="prodNetAmt"      	column="PROD_NET_AMT"       />   
+		<result property="applyStartDt"     column="APPLY_START_DT"     />   
+		<result property="applyEndDt"       column="APPLY_END_DT"       />   
+		<result property="seq"         		column="SEQ"          		/>   
+		<result property="dcRate"        	column="DC_RATE"         	/>   
+		<result property="dcAmt"        	column="DC_AMT"         	/>   
+		<result property="regId"            column="REG_ID"             />   
+		<result property="regDt"            column="REG_DT"             />   
+		<result property="taxClsf"          column="TAX_CLSF"           />   
+	</resultMap>
+
+  	<select id="selectDPTenantPrice" parameterType="dpTenantProductPriceVO" resultMap="dpTenantProductPriceMap">
+  	
+		SELECT  /* DP_TENANT_PRICE-selectDPTenantPrice : mhcha123 (2014-01-03) */
+			PROD_ID
+			,TENANT_ID
+			,PROD_AMT
+			,CHNL_UNLMT_AMT
+			,CHNL_PERIOD_AMT
+			,PROD_NET_AMT
+			,APPLY_START_DT
+			,APPLY_END_DT
+			,SEQ
+			,DC_RATE
+			,DC_AMT
+			,REG_ID
+			,REG_DT
+			,TAX_CLSF
+	  	FROM TB_DP_TENANT_PROD_PRICE
+		WHERE PROD_ID = #{prodId}
+  	</select>
+
+	<insert id="insertDPTenantPrice" parameterType="dpTenantProductPriceVO">
+		INSERT    /* DP_TENANT_PRICE-insertDPTenantPrice : mhcha123 (2014-01-03) */
+		INTO TB_DP_TENANT_PROD_PRICE (
+			PROD_ID
+			,TENANT_ID
+			,PROD_AMT
+			,CHNL_UNLMT_AMT
+			,CHNL_PERIOD_AMT
+			,PROD_NET_AMT
+			,APPLY_START_DT
+			,APPLY_END_DT
+			,SEQ
+			,DC_RATE
+			,DC_AMT
+			,REG_ID
+			,REG_DT
+			,TAX_CLSF
+		)
+		VALUES(
+			#{prodId}
+			,#{tenantId}
+			,#{prodAmt, jdbcType=INTEGER}
+			,#{chnlUnlmtAmt, jdbcType=INTEGER}
+			,#{chnlPeriodAmt, jdbcType=INTEGER}
+			,#{prodNetAmt, jdbcType=INTEGER}
+			,SYSDATE
+			,TO_DATE(#{applyEndDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{seq, jdbcType=INTEGER}
+			,#{dcRate, jdbcType=INTEGER}
+			,#{dcAmt, jdbcType=INTEGER}
+			,#{regId, jdbcType=VARCHAR}
+			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{taxClsf, jdbcType=VARCHAR}       
+		 )
+	</insert>
+    	
+ 
+	<delete id="deleteDPTenantPrice"  parameterType="dpTenantProductPriceVO" >
+		DELETE  /* DP_TENANT_PRICE-deleteDPTenantPrice : mhcha123 (2014-01-03) */
+		  FROM TB_DP_TENANT_PROD_PRICE
+      	  WHERE PROD_ID = #{prodId}
+	</delete>	
+	
+		
+</mapper>

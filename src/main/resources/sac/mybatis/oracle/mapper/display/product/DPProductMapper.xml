@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DP_PRODUCT">
+
+	<resultMap id="dpProductMap" type="com.skplanet.icms.refactoring.deploy.DPProductVO">
+		<result property="prodId"           column="PROD_ID"             />   
+		<result property="prodChrgYn"       column="PROD_CHRG_YN"        />   
+		<result property="sellerMbrNo"      column="SELLER_MBR_NO"       />   
+		<result property="expoSellerNm"     column="EXPO_SELLER_NM"      />   
+		<result property="expoSellerTelno"  column="EXPO_SELLER_TELNO"   />   
+		<result property="expoSellerEmail"  column="EXPO_SELLER_EMAIL"   />   
+		<result property="usePeriodUnitCd"  column="USE_PERIOD_UNIT_CD"  />   
+		<result property="usePeriod"        column="USE_PERIOD"          />   
+		<result property="drmYn"         	column="DRM_YN"              />   
+		<result property="drmSetCd"        	column="DRM_SET_CD"          />   
+		<result property="drmSetValue"      column="DRM_SET_VALUE"       />   
+		<result property="regId"       		column="REG_ID"        		 />   
+		<result property="regDt"            column="REG_DT"              />   
+		<result property="updId"         	column="UPD_ID"              />   
+		<result property="updDt"        	column="UPD_DT"              />   
+		<result property="prodGrdCd"        column="PROD_GRD_CD"         />   
+		<result property="cid"        		column="CID"                 />   
+		<result property="svcGrpCd"      	column="SVC_GRP_CD"       	 />   
+		<result property="svcTypeCd"        column="SVC_TYPE_CD"         />
+		<result property="mallCd"           column="MALL_CD"             />    
+		<result property="feeCaseCd"        column="FEE_CASE_CD"         />   
+		<result property="feeUnitCd"        column="FEE_UNIT_CD"         />
+		<result property="contentsTypeCd"   column="CONTENTS_TYPE_CD"    />   
+		<result property="metaClsfCd"       column="META_CLSF_CD"        />   
+		<result property="topMenuId"        column="TOP_MENU_ID"         />      
+	</resultMap>
+
+  	<select id="selectDPProduct" parameterType="dpProductVO" resultMap="dpProductMap">
+  	
+		SELECT  /* DP_PRODUCT-selectDPProduct : mhcha123 (2014-01-03) */
+			PROD_ID
+			,PROD_CHRG_YN
+			,SELLER_MBR_NO
+			,EXPO_SELLER_NM
+			,EXPO_SELLER_TELNO
+			,EXPO_SELLER_EMAIL
+			,USE_PERIOD_UNIT_CD
+			,USE_PERIOD
+			,DRM_YN
+			,DRM_SET_CD
+			,DRM_SET_VALUE
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+			,PROD_GRD_CD
+			,CID
+			,SVC_GRP_CD
+			,SVC_TYPE_CD
+			,MALL_CD
+			,FEE_CASE_CD
+			,FEE_UNIT_CD
+			,CONTENTS_TYPE_CD
+			,META_CLSF_CD
+			,TOP_MENU_ID
+	  	FROM TB_DP_PROD
+		WHERE PROD_ID = #{prodId}
+  	</select>
+  		
+  	  		
+	<insert id="insertDPProduct" parameterType="dpProductVO">
+		INSERT    /* DP_PRODUCT-insertDPProduct : mhcha123 (2014-01-03) */
+		INTO TB_DP_PROD (
+			PROD_ID
+			,PROD_CHRG_YN
+			,SELLER_MBR_NO
+			,EXPO_SELLER_NM
+			,EXPO_SELLER_TELNO
+			,EXPO_SELLER_EMAIL
+			,USE_PERIOD_UNIT_CD
+			,USE_PERIOD
+			,DRM_YN
+			,DRM_SET_CD
+			,DRM_SET_VALUE
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+			,PROD_GRD_CD
+			,CID
+			,SVC_GRP_CD
+			,SVC_TYPE_CD
+			,MALL_CD
+			,FEE_CASE_CD
+			,FEE_UNIT_CD
+			,CONTENTS_TYPE_CD
+			,META_CLSF_CD
+			,TOP_MENU_ID			
+		)
+		VALUES(
+			#{prodId}
+			,#{prodChrgYn, jdbcType=VARCHAR}
+			,#{sellerMbrNo, jdbcType=VARCHAR}
+			,#{expoSellerNm, jdbcType=VARCHAR}
+			,#{expoSellerTelno, jdbcType=VARCHAR}
+			,#{expoSellerEmail, jdbcType=VARCHAR}
+			,#{usePeriodUnitCd, jdbcType=VARCHAR}
+			,#{usePeriod, jdbcType=INTEGER}
+			,#{drmYn, jdbcType=VARCHAR}
+			,#{drmSetCd, jdbcType=VARCHAR}
+			,#{drmSetValue, jdbcType=VARCHAR}
+			,#{regId}
+			,TO_DATE(#{regDt}, 'yyyyMMddHH24MISS')
+			,#{updId, jdbcType=VARCHAR}
+			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{prodGrdCd, jdbcType=VARCHAR}
+			,#{cid, jdbcType=VARCHAR}
+			,#{svcGrpCd, jdbcType=VARCHAR}
+			,#{svcTypeCd, jdbcType=VARCHAR}
+			,#{mallCd, jdbcType=VARCHAR}
+			,#{feeCaseCd, jdbcType=VARCHAR}
+			,#{feeUnitCd, jdbcType=VARCHAR}    
+			,#{contentsTypeCd, jdbcType=VARCHAR}
+			,#{metaClsfCd, jdbcType=VARCHAR}
+			,#{topMenuId, jdbcType=VARCHAR}
+		 )
+	</insert>
+    	
+	<delete id="deleteDPProduct"  parameterType="String" >
+		DELETE  /* DP_PRODUCT-deleteDPProduct : mhcha123 (2014-01-03) */
+		  FROM TB_DP_PROD
+      	  WHERE PROD_ID = #{prodId}
+	</delete>	
+	
+</mapper>

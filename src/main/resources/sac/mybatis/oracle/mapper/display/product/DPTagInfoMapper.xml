@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DP_TAG_INFO">
+
+	<resultMap id="dpTagInfoMap" type="com.skplanet.icms.refactoring.deploy.DPTagInfoVO">
+		<result property="tagSeq"  			column="TAG_SEQ" 			/>
+		<result property="cid"         		column="CID"          		/>
+		<result property="tagTypeCd"     	column="TAG_TYPE_CD"     	/>
+		<result property="tagCd"     		column="TAG_CD"     		/>
+		<result property="tagNm"       		column="TAG_NM"       		/>
+		<result property="regId"      		column="REG_ID"       		/>   
+		<result property="regDt"       		column="REG_DT"        		/>   
+		<result property="updId"            column="UPD_ID"             />   
+		<result property="updDt"         	column="UPD_DT"          	/>   
+	</resultMap>
+
+	<select id="selectDPTagInfoCount" parameterType="dpTagInfoVO" resultType="Integer">
+	    SELECT /* DP_TAG_INFO-selectDPTagInfoCount : mhcha123 (2014-01-03) */
+	     COUNT(1)
+	    FROM TB_DP_PROD_TAG 
+	    WHERE CID = #{cid}
+	</select>
+	
+	<select id="selectDPTagInfo" parameterType="dpTagInfoVO" resultMap="dpTagInfoMap">
+	    SELECT  /* DP_TAG_INFO-selectDPTagInfo : mhcha123 (2014-01-03) */
+			TAG_SEQ
+			,CID
+			,TAG_TYPE_CD
+			,TAG_CD
+			,TAG_NM
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT	
+	    FROM TB_DP_PROD_TAG 
+	    WHERE CID = #{cid}
+		<if test="@org.springframework.util.StringUtils@hasText(tagInfoSeq)">
+			AND TAG_SEQ = #{tagSeq}
+		</if>							    
+	</select>
+	
+			
+	<insert id="insertDPTagInfo" parameterType="dpTagInfoVO" >
+    	INSERT /* DP_TAG_INFO-insertDPTagInfo : mhcha123 (2014-01-03) */
+    	INTO TB_DP_PROD_TAG 
+    	(
+			TAG_SEQ
+			,CID
+			,TAG_TYPE_CD
+			,TAG_CD
+			,TAG_NM
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT	
+		)
+   		VALUES	(
+	   		#{tagSeq, jdbcType=INTEGER}
+			,#{cid, jdbcType=VARCHAR}
+			,#{tagTypeCd, jdbcType=VARCHAR}
+			,#{tagCd, jdbcType=VARCHAR}
+			,#{tagNm, jdbcType=VARCHAR}
+			,#{regId, jdbcType=VARCHAR}
+			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{updId, jdbcType=VARCHAR}
+			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+		)
+
+	</insert>
+
+
+	<delete id="deleteDPTagInfo"  parameterType="dpTagInfoVO" >
+		DELETE /* DP_TAG_INFO-deleteDPTagInfo : mhcha123 (2014-01-03) */
+		  FROM TB_DP_PROD_TAG
+	    WHERE CID = #{cid}
+		<if test="@org.springframework.util.StringUtils@hasText(tagSeq)">
+			AND TAG_SEQ = #{tagSeq}
+		</if>	 
+	</delete> 
+  	
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DP_TENANT">
+
+	<resultMap id="dpTenantProductMap" type="com.skplanet.icms.refactoring.deploy.DPTenantProductVO">
+		<result property="prodId"           column="PROD_ID"            />   
+		<result property="tenantId"         column="TENANT_ID"          />   
+		<result property="prodStatusCd"     column="PROD_STATUS_CD"     />   
+		<result property="expoYn"      		column="EXPO_YN"       		/>   
+		<result property="expoOrd"          column="EXPO_ORD"           />   
+		<result property="regId"      		column="REG_ID"       		/>   
+		<result property="regDt"       		column="REG_DT"        		/>   
+		<result property="updId"            column="UPD_ID"             />   
+		<result property="updDt"         	column="UPD_DT"          	/>   
+	</resultMap>
+
+  	<select id="selectDPTenant" parameterType="dpTenantProductVO" resultMap="dpTenantProductMap">
+  	
+		SELECT  /* DP_TENANT-selectDPTenant : mhcha123 (2014-01-03) */
+			PROD_ID
+			,TENANT_ID
+			,PROD_STATUS_CD
+			,EXPO_YN
+			,EXPO_ORD
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+	  	FROM TB_DP_TENANT_PROD
+		WHERE PROD_ID = #{prodId}
+  	</select>
+  		
+  
+	<insert id="insertDPTenant" parameterType="dpTenantProductVO">
+		INSERT    /* DP_TENANT-insertDPTenant : mhcha123 (2014-01-03) */
+		INTO TB_DP_TENANT_PROD (
+			PROD_ID
+			,TENANT_ID
+			,PROD_STATUS_CD
+			,EXPO_YN
+			,EXPO_ORD
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+		)
+		VALUES(
+			#{prodId}
+			,#{tenantId}
+			,#{prodStatusCd, jdbcType=VARCHAR}
+			,#{expoYn, jdbcType=VARCHAR}
+			,#{expoOrd, jdbcType=INTEGER}
+			,#{regId, jdbcType=VARCHAR}
+			,TO_DATE(#{regDt}, 'yyyyMMddHH24MISS')
+			,#{updId, jdbcType=VARCHAR}
+			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')     
+		 )
+	</insert>
+
+	<delete id="deleteDPTenant"  parameterType="dpTenantProductVO" >
+		DELETE  /* DP_TENANT-deleteDPTenant : mhcha123 (2014-01-03) */
+		  FROM TB_DP_TENANT_PROD
+      	  WHERE PROD_ID = #{prodId}
+	</delete>	
+</mapper>

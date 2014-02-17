@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DP_PRODUCT_UPD">
+
+	<resultMap id="dpProductUpdMap" type="com.skplanet.icms.refactoring.deploy.DPProductUpdVO">
+		<result property="prodId"    	column="PROD_ID"   		/>  
+		<result property="updtSeq"     	column="UPDT_SEQ"      	/>
+		<result property="updtText"   	column="UPDT_TEXT"  	/>
+		<result property="prodUpdDt"  	column="PROD_UPD_DT"  	/>
+		<result property="verMajor"    	column="VER_MAJOR"      />
+		<result property="verMinor"    	column="VER_MINOR"      />
+		<result property="delYn"     	column="DEL_YN"    		/>
+		<result property="regId"     	column="REG_ID"    		/>
+		<result property="regDt"       	column="REG_DT"       	/>
+		<result property="updId"       	column="UPD_ID"       	/>
+		<result property="updDt"       	column="UPD_DT"       	/>
+	</resultMap>
+
+	<select id="selectDPProductUpdCount" parameterType="dpProductUpdVO" resultType="Integer">
+	    SELECT /* DP_PRODUCT_UPD-selectDPProductUpdCount : mhcha123 (2014-01-03) */
+	     COUNT(1)
+	    FROM TB_DP_PROD_UPDT_HIS 
+	    WHERE PROD_ID = #{prodId}
+	</select>
+	
+	<select id="selectDPProductUpd" parameterType="dpProductUpdVO" resultMap="dpProductUpdMap">
+	    SELECT  /* DP_PRODUCT_UPD-selectDPProductUpd : mhcha123 (2014-01-03) */
+			PROD_ID
+			,UPDT_SEQ
+			,UPDT_TEXT
+			,PROD_UPD_DT
+			,VER_MAJOR
+			,VER_MINOR
+			,DEL_YN
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+	    FROM TB_DP_PROD_UPDT_HIS 
+   	    WHERE PROD_ID = #{prodId}
+		<if test="@org.springframework.util.StringUtils@hasText(updateSeq)">
+			AND UPDATE_SEQ = #{updateSeq}
+		</if>							    
+	</select>
+	
+			
+	<insert id="insertDPProductUpd" parameterType="dpProductUpdVO" >
+    	INSERT /* DP_PRODUCT_UPD-insertDPProductUpd : mhcha123 (2014-01-03) */
+    	INTO TB_DP_PROD_UPDT_HIS 
+    	(
+			PROD_ID
+			,UPDT_SEQ
+			,UPDT_TEXT
+			,PROD_UPD_DT
+			,VER_MAJOR
+			,VER_MINOR
+			,DEL_YN
+			,REG_ID
+			,REG_DT
+			,UPD_ID
+			,UPD_DT
+   		)VALUES	(
+   			#{prodId, jdbcType=VARCHAR}
+			,#{updtSeq, jdbcType=INTEGER}
+			,#{updtText, jdbcType=VARCHAR}
+			,TO_DATE(#{prodUpdDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{verMajor, jdbcType=INTEGER}
+			,#{verMinor, jdbcType=INTEGER}
+			,#{delYn, jdbcType=VARCHAR}
+			,#{regId, jdbcType=VARCHAR}
+			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{updId, jdbcType=VARCHAR}
+			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+		)
+
+	</insert>
+
+
+	<delete id="deleteDPProductUpd"  parameterType="dpProductUpdVO" >
+		DELETE /* DP_PRODUCT_UPD-deleteDPProductUpd : mhcha123 (2014-01-03) */
+		  FROM TB_DP_PROD_UPDT_HIS
+      	  WHERE PROD_ID = #{prodId} 
+			<if test="@org.springframework.util.StringUtils@hasText(updtSeq)">
+				AND UPDT_SEQ = #{updtSeq}
+			</if>      	  
+	</delete> 
+  	
+</mapper>
