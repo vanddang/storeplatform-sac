@@ -325,8 +325,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
 			for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
-				DeviceInfo deviceInfo = new DeviceInfo();
-				deviceInfo = DeviceUtil.getConverterDeviceInfo(userMbrDevice);
+				DeviceInfo deviceInfo = DeviceUtil.getConverterDeviceInfo(userMbrDevice);
 
 				/* 폰정보 DB 조회하여 추가 정보 반영 */
 				Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
