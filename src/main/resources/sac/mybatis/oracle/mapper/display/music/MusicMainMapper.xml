@@ -5,87 +5,84 @@
     <!-- Music Main -->
     <select id="getMusicMainList" parameterType="MusicContentsSacReq" resultType="ProductBasicInfo">
         SELECT /* MusicMainMapper.xml, getMusicMainList, 조준일, 2014-02-05 */
-               B.TENANT_ID
-             , B.MENU_ID
-             , B.PROD_ID
-             , B.PART_PROD_ID
-             , B.TOP_MENU_ID
-             , B.META_CLSF_CD
-             , B.CONTENTS_TYPE_CD
-             , B.TOTAL_COUNT
-          FROM (SELECT A.*
+               A.TENANT_ID
+             , A.MENU_ID
+             , A.PROD_ID
+             , A.PART_PROD_ID
+             , A.TOP_MENU_ID
+             , A.META_CLSF_CD
+             , A.CONTENTS_TYPE_CD
+             , A.TOTAL_COUNT
+          FROM (SELECT F.TENANT_ID
+                     , C.MENU_ID
+                     , I.PROD_ID
+                     , I.PART_PROD_ID
+                     , C.TOP_MENU_ID
+                     , D.META_CLSF_CD
+                     , D.CONTENTS_TYPE_CD
                      , COUNT(*) OVER () AS TOTAL_COUNT
-                     , ROWNUM AS RNUM
-                  FROM (SELECT F.TENANT_ID
-                             , C.MENU_ID
-                             , I.PROD_ID
-                             , I.PART_PROD_ID
-                             , C.TOP_MENU_ID
-                             , D.META_CLSF_CD
-                             , D.CONTENTS_TYPE_CD
-                          FROM TB_DP_MUSIC_CHART A  /* 에피소드 */
-                             , TB_DP_MENU_CATEGORY_PROD_MAPG B
-                             , TB_DP_MENU_CATEGORY C
-                             , TB_DP_PROD D
-                             , TB_DP_PROD_DESC E
-                             , TB_DP_TENANT_PROD F
-                             , UV_TB_DP_MULTIMDA_PROD G
-                             , (SELECT SD.PROD_ID
-                                  FROM TB_DP_SPRT_DEVICE SD
-                                    , TB_CM_DEVICE CD
-                                WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
-                                  AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = 'android_standard2')
-                                  AND CD.USE_YN = 'Y'
-                                  AND CD.MUSIC_SPRT_YN = 'Y'
-                              ) H
-                             , TB_DP_PROD_RSHP I
-                         WHERE A.CHART_CLSF_CD = #{chartClsfCd}
-                           AND A.RANK_START_DAY = #{stdDt}
-                           AND A.PROD_ID = B.PROD_ID
-                           AND B.USE_YN = 'Y'
-                           AND B.MENU_ID = C.MENU_ID
-                           AND C.USE_YN = 'Y'
-                           AND C.MENU_ID LIKE CONCAT(#{menuId}, '%')
-                           AND B.PROD_ID = D.PROD_ID
-                           AND D.CONTENTS_TYPE_CD = 'PD002502'
-                           AND D.META_CLSF_CD = 'CT25'
-                           AND D.PROD_ID = E.PROD_ID
-                           AND E.LANG_CD = #{langCd}
-                           AND E.PROD_ID = F.PROD_ID
-                           AND F.TENANT_ID = #{tenantId}
-                           AND F.EXPO_YN = 'Y'
-                           AND F.PROD_STATUS_CD = 'PD000403' 
-                           AND A.PROD_ID = G.PROD_ID
-                           AND A.PROD_ID = H.PROD_ID
-                           AND H.PROD_ID = I.PART_PROD_ID
-                           AND I.PROD_RSHP_CD = 'DP010802'
-                           <!-- TOP Music -->
-                           <if test='filteredBy == "top"'>
-                         ORDER BY A.RANK_CHG_CNT, E.PROD_NM
-                           </if>
-                           <!-- 최신음악, 장르별 -->
-                           <if test='filteredBy == "recent" || filteredBy == "genre"'>
-                             <!-- 인기도 -->
-                             <if test='orderedBy == "popular"'>
-                         ORDER BY A.NOW_RANK ASC, G.ISSUE_DAY, E.PROD_NM
-                             </if>
-                             <!-- 아티스트명 -->
-                             <if test='orderedBy == "artist"'>
-                         ORDER BY E.ARTIST1_NM, E.PROD_NM
-                             </if>
-                             <!-- 곡명 -->
-                             <if test='orderedBy == "title"'>
-                         ORDER BY E.PROD_NM, E.ARTIST1_NM
-                             </if>
-                             <!-- 음악 > 최신음악 -->
-                             <if test='orderedBy == null || orderedBy == ""'>
-                         ORDER BY G.ISSUE_DAY DESC, E.PROD_NM
-                             </if>
-                           </if>   
-                       ) A
-               ) B
-         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
-         ORDER BY RNUM
+                     <!-- TOP Music -->
+                     <if test='filteredBy == "top"'>
+                     , ROW_NUMBER() OVER(ORDER BY A.RANK_CHG_CNT, E.PROD_NM) AS RNUM
+                     </if>
+                     <!-- 최신음악, 장르별 -->
+                     <if test='filteredBy == "recent" || filteredBy == "genre"'>
+                         <!-- 인기도 -->
+                         <if test='orderedBy == "popular"'>
+                     , ROW_NUMBER() OVER(ORDER BY A.NOW_RANK ASC, G.ISSUE_DAY, E.PROD_NM) AS RNUM
+                         </if>
+                         <!-- 아티스트명 -->
+                         <if test='orderedBy == "artist"'>
+                     , ROW_NUMBER() OVER(ORDER BY E.ARTIST1_NM, E.PROD_NM) AS RNUM
+                         </if>
+                         <!-- 곡명 -->
+                         <if test='orderedBy == "title"'>
+                     , ROW_NUMBER() OVER(ORDER BY E.PROD_NM, E.ARTIST1_NM) AS RNUM
+                         </if>
+                         <!-- 음악 > 최신음악 -->
+                         <if test='orderedBy == null || orderedBy == ""'>
+                     , ROW_NUMBER() OVER(ORDER BY G.ISSUE_DAY DESC, E.PROD_NM) AS RNUM
+                         </if>
+                     </if> 
+                  FROM TB_DP_MUSIC_CHART A  /* 에피소드 */
+                     , TB_DP_MENU_CATEGORY_PROD_MAPG B
+                     , TB_DP_MENU_CATEGORY C
+                     , TB_DP_PROD D
+                     , TB_DP_PROD_DESC E
+                     , TB_DP_TENANT_PROD F
+                     , UV_TB_DP_MULTIMDA_PROD G
+                     , (SELECT SD.PROD_ID
+                          FROM TB_DP_SPRT_DEVICE SD
+                             , TB_CM_DEVICE CD
+                         WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
+                           AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = 'android_standard2')
+                           AND CD.USE_YN = 'Y'
+                           AND CD.MUSIC_SPRT_YN = 'Y'
+                       ) H
+                     , TB_DP_PROD_RSHP I
+                 WHERE A.CHART_CLSF_CD = #{chartClsfCd}
+                   AND A.RANK_START_DAY = #{stdDt}
+                   AND A.PROD_ID = B.PROD_ID
+                   AND B.USE_YN = 'Y'
+                   AND B.MENU_ID = C.MENU_ID
+                   AND C.USE_YN = 'Y'
+                   AND C.MENU_ID LIKE CONCAT(#{menuId}, '%')
+                   AND B.PROD_ID = D.PROD_ID
+                   AND D.CONTENTS_TYPE_CD = 'PD002502'
+                   AND D.META_CLSF_CD = 'CT25'
+                   AND D.PROD_ID = E.PROD_ID
+                   AND E.LANG_CD = #{langCd}
+                   AND E.PROD_ID = F.PROD_ID
+                   AND F.TENANT_ID = #{tenantId}
+                   AND F.EXPO_YN = 'Y'
+                   AND F.PROD_STATUS_CD = 'PD000403' 
+                   AND A.PROD_ID = G.PROD_ID
+                   AND A.PROD_ID = H.PROD_ID
+                   AND H.PROD_ID = I.PART_PROD_ID
+                   AND I.PROD_RSHP_CD = 'DP010802'
+                ) A
+          WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+          ORDER BY RNUM
     </select>
 
     <!-- Dummy Data -->
