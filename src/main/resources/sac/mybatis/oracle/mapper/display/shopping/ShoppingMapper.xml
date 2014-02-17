@@ -1684,10 +1684,11 @@
     <select id="getShoppingImgDetailList" parameterType="Map" resultType="Shopping">
      /* ShoppingMapper.xml.getShoppingImgDetailList,쇼핑상세(이미지) 조회, 김형식/SK플래닛 , 2014-02-04 */
         SELECT 
-               (FILE_PATH||FILE_NM) filePos  
+                (FILE_PATH||FILE_NM) filePos 
+               , EXPO_ORD
           FROM TB_DP_PROD_IMG
          WHERE PROD_ID = #{req.prodId} 
-           AND IMG_CD =#{req.detailImgCd}
+           AND IMG_CD =#{cutDetailImageCd}
            AND LANG_CD= #{req.langCd}          /* ko : 한국어 */
          ORDER BY EXPO_ORD            
     </select>            
