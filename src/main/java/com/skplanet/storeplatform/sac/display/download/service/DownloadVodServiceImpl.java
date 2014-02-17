@@ -46,7 +46,6 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
 import com.skplanet.storeplatform.sac.display.response.VodGenerator;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 //import org.apache.commons.lang3.StringUtils;
 
@@ -92,6 +91,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
 
+		String sysDate = downloadSystemDate.getSysDate();
 		downloadVodSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadVodSacReq.setDeviceModelCd(deviceHeader.getModel());
 		downloadVodSacReq.setLangCd(tanantHeader.getLangCd());
@@ -160,9 +160,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					historyListSacReq.setTenantId(downloadVodSacReq.getTenantId());
 					historyListSacReq.setUserKey(downloadVodSacReq.getUserKey());
 					historyListSacReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
-					historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
-					historyListSacReq.setStartDt("19000101000000");
-					historyListSacReq.setEndDt(metaInfo.getSysDate());
+					historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+					historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+					historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+					historyListSacReq.setEndDt(sysDate);
 					historyListSacReq.setOffset(1);
 					historyListSacReq.setCount(1);
 					historyListSacReq.setProductList(productList);
@@ -223,15 +224,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 				// 구매 정보
 				if (StringUtils.isNotEmpty(prchsId)) {
-					/*
-					 * 단말 정보 조회
-					 */
-					String deviceId = "";
-					String deviceIdType = "";
+					String deviceId = null;
+					String deviceIdType = null;
 
 					SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
 					request.setUserKey(downloadVodSacReq.getUserKey());
 					request.setDeviceKey(downloadVodSacReq.getDeviceKey());
+
+					// 단말 정보 조회
 					SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
 
 					if (result != null) {
@@ -280,9 +280,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
 						encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
 						encryption.setToken(encryptString);
-						product.setEncryption(encryption);
 
-						product.setEncryption(encryption);
+						product.setDl(encryption);
 					}
 
 				}

@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -96,9 +95,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		// OS VERSION 가공
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
 		String osVersion = temp[1];
+		String sysDate = downloadSystemDate.getSysDate();
 
 		String osVersionOrginal = osVersion;
-		String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
+		String[] osVersionTemp = osVersionOrginal.split(".");
 		if (osVersionTemp.length == 3) {
 			osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
 		}
@@ -146,7 +146,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 			// 파라미터 체크
 			if ("package".equals(filteredBy)) {
-				if (StringUtil.isEmpty(packageName)) {
+				if (StringUtils.isEmpty(packageName)) {
 					throw new StorePlatformException("SAC_DSP_0002", "packageName", packageName);
 				}
 
@@ -154,11 +154,11 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						downloadAppSacReq);
 				downloadAppSacReq.setProductId(productId);
 
-				if (StringUtil.isEmpty(productId)) {
+				if (StringUtils.isEmpty(productId)) {
 					throw new StorePlatformException("SAC_DSP_0005", packageName);
 				}
 			} else {
-				if (StringUtil.isEmpty(productId)) {
+				if (StringUtils.isEmpty(productId)) {
 					throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
 				}
 			}
@@ -190,9 +190,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					historyListSacReq.setTenantId(downloadAppSacReq.getTenantId());
 					historyListSacReq.setUserKey(downloadAppSacReq.getUserKey());
 					historyListSacReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
-					historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
-					historyListSacReq.setStartDt("19000101000000");
-					historyListSacReq.setEndDt(metaInfo.getSysDate());
+					historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+					historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+					historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+					historyListSacReq.setEndDt(sysDate);
 					historyListSacReq.setOffset(1);
 					historyListSacReq.setCount(1);
 					historyListSacReq.setProductList(productList);
@@ -250,15 +251,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 				// 구매 정보
 				if (StringUtils.isNotEmpty(prchsId)) {
-					/*
-					 * 단말 정보 조회
-					 */
-					String deviceId = "";
-					String deviceIdType = "";
+					String deviceId = null;
+					String deviceIdType = null;
 
 					SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
 					request.setUserKey(downloadAppSacReq.getUserKey());
 					request.setDeviceKey(downloadAppSacReq.getDeviceKey());
+
+					// 단말 정보 조회
 					SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
 
 					if (result != null) {
@@ -294,9 +294,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
 					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
 					encryption.setToken(encryptString);
-					product.setEncryption(encryption);
 
-					product.setEncryption(encryption);
+					product.setDl(encryption);
 
 				}
 

@@ -79,6 +79,11 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
+		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
+				MetaInfo.class);
+
+		String sysDate = downloadSystemDate.getSysDate();
+
 		downloadMusicSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadMusicSacReq.setDeviceModelCd(deviceHeader.getModel());
 		downloadMusicSacReq.setLangCd(tanantHeader.getLangCd());
@@ -87,7 +92,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		DownloadMusicSacRes response = new DownloadMusicSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		int totalCount = 0;
 		String productId = downloadMusicSacReq.getProductId();
 		String deviceKey = downloadMusicSacReq.getDeviceKey();
 		String userKey = downloadMusicSacReq.getUserKey();
@@ -142,9 +146,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				historyListSacReq.setTenantId(downloadMusicSacReq.getTenantId());
 				historyListSacReq.setUserKey(downloadMusicSacReq.getUserKey());
 				historyListSacReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
-				historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
-				historyListSacReq.setStartDt("19000101000000");
-				historyListSacReq.setEndDt(metaInfo.getSysDate());
+				historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+				historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+				historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+				historyListSacReq.setEndDt(sysDate);
 				historyListSacReq.setOffset(1);
 				historyListSacReq.setCount(1);
 				historyListSacReq.setProductList(productList);
