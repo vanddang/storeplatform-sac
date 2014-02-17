@@ -19,6 +19,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInfor
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -39,21 +41,24 @@ public interface SellerService {
 	/** 2.2.4. 판매자 회원 단순 인증. */
 	public AuthorizeRes authorizeSimple(SacRequestHeader header, AuthorizeSimpleReq req);
 
-	/** 2.2.10. 판매자 회원 기본정보 수정 */
+	/** 2.2.11. 판매자 회원 기본정보 수정 */
 	public ModifyInformationSacRes modifyInformation(SacRequestHeader header, ModifyInformationSacReq req);
 
-	/** 2.2.11. 판매자 회원 정산정보 수정 */
+	/** 2.2.12. 판매자 회원 정산정보 수정 */
 	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
 			ModifyAccountInformationSacReq req);
 
-	/** 2.2.16. 판매자 회원 계정 잠금. */
-	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req);
-
-	/** 2.2.14. 판매자 회원 계정 승인. */
+	/** 2.2.15. 판매자 회원 계정 승인. */
 	public ConfirmRes confirm(SacRequestHeader header, ConfirmReq req);
 
 	/** 2.2.16. 판매자 회원 전환 신청. */
 	public ConversionClassSacRes conversionClass(SacRequestHeader header, ConversionClassSacReq req);
+
+	/** 2.2.17. 판매자 회원 계정 잠금. */
+	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req);
+
+	/** 2.2.18. 판매자회원 실명 인증 정보 수정. */
+	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, ModifyRealNameSacReq req);
 
 	/** 2.2.24. 판매자 회원 탈퇴. */
 	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req);

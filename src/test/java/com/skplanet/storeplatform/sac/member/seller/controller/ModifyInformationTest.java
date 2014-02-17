@@ -154,11 +154,9 @@ public class ModifyInformationTest {
 						req.setSellerPhone("010XXXX2345");
 						req.setSellerSex("M");
 						req.setSellerName("국내개인무료사용자2");
-						req.setRealNameSystemId("S01");
 						req.setParentRealNameMethod("US011101");
 						req.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1");
 						req.setParentBirthDay("19750325");
-						req.setParentRealNameSystemId("S01");
 						req.setParentTelecom("US001202");
 						req.setParentEmail("parent_test@test.com");
 						req.setParentRealNameDate("20140206000000");

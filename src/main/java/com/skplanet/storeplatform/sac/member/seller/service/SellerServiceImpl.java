@@ -34,6 +34,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerUpgrade;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateRealNameSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateRealNameSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
@@ -58,6 +60,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInfor
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -146,7 +150,7 @@ public class SellerServiceImpl implements SellerService {
 		// 회원명
 		mbrAuth.setName(req.getSellerName());
 		// 실명 인증사이트
-		mbrAuth.setRealNameSite(header.getTenantHeader().getSystemId());
+		mbrAuth.setRealNameSite(commonRequest.getSystemID());
 		// 실명 인증 일시
 		mbrAuth.setRealNameDate(req.getRealNameDate());
 		// 내국인 여부
@@ -401,7 +405,239 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 2.2.14. 판매자 회원 계정 승인.
+	 * 2.2.10. 판매자 기본정보 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ModifyInformationRes
+	 */
+	@Override
+	public ModifyInformationSacRes modifyInformation(SacRequestHeader header, ModifyInformationSacReq req) {
+
+		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
+		// SC공통 헤더
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+
+		// SessionKey 유효성 체크
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+
+		/** 2. 기본정보수정 [REQUEST] 생성 및 주입. */
+		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
+
+		/** 2-1. 실명인증 정보 생성 및 주입. */
+		if (StringUtils.equals(req.getIsRealName(), MemberConstants.USE_Y)) {
+			MbrAuth mbrAuth = new MbrAuth();
+			// 실명인증여부
+			mbrAuth.setIsRealName(req.getIsRealName());
+			// CI
+			mbrAuth.setCi(req.getSellerCI());
+			// DI
+			mbrAuth.setDi(req.getSellerDI());
+			//
+			mbrAuth.setMemberCategory(req.getSellerCategory());
+			// 인증방법코드
+			mbrAuth.setRealNameMethod(req.getRealNameMethod());
+			// 통신사 코드
+			mbrAuth.setTelecom(req.getSellerTelecom());
+			// 무선 전화번호
+			mbrAuth.setPhone(req.getSellerPhone());
+			// 생년월일
+			mbrAuth.setBirthDay(req.getSellerBirthDay());
+			// 성별
+			mbrAuth.setSex(req.getSellerSex());
+			// 회원명
+			mbrAuth.setName(req.getSellerName());
+			// 실명 인증사이트
+			// mbrAuth.setRealNameSite(req.getRealNameSystemId());
+			mbrAuth.setRealNameSite(commonRequest.getSystemID());
+
+			updateSellerRequest.setMbrAuth(mbrAuth);
+		}
+
+		/** 2-2. 법정 대리인 정보 생성 및 주입. */
+		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+			MbrLglAgent mbrLglAgent = new MbrLglAgent();
+
+			mbrLglAgent.setIsParent(req.getIsParent());
+			mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod());
+			mbrLglAgent.setParentName(req.getParentName());
+			mbrLglAgent.setParentType(req.getParentType());
+			mbrLglAgent.setParentDate(req.getParentDate());
+			mbrLglAgent.setParentEmail(req.getParentEmail());
+			mbrLglAgent.setParentBirthDay(req.getParentBirthDay());
+			mbrLglAgent.setParentTelecom(req.getParentTelecom());
+			mbrLglAgent.setParentMDN(req.getParentMDN());
+			mbrLglAgent.setParentCI(req.getParentCI());
+			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate());
+			mbrLglAgent.setParentRealNameSite(commonRequest.getSystemID());
+			//
+			mbrLglAgent.setMemberKey(req.getSellerKey());
+
+			updateSellerRequest.setMbrLglAgent(mbrLglAgent);
+		}
+
+		/** 2-3. 판매자 정보 생성 및 주입. */
+		SellerMbr sellerMbr = new SellerMbr();
+		sellerMbr.setSellerKey(req.getSellerKey());
+		sellerMbr.setSellerClass(req.getSellerClass());
+		sellerMbr.setSellerCategory(req.getSellerCategory());
+		sellerMbr.setSellerMainStatus(req.getSellerMainStatus());
+		sellerMbr.setSellerSubStatus(req.getSellerSubStatus());
+		sellerMbr.setSellerID(req.getSellerId());
+		sellerMbr.setSellerTelecom(req.getSellerTelecom());
+		sellerMbr.setSellerPhoneCountry(req.getSellerPhoneCountry());
+		sellerMbr.setSellerPhone(req.getSellerPhone());
+		sellerMbr.setIsRecvSMS(req.getIsRecvSMS());
+		sellerMbr.setSellerName(req.getSellerName());
+		sellerMbr.setSellerSex(req.getSellerSex());
+		sellerMbr.setSellerBirthDay(req.getSellerBirthDay());
+		sellerMbr.setSellerZip(req.getSellerZip());
+		sellerMbr.setSellerAddress(req.getSellerAddress());
+		sellerMbr.setSellerDetailAddress(req.getSellerDetailAddress());
+		sellerMbr.setSellerCity(req.getSellerCity());
+		sellerMbr.setSellerState(req.getSellerState());
+		sellerMbr.setSellerCountry(req.getSellerCountry());
+		sellerMbr.setSellerLanguage(req.getSellerLanguage());
+		sellerMbr.setIsDomestic(req.getIsDomestic());
+		sellerMbr.setIsParent(req.getIsParent());
+		sellerMbr.setSellerCompany(req.getSellerCompany());
+		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
+		sellerMbr.setCustomerPhoneCountry(req.getCustomerPhoneCountry());
+		sellerMbr.setCustomerPhone(req.getCustomerPhone());
+		sellerMbr.setCustomerEmail(req.getCustomerEmail());
+
+		updateSellerRequest.setSellerMbr(sellerMbr);
+
+		/** 2-4. 공통 헤더 생성 및 주입. */
+		updateSellerRequest.setCommonRequest(commonRequest);
+
+		/** 2-5. SC회원 - 기본정보변경 Call. */
+		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
+
+		// Debug
+		LOGGER.debug("[SC-UpdateSellerResponse] : \n{}", updateSellerResponse.toString());
+
+		/** 2-6. Tenant [RESPONSE] 생성 및 주입 */
+		ModifyInformationSacRes res = new ModifyInformationSacRes();
+		res.setSellerKey(updateSellerResponse.getSellerKey());
+
+		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.11. 판매자회원 정산 정보 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ModifyAccountInformationRes
+	 */
+	@Override
+	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
+			ModifyAccountInformationSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [START] ############");
+		// SC공통 헤더
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+		// SessionKey 유효성 체크
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+
+		// 수정 가능 회원 Check
+		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
+				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
+
+		if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY, searchSellerResponse.getSellerMbr()
+				.getSellerCategory())
+				|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_BP, searchSellerResponse
+						.getSellerMbr().getSellerCategory())) {
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
+		}
+
+		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
+
+		SellerMbr sellerMbr = new SellerMbr();
+		// 회원 정보
+		sellerMbr.setSellerKey(req.getSellerKey());
+		sellerMbr.setSellerBizType(req.getSellerBizType()); // INDT_NM 업종명 종목 종목
+		sellerMbr.setSellerBizCategory(req.getSellerBizCategory()); // COND_NM 업태명 업태 업태
+		sellerMbr.setSellerBizCorpNumber(req.getSellerBizCorpNumber()); // ("법인등록번호"); CORP_REG_NO
+		sellerMbr.setRepPhoneArea(req.getRepFaxArea()); // ("대표전화번호 국가코드"); REP_TEL_NATION_NO
+		sellerMbr.setRepPhone(req.getRepPhone()); // ("대표전화번호"); REP_TEL_NO
+		sellerMbr.setRepFaxArea(req.getRepFaxArea()); // ("대표팩스번호 국가코드"); FAX_NATION_NO
+		sellerMbr.setRepFax(req.getRepFax()); // ("대표팩스번호"); FAX_NO
+		sellerMbr.setRepEmail(req.getRepEmail()); // ("대표 이메일"); REP_EMAIL
+		sellerMbr.setSellerZip(req.getSellerZip()); // ("사업장 우편번호"); ZIP 우편번호
+		sellerMbr.setSellerAddress(req.getSellerAddress()); // ("사업장 주소"); ADDR
+		sellerMbr.setSellerDetailAddress(req.getSellerDetailAddress()); // ("사업장 상세주소"); DTL_ADDR
+		sellerMbr.setVendorCode(req.getVendorCode()); // ("벤더 코드"); VENDOR_CD
+		sellerMbr.setIsBizRegistered(req.getIsBizRegistered()); // ("통신판매업 신고여부"); MSALBIZ_DECL_YN
+		sellerMbr.setBizRegNumber(req.getBizRegNumber()); // ("통신판매업 신고번호"); MSALBIZ_DECL_NO
+		sellerMbr.setBizUnregReason(req.getBizUnregReason()); // ("통신판매업 미신고사유  코드"); MSALBIZ_UNDECL_REASON_CD
+		sellerMbr.setIsBizTaxable(req.getIsBizTaxable()); // ("간이과세여부"); // EASY_TXN_YN 간이 과세 여부 ##### 전환 쪽에서 사용
+		sellerMbr.setBizGrade(req.getBizGrade()); // ("심의등급코드"); DELIB_GRD_CD 심의 등급코드
+		sellerMbr.setIsDeductible(req.getIsDeductible()); // ("자동차감가능대상여부"); AUTO_DED_POSB_TARGET_YN
+		sellerMbr.setMarketCode(req.getMarketCode()); // ("입점상점코드"); LNCHG_MALL_CD 입점 상점코드
+		sellerMbr.setMarketStatus(req.getMarketStatus()); // ("입점상태코드"); LNCHG_MBR_STATUS_CD
+		sellerMbr.setIsAccountReal(req.getIsAccountReal()); // ("   계좌인증여부"); // ACCT_AUTH_YN 계좌 인증여부 컬럼
+
+		updateAccountSellerRequest.setSellerMbr(sellerMbr);
+
+		// 정산정보
+		SellerAccount sellerAccount = new SellerAccount();
+		sellerAccount.setSellerKey(req.getSellerKey());
+		sellerAccount.setBankAccount(req.getBankAccount()); // ACCT_NO 계좌번호
+		sellerAccount.setBankCode(req.getBankCode()); // BANK_CD 은행코드
+		sellerAccount.setBankAcctName(req.getBankAcctName()); // DEPSTR_NM 예금자명
+		sellerAccount.setBankName(req.getBankName()); // FR_BANK_NM 은행명
+		sellerAccount.setBankBranchCode(req.getBankBranchCode()); // FR_BANK_NM 은행명
+		sellerAccount.setBankBranch(req.getBankBranch()); // FR_BRCH_NM 은행지점명
+		sellerAccount.setSwiftCode(req.getSwiftCode()); // INTL_SWIFT_CD Swift 코드
+		sellerAccount.setAbaCode(req.getAbaCode()); // ABA 코드 INTL_ABA 국제 aba
+		sellerAccount.setIbanCode(req.getIbanCode()); // IBAN 코드 INTL_IBAN 국제 iban
+		sellerAccount.setBankAddress(req.getBankAddress()); // FR_BANK_ADDR 외국은행주소
+		sellerAccount.setBankLocation(req.getBankLocation()); // FR_BANK_LOC 외국은행 위치
+		sellerAccount.setTpinCode(req.getTpinCode()); // FR_TIN_NO 외국 tpin 번호
+		sellerAccount.setAccountRealDate(req.getAccountRealDate()); // ACCT_AUTH_DT 계좌인증일시
+
+		updateAccountSellerRequest.setSellerAccount(sellerAccount);
+
+		List<Document> documentList = null;
+		if (req.getExtraDocumentList() != null) {
+			documentList = new ArrayList<Document>();
+			for (int i = 0; i < req.getExtraDocumentList().size(); i++) {
+				Document document = new Document();
+				document.setDocumentCode(req.getExtraDocumentList().get(i).getDocumentCode());
+				document.setDocumentName(req.getExtraDocumentList().get(i).getDocumentName());
+				document.setDocumentPath(req.getExtraDocumentList().get(i).getDocumentPath());
+				document.setDocumentSize(req.getExtraDocumentList().get(i).getDocumentSize());
+				document.setIsUsed(req.getExtraDocumentList().get(i).getIsUsed());
+				documentList.add(document);
+			}
+			updateAccountSellerRequest.setDocumentList(documentList);
+		}
+
+		updateAccountSellerRequest.setSellerKey(req.getSellerKey());
+
+		/** 2. 공통 헤더 생성 및 주입. */
+		updateAccountSellerRequest.setCommonRequest(commonRequest);
+
+		/** 3. SC회원 - 정산정보수정변경 Call. */
+		UpdateAccountSellerResponse updateAccountSellerResponse = this.sellerSCI
+				.updateAccountSeller(updateAccountSellerRequest);
+
+		/** 4. TenantRes Response 생성 및 주입 */
+		ModifyAccountInformationSacRes res = new ModifyAccountInformationSacRes();
+		res.setSellerKey(updateAccountSellerResponse.getSellerKey());
+		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [END] ############");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.15. 판매자 회원 계정 승인.
 	 * </pre>
 	 * 
 	 * @param header
@@ -587,7 +823,7 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 2.2.16 판매자 회원 계정 잠금.
+	 * 2.2.17. 판매자 회원 계정 잠금.
 	 * </pre>
 	 * 
 	 * @param header
@@ -633,232 +869,66 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 2.2.10. 판매자 기본정보 수정.
+	 * 2.2.18. 판매자회원 실명 인증 정보 수정
 	 * </pre>
 	 * 
 	 * @param header
 	 * @param req
-	 * @return ModifyInformationRes
+	 * @return ModifyRealNameSacRes
 	 */
 	@Override
-	public ModifyInformationSacRes modifyInformation(SacRequestHeader header, ModifyInformationSacReq req) {
-
-		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
-		// SC공통 헤더
+	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, ModifyRealNameSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.modifyRealName() [START] ############");
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 
-		// SessionKey 유효성 체크
-		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+		UpdateRealNameSellerRequest updateRealNameSellerRequest = new UpdateRealNameSellerRequest();
+		updateRealNameSellerRequest.setIsOwn(req.getIsOwn());
+		updateRealNameSellerRequest.setIsRealName(req.getIsRealName());
+		updateRealNameSellerRequest.setSellerKey(req.getSellerKey());
 
-		/** 2. 기본정보수정 [REQUEST] 생성 및 주입. */
-		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
-
-		/** 2-1. 실명인증 정보 생성 및 주입. */
-		if (StringUtils.equals(req.getIsRealName(), MemberConstants.USE_Y)) {
+		if (StringUtils.equals(MemberConstants.AUTH_TYPE_OWN, req.getIsOwn())) {
+			// 실명인증 정보
 			MbrAuth mbrAuth = new MbrAuth();
-			// 실명인증여부
-			mbrAuth.setIsRealName(req.getIsRealName());
-			// CI
-			mbrAuth.setCi(req.getSellerCI());
-			// DI
-			mbrAuth.setDi(req.getSellerDI());
-			//
-			mbrAuth.setMemberCategory(req.getSellerCategory());
-			// 인증방법코드
-			mbrAuth.setRealNameMethod(req.getRealNameMethod());
-			// 통신사 코드
-			mbrAuth.setTelecom(req.getSellerTelecom());
-			// 무선 전화번호
-			mbrAuth.setPhone(req.getSellerPhone());
-			// 생년월일
 			mbrAuth.setBirthDay(req.getSellerBirthDay());
-			// 성별
-			mbrAuth.setSex(req.getSellerSex());
-			// 회원명
+			mbrAuth.setCi(req.getSellerCI());
+			mbrAuth.setDi(req.getSellerDI());
+			mbrAuth.setIsDomestic(req.getIsDomestic());
+			mbrAuth.setIsRealName(req.getIsRealName());
 			mbrAuth.setName(req.getSellerName());
-			// 실명 인증사이트
-			mbrAuth.setRealNameSite(req.getRealNameSystemId());
+			mbrAuth.setPhone(req.getSellerPhone());
+			mbrAuth.setRealNameDate(req.getRealNameDate());
+			mbrAuth.setRealNameMethod(req.getRealNameMethod());
+			mbrAuth.setRealNameSite(commonRequest.getSystemID());
+			mbrAuth.setSex(req.getSex());
+			mbrAuth.setTelecom(req.getSellerTelecom());
+			updateRealNameSellerRequest.setMbrAuth(mbrAuth);
 
-			updateSellerRequest.setMbrAuth(mbrAuth);
-		}
-
-		/** 2-2. 법정 대리인 정보 생성 및 주입. */
-		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+		} else if (StringUtils.equals(MemberConstants.AUTH_TYPE_PARENT, req.getIsOwn())) {
+			// 법정 대리인 정보
 			MbrLglAgent mbrLglAgent = new MbrLglAgent();
-
-			mbrLglAgent.setIsParent(req.getIsParent());
-			mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod());
-			mbrLglAgent.setParentName(req.getParentName());
-			mbrLglAgent.setParentType(req.getParentType());
-			mbrLglAgent.setParentDate(req.getParentDate());
-			mbrLglAgent.setParentEmail(req.getParentEmail());
-			mbrLglAgent.setParentBirthDay(req.getParentBirthDay());
-			mbrLglAgent.setParentTelecom(req.getParentTelecom());
-			mbrLglAgent.setParentMDN(req.getParentMDN());
-			mbrLglAgent.setParentCI(req.getParentCI());
-			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate());
-			mbrLglAgent.setParentRealNameSite(req.getParentRealNameSystemId());
-			//
 			mbrLglAgent.setMemberKey(req.getSellerKey());
-
-			updateSellerRequest.setMbrLglAgent(mbrLglAgent);
+			mbrLglAgent.setParentBirthDay(req.getParentBirthDay());
+			mbrLglAgent.setParentCI(req.getSellerCI());
+			mbrLglAgent.setParentDate(req.getParentEmail());
+			mbrLglAgent.setParentEmail(req.getParentEmail());
+			mbrLglAgent.setParentMDN(req.getSellerPhone());
+			mbrLglAgent.setParentName(req.getSellerName());
+			mbrLglAgent.setParentRealNameDate(req.getRealNameDate());
+			mbrLglAgent.setParentRealNameMethod(req.getRealNameMethod());
+			mbrLglAgent.setParentRealNameSite(commonRequest.getSystemID());
+			mbrLglAgent.setParentTelecom(req.getSellerTelecom());
+			mbrLglAgent.setParentType(req.getParentType());
+			updateRealNameSellerRequest.setMbrLglAgent(mbrLglAgent);
 		}
 
-		/** 2-3. 판매자 정보 생성 및 주입. */
-		SellerMbr sellerMbr = new SellerMbr();
-		sellerMbr.setSellerKey(req.getSellerKey());
-		sellerMbr.setSellerClass(req.getSellerClass());
-		sellerMbr.setSellerCategory(req.getSellerCategory());
-		sellerMbr.setSellerMainStatus(req.getSellerMainStatus());
-		sellerMbr.setSellerSubStatus(req.getSellerSubStatus());
-		sellerMbr.setSellerID(req.getSellerId());
-		sellerMbr.setSellerTelecom(req.getSellerTelecom());
-		sellerMbr.setSellerPhoneCountry(req.getSellerPhoneCountry());
-		sellerMbr.setSellerPhone(req.getSellerPhone());
-		sellerMbr.setIsRecvSMS(req.getIsRecvSMS());
-		sellerMbr.setSellerName(req.getSellerName());
-		sellerMbr.setSellerSex(req.getSellerSex());
-		sellerMbr.setSellerBirthDay(req.getSellerBirthDay());
-		sellerMbr.setSellerZip(req.getSellerZip());
-		sellerMbr.setSellerAddress(req.getSellerAddress());
-		sellerMbr.setSellerDetailAddress(req.getSellerDetailAddress());
-		sellerMbr.setSellerCity(req.getSellerCity());
-		sellerMbr.setSellerState(req.getSellerState());
-		sellerMbr.setSellerCountry(req.getSellerCountry());
-		sellerMbr.setSellerLanguage(req.getSellerLanguage());
-		sellerMbr.setIsDomestic(req.getIsDomestic());
-		sellerMbr.setIsParent(req.getIsParent());
-		sellerMbr.setSellerCompany(req.getSellerCompany());
-		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
-		sellerMbr.setCustomerPhoneCountry(req.getCustomerPhoneCountry());
-		sellerMbr.setCustomerPhone(req.getCustomerPhone());
-		sellerMbr.setCustomerEmail(req.getCustomerEmail());
+		updateRealNameSellerRequest.setCommonRequest(commonRequest);
 
-		updateSellerRequest.setSellerMbr(sellerMbr);
+		UpdateRealNameSellerResponse updateRealNameSellerResponse = this.sellerSCI
+				.updateRealNameSeller(updateRealNameSellerRequest);
 
-		/** 2-4. 공통 헤더 생성 및 주입. */
-		updateSellerRequest.setCommonRequest(commonRequest);
-
-		/** 2-5. SC회원 - 기본정보변경 Call. */
-		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
-
-		// Debug
-		LOGGER.debug("[SC-UpdateSellerResponse] : \n{}", updateSellerResponse.toString());
-
-		/** 2-6. Tenant [RESPONSE] 생성 및 주입 */
-		ModifyInformationSacRes res = new ModifyInformationSacRes();
-		res.setSellerKey(updateSellerResponse.getSellerKey());
-
-		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
-		return res;
-	}
-
-	/**
-	 * <pre>
-	 * 2.2.11. 판매자회원 정산 정보 수정.
-	 * </pre>
-	 * 
-	 * @param header
-	 * @param req
-	 * @return ModifyAccountInformationRes
-	 */
-	@Override
-	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
-			ModifyAccountInformationSacReq req) {
-		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [START] ############");
-		// SC공통 헤더
-		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
-		// SessionKey 유효성 체크
-		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
-
-		// 수정 가능 회원 Check
-		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
-				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
-
-		if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY, searchSellerResponse.getSellerMbr()
-				.getSellerCategory())
-				|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_BP, searchSellerResponse
-						.getSellerMbr().getSellerCategory())) {
-			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-					searchSellerResponse.getSellerMbr().getSellerSubStatus());
-		}
-
-		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
-
-		SellerMbr sellerMbr = new SellerMbr();
-		// 회원 정보
-		sellerMbr.setSellerKey(req.getSellerKey());
-		sellerMbr.setSellerBizType(req.getSellerBizType()); // INDT_NM 업종명 종목 종목
-		sellerMbr.setSellerBizCategory(req.getSellerBizCategory()); // COND_NM 업태명 업태 업태
-		sellerMbr.setSellerBizCorpNumber(req.getSellerBizCorpNumber()); // ("법인등록번호"); CORP_REG_NO
-		sellerMbr.setRepPhoneArea(req.getRepFaxArea()); // ("대표전화번호 국가코드"); REP_TEL_NATION_NO
-		sellerMbr.setRepPhone(req.getRepPhone()); // ("대표전화번호"); REP_TEL_NO
-		sellerMbr.setRepFaxArea(req.getRepFaxArea()); // ("대표팩스번호 국가코드"); FAX_NATION_NO
-		sellerMbr.setRepFax(req.getRepFax()); // ("대표팩스번호"); FAX_NO
-		sellerMbr.setRepEmail(req.getRepEmail()); // ("대표 이메일"); REP_EMAIL
-		sellerMbr.setSellerZip(req.getSellerZip()); // ("사업장 우편번호"); ZIP 우편번호
-		sellerMbr.setSellerAddress(req.getSellerAddress()); // ("사업장 주소"); ADDR
-		sellerMbr.setSellerDetailAddress(req.getSellerDetailAddress()); // ("사업장 상세주소"); DTL_ADDR
-		sellerMbr.setVendorCode(req.getVendorCode()); // ("벤더 코드"); VENDOR_CD
-		sellerMbr.setIsBizRegistered(req.getIsBizRegistered()); // ("통신판매업 신고여부"); MSALBIZ_DECL_YN
-		sellerMbr.setBizRegNumber(req.getBizRegNumber()); // ("통신판매업 신고번호"); MSALBIZ_DECL_NO
-		sellerMbr.setBizUnregReason(req.getBizUnregReason()); // ("통신판매업 미신고사유  코드"); MSALBIZ_UNDECL_REASON_CD
-		sellerMbr.setIsBizTaxable(req.getIsBizTaxable()); // ("간이과세여부"); // EASY_TXN_YN 간이 과세 여부 ##### 전환 쪽에서 사용
-		sellerMbr.setBizGrade(req.getBizGrade()); // ("심의등급코드"); DELIB_GRD_CD 심의 등급코드
-		sellerMbr.setIsDeductible(req.getIsDeductible()); // ("자동차감가능대상여부"); AUTO_DED_POSB_TARGET_YN
-		sellerMbr.setMarketCode(req.getMarketCode()); // ("입점상점코드"); LNCHG_MALL_CD 입점 상점코드
-		sellerMbr.setMarketStatus(req.getMarketStatus()); // ("입점상태코드"); LNCHG_MBR_STATUS_CD
-		sellerMbr.setIsAccountReal(req.getIsAccountReal()); // ("   계좌인증여부"); // ACCT_AUTH_YN 계좌 인증여부 컬럼
-
-		updateAccountSellerRequest.setSellerMbr(sellerMbr);
-
-		// 정산정보
-		SellerAccount sellerAccount = new SellerAccount();
-		sellerAccount.setSellerKey(req.getSellerKey());
-		sellerAccount.setBankAccount(req.getBankAccount()); // ACCT_NO 계좌번호
-		sellerAccount.setBankCode(req.getBankCode()); // BANK_CD 은행코드
-		sellerAccount.setBankAcctName(req.getBankAcctName()); // DEPSTR_NM 예금자명
-		sellerAccount.setBankName(req.getBankName()); // FR_BANK_NM 은행명
-		sellerAccount.setBankBranchCode(req.getBankBranchCode()); // FR_BANK_NM 은행명
-		sellerAccount.setBankBranch(req.getBankBranch()); // FR_BRCH_NM 은행지점명
-		sellerAccount.setSwiftCode(req.getSwiftCode()); // INTL_SWIFT_CD Swift 코드
-		sellerAccount.setAbaCode(req.getAbaCode()); // ABA 코드 INTL_ABA 국제 aba
-		sellerAccount.setIbanCode(req.getIbanCode()); // IBAN 코드 INTL_IBAN 국제 iban
-		sellerAccount.setBankAddress(req.getBankAddress()); // FR_BANK_ADDR 외국은행주소
-		sellerAccount.setBankLocation(req.getBankLocation()); // FR_BANK_LOC 외국은행 위치
-		sellerAccount.setTpinCode(req.getTpinCode()); // FR_TIN_NO 외국 tpin 번호
-		sellerAccount.setAccountRealDate(req.getAccountRealDate()); // ACCT_AUTH_DT 계좌인증일시
-
-		updateAccountSellerRequest.setSellerAccount(sellerAccount);
-
-		List<Document> documentList = null;
-		if (req.getExtraDocumentList() != null) {
-			documentList = new ArrayList<Document>();
-			for (int i = 0; i < req.getExtraDocumentList().size(); i++) {
-				Document document = new Document();
-				document.setDocumentCode(req.getExtraDocumentList().get(i).getDocumentCode());
-				document.setDocumentName(req.getExtraDocumentList().get(i).getDocumentName());
-				document.setDocumentPath(req.getExtraDocumentList().get(i).getDocumentPath());
-				document.setDocumentSize(req.getExtraDocumentList().get(i).getDocumentSize());
-				document.setIsUsed(req.getExtraDocumentList().get(i).getIsUsed());
-				documentList.add(document);
-			}
-			updateAccountSellerRequest.setDocumentList(documentList);
-		}
-
-		updateAccountSellerRequest.setSellerKey(req.getSellerKey());
-
-		/** 2. 공통 헤더 생성 및 주입. */
-		updateAccountSellerRequest.setCommonRequest(commonRequest);
-
-		/** 3. SC회원 - 정산정보수정변경 Call. */
-		UpdateAccountSellerResponse updateAccountSellerResponse = this.sellerSCI
-				.updateAccountSeller(updateAccountSellerRequest);
-
-		/** 4. TenantRes Response 생성 및 주입 */
-		ModifyAccountInformationSacRes res = new ModifyAccountInformationSacRes();
-		res.setSellerKey(updateAccountSellerResponse.getSellerKey());
-		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [END] ############");
+		ModifyRealNameSacRes res = new ModifyRealNameSacRes();
+		res.setSellerKey(updateRealNameSellerResponse.getSellerKey());
+		LOGGER.debug("############ SellerServiceImpl.modifyRealName() [END] ############");
 		return res;
 	}
 

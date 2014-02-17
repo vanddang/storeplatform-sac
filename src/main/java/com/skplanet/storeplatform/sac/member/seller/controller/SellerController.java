@@ -32,6 +32,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInfor
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -181,6 +183,21 @@ public class SellerController {
 	public LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req,
 			BindingResult result) throws Exception {
 		return this.sellerService.lockAccount(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.18. 판매자회원 실명 인증 정보 수정
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping(value = "/dev/modifyRealName/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, @RequestBody @Validated ModifyRealNameSacReq req) {
+		return this.sellerService.modifyRealName(header, req);
 	}
 
 	/**
