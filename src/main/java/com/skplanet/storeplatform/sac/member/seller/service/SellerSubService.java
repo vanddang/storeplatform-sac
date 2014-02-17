@@ -4,8 +4,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
@@ -30,9 +28,5 @@ public interface SellerSubService {
 
 	/** 서브계정 상세 조회. */
 	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req);
-
-	/** 판매자 회원 ID/Email 중복조회 */
-	public DuplicateBySubsellerIdRes duplicateBySubsellerId(SacRequestHeader header, DuplicateBySubsellerIdReq req)
-			throws Exception;
 
 }

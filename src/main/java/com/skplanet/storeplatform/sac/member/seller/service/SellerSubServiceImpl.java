@@ -9,11 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSubSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSubSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSubSellerRequest;
@@ -27,15 +24,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 /**
  * 판매자 회원 서브계정 등록/수정/삭제/조회 기능 항목들.
@@ -181,50 +175,6 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 		DetailSubsellerRes response = new DetailSubsellerRes();
 		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
-
-		return response;
-	}
-
-	@Override
-	public DuplicateBySubsellerIdRes duplicateBySubsellerId(SacRequestHeader header, DuplicateBySubsellerIdReq req)
-			throws Exception {
-
-		/** SC회원 시작 */
-		/** 1. ID/Email Req 생성 및 주입 */
-		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
-
-		checkDuplicationSellerRequest.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
-
-		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_ID);
-		keySearch.setKeyString(req.getKeyString());
-		List<KeySearch> keySearchs = new ArrayList<KeySearch>();
-		keySearchs.add(keySearch);
-
-		checkDuplicationSellerRequest.setKeySearchList(keySearchs);
-
-		/** 3. SC회원(ID/Email중복) Call */
-		CheckDuplicationSellerResponse checkDuplicationSellerResponse = this.sellerSCI
-				.checkDuplicationSeller(checkDuplicationSellerRequest);
-
-		// Response Debug
-		LOGGER.info("checkDuplicationSellerResponse Code : {}", checkDuplicationSellerResponse.getCommonResponse()
-				.getResultCode());
-		LOGGER.info("checkDuplicationSellerResponse Messge : {}", checkDuplicationSellerResponse.getCommonResponse()
-				.getResultMessage());
-
-		/** 4. TenantRes Response 생성 및 주입 */
-		DuplicateBySubsellerIdRes response = new DuplicateBySubsellerIdRes();
-
-		// TODO Exception 재정의 - 성공또는 값없음의 경우
-		if (MemberConstants.RESULT_SUCCES.equals(checkDuplicationSellerResponse.getCommonResponse().getResultCode())) {
-			response.setIsRegistered(checkDuplicationSellerResponse.getIsRegistered());
-		} else if (MemberConstants.RESULT_FAIL.equals(checkDuplicationSellerResponse.getCommonResponse()
-				.getResultCode())) {
-			response.setIsRegistered("N");
-		} else {
-			// throw new RuntimeException(checkDuplicationSellerResponse.getCommonResponse().getResultMessage());
-		}
 
 		return response;
 	}

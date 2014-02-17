@@ -17,8 +17,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
@@ -155,27 +153,6 @@ public class SellerSubController {
 		}
 
 		return this.sellerSubService.detailSubseller(header, req);
-	}
-
-	/**
-	 * <pre>
-	 * 5.2.23 판매자 회원 서브계정 ID 중복 조회.
-	 * </pre>
-	 * 
-	 * @param req
-	 * @return DuplicateByIdEmailRes
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/duplicateBySubsellerId/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	DuplicateBySubsellerIdRes duplicateBySubsellerId(SacRequestHeader header,
-			@RequestBody @Validated DuplicateBySubsellerIdReq req, BindingResult result) throws Exception {
-		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-		// TODO Exception (01/17이후 적용)
-		if (result.hasErrors()) {
-			throw new RuntimeException("parameter error~~~");
-		}
-		return this.sellerSubService.duplicateBySubsellerId(header, req);
 	}
 
 }
