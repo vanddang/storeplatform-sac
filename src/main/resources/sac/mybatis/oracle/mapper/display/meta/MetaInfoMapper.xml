@@ -40,6 +40,8 @@
                   WHERE MENU_ID = TB.TOP_MENU_ID
                     AND LANG_CD = #{tenantHeader.langCd}
                     AND ROWNUM = 1) AS TOP_MENU_NM
+              , TB.PROD_DTL_DESC
+              , TB.MENU_DESC
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
                       , A.MENU_ID
@@ -67,6 +69,7 @@
                       , L.PATICPERS_CNT
                       , L.PRCHS_CNT
                       , L.AVG_EVLU_SCORE
+                      , F.PROD_DTL_DESC
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
