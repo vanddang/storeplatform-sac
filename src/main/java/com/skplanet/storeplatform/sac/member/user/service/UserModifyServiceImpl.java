@@ -551,7 +551,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrAuth.setSex(req.getUserSex()); // 사용자 성별
 			mbrAuth.setCi(req.getUserCi()); // CI
 			mbrAuth.setDi(req.getUserDi()); // DI
-			mbrAuth.setRealNameSite(req.getRealNameSite()); // 실명인증 사이트 코드
+			mbrAuth.setRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 실명인증 사이트 코드
 			mbrAuth.setRealNameDate(req.getRealNameDate()); // 실명인증 일시
 			mbrAuth.setRealNameMethod(req.getRealNameMethod()); // 실명인증 수단코드
 
@@ -572,7 +572,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrLglAgent.setParentType(req.getParentType()); // 법정대리인 관계코드
 			mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 이메일
 			mbrLglAgent.setParentRealNameDate(req.getRealNameDate()); // 법정대리인 실명인증 일시
-			mbrLglAgent.setParentRealNameSite(req.getRealNameSite()); // 법정대리인 실명인증 사이트 코드
+			mbrLglAgent.setParentRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 법정대리인 실명인증 사이트 코드
 			mbrLglAgent.setParentRealNameMethod(req.getRealNameMethod()); // 법정대리인 실명인증 수단코드
 
 			updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
