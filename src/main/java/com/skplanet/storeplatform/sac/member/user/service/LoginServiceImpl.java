@@ -82,7 +82,7 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private IdpSCI idpSCI;
 
-	@Value("#{propertiesForSac['idp.user.auth.key']}")
+	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	private String tempUserAuthKey;
 
 	/*
