@@ -40,6 +40,7 @@ public class Store extends CommonInfo implements Serializable {
 	private List<Identifier> identifierList; // 상품의 에피소드 ID 리스트
 	private List<Support> supportList; // 지원매체 리스트
 	private String storeProductStatusCode; // store 상품의 상태(restrict)
+	private String usePeriodUnitCd; // 이용기간단위
 
 	/**
 	 * Store().
@@ -211,5 +212,20 @@ public class Store extends CommonInfo implements Serializable {
 	 */
 	public void setStoreProductStatusCode(String storeProductStatusCode) {
 		this.storeProductStatusCode = storeProductStatusCode;
+	}
+
+	/**
+	 * @return the usePeriodUnitCd
+	 */
+	public String getUsePeriodUnitCd() {
+		return this.usePeriodUnitCd;
+	}
+
+	/**
+	 * @param usePeriodUnitCd
+	 *            the usePeriodUnitCd to set
+	 */
+	public void setUsePeriodUnitCd(String usePeriodUnitCd) {
+		this.usePeriodUnitCd = usePeriodUnitCd;
 	}
 }
