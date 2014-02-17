@@ -314,10 +314,6 @@ public class SellerServiceImpl implements SellerService {
 		/** 1-1. SC-로그인인증 Call. */
 		LoginSellerResponse logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
 
-		// Response Debug
-		LOGGER.info("[SellerSCI.loginSeller()] - Response CODE : {}, MESSGE : {}", logInSellerResponse
-				.getCommonResponse().getResultCode(), logInSellerResponse.getCommonResponse().getResultMessage());
-
 		/** 2. SAC-[Response] 생성 및 주입. */
 		AuthorizeRes res = new AuthorizeRes();
 		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr sellerMbr = null;
