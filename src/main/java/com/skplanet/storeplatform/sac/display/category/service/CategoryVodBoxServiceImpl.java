@@ -277,6 +277,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					// store.setStoreProductStatusCode("restrict"); // "사용중" 상태가 아닐경우에 "restrict" 노출(항상 사용중)
 					rights.setStore(store);
 				}
+				product.setRights(rights);
 
 				/*
 				 * VOD
