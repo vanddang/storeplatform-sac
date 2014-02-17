@@ -32,10 +32,12 @@ import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
+import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
@@ -189,7 +191,70 @@ public class UserModifyServiceImpl implements UserModifyService {
 	@Override
 	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, ModifyPasswordReq req) {
 
+		/**
+		 * 회원 정보 조회.
+		 */
+		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+
+		/**
+		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
+		 */
+		LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
+		LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
+		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
+
+			LOGGER.info("## ====================================================");
+			LOGGER.info("## One ID 통합회원 [{}]", userInfo.getUserName());
+			LOGGER.info("## ====================================================");
+
+			/**
+			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
+			 */
+			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
+
+				/**
+				 * TODO 통합IDP 패스워드 확인 연동 (cmd - authIntegratedSPPW))
+				 */
+
+				/**
+				 * TODO 통합IDP 비밀번호 변경 연동(cmd - TXUpdateUserPwdIDP)
+				 */
+
+			}
+
+		} else {
+
+			LOGGER.info("## ====================================================");
+			LOGGER.info("## 기존 IDP 회원 [{}]", userInfo.getUserName());
+			LOGGER.info("## ====================================================");
+
+			/**
+			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
+			 */
+			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
+
+				/**
+				 * TODO IDP 패스워드 확인 연동 (cmd - authForId)
+				 */
+
+				/**
+				 * TODO IDP 비밀번호 변경 연동 (cmd - modifyAuthInfo)
+				 */
+
+			}
+
+		}
+
+		/**
+		 * SC 회원 비밀번호 변경 요청.
+		 */
+		this.updatePasswordUser(sacHeader, req, userInfo.getUserId());
+
+		/**
+		 * 결과 setting.
+		 */
 		ModifyPasswordRes response = new ModifyPasswordRes();
+		response.setUserKey(req.getUserKey());
 
 		return response;
 	}
@@ -647,7 +712,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrClauseAgree.setExtraAgreementID(info.getExtraAgreementId());
 			mbrClauseAgree.setExtraAgreementVersion(info.getExtraAgreementVersion());
 			mbrClauseAgree.setIsExtraAgreement(info.getIsExtraAgreement());
-			mbrClauseAgree.setRegDate(DateUtil.getToday());
+			mbrClauseAgree.setRegDate(DateUtil.getToday("yyyyMMddHHmmss"));
 			mbrClauseAgreeList.add(mbrClauseAgree);
 		}
 		updateAgreementRequest.setMbrClauseAgreeList(mbrClauseAgreeList);
@@ -733,5 +798,37 @@ public class UserModifyServiceImpl implements UserModifyService {
 		} else {
 			return "2"; // 기타
 		}
+	}
+
+	/**
+	 * <pre>
+	 * SC 회원 비밀번호 변경 요청.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @param userId
+	 *            사용자 아이디
+	 */
+	private void updatePasswordUser(SacRequestHeader sacHeader, ModifyPasswordReq req, String userId) {
+
+		UpdatePasswordUserRequest updatePasswordUserRequest = new UpdatePasswordUserRequest();
+		updatePasswordUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+		MbrPwd mbrPwd = new MbrPwd();
+		mbrPwd.setMemberID(userId); // 사용자 아이디
+		mbrPwd.setMemberKey(req.getUserKey()); // 사용자 Key
+		mbrPwd.setMemberPW(req.getNewPassword()); // 신규 비밀번호
+		mbrPwd.setOldPW(req.getOldPassword()); // 기존 비밀번호
+		mbrPwd.setPwRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 비밀번호 변경 일시
+		updatePasswordUserRequest.setMbrPwd(mbrPwd);
+
+		/**
+		 * SC 회원 비밀번호 변경 요청.
+		 */
+		this.userSCI.updatePasswordUser(updatePasswordUserRequest);
+
 	}
 }
