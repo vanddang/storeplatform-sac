@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
@@ -48,6 +51,12 @@ public class RemoveSubsellerTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	public static CreateSubsellerReq createSubsellerReq;
+
+	/** [RESPONSE]. */
+	public static CreateSubsellerRes createSubsellerRes;
+
 	/**
 	 * 
 	 * <pre>
@@ -57,6 +66,48 @@ public class RemoveSubsellerTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+		createSubsellerReq = new CreateSubsellerReq();
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 서브계정 등록.
+	 * </pre>
+	 */
+	@Test
+	public void createSubseller() {
+
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/createSubseller/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						// 필수
+						createSubsellerReq.setSellerKey("IF1023501184720130823173955");
+						createSubsellerReq.setSubSellerID("011ZXCsssssss");
+						// createSubsellerReq.setIsNew("Y");
+
+						createSubsellerReq.setSubSellerMemo("test2");
+						createSubsellerReq.setSubSellerEmail("omsc997assefd@hanmail.net");
+
+						// 새로 추가됨
+						// createSubsellerReq.setSubSellerKey("SS201402061427346800000640");
+						createSubsellerReq.setMemberPW("1234567999");
+						// createSubsellerReq.setOldPW("1234567999");
+
+						LOGGER.debug("request param : {}", createSubsellerReq.toString());
+						return createSubsellerReq;
+					}
+				}).success(CreateSubsellerRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						createSubsellerRes = (CreateSubsellerRes) result;
+						// assertThat(res.getSubSellerKey(), notNullValue());
+						LOGGER.debug("response param : {}", createSubsellerRes.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
 	}
 
 	/**
@@ -64,8 +115,8 @@ public class RemoveSubsellerTest {
 	 * 판매자 회원 서브 계정 탈퇴.
 	 * </pre>
 	 */
-	@Test
-	public void removeSubseller() {
+	@After
+	public void after() {
 
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/removeSubseller/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
@@ -77,7 +128,7 @@ public class RemoveSubsellerTest {
 
 						List<String> removeKeyList;
 						removeKeyList = new ArrayList<String>();
-						removeKeyList.add("SS201402131048341210000772");
+						removeKeyList.add(createSubsellerRes.getSubSellerKey());
 						req.setSubSellerKey(removeKeyList);
 
 						LOGGER.debug("request param : {}", req.toString());
