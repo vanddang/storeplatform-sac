@@ -354,6 +354,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		metaInfo.setProdNetAmt(metaInfo.getStoreProdNetAmt());
 		store.setPrice(this.generatePrice(metaInfo));
 
+		// 이용기간단위
+		if (StringUtils.isNotEmpty(metaInfo.getStoreUsePeriodUnitCd())) {
+			store.setUsePeriodUnitCd(metaInfo.getStoreUsePeriodUnitCd());
+		}
+
 		return store;
 	}
 
@@ -378,6 +383,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
 		date.setText(metaInfo.getUsePeriodNm());
 		play.setDate(date);
+
+		// 이용기간단위
+		if (StringUtils.isNotEmpty(metaInfo.getPlayUsePeriodUnitCd())) {
+			play.setUsePeriodUnitCd(metaInfo.getStoreUsePeriodUnitCd());
+		}
 
 		return play;
 	}
