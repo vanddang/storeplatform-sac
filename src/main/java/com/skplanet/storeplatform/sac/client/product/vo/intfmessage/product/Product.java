@@ -220,7 +220,7 @@ public class Product extends CommonInfo implements Serializable {
 	/**
 	 * 암호화 정보.
 	 */
-	private Encryption encryption;
+	private Encryption dl;
 
 	/**
 	 * @return Identifier
@@ -888,17 +888,17 @@ public class Product extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the encryption
+	 * @return the dl
 	 */
-	public Encryption getEncryption() {
-		return this.encryption;
+	public Encryption getDl() {
+		return this.dl;
 	}
 
 	/**
-	 * @param encryption
-	 *            the encryption to set
+	 * @param dl
+	 *            the dl to set
 	 */
-	public void setEncryption(Encryption encryption) {
-		this.encryption = encryption;
+	public void setDl(Encryption dl) {
+		this.dl = dl;
 	}
 }
