@@ -144,7 +144,7 @@
 			        , TB_DP_SPRT_DEVICE D
 			        , TB_CM_DEVICE E
 			        , TB_DP_SUB_CONTENTS F 
-			        , TB_DP_MULTIMDA_PROD G /* 에피소드 기준 */
+			        , UV_TB_DP_MULTIMDA_PROD G /* 에피소드 기준 */
 		        WHERE A.PROD_ID = B.PROD_ID
 		        AND A.PROD_ID = C.PART_PROD_ID
 		        AND A.PROD_ID = D.PROD_ID
@@ -182,7 +182,7 @@
 		        , TB_DP_PROD_DESC D /* 에피소드 기준 */
 		        , TB_DP_MENU_CATEGORY_PROD_MAPG E
 		        , TB_DP_PROD F /* 채널 기준 */
-		        , TB_DP_MULTIMDA_PROD G /* 채널 기준 */
+		        , UV_TB_DP_MULTIMDA_PROD G /* 채널 기준 */
 		        , TB_DP_PROD_DESC H /* 채널 기준 */
 		    WHERE 1=1
 		    AND A.TENANT_ID = C.TENANT_ID
