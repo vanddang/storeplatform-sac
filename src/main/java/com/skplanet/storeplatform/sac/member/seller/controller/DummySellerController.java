@@ -160,7 +160,7 @@ public class DummySellerController {
 	 * 
 	 * @return SearchPasswordRes
 	 */
-	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchPasswordRes searchPassword() {
 
@@ -178,7 +178,7 @@ public class DummySellerController {
 	 * 
 	 * @return CheckPasswordReminderQuestionRes
 	 */
-	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion() {
 
@@ -196,7 +196,7 @@ public class DummySellerController {
 	 * 
 	 * @return ListPasswordReminderQuestionRes
 	 */
-	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion() {
 
