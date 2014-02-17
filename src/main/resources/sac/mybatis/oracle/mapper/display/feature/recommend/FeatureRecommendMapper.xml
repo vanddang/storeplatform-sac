@@ -4,72 +4,69 @@
 
     <!--운영자 추천 앱상품 조회 -->
     <select id="selectRecommendAdminList" parameterType="FeatureRecommendAdminSacReq" resultType="ProductBasicInfo">
-       /* FeatureRecommendMapper.xml, selectRecommendAdminList, SAC : 조준일 , 2014-02-03 */
-       SELECT B.TENANT_ID
-		     , B.MENU_ID
-		     , B.PROD_ID
-		     , B.TOTAL_COUNT
-		  FROM (SELECT A.*
+       SELECT /* FeatureRecommendMapper.xml, selectRecommendAdminList, SAC : 조준일 , 2014-02-03 */
+              A.TENANT_ID
+		    , A.MENU_ID
+		    , A.PROD_ID
+		    , A.TOTAL_COUNT
+		 FROM (SELECT A.TENANT_ID
+		            , B.MENU_ID
+		            , B.PROD_ID
 		            , COUNT(*) OVER () AS TOTAL_COUNT
-		            , ROWNUM AS RNUM
-		         FROM (SELECT A.TENANT_ID
-		                     , B.MENU_ID
-		                     , B.PROD_ID
-		                  FROM TB_DP_LIST A
-		                     , TB_DP_LIST_PROD B
-		                     , TB_DP_MENU_CATEGORY_PROD_MAPG C
-		                     , TB_DP_MENU_CATEGORY D
-		                     , TB_DP_PROD E
-		                     , TB_DP_PROD_DESC F
-		                     , TB_DP_SUB_CONTENTS G
-		                     , TB_DP_SPRT_DEVICE H
-		                     , TB_CM_DEVICE I
-		                     , TB_DP_TENANT_PROD J
-		                 WHERE A.LIST_ID = B.LIST_ID
-		                   AND A.TENANT_ID = B.TENANT_ID
-		                   AND B.LIST_ID = #{listId}
-		                   AND A.TENANT_ID = #{tenantId}
-		                   AND A.EXPO_YN = 'Y'
-		                   AND B.EXPO_YN = 'Y'
-		                   AND TO_CHAR(B.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
-		                   AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
-		                   AND B.PROD_ID = C.PROD_ID
-		                   AND B.MENU_ID = C.MENU_ID  /* MENU_ID 다른경우 있음(확인 필요) */
-		                   AND C.USE_YN = 'Y'
-		                   AND C.MENU_ID = D.MENU_ID
-		                   AND D.USE_YN = 'Y'
-		                   AND D.TOP_MENU_ID IN
-		                   <foreach collection="topMenuIdArr" item="topMenuId" index="index" open="(" close=")" separator=",">
-                            #{topMenuId}
-                           </foreach>
-		                   AND C.PROD_ID = E.PROD_ID
-		                   AND D.TOP_MENU_ID = E.TOP_MENU_ID
-		                   <if test='prodGradeCd != null and prodGradeCd != ""'>
-		                   AND E.PROD_GRD_CD IN
-		                      <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
-		                      #{prodGradeCd}          
-		                      </foreach> /* 상품등급코드 */
-		                   </if>
-		                   <if test='prodCharge == "Y"'>
-		                   AND E.PROD_CHRG_YN = 'Y'       /* 유료 */
-		                   </if>
-		                   <if test='prodCharge == "N"'>
-		                   AND E.PROD_CHRG_YN = 'N'       /* 무료 */
-		                   </if>  
-		                   AND E.PROD_ID = F.PROD_ID
-		                   AND F.LANG_CD = #{langCd}
-		                   AND F.PROD_ID = G.PROD_ID
-		                   AND G.PROD_ID = H.PROD_ID
-		                   AND G.SUB_CONTENTS_ID = H.SUB_CONTENTS_ID
-		                   AND H.DEVICE_MODEL_CD = I.DEVICE_MODEL_CD
-		                   AND H.DEVICE_MODEL_CD = #{deviceModelCd}
-		                   AND B.PROD_ID = J.PROD_ID
-		                   AND B.TENANT_ID = J.TENANT_ID
-		                   AND J.EXPO_YN = 'Y'
-		                   AND J.PROD_STATUS_CD = 'PD000403'
-		                 ORDER BY B.EXPO_ORD_ALWAYS_YN DESC, B.EXPO_ORD, B.EXPO_ORD_SUB
-		              ) A 
-		       ) B
+                    , ROW_NUMBER() OVER(ORDER BY B.EXPO_ORD_ALWAYS_YN DESC, B.EXPO_ORD, B.EXPO_ORD_SUB) AS RNUM
+		         FROM TB_DP_LIST A
+		            , TB_DP_LIST_PROD B
+		            , TB_DP_MENU_CATEGORY_PROD_MAPG C
+		            , TB_DP_MENU_CATEGORY D
+		            , TB_DP_PROD E
+		            , TB_DP_PROD_DESC F
+		            , TB_DP_SUB_CONTENTS G
+		            , TB_DP_SPRT_DEVICE H
+		            , TB_CM_DEVICE I
+		            , TB_DP_TENANT_PROD J
+		        WHERE A.LIST_ID = B.LIST_ID
+		          AND A.TENANT_ID = B.TENANT_ID
+		          AND B.LIST_ID = #{listId}
+		          AND A.TENANT_ID = #{tenantId}
+		          AND A.EXPO_YN = 'Y'
+		          AND B.EXPO_YN = 'Y'
+		          AND TO_CHAR(B.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+		          AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+		          AND B.PROD_ID = C.PROD_ID
+		          AND B.MENU_ID = C.MENU_ID  /* MENU_ID 다른경우 있음(확인 필요) */
+		          AND C.USE_YN = 'Y'
+		          AND C.MENU_ID = D.MENU_ID
+		          AND D.USE_YN = 'Y'
+		          AND D.TOP_MENU_ID IN
+		          <foreach collection="topMenuIdArr" item="topMenuId" index="index" open="(" close=")" separator=",">
+                   #{topMenuId}
+                  </foreach>
+		          AND C.PROD_ID = E.PROD_ID
+		          AND D.TOP_MENU_ID = E.TOP_MENU_ID
+		          <if test='prodGradeCd != null and prodGradeCd != ""'>
+		          AND E.PROD_GRD_CD IN
+		          <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+		           #{prodGradeCd}          
+		          </foreach> /* 상품등급코드 */
+		          </if>
+		          <if test='prodCharge == "Y"'>
+                  AND E.PROD_CHRG_YN = 'Y'       /* 유료 */
+                  </if>
+                  <if test='prodCharge == "N"'>
+                  AND E.PROD_CHRG_YN = 'N'       /* 무료 */
+                  </if>  
+                  AND E.PROD_ID = F.PROD_ID
+                  AND F.LANG_CD = #{langCd}
+                  AND F.PROD_ID = G.PROD_ID
+		          AND G.PROD_ID = H.PROD_ID
+		          AND G.SUB_CONTENTS_ID = H.SUB_CONTENTS_ID
+		          AND H.DEVICE_MODEL_CD = I.DEVICE_MODEL_CD
+		          AND H.DEVICE_MODEL_CD = #{deviceModelCd}
+		          AND B.PROD_ID = J.PROD_ID
+		          AND B.TENANT_ID = J.TENANT_ID
+		          AND J.EXPO_YN = 'Y'
+		          AND J.PROD_STATUS_CD = 'PD000403'
+		       ) A 
 		 WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 		 ORDER BY RNUM
     </select>    
