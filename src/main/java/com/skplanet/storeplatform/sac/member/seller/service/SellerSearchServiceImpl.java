@@ -66,6 +66,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.localsci.sci.service.SearchSellerKeyService;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
@@ -81,6 +82,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	@Autowired
 	private SellerSCI sellerSCI;
+
+	@Autowired
+	private SearchSellerKeyService searchSellerKeyService;
 
 	@Autowired
 	@Qualifier("sac")
@@ -158,9 +162,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			keySearch.setKeyString(req.getSellerId());
 			keySearch.setKeyType("SELLERMBR_ID");
 		} else {
-			DetailInformationReq sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", req,
-					DetailInformationReq.class);
-			keySearch.setKeyString(sellerDTO.getSellerKey());
+			keySearch.setKeyString(this.searchSellerKeyService.searchSellerKeyForAid(req.getAid()));
 			keySearch.setKeyType("INSD_SELLERMBR_NO");
 		}
 
