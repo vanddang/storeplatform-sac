@@ -272,7 +272,9 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				date = new Date();
 				date.setType("date/purchase");
 				date.setText(DateUtils.parseDate(prchsDt));
-				purchase.setDate(date);
+				List<Date> dateList = new ArrayList<Date>();
+				dateList.add(date);
+				purchase.setDateList(dateList);
 				product.setPurchase(purchase);
 
 			}
@@ -381,7 +383,9 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			date = new Date();
 			date.setType("date/purchase");
 			date.setText("20130722143732");
-			purchase.setDate(date);
+			List<Date> dateList = new ArrayList<Date>();
+			dateList.add(date);
+			purchase.setDateList(dateList);
 
 			product = new Product();
 			product.setIdentifierList(identifierList);
