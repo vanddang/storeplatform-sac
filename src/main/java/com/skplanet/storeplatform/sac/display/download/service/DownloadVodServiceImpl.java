@@ -226,12 +226,18 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					/*
 					 * 단말 정보 조회
 					 */
+					String deviceId = "";
+					String deviceIdType = "";
+
 					SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
-					request.setUserKey("US201402110557052730002230");
-					request.setDeviceKey("DE201402120409541480001552");
+					request.setUserKey(downloadVodSacReq.getUserKey());
+					request.setDeviceKey(downloadVodSacReq.getDeviceKey());
 					SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
-					String deviceId = result.getDeviceId(); // Device Id
-					String deviceIdType = this.commonService.getDeviceIdType(deviceId); // Device Id 유형
+
+					if (result != null) {
+						deviceId = result.getDeviceId(); // Device Id
+						deviceIdType = this.commonService.getDeviceIdType(deviceId); // Device Id 유형
+					}
 
 					metaInfo.setPurchaseId(prchsId);
 					metaInfo.setPurchaseDt(prchsDt);
