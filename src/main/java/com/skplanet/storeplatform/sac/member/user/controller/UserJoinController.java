@@ -121,7 +121,7 @@ public class UserJoinController {
 			if (StringUtils.equals(req.getDeviceId(), "")) {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 			} else if (StringUtils.equals(req.getDeviceIdType(), "")) {
-				throw new StorePlatformException("SAC_MEM_0001", "deviceType");
+				throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
 			} else if (StringUtils.equals(req.getDeviceTelecom(), "")) {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
 			} else if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
@@ -182,7 +182,7 @@ public class UserJoinController {
 			if (StringUtils.equals(req.getDeviceId(), "")) {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 			} else if (StringUtils.equals(req.getDeviceIdType(), "")) {
-				throw new StorePlatformException("SAC_MEM_0001", "deviceType");
+				throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
 			} else if (StringUtils.equals(req.getDeviceTelecom(), "")) {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
 			} else if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
