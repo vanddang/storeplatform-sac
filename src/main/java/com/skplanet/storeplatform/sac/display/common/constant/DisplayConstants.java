@@ -460,12 +460,16 @@ public class DisplayConstants {
 	 */
 	public static final String DP_SHOPPING_COUPON_CD = "DP004507";
 
-	/** 구매상품타입_보유상품. */
-	public static final String PRCHS_PROD_TYPE_OWN = "OR020201"; // 보유상품
-
-	// 구매유형코드: 구매 / 선물 - OR0017S / OR0017G 사용 결정 필요
+	/**
+	 * 구매
+	 */
+	public static final String PRCHS_PROD_HAVE_YES = "Y"; // 상품보유
+	public static final String PRCHS_PROD_HAVE_NO = "N"; // 상품 미보유
+	public static final String PRCHS_PROD_TYPE_UNIT = "OR020201"; // 단위상품
+	public static final String PRCHS_PROD_TYPE_FREEPASS = "OR020202"; // 권한상품
 	public static final String PRCHS_CASE_PURCHASE_CD = "OR0017S"; // 구매
 	public static final String PRCHS_CASE_GIFT_CD = "OR0017G"; // 선물
+	public static final String PRCHS_START_DATE = "19000101000000"; // 구매조회 시작일시
 	public static final String PRCHS_STATE_TYPE_EXPIRED = "expired"; // 구매상태(만료)
 
 	// 정액제 상품 자동결제 구분
