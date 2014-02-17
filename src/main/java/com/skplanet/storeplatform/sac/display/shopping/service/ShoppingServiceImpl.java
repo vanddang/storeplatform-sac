@@ -2158,24 +2158,26 @@ public class ShoppingServiceImpl implements ShoppingService {
 					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 					source.setUrl(shopping.getFilePos());
 					sourceList.add(source);
-
+					String detailImgCd = "";
 					// 이미지 정보 (상세 이미지 가져오기)
 					for (int qq = 0; qq < 2; qq++) {
 						if (qq == 0) {
-							reqMap.put("cutDetailImageCd", DisplayConstants.DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD);
+							detailImgCd = DisplayConstants.DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD;
 						} else {
-							reqMap.put("cutDetailImageCd", DisplayConstants.DP_SHOPPING_REPRESENT_CUT_DETAIL_IMAGE_CD);
+							detailImgCd = DisplayConstants.DP_SHOPPING_REPRESENT_CUT_DETAIL_IMAGE_CD;
 						}
+						reqMap.put("cutDetailImageCd", detailImgCd);
 						List<Shopping> resultImgDetailList = this.commonDAO.queryForList(
 								"Shopping.getShoppingImgDetailList", reqMap, Shopping.class);
 						for (int pp = 0; pp < resultImgDetailList.size(); pp++) {
 							source = new Source();
 							if (qq == 0) {
-								source.setType(DisplayConstants.DP_SOURCE_TYPE_CUT_DETAIL);
-							} else {
 								source.setType(DisplayConstants.DP_SOURCE_TYPE_DETAIL);
+							} else {
+								source.setExpoOrd(resultImgDetailList.get(pp).getExpoOrd());
+								source.setType(DisplayConstants.DP_SOURCE_TYPE_CUT_DETAIL);
 							}
-							source.setUrl(resultImgDetailList.get(i).getFilePos());
+							source.setUrl(resultImgDetailList.get(pp).getFilePos());
 							sourceList.add(source);
 						}
 					}
