@@ -232,7 +232,7 @@ public class DeviceUtil {
 		if (deviceInfo.getDeviceExtraInfoList() != null && deviceInfo.getDeviceExtraInfoList().size() > 0) {
 			userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 			for (DeviceExtraInfo deviceExtraInfo : deviceInfo.getDeviceExtraInfoList()) {
-				if (!StringUtil.equals(deviceExtraInfo.getExtraProfile(), "")) {
+				if (!StringUtil.equals(deviceExtraInfo.getExtraProfile(), "") && !StringUtil.equals(deviceExtraInfo.getExtraProfileValue(), "")) {
 					userMbrDeviceDetail = new UserMbrDeviceDetail();
 					userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
 					userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
