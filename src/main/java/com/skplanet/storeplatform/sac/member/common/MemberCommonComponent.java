@@ -510,6 +510,37 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
+	 * 이동통신사 코드 Converting.
+	 * </pre>
+	 * 
+	 * @param deviceTelecom
+	 *            이동통신사
+	 * @return String
+	 * @throws Exception
+	 *             Exception
+	 */
+	public String convertDeviceTelecomCode(String deviceTelecom) {
+		if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_SKT)) {
+			return MemberConstants.DEVICE_TELECOM_SKT;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_KT)) {
+			return MemberConstants.DEVICE_TELECOM_KT;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_LGT)) {
+			return MemberConstants.DEVICE_TELECOM_LGT;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_OMD)) {
+			return MemberConstants.DEVICE_TELECOM_OMD;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_NSH)) {
+			return MemberConstants.DEVICE_TELECOM_NSH;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_NON)) {
+			return MemberConstants.DEVICE_TELECOM_NON;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_IOS)) {
+			return MemberConstants.DEVICE_TELECOM_IOS;
+		} else {
+			throw new StorePlatformException("SAC_MEM_1103", deviceTelecom);
+		}
+	}
+
+	/**
+	 * <pre>
 	 * SC 공통 헤더 셋팅.
 	 * </pre>
 	 * 
