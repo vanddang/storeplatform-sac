@@ -274,7 +274,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		ListDeviceRes res = new ListDeviceRes();
 
-		if (req.getDeviceId() != null) {
+		if (req.getDeviceId() != null && !req.getDeviceId().equals("")) {
 			/* 단건 조회 처리 */
 			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userKey);
 			if (deviceInfo != null) {
@@ -286,7 +286,7 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 			return res;
-		} else if (req.getDeviceKey() != null) {
+		} else if (req.getDeviceKey() != null && !req.getDeviceKey().equals("")) {
 			/* 단건 조회 처리 */
 			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, req.getDeviceKey(), userKey);
 			if (deviceInfo != null) {
@@ -297,10 +297,10 @@ public class DeviceServiceImpl implements DeviceService {
 				res.setDeviceInfoList(deviceInfoList);
 			}
 			return res;
-		} else if (req.getUserId() != null) {
+		} else if (req.getUserId() != null && !req.getUserId().equals("")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 			key.setKeyString(req.getUserId());
-		} else if (req.getUserKey() != null) {
+		} else if (req.getUserKey() != null && !req.getUserKey().equals("")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
 			key.setKeyString(req.getUserKey());
 		}
