@@ -388,7 +388,6 @@ public class LoginServiceImpl implements LoginService {
 
 					/* 통합IDP 로그인 상태 정상처리 요청 */
 					SetLoginStatusEcReq setLoginStatusEcReq = new SetLoginStatusEcReq();
-					setLoginStatusEcReq.setKeyType(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_ID);
 					setLoginStatusEcReq.setKey(userId);
 					setLoginStatusEcReq.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
 					this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
@@ -396,7 +395,6 @@ public class LoginServiceImpl implements LoginService {
 
 				/* 인증요청 */
 				AuthForIdEcReq authForIdEcReq = new AuthForIdEcReq();
-				authForIdEcReq.setKeyType(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_ID);
 				authForIdEcReq.setKey(userId);
 				authForIdEcReq.setUserPasswd(userPw);
 				AuthForIdEcRes authForIdEcRes = this.imIdpSCI.authForId(authForIdEcReq);
