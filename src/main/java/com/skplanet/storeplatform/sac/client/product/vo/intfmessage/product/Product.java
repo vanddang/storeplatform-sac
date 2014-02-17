@@ -222,7 +222,20 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private Encryption dl;
 
-	/**
+    /**
+     * 판매상태.
+     */
+    private String salesStatus;
+
+    public String getSalesStatus() {
+        return salesStatus;
+    }
+
+    public void setSalesStatus(String salesStatus) {
+        this.salesStatus = salesStatus;
+    }
+
+    /**
 	 * @return Identifier
 	 */
 	public Identifier getIdentifier() {
