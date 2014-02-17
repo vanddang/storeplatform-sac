@@ -25,6 +25,9 @@ import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
 import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
@@ -35,6 +38,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
@@ -68,6 +72,12 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	@Autowired
 	private DownloadAES128Helper downloadAES128Helper;
 
+	@Autowired
+	private DeviceSCI deviceSCI;
+
+	@Autowired
+	private DisplayCommonService commonService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -82,7 +92,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
 		String sysDate = metaInfo.getSysDate();
-		String expireDate = metaInfo.getExpiredDate();
+		String reqExpireDate = metaInfo.getExpiredDate();
 		metaInfo = null;
 
 		DownloadEbookSacRes ebookRes = new DownloadEbookSacRes();
@@ -153,8 +163,9 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				historyListSacReq.setTenantId(downloadEbookReq.getTenantId());
 				historyListSacReq.setUserKey(downloadEbookReq.getUserKey());
 				historyListSacReq.setDeviceKey(downloadEbookReq.getDeviceKey());
-				historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
-				historyListSacReq.setStartDt("19000101000000");
+				historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+				historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+				historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 				historyListSacReq.setEndDt(sysDate);
 				historyListSacReq.setOffset(1);
 				historyListSacReq.setCount(1);
@@ -249,10 +260,27 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 				// 구매상태 만료 여부 확인
 				if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
-					metaInfo.setExpiredDate(expireDate);
+					String deviceId = null; // Device Id
+					String deviceIdType = null; // Device Id 유형
+
+					SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
+					request.setUserKey(downloadEbookReq.getUserKey());
+					request.setDeviceKey(downloadEbookReq.getDeviceKey());
+
+					// 기기정보 조회
+					SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
+
+					if (result != null) {
+						deviceId = result.getDeviceId();
+						deviceIdType = this.commonService.getDeviceIdType(deviceId);
+					}
+
+					metaInfo.setExpiredDate(reqExpireDate);
 					metaInfo.setUseExprDt(useExprDt);
 					metaInfo.setUserKey(userKey);
 					metaInfo.setDeviceKey(deviceKey);
+					metaInfo.setDeviceType(deviceIdType);
+					metaInfo.setDeviceSubKey(deviceId);
 
 					// 소장, 대여 구분(Store : 소장, Play : 대여)
 					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
@@ -263,7 +291,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
 					}
 
-					// 인터파크 DRM 타입
+					// 인터파크 DRM 번호
 					if (StringUtils.isNotEmpty(metaInfo.getBpJoinFileNo())) {
 						metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_EBOOK_TYPE);
 					} else {
@@ -285,7 +313,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
 					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
 					encryption.setToken(encryptString);
-					product.setEncryption(encryption);
+					product.setDl(encryption);
 				}
 			}
 
