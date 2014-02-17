@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 */
 public enum InterfaceStatus {
 
-	AVALIABLE("CM010601"), UNAVAILABLE("CM010602"), DEPRECATED("CM010603");
+	AVAILABLE("CM010601"), UNAVAILABLE("CM010602"), DEPRECATED("CM010603");
 
 	private final String code;
 

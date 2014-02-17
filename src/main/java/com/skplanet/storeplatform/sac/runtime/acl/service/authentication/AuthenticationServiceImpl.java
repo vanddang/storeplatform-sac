@@ -57,10 +57,9 @@ public class AuthenticationServiceImpl implements AuthenticateService {
 		// 2. TENANT 상태 체크
 		String tenantStatusCd = authKeyInfo.getTenantStatusCd();
 
-		if(!tenantStatusCd.equals(TenantStatus.AVALIABLE.getCode())) {
+		if(!tenantStatusCd.equals(TenantStatus.AVAILABLE.getCode())) {
 			throw new StorePlatformException("SAC_CMN_0031");
 		}
-
 
 		// 3. authTypeCd 값에 따라 인증 처리
 		//  KEY : AuthKey, Secret 값으로 MAC 인증

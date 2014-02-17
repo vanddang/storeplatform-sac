@@ -14,14 +14,14 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
 *
-* T_CN_INTERFACE 디비 맵핑용 Value Object
+* Tenant 상태
 *
 * Updated on : 2014. 2. 18.
 * Updated by : 임근대, SK플래닛.
 */
 public enum TenantStatus {
 
-	AVALIABLE("CM010601"), UNAVAILABLE("CM010602");
+	AVAILABLE("CM010601"), UNAVAILABLE("CM010602");
 
 	private final String code;
 
