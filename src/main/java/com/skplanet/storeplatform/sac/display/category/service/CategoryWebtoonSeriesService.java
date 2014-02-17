@@ -14,7 +14,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoon
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * 특정 상품 vod 조회 Service
+ * 웹툰 회차별 목록 조회.
  * 
  * Updated on : 2014. 2. 4. Updated by : 이승훈, 엔텔스.
  */
