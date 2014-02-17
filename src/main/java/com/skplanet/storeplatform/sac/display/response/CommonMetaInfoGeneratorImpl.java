@@ -96,6 +96,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		menu.setId(metaInfo.getMenuId());
 		menu.setName(metaInfo.getMenuNm());
+		menu.setDesc(metaInfo.getMenuDesc());
 		menuList.add(menu);
 
 		menu = new Menu();

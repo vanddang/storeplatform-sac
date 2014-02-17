@@ -172,6 +172,7 @@
                     AND LANG_CD = #{tenantHeader.langCd}
                     AND ROWNUM = 1) AS TOP_MENU_NM
               , LA.FILE_SIZE
+              , LA.PROD_DTL_DESC
           FROM (          
                             SELECT JA.*
                                   FROM (SELECT G.TENANT_ID
@@ -209,6 +210,7 @@
                                              , M.FILE_NM
                                              , M.FILE_SIZE
                                              , O.PROD_AMT
+                                             , F.PROD_DTL_DESC
                                           FROM  TB_DP_MENU_CATEGORY           A
                                               , TB_DP_MENU_CATEGORY_PROD_MAPG B
                                               , TB_DP_MENU_CATEGORY_DESC      C
@@ -403,6 +405,10 @@
                     THEN TB.PROD_DTL_DESC
                     ELSE TB.PROD_BASE_DESC
                END AS PROD_BASE_DESC
+             , CASE WHEN TB.TOP_MENU_ID = 'DP13' -- 이북은 상품상세설명 컬럼 위치가 다름
+                    THEN TB.PROD_BASE_DESC
+                    ELSE TB.PROD_DTL_DESC
+               END AS PROD_DTL_DESC
              , TB.PROD_GRD_CD
              , TB.ARTIST1_NM
              , TB.ARTIST2_NM
