@@ -26,11 +26,15 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.History;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -84,7 +88,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 		// String sPkgNms = ObjectUtils.toString(mapReq.get("PKG_NM_LIST"));
 		// String sPolicy = ObjectUtils.toString(mapReq.get("policy"));
 		// String sDigest = ObjectUtils.toString(mapReq.get("digest"));
-		String sArrPkgNm[] = StringUtils.split(req.getPackageInfo(), ";");
+		String sArrPkgNm[] = StringUtils.split(req.getPackageInfo(), "+");
 
 		/**************************************************************
 		 * Package 명으로 상품 조회
@@ -208,11 +212,17 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				// Response 정보 가공
 				for (Map<String, Object> updateTargetApp : listUpdate) {
 					Product product = new Product();
-
+					History history = new History();
 					String prchId = (String) updateTargetApp.get("PRCHS_ID");
+					List<Update> updateList = new ArrayList<Update>();
 					List<Identifier> identifierList = this.appGenerator.generateIdentifierList(
 							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, (String) updateTargetApp.get("PROD_ID"));
 					product.setIdentifierList(identifierList);
+
+					List<Menu> menuList = this.appGenerator.generateMenuList(
+							(String) updateTargetApp.get("TOP_MENU_ID"), (String) updateTargetApp.get("TOP_MENU_NM"),
+							(String) updateTargetApp.get("MENU_ID"), (String) updateTargetApp.get("MENU_NM"));
+					product.setMenuList(menuList);
 
 					Title title = new Title();
 					title.setText((String) updateTargetApp.get("PROD_NM"));
@@ -232,6 +242,11 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 							ObjectUtils.toString(updateTargetApp.get("PROD_VER")),
 							((BigDecimal) updateTargetApp.get("FILE_SIZE")).intValue(), null, null, null);
 
+					Update update = this.appGenerator.generateUpdate(
+							new Date(null, ObjectUtils.toString(updateTargetApp.get("UPD_DT"))), null);
+					updateList.add(update);
+					history.setUpdate(updateList);
+					app.setHistory(history);
 					product.setApp(app);
 					productList.add(product);
 				}

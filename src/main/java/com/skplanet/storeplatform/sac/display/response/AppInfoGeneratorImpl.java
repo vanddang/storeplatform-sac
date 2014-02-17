@@ -119,14 +119,14 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		Menu menu = new Menu();
 		List<Menu> menuList = new ArrayList<Menu>();
 
-		menu.setId(menuId);
-		menu.setName(menuNm);
-		menuList.add(menu);
-
-		menu = new Menu();
 		menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 		menu.setId(topMenuId);
 		menu.setName(topMenuNm);
+		menuList.add(menu);
+
+		menu = new Menu();
+		menu.setId(menuId);
+		menu.setName(menuNm);
 		menuList.add(menu);
 		return menuList;
 	}

@@ -89,7 +89,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		/**************************************************************
 		 * Package 명으로 상품 조회
 		 **************************************************************/
-		String sArrPkgNm[] = StringUtils.split(req.getPackageInfo(), ";");
+		String sArrPkgNm[] = StringUtils.split(req.getPackageInfo(), "+");
 		List<String> listPkgNm = new ArrayList<String>();
 		for (String s : sArrPkgNm) {
 			listPkgNm.add(StringUtils.split(s, "/")[0]);
