@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -79,7 +78,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
@@ -111,17 +109,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 	private UserSCI userSCI;
 
 	@Autowired
-	private IdpService idpService;
-
-	@Autowired
 	private MemberCommonComponent memberCommonComponent;
-
-	private IdpReceiverM idpReceiverM;
 
 	@Autowired
 	private ImIdpService imIdpService;
-
-	private ImIdpReceiverM imIdpReceiverM;
 
 	/**
 	 * 회원 가입 조회
@@ -464,34 +455,34 @@ public class UserSearchServiceImpl implements UserSearchService {
 		UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
 
 		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) { // IDP 회원
-			//			mapUrl.put("cmd", "findPasswd");
-			//            mapUrl.put("key_type", "3"); // 사용자 ID
-			//            mapUrl.put("key", sMemMbrId);
-			//            mapUrl.put("watermark_auth", "2");
+			// mapUrl.put("cmd", "findPasswd");
+			// mapUrl.put("key_type", "3"); // 사용자 ID
+			// mapUrl.put("key", sMemMbrId);
+			// mapUrl.put("watermark_auth", "2");
 		} else { // 통합 IDP 회원
 			// 통합ID회원 프로파일 조회
 			ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(info.getImSvcNo());
 
-			//			mapUrl.put("cmd", "TXResetUserPwdIDP");
-			//            mapUrl.put("operation_mode", StringUtils.defaultIfEmpty(Config.get("idp.im.operation_mode"), "real"));
-			//            mapUrl.put("key_type", "2");
-			//            mapUrl.put("key", sMemMbrId);
-			//            
-			//            mapUrl.put("lang_code", "KOR");
-			//            Date dtCur = new Date();
-			//            mapUrl.put("modify_req_date", new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(dtCur));
-			//            mapUrl.put("modify_req_time", new SimpleDateFormat("HHmmss", Locale.KOREA).format(dtCur));
+			// mapUrl.put("cmd", "TXResetUserPwdIDP");
+			// mapUrl.put("operation_mode", StringUtils.defaultIfEmpty(Config.get("idp.im.operation_mode"), "real"));
+			// mapUrl.put("key_type", "2");
+			// mapUrl.put("key", sMemMbrId);
+			//
+			// mapUrl.put("lang_code", "KOR");
+			// Date dtCur = new Date();
+			// mapUrl.put("modify_req_date", new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(dtCur));
+			// mapUrl.put("modify_req_time", new SimpleDateFormat("HHmmss", Locale.KOREA).format(dtCur));
 
 			if (profileInfo.getResponseBody().getIs_user_tn_auth().equals("Y")) { // 휴대폰 인증
-				//				mapUrl.put("user_tn", profileInfo.getResponseBody().getUser_tn());
-				//                mapUrl.put("user_tn_nation_cd", "82");
-				//                mapUrl.put("user_tn_type", "M");
-				//                mapUrl.put("is_user_tn_auth", "Y");
-				//                mapUrl.put("is_email_auth", "N");
+				// mapUrl.put("user_tn", profileInfo.getResponseBody().getUser_tn());
+				// mapUrl.put("user_tn_nation_cd", "82");
+				// mapUrl.put("user_tn_type", "M");
+				// mapUrl.put("is_user_tn_auth", "Y");
+				// mapUrl.put("is_email_auth", "N");
 			} else if (profileInfo.getResponseBody().getIs_email_auth().equals("Y")) { // 이메일 인증
-				//				mapUrl.put("is_email_auth", "Y");
-				//                mapUrl.put("user_email", profileInfo.getResponseBody().getUser_email());
-				//                mapUrl.put("is_user_tn_auth", "N");
+				// mapUrl.put("is_email_auth", "Y");
+				// mapUrl.put("user_email", profileInfo.getResponseBody().getUser_email());
+				// mapUrl.put("is_user_tn_auth", "N");
 			}
 		}
 
