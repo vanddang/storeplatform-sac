@@ -67,10 +67,10 @@ public class ModifyAccountInformationTest {
 	private static String xStoreAuthInfo;
 
 	/** [REQUEST]. */
-	public static ModifyAccountInformationSacReq req;
+	private static ModifyAccountInformationSacReq req;
 
 	/** [RESPONSE]. */
-	public static ModifyAccountInformationSacRes res;
+	private static ModifyAccountInformationSacRes res;
 
 	/**
 	 * <pre>

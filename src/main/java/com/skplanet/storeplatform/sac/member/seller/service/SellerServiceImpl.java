@@ -34,6 +34,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerUpgrade;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateRealNameSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateRealNameSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerRequest;
@@ -58,8 +60,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
@@ -548,13 +554,22 @@ public class SellerServiceImpl implements SellerService {
 		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
 				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
 
+		// 메인, 서브 상태
+		if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, req.getSellerMainStatus())
+				|| !StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, req.getSellerSubStatus())) {
+
+		}
+
+		// 무료, BP
 		if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY, searchSellerResponse.getSellerMbr()
 				.getSellerCategory())
 				|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_BP, searchSellerResponse
 						.getSellerMbr().getSellerCategory())) {
-			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-					searchSellerResponse.getSellerMbr().getSellerSubStatus());
+			throw new StorePlatformException("SAC_MEM_2004", searchSellerResponse.getSellerMbr().getSellerCategory(),
+					searchSellerResponse.getSellerMbr().getSellerClass());
 		}
+
+		// SAC_MEM_2004
 
 		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
 
@@ -637,6 +652,82 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
+	 * 2.2.13. 판매자회원 이메일 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ModifyEmailSacRes
+	 */
+	@Override
+	public ModifyEmailSacRes modifyEmail(SacRequestHeader header, ModifyEmailSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.modifyEmail() [START] ############");
+		// SC 공통 헤더 생성
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+		// SessionKey 유효성 체크
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+
+		// 수정 가능 회원 Check
+		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
+				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
+
+		// 이미 사용중인 이메일
+		if (StringUtils.equals(req.getNewEmailAddress(), searchSellerResponse.getSellerMbr().getSellerEmail())) {
+			throw new StorePlatformException("SAC_MEM_2012", req.getNewEmailAddress());
+		}
+
+		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
+
+		SellerMbr sellerMbr = new SellerMbr();
+		sellerMbr.setSellerKey(req.getSellerKey());
+		sellerMbr.setSellerEmail(req.getNewEmailAddress());
+		updateSellerRequest.setSellerMbr(sellerMbr);
+		updateSellerRequest.setCommonRequest(commonRequest);
+		/** 2-5. SC회원 - 기본정보변경 Call. */
+		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
+		ModifyEmailSacRes res = new ModifyEmailSacRes();
+		res.setSellerKey(updateSellerResponse.getSellerKey());
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.14. 판매자회원 Password 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ModifyPasswordSacRes
+	 */
+	@Override
+	public ModifyPasswordSacRes modifyPassword(SacRequestHeader header, ModifyPasswordSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.modifyPassword() [START] ############");
+		// SC 공통 헤더 생성
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+		// SessionKey 유효성 체크
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+
+		UpdatePasswordSellerRequest updatePasswordSellerRequest = new UpdatePasswordSellerRequest();
+
+		MbrPwd mbrPwd = new MbrPwd();
+		mbrPwd.setOldPW(req.getOldPW());
+		mbrPwd.setMemberPW(req.getNewPW());
+		updatePasswordSellerRequest.setMbrPwd(mbrPwd);
+
+		updatePasswordSellerRequest.setCommonRequest(commonRequest);
+
+		UpdatePasswordSellerResponse updatePasswordSellerResponse = this.sellerSCI
+				.updatePasswordSeller(updatePasswordSellerRequest);
+
+		ModifyPasswordSacRes res = new ModifyPasswordSacRes();
+
+		res.setSellerKey(updatePasswordSellerResponse.getSellerKey());
+		LOGGER.debug("############ SellerServiceImpl.modifyPassword() [END] ############");
+		return res;
+	}
+
+	/**
+	 * <pre>
 	 * 2.2.15. 판매자 회원 계정 승인.
 	 * </pre>
 	 * 
@@ -709,14 +800,13 @@ public class SellerServiceImpl implements SellerService {
 		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
 				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
 
+		// 법인 / BP
 		if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS, searchSellerResponse
 				.getSellerMbr().getSellerClass())
-				|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PAY, searchSellerResponse
-						.getSellerMbr().getSellerCategory())
 				|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_BP, searchSellerResponse
 						.getSellerMbr().getSellerCategory())) {
-			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-					searchSellerResponse.getSellerMbr().getSellerSubStatus());
+			throw new StorePlatformException("SAC_MEM_2004", searchSellerResponse.getSellerMbr().getSellerCategory(),
+					searchSellerResponse.getSellerMbr().getSellerClass());
 		}
 
 		UpgradeSellerRequest upgradeSellerRequest = new UpgradeSellerRequest();
@@ -880,6 +970,8 @@ public class SellerServiceImpl implements SellerService {
 	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, ModifyRealNameSacReq req) {
 		LOGGER.debug("############ SellerServiceImpl.modifyRealName() [START] ############");
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+		// SessionKey 유효성 체크
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
 
 		UpdateRealNameSellerRequest updateRealNameSellerRequest = new UpdateRealNameSellerRequest();
 		updateRealNameSellerRequest.setIsOwn(req.getIsOwn());
@@ -906,18 +998,17 @@ public class SellerServiceImpl implements SellerService {
 		} else if (StringUtils.equals(MemberConstants.AUTH_TYPE_PARENT, req.getIsOwn())) {
 			// 법정 대리인 정보
 			MbrLglAgent mbrLglAgent = new MbrLglAgent();
-			mbrLglAgent.setMemberKey(req.getSellerKey());
 			mbrLglAgent.setParentBirthDay(req.getParentBirthDay());
-			mbrLglAgent.setParentCI(req.getSellerCI());
-			mbrLglAgent.setParentDate(req.getParentEmail());
+			mbrLglAgent.setParentDate(req.getParentDate());
 			mbrLglAgent.setParentEmail(req.getParentEmail());
+			mbrLglAgent.setParentType(req.getParentType());
+			mbrLglAgent.setParentCI(req.getSellerCI());
 			mbrLglAgent.setParentMDN(req.getSellerPhone());
 			mbrLglAgent.setParentName(req.getSellerName());
 			mbrLglAgent.setParentRealNameDate(req.getRealNameDate());
 			mbrLglAgent.setParentRealNameMethod(req.getRealNameMethod());
 			mbrLglAgent.setParentRealNameSite(commonRequest.getSystemID());
 			mbrLglAgent.setParentTelecom(req.getSellerTelecom());
-			mbrLglAgent.setParentType(req.getParentType());
 			updateRealNameSellerRequest.setMbrLglAgent(mbrLglAgent);
 		}
 

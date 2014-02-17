@@ -17,8 +17,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
@@ -47,6 +51,12 @@ public interface SellerService {
 	/** 2.2.12. 판매자 회원 정산정보 수정 */
 	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
 			ModifyAccountInformationSacReq req);
+
+	/** 2.2.13. 판매자회원 이메일 수정. */
+	public ModifyEmailSacRes modifyEmail(SacRequestHeader header, ModifyEmailSacReq req);
+
+	/** 2.2.14. 판매자회원 Password 수정. */
+	public ModifyPasswordSacRes modifyPassword(SacRequestHeader header, ModifyPasswordSacReq req);
 
 	/** 2.2.15. 판매자 회원 계정 승인. */
 	public ConfirmRes confirm(SacRequestHeader header, ConfirmReq req);

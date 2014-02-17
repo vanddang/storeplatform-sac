@@ -30,8 +30,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
@@ -130,6 +134,38 @@ public class SellerController {
 	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
 			@RequestBody @Validated ModifyAccountInformationSacReq req) {
 		return this.sellerService.modifyAccountInformation(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.13. 판매자회원 이메일 수정.
+	 * TODO 개발 작업 : 추후 URL 삭제 => /dev
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ModifyEmailSacRes
+	 */
+	@RequestMapping(value = "/dev/modifyEmail/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyEmailSacRes modifyEmail(SacRequestHeader header, @RequestBody @Validated ModifyEmailSacReq req) {
+		return this.sellerService.modifyEmail(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.14. 판매자회원 Password 수정.
+	 * TODO 개발 작업 : 추후 URL 삭제 => /dev
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ModifyPasswordSacRes
+	 */
+	@RequestMapping(value = "/dev/modifyPassword/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyPasswordSacRes modifyPassword(SacRequestHeader header, @RequestBody @Validated ModifyPasswordSacReq req) {
+		return this.sellerService.modifyPassword(header, req);
 	}
 
 	/**
