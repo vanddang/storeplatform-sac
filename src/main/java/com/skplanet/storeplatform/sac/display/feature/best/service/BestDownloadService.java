@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
  * 
- * Updated on : 2013. 12. 18. Updated by : 이석희, SK 플래닛.
+ * Updated on : 2014. 2. 11. Updated by : 유시혁.
  */
 
 public interface BestDownloadService {
@@ -19,9 +19,9 @@ public interface BestDownloadService {
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param bestDownloadReq
+	 * @param BestDownloadSacReq
 	 *            bestDownloadReq
-	 * @return BestDownloadRes
+	 * @return BestDownloadSacRes
 	 */
 	BestDownloadSacRes searchBestDownloadList(SacRequestHeader requestheader, BestDownloadSacReq bestDownloadReq);
 }

@@ -78,14 +78,14 @@ public class BestController {
 	/**
 	 * 
 	 * <pre>
-	 * BEST 컨텐츠 리스트 조회.
+	 * BEST 다운로드 리스트 조회.
 	 * </pre>
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param bestDownloadReq
+	 * @param BestDownloadSacReq
 	 *            bestDownloadReq
-	 * @return bestDownloadReq
+	 * @return BestDownloadSacRes
 	 */
 	@RequestMapping(value = "/display/feature/best/download/list/v1", method = RequestMethod.GET)
 	@ResponseBody
