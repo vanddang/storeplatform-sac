@@ -33,7 +33,7 @@ public class Shopping extends CommonInfo {
 	private String expoOrd;
 
 	private String brandId;
-	private String brandName;
+	private String brandNm;
 	private String menuId;
 	private String menuName;
 	private String upMenuId;
@@ -204,12 +204,12 @@ public class Shopping extends CommonInfo {
 		this.brandId = brandId;
 	}
 
-	public String getBrandName() {
-		return this.brandName;
+	public String getBrandNm() {
+		return this.brandNm;
 	}
 
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+	public void setBrandNm(String brandNm) {
+		this.brandNm = brandNm;
 	}
 
 	public String getMenuId() {

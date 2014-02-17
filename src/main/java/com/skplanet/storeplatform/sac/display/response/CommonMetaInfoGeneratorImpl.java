@@ -97,6 +97,9 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		menu.setId(metaInfo.getMenuId());
 		menu.setName(metaInfo.getMenuNm());
 		menu.setDesc(metaInfo.getMenuDesc());
+		if (!StringUtils.isEmpty(metaInfo.getSpecialSale())) { // 특가 상품일 경우
+			menu.setType(metaInfo.getSpecialSale());
+		}
 		menuList.add(menu);
 
 		menu = new Menu();

@@ -448,7 +448,8 @@
                    ,'specialSale' AS specialSale
    	               ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
 		                             ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY ) ) THEN 'Y' ELSE 'N'
-		               END ) AS soldOut                   
+		               END ) AS soldOut     
+		           ,CONTENTS_TYPE_CD              
              FROM (
                   SELECT  * 
                    FROM (
@@ -495,7 +496,7 @@
 			                   ,N.SPRC_APPLY_END_DT
 			                   ,N.EXPO_ORD   
 			                   ,O.PROD_NM 
-			                                             
+			                   ,J.CONTENTS_TYPE_CD                            
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -757,7 +758,7 @@
              FROM(
                 SELECT 
                            BRAND_ID AS brandId
-                         , BRAND_NM AS brandName
+                         , BRAND_NM 
                          , MENU_ID AS menuId
                           <if test='menuId == null and brandId == null'> 
                          , '쇼핑 HOT' AS menuName
@@ -1396,7 +1397,7 @@
                         ,H.PART_PROD_ID                          
                         ,C.CATALOG_DESC
                         ,A.BRAND_ID  
-                        ,A.BRAND_NM as brandName 
+                        ,A.BRAND_NM  
                         ,D.MENU_ID as menuId  
                         ,F.MENU_NM as menuName
                         ,J.TOP_MENU_ID as upMenuId

@@ -778,14 +778,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 				shopping = resultList.get(i);
 				product = new Product();
 				// 특가 상품 정보 (상품ID)
-				product.setIdentifierList(this.shoppingGenerator.generateSpecialIdentifier(shopping));
-
+				product.setIdentifierList(this.commonGenerator.generateIdentifierList(shopping));
 				// Title 생성
 				Title title = this.commonGenerator.generateTitle(shopping);
 				// Price 생성
 				Price price = this.shoppingGenerator.generatePrice(shopping);
 				// MenuList 생성
-				List<Menu> menuList = this.shoppingGenerator.generateSpecialMenuList(shopping);
+				List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
 				// SourceList 생성
 				List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
 				// Accrual 생성
