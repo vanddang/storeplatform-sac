@@ -42,7 +42,6 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 	/**
 	 * 사용후기 번호.
 	 */
-	@NotBlank
 	private String notiSeq;
 	/**
 	 * 채널 ID.

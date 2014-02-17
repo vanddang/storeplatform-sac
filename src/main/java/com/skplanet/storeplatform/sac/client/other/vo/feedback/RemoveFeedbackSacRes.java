@@ -24,9 +24,29 @@ public class RemoveFeedbackSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 상품 ID.
+	 */
+	private String prodId;
+
+	/**
 	 * 사용후기 번호.
 	 */
 	private String notiSeq;
+
+	/**
+	 * @return String
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            prodId
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
+	}
 
 	/**
 	 * @return String
