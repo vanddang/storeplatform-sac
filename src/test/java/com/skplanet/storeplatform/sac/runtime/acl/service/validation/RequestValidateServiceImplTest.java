@@ -15,6 +15,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessSe
 import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.InterfaceStatus;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RequestValidateServiceImplTest {
@@ -79,7 +80,7 @@ public class RequestValidateServiceImplTest {
 		Interface obj = new Interface();
 		obj.setInterfaceId(id);
 		obj.setUrl("/member/user/createByMdn/v1");
-		obj.setStatusCd("CM010601");
+		obj.setStatus(InterfaceStatus.AVALIABLE);
 
 		when(this.dbAccessMock.selectInterfaceById(id)).thenReturn(obj);
 
@@ -140,7 +141,7 @@ public class RequestValidateServiceImplTest {
 		Interface obj = new Interface();
 		obj.setInterfaceId(id);
 		obj.setUrl("/member/user/createByMdn/v1");
-		obj.setStatusCd("CM010602");
+		obj.setStatus(InterfaceStatus.UNAVAILABLE);
 
 		when(this.dbAccessMock.selectInterfaceById(id)).thenReturn(obj);
 

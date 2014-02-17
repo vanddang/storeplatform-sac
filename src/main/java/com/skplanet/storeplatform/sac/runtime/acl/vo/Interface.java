@@ -24,7 +24,7 @@ public class Interface extends CommonInfo {
 
 	private String interfaceId;
 	private String url;
-	private String statusCd;
+	private InterfaceStatus status;
 
 	public Interface() {
 	}
@@ -45,11 +45,11 @@ public class Interface extends CommonInfo {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public String getStatusCd() {
-		return this.statusCd;
+	public InterfaceStatus getStatus() {
+		return this.status;
 	}
-	public void setStatusCd(String statusCd) {
-		this.statusCd = statusCd;
+	public void setStatus(InterfaceStatus status) {
+		this.status = status;
 	}
 
 }

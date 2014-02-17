@@ -250,4 +250,9 @@
 		<typeAlias alias="dpTenantProductPriceVO"   type="com.skplanet.icms.refactoring.deploy.DPTenantProductPriceVO" />
 		<typeAlias alias="ProductVo" 				type="com.skplanet.storeplatform.sac.display.product.vo.ProductVo"/>        
     </typeAliases>
+    
+    <typeHandlers>
+        <typeHandler javaType="com.skplanet.storeplatform.sac.runtime.acl.vo.InterfaceStatus" 
+                handler="com.skplanet.storeplatform.sac.runtime.acl.vo.InterfaceStatusTypeHandler" /> 
+    </typeHandlers>
 </configuration>

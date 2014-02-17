@@ -75,7 +75,7 @@ public class RequestValidateServiceImpl implements RequestValidateService {
 			throw new StorePlatformException("SAC_CMN_0004");
 		}
 
-		if (InterfaceStatus.fromCode(intf.getStatusCd()) != InterfaceStatus.AVALIABLE) {
+		if (intf.getStatus() != InterfaceStatus.AVALIABLE) {
 			throw new StorePlatformException("SAC_CMN_0005");
 		}
 

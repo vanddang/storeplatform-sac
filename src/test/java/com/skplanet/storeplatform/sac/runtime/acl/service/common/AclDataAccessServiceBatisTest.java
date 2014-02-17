@@ -44,6 +44,7 @@ public class AclDataAccessServiceBatisTest {
 	public void test() {
 		String interfaceId = "I03000001";
 		Interface intf = this.service.selectInterfaceById(interfaceId);
+		System.out.println("# intf : " + intf);
 		assertEquals("I03000001", intf.getInterfaceId());
 		assertTrue(StringUtils.isNotBlank(intf.getUrl()));
 	}
