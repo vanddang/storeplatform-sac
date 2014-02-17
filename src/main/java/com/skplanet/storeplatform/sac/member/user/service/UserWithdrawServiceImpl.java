@@ -15,7 +15,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
@@ -71,19 +70,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	private IdpService idpService; // IDP 연동 클래스
 
 	@Autowired
-	private ImIdpService imIdpService; // 통합 IDP 연동 클래스
-
-	@Autowired
-	private IdpRepository idpRepository;
-
-	@Autowired
 	private UapsSCI uapsSCI;
 
 	@Autowired
 	private MemberCommonComponent mcc;
-
-	@Value("#{propertiesForSac['idp.im.request.operation']}")
-	public String IDP_OPERATION_MODE;
 
 	@Autowired
 	private IdpSCI idpSCI;

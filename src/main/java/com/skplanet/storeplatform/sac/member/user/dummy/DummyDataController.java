@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
 /**
@@ -539,21 +538,21 @@ public class DummyDataController {
 	 * 
 	 * @return SearchPasswordRes
 	 */
-	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public SearchPasswordSacRes searchPassword() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.8. Password 찾기에 대한 기능을 제공한다. #####");
-		LOGGER.info("####################################################");
-
-		SearchPasswordSacRes res = new SearchPasswordSacRes();
-		res.setUserPw("");
-		res.setSendMean("01");
-		res.setSendInfo("seoguman@nate.com");
-
-		return res;
-	}
+	//	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
+	//	@ResponseBody
+	//	public SearchPasswordSacRes searchPassword() {
+	//
+	//		LOGGER.info("####################################################");
+	//		LOGGER.info("##### 5.1.8. Password 찾기에 대한 기능을 제공한다. #####");
+	//		LOGGER.info("####################################################");
+	//
+	//		SearchPasswordSacRes res = new SearchPasswordSacRes();
+	//		res.setUserPw("");
+	//		res.setSendMean("01");
+	//		res.setSendInfo("seoguman@nate.com");
+	//
+	//		return res;
+	//	}
 
 	/**
 	 * <pre>

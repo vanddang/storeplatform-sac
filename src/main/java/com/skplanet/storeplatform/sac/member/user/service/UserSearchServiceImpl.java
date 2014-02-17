@@ -9,9 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
@@ -21,7 +24,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
+import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.FindPasswdEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.FindPasswdEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -108,10 +119,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 	private UserSCI userSCI;
 
 	@Autowired
-	private MemberCommonComponent memberCommonComponent;
+	private IdpSCI idpSCI;
 
 	@Autowired
-	private ImIdpService imIdpService;
+	private ImIdpSCI imIdpSCI;
+
+	@Autowired
+	private MemberCommonComponent memberCommonComponent;
 
 	/**
 	 * 회원 가입 조회
@@ -453,39 +467,75 @@ public class UserSearchServiceImpl implements UserSearchService {
 		/* 회원 정보 조회 */
 		UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
 
-		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) { // IDP 회원
-			// mapUrl.put("cmd", "findPasswd");
-			// mapUrl.put("key_type", "3"); // 사용자 ID
-			// mapUrl.put("key", sMemMbrId);
-			// mapUrl.put("watermark_auth", "2");
-		} else { // 통합 IDP 회원
-			// 통합ID회원 프로파일 조회
-			ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(info.getImSvcNo());
+		SearchPasswordSacRes res = new SearchPasswordSacRes();
+		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
+			// IDP 회원
+			FindPasswdEcReq ecReqFindpass = new FindPasswdEcReq();
+			ecReqFindpass.setKeyType("3");
+			ecReqFindpass.setKey(info.getUserId());
+			ecReqFindpass.setWatermarkAuth("2");
 
-			// mapUrl.put("cmd", "TXResetUserPwdIDP");
-			// mapUrl.put("operation_mode", StringUtils.defaultIfEmpty(Config.get("idp.im.operation_mode"), "real"));
-			// mapUrl.put("key_type", "2");
-			// mapUrl.put("key", sMemMbrId);
-			//
-			// mapUrl.put("lang_code", "KOR");
-			// Date dtCur = new Date();
-			// mapUrl.put("modify_req_date", new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(dtCur));
-			// mapUrl.put("modify_req_time", new SimpleDateFormat("HHmmss", Locale.KOREA).format(dtCur));
+			FindPasswdEcRes ecResFindpass = this.idpSCI.findPasswd(ecReqFindpass);
 
-			if (profileInfo.getResponseBody().getIs_user_tn_auth().equals("Y")) { // 휴대폰 인증
-				// mapUrl.put("user_tn", profileInfo.getResponseBody().getUser_tn());
-				// mapUrl.put("user_tn_nation_cd", "82");
-				// mapUrl.put("user_tn_type", "M");
-				// mapUrl.put("is_user_tn_auth", "Y");
-				// mapUrl.put("is_email_auth", "N");
-			} else if (profileInfo.getResponseBody().getIs_email_auth().equals("Y")) { // 이메일 인증
-				// mapUrl.put("is_email_auth", "Y");
-				// mapUrl.put("user_email", profileInfo.getResponseBody().getUser_email());
-				// mapUrl.put("is_user_tn_auth", "N");
+			logger.info("## IDP Request FindPasswd : {}", ecReqFindpass.toString());
+			logger.info("## IDP Response FindPasswd : {}", ecResFindpass.getCommonRes().getResultText());
+
+			res.setUserPw(ecResFindpass.getTempPasswd());
+
+			if (!req.getUserEmail().equals("")) {
+				res.setSendInfo(req.getUserEmail());
+				res.setSendMean("01");
+			} else if (!req.getUserPhone().equals("")) {
+				res.setSendInfo(req.getUserPhone());
+				res.setSendMean("02");
+			} else if (req.getUserEmail().equals("") && req.getUserPhone().equals("")) {
+				throw new StorePlatformException("SAC_MEM_0001", "userEmail or userPhone");
 			}
+
+		} else {
+			// 통합ID회원
+			UserInfoIdpSearchServerEcReq ecReqUserInfo = new UserInfoIdpSearchServerEcReq();
+			ecReqUserInfo.setKey(info.getImSvcNo()); // 통합 서비스 관리번호
+			ecReqUserInfo.setKeyType("1");
+			UserInfoIdpSearchServerEcRes ecResUserInfo = this.imIdpSCI.userInfoIdpSearchServer(ecReqUserInfo);
+
+			logger.info("## ImIDP Request UserSearch : {}", ecReqUserInfo.toString());
+			logger.info("## ImIDP Response UserSearch{}", ecResUserInfo.toString());
+
+			// 통합ID회원 패스워드 리셋
+			ResetUserPwdIdpEcReq ecReqResetUserPwd = new ResetUserPwdIdpEcReq();
+			Date dtCur = new Date();
+			ecReqResetUserPwd.setKeyType("1");
+			ecReqResetUserPwd.setKey(info.getImSvcNo());
+			ecReqResetUserPwd.setLangCode("KOR");
+			ecReqResetUserPwd.setModifyReqDate(new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(dtCur));
+			ecReqResetUserPwd.setModifyReqTime(new SimpleDateFormat("HHmmss", Locale.KOREA).format(dtCur));
+
+			if (ecResUserInfo.getIsUserTnAuth().equals("Y")) {
+				// 휴대폰 인증
+				ecReqResetUserPwd.setUserTn(ecResUserInfo.getUserTn());
+				ecReqResetUserPwd.setUserTnNationCd("82");
+				ecReqResetUserPwd.setUserTnType("M");
+				ecReqResetUserPwd.setIsUserTnAuth("Y");
+				ecReqResetUserPwd.setIsEmailAuth("N");
+			} else if (ecResUserInfo.getIsEmailAuth().equals("Y")) {
+				// 이메일 인증
+				ecReqResetUserPwd.setIsEmailAuth("Y");
+				ecReqResetUserPwd.setUserEmail(ecResUserInfo.getUserEmail());
+				ecReqResetUserPwd.setIsUserTnAuth("N");
+			}
+
+			logger.info("## ImIDP Request ResetUserPWD : {}", ecReqResetUserPwd.toString());
+
+			ResetUserPwdIdpEcRes ecResResetUserPwd = this.imIdpSCI.resetUserPwdIdp(ecReqResetUserPwd);
+
+			logger.info("## ImIDP Response ResetUserPWD : {}", ecResResetUserPwd.getCommonRes().getResultText());
+
+			res.setSendInfo("");
+			res.setUserPw("");
+			res.setSendMean("03");
 		}
 
-		SearchPasswordSacRes res = new SearchPasswordSacRes();
 		logger.info("SearchIdSacRes : ", res.toString());
 
 		return res;

@@ -201,7 +201,7 @@ public class UserSearchController {
 		return res;
 	}
 
-	//	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchPasswordSacRes searchId(SacRequestHeader sacHeader, @RequestBody SearchPasswordSacReq req) {
 		LOGGER.info("####################################################");
@@ -214,9 +214,13 @@ public class UserSearchController {
 		String userEmail = StringUtil.nvl(req.getUserEmail(), "");
 		String userPhone = StringUtil.nvl(req.getUserPhone(), "");
 
-		if (userId.equals("") || userEmail.equals("") || userPhone.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "userId, userEmail, userPhone");
+		if (userId.equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userId");
 		}
+
+		req.setUserId(userId);
+		req.setUserEmail(userEmail);
+		req.setUserPhone(userPhone);
 
 		SearchPasswordSacRes res = this.svc.searchPassword(sacHeader, req);
 
