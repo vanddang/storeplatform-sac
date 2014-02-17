@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +26,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 /**
- * 판매자 서브계정 등록/수정
+ * 판매자 서브계정 수정
  * 
  * Updated on : 2014. 1. 20. Updated by : 한서구, 부르칸.
  */
@@ -42,6 +43,12 @@ public class ModifySubsellerTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	public static CreateSubsellerReq createSubsellerReq;
+
+	/** [RESPONSE]. */
+	public static CreateSubsellerRes createSubsellerRes;
+
 	/**
 	 * 
 	 * <pre>
@@ -51,6 +58,48 @@ public class ModifySubsellerTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+		createSubsellerReq = new CreateSubsellerReq();
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 서브계정 등록.
+	 * </pre>
+	 */
+	@Test
+	public void createSubseller() {
+
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/createSubseller/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						// 필수
+						createSubsellerReq.setSellerKey("IF1023501184720130823173955");
+						createSubsellerReq.setSubSellerID("011ZXCsss");
+						// createSubsellerReq.setIsNew("Y");
+
+						createSubsellerReq.setSubSellerMemo("test2");
+						createSubsellerReq.setSubSellerEmail("omc97asefd@hanmail.net");
+
+						// 새로 추가됨
+						// createSubsellerReq.setSubSellerKey("SS201402061427346800000640");
+						createSubsellerReq.setMemberPW("1234567999");
+						// createSubsellerReq.setOldPW("1234567999");
+
+						LOGGER.debug("request param : {}", createSubsellerReq.toString());
+						return createSubsellerReq;
+					}
+				}).success(CreateSubsellerRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						createSubsellerRes = (CreateSubsellerRes) result;
+						// assertThat(res.getSubSellerKey(), notNullValue());
+						LOGGER.debug("response param : {}", createSubsellerRes.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
 	}
 
 	/**
@@ -58,8 +107,8 @@ public class ModifySubsellerTest {
 	 * 판매자 서브계정 수정.
 	 * </pre>
 	 */
-	@Test
-	public void modifySubseller() {
+	@After
+	public void after() {
 
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/modifySubseller/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
@@ -69,14 +118,14 @@ public class ModifySubsellerTest {
 
 						// 필수
 						req.setSellerKey("IF1023501184720130823173955");
-						req.setSubSellerID("01w22st21121");
+						req.setSubSellerID("011ZXCsss");
 						// req.setIsNew("N");
 
 						req.setSubSellerMemo("test2");
 						req.setSubSellerEmail("omc97@hanmail.net");
 
 						// 새로 추가됨
-						req.setSubSellerKey("SS201402131048341210000772");
+						req.setSubSellerKey(createSubsellerRes.getSubSellerKey());
 						req.setMemberPW("1234567999");
 						req.setOldPW("1234567999");
 
