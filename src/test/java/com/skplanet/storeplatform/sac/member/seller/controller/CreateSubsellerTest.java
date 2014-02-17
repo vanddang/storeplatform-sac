@@ -1,5 +1,12 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +29,12 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 /**
- * 판매자 서브계정 등록/수정
+ * 판매자 서브계정 등록
  * 
  * Updated on : 2014. 1. 20. Updated by : 한서구, 부르칸.
  */
@@ -42,6 +51,12 @@ public class CreateSubsellerTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	public static CreateSubsellerReq createSubsellerReq;
+
+	/** [RESPONSE]. */
+	public static CreateSubsellerRes createSubsellerRes;
+
 	/**
 	 * 
 	 * <pre>
@@ -51,6 +66,8 @@ public class CreateSubsellerTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+		createSubsellerReq = new CreateSubsellerReq();
 	}
 
 	/**
@@ -65,32 +82,64 @@ public class CreateSubsellerTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						CreateSubsellerReq req = new CreateSubsellerReq();
 
 						// 필수
-						req.setSellerKey("IF1023501184720130823173955");
-						req.setSubSellerID("011");
-						// req.setIsNew("Y");
+						createSubsellerReq.setSellerKey("IF1023501184720130823173955");
+						createSubsellerReq.setSubSellerID("011ZXC");
+						// createSubsellerReq.setIsNew("Y");
 
-						req.setSubSellerMemo("test2");
-						req.setSubSellerEmail("omc97asefd@hanmail.net");
+						createSubsellerReq.setSubSellerMemo("test2");
+						createSubsellerReq.setSubSellerEmail("omc97asefd@hanmail.net");
 
 						// 새로 추가됨
-						// req.setSubSellerKey("SS201402061427346800000640");
-						req.setMemberPW("1234567999");
-						// req.setOldPW("1234567999");
+						// createSubsellerReq.setSubSellerKey("SS201402061427346800000640");
+						createSubsellerReq.setMemberPW("1234567999");
+						// createSubsellerReq.setOldPW("1234567999");
 
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+						LOGGER.debug("request param : {}", createSubsellerReq.toString());
+						return createSubsellerReq;
 					}
 				}).success(CreateSubsellerRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateSubsellerRes res = (CreateSubsellerRes) result;
+						createSubsellerRes = (CreateSubsellerRes) result;
 						// assertThat(res.getSubSellerKey(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
+						LOGGER.debug("response param : {}", createSubsellerRes.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 서브 계정 탈퇴.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/removeSubseller/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						RemoveSubsellerReq req = new RemoveSubsellerReq();
+
+						req.setSellerKey("IF1023501184720130823173955");
+
+						List<String> removeKeyList;
+						removeKeyList = new ArrayList<String>();
+						removeKeyList.add(createSubsellerRes.getSubSellerKey());
+						req.setSubSellerKey(removeKeyList);
+
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(RemoveSubsellerRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						RemoveSubsellerRes res = (RemoveSubsellerRes) result;
+						assertThat(res.getRemoveCnt(), notNullValue());
+						LOGGER.debug("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 }
