@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.vo.ChangeDisplayUserSacReq;
@@ -22,7 +22,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.vo.ChangeDisplayUs
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-@WebAppConfiguration
+@Transactional
 public class ChangeDisplayUserSCITest {
 
 	@Autowired
@@ -37,6 +37,9 @@ public class ChangeDisplayUserSCITest {
 	@Test
 	public void testChangeUserId() {
 		ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
+		changeDisplayUserSacReq.setTenantId("S01");
+		changeDisplayUserSacReq.setOldUserId("test1");
+		changeDisplayUserSacReq.setNewUserId("test2");
 		this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReq);
 	}
 
@@ -49,6 +52,9 @@ public class ChangeDisplayUserSCITest {
 	@Test
 	public void testChangeUserKey() {
 		ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
+		changeDisplayUserSacReq.setTenantId("S01");
+		changeDisplayUserSacReq.setOldUserKey("test3");
+		changeDisplayUserSacReq.setNewUseKey("test4");
 		this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
 	}
 }
