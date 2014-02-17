@@ -56,6 +56,8 @@ public class ModifyRealNameSacReq extends CommonInfo {
 	private String isDomestic;
 	/** 성별. */
 	private String sex;
+	/** 동의일시. */
+	private String parentDate;
 
 	public String getSessionKey() {
 		return this.sessionKey;
@@ -191,6 +193,14 @@ public class ModifyRealNameSacReq extends CommonInfo {
 
 	public void setSex(String sex) {
 		this.sex = sex;
+	}
+
+	public String getParentDate() {
+		return this.parentDate;
+	}
+
+	public void setParentDate(String parentDate) {
+		this.parentDate = parentDate;
 	}
 
 }
