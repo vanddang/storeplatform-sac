@@ -18,7 +18,7 @@
 		http://www.springframework.org/schema/util				  http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/integration/amqp    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.2.xsd
         http://www.springframework.org/schema/rabbit              http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
- 	 
+ 	 <!-- 
  	<import resource="classpath*:runtime/context-runtime-amqp.xml"/>
  	
  	<bean class="com.rabbitmq.client.ConnectionFactory">
@@ -32,11 +32,11 @@
     <bean id="inboundQueueNames" class="com.skplanet.storeplatform.framework.core.util.StringUtils" factory-method="convertArrayListToString">
         <constructor-arg>
             <list>
-<!--                 <value>cmsapp.sac.request.sync.content.test99999</value> -->
-<!--                 <value>cmsapp.sac.request.sync.content.test0001</value> -->
-<!--                 <value>cmsapp.sac.response.sync.content.test0001</value> -->
-<!--                 <value>tenant1.sac.request.sync.content.test0001</value> -->
-<!--                 <value>tenant1.sac.response.sync.content.test0001</value> -->
+                <value>cmsapp.sac.request.sync.content.test99999</value>
+                <value>cmsapp.sac.request.sync.content.test0001</value>
+                <value>cmsapp.sac.response.sync.content.test0001</value>
+                <value>tenant1.sac.request.sync.content.test0001</value>
+                <value>tenant1.sac.response.sync.content.test0001</value>
                 <value>local.icms-app-refactoring-deploy.sac.deploy.async</value>
                 <value>local.icms-app-admin.sac.device-mapping.async</value>
             </list>
@@ -73,19 +73,19 @@
     
     <bean id="sacRabbitJsonMessageConverter" class="org.springframework.amqp.support.converter.JsonMessageConverter" />
     
-    <!-- CMS DISPLAY RESULT Rabbit Template -->
+    CMS DISPLAY RESULT Rabbit Template
     <bean id="cmsAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
         <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
         <property name="routingKey" value="local.sac.icms-app-refactoring-deploy.deploy-result.async" />
     </bean>
     
-    <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
+    CMS DEVICE REMAPPING RESULT Rabbit Template
     <bean id="deviceMappingRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
         <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
         <property name="routingKey" value="local.sac.icms-app-admin.device-mapping-result.async" />
     </bean>
-    
+     -->
     
 </beans> 
