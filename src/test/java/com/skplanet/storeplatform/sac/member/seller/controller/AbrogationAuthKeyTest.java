@@ -1,8 +1,10 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +29,10 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -43,6 +48,12 @@ public class AbrogationAuthKeyTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	public static AuthorizeReq authorizeReq;
+
+	/** [RESPONSE]. */
+	public static AuthorizeRes authorizeRes;
+
 	/**
 	 * 
 	 * <pre>
@@ -52,6 +63,41 @@ public class AbrogationAuthKeyTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+		authorizeReq = new AuthorizeReq();
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 인증키 생성.
+	 * </pre>
+	 */
+	@Test
+	public void abrogationAuthKey() {
+
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						authorizeReq.setSellerId("biz_7908");
+						authorizeReq.setSellerPW("hzImA3SQ");
+						authorizeReq.setReleaseLock("N");
+						authorizeReq.setExpireDate("3");
+						authorizeReq.setIpAddress("127.0.0.1");
+						LOGGER.debug("[REQUEST(SAC)-회원인증] : \n{}",
+								TestConvertMapperUtils.convertObjectToJson(authorizeReq));
+						return authorizeReq;
+					}
+				}).success(AuthorizeRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						assertEquals("Y", authorizeRes.getIsLoginSuccess());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
 	}
 
 	/**
@@ -59,16 +105,15 @@ public class AbrogationAuthKeyTest {
 	 * 판매자 회원 인증키 폐기.
 	 * </pre>
 	 */
-	@Test
-	public void abrogationAuthKey() {
-
+	@After
+	public void after() {
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/removeAuthorizationKey/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						AbrogationAuthKeyReq req = new AbrogationAuthKeyReq();
 
-						req.setSellerKey("IF1023501629320130913143329");
+						req.setSellerKey("IF1023599819420120111013407");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
@@ -81,7 +126,6 @@ public class AbrogationAuthKeyTest {
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
 	}
 
 }
