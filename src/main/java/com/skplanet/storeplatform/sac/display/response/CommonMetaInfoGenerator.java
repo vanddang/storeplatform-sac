@@ -267,11 +267,15 @@ public interface CommonMetaInfoGenerator {
 	 * 
 	 * @param prchId
 	 *            prchId
+	 * @param prodId
+	 *            prodId
 	 * @param prchState
 	 *            prchState
 	 * @param prchDt
 	 *            prchDt
+	 * @param dwldExprDt
+	 *            dwldExprDt
 	 * @return Purchase
 	 */
-	public Purchase generatePurchase(String prchId, String prchState, String prchDt, String dwldExprDt);
+	public Purchase generatePurchase(String prchId, String prodId, String prchState, String prchDt, String dwldExprDt);
 }

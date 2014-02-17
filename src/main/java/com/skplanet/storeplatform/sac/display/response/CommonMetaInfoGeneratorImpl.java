@@ -395,12 +395,12 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	@Override
 	public Purchase generatePurchase(MetaInfo metaInfo) {
-		return this.generatePurchase(metaInfo.getPurchaseProdId(), metaInfo.getPurchaseState(),
-				metaInfo.getPurchaseDt(), metaInfo.getPurchaseDwldExprDt());
+		return this.generatePurchase(metaInfo.getPurchaseId(), metaInfo.getPurchaseProdId(),
+				metaInfo.getPurchaseState(), metaInfo.getPurchaseDt(), metaInfo.getPurchaseDwldExprDt());
 	}
 
 	@Override
-	public Purchase generatePurchase(String prchId, String prchState, String prchDt, String dwldExprDt) {
+	public Purchase generatePurchase(String prchId, String prodId, String prchState, String prchDt, String dwldExprDt) {
 		Purchase purchase = new Purchase();
 		purchase.setState(prchState);
 
@@ -409,7 +409,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 			List<Identifier> identifierList = new ArrayList<Identifier>();
 			identifierList.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, prchId));
-			identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, prchId));
+			identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, prodId));
 			purchase.setIdentifierList(identifierList);
 
 			if (StringUtils.isNotEmpty(prchDt)) {

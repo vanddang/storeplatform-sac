@@ -221,7 +221,8 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 					// 구매 정보는 구매 내역이 있는 App만 표시한다.
 					if (!StringUtils.isEmpty(prchId)) {
 						Purchase purchage = this.commonGenerator.generatePurchase(
-								(String) updateTargetApp.get("PRCHS_ID"), null, null, null);
+								(String) updateTargetApp.get("PRCHS_ID"), (String) updateTargetApp.get("PROD_ID"),
+								null, null, null);
 						product.setPurchase(purchage);
 					}
 
