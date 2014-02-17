@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.member.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
@@ -164,14 +165,17 @@ public class DeviceUtil {
 
 		if (list != null && list.size() > 0) {
 			deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-			for (UserMbrDeviceDetail deviceDetail : list) {
-				deviceExtraInfo = new DeviceExtraInfo();
-				deviceExtraInfo.setExtraProfile(deviceDetail.getExtraProfile());
-				deviceExtraInfo.setExtraProfileValue(deviceDetail.getExtraProfileValue());
-				deviceExtraInfo.setDeviceKey(deviceDetail.getDeviceKey());
-				deviceExtraInfo.setTenentId(deviceDetail.getTenantID());
-				deviceExtraInfo.setUserKey(deviceDetail.getUserKey());
-				deviceExtraInfoList.add(deviceExtraInfo);
+			for (UserMbrDeviceDetail userMbrDeviceDetail : list) {
+				if (!StringUtil.equals(userMbrDeviceDetail.getExtraProfile(), "")
+						&& !StringUtil.equals(userMbrDeviceDetail.getExtraProfileValue(), "")) {
+					deviceExtraInfo = new DeviceExtraInfo();
+					deviceExtraInfo.setExtraProfile(userMbrDeviceDetail.getExtraProfile());
+					deviceExtraInfo.setExtraProfileValue(userMbrDeviceDetail.getExtraProfileValue());
+					deviceExtraInfo.setDeviceKey(userMbrDeviceDetail.getDeviceKey());
+					deviceExtraInfo.setTenentId(userMbrDeviceDetail.getTenantID());
+					deviceExtraInfo.setUserKey(userMbrDeviceDetail.getUserKey());
+					deviceExtraInfoList.add(deviceExtraInfo);
+				}
 			}
 		}
 
@@ -228,13 +232,15 @@ public class DeviceUtil {
 		if (deviceInfo.getDeviceExtraInfoList() != null && deviceInfo.getDeviceExtraInfoList().size() > 0) {
 			userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 			for (DeviceExtraInfo deviceExtraInfo : deviceInfo.getDeviceExtraInfoList()) {
-				userMbrDeviceDetail = new UserMbrDeviceDetail();
-				userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
-				userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
-				userMbrDeviceDetail.setDeviceKey(deviceInfo.getDeviceKey());
-				userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-				userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-				userMbrDeviceDetailList.add(userMbrDeviceDetail);
+				if (!StringUtil.equals(deviceExtraInfo.getExtraProfile(), "")) {
+					userMbrDeviceDetail = new UserMbrDeviceDetail();
+					userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
+					userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
+					userMbrDeviceDetail.setDeviceKey(deviceInfo.getDeviceKey());
+					userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
+					userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+					userMbrDeviceDetailList.add(userMbrDeviceDetail);
+				}
 			}
 		}
 
