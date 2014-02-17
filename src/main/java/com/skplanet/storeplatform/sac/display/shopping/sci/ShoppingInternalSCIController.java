@@ -71,7 +71,7 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 			if (sacRes.getProductList().size() > 0) {
 				response.setSalesOption(this.setSaleOption(sacRes.getProductList().get(0).getSalesOption()));
 			}
-			System.out.println("1231::" + response.toString());
+			// System.out.println("1231::" + response.toString());
 
 		}
 		return response;
