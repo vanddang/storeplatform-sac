@@ -150,6 +150,7 @@ public class MetaInfo {
 	private String colorSprtYn;
 	private String isbn;
 	private String mgzinCoverYn;
+	private String dlmImagePath;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -2257,6 +2258,21 @@ public class MetaInfo {
 	 */
 	public void setMgzinCoverYn(String mgzinCoverYn) {
 		this.mgzinCoverYn = mgzinCoverYn;
+	}
+
+	/**
+	 * @return the dlmImagePath
+	 */
+	public String getDlmImagePath() {
+		return this.dlmImagePath;
+	}
+
+	/**
+	 * @param dlmImagePath
+	 *            the dlmImagePath to set
+	 */
+	public void setDlmImagePath(String dlmImagePath) {
+		this.dlmImagePath = dlmImagePath;
 	}
 
 	/**
