@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
+import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
 import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
@@ -189,4 +190,13 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 		return this.commonDAO.update("Feedback.updateSellerRespWD", prodNoti);
 	}
 
+	@Override
+	public TenantProdStats getProdEvalInfo(TenantProdStats tenantProdStats) {
+		return this.commonDAO.queryForObject("Feedback.getProdEvalInfo", tenantProdStats, TenantProdStats.class);
+	}
+
+	@Override
+	public List<MbrAvgScore> getScoreList(MbrAvgScore mbrAvgScore) {
+		return this.commonDAO.queryForList("Feedback.getScoreList", mbrAvgScore, MbrAvgScore.class);
+	}
 }

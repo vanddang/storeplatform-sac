@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
+import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
 import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
@@ -443,4 +445,37 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 평점, 다운로드 조회.
+	 * </pre>
+	 */
+	@Test
+	public void testGetProdEvalInfo() {
+		TenantProdStats tenantProdStats = new TenantProdStats();
+
+		tenantProdStats.setTenantId("S01");
+		tenantProdStats.setProdId("H000044521");
+
+		TenantProdStats ret = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
+		assertNotNull(ret);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 참여수 조회.
+	 * </pre>
+	 */
+	@Test
+	public void testGetScoreList() {
+		MbrAvgScore mbrAvgScore = new MbrAvgScore();
+
+		mbrAvgScore.setTenantId("S01");
+		mbrAvgScore.setProdId("H000044521");
+
+		List<MbrAvgScore> ret = this.feedbackRepository.getScoreList(mbrAvgScore);
+		assertNotNull(ret);
+	}
 }

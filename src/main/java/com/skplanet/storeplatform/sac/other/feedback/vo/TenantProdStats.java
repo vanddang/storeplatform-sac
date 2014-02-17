@@ -42,6 +42,9 @@ public class TenantProdStats extends CommonInfo {
 	//
 	private String action;
 
+	private String avgEvluScorePct;
+	private String avgEvluScorePcts;
+
 	/**
 	 * @return String
 	 */
@@ -267,4 +270,33 @@ public class TenantProdStats extends CommonInfo {
 		this.action = action;
 	}
 
+	/**
+	 * @return String
+	 */
+	public String getAvgEvluScorePct() {
+		return this.avgEvluScorePct;
+	}
+
+	/**
+	 * @param avgEvluScorePct
+	 *            avgEvluScorePct
+	 */
+	public void setAvgEvluScorePct(String avgEvluScorePct) {
+		this.avgEvluScorePct = avgEvluScorePct;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getAvgEvluScorePcts() {
+		return this.avgEvluScorePcts;
+	}
+
+	/**
+	 * @param avgEvluScorePcts
+	 *            avgEvluScorePcts
+	 */
+	public void setAvgEvluScorePcts(String avgEvluScorePcts) {
+		this.avgEvluScorePcts = avgEvluScorePcts;
+	}
 }

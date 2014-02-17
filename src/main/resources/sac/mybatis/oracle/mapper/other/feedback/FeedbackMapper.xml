@@ -859,6 +859,7 @@
               GROUP BY PROD_ID
              ) NOTI
     </select>
+
     <!-- 판매자 댓글 -->
     <update id="updateSellerResp" parameterType="ProdNoti">
         UPDATE  /* FeedbackMapper.xml, updateSellerResp, SAC : 남궁석호 , 2014-02-10 */
@@ -881,4 +882,79 @@
            AND  NOTI_SEQ = #{notiSeq}
     </update>
 
+    <!-- 평점, 다운로드 조회 -->
+    <select id="getProdEvalInfo" parameterType="TenantProdStats" resultType="TenantProdStats">
+        SELECT  /* FeedbackMapper.xml, getProdEvalInfo, SAC : 남궁석호 , 2014-02-13 */
+                (SELECT RTRIM ( XMLAGG ( XMLELEMENT (A, CONCAT (AVG_SCORE_PCT, ',')).EXTRACT ('//text()')), ',')
+                   FROM (  SELECT   AVG_SCORE
+                                  , NVL (AVG_COUNT, 0) AS PATICPERS_CNT
+                                  , NVL (ROUND ( (AVG_COUNT / PATICPERS_CNT) * 100, 1), 0) AS AVG_SCORE_PCT
+                             FROM   (SELECT TA.AVG_SCORE
+                                          , AVG_COUNT
+                                          , (SELECT PATICPERS_CNT
+                                               FROM TB_DP_TENANT_PROD_STATS
+                                              WHERE TENANT_ID = #{tenantId}
+                                                AND PROD_ID = #{prodId}) AS PATICPERS_CNT
+                                       FROM (SELECT AVG_SCORE
+                                                  , COUNT (AVG_SCORE) AS AVG_COUNT
+                                               FROM TB_DP_MBR_AVG
+                                              WHERE TENANT_ID = #{tenantId}
+                                                AND PROD_ID = #{prodId}
+                                           GROUP BY AVG_SCORE) MA
+                                          , (SELECT AVG_SCORE
+                                               FROM (SELECT '1' AS AVG_SCORE FROM DUAL
+                                                     UNION ALL
+                                                     SELECT '2' AS AVG_SCORE FROM DUAL
+                                                     UNION ALL
+                                                     SELECT '3' AS AVG_SCORE FROM DUAL
+                                                     UNION ALL
+                                                     SELECT '4' AS AVG_SCORE FROM DUAL
+                                                     UNION ALL
+                                                     SELECT '5' AS AVG_SCORE FROM DUAL)) TA
+                                      WHERE MA.AVG_SCORE(+) = TA.AVG_SCORE)
+                         ORDER BY   AVG_SCORE DESC)) AS AVG_EVLU_SCORE_PCTS
+                         , NVL (TOT_EVLU_SCORE, 0) TOT_EVLU_SCORE
+                         , NVL (PRCHS_CNT, 0) AS DWLD_CNT
+                         , NVL ((CASE   WHEN (AVG_EVLU_SCORE <![CDATA[>]]> 0 AND AVG_EVLU_SCORE <![CDATA[<]]> 1) THEN 1
+                                        WHEN AVG_EVLU_SCORE <![CDATA[>]]> 5 THEN 5
+                                        ELSE ROUND (AVG_EVLU_SCORE, 1)
+                                END), 0) AS AVG_EVLU_SCORE
+                         , NVL (PATICPERS_CNT, 0) AS PATICPERS_CNT
+                         , TRIM ( NVL ( TO_CHAR ( (TOT_EVLU_SCORE / PATICPERS_CNT) / 5.0 * 100, '99900.00'), '0')) AS AVG_EVLU_SCORE_PCT
+          FROM TB_DP_TENANT_PROD_STATS
+         WHERE TENANT_ID = #{tenantId}
+           AND PROD_ID = #{prodId}
+    </select>
+    
+    <!-- 참여수 조회 -->
+    <select id="getScoreList" parameterType="MbrAvgScore" resultType="MbrAvgScore">
+        SELECT  /* FeedbackMapper.xml, getScoreList, SAC : 남궁석호 , 2014-02-13 */
+                AVG_SCORE
+              , NVL (AVG_COUNT, 0) AS PATICPERS_CNT
+              , NVL (ROUND ( (AVG_COUNT / PATICPERS_CNT) * 100, 1), 0) AS AVG_SCORE_PCT
+          FROM  (SELECT TA.AVG_SCORE
+                      , AVG_COUNT
+                      , (SELECT PATICPERS_CNT
+                           FROM TB_DP_TENANT_PROD_STATS
+                          WHERE TENANT_ID = #{tenantId}
+                            AND PROD_ID = #{prodId}) AS PATICPERS_CNT
+                   FROM (SELECT AVG_SCORE
+                              , COUNT (AVG_SCORE) AS AVG_COUNT
+                           FROM TB_DP_MBR_AVG
+                          WHERE TENANT_ID = #{tenantId}
+                            AND PROD_ID = #{prodId}
+                       GROUP BY AVG_SCORE) MA
+                      , (SELECT AVG_SCORE
+                           FROM (SELECT '1' AS AVG_SCORE FROM DUAL
+                                 UNION ALL
+                                 SELECT '2' AS AVG_SCORE FROM DUAL
+                                 UNION ALL
+                                 SELECT '3' AS AVG_SCORE FROM DUAL
+                                 UNION ALL
+                                 SELECT '4' AS AVG_SCORE FROM DUAL
+                                 UNION ALL
+                                 SELECT '5' AS AVG_SCORE FROM DUAL)) TA
+                  WHERE MA.AVG_SCORE(+) = TA.AVG_SCORE)
+      ORDER BY AVG_SCORE DESC
+    </select>
 </mapper>

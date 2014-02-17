@@ -43,6 +43,7 @@
         <typeAlias alias="ProdNotiGood" type="com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood" />
         <typeAlias alias="MbrAvg" type="com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg" />
         <typeAlias alias="TenantProdStats" type="com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats" />
+        <typeAlias alias="MbrAvgScore" type="com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore" />
         
         <!-- ################################################# -->
         <!-- 회원                                            -->

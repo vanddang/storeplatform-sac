@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.other.feedback.repository;
 import java.util.List;
 
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
+import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
 import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
@@ -396,5 +397,29 @@ public interface FeedbackRepository {
 	 * @return Object
 	 */
 	public Object updateSellerRespWD(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 평점, 다운로드 조회.
+	 * </pre>
+	 * 
+	 * @param tenantProdStats
+	 *            tenantProdStats
+	 * @return TenantProdStats
+	 */
+	public TenantProdStats getProdEvalInfo(TenantProdStats tenantProdStats);
+
+	/**
+	 * 
+	 * <pre>
+	 * 참여수 조회.
+	 * </pre>
+	 * 
+	 * @param mbrAvgScore
+	 *            mbrAvgScore
+	 * @return List<MbrAvgScore>
+	 */
+	public List<MbrAvgScore> getScoreList(MbrAvgScore mbrAvgScore);
 
 }
