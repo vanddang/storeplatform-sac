@@ -107,6 +107,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
 			Chapter chapter = new Chapter();
 			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
+			chapter.setUnit(metaInfo.getChapterUnit());
 			book.setChapter(chapter);
 		}
 
