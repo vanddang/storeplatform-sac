@@ -12,7 +12,14 @@ package com.skplanet.storeplatform.sac.runtime.acl.service.common;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
-public interface AclDbAccessService {
+/**
+*
+* ACL 관련 DB 접근 서비스
+*
+* Updated on : 2014. 2. 5.
+* Updated by : 서대영, SK플래닛
+*/
+public interface AclDataAccessService {
 
 	/**
 	 * <pre>

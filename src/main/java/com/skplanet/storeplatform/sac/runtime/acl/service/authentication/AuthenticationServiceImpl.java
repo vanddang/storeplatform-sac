@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.runtime.acl.service.authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
@@ -28,7 +28,7 @@ public class AuthenticationServiceImpl implements AuthenticateService {
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 
 	// @Autowired
-	private AclDbAccessService service;
+	private AclDataAccessService service;
 
 
 	@Override

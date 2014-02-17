@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.runtime.acl.service.authorizaiton;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
-import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 public class RequestAuthorizationServiceImpl implements RequestAuthorizationService {
 
 //    @Autowired
-    private AclDbAccessService dbAccessService;
+    private AclDataAccessService dbAccessService;
 
     @Override
     public void authorize(HttpHeaders httpHeaders) {

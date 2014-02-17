@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Interface">
+
+	<!-- 1. SELECT SQL-->
+	<select id="detail" parameterType="String" resultType="Interface">
+			SELECT /* InterfaceMapper.searchDetail, 인터페이스 상세 조회, 서대영/SK플래닛, 2014-02-17 */
+			       interface_id,
+			       interface_type_cd,
+			       (SELECT cd_nm FROM tb_cm_cd where cd_id = interface_type_cd) as interface_type_nm,
+			       url,
+			       version,
+			       interface_nm,
+			       interface_desc,
+			       bypass_yn,
+			       status_cd,
+			       (SELECT cd_nm FROM tb_cm_cd where cd_id = status_cd) as status_cd_nm,
+			       reg_id,
+			       reg_dt,
+			       upd_id,
+			       upd_dt
+			  FROM tb_fw_interface
+			 WHERE interface_id = #{interfaceId}
+    </select>  
+
+</mapper>

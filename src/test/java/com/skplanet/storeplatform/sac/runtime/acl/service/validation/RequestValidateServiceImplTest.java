@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
@@ -23,7 +23,7 @@ public class RequestValidateServiceImplTest {
 	private RequestValidateServiceImpl validatService;
 
 	@Mock
-	private AclDbAccessService dbAccessMock;
+	private AclDataAccessService dbAccessMock;
 
 	@Test
 	public void testValidateInterface() {

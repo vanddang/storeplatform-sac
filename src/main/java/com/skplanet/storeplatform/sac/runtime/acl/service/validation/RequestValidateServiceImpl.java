@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.runtime.acl.service.validation;
 import org.apache.commons.lang3.StringUtils;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
@@ -28,22 +28,25 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 public class RequestValidateServiceImpl implements RequestValidateService {
 
 	// @Autowired
-	private AclDbAccessService service;
+	private AclDataAccessService service;
 
 	@Override
 	public void validateHeaders(HttpHeaders header) {
 		String accept = header.getAccept();
+		String authKey = header.getAuthKey();
 		String systemId = header.getSystemId();
 		String interfaceId = header.getInterfaceId();
 		String guid = header.getGuid();
 
-		if (StringUtils.isNotBlank(accept))
+		if (StringUtils.isBlank(accept))
 			throw new StorePlatformException("SAC_CMN_0004", accept);
-		if (StringUtils.isNotBlank(systemId))
+		if (StringUtils.isBlank(authKey))
+			throw new StorePlatformException("SAC_CMN_0004", authKey);
+		if (StringUtils.isBlank(systemId))
 			throw new StorePlatformException("SAC_CMN_0004", systemId);
-		if (StringUtils.isNotBlank(interfaceId))
+		if (StringUtils.isBlank(interfaceId))
 			throw new StorePlatformException("SAC_CMN_0004", interfaceId);
-		if (StringUtils.isNotBlank(guid))
+		if (StringUtils.isBlank(guid))
 			throw new StorePlatformException("SAC_CMN_0004", guid);
 
 	}
