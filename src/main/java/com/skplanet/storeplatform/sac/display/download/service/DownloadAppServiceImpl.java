@@ -59,7 +59,6 @@ import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
  * Updated on : 2014. 1. 21. Updated by : 이석희, 인크로스.
  */
 @Service
-@Transactional
 public class DownloadAppServiceImpl implements DownloadAppService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 

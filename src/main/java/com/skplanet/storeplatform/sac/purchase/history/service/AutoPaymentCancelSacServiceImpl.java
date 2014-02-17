@@ -25,7 +25,6 @@ import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelSc
  * Updated on : 2013-09-01 Updated by :조용진, 엔텔스.
  */
 @Service
-@Transactional
 public class AutoPaymentCancelSacServiceImpl implements AutoPaymentCancelSacService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

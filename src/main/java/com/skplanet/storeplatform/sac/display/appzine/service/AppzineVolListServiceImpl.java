@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineVolListSacReq;
@@ -37,7 +36,6 @@ import com.skplanet.storeplatform.sac.display.appzine.vo.AppzineVolList;
  * Updated on : 2014. 02. 10. Updated by : 유시혁.
  */
 @Service
-@Transactional
 public class AppzineVolListServiceImpl implements AppzineVolListService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

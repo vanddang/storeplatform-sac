@@ -28,7 +28,6 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Update
  * Updated on : 2014. 2. 14. Updated by : 이석희, 아이에스플러스.
  */
 @Service
-@Transactional
 public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountService {
 
 	@Autowired

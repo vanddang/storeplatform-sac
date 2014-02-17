@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -38,7 +38,6 @@ import com.skplanet.storeplatform.sac.display.other.vo.OtherServiceGroup;
  * Updated on : 2014. 1. 28. Updated by : 이승훈, 엔텔스.
  */
 @Service
-@Transactional
 public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 	private transient Logger logger = LoggerFactory.getLogger(OtherServiceGroupServiceImpl.class);
 

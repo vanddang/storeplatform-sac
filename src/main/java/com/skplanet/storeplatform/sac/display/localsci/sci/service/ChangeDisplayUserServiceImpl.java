@@ -2,7 +2,6 @@ package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.display.localsci.sci.repository.ChangeDisplayUserRepository;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
@@ -16,7 +15,6 @@ import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
  * Updated on : 2014. 2. 13. Updated by : 김현일, 인크로스
  */
 @Service
-@Transactional
 public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 
 	@Autowired

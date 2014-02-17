@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.product.sci.ProductCountSCI;
 import com.skplanet.storeplatform.purchase.client.product.vo.GetProductCountScReq;
@@ -29,7 +28,6 @@ import com.skplanet.storeplatform.sac.purchase.product.vo.SetProductCountSacRes;
  * Updated on : 2014. 2. 13. Updated by : 조용진, NTELS.
  */
 @Service
-@Transactional
 public class ProductCountSacServiceImpl implements ProductCountSacService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

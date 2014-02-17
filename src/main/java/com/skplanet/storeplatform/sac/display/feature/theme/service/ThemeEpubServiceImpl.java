@@ -15,7 +15,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacReq;
@@ -34,7 +33,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  */
 
 @Service
-@Transactional
 public class ThemeEpubServiceImpl implements ThemeEpubService {
 	@Autowired
 	@Qualifier("sac")

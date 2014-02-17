@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.Headers;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skplanet.storeplatform.framework.core.exception.ErrorMessageBuilder;
@@ -37,7 +36,6 @@ import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderInfo;
  * Updated on : 2013. 11. 26. Updated by : 김현일, 인크로스.
  */
 @Service
-@Transactional
 public class ValidationServiceImpl implements ValidationService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

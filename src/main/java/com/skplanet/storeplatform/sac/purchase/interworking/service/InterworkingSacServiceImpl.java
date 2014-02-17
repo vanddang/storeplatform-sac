@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.skplanet.storeplatform.external.client.interpark.sci.InterparkSCI;
@@ -33,7 +32,6 @@ import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSacRe
  * Updated on : 2014. 2. 5. Updated by : 조용진, NTELS.
  */
 @Service
-@Transactional
 public class InterworkingSacServiceImpl implements InterworkingSacService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -55,7 +55,6 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
 @Service
-@Transactional
 public class CategoryEbookComicServiceImpl implements CategoryEbookComicService {
 	private transient Logger logger = LoggerFactory.getLogger(CategoryEbookComicServiceImpl.class);
 

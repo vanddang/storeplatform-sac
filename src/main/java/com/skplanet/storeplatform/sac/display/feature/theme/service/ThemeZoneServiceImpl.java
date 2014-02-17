@@ -15,7 +15,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeZoneReq;
@@ -39,7 +38,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
  */
 
 @Service
-@Transactional
 public class ThemeZoneServiceImpl implements ThemeZoneService {
 	@Autowired
 	@Qualifier("sac")

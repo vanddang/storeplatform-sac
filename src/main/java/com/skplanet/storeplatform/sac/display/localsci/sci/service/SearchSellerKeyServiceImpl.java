@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -24,7 +23,6 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
  * Updated on : 2014. 2. 13. Updated by : 이석희, 아이에스플러스.
  */
 @Service
-@Transactional
 public class SearchSellerKeyServiceImpl implements SearchSellerKeyService {
 
 	@Autowired

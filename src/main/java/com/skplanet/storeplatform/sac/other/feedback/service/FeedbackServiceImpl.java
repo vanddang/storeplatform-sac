@@ -69,7 +69,6 @@ import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
  * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
  */
 @Service
-@Transactional
 public class FeedbackServiceImpl implements FeedbackService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeedbackController.class);
 

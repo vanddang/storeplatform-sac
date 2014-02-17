@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.external.client.isf.vo.MultiValueType;
@@ -58,7 +57,6 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  * Updated on : 2014. 02. 05. Updated by : 윤주영, GTSOFT.
  */
 @Service
-@Transactional
 public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

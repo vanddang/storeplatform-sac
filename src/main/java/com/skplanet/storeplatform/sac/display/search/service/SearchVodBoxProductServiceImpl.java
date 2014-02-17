@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductReq;
@@ -33,7 +32,6 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스.
  */
 @Service
-@Transactional
 public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductService {
 
 	@Autowired

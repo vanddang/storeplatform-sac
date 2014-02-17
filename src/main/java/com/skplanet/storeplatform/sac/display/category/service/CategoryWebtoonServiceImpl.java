@@ -43,7 +43,6 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  * Updated on : 2013. 12. 23. Updated by : 김형식, SK 플래닛.
  */
 @Service
-@Transactional
 public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

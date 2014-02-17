@@ -40,7 +40,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  */
 
 @Service
-@Transactional
 public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 	@Autowired
 	@Qualifier("sac")

@@ -14,11 +14,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo;
 
 /**
  * 
@@ -27,7 +26,6 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo;
  * Updated on : 2013. 11. 26. Updated by : 김현일, 인크로스.
  */
 @Service
-@Transactional
 public class AclServiceImpl implements AclService {
 
 	@Autowired

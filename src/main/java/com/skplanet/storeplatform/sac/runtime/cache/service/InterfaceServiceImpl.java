@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo;
@@ -29,7 +28,6 @@ import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo;
  * Updated on : 2013. 11. 26. Updated by : 김현일, 인크로스.
  */
 @Service
-@Transactional
 public class InterfaceServiceImpl implements InterfaceService {
 
 	@Autowired

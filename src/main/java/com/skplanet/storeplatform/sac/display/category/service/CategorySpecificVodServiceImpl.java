@@ -55,7 +55,6 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  * Updated on : 2014. 2. 3. Updated by : 이승훈, 엔텔스.
  */
 @Service
-@Transactional
 public class CategorySpecificVodServiceImpl implements CategorySpecificVodService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 

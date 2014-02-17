@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -18,7 +17,6 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
 @Service
-@Transactional
 public class MetaInfoServiceImpl implements MetaInfoService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -85,7 +83,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	public MetaInfo getShoppingMetaInfo(Map<String, Object> paramMap) {
 		return this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

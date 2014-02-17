@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
@@ -28,7 +27,6 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
  * Updated on : 2013-09-01 Updated by :조용진, 엔텔스.
  */
 @Service
-@Transactional
 public class ExistenceSacServiceImpl implements ExistenceSacService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerReq;
@@ -35,7 +34,6 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 //import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner;
 
 @Service
-@Transactional
 public class BannerServceImpl implements BannerService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

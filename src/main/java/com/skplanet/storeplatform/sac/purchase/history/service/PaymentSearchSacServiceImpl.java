@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.PaymentListSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScReq;
@@ -27,7 +26,6 @@ import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScRes;
  * Updated on : 2014-01-21 Updated by :조용진, 엔텔스.
  */
 @Service
-@Transactional
 public class PaymentSearchSacServiceImpl implements PaymentSearchSacService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

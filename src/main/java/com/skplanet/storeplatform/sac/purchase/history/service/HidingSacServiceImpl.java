@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.HidingSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingScReq;
@@ -27,7 +26,6 @@ import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRes;
  * Updated on : 2013-12-10 Updated by : 조용진, 엔텔스.
  */
 @Service
-@Transactional
 public class HidingSacServiceImpl implements HidingSacService {
 	private static Logger logger = LoggerFactory.getLogger(HidingSacServiceImpl.class);
 

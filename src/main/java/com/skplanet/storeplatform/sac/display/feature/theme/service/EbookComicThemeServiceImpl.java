@@ -36,7 +36,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layo
  */
 
 @Service
-@Transactional
 public class EbookComicThemeServiceImpl implements EbookComicThemeService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
