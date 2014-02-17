@@ -214,15 +214,15 @@
 	<update id="updateTenantProdStats" parameterType="TenantProdStats">
         UPDATE /* FeedbackMapper.xml, updateTenantProdStats, SAC : 김현일 , 2014-02-04 */
 	           TB_DP_TENANT_PROD_STATS
-	       SET TOT_EVLU_SCORE = TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore}
+	       SET TOT_EVLU_SCORE = NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore} - #{preAvgScore}
 	           , UPD_ID = #{updId}
 	           , UPD_DT = SYSDATE
 	           <if test="action == 'create'">
-	           , AVG_EVLU_SCORE = ( ( TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore} ) / PATICPERS_CNT )
+	           , AVG_EVLU_SCORE = ( ( NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore} - #{preAvgScore} ) / NVL(PATICPERS_CNT, 0) )
 	           </if>
 	           <if test="action == 'remove'">
 	           , PATICPERS_CNT = PATICPERS_CNT - 1
-	           , AVG_EVLU_SCORE = ( ( TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore} ) / (PATICPERS_CNT - 1) )
+	           , AVG_EVLU_SCORE = ( ( NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore} - #{preAvgScore} ) / (NVL(PATICPERS_CNT, 0) - 1) )
 	           </if>
 	     WHERE TENANT_ID = #{tenantId}
 	       AND PROD_ID = #{prodId}
@@ -251,9 +251,9 @@
 	               , SYSDATE )
 	    WHEN MATCHED THEN
 	        UPDATE
-	           SET AVG_EVLU_SCORE = ((TOT_EVLU_SCORE + #{avgEvluScore}) / (PATICPERS_CNT + 1))
-	                , TOT_EVLU_SCORE = TOT_EVLU_SCORE + #{avgEvluScore}
-	                , PATICPERS_CNT = PATICPERS_CNT+1
+	           SET AVG_EVLU_SCORE = ((NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore}) / (NVL(PATICPERS_CNT, 0) + 1))
+	                , TOT_EVLU_SCORE = NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore}
+	                , PATICPERS_CNT = NVL(PATICPERS_CNT, 0) + 1
 	             , UPD_ID = #{updId}
 	             , UPD_DT = SYSDATE
 	</insert>
@@ -323,10 +323,10 @@
 	    /* FeedbackMapper.xml, updateProdNotiWDGood, SAC : 김현일 , 2014-02-04 */
 	    UPDATE TB_DP_PROD_NOTI_WD
 	       <if test="action == 'create'">
-	       SET NOTI_SCORE = NOTI_SCORE + 1
+	       SET NOTI_SCORE = NVL(NOTI_SCORE, 0) + 1
 	       </if>
 	       <if test="action == 'remove'">
-           SET NOTI_SCORE = NOTI_SCORE - 1
+           SET NOTI_SCORE = NVL(NOTI_SCORE, 0) - 1
            </if>
 	           , UPD_DT = SYSDATE
 	     WHERE TENANT_ID = #{tenantId} 
@@ -356,10 +356,10 @@
         /* FeedbackMapper.xml, updateProdNotiGood, SAC : 김현일 , 2014-02-04 */
         UPDATE TB_DP_PROD_NOTI
            <if test="action == 'create'">
-           SET NOTI_SCORE = NOTI_SCORE + 1
+           SET NOTI_SCORE = NVL(NOTI_SCORE, 0) + 1
            </if>
            <if test="action == 'remove'">
-           SET NOTI_SCORE = NOTI_SCORE - 1
+           SET NOTI_SCORE = NVL(NOTI_SCORE, 0) - 1
            </if>
                , UPD_DT = SYSDATE
          WHERE TENANT_ID = #{tenantId} 
@@ -382,7 +382,8 @@
              </if>
                   COUNT(*) AS TOTAL_COUNT
              FROM TB_DP_PROD_NOTI N
-            WHERE N.DEL_YN = 'N'
+            WHERE N.TENANT_ID = #{tenantId}
+              AND N.DEL_YN = 'N'
               AND N.BAD_NOTI_YN IN ( 'N', 'R' )
               AND N.SPAM_YN = 'N'
               AND N.NOTI_TYPE_CD = 'DP000401'
@@ -403,7 +404,8 @@
             UNION ALL
            SELECT COUNT(*) AS TOTAL_COUNT
              FROM TB_DP_PROD_NOTI_WD N
-            WHERE N.DEL_YN = 'N'
+            WHERE N.TENANT_ID = #{tenantId}
+              AND N.DEL_YN = 'N'
               AND N.BAD_NOTI_YN IN ( 'N', 'R' )
               AND N.SPAM_YN = 'N'
               AND N.NOTI_TYPE_CD = 'DP000401'
@@ -445,11 +447,12 @@
 	          , DECODE( N.MBR_NO, N.SELLER_MBR_NO, 'seller', #{mbrNo}, 'mine', '' ) AS WHOSE
 	           , ( CASE WHEN ( SELECT COUNT(*)
 	                               FROM TB_DP_PROD_NOTIGOOD NG
-	                             WHERE NG.MBR_NO = #{mbrNo}
+	                             WHERE NG.TENANT_ID = N.TENANT_ID
+	                             AND NG.MBR_NO = #{mbrNo}
 	                             AND NG.NOTI_SEQ = N.NOTI_SEQ ) > 0 THEN 'Y'
 	                     ELSE 'N'
 	                 END ) AS NOTI_YN
-	          , ( SELECT AVG_SCORE FROM TB_DP_MBR_AVG WHERE PROD_ID = N.PROD_ID AND MBR_NO = N.MBR_NO ) AS AVG_SCORE
+	          , ( SELECT AVG_SCORE FROM TB_DP_MBR_AVG WHERE TENANT_ID = N.TENANT_ID AND PROD_ID = N.PROD_ID AND MBR_NO = N.MBR_NO ) AS AVG_SCORE
 	          , N.FB_POST_YN
 	          , N.PROD_ID
 	          , N.EXPO_SELLER_NM
@@ -487,7 +490,8 @@
 	                                               </if>
 	                                           </if>
 	                                       </if>
-	                                         N.NOTI_SEQ
+	                                         N.TENANT_ID
+	                                       , N.NOTI_SEQ
 	                                       , N.TITLE
 	                                       , N.NOTI_DSCR
 	                                       , N.REG_DT
@@ -506,7 +510,8 @@
 	                                       , P.EXPO_SELLER_NM
 	                                    FROM TB_DP_PROD_NOTI N
 	                                       , TB_DP_PROD P
-	                                   WHERE P.PROD_ID = N.PROD_ID
+	                                   WHERE N.TENANT_ID = #{tenantId}
+	                                       AND P.PROD_ID = N.PROD_ID
 	                                   <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
 	                                       AND N.NOTI_SEQ = #{notiSeq}
 	                                   </if>
@@ -560,7 +565,8 @@
                                                    </if>
                                                </if>
                                            </if>
-	                                         N.NOTI_SEQ
+                                             N.TENANT_ID
+	                                       , N.NOTI_SEQ
 	                                       , N.TITLE
 	                                       , N.NOTI_DSCR
 	                                       , N.REG_DT
@@ -579,7 +585,8 @@
 	                                       , P.EXPO_SELLER_NM
 	                                    FROM TB_DP_PROD_NOTI_WD N
 	                                       , TB_DP_PROD P
-	                                   WHERE P.PROD_ID = N.PROD_ID
+	                                   WHERE N.TENANT_ID = #{tenantId}
+	                                       AND P.PROD_ID = N.PROD_ID
                                        <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
                                            AND N.NOTI_SEQ = #{notiSeq}
                                        </if>
@@ -636,10 +643,8 @@
 	         , NVL2( N.TITLE, N.TITLE, NVL2( N.NOTI_DSCR, NULL, DEFAULT_MSG ) ) AS TITLE
 	         , NVL2( N.NOTI_DSCR, N.NOTI_DSCR, DEFAULT_MSG ) AS NOTI_DSCR
 	         , NVL( N.NOTI_SCORE, 0 ) AS NOTI_SCORE
-	         , ( CASE WHEN INSTR( N.MBR_NO, 'IW' ) > 0 AND N.MBR_TELNO > ' ' THEN
-	                       SUBSTR( N.MBR_TELNO, 0, 3 )||( CASE WHEN LENGTH(N.MBR_TELNO) <![CDATA[<]]> 11 THEN '***' ELSE '****' END )||SUBSTR( N.MBR_TELNO, -4 )
-	                  ELSE N.REG_ID
-	              END ) AS REG_ID
+	         , N.MBR_TELNO
+             , N.REG_ID
 	         , TO_CHAR(N.REG_DT,'YYYYMMDDHH24MISS') AS REG_DT
 	         , N.SELLER_RESP_TITLE
 	         , N.SELLER_RESP_OPIN
@@ -648,7 +653,8 @@
 	         , 'mine' AS WHOSE
 	         , ( CASE WHEN ( SELECT COUNT(*)
 	                           FROM TB_DP_PROD_NOTIGOOD NG
-	                          WHERE NG.MBR_NO = #{mbrNo}
+	                          WHERE NG.TENANT_ID = N.TENANT_ID
+	                            AND NG.MBR_NO = #{mbrNo}
 	                            AND NG.NOTI_SEQ = N.NOTI_SEQ ) > 0 THEN 'Y'
 	                  ELSE 'N'
 	              END ) AS NOTI_YN
@@ -673,6 +679,7 @@
 	                FROM
 	                   (
 	                   SELECT COUNT(*) OVER() AS TOTAL_COUNT
+	                        , MAX( TENANT_ID ) AS TENANT_ID
 	                        , MAX( NOTI_SEQ ) AS NOTI_SEQ
 	                        , MAX( TITLE ) AS TITLE
 	                        , MAX( NOTI_DSCR ) AS NOTI_DSCR
@@ -702,7 +709,8 @@
 	                        <if test="prodType != 'shopping'">
 	                            /*+ leading(P) use_nl(N) index(N IDX_DP_PROD_NOTI_06) */
 	                        </if>
-	                               N.NOTI_SEQ
+	                               N.TENANT_ID
+	                             , N.NOTI_SEQ
 	                             , N.TITLE
 	                             , N.NOTI_DSCR
 	                             , N.REG_DT
@@ -722,7 +730,8 @@
 	                             , NULL AVG_SCORE
 	                          FROM TB_DP_PROD_NOTI  N
 	                             , TB_DP_PROD  P
-	                         WHERE P.PROD_ID = N.PROD_ID
+	                         WHERE N.TENANT_ID = #{tenantId}
+	                           AND P.PROD_ID = N.PROD_ID
 	                           AND N.MBR_NO = #{mbrNo}
 	                    <!-- Shopping -->
 	                    <if test="prodType == 'shopping'">
@@ -752,7 +761,8 @@
 	                    <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
 	                    <if test="prodType != 'shopping'">
 	                        UNION ALL
-	                        SELECT NULL AS NOTI_SEQ
+	                        SELECT MA.TENANT_ID AS TENANT_ID                               
+	                             , NULL AS NOTI_SEQ
 	                             , NULL AS TITLE
 	                             , NULL AS NOTI_DSCR
 	                             , MA.REG_DT AS REG_DT
@@ -771,7 +781,8 @@
 	                             , NULL AS EXPO_SELLER_NM
 	                             , MA.AVG_SCORE
 	                        FROM TB_DP_MBR_AVG MA
-	                       WHERE MA.MBR_NO = #{mbrNo} 
+	                       WHERE MA.TENANT_ID = #{tenantId} 
+	                         AND MA.MBR_NO = #{mbrNo} 
 	                        <if test="prodType != 'shopping'">
 	                            <if test="prodIds != null">
 	                               AND MA.PROD_ID IN
@@ -796,8 +807,7 @@
         SELECT COUNT(*) AS TOTAL_COUNT
           FROM
              (
-             SELECT MAX( REG_DT ) AS REG_DT
-                  , MAX( PROD_ID ) AS PROD_ID
+             SELECT MAX( PROD_ID ) AS PROD_ID
                FROM
                   (
                   SELECT
@@ -809,11 +819,11 @@
                   <if test="prodType != 'shopping'">
                       /*+ leading(P) use_nl(N) index(N IDX_DP_PROD_NOTI_06) */
                   </if>
-                         N.REG_DT
-                       , N.PROD_ID
+                         N.PROD_ID
                     FROM TB_DP_PROD_NOTI  N
                        , TB_DP_PROD  P
-                   WHERE P.PROD_ID = N.PROD_ID
+                   WHERE N.TENANT_ID = #{tenantId}
+                     AND P.PROD_ID = N.PROD_ID
                      AND N.MBR_NO = #{mbrNo}
               <!-- Shopping -->
               <if test="prodType == 'shopping'">
@@ -845,7 +855,8 @@
                   UNION ALL
                   SELECT MA.PROD_ID
                   FROM TB_DP_MBR_AVG MA
-                 WHERE MA.MBR_NO = #{mbrNo} 
+                 WHERE MA.TENANT_ID = #{tenantId} 
+                   AND MA.MBR_NO = #{mbrNo} 
                   <if test="prodType != 'shopping'">
                       <if test="prodIds != null">
                          AND MA.PROD_ID IN
