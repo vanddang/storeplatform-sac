@@ -35,6 +35,7 @@ public class Source extends CommonInfo implements Serializable {
 	 */
 	private String type;
 	private String url; // Resource URL
+	private String expoOrd; // 노출 순서
 
 	public String getMediaType() {
 		return this.mediaType;
@@ -67,4 +68,13 @@ public class Source extends CommonInfo implements Serializable {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	public String getExpoOrd() {
+		return this.expoOrd;
+	}
+
+	public void setExpoOrd(String expoOrd) {
+		this.expoOrd = expoOrd;
+	}
+
 }
