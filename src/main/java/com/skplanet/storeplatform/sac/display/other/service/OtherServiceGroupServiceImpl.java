@@ -88,6 +88,8 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 		if (!appList.isEmpty()) {
 			OtherServiceGroup otherServiceGroup = null;
 
+			// Identifier 설정
+			List<Identifier> identifierList;
 			Identifier identifier = null;
 			Product product = null;
 
@@ -100,6 +102,7 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 
 				product = new Product(); // 결과물
 				identifier = new Identifier();
+				identifierList = new ArrayList<Identifier>();
 
 				// Response VO를 만들기위한 생성자
 				menuList = new ArrayList<Menu>(); // 메뉴 리스트
@@ -109,7 +112,8 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 				else if ("PD002502".equals(otherServiceGroup.getContentsTypeCd()))
 					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 				identifier.setText(otherServiceGroup.getProdId());
-				product.setIdentifier(identifier);
+				identifierList.add(identifier);
+				product.setIdentifierList(identifierList);
 
 				// 메뉴 정보
 				menu = new Menu(); // 메뉴
