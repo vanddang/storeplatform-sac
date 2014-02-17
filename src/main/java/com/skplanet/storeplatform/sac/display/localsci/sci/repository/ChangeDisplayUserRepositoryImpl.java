@@ -1,7 +1,10 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
 
 /**
@@ -15,34 +18,32 @@ import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
 @Component
 public class ChangeDisplayUserRepositoryImpl implements ChangeDisplayUserRepository {
 
+	@Autowired
+	@Qualifier("sac")
+	private CommonDAO commonDAO;
+
 	@Override
 	public Object changeMbrAvg(ChangeDisplayUser changeDisplayUser) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.commonDAO.update("LocalSci.changeMbrAvg", changeDisplayUser);
 	}
 
 	@Override
 	public Object changeProdNoti(ChangeDisplayUser changeDisplayUser) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.commonDAO.update("LocalSci.changeProdNoti", changeDisplayUser);
 	}
 
 	@Override
 	public Object changeProdNotiGood(ChangeDisplayUser changeDisplayUser) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.commonDAO.update("LocalSci.changeProdNotiGood", changeDisplayUser);
 	}
 
 	@Override
 	public Object changeTenantProdStats(ChangeDisplayUser changeDisplayUser) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.commonDAO.update("LocalSci.changeTenantProdStats", changeDisplayUser);
 	}
 
 	@Override
 	public Object changeMsgMbrMapg(ChangeDisplayUser changeDisplayUser) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.commonDAO.update("LocalSci.changeMsgMbrMapg", changeDisplayUser);
 	}
-
 }

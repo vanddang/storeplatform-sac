@@ -38,8 +38,9 @@ public class ChangeDisplayUserSCIController implements ChangeDisplayUserSCI {
 		LOGGER.debug("## req : {}", changeDisplayUserSacReq);
 
 		ChangeDisplayUser changeDisplayUser = new ChangeDisplayUser();
-		changeDisplayUser.setNewUserId(changeDisplayUser.getNewUserId());
-		changeDisplayUser.setOldUserId(changeDisplayUser.getOldUserId());
+		changeDisplayUser.setTenantId(changeDisplayUserSacReq.getTenantId());
+		changeDisplayUser.setNewUserId(changeDisplayUserSacReq.getNewUserId());
+		changeDisplayUser.setOldUserId(changeDisplayUserSacReq.getOldUserId());
 		this.changeDisplayUserService.changeDisplayUser(changeDisplayUser);
 
 		ChangeDisplayUserSacRes changeDisplayUserSacRes = new ChangeDisplayUserSacRes();
@@ -56,6 +57,7 @@ public class ChangeDisplayUserSCIController implements ChangeDisplayUserSCI {
 		LOGGER.debug("## req : {}", changeDisplayUserSacReq);
 
 		ChangeDisplayUser changeDisplayUser = new ChangeDisplayUser();
+		changeDisplayUser.setTenantId(changeDisplayUserSacReq.getTenantId());
 		changeDisplayUser.setNewUserKey(changeDisplayUserSacReq.getNewUseKey());
 		changeDisplayUser.setOldUserKey(changeDisplayUserSacReq.getOldUserKey());
 
