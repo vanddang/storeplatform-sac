@@ -38,14 +38,12 @@ public class Purchase extends CommonInfo implements Serializable {
 	private String token; // 암호화된 토큰 (외부 연동을 위해 사용)
 	private String purchaser; // 구매자 전화번호
 	private Price price; // 구매가격
-	private Date date; // 구매일자
+	private List<Date> dateList;
 	private Rights rights; // 이용기간 및 이용권한
 	private Gift gift; // 구매이력이 '선물'일 경우 정의
 	private Coupon coupon; // 구매한 쿠폰이 있을 경우 정의
 	private AutoPay autoPay; // 자동결제 상품인 경우 정의
 	private Count count; // 구매 건수
-	private String purchaseFlag; // payment : 구매, nonPayment : 미구매
-	private String dwldExprDt; // 다운로드 만료일시
 
 	/**
 	 * @return the identifierList
@@ -138,18 +136,18 @@ public class Purchase extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the date
+	 * @return the dateList
 	 */
-	public Date getDate() {
-		return this.date;
+	public List<Date> getDateList() {
+		return this.dateList;
 	}
 
 	/**
-	 * @param date
-	 *            the date to set
+	 * @param dateList
+	 *            the dateList to set
 	 */
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDateList(List<Date> dateList) {
+		this.dateList = dateList;
 	}
 
 	/**
@@ -225,35 +223,5 @@ public class Purchase extends CommonInfo implements Serializable {
 	 */
 	public void setCount(Count count) {
 		this.count = count;
-	}
-
-	/**
-	 * @return the purchaseFlag
-	 */
-	public String getPurchaseFlag() {
-		return this.purchaseFlag;
-	}
-
-	/**
-	 * @param purchaseFlag
-	 *            the purchaseFlag to set
-	 */
-	public void setPurchaseFlag(String purchaseFlag) {
-		this.purchaseFlag = purchaseFlag;
-	}
-
-	/**
-	 * @return the dwldExprDt
-	 */
-	public String getDwldExprDt() {
-		return this.dwldExprDt;
-	}
-
-	/**
-	 * @param dwldExprDt
-	 *            the dwldExprDt to set
-	 */
-	public void setDwldExprDt(String dwldExprDt) {
-		this.dwldExprDt = dwldExprDt;
 	}
 }
