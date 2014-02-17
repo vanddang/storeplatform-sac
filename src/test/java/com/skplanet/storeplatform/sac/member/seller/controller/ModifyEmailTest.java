@@ -80,7 +80,7 @@ public class ModifyEmailTest {
 		xStoreAuthInfo = "authKey=114127c7ef42667669819dad5df8d820c;ist=N";
 
 		// [REQUEST] 초기화
-		this.req = new ModifyEmailSacReq();
+		req = new ModifyEmailSacReq();
 		authorizeReq = new AuthorizeReq();
 
 		// 로그인 데이터 주입
@@ -94,6 +94,9 @@ public class ModifyEmailTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
+						req.setSellerKey("");
+						req.setSessionKey("");
+						req.setNewEmailAddress("");
 						LOGGER.debug("[REQUEST(SAC)-회원인증] : \n{}",
 								TestConvertMapperUtils.convertObjectToJson(authorizeReq));
 						return authorizeReq;
@@ -108,8 +111,8 @@ public class ModifyEmailTest {
 		// 로그인 결과 검증
 		if (StringUtils.equals(TestMemberConstant.USE_Y, authorizeRes.getIsLoginSuccess())) {
 			// 정보수정의 위한 데이터 주입
-			this.req.setSellerKey(authorizeRes.getSellerMbr().getSellerKey());
-			this.req.setSessionKey(authorizeRes.getSessionKey());
+			req.setSellerKey(authorizeRes.getSellerMbr().getSellerKey());
+			req.setSessionKey(authorizeRes.getSessionKey());
 		} else {
 			fail("수정 불가 회원입니다.");
 		}
@@ -118,7 +121,7 @@ public class ModifyEmailTest {
 	@After
 	public void after() {
 		// Debug
-		LOGGER.debug("[RESPONSE(SAC)-Password 수정] : \n{}", TestConvertMapperUtils.convertObjectToJson(this.res));
+		LOGGER.debug("[RESPONSE(SAC)-Password 수정] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
 	}
 
 	@Test
