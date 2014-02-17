@@ -27,7 +27,6 @@ public class VodDetailReq extends CommonInfo {
 	private String channelId;
 
 	/** 상품 정렬 순서 */
-	@NotEmpty
 	private String orderedBy;
 
 	/** 시작점 ROW, default : 1 */
