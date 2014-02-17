@@ -154,6 +154,12 @@
             <version>0.8.1</version>
             <scope>test</scope>
         </dependency>
+        <!-- CMS -> SAC 전시배포 , 단말 리맵핑에 사용되는 jar -->
+		<dependency>
+			<groupId>com.skplanet</groupId>
+			<artifactId>storeplatform-cmsapp-interface-model</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency> 
 	</dependencies>
  
 </project>
