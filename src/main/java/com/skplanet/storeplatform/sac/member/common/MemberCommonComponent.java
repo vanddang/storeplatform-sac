@@ -212,7 +212,6 @@ public class MemberCommonComponent {
 	 * <pre>
 	 * 고객정보조회
 	 * 모번호 조회및 단말 정보 조회(USPS 정보와 서비스 관리번호 UA_CD 값이 같이 들어와야함.)
-	 * TODO 기타 파트에서 api 개발 완료되면 확인해봐야함.
 	 * </pre>
 	 * 
 	 * @param pReqParam
@@ -222,7 +221,6 @@ public class MemberCommonComponent {
 	 * @return UserEcRes
 	 */
 	public UserEcRes getMappingInfo(String pReqParam, String type) {
-		LOGGER.info("## 기타 파트 API 미구현...... (1월 27일 완료 예정이라함.)");
 		UapsEcReq uapsReq = new UapsEcReq();
 		uapsReq.setDeviceId(pReqParam);
 		uapsReq.setType(type);
@@ -252,9 +250,6 @@ public class MemberCommonComponent {
 	/**
 	 * <pre>
 	 * 회원 기본 정보 조회 (기본정보만...조회 - TB_US_USERMBR).
-	 * test userKey - "IF1023002708420090928145937"
-	 * 
-	 * TODO 추가 필요한 정보가 있으면 정의해서 쓰면됨.
 	 * </pre>
 	 * 
 	 * @param keyType
@@ -435,8 +430,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -458,12 +452,9 @@ public class MemberCommonComponent {
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
 
-				/**
-				 * TODO 기타 파트 API 호출 (방화벽이 뚤리지 않아 Dummy 데이타가 내려온다.)
-				 */
 				UserEcRes userRes = this.getMappingInfo(deviceId, "mdn");
-				// LOGGER.debug("## UAPS 연동 : {}", userRes.toString());
-				LOGGER.debug("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
+				LOGGER.info("## UAPS 연동 결과 toString() : {}", userRes);
+				LOGGER.info("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
 				majorDeviceInfo.setSvcMangNum(userRes.getSvcMngNum());
 
 			}
@@ -480,7 +471,7 @@ public class MemberCommonComponent {
 
 		}
 
-		LOGGER.info("## 단말 주요정보 : {}", majorDeviceInfo.toString());
+		LOGGER.info("## 단말 주요정보 : {}", majorDeviceInfo);
 
 		return majorDeviceInfo;
 
@@ -618,6 +609,7 @@ public class MemberCommonComponent {
 	public boolean isIdpConnect(String userAuthkey) {
 
 		if (StringUtils.equals(userAuthkey, this.fixedMobileUserAuthKey)) {
+			LOGGER.info(">> userAuthKey 가 Fixed 값과 달라 IDP 연동 하지 않는다.");
 			return false;
 		} else {
 			return true;
