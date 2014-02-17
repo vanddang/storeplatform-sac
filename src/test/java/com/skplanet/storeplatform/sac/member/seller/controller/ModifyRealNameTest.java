@@ -83,8 +83,8 @@ public class ModifyRealNameTest {
 		authorizeReq = new AuthorizeReq();
 
 		// 로그인 데이터 주입
-		authorizeReq.setSellerId("sctest5");
-		authorizeReq.setSellerPW("123456");
+		authorizeReq.setSellerId("rejoiceTest07");
+		authorizeReq.setSellerPW("1234");
 		authorizeReq.setExpireDate("2");
 
 		// 로그인 콜
@@ -127,23 +127,22 @@ public class ModifyRealNameTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						req.setSessionKey("");
-						req.setSellerKey("");
-						req.setIsDomestic("");
-						req.setIsOwn("");
-						req.setIsRealName("");
-						req.setParentBirthDay("");
-						req.setParentEmail("");
-						req.setParentType("");
-						req.setRealNameDate("");
-						req.setRealNameMethod("");
-						req.setSellerBirthDay("");
-						req.setSellerCI("");
-						req.setSellerDI("");
-						req.setSellerName("");
-						req.setSellerPhone("");
-						req.setSellerTelecom("");
-						req.setSex("");
+						req.setIsDomestic("N");
+						req.setIsOwn("OWN");
+						req.setIsRealName("Y");
+						req.setParentBirthDay("19880214");
+						req.setParentDate("20140208185420");
+						req.setParentEmail("awdawdw@adawd.com");
+						req.setParentType("M");
+						req.setRealNameDate("20140212175223");
+						req.setRealNameMethod("US011101");
+						req.setSellerBirthDay("19800202");
+						req.setSellerCI("ad2d23adaw");
+						req.setSellerDI("awd12edad");
+						req.setSellerName("삼돌이");
+						req.setSellerPhone("01012341234");
+						req.setSellerTelecom("US001201");
+						req.setSex("M");
 						// Debug
 						LOGGER.debug("[REQUEST (SAC)-회원기본정보 수정] : \n{}",
 								TestConvertMapperUtils.convertObjectToJson(req));

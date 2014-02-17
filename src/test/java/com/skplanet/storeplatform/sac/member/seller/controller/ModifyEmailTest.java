@@ -131,9 +131,9 @@ public class ModifyEmailTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						req.setSellerKey("");
-						req.setSessionKey("");
-						req.setNewEmailAddress("");
+						req.setSellerKey("SE201402142023109010000977");
+						req.setSessionKey("c2ee833eb2844223afd5143651c08eb0");
+						req.setNewEmailAddress("abc00107@yopmail.com");
 
 						// Debug
 						LOGGER.debug("[REQUEST (SAC)-회원기본정보 수정] : \n{}",
