@@ -1156,7 +1156,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 상품 정보 (상품명)
 				title = new Title();
-				title.setText(shopping.getBrandName());
+				title.setText(shopping.getBrandNm());
 
 				// 이미지 정보
 				sourceList = new ArrayList<Source>();
@@ -1245,7 +1245,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				layOut = new Layout();
 				// 상품 정보 (상품명)
 				title = new Title();
-				title.setText(shopping.getBrandName());
+				title.setText(shopping.getBrandNm());
 				// 메뉴정보
 				menu = new Menu();
 				menu.setId(shopping.getMenuId());
@@ -2131,7 +2131,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					identifier1 = new Identifier();
 					identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
 					identifier1.setText(shopping.getBrandId());
-					contributor.setName(shopping.getBrandName());
+					contributor.setName(shopping.getBrandNm());
 					contributor.setIdentifier(identifier1);
 
 					String deliveryValue = shopping.getProdCaseCd();
@@ -2247,7 +2247,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 								purchaseDate = new Date(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM,
 										DateUtils.parseDate(prchsDt));
 							}
-							purchase.setDate(purchaseDate);
+
+							List<Date> dateList = new ArrayList<Date>();
+							dateList.add(purchaseDate);
+							purchase.setDateList(dateList);
+
 							if (!StringUtils.isEmpty(req.getUserKey())) {// 사용자키가 있을 경우
 								episodeProduct.setPurchase(purchase);
 							}
