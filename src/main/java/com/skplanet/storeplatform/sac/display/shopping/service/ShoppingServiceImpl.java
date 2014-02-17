@@ -790,6 +790,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
 				identifier.setText(shopping.getCatalogId());
+				identifierList.add(identifier);
 
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
