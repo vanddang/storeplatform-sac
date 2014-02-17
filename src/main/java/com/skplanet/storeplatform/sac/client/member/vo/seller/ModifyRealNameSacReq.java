@@ -14,9 +14,6 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class ModifyRealNameSacReq extends CommonInfo {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** 인증 키. */
@@ -26,6 +23,7 @@ public class ModifyRealNameSacReq extends CommonInfo {
 	@NotBlank
 	private String sellerKey;
 	/** 법정대리인 관계코드. */
+	@NotBlank
 	private String parentType;
 	/** 실명인증 대상. */
 	@NotBlank
@@ -40,13 +38,12 @@ public class ModifyRealNameSacReq extends CommonInfo {
 	/** 실명인증 일시. */
 	private String realNameDate;
 	/** CI. */
+	@NotBlank
 	private String sellerCI;
 	/** DI. */
 	private String sellerDI;
 	/** 실명인증수단 코드. */
 	private String realNameMethod;
-	/** 실명인증사이트 코드. */
-	private String realNameSystemId;
 	/** 이동통신사. */
 	private String sellerTelecom;
 	/** 전화번호. */
@@ -55,6 +52,10 @@ public class ModifyRealNameSacReq extends CommonInfo {
 	private String sellerName;
 	/** 판매자 생년월일. */
 	private String sellerBirthDay;
+	/** 내국인 여부. */
+	private String isDomestic;
+	/** 성별. */
+	private String sex;
 
 	public String getSessionKey() {
 		return this.sessionKey;
@@ -144,14 +145,6 @@ public class ModifyRealNameSacReq extends CommonInfo {
 		this.realNameMethod = realNameMethod;
 	}
 
-	public String getRealNameSystemId() {
-		return this.realNameSystemId;
-	}
-
-	public void setRealNameSystemId(String realNameSystemId) {
-		this.realNameSystemId = realNameSystemId;
-	}
-
 	public String getSellerTelecom() {
 		return this.sellerTelecom;
 	}
@@ -182,6 +175,22 @@ public class ModifyRealNameSacReq extends CommonInfo {
 
 	public void setSellerBirthDay(String sellerBirthDay) {
 		this.sellerBirthDay = sellerBirthDay;
+	}
+
+	public String getIsDomestic() {
+		return this.isDomestic;
+	}
+
+	public void setIsDomestic(String isDomestic) {
+		this.isDomestic = isDomestic;
+	}
+
+	public String getSex() {
+		return this.sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
 }

@@ -108,8 +108,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String parentCI;
 	/** 법정대리인 실명인증수단 코드. */
 	private String parentRealNameMethod;
-	/** 법정대리인 실명인증 시스템 id. */
-	private String parentRealNameSystemId;
 	/** 실명인증 여부. */
 	@NotBlank
 	@Pattern(regexp = "^Y|^N")
@@ -123,8 +121,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String sellerDI;
 	/** 실명인증수단 코드. */
 	private String realNameMethod;
-	/** 실명인증사이트 코드. */
-	private String realNameSystemId;
 	/** 회사명. */
 	private String sellerCompany;
 	/** 사업자 등록번호. */
@@ -418,14 +414,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 		this.parentRealNameMethod = parentRealNameMethod;
 	}
 
-	public String getParentRealNameSystemId() {
-		return this.parentRealNameSystemId;
-	}
-
-	public void setParentRealNameSystemId(String parentRealNameSystemId) {
-		this.parentRealNameSystemId = parentRealNameSystemId;
-	}
-
 	public String getIsRealName() {
 		return this.isRealName;
 	}
@@ -464,14 +452,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 
 	public void setRealNameMethod(String realNameMethod) {
 		this.realNameMethod = realNameMethod;
-	}
-
-	public String getRealNameSystemId() {
-		return this.realNameSystemId;
-	}
-
-	public void setRealNameSystemId(String realNameSystemId) {
-		this.realNameSystemId = realNameSystemId;
 	}
 
 	public String getSellerCompany() {
