@@ -7,8 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
-import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
@@ -25,14 +24,14 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
  * Updated on : 2014. 2. 11. Updated by : 김다슬, 인크로스.
  */
 @LocalSCI
-public class DeviceSCIController implements DeviceInternalSCI {
+public class DeviceSCIController implements DeviceSCI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceSCIController.class);
 
 	@Autowired
-	private DeviceService deviceService; // 휴대기기 관련 내부 인터페이스.
+	private DeviceService deviceService; // 휴대기기 관련 SAC 내부 인터페이스.
 
 	@Autowired
-	private DeviceSCI deviceSCI; // 회원 콤포넌트 휴대기기 기능 인터페이스.
+	private com.skplanet.storeplatform.member.client.user.sci.DeviceSCI deviceSCI; // 회원 콤포넌트 휴대기기 기능 인터페이스.
 
 	/*
 	 * (non-Javadoc)
@@ -48,12 +47,13 @@ public class DeviceSCIController implements DeviceInternalSCI {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		LOGGER.info("[DeviceSCIController] RequestHeader : {}, \nRequestParameter : {}", requestHeader, requestVO);
+		LOGGER.info("[DeviceInternalSCIController.searchDeviceId] RequestHeader : {}, \nRequestParameter : {}",
+				requestHeader, requestVO);
 
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				requestVO.getDeviceKey(), requestVO.getUserKey());
 
-		LOGGER.info("[DeviceSCIController] SearchDevice Info : {}", deviceInfo);
+		LOGGER.info("[DeviceInternalSCIController.searchDeviceId] SearchDevice Info : {}", deviceInfo);
 
 		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
 		responseVO.setDeviceId(deviceInfo.getDeviceId());

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
@@ -27,7 +27,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
  * Updated on : 2014. 2. 12. Updated by : 김다슬, 인크로스.
  */
 @LocalSCI
-public class SearchUserSCIController implements SearchUserInternalSCI {
+public class SearchUserSCIController implements SearchUserSCI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchUserSCIController.class);
 
 	@Autowired
@@ -44,12 +44,14 @@ public class SearchUserSCIController implements SearchUserInternalSCI {
 	public SearchUserSacRes searchUserByUserKey(SearchUserSacReq request) {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}",
-				request);
+		LOGGER.info(
+				"[SearchUserInternalSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}",
+				requestHeader, request);
 
 		/* 1. 회원 정보 조회 SC API 호출. */
 		DetailReq detailRequest = new DetailReq();
 		DetailRes userDetail = this.userSearchService.detail(requestHeader, detailRequest);
+		LOGGER.info("[SearchUserInternalSCIController.searchUserByUserKey] SC UserDetailInfo Response : {}", userDetail);
 
 		/* 2. 사용자 휴대기기 등록 대수가 1개 이상일 경우 리스트 가져오기. */
 		// 등록기기 없는경우, size=0 인 List 내려주기.
@@ -68,6 +70,8 @@ public class SearchUserSCIController implements SearchUserInternalSCI {
 		searchUserSacRes.setUserType(userDetail.getUserInfo().getUserType());
 		searchUserSacRes.setUserMainStatus(userDetail.getUserInfo().getUserMainStatus());
 		searchUserSacRes.setUserSubStatus(userDetail.getUserInfo().getUserSubStatus());
+		LOGGER.info("[SearchUserInternalSCIController.searchUserByUserKey] SAC UserInfo Response : {}",
+				searchUserSacRes);
 
 		return searchUserSacRes;
 	}
