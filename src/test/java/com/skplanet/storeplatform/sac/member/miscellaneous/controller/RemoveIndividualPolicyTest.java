@@ -99,7 +99,7 @@ public class RemoveIndividualPolicyTest {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						RemoveIndividualPolicyRes response = (RemoveIndividualPolicyRes) result;
+						response = (RemoveIndividualPolicyRes) result;
 						assertThat(response.getPolicyCode(), notNullValue());
 						assertEquals(response.getPolicyCode(), request.getPolicyCode());
 					}
