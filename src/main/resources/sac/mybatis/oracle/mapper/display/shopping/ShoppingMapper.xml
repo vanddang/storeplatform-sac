@@ -444,7 +444,7 @@
                      , 'DP006301', 'giftcard'
                      , 'DP006302', 'exchange'
                      , 'DP006303', 'delivery' ) AS prodCaseCd
-                   ,(FILE_PATH ||FILE_NM) as filePos
+                   ,CONCAT(FILE_PATH,FILE_NM) as filePos
                    ,'specialSale' AS specialSale
    	               ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
 		                             ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY ) ) THEN 'Y' ELSE 'N'
@@ -596,10 +596,10 @@
                       ,PLAN_END_DT as planEndDt
                       ,PRZWNER_ANNO_DT przwnerAnnoDt
                       ,PLAN_GIFT_NM as planGiftName
-					  ,(SELECT FILE_PATH||FILE_NM FROM TB_DP_PROD_IMG
+					  ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
 						 WHERE PROD_ID = PLAN_ID AND IMG_CD =#{bannerImgCd}
 					   )filePos
-                      ,(SELECT FILE_PATH||FILE_NM FROM TB_DP_PROD_IMG
+                      ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
                          WHERE PROD_ID = PLAN_ID AND IMG_CD =#{promotionImgCd}
                        )filePos1					   
                  FROM TB_DP_PLAN_INFO_MANG
@@ -772,7 +772,7 @@
                                AND LANG_CD = #{langCd}          /* ko : 한국어 */
                                AND ROWNUM = 1
                            ) AS upMenuName                      
-	                     ,(SELECT FILE_PATH||FILE_NM FROM TB_DP_PROD_IMG
+	                     ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
 	                        WHERE PROD_ID = BRAND_ID AND IMG_CD =#{imageCd}
 	                      )filePos
                  FROM (
@@ -937,7 +937,7 @@
                 SELECT THEME_ID as themeId
                      , THEME_NM as themeName
                      , LINK_URL as linkUrl
-                     ,(SELECT FILE_PATH||FILE_NM FROM TB_DP_PROD_IMG
+                     ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
                         WHERE PROD_ID = THEME_ID AND IMG_CD =#{imageCd}
                       )filePos                     
                   FROM TB_DP_THEME_INFO
@@ -1412,7 +1412,7 @@
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
                               , 'DP006303', 'delivery' ) PROD_CASE_CD
-                        ,(PI.FILE_PATH || PI.FILE_NM) as filePos
+                        ,CONCAT(PI.FILE_PATH,PI.FILE_NM) as filePos
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -1684,7 +1684,7 @@
     <select id="getShoppingImgDetailList" parameterType="Map" resultType="Shopping">
      /* ShoppingMapper.xml.getShoppingImgDetailList,쇼핑상세(이미지) 조회, 김형식/SK플래닛 , 2014-02-04 */
         SELECT 
-                (FILE_PATH||FILE_NM) filePos 
+                 CONCAT(FILE_PATH,FILE_NM) filePos 
                , EXPO_ORD
           FROM TB_DP_PROD_IMG
          WHERE PROD_ID = #{req.prodId} 
