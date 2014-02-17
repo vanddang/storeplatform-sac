@@ -198,6 +198,8 @@ public class DisplayConstants {
 
 	public static final String DP_DATE_PUBLISHED_NM = "date/published";
 
+	public static final String DP_DATE_DOWNLOAD_EXPIRED_NM = "date/downloadExpired";
+
 	public static final String DP_DATE_UPT_NM = "date/upt";
 
 	public static final String DP_SOLDOUT = "soldout";
