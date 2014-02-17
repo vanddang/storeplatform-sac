@@ -65,7 +65,6 @@ public class SellerController {
 	 * 
 	 * @param req
 	 * @return CreateRes
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -80,7 +79,6 @@ public class SellerController {
 	 * 
 	 * @param AuthorizeReq
 	 * @return AuthorizeRes : JSON
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -95,7 +93,6 @@ public class SellerController {
 	 * 
 	 * @param AuthorizeReq
 	 * @return AuthorizeRes : JSON
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/authorizeSimple/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -111,7 +108,6 @@ public class SellerController {
 	 * @param header
 	 * @param req
 	 * @return ModifyInformationRes
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -144,7 +140,6 @@ public class SellerController {
 	 * @param header
 	 * @param req
 	 * @return ConfirmRes
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -155,7 +150,6 @@ public class SellerController {
 	/**
 	 * <pre>
 	 * 2.2.16. 판매자 회원 전환 신청.
-	 * TODO 개발 작업 : 추후 URL 삭제 => /dev
 	 * </pre>
 	 * 
 	 * @param header
@@ -176,7 +170,6 @@ public class SellerController {
 	 * 
 	 * @param LockAccountReq
 	 * @return LockAccountRes : JSON
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -188,11 +181,12 @@ public class SellerController {
 	/**
 	 * <pre>
 	 * 2.2.18. 판매자회원 실명 인증 정보 수정
+	 * TODO 개발 작업 : 추후 URL 삭제 => /dev
 	 * </pre>
 	 * 
 	 * @param header
 	 * @param req
-	 * @return
+	 * @return ModifyRealNameSacRes
 	 */
 	@RequestMapping(value = "/dev/modifyRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -207,7 +201,6 @@ public class SellerController {
 	 * 
 	 * @param WithdrawReq
 	 * @return WithdrawRes : JSON
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -230,7 +223,6 @@ public class SellerController {
 	 * 
 	 * @param header
 	 * @param req
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/createAuthorizationKey/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -247,7 +239,6 @@ public class SellerController {
 	 * 
 	 * @param header
 	 * @param req
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/removeAuthorizationKey/v1", method = RequestMethod.POST)
 	@ResponseBody
