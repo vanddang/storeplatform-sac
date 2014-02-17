@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,12 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -56,6 +59,8 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 	private CommonMetaInfoGenerator commonGenerator;
 	@Autowired
 	private AppInfoGenerator appInfoGenerator;
+	@Autowired
+	private SellerSearchSCI sellerSearchSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -110,6 +115,21 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(prodCharge)) {
 				throw new StorePlatformException("SAC_DSP_0002", "prodCharge", prodCharge);
+			}
+
+			if ("2".equals(inquiryType)) {
+				// 사업자 등록번호로 Selley Key 조회
+				DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+				DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
+				detailInformationSacReq.setSellerBizNumber(inquiryValue);
+				detailInformationSacRes = this.sellerSearchSCI.detailInformation(detailInformationSacReq);
+
+				if (detailInformationSacRes != null) {
+					// 조회된 Seller Key setting
+					downloadBestSacReq.setInquiryValue(detailInformationSacRes.getSellerMbr().getSellerKey());
+				} else {
+					throw new StorePlatformException("SAC_DSP_0008");
+				}
 			}
 
 			List<MetaInfo> downloadBestList = null;
