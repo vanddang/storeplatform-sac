@@ -840,8 +840,7 @@ public class SellerServiceImpl implements SellerService {
 				document.setDocumentName(req.getExtraDocumentList().get(i).getDocumentName());
 				document.setDocumentPath(req.getExtraDocumentList().get(i).getDocumentPath());
 				document.setDocumentSize(req.getExtraDocumentList().get(i).getDocumentSize());
-				document.setIsUsed(MemberConstants.USE_Y);
-
+				document.setIsUsed(req.getExtraDocumentList().get(i).getIsUsed());
 				documentList.add(document);
 			}
 			updateAccountSellerRequest.setDocumentList(documentList);
