@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
@@ -17,6 +18,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserS
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
@@ -48,30 +50,47 @@ public class SearchUserSCIController implements SearchUserSCI {
 				"[SearchUserInternalSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}",
 				requestHeader, request);
 
-		/* 1. 회원 정보 조회 SC API 호출. */
+		// 회원정보 조회 범위 설정.
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn("Y");
+		searchExtent.setDeviceInfoYn("Y");
+
 		DetailReq detailRequest = new DetailReq();
+		detailRequest.setUserKey(request.getUserKey());
+		detailRequest.setSearchExtent(searchExtent);
+
+		// 회원 정보 조회 SC API 호출.
 		DetailRes userDetail = this.userSearchService.detail(requestHeader, detailRequest);
 		LOGGER.info("[SearchUserInternalSCIController.searchUserByUserKey] SC UserDetailInfo Response : {}", userDetail);
 
-		/* 2. 사용자 휴대기기 등록 대수가 1개 이상일 경우 리스트 가져오기. */
-		// 등록기기 없는경우, size=0 인 List 내려주기.
-		List<DeviceInfo> deviceList = userDetail.getDeviceInfoList();
-		List<String> deviceIdList = new ArrayList<String>();
-
-		// MDN 정보 리스트 셋팅
-		for (int i = 0; i < deviceList.size(); i++) {
-			deviceIdList.set(i, deviceList.get(i).getDeviceId());
-		}
-
-		/* 3. 파라미터 셋팅해서 Response. */
 		SearchUserSacRes searchUserSacRes = new SearchUserSacRes();
-		searchUserSacRes.setDeviceId(deviceIdList);
-		searchUserSacRes.setUserId(userDetail.getUserInfo().getUserId());
-		searchUserSacRes.setUserType(userDetail.getUserInfo().getUserType());
-		searchUserSacRes.setUserMainStatus(userDetail.getUserInfo().getUserMainStatus());
-		searchUserSacRes.setUserSubStatus(userDetail.getUserInfo().getUserSubStatus());
-		LOGGER.info("[SearchUserInternalSCIController.searchUserByUserKey] SAC UserInfo Response : {}",
-				searchUserSacRes);
+
+		// 회원 정보가 존재할 경우
+		if (userDetail != null && userDetail.getUserInfo() != null) {
+
+			List<DeviceInfo> deviceList = userDetail.getDeviceInfoList();
+			List<String> deviceIdList = new ArrayList<String>();
+
+			if (deviceList == null) { // 등록기기 없는경우, size=0 인 List 내려주기.
+				deviceList = new ArrayList<DeviceInfo>();
+			} else {
+				// Setting deviceId List.
+				for (int i = 0; i < deviceList.size(); i++) {
+					deviceIdList.add(deviceList.get(i).getDeviceId());
+				}
+			}
+
+			/* 3. 파라미터 셋팅해서 Response. */
+			searchUserSacRes.setDeviceId(deviceIdList);
+			searchUserSacRes.setUserId(userDetail.getUserInfo().getUserId());
+			searchUserSacRes.setUserType(userDetail.getUserInfo().getUserType());
+			searchUserSacRes.setUserMainStatus(userDetail.getUserInfo().getUserMainStatus());
+			searchUserSacRes.setUserSubStatus(userDetail.getUserInfo().getUserSubStatus());
+			LOGGER.info("[SearchUserInternalSCIController.searchUserByUserKey] SAC UserInfo Response : {}",
+					searchUserSacRes);
+		} else {
+			throw new StorePlatformException("SAC_MEM_0003", "userKey", request.getUserKey());
+		}
 
 		return searchUserSacRes;
 	}

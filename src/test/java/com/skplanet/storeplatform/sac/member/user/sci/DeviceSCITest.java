@@ -71,24 +71,29 @@ public class DeviceSCITest {
 		SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
 		assertThat(result.getDeviceId(), notNullValue());
 
-		LOGGER.debug("[DeviceInternalSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
+		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
 	}
 
 	/**
 	 * <pre>
 	 * 단말 MDN 정보 조회 SCI TEST.
-	 * - 검색결과 없음.
+	 * - 검색결과 없음 (Exception).
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
+	@Test
 	public void testExceptGetDeviceId() {
 		SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceKey("DE201401241840125800000296");
-		SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
-		assertThat(result.getDeviceId(), notNullValue());
+		try {
+			SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
+			assertEquals(result.getDeviceId(), null);
 
-		LOGGER.debug("[DeviceInternalSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
+			LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
+		} catch (StorePlatformException e) {
+			assertEquals("SAC_MEM_0002", e.getErrorInfo().getCode());
+			LOGGER.info("\nerror >> ", e);
+		}
 	}
 
 	/**

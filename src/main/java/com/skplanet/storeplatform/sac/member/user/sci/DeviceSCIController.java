@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
@@ -56,8 +57,11 @@ public class DeviceSCIController implements DeviceSCI {
 		LOGGER.info("[DeviceInternalSCIController.searchDeviceId] SearchDevice Info : {}", deviceInfo);
 
 		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
-		responseVO.setDeviceId(deviceInfo.getDeviceId());
-
+		if (deviceInfo != null && deviceInfo.getDeviceId() != null) {
+			responseVO.setDeviceId(deviceInfo.getDeviceId());
+		} else {
+			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+		}
 		return responseVO;
 	}
 

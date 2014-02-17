@@ -3,8 +3,12 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +43,9 @@ public class SearchUserSCITest {
 	@Autowired
 	private SearchUserSCI searchUserSCI;
 
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
+
 	@Before
 	public void before() {
 		SacRequestHeader sacRequestHeader = new SacRequestHeader();
@@ -53,30 +60,53 @@ public class SearchUserSCITest {
 	/**
 	 * <pre>
 	 * UserKey를 이용한 회원정보 조회 SCI TEST.
+	 * - 검색결과 존재.
 	 * </pre>
 	 */
 	@Test
 	public void testSearchUserByUserKey() {
+
 		SearchUserSacReq request = new SearchUserSacReq();
-		request.setUserKey("US201402110557052730002230");
+		request.setUserKey("IW1023284651220101007215215");
 
 		SearchUserSacRes result = this.searchUserSCI.searchUserByUserKey(request);
-		LOGGER.debug("[SearchUserInternalSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
+		LOGGER.debug("[SearchUserSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
 	}
 
 	/**
 	 * <pre>
 	 * UserKey를 이용한 회원정보 조회 SCI TEST.
-	 * - Exception
+	 * - 검색결과 존재.
+	 * 	 deviceId가 여러개.
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
-	public void testExceptSearchUserByUserKey() {
+	@Test
+	public void testSearchUserByUserKey2() {
+
 		SearchUserSacReq request = new SearchUserSacReq();
-		request.setUserKey("");
+		request.setUserKey("IM142100006719244201304082142");
 
 		SearchUserSacRes result = this.searchUserSCI.searchUserByUserKey(request);
-		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
+		LOGGER.debug("[SearchUserSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
 	}
 
+	/**
+	 * <pre>
+	 * UserKey를 이용한 회원정보 조회 SCI TEST.
+	 * - 검색결과 없음 (Exception) .
+	 * </pre>
+	 */
+	@Test
+	public void testExceptSearchUserByUserKey() {
+		SearchUserSacReq request = new SearchUserSacReq();
+		request.setUserKey("IW1024171529820110627132506");
+
+		try {
+			SearchUserSacRes result = this.searchUserSCI.searchUserByUserKey(request);
+			LOGGER.debug("[SearchUserISCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
+		} catch (StorePlatformException e) {
+			assertEquals("SC_MEM_9995", e.getErrorInfo().getCode());
+			LOGGER.info("\nerror >> ", e);
+		}
+	}
 }
