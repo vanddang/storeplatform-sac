@@ -178,6 +178,31 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateDownloadSourceList(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Source> generateDownloadSourceList(MetaInfo metaInfo) {
+		Source source = new Source();
+		List<Source> sourceList = new ArrayList<Source>();
+
+		source = this.generateSource(metaInfo);
+		sourceList.add(source);
+
+		// DLM 이미지
+		source = new Source();
+		source.setType(DisplayConstants.DP_DLM_SOURCE);
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getDlmImagePath()));
+		source.setUrl(metaInfo.getDlmImagePath());
+		sourceList.add(source);
+
+		return sourceList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
 	 */

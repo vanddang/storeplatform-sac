@@ -104,6 +104,16 @@ public interface CommonMetaInfoGenerator {
 
 	/**
 	 * <pre>
+	 * for download Source List 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 * @return List<Source>
+	 */
+	public List<Source> generateDownloadSourceList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
 	 * 공통 Source List 생성.
 	 * </pre>
 	 * 

@@ -171,6 +171,7 @@ public class DisplayConstants {
 
 	// //////////////////////////////////////Source Code //////////////////////////////////////////
 	public static final String DP_THUMNAIL_SOURCE = "thumbnail";
+	public static final String DP_DLM_SOURCE = "dlm";
 
 	public static final String DP_MENU_TOPCLASS_TYPE = "topClass";
 	public static final String DP_META_CLASS_MENU_TYPE = "metaClass";

@@ -25,6 +25,9 @@ import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
 import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
@@ -36,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
@@ -69,13 +73,19 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 	@Autowired
 	private DownloadAES128Helper downloadAES128Helper;
 
+	@Autowired
+	private DeviceSCI deviceSCI;
+
+	@Autowired
+	private DisplayCommonService commonService;
+
 	@Override
 	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader, DownloadComicSacReq downloadComicReq) {
 		// 현재일시 및 만료일시 조회
 		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
 		String sysDate = metaInfo.getSysDate();
-		String expireDate = metaInfo.getExpiredDate();
+		String reqExpireDate = metaInfo.getExpiredDate();
 		metaInfo = null;
 
 		DownloadComicSacRes comicRes = new DownloadComicSacRes();
@@ -114,6 +124,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		if (metaInfo != null) {
 			String prchsId = null; // 구매ID
 			String prchsDt = null; // 구매일시
+			String useExprDt = null; // 이용 만료일시
 			String dwldExprDt = null; // 다운로드 만료일시
 			String prchsState = null; // 구매상태
 			String prchsProdId = null; // 구매 상품ID
@@ -130,8 +141,9 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				historyListSacReq.setTenantId(downloadComicReq.getTenantId());
 				historyListSacReq.setUserKey(downloadComicReq.getUserKey());
 				historyListSacReq.setDeviceKey(downloadComicReq.getDeviceKey());
-				historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
-				historyListSacReq.setStartDt("19000101000000");
+				historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+				historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+				historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 				historyListSacReq.setEndDt(sysDate);
 				historyListSacReq.setOffset(1);
 				historyListSacReq.setCount(1);
@@ -147,6 +159,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				if (historyListSacRes.getTotalCnt() > 0) {
 					prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 					prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
+					useExprDt = historyListSacRes.getHistoryList().get(0).getUseExprDt();
 					dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
 					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 					prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
@@ -180,6 +193,11 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 			// 상품명 정보
 			product.setTitle(this.commonMetaInfoGenerator.generateTitle(metaInfo));
+			product.setChnlProdNm(metaInfo.getChnlProdNm());
+
+			// 상품 설명 정보
+			product.setProductExplain(metaInfo.getProdBaseDesc());
+			product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 
 			// 이미지 정보
 			product.setSourceList(this.commonMetaInfoGenerator.generateSourceList(metaInfo));
@@ -196,40 +214,64 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			// 이용권한 정보
 			product.setRights(this.commonMetaInfoGenerator.generateRights(metaInfo));
 
-			// 저작자 정보
+			// 배포자 정보
 			product.setDistributor(this.commonMetaInfoGenerator.generateDistributor(metaInfo));
+
+			// 저작자 정보
+			product.setContributor(this.ebookComicGenerator.generateEbookContributor(metaInfo));
 
 			// 구매 여부 확인
 			if (StringUtils.isNotEmpty(prchsId)) {
-				metaInfo.setExpiredDate(expireDate);
 				metaInfo.setPurchaseId(prchsId);
 				metaInfo.setPurchaseProdId(prchsProdId);
 				metaInfo.setPurchaseDt(prchsDt);
 				metaInfo.setPurchaseState(prchsState);
-				metaInfo.setDwldExprDt(dwldExprDt);
-				metaInfo.setUserKey(userKey);
-				metaInfo.setDeviceKey(deviceKey);
-				metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
+				metaInfo.setPurchaseDwldExprDt(dwldExprDt);
 
 				// 구매 정보
 				product.setPurchase(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
 
-				// 암호화 정보
-				EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+				if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+					String deviceId = null; // Device Id
+					String deviceIdType = null; // Device Id 유형
 
-				// JSON 파싱
-				MarshallingHelper marshaller = new JacksonMarshallingHelper();
-				byte[] jsonData = marshaller.marshal(contents);
+					SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
+					request.setUserKey(downloadComicReq.getUserKey());
+					request.setDeviceKey(downloadComicReq.getDeviceKey());
 
-				// JSON 암호화
-				byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-				String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+					// 기기정보 조회
+					SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
 
-				Encryption encryption = new Encryption();
-				encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-				encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
-				encryption.setToken(encryptString);
-				product.setEncryption(encryption);
+					if (result != null) {
+						deviceId = result.getDeviceId();
+						deviceIdType = this.commonService.getDeviceIdType(deviceId);
+					}
+
+					metaInfo.setExpiredDate(reqExpireDate);
+					metaInfo.setUseExprDt(useExprDt);
+					metaInfo.setUserKey(userKey);
+					metaInfo.setDeviceKey(deviceKey);
+					metaInfo.setDeviceType(deviceIdType);
+					metaInfo.setDeviceSubKey(deviceId);
+					metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
+
+					// 암호화 정보
+					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+
+					// JSON 파싱
+					MarshallingHelper marshaller = new JacksonMarshallingHelper();
+					byte[] jsonData = marshaller.marshal(contents);
+
+					// JSON 암호화
+					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+					String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+					Encryption encryption = new Encryption();
+					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+					encryption.setToken(encryptString);
+					product.setDl(encryption);
+				}
 			}
 
 			comicRes.setProduct(product);

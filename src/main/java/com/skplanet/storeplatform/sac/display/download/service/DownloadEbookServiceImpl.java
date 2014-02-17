@@ -230,7 +230,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 
 			// 이미지 정보
-			product.setSourceList(this.commonMetaInfoGenerator.generateSourceList(metaInfo));
+			product.setSourceList(this.commonMetaInfoGenerator.generateDownloadSourceList(metaInfo));
 
 			// 메뉴 정보
 			product.setMenuList(this.commonMetaInfoGenerator.generateMenuList(metaInfo));

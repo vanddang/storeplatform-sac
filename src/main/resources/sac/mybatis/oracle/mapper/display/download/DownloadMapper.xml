@@ -506,6 +506,7 @@
     <select id="selectDownloadEbookInfo" parameterType="DownloadEbookSacReq" resultType="MetaInfo">
 		SELECT  /* DownloadMapper.xml, selectDownloadEbookInfo, tae hee Lee, 2014-02-14 */
 		        KA.*
+		      , FN_GETIMAGE(DECODE(KA.META_CLSF_CD, 'CT19', KA.PROD_ID, KA.PART_PROD_ID), #{imageCd}) AS DLM_IMAGE_PATH
 		      , CONCAT(KB.FILE_PATH, KB.FILE_NM) AS IMAGE_PATH
 		      , KB.FILE_SIZE AS IMAGE_SIZE
 		      , (SELECT MENU_NM
