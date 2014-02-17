@@ -41,6 +41,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveMbrOneIDReques
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateNonMbrSegmentRequest;
@@ -145,19 +146,15 @@ public class IdpServiceImpl implements IdpService {
 		for (int i = 0; i < tempSplit.length; i++) {
 			String[] tmpSplit = tempSplit[i].split(",");
 
-			if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0]
-					&& MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
+			if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0] && MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
 
-				if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4])
-						&& !"null".equals(tmpSplit[4])) {
+				if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4]) && !"null".equals(tmpSplit[4])) {
 					LOGGER.debug("RXCREATEUSERIDP old_id : " + tmpSplit[4]);
 					map.put("old_id", tmpSplit[4]);
-				} else if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4])
-						&& "null".equals(tmpSplit[4])) {
+				} else if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4]) && "null".equals(tmpSplit[4])) {
 					map.put("old_id", "null");
 				}
-				if (tmpSplit.length >= 2 && null != tmpSplit[1] && !"".equals(tmpSplit[1])
-						&& !"null".equals(tmpSplit[1])) {
+				if (tmpSplit.length >= 2 && null != tmpSplit[1] && !"".equals(tmpSplit[1]) && !"null".equals(tmpSplit[1])) {
 					mbrCaluseAgreeArray = tmpSplit[1].split("\\^");
 				}
 				break;
@@ -192,7 +189,7 @@ public class IdpServiceImpl implements IdpService {
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
 			userMbr.setImSvcNo(imIntSvcNo); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호
 			userMbr.setIsImChanged(map.get("is_im_changed").toString()); // 전환가입코드 * * - 전환가입 : Y, 신규가입 : N, 변경가입 : C,
-																		 // 변경전환 : H
+																			// 변경전환 : H
 			userMbr.setUserID(userID); // 사용자 ID
 
 			if (map.get("user_tn_nation_cd") != null)
@@ -502,8 +499,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @param searchUserResponse
 	 * @return tag UpdateUserRequest
 	 */
-	private UpdateUserRequest getUpdateUserRequest(HashMap<String, String> hashMap,
-			SearchUserResponse searchUserResponse) {
+	private UpdateUserRequest getUpdateUserRequest(HashMap<String, String> hashMap, SearchUserResponse searchUserResponse) {
 		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 
 		CommonRequest commonRequest = new CommonRequest();
@@ -520,7 +516,7 @@ public class IdpServiceImpl implements IdpService {
 
 		if (hashMap.get("user_key") != null)
 			getUserMbr.setImMbrNo(hashMap.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key . IDP 통합서비스
-																	   // 키 USERMBR_NO
+																		// 키 USERMBR_NO
 		getUserMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // 사용자 구분 코드
 		getUserMbr.setUserMainStatus(searchUserResponse.getUserMbr().getUserMainStatus()); // 사용자 메인 상태 코드
 		getUserMbr.setUserSubStatus(searchUserResponse.getUserMbr().getUserSubStatus()); // 사용자 서브 상태 코드
@@ -600,7 +596,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrLglAgent.setIsParent(hashMap.get("is_parent_approve").toString()); // 법정대리인 동의여부(Y/N)
 			mbrLglAgent.setTenantID(hashMap.get("tenantID").toString()); // 테넌트 ID
 			mbrLglAgent.setParentRealNameMethod(hashMap.get("parent_rname_auth_type").toString()); // LGL_AGENT_AUTH_MTD_CD
-																								   // 법정대리인 인증방법코드
+																									// 법정대리인 인증방법코드
 			mbrLglAgent.setParentName(hashMap.get("parent_name").toString()); // LGL_AGENT_FLNM 법정대리인 이름
 			mbrLglAgent.setParentType(hashMap.get("parent_type").toString()); // LGL_AGENT_RSHP 법정대리인 관계, API :
 			mbrLglAgent.setParentDate(hashMap.get("parent_approve_date").toString()); // LGL_AGENT_AGREE_DT 동의 일시
@@ -854,6 +850,14 @@ public class IdpServiceImpl implements IdpService {
 		try {
 
 			/* 휴대기기 정보조회 - 서비스 관리 번호 */
+			SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
+			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+			KeySearch key = new KeySearch();
+			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+			key.setKeyString(mdn);
+			keySearchList.add(key);
+
+			schDeviceReq.setKeySearchList(keySearchList);
 
 			/* 휴대기기 삭제 요청 */
 
@@ -980,8 +984,7 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
 		} catch (StorePlatformException spe) {
-			LOGGER.debug("RXSetLoginConditionIDP ------- update state excetion error code = "
-					+ spe.getErrorInfo().getCode());
+			LOGGER.debug("RXSetLoginConditionIDP ------- update state excetion error code = " + spe.getErrorInfo().getCode());
 		}
 
 		// 미동의 회원 정보 수정
@@ -995,8 +998,7 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-			if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
-					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
+			if (updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
 				// 성공이면
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
@@ -1079,8 +1081,7 @@ public class IdpServiceImpl implements IdpService {
 
 				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-				if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
+				if (updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
 					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 				}
@@ -1149,8 +1150,7 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-			if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
-					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
+			if (updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
 				// 성공이면
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
@@ -1277,10 +1277,8 @@ public class IdpServiceImpl implements IdpService {
 
 				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-				if (updateRealNameResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
-						&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
-								.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+				if (updateRealNameResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
+						&& updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 				}
@@ -1371,8 +1369,7 @@ public class IdpServiceImpl implements IdpService {
 
 				UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
 				LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
-				if (updateRealNameResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+				if (updateRealNameResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 				}
@@ -1452,8 +1449,7 @@ public class IdpServiceImpl implements IdpService {
 
 				// 조회되어진 사용자의 상태값이 정상이 아닌경우에 사용자 상태변경 정상 상태로 TB_US_USERMBR 데이터를 수정함
 				if (!MemberConstants.MAIN_STATUS_NORMAL.equals(searchUserResponse.getUserMbr().getUserMainStatus())
-						|| !MemberConstants.SUB_STATUS_NORMAL
-								.equals(searchUserResponse.getUserMbr().getUserSubStatus())) {
+						|| !MemberConstants.SUB_STATUS_NORMAL.equals(searchUserResponse.getUserMbr().getUserSubStatus())) {
 					UpdateStatusUserRequest updateStatusUserRequest = new UpdateStatusUserRequest();
 
 					updateStatusUserRequest.setCommonRequest(commonRequest);
@@ -1470,8 +1466,7 @@ public class IdpServiceImpl implements IdpService {
 
 					updateStatusUserRequest.setKeySearchList(updateKeySearchList);
 
-					UpdateStatusUserResponse updateStatusUserResponse = this.userSCI
-							.updateStatus(updateStatusUserRequest);
+					UpdateStatusUserResponse updateStatusUserResponse = this.userSCI.updateStatus(updateStatusUserRequest);
 
 					resultValue = updateStatusUserResponse.getCommonResponse().getResultCode();
 
@@ -1768,8 +1763,10 @@ public class IdpServiceImpl implements IdpService {
 
 						if (removeKeyList.size() > 0) {
 							RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+							removeDeviceReq.setCommonRequest(commonRequest);
 							removeDeviceReq.setUserKey(userKey);
 							removeDeviceReq.setDeviceKey(removeKeyList);
+							this.deviceSCI.removeDevice(removeDeviceReq);
 						}
 
 					} else { // 처리단말 한개
@@ -1853,8 +1850,10 @@ public class IdpServiceImpl implements IdpService {
 
 						if (removeKeyList.size() > 0) {
 							RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+							removeDeviceReq.setCommonRequest(commonRequest);
 							removeDeviceReq.setUserKey(userKey);
 							removeDeviceReq.setDeviceKey(removeKeyList);
+							this.deviceSCI.removeDevice(removeDeviceReq);
 						}
 					}
 				}
@@ -2111,8 +2110,7 @@ public class IdpServiceImpl implements IdpService {
 				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 				imResult.setUserId(userID);
 				imResult.setIsCancelAble(delYN);
-				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
-						LocaleContextHolder.getLocale());
+				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"), LocaleContextHolder.getLocale());
 				String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
 				LOGGER.debug("rXPreCheckDeleteUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
 				imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
@@ -2191,8 +2189,7 @@ public class IdpServiceImpl implements IdpService {
 				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 				imResult.setUserId(userID);
 				imResult.setIsCancelAble(delYN);
-				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
-						LocaleContextHolder.getLocale());
+				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"), LocaleContextHolder.getLocale());
 				String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
 				LOGGER.debug("RXPreCheckDisagreeUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
 				imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
@@ -2287,8 +2284,7 @@ public class IdpServiceImpl implements IdpService {
 			for (int i = 0; i < tempSplit.length; i++) {
 				String[] tmpSplit = tempSplit[i].split(",");
 				LOGGER.debug("====JSH====" + tempSplit[i]);
-				if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0]
-						&& MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
+				if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0] && MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
 					siteCodeCheck = true;
 					break;
 				}
@@ -2297,7 +2293,7 @@ public class IdpServiceImpl implements IdpService {
 
 		// 이용동의 해지인 경우
 		if (!siteCodeCheck) { // tStore 이용동의 해지 join_sst_list 안에 tstore 41100 이 없으면 siteCodeCheck=false로 셋팅되서 tstore이용동의
-							  // 해지 상태임.
+								// 해지 상태임.
 			try {
 				searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 			} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
@@ -2428,8 +2424,7 @@ public class IdpServiceImpl implements IdpService {
 			try {
 				updatePasswordUserResponse = this.userSCI.updatePasswordUser(updatePasswordUserRequest);
 
-				if (updatePasswordUserResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+				if (updatePasswordUserResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 				}
@@ -2484,11 +2479,9 @@ public class IdpServiceImpl implements IdpService {
 		updatePasswordUserRequest.setMbrPwd(mbrPwd);
 
 		try {
-			UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI
-					.updatePasswordUser(updatePasswordUserRequest);
+			UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI.updatePasswordUser(updatePasswordUserRequest);
 
-			if (updatePasswordUserResponse.getCommonResponse().getResultCode()
-					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+			if (updatePasswordUserResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
@@ -2561,7 +2554,7 @@ public class IdpServiceImpl implements IdpService {
 				userMbr.setUserKey(searchUserResponse.getUserMbr().getUserKey());
 				updateUserRequest.setUserMbr(userMbr);
 				if (searchUserResponse.getMbrLglAgent().getIsParent().equals(MemberConstants.USE_Y)) { // 법정대리인 정보가
-																									   // 있는경우만 셋팅
+																										// 있는경우만 셋팅
 					updateUserRequest.setMbrLglAgent(searchUserResponse.getMbrLglAgent());
 				}
 

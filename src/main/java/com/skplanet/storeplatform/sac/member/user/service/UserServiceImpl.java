@@ -113,6 +113,7 @@ public class UserServiceImpl implements UserService {
 			this.imIdpSCI.updateAdditionalInfo(req);
 		} else {
 			ModifyProfileEcReq req = new ModifyProfileEcReq();
+			req.setKeyType("2"); // idp키로 조회 
 			req.setUserAuthKey(userAuthKey);
 			req.setKey(schUserRes.getUserMbr().getImMbrNo());
 			req.setUserPhone(userPhoneStr);
