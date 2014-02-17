@@ -29,16 +29,18 @@ public class Menu extends CommonInfo implements Serializable {
 	private String type; // 전시 메뉴 타입
 	private Integer count; // 전시 메뉴 상품수
 	private Source source; // 전시 메뉴의 graphic resource가 있을 경우 정의
+	private String desc; // 메뉴 설명
 
-    public Menu() {}
+	public Menu() {
+	}
 
-    public Menu(String id, String name, String type) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-    }
+	public Menu(String id, String name, String type) {
+		this.id = id;
+		this.name = name;
+		this.type = type;
+	}
 
-    public String getId() {
+	public String getId() {
 		return this.id;
 	}
 
@@ -77,4 +79,13 @@ public class Menu extends CommonInfo implements Serializable {
 	public void setSource(Source source) {
 		this.source = source;
 	}
+
+	public String getDesc() {
+		return this.desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
 }
