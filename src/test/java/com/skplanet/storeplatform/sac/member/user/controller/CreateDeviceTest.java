@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +42,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -80,7 +82,7 @@ public class CreateDeviceTest {
 
 	String userAuthKey = "114127c7ef42667669819dad5df8d820c";
 	String userKey = "US201401280706367180001249";
-	String mdn = "01066786248";
+	String mdn = "01099999997";
 
 	/**
 	 * <pre>
@@ -106,7 +108,7 @@ public class CreateDeviceTest {
 							CreateDeviceReq req = new CreateDeviceReq();
 							req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
 							req.setUserKey(CreateDeviceTest.this.userKey);
-							req.setRegMaxCnt("5");
+							req.setRegMaxCnt("100");
 
 							DeviceInfo deviceInfo = new DeviceInfo();
 							deviceInfo.setUserKey(CreateDeviceTest.this.userKey);
@@ -174,7 +176,7 @@ public class CreateDeviceTest {
 	 * 등록 후 삭제 처리.
 	 * </pre>
 	 */
-	@Test
+	@After
 	public void after() {
 		new TestCaseTemplate(this.mockMvc)
 				.url("/member/user/removeDevice/v1")
@@ -189,7 +191,13 @@ public class CreateDeviceTest {
 						RemoveDeviceReq req = new RemoveDeviceReq();
 						req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
 						req.setUserKey(CreateDeviceTest.this.userKey);
-						req.setDeviceId(CreateDeviceTest.this.mdn);
+
+						List<RemoveDeviceListSacReq> removeDeviceIdList = new ArrayList<RemoveDeviceListSacReq>();
+						RemoveDeviceListSacReq removeDeviceListSacReq = new RemoveDeviceListSacReq();
+						removeDeviceListSacReq.setDeviceId(CreateDeviceTest.this.mdn);
+						removeDeviceIdList.add(removeDeviceListSacReq);
+						req.setDeviceIdList(removeDeviceIdList);
+
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
