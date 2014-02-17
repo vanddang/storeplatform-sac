@@ -640,7 +640,7 @@ public class MemberCommonComponent {
 	public boolean isIdpConnect(String userAuthkey) {
 
 		if (StringUtils.equals(userAuthkey, this.fixedMobileUserAuthKey)) {
-			LOGGER.info(">> userAuthKey 가 Fixed 값과 달라 IDP 연동 하지 않는다.");
+			LOGGER.info(">> userAuthKey 가 Fixed 값과 같으면 IDP 연동 하지 않는다.");
 			return false;
 		} else {
 			return true;
