@@ -636,8 +636,7 @@
     <!-- 자기가작성한 사용후기.  -->
     <select id="getMyProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
 	    SELECT /* FeedbackMapper.xml, getProdNotiList, SAC : 김현일 , 2014-02-04 */
-	           N.TOTAL_COUNT
-	         , N.NOTI_SEQ
+	           N.NOTI_SEQ
 	         , N.MBR_NO
 	         , N.SELLER_MBR_NO
 	         , NVL2( N.TITLE, N.TITLE, NVL2( N.NOTI_DSCR, NULL, DEFAULT_MSG ) ) AS TITLE
@@ -666,11 +665,11 @@
 	         (
 	         SELECT N.*
 	              , DECODE( N.AVG_SCORE
-	                      , 1, 'A'
-	                      , 2, 'B'
-	                      , 3, 'C'
-	                      , 4, 'D'
-	                      , 5, 'E'
+	                      , 1, #{defaultMsg1}
+	                      , 2, #{defaultMsg2}
+	                      , 3, #{defaultMsg3}
+	                      , 4, #{defaultMsg4}
+	                      , 5, #{defaultMsg5}
 	                      , NULL ) AS DEFAULT_MSG
 	           FROM
 	              (
@@ -678,8 +677,7 @@
 	                   , ROWNUM AS RNUM
 	                FROM
 	                   (
-	                   SELECT COUNT(*) OVER() AS TOTAL_COUNT
-	                        , MAX( TENANT_ID ) AS TENANT_ID
+	                   SELECT MAX( TENANT_ID ) AS TENANT_ID
 	                        , MAX( NOTI_SEQ ) AS NOTI_SEQ
 	                        , MAX( TITLE ) AS TITLE
 	                        , MAX( NOTI_DSCR ) AS NOTI_DSCR
