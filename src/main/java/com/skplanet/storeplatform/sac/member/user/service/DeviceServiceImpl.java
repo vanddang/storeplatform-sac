@@ -85,7 +85,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
@@ -116,9 +115,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private IdpRepository idpRepository;
 
 	@Autowired
 	private UserSearchService userSearchService;
