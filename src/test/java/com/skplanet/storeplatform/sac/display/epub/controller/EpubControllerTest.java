@@ -1,10 +1,18 @@
 package com.skplanet.storeplatform.sac.display.epub.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,17 +43,29 @@ public class EpubControllerTest {
 	}
 
 	@Test
-	public void epubChannel_recent() throws Exception {
-		this.mvc.perform(get("/display/epub/channel/detail/v1")
-				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-				//TODO: Header 추가
-					.header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37")
-				.param("channelId", "H900063921").param("orderedBy", "recent")
-				)
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(content().contentType("application/json;charset=UTF-8"))
-		;
+	public void searchEpubChannel() throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("channelId", "H000044572");
+		String json = this.convertMapToJson(param);
+
+		this.mvc.perform(
+				post("/display/epub/channel/detail/v1")
+						.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+						// TODO: Header 추가
+						.header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37\"")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(json))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"));
 	}
 
+	private String convertMapToJson(Map<String, Object> param)
+			throws IOException, JsonGenerationException, JsonMappingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper
+				.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+		String json = objectMapper.writeValueAsString(param);
+		return json;
+	}
 }

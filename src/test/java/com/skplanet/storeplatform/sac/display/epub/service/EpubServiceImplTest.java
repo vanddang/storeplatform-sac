@@ -71,7 +71,7 @@ public class EpubServiceImplTest {
     @Test
     public void searchEpubChannel() {
     	EpubChannelReq req = new EpubChannelReq();
-    	req.setChannelId("H900063921");
+    	req.setChannelId("H000044572");
     	req.setLangCd("ko");
     	req.setTenantId("S01");
     	req.setDeviceModel("SHV-E110S");

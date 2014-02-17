@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,9 +39,9 @@ public class VodController {
 	@Autowired
 	private VodService vodService;
 
-	@RequestMapping(value = "/detail/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public VodDetailRes vodDetail(SacRequestHeader header, @Validated VodDetailReq req) {
+	public VodDetailRes searchVodDetail(SacRequestHeader header, @Validated @RequestBody VodDetailReq req) {
 		//logger.debug("header={}, req={}", new String[]{ header.toString(), req.toString() });
         req.setLangCd(header.getTenantHeader().getLangCd());
         req.setTenantId(header.getTenantHeader().getTenantId());

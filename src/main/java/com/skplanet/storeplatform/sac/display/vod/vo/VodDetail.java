@@ -137,8 +137,8 @@ public class VodDetail extends CommonInfo {
 	/** 채널 회사명 */
 	private String chnlCompNm;
 
-	/**  */
-	// private String agencyNm;
+	/** 기획사 */
+	 private String agencyNm;
 
 	/** */
 	// private Integer prodAmt;
@@ -1186,10 +1186,13 @@ public class VodDetail extends CommonInfo {
 		this.hdDpPicRatio = hdDpPicRatio;
 	}
 
+	public String getAgencyNm() {
+		return this.agencyNm;
+	}
 
-
-	//public String getAgencyNm() { return this.agencyNm; }
-	//public void setAgencyNm(String agencyNm) { this.agencyNm = agencyNm; }
+	public void setAgencyNm(String agencyNm) {
+		this.agencyNm = agencyNm;
+	}
 
 	//public String getPlayTm() { return this.playTm; }
 	//public void setPlayTm(String playTm) { this.playTm = playTm; }

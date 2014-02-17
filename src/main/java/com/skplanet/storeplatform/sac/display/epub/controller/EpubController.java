@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,9 +47,9 @@ public class EpubController {
 	 * @param req
 	 * @return EpubDetailRes
 	 */
-	@RequestMapping(value = "/channel/detail/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/channel/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public EpubChannelRes searchEpubChannel(SacRequestHeader header, EpubChannelReq req) {
+	public EpubChannelRes searchEpubChannel(SacRequestHeader header, @Validated @RequestBody EpubChannelReq req) {
         req.setLangCd(header.getTenantHeader().getLangCd());
         req.setTenantId(header.getTenantHeader().getTenantId());
         req.setDeviceModel(header.getDeviceHeader().getModel());
@@ -61,9 +63,9 @@ public class EpubController {
 	 * @param req
 	 * @return EpubDetailRes
 	 */
-	@RequestMapping(value = "/series/list/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/series/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public EpubSeriesRes searchEpubSeries(SacRequestHeader header, EpubSeriesReq req) {
+	public EpubSeriesRes searchEpubSeries(SacRequestHeader header, @Validated @RequestBody EpubSeriesReq req) {
         req.setLangCd(header.getTenantHeader().getLangCd());
         req.setTenantId(header.getTenantHeader().getTenantId());
         req.setDeviceModel(header.getDeviceHeader().getModel());

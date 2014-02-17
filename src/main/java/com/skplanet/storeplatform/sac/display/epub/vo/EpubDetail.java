@@ -41,10 +41,9 @@ public class EpubDetail extends CommonInfo {
 	private String cid;
 	/** 상품ID */
 	private String prodId;
-	//private String espdProdId;//에피소드 상품ID
+	// private String espdProdId;//에피소드 상품ID
 	/** 상품 상태 코드 */
 	private String prodStatusCd;
-
 
 	/** 등록일시 */
 	private Date regDt;
@@ -67,6 +66,11 @@ public class EpubDetail extends CommonInfo {
 	/** 상품 가격 */
 	private Integer prodAmt;
 
+	/** 도서 목차 */
+	private String bookTbctns;
+
+	/** 다운로드 지역제한 */
+	private String dwldAreaLimtYn;
 	// ---------------------------------------------------
 	// 다운로드 상품
 	// ---------------------------------------------------
@@ -94,7 +98,7 @@ public class EpubDetail extends CommonInfo {
 	private String usagePeriod;
 
 	/** 다운로드 지역제한 */
-	//private String dwldAreaLimtYn;
+	// private String dwldAreaLimtYn;
 
 	/** 상품 등급 코드 */
 	private String prodGrdCd;
@@ -160,8 +164,6 @@ public class EpubDetail extends CommonInfo {
 	private String bookCnt;
 	private String bookFreeCnt;
 	private String serialFreeCnt;
-
-
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -308,7 +310,6 @@ public class EpubDetail extends CommonInfo {
 		this.chnlCompNm = chnlCompNm;
 	}
 
-
 	/**
 	 * 참여자수
 	 *
@@ -373,7 +374,6 @@ public class EpubDetail extends CommonInfo {
 	public void setTopMenuNm(String topMenuNm) {
 		this.topMenuNm = topMenuNm;
 	}
-
 
 	/**
 	 * thumbnail filePath
@@ -476,7 +476,6 @@ public class EpubDetail extends CommonInfo {
 		this.svcStartDt = svcStartDt;
 	}
 
-
 	public String getGenreCd() {
 		return this.genreCd;
 	}
@@ -517,7 +516,6 @@ public class EpubDetail extends CommonInfo {
 		this.expoSellerEmail = expoSellerEmail;
 	}
 
-
 	public String getCid() {
 		return this.cid;
 	}
@@ -525,7 +523,6 @@ public class EpubDetail extends CommonInfo {
 	public void setCid(String cid) {
 		this.cid = cid;
 	}
-
 
 	public String getStoreProdId() {
 		return this.storeProdId;
@@ -591,7 +588,6 @@ public class EpubDetail extends CommonInfo {
 		this.chapterUnit = chapterUnit;
 	}
 
-
 	public String getUsagePeriod() {
 		return this.usagePeriod;
 	}
@@ -615,7 +611,6 @@ public class EpubDetail extends CommonInfo {
 	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
 	}
-
 
 	public Integer getProdNetAmt() {
 		return this.prodNetAmt;
@@ -735,6 +730,22 @@ public class EpubDetail extends CommonInfo {
 
 	public void setSerialFreeCnt(String serialFreeCnt) {
 		this.serialFreeCnt = serialFreeCnt;
+	}
+
+	public String getBookTbctns() {
+		return this.bookTbctns;
+	}
+
+	public void setBookTbctns(String bookTbctns) {
+		this.bookTbctns = bookTbctns;
+	}
+
+	public String getDwldAreaLimtYn() {
+		return this.dwldAreaLimtYn;
+	}
+
+	public void setDwldAreaLimtYn(String dwldAreaLimtYn) {
+		this.dwldAreaLimtYn = dwldAreaLimtYn;
 	}
 
 }
