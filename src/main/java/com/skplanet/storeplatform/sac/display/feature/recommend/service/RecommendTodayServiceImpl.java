@@ -101,13 +101,7 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 		if (StringUtils.isEmpty(stdDt)) {
 			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
 		} else {
-			if ("DP16".equals(requestVO.getTopMenuId())) {
-				// 뮤직 배치일자는 년월일만 필요
-				// requestVO.setStdDt(stdDt.substring(0, 8));
-				requestVO.setStdDt("20120710"); // 더미 데이터
-			} else {
-				requestVO.setStdDt(stdDt);
-			}
+			requestVO.setStdDt(stdDt);
 		}
 
 		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
@@ -125,13 +119,8 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 
 		List<ProductBasicInfo> productBasicInfoList;
 
-		if ("DP16".equals(requestVO.getTopMenuId())) {
-			productBasicInfoList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendTodayMusicList",
-					requestVO, ProductBasicInfo.class);
-		} else {
-			productBasicInfoList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendTodayList", requestVO,
-					ProductBasicInfo.class);
-		}
+		productBasicInfoList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendTodayList", requestVO,
+				ProductBasicInfo.class);
 
 		List<Product> productList = new ArrayList<Product>();
 

@@ -71,77 +71,6 @@
 		 ORDER BY RNUM
     </select>    
     
-    <!--운영자 추천 앱상품 조회-->
-    <select id="selectRecommendAdminListDummy" parameterType="FeatureRecommendAdminSacReq" resultType="FeatureRecommendAdmin">
-       /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
-        SELECT
-			PROD.*
-			, NVL(ST.DWLD_CNT, 0) DWLD_CNT
-			, NVL(ST.PRCHS_CNT, 0) PRCHS_CNT
-		FROM (
-			SELECT 
-				LP.TENANT_ID
-				, MN.UP_MENU_ID AS TOP_MENU_ID
-				, (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = MN.UP_MENU_ID AND LANG_CD = 'ko') TOP_MENU_NM
-				, MN.MENU_ID
-				, (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = MN.MENU_ID AND LANG_CD = 'ko') MENU_NM
-				, DP.PROD_ID
-				, AP.AID
-				, PS.PROD_NM
-				, PS.PROD_BASE_DESC
-				, PR.PROD_AMT
-				/*, DP.PROD_GRD_CD*/
-				, DECODE( DP.PROD_GRD_CD
-				        , 'PD004401', 0
-				        , 'PD004402', 1
-				        , 'PD004403', 2
-				        , 'PD004404', 4 ) AS PROD_GRD_CD
-				/*, AP.PART_PARENT_CLSF_CD*/
-				, DECODE( AP.PART_PARENT_CLSF_CD, 'PD012301', 'iab', NULL ) AS PART_PARENT_CLSF_CD
-				, DECODE( DP.DRM_YN, 'Y', 'drm', NULL ) AS DRM_YN
-				/*, DP.DRM_YN*/
-				, SC.APK_PKG_NM
-				, SC.APK_VER
-				, SC.FILE_SIZE AS APK_FILE_SIZE
-				, SC.FILE_SIZE
-				, AP.VER_MAJOR||'.'||AP.VER_MINOR AS PROD_VER
-				, AP.VER_MAJOR
-				, AP.VER_MINOR
-				, PI.FILE_PATH || PI.FILE_NM AS FILE_PATH
-				/*, PI.FILE_PATH || 
-				, PI.FILE_NM*/
-			FROM 
-				TB_DP_LIST_PROD LP,
-				TB_DP_PROD DP,
-				TB_DP_TENANT_PROD_PRICE PR,
-				TB_DP_MENU_CATEGORY_PROD_MAPG MP, 
-				TB_DP_APP_PROD AP,
-				TB_DP_TENANT_PROD TP, 
-				TB_DP_PROD_DESC PS,
-				TB_DP_SUB_CONTENTS SC,
-				TB_DP_PROD_IMG PI,
-				TB_DP_SPRT_DEVICE DV,
-				TB_DP_MENU_CATEGORY MN
-			WHERE LP.LIST_ID = 'ADM000000013'
-			AND DP.PROD_ID = LP.PROD_ID
-			AND DP.PROD_ID = PR.PROD_ID
-			AND MP.PROD_ID = DP.PROD_ID
-			AND DP.PROD_ID = AP.PROD_ID
-			AND DP.PROD_ID = TP.PROD_ID
-			AND DP.PROD_ID = PS.PROD_ID
-			AND DP.PROD_ID = SC.PROD_ID
-			AND DP.PROD_ID = PI.PROD_ID
-			AND SC.SUB_CONTENTS_ID = DV.SUB_CONTENTS_ID 
-			AND SC.PROD_ID = DV.PROD_ID 
-			AND MN.MENU_ID = MP.MENU_ID
-			AND PI.IMG_CD = 'DP000101'
-			AND DV.DEVICE_MODEL_CD = 'SCH-W940'
-			AND ROWNUM <![CDATA[<=]]> #{count}
-		) PROD LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS ST
-		ON PROD.PROD_ID = ST.PROD_ID
-		AND PROD.TENANT_ID = ST.TENANT_ID
-    </select>    
-    
     <!-- TODAY 상품 조회 (더미 -수정예정) -->
     <select id="selectRecommendTodayList" parameterType="RecommendTodaySacReq" resultType="ProductBasicInfo">
 	    SELECT /* FeatureRecommendMapper.xml, selectRecommendTodayList, SAC : 조준일 , 2014-02-06 */
@@ -154,7 +83,7 @@
 		     , B.TOTAL_COUNT
 		  FROM (SELECT A.*
 		             , COUNT(*) OVER () AS TOTAL_COUNT
-		             , ROWNUM AS RNUM
+		             , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
 		          FROM (SELECT A.TENANT_ID
 		                     , E.MENU_ID
 		                     , C.PROD_ID
@@ -205,16 +134,16 @@
 		                   AND C.PROD_RSHP_CD = 'DP010802'
 		                   AND B.PROD_ID = D.PROD_ID
 		                   AND D.USE_YN = 'Y'
-		                   --AND D.MENU_ID = E.MENU_ID  /* 다른경우 확인 필요 */
+		                   AND D.MENU_ID = E.MENU_ID
 		                   AND E.USE_YN = 'Y'
 		                   AND E.TOP_MENU_ID = #{topMenuId}
 		                   AND C.PART_PROD_ID = F.PROD_ID
 		                   AND F.CONTENTS_TYPE_CD = 'PD002502'
 		                   <if test='prodCharge == "Y"'>
-		                   --AND F.PROD_CHRG_YN = 'Y'  /* 유료 */
+		                   AND F.PROD_CHRG_YN = 'Y'  /* 유료 */
 		                   </if>
 		                   <if test='prodCharge == "N"'>
-		                   --AND F.PROD_CHRG_YN = 'N'  /* 무료 */
+		                   AND F.PROD_CHRG_YN = 'N'  /* 무료 */
 		                   </if>
 		                   <if test='prodGradeCd != null and prodGradeCd != ""'>
 		                   AND F.PROD_GRD_CD IN
@@ -236,74 +165,9 @@
 		                   AND C.PART_PROD_ID = I.PROD_ID
 		              ) A
 		         WHERE RN = 1
-		         ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB
 		      ) B
 		 WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 		 ORDER BY RNUM
-    </select>
-    
-    <!-- TODAY 상품 조회 (더미 -삭제예정) -->
-    <select id="selectRecommendTodayMusicList" parameterType="RecommendTodaySacReq" resultType="ProductBasicInfo">
-        SELECT /* FeatureRecommendMapper.xml, selectRecommendTodayMusicList, 조준일, 2014-02-05 */
-               B.TENANT_ID
-             , B.MENU_ID
-             , B.PROD_ID
-             , B.PART_PROD_ID
-             , B.TOP_MENU_ID
-             , B.META_CLSF_CD
-             , B.CONTENTS_TYPE_CD
-             , B.TOTAL_COUNT
-          FROM (SELECT A.*
-                     , COUNT(*) OVER () AS TOTAL_COUNT
-                     , ROWNUM AS RNUM
-                  FROM (SELECT F.TENANT_ID
-                             , C.MENU_ID
-                             , I.PROD_ID
-                             , I.PART_PROD_ID
-                             , C.TOP_MENU_ID
-                             , D.META_CLSF_CD
-                             , D.CONTENTS_TYPE_CD
-                          FROM TB_DP_MUSIC_CHART A  /* 에피소드 */
-                             , TB_DP_MENU_CATEGORY_PROD_MAPG B
-                             , TB_DP_MENU_CATEGORY C
-                             , TB_DP_PROD D
-                             , TB_DP_PROD_DESC E
-                             , TB_DP_TENANT_PROD F
-                             , UV_TB_DP_MULTIMDA_PROD G
-                             , (SELECT SD.PROD_ID
-                                  FROM TB_DP_SPRT_DEVICE SD
-                                    , TB_CM_DEVICE CD
-                                WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
-                                  AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = 'android_standard2')
-                                  AND CD.USE_YN = 'Y'
-                                  AND CD.MUSIC_SPRT_YN = 'Y'
-                              ) H
-                             , TB_DP_PROD_RSHP I
-                         WHERE A.CHART_CLSF_CD = 'DP004901'
-                           AND A.RANK_START_DAY = '20120710'
-                           AND A.PROD_ID = B.PROD_ID
-                           AND B.USE_YN = 'Y'
-                           AND B.MENU_ID = C.MENU_ID
-                           AND C.USE_YN = 'Y'
-                           AND C.MENU_ID LIKE 'DP16%'
-                           AND B.PROD_ID = D.PROD_ID
-                           AND D.CONTENTS_TYPE_CD = 'PD002502'
-                           AND D.META_CLSF_CD = 'CT25'
-                           AND D.PROD_ID = E.PROD_ID
-                           AND E.LANG_CD = 'ko'
-                           AND E.PROD_ID = F.PROD_ID
-                           AND F.TENANT_ID = 'S01'
-                           AND F.EXPO_YN = 'Y'
-                           AND F.PROD_STATUS_CD = 'PD000403' 
-                           AND A.PROD_ID = G.PROD_ID
-                           AND A.PROD_ID = H.PROD_ID
-                           AND H.PROD_ID = I.PART_PROD_ID
-                           AND I.PROD_RSHP_CD = 'DP010802'
-                         ORDER BY A.RANK_CHG_CNT, E.PROD_NM
-                       ) A
-               ) B
-         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
-         ORDER BY RNUM
     </select>
     
 </mapper>
