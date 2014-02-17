@@ -20,5 +20,79 @@
 			   SET PRCHS_CNT =#{purchaseCount}
 			 WHERE TENANT_ID = #{tenantId} 
 			   AND PROD_ID= #{productId}
+    </update>
+    
+    <!-- 평점 테이블 회원 ID, KEY 변경 -->
+    <update id="changeMbrAvg" parameterType="ChangeDisplayUser">
+	    UPDATE /* LocalSciMapper.xml, changeMbrAvg, SAC : 김현일 , 2014-02-17 */
+	           TB_DP_MBR_AVG
+	      <set>
+	           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">MBR_NO = #{newUserKey} </if>
+	           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserId)">REG_ID = #{newUserId} </if>
+	      </set>
+	      <where>
+	           TENANT_ID = #{tenantId}
+	           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND MBR_NO = #{oldUserKey}</if>
+	           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserId)">AND REG_ID = #{oldUserId}</if>
+	      </where>
     </update>    
+    
+    <!-- 사용후기 테이블 회원 ID, KEY 변경 -->
+    <update id="changeProdNoti" parameterType="ChangeDisplayUser">
+        UPDATE /* LocalSciMapper.xml, changeProdNoti, SAC : 김현일 , 2014-02-17 */
+               TB_DP_PROD_NOTI
+          <set>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">MBR_NO = #{newUserKey} </if>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserId)">REG_ID = #{newUserId} </if>
+          </set>
+          <where>
+               TENANT_ID = #{tenantId}
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND MBR_NO = #{oldUserKey}</if>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserId)">AND REG_ID = #{oldUserId}</if>
+          </where>    
+    </update>
+    
+    <!-- 사용후기 추천 테이블 회원 ID, KEY 변경 -->
+    <update id="changeProdNotiGood" parameterType="ChangeDisplayUser">
+        UPDATE /* LocalSciMapper.xml, changeProdNotiGood, SAC : 김현일 , 2014-02-17 */
+               TB_DP_PROD_NOTIGOOD
+          <set>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">MBR_NO = #{newUserKey} </if>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserId)">REG_ID = #{newUserId} </if>
+          </set>
+          <where>
+               TENANT_ID = #{tenantId}
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND MBR_NO = #{oldUserKey}</if>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserId)">AND REG_ID = #{oldUserId}</if>
+          </where>    
+    </update>
+    
+    <!-- 테넌트 상품 통계 테이블 회원ID, KEY 변경 -->
+    <update id="changeTenantProdStats" parameterType="ChangeDisplayUser">
+        UPDATE /* LocalSciMapper.xml, changeTenantProdStats, SAC : 김현일 , 2014-02-17 */
+               TB_DP_TENANT_PROD_STATS
+          <set>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserId)">REG_ID = #{newUserId} </if>
+          </set>
+          <where>
+               TENANT_ID = #{tenantId}
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserId)">AND REG_ID = #{oldUserId}</if>
+          </where>     
+    </update>
+    
+    <!-- 메시지 회원 맵핑 테이블 회원ID, KEY 변경 -->
+    <update id="changeMsgMbrMapg" parameterType="ChangeDisplayUser">
+        UPDATE /* LocalSciMapper.xml, changeMsgMbrMapg, SAC : 김현일 , 2014-02-17 */
+               TB_DP_MSG_MBR_MAPG
+          <set>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">MBR_NO = #{newUserKey} </if>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserId)">REG_ID = #{newUserId} </if>
+          </set>
+          <where>
+               TENANT_ID = #{tenantId}
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND MBR_NO = #{oldUserKey}</if>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserId)">AND REG_ID = #{oldUserId}</if>
+          </where>        
+    </update>
+    
 </mapper>

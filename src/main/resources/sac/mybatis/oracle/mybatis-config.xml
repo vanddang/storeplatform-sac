@@ -44,6 +44,7 @@
         <typeAlias alias="MbrAvg" type="com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg" />
         <typeAlias alias="TenantProdStats" type="com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats" />
         <typeAlias alias="MbrAvgScore" type="com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore" />
+        <typeAlias alias="ChangeDisplayUser" type="com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser" />
         
         <!-- ################################################# -->
         <!-- 회원                                            -->
