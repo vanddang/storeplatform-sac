@@ -142,14 +142,9 @@ public class DeviceController {
 	@ResponseBody
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) {
 
-		if (StringUtil.nvl(req.getDeviceInfo().getDeviceKey(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceKey");
+		if (StringUtil.nvl(req.getDeviceInfo().getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceInfo().getDeviceId(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceKey || deviceId");
 		}
-
-		/* imei값은 수정 불가이므로 빈값처리 */
-		DeviceInfo deviceInfo = req.getDeviceInfo();
-		deviceInfo.setNativeId("");
-		req.setDeviceInfo(deviceInfo);
 
 		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);
 

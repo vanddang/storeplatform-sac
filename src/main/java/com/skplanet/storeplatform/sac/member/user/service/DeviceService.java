@@ -107,6 +107,17 @@ public interface DeviceService {
 	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
 
 	/**
+	 * 로그인한 기기정보 update.
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            DeviceInfo
+	 * @return deviceKey String
+	 */
+	public String updateLoginDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
+
+	/**
 	 * 휴대기기 대표단말 설정.
 	 * 
 	 * @param requestHeader

@@ -163,7 +163,7 @@ public class LoginServiceImpl implements LoginService {
 		if (chkDupRes.getUserMbr().getImSvcNo() != null) {
 
 			/* 단말정보 update */
-			this.updateDeviceInfo(requestHeader, userKey, null, req);
+			this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 			/* 로그인 성공이력 저장 */
 			LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
@@ -189,7 +189,7 @@ public class LoginServiceImpl implements LoginService {
 				this.idpSCI.authForWap(authForWapEcReq);
 
 				/* 단말정보 update */
-				this.updateDeviceInfo(requestHeader, userKey, null, req);
+				this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 				/* 로그인 성공이력 저장 */
 				LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
@@ -402,7 +402,7 @@ public class LoginServiceImpl implements LoginService {
 				authForIdEcRes.getCommonRes().toString();
 
 				/* 단말정보 update */
-				this.updateDeviceInfo(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
+				this.updateLoginDeviceInfo(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 				/* 로그인 성공이력 저장 */
 				LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
@@ -460,7 +460,7 @@ public class LoginServiceImpl implements LoginService {
 				}
 
 				/* 단말정보 update */
-				this.updateDeviceInfo(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
+				this.updateLoginDeviceInfo(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 				/* 로그인 성공이력 저장 */
 				LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
@@ -594,7 +594,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @param obj
 	 *            요청객체
 	 */
-	public void updateDeviceInfo(SacRequestHeader requestHeader, String userKey, String userAuthKey, Object obj) {
+	public void updateLoginDeviceInfo(SacRequestHeader requestHeader, String userKey, String userAuthKey, Object obj) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userKey);
@@ -611,7 +611,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth());
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
+			this.deviceService.updateLoginDeviceInfo(requestHeader, deviceInfo);
 
 		} else if (obj instanceof AuthorizeByIdReq) { // id인증
 
@@ -627,7 +627,7 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth());
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
 				deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-				this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
+				this.deviceService.updateLoginDeviceInfo(requestHeader, deviceInfo);
 
 				/* 변경된 휴대기기 정보 IDP도 변경 */
 				this.userService.updateProfileIdp(requestHeader, userKey, userAuthKey);
@@ -760,7 +760,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setUserKey(userKey);
 		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		deviceInfo.setSvcMangNum(imMngNum);
-		this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
+		this.deviceService.updateLoginDeviceInfo(requestHeader, deviceInfo);
 
 		LOGGER.info("########## volatileMember process end #########");
 	}
