@@ -179,7 +179,7 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 						productBasicInfo.setMenuId("DP004901");
 						paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
-						// TODO osm1021 dummy data 꼭 삭제할것
+						// TODO dummy data 꼭 삭제할것
 						paramMap.put("stdDt", "20110806");
 
 						this.log.debug("##### Search for Music specific product");
