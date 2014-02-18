@@ -102,6 +102,7 @@ public class CreateRealNameTest {
 						reqJson.setUserName("아무개"); // 사용자 이름
 						reqJson.setUserBirthDay("19820324"); // 사용자 생년월일
 						reqJson.setUserSex("M"); // 사용자 성별
+						reqJson.setResident("local"); // 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
 
 						return reqJson;
 					}
@@ -110,7 +111,6 @@ public class CreateRealNameTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateRealNameRes res = (CreateRealNameRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -154,6 +154,7 @@ public class CreateRealNameTest {
 						reqJson.setUserName("태백산"); // 사용자 이름
 						reqJson.setUserBirthDay("19870506"); // 법정대리인 생년월일
 						reqJson.setUserSex("M"); // 사용자 성별
+						reqJson.setResident("local"); // 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
 
 						return reqJson;
 					}
@@ -162,7 +163,6 @@ public class CreateRealNameTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateRealNameRes res = (CreateRealNameRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -204,6 +204,7 @@ public class CreateRealNameTest {
 						reqJson.setUserName("홍말똥"); // 사용자 이름
 						reqJson.setUserBirthDay("19790101"); // 사용자 생년월일
 						reqJson.setUserSex("M"); // 사용자 성별
+						reqJson.setResident("local"); // 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
 
 						return reqJson;
 					}
@@ -254,6 +255,7 @@ public class CreateRealNameTest {
 						reqJson.setUserName("심대진"); // 사용자 이름
 						reqJson.setUserBirthDay("20020101"); // 사용자 생년월일
 						reqJson.setUserSex("M"); // 사용자 성별
+						reqJson.setResident("local"); // 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
 
 						return reqJson;
 					}
@@ -276,6 +278,7 @@ public class CreateRealNameTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test(expected = StorePlatformException.class)
 	public void test5_createRealName() throws Exception {
 
@@ -305,6 +308,7 @@ public class CreateRealNameTest {
 						reqJson.setUserName("홍길동"); // 사용자 이름
 						reqJson.setUserBirthDay("19790101"); // 사용자 생년월일
 						reqJson.setUserSex("M"); // 사용자 성별
+						reqJson.setResident("local"); // 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
 
 						return reqJson;
 
@@ -319,4 +323,49 @@ public class CreateRealNameTest {
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
+
+	/**
+	 * <pre>
+	 * 실명인증정보 수정 테스트 (법인).
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Test
+	public void test6_createRealName() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL +
+				"/createRealName/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("Accept", "application/json")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateRealNameReq reqJson = new CreateRealNameReq();
+
+						/**
+						 * 통합 IDP 회원
+						 */
+						// simdae12 (사이트에서 가입하고 이용동의 가입한다. 사이트 들어가서 본인인증 한다.)
+						reqJson.setUserKey("US201402141746333040002583");
+						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
+
+						reqJson.setIsOwn("CORP"); // 실명인증 대상
+						reqJson.setResident("local"); // 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
+
+						return reqJson;
+
+					}
+				}).success(CreateRealNameRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateRealNameRes res = (CreateRealNameRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
 }

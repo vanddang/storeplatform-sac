@@ -97,7 +97,7 @@ public interface UserModifyService {
 
 	/**
 	 * <pre>
-	 * 실명 인증 정보 등록.
+	 * 실명 인증 정보 등록 (본인/법정대리인).
 	 * </pre>
 	 * 
 	 * @param sacHeader

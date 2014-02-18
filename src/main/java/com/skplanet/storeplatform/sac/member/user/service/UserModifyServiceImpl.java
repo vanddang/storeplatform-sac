@@ -374,7 +374,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 						this.imIdpSCI.updateUserName(updateUserNameEcReq);
 					}
 
-				} else { // 법정대리인
+				} else if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_OWN)) { // 법정대리인
 
 					/**
 					 * 통합IDP 실명인증 법정대리인 연동 (cmd = TXUpdateGuardianInfoIDP)
@@ -395,6 +395,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 					updateGuardianEcReq.setParentApproveDate(req.getRealNameDate()); // 법정대리인동의일자 (YYYYMMDD)
 					LOGGER.info("## IDP Request : {}", updateGuardianEcReq);
 					this.imIdpSCI.updateGuardian(updateGuardianEcReq);
+
+				} else { // 법인
+
+					/**
+					 * 법인 단말일 경우 Skip.
+					 */
+					LOGGER.info("## >> 법인 단말일 경우는 Skip.");
 
 				}
 
@@ -524,19 +531,19 @@ public class UserModifyServiceImpl implements UserModifyService {
 	private String updateRealName(SacRequestHeader sacHeader, CreateRealNameReq req) {
 
 		/**
-		 * 실명인증 setting.
-		 */
-		UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
-		updateRealNameRequest = new UpdateRealNameRequest();
-		updateRealNameRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-		updateRealNameRequest.setIsOwn(req.getIsOwn());
-		updateRealNameRequest.setIsRealName(MemberConstants.USE_Y);
-		updateRealNameRequest.setUserKey(req.getUserKey());
-
-		/**
-		 * 실명인증 대상 여부에 따라 분기 처리. (OWN=본인, PARENT=법정대리인)
+		 * 실명인증 대상 여부에 따라 분기 처리. (OWN=본인, PARENT=법정대리인, CORP=법인)
 		 */
 		if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_OWN)) {
+
+			/**
+			 * 실명인증 기본 setting.
+			 */
+			UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
+			updateRealNameRequest = new UpdateRealNameRequest();
+			updateRealNameRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+			updateRealNameRequest.setIsOwn(req.getIsOwn());
+			updateRealNameRequest.setIsRealName(MemberConstants.USE_Y);
+			updateRealNameRequest.setUserKey(req.getUserKey());
 
 			/**
 			 * 실명인증 (본인)
@@ -554,10 +561,29 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrAuth.setRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 실명인증 사이트 코드
 			mbrAuth.setRealNameDate(req.getRealNameDate()); // 실명인증 일시
 			mbrAuth.setRealNameMethod(req.getRealNameMethod()); // 실명인증 수단코드
-
 			updateRealNameRequest.setUserMbrAuth(mbrAuth);
 
-		} else {
+			/**
+			 * SC 실명인증정보 수정 연동.
+			 */
+			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
+			if (updateRealNameResponse.getUserKey() == null || StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
+				throw new StorePlatformException("SAC_MEM_0002", "userKey");
+			}
+
+			return updateRealNameResponse.getUserKey();
+
+		} else if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_PARENT)) { // 법정대리인
+
+			/**
+			 * 실명인증 기본 setting.
+			 */
+			UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
+			updateRealNameRequest = new UpdateRealNameRequest();
+			updateRealNameRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+			updateRealNameRequest.setIsOwn(req.getIsOwn());
+			updateRealNameRequest.setIsRealName(MemberConstants.USE_Y);
+			updateRealNameRequest.setUserKey(req.getUserKey());
 
 			/**
 			 * 실명인증 (법정대리인)
@@ -574,20 +600,42 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrLglAgent.setParentRealNameDate(req.getRealNameDate()); // 법정대리인 실명인증 일시
 			mbrLglAgent.setParentRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 법정대리인 실명인증 사이트 코드
 			mbrLglAgent.setParentRealNameMethod(req.getRealNameMethod()); // 법정대리인 실명인증 수단코드
-
 			updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
 
-		}
+			/**
+			 * SC 실명인증정보 수정 연동.
+			 */
+			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
+			if (updateRealNameResponse.getUserKey() == null || StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
+				throw new StorePlatformException("SAC_MEM_0002", "userKey");
+			}
 
-		/**
-		 * SC 실명인증정보 수정 연동.
-		 */
-		UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-		if (updateRealNameResponse.getUserKey() == null || StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
-			throw new StorePlatformException("SAC_MEM_0002", "userKey");
-		}
+			return updateRealNameResponse.getUserKey();
 
-		return updateRealNameResponse.getUserKey();
+		} else { // 법인
+
+			/**
+			 * 법인 단말일 경우. (사용자 기본정보의 REALNM_AUTH_YN = 'Y' 로만 업데이트 한다.)
+			 */
+			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+			updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserKey(req.getUserKey()); // 사용자 Key
+			userMbr.setIsRealName(MemberConstants.USE_Y); // 본인 인증 여부
+			updateUserRequest.setUserMbr(userMbr);
+
+			/**
+			 * SC 사용자 회원 기본정보 수정 요청.
+			 */
+			UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
+			if (updateUserResponse.getUserKey() == null || StringUtils.equals(updateUserResponse.getUserKey(), "")) {
+				throw new StorePlatformException("SAC_MEM_0002", "userKey");
+			}
+
+			return updateUserResponse.getUserKey();
+
+		}
 
 	}
 

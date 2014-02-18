@@ -262,11 +262,10 @@ public class UserModifyController {
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
-		CreateRealNameRes res = null;
 		if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_OWN)
 				|| StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_PARENT)) { // 본인 or 법정대리인
 
-			LOGGER.info("## >> ======================== 본인 or 법정대리인");
+			LOGGER.info("## >> ======================== 본인 or 법정대리인 파라미터 필수 체크.");
 
 			/**
 			 * 필수 파라미터 체크 (userCi).
@@ -275,23 +274,12 @@ public class UserModifyController {
 				throw new StorePlatformException("SAC_MEM_0001", "userCi");
 			}
 
-			/**
-			 * 실명인증 등록/수정 Biz (본인/법정대리인)
-			 */
-			res = this.svc.createRealName(sacHeader, req);
-
-		} else {
-
-			LOGGER.info("## >> ======================== 법인");
-
-			/**
-			 * TODO [[로직 구현해야함. 회원 기본정보만 수정. realnameAuthYN 여부만......]]실명인증 등록/수정 Biz (법인)
-			 * 
-			 * Service 따로 구현 할것...... 연동 규격서는 수정 완료 하였습니다.
-			 */
-			// res = this.svc.createRealNameCorp(sacHeader, req);
-
 		}
+
+		/**
+		 * 실명인증 등록/수정 Biz (본인/법정대리인)
+		 */
+		CreateRealNameRes res = this.svc.createRealName(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.toString());
 
