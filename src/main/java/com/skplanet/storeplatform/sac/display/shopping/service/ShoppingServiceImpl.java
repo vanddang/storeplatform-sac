@@ -197,118 +197,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			ShoppingRes responseVO = null;
-			ShoppingReq requestVO = new ShoppingReq();
-			requestVO.setOffset(1);
-			requestVO.setCount(20);
-			if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-				// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-			}
-			if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-				// throw new Exception("systemId 는 필수 파라메터 입니다.");
-			}
-
-			// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-			// shopping.class);
-			// List<shopping> resultList = null;
-
-			// if (resultList != null) {
-			// shopping shopping = new shopping();
-
-			// Response VO를 만들기위한 생성자
-			Identifier identifier = new Identifier();
-			Identifier identifier1 = new Identifier();
-			Menu menu = new Menu();
-			Rights rights = new Rights();
-			Title title = new Title();
-			Source source = new Source();
-			Price price = new Price();
-			Product product = new Product();
-			Contributor contributor = new Contributor();
-			Accrual acc = new Accrual();
-			Date date = new Date();
-			SalesOption saleoption = new SalesOption();
-
-			List<Menu> menuList = new ArrayList<Menu>();
-			List<Source> sourceList = new ArrayList<Source>();
-			List<Product> productList = new ArrayList<Product>();
-
-			for (int i = 0; i < 1; i++) {
-				// shopping = resultList.get(i);
-				// 상품 정보 (상품ID)
-				identifier.setType("catalog");
-				identifier.setText("CT00010008");
-
-				// 메뉴 정보
-				menu.setType("menuId");
-				menu.setId("DP28009");
-				menu.setName("편의점/마트");
-				menuList.add(menu);
-
-				// 상품 정보 (상품명)
-				title.setText("추천/인기 카탈로그 상품");
-				// 상품 정보 (상품가격)
-
-				price.setFixedPrice(1000);
-				price.setDiscountRate(0d);
-				price.setDiscountPrice(0);
-				price.setText(1000);
-
-				// 이미지 정보
-				source.setType("thumbnail");
-				source.setUrl("inst_thumbnail_20111216154840.jpg");
-				sourceList.add(source);
-				// contributor
-
-				acc.setDownloadCount(6229);
-
-				// 이용권한 정보
-				date.setType("duration/salePeriod");
-				date.setText("20121017T132615+0900/20121017T132615+0900");
-				rights.setGrade("PD004401");
-				rights.setDate(date);
-
-				// contributor
-				identifier1.setType("brand");
-				identifier1.setText("BR00010008");
-				contributor.setName("세븐일레븐 바이더웨이");
-				contributor.setIdentifier(identifier1);
-
-				// saleoption
-				saleoption.setType("delivery");
-
-				// 데이터 매핑
-				product.setIdentifier(identifier);
-				product.setMenuList(menuList);
-				product.setTitle(title);
-				product.setPrice(price);
-				product.setRights(rights);
-				product.setSourceList(sourceList);
-				product.setAccrual(acc);
-				product.setRights(rights);
-				product.setContributor(contributor);
-				product.setSalesOption(saleoption);
-
-				productList.add(i, product);
-				identifier = new Identifier();
-				menu = new Menu();
-				menuList = new ArrayList<Menu>();
-				rights = new Rights();
-				title = new Title();
-				source = new Source();
-				sourceList = new ArrayList<Source>();
-				price = new Price();
-				product = new Product();
-			}
-
-			responseVO = new ShoppingRes();
-			responseVO.setProductList(productList);
-
-			CommonResponse commonResponse = new CommonResponse();
-			commonResponse.setTotalCount(20);
-			responseVO.setCommonResponse(commonResponse);
-			// }
-			return responseVO;
+			ShoppingRes response = new ShoppingRes();
+			return response = this.commonDummy(req);
 		}
 	}
 
@@ -392,118 +282,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			ShoppingRes responseVO = null;
-			ShoppingReq requestVO = new ShoppingReq();
-			requestVO.setOffset(1);
-			requestVO.setCount(20);
-			if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-				// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-			}
-			if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-				// throw new Exception("systemId 는 필수 파라메터 입니다.");
-			}
-
-			// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-			// shopping.class);
-			// List<shopping> resultList = null;
-
-			// if (resultList != null) {
-			// shopping shopping = new shopping();
-
-			// Response VO를 만들기위한 생성자
-			Identifier identifier = new Identifier();
-			Identifier identifier1 = new Identifier();
-			Menu menu = new Menu();
-			Rights rights = new Rights();
-			Title title = new Title();
-			Source source = new Source();
-			Price price = new Price();
-			Product product = new Product();
-			Contributor contributor = new Contributor();
-			Accrual acc = new Accrual();
-			Date date = new Date();
-			SalesOption saleoption = new SalesOption();
-
-			List<Menu> menuList = new ArrayList<Menu>();
-			List<Source> sourceList = new ArrayList<Source>();
-			List<Product> productList = new ArrayList<Product>();
-
-			for (int i = 0; i < 1; i++) {
-				// shopping = resultList.get(i);
-				// 상품 정보 (상품ID)
-				identifier.setType("catalog");
-				identifier.setText("CT00010008");
-
-				// 메뉴 정보
-				menu.setType("menuId");
-				menu.setId("DP28009");
-				menu.setName("편의점/마트");
-				menuList.add(menu);
-
-				// 상품 정보 (상품명)
-				title.setText("추천/인기 카탈로그 상품");
-				// 상품 정보 (상품가격)
-
-				price.setFixedPrice(1000);
-				price.setDiscountRate(0d);
-				price.setDiscountPrice(0);
-				price.setText(1000);
-
-				// 이미지 정보
-				source.setType("thumbnail");
-				source.setUrl("inst_thumbnail_20111216154840.jpg");
-				sourceList.add(source);
-				// contributor
-
-				acc.setDownloadCount(6229);
-
-				// 이용권한 정보
-				date.setType("duration/salePeriod");
-				date.setText("20121017T132615+0900/20121017T132615+0900");
-				rights.setGrade("PD004401");
-				rights.setDate(date);
-
-				// contributor
-				identifier1.setType("brand");
-				identifier1.setText("BR00010008");
-				contributor.setName("세븐일레븐 바이더웨이");
-				contributor.setIdentifier(identifier1);
-
-				// saleoption
-				saleoption.setType("delivery");
-
-				// 데이터 매핑
-				product.setIdentifier(identifier);
-				product.setMenuList(menuList);
-				product.setTitle(title);
-				product.setPrice(price);
-				product.setRights(rights);
-				product.setSourceList(sourceList);
-				product.setAccrual(acc);
-				product.setRights(rights);
-				product.setContributor(contributor);
-				product.setSalesOption(saleoption);
-
-				productList.add(i, product);
-				identifier = new Identifier();
-				menu = new Menu();
-				menuList = new ArrayList<Menu>();
-				rights = new Rights();
-				title = new Title();
-				source = new Source();
-				sourceList = new ArrayList<Source>();
-				price = new Price();
-				product = new Product();
-			}
-
-			responseVO = new ShoppingRes();
-			responseVO.setProductList(productList);
-
-			CommonResponse commonResponse = new CommonResponse();
-			commonResponse.setTotalCount(20);
-			responseVO.setCommonResponse(commonResponse);
-			// }
-			return responseVO;
+			ShoppingRes response = new ShoppingRes();
+			return response = this.commonDummy(req);
 		}
 	}
 
@@ -610,119 +390,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			ShoppingRes responseVO = null;
-			ShoppingReq requestVO = new ShoppingReq();
-			requestVO.setOffset(1);
-			requestVO.setCount(20);
-			if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-				// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-			}
-			if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-				// throw new Exception("systemId 는 필수 파라메터 입니다.");
-			}
-
-			// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-			// shopping.class);
-			// List<shopping> resultList = null;
-
-			// if (resultList != null) {
-			// shopping shopping = new shopping();
-
-			// Response VO를 만들기위한 생성자
-			Identifier identifier = new Identifier();
-			Identifier identifier1 = new Identifier();
-			Menu menu = new Menu();
-			Rights rights = new Rights();
-			Title title = new Title();
-			Source source = new Source();
-			Price price = new Price();
-			Product product = new Product();
-			Contributor contributor = new Contributor();
-			Accrual acc = new Accrual();
-			Date date = new Date();
-			SalesOption saleoption = new SalesOption();
-
-			List<Menu> menuList = new ArrayList<Menu>();
-			List<Source> sourceList = new ArrayList<Source>();
-			List<Product> productList = new ArrayList<Product>();
-
-			for (int i = 0; i < 1; i++) {
-				// shopping = resultList.get(i);
-				// 상품 정보 (상품ID)
-				identifier.setType("catalog");
-				identifier.setText("CT00010008");
-
-				// 메뉴 정보
-				menu.setType("menuId");
-				menu.setId("DP28009");
-				menu.setName("편의점/마트");
-				menuList.add(menu);
-
-				// 상품 정보 (상품명)
-				title.setText("추천/인기 카탈로그 상품");
-				title.setPrefix("Y");
-				// 상품 정보 (상품가격)
-
-				price.setFixedPrice(1000);
-				price.setDiscountRate(0d);
-				price.setDiscountPrice(0);
-				price.setText(1000);
-
-				// 이미지 정보
-				source.setType("thumbnail");
-				source.setUrl("inst_thumbnail_20111216154840.jpg");
-				sourceList.add(source);
-				// contributor
-
-				acc.setDownloadCount(6229);
-
-				// 이용권한 정보
-				date.setType("duration/salePeriod");
-				date.setText("20121017T132615+0900/20121017T132615+0900");
-				rights.setGrade("PD004401");
-				rights.setDate(date);
-
-				// contributor
-				identifier1.setType("brand");
-				identifier1.setText("BR00010008");
-				contributor.setName("세븐일레븐 바이더웨이");
-				contributor.setIdentifier(identifier1);
-
-				// saleoption
-				saleoption.setType("delivery");
-
-				// 데이터 매핑
-				product.setIdentifier(identifier);
-				product.setMenuList(menuList);
-				product.setTitle(title);
-				product.setPrice(price);
-				product.setRights(rights);
-				product.setSourceList(sourceList);
-				product.setAccrual(acc);
-				product.setRights(rights);
-				product.setContributor(contributor);
-				product.setSalesOption(saleoption);
-
-				productList.add(i, product);
-				identifier = new Identifier();
-				menu = new Menu();
-				menuList = new ArrayList<Menu>();
-				rights = new Rights();
-				title = new Title();
-				source = new Source();
-				sourceList = new ArrayList<Source>();
-				price = new Price();
-				product = new Product();
-			}
-
-			responseVO = new ShoppingRes();
-			responseVO.setProductList(productList);
-
-			CommonResponse commonResponse = new CommonResponse();
-			commonResponse.setTotalCount(20);
-			responseVO.setCommonResponse(commonResponse);
-			// }
-			return responseVO;
+			ShoppingRes response = new ShoppingRes();
+			return response = this.commonDummy(req);
 		}
 	}
 
@@ -1535,118 +1204,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			ShoppingRes responseVO = null;
-			ShoppingReq requestVO = new ShoppingReq();
-			requestVO.setOffset(1);
-			requestVO.setCount(20);
-			if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-				// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-			}
-			if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-				// throw new Exception("systemId 는 필수 파라메터 입니다.");
-			}
-
-			// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-			// shopping.class);
-			// List<shopping> resultList = null;
-
-			// if (resultList != null) {
-			// shopping shopping = new shopping();
-
-			// Response VO를 만들기위한 생성자
-			Identifier identifier = new Identifier();
-			Identifier identifier1 = new Identifier();
-			Menu menu = new Menu();
-			Rights rights = new Rights();
-			Title title = new Title();
-			Source source = new Source();
-			Price price = new Price();
-			Product product = new Product();
-			Contributor contributor = new Contributor();
-			Accrual acc = new Accrual();
-			Date date = new Date();
-			SalesOption saleoption = new SalesOption();
-
-			List<Menu> menuList = new ArrayList<Menu>();
-			List<Source> sourceList = new ArrayList<Source>();
-			List<Product> productList = new ArrayList<Product>();
-
-			for (int i = 0; i < 1; i++) {
-				// shopping = resultList.get(i);
-				// 상품 정보 (상품ID)
-				identifier.setType("catalog");
-				identifier.setText("CT00010008");
-
-				// 메뉴 정보
-				menu.setType("menuId");
-				menu.setId("DP28009");
-				menu.setName("편의점/마트");
-				menuList.add(menu);
-
-				// 상품 정보 (상품명)
-				title.setText("추천/인기 카탈로그 상품");
-				// 상품 정보 (상품가격)
-
-				price.setFixedPrice(1000);
-				price.setDiscountRate(0d);
-				price.setDiscountPrice(0);
-				price.setText(1000);
-
-				// 이미지 정보
-				source.setType("thumbnail");
-				source.setUrl("inst_thumbnail_20111216154840.jpg");
-				sourceList.add(source);
-				// contributor
-
-				acc.setDownloadCount(6229);
-
-				// 이용권한 정보
-				date.setType("duration/salePeriod");
-				date.setText("20121017T132615+0900/20121017T132615+0900");
-				rights.setGrade("PD004401");
-				rights.setDate(date);
-
-				// contributor
-				identifier1.setType("brand");
-				identifier1.setText("BR00010008");
-				contributor.setName("세븐일레븐 바이더웨이");
-				contributor.setIdentifier(identifier1);
-
-				// saleoption
-				saleoption.setType("delivery");
-
-				// 데이터 매핑
-				product.setIdentifier(identifier);
-				product.setMenuList(menuList);
-				product.setTitle(title);
-				product.setPrice(price);
-				product.setRights(rights);
-				product.setSourceList(sourceList);
-				product.setAccrual(acc);
-				product.setRights(rights);
-				product.setContributor(contributor);
-				product.setSalesOption(saleoption);
-
-				productList.add(i, product);
-				identifier = new Identifier();
-				menu = new Menu();
-				menuList = new ArrayList<Menu>();
-				rights = new Rights();
-				title = new Title();
-				source = new Source();
-				sourceList = new ArrayList<Source>();
-				price = new Price();
-				product = new Product();
-			}
-
-			responseVO = new ShoppingRes();
-			responseVO.setProductList(productList);
-
-			CommonResponse commonResponse = new CommonResponse();
-			commonResponse.setTotalCount(20);
-			responseVO.setCommonResponse(commonResponse);
-			// }
-			return responseVO;
+			ShoppingRes response = new ShoppingRes();
+			return response = this.commonDummy(req);
 		}
 	}
 
@@ -1757,118 +1316,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			ShoppingRes responseVO = null;
-			ShoppingReq requestVO = new ShoppingReq();
-			requestVO.setOffset(1);
-			requestVO.setCount(20);
-			if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-				// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-			}
-			if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-				// throw new Exception("systemId 는 필수 파라메터 입니다.");
-			}
-
-			// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-			// shopping.class);
-			// List<shopping> resultList = null;
-
-			// if (resultList != null) {
-			// shopping shopping = new shopping();
-
-			// Response VO를 만들기위한 생성자
-			Identifier identifier = new Identifier();
-			Identifier identifier1 = new Identifier();
-			Menu menu = new Menu();
-			Rights rights = new Rights();
-			Title title = new Title();
-			Source source = new Source();
-			Price price = new Price();
-			Product product = new Product();
-			Contributor contributor = new Contributor();
-			Accrual acc = new Accrual();
-			Date date = new Date();
-			SalesOption saleoption = new SalesOption();
-
-			List<Menu> menuList = new ArrayList<Menu>();
-			List<Source> sourceList = new ArrayList<Source>();
-			List<Product> productList = new ArrayList<Product>();
-
-			for (int i = 0; i < 1; i++) {
-				// shopping = resultList.get(i);
-				// 상품 정보 (상품ID)
-				identifier.setType("catalog");
-				identifier.setText("CT00010008");
-
-				// 메뉴 정보
-				menu.setType("menuId");
-				menu.setId("DP28009");
-				menu.setName("편의점/마트");
-				menuList.add(menu);
-
-				// 상품 정보 (상품명)
-				title.setText("추천/인기 카탈로그 상품");
-				// 상품 정보 (상품가격)
-
-				price.setFixedPrice(1000);
-				price.setDiscountRate(0d);
-				price.setDiscountPrice(0);
-				price.setText(1000);
-
-				// 이미지 정보
-				source.setType("thumbnail");
-				source.setUrl("inst_thumbnail_20111216154840.jpg");
-				sourceList.add(source);
-				// contributor
-
-				acc.setDownloadCount(6229);
-
-				// 이용권한 정보
-				date.setType("duration/salePeriod");
-				date.setText("20121017T132615+0900/20121017T132615+0900");
-				rights.setGrade("PD004401");
-				rights.setDate(date);
-
-				// contributor
-				identifier1.setType("brand");
-				identifier1.setText("BR00010008");
-				contributor.setName("세븐일레븐 바이더웨이");
-				contributor.setIdentifier(identifier1);
-
-				// saleoption
-				saleoption.setType("delivery");
-
-				// 데이터 매핑
-				product.setIdentifier(identifier);
-				product.setMenuList(menuList);
-				product.setTitle(title);
-				product.setPrice(price);
-				product.setRights(rights);
-				product.setSourceList(sourceList);
-				product.setAccrual(acc);
-				product.setRights(rights);
-				product.setContributor(contributor);
-				product.setSalesOption(saleoption);
-
-				productList.add(i, product);
-				identifier = new Identifier();
-				menu = new Menu();
-				menuList = new ArrayList<Menu>();
-				rights = new Rights();
-				title = new Title();
-				source = new Source();
-				sourceList = new ArrayList<Source>();
-				price = new Price();
-				product = new Product();
-			}
-
-			responseVO = new ShoppingRes();
-			responseVO.setProductList(productList);
-
-			CommonResponse commonResponse = new CommonResponse();
-			commonResponse.setTotalCount(20);
-			responseVO.setCommonResponse(commonResponse);
-			// }
-			return responseVO;
+			ShoppingRes response = new ShoppingRes();
+			return response = this.commonDummy(req);
 		}
 	}
 
@@ -2307,5 +1756,120 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
 		return result;
+	}
+
+	private ShoppingRes commonDummy(ShoppingReq req) {
+		ShoppingRes responseVO = null;
+		ShoppingReq requestVO = new ShoppingReq();
+		requestVO.setOffset(1);
+		requestVO.setCount(20);
+		if (null == req.getTenantId() || "".equals(req.getTenantId())) {
+			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
+		}
+		if (null == req.getSystemId() || "".equals(req.getSystemId())) {
+			// throw new Exception("systemId 는 필수 파라메터 입니다.");
+		}
+
+		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+		// shopping.class);
+		// List<shopping> resultList = null;
+
+		// if (resultList != null) {
+		// shopping shopping = new shopping();
+
+		// Response VO를 만들기위한 생성자
+		Identifier identifier = new Identifier();
+		Identifier identifier1 = new Identifier();
+		Menu menu = new Menu();
+		Rights rights = new Rights();
+		Title title = new Title();
+		Source source = new Source();
+		Price price = new Price();
+		Product product = new Product();
+		Contributor contributor = new Contributor();
+		Accrual acc = new Accrual();
+		Date date = new Date();
+		SalesOption saleoption = new SalesOption();
+
+		List<Menu> menuList = new ArrayList<Menu>();
+		List<Source> sourceList = new ArrayList<Source>();
+		List<Product> productList = new ArrayList<Product>();
+
+		for (int i = 0; i < 1; i++) {
+			// shopping = resultList.get(i);
+			// 상품 정보 (상품ID)
+			identifier.setType("catalog");
+			identifier.setText("CT00010008");
+
+			// 메뉴 정보
+			menu.setType("menuId");
+			menu.setId("DP28009");
+			menu.setName("편의점/마트");
+			menuList.add(menu);
+
+			// 상품 정보 (상품명)
+			title.setText("추천/인기 카탈로그 상품");
+			// 상품 정보 (상품가격)
+
+			price.setFixedPrice(1000);
+			price.setDiscountRate(0d);
+			price.setDiscountPrice(0);
+			price.setText(1000);
+
+			// 이미지 정보
+			source.setType("thumbnail");
+			source.setUrl("inst_thumbnail_20111216154840.jpg");
+			sourceList.add(source);
+			// contributor
+
+			acc.setDownloadCount(6229);
+
+			// 이용권한 정보
+			date.setType("duration/salePeriod");
+			date.setText("20121017T132615+0900/20121017T132615+0900");
+			rights.setGrade("PD004401");
+			rights.setDate(date);
+
+			// contributor
+			identifier1.setType("brand");
+			identifier1.setText("BR00010008");
+			contributor.setName("세븐일레븐 바이더웨이");
+			contributor.setIdentifier(identifier1);
+
+			// saleoption
+			saleoption.setType("delivery");
+
+			// 데이터 매핑
+			product.setIdentifier(identifier);
+			product.setMenuList(menuList);
+			product.setTitle(title);
+			product.setPrice(price);
+			product.setRights(rights);
+			product.setSourceList(sourceList);
+			product.setAccrual(acc);
+			product.setRights(rights);
+			product.setContributor(contributor);
+			product.setSalesOption(saleoption);
+
+			productList.add(i, product);
+			identifier = new Identifier();
+			menu = new Menu();
+			menuList = new ArrayList<Menu>();
+			rights = new Rights();
+			title = new Title();
+			source = new Source();
+			sourceList = new ArrayList<Source>();
+			price = new Price();
+			product = new Product();
+		}
+
+		responseVO = new ShoppingRes();
+		responseVO.setProductList(productList);
+
+		CommonResponse commonResponse = new CommonResponse();
+		commonResponse.setTotalCount(20);
+		responseVO.setCommonResponse(commonResponse);
+		// }
+		return responseVO;
 	}
 }
