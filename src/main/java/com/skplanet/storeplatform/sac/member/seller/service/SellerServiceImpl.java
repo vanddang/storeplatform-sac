@@ -754,7 +754,8 @@ public class SellerServiceImpl implements SellerService {
 				&& !StringUtils.equals(searchSellerResponse.getSellerMbr().getSellerSubStatus(),
 						MemberConstants.SUB_STATUS_JOIN_APPLY_WATING)) {
 
-			LOGGER.debug("[SC] 회원메인 상태 : {}", searchSellerResponse.getSellerMbr().getSellerMainStatus());
+			LOGGER.debug("[SC] 회원메인 상태 : {}, 서브 상태 {}", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 
 			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
 					searchSellerResponse.getSellerMbr().getSellerSubStatus());
