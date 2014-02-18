@@ -32,7 +32,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEc
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -469,27 +468,32 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		SearchPasswordSacRes res = new SearchPasswordSacRes();
 		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
-			// IDP 회원
-			FindPasswdEcReq ecReqFindpass = new FindPasswdEcReq();
-			ecReqFindpass.setKeyType("3");
-			ecReqFindpass.setKey(info.getUserId());
-			ecReqFindpass.setWatermarkAuth("2");
+			if (info.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+				// 무선회원
+				throw new StorePlatformException("SAC_MEM_1300", info.getUserType());
+			} else if (info.getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
+				// IDP 회원
+				FindPasswdEcReq ecReqFindpass = new FindPasswdEcReq();
+				ecReqFindpass.setKeyType("3");
+				ecReqFindpass.setKey(info.getUserId());
+				ecReqFindpass.setWatermarkAuth("2");
 
-			FindPasswdEcRes ecResFindpass = this.idpSCI.findPasswd(ecReqFindpass);
+				FindPasswdEcRes ecResFindpass = this.idpSCI.findPasswd(ecReqFindpass);
 
-			logger.info("## IDP Request FindPasswd : {}", ecReqFindpass.toString());
-			logger.info("## IDP Response FindPasswd : {}", ecResFindpass.getCommonRes().getResultText());
+				logger.info("## IDP Request FindPasswd : {}", ecReqFindpass.toString());
+				logger.info("## IDP Response FindPasswd : {}", ecResFindpass.getCommonRes().getResultText());
 
-			res.setUserPw(ecResFindpass.getTempPasswd());
+				res.setUserPw(ecResFindpass.getTempPasswd());
 
-			if (!req.getUserEmail().equals("")) {
-				res.setSendInfo(req.getUserEmail());
-				res.setSendMean("01");
-			} else if (!req.getUserPhone().equals("")) {
-				res.setSendInfo(req.getUserPhone());
-				res.setSendMean("02");
-			} else if (req.getUserEmail().equals("") && req.getUserPhone().equals("")) {
-				throw new StorePlatformException("SAC_MEM_0001", "userEmail or userPhone");
+				if (!req.getUserEmail().equals("")) {
+					res.setSendInfo(req.getUserEmail());
+					res.setSendMean("01");
+				} else if (!req.getUserPhone().equals("")) {
+					res.setSendInfo(req.getUserPhone());
+					res.setSendMean("02");
+				} else if (req.getUserEmail().equals("") && req.getUserPhone().equals("")) {
+					throw new StorePlatformException("SAC_MEM_0001", "userEmail or userPhone");
+				}
 			}
 
 		} else {
@@ -937,10 +941,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 			if (schUserRes.getMbrMangItemPtcrList() != null) {
 				for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-					logger.debug("============================================ UserExtraInfo CODE : {}",
-							ptcr.getExtraProfile());
-					logger.debug("============================================ UserExtraInfo VALUE : {}",
-							ptcr.getExtraProfileValue());
+					logger.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
+					logger.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
 
 					UserExtraInfo extra = new UserExtraInfo();
 					extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -954,8 +956,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		}
 
-		logger.debug("============================================ UserSearch Req : {}", searchUserRequest
-				.getKeySearchList().toString());
+		logger.debug("============================================ UserSearch Req : {}", searchUserRequest.getKeySearchList().toString());
 		logger.debug("============================================ UserSearch Res : {}", userInfo.toString());
 
 		return userInfo;
@@ -1278,8 +1279,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @param response
 	 * @return DetailByDeviceIdSacRes
 	 */
-	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req,
-			DetailByDeviceIdSacRes response) {
+	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req, DetailByDeviceIdSacRes response) {
 
 		/**
 		 * 검색조건 정보 setting.
@@ -1340,8 +1340,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
 		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
-		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo())
-				.getGiftSprtYn());
+		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo()).getGiftSprtYn());
 
 		return response;
 
