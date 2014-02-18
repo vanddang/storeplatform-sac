@@ -146,6 +146,7 @@ public class MetaInfo {
 	private String hdFilePath;
 	private String chnlProdNm;
 	private String genreCd;
+	private String genreCd2;
 	private Integer bookPageCnt;
 	private String colorSprtYn;
 	private String isbn;
@@ -2229,6 +2230,21 @@ public class MetaInfo {
 	}
 
 	/**
+	 * @return the genreCd2
+	 */
+	public String getGenreCd2() {
+		return this.genreCd2;
+	}
+
+	/**
+	 * @param genreCd2
+	 *            the genreCd2 to set
+	 */
+	public void setGenreCd2(String genreCd2) {
+		this.genreCd2 = genreCd2;
+	}
+
+	/**
 	 * @return the bookPageCnt
 	 */
 	public Integer getBookPageCnt() {
@@ -3241,11 +3257,12 @@ public class MetaInfo {
 	 * @return the prodStatusCd
 	 */
 	public String getProdStatusCd() {
-		return prodStatusCd;
+		return this.prodStatusCd;
 	}
 
 	/**
-	 * @param prodStatusCd the prodStatusCd to set
+	 * @param prodStatusCd
+	 *            the prodStatusCd to set
 	 */
 	public void setProdStatusCd(String prodStatusCd) {
 		this.prodStatusCd = prodStatusCd;
