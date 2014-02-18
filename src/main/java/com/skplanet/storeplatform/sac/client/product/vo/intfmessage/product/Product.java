@@ -220,7 +220,7 @@ public class Product extends CommonInfo implements Serializable {
 	/**
 	 * 암호화 정보.
 	 */
-	private Encryption dl;
+	private List<Encryption> dl;
 
     /**
      * 판매상태.
@@ -903,7 +903,7 @@ public class Product extends CommonInfo implements Serializable {
 	/**
 	 * @return the dl
 	 */
-	public Encryption getDl() {
+	public List<Encryption> getDl() {
 		return this.dl;
 	}
 
@@ -911,7 +911,7 @@ public class Product extends CommonInfo implements Serializable {
 	 * @param dl
 	 *            the dl to set
 	 */
-	public void setDl(Encryption dl) {
+	public void setDl(List<Encryption> dl) {
 		this.dl = dl;
 	}
 }
