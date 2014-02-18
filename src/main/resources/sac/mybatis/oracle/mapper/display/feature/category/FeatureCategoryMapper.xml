@@ -432,12 +432,11 @@
                              , TB_DP_MENU_CATEGORY_PROD_MAPG C
                              , TB_DP_MENU_CATEGORY D
                              , TB_DP_PROD E
-                             , TB_DP_PROD_DESC F
-                             , TB_DP_SUB_CONTENTS G
-                             , TB_DP_SPRT_DEVICE H
-                             , TB_CM_DEVICE I
-                             , TB_DP_TENANT_PROD J
-                             , TB_DP_APP_PROD K
+                             , TB_DP_SUB_CONTENTS F
+                             , TB_DP_SPRT_DEVICE G
+                             , TB_CM_DEVICE H
+                             , TB_DP_TENANT_PROD I
+                             , TB_DP_APP_PROD J
                          WHERE A.LIST_ID = B.LIST_ID
                            AND A.TENANT_ID = B.TENANT_ID
                            AND B.LIST_ID = #{listId}
@@ -469,17 +468,15 @@
                            AND E.PROD_CHRG_YN = 'N'  /* 무료 */
                            </if>  
                            AND E.PROD_ID = F.PROD_ID
-                           AND F.LANG_CD = #{langCd}
                            AND F.PROD_ID = G.PROD_ID
-                           AND G.PROD_ID = H.PROD_ID
-                           AND G.SUB_CONTENTS_ID = H.SUB_CONTENTS_ID
-                           AND H.DEVICE_MODEL_CD = I.DEVICE_MODEL_CD
-                           AND H.DEVICE_MODEL_CD = #{deviceModelCd}
-                           AND B.PROD_ID = J.PROD_ID
-                           AND B.TENANT_ID = J.TENANT_ID
-                           AND J.EXPO_YN = 'Y'
-                           AND J.PROD_STATUS_CD = 'PD000403'
-                           AND J.PROD_ID = K.PROD_ID
+                           AND F.SUB_CONTENTS_ID = G.SUB_CONTENTS_ID
+                           AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                           AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                           AND B.PROD_ID = I.PROD_ID
+                           AND I.TENANT_ID = #{tenantId}
+                           AND I.EXPO_YN = 'Y'
+                           AND I.PROD_STATUS_CD = 'PD000403'
+                           AND I.PROD_ID = J.PROD_ID
                       ) A 
                 WHERE A.RN <![CDATA[<=]]> 2
                ) B
@@ -504,12 +501,11 @@
                      , TB_DP_MENU_CATEGORY_PROD_MAPG C
                      , TB_DP_MENU_CATEGORY D
                      , TB_DP_PROD E
-                     , TB_DP_PROD_DESC F
-                     , TB_DP_SUB_CONTENTS G
-                     , TB_DP_SPRT_DEVICE H
-                     , TB_CM_DEVICE I
-                     , TB_DP_TENANT_PROD J
-                     , TB_DP_APP_PROD K
+                     , TB_DP_SUB_CONTENTS F
+                     , TB_DP_SPRT_DEVICE G
+                     , TB_CM_DEVICE H
+                     , TB_DP_TENANT_PROD I
+                     , TB_DP_APP_PROD J
                  WHERE A.LIST_ID = B.LIST_ID
                    AND A.TENANT_ID = B.TENANT_ID
                    AND B.LIST_ID = #{listId}
@@ -541,17 +537,15 @@
                    AND E.PROD_CHRG_YN = 'N'  /* 무료 */
                    </if>  
                    AND E.PROD_ID = F.PROD_ID
-                   AND F.LANG_CD = #{langCd}
                    AND F.PROD_ID = G.PROD_ID
-                   AND G.PROD_ID = H.PROD_ID
-                   AND G.SUB_CONTENTS_ID = H.SUB_CONTENTS_ID
-                   AND H.DEVICE_MODEL_CD = I.DEVICE_MODEL_CD
-                   AND H.DEVICE_MODEL_CD = #{deviceModelCd}
-                   AND B.PROD_ID = J.PROD_ID
-                   AND B.TENANT_ID = J.TENANT_ID
-                   AND J.EXPO_YN = 'Y'
-                   AND J.PROD_STATUS_CD = 'PD000403'
-                   AND J.PROD_ID = K.PROD_ID
+                   AND F.SUB_CONTENTS_ID = G.SUB_CONTENTS_ID
+                   AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                   AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                   AND B.PROD_ID = I.PROD_ID
+                   AND I.TENANT_ID = #{tenantId}
+                   AND I.EXPO_YN = 'Y'
+                   AND I.PROD_STATUS_CD = 'PD000403'
+                   AND I.PROD_ID = J.PROD_ID
                ) A 
          WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
          ORDER BY RNUM
@@ -574,12 +568,11 @@
                      , TB_DP_MENU_CATEGORY_PROD_MAPG C
                      , TB_DP_MENU_CATEGORY D
                      , TB_DP_PROD E
-                     , TB_DP_PROD_DESC F
-                     , TB_DP_SUB_CONTENTS G
-                     , TB_DP_SPRT_DEVICE H
-                     , TB_CM_DEVICE I
-                     , TB_DP_TENANT_PROD J
-                     , TB_DP_APP_PROD K
+                     , TB_DP_SUB_CONTENTS F
+                     , TB_DP_SPRT_DEVICE G
+                     , TB_CM_DEVICE H
+                     , TB_DP_TENANT_PROD I
+                     , TB_DP_APP_PROD J
                  WHERE A.LIST_ID = B.LIST_ID
                    AND A.TENANT_ID = B.TENANT_ID
                    AND B.LIST_ID = #{listId}
@@ -611,17 +604,15 @@
                    AND E.PROD_CHRG_YN = 'N'  /* 무료 */
                    </if>  
                    AND E.PROD_ID = F.PROD_ID
-                   AND F.LANG_CD = #{langCd}
                    AND F.PROD_ID = G.PROD_ID
-                   AND G.PROD_ID = H.PROD_ID
-                   AND G.SUB_CONTENTS_ID = H.SUB_CONTENTS_ID
-                   AND H.DEVICE_MODEL_CD = I.DEVICE_MODEL_CD
-                   AND H.DEVICE_MODEL_CD = #{deviceModelCd}
-                   AND B.PROD_ID = J.PROD_ID
-                   AND B.TENANT_ID = J.TENANT_ID
-                   AND J.EXPO_YN = 'Y'
-                   AND J.PROD_STATUS_CD = 'PD000403'
-                   AND J.PROD_ID = K.PROD_ID
+                   AND F.SUB_CONTENTS_ID = G.SUB_CONTENTS_ID
+                   AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                   AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                   AND B.PROD_ID = I.PROD_ID
+                   AND I.TENANT_ID = #{tenantId}
+                   AND I.EXPO_YN = 'Y'
+                   AND I.PROD_STATUS_CD = 'PD000403'
+                   AND I.PROD_ID = J.PROD_ID
                ) A 
          WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
          ORDER BY RNUM
