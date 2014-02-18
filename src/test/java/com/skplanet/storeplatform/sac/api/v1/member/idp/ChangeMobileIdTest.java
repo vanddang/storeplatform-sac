@@ -48,9 +48,9 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class ChangeMobileIDTest {
+public class ChangeMobileIdTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChangeMobileIDTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChangeMobileIdTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -78,7 +78,11 @@ public class ChangeMobileIDTest {
 	 * </pre>
 	 */
 	@Test
-	public void changeMobileIDTest01() {
+	public void changeMobileIdTest01() {
+
+		// <provisionInterface> CMD[ changeMobileID] REQUEST URL [
+		// http://sbeta.itopping.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=changeMobileID&svc_mng_num=7035516765&mdn=01049545098&be_mdn=01049545098&model_id=SSOG&min=1049545098]
+		// svcMngNum [ 7035516765] mdn [ 01049545098] modelId [ SSOG]
 
 		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
@@ -88,7 +92,13 @@ public class ChangeMobileIDTest {
 				HashMap map = new HashMap();
 				map.put("systemID", "W");
 				map.put("tenantID", "S01");
-				map.put("mdn", "01066786220");
+
+				map.put("mdn", "01010007001");
+				map.put("svc_mng_num", "9050006513");
+				map.put("model_id", "SSMF");
+				map.put("be_mdn", "01010007001");
+				map.put("min", "1010007001");
+
 				req.setReqParam(map);
 
 				LOGGER.info("request param : {}", req.toString());
@@ -110,13 +120,19 @@ public class ChangeMobileIDTest {
 	 * 회선 변경 정보 Provisioning (기기변경).
 	 */
 	@Test
-	public void changeMobileIDTest02() {
+	public void changeMobileIdTestService() {
 
 		try {
 			HashMap map = new HashMap();
 			map.put("systemID", "W");
 			map.put("tenantID", "S01");
-			map.put("mdn", "01066786220");
+
+			map.put("mdn", "01010007001");
+			map.put("svc_mng_num", "9050006513");
+			map.put("model_id", "SSMF");
+			map.put("be_mdn", "01010007001");
+			map.put("min", "1010007001");
+
 			this.idpService.changeMobileID(map);
 
 		} catch (Exception e) {
