@@ -124,6 +124,14 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			menuList.add(menu);
 		}
 
+		// 장르2 정보
+		if (StringUtils.isNotEmpty(metaInfo.getGenreCd2())) {
+			menu = new Menu();
+			menu.setType(DisplayConstants.DP_MENU_TYPE_SUB_GENRE);
+			menu.setId(metaInfo.getGenreCd2());
+			menuList.add(menu);
+		}
+
 		return menuList;
 	}
 
