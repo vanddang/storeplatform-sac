@@ -224,7 +224,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 				checkIdPwdAuthEcReq.setUserPasswd(req.getOldPassword());
 				this.imIdpSCI.checkIdPwdAuth(checkIdPwdAuthEcReq);
 
-				LOGGER.info("## >> ========================= 패스워드 확인 연동 성공.");
+				LOGGER.info("## 통합 >> ========================= 패스워드 확인 연동 성공.");
 
 				/**
 				 * 통합IDP 비밀번호 변경 연동(cmd - TXUpdateUserPwdIDP)
@@ -237,7 +237,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 				modifyPwdEcReq.setUserPasswdModifyDate(DateUtil.getToday()); // 비밀번호변경일자 (YYYYMMDD)
 				this.imIdpSCI.modifyPwd(modifyPwdEcReq);
 
-				LOGGER.info("## >> ========================= 비밀번호 변경 연동 성공.");
+				LOGGER.info("## 통합 >> ========================= 비밀번호 변경 연동 성공.");
 
 			}
 
@@ -260,7 +260,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 				authForIdEcReq.setUserPasswd(req.getOldPassword());
 				this.idpSCI.authForId(authForIdEcReq);
 
-				LOGGER.info("## >> ========================= 패스워드 확인 연동 성공.");
+				LOGGER.info("## IDP >> ========================= 패스워드 확인 연동 성공.");
 
 				/**
 				 * IDP 비밀번호 변경 연동 (cmd - modifyAuthInfo)
@@ -273,7 +273,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 				modifyAuthInfoEcReq.setKey(req.getNewPassword()); // 신규 패스워드
 				this.idpSCI.modifyAuthInfo(modifyAuthInfoEcReq);
 
-				LOGGER.info("## >> ========================= 비밀번호 변경 연동 성공.");
+				LOGGER.info("## IDP >> ========================= 비밀번호 변경 연동 성공.");
 
 			}
 
@@ -337,7 +337,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 				// updateUserInfoEcReq.setIsBizAuth(MemberConstants.USE_N);
 				// updateUserInfoEcReq.setUdtTypeCd("2"); // 업데이트 구분 코드 (1:TN, 2:EM, 3:TN+EM, 4:부가정보)
 				// this.imIdpSCI.updateUserInfo(updateUserInfoEcReq);
-				LOGGER.info("## >> ========================= 이메일 수정 연동 성공.");
+				LOGGER.info("## 통합 >> ========================= 이메일 수정 연동 성공.");
 
 			}
 
@@ -362,7 +362,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 				// modifyAuthInfoEcReq.setPreKey(req.getOldEmail()); // 기존 패스워드
 				// modifyAuthInfoEcReq.setKey(req.getNewEmail()); // 신규 패스워드
 				// this.idpSCI.modifyAuthInfo(modifyAuthInfoEcReq);
-				LOGGER.info("## >> ========================= 이메일 수정 연동 성공.");
+				LOGGER.info("## IDP >> ========================= 이메일 수정 연동 성공.");
 
 			}
 
