@@ -86,7 +86,7 @@
 					AND L.DEVICE_MODEL_CD = #{deviceModel} 		/* 단말모델코드 */
 					AND A.BASE_YN = 'Y' AND A.BASE_YN = 'Y'
 					AND B.USE_YN = 'Y'                        	/* Y : 사용 (사용여부) */
-					AND D.SVC_GRP_CD = 'DP000203'             	/* DP000201 : 멀티미디어 */
+					AND D.SVC_GRP_CD = 'DP000203'             	/* DP000203 : 멀티미디어 */
 					AND D.CONTENTS_TYPE_CD = 'PD002501'       	/* PD002501 : 채널타입 */
 					AND D.SVC_TYPE_CD = 'DP001116'				/* 서비스 타입 : 이북/코믹 */
 					AND D.TOP_MENU_ID IN ('DP13')				/* 이북 */
