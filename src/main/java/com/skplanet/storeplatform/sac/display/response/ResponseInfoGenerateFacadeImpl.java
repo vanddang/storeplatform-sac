@@ -415,7 +415,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateSpecificAppProduct(MetaInfo metaInfo) {
-		// TODO osm1021 일단은 기존 App meta 조회와 동일
 		Product product = new Product();
 		List<Identifier> identifierList = this.appGenerator.generateIdentifierList(metaInfo);
 		// App용 SupportList 설정
