@@ -174,11 +174,6 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 ,(SELECT  PROD_ID
-                                          ,PRCHS_CNT
-                                     FROM TB_DP_TENANT_PROD_STATS 
-                                    WHERE TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
-                                   ) M
                                  ,(SELECT 
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
@@ -203,7 +198,6 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
-                        AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)  
                          <if test="req.partProdId != null">
                          AND I.PROD_ID = #{req.partProdId}
@@ -854,11 +848,6 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 ,(SELECT  PROD_ID
-                                          ,PRCHS_CNT
-                                     FROM TB_DP_TENANT_PROD_STATS 
-                                    WHERE TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
-                                   ) M
                                  ,(SELECT 
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
@@ -883,7 +872,6 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
-                        AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)  
                         AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                         AND NVL(B.CHNL_CNT, 0) > 0          
@@ -1113,14 +1101,6 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-
-                                 <if test='req.orderedBy == "recent"'>
-                                 ,(SELECT  PROD_ID
-                                          ,PRCHS_CNT
-                                     FROM TB_DP_TENANT_PROD_STATS 
-                                    WHERE TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
-                                   ) M
-                                 </if>
                                  <if test='req.orderedBy == "download"'>
                                 ,(
                                     SELECT  TDLP.TENANT_ID
@@ -1170,9 +1150,6 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
-                         <if test='req.orderedBy == "recent"'>
-                        AND I.PROD_ID = M.PROD_ID(+)        
-                        </if>                                           
                         <if test='req.orderedBy == "download"'>
                         AND K.TENANT_ID = M.TENANT_ID 
                         AND B.CATALOG_ID = M.PROD_ID                             
@@ -1271,13 +1248,6 @@
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
 
-                                 <if test='req.orderedBy == "recent"'>
-                                 ,(SELECT  PROD_ID
-                                          ,PRCHS_CNT
-                                     FROM TB_DP_TENANT_PROD_STATS 
-                                    WHERE TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
-                                   ) M
-                                 </if>
                                  <if test='req.orderedBy == "download"'>
                                 ,(
                                     SELECT  TDLP.TENANT_ID
@@ -1327,9 +1297,6 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
-                         <if test='req.orderedBy == "recent"'>
-                        AND I.PROD_ID = M.PROD_ID(+)        
-                        </if>                                           
                         <if test='req.orderedBy == "download"'>
                         AND K.TENANT_ID = M.TENANT_ID 
                         AND B.CATALOG_ID = M.PROD_ID                             
