@@ -177,6 +177,7 @@ public class DisplayConstants {
 	public static final String DP_META_CLASS_MENU_TYPE = "metaClass";
 	/** 장르 */
 	public static final String DP_MENU_TYPE_GENRE = "genre";
+	public static final String DP_MENU_TYPE_SUB_GENRE = "subGenre";
 
 	public static final String DP_MUSIC_SERVICE_MP3 = "mp3";
 	public static final String DP_MUSIC_SERVICE_BELL = "bell";

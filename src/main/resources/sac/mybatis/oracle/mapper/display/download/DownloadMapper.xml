@@ -546,6 +546,7 @@
 		              , MAX(JA.ARTIST2_NM) AS ARTIST2_NM
 		              , MAX(JA.CHNL_COMP_NM) AS CHNL_COMP_NM
 		              , MAX(JA.GENRE_CD) AS GENRE_CD
+		              , MAX(JA.GENRE_CD2) AS GENRE_CD2
 		              , MAX(JA.COMPT_YN) AS COMPT_YN
 		              , MAX(JA.PROD_NM) AS PROD_NM
 		              , MAX(JA.META_CLSF_CD) AS META_CLSF_CD
@@ -581,6 +582,7 @@
 		                              , CH_B.ARTIST2_NM
 		                              , CH_C.CHNL_COMP_NM
 		                              , CH_C.GENRE_CD
+		                              , CH_C.GENRE_CD2
 		                              , CH_C.COMPT_YN
 		                              , MP_E.PART_PROD_ID
 		                              , EP_F.META_CLSF_CD
@@ -734,6 +736,7 @@
 		                      , EP_H.ISBN
 		                      , EP_H.ISSUE_DAY
 		                      , EP_H.GENRE_CD
+		                      , EP_H.GENRE_CD2
 		                      , EP_H.BOOK_CLSF_CD
 		                      , EP_H.COMPT_YN
 		                      , EP_J.PROD_AMT

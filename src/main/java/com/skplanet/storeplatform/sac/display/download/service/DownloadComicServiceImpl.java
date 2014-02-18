@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Ident
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -80,7 +82,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 	private DisplayCommonService commonService;
 
 	@Override
-	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader, DownloadComicSacReq downloadComicReq) {
+	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader, DownloadComicSacReq comicReq) {
 		// 현재일시 및 만료일시 조회
 		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
@@ -91,9 +93,9 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		DownloadComicSacRes comicRes = new DownloadComicSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		String productId = downloadComicReq.getProductId();
-		String deviceKey = downloadComicReq.getDeviceKey();
-		String userKey = downloadComicReq.getUserKey();
+		String productId = comicReq.getProductId();
+		String deviceKey = comicReq.getDeviceKey();
+		String userKey = comicReq.getUserKey();
 
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("[getDownloadComicInfo] productId : {}", productId);
@@ -113,86 +115,15 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		}
 
 		// 헤더정보 세팅
-		downloadComicReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		downloadComicReq.setLangCd(requestHeader.getTenantHeader().getLangCd());
-		downloadComicReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
-		downloadComicReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+		comicReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		comicReq.setLangCd(requestHeader.getTenantHeader().getLangCd());
+		comicReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		comicReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
 		// comic 상품 정보 조회(for download)
-		metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadComicInfo", downloadComicReq);
+		metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadComicInfo", comicReq);
 
 		if (metaInfo != null) {
-			String prchsId = null; // 구매ID
-			String prchsDt = null; // 구매일시
-			String useExprDt = null; // 이용 만료일시
-			String dwldExprDt = null; // 다운로드 만료일시
-			String prchsState = null; // 구매상태
-			String prchsProdId = null; // 구매 상품ID
-
-			try {
-				// 구매내역 조회를 위한 생성자
-				ProductListSacIn productListSacIn = new ProductListSacIn();
-				List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
-
-				productListSacIn.setProdId(metaInfo.getPartProdId());
-				productList.add(productListSacIn);
-
-				HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
-				historyListSacReq.setTenantId(downloadComicReq.getTenantId());
-				historyListSacReq.setUserKey(downloadComicReq.getUserKey());
-				historyListSacReq.setDeviceKey(downloadComicReq.getDeviceKey());
-				historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-				historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-				historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-				historyListSacReq.setEndDt(sysDate);
-				historyListSacReq.setOffset(1);
-				historyListSacReq.setCount(1);
-				historyListSacReq.setProductList(productList);
-
-				// 구매내역 조회 실행
-				HistoryListSacInRes historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
-
-				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("[getDownloadComicInfo] purchase count : {}", historyListSacRes.getTotalCnt());
-				this.logger.debug("----------------------------------------------------------------");
-
-				if (historyListSacRes.getTotalCnt() > 0) {
-					prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
-					prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
-					useExprDt = historyListSacRes.getHistoryList().get(0).getUseExprDt();
-					dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
-					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
-					prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
-
-					// 소장상품 확인
-					if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(metaInfo.getUsePeriodUnitCd())) {
-						if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
-							prchsState = "payment";
-						} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
-							prchsState = "gift";
-						}
-					} else {
-						downloadComicReq.setPrchsDt(prchsDt);
-						downloadComicReq.setDwldExprDt(dwldExprDt);
-
-						// 대여 상품 만료여부 조회
-						prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
-								downloadComicReq);
-					}
-
-					this.logger.debug("----------------------------------------------------------------");
-					this.logger.debug("[getDownloadComicInfo] prchsId : {}", prchsId);
-					this.logger.debug("[getDownloadComicInfo] prchsDt : {}", prchsDt);
-					this.logger.debug("[getDownloadComicInfo] useExprDt : {}", useExprDt);
-					this.logger.debug("[getDownloadComicInfo] dwldExprDt : {}", dwldExprDt);
-					this.logger.debug("[getDownloadComicInfo] prchsState : {}", prchsState);
-					this.logger.debug("[getDownloadComicInfo] prchsProdId : {}", prchsProdId);
-					this.logger.debug("----------------------------------------------------------------");
-				}
-			} catch (Exception ex) {
-				throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
-			}
-
 			Product product = new Product();
 
 			// 상품 ID 정보
@@ -232,60 +163,162 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			// 저작자 정보
 			product.setContributor(this.ebookComicGenerator.generateComicContributor(metaInfo));
 
-			// 구매 여부 확인
-			if (StringUtils.isNotEmpty(prchsId)) {
-				metaInfo.setPurchaseId(prchsId);
-				metaInfo.setPurchaseProdId(prchsProdId);
-				metaInfo.setPurchaseDt(prchsDt);
-				metaInfo.setPurchaseState(prchsState);
-				metaInfo.setPurchaseDwldExprDt(dwldExprDt);
+			// 구매내역 조회를 위한 생성자
+			ProductListSacIn productListSacIn = null;
+			List<ProductListSacIn> productList = null;
+			HistoryListSacInReq historyReq = null;
+			HistoryListSacInRes historyRes = null;
 
-				// 구매 정보
-				product.setPurchase(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
+			try {
+				// 구매내역 조회를 위한 생성자
+				productListSacIn = new ProductListSacIn();
+				productList = new ArrayList<ProductListSacIn>();
 
-				if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
-					String deviceId = null; // Device Id
-					String deviceIdType = null; // Device Id 유형
+				productListSacIn.setProdId(metaInfo.getPartProdId());
+				productList.add(productListSacIn);
 
-					SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
-					request.setUserKey(downloadComicReq.getUserKey());
-					request.setDeviceKey(downloadComicReq.getDeviceKey());
+				historyReq = new HistoryListSacInReq();
+				historyReq.setTenantId(comicReq.getTenantId());
+				historyReq.setUserKey(comicReq.getUserKey());
+				historyReq.setDeviceKey(comicReq.getDeviceKey());
+				historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+				historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+				historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+				historyReq.setEndDt(sysDate);
+				historyReq.setOffset(1);
+				historyReq.setCount(1);
+				historyReq.setProductList(productList);
 
-					// 기기정보 조회
-					SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
+				// 구매내역 조회 실행
+				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 
-					if (result != null) {
-						deviceId = result.getDeviceId();
-						deviceIdType = this.commonService.getDeviceIdType(deviceId);
+			} catch (Exception ex) {
+				throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
+			}
+
+			String prchsId = null; // 구매ID
+			String prchsDt = null; // 구매일시
+			String useExprDt = null; // 이용 만료일시
+			String dwldExprDt = null; // 다운로드 만료일시
+			String prchsCaseCd = null; // 선물 여부
+			String prchsState = null; // 구매상태
+			String prchsProdId = null; // 구매 상품ID
+
+			if (historyRes.getTotalCnt() > 0) {
+				List<Purchase> purchaseList = new ArrayList<Purchase>();
+				List<Encryption> encryptionList = new ArrayList<Encryption>();
+
+				for (int i = 0; i < historyRes.getTotalCnt(); i++) {
+					prchsId = historyRes.getHistoryList().get(i).getPrchsId();
+					prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
+					useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
+					dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
+					prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
+					prchsProdId = historyRes.getHistoryList().get(i).getProdId();
+
+					// 구매상태 확인
+					comicReq.setPrchsDt(prchsDt);
+					comicReq.setDwldExprDt(dwldExprDt);
+					prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState", comicReq);
+
+					// 구매상태 만료여부 확인
+					if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+						// 구매 및 선물 여부 확인
+						if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
+							prchsState = "payment";
+						} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
+							prchsState = "gift";
+						}
 					}
 
-					metaInfo.setExpiredDate(reqExpireDate);
-					metaInfo.setUseExprDt(useExprDt);
-					metaInfo.setUserKey(userKey);
-					metaInfo.setDeviceKey(deviceKey);
-					metaInfo.setDeviceType(deviceIdType);
-					metaInfo.setDeviceSubKey(deviceId);
-					metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[getDownloadComicInfo] prchsId : {}", prchsId);
+					this.logger.debug("[getDownloadComicInfo] prchsDt : {}", prchsDt);
+					this.logger.debug("[getDownloadComicInfo] useExprDt : {}", useExprDt);
+					this.logger.debug("[getDownloadComicInfo] dwldExprDt : {}", dwldExprDt);
+					this.logger.debug("[getDownloadComicInfo] prchsCaseCd : {}", prchsCaseCd);
+					this.logger.debug("[getDownloadComicInfo] prchsState : {}", prchsState);
+					this.logger.debug("[getDownloadComicInfo] prchsProdId : {}", prchsProdId);
+					this.logger.debug("----------------------------------------------------------------");
 
-					// 암호화 정보 (JSON)
-					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+					metaInfo.setPurchaseId(prchsId);
+					metaInfo.setPurchaseProdId(prchsProdId);
+					metaInfo.setPurchaseDt(prchsDt);
+					metaInfo.setPurchaseState(prchsState);
+					metaInfo.setPurchaseDwldExprDt(dwldExprDt);
 
-					// JSON 파싱
-					MarshallingHelper marshaller = new JacksonMarshallingHelper();
-					byte[] jsonData = marshaller.marshal(contents);
+					// 구매 정보
+					purchaseList.add(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
 
-					// JSON 암호화
-					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-					String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+					// 구매상태 만료 여부 확인
+					if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+						String deviceId = null; // Device Id
+						String deviceIdType = null; // Device Id 유형
+						SearchDeviceIdSacReq deviceReq = null;
+						SearchDeviceIdSacRes deviceRes = null;
 
-					// 암호화 정보 (AES-128)
-					Encryption encryption = new Encryption();
-					List<Encryption> encryptionList = new ArrayList<Encryption>();
-					encryption.setProductId(prchsProdId);
-					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
-					encryption.setToken(encryptString);
-					encryptionList.add(encryption);
+						try {
+							deviceReq = new SearchDeviceIdSacReq();
+							deviceReq.setUserKey(comicReq.getUserKey());
+							deviceReq.setDeviceKey(comicReq.getDeviceKey());
+
+							// 기기정보 조회
+							deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
+						} catch (Exception ex) {
+							throw new StorePlatformException("SAC_DSP_0001", "기기정보 조회 ", ex);
+						}
+
+						if (deviceRes != null) {
+							deviceId = deviceRes.getDeviceId();
+							deviceIdType = this.commonService.getDeviceIdType(deviceId);
+
+							metaInfo.setExpiredDate(reqExpireDate);
+							metaInfo.setUseExprDt(useExprDt);
+							metaInfo.setUserKey(userKey);
+							metaInfo.setDeviceKey(deviceKey);
+							metaInfo.setDeviceType(deviceIdType);
+							metaInfo.setDeviceSubKey(deviceId);
+							metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
+
+							// 암호화 정보 (JSON)
+							EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+
+							// JSON 파싱
+							MarshallingHelper marshaller = new JacksonMarshallingHelper();
+							byte[] jsonData = marshaller.marshal(contents);
+
+							// JSON 암호화
+							byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+							String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+							// 암호화 정보 (AES-128)
+							Encryption encryption = new Encryption();
+							encryption.setProductId(prchsProdId);
+							encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+							encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+							encryption.setToken(encryptString);
+							encryptionList.add(encryption);
+
+							// JSON 복호화
+							byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+							byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+
+							try {
+								String decData = new String(decrypt, "UTF-8");
+								this.logger.debug("----------------------------------------------------------------");
+								this.logger.debug("[getDownloadEbookInfo] decData : {}", decData);
+								this.logger.debug("----------------------------------------------------------------");
+							} catch (UnsupportedEncodingException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				// 구매 정보
+				product.setPurchaseList(purchaseList);
+
+				// 암호화 정보
+				if (!encryptionList.isEmpty()) {
 					product.setDl(encryptionList);
 				}
 			}
