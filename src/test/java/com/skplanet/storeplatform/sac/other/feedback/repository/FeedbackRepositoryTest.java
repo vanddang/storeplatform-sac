@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
@@ -31,8 +33,8 @@ import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @WebAppConfiguration
-// @TransactionConfiguration
-// @Transactional
+@TransactionConfiguration
+@Transactional
 public class FeedbackRepositoryTest {
 
 	@Autowired
@@ -49,7 +51,7 @@ public class FeedbackRepositoryTest {
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId("S01");
 		prodNoti.setMbrNo("IW1425872523320130906100815");
-		prodNoti.setProdId("H090123997");
+		prodNoti.setProdId("0000045297");
 		// prodNoti.setChnlId("CL00000642");
 
 		ProdNoti ret = this.feedbackRepository.getRegProdNoti(prodNoti);
@@ -66,7 +68,7 @@ public class FeedbackRepositoryTest {
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId("S01");
 		prodNoti.setNotiSeq("14280");
-		prodNoti.setMbrNo("IW1023992275020110428164435");
+		prodNoti.setMbrNo("IW1425872523320130906100815");
 		prodNoti.setProdId("0000045297");
 		prodNoti.setTitle("aaa");
 		prodNoti.setNotiDscr("bbb");
