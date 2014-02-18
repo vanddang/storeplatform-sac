@@ -218,7 +218,9 @@ public class DeviceServiceImpl implements DeviceService {
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
 		/* 모번호 조회 */
-		deviceInfo.setDeviceId(this.commService.getOpmdMdnInfo(deviceInfo.getDeviceId()));
+		if (deviceInfo.getDeviceId() != null && !StringUtil.equals(deviceInfo.getDeviceId(), "")) {
+			deviceInfo.setDeviceId(this.commService.getOpmdMdnInfo(deviceInfo.getDeviceId()));
+		}
 
 		/* 수정할 userKey 값 셋팅 */
 		deviceInfo.setUserKey(userKey);
@@ -568,7 +570,8 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
 		deviceInfo.setUserKey(userMbrDevice.getUserKey());
 
-		LOGGER.info("::::::::::::::{}", deviceInfo.toString());
+		/* device header 값 셋팅 */
+		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 		/* 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
