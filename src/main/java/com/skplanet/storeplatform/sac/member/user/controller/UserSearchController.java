@@ -164,16 +164,20 @@ public class UserSearchController {
 
 	@RequestMapping(value = "/member/user/searchOneIdInfo/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MbrOneidSacRes detail(SacRequestHeader sacHeader, MbrOneidSacReq req) {
+	public MbrOneidSacRes searchOneIdInfo(SacRequestHeader sacHeader, MbrOneidSacReq req) {
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 2.1.35. OneID 정보조회 #####");
 		LOGGER.info("####################################################");
 
 		LOGGER.info("============================================ MbrOneidSacReq : {}", req.toString());
 
-		if (req.getUserKey() == null && "".equals(req.getUserKey())) {
-			throw new StorePlatformException("SAC_MEM_0001", "getUserKey()");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+
+		if ("".equals(userKey)) {
+			throw new StorePlatformException("SAC_MEM_0001", "userKey()");
 		}
+
+		req.setUserKey(userKey);
 
 		MbrOneidSacRes res = this.svc.searchUserOneId(sacHeader, req);
 		LOGGER.info("Final MbrOneidSacRes Response : {}", res.toString());
@@ -190,9 +194,13 @@ public class UserSearchController {
 
 		LOGGER.info("============================================ SearchIdSacReq : {}", req.toString());
 
-		if (req.getDeviceId() == null && "".equals(req.getDeviceId())) {
-			throw new StorePlatformException("SAC_MEM_0001", "getDeviceId()");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+
+		if ("".equals(deviceId)) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId()");
 		}
+
+		req.setDeviceId(deviceId);
 
 		SearchIdSacRes res = this.svc.searchId(sacHeader, req);
 
@@ -239,7 +247,7 @@ public class UserSearchController {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
 		if (userKey.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "getUserKey()");
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
 		ListTermsAgreementSacRes res = this.svc.listTermsAgreement(sacHeader, req);
