@@ -289,14 +289,6 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-
-                                 <if test='req.orderedBy == "recent"'>
-                                 ,(SELECT  PROD_ID
-                                          ,PRCHS_CNT
-                                     FROM TB_DP_TENANT_PROD_STATS 
-                                    WHERE TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
-                                   ) M
-                                 </if>
                                  <if test='req.orderedBy == "download"'>
                                 ,(
                                     SELECT  TDLP.TENANT_ID
@@ -345,9 +337,6 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
-                         <if test='req.orderedBy == "recent"'>
-                        AND I.PROD_ID = M.PROD_ID(+)        
-                        </if>                                           
                         <if test='req.orderedBy == "download"'>
                         AND K.TENANT_ID = M.TENANT_ID 
                         AND B.CATALOG_ID = M.PROD_ID                             
