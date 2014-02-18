@@ -94,7 +94,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		}
 
 		// 리스트ID 유효값 체크
-		if (!"ADM000000003".equals(listId) && !"ADM000000008".equals(listId)) {
+		if (!"TGR000000002".equals(listId) && !"ADM000000008".equals(listId)) {
 			throw new StorePlatformException("SAC_DSP_0003", "listId", listId);
 		}
 

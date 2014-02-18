@@ -95,7 +95,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		}
 
 		// 리스트ID 유효값 체크
-		if (!"ADM000000013".equals(listId) && !"ADM000000002".equals(listId) && !"RNK000000002".equals(listId)
+		if (!"ADM000000013".equals(listId) && !"TGR000000001".equals(listId) && !"RNK000000002".equals(listId)
 				&& !"RNK000000006".equals(listId)) {
 			throw new StorePlatformException("SAC_DSP_0003", "listId", listId);
 		}
