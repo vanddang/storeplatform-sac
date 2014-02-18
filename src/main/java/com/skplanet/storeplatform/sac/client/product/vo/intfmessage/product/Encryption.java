@@ -24,9 +24,25 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class Encryption extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private String productId;
 	private String digest;
 	private String keyIndex;
 	private String token;
+
+	/**
+	 * @return the productId
+	 */
+	public String getProductId() {
+		return this.productId;
+	}
+
+	/**
+	 * @param productId
+	 *            the productId to set
+	 */
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
 
 	/**
 	 * @return the digest
