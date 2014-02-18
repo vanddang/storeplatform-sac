@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import javax.validation.constraints.Pattern;
-
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -32,25 +30,6 @@ public class CreateOcbInformationReq extends CommonInfo {
 	 */
 	@NotEmpty
 	private String cardNumber = "";
-
-	/**
-	 * 사용시작 일시.
-	 */
-	@NotEmpty
-	private String startDate = "";
-
-	/**
-	 * 사용종료 일시.
-	 */
-	@NotEmpty
-	private String endDate = "";
-
-	/**
-	 * 사용여부 (Y/N).
-	 */
-	@Pattern(regexp = "^Y|N")
-	@NotEmpty
-	private String isUsed = "";
 
 	/**
 	 * @return String : userKey
@@ -95,51 +74,6 @@ public class CreateOcbInformationReq extends CommonInfo {
 	 */
 	public void setCardNumber(String cardNumber) {
 		this.cardNumber = cardNumber;
-	}
-
-	/**
-	 * @return String : startDate
-	 */
-	public String getStartDate() {
-		return this.startDate;
-	}
-
-	/**
-	 * @param startDate
-	 *            String : the startDate to set
-	 */
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
-
-	/**
-	 * @return String : endDate
-	 */
-	public String getEndDate() {
-		return this.endDate;
-	}
-
-	/**
-	 * @param endDate
-	 *            String : the endDate to set
-	 */
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
-
-	/**
-	 * @return String : isUsed
-	 */
-	public String getIsUsed() {
-		return this.isUsed;
-	}
-
-	/**
-	 * @param isUsed
-	 *            String : the isUsed to set
-	 */
-	public void setIsUsed(String isUsed) {
-		this.isUsed = isUsed;
 	}
 
 }

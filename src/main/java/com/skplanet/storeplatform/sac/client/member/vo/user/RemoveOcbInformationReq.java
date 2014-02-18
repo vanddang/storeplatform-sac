@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -14,27 +16,14 @@ public class RemoveOcbInformationReq extends CommonInfo {
 	/**
 	 * 사용자 Key.
 	 */
+	@NotEmpty
 	private String userKey = "";
-
-	/**
-	 * 인증방법 코드.
-	 */
-	private String authMethodCode = "";
 
 	/**
 	 * 카드 번호.
 	 */
+	@NotEmpty
 	private String cardNumber = "";
-
-	/**
-	 * 사용시작 일시.
-	 */
-	private String startDate = "";
-
-	/**
-	 * 사용여부 (Y/N).
-	 */
-	private String isUsed = "";
 
 	/**
 	 * @return String : userKey
@@ -52,21 +41,6 @@ public class RemoveOcbInformationReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : authMethodCode
-	 */
-	public String getAuthMethodCode() {
-		return this.authMethodCode;
-	}
-
-	/**
-	 * @param authMethodCode
-	 *            String : the authMethodCode to set
-	 */
-	public void setAuthMethodCode(String authMethodCode) {
-		this.authMethodCode = authMethodCode;
-	}
-
-	/**
 	 * @return String : cardNumber
 	 */
 	public String getCardNumber() {
@@ -81,33 +55,4 @@ public class RemoveOcbInformationReq extends CommonInfo {
 		this.cardNumber = cardNumber;
 	}
 
-	/**
-	 * @return String : startDate
-	 */
-	public String getStartDate() {
-		return this.startDate;
-	}
-
-	/**
-	 * @param startDate
-	 *            String : the startDate to set
-	 */
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
-
-	/**
-	 * @return String : isUsed
-	 */
-	public String getIsUsed() {
-		return this.isUsed;
-	}
-
-	/**
-	 * @param isUsed
-	 *            String : the isUsed to set
-	 */
-	public void setIsUsed(String isUsed) {
-		this.isUsed = isUsed;
-	}
 }
