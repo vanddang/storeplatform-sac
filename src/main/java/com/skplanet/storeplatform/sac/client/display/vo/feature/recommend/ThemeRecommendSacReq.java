@@ -31,12 +31,18 @@ public class ThemeRecommendSacReq extends CommonInfo {
 
 	private String deviceId; // 기기ID
 
+	private String recommendId; // 테마 추천 ID
+
 	private int offset = 1; // 시작점 ROW
 
 	private int count = 20; // 페이지당 노출 ROW 수
 
 	public String getFilteredBy() {
 		return this.filteredBy;
+	}
+
+	public void setFilteredBy(String filteredBy) {
+		this.filteredBy = filteredBy;
 	}
 
 	/**
@@ -84,8 +90,19 @@ public class ThemeRecommendSacReq extends CommonInfo {
 		this.deviceId = deviceId;
 	}
 
-	public void setFilteredBy(String filteredBy) {
-		this.filteredBy = filteredBy;
+	/**
+	 * @return the recommendId
+	 */
+	public String getRecommendId() {
+		return this.recommendId;
+	}
+
+	/**
+	 * @param recommendId
+	 *            the recommendId to set
+	 */
+	public void setRecommendId(String recommendId) {
+		this.recommendId = recommendId;
 	}
 
 	public int getOffset() {
