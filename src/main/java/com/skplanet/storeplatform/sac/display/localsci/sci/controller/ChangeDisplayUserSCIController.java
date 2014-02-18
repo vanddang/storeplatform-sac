@@ -10,7 +10,6 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.Chang
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq.GroupChangeDisplayUserId;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq.GroupChangeDisplayUserKey;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacRes;
 import com.skplanet.storeplatform.sac.display.localsci.sci.service.ChangeDisplayUserService;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
 
@@ -31,8 +30,7 @@ public class ChangeDisplayUserSCIController implements ChangeDisplayUserSCI {
 	private ChangeDisplayUserService changeDisplayUserService;
 
 	@Override
-	public ChangeDisplayUserSacRes changeUserId(
-			@Validated(GroupChangeDisplayUserId.class) ChangeDisplayUserSacReq changeDisplayUserSacReq) {
+	public void changeUserId(@Validated(GroupChangeDisplayUserId.class) ChangeDisplayUserSacReq changeDisplayUserSacReq) {
 
 		LOGGER.debug("## 회원 ID 변경 ##");
 		LOGGER.debug("## req : {}", changeDisplayUserSacReq);
@@ -42,15 +40,10 @@ public class ChangeDisplayUserSCIController implements ChangeDisplayUserSCI {
 		changeDisplayUser.setNewUserId(changeDisplayUserSacReq.getNewUserId());
 		changeDisplayUser.setOldUserId(changeDisplayUserSacReq.getOldUserId());
 		this.changeDisplayUserService.changeDisplayUserId(changeDisplayUser);
-
-		ChangeDisplayUserSacRes changeDisplayUserSacRes = new ChangeDisplayUserSacRes();
-		changeDisplayUserSacRes.setResultStatus("success");
-
-		return changeDisplayUserSacRes;
 	}
 
 	@Override
-	public ChangeDisplayUserSacRes changeUserKey(
+	public void changeUserKey(
 			@Validated(GroupChangeDisplayUserKey.class) ChangeDisplayUserSacReq changeDisplayUserSacReq) {
 
 		LOGGER.debug("## 회원 KEY 변경 ##");
@@ -60,13 +53,7 @@ public class ChangeDisplayUserSCIController implements ChangeDisplayUserSCI {
 		changeDisplayUser.setTenantId(changeDisplayUserSacReq.getTenantId());
 		changeDisplayUser.setNewUserKey(changeDisplayUserSacReq.getNewUseKey());
 		changeDisplayUser.setOldUserKey(changeDisplayUserSacReq.getOldUserKey());
-
 		this.changeDisplayUserService.changeDisplayUserKey(changeDisplayUser);
-
-		ChangeDisplayUserSacRes changeDisplayUserSacRes = new ChangeDisplayUserSacRes();
-		changeDisplayUserSacRes.setResultStatus("success");
-
-		return changeDisplayUserSacRes;
 	}
 
 }
