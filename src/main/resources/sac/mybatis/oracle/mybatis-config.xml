@@ -83,14 +83,8 @@
         <!-- ################################################# -->
         <!-- 전시                                            -->
         <!-- ################################################# -->
-        
-        <!-- 전시 상품 공통 -->
-        <typeAlias alias="ProductCommonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonRequest" />
-        <typeAlias alias="ProductCommonDTO"  type="com.skplanet.storeplatform.sac.product.vo.ProductCommonDTO" /> 
         <!-- 상품 이미지 -->
         <typeAlias alias="ProductImage"  type="com.skplanet.storeplatform.sac.display.common.vo.ProductImage" /> 
-        
-        
         
         <!-- 일반카테고리 앱 상품 조회 -->
         <typeAlias alias="CategoryAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacReq" />
@@ -99,10 +93,6 @@
         <!-- 일반카테고리 이북/코믹 상품 조회 -->
         <typeAlias alias="CategoryEbookComicSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacReq" />
         <typeAlias alias="CategoryEbookComic"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryEbookComic" />
-        
-        <!-- ??? -->
-        <typeAlias alias="FeatureVodProductRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductRequest" />
-        <typeAlias alias="FeatureVodProductDTO"  type="com.skplanet.storeplatform.sac.product.vo.FeatureVodProductDTO" />
         
         <!-- 일반카테고리 음원 상품 조회 -->
         <typeAlias alias="MusicContentsSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq" />
