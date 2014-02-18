@@ -17,6 +17,8 @@ public class SearchIdSacReq extends CommonInfo {
 	/* 기기 ID(MDN, UUID, MacAddress), Value : 01011112222 */
 	private String deviceId;
 
+	private String userEmail;
+
 	public String getDeviceId() {
 		return this.deviceId;
 	}
@@ -27,6 +29,14 @@ public class SearchIdSacReq extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getUserEmail() {
+		return this.userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
 }
