@@ -65,13 +65,8 @@ public class AutoPaymentCancelController {
 		// 필수값 체크
 		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
-		AutoPaymentCancelScReq rea = this.reqConvert(autoPaymentCancelSacReq, header);
-		AutoPaymentCancelScRes autoPaymentCancelRes = new AutoPaymentCancelScRes();
-
-		autoPaymentCancelRes = this.autoPaymentCancelSacService.updateReservation(rea);
-		AutoPaymentCancelSacRes autoPaymentCancelSacRes = this.resConvert(autoPaymentCancelRes);
-
-		return autoPaymentCancelSacRes;
+		return this.resConvert(this.autoPaymentCancelSacService.updateReservation(this.reqConvert(
+				autoPaymentCancelSacReq, header)));
 	}
 
 	/**

@@ -72,12 +72,7 @@ public class GiftController {
 		// 필수값 체크
 		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
-		GiftReceiveScReq req = this.reqConvert(giftReceiveSacReq, header);
-		GiftReceiveScRes giftReceiveScRes = new GiftReceiveScRes();
-		giftReceiveScRes = this.giftService.searchGiftReceive(req);
-		GiftReceiveSacRes res = this.resConvert(giftReceiveScRes);
-
-		return res;
+		return this.resConvert(this.giftService.searchGiftReceive(this.reqConvert(giftReceiveSacReq, header)));
 	}
 
 	/**
@@ -111,12 +106,7 @@ public class GiftController {
 		}
 		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
-		GiftConfirmScReq req = this.reqConvert(giftConfirmSacReq, header);
-		GiftConfirmScRes giftConfirmScRes = new GiftConfirmScRes();
-		giftConfirmScRes = this.giftService.updateGiftConfirm(req);
-		GiftConfirmSacRes res = this.resConvert(giftConfirmScRes);
-
-		return res;
+		return this.resConvert(this.giftService.updateGiftConfirm(this.reqConvert(giftConfirmSacReq, header)));
 	}
 
 	/**

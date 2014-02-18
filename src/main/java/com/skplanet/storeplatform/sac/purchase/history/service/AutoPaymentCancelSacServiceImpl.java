@@ -40,8 +40,9 @@ public class AutoPaymentCancelSacServiceImpl implements AutoPaymentCancelSacServ
 	 */
 	@Override
 	public AutoPaymentCancelScRes updateReservation(AutoPaymentCancelScReq autoPaymentCancelReq) {
-		AutoPaymentCancelScRes autoPaymentCancelRes = new AutoPaymentCancelScRes();
-		autoPaymentCancelRes = this.autoPaymentCancelSCI.updateReservation(autoPaymentCancelReq);
+
+		AutoPaymentCancelScRes autoPaymentCancelRes = this.autoPaymentCancelSCI.updateReservation(autoPaymentCancelReq);
+
 		if (autoPaymentCancelRes.getResultYn().equals("Y")) {
 			this.logger.debug("@@@@@@자동결재해지예약/예약취소/해지 이메일 발송 처리@@@@@@");
 			// 이메일 발송 및 성공실패에 대한 셋팅이 필요함

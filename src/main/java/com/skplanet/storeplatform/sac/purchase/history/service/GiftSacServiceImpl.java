@@ -42,10 +42,7 @@ public class GiftSacServiceImpl implements GiftSacService {
 	@Override
 	public GiftReceiveScRes searchGiftReceive(GiftReceiveScReq giftReceiveScReq) {
 
-		GiftReceiveScRes giftReceiveScRes = new GiftReceiveScRes();
-		giftReceiveScRes = this.giftSCI.searchGiftReceive(giftReceiveScReq);
-
-		return giftReceiveScRes;
+		return this.giftSCI.searchGiftReceive(giftReceiveScReq);
 	}
 
 	/**
@@ -57,10 +54,8 @@ public class GiftSacServiceImpl implements GiftSacService {
 	 */
 	@Override
 	public GiftConfirmScRes updateGiftConfirm(GiftConfirmScReq giftConfirmScReq) {
-		GiftConfirmScRes giftConfirmScRes = new GiftConfirmScRes();
-		giftConfirmScRes = this.giftSCI.updateGiftConfirm(giftConfirmScReq);
 
-		return giftConfirmScRes;
+		return this.giftSCI.updateGiftConfirm(giftConfirmScReq);
 	}
 
 }

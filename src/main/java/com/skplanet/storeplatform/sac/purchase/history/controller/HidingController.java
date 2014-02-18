@@ -70,14 +70,9 @@ public class HidingController {
 		// 필수값 체크
 		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
-		HidingScReq req = this.reqConvert(hidingSacReq, header);
-		List<HidingScRes> hidingScRes = new ArrayList<HidingScRes>();
-		List<HidingSacRes> hidingRes = new ArrayList<HidingSacRes>();
-
-		hidingScRes = this.hidingSacService.updateHiding(req);
 		HidingListSacRes response = new HidingListSacRes();
-		hidingRes = this.resConvert(hidingScRes);
-		response.setResponseList(hidingRes);
+		response.setResponseList(this.resConvert(this.hidingSacService.updateHiding(this.reqConvert(hidingSacReq,
+				header))));
 		return response;
 	}
 
@@ -91,16 +86,15 @@ public class HidingController {
 	 * @return hidingSacReq
 	 */
 	private HidingScReq reqConvert(HidingSacReq hidingSacReq, TenantHeader header) {
+		this.logger.debug("@@@@@@reqConvert@@@@@@@");
 		HidingScReq req = new HidingScReq();
 		List<HidingListSc> list = new ArrayList<HidingListSc>();
 
 		req.setTenantId(header.getTenantId());
 		req.setUserKey(hidingSacReq.getUserKey());
 		req.setDeviceKey(hidingSacReq.getDeviceKey());
-		this.logger.debug("@@@@@@header.getSystemId()@@@@@@@" + header.getSystemId());
 		req.setSystemId(header.getSystemId());
 		int size = hidingSacReq.getHidingList().size();
-		this.logger.debug("@@@@@@reqConvert@@@@@@@" + size);
 		for (int i = 0; i < size; i++) {
 
 			HidingListSc hidingListSc = new HidingListSc();

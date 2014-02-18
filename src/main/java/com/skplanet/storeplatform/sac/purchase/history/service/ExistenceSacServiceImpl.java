@@ -45,10 +45,9 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 
 		// 구매완료건만을 넣기 위한 리스트
 		List<ExistenceScRes> existenceListScRes = new ArrayList<ExistenceScRes>();
-		// SC에서 리턴받을 리스트
-		List<ExistenceScRes> resultList = new ArrayList<ExistenceScRes>();
-		resultList = this.existenceSCI.searchExistenceList(existenceReq);
-		this.logger.debug("SAC size : {}", resultList.size());
+
+		List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceReq);
+
 		for (int i = 0; i < resultList.size(); i++) {
 			this.logger.debug("resultList.get(i).getStatusCd() : {}", resultList.get(i).getStatusCd());
 			if (resultList.get(i).getStatusCd() != null && resultList.get(i).getStatusCd().equals("OR000301")) {
