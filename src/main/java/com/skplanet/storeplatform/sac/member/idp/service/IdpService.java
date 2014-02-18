@@ -332,4 +332,17 @@ public interface IdpService {
 	 * @return
 	 */
 	public ImResult rXChangeUserIdIDP(HashMap<String, String> map);
+
+	/**
+	 * 이용동의 변경사이트 목록 배포.
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request 받은 Parameter Map
+	 * @return
+	 */
+	public ImResult rXUpdateAgreeUserIDP(HashMap<String, String> map);
 }

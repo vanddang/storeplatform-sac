@@ -219,32 +219,13 @@ public class IdpServiceImpl implements IdpService {
 				userMbr.setUserCountry(map.get("user_nation_code").toString()); // 사용자 국가 코드
 
 			userMbr.setImSiteCode(map.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
-			userMbr.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부 (사용자정보는 그대로 전달하는게 맞는지 확인필요)
+			// 실명인증 여부 신규인경우 Y로 전달받아도 실명인증정보에서 신규인경우 N으로 수정이됨
+			userMbr.setIsRealName(map.get("is_rname_auth").toString());
 			userMbr.setIsParent(isParentApprove); // 법정대리인 동의여부(Y/N)
 			userMbr.setIsMemberPoint(ocbJoinCodeYn); // 통합 포인트 여부 (Y/N)
 
-			// 실명인증정보
-			MbrAuth mbrAuth = new MbrAuth();
-			mbrAuth.setIsRealName("N"); // 실명 인증 여부 신규가입인경우 Tstore에서 실명인증을 받아야 구매할수 있으므로 초기값 셋팅
-
-			if (map.get("user_ci") != null)
-				mbrAuth.setCi(map.get("user_ci").toString()); // CI
-
-			if (map.get("user_di") != null)
-				mbrAuth.setDi(map.get("user_di").toString()); // DI
-
-			mbrAuth.setRealNameMethod(map.get("rname_auth_mns_code").toString()); // AUTH_MTD_CD 인증방법코드
-
-			if (map.get("user_birthday") != null)
-				mbrAuth.setBirthDay(map.get("user_birthday").toString()); // BIRTHDAY
-
-			if (map.get("user_sex") != null)
-				mbrAuth.setSex(map.get("user_sex").toString()); // SEX 성별
-
-			if (map.get("user_name") != null)
-				mbrAuth.setName(map.get("user_name").toString()); // MBR_NM 회원명
-			mbrAuth.setTenantID(commonRequest.getTenantID()); // TENANT_ID 테넌트 아이디
-			mbrAuth.setRealNameSite(systemID); // systemID 입력으로 변경 20140204
+			// TO DO ... 실명인증정보 공통 내부 메소드로 정의해야 함.
+			MbrAuth mbrAuth = this.getMbrAuthByNew(map, "N");
 
 			createUserRequest.setCommonRequest(commonRequest); // 공통요청
 			createUserRequest.setUserMbr(userMbr); // 사용자정보
@@ -394,6 +375,11 @@ public class IdpServiceImpl implements IdpService {
 
 					updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
 					LOGGER.debug("전환가입 정보 입력 완료");
+
+					// 구매쪽 API CALL START
+
+					// 구매쪽 API CALL END
+
 					// TO DO... 전시,구매,기타에서 사용되는 회원ID, 회원USER_KEY 등을 변경할수 있는 API 호출 추가 로직 대기중...
 				} catch (StorePlatformException spe) {
 					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
@@ -497,6 +483,76 @@ public class IdpServiceImpl implements IdpService {
 	/**
 	 * 
 	 * <pre>
+	 * 실명인증 정보 셋팅 .
+	 * </pre>
+	 * 
+	 * @param hashMap
+	 *            Request 받은 Parameter Map
+	 * @param isNewYn
+	 *            신규여부
+	 * @return
+	 */
+	private MbrAuth getMbrAuthByNew(HashMap<String, String> hashMap, String isNewYn) {
+		// 프로비저닝으로 내려온 실명인증은 재 인증을 해야함으로 Garbage method 될수 있음 일단 구현해놓음.
+		MbrAuth setMbrAuth = new MbrAuth();
+
+		// 실명 인증 여부 신규가입인경우 Tstore에서 실명인증을 받아야 구매할수 있으므로 N 으로 셋팅이 되서 TB_US_USERMBR의 실명인증여부를 SC에서 N으로 수정함
+		if (isNewYn.equals("N")) {
+			setMbrAuth.setIsRealName("N");
+		} else {
+			setMbrAuth.setIsRealName("Y");
+		}
+
+		if (hashMap.get("user_ci") != null) { // user_ci 회원테이블에서 필수값이므로 " "공백을 셋팅해줘야 인서트가 됨.
+			if (!hashMap.get("user_ci").toString().equals("")) {
+				setMbrAuth.setCi(hashMap.get("user_ci").toString()); // CI
+			} else {
+				setMbrAuth.setCi(" ");
+			}
+		}
+
+		if (hashMap.get("user_di") != null)
+			setMbrAuth.setDi(hashMap.get("user_di").toString()); // DI
+
+		if (hashMap.get("rname_auth_mns_code") != null) { // 실명인증 수단 코드 판단 값
+			if (MemberConstants.REAL_NAME_AUTH_TYPE_MOBILE.equals(hashMap.get("rname_auth_mns_code").toString())) { // 휴대폰
+				setMbrAuth.setRealNameMethod(MemberConstants.REAL_NAME_AUTH_MOBILE); // AUTH_MTD_CD 인증방법코드
+			} else if (MemberConstants.REAL_NAME_AUTH_TYPE_IPIN.equals(hashMap.get("rname_auth_mns_code").toString())) {// IPIN인증
+				setMbrAuth.setRealNameMethod(MemberConstants.REAL_NAME_AUTH_IPIN);
+			} else { // 기타
+				setMbrAuth.setRealNameMethod(""); // AUTH_MTD_CD 인증방법코드
+			}
+		}
+
+		if (hashMap.get("user_birthday") != null)
+			setMbrAuth.setBirthDay(hashMap.get("user_birthday").toString()); // BIRTHDAY
+
+		if (hashMap.get("user_sex") != null)
+			setMbrAuth.setSex(hashMap.get("user_sex").toString()); // SEX 성별
+
+		if (hashMap.get("user_name") != null)
+			setMbrAuth.setName(hashMap.get("user_name").toString()); // MBR_NM 회원명
+
+		if (hashMap.get("rname_auth_mbr_code") != null) { // 내국인,외국인 설정
+			if (hashMap.get("rname_auth_mbr_code").toString().equals("10")) {
+				setMbrAuth.setIsDomestic("Y");
+			} else {
+				setMbrAuth.setIsDomestic("N");
+			}
+		}
+
+		if (hashMap.get("rname_auth_date") != null) // 실명인증일시 db-datetype 14자리
+			setMbrAuth.setRealNameDate(hashMap.get("rname_auth_date").toString());
+
+		setMbrAuth.setTenantID(hashMap.get("tenantID").toString()); // TENANT_ID 테넌트 아이디
+		setMbrAuth.setRealNameSite(hashMap.get("systemID").toString()); // systemID
+
+		return setMbrAuth;
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * method 회원정보를 수정하기 위한 객체 셋팅 .
 	 * </pre>
 	 * 
@@ -514,7 +570,7 @@ public class IdpServiceImpl implements IdpService {
 		commonRequest.setSystemID(hashMap.get("systemID").toString());
 
 		UserMbr getUserMbr = searchUserResponse.getUserMbr();
-		MbrAuth getMbrAuth = searchUserResponse.getMbrAuth();
+		MbrAuth getMbrAuth = null;
 		getUserMbr.setImRegDate(hashMap.get("im_reg_date").toString());
 
 		getUserMbr.setTenantID(commonRequest.getTenantID()); // 테넌트 ID
@@ -542,9 +598,9 @@ public class IdpServiceImpl implements IdpService {
 			getUserMbr.setUserName(hashMap.get("user_name").toString()); // 사용자 이름
 			// 이름이 바뀐경우 실명인증 여부 N으로 셋팅
 			if (!hashMap.get("user_name").toString().equals(searchUserResponse.getUserMbr().getUserName())) {
-				getMbrAuth.setIsRealName("N"); // 실명 인증 여부
+				getMbrAuth = this.getMbrAuthByNew(hashMap, "N"); // 실명 인증 여부
 			} else {
-				getMbrAuth.setIsRealName(searchUserResponse.getUserMbr().getIsRealName()); // 실명 인증 여부
+				getMbrAuth = this.getMbrAuthByNew(hashMap, hashMap.get("is_rname_auth").toString()); // 실명 인증 여부
 			}
 		}
 		if (hashMap.get("user_sex") != null)
@@ -556,24 +612,6 @@ public class IdpServiceImpl implements IdpService {
 		getUserMbr.setImSiteCode(hashMap.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
 		getUserMbr.setIsParent(hashMap.get("is_parent_approve").toString()); // 법정대리인 동의여부(Y/N)
 		getUserMbr.setIsMemberPoint(hashMap.get("ocb_join_code").toString()); // 통합 포인트 여부 (Y/N)
-
-		if (hashMap.get("user_ci") != null)
-			getMbrAuth.setCi(hashMap.get("user_ci").toString()); // CI
-		if (hashMap.get("user_di") != null)
-			getMbrAuth.setDi(hashMap.get("user_di").toString()); // DI
-
-		getMbrAuth.setRealNameMethod(hashMap.get("rname_auth_mns_code").toString()); // AUTH_MTD_CD 인증방법코드
-
-		if (hashMap.get("user_birthday") != null)
-			getMbrAuth.setBirthDay(hashMap.get("user_birthday").toString()); // BIRTH 생년월일 DB 에 없음
-		if (hashMap.get("user_sex") != null)
-			getMbrAuth.setSex(hashMap.get("user_sex").toString()); // SEX 성별
-
-		getMbrAuth.setName(hashMap.get("user_name").toString()); // MBR_NM 회원명
-		getMbrAuth.setUpdateDate(hashMap.get("modify_req_date").toString() + hashMap.get("modify_req_time").toString()); // UPD_DT
-		getMbrAuth.setRealNameSite(hashMap.get("systemID").toString()); // systemID 입력으로 변경 20140204
-
-		getMbrAuth.setTenantID(commonRequest.getTenantID()); // TENANT_ID 테넌트 아이디
 
 		updateUserRequest.setCommonRequest(commonRequest);
 		updateUserRequest.setUserMbr(getUserMbr);
@@ -765,8 +803,8 @@ public class IdpServiceImpl implements IdpService {
 		String svcMngNum = StringUtil.nvl(map.get("svc_mng_num"), "");
 		String tenantId = StringUtil.nvl(map.get("tenantID"), "");
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
-		String beforeV4SprtYn = null; //이전 단말 DCD 지원여부
-		String v4SprtYn = null; //변경될 단말 DCD 지원여부
+		String beforeV4SprtYn = null; // 이전 단말 DCD 지원여부
+		String v4SprtYn = null; // 변경될 단말 DCD 지원여부
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
@@ -803,7 +841,7 @@ public class IdpServiceImpl implements IdpService {
 
 			} else {
 
-				v4SprtYn = device.getItoppV4SprtYn() == null ? "N" : device.getItoppV4SprtYn(); //DCD 연동 지원여부
+				v4SprtYn = device.getItoppV4SprtYn() == null ? "N" : device.getItoppV4SprtYn(); // DCD 연동 지원여부
 
 				if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
 
@@ -829,8 +867,9 @@ public class IdpServiceImpl implements IdpService {
 					}
 
 					if (StringUtil.equals(isTestModel, "Y")) {
-						LOGGER.info("<idpChangeMobile> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-								device.getDeviceModelCd(), uacd, svcMngNum);
+						LOGGER.info(
+								"<idpChangeMobile> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+								mdn, device.getDeviceModelCd(), uacd, svcMngNum);
 					} else {
 						LOGGER.info(
 								"<idpChangeMobile> NOT SUPPORT DEVICE.(기기변경 대상 단말이 존재하지 않음- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
@@ -879,25 +918,26 @@ public class IdpServiceImpl implements IdpService {
 			/* DCD 연동 */
 			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
 
 				/* 기존에 구매했던 DCD 상품 조회 */
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info(
+						"<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
 
 			}
 
@@ -2782,4 +2822,72 @@ public class IdpServiceImpl implements IdpService {
 		return imResult;
 	}
 
+	/*
+	 * 
+	 * <pre> 이용동의 변경사이트 목록 배포 - CMD : rXUpdateAgreeUserIDP . </pre>
+	 * 
+	 * @param map Request 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	@Override
+	public ImResult rXUpdateAgreeUserIDP(HashMap<String, String> map) {
+
+		String tenantID = "";
+		String systemID = "";
+		String userKey = ""; // 내부사용자키
+		String imIntSvcNo = ""; // 통합서비스번호
+		String userID = ""; // 사용자 ID
+		String oldID = "";
+		String ocbJoinCodeYn = ""; // 통합포인트 가입여부
+
+		tenantID = map.get("tenantID").toString();
+		systemID = map.get("systemID").toString();
+		imIntSvcNo = map.get("im_int_svc_no").toString();
+		userID = map.get("user_id").toString();
+		ocbJoinCodeYn = map.get("ocb_join_code").toString();
+		boolean siteCodeCheck = false; // 이용동의 사이트중 tstore가 있는지 없는지 체크하기 위한 boolean 변수
+
+		ImResult imResult = new ImResult();
+		imResult.setCmd("rXUpdateAgreeUserIDP");
+		imResult.setUserId(userID);
+		imResult.setImIntSvcNo(imIntSvcNo);
+
+		// LOGGER.debug("JOIN_SST_LIST START");
+
+		String joinSiteTotalList = map.get("join_sst_list").toString(); // 이용동의사이트정보
+		// example info list : 41100,null,20130923,212917,tstore000001741|90300,null,20130917,113426,null
+		// LOGGER.debug("replace before:" + joinSiteTotalList);
+		joinSiteTotalList = joinSiteTotalList.replaceAll(" ", "");
+		// LOGGER.debug("replace after:" + joinSiteTotalList);
+
+		String[] mbrCaluseAgreeArray = null;
+		String[] tempSplit = joinSiteTotalList.split("\\|");
+		for (int i = 0; i < tempSplit.length; i++) {
+			String[] tmpSplit = tempSplit[i].split(",");
+			if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0]
+					&& MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
+				siteCodeCheck = true; // join_sst_list 문자열에 tstore 41100 이용동의가 있는경우
+				if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4])
+						&& !"null".equals(tmpSplit[4])) {
+					LOGGER.debug("RXUPDATEAGREEUSERIDP old_id : " + tmpSplit[4]);
+					map.put("old_id", tmpSplit[4]);
+				} else if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4])
+						&& "null".equals(tmpSplit[4])) {
+					map.put("old_id", "null");
+				}
+				if (tmpSplit.length >= 2 && null != tmpSplit[1] && !"".equals(tmpSplit[1])
+						&& !"null".equals(tmpSplit[1])) {
+					mbrCaluseAgreeArray = tmpSplit[1].split("\\^");
+				}
+				break;
+			}
+		}
+
+		// TO DO... 로직 구성중
+		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
+		imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
+
+		return imResult;
+	}
 }
