@@ -92,7 +92,7 @@ public class CreateRealNameReq extends CommonInfo {
 	/**
 	 * 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
 	 */
-	private final String resident = "";
+	private String resident = "";
 
 	/**
 	 * @return String : userKey
@@ -309,6 +309,14 @@ public class CreateRealNameReq extends CommonInfo {
 	 */
 	public String getResident() {
 		return this.resident;
+	}
+
+	/**
+	 * @param resident
+	 *            String : the resident to set
+	 */
+	public void setResident(String resident) {
+		this.resident = resident;
 	}
 
 }
