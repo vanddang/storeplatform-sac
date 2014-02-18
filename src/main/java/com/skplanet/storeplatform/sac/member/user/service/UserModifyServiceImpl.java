@@ -20,8 +20,12 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.FindCommonProfileForServerEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.ModifyAuthInfoEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.CheckIdPwdAuthEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.ModifyPwdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateGuardianEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserNameEcReq;
@@ -213,12 +217,27 @@ public class UserModifyServiceImpl implements UserModifyService {
 			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
 
 				/**
-				 * TODO 통합IDP 패스워드 확인 연동 (cmd - authIntegratedSPPW))
+				 * 통합IDP 패스워드 확인 연동 (cmd - authIntegratedSPPW))
 				 */
+				CheckIdPwdAuthEcReq checkIdPwdAuthEcReq = new CheckIdPwdAuthEcReq();
+				checkIdPwdAuthEcReq.setUserId(userInfo.getUserId());
+				checkIdPwdAuthEcReq.setUserPasswd(req.getOldPassword());
+				this.imIdpSCI.checkIdPwdAuth(checkIdPwdAuthEcReq);
+
+				LOGGER.info("## >> ========================= 패스워드 확인 연동 성공.");
 
 				/**
-				 * TODO 통합IDP 비밀번호 변경 연동(cmd - TXUpdateUserPwdIDP)
+				 * 통합IDP 비밀번호 변경 연동(cmd - TXUpdateUserPwdIDP)
 				 */
+				ModifyPwdEcReq modifyPwdEcReq = new ModifyPwdEcReq();
+				modifyPwdEcReq.setKey(req.getUserAuthKey()); // IDP 인증 Key
+				modifyPwdEcReq.setKey(userInfo.getImSvcNo()); // 통합 서비스 관리번호
+				modifyPwdEcReq.setUserPasswd(req.getNewPassword()); // 신규 비밀번호
+				modifyPwdEcReq.setUserPasswdType("1"); // 비밀번호유형코드 (1: 정상, 2: 임시)
+				modifyPwdEcReq.setUserPasswdModifyDate(DateUtil.getToday()); // 비밀번호변경일자 (YYYYMMDD)
+				this.imIdpSCI.modifyPwd(modifyPwdEcReq);
+
+				LOGGER.info("## >> ========================= 비밀번호 변경 연동 성공.");
 
 			}
 
@@ -234,12 +253,27 @@ public class UserModifyServiceImpl implements UserModifyService {
 			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
 
 				/**
-				 * TODO IDP 패스워드 확인 연동 (cmd - authForId)
+				 * IDP 패스워드 확인 연동 (cmd - authForId)
 				 */
+				AuthForIdEcReq authForIdEcReq = new AuthForIdEcReq();
+				authForIdEcReq.setUserId(userInfo.getUserId());
+				authForIdEcReq.setUserPasswd(req.getOldPassword());
+				this.idpSCI.authForId(authForIdEcReq);
+
+				LOGGER.info("## >> ========================= 패스워드 확인 연동 성공.");
 
 				/**
-				 * TODO IDP 비밀번호 변경 연동 (cmd - modifyAuthInfo)
+				 * IDP 비밀번호 변경 연동 (cmd - modifyAuthInfo)
 				 */
+				ModifyAuthInfoEcReq modifyAuthInfoEcReq = new ModifyAuthInfoEcReq();
+				modifyAuthInfoEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 연동 Key
+				modifyAuthInfoEcReq.setKeyType("2"); // 변경할 인증 정보의 type (1=Email, 2=password, default=1)
+				modifyAuthInfoEcReq.setUserKey(userInfo.getImMbrNo()); // MBR_NO
+				modifyAuthInfoEcReq.setPreKey(req.getOldPassword()); // 기존 패스워드
+				modifyAuthInfoEcReq.setKey(req.getNewPassword()); // 신규 패스워드
+				this.idpSCI.modifyAuthInfo(modifyAuthInfoEcReq);
+
+				LOGGER.info("## >> ========================= 비밀번호 변경 연동 성공.");
 
 			}
 

@@ -99,7 +99,7 @@ public class UserModifyController {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	@RequestMapping(value = "/dev/member/user/modifyPassword/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, @Validated @RequestBody ModifyPasswordReq req) {
 
