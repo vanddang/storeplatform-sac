@@ -117,6 +117,11 @@ public final class MemberConstants {
 	public static final String DEVICE_EXTRA_ROOTING_YN = "US011412"; // 루팅 여부
 	public static final String DEVICE_EXTRA_TCLOUD_SUPPORT_YN = "US011413"; // T CLOUD 지원여부
 
+	/** 기기변경 유형 코드 */
+	public static final String DEVICE_CHANGE_TYPE_USER_SELECT = "US012001"; // 사용자선택
+	public static final String DEVICE_CHANGE_TYPE_MODEL_CHANGE = "US012002"; // 기기변경
+	public static final String DEVICE_CHANGE_TYPE_NUMBER_CHANGE = "US012003"; // 번호변경
+
 	/** 미지원 단말. */
 	public static final String NOT_SUPPORT_HP_CORP = "NSH";
 	public static final String NOT_SUPPORT_HP_UACODE = "9999";
