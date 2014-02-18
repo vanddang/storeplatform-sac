@@ -57,7 +57,7 @@
 				AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
 				AND A.BASE_YN = 'Y' AND A.BASE_YN = 'Y' 
 				AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-				AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
+				AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
 				AND D.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 :  */
 				AND D.TOP_MENU_ID IN ('DP17', 'DP18')	/* 영화,TV방송 */
 				AND SC.SALE_YN ='Y'
@@ -265,7 +265,7 @@
 										   AND L.DEVICE_MODEL_CD = #{deviceModel}	/* 단말모델코드 */
 										   AND L.USE_YN = 'Y'
 										   AND B.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
-										   AND D.SVC_GRP_CD = 'DP000203'            /* DP000201 : 멀티미디어 */
+										   AND D.SVC_GRP_CD = 'DP000203'            /* DP000203 : 멀티미디어 */
 										   AND D.CONTENTS_TYPE_CD = 'PD002501'      /* PD002501 : 채널타입 */
 										   AND D.TOP_MENU_ID IN ('DP17', 'DP18')	/* 영화,TV방송 */
 										   AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
