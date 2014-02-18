@@ -35,7 +35,7 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 /**
@@ -96,12 +96,11 @@ public class ModifyPasswordTest {
 
 						return reqJson;
 					}
-				}).success(ModifyRes.class, new SuccessCallback() {
+				}).success(ModifyPasswordRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ModifyRes res = (ModifyRes) result;
+						ModifyPasswordRes res = (ModifyPasswordRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -136,12 +135,11 @@ public class ModifyPasswordTest {
 
 						return reqJson;
 					}
-				}).success(ModifyRes.class, new SuccessCallback() {
+				}).success(ModifyPasswordRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ModifyRes res = (ModifyRes) result;
+						ModifyPasswordRes res = (ModifyPasswordRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -178,12 +176,11 @@ public class ModifyPasswordTest {
 
 						return reqJson;
 					}
-				}).success(ModifyRes.class, new SuccessCallback() {
+				}).success(ModifyPasswordRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ModifyRes res = (ModifyRes) result;
+						ModifyPasswordRes res = (ModifyPasswordRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -219,12 +216,11 @@ public class ModifyPasswordTest {
 
 						return reqJson;
 					}
-				}).success(ModifyRes.class, new SuccessCallback() {
+				}).success(ModifyPasswordRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ModifyRes res = (ModifyRes) result;
+						ModifyPasswordRes res = (ModifyPasswordRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
