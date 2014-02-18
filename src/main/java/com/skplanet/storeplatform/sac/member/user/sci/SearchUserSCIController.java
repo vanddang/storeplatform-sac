@@ -9,6 +9,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
@@ -29,6 +31,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
  * Updated on : 2014. 2. 12. Updated by : 김다슬, 인크로스.
  */
 @LocalSCI
+@RequestMapping(value = "/member/user/sci")
 public class SearchUserSCIController implements SearchUserSCI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchUserSCIController.class);
 
@@ -43,6 +46,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 	 * skplanet .storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq)
 	 */
 	@Override
+	@RequestMapping(value = "/searchUserByUserKey", method = RequestMethod.POST)
 	public SearchUserSacRes searchUserByUserKey(SearchUserSacReq request) {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
