@@ -716,6 +716,7 @@
 		                      , CH_B.PROD_NM AS CHNL_PROD_NM
 		                      , CH_B.ARTIST1_NM
 		                      , CH_B.ARTIST2_NM
+		                      , CH_B.ARTIST3_NM
 		                      , CH_C.CHNL_COMP_NM
 		                      , MP_E.PART_PROD_ID
 		                      , EP_F.META_CLSF_CD
@@ -725,7 +726,6 @@
 		                      , EP_F.USE_PERIOD
 		                      , EP_F.PROD_CHRG_YN
 		                      , EP_G.PROD_NM
-		                      , EP_G.ARTIST3_NM
 		                      , EP_G.PROD_BASE_DESC
 		                      , EP_G.PROD_DTL_DESC
 		                      , EP_H.BOOK_PAGE_CNT
