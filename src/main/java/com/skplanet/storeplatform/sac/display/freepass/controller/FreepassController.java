@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.freepass.controller;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +80,7 @@ public class FreepassController {
 
 		return this.freepassService.searchFreepassDetail(req, header);
 	}
-	
+
 	/**
 	 * <pre>
 	 * 자유 이용권 목록 조회.
@@ -103,10 +102,10 @@ public class FreepassController {
 
 		return this.freepassService.searchSeriesPassList(req, header);
 	}
-	
+
 	/**
 	 * <pre>
-	 * 자유 이용권 목록 조회.
+	 * 특정 상품에 적용할 자유 이용권 조회– GET.
 	 * </pre>
 	 * 
 	 * @param req
