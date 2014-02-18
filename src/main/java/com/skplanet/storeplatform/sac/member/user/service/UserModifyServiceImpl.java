@@ -20,8 +20,12 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.FindCommonProfileForServerEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.ModifyAuthInfoEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.CheckIdPwdAuthEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.ModifyPwdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateGuardianEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserNameEcReq;
@@ -207,71 +211,71 @@ public class UserModifyServiceImpl implements UserModifyService {
 			LOGGER.info("## One ID 통합회원 [{}]", userInfo.getUserName());
 			LOGGER.info("## ====================================================");
 
-			// /**
-			// * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
-			// */
-			// if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
-			//
-			// /**
-			// * 통합IDP 패스워드 확인 연동 (cmd - authIntegratedSPPW))
-			// */
-			// CheckIdPwdAuthEcReq checkIdPwdAuthEcReq = new CheckIdPwdAuthEcReq();
-			// checkIdPwdAuthEcReq.setUserId(userInfo.getUserId());
-			// checkIdPwdAuthEcReq.setUserPasswd(req.getOldPassword());
-			// this.imIdpSCI.checkIdPwdAuth(checkIdPwdAuthEcReq);
-			//
-			// LOGGER.info("## >> ========================= 패스워드 확인 연동 성공.");
-			//
-			// /**
-			// * 통합IDP 비밀번호 변경 연동(cmd - TXUpdateUserPwdIDP)
-			// */
-			// ModifyPwdEcReq modifyPwdEcReq = new ModifyPwdEcReq();
-			// modifyPwdEcReq.setKey(req.getUserAuthKey()); // IDP 인증 Key
-			// modifyPwdEcReq.setKey(userInfo.getImSvcNo()); // 통합 서비스 관리번호
-			// modifyPwdEcReq.setUserPasswd(req.getNewPassword()); // 신규 비밀번호
-			// modifyPwdEcReq.setUserPasswdType("1"); // 비밀번호유형코드 (1: 정상, 2: 임시)
-			// modifyPwdEcReq.setUserPasswdModifyDate(DateUtil.getToday()); // 비밀번호변경일자 (YYYYMMDD)
-			// this.imIdpSCI.modifyPwd(modifyPwdEcReq);
-			//
-			// LOGGER.info("## >> ========================= 비밀번호 변경 연동 성공.");
-			//
-			// }
-			//
-			// } else {
-			//
-			// LOGGER.info("## ====================================================");
-			// LOGGER.info("## 기존 IDP 회원 [{}]", userInfo.getUserName());
-			// LOGGER.info("## ====================================================");
-			//
-			// /**
-			// * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
-			// */
-			// if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
-			//
-			// /**
-			// * IDP 패스워드 확인 연동 (cmd - authForId)
-			// */
-			// AuthForIdEcReq authForIdEcReq = new AuthForIdEcReq();
-			// authForIdEcReq.setUserId(userInfo.getUserId());
-			// authForIdEcReq.setUserPasswd(req.getOldPassword());
-			// this.idpSCI.authForId(authForIdEcReq);
-			//
-			// LOGGER.info("## >> ========================= 패스워드 확인 연동 성공.");
-			//
-			// /**
-			// * IDP 비밀번호 변경 연동 (cmd - modifyAuthInfo)
-			// */
-			// ModifyAuthInfoEcReq modifyAuthInfoEcReq = new ModifyAuthInfoEcReq();
-			// modifyAuthInfoEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 연동 Key
-			// modifyAuthInfoEcReq.setKeyType("2"); // 변경할 인증 정보의 type (1=Email, 2=password, default=1)
-			// modifyAuthInfoEcReq.setUserKey(userInfo.getImMbrNo()); // MBR_NO
-			// modifyAuthInfoEcReq.setPreKey(req.getOldPassword()); // 기존 패스워드
-			// modifyAuthInfoEcReq.setKey(req.getNewPassword()); // 신규 패스워드
-			// this.idpSCI.modifyAuthInfo(modifyAuthInfoEcReq);
-			//
-			// LOGGER.info("## >> ========================= 비밀번호 변경 연동 성공.");
-			//
-			// }
+			/**
+			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
+			 */
+			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
+
+				/**
+				 * 통합IDP 패스워드 확인 연동 (cmd - authIntegratedSPPW))
+				 */
+				CheckIdPwdAuthEcReq checkIdPwdAuthEcReq = new CheckIdPwdAuthEcReq();
+				checkIdPwdAuthEcReq.setUserId(userInfo.getUserId());
+				checkIdPwdAuthEcReq.setUserPasswd(req.getOldPassword());
+				this.imIdpSCI.checkIdPwdAuth(checkIdPwdAuthEcReq);
+
+				LOGGER.info("## >> ========================= 패스워드 확인 연동 성공.");
+
+				/**
+				 * 통합IDP 비밀번호 변경 연동(cmd - TXUpdateUserPwdIDP)
+				 */
+				ModifyPwdEcReq modifyPwdEcReq = new ModifyPwdEcReq();
+				modifyPwdEcReq.setKey(req.getUserAuthKey()); // IDP 인증 Key
+				modifyPwdEcReq.setKey(userInfo.getImSvcNo()); // 통합 서비스 관리번호
+				modifyPwdEcReq.setUserPasswd(req.getNewPassword()); // 신규 비밀번호
+				modifyPwdEcReq.setUserPasswdType("1"); // 비밀번호유형코드 (1: 정상, 2: 임시)
+				modifyPwdEcReq.setUserPasswdModifyDate(DateUtil.getToday()); // 비밀번호변경일자 (YYYYMMDD)
+				this.imIdpSCI.modifyPwd(modifyPwdEcReq);
+
+				LOGGER.info("## >> ========================= 비밀번호 변경 연동 성공.");
+
+			}
+
+		} else {
+
+			LOGGER.info("## ====================================================");
+			LOGGER.info("## 기존 IDP 회원 [{}]", userInfo.getUserName());
+			LOGGER.info("## ====================================================");
+
+			/**
+			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
+			 */
+			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
+
+				/**
+				 * IDP 패스워드 확인 연동 (cmd - authForId)
+				 */
+				AuthForIdEcReq authForIdEcReq = new AuthForIdEcReq();
+				authForIdEcReq.setUserId(userInfo.getUserId());
+				authForIdEcReq.setUserPasswd(req.getOldPassword());
+				this.idpSCI.authForId(authForIdEcReq);
+
+				LOGGER.info("## >> ========================= 패스워드 확인 연동 성공.");
+
+				/**
+				 * IDP 비밀번호 변경 연동 (cmd - modifyAuthInfo)
+				 */
+				ModifyAuthInfoEcReq modifyAuthInfoEcReq = new ModifyAuthInfoEcReq();
+				modifyAuthInfoEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 연동 Key
+				modifyAuthInfoEcReq.setKeyType("2"); // 변경할 인증 정보의 type (1=Email, 2=password, default=1)
+				modifyAuthInfoEcReq.setUserKey(userInfo.getImMbrNo()); // MBR_NO
+				modifyAuthInfoEcReq.setPreKey(req.getOldPassword()); // 기존 패스워드
+				modifyAuthInfoEcReq.setKey(req.getNewPassword()); // 신규 패스워드
+				this.idpSCI.modifyAuthInfo(modifyAuthInfoEcReq);
+
+				LOGGER.info("## >> ========================= 비밀번호 변경 연동 성공.");
+
+			}
 
 		}
 
@@ -292,7 +296,83 @@ public class UserModifyServiceImpl implements UserModifyService {
 	@Override
 	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, ModifyEmailReq req) {
 
+		/**
+		 * TODO 로직 미정의로 미구현됨.........
+		 * 
+		 * TODO 로직 미정의로 미구현됨.........
+		 * 
+		 * TODO 로직 미정의로 미구현됨.........
+		 * 
+		 * TODO 로직 미정의로 미구현됨.........
+		 */
+
+		/**
+		 * 회원 정보 조회.
+		 */
+		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+
+		/**
+		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
+		 */
+		LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
+		LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
+		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
+
+			LOGGER.info("## ====================================================");
+			LOGGER.info("## One ID 통합회원 [{}]", userInfo.getUserName());
+			LOGGER.info("## ====================================================");
+
+			/**
+			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
+			 */
+			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
+
+				/**
+				 * TODO 통합IDP 회원정보 수정 연동 (cmd - TXUpdateUserInfoIDP)
+				 */
+				// UpdateUserInfoEcReq updateUserInfoEcReq = new UpdateUserInfoEcReq();
+				// updateUserInfoEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 인증키
+				// updateUserInfoEcReq.setKey(userInfo.getImSvcNo()); // 통합서비스 관리번호
+				// updateUserInfoEcReq.setUserType("1"); // 가입자 유형코드 (1:개인)
+				// updateUserInfoEcReq.setIsBizAuth(MemberConstants.USE_N);
+				// updateUserInfoEcReq.setUdtTypeCd("2"); // 업데이트 구분 코드 (1:TN, 2:EM, 3:TN+EM, 4:부가정보)
+				// this.imIdpSCI.updateUserInfo(updateUserInfoEcReq);
+				LOGGER.info("## >> ========================= 이메일 수정 연동 성공.");
+
+			}
+
+		} else {
+
+			LOGGER.info("## ====================================================");
+			LOGGER.info("## 기존 IDP 회원 [{}]", userInfo.getUserName());
+			LOGGER.info("## ====================================================");
+
+			/**
+			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
+			 */
+			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
+
+				/**
+				 * TODO IDP 이메일 변경 연동 (cmd - modifyAuthInfo)
+				 */
+				// ModifyAuthInfoEcReq modifyAuthInfoEcReq = new ModifyAuthInfoEcReq();
+				// modifyAuthInfoEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 연동 Key
+				// modifyAuthInfoEcReq.setKeyType("1"); // 변경할 인증 정보의 type (1=Email, 2=password, default=1)
+				// modifyAuthInfoEcReq.setUserKey(userInfo.getImMbrNo()); // MBR_NO
+				// modifyAuthInfoEcReq.setPreKey(req.getOldEmail()); // 기존 패스워드
+				// modifyAuthInfoEcReq.setKey(req.getNewEmail()); // 신규 패스워드
+				// this.idpSCI.modifyAuthInfo(modifyAuthInfoEcReq);
+				LOGGER.info("## >> ========================= 이메일 수정 연동 성공.");
+
+			}
+
+		}
+
+		/**
+		 * 결과 setting.
+		 */
 		ModifyEmailRes response = new ModifyEmailRes();
+		response.setUserKey("");
 
 		return response;
 	}
