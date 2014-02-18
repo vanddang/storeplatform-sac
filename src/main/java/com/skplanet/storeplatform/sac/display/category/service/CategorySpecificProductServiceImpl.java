@@ -166,7 +166,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
 						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 							// 배치완료 기준일시 조회
-							// TODO osm1021 기준 ListID가 없기 때문에 일단 멜론 Top 100으로 고정
+							// TODO 기준 ListID가 없기 때문에 일단 멜론 Top 100으로 고정
 							// String stdDt = this.displayCommonService.getBatchStandardDateString(tenantId,
 							// "MELON_DP004901");
 							// paramMap.put("stdDt", stdDt);
