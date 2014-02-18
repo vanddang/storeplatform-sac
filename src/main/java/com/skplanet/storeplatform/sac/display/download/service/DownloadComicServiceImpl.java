@@ -200,7 +200,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 
 			// 이미지 정보
-			product.setSourceList(this.commonMetaInfoGenerator.generateSourceList(metaInfo));
+			product.setSourceList(this.commonMetaInfoGenerator.generateDownloadSourceList(metaInfo));
 
 			// 메뉴 정보
 			product.setMenuList(this.commonMetaInfoGenerator.generateMenuList(metaInfo));
@@ -218,7 +218,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			product.setDistributor(this.commonMetaInfoGenerator.generateDistributor(metaInfo));
 
 			// 저작자 정보
-			product.setContributor(this.ebookComicGenerator.generateEbookContributor(metaInfo));
+			product.setContributor(this.ebookComicGenerator.generateComicContributor(metaInfo));
 
 			// 구매 여부 확인
 			if (StringUtils.isNotEmpty(prchsId)) {
@@ -255,7 +255,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					metaInfo.setDeviceSubKey(deviceId);
 					metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
 
-					// 암호화 정보
+					// 암호화 정보 (JSON)
 					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
 
 					// JSON 파싱
@@ -266,11 +266,14 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
 					String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
 
+					// 암호화 정보 (AES-128)
 					Encryption encryption = new Encryption();
+					List<Encryption> encryptionList = new ArrayList<Encryption>();
 					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
 					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
 					encryption.setToken(encryptString);
-					product.setDl(encryption);
+					encryptionList.add(encryption);
+					product.setDl(encryptionList);
 				}
 			}
 

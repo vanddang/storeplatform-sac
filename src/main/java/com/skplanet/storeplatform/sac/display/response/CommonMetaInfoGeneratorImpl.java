@@ -430,9 +430,15 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Override
 	public Purchase generatePurchase(String prchId, String prodId, String prchState, String prchDt, String dwldExprDt) {
 		Purchase purchase = new Purchase();
-		purchase.setState(prchState);
 
-		if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchState)) {
+		// 구매상태 만료 여부 확인
+		if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchState)) {
+			List<Identifier> identifierList = new ArrayList<Identifier>();
+			identifierList.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, prchId));
+
+			purchase.setState(prchState);
+			purchase.setIdentifierList(identifierList);
+		} else {
 			List<Identifier> identifierList = new ArrayList<Identifier>();
 			identifierList.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, prchId));
 			identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, prodId));

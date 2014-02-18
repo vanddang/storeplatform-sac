@@ -298,7 +298,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
 					}
 
-					// 암호화 정보
+					// 암호화 정보 (JSON)
 					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
 
 					// JSON 파싱
@@ -309,11 +309,14 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
 					String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
 
+					// 암호화 정보 (AES-128)
 					Encryption encryption = new Encryption();
+					List<Encryption> encryptionList = new ArrayList<Encryption>();
 					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
 					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
 					encryption.setToken(encryptString);
-					product.setDl(encryption);
+					encryptionList.add(encryption);
+					product.setDl(encryptionList);
 				}
 			}
 
