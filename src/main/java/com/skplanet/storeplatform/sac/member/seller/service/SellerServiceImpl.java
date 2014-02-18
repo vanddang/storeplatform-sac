@@ -706,12 +706,12 @@ public class SellerServiceImpl implements SellerService {
 		UpdatePasswordSellerRequest updatePasswordSellerRequest = new UpdatePasswordSellerRequest();
 
 		MbrPwd mbrPwd = new MbrPwd();
-		mbrPwd.setOldPW(req.getOldPW());
-		mbrPwd.setMemberPW(req.getNewPW());
+		mbrPwd.setOldPW(req.getOldPw());
+		mbrPwd.setMemberPW(req.getNewPw());
 		updatePasswordSellerRequest.setMbrPwd(mbrPwd);
 
 		updatePasswordSellerRequest.setCommonRequest(commonRequest);
-
+		// Id
 		UpdatePasswordSellerResponse updatePasswordSellerResponse = this.sellerSCI
 				.updatePasswordSeller(updatePasswordSellerRequest);
 
@@ -821,55 +821,52 @@ public class SellerServiceImpl implements SellerService {
 		SellerUpgrade sellerUpgrade = new SellerUpgrade();
 
 		sellerUpgrade.setSellerKey(req.getSellerKey());
-		sellerUpgrade.setSellerClassTo(req.getSellerCategoryTo()); // BIZ_KIND_CD(US000901,US000904) 신청
-		sellerUpgrade.setRepEmail(req.getRepEmail()); // ("대표 이메일"); 회원 REP_EMAIL > 전환 CHRGPERS_EMAIL
-		sellerUpgrade.setSellerBizCorpNumber(req.getSellerBizCorpNumber());// ("법인등록번호"); CORP_REG_NO
-		sellerUpgrade.setSellerBizType(req.getSellerBizType()); // INDT_NM 업종명 종목 종목
-		sellerUpgrade.setSellerBizCategory(req.getSellerBizCategory()); // COND_NM 업태명 업태 업태
-		sellerUpgrade.setBankAccount(req.getBankAccount()); // ACCT_NO 계좌번호
-		sellerUpgrade.setBankCode(req.getBankCode()); // BANK_CD 은행코드
-		sellerUpgrade.setBankAcctName(req.getBankAcctName()); // DEPSTR_NM 예금자명
-		sellerUpgrade.setIsAccountReal(req.getIsAccountReal()); // ACCT_AUTH_YN 계좌인증여부
-		sellerUpgrade.setIsBizTaxable(req.getIsBizTaxable()); // EASY_TXNPERS_YN 간이과세여부
-		sellerUpgrade.setRepPhone(req.getRepPhone()); // REP_TEL_NO 대표전화번호
-		sellerUpgrade.setRepFax(req.getRepFax()); // FAX_NO 팩스번호
-		sellerUpgrade.setIsBizRegistered(req.getIsBizRegistered()); // CMNT_SALBIZ_DECL_YN 통신판매업 신고여부
-		sellerUpgrade.setBizRegNumber(req.getBizRegNumber()); // CMNT_SALBIZ_DECL_NO 통신판매업 신고번호
-		sellerUpgrade.setBizUnregReason(req.getBizUnregReason()); // CMNT_SALBIZ_UNDECL_REASON_CD 통신판매업 미신고사유
-		sellerUpgrade.setBankName(req.getBankName()); // FR_BANK_NM 은행명
-		sellerUpgrade.setBankBranchCode(req.getBankBranchCode()); // FR_BANK_NM 은행명
-		sellerUpgrade.setBankBranch(req.getBankBranch()); // FR_BRCH_NM 은행지점명
-		sellerUpgrade.setSwiftCode(req.getSwiftCode()); // INTL_SWIFT_CD Swift 코드
-		sellerUpgrade.setAbaCode(req.getAbaCode()); // ABA 코드 INTL_ABA 국제 aba
-		sellerUpgrade.setIbanCode(req.getIbanCode()); // IBAN 코드 INTL_IBAN 국제 iban
-		sellerUpgrade.setBankAddress(req.getBankAddress()); // FR_BANK_ADDR 외국은행주소
-		sellerUpgrade.setBankLocation(req.getBankLocation()); // FR_BANK_LOC 외국은행 위치
-		sellerUpgrade.setTpinCode(req.getTpinCode()); // FR_TIN_NO 외국 tpin 번호
-		sellerUpgrade.setVendorCode(req.getVendorCode()); // VENDOR_CD 벤더코드
-		sellerUpgrade.setRepPhoneArea(req.getRepPhoneArea()); // REP_TEL_NATION_NO 대표전화 국가 번호
-		sellerUpgrade.setRepFaxArea(req.getRepFaxArea()); // FAX_TEL_NATION_NO member 테이블네 넣을때는 FAX_NATION_NO 넣으면 될듯
-		sellerUpgrade.setBizGrade(req.getBizGrade()); // DELIB_GRD_CD 심의등급코드 TB_US_SELLERMBR 에만 있음 테이블에 추가됨
-		sellerUpgrade.setIsDeductible(req.getIsDeductible()); // AUTO_DED_POSB_TARGET_YN 자동차감가능대상여부 TB_US_SELLERMBR 에만
-															  // 있음 테이블에 추가 해야한다.
-		sellerUpgrade.setMarketCode(req.getMarketCode()); // LNCHG_MALL_CD 입점 상점코드 ##### 전환 쪽에서 사용
-		sellerUpgrade.setMarketStatus(req.getMarketStatus()); // LNCHG_MBR_STATUS_CD 입점 회원 상태코드 ##### 전환 쪽에서 사용
-		sellerUpgrade.setAccountRealDate(req.getAccountRealDate()); // ACCT_AUTH_DT 계좌인증일시
-		sellerUpgrade.setSellerClassTo(req.getSellerClassTo()); // BIZ_KIND_CD(US000901,US000904) 신청 구분코드(개인/사업자/법인사업자)
-		sellerUpgrade.setSellerZip(req.getSellerZip()); // ENPRPL_ZIP 우편번호
-		sellerUpgrade.setSellerAddress(req.getSellerAddress()); // ENPRPL_ADDR 주소 의경우
-		sellerUpgrade.setSellerDetailAddress(req.getSellerDetailAddress());
-		sellerUpgrade.setCeoBirthDay(req.getCeoBirthDay()); // CEO_BIRTH
-		sellerUpgrade.setSellerLanguage(req.getSellerLanguage()); // LANG_CD
-		sellerUpgrade.setSellerTelecom(req.getSellerTelecom()); // MNO_CD 통신사 코드 >> api 추가 하지말고 판매자 테이블에서 가져온다.
-		sellerUpgrade.setCeoName(req.getCeoName()); //
-		sellerUpgrade.setSellerBizCorpNumber(req.getSellerBizCorpNumber());// CORP_REG_NO 법인등록번호
-		sellerUpgrade.setSellerDetailAddress(req.getSellerDetailAddress());
-		sellerUpgrade.setSellerClassTo(req.getSellerClassTo()); // BIZ_KIND_CD(US000901,US000904) 신청 구분코드(개인/사업자/법인사업자)
-		sellerUpgrade.setSellerCompany(req.getSellerCompany()); // COMP_NM 회사명 >> api 추가 하지말고 판매자 테이블에서 가져온다.
-		sellerUpgrade.setSellerBizNumber(req.getSellerBizNumber()); // BIZ_REG_NO 사업자등록번호 >> api 추가 하지말고 판매자 테이블에서 가져온다.
-		sellerUpgrade.setIsOfficialAuth(req.getIsOfficialAuth()); // PUB_AUTH_YN PUB_AUTH_YN 공인인증여부 >
+		sellerUpgrade.setSellerClassTo(req.getSellerCategoryTo());
+		sellerUpgrade.setRepEmail(req.getRepEmail());
+		sellerUpgrade.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
+		sellerUpgrade.setSellerBizType(req.getSellerBizType());
+		sellerUpgrade.setSellerBizCategory(req.getSellerBizCategory());
+		sellerUpgrade.setBankAccount(req.getBankAccount());
+		sellerUpgrade.setBankCode(req.getBankCode());
+		sellerUpgrade.setBankAcctName(req.getBankAcctName());
+		sellerUpgrade.setIsAccountReal(req.getIsAccountReal());
+		sellerUpgrade.setIsBizTaxable(req.getIsBizTaxable());
+		sellerUpgrade.setRepPhone(req.getRepPhone());
+		sellerUpgrade.setRepFax(req.getRepFax());
+		sellerUpgrade.setIsBizRegistered(req.getIsBizRegistered());
+		sellerUpgrade.setBizRegNumber(req.getBizRegNumber());
+		sellerUpgrade.setBizUnregReason(req.getBizUnregReason());
+		sellerUpgrade.setBankName(req.getBankName());
+		sellerUpgrade.setBankBranchCode(req.getBankBranchCode());
+		sellerUpgrade.setBankBranch(req.getBankBranch());
+		sellerUpgrade.setSwiftCode(req.getSwiftCode());
+		sellerUpgrade.setAbaCode(req.getAbaCode());
+		sellerUpgrade.setIbanCode(req.getIbanCode());
+		sellerUpgrade.setBankAddress(req.getBankAddress());
+		sellerUpgrade.setBankLocation(req.getBankLocation());
+		sellerUpgrade.setTpinCode(req.getTpinCode());
+		sellerUpgrade.setVendorCode(req.getVendorCode());
+		sellerUpgrade.setRepPhoneArea(req.getRepPhoneArea());
+		sellerUpgrade.setRepFaxArea(req.getRepFaxArea());
+		sellerUpgrade.setBizGrade(req.getBizGrade());
+		sellerUpgrade.setIsDeductible(req.getIsDeductible());
+		sellerUpgrade.setMarketCode(req.getMarketCode());
+		sellerUpgrade.setMarketStatus(req.getMarketStatus());
+		sellerUpgrade.setAccountRealDate(req.getAccountRealDate());
+		sellerUpgrade.setSellerBizZip(req.getSellerBizZip());
+		sellerUpgrade.setSellerBizAddress(req.getSellerBizAddress());
+		sellerUpgrade.setSellerBizDetailAddress(req.getSellerBizDetailAddress());
+		sellerUpgrade.setCeoBirthDay(req.getCeoBirthDay());
+		sellerUpgrade.setSellerLanguage(req.getSellerLanguage());
+		sellerUpgrade.setSellerTelecom(req.getSellerTelecom());
+		sellerUpgrade.setCeoName(req.getCeoName());
+		sellerUpgrade.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
+		sellerUpgrade.setSellerClassTo(req.getSellerClassTo());
+		sellerUpgrade.setSellerCompany(req.getSellerCompany());
+		sellerUpgrade.setSellerBizNumber(req.getSellerBizNumber());
+		sellerUpgrade.setIsOfficialAuth(req.getIsOfficialAuth());
 		sellerUpgrade.setCordedTelephone(req.getCordedTelephone());
-		sellerUpgrade.setSellerPhone(req.getSellerPhone());
+		sellerUpgrade.setChargerPhone(req.getChargerPhone());
 		sellerUpgrade.setIsRecvSMS(req.getIsRecvSMS());
 		sellerUpgrade.setCeoName(req.getCeoName());
 		sellerUpgrade.setCharger(req.getCharger());
