@@ -347,7 +347,6 @@ public class CreateRealNameTest {
 						/**
 						 * 통합 IDP 회원
 						 */
-						// simdae12 (사이트에서 가입하고 이용동의 가입한다. 사이트 들어가서 본인인증 한다.)
 						reqJson.setUserKey("US201402141746333040002583");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
