@@ -8,9 +8,9 @@ import org.springframework.validation.annotation.Validated;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq.GroupChangeDisplayUserId;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq.GroupChangeDisplayUserKey;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacRes;
 import com.skplanet.storeplatform.sac.display.localsci.sci.service.ChangeDisplayUserService;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
 
@@ -41,7 +41,7 @@ public class ChangeDisplayUserSCIController implements ChangeDisplayUserSCI {
 		changeDisplayUser.setTenantId(changeDisplayUserSacReq.getTenantId());
 		changeDisplayUser.setNewUserId(changeDisplayUserSacReq.getNewUserId());
 		changeDisplayUser.setOldUserId(changeDisplayUserSacReq.getOldUserId());
-		this.changeDisplayUserService.changeDisplayUser(changeDisplayUser);
+		this.changeDisplayUserService.changeDisplayUserId(changeDisplayUser);
 
 		ChangeDisplayUserSacRes changeDisplayUserSacRes = new ChangeDisplayUserSacRes();
 		changeDisplayUserSacRes.setResultStatus("success");
@@ -61,7 +61,7 @@ public class ChangeDisplayUserSCIController implements ChangeDisplayUserSCI {
 		changeDisplayUser.setNewUserKey(changeDisplayUserSacReq.getNewUseKey());
 		changeDisplayUser.setOldUserKey(changeDisplayUserSacReq.getOldUserKey());
 
-		this.changeDisplayUserService.changeDisplayUser(changeDisplayUser);
+		this.changeDisplayUserService.changeDisplayUserKey(changeDisplayUser);
 
 		ChangeDisplayUserSacRes changeDisplayUserSacRes = new ChangeDisplayUserSacRes();
 		changeDisplayUserSacRes.setResultStatus("success");
