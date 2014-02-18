@@ -249,6 +249,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				product.setRights(this.commonGenerator.generateRights(metaInfo)); // 권한
 				product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 
+				/************************************************************************************************
+				 * 구매 정보에 따른 암호화 시작
+				 ************************************************************************************************/
 				// 구매 정보
 				if (StringUtils.isNotEmpty(prchsId)) {
 					String deviceId = null;
@@ -290,13 +293,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
 					String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
 
+					// 암호화 정보 (AES-128)
 					Encryption encryption = new Encryption();
+					List<Encryption> encryptionList = new ArrayList<Encryption>();
+					encryption.setProductId(prchsProdId);
 					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
 					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
 					encryption.setToken(encryptString);
-
-					product.setDl(encryption);
-
+					encryptionList.add(encryption);
+					product.setDl(encryptionList);
 				}
 
 				product.setPacketFee(metaInfo.getProdClsfCd());
