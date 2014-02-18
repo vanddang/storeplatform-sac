@@ -541,10 +541,10 @@ public class DeviceServiceImpl implements DeviceService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 
-		if (deviceKey != null) {
+		if (deviceKey != null && !deviceKey.equals("")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 			key.setKeyString(deviceKey);
-		} else if (deviceId != null) {
+		} else if (deviceId != null && !deviceId.equals("")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			key.setKeyString(deviceId);
 		}
@@ -639,16 +639,10 @@ public class DeviceServiceImpl implements DeviceService {
 
 			if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
-				if (!StringUtils.equals(nativeId, userMbrDevice.getNativeID())) {
-					LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
-					userMbrDevice.setNativeID(nativeId);
-				}
-
 				// 자번호 여부
 				boolean isOpmd = StringUtils.substring(deviceId, 0, 3).equals("989");
 
-				// 루팅 단말이고 OPMD 단말이 아닌 경우만 nativeId 체크
-				if (StringUtils.equals(rooting, "Y") && !isOpmd) {
+				if (!StringUtils.equals(nativeId, userMbrDevice.getNativeID()) && !isOpmd) {
 
 					String icasImei = null;
 
@@ -669,6 +663,9 @@ public class DeviceServiceImpl implements DeviceService {
 					LOGGER.info("::::  ICAS 연동 :::: icasImei : {}", icasImei);
 
 					if (StringUtils.equals(icasImei, nativeId)) {
+						LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
+						userMbrDevice.setNativeID(nativeId);
+					} else {
 						throw new StorePlatformException("SAC_MEM_1503");
 					}
 
