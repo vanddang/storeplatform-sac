@@ -97,7 +97,6 @@ public class CreateRealNameTest {
 						reqJson.setUserCi("CICICICICICICICICICICI"); // CI
 						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDI"); // DI
 						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
-						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
 						reqJson.setUserPhone("0101231232"); // 사용자 전화번호
 						reqJson.setDeviceTelecom("US001201"); // 이동 통신사
 						reqJson.setUserName("아무개"); // 사용자 이름
@@ -150,7 +149,6 @@ public class CreateRealNameTest {
 						reqJson.setUserCi("CICICICICICICICICICICI"); // CI
 						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDI"); // DI
 						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
-						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
 						reqJson.setUserPhone("0101231232"); // 법정대리인 전화번호
 						reqJson.setDeviceTelecom("US001201"); // 이동 통신사
 						reqJson.setUserName("태백산"); // 사용자 이름
@@ -201,7 +199,6 @@ public class CreateRealNameTest {
 						reqJson.setUserCi("ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ00003631"); // CI
 						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDDIDIDIDIDIDID0000003631"); // DI
 						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
-						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
 						reqJson.setUserPhone("01090556567"); // 사용자 전화번호
 						reqJson.setDeviceTelecom("US001202"); // 이동 통신사
 						reqJson.setUserName("홍말똥"); // 사용자 이름
@@ -252,7 +249,6 @@ public class CreateRealNameTest {
 						reqJson.setUserCi("ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ00003631"); // CI
 						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDDIDIDIDIDIDID0000003631"); // DI
 						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
-						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
 						reqJson.setUserPhone("01090556567"); // 사용자 전화번호
 						reqJson.setDeviceTelecom("US001202"); // 이동 통신사
 						reqJson.setUserName("심대진"); // 사용자 이름
@@ -304,7 +300,6 @@ public class CreateRealNameTest {
 						reqJson.setUserCi("ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ00003631"); // CI
 						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDDIDIDIDIDIDID0000003631"); // DI
 						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
-						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
 						reqJson.setUserPhone("01090556567"); // 사용자 전화번호
 						reqJson.setDeviceTelecom("US001202"); // 이동 통신사
 						reqJson.setUserName("홍길동"); // 사용자 이름
