@@ -274,7 +274,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		prchs.setPrchsDt(prchsDtl.getPrchsDt());
 		prchs.setTotAmt(prchsDtl.getTotAmt());
 
-		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsDtl.getPrchsCaseCd())) { // 선물경우, 발신자 기준
+		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsDtl.getPrchsCaseCd())) { // 선물경우, TB_구매 는 발신자 기준
 			prchs.setInsdUsermbrNo(prchsDtl.getSendInsdUsermbrNo());
 			prchs.setInsdDeviceId(prchsDtl.getSendInsdDeviceId());
 		} else {

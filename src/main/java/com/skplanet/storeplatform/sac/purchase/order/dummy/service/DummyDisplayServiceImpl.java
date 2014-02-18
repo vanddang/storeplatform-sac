@@ -35,6 +35,10 @@ public class DummyDisplayServiceImpl {
 	 * @return Dummy 상품 정보
 	 */
 	public DummyProduct getProductInfo(String tenantId, String systemId, String prodId, String deviceModelCd) {
+		if ("0".equals(prodId)) {
+			return null;
+		}
+
 		DummyProduct dummy = new DummyProduct();
 		dummy.setProdId(prodId);
 		dummy.setProdAmt(0.0);

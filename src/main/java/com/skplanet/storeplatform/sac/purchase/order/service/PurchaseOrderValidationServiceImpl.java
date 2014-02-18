@@ -130,7 +130,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 		List<DummyProduct> productInfoList = purchaseOrderInfo.getProductList();
 
-		Double totAmt = 0.0;
+		double totAmt = 0.0;
 		// 상품 정보 조회
 		DummyProduct productInfo = null;
 		for (CreatePurchaseSacReqProduct reqProduct : purchaseOrderInfo.getCreatePurchaseReq().getProductList()) {
@@ -157,7 +157,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			productInfo.setProdAmt(reqProduct.getProdAmt()); // 임시적. TAKTODO
 			productInfo.setProdQty(reqProduct.getProdQty());
 			productInfo.setTenantProdGrpCd(reqProduct.getTenantProdGrpCd());
-			totAmt += reqProduct.getProdAmt();
+			totAmt += (reqProduct.getProdAmt() * reqProduct.getProdQty());
 
 			// 상품 가격 체크
 			if (reqProduct.getProdAmt() != productInfo.getProdAmt()) {
@@ -179,7 +179,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	/**
 	 * 
 	 * <pre>
-	 * 구매 적합성 체크: 상품&회원 결합 체크, 기구매체크, 쇼핑쿠폰 발급 가능여부 체크 등.
+	 * 구매 적합성(&가능여부) 체크: 상품&회원 결합 체크, 기구매체크, 쇼핑쿠폰 발급 가능여부 체크 등.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo
@@ -206,7 +206,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
 			// 연령 체크
-			if ("PD004404".equals(product) && useUserInfo.getAge() < 20) {
+			if (StringUtils.equals("PD004404", product.getProdGrdCd()) && useUserInfo.getAge() < 20) {
 				throw new StorePlatformException("SAC_PUR_0001", "연령제한으로 이용할 수 없는 상품입니다: " + useUserInfo.getAge());
 			}
 

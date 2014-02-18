@@ -173,9 +173,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		SearchSktPaymentScReq sciReq = new SearchSktPaymentScReq();
 		SearchSktPaymentScRes sciRes = null;
 
-		sciReq.setTenantId(purchaseOrderInfo.getRecvTenantId());
-		sciReq.setUserKey(purchaseOrderInfo.getRecvUserKey());
-		sciReq.setDeviceKey(purchaseOrderInfo.getRecvDeviceKey());
+		sciReq.setTenantId(purchaseOrderInfo.getRecvTenantId()); // 수신자 기준 조회
+		sciReq.setUserKey(purchaseOrderInfo.getRecvUserKey()); // 수신자 기준 조회
+		sciReq.setDeviceKey(purchaseOrderInfo.getRecvDeviceKey()); // 수신자 기준 조회
 		sciReq.setTenantProdGrpCd(policy.getTenantProdGrpCd());
 		sciReq.setApplyUnitCd(policy.getApplyUnitCd());
 		sciReq.setCondUnitCd(policy.getCondUnitCd());
