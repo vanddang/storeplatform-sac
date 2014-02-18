@@ -669,7 +669,7 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setIsOneID("Y");
 		loginReq.setIsMobile(isMobile);
 
-		String svcVersion = requestHeader.getDeviceHeader().getSvcVersion();
+		String svcVersion = requestHeader.getDeviceHeader().getSvc();
 		if (svcVersion != null) {
 			loginReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
 		}

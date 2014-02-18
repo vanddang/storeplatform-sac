@@ -149,7 +149,7 @@ public class AuthorizeByIdTest {
 		DeviceHeader deviceHeader = new DeviceHeader();
 		//deviceHeader.setModel("SHW-M440S");
 		deviceHeader.setModel("SHW-M110S");
-		deviceHeader.setOsVersion("1.0");
+		deviceHeader.setOs("1.0");
 
 		SacRequestHeader header = new SacRequestHeader();
 		header.setDeviceHeader(deviceHeader);

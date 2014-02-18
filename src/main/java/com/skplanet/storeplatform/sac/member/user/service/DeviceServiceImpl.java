@@ -821,13 +821,13 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceInfo.setDeviceModelNo(deviceheader.getModel());
 		}
 
-		String osVersion = deviceheader.getOsVersion();
+		String osVersion = deviceheader.getOs();
 		if (osVersion != null) { // OS버젼
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
 					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo));
 		}
 
-		String svcVersion = deviceheader.getSvcVersion();
+		String svcVersion = deviceheader.getSvc();
 		if (svcVersion != null) { //SC버젼
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
 					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo));

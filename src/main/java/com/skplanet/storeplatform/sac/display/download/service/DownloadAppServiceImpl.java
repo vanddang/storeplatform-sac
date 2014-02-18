@@ -93,7 +93,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				MetaInfo.class);
 
 		// OS VERSION 가공
-		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String[] temp = deviceHeader.getOs().trim().split("/");
 
 		String osVersion = temp[1];
 		String sysDate = downloadSystemDate.getSysDate();

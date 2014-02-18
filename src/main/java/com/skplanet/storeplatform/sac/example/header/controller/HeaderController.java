@@ -36,9 +36,9 @@ public class HeaderController {
 		res.setModel(header.getModel());
 		res.setDpi(header.getDpi());
 		res.setResolution(header.getResolution());
-		res.setOsVersion(header.getOsVersion());
-		res.setPkgVersion(header.getPkgVersion());
-		res.setSvcVersion(header.getSvcVersion());
+		res.setOsVersion(header.getOs());
+		res.setPkgVersion(header.getPkg());
+		res.setSvcVersion(header.getSvc());
 		return res;
 	}
 

@@ -118,7 +118,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			CommonResponse commonResponse = new CommonResponse();
 			TenantHeader tenantHeader = header.getTenantHeader();
 			DeviceHeader deviceHeader = header.getDeviceHeader();
-			String[] temp = deviceHeader.getOsVersion().trim().split("/");
+			String[] temp = deviceHeader.getOs().trim().split("/");
 			String osVersion = temp[1];
 			req.setTenantId(tenantHeader.getTenantId());
 			req.setDeviceModelCd(deviceHeader.getModel());
@@ -215,7 +215,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			CommonResponse commonResponse = new CommonResponse();
 			TenantHeader tenantHeader = header.getTenantHeader();
 			DeviceHeader deviceHeader = header.getDeviceHeader();
-			String[] temp = deviceHeader.getOsVersion().trim().split("/");
+			String[] temp = deviceHeader.getOs().trim().split("/");
 			String osVersion = temp[1];
 			req.setTenantId(tenantHeader.getTenantId());
 			req.setDeviceModelCd(deviceHeader.getModel());
@@ -300,7 +300,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			CommonResponse commonResponse = new CommonResponse();
 			TenantHeader tenantHeader = header.getTenantHeader();
 			DeviceHeader deviceHeader = header.getDeviceHeader();
-			String[] temp = deviceHeader.getOsVersion().trim().split("/");
+			String[] temp = deviceHeader.getOs().trim().split("/");
 			String osVersion = temp[1];
 			req.setTenantId(tenantHeader.getTenantId());
 			req.setDeviceModelCd(deviceHeader.getModel());
@@ -406,7 +406,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String[] temp = deviceHeader.getOs().trim().split("/");
 		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
@@ -498,7 +498,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String[] temp = deviceHeader.getOs().trim().split("/");
 		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
@@ -574,7 +574,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String[] temp = deviceHeader.getOs().trim().split("/");
 		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
@@ -705,7 +705,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		MetaInfo shopping = null;
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String[] temp = deviceHeader.getOs().trim().split("/");
 		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
@@ -800,7 +800,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String[] temp = deviceHeader.getOs().trim().split("/");
 		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
@@ -915,7 +915,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		MetaInfo shopping = null;
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String[] temp = deviceHeader.getOs().trim().split("/");
 		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
@@ -1008,7 +1008,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String[] temp = deviceHeader.getOs().trim().split("/");
 		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
@@ -1111,7 +1111,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			CommonResponse commonResponse = new CommonResponse();
 			TenantHeader tenantHeader = header.getTenantHeader();
 			DeviceHeader deviceHeader = header.getDeviceHeader();
-			String[] temp = deviceHeader.getOsVersion().trim().split("/");
+			String[] temp = deviceHeader.getOs().trim().split("/");
 			String osVersion = temp[1];
 			req.setTenantId(tenantHeader.getTenantId());
 			req.setDeviceModelCd(deviceHeader.getModel());
@@ -1223,7 +1223,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			CommonResponse commonResponse = new CommonResponse();
 			TenantHeader tenantHeader = header.getTenantHeader();
 			DeviceHeader deviceHeader = header.getDeviceHeader();
-			String[] temp = deviceHeader.getOsVersion().trim().split("/");
+			String[] temp = deviceHeader.getOs().trim().split("/");
 			String osVersion = temp[1];
 			req.setTenantId(tenantHeader.getTenantId());
 			req.setDeviceModelCd(deviceHeader.getModel());
@@ -1333,7 +1333,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String[] temp = deviceHeader.getOs().trim().split("/");
 		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());

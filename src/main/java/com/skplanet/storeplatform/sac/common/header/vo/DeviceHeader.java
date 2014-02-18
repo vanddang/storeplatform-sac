@@ -24,9 +24,9 @@ public class DeviceHeader extends CommonInfo {
 	private String model;
 	private String dpi;
 	private String resolution;
-	private String osVersion;
-	private String pkgVersion;
-	private String svcVersion;
+	private String os;
+	private String pkg;
+	private String svc;
 
 	public DeviceHeader() {
 		super();
@@ -50,23 +50,23 @@ public class DeviceHeader extends CommonInfo {
 	public void setResolution(String resolution) {
 		this.resolution = resolution;
 	}
-	public String getOsVersion() {
-		return this.osVersion;
+	public String getOs() {
+		return this.os;
 	}
-	public void setOsVersion(String osVersion) {
-		this.osVersion = osVersion;
+	public void setOs(String os) {
+		this.os = os;
 	}
-	public String getPkgVersion() {
-		return this.pkgVersion;
+	public String getPkg() {
+		return this.pkg;
 	}
-	public void setPkgVersion(String pkgVersion) {
-		this.pkgVersion = pkgVersion;
+	public void setPkg(String pkg) {
+		this.pkg = pkg;
 	}
-	public String getSvcVersion() {
-		return this.svcVersion;
+	public String getSvc() {
+		return this.svc;
 	}
-	public void setSvcVersion(String svcVersion) {
-		this.svcVersion = svcVersion;
+	public void setSvc(String svc) {
+		this.svc = svc;
 	}
 
 }
