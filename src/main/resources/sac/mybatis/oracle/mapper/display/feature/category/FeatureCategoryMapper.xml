@@ -107,7 +107,7 @@
 	    ORDER BY RNUM
     </select>
     
-    <!-- 영화/방송 카테고리 신규 상품 조회 (더미) -->
+    <!-- 영화/방송 카테고리 신규 상품 조회 -->
     <select id="selectFeatureNewVodist" parameterType="FeatureCategoryVodSacReq" resultType="ProductBasicInfo">
         SELECT /* FeatureCategoryMapper.xml, selectFeatureNewVodist, 조준일, 2014-02-10 */
                B.TENANT_ID
@@ -149,7 +149,7 @@
                                  FROM TB_DP_LIST_PROD LP  /* 채널 */
                                     , TB_DP_LIST LT
                                 WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
-                                  AND LP.LIST_ID = #{listId}       /* ADM000000003 : 운영자신규 멀티미디어 */
+                                  AND LP.LIST_ID = #{listId}       /* TGR000000002 : 운영자신규 멀티미디어 */
                                   AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                   AND TO_CHAR(LP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
@@ -239,7 +239,7 @@
                                  FROM TB_DP_LIST_PROD LP  /* 채널 */
                                     , TB_DP_LIST LT
                                 WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
-                                  AND LP.LIST_ID = 'ADM000000008' --listId       /* ADM000000003 : 운영자신규 멀티미디어 */
+                                  AND LP.LIST_ID = 'ADM000000008' --listId       /* TGR000000002 : 운영자신규 멀티미디어 */
                                   AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                   AND TO_CHAR(LP.STD_DT, 'YYYYMMDDHH24MISS') = '20130101000000' --stdDt
                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubSacReq;
@@ -85,27 +84,7 @@ public class FeatureCategoryController {
 	public FeatureCategoryAppSacRes searchAppList(FeatureCategoryAppSacReq requestVO, SacRequestHeader header) {
 
 		FeatureCategoryAppSacRes responseVO;
-
-		if ("".equals(StringUtil.nvl(requestVO.getDummy(), ""))) {
-
-			responseVO = this.categoryAppService.searchMenuAppList(requestVO, header);
-		} else {
-			// 임시 저장
-			// 시작점 ROW Default 세팅
-			if (requestVO.getOffset() == 0) {
-				requestVO.setOffset(1);
-			}
-			// 페이지당 노출될 ROW 개수 Default 세팅
-			if (requestVO.getCount() == 0) {
-				requestVO.setCount(20);
-			}
-			requestVO.setTenantId("S01");
-			requestVO.setDeviceModelCd("SHW-M180L");
-			requestVO.setLangCd("ko");
-			requestVO.setMenuId(StringUtil.nvl(requestVO.getMenuId(), "DP01"));
-			// Dummy 요청 일 경우
-			responseVO = this.categoryAppService.searchAppList(requestVO);
-		}
+		responseVO = this.categoryAppService.searchMenuAppList(requestVO, header);
 		return responseVO;
 	}
 

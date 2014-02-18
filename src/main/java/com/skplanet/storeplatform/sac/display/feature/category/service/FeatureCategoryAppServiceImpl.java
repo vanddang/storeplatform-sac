@@ -24,22 +24,12 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryApp;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -67,160 +57,6 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
-	 */
-	@Override
-	public FeatureCategoryAppSacRes searchAppList(FeatureCategoryAppSacReq requestVO) {
-		// TODO Auto-generated method stub
-		// 공통 응답 변수 선언
-		int totalCount = 0;
-		FeatureCategoryAppSacRes responseVO = null;
-		CommonResponse commonResponse = null;
-
-		List<FeatureCategoryApp> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryAppListDummy",
-				requestVO, FeatureCategoryApp.class);
-		List<Product> listVO = new ArrayList<Product>();
-
-		FeatureCategoryApp categoryAppDTO;
-		Product product;
-		Identifier identifier;
-		Title title;
-		App app;
-		Accrual accrual;
-		Rights rights;
-		Source source;
-		Price price;
-		Support support;
-		Menu menu;
-
-		// Response VO를 만들기위한 생성자
-		// List<Product> productList = new ArrayList<Product>();
-		List<Menu> menuList;
-		List<Source> sourceList;
-		List<Support> supportList;
-		List<Identifier> identifierList;
-
-		for (int i = 0; resultList != null && i < resultList.size(); i++) {
-
-			categoryAppDTO = resultList.get(i);
-			product = new Product();
-			identifier = new Identifier();
-			title = new Title();
-			app = new App();
-			accrual = new Accrual();
-			rights = new Rights();
-			source = new Source();
-			price = new Price();
-			support = new Support();
-
-			// 상품ID
-			identifier = new Identifier();
-
-			// Response VO를 만들기위한 생성자
-			menuList = new ArrayList<Menu>();
-			sourceList = new ArrayList<Source>();
-			supportList = new ArrayList<Support>();
-			identifierList = new ArrayList<Identifier>();
-
-			totalCount = categoryAppDTO.getTotalCount();
-
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(categoryAppDTO.getProdId());
-			title.setText(categoryAppDTO.getProdNm());
-
-			menu = new Menu();
-			menu.setId(categoryAppDTO.getTopMenuId());
-			menu.setName(categoryAppDTO.getTopMenuNm());
-			menu.setType("topClass");
-			menuList.add(menu);
-			menu = new Menu();
-			menu.setId(categoryAppDTO.getMenuId());
-			menu.setName(categoryAppDTO.getMenuNm());
-			// menu.setType("");
-			menuList.add(menu);
-
-			app.setAid(categoryAppDTO.getAid());
-			app.setPackageName(categoryAppDTO.getApkPkgNm());
-			app.setVersionCode(categoryAppDTO.getApkVer());
-			app.setVersion(categoryAppDTO.getProdVer());
-			product.setApp(app);
-
-			accrual.setVoterCount(categoryAppDTO.getPrchsCnt());
-			accrual.setDownloadCount(categoryAppDTO.getDwldCnt());
-			accrual.setScore(3.3);
-
-			/*
-			 * Rights grade
-			 */
-			rights.setGrade(categoryAppDTO.getProdGrdCd());
-
-			// source.setMediaType("");
-			source.setSize(categoryAppDTO.getFileSize());
-			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-			source.setUrl(categoryAppDTO.getFilePath());
-			sourceList.add(source);
-
-			/*
-			 * Price text
-			 */
-			price.setText(categoryAppDTO.getProdAmt());
-
-			// identifier Lisst형으로 수정
-			// product.setIdentifier(identifier);
-			identifierList.add(identifier);
-			product.setIdentifierList(identifierList);
-
-			product.setTitle(title);
-
-			if ("PD012301".equals(categoryAppDTO.getPartParentClsfCd())) {
-				support = new Support();
-				support.setType("iab");
-				support.setText("Y");
-				supportList.add(support);
-			} else {
-				support = new Support();
-				support.setType("iab");
-				support.setText("N");
-				supportList.add(support);
-			}
-			if ("Y".equals(categoryAppDTO.getDrmYn())) {
-				support = new Support();
-				support.setType("drm");
-				support.setText("Y");
-				supportList.add(support);
-			} else {
-				support = new Support();
-				support.setType("drm");
-				support.setText("N");
-				supportList.add(support);
-			}
-
-			product.setSupportList(supportList);
-			product.setMenuList(menuList);
-
-			product.setAccrual(accrual);
-			product.setRights(rights);
-			product.setProductExplain(categoryAppDTO.getProdBaseDesc());
-			product.setSourceList(sourceList);
-			product.setPrice(price);
-
-			listVO.add(product);
-		}
-
-		responseVO = new FeatureCategoryAppSacRes();
-		commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(totalCount);
-
-		responseVO.setCommonResponse(commonResponse);
-		responseVO.setProductList(listVO);
-		return responseVO;
-	}
 
 	/*
 	 * (non-Javadoc)

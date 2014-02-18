@@ -99,7 +99,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		}
 
 		// 영화 추천/1000원관, 방송 카테고리별 추천 filteredBy 필수
-		// ADM000000003 신규 방송 최신 up의 경우도 filteredBy 필수이나 없는 경우 신규상품 조회
+		// TGR000000002 신규 방송 최신 up의 경우도 filteredBy 필수이나 없는 경우 신규상품 조회
 		if ("ADM000000008".equals(listId) && StringUtils.isEmpty(filteredBy)) {
 			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
 		}
@@ -144,7 +144,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 
 		List<ProductBasicInfo> productBasicInfoList;
 
-		// ADM000000008 : 운영자 추천, ADM000000003 운영자 신규
+		// ADM000000008 : 운영자 추천, TGR000000002 운영자 신규
 		// DP17 : 영화, DP18 : 방송
 		if ("ADM000000008".equals(listId)) {
 			if ("DP17".equals(topMenuId)) {
