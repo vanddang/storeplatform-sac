@@ -22,6 +22,8 @@ public class DownloadComicSacReq extends CommonInfo {
 	private String productId; // 상품ID
 	private String deviceKey; // 디바이스키
 	private String userKey; // 사용자고유키
+	private String prchsDt; // 구매일시
+	private String dwldExprDt; // 다운로드 만료일시
 	private String tenantId; // 테넌트ID
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스모델코드
@@ -70,6 +72,36 @@ public class DownloadComicSacReq extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	/**
+	 * @return the prchsDt
+	 */
+	public String getPrchsDt() {
+		return this.prchsDt;
+	}
+
+	/**
+	 * @param prchsDt
+	 *            the prchsDt to set
+	 */
+	public void setPrchsDt(String prchsDt) {
+		this.prchsDt = prchsDt;
+	}
+
+	/**
+	 * @return the dwldExprDt
+	 */
+	public String getDwldExprDt() {
+		return this.dwldExprDt;
+	}
+
+	/**
+	 * @param dwldExprDt
+	 *            the dwldExprDt to set
+	 */
+	public void setDwldExprDt(String dwldExprDt) {
+		this.dwldExprDt = dwldExprDt;
 	}
 
 	/**
