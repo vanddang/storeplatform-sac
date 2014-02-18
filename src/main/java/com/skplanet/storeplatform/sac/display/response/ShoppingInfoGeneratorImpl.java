@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.response;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -63,7 +64,13 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	public SalesOption generateSalesOption(MetaInfo metaInfo) {
 		SalesOption salesOption = new SalesOption();
 		salesOption.setType(metaInfo.getProdCaseCd());
-		salesOption.setSatus(metaInfo.getSoldOut());
+		if (StringUtils.isNotEmpty(metaInfo.getSoldOut())) {
+			if (metaInfo.getSoldOut().equals("Y")) {
+				salesOption.setSatus(DisplayConstants.DP_SOLDOUT);
+			} else {
+				salesOption.setSatus(DisplayConstants.DP_CONTINUE);
+			}
+		}
 		return salesOption;
 	}
 
