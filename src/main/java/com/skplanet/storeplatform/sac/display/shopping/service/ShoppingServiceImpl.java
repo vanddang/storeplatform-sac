@@ -49,7 +49,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Dist
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Promotion;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SelectOption;
@@ -1953,10 +1952,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Rights episodeRights = null;
 				Date episodeDate = null;
 				Distributor distributor = null;
-				Purchase purchase = null;
-				Identifier purchaseIdentifier = null;
-				List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
-				Date purchaseDate = null;
 				List<Date> episodeDateList = null;
 				episodeDateList = new ArrayList<Date>();
 				SalesOption episodeSaleOption = null;
