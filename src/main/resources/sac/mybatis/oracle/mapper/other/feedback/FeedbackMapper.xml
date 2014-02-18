@@ -29,7 +29,7 @@
 	                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
 	                       SELECT 'X'
 	                         FROM TB_DP_SHPG_CATALOG P
-	                        WHERE P.CATALOG_ID = #{prodId}
+	                        WHERE P.CATALOG_ID = #{chnlId}
 	                          AND P.CHNL_CNT > 0
 	                       </if>
 	                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
@@ -456,6 +456,7 @@
 	          , N.FB_POST_YN
 	          , N.PROD_ID
 	          , N.EXPO_SELLER_NM
+	          , N.SVC_GRP_CD
 	       FROM
 	          (
 	          SELECT A.*
@@ -661,6 +662,7 @@
 	         , N.FB_POST_YN
 	         , N.PROD_ID
 	         , N.EXPO_SELLER_NM
+	         , N.SVC_GRP_CD
 	      FROM
 	         (
 	         SELECT N.*
