@@ -60,6 +60,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrSegment;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -97,6 +99,9 @@ public class IdpServiceImpl implements IdpService {
 
 	@Autowired
 	private DeviceService deviceService;
+
+	@Autowired
+	private ChangeDisplayUserSCI changeDisplayUserSCI;
 
 	/*
 	 * 
@@ -418,7 +423,16 @@ public class IdpServiceImpl implements IdpService {
 					updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
 					LOGGER.debug("변경가입,변경전환 정보 입력 완료");
 
-					// TO DO... 전시,구매,기타에서 사용되는 회원ID, 회원USER_KEY 등을 변경할수 있는 API 호출 추가 로직 대기중...
+					// TO DO... 전시,구매,공통_기타에서 사용되는 회원ID 변경할수 있는 API 호출 추가중 ...
+
+					// 공통_기타 회원ID 변경 시작
+					ChangeDisplayUserSacReq changeDisplayUserSacReqByUserID = new ChangeDisplayUserSacReq();
+					changeDisplayUserSacReqByUserID.setNewUserId(userID);
+					changeDisplayUserSacReqByUserID.setOldUserId(oldID);
+					changeDisplayUserSacReqByUserID.setTenantId(tenantID);
+					this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReqByUserID);
+					// 공통_기타 회원ID 변경 끝
+
 				} catch (StorePlatformException spe) {
 					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
