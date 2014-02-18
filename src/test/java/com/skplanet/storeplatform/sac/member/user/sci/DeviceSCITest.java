@@ -108,7 +108,7 @@ public class DeviceSCITest {
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceKey("DE201401241840125800000296");
 
-		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistoryList(request);
+		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 		assertThat(result.getIsChanged(), notNullValue());
 		assertEquals(result.getDeviceKey(), request.getDeviceKey());
 	}
@@ -125,7 +125,7 @@ public class DeviceSCITest {
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceId("");
 
-		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistoryList(request);
+		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 		assertThat(result.getIsChanged(), notNullValue());
 		assertThat(result.getDeviceKey(), notNullValue());
 	}
@@ -142,7 +142,7 @@ public class DeviceSCITest {
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceKey("DE201401241840125800000296");
 
-		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistoryList(request);
+		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 		assertThat(result.getIsChanged(), notNullValue());
 		assertEquals(result.getDeviceKey(), request.getDeviceKey());
 	}
@@ -159,7 +159,7 @@ public class DeviceSCITest {
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceId("");
 
-		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistoryList(request);
+		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 		assertThat(result.getIsChanged(), notNullValue());
 		assertThat(result.getDeviceKey(), notNullValue());
 	}
