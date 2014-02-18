@@ -53,7 +53,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		Contributor contributor = new Contributor();
 		contributor.setName(metaInfo.getArtist1Nm()); // 글작가
 		contributor.setPainter(metaInfo.getArtist2Nm()); // 그림작가
-		contributor.setTranslator(metaInfo.getArtist3Nm()); // 그림작가
+		contributor.setTranslator(metaInfo.getArtist3Nm()); // 번역자
 		contributor.setPublisher(metaInfo.getChnlCompNm()); // 출판사
 
 		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
