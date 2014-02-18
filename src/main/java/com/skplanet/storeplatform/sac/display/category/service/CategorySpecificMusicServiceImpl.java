@@ -175,7 +175,7 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 					// 음원 상품의 경우
 					if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
 						// 배치완료 기준일시 조회
-						// TODO osm1021 기준 ListID가 없기 때문에 일단 멜론 Top 100으로 고정
+						// TODO 기준 ListID가 없기 때문에 일단 멜론 Top 100으로 고정
 						productBasicInfo.setMenuId("DP004901");
 						paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
