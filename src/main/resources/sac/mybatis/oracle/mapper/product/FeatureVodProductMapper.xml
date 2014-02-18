@@ -92,7 +92,7 @@
 		                           AND  g.tenant_id = h.tenant_id
 		                           AND  c.menu_id = #{menuId}           /* MN17004 : 영화>드라마 */
 		                           AND  c.system_id = #{systemId}       /* Input 시스템ID */
-		                           AND  d.svc_grp_cd = 'DP000203'       /* DP000201 : 멀티미디어 */
+		                           AND  d.svc_grp_cd = 'DP000203'       /* DP000203 : 멀티미디어 */
 		                           AND  e.contents_type_cd = 'PD002501' /* PD002501 : 채널타입*/
 		                           AND  f.lang_cd = 'ko'                /* ko : 한국어 */
 		                           AND  g.prod_status_cd = 'PD000403'   /* PD000403 : 판매중 */
