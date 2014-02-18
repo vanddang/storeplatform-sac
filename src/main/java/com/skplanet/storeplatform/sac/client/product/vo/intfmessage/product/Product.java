@@ -158,6 +158,10 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private Purchase purchase;
 	/**
+	 * 구매 정보 리스트.
+	 */
+	private List<Purchase> purchaseList;
+	/**
 	 * 쿠폰 정보.
 	 */
 	private Coupon coupon;
@@ -222,20 +226,20 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private List<Encryption> dl;
 
-    /**
-     * 판매상태.
-     */
-    private String salesStatus;
+	/**
+	 * 판매상태.
+	 */
+	private String salesStatus;
 
-    public String getSalesStatus() {
-        return salesStatus;
-    }
+	public String getSalesStatus() {
+		return this.salesStatus;
+	}
 
-    public void setSalesStatus(String salesStatus) {
-        this.salesStatus = salesStatus;
-    }
+	public void setSalesStatus(String salesStatus) {
+		this.salesStatus = salesStatus;
+	}
 
-    /**
+	/**
 	 * @return Identifier
 	 */
 	public Identifier getIdentifier() {
@@ -702,6 +706,21 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setPurchase(Purchase purchase) {
 		this.purchase = purchase;
+	}
+
+	/**
+	 * @return the purchaseList
+	 */
+	public List<Purchase> getPurchaseList() {
+		return this.purchaseList;
+	}
+
+	/**
+	 * @param purchaseList
+	 *            the purchaseList to set
+	 */
+	public void setPurchaseList(List<Purchase> purchaseList) {
+		this.purchaseList = purchaseList;
 	}
 
 	/**
