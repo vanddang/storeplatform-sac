@@ -165,9 +165,13 @@ public class DisplayConstants {
 
 	// //////////////////////////////////////Content Type Code //////////////////////////////////////////
 	/**
-	 * 판매중.
+	 * 판매상태.
 	 */
-	public static final String DP_SALE_STAT_ING = "PD000403";
+	public static final String DP_SALE_STAT_ING = "PD000403";			// 판매중
+	public static final String DP_SALE_STAT_WAIT = "PD000402";			// 판매대기
+	public static final String DP_SALE_STAT_STOP = "PD000404";			// 판매중지
+	public static final String DP_SALE_STAT_RESTRIC = "PD000405";		// 판매불가
+	public static final String DP_SALE_STAT_RESTRIC_DN = "PD000409";	// 판매불가
 
 	// //////////////////////////////////////Source Code //////////////////////////////////////////
 	public static final String DP_THUMNAIL_SOURCE = "thumbnail";
