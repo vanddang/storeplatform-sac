@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -77,7 +76,7 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 		// prodId 리스트로 변경
 		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 		if (prodIdList.size() > 50) {
-			// TODO osm1021 에러 처리 추가 필요
+			// TODO 에러 처리 추가 필요
 			this.logger.error("## prod id over 50 : {}" + prodIdList.size());
 		}
 		req.setProdIdList(prodIdList);
