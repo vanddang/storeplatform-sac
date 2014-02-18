@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.CommonRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AgreeUserEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AgreeUserEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
@@ -24,7 +25,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.FindJoinServiceListIDPEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.FindJoinServiceListIDPEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.FindUserIdByMdnEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.FindUserIdByMdnEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.GetMdnInfoIdpEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.GetMdnInfoIdpEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.ModifyPwdEcReq;
@@ -255,7 +255,7 @@ public class ImIdpSCIControllerTest {
 	@Test
 	public void testFindUserIdByMdn() {
 		FindUserIdByMdnEcReq req = new FindUserIdByMdnEcReq();
-		FindUserIdByMdnEcRes res = this.imIdpSCI.findUserIdByMdn(req);
+		CommonRes res = this.imIdpSCI.findUserIdByMdn(req);
 		LOGGER.debug(res.toString());
 	}
 
