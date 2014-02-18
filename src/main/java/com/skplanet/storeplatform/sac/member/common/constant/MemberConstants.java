@@ -24,6 +24,7 @@ public final class MemberConstants {
 	public static final String RESULT_UNKNOWN_ERR = "9991"; // 알수 없는 에러
 	public static final String RESULT_UNKNOWN_USER_ID = "9990"; // 존재하지 않는 사용자ID
 
+	public static final String SC_ERROR_DARK = "SC_MEM_9991"; // SC 알수없는에러(보통 DB에 2건이상 존재할때)
 	public static final String SC_ERROR_NO_DATA = "SC_MEM_9982"; // SC 검색결과 없음
 
 	/** EC IDP 에러 코드 문자열. */
@@ -70,6 +71,7 @@ public final class MemberConstants {
 	public static final String KEY_TYPE_USERMBR_NO = "USERMBR_NO"; // 통합서비스 키
 	public static final String KEY_TYPE_INSD_DEVICE_ID = "INSD_DEVICE_ID"; // 내부 기기 키
 	public static final String KEY_TYPE_DEVICE_ID = "DEVICE_ID"; // 기기 ID
+	public static final String KEY_TYPE_SVC_MANG_NO = "SVC_MANG_NO"; // SKT 서비스 관리번호
 	public static final String KEY_TYPE_EMAIL_ADDR = "EMAIL_ADDR"; // 사용자 이메일
 	public static final String KEY_TYPE_EMAIL = "EMAIL"; // 판매자 이메일
 	public static final String KEY_TYPE_TEL_NO = "TEL_NO"; // 사용자 연락처

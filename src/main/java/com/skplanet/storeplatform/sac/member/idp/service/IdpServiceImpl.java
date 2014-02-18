@@ -42,6 +42,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateNonMbrSegmentRequest;
@@ -629,9 +630,11 @@ public class IdpServiceImpl implements IdpService {
 		// <provisionInterface> CMD[ changeMobileNumber] REQUEST URL [
 		// http://stg.tstore.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=changeMobileNumber&mdn=01071295269&model_id=SSNT&be_mdn=01071295269&svc_mng_num=7213811004]
 		// svcMngNum [ 7213811004] mdn [ 01071295269] modelId [ SSNT]
+
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
-		String beMdn = StringUtil.nvl(map.get("be_mdn"), ""); // 이전 번호
-		String modelId = StringUtil.nvl(map.get("model_id"), "");
+		String beMdn = StringUtil.nvl(map.get("be_mdn"), "");
+		String uacd = StringUtil.nvl(map.get("model_id"), ""); // uacd
+		String svcMngNum = StringUtil.nvl(map.get("svc_mng_num"), "");
 		String tenantId = StringUtil.nvl(map.get("tenantID"), "");
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
 
@@ -641,12 +644,27 @@ public class IdpServiceImpl implements IdpService {
 
 		try {
 
+			/* 휴대기기 정보조회 - 서비스 관리 번호 */
+			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+			searchDeviceRequest.setCommonRequest(commonRequest);
+
+			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+			KeySearch key = new KeySearch();
+			key.setKeyType(MemberConstants.KEY_TYPE_SVC_MANG_NO);
+			key.setKeyString(svcMngNum);
+			keySearchList.add(key);
+
+			searchDeviceRequest.setKeySearchList(keySearchList);
+			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
+			/* 번호 변경 DCD 연동 */
+
 			/* 단말 정보 조회 */
-			Device device = this.mcc.getPhoneInfo(modelId);
+			Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
 			if (device == null) {
 
-				modelId = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+				uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 
 			} else {
 
@@ -669,17 +687,38 @@ public class IdpServiceImpl implements IdpService {
 					}
 
 					if (!StringUtil.equals(isTestModel, "Y")) { // 일반 사용자인 경우 - 미지원 휴대폰으로
-						modelId = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+						uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 					}
 
 				}
 			}
 
 			/* 휴대기기 수정 요청 */
+			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+
+			UserMbrDevice userMbrDevice = new UserMbrDevice();
+			userMbrDevice.setDeviceID(mdn);
+			userMbrDevice.setDeviceModelNo(device.getDeviceModelCd());
+			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 : 번호변경
+
+			List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+			UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+			userMbrDeviceDetail.setExtraProfileValue(uacd);
+			userMbrDeviceDetail.setTenantID(tenantId);
+			userMbrDeviceDetail.setUserKey(schDeviceRes.getUserKey());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+			userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
+
+			createDeviceReq.setCommonRequest(commonRequest);
+			createDeviceReq.setUserKey(schDeviceRes.getUserKey());
+			createDeviceReq.setIsNew("N");
+			createDeviceReq.setUserMbrDevice(userMbrDevice);
+			this.deviceSCI.createDevice(createDeviceReq);
 
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			// gameCenterSacReq.setUserKey(schUserRes.getUserKey());
+			gameCenterSacReq.setUserKey(schDeviceRes.getUserKey());
 			gameCenterSacReq.setDeviceId(mdn);
 			gameCenterSacReq.setPreDeviceId(beMdn);
 			gameCenterSacReq.setSystemId(systemId);
@@ -687,9 +726,18 @@ public class IdpServiceImpl implements IdpService {
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
+			/* 구매내역 MDN 변경 */
+
+			/* 구매한도 즉시적용 내역 변경 */
+
+			/* 선물수신한도 즉시적용 내역 변경 */
 		} catch (StorePlatformException ex) {
+
+			/* IDP로그 저장 */
 			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				return this.FAIL_NODATA_STR;
+			} else if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_DARK)) {
+				return this.FAIL_STR;
 			} else {
 				return this.FAIL_STR;
 			}
@@ -713,11 +761,12 @@ public class IdpServiceImpl implements IdpService {
 		// http://sbeta.itopping.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=changeMobileID&svc_mng_num=7035516765&mdn=01049545098&be_mdn=01049545098&model_id=SSOG&min=1049545098]
 		// svcMngNum [ 7035516765] mdn [ 01049545098] modelId [ SSOG]
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
-		String modelId = StringUtil.nvl(map.get("model_id"), ""); // uacd
+		String uacd = StringUtil.nvl(map.get("model_id"), ""); // uacd
+		String svcMngNum = StringUtil.nvl(map.get("svc_mng_num"), "");
 		String tenantId = StringUtil.nvl(map.get("tenantID"), "");
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
-		String deviceModelNo = null;
-		String v4SprtYn = null;
+		String beforeV4SprtYn = null; //이전 단말 DCD 지원여부
+		String v4SprtYn = null; //변경될 단말 DCD 지원여부
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
@@ -725,41 +774,53 @@ public class IdpServiceImpl implements IdpService {
 
 		try {
 
-			/* 회원정보 조회 */
+			/* 휴대기기 정보조회 - 서비스 관리 번호 */
+			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+			searchDeviceRequest.setCommonRequest(commonRequest);
+
 			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 			KeySearch key = new KeySearch();
-			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			key.setKeyString(mdn);
+			key.setKeyType(MemberConstants.KEY_TYPE_SVC_MANG_NO);
+			key.setKeyString(svcMngNum);
 			keySearchList.add(key);
 
-			SearchUserRequest schUserReq = new SearchUserRequest();
-			schUserReq.setCommonRequest(commonRequest);
-			schUserReq.setKeySearchList(keySearchList);
-			SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
+			searchDeviceRequest.setKeySearchList(keySearchList);
+			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
-			/* 단말 정보 조회 */
-			Device device = this.mcc.getPhoneInfo(modelId);
+			/* 이전 단말의 DCD 지원여부 조회 */
+			Device beforeDevice = this.mcc.getPhoneInfo(schDeviceRes.getUserMbrDevice().getDeviceModelNo());
+			beforeV4SprtYn = beforeDevice.getItoppV4SprtYn() == null ? "N" : beforeDevice.getItoppV4SprtYn();
+
+			/* 변경될 단말의 정보 조회 */
+			Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
 			if (device == null) {
-
-				modelId = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+				LOGGER.info(
+						"<idpChangeMobile> NOT SUPPORT DEVICE.(기기변경 대상 단말이 존재하지 않음- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, null, uacd, svcMngNum);
+				uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 				v4SprtYn = "N"; // V4 무조건 해지
 
 			} else {
 
-				deviceModelNo = device.getDeviceModelCd();
+				v4SprtYn = device.getItoppV4SprtYn() == null ? "N" : device.getItoppV4SprtYn(); //DCD 연동 지원여부
 
 				if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
 
 					/* 테스트 단말여부 확인 */
 					String isTestModel = "N";
+
+					/* 사용자 제한정책 조회(테스트 폰 리스트) */
+					SearchPolicyRequest policyRequest = new SearchPolicyRequest();
+
 					List<String> limitPolicyCodeList = new ArrayList<String>();
 					limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_TESTER);
-					SearchPolicyRequest policyRequest = new SearchPolicyRequest();
+
 					policyRequest.setCommonRequest(commonRequest);
 					policyRequest.setLimitPolicyKey(mdn);
 					policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
 					SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+
 					for (LimitTarget limitTarget : policyResponse.getLimitTargetList()) {
 						if (limitTarget.getPolicyApplyValue().equals(mdn)) {
 							isTestModel = "Y";
@@ -767,8 +828,14 @@ public class IdpServiceImpl implements IdpService {
 						}
 					}
 
-					if (!StringUtil.equals(isTestModel, "Y")) {
-						modelId = MemberConstants.NOT_SUPPORT_HP_MODEL_CD; // 일반 사용자인 경우 - 미지원 휴대폰으로
+					if (StringUtil.equals(isTestModel, "Y")) {
+						LOGGER.info("<idpChangeMobile> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
+								device.getDeviceModelCd(), uacd, svcMngNum);
+					} else {
+						LOGGER.info(
+								"<idpChangeMobile> NOT SUPPORT DEVICE.(기기변경 대상 단말이 존재하지 않음- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+								mdn, device.getDeviceModelCd(), uacd, svcMngNum);
+						uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD; // 일반 사용자인 경우 - 미지원 휴대폰으로
 						v4SprtYn = "N"; // V4 무조건 해지
 					}
 
@@ -776,52 +843,72 @@ public class IdpServiceImpl implements IdpService {
 			}
 
 			/* 휴대기기 수정 요청 */
+			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+
 			UserMbrDevice userMbrDevice = new UserMbrDevice();
 			userMbrDevice.setDeviceID(mdn);
-			userMbrDevice.setDeviceModelNo(deviceModelNo);
+			userMbrDevice.setDeviceModelNo(device.getDeviceModelCd());
+			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE); // 휴대기기 변경 유형코드 : 기기변경
 
 			List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 			UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
-			userMbrDeviceDetail.setExtraProfileValue(modelId);
+			userMbrDeviceDetail.setExtraProfileValue(uacd);
 			userMbrDeviceDetail.setTenantID(tenantId);
-			userMbrDeviceDetail.setUserKey(schUserRes.getUserKey());
+			userMbrDeviceDetail.setUserKey(schDeviceRes.getUserKey());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
-
 			userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
-			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 			createDeviceReq.setCommonRequest(commonRequest);
-			createDeviceReq.setUserKey(schUserRes.getUserKey());
+			createDeviceReq.setUserKey(schDeviceRes.getUserKey());
 			createDeviceReq.setIsNew("N");
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
 			this.deviceSCI.createDevice(createDeviceReq);
 
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(schUserRes.getUserKey());
+			gameCenterSacReq.setUserKey(schDeviceRes.getUserKey());
 			gameCenterSacReq.setDeviceId(mdn);
 			gameCenterSacReq.setSystemId(systemId);
 			gameCenterSacReq.setTenantId(tenantId);
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
+			/* IDP로그 저장 */
+
 			/* DCD 연동 */
-			if (StringUtil.equals(device.getItoppV4SprtYn(), "Y") && StringUtil.equals(v4SprtYn, "N")) {
+			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
+
+				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
+						device.getDeviceModelCd(), uacd, svcMngNum);
 
 				/* 기존에 구매했던 DCD 상품 조회 */
 
-			} else if (StringUtil.equals(device.getItoppV4SprtYn(), "Y") && StringUtil.equals(v4SprtYn, "Y")) {
+			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
 
-			} else if (StringUtil.equals(device.getItoppV4SprtYn(), "N") && StringUtil.equals(v4SprtYn, "Y")) {
+				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
+						device.getDeviceModelCd(), uacd, svcMngNum);
 
-			} else if (StringUtil.equals(device.getItoppV4SprtYn(), "N") && StringUtil.equals(v4SprtYn, "N")) {
+			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
+
+				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
+						device.getDeviceModelCd(), uacd, svcMngNum);
+
+			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
+
+				LOGGER.info("<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
+						device.getDeviceModelCd(), uacd, svcMngNum);
 
 			}
 
 		} catch (StorePlatformException ex) {
+
+			/* IDP로그 저장 */
+
 			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				return this.FAIL_NODATA_STR;
+			} else if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_DARK)) {
+				return this.FAIL_STR;
 			} else {
 				return this.FAIL_STR;
 			}
@@ -845,6 +932,8 @@ public class IdpServiceImpl implements IdpService {
 		// http://sbeta.itopping.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=secedeMobileNumber&svc_mng_num=7049931033&mdn=01090130995&be_mdn=01090130995&svc_rsn_cd=Z21Z&min=1090130995]
 		// svcMngNum [ 7049931033] mdn [ 01090130995] modelId [ null]
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
+		String svcMngNum = StringUtil.nvl(map.get("svc_mng_num"), "");
+
 		String tenantId = StringUtil.nvl(map.get("tenantID"), "");
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
 
@@ -855,20 +944,31 @@ public class IdpServiceImpl implements IdpService {
 		try {
 
 			/* 휴대기기 정보조회 - 서비스 관리 번호 */
-			SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
+			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+			searchDeviceRequest.setCommonRequest(commonRequest);
+
 			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 			KeySearch key = new KeySearch();
-			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			key.setKeyString(mdn);
+			key.setKeyType(MemberConstants.KEY_TYPE_SVC_MANG_NO);
+			key.setKeyString(svcMngNum);
 			keySearchList.add(key);
 
-			schDeviceReq.setKeySearchList(keySearchList);
+			searchDeviceRequest.setKeySearchList(keySearchList);
+			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
 			/* 휴대기기 삭제 요청 */
+			List<String> removeKeyList = new ArrayList<String>();
+			removeKeyList.add(schDeviceRes.getUserMbrDevice().getDeviceKey());
+
+			RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+			removeDeviceReq.setCommonRequest(commonRequest);
+			removeDeviceReq.setUserKey(schDeviceRes.getUserKey());
+			removeDeviceReq.setDeviceKey(removeKeyList);
+			this.deviceSCI.removeDevice(removeDeviceReq);
 
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			// gameCenterSacReq.setUserKey(schUserRes.getUserKey());
+			gameCenterSacReq.setUserKey(schDeviceRes.getUserKey());
 			gameCenterSacReq.setDeviceId(mdn);
 			gameCenterSacReq.setSystemId(systemId);
 			gameCenterSacReq.setTenantId(tenantId);
@@ -877,8 +977,13 @@ public class IdpServiceImpl implements IdpService {
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
 		} catch (StorePlatformException ex) {
+
+			/* IDP로그 저장 */
+
 			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				return this.FAIL_NODATA_STR;
+			} else if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_DARK)) {
+				return this.FAIL_STR;
 			} else {
 				return this.FAIL_STR;
 			}
