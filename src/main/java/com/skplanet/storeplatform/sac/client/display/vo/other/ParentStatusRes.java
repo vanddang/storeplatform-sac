@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.display.vo.product;
+package com.skplanet.storeplatform.sac.client.display.vo.other;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
