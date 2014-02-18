@@ -22,8 +22,6 @@ public class ExistReq extends CommonInfo {
 	private String userKey;
 	/* 기기 Key, Value : 01011112222 */
 	private String deviceKey;
-	/* 기기 타입 */
-	private String deviceType;
 
 	public String getUserId() {
 		return this.userId;
@@ -59,14 +57,6 @@ public class ExistReq extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	public String getDeviceType() {
-		return this.deviceType;
-	}
-
-	public void setDeviceType(String deviceType) {
-		this.deviceType = deviceType;
 	}
 
 }
