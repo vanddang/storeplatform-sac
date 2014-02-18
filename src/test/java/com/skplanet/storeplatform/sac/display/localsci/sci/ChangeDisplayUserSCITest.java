@@ -9,8 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
-
-//import com.skplanet.storeplatform.sac.client.internal.display.vo.ChangeDisplayUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 
 /**
  * 
@@ -37,11 +36,11 @@ public class ChangeDisplayUserSCITest {
 	 */
 	@Test
 	public void testChangeUserId() {
-		// ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
-		// changeDisplayUserSacReq.setTenantId("S01");
-		// changeDisplayUserSacReq.setOldUserId("test1");
-		// changeDisplayUserSacReq.setNewUserId("test2");
-		// this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReq);
+		ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
+		changeDisplayUserSacReq.setTenantId("S01");
+		changeDisplayUserSacReq.setOldUserId("test1");
+		changeDisplayUserSacReq.setNewUserId("test2");
+		this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReq);
 	}
 
 	/**
@@ -52,10 +51,10 @@ public class ChangeDisplayUserSCITest {
 	 */
 	@Test
 	public void testChangeUserKey() {
-		// ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
-		// changeDisplayUserSacReq.setTenantId("S01");
-		// changeDisplayUserSacReq.setOldUserKey("test3");
-		// changeDisplayUserSacReq.setNewUseKey("test4");
-		// this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
+		ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
+		changeDisplayUserSacReq.setTenantId("S01");
+		changeDisplayUserSacReq.setOldUserKey("test3");
+		changeDisplayUserSacReq.setNewUseKey("test4");
+		this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
 	}
 }
