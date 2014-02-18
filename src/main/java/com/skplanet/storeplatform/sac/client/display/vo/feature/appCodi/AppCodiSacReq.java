@@ -16,34 +16,65 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 01. 28. Updated by : 윤주영, SK 플래닛.
  */
-public class AppCodiReq extends CommonInfo {
+public class AppCodiSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123145L;
 
-	private String memberNo; // 회원번호
-
-	private String msisdn; // 전화번호
-
 	private String filteredBy; // 서비스 구분 (short|long)
+
+	private String userKey; // 사용자고유키
+
+	private String deviceIdType; // 기기ID유형
+
+	private String deviceId; // 기기ID
 
 	private int offset = 1; // 시작점 ROW
 
 	private int count = 20; // 페이지당 노출 ROW 수
 
-	public String getMemberNo() {
-		return this.memberNo;
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
 	}
 
-	public void setMemberNo(String memberNo) {
-		this.memberNo = memberNo;
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
-	public String getMsisdn() {
-		return this.msisdn;
+	/**
+	 * @return the deviceIdType
+	 */
+	public String getDeviceIdType() {
+		return this.deviceIdType;
 	}
 
-	public void setMsisdn(String msisdn) {
-		this.msisdn = msisdn;
+	/**
+	 * @param deviceIdType
+	 *            the deviceIdType to set
+	 */
+	public void setDeviceIdType(String deviceIdType) {
+		this.deviceIdType = deviceIdType;
+	}
+
+	/**
+	 * @return the deviceId
+	 */
+	public String getDeviceId() {
+		return this.deviceId;
+	}
+
+	/**
+	 * @param deviceId
+	 *            the deviceId to set
+	 */
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	public String getFilteredBy() {

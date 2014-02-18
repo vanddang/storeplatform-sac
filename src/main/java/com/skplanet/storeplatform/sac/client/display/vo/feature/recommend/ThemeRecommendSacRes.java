@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2014. 02. 05. Updated by : 윤주영, SK 플래닛.
  */
-public class ThemeRecommendRes extends CommonInfo {
+public class ThemeRecommendSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123126L;
 
