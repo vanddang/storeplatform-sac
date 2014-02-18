@@ -28,7 +28,6 @@ public class AuthorizeReq extends CommonInfo {
 	@NotBlank
 	private String sellerPW;
 	/** 계정 잠금 해제 요청 ('Y'/'N') */
-	@Pattern(regexp = "^Y|^N")
 	private String releaseLock;
 	/** 만료일시. */
 	@NotBlank

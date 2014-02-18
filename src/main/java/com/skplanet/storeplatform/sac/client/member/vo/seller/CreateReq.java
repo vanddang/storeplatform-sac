@@ -38,21 +38,18 @@ public class CreateReq extends CommonInfo {
 	/** 전화번호. */
 	private String sellerPhone;
 	/** SMS 수신 여부. */
-	// @Pattern(regexp = "^Y|^N")
 	private String isRecvSMS;
 	/** 판매자 이메일. */
 	@NotBlank
 	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String sellerEmail;
 	/** 이메일수신 여부. */
-	// @Pattern(regexp = "^Y|^N")
 	private String isRecvEmail;
 	/** 판매자 이름. */
 	private String sellerName;
 	/** 노출 이름. */
 	private String sellerNickName;
 	/** 판매자 성별. */
-	// @Pattern(regexp = "^M|^F")
 	private String sellerSex;
 	/** 판매자 생년월일. */
 	@Size(max = 8)
@@ -100,7 +97,6 @@ public class CreateReq extends CommonInfo {
 	/** 고객 전화번호. */
 	private String customerPhone;
 	/** 고객 응대 이메일. */
-	// @Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String customerEmail;
 	/** 법인등록번호. */
 	private String sellerBizCorpNumber;

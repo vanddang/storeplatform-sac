@@ -47,18 +47,14 @@ public class ModifyInformationSacReq extends CommonInfo {
 	/** 전화번호. */
 	private String sellerPhone;
 	/** SMS 수신 여부. */
-	@Pattern(regexp = "^Y|^N")
 	private String isRecvSMS;
 	/** 판매자 이메일. */
-	// @Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String sellerEmail;
 	/** 이메일수신 여부. */
-	// @Pattern(regexp = "^Y|^N")
 	private String isRecvEmail;
 	/** 판매자 이름. */
 	private String sellerName;
 	/** 판매자 성별. */
-	// @Pattern(regexp = "^M|^F")
 	private String sellerSex;
 	/** 판매자 생년월일. */
 	@Size(max = 8)
@@ -96,7 +92,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 	/** 법정대리인 생년월일. */
 	private String parentBirthDay;
 	/** 법정대리인 이메일. */
-	// @Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String parentEmail;
 	/** 법정대리인 휴대폰 번호. */
 	private String parentMDN;
