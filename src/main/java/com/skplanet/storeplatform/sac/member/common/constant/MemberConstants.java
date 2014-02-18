@@ -135,6 +135,11 @@ public final class MemberConstants {
 	public static final String DEVICE_ID_TYPE_UUID = "uuid";
 	public static final String DEVICE_ID_TYPE_MACADDRESS = "mac";
 
+	/** 실명인증 수단 코드 판단 값 */
+	public static final String REAL_NAME_AUTH_TYPE_MOBILE = "1"; // 휴대폰
+	public static final String REAL_NAME_AUTH_TYPE_IPIN = "2"; // IPIN
+	public static final String REAL_NAME_AUTH_TYPE_ETC = "9"; // 기타
+
 	/** 실명인증 수단 코드 */
 	public static final String REAL_NAME_AUTH_MOBILE = "US011101"; // 휴대폰인증
 	public static final String REAL_NAME_AUTH_IPIN = "US011102"; // IPIN인증
