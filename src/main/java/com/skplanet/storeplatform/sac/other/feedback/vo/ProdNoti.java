@@ -84,8 +84,9 @@ public class ProdNoti extends CommonInfo {
 	private String whose; // WHOSE
 	private String notiYn; // NOTI_YN
 	private String avgScore; // AVG_SCORE
-	private String expoSellerNm;
+	private String expoSellerNm; // EXPO_SELLER_NM
 	private String totalCount;
+	private String svcGrpCd; // SVC_GRP_CD
 
 	// paging
 	private String startRow;
@@ -929,6 +930,21 @@ public class ProdNoti extends CommonInfo {
 	 */
 	public void setTotalCount(String totalCount) {
 		this.totalCount = totalCount;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getSvcGrpCd() {
+		return this.svcGrpCd;
+	}
+
+	/**
+	 * @param svcGrpCd
+	 *            svcGrpCd
+	 */
+	public void setSvcGrpCd(String svcGrpCd) {
+		this.svcGrpCd = svcGrpCd;
 	}
 
 	/**

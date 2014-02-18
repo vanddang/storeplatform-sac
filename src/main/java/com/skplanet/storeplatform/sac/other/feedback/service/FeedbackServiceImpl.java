@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
@@ -76,6 +77,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Autowired
 	private FeedbackRepository feedbackRepository;
 
+	@Autowired
+	private SellerSearchSCI sellerSearchSCI;
+
 	@Override
 	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
@@ -112,7 +116,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 			notiSeq = prodNoti.getNotiSeq();
 
 		}
-
 		CreateFeedbackSacRes createFeedbackSacRes = new CreateFeedbackSacRes();
 		createFeedbackSacRes.setProdId(createFeedbackSacReq.getProdId());
 		createFeedbackSacRes.setNotiSeq(notiSeq);
@@ -290,7 +293,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			throw new StorePlatformException("SAC_OTH_9001");
 		}
 
-		Feedback feedback = this.setFeedback(res);
+		Feedback feedback = this.setFeedback(res, "");
 
 		CreateRecommendFeedbackSacRes createRecommendFeedbackSacRes = new CreateRecommendFeedbackSacRes();
 		BeanUtils.copyProperties(feedback, createRecommendFeedbackSacRes);
@@ -356,7 +359,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			throw new StorePlatformException("SAC_OTH_9001");
 		}
 
-		Feedback feedback = this.setFeedback(res);
+		Feedback feedback = this.setFeedback(res, "");
 
 		RemoveRecommendFeedbackSacRes removeRecommendFeedbackSacRes = new RemoveRecommendFeedbackSacRes();
 		BeanUtils.copyProperties(feedback, removeRecommendFeedbackSacRes);
@@ -404,7 +407,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// }
 		// List<Feedback> notiList = new ArrayList<Feedback>();
 		// for (ProdNoti res : getProdnotiList) {
-		// notiList.add(this.setFeedback(res));
+		// notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
 		// }
 		// listFeedbackRes.setNotiList(notiList);
 		// return listFeedbackRes;
@@ -748,7 +751,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	 * @param prodNoti
 	 * @return
 	 */
-	private Feedback setFeedback(ProdNoti prodNoti) {
+	private Feedback setFeedback(ProdNoti prodNoti, String prodType) {
 		Feedback feedback = new Feedback();
 		feedback.setNotiSeq(prodNoti.getNotiSeq());
 		feedback.setUserKey(prodNoti.getMbrNo());
@@ -772,7 +775,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 		} else {
 			regId = prodNoti.getRegId();
 		}
-
 		feedback.setRegId(regId);
 		feedback.setRegDt(prodNoti.getRegDt());
 		feedback.setSellerRespTitle(prodNoti.getSellerRespTitle());
@@ -784,13 +786,77 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setWhose(prodNoti.getWhose());
 		feedback.setSelfRecomYn(prodNoti.getNotiYn());
 		feedback.setAvgScore(prodNoti.getAvgScore());
-
-		// ?? 판매자 회원 SCI 연동.
-		feedback.setNickNm("회원SCI 연동준비.");
+		// String nickNm = "";
+		// String compNm = "";
+		// String sellerNickName = "";
+		// String sellerCompany = "";
+		// String sellerClass = "";
+		// String charger = "";
+		// if (StringUtils.isNotBlank(prodNoti.getSellerMbrNo())) {
+		// DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+		// detailInformationSacReq.setSellerKey(prodNoti.getSellerMbrNo());
+		// DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
+		// .detailInformation(detailInformationSacReq);
+		// if (detailInformationSacRes != null && detailInformationSacRes.getSellerMbr() != null) {
+		// sellerNickName = detailInformationSacRes.getSellerMbr().getSellerNickName();
+		// sellerCompany = detailInformationSacRes.getSellerMbr().getSellerCompany();
+		// sellerClass = detailInformationSacRes.getSellerMbr().getSellerClass();
+		// charger = detailInformationSacRes.getSellerMbr().getCharger();
+		// }
+		// }
+		// // 테스트 해보기.
+		//
+		// // , NVL2( N.SELLER_NOTI_DSCR
+		// // , NVL2( N.EXPOSURE_DEV_NM
+		// // , N.EXPOSURE_DEV_NM
+		// // , DECODE( M.DEV_TP_CD, 'US000401', M.OP_NM, 'US000404', M.FR_COMPANY, M.COMP_NM ) )
+		// // , NULL) AS NICK_NAME
+		// // 사용후기 내용이 있으면
+		// if (StringUtils.isNotBlank(prodNoti.getNotiDscr())) {
+		// // 상품테이블 판매자명이 있으면
+		// if (StringUtils.isNotBlank(prodNoti.getExpoSellerNm())) {
+		// nickNm = prodNoti.getExpoSellerNm();
+		// } else {
+		// // 상품테이블에 판매자 노출명이 없고 개인판매자이면 담당자명을 노출
+		// if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_PRIVATE_PERSON)) {
+		// nickNm = charger;
+		// // 상품테이블에 판매자 노출명이 없고 법인사업자이면 회사명을 노출
+		// } else if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_LEGAL_BUSINESS)) {
+		// nickNm = sellerCompany;
+		// // 기타 추가 될 사항있음으로 기본으로 회사명을 노출
+		// } else {
+		// nickNm = sellerCompany;
+		// }
+		// }
+		// }
+		// // 사용후기가 내용이 없으면 NULL
+		// feedback.setNickNm(nickNm);
+		// // <!-- Shopping 인 경우만 -->
+		// // <isEqual property="type" compareValue="shopping">
+		// // , DECODE( M.DEV_TP_CD
+		// // , 'US000401', M.OP_NM
+		// // , 'US000404', M.FR_COMPANY
+		// // , DECODE( N.SVC_GRP_CD, 'DP000206', M.REP_COMP_NM, M.COMP_NM ) ) AS COMP_NM
+		// // </isEqual>
+		// // 쇼핑 상품인 경우.
+		// if (StringUtils.equals(prodType, "shopping")) {
+		// // 쇼핑 상품이면서 개인 판매자이면,
+		// if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_PRIVATE_PERSON)) {
+		// compNm = charger;
+		// } else if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_LEGAL_BUSINESS)) {
+		// compNm = sellerCompany;
+		// } else {
+		//
+		// if (StringUtils.equals(prodNoti.getSvcGrpCd(), DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD)) {
+		// compNm = sellerNickName;
+		// } else {
+		// compNm = sellerCompany;
+		// }
+		// }
+		// }
+		// feedback.setCompNm(compNm);
 		feedback.setFbPostYn(prodNoti.getFbPostYn());
 		feedback.setProdId(prodNoti.getProdId());
-		// ?? 판매자 회원 SCI 연동
-		feedback.setCompNm("회원SCI 연동준비.");
 
 		return feedback;
 	}
