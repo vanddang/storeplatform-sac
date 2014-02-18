@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.app.controller;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
@@ -46,6 +47,11 @@ public class AppController {
         request.setUserKey(req.getUserKey());
         request.setDeviceKey(req.getDeviceKey());
 
-        return appService.getAppDetail(request);
+        AppDetailRes appDetail = appService.getAppDetail(request);
+        if (appDetail == null) {
+            throw new StorePlatformException("SAC_DSP_0009");
+        }
+
+        return appDetail;
     }
 }

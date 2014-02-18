@@ -78,7 +78,7 @@ public class AppServiceImpl implements AppService {
 		// TODO Provisioning - 단말기, 운영체제 버전
 		AppDetail appDetail = this.commonDAO.queryForObject("AppDetail.getAppDetail", request, AppDetail.class);
 		if (appDetail == null)
-			throw new StorePlatformException("SAC_DSP_9999");
+			return null;
 		AppDetailRes res = new AppDetailRes();
 
         // Product Basic info

@@ -48,7 +48,7 @@ public class MusicServiceImpl implements MusicService {
 		MusicDetailComposite detailComposite = new MusicDetailComposite();
 		MusicDetail musicDetail = this.commonDAO.queryForObject("MusicDetail.getMusicDetail", param, MusicDetail.class);
 		if (musicDetail == null)
-			throw new StorePlatformException("SAC_DSP_9999");
+			return null;
 
 		List<MenuItem> menuList = this.commonService.getMenuItemList(param.getChannelId(), param.getLangCd());
 		List<SubContent> contentList = this.commonDAO.queryForList("MusicDetail.getSubContentList",

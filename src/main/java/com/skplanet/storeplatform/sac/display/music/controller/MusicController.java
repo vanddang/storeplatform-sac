@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.music.controller;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -58,6 +59,9 @@ public class MusicController {
         param.setDeviceModelCd(header.getDeviceHeader().getModel());
 
         MusicDetailComposite musicDetailComp = musicService.getMusicDetail(param);
+        if(musicDetailComp == null)
+            throw new StorePlatformException("SAC_DSP_0009");
+
         MusicDetailRes res = new MusicDetailRes();
         Product product = new Product();
 
