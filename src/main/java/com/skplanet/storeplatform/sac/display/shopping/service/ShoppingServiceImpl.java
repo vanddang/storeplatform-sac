@@ -197,7 +197,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			int totalCount = 0;
 			ShoppingRes responseVO = null;
 			ShoppingReq requestVO = new ShoppingReq();
 			requestVO.setOffset(1);
@@ -393,7 +392,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			int totalCount = 0;
 			ShoppingRes responseVO = null;
 			ShoppingReq requestVO = new ShoppingReq();
 			requestVO.setOffset(1);
@@ -612,7 +610,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			int totalCount = 0;
 			ShoppingRes responseVO = null;
 			ShoppingReq requestVO = new ShoppingReq();
 			requestVO.setOffset(1);
@@ -1540,7 +1537,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			int totalCount = 0;
 			ShoppingRes responseVO = null;
 			ShoppingReq requestVO = new ShoppingReq();
 			requestVO.setOffset(1);
@@ -1763,7 +1759,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			int totalCount = 0;
 			ShoppingRes responseVO = null;
 			ShoppingReq requestVO = new ShoppingReq();
 			requestVO.setOffset(1);
