@@ -100,8 +100,8 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			throw new StorePlatformException("SAC_DSP_0003", "listId", listId);
 		}
 
-		// ADM000000002 만화만 조회되어야 함 topMenuId DP13(이북) 넘어온 경우 체크
-		if ("ADM000000002".equals(listId) && "DP13".equals(topMenuId)) {
+		// TGR000000001 만화만 조회되어야 함 topMenuId DP13(이북) 넘어온 경우 체크
+		if ("TGR000000001".equals(listId) && "DP13".equals(topMenuId)) {
 			throw new StorePlatformException("SAC_DSP_0003", "listId", listId, "topMenuId", topMenuId);
 		}
 
@@ -158,7 +158,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 
 		List<ProductBasicInfo> productBasicInfoList;
 
-		// ADM000000013 : 운영자 추천, ADM000000002 : 신규 만화, RNK000000002 : 신규 이북, RNK000000006 : 인기코믹/인기도서
+		// ADM000000013 : 운영자 추천, TGR000000001 : 신규 만화, RNK000000002 : 신규 이북, RNK000000006 : 인기코믹/인기도서
 		if (listId.equals("ADM000000013")) {
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("만화/이북 > 추천 > Tstore 추천 조회");
@@ -166,7 +166,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 
 			productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubRecomList",
 					requestVO, ProductBasicInfo.class);
-		} else if (listId.equals("ADM000000002")) {
+		} else if (listId.equals("TGR000000001")) {
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("만화 > 최신 조회");
 			this.logger.debug("----------------------------------------------------------------");
