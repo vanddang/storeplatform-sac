@@ -19,6 +19,9 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
 *
 * ACL 관련 DB 접근 서비스
@@ -57,8 +60,11 @@ public class AclDataAccessServiceBatis implements AclDataAccessService {
 	}
 
     @Override
-    public String selectInterfaceStatus(String tenantId, String interfaceId) {
-        // TODO Implementation.
-        return null;
+    public String selectUsableInterface(String authKey, String interfaceId) {
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("authKey", authKey);
+        param.put("interfaceId", interfaceId);
+
+        return this.commonDAO.queryForObject("Interface.selectUsableInterface", param, String.class);
     }
 }

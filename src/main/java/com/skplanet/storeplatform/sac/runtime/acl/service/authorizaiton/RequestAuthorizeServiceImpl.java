@@ -14,8 +14,9 @@ import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -24,24 +25,21 @@ import org.apache.commons.lang3.StringUtils;
  * Updated on : 2014. 2. 10.
  * Updated by : 정희원, SK 플래닛
  */
-public class RequestAuthorizationServiceImpl implements RequestAuthorizationService {
+@Service
+public class RequestAuthorizeServiceImpl implements RequestAuthorizeService {
 
-//    @Autowired
+    @Autowired
     private AclDataAccessService dbAccessService;
 
     @Override
     public void authorize(HttpHeaders httpHeaders) {
-        Tenant tenant = this.dbAccessService.selectTenantByAuthKey(httpHeaders.getAuthKey());
-        String tenantId = tenant.getTenantId();
 
-        String interfaceStatus = this.dbAccessService.selectInterfaceStatus(tenantId, httpHeaders.getInterfaceId());
+        String interfaceStatus = this.dbAccessService.selectUsableInterface(httpHeaders.getAuthKey(), httpHeaders.getInterfaceId());
 
         if(StringUtils.isEmpty(interfaceStatus))
             throw new StorePlatformException("SAC_CMN_0061");
 
         if(!StringUtil.equals(interfaceStatus, CommonConstants.INTERFACE_STAT_OK))
             throw new StorePlatformException("SAC_CMN_0062");
-
-        // TODO Flow에도 실패 케이스 명시할 것
     }
 }

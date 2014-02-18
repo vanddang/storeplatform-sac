@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service;
 
-import com.skplanet.storeplatform.sac.runtime.acl.service.authorizaiton.RequestAuthorizationService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.authorizaiton.RequestAuthorizeService;
 import org.springframework.integration.annotation.Header;
 
 import com.skplanet.storeplatform.sac.runtime.acl.service.authentication.AuthenticateService;
@@ -29,7 +29,7 @@ public class AclServiceTobeImpl implements AclServiceTobe {
 	// @Autowired
 	private RequestValidateService validator;
 	private AuthenticateService authenticateService;
-    private RequestAuthorizationService authorizationService;
+    private RequestAuthorizeService authorizationService;
 
 	/**
 	 * Request를 검증한다. (Interface 및 Timestamp 검사)

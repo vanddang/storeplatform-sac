@@ -25,6 +25,19 @@
 			       upd_dt
 			  FROM tb_fw_interface
 			 WHERE interface_id = #{interfaceId}
-    </select>  
+    </select>
+
+    <select id="selectUsableInterface" parameterType="map" resultType="string">
+        SELECT
+            INF.INTERFACE_ID
+        FROM TB_FW_INTERFACE INF
+            INNER JOIN TB_FW_INTERFACE_AUTH IA
+                ON IA.INTERFACE_ID = INF.INTERFACE_ID
+            INNER JOIN TB_FW_AUTH_KEY AK
+                ON AK.TENANT_ID = IA.TENANT_ID
+        WHERE
+            INF.INTERFACE_ID = #{interfaceId}
+            AND AK.AUTH_KEY = #{authKey}
+    </select>
 
 </mapper>

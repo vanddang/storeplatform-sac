@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
  * Updated on : 2014. 2. 10.
  * Updated by : 정희원, SK 플래닛
  */
-public interface RequestAuthorizationService {
+public interface RequestAuthorizeService {
 
     /**
      * systemId, interfaceId에 해당하는 인가 정보를 확인하여 액세스가 가능한지 확인한다.

@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
-import com.skplanet.storeplatform.sac.runtime.acl.util.HmacSha1Util;
-import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
+//import com.skplanet.storeplatform.sac.runtime.acl.util.HmacSha1Util;
+//import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthType;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
@@ -72,18 +72,18 @@ public class AuthenticationServiceImpl implements AuthenticateService {
 			String nonce = headers.getNonce();
 			String signature = headers.getSignature();
 			//MAC 인증
-			try {
+//			try {
 				logger.debug("timestamp={}, nonce={}", timestamp, nonce);
-				String data = SacAuthUtil.getMessageForAuth(requestUri, authKey, timestamp, nonce);
-				String newSignature = HmacSha1Util.getSignature(data, authKeyInfo.getSecret());
+				String data = "";//SacAuthUtil.getMessageForAuth(requestUri, authKey, timestamp, nonce);
+				String newSignature = "";//HmacSha1Util.getSignature(data, authKeyInfo.getSecret());
 				logger.debug("signature={}, newSignature={}", signature, newSignature);
 				if(newSignature.equals(signature)) {
 					isValid = true;
 				}
-			} catch (SignatureException e) {
-				logger.error(e.getMessage());
-				isValid = false;
-			}
+//			} catch (SignatureException e) {
+//				logger.error(e.getMessage());
+//				isValid = false;
+//			}
 
 			if(!isValid) {
 				throw new StorePlatformException("SAC_CMN_0032");

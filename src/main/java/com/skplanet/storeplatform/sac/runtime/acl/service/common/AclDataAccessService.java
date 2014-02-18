@@ -59,10 +59,11 @@ public interface AclDataAccessService {
      * <pre>
      * 테넌트가 해당 인터페이스를 사용 가능한지 여부 조회
      * </pre>
-     * @param tenantId 테넌트ID
+     *
+     * @param authKey 테넌트ID
      * @param interfaceId 인터페이스ID
      * @return 인터페이스 상태. null인 경우 사용 불가.
      */
-    String selectInterfaceStatus(String tenantId, String interfaceId);
+    String selectUsableInterface(String authKey, String interfaceId);
 
 }
