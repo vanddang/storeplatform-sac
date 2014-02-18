@@ -65,11 +65,6 @@ public class CreateRealNameReq extends CommonInfo {
 	private String realNameMethod = "";
 
 	/**
-	 * 실명인증 사이트 코드
-	 */
-	private String realNameSite = "";
-
-	/**
 	 * 이동 통신사
 	 */
 	private String deviceTelecom = "";
@@ -232,21 +227,6 @@ public class CreateRealNameReq extends CommonInfo {
 	 */
 	public void setRealNameMethod(String realNameMethod) {
 		this.realNameMethod = realNameMethod;
-	}
-
-	/**
-	 * @return String : realNameSite
-	 */
-	public String getRealNameSite() {
-		return this.realNameSite;
-	}
-
-	/**
-	 * @param realNameSite
-	 *            String : the realNameSite to set
-	 */
-	public void setRealNameSite(String realNameSite) {
-		this.realNameSite = realNameSite;
 	}
 
 	/**
