@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.skplanet.storeplatform.external.client.isf.vo.ISFReq;
 import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiSacReq;
 
 /**
  * App Codi EC Invoker Interface 구현체
@@ -38,7 +38,7 @@ public class AppCodiECInvokerImpl implements AppCodiECInvoker {
 	private String domainName;
 
 	@Override
-	public ISFRes invoke(AppCodiReq requestVO) throws StorePlatformException {
+	public ISFRes invoke(AppCodiSacReq requestVO) throws StorePlatformException {
 
 		ISFRes response = new ISFRes();
 
@@ -71,7 +71,7 @@ public class AppCodiECInvokerImpl implements AppCodiECInvoker {
 		return response;
 	}
 
-	private ISFReq makeRequest(AppCodiReq requestVO) {
+	private ISFReq makeRequest(AppCodiSacReq requestVO) {
 
 		ISFReq request = new ISFReq();
 
@@ -80,8 +80,8 @@ public class AppCodiECInvokerImpl implements AppCodiECInvoker {
 		else
 			request.setId("SVC_MAIN_0003");
 
-		request.setMbn(requestVO.getMemberNo());
-		request.setMdn(requestVO.getMsisdn());
+		request.setMbn(requestVO.getUserKey());
+		request.setMdn(requestVO.getDeviceId());
 		request.setType(requestVO.getFilteredBy());
 
 		this.log.debug(request.toString());

@@ -1,12 +1,8 @@
 package com.skplanet.storeplatform.sac.display.feature.appCodi.service;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-
-import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiReq;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiListSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -21,25 +17,25 @@ public interface AppCodiService {
 	 * App Codi 조회.
 	 * </pre>
 	 * 
-	 * @param AppCodiReq
+	 * @param AppCodiSacReq
 	 *            requestVO
 	 * @param SacRequestHeader
 	 *            requestHeader
 	 * @return AppCodiListRes
 	 */
-	public AppCodiListRes searchAppCodiList(AppCodiReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+	public AppCodiListSacRes searchAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader)
+			throws StorePlatformException;
 
 	/**
 	 * <pre>
 	 * App Codi Dummy 조회.
 	 * </pre>
 	 * 
-	 * @param AppCodiReq
+	 * @param AppCodiSacReq
 	 *            requestVO
 	 * @param SacRequestHeader
 	 *            requestHeader
 	 * @return AppCodiListRes
 	 */
-	public AppCodiListRes searchDummyAppCodiList(AppCodiReq requestVO, SacRequestHeader requestHeader);
+	public AppCodiListSacRes searchDummyAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader);
 }

@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.skplanet.storeplatform.external.client.isf.vo.ISFReq;
 import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacReq;
 
 /**
  * Theme Recommend EC Service 인터페이스(CoreStoreBusiness) 구현체
@@ -38,7 +38,7 @@ public class ThemeRecommendInvokerImpl implements ThemeRecommendInvoker {
 	private String domainName;
 
 	@Override
-	public ISFRes invoke(ThemeRecommendReq requestVO) throws StorePlatformException {
+	public ISFRes invoke(ThemeRecommendSacReq requestVO) throws StorePlatformException {
 		ISFRes response = new ISFRes();
 
 		HttpHeaders headers = new HttpHeaders();
@@ -68,7 +68,7 @@ public class ThemeRecommendInvokerImpl implements ThemeRecommendInvoker {
 		return response;
 	}
 
-	private ISFReq makeRequest(ThemeRecommendReq requestVO) {
+	private ISFReq makeRequest(ThemeRecommendSacReq requestVO) {
 
 		ISFReq request = new ISFReq();
 
@@ -77,8 +77,8 @@ public class ThemeRecommendInvokerImpl implements ThemeRecommendInvoker {
 		else
 			request.setId("SVC_MAIN_0004");
 
-		request.setMbn(requestVO.getMemberNo());
-		request.setMdn(requestVO.getMsisdn());
+		request.setMbn(requestVO.getUserKey());
+		request.setMdn(requestVO.getDeviceId());
 		request.setType(requestVO.getFilteredBy());
 
 		this.log.debug(request.toString());

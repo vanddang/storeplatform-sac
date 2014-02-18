@@ -31,8 +31,8 @@ import com.skplanet.storeplatform.external.client.isf.vo.SingleValueType;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -78,7 +78,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	@Override
-	public ThemeRecommendRes searchThemeRecommendList(ThemeRecommendReq requestVO, SacRequestHeader requestHeader)
+	public ThemeRecommendSacRes searchThemeRecommendList(ThemeRecommendSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException {
 		// TODO Auto-generated method stub
 
@@ -89,6 +89,31 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 		mapReq.put("tenantHeader", tenantHeader);
 		mapReq.put("deviceHeader", deviceHeader);
+
+		String userKey = requestVO.getUserKey();
+		String deviceIdType = requestVO.getDeviceIdType();
+		String deviceId = requestVO.getDeviceId();
+
+		this.log.debug("----------------------------------------------------------------");
+		this.log.debug("[searchIntimateMessageList] userKey : {}", userKey);
+		this.log.debug("[searchIntimateMessageList] deviceIdType : {}", deviceIdType);
+		this.log.debug("[searchIntimateMessageList] deviceId : {}", deviceId);
+		this.log.debug("----------------------------------------------------------------");
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(userKey)) {
+			throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
+		}
+		if (StringUtils.isEmpty(deviceIdType)) {
+			throw new StorePlatformException("SAC_DSP_0002", "deviceIdType", deviceIdType);
+		}
+		if (StringUtils.isEmpty(deviceId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "deviceId", deviceId);
+		}
+		// 기기ID유형 유효값 체크
+		if (!"msisdn".equals(deviceIdType)) {
+			throw new StorePlatformException("SAC_DSP_0003", "deviceIdType", deviceIdType);
+		}
 
 		ISFRes response = new ISFRes();
 		try {
@@ -174,8 +199,8 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		return this.makeThemeRecommendResult(listThemeRecommend, reason, requestVO.getFilteredBy());
 	}
 
-	private ThemeRecommendRes makeThemeRecommendResult(List<ThemeRecommend> resultList, String reason, String filteredBy) {
-		ThemeRecommendRes response = new ThemeRecommendRes();
+	private ThemeRecommendSacRes makeThemeRecommendResult(List<ThemeRecommend> resultList, String reason, String filteredBy) {
+		ThemeRecommendSacRes response = new ThemeRecommendSacRes();
 
 		CommonResponse commonResponse = new CommonResponse();
 
@@ -333,10 +358,10 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public ThemeRecommendRes searchDummyThemeRecommendList(ThemeRecommendReq requestVO, SacRequestHeader header) {
+	public ThemeRecommendSacRes searchDummyThemeRecommendList(ThemeRecommendSacReq requestVO, SacRequestHeader header) {
 		// TODO Auto-generated method stub
 
-		ThemeRecommendRes response = new ThemeRecommendRes();
+		ThemeRecommendSacRes response = new ThemeRecommendSacRes();
 		CommonResponse commonResponse = null;
 		List<Product> listVO = new ArrayList<Product>();
 		List<Product> subListVO = new ArrayList<Product>();

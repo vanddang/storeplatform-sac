@@ -2,7 +2,7 @@ package com.skplanet.storeplatform.sac.display.feature.theme.recommend.invoker;
 
 import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacReq;
 
 /**
  * Theme Recommend EC Service 인터페이스(CoreStoreBusiness)
@@ -11,6 +11,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeR
  */
 public interface ThemeRecommendInvoker {
 
-	public ISFRes invoke(ThemeRecommendReq requestVO) throws StorePlatformException;
+	public ISFRes invoke(ThemeRecommendSacReq requestVO) throws StorePlatformException;
 
 }

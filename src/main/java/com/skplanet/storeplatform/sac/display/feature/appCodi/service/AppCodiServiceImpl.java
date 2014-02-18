@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.appCodi.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,8 +19,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang.ObjectUtils;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +29,12 @@ import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.external.client.isf.vo.MultiValueType;
 import com.skplanet.storeplatform.external.client.isf.vo.MultiValuesType;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiListSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiSacReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -100,8 +98,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public AppCodiListRes searchAppCodiList(AppCodiReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public AppCodiListSacRes searchAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader)
+			throws StorePlatformException {
 
 		boolean isExists = true;
 
@@ -111,6 +109,31 @@ public class AppCodiServiceImpl implements AppCodiService {
 		Map<String, Object> mapReq = new HashMap<String, Object>();
 		mapReq.put("tenantHeader", tenantHeader);
 		mapReq.put("deviceHeader", deviceHeader);
+
+		String userKey = requestVO.getUserKey();
+		String deviceIdType = requestVO.getDeviceIdType();
+		String deviceId = requestVO.getDeviceId();
+
+		this.log.debug("----------------------------------------------------------------");
+		this.log.debug("[searchIntimateMessageList] userKey : {}", userKey);
+		this.log.debug("[searchIntimateMessageList] deviceIdType : {}", deviceIdType);
+		this.log.debug("[searchIntimateMessageList] deviceId : {}", deviceId);
+		this.log.debug("----------------------------------------------------------------");
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(userKey)) {
+			throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
+		}
+		if (StringUtils.isEmpty(deviceIdType)) {
+			throw new StorePlatformException("SAC_DSP_0002", "deviceIdType", deviceIdType);
+		}
+		if (StringUtils.isEmpty(deviceId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "deviceId", deviceId);
+		}
+		// 기기ID유형 유효값 체크
+		if (!"msisdn".equals(deviceIdType)) {
+			throw new StorePlatformException("SAC_DSP_0003", "deviceIdType", deviceIdType);
+		}
 
 		// 상품 아이디
 		String sPid = "";
@@ -133,7 +156,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 		// 순서 체크용 임시 변수 - 나중에 최종 개수로 사용함
 		int idx = 0;
 
-		AppCodiListRes responseVO = new AppCodiListRes();
+		AppCodiListSacRes responseVO = new AppCodiListSacRes();
 
 		List<Product> productList = new ArrayList<Product>();
 
@@ -778,9 +801,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 	 * requestVO)
 	 */
 	@Override
-	public AppCodiListRes searchDummyAppCodiList(AppCodiReq requestVO, SacRequestHeader requestHeader) {
+	public AppCodiListSacRes searchDummyAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader) {
 
-		AppCodiListRes response = new AppCodiListRes();
+		AppCodiListSacRes response = new AppCodiListSacRes();
 		CommonResponse commonResponse = null;
 		List<Product> listVO = new ArrayList<Product>();
 

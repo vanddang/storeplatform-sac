@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.theme.recommend.service.ThemeRecommendService;
 
@@ -44,7 +44,7 @@ public class ThemeRecommendController {
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ThemeRecommendRes searchThemeRecommendList(@RequestBody ThemeRecommendReq requestVO, SacRequestHeader header) {
+	public ThemeRecommendSacRes searchThemeRecommendList(@RequestBody ThemeRecommendSacReq requestVO, SacRequestHeader header) {
 
 		this.log.debug("searchThemeRecommendList start !!");
 		this.log.debug("request {}", requestVO);
