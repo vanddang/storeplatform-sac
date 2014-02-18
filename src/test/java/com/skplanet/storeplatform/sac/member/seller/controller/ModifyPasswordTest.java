@@ -129,8 +129,8 @@ public class ModifyPasswordTest {
 					public Object requestBody() {
 						req.setSellerKey("");
 						req.setSessionKey("");
-						req.setNewPw("");
-						req.setOldPw("");
+						req.setNewPW("");
+						req.setOldPW("");
 						// Debug
 						LOGGER.debug("[REQUEST (SAC)-회원기본정보 수정] : \n{}",
 								TestConvertMapperUtils.convertObjectToJson(req));

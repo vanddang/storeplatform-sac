@@ -703,15 +703,20 @@ public class SellerServiceImpl implements SellerService {
 		// SessionKey 유효성 체크
 		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
 
+		// SellerId 조회
+		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
+				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
+
 		UpdatePasswordSellerRequest updatePasswordSellerRequest = new UpdatePasswordSellerRequest();
 
 		MbrPwd mbrPwd = new MbrPwd();
-		mbrPwd.setOldPW(req.getOldPw());
-		mbrPwd.setMemberPW(req.getNewPw());
+		mbrPwd.setMemberID(searchSellerResponse.getSellerMbr().getSellerID());
+		mbrPwd.setOldPW(req.getOldPW());
+		mbrPwd.setMemberPW(req.getNewPW());
 		updatePasswordSellerRequest.setMbrPwd(mbrPwd);
 
 		updatePasswordSellerRequest.setCommonRequest(commonRequest);
-		// Id
+
 		UpdatePasswordSellerResponse updatePasswordSellerResponse = this.sellerSCI
 				.updatePasswordSeller(updatePasswordSellerRequest);
 
