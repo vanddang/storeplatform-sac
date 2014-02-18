@@ -115,6 +115,13 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 			sellerMbrRes.setSellerCompany(sellerMbr.getSellerCompany());
 			sellerMbrRes.setSellerNickName(sellerMbr.getSellerNickName());
 			sellerMbrRes.setSellerBizNumber(sellerMbr.getSellerBizNumber());
+
+			sellerMbrRes.setSellerName(sellerMbr.getSellerName());
+			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
+			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
+			sellerMbrRes.setSellerAddress(sellerMbr.getSellerAddress());
+			sellerMbrRes.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
+			sellerMbrRes.setBizRegNumber(sellerMbr.getBizRegNumber());
 		}
 		return sellerMbrRes;
 	}
