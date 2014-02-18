@@ -102,7 +102,7 @@
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -211,7 +211,7 @@
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -351,7 +351,7 @@
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -530,7 +530,7 @@
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                         AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT 
@@ -684,7 +684,7 @@
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -871,7 +871,7 @@
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -1012,7 +1012,7 @@
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -1153,7 +1153,7 @@
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -1300,7 +1300,7 @@
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -1416,7 +1416,7 @@
                 AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                 AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -1563,7 +1563,7 @@
                 AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                 AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -1618,7 +1618,7 @@
 		  AND A.EPSD_PROD_ID = D.PROD_ID
 		  AND A.EPSD_PROD_ID = E.PROD_ID
 		  AND A.CHNL_PROD_ID =#{chnlProdId}
-		  AND NVL(B.B2B_PROD_YN, 'N') != 'Y'
+		  AND NVL(B.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
           AND E.EXPO_YN ='Y'                                /* Y : 기본(기본여부) */
           AND E.TENANT_ID  =#{req.tenantId}        /* INPUT 테넌트ID */
           AND D.TENANT_ID  =#{req.tenantId}        /* INPUT 테넌트ID */	  
