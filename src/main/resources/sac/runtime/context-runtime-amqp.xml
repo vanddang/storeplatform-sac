@@ -22,11 +22,11 @@
  	<import resource="classpath*:runtime/context-runtime-amqp.xml"/>
  	
  	<bean class="com.rabbitmq.client.ConnectionFactory">
-        <property name="host" value="#{propertiesForSac['skp.cms.mq.server.ip']}" />
-        <property name="port" value="#{propertiesForSac['skp.cms.mq.server.port']}" />
-        <property name="username" value="#{propertiesForSac['skp.cms.mq.server.username']}" />
-        <property name="password" value="#{propertiesForSac['skp.cms.mq.server.password']}" />
-        <property name="virtualHost" value="#{propertiesForSac['skp.cms.mq.server.virtualHost']}" />
+        <property name="host" value="211.110.115.151" />
+        <property name="port" value="5672" />
+        <property name="username" value="guest" />
+        <property name="password" value="guest" />
+        <property name="virtualHost" value="/" />
     </bean>
     
     <bean id="inboundQueueNames" class="com.skplanet.storeplatform.framework.core.util.StringUtils" factory-method="convertArrayListToString">
