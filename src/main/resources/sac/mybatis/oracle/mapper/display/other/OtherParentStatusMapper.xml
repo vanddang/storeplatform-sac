@@ -5,7 +5,7 @@
     <select id="selectParentProductStatus" parameterType="java.util.HashMap" resultType="com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo">
         SELECT
             /* ProductStatus.xml, selectParentProductStatus, SAC : 정희원 , 2014-02-17 */
-            PAPP.PROD_ID as "parentProdId",
+            PAPP.PROD_ID as "parentChannelId",
             TP.PROD_STATUS_CD as "parentStatus"
         FROM
                 TB_DP_PROD_RSHP RS

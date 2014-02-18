@@ -33,15 +33,15 @@ public class ProductStatusController {
 
     @RequestMapping(value = "/other/parentStatus/get/v1", method = RequestMethod.GET)
     @ResponseBody
-    public ParentStatusRes parentStatus(@RequestParam String partProdId, SacRequestHeader header) {
-        ParentAppInfo parentAppInfo = productStatusService.selectParentInfo(header.getTenantHeader().getTenantId(), partProdId);
+    public ParentStatusRes parentStatus(@RequestParam String partChannelId, SacRequestHeader header) {
+        ParentAppInfo parentAppInfo = productStatusService.selectParentInfo(header.getTenantHeader().getTenantId(), partChannelId);
 
         if(parentAppInfo == null)
             throw new StorePlatformException("SAC_DSP_0009");
 
         ParentStatusRes parentStatusRes = new ParentStatusRes();
         parentStatusRes.setParentStatus(parentAppInfo.getParentStatus());
-        parentStatusRes.setParentProdId(parentAppInfo.getParentProdId());
+        parentStatusRes.setParentChannelId(parentAppInfo.getParentChannelId());
 
         return parentStatusRes;
     }

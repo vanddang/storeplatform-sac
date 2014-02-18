@@ -59,7 +59,7 @@ public class ProductStatusServiceTest {
     public void selectParentProductStatusTest() {
 
         ParentAppInfo parentAppInfo = productStatusService.selectParentInfo("S01", "0900121441");
-        assert parentAppInfo.getParentProdId() != null;
+        assert parentAppInfo.getParentChannelId() != null;
 
     }
 
@@ -74,7 +74,7 @@ public class ProductStatusServiceTest {
     @Test
     public void parentStatusTest() throws Exception {
         this.mvc.perform(
-                get("/display/other/parentStatus/get/v1?partProdId=0900121441")
+                get("/display/other/parentStatus/get/v1?partChannelId=0900121441")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37")
         )
@@ -87,7 +87,7 @@ public class ProductStatusServiceTest {
     @Test
     public void parentStatusTestWithError() throws Exception {
         this.mvc.perform(
-                get("/display/other/parentStatus/get/v1?partProdId=QQ")
+                get("/display/other/parentStatus/get/v1?partChannelId=QQ")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37")
         )
