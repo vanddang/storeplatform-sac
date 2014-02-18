@@ -1678,7 +1678,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 									distributor.setEmail(memberRes.getSellerMbr().getSellerEmail());
 									distributor.setAddress(memberRes.getSellerMbr().getSellerAddress()
 											+ memberRes.getSellerMbr().getSellerDetailAddress());
-									distributor.setRegNo(memberRes.getSellerMbr().getBizRegNumber());
+									distributor.setRegNo(memberRes.getSellerMbr().getSellerBizNumber());
 									episodeProduct.setDistributor(distributor);
 
 								}
