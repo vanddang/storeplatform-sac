@@ -1175,7 +1175,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 			for (int i = 0; i < resultList.size(); i++) {
 				shopping = resultList.get(i);
-				// 상품 정보 (상품ID)
 				layOut = new Layout();
 				// 상품 정보 (상품명)
 				Title title = this.commonGenerator.generateTitle(shopping);
@@ -1378,7 +1377,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			Layout layOut = null;
 			for (int i = 0; i < resultList.size(); i++) {
 				shopping = resultList.get(i);
-				// 상품 정보 (상품ID)
 				layOut = new Layout();
 				// 상품 정보 (상품명)
 				Title title = this.commonGenerator.generateTitle(shopping);
