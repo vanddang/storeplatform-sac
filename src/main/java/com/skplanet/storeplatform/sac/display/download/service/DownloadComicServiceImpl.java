@@ -269,6 +269,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					// 암호화 정보 (AES-128)
 					Encryption encryption = new Encryption();
 					List<Encryption> encryptionList = new ArrayList<Encryption>();
+					encryption.setProductId(prchsProdId);
 					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
 					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
 					encryption.setToken(encryptString);
