@@ -859,7 +859,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 			// Response VO를 만들기위한 생성자
 			Promotion promotion = null;
-			List<Identifier> identifierList = null;
 			List<Promotion> promotionList = new ArrayList<Promotion>();
 
 			for (int i = 0; i < resultList.size(); i++) {
@@ -867,10 +866,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 상품 정보 (상품ID)
 				promotion = new Promotion();
-				identifierList = new ArrayList<Identifier>();
-				Identifier identifier = this.commonGenerator.generateIdentifier(
-						DisplayConstants.DP_PROMOTION_IDENTIFIER_CD, shopping.getPlanId());
-				identifierList.add(identifier);
+				List<Identifier> identifierList = new ArrayList<Identifier>();
+				identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_PROMOTION_IDENTIFIER_CD,
+						shopping.getPlanId()));
+
 				// 상품 정보 (상품명)
 				Title title = this.commonGenerator.generateTitle(shopping);
 				// 이미지 정보
@@ -951,7 +950,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 			// Response VO를 만들기위한 생성자
 			Promotion promotion = null;
-			List<Identifier> identifierList = null;
 			Date date = null;
 			List<Promotion> promotionList = new ArrayList<Promotion>();
 
@@ -960,10 +958,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 상품 정보 (상품ID)
 				promotion = new Promotion();
-				identifierList = new ArrayList<Identifier>();
-				Identifier identifier = this.commonGenerator.generateIdentifier(
-						DisplayConstants.DP_PROMOTION_IDENTIFIER_CD, shopping.getPlanId());
-				identifierList.add(identifier);
+				List<Identifier> identifierList = new ArrayList<Identifier>();
+				identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_PROMOTION_IDENTIFIER_CD,
+						shopping.getPlanId()));
 
 				// 상품 정보 (상품명)
 				Title title = this.commonGenerator.generateTitle(shopping);
@@ -1096,9 +1093,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품ID)
 				product = new Product();
 				identifierList = new ArrayList<Identifier>();
-				Identifier identifier = this.commonGenerator.generateIdentifier(
-						DisplayConstants.DP_BRAND_IDENTIFIER_CD, shopping.getBrandId());
-				identifierList.add(identifier);
+				identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_BRAND_IDENTIFIER_CD,
+						shopping.getBrandId()));
 
 				// MenuList 생성
 				List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
@@ -1309,9 +1305,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품ID)
 				product = new Product();
 				identifierList = new ArrayList<Identifier>();
-				Identifier identifier = this.commonGenerator.generateIdentifier(
-						DisplayConstants.DP_THEME_IDENTIFIER_CD, shopping.getProdId());
-				identifierList.add(identifier);
+				identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_THEME_IDENTIFIER_CD,
+						shopping.getProdId()));
 
 				// 상품 정보 (상품명)
 				Title title = this.commonGenerator.generateTitle(shopping);
