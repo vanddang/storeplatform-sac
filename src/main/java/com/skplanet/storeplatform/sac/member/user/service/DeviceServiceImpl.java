@@ -639,7 +639,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
-				// 자번호 여부
+				// OPMD 여부
 				boolean isOpmd = StringUtils.substring(deviceId, 0, 3).equals("989");
 
 				if (!StringUtils.equals(nativeId, userMbrDevice.getNativeID()) && !isOpmd) {
