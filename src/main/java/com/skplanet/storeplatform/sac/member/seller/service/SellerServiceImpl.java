@@ -322,6 +322,7 @@ public class SellerServiceImpl implements SellerService {
 			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
 			String loginStatusCode = logInSellerResponse.getLoginStatusCode();
 			String isLoginSuccess = logInSellerResponse.getIsLoginSuccess();
+			String loginFailCount = String.valueOf(logInSellerResponse.getLoginFailCount());
 			// 존재 하지 않는 회원일 경우
 			if (StringUtils.equals(logInSellerResponse.getCommonResponse().getResultCode(),
 					MemberConstants.RESULT_UNKNOWN_USER_ID)) {
@@ -352,6 +353,8 @@ public class SellerServiceImpl implements SellerService {
 								MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, logInSellerResponse.getSellerKey());
 						/** 3-5. 로그인 상태 코드 주입. */
 						loginStatusCode = searchSellerResponse.getSellerMbr().getLoginStatusCode();
+						// FailCount '0' Reset
+						loginFailCount = "0";
 					}
 
 					if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
@@ -389,7 +392,7 @@ public class SellerServiceImpl implements SellerService {
 				sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
 				sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
 				sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
-				res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
+				res.setLoginFailCount(loginFailCount);
 				res.setIsSubSeller(logInSellerResponse.getIsSubSeller());
 				res.setIsLoginSuccess(isLoginSuccess);
 				res.setLoginStatusCode(loginStatusCode);
