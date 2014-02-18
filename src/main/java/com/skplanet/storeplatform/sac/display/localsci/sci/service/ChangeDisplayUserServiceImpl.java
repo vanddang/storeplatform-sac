@@ -21,11 +21,19 @@ public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 	private ChangeDisplayUserRepository changeDisplayUserRepository;
 
 	@Override
-	public void changeDisplayUser(ChangeDisplayUser changeDisplayUser) {
+	public void changeDisplayUserId(ChangeDisplayUser changeDisplayUser) {
 		this.changeDisplayUserRepository.changeMbrAvg(changeDisplayUser);
 		this.changeDisplayUserRepository.changeProdNoti(changeDisplayUser);
 		this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
 		this.changeDisplayUserRepository.changeTenantProdStats(changeDisplayUser);
+		this.changeDisplayUserRepository.changeMsgMbrMapg(changeDisplayUser);
+	}
+
+	@Override
+	public void changeDisplayUserKey(ChangeDisplayUser changeDisplayUser) {
+		this.changeDisplayUserRepository.changeMbrAvg(changeDisplayUser);
+		this.changeDisplayUserRepository.changeProdNoti(changeDisplayUser);
+		this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
 		this.changeDisplayUserRepository.changeMsgMbrMapg(changeDisplayUser);
 	}
 }

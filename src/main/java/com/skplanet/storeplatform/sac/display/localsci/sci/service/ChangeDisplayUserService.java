@@ -12,5 +12,25 @@ import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
  */
 public interface ChangeDisplayUserService {
 
-	public void changeDisplayUser(ChangeDisplayUser changeDisplayUser);
+	/**
+	 * 
+	 * <pre>
+	 * 전시테이블 중 회원 ID 변경.
+	 * </pre>
+	 * 
+	 * @param changeDisplayUser
+	 *            changeDisplayUser
+	 */
+	public void changeDisplayUserId(ChangeDisplayUser changeDisplayUser);
+
+	/**
+	 * 
+	 * <pre>
+	 * 전시테이블 중 회원 KEY 변경.
+	 * </pre>
+	 * 
+	 * @param changeDisplayUser
+	 *            changeDisplayUser
+	 */
+	public void changeDisplayUserKey(ChangeDisplayUser changeDisplayUser);
 }
