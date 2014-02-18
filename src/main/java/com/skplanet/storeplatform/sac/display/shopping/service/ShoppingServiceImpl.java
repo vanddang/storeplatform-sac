@@ -829,8 +829,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		ShoppingThemeRes res = null;
 		CommonResponse commonResponse = new CommonResponse();
 		Integer totalCount = 0;
-		List<Shopping> resultList = null;
-		Shopping shopping = null;
+		List<MetaInfo> resultList = null;
+		MetaInfo shopping = null;
 
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
@@ -852,18 +852,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// offset, Count default setting
 		this.commonOffsetCount(req);
 
-		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, Shopping.class);
+		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new Shopping();
+			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Promotion promotion = null;
-			Identifier identifier = null;
-			Title title = null;
-			Source source = null;
 			List<Identifier> identifierList = null;
-			List<Source> sourceList = null;
 			List<Promotion> promotionList = new ArrayList<Promotion>();
 
 			for (int i = 0; i < resultList.size(); i++) {
@@ -871,27 +867,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 상품 정보 (상품ID)
 				promotion = new Promotion();
-				identifier = new Identifier();
 				identifierList = new ArrayList<Identifier>();
-				identifier.setType(DisplayConstants.DP_PROMOTION_IDENTIFIER_CD);
-				identifier.setText(shopping.getPlanId());
+				Identifier identifier = this.commonGenerator.generateIdentifier(
+						DisplayConstants.DP_PROMOTION_IDENTIFIER_CD, shopping.getPlanId());
 				identifierList.add(identifier);
 				// 상품 정보 (상품명)
-				title = new Title();
-				title.setText(shopping.getPlanName());
-
+				Title title = this.commonGenerator.generateTitle(shopping);
 				// 이미지 정보
-				sourceList = new ArrayList<Source>();
-				source = new Source();
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_BANNER);
-				source.setUrl(shopping.getFilePos());
-				sourceList.add(source);
-
-				source = new Source();
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_PROMOTION);
-				source.setUrl(shopping.getFilePos1());
-
-				sourceList.add(source);
+				List<Source> sourceList = this.shoppingGenerator.generateSpecialSalesSourceList(shopping);
 
 				Date date = new Date();
 				date.setText(DateUtils.parseDate(shopping.getPlanStartDt()),
@@ -900,7 +883,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 데이터 매핑
 				promotion.setIdentifierList(identifierList);
 				promotion.setTitle(title);
-				promotion.setPromotionExplain(shopping.getSubTitleName());
+				promotion.setPromotionExplain(shopping.getSubTitlNm());
 				promotion.setUsagePeriod(date.getText());
 				promotion.setSourceList(sourceList);
 				promotionList.add(i, promotion);
@@ -939,8 +922,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setPromotionImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
 
-		List<Shopping> resultList = null;
-		Shopping shopping = null;
+		List<MetaInfo> resultList = null;
+		MetaInfo shopping = null;
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
@@ -961,18 +944,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 		this.commonOffsetCount(req);
 
 		// 프로모션 리스트 가져오기
-		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, Shopping.class);
+		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new Shopping();
+			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Promotion promotion = null;
-			Identifier identifier = null;
-			Title title = null;
-			Source source = null;
 			List<Identifier> identifierList = null;
-			List<Source> sourceList = null;
 			Date date = null;
 			List<Promotion> promotionList = new ArrayList<Promotion>();
 
@@ -982,26 +961,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품ID)
 				promotion = new Promotion();
 				identifierList = new ArrayList<Identifier>();
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_PROMOTION_IDENTIFIER_CD);
-				identifier.setText(shopping.getPlanId());
+				Identifier identifier = this.commonGenerator.generateIdentifier(
+						DisplayConstants.DP_PROMOTION_IDENTIFIER_CD, shopping.getPlanId());
 				identifierList.add(identifier);
 
 				// 상품 정보 (상품명)
-				title = new Title();
-				title.setText(shopping.getPlanName());
-
+				Title title = this.commonGenerator.generateTitle(shopping);
 				// 이미지 정보
-				sourceList = new ArrayList<Source>();
-				source = new Source();
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_BANNER);
-				source.setUrl(shopping.getFilePos());
-				sourceList.add(source);
-
-				source = new Source();
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_PROMOTION);
-				source.setUrl(shopping.getFilePos());
-				sourceList.add(source);
+				List<Source> sourceList = this.shoppingGenerator.generateSpecialSalesSourceList(shopping);
 
 				date = new Date();
 				date.setText(DateUtils.parseDate(shopping.getPlanStartDt()),
@@ -1009,7 +976,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 데이터 매핑
 				promotion.setIdentifierList(identifierList);
 				promotion.setTitle(title);
-				promotion.setPromotionExplain(shopping.getSubTitleName());
+				promotion.setPromotionExplain(shopping.getSubTitlNm());
 				promotion.setUsagePeriod(date.getText());
 				promotion.setSourceList(sourceList);
 				promotionList.add(i, promotion);
@@ -1070,11 +1037,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 		ShoppingRes res = null;
 		CommonResponse commonResponse = new CommonResponse();
 		Integer totalCount = 0;
-		List<Shopping> resultList = null;
-		List<Shopping> hotBrandList = null;
-		List<Shopping> detailList = null;
-		List<Shopping> menuBrandList = null;
-		Shopping shopping = null;
+		List<MetaInfo> resultList = null;
+		List<MetaInfo> hotBrandList = null;
+		List<MetaInfo> detailList = null;
+		List<MetaInfo> menuBrandList = null;
+		MetaInfo shopping = null;
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -1091,42 +1058,36 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
-		resultList = new ArrayList<Shopping>();
-		hotBrandList = new ArrayList<Shopping>();
-		detailList = new ArrayList<Shopping>();
-		menuBrandList = new ArrayList<Shopping>();
+		resultList = new ArrayList<MetaInfo>();
+		hotBrandList = new ArrayList<MetaInfo>();
+		detailList = new ArrayList<MetaInfo>();
+		menuBrandList = new ArrayList<MetaInfo>();
 		if (!StringUtils.isEmpty(req.getMenuId())) {
 
-			resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
+			resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
 		} else {
 			req.setMenuId(null);
-			hotBrandList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
-			for (Shopping hotBrandShopping : hotBrandList) {
+			hotBrandList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
+			for (MetaInfo hotBrandShopping : hotBrandList) {
 				resultList.add(hotBrandShopping);
 			}
-			menuBrandList = this.commonDAO.queryForList("Shopping.getShoppingBrandMenuList", req, Shopping.class);
+			menuBrandList = this.commonDAO.queryForList("Shopping.getShoppingBrandMenuList", req, MetaInfo.class);
 			for (int i = 0; i < menuBrandList.size(); i++) {
 				req.setMenuId(menuBrandList.get(i).getMenuId());
-				detailList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
-				for (Shopping detailShopping : detailList) {
+				detailList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
+				for (MetaInfo detailShopping : detailList) {
 					resultList.add(detailShopping);
 				}
 			}
 		}
 
 		if (resultList != null) {
-			shopping = new Shopping();
+			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;
-			Identifier identifier = null;
-			Menu menu = null;
-			Title title = null;
-			Source source = null;
 			List<Identifier> identifierList = null;
 
-			List<Menu> menuList = null;
-			List<Source> sourceList = null;
 			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < resultList.size(); i++) {
@@ -1135,34 +1096,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품ID)
 				product = new Product();
 				identifierList = new ArrayList<Identifier>();
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
-				identifier.setText(shopping.getBrandId());
+				Identifier identifier = this.commonGenerator.generateIdentifier(
+						DisplayConstants.DP_BRAND_IDENTIFIER_CD, shopping.getBrandId());
 				identifierList.add(identifier);
 
-				// 메뉴 정보
-				menuList = new ArrayList<Menu>();
-				menu = new Menu();
-				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-				menu.setId(shopping.getUpMenuId());
-				menu.setName(shopping.getUpMenuName());
-				menuList.add(menu);
-
-				menu = new Menu();
-				menu.setId(shopping.getMenuId());
-				menu.setName(shopping.getMenuName());
-				menuList.add(menu);
+				// MenuList 생성
+				List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
 
 				// 상품 정보 (상품명)
-				title = new Title();
-				title.setText(shopping.getBrandNm());
+				Title title = this.commonGenerator.generateTitle(shopping);
 
-				// 이미지 정보
-				sourceList = new ArrayList<Source>();
-				source = new Source();
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-				source.setUrl(shopping.getFilePos());
-				sourceList.add(source);
+				// SourceList 생성
+				List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
 
 				// 데이터 매핑
 				product.setIdentifierList(identifierList);
@@ -1190,8 +1135,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
-		List<Shopping> resultList = null;
-		Shopping shopping = null;
+		List<MetaInfo> resultList = null;
+		MetaInfo shopping = null;
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
@@ -1228,14 +1173,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 		this.commonOffsetCount(req);
 
 		// 브랜드샵 정보 가져오기
-		resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
+		resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new Shopping();
+			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Layout layOut = null;
-			Title title = null;
 			Menu menu = null;
 
 			for (int i = 0; i < resultList.size(); i++) {
@@ -1243,12 +1187,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품ID)
 				layOut = new Layout();
 				// 상품 정보 (상품명)
-				title = new Title();
-				title.setText(shopping.getBrandNm());
+				Title title = this.commonGenerator.generateTitle(shopping);
 				// 메뉴정보
 				menu = new Menu();
 				menu.setId(shopping.getMenuId());
-				menu.setName(shopping.getMenuName());
+				menu.setName(shopping.getMenuNm());
 				// 데이터 매핑
 				layOut.setTitle(title);
 				layOut.setMenu(menu);
@@ -1309,8 +1252,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		ShoppingRes res = null;
 		CommonResponse commonResponse = new CommonResponse();
 		Integer totalCount = 0;
-		List<Shopping> resultList = null;
-		Shopping shopping = null;
+		List<MetaInfo> resultList = null;
+		MetaInfo shopping = null;
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -1350,18 +1293,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// offset, Count default setting
 		this.commonOffsetCount(req);
 
-		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, Shopping.class);
+		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new Shopping();
+			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;
-			Identifier identifier = null;
-			Title title = null;
-			Source source = null;
 			List<Identifier> identifierList = null;
-			List<Source> sourceList = null;
 			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < resultList.size(); i++) {
@@ -1370,21 +1309,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품ID)
 				product = new Product();
 				identifierList = new ArrayList<Identifier>();
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_THEME_IDENTIFIER_CD);
-				identifier.setText(shopping.getThemeId());
+				Identifier identifier = this.commonGenerator.generateIdentifier(
+						DisplayConstants.DP_THEME_IDENTIFIER_CD, shopping.getProdId());
 				identifierList.add(identifier);
 
 				// 상품 정보 (상품명)
-				title = new Title();
-				title.setText(shopping.getThemeName());
+				Title title = this.commonGenerator.generateTitle(shopping);
 
-				// 이미지 정보
-				sourceList = new ArrayList<Source>();
-				source = new Source();
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-				source.setUrl(shopping.getFilePos());
-				sourceList.add(source);
+				// SourceList 생성
+				List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
 
 				// 데이터 매핑
 				product.setIdentifierList(identifierList);
@@ -1412,8 +1345,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
-		List<Shopping> resultList = null;
-		Shopping shopping = null;
+		List<MetaInfo> resultList = null;
+		MetaInfo shopping = null;
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
@@ -1446,22 +1379,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 		this.commonOffsetCount(req);
 
 		// 테마 정보 가져오기
-		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, Shopping.class);
+		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new Shopping();
+			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Layout layOut = null;
-			Title title = null;
-
 			for (int i = 0; i < resultList.size(); i++) {
 				shopping = resultList.get(i);
 				// 상품 정보 (상품ID)
 				layOut = new Layout();
 				// 상품 정보 (상품명)
-				title = new Title();
-				title.setText(shopping.getThemeName());
+				Title title = this.commonGenerator.generateTitle(shopping);
 				// 데이터 매핑
 				layOut.setTitle(title);
 			}

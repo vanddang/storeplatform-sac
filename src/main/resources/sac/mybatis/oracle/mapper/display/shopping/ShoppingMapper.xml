@@ -581,28 +581,28 @@
     </select>            
     
     <!-- 기획전 상품 조회-->
-    <select id="getSpecialSalesList" parameterType="ShoppingReq" resultType="Shopping">
+    <select id="getSpecialSalesList" parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getSpecialSalesList,기획전 상품 조회, 김형식/SK플래닛 , 2014-02-03 */
       SELECT * FROM ( 
            SELECT 
                  KK.*
-                ,COUNT(planId) OVER() AS TOTALCOUNT
+                ,COUNT(PLAN_ID) OVER() AS TOTALCOUNT
                 ,ROWNUM AS RNUM   
             FROM(      
-                SELECT PLAN_ID as planId
-                      ,PLAN_NM as PlanName
-                      ,SUB_TITL_NM as subTitleName
-                      ,LINK_URL as linkUrl
-                      ,PLAN_START_DT as planStartDt
-                      ,PLAN_END_DT as planEndDt
-                      ,PRZWNER_ANNO_DT przwnerAnnoDt
-                      ,PLAN_GIFT_NM as planGiftName
+                SELECT PLAN_ID
+                      ,PLAN_NM as prodNm
+                      ,SUB_TITL_NM
+                      ,LINK_URL
+                      ,PLAN_START_DT
+                      ,PLAN_END_DT
+                      ,PRZWNER_ANNO_DT
+                      ,PLAN_GIFT_NM
 					  ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
 						 WHERE PROD_ID = PLAN_ID AND IMG_CD =#{bannerImgCd}
-					   )filePos
+					   )bannerFilePath
                       ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
                          WHERE PROD_ID = PLAN_ID AND IMG_CD =#{promotionImgCd}
-                       )filePos1					   
+                       )FILE_PATH					   
                  FROM TB_DP_PLAN_INFO_MANG
                 WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN PLAN_START_DT AND PLAN_END_DT
                   AND PLAN_STATUS_CD = 'DP006501'
@@ -733,11 +733,11 @@
     </select>    
         
     <!-- 브랜드샵 - 메인 메뉴 리스트 조회-->
-    <select id="getShoppingBrandMenuList" parameterType="ShoppingReq" resultType="Shopping">
+    <select id="getShoppingBrandMenuList" parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getShoppingBrandMenuList,브랜드샵 - 메인 메뉴 리스트 조회, 김형식/SK플래닛 , 2014-01-30 */
         SELECT  
-                A.MENU_ID as menuId
-               ,B.MENU_NM as menuName
+                A.MENU_ID 
+               ,B.MENU_NM 
           FROM  TB_DP_MENU_CATEGORY A
                ,TB_DP_MENU_CATEGORY_DESC B
          WHERE A.UP_MENU_ID ='DP28'
@@ -748,7 +748,7 @@
     </select> 
     
     <!-- 브랜드샵 - 메인 리스트 조회-->
-    <select id="getBrandshopMainList" parameterType="ShoppingReq" resultType="Shopping">
+    <select id="getBrandshopMainList" parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getBrandshopMainList,브랜드샵 - 메인 리스트 조회, 김형식/SK플래닛 , 2014-01-30 */
        SELECT * FROM (
            SELECT 
@@ -757,25 +757,25 @@
                     ,ROWNUM AS RNUM         
              FROM(
                 SELECT 
-                           BRAND_ID AS brandId
-                         , BRAND_NM 
-                         , MENU_ID AS menuId
+                           BRAND_ID 
+                         , BRAND_NM AS catalogNm
+                         , MENU_ID 
                           <if test='menuId == null and brandId == null'> 
-                         , '쇼핑 HOT' AS menuName
+                         , '쇼핑 HOT' AS menuNm
                          </if>
                          <if test='menuId != null or brandId !=null'>
-                         , MENU_NM AS menuName
+                         , MENU_NM 
                          </if>
-                         , TOP_MENU_ID as upMenuId
+                         , TOP_MENU_ID 
                          ,(SELECT MENU_NM
                               FROM TB_DP_MENU_CATEGORY_DESC
                              WHERE MENU_ID = TOP_MENU_ID
                                AND LANG_CD = #{langCd}          /* ko : 한국어 */
                                AND ROWNUM = 1
-                           ) AS upMenuName                      
+                           ) AS TOP_MENU_NM                      
 	                     ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
 	                        WHERE PROD_ID = BRAND_ID AND IMG_CD =#{imageCd}
-	                      )filePos
+	                      )FILE_PATH
                  FROM (
                     SELECT *
                     FROM (
@@ -927,7 +927,7 @@
     </select>     
 
     <!-- 쇼핑테마  리스트 조회-->
-    <select id="getThemeList" parameterType="ShoppingReq" resultType="Shopping">
+    <select id="getThemeList" parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getThemeList,쇼핑테마  리스트 조회, 김형식/SK플래닛 , 2014-02-03 */
        SELECT * FROM (
            SELECT 
@@ -935,12 +935,12 @@
                     ,COUNT(1) OVER() AS TOTALCOUNT
                     ,ROWNUM AS RNUM         
              FROM(       
-                SELECT THEME_ID as themeId
-                     , THEME_NM as themeName
+                SELECT THEME_ID as prodId
+                     , THEME_NM as prodNm
                      , LINK_URL as linkUrl
                      ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
                         WHERE PROD_ID = THEME_ID AND IMG_CD =#{imageCd}
-                      )filePos                     
+                      )FILE_PATH                     
                   FROM TB_DP_THEME_INFO
                  WHERE EXPO_YN = 'Y'
                    AND THEME_STATUS_CD = 'DP006501'

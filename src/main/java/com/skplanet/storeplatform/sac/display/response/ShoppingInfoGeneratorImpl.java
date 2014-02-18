@@ -9,11 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
@@ -108,6 +112,30 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 		price.setDiscountRate(metaInfo.getDcRate());
 		price.setText(metaInfo.getProdAmt());
 		return price;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSpecialSalesSourceList(com.skplanet
+	 * .storeplatform .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Source> generateSpecialSalesSourceList(MetaInfo metaInfo) {
+		List<Source> sourceList = new ArrayList<Source>();
+
+		Source source = new Source();
+		source.setType(DisplayConstants.DP_SOURCE_TYPE_BANNER);
+		source.setUrl(metaInfo.getBannerFilePath());
+		sourceList.add(source);
+
+		source = new Source();
+		source.setType(DisplayConstants.DP_SOURCE_TYPE_PROMOTION);
+		source.setUrl(metaInfo.getFilePath());
+		sourceList.add(source);
+
+		return sourceList;
 	}
 
 }

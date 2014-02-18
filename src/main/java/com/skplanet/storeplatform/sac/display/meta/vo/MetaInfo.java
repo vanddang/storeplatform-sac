@@ -191,6 +191,14 @@ public class MetaInfo {
 	private String specialSale;
 	private String soldOut;
 
+	private String planId;
+	private String PlanNm;
+	private String subTitlNm;
+	private String planStartDt;
+	private String planEndDt;
+	private String przwnerAnnoDt;
+	private String planGiftNm;
+
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
 	private String tagNm;
@@ -2943,6 +2951,62 @@ public class MetaInfo {
 	 */
 	public void setSoldOut(String soldOut) {
 		this.soldOut = soldOut;
+	}
+
+	public String getPlanId() {
+		return this.planId;
+	}
+
+	public void setPlanId(String planId) {
+		this.planId = planId;
+	}
+
+	public String getPlanNm() {
+		return this.PlanNm;
+	}
+
+	public void setPlanNm(String planNm) {
+		this.PlanNm = planNm;
+	}
+
+	public String getSubTitlNm() {
+		return this.subTitlNm;
+	}
+
+	public void setSubTitlNm(String subTitlNm) {
+		this.subTitlNm = subTitlNm;
+	}
+
+	public String getPlanStartDt() {
+		return this.planStartDt;
+	}
+
+	public void setPlanStartDt(String planStartDt) {
+		this.planStartDt = planStartDt;
+	}
+
+	public String getPlanEndDt() {
+		return this.planEndDt;
+	}
+
+	public void setPlanEndDt(String planEndDt) {
+		this.planEndDt = planEndDt;
+	}
+
+	public String getPrzwnerAnnoDt() {
+		return this.przwnerAnnoDt;
+	}
+
+	public void setPrzwnerAnnoDt(String przwnerAnnoDt) {
+		this.przwnerAnnoDt = przwnerAnnoDt;
+	}
+
+	public String getPlanGiftNm() {
+		return this.planGiftNm;
+	}
+
+	public void setPlanGiftNm(String planGiftNm) {
+		this.planGiftNm = planGiftNm;
 	}
 
 }
