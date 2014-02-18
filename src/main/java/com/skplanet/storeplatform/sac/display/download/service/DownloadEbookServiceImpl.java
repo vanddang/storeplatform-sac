@@ -195,7 +195,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					this.logger.debug("[getDownloadEbookInfo] prchsProdId : {}", prchsProdId);
 					this.logger.debug("----------------------------------------------------------------");
 
-					// 소장, 대여 구분(Store : 소장, Play : 대여)
+					// 소장, 대여 확인
 					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
 						if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 							prchsState = "payment";
@@ -207,7 +207,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						downloadEbookReq.setDwldExprDt(dwldExprDt);
 
 						// 대여 상품 만료여부 조회
-						prchsState = (String) this.commonDAO.queryForObject("Download.getEbookPurchaseState",
+						prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
 								downloadEbookReq);
 					}
 				}

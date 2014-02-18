@@ -677,8 +677,8 @@
 		   AND KB.LANG_CD(+) = #{langCd}
     </select>
     
-    <!-- ebook 대여 상품 구매상태 조회 -->
-    <select id="getEbookPurchaseState" parameterType="DownloadComicSacReq" resultType="java.lang.String">
+    <!-- for download 대여 상품 구매상태 조회 -->
+    <select id="getDownloadPurchaseState" parameterType="DownloadEbookSacReq" resultType="java.lang.String">
         SELECT /* DownloadMapper.xml, getEbookPurchaseState, tae hee Lee, 2014-02-03 */
                CASE WHEN TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') BETWEEN #{prchsDt} AND #{dwldExprDt} THEN 'payment' ELSE 'expired' END AS PURCHASE_STATE
           FROM DUAL

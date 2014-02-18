@@ -164,15 +164,27 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 					prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
 
-					if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
-						prchsState = "payment";
-					} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
-						prchsState = "gift";
+					// 소장상품 확인
+					if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(metaInfo.getUsePeriodUnitCd())) {
+						if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+							prchsState = "payment";
+						} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+							prchsState = "gift";
+						}
+					} else {
+						downloadComicReq.setPrchsDt(prchsDt);
+						downloadComicReq.setDwldExprDt(dwldExprDt);
+
+						// 대여 상품 만료여부 조회
+						prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
+								downloadComicReq);
 					}
 
 					this.logger.debug("----------------------------------------------------------------");
 					this.logger.debug("[getDownloadComicInfo] prchsId : {}", prchsId);
 					this.logger.debug("[getDownloadComicInfo] prchsDt : {}", prchsDt);
+					this.logger.debug("[getDownloadComicInfo] useExprDt : {}", useExprDt);
+					this.logger.debug("[getDownloadComicInfo] dwldExprDt : {}", dwldExprDt);
 					this.logger.debug("[getDownloadComicInfo] prchsState : {}", prchsState);
 					this.logger.debug("[getDownloadComicInfo] prchsProdId : {}", prchsProdId);
 					this.logger.debug("----------------------------------------------------------------");
