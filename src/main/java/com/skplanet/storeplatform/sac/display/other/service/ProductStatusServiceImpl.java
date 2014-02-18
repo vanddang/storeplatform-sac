@@ -7,10 +7,10 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.display.product.service;
+package com.skplanet.storeplatform.sac.display.other.service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.product.vo.ParentAppInfo;
+import com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,6 @@ public class ProductStatusServiceImpl implements ProductStatusService {
         param.put("tenantId", tenantId);
         param.put("partProdId", partProdId);
 
-        return commonDAO.queryForObject("ProductStatus.selectParentProductStatus", param, ParentAppInfo.class);
+        return commonDAO.queryForObject("OtherParentStatus.selectParentProductStatus", param, ParentAppInfo.class);
     }
 }

@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.product;
 
-import com.skplanet.storeplatform.sac.display.product.service.ProductStatusService;
-import com.skplanet.storeplatform.sac.display.product.vo.ParentAppInfo;
+import com.skplanet.storeplatform.sac.display.other.service.ProductStatusService;
+import com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,7 +74,7 @@ public class ProductStatusServiceTest {
     @Test
     public void parentStatusTest() throws Exception {
         this.mvc.perform(
-                get("/display/product/parentStatus/get/v1?partProdId=0900121441")
+                get("/display/other/parentStatus/get/v1?partProdId=0900121441")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37")
         )
@@ -87,7 +87,7 @@ public class ProductStatusServiceTest {
     @Test
     public void parentStatusTestWithError() throws Exception {
         this.mvc.perform(
-                get("/display/product/parentStatus/get/v1?partProdId=QQ")
+                get("/display/other/parentStatus/get/v1?partProdId=QQ")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37")
         )
@@ -101,7 +101,7 @@ public class ProductStatusServiceTest {
     @Test
     public void parentStatusTestWithNoParam() throws Exception {
         this.mvc.perform(
-                get("/display/product/parentStatus/get/v1")
+                get("/display/other/parentStatus/get/v1")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37")
         )

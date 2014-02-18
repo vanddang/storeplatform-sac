@@ -7,9 +7,9 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.display.product.service;
+package com.skplanet.storeplatform.sac.display.other.service;
 
-import com.skplanet.storeplatform.sac.display.product.vo.ParentAppInfo;
+import com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo;
 
 /**
  * <p>

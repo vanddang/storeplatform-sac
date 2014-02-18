@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ProductStatus">
+<mapper namespace="OtherParentStatus">
     
-    <select id="selectParentProductStatus" parameterType="java.util.HashMap" resultType="com.skplanet.storeplatform.sac.display.product.vo.ParentAppInfo">
+    <select id="selectParentProductStatus" parameterType="java.util.HashMap" resultType="com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo">
         SELECT
             /* ProductStatus.xml, selectParentProductStatus, SAC : 정희원 , 2014-02-17 */
             PAPP.PROD_ID as "parentProdId",

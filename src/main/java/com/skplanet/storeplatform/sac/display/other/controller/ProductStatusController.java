@@ -7,13 +7,13 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.display.product.controller;
+package com.skplanet.storeplatform.sac.display.other.controller;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.product.ParentStatusRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.ParentStatusRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.product.service.ProductStatusService;
-import com.skplanet.storeplatform.sac.display.product.vo.ParentAppInfo;
+import com.skplanet.storeplatform.sac.display.other.service.ProductStatusService;
+import com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +31,7 @@ public class ProductStatusController {
     @Autowired
     private ProductStatusService productStatusService;
 
-    @RequestMapping(value = "/product/parentStatus/get/v1", method = RequestMethod.GET)
+    @RequestMapping(value = "/other/parentStatus/get/v1", method = RequestMethod.GET)
     @ResponseBody
     public ParentStatusRes parentStatus(@RequestParam String partProdId, SacRequestHeader header) {
         ParentAppInfo parentAppInfo = productStatusService.selectParentInfo(header.getTenantHeader().getTenantId(), partProdId);
