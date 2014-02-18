@@ -21,7 +21,6 @@ public class ConversionClassSacReq extends CommonInfo {
 	/** 인증 키. */
 	@NotBlank
 	private String sessionKey;
-
 	/** 판매자 key. */
 	private String sellerKey;
 	/** 현재 구분코드. */
@@ -39,96 +38,96 @@ public class ConversionClassSacReq extends CommonInfo {
 	/** 판매자 ID. */
 	private String sellerId;
 	/** 법인등록번호. */
-	private String sellerBizCorpNumber; // CORP_REG_NO 법인등록번호// 추가된것 같음
+	private String sellerBizCorpNumber;
 	/** CEO명. */
-	private String ceoName; // CEO_NM
+	private String ceoName;
 	/** 담당자명. */
-	private String charger; // CHRGPERS_NM 담당자 명 >> api 에 포함되지 않아도 되는부분이다. member 에서 가져와도 된다.
+	private String charger;
 	/** 대표 Email. */
-	private String repEmail; // CHRGPERS_EMAIL >> member 테이블에 는 없네? member 테이블네 넣을때는 sellerEmail EMAIL 넣으면 될듯
+	private String repEmail;
 	/** 유선 전화번호. */
-	private String cordedTelephone; // CHRGPERS_WIRE_TEL_NO >> member 테이블에 는 없네? member 테이블네 넣을때는 WIRE_TEL_NO 넣으면 될듯
-	/** 무선 전화번호. */
-	private String sellerPhone; // CHRGPERS_WILS_TEL_NO 담당자 무선전화번호 >> member 테이블에 는 없네? member 테이블네 넣을때는 WILS_TEL_NO 넣으면
+	private String cordedTelephone;
+	/** 담당자 무선 전화번호. */
+	private String chargerPhone;
 	/** SMS 수신여부. */
-	private String isRecvSMS; // SMS_RECV_YN 넣으면 될듯
+	private String isRecvSMS;
 	/** 공인인증여부. */
-	private String isOfficialAuth; // PUB_AUTH_YN PUB_AUTH_YN 공인인증여부 >>판매자 테이블에는 매치되는 컬럼 없음
+	private String isOfficialAuth;
 	/** 계좌번호. (필수). */
 	@NotBlank
-	private String bankAccount; // ACCT_NO 계좌번호
+	private String bankAccount;
 	/** 예금자명. */
-	private String bankAcctName; // DEPSTR_NM 예금자명
+	private String bankAcctName;
 	/** 은행코드. */
-	private String bankCode; // BANK_CD 은행코드
+	private String bankCode;
 	/** 계좌인증여부. */
-	private String isAccountReal; // ACCT_AUTH_YN 계좌인증여부
+	private String isAccountReal;
 	/** 회사명. */
-	private String sellerCompany; // COMP_NM 회사명 >> api 추가 하지말고 판매자 테이블에서 가져온다.
+	private String sellerCompany;
 	/** 사업자 등록번호. */
-	private String sellerBizNumber; // BIZ_REG_NO 사업자등록번호 >> api 추가 하지말고 판매자 테이블에서 가져온다.
+	private String sellerBizNumber;
 	/** 업태명. */
-	private String sellerBizCategory; // COND_NM 업태명
+	private String sellerBizCategory;
 	/** 업종명. */
-	private String sellerBizType; // INDT_NM(서비스,이동통신,영상제작,시스템유지보수) 업종명
+	private String sellerBizType;
 	/** 대표전화 국가번호. */
-	private String repPhoneArea; // REP_TEL_NATION_NO 대표전화 국가 번호
+	private String repPhoneArea;
 	/** 대표전화번호. */
-	private String repPhone; // REP_TEL_NO 대표전화번호
+	private String repPhone;
 	/** 대표팩스 국가번호. */
-	private String repFaxArea; // FAX_NATION_NO 대표팩스번호 국가코드 => 변경됨 FAX_TEL_NATION_NO
+	private String repFaxArea;
 	/** 대표팩스번호. */
-	private String repFax; // FAX_NO 대표팩스번호
+	private String repFax;
 	/** 우편번호. */
-	private String sellerZip; // ZIP 우편번호 => ENPRPL_ZIP 바뀌었나?
+	private String sellerBizZip;
 	/** 주소. */
-	private String sellerAddress; // ADDR 주소 => ENPRPL_ADDR 바뀌었나?
+	private String sellerBizAddress;
 	/** 상세주소. */
-	private String sellerDetailAddress; // DTL_ADDR 상세주소 => ENPRPL_ADDR_DTL 바뀌었나?
+	private String sellerBizDetailAddress;
 	/** 통신판매업 신고여부. */
-	private String isBizRegistered; // MSALBIZ_DECL_YN 통신판매업 신고 여부 => CMNT_SALBIZ_DECL_YN 바뀌었나?
+	private String isBizRegistered;
 	/** 통신판매업 신고번호. */
-	private String bizRegNumber; // MSALBIZ_DECL_NO 통신판매업 신고 번호 => CMNT_SALBIZ_DECL_NO 바뀌었나?
+	private String bizRegNumber;
 	/** 통신판매업 미신고 사유코드. */
-	private String bizUnregReason; // MSALBIZ_UNDECL_REASON_CD 통신판매업 미신고 사유 코드 =>CMNT_SALBIZ_UNDECL_REASON_CD 바뀌었나?
+	private String bizUnregReason;
 	/** 통신사 코드. */
-	private String sellerTelecom; // MNO_CD 통신사 코드 >> api 추가 하지말고 판매자 테이블에서 가져온다.
+	private String sellerTelecom;
 	/** 은행명. */
-	private String bankName; // FR_BANK_NM 은행명
+	private String bankName;
 	/** 은행지점코드. */
-	private String bankBranchCode; // FR_BRCH_CD 은행지점코드
+	private String bankBranchCode;
 	/** 은행지점명. */
-	private String bankBranch; // FR_BRCH_NM 은행지점명
+	private String bankBranch;
 	/** 은행주소. */
-	private String bankAddress; // FR_BANK_ADDR 외국은행주소
+	private String bankAddress;
 	/** 은행 위치. */
-	private String bankLocation; // FR_BANK_LOC 외국은행 위치
+	private String bankLocation;
 	/** Swift 코드. */
-	private String swiftCode; // INTL_SWIFT_CD Swift 코드
+	private String swiftCode;
 	/** IBAN 코드. */
-	private String ibanCode; // INTL_IBAN IBAN 코드
+	private String ibanCode;
 	/** ABA 코드. */
-	private String abaCode; // INTL_ABA ABA 코드
+	private String abaCode;
 	/** TPIN 코드. */
-	private String tpinCode; // FR_TPIN_NO
+	private String tpinCode;
 	/** CEO 생년월일. */
-	private String ceoBirthDay; // CEO_BIRTH
+	private String ceoBirthDay;
 	/** 언어 코드. */
-	private String sellerLanguage; // LANG_CD
+	private String sellerLanguage;
 	/** 벤더코드. */
-	private String vendorCode; // // VENDOR_CD 벤더코드
+	private String vendorCode;
 	/** 간이 과세여부. */
-	private String isBizTaxable; // EASY_TXN_YN 간이 과세 여부 ##### 전환 쪽에서 사용
+	private String isBizTaxable;
 	/** 심의 등급코드. */
-	private String bizGrade; // DELIB_GRD_CD 심의 등급코드 ##### 전환 쪽에서 사용
+	private String bizGrade;
 	/** 자동 차감 가능 대상여부. */
-	private String isDeductible; // AUTO_DED_POSB_TARGET_YN 자동 차감 가능 대상 여부 ##### 전환 쪽에서 사용
+	private String isDeductible;
 	/** 입점 상점코드. */
-	private String marketCode; // LNCHG_MALL_CD 입점 상점코드 ##### 전환 쪽에서 사용
+	private String marketCode;
 	/** 입점 회원 상태코드. */
-	private String marketStatus; // LNCHG_MBR_STATUS_CD 입점 회원 상태코드 ##### 전환 쪽에서 사용
+	private String marketStatus;
 	/** 계좌인증일시. */
-	private String accountRealDate; // ACCT_AUTH_DT 계좌인증일시
+	private String accountRealDate;
 
 	/** 서류 리스트. */
 	private List<ExtraDocument> extraDocumentList;
@@ -253,12 +252,12 @@ public class ConversionClassSacReq extends CommonInfo {
 		this.cordedTelephone = cordedTelephone;
 	}
 
-	public String getSellerPhone() {
-		return this.sellerPhone;
+	public String getChargerPhone() {
+		return this.chargerPhone;
 	}
 
-	public void setSellerPhone(String sellerPhone) {
-		this.sellerPhone = sellerPhone;
+	public void setChargerPhone(String chargerPhone) {
+		this.chargerPhone = chargerPhone;
 	}
 
 	public String getIsRecvSMS() {
@@ -373,28 +372,28 @@ public class ConversionClassSacReq extends CommonInfo {
 		this.repFax = repFax;
 	}
 
-	public String getSellerZip() {
-		return this.sellerZip;
+	public String getSellerBizZip() {
+		return this.sellerBizZip;
 	}
 
-	public void setSellerZip(String sellerZip) {
-		this.sellerZip = sellerZip;
+	public void setSellerBizZip(String sellerBizZip) {
+		this.sellerBizZip = sellerBizZip;
 	}
 
-	public String getSellerAddress() {
-		return this.sellerAddress;
+	public String getSellerBizAddress() {
+		return this.sellerBizAddress;
 	}
 
-	public void setSellerAddress(String sellerAddress) {
-		this.sellerAddress = sellerAddress;
+	public void setSellerBizAddress(String sellerBizAddress) {
+		this.sellerBizAddress = sellerBizAddress;
 	}
 
-	public String getSellerDetailAddress() {
-		return this.sellerDetailAddress;
+	public String getSellerBizDetailAddress() {
+		return this.sellerBizDetailAddress;
 	}
 
-	public void setSellerDetailAddress(String sellerDetailAddress) {
-		this.sellerDetailAddress = sellerDetailAddress;
+	public void setSellerBizDetailAddress(String sellerBizDetailAddress) {
+		this.sellerBizDetailAddress = sellerBizDetailAddress;
 	}
 
 	public String getIsBizRegistered() {
@@ -571,10 +570,6 @@ public class ConversionClassSacReq extends CommonInfo {
 
 	public void setAccountRealDate(String accountRealDate) {
 		this.accountRealDate = accountRealDate;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	/**
