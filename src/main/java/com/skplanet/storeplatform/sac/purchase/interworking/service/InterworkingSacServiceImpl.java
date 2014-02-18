@@ -13,15 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import com.skplanet.storeplatform.external.client.interpark.sci.InterparkSCI;
 import com.skplanet.storeplatform.external.client.interpark.vo.CreateOrderEcReq;
 import com.skplanet.storeplatform.external.client.interpark.vo.CreateOrderEcRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.interworking.sci.InterworkingSCI;
 import com.skplanet.storeplatform.purchase.client.interworking.vo.InterworkingScReq;
 import com.skplanet.storeplatform.purchase.client.interworking.vo.InterworkingScRes;
-import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.CreateOrderReq;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.CreateOrderRes;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSacReq;
@@ -39,8 +38,6 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 	@Autowired
 	private InterparkSCI interparkSCI;
 	@Autowired
-	private PurchaseCommonUtils purchaseCommonUtils;
-	@Autowired
 	private InterworkingSCI interworkingSCI;
 
 	/**
@@ -51,15 +48,8 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 	 * @return
 	 */
 	@Override
-	public void createInterworking(@Validated InterworkingSacReq interworkingSacReq) {
+	public void createInterworking(InterworkingSacReq interworkingSacReq) {
 
-		// DataBinder dataBinder = new DataBinder(interworkingSacReq);
-		// BindingResult result = dataBinder.getBindingResult();
-		//
-		// this.validator.validate(interworkingSacReq, result, null);
-		// if (result.hasErrors()) {
-		// throw new StorePlatformException("SAC_PUR_0001", result.getErrorCount());
-		// }
 		/**
 		 * 상품ID로 전시호출후 응답값이 (인터파크,씨네21)일 경우 배치를 위해 생성될 table에 insert후 인터파크일 경우에는 실시간 연동처리를 한다. 전시쪽에서 조회가 어떻게 될지 몰라 현재
 		 * 구현을 위해 test변수 temp을 사용한다.
@@ -77,21 +67,23 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 
 			this.logger.debug("@@@@@@@@@@@@ getResult @@@@@@@@@@@@ {}", interworkingScRes.getResult());
 			if (temp.equals("interpark") && interworkingScRes.getResult() > 0) {
-				this.logger.debug("@@@@@@@@@@@@ interpark @@@@@@@@@@@@ ");
-				CreateOrderReq createOrderReq = new CreateOrderReq();
+				try {
+					this.logger.debug("@@@@@@@@@@@@ interpark @@@@@@@@@@@@ ");
+					CreateOrderReq createOrderReq = new CreateOrderReq();
 
-				createOrderReq.setRevOrdNo(interworkingSacReq.getPrchsId());
-				createOrderReq.setOrdDts(interworkingSacReq.getPrchsDt());
-				createOrderReq.setPrdNo(interworkingSacReq.getCompContentsId());
-				createOrderReq.setItemNo(interworkingSacReq.getProdId());
-				createOrderReq.setPrice(interworkingSacReq.getProdAmt());
+					createOrderReq.setRevOrdNo(interworkingSacReq.getPrchsId());
+					createOrderReq.setOrdDts(interworkingSacReq.getPrchsDt());
+					createOrderReq.setPrdNo(interworkingSacReq.getCompContentsId());
+					createOrderReq.setItemNo(interworkingSacReq.getProdId());
+					createOrderReq.setPrice(interworkingSacReq.getProdAmt());
 
-				// try {
-				// // interpark 실시간 연동처리
-				// this.createOrder(createOrderReq);
-				// } catch (Exception ex) {
-				// throw new StorePlatformException("SAC_PUR_3000", ex.getMessage());
-				// }
+					// interpark 실시간 연동처리
+					this.createOrder(createOrderReq);
+				} catch (StorePlatformException ex) {
+					if (ex.getErrorInfo().getCode().equals("EC_INTERPARK_9996")) {
+						throw new StorePlatformException("SAC_PUR_3000");
+					}
+				}
 			}
 
 		}

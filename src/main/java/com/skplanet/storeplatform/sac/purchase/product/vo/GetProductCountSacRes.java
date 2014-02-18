@@ -22,9 +22,9 @@ public class GetProductCountSacRes extends CommonInfo {
 	private String prodId;
 	private Integer prchsCnt;
 	private Integer prchsAmt;
-	private String prchsMn;
-	private Integer prchsMnCnt;
-	private Integer prchsMnAmt;
+	private String prchsMm;
+	private Integer prchsMmCnt;
+	private Integer prchsMmAmt;
 	private String prchsDay;
 	private Integer prchsDayCnt;
 	private Integer prchsDayAmt;
@@ -75,48 +75,48 @@ public class GetProductCountSacRes extends CommonInfo {
 	}
 
 	/**
-	 * @return the prchsMn
+	 * @return the prchsMm
 	 */
-	public String getPrchsMn() {
-		return this.prchsMn;
+	public String getPrchsMm() {
+		return this.prchsMm;
 	}
 
 	/**
-	 * @param prchsMn
-	 *            the prchsMn to set
+	 * @param prchsMm
+	 *            the prchsMm to set
 	 */
-	public void setPrchsMn(String prchsMn) {
-		this.prchsMn = prchsMn;
+	public void setPrchsMm(String prchsMm) {
+		this.prchsMm = prchsMm;
 	}
 
 	/**
-	 * @return the prchsMnCnt
+	 * @return the prchsMmCnt
 	 */
-	public Integer getPrchsMnCnt() {
-		return this.prchsMnCnt;
+	public Integer getPrchsMmCnt() {
+		return this.prchsMmCnt;
 	}
 
 	/**
-	 * @param prchsMnCnt
-	 *            the prchsMnCnt to set
+	 * @param prchsMmCnt
+	 *            the prchsMmCnt to set
 	 */
-	public void setPrchsMnCnt(Integer prchsMnCnt) {
-		this.prchsMnCnt = prchsMnCnt;
+	public void setPrchsMmCnt(Integer prchsMmCnt) {
+		this.prchsMmCnt = prchsMmCnt;
 	}
 
 	/**
-	 * @return the prchsMnAmt
+	 * @return the prchsMmAmt
 	 */
-	public Integer getPrchsMnAmt() {
-		return this.prchsMnAmt;
+	public Integer getPrchsMmAmt() {
+		return this.prchsMmAmt;
 	}
 
 	/**
-	 * @param prchsMnAmt
-	 *            the prchsMnAmt to set
+	 * @param prchsMmAmt
+	 *            the prchsMmAmt to set
 	 */
-	public void setPrchsMnAmt(Integer prchsMnAmt) {
-		this.prchsMnAmt = prchsMnAmt;
+	public void setPrchsMmAmt(Integer prchsMmAmt) {
+		this.prchsMmAmt = prchsMmAmt;
 	}
 
 	/**

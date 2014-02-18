@@ -137,6 +137,7 @@ public class GiftController {
 		req.setDeviceKey(giftConfirmSacReq.getDeviceKey());
 		req.setPrchsId(giftConfirmSacReq.getPrchsId());
 		req.setRecvDt(giftConfirmSacReq.getRecvDt());
+		req.setRecvConfPathCd(giftConfirmSacReq.getRecvConfPathCd());
 		req.setProdId(giftConfirmSacReq.getProdId());
 
 		return req;
@@ -162,7 +163,7 @@ public class GiftController {
 	 * reqConvert.
 	 * 
 	 * @param giftReceiveSacReq
-	 *            요청정보
+	 *            선물수신확인 체크 요청정보
 	 * @param header
 	 *            테넌트 헤더정보
 	 * @return giftReceiveSacReq

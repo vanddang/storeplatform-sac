@@ -16,14 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceSacSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
@@ -36,7 +36,7 @@ import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacServi
  */
 @Controller
 @LocalSCI
-public class ExistenceSCIController implements ExistenceSacSCI {
+public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -52,10 +52,19 @@ public class ExistenceSCIController implements ExistenceSacSCI {
 	 */
 	@Override
 	@ResponseBody
-	public ExistenceListRes searchExistenceList(@Validated ExistenceReq existenceReq) {
+	public ExistenceListRes searchExistenceList(ExistenceReq existenceReq) {
+
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		this.logger.debug("@@@@@@ Start Internal searchExistenceList @@@@@@");
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		// 필수값 체크
+		if (existenceReq.getTenantId() == null || !existenceReq.getTenantId().equals("")) {
+			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+		}
+		if (existenceReq.getUserKey() == null || !existenceReq.getUserKey().equals("")) {
+			throw new StorePlatformException("SAC_PUR_0001", "UserKey");
+		}
+
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
 
 		ExistenceScReq req = this.reqConvert(existenceReq);

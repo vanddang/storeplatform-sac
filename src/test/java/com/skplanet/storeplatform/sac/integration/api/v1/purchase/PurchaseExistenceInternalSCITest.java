@@ -25,7 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceSacSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
@@ -41,12 +41,12 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 @ContextConfiguration({ "classpath*:spring-test/context-test.xml" })
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @WebAppConfiguration
-public class PurchaseExistenceSCITest {
+public class PurchaseExistenceInternalSCITest {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private ExistenceSacSCI existenceSacSCI;
+	private ExistenceInternalSacSCI existenceInternalSacSCI;
 
 	/**
 	 * 
@@ -107,7 +107,7 @@ public class PurchaseExistenceSCITest {
 		// 응답받을 객체 생성
 		ExistenceListRes existenceListRes = new ExistenceListRes();
 		// 기구매체크 조회
-		existenceListRes = this.existenceSacSCI.searchExistenceList(existenceReq);
+		existenceListRes = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
 		// 조회한 리스트 확인
 		for (int i = 0; i < existenceListRes.getExistenceListRes().size(); i++) {
 			this.logger.debug("@@@@@@@@@@@@ getPrchsId @@@@@@@@@@@@@@@@@@@ : {}", existenceListRes
