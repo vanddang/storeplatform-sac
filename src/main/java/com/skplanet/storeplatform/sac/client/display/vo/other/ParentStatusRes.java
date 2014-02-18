@@ -21,16 +21,16 @@ public class ParentStatusRes extends CommonInfo {
 
     private static final long serialVersionUID = 1L;
 
-    private String parentProdId;
+    private String parentChannelId;
 
     private String parentStatus;
 
-    public String getParentProdId() {
-        return parentProdId;
+    public String getParentChannelId() {
+        return parentChannelId;
     }
 
-    public void setParentProdId(String parentProdId) {
-        this.parentProdId = parentProdId;
+    public void setParentChannelId(String parentChannelId) {
+        this.parentChannelId = parentChannelId;
     }
 
     public String getParentStatus() {
