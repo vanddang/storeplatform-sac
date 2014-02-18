@@ -1381,39 +1381,40 @@
     </select>         
 
     <!-- 쇼핑상세(채널) 조회-->
-    <select id="getShoppingChannelDetail" parameterType="Map" resultType="Shopping">
+    <select id="getShoppingChannelDetail" parameterType="Map" resultType="MetaInfo">
      /* ShoppingMapper.xml.getShoppingChannelDetail,쇼핑상세(채널) 조회, 김형식/SK플래닛 , 2014-02-04 */
           SELECT  * 
            FROM (
                   SELECT 
                          B.CATALOG_ID 
                          <if test="req.specialProdId == null">
-                        ,C.CATALOG_NM as catalogName
+                        ,C.CATALOG_NM 
                         </if>
                         <if test="req.specialProdId != null">
-                        ,O.PROD_NM  as catalogName
+                        ,O.PROD_NM  as catalogNm
                         </if>
                         ,H.PROD_ID 
                         ,H.PART_PROD_ID                          
                         ,C.CATALOG_DESC
                         ,A.BRAND_ID  
                         ,A.BRAND_NM  
-                        ,D.MENU_ID as menuId  
-                        ,F.MENU_NM as menuName
-                        ,J.TOP_MENU_ID as upMenuId
+                        ,D.MENU_ID   
+                        ,F.MENU_NM 
+                        ,J.TOP_MENU_ID 
                         ,(SELECT MENU_NM
                             FROM TB_DP_MENU_CATEGORY_DESC
                            WHERE MENU_ID = J.TOP_MENU_ID
                              AND LANG_CD = #{req.langCd}
                              AND ROWNUM = 1
-                         ) AS upMenuName                                   
+                         ) AS TOP_MENU_NM                                   
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY L.PROD_AMT ASC) as NO
-                        ,NVL(M.PRCHS_CNT, 0) as prchsQty
+                        ,NVL(M.PRCHS_CNT, 0) as PRCHS_CNT
                         ,DECODE(I.PROD_CASE_CD
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
                               , 'DP006303', 'delivery' ) PROD_CASE_CD
-                        ,CONCAT(PI.FILE_PATH,PI.FILE_NM) as filePos
+                        ,CONCAT(PI.FILE_PATH,PI.FILE_NM) as FILE_PATH
+                        ,J.CONTENTS_TYPE_CD 
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -1482,7 +1483,7 @@
            WHERE NO =1
     </select>    
    <!-- 쇼핑상세(에피소드) 조회-->
-    <select id="getShoppingEpisodeDetail" parameterType="Map" resultType="Shopping">
+    <select id="getShoppingEpisodeDetail" parameterType="Map" resultType="MetaInfo">
      /* ShoppingMapper.xml.getShoppingEpisodeDetail,쇼핑상세(에피소드) 조회, 김형식/SK플래닛 , 2014-02-04 */
           SELECT  
                 KK.*
@@ -1623,12 +1624,12 @@
     </select>   
     
    <!-- 쇼핑상세(옵션) 조회-->
-    <select id="getShoppingOption" parameterType="Map" resultType="Shopping">
+    <select id="getShoppingOption" parameterType="Map" resultType="MetaInfo">
      /* ShoppingMapper.xml.getShoppingOption,쇼핑상세(옵션) 조회, 김형식/SK플래닛 , 2014-02-04 */
 		 SELECT 
                 A.CHNL_PROD_ID AS prodId
                ,A.EPSD_PROD_ID AS partProdId
-               ,A.OPT1_NM as opt1Nm
+               ,A.OPT1_NM as prodNm
                ,A.EXPO_ORD as expoOrd 
                ,DECODE(A.EXPO_ORD, 1, A.OPT1_NM, A.OPT2_NM ) AS optPdNm
                ,DECODE(A.EXPO_ORD, 1, 'Y', 'N' ) AS subYn                  
@@ -1682,10 +1683,10 @@
     </select>        
     
   <!-- 쇼핑상세(이미지) 조회-->
-    <select id="getShoppingImgDetailList" parameterType="Map" resultType="Shopping">
+    <select id="getShoppingImgDetailList" parameterType="Map" resultType="MetaInfo">
      /* ShoppingMapper.xml.getShoppingImgDetailList,쇼핑상세(이미지) 조회, 김형식/SK플래닛 , 2014-02-04 */
         SELECT 
-                 CONCAT(FILE_PATH,FILE_NM) filePos 
+                 CONCAT(FILE_PATH,FILE_NM) FILE_PATH 
                , EXPO_ORD
           FROM TB_DP_PROD_IMG
          WHERE PROD_ID = #{req.prodId} 

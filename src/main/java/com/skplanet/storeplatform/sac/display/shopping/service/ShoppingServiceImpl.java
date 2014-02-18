@@ -66,7 +66,6 @@ import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 import com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator;
-import com.skplanet.storeplatform.sac.display.shopping.vo.Shopping;
 
 /**
  * ShoppingList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -1934,8 +1933,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		// ID list 조회
-		List<Shopping> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetail", reqMap,
-				Shopping.class);
+		List<MetaInfo> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetail", reqMap,
+				MetaInfo.class);
 
 		if (resultChannelList == null) {
 			throw new StorePlatformException("SAC_DSP_0001", "쇼핑 상세 확인 ");
@@ -1944,23 +1943,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// Response VO를 만들기위한 생성자
 				Product product = null;
-				Identifier identifier = null;
-				Identifier identifier1 = null;
-				Menu menu = null;
-				Title title = null;
 				Source source = null;
-				Contributor contributor = null;
-				Accrual accrual = null;
-
-				List<Identifier> identifierList = null;
 
 				// / 에피소드용
 				Product episodeProduct = null;
-				Identifier episodeIdentifier = null;
 				List<Identifier> episodeIdentifierList = null;
 				Menu episodeMenu = null;
 				List<Menu> episodeMenuList = new ArrayList<Menu>();
-				Price episodePrice = null;
 				Rights episodeRights = null;
 				Date episodeDate = null;
 				Distributor distributor = null;
@@ -1977,51 +1966,27 @@ public class ShoppingServiceImpl implements ShoppingService {
 				SubSelectOption subSelectOption = null;
 				List<SelectOption> selectOptionList = new ArrayList<SelectOption>();
 				List<SubSelectOption> subSelectOptionList = new ArrayList<SubSelectOption>();
-				Title option1Title = null;
-				Price option1Price = null;
 				Title option2Title = null;
-				Price option2Price = null;
-
-				List<Menu> menuList = null;
-				List<Source> sourceList = null;
 				List<Product> subProductList = new ArrayList<Product>();
 
 				List<Product> productList = new ArrayList<Product>();
 				// 채널 list 조회
 				for (int i = 0; i < resultChannelList.size(); i++) {
-					Shopping shopping = resultChannelList.get(i);
+					MetaInfo shopping = resultChannelList.get(i);
 
 					// 상품 정보 (상품ID)
 					product = new Product();
-					identifierList = new ArrayList<Identifier>();
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
-					identifier.setText(shopping.getCatalogId());
-					identifierList.add(identifier);
+					product.setIdentifierList(this.commonGenerator.generateIdentifierList(shopping));
 
-					// 메뉴 정보
-					menuList = new ArrayList<Menu>();
-					menu = new Menu();
-					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-					menu.setId(shopping.getUpMenuId());
-					menu.setName(shopping.getUpMenuName());
-					menuList.add(menu);
+					// MenuList 생성
+					List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
 
-					menu = new Menu();
-					menu.setId(shopping.getMenuId());
-					menu.setName(shopping.getMenuName());
-					menuList.add(menu);
+					// Title 생성
+					Title title = this.commonGenerator.generateTitle(shopping);
 
-					// 상품 정보 (상품명)
-					title = new Title();
-					title.setText(shopping.getCatalogName());
-
+					// SourceList 생성
+					List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
 					// 이미지 정보
-					sourceList = new ArrayList<Source>();
-					source = new Source();
-					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(shopping.getFilePos());
-					sourceList.add(source);
 					String detailImgCd = "";
 					// 이미지 정보 (상세 이미지 가져오기)
 					for (int qq = 0; qq < 2; qq++) {
@@ -2031,8 +1996,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 							detailImgCd = DisplayConstants.DP_SHOPPING_REPRESENT_CUT_DETAIL_IMAGE_CD;
 						}
 						reqMap.put("cutDetailImageCd", detailImgCd);
-						List<Shopping> resultImgDetailList = this.commonDAO.queryForList(
-								"Shopping.getShoppingImgDetailList", reqMap, Shopping.class);
+						List<MetaInfo> resultImgDetailList = this.commonDAO.queryForList(
+								"Shopping.getShoppingImgDetailList", reqMap, MetaInfo.class);
 						for (int pp = 0; pp < resultImgDetailList.size(); pp++) {
 							source = new Source();
 							if (qq == 0) {
@@ -2041,22 +2006,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 								source.setExpoOrd(resultImgDetailList.get(pp).getExpoOrd());
 								source.setType(DisplayConstants.DP_SOURCE_TYPE_CUT_DETAIL);
 							}
-							source.setUrl(resultImgDetailList.get(pp).getFilePos());
+							source.setUrl(resultImgDetailList.get(pp).getFilePath());
 							sourceList.add(source);
 						}
 					}
-
-					// 다운로드 수
-					accrual = new Accrual();
-					accrual.setDownloadCount(shopping.getPrchsQty());
-
-					// contributor
-					contributor = new Contributor();
-					identifier1 = new Identifier();
-					identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
-					identifier1.setText(shopping.getBrandId());
-					contributor.setName(shopping.getBrandNm());
-					contributor.setIdentifier(identifier1);
+					// Accrual 생성
+					Accrual accrual = this.shoppingGenerator.generateAccrual(shopping);
+					// Shopping용 Contributor 생성
+					Contributor contributor = this.shoppingGenerator.generateContributor(shopping);
 
 					String deliveryValue = shopping.getProdCaseCd();
 					// 배송상품은 단품이며 기본정보는 동일
@@ -2065,40 +2022,33 @@ public class ShoppingServiceImpl implements ShoppingService {
 					}
 
 					// 에피소드 list 조회
-					List<Shopping> resultEpisodeList = this.commonDAO.queryForList("Shopping.getShoppingEpisodeDetail",
-							reqMap, Shopping.class);
+					List<MetaInfo> resultEpisodeList = this.commonDAO.queryForList("Shopping.getShoppingEpisodeDetail",
+							reqMap, MetaInfo.class);
 					if (resultEpisodeList != null) {
 						for (int kk = 0; kk < resultEpisodeList.size(); kk++) {
-							Shopping episodeShopping = resultEpisodeList.get(kk);
+							MetaInfo episodeShopping = resultEpisodeList.get(kk);
 
 							episodeProduct = new Product();
 
 							// 특가 상품일 경우
 							episodeMenu = new Menu();
+							episodeMenuList = new ArrayList<Menu>();
 							episodeMenu.setType(episodeShopping.getSpecialSale());
 							episodeMenuList.add(episodeMenu);
 							episodeProduct.setMenuList(episodeMenuList);
 
 							// 채널 상품 정보 (상품ID)
 							episodeIdentifierList = new ArrayList<Identifier>();
-							episodeIdentifier = new Identifier();
-							episodeIdentifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-							episodeIdentifier.setText(episodeShopping.getProdId());
-							episodeIdentifierList.add(episodeIdentifier);
+							episodeIdentifierList.add(this.commonGenerator.generateIdentifier(
+									DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, episodeShopping.getProdId()));
 
 							// 에피소드 상품 정보 (상품ID)
-							episodeIdentifier = new Identifier();
-							episodeIdentifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-							episodeIdentifier.setText(episodeShopping.getPartProdId());
-							episodeIdentifierList.add(episodeIdentifier);
-
+							episodeIdentifierList.add(this.commonGenerator.generateIdentifier(
+									DisplayConstants.DP_EPISODE_IDENTIFIER_CD, episodeShopping.getPartProdId()));
 							episodeProduct.setIdentifierList(episodeIdentifierList);
 
 							// 에피소드 상품 가격 정보
-							episodePrice = new Price();
-							episodePrice.setFixedPrice(episodeShopping.getProdNetAmt());
-							episodePrice.setDiscountRate(episodeShopping.getDcRate());
-							episodePrice.setText(episodeShopping.getProdAmt());
+							Price episodePrice = this.shoppingGenerator.generatePrice(episodeShopping);
 							episodeProduct.setPrice(episodePrice);
 
 							// 에피소드 구매내역 정보
@@ -2153,31 +2103,16 @@ public class ShoppingServiceImpl implements ShoppingService {
 										this.log.debug("----------------------------------------------------------------");
 									}
 								}
-								System.out.println("log4");
 							} catch (Exception ex) {
 								throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 							}
-
-							purchase = new Purchase();
-							purchaseDate = new Date();
-							purchaseIdentifier = new Identifier();
-							purchaseIdentifierList = new ArrayList<Identifier>();
-							purchaseIdentifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-							purchaseIdentifier.setText(prchsId);
-							purchaseIdentifierList.add(purchaseIdentifier);
-							purchase.setIdentifierList(purchaseIdentifierList);
-							purchase.setState(prchsState);
-							if (prchsDt != null) {
-								purchaseDate = new Date(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM,
-										DateUtils.parseDate(prchsDt));
-							}
-
-							List<Date> dateList = new ArrayList<Date>();
-							dateList.add(purchaseDate);
-							purchase.setDateList(dateList);
-
-							if (!StringUtils.isEmpty(req.getUserKey())) {// 사용자키가 있을 경우
-								episodeProduct.setPurchase(purchase);
+							if (StringUtils.isNotEmpty(prchsId)) {
+								episodeShopping.setPurchaseId(prchsId);
+								episodeShopping.setPurchaseProdId(episodeShopping.getPartProdId());
+								episodeShopping.setPurchaseDt(prchsDt);
+								episodeShopping.setPurchaseState(prchsState);
+								// 구매 정보
+								product.setPurchase(this.commonGenerator.generatePurchase(episodeShopping));
 							}
 
 							// 에피소드 날짜 권한 정보
@@ -2231,11 +2166,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 							if (deliveryValue.equals("delivery")) {
 								reqMap.put("chnlProdId", episodeShopping.getProdId());
 								// 에피소드 list 조회
-								List<Shopping> resultOptionList = this.commonDAO.queryForList(
-										"Shopping.getShoppingOption", reqMap, Shopping.class);
+								List<MetaInfo> resultOptionList = this.commonDAO.queryForList(
+										"Shopping.getShoppingOption", reqMap, MetaInfo.class);
 								if (resultOptionList != null) {
 									for (int mm = 0; mm < resultOptionList.size(); mm++) {
-										Shopping optionShopping = resultOptionList.get(mm);
+										MetaInfo optionShopping = resultOptionList.get(mm);
 										if (optionShopping.getSubYn().equals("Y")) { // 옵션 1 인 경우
 											selectOption = new SelectOption();
 											// 옵션1 상품 ID
@@ -2246,14 +2181,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 											}
 
 											// 옵션1 상품 정보 (상품명)
-											option1Title = new Title();
-											option1Title.setText(optionShopping.getOptPdNm());
+											Title option1Title = this.commonGenerator.generateTitle(optionShopping);
 											selectOption.setTitle(option1Title);
 											// 옵션1 상품 가격정보
-											option1Price = new Price();
-											option1Price.setFixedPrice(optionShopping.getProdNetAmt());
-											option1Price.setDiscountRate(optionShopping.getDcRate());
-											option1Price.setText(optionShopping.getProdAmt());
+											Price option1Price = this.shoppingGenerator.generatePrice(optionShopping);
 											selectOption.setPrice(option1Price);
 										}
 										if (optionShopping.getSubYn().equals("N")) { // 옵션 2 인 경우
@@ -2266,10 +2197,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 											option2Title.setText(optionShopping.getOptPdNm());
 											subSelectOption.setSubTitle(option2Title);
 											// 옵션2 상품 가격정보
-											option2Price = new Price();
-											option2Price.setFixedPrice(optionShopping.getProdNetAmt());
-											option2Price.setDiscountRate(optionShopping.getDcRate());
-											option2Price.setText(optionShopping.getProdAmt());
+											Price option2Price = this.shoppingGenerator.generatePrice(optionShopping);
 											subSelectOption.setSubPrice(option2Price);
 
 											subSelectOptionList.add(subSelectOption);
@@ -2326,7 +2254,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 					}
 					// 데이터 매핑
 
-					product.setIdentifierList(identifierList);
 					product.setMenuList(menuList);
 					product.setTitle(title);
 					product.setSourceList(sourceList);
