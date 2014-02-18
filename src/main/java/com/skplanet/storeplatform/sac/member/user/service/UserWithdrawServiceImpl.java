@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
@@ -140,6 +141,14 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 			}
 		}
+
+		/* SC Remove */
+		RemoveUserRequest scReq = new RemoveUserRequest();
+		scReq.setCommonRequest(commonRequest);
+		scReq.setUserKey(schUserRes.getUserKey());
+		scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+		scReq.setSecedeReasonMessage("");
+		this.userSCI.remove(scReq);
 
 		/* 게임센터 연동 */
 		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
