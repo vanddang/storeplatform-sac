@@ -231,6 +231,7 @@ public class MetaInfo {
 	private String bannerFilePath; // 배너이미지
 	private String thumbnailFilePath; // 썸네일이미지
 	private String prodIntrDscr; // 정액제 상품 설명
+	private String prodStatusCd; // 정액제 상품 상태
 
 	/**
 	 * @return the topMenuId
@@ -3234,6 +3235,20 @@ public class MetaInfo {
 	 */
 	public void setSubYn(String subYn) {
 		this.subYn = subYn;
+	}
+
+	/**
+	 * @return the prodStatusCd
+	 */
+	public String getProdStatusCd() {
+		return prodStatusCd;
+	}
+
+	/**
+	 * @param prodStatusCd the prodStatusCd to set
+	 */
+	public void setProdStatusCd(String prodStatusCd) {
+		this.prodStatusCd = prodStatusCd;
 	}
 
 }
