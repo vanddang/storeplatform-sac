@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -77,7 +76,6 @@ public class CreateByAgreementTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test1_createByAgreementId() throws Exception {
 
@@ -223,7 +221,6 @@ public class CreateByAgreementTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test4_errorTestCase() throws Exception {
 

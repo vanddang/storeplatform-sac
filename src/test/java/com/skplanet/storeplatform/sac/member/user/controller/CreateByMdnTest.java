@@ -87,7 +87,6 @@ public class CreateByMdnTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test1_createByMdn() throws Exception {
 
@@ -174,7 +173,6 @@ public class CreateByMdnTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test2_createByMdn() throws Exception {
 
@@ -261,7 +259,6 @@ public class CreateByMdnTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test3_createByUuid() throws Exception {
 
@@ -344,7 +341,6 @@ public class CreateByMdnTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test4_createByMac() throws Exception {
 
