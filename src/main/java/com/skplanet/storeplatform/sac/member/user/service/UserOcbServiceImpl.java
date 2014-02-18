@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointReque
 import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
@@ -59,9 +60,8 @@ public class UserOcbServiceImpl implements UserOcbService {
 		memberPoint.setUserKey(req.getUserKey()); // 사용자 Key
 		memberPoint.setAuthMethodCode(req.getAuthMethodCode()); // 인증방법 코드
 		memberPoint.setCardNumber(req.getCardNumber()); // 카드 번호
-		memberPoint.setStartDate(req.getStartDate()); // 사용시작 일시
-		memberPoint.setEndDate(req.getEndDate()); // 사용종료 일시
-		memberPoint.setIsUsed(req.getIsUsed()); // 사용여부 (Y/N)
+		memberPoint.setStartDate(DateUtil.getToday("yyyyMMddHHmmss")); // 사용시작 일시
+		memberPoint.setEndDate("99991231115959"); // 사용종료 일시
 		updateMemberPointRequest.setMemberPoint(memberPoint);
 
 		/**
@@ -84,13 +84,13 @@ public class UserOcbServiceImpl implements UserOcbService {
 		RemoveMemberPointRequest removeMemberPointRequest = new RemoveMemberPointRequest();
 		removeMemberPointRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
+		/**
+		 * TODO 삭제 테스트 해봐야 한다. (SC 변경 완료되는 시점에 2014.02.19)
+		 */
 		List<MemberPoint> memberPointList = new ArrayList<MemberPoint>();
 		MemberPoint memberPoint = new MemberPoint();
 		memberPoint.setUserKey(req.getUserKey()); // 사용자 Key
-		memberPoint.setAuthMethodCode(req.getAuthMethodCode()); // 인증방법 코드
 		memberPoint.setCardNumber(req.getCardNumber()); // 카드번호
-		memberPoint.setStartDate(req.getStartDate()); // 사용시작 일시
-		memberPoint.setIsUsed(req.getIsUsed()); // 사용여부 (Y/N)
 
 		memberPointList.add(memberPoint);
 		removeMemberPointRequest.setMemberPointList(memberPointList);

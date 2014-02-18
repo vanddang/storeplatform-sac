@@ -34,7 +34,6 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 /**
@@ -84,12 +83,9 @@ public class CreateOcbInformationTest {
 						CreateOcbInformationReq reqJson = new CreateOcbInformationReq();
 
 						reqJson.setUserKey("US201401241550022950000616");
-						reqJson.setCardNumber("3306-3306-3306-3306"); // 카드 번호 (암호화..??)
+						reqJson.setCardNumber("3306-3306-3306-3307"); // 카드 번호 (암호화..??)
 						/* 인증수단 코드 (OR003400 비인증, OR003401 카드번호인증, OR003402 주민번호인증) */
 						reqJson.setAuthMethodCode("OR003401");
-						reqJson.setStartDate("20140214132821"); // YYYYMMDDHH24MISS
-						reqJson.setEndDate("99991231235959"); // YYYYMMDDHH24MISS
-						reqJson.setIsUsed(MemberConstants.USE_Y);
 
 						return reqJson;
 					}
