@@ -174,16 +174,16 @@ public class ConversionClassTest {
 						req.setMarketCode("XXXX"); // LNCHG_MALL_CD 입점 상점코드 ##### 전환 쪽에서 사용
 						req.setMarketStatus("XXXX"); // LNCHG_MBR_STATUS_CD 입점 회원 상태코드 ##### 전환 쪽에서 사용
 						req.setAccountRealDate("20110124135542"); // ACCT_AUTH_DT 계좌인증일시
-						req.setSellerZip("120757"); // ENPRPL_ZIP 우편번호
-						req.setSellerAddress("서울시 서대문구 대현동");// ENPRPL_ADDR 주소 의경우
-						req.setSellerDetailAddress("럭키 아파트 101동 909호");
+						req.setSellerBizZip("120757"); // ENPRPL_ZIP 우편번호
+						req.setSellerBizAddress("서울시 서대문구 대현동");// ENPRPL_ADDR 주소 의경우
+						req.setSellerBizDetailAddress("럭키 아파트 101동 909호");
 						req.setCeoBirthDay("231123"); // CEO_BIRTH
 						req.setSellerLanguage("KO"); // LANG_CD
 						req.setSellerTelecom("US001201"); // MNO_CD 통신사 코드 >> api 추가 하지말고 판매자 테이블에서 가져온다.
 						req.setCeoName("심봉사"); //
 						req.setSellerCompany("호랑"); // COMP_NM 회사명 >> api 추가 하지말고 판매자 테이블에서 가져온다.
 						req.setCordedTelephone("1231231");
-						req.setSellerPhone("12312312");
+						req.setChargerPhone("12312312");
 						req.setIsRecvSMS("N");
 						req.setCharger("일순");
 
