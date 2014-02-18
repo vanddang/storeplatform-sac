@@ -190,8 +190,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							downloadVodSacReq.setPrchsDt(prchsDt);
 							downloadVodSacReq.setDwldExprDt(dwldExprDt);
 
-							// 대여 상품 구매상태 조회
-							prchsState = (String) this.commonDAO.queryForObject("Download.getEbookPurchaseState",
+							// 대여 상품 구매상태 조회 (다운로드 만료기간으로 체크)
+							prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
 									downloadVodSacReq);
 						}
 					}
