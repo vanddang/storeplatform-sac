@@ -9,10 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.other.feedback.service;
 
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeySacReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeySacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackSacReq;
@@ -220,29 +216,5 @@ public interface FeedbackService {
 	 */
 	public ListScorePaticpersSacRes listScoreParticpers(ListScorePaticpersSacReq listScorePaticpersSacReq,
 			SacRequestHeader sacRequestHeader);
-
-	/**
-	 * 
-	 * <pre>
-	 * 사용자 ID 변경.
-	 * </pre>
-	 * 
-	 * @param changeFeedbackUserIdSacReq
-	 *            changeFeedbackUserIdSacReq
-	 * @return ChangeFeedbackUserIdSacRes
-	 */
-	public ChangeFeedbackUserIdSacRes changeFeedbackUserId(ChangeFeedbackUserIdSacReq changeFeedbackUserIdSacReq);
-
-	/**
-	 * 
-	 * <pre>
-	 * 사용자 Key 변경.
-	 * </pre>
-	 * 
-	 * @param changeFeedbackUserKeySacReq
-	 *            changeFeedbackUserKeySacReq
-	 * @return ChangeFeedbackUserKeySacRes
-	 */
-	public ChangeFeedbackUserKeySacRes changeFeedbackUserKey(ChangeFeedbackUserKeySacReq changeFeedbackUserKeySacReq);
 
 }

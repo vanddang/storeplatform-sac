@@ -23,10 +23,6 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeySacReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeySacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackSacReq;
@@ -687,20 +683,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 			notiList.add(feedback);
 		}
 		return notiList;
-	}
-
-	@Override
-	public ChangeFeedbackUserIdSacRes changeFeedbackUserId(ChangeFeedbackUserIdSacReq changeFeedbackUserIdSacReq) {
-		ChangeFeedbackUserIdSacRes changeFeedbackUserIdRes = new ChangeFeedbackUserIdSacRes();
-		changeFeedbackUserIdRes.setResultStatus("success");
-		return changeFeedbackUserIdRes;
-	}
-
-	@Override
-	public ChangeFeedbackUserKeySacRes changeFeedbackUserKey(ChangeFeedbackUserKeySacReq changeFeedbackUserKeySacReq) {
-		ChangeFeedbackUserKeySacRes changeFeedbackUserKeyRes = new ChangeFeedbackUserKeySacRes();
-		changeFeedbackUserKeyRes.setResultStatus("success");
-		return changeFeedbackUserKeyRes;
 	}
 
 	/**
