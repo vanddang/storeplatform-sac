@@ -96,9 +96,9 @@ public class ProductCountSacServiceImpl implements ProductCountSacService {
 		res.setPrchsDay(getProductCountScRes.getPrchsDay());
 		res.setPrchsDayAmt(getProductCountScRes.getPrchsDayAmt());
 		res.setPrchsDayCnt(getProductCountScRes.getPrchsDayCnt());
-		res.setPrchsMm(getProductCountScRes.getPrchsMm());
-		res.setPrchsMmAmt(getProductCountScRes.getPrchsMmAmt());
-		res.setPrchsMmCnt(getProductCountScRes.getPrchsMmCnt());
+//		res.setPrchsMm(getProductCountScRes.getPrchsMm());
+//		res.setPrchsMmAmt(getProductCountScRes.getPrchsMmAmt());
+//		res.setPrchsMmCnt(getProductCountScRes.getPrchsMmCnt());
 		res.setProdId(getProductCountScRes.getProdId());
 
 		return res;
