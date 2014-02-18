@@ -56,6 +56,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateGameCenterRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
@@ -118,6 +120,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private UserSearchService userSearchService;
+
+	@Autowired
+	private ChangeDisplayUserSCI changeDisplayUserSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -435,7 +440,12 @@ public class DeviceServiceImpl implements DeviceService {
 			LOGGER.info(":::: [PreviousUserKey] {}", previousUserKey);
 			LOGGER.info(":::: [NowUserKey] {}", userKey);
 
-			/* 3. 구매이력 이관요청 */
+			/* 3. 기타파트, 구매파트 userKey 변경 */
+			ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
+			changeDisplayUserSacReq.setNewUseKey(userKey);
+			changeDisplayUserSacReq.setOldUserKey(previousUserKey);
+			changeDisplayUserSacReq.setTenantId(tenantId);
+			this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
 
 			/* 4. 약관 이관 처리 */
 			SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
