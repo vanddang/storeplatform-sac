@@ -1514,7 +1514,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 								historyListSacReq.setProductList(productEpisodeList);
 
 								// 구매내역 조회 실행
-								if (!StringUtils.isEmpty(req.getUserKey())) {
+								if (StringUtils.isNotEmpty(req.getUserKey())) {
 									HistoryListSacInRes historyListSacRes = this.historyInternalSCI
 											.searchHistoryList(historyListSacReq);
 									this.log.debug("----------------------------------------------------------------");
