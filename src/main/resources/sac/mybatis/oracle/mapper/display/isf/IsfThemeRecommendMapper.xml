@@ -22,8 +22,8 @@
           WHERE EXPO_YN = 'Y'
             AND ( SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT OR ALWAYS_EXPO_YN = 'Y' )
      <choose>
-         <when test="THEME_RECOMM_ID != null">
-            AND PKG_ID = #{THEME_RECOMM_ID}
+         <when test="recommendId != null">
+            AND PKG_ID = #{recommendId}
          </when>
          <when test="multiValue_id != null">
             AND PKG_ID = ISF_ID
@@ -217,4 +217,242 @@
          )
      WHERE ROWNUM <![CDATA[<=]]> 4    
     </select>
+    
+    <!-- 테마추천 상품 리스트 -->
+    <select id="getRecommendPkgProdList" parameterType="Map" resultType="ThemeRecommend">
+	SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgMainList, Yun JuYoung, 2014-02-19 */
+              P.TOTAL_COUNT
+	        , P.TOP_MENU_ID
+	        , TRIM(REPLACE((SELECT MENU_NM
+	                          FROM TB_DP_MENU_CATEGORY_DESC 
+	                         WHERE MENU_ID = P.TOP_MENU_ID
+	                           AND LANG_CD = #{tenantHeader.langCd}), 'TOP', '')) AS TOP_MENU_NM
+	        , P.MENU_ID
+	        , TRIM(REPLACE((SELECT MENU_NM
+	                          FROM TB_DP_MENU_CATEGORY_DESC 
+	                         WHERE MENU_ID = P.MENU_ID
+	                           AND LANG_CD = #{tenantHeader.langCd}), 'TOP', '')) AS MENU_NM
+	        , P.META_CLSF_CD
+	        , P.PROD_ID
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN
+	                      CONCAT( P.VOD_TITL_NM, P.PROD_NM )
+	                 ELSE P.PROD_NM
+	             END ) AS PROD_NM
+	        , DECODE( P.TOP_MENU_ID, 'DP13', P.PROD_DTL_DESC, P.PROD_BASE_DESC ) AS PROD_DESC
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN
+	                     ( CASE WHEN ( P.CHNL_PERIOD_AMT <![CDATA[>=]]> 0 AND P.STRM_EPSD_CNT <![CDATA[>]]> 0 ) THEN P.CHNL_PERIOD_AMT
+	                            ELSE P.CHNL_UNLMT_AMT
+	                        END )
+	                  ELSE P.PROD_AMT
+	             END ) AS PROD_AMT
+	        , NVL(P.PROD_NET_AMT, 0) AS PROD_NET_AMT
+	        , DECODE( P.PROD_GRD_CD
+	                , 'PD004401', 0
+	                , 'PD004402', 1
+	                , 'PD004403', 2
+	                , 'PD004404', 4 ) AS PROD_GRD_CD
+	        , P.SVC_GRP_CD
+	        , P.CONTENTS_TYPE_CD
+	        , P.OUTSD_CONTENTS_ID
+	        , DECODE( P.SVC_GRP_CD, 'DP000201', P.AID ) AS AID
+	        , DECODE( P.SVC_GRP_CD, 'DP000201', REGEXP_SUBSTR(P.PKG_INF,'[^,]+',1,1) ) AS APK_PKG
+	        , DECODE( P.SVC_GRP_CD, 'DP000201', REGEXP_SUBSTR(P.PKG_INF,'[^,]+',1,2) ) AS APK_VER_CD
+	        , DECODE( P.SVC_GRP_CD, 'DP000201', REGEXP_SUBSTR(P.PKG_INF,'[^,]+',1,3) ) AS APK_FILE_SIZE
+	        , DECODE( P.SVC_GRP_CD, 'DP000201', P.VER_MAJOR||'.'||P.VER_MINOR ) AS PROD_VER
+	        , DECODE( P.SVC_GRP_CD, 'DP000201', DECODE( P.PART_PARENT_CLSF_CD, 'PD012301', 'iab', NULL ) ) AS IN_APP_BILLING
+	        , DECODE( P.SVC_GRP_CD, 'DP000201', DECODE( P.DRM_YN, 'Y', 'drm', NULL ) ) AS DRM
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN P.ARTIST1_NM END ) AS BOOK_ARTIST_NM
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN P.ARTIST2_NM END ) AS BOOK_ARTIST_NM2
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN P.ARTIST3_NM END ) AS BOOK_ARTIST_NM3
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN P.CHNL_COMP_NM END ) AS BOOK_CHNL_COMP_NM
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN P.ISSUE_DAY END ) AS BOOK_SALE_DT
+	        , DECODE( P.HDV_YN, 'Y', 'hd', NULL ) AS HDV_YN
+	        , DECODE( P.DOLBY_SPRT_YN, 'Y', 'dolby', NULL ) AS DOLBY_SPRT_YN
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN P.ARTIST1_NM END ) AS VOD_ARTIST_NM
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN P.ARTIST2_NM END ) AS VOD_ARTIST_NM2
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN P.CHNL_COMP_NM END ) AS VOD_CHNL_COMP_NM
+	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN P.ISSUE_DAY END ) AS VOD_SALE_DT
+	        , DECODE( P.TOP_MENU_ID, 'DP16', P.ARTIST1_NM ) AS MUSIC_ARTIST_NM
+	        , DECODE( P.TOP_MENU_ID, 'DP16', P.ARTIST2_NM ) AS MUSIC_ARTIST_NM2
+	        , DECODE( P.TOP_MENU_ID, 'DP16', P.ARTIST3_NM ) AS MUSIC_ARTIST_NM3
+	        , DECODE( P.TOP_MENU_ID, 'DP16', P.CHNL_COMP_NM ) AS MUSIC_CHNL_COMP_NM
+	        , DECODE( P.TOP_MENU_ID, 'DP16', P.PLN_COMP_NM ) AS MUSIC_AGENCY_NM
+	        , DECODE( P.TOP_MENU_ID, 'DP16', 'support' ) AS MP3_SPRT
+	        , DECODE( P.TOP_MENU_ID, 'DP16', DECODE( P.BELL_SPRT_YN, 'Y', 'support', 'restrict' ) ) AS BELL_SPRT
+	        , DECODE( P.TOP_MENU_ID, 'DP16', DECODE( P.COLORRING_SPRT_YN, 'Y', 'support', 'restrict' ) ) AS RING_SPRT
+	        , ( CASE WHEN P.SVC_GRP_CD = 'DP000203' THEN CONCAT( PI.FILE_PATH, PI.FILE_NM )
+	                 ELSE PI.FILE_PATH
+	             END ) AS FILE_POS
+	        , NVL( ( CASE WHEN ( PP.AVG_EVLU_SCORE <![CDATA[>]]> 0 AND PP.AVG_EVLU_SCORE <![CDATA[<]]> 1 ) THEN 1
+	                      WHEN PP.AVG_EVLU_SCORE <![CDATA[>]]> 5 THEN 5
+	                      ELSE ROUND( PP.AVG_EVLU_SCORE , 1 )
+	                  END )
+	             , 0 ) AS AVG_SCORE
+	        , NVL( PP.PATICPERS_CNT, 0 ) AS PART_CNT
+	        , NVL( PP.PRCHS_CNT, 0 ) AS DWLD_CNT
+	   FROM
+	      (
+	         SELECT C.*
+	              , DECODE( C.SVC_GRP_CD
+	                      , 'DP000201'
+	                      , ( SELECT SCF.APK_PKG_NM||','||SCF.APK_VER
+	                            FROM TB_DP_SUB_CONTENTS SCF
+	                           WHERE SCF.SUB_CONTENTS_ID = C.SUB_CONTENTS_ID
+	                             AND SCF.PROD_ID = C.PROD_ID ) ) AS PKG_INF
+	           FROM
+	              (
+	              SELECT ROWNUM AS RNUM
+	                   , P.*
+	                FROM
+	                   (
+	                   SELECT COUNT(*) OVER () AS TOTAL_COUNT
+	                        , A.*
+	                     FROM
+	                        (
+	                        SELECT 
+	                               P.TOP_MENU_ID
+	                             , C.MENU_ID
+	                             , P2.SVC_GRP_CD
+	                             , P2.CONTENTS_TYPE_CD
+	                             , MP2.OUTSD_CONTENTS_ID
+	                             , P2.PROD_ID
+	                             , PD2.PROD_NM
+	                             , MP2.VOD_TITL_NM
+	                             , PD2.PROD_BASE_DESC
+	                             , PD2.PROD_DTL_DESC
+	                             , PP2.CHNL_PERIOD_AMT
+	                             , PP2.CHNL_UNLMT_AMT
+	                             , MP2.STRM_EPSD_CNT
+	                             , P2.PROD_GRD_CD
+	                             , P2.META_CLSF_CD
+	                             , NVL( PD2.ARTIST1_NM, PD.ARTIST1_NM ) AS ARTIST1_NM
+	                             , NVL( PD2.ARTIST2_NM, PD.ARTIST2_NM ) AS ARTIST2_NM
+	                             , NVL( PD2.ARTIST3_NM, PD.ARTIST3_NM ) AS ARTIST3_NM
+	                             , NVL( MP2.CHNL_COMP_NM, MP.CHNL_COMP_NM ) AS CHNL_COMP_NM
+	                             , NVL( MP2.AGENCY_NM, MP.AGENCY_NM ) AS PLN_COMP_NM
+	                             , MP2.HDV_YN
+	                             , DECODE( PI.DOLBY_SPRT_YN, 'Y', MP2.DOLBY_SPRT_YN ) AS DOLBY_SPRT_YN
+	                             , MP.ISSUE_DAY
+	                             , PP.PROD_AMT
+	                             , PP.PROD_NET_AMT
+	                             , MP.CHAPTER
+	                             , AP.AID
+	                             , AP.VER_MAJOR
+	                             , AP.VER_MINOR
+	                             , AP.PART_PARENT_CLSF_CD
+	                             , P.DRM_YN
+	                             , MP.BELL_SPRT_YN
+	                             , MP.COLORRING_SPRT_YN
+	                             , P.REG_DT
+	                             , DP.EXPO_ORD
+	                             , SH.SUB_CONTENTS_ID
+	                             , ROW_NUMBER( ) OVER ( PARTITION BY CP.PROD_ID
+	                                                        ORDER BY P.REG_DT DESC ) AS RN
+	                          FROM TB_DP_RECOM_PKG_DTL DP
+	                             , TB_DP_PROD_RSHP CP
+	                             , TB_DP_MENU_CATEGORY_PROD_MAPG C
+	                             , TB_DP_SPRT_DEVICE SH
+	                             , TB_CM_DEVICE PI
+	                             , TB_DP_PROD P
+	                             , TB_DP_TENANT_PROD TP
+	                             , TB_DP_PROD P2
+	                             , TB_DP_TENANT_PROD TP2
+	                             , TB_DP_PROD_DESC PD
+	                             , TB_DP_PROD_DESC PD2
+	                             , TB_DP_TENANT_PROD_PRICE PP
+	                             , TB_DP_TENANT_PROD_PRICE PP2
+	                             , UV_TB_DP_MULTIMDA_PROD MP
+	                             , UV_TB_DP_MULTIMDA_PROD MP2
+	                             , TB_DP_APP_PROD AP
+	                         WHERE CP.PROD_ID = DP.PROD_ID  -- CHANNEL ID
+	                           AND CP.PROD_ID = C.PROD_ID
+	                           AND SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
+	                           AND SH.PROD_ID = CP.PART_PROD_ID
+	                           AND P.PROD_ID = CP.PART_PROD_ID
+	                           AND TP.PROD_ID = P.PROD_ID
+	                           AND PD.PROD_ID = P.PROD_ID
+	                           AND MP.PROD_ID(+) = P.PROD_ID
+	                           AND PP.PROD_ID = P.PROD_ID
+	                           AND AP.PROD_ID(+) = P.PROD_ID
+	                           AND P2.PROD_ID = CP.PROD_ID
+	                           AND TP2.PROD_ID = P2.PROD_ID
+	                           AND PD2.PROD_ID = P2.PROD_ID
+	                           AND MP2.PROD_ID(+) = P2.PROD_ID
+	                           AND PP2.PROD_ID = P2.PROD_ID
+	                           AND PD.LANG_CD = #{tenantHeader.langCd}
+	                           AND PD2.LANG_CD = #{tenantHeader.langCd}
+	                           AND DP.PKG_ID = #{recommendId}
+	                           AND DP.EXPO_YN = 'Y'
+	                           AND C.USE_YN = 'Y'
+	                           AND C.BASE_YN = 'Y'
+                               AND (PI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PI.DEVICE_MODEL_CD = 'android_standard2')
+	                           AND PI.USE_YN = 'Y'
+	                           AND TP.PROD_STATUS_CD = 'PD000403'
+	                           AND TP.EXPO_YN = 'Y'
+	                           AND TP2.PROD_STATUS_CD = 'PD000403'
+	                           AND TP2.EXPO_YN = 'Y'
+	                           AND CP.PROD_RSHP_CD = 'DP010802'
+	                           AND DECODE( P.TOP_MENU_ID
+	                                , 'DP13'
+	                                , DECODE( PI.EBOOK_SPRT_YN
+	                                        , 'Y'
+	                                        , DECODE( P.META_CLSF_CD
+	                                                , 'CT24'
+	                                                , DECODE( PI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+	                                                , 'CT26'
+	                                                , DECODE( PI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+	                                                , 1 )
+	                                        , 0 )
+	                                , 'DP14'
+	                                , DECODE( PI.COMIC_SPRT_YN , 'Y', 1 , 0 )
+	                                , 'DP15'
+	                                , 0
+	                                , 'DP16'
+	                                , DECODE( P.META_CLSF_CD
+	                                        , 'CT25'
+	                                        , DECODE( PI.MUSIC_SPRT_YN, 'Y', 1, 0)
+	                                        , 1 )
+	                                , 1 ) = 1
+	                           AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+		                                  THEN ( SELECT 1
+		                                          FROM TB_DP_SUB_CONTENTS SC
+		                                         WHERE SC.PROD_ID = CP.PART_PROD_ID
+		                                           AND SC.SALE_YN = 'Y'
+		                                           AND DECODE( PI.HDV_SPRT_YN
+		                                                     , 'PD005201'
+		                                                     , DECODE ( SC.DP_PG_QULT_CD
+		                                                              , 'PD009701', 1
+		                                                              , 'PD009702', 1
+		                                                              , DECODE( PI.SD_VIDEO_SPRT_YN , 'Y', 1 , 0 ) )
+		                                                     , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+		                                           AND ROWNUM <![CDATA[<=]]> 1  )
+	                                      ELSE 1
+	                                  END ) = 1
+	                           AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+		                                  THEN DECODE( PI.VIDEO_DRM_SPRT_YN
+		                                            , 'PD005200'
+		                                            , DECODE( NVL( P.DRM_YN, 'N' ), 'N', 1, 0 )
+		                                            , 'PD005201'
+		                                            , 1 )
+		                                  ELSE 1
+		                              END ) = 1
+	                         ) A
+	                     WHERE A.RN = 1
+	                     ORDER BY A.EXPO_ORD
+	                            , A.PROD_NM
+	                   ) P
+                   WHERE ROWNUM <![CDATA[<=]]> #{END_ROW}
+                 ) C
+             WHERE RNUM <![CDATA[>=]]> #{START_ROW}
+	          ) P
+	          , TB_DP_PROD_IMG PI
+	          , TB_DP_TENANT_PROD_STATS PP
+	      WHERE PI.PROD_ID = P.PROD_ID
+	        AND PP.PROD_ID(+) = P.PROD_ID
+	        AND PP.TENANT_ID(+) = #{tenantHeader.tenantId}
+	        AND PI.IMG_CD IN (<foreach collection="imageCdList" item="imgCd" separator=",">#{imgCd}</foreach>)
+	     ORDER BY P.EXPO_ORD
+	            , P.PROD_NM
+    </select>
+    
 </mapper>
