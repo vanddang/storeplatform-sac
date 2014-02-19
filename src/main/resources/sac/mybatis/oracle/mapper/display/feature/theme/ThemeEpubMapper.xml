@@ -67,6 +67,7 @@
             AND TDBE.EXPO_YN = 'Y'
             AND tdbi.MOBILE_WEB_EXPO_YN = 'Y'
         ) A
+        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
         ORDER BY RNUM
     </select>
 </mapper>
