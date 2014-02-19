@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 1. 28. Updated by : 이승훈, 엔텔스.
  */
 public class OtherServiceGroupSacReq extends CommonInfo {
+	private static final long serialVersionUID = 1L;
 
 	private String list; // 리스트;
 	private List<String> prodIdList;
