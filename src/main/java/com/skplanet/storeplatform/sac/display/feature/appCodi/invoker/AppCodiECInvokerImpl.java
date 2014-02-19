@@ -53,7 +53,7 @@ public class AppCodiECInvokerImpl implements AppCodiECInvoker {
 			if (res.getStatusCode().equals(HttpStatus.OK)) {
 				response = res.getBody();
 			} else {
-				throw new StorePlatformException("SAC_DSP_0008");
+				throw new StorePlatformException("SAC_DSP_0010");
 			}
 
 			if (this.log.isDebugEnabled()) {
@@ -65,7 +65,7 @@ public class AppCodiECInvokerImpl implements AppCodiECInvoker {
 		} catch (StorePlatformException se) {
 			throw se;
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0008", e);
+			throw new StorePlatformException("SAC_DSP_0010", e);
 		}
 
 		return response;
