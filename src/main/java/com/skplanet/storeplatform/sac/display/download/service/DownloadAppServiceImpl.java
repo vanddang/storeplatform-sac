@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Comp
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -97,6 +99,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		String osVersion = temp[1];
 		String sysDate = downloadSystemDate.getSysDate();
+		String reqExpireDate = downloadSystemDate.getExpiredDate();
 		String osVersionOrginal = osVersion;
 		String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
 		if (osVersionTemp.length == 3) {
@@ -173,49 +176,165 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				product = new Product();
 				identifier = new Identifier();
 
-				String prchsId = null;
-				String prchsDt = null;
-				String prchsState = null;
-				String prchsProdId = null;
+				// 구매내역 조회를 위한 생성자
+				ProductListSacIn productListSacIn = null;
+				List<ProductListSacIn> productList = null;
+				HistoryListSacInReq historyReq = null;
+				HistoryListSacInRes historyRes = null;
 
 				try {
-					// 구매내역 조회를 위한 생성자
-					ProductListSacIn productListSacIn = new ProductListSacIn();
-					List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
+					productListSacIn = new ProductListSacIn();
+					productList = new ArrayList<ProductListSacIn>();
 
 					productListSacIn.setProdId(metaInfo.getProdId());
 					productList.add(productListSacIn);
 
-					HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
-					historyListSacReq.setTenantId(downloadAppSacReq.getTenantId());
-					historyListSacReq.setUserKey(downloadAppSacReq.getUserKey());
-					historyListSacReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
-					historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-					historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-					historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-					historyListSacReq.setEndDt(sysDate);
-					historyListSacReq.setOffset(1);
-					historyListSacReq.setCount(1);
-					historyListSacReq.setProductList(productList);
+					historyReq = new HistoryListSacInReq();
+					historyReq.setTenantId(downloadAppSacReq.getTenantId());
+					historyReq.setUserKey(downloadAppSacReq.getUserKey());
+					historyReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
+					historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+					historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+					historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+					historyReq.setEndDt(sysDate);
+					historyReq.setOffset(1);
+					historyReq.setCount(1);
+					historyReq.setProductList(productList);
 
 					// 구매내역 조회 실행
-					HistoryListSacInRes historyListSacRes = this.historyInternalSCI
-							.searchHistoryList(historyListSacReq);
+					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 
-					if (historyListSacRes.getTotalCnt() > 0) {
-						prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
-						prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
-						prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
-						prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
-
-						if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
-							prchsState = "payment";
-						} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
-							prchsState = "gift";
-						}
-					}
 				} catch (Exception ex) {
 					throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
+				}
+
+				String prchsId = null; // 구매ID
+				String prchsDt = null; // 구매일시
+				String useExprDt = null; // 이용 만료일시
+				String dwldExprDt = null; // 다운로드 만료일시
+				String prchsCaseCd = null; // 선물 여부
+				String prchsState = null; // 구매상태
+				String prchsProdId = null; // 구매 상품ID
+
+				if (historyRes != null && historyRes.getTotalCnt() > 0) {
+					List<Purchase> purchaseList = new ArrayList<Purchase>();
+					List<Encryption> encryptionList = new ArrayList<Encryption>();
+
+					for (int i = 0; i < historyRes.getTotalCnt(); i++) {
+						prchsId = historyRes.getHistoryList().get(i).getPrchsId();
+						prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
+						useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
+						dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
+						prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
+						prchsProdId = historyRes.getHistoryList().get(i).getProdId();
+
+						// 구매상태 확인
+						downloadAppSacReq.setPrchsDt(prchsDt);
+						downloadAppSacReq.setDwldExprDt(dwldExprDt);
+						prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
+								downloadAppSacReq);
+
+						// 구매상태 만료여부 확인
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+							// 구매 및 선물 여부 확인
+							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
+								prchsState = "payment";
+							} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
+								prchsState = "gift";
+							}
+						}
+
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("[getDownloadEbookInfo] prchsId : {}", prchsId);
+						this.log.debug("[getDownloadEbookInfo] prchsDt : {}", prchsDt);
+						this.log.debug("[getDownloadEbookInfo] useExprDt : {}", useExprDt);
+						this.log.debug("[getDownloadEbookInfo] dwldExprDt : {}", dwldExprDt);
+						this.log.debug("[getDownloadEbookInfo] prchsCaseCd : {}", prchsCaseCd);
+						this.log.debug("[getDownloadEbookInfo] prchsState : {}", prchsState);
+						this.log.debug("[getDownloadEbookInfo] prchsProdId : {}", prchsProdId);
+						this.log.debug("----------------------------------------------------------------");
+
+						metaInfo.setPurchaseId(prchsId);
+						metaInfo.setPurchaseProdId(prchsProdId);
+						metaInfo.setPurchaseDt(prchsDt);
+						metaInfo.setPurchaseState(prchsState);
+						metaInfo.setPurchaseDwldExprDt(dwldExprDt);
+
+						// 구매 정보
+						purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
+
+						// 구매상태 만료 여부 확인
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+							String deviceId = null; // Device Id
+							String deviceIdType = null; // Device Id 유형
+							SearchDeviceIdSacReq deviceReq = null;
+							SearchDeviceIdSacRes deviceRes = null;
+
+							try {
+								deviceReq = new SearchDeviceIdSacReq();
+								deviceReq.setUserKey(downloadAppSacReq.getUserKey());
+								deviceReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
+
+								// 기기정보 조회
+								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
+							} catch (Exception ex) {
+								throw new StorePlatformException("SAC_DSP_0001", "기기정보 조회 ", ex);
+							}
+
+							if (deviceRes != null) {
+								deviceId = deviceRes.getDeviceId();
+								deviceIdType = this.commonService.getDeviceIdType(deviceId);
+
+								metaInfo.setExpiredDate(reqExpireDate);
+								metaInfo.setUseExprDt(useExprDt);
+								metaInfo.setUserKey(userKey);
+								metaInfo.setDeviceKey(deviceKey);
+								metaInfo.setDeviceType(deviceIdType);
+								metaInfo.setDeviceSubKey(deviceId);
+
+								// 암호화 정보 (JSON)
+								EncryptionContents contents = this.encryptionGenerator
+										.generateEncryptionContents(metaInfo);
+
+								// JSON 파싱
+								MarshallingHelper marshaller = new JacksonMarshallingHelper();
+								byte[] jsonData = marshaller.marshal(contents);
+
+								// JSON 암호화
+								byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+								String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+								// 암호화 정보 (AES-128)
+								Encryption encryption = new Encryption();
+								encryption.setProductId(prchsProdId);
+								encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+								encryption
+										.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+								encryption.setToken(encryptString);
+								encryptionList.add(encryption);
+
+								// JSON 복호화
+								byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+								byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+
+								try {
+									String decData = new String(decrypt, "UTF-8");
+									this.log.debug("----------------------------------------------------------------");
+									this.log.debug("[getDownloadVodInfo] decData : {}", decData);
+									this.log.debug("----------------------------------------------------------------");
+								} catch (UnsupportedEncodingException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+					// 구매 정보
+					product.setPurchaseList(purchaseList);
+
+					// 암호화 정보
+					if (!encryptionList.isEmpty()) {
+						product.setDl(encryptionList);
+					}
 				}
 
 				/************************************************************************************************
@@ -232,7 +351,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				/************************************************************************************************
 				 * 상품 정보
 				 ************************************************************************************************/
-				product = new Product();
 
 				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
 						metaInfo.getProdId());
@@ -252,57 +370,57 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				/************************************************************************************************
 				 * 구매 정보에 따른 암호화 시작
 				 ************************************************************************************************/
-				// 구매 정보
-				if (StringUtils.isNotEmpty(prchsId)) {
-					String deviceId = null;
-					String deviceIdType = null;
-
-					SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
-					request.setUserKey(downloadAppSacReq.getUserKey());
-					request.setDeviceKey(downloadAppSacReq.getDeviceKey());
-
-					// 단말 정보 조회
-					SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
-
-					if (result != null) {
-						deviceId = result.getDeviceId(); // Device Id
-						deviceIdType = this.commonService.getDeviceIdType(deviceId); // Device Id 유형
-					}
-
-					metaInfo.setPurchaseId(prchsId);
-					metaInfo.setPurchaseDt(prchsDt);
-					metaInfo.setPurchaseState(prchsState);
-					metaInfo.setPurchaseProdId(prchsProdId);
-					product.setPurchase(this.commonGenerator.generatePurchase(metaInfo));
-
-					metaInfo.setExpiredDate(downloadSystemDate.getExpiredDate());
-					// metaInfo.setDwldExprDt(dwldExprDt);
-					metaInfo.setUserKey(downloadAppSacReq.getUserKey());
-					metaInfo.setDeviceKey(downloadAppSacReq.getDeviceKey());
-					metaInfo.setDeviceType(deviceIdType);
-					metaInfo.setDeviceSubKey(deviceId);
-
-					// 암호화 정보
-					EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
-
-					// JSON 파싱
-					MarshallingHelper marshaller = new JacksonMarshallingHelper();
-					byte[] jsonData = marshaller.marshal(contents);
-
-					// JSON 암호화
-					byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-					String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
-
-					// 암호화 정보 (AES-128)
-					Encryption encryption = new Encryption();
-					List<Encryption> encryptionList = new ArrayList<Encryption>();
-					encryption.setProductId(prchsProdId);
-					encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-					encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
-					encryption.setToken(encryptString);
-					encryptionList.add(encryption);
-					product.setDl(encryptionList);
-				}
+				// // 구매 정보
+				// if (StringUtils.isNotEmpty(prchsId)) {
+				// String deviceId = null;
+				// String deviceIdType = null;
+				//
+				// SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
+				// request.setUserKey(downloadAppSacReq.getUserKey());
+				// request.setDeviceKey(downloadAppSacReq.getDeviceKey());
+				//
+				// // 단말 정보 조회
+				// SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
+				//
+				// if (result != null) {
+				// deviceId = result.getDeviceId(); // Device Id
+				// deviceIdType = this.commonService.getDeviceIdType(deviceId); // Device Id 유형
+				// }
+				//
+				// metaInfo.setPurchaseId(prchsId);
+				// metaInfo.setPurchaseDt(prchsDt);
+				// metaInfo.setPurchaseState(prchsState);
+				// metaInfo.setPurchaseProdId(prchsProdId);
+				// product.setPurchase(this.commonGenerator.generatePurchase(metaInfo));
+				//
+				// metaInfo.setExpiredDate(downloadSystemDate.getExpiredDate());
+				// // metaInfo.setDwldExprDt(dwldExprDt);
+				// metaInfo.setUserKey(downloadAppSacReq.getUserKey());
+				// metaInfo.setDeviceKey(downloadAppSacReq.getDeviceKey());
+				// metaInfo.setDeviceType(deviceIdType);
+				// metaInfo.setDeviceSubKey(deviceId);
+				//
+				// // 암호화 정보
+				// EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+				//
+				// // JSON 파싱
+				// MarshallingHelper marshaller = new JacksonMarshallingHelper();
+				// byte[] jsonData = marshaller.marshal(contents);
+				//
+				// // JSON 암호화
+				// byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+				// String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+				//
+				// // 암호화 정보 (AES-128)
+				// Encryption encryption = new Encryption();
+				// List<Encryption> encryptionList = new ArrayList<Encryption>();
+				// encryption.setProductId(prchsProdId);
+				// encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+				// encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+				// encryption.setToken(encryptString);
+				// encryptionList.add(encryption);
+				// product.setDl(encryptionList);
+				// }
 
 				product.setPacketFee(metaInfo.getProdClsfCd());
 				product.setPlatClsfCd(metaInfo.getPlatClsfCd());
