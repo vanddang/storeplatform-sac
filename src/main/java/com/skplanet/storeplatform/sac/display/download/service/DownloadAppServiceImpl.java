@@ -205,7 +205,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 
 				} catch (Exception ex) {
-					throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
+					throw new StorePlatformException("SAC_DSP_1001", ex);
 				}
 
 				String prchsId = null; // 구매ID
@@ -263,6 +263,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						// 구매 정보
 						purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
 
+						/************************************************************************************************
+						 * 구매 정보에 따른 암호화 시작
+						 ************************************************************************************************/
 						// 구매상태 만료 여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
 							String deviceId = null; // Device Id
@@ -278,7 +281,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								// 기기정보 조회
 								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 							} catch (Exception ex) {
-								throw new StorePlatformException("SAC_DSP_0001", "기기정보 조회 ", ex);
+								throw new StorePlatformException("SAC_DSP_2001", ex);
 							}
 
 							if (deviceRes != null) {
@@ -366,62 +369,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
 				product.setRights(this.commonGenerator.generateRights(metaInfo)); // 권한
 				product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
-
-				/************************************************************************************************
-				 * 구매 정보에 따른 암호화 시작
-				 ************************************************************************************************/
-				// // 구매 정보
-				// if (StringUtils.isNotEmpty(prchsId)) {
-				// String deviceId = null;
-				// String deviceIdType = null;
-				//
-				// SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
-				// request.setUserKey(downloadAppSacReq.getUserKey());
-				// request.setDeviceKey(downloadAppSacReq.getDeviceKey());
-				//
-				// // 단말 정보 조회
-				// SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
-				//
-				// if (result != null) {
-				// deviceId = result.getDeviceId(); // Device Id
-				// deviceIdType = this.commonService.getDeviceIdType(deviceId); // Device Id 유형
-				// }
-				//
-				// metaInfo.setPurchaseId(prchsId);
-				// metaInfo.setPurchaseDt(prchsDt);
-				// metaInfo.setPurchaseState(prchsState);
-				// metaInfo.setPurchaseProdId(prchsProdId);
-				// product.setPurchase(this.commonGenerator.generatePurchase(metaInfo));
-				//
-				// metaInfo.setExpiredDate(downloadSystemDate.getExpiredDate());
-				// // metaInfo.setDwldExprDt(dwldExprDt);
-				// metaInfo.setUserKey(downloadAppSacReq.getUserKey());
-				// metaInfo.setDeviceKey(downloadAppSacReq.getDeviceKey());
-				// metaInfo.setDeviceType(deviceIdType);
-				// metaInfo.setDeviceSubKey(deviceId);
-				//
-				// // 암호화 정보
-				// EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
-				//
-				// // JSON 파싱
-				// MarshallingHelper marshaller = new JacksonMarshallingHelper();
-				// byte[] jsonData = marshaller.marshal(contents);
-				//
-				// // JSON 암호화
-				// byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-				// String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
-				//
-				// // 암호화 정보 (AES-128)
-				// Encryption encryption = new Encryption();
-				// List<Encryption> encryptionList = new ArrayList<Encryption>();
-				// encryption.setProductId(prchsProdId);
-				// encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-				// encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
-				// encryption.setToken(encryptString);
-				// encryptionList.add(encryption);
-				// product.setDl(encryptionList);
-				// }
-
 				product.setPacketFee(metaInfo.getProdClsfCd());
 				product.setPlatClsfCd(metaInfo.getPlatClsfCd());
 
