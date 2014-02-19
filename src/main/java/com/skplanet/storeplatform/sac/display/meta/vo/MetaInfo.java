@@ -63,6 +63,7 @@ public class MetaInfo {
 	private String deviceType;
 	private String deviceSubKey;
 	private String userKey;
+	private String cid;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -3266,6 +3267,14 @@ public class MetaInfo {
 	 */
 	public void setProdStatusCd(String prodStatusCd) {
 		this.prodStatusCd = prodStatusCd;
+	}
+
+	public String getCid() {
+		return this.cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 }
