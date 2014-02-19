@@ -69,14 +69,11 @@ public class DetailByDeviceIdTest {
 
 	/**
 	 * <pre>
-	 * 회원정보 조회 테스트.
+	 * DeviceID를 이용하여 회원정보 조회 테스트.
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test
-	public void test1_detailByDeviceId() throws Exception {
+	public void TEST_A_DeviceID를이용하여회원정보조회() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/detailByDeviceId/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
