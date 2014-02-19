@@ -16,6 +16,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
@@ -34,6 +40,24 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private SearchUserSCI searchUserSCI;
+
+	@Autowired
+	private SellerSearchSCI sellerSearchSCI;
+
+	@Override
+	public DetailInformationSacRes detailInformation(DetailInformationSacReq detailInformationSacReq) {
+		return this.sellerSearchSCI.detailInformation(detailInformationSacReq);
+	}
+
+	@Override
+	public SearchUserSacRes searchUserByUserKey(String userKey) {
+		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+		searchUserSacReq.setUserKey(userKey);
+		return this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
+	}
 
 	@Override
 	public ProdNoti getRegProdNoti(ProdNoti prodNoti) {

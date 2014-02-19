@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
@@ -79,13 +78,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Autowired
 	private FeedbackRepository feedbackRepository;
 
-	@Autowired
-	private SellerSearchSCI sellerSearchSCI;
-
 	@Override
 	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
 		// ?? 회원 정보 조회 회원SCI 조회.
+		this.feedbackRepository.searchUserByUserKey(createFeedbackSacReq.getUserKey());
 
 		// 평점 저장
 		this.setMbrAvgTenantProdStats(createFeedbackSacReq, sacRequestHeader);
@@ -128,6 +125,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public ModifyFeedbackSacRes modify(ModifyFeedbackSacReq modifyFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
 		// ?? 회원 정보 조회 회원SCI 조회.
+		this.feedbackRepository.searchUserByUserKey(modifyFeedbackSacReq.getUserKey());
 
 		// 평점 저장.
 		this.setMbrAvgTenantProdStats(modifyFeedbackSacReq, sacRequestHeader);
@@ -173,6 +171,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public RemoveFeedbackSacRes remove(RemoveFeedbackSacReq removeFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
 		// ?? 회원 정보 조회 회원SCI 조회.
+		this.feedbackRepository.searchUserByUserKey(removeFeedbackSacReq.getUserKey());
 
 		// 기 평가여부 조회
 		MbrAvg mbrAvg = new MbrAvg();
@@ -225,6 +224,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			SacRequestHeader sacRequestHeader) {
 
 		// ?? 회원 정보 조회 회원SCI 조회.
+		this.feedbackRepository.searchUserByUserKey(createRecommendFeedbackReq.getUserKey());
 
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
@@ -308,6 +308,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			SacRequestHeader sacRequestHeader) {
 
 		// ?? 회원 정보 조회 회원SCI 조회.
+		this.feedbackRepository.searchUserByUserKey(removeRecommendFeedbackSacReq.getUserKey());
 
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
@@ -501,7 +502,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		DetailInformationSacReq memberReq = new DetailInformationSacReq();
 
 		memberReq.setSellerKey(createSellerFeedbackSacReq.getSellerKey());
-		this.sellerSearchSCI.detailInformation(memberReq);
+		this.feedbackRepository.detailInformation(memberReq);
 
 		// 탈퇴회원 사용후기 등록 수 조회
 		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
@@ -537,7 +538,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		DetailInformationSacReq memberReq = new DetailInformationSacReq();
 
 		memberReq.setSellerKey(modifySellerFeedbackSacReq.getSellerKey());
-		this.sellerSearchSCI.detailInformation(memberReq);
+		this.feedbackRepository.detailInformation(memberReq);
 
 		// 탈퇴회원 사용후기 등록 수 조회
 		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
@@ -573,7 +574,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		DetailInformationSacReq memberReq = new DetailInformationSacReq();
 
 		memberReq.setSellerKey(removeSellerFeedbackSacReq.getSellerKey());
-		this.sellerSearchSCI.detailInformation(memberReq);
+		this.feedbackRepository.detailInformation(memberReq);
 
 		// 탈퇴회원 사용후기 등록 수 조회
 		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
@@ -801,7 +802,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// if (StringUtils.isNotBlank(prodNoti.getSellerMbrNo())) {
 		// DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 		// detailInformationSacReq.setSellerKey(prodNoti.getSellerMbrNo());
-		// DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
+		// DetailInformationSacRes detailInformationSacRes = this.feedbackRepository
 		// .detailInformation(detailInformationSacReq);
 		// if (detailInformationSacRes != null && detailInformationSacRes.getSellerMbr() != null) {
 		// sellerNickName = detailInformationSacRes.getSellerMbr().getSellerNickName();

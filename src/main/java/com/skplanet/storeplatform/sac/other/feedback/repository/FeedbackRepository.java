@@ -11,6 +11,9 @@ package com.skplanet.storeplatform.sac.other.feedback.repository;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
@@ -24,6 +27,30 @@ import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
  * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
  */
 public interface FeedbackRepository {
+
+	/**
+	 * 
+	 * <pre>
+	 * 판매자 회원정보 조회.
+	 * </pre>
+	 * 
+	 * @param detailInformationSacReq
+	 *            detailInformationSacReq
+	 * @return DetailInformationSacRes
+	 */
+	public DetailInformationSacRes detailInformation(DetailInformationSacReq detailInformationSacReq);
+
+	/**
+	 * 
+	 * <pre>
+	 * 일반 회원정보 조회.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            userKey
+	 * @return SearchUserSacRes
+	 */
+	public SearchUserSacRes searchUserByUserKey(String userKey);
 
 	/**
 	 * 
