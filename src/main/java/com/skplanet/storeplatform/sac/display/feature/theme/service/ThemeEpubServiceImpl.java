@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeEpubServiceGroup;
+import com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeEpubInfo;
 
 /**
  * 
@@ -100,8 +100,8 @@ public class ThemeEpubServiceImpl implements ThemeEpubService {
 				CommonResponse commonResponse = new CommonResponse();
 				List<Product> productList = new ArrayList<Product>();
 				// 웹툰 회차별 List 조회
-				List<ThemeEpubServiceGroup> themeEpubList = this.commonDAO.queryForList(
-						"ThemeEpub.selectThemeEpubList", req, ThemeEpubServiceGroup.class);
+				List<ThemeEpubInfo> themeEpubList = this.commonDAO.queryForList("ThemeEpub.selectThemeEpubList", req,
+						ThemeEpubInfo.class);
 
 				if (!themeEpubList.isEmpty()) {
 
@@ -117,14 +117,14 @@ public class ThemeEpubServiceImpl implements ThemeEpubService {
 					List<Source> sourceList = new ArrayList<Source>();
 					Source source = null;
 
-					ThemeEpubServiceGroup themeEpubServiceGroup = null;
+					ThemeEpubInfo ThemeEpubInfo = null;
 					Map<String, Object> reqMap = new HashMap<String, Object>();
 					reqMap.put("tenantHeader", tenantHeader);
 					reqMap.put("deviceHeader", deviceHeader);
 					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
 					for (int i = 0; i < themeEpubList.size(); i++) {
-						themeEpubServiceGroup = themeEpubList.get(i);
+						ThemeEpubInfo = themeEpubList.get(i);
 
 						product = new Product(); // 결과물
 
@@ -133,7 +133,7 @@ public class ThemeEpubServiceImpl implements ThemeEpubService {
 						identifierList = new ArrayList<Identifier>();
 
 						identifier.setType("theme");
-						identifier.setText(themeEpubServiceGroup.getBnrSeq());
+						identifier.setText(ThemeEpubInfo.getBnrSeq());
 						identifierList.add(identifier);
 						product.setIdentifierList(identifierList);
 
@@ -153,17 +153,17 @@ public class ThemeEpubServiceImpl implements ThemeEpubService {
 
 						// title 정보
 						title = new Title();
-						title.setText(themeEpubServiceGroup.getBnrNm());
+						title.setText(ThemeEpubInfo.getBnrNm());
 						product.setTitle(title);
 
 						// productExplain
-						product.setProductExplain(themeEpubServiceGroup.getBnrDesc());
+						product.setProductExplain(ThemeEpubInfo.getBnrDesc());
 
 						// source 정보
 						source = new Source();
 						sourceList = new ArrayList<Source>();
 						source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-						source.setUrl(themeEpubServiceGroup.getImgPath());
+						source.setUrl(ThemeEpubInfo.getImgPath());
 						sourceList.add(source);
 						product.setSourceList(sourceList);
 
