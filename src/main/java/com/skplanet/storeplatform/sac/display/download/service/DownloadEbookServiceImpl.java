@@ -197,8 +197,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				historyReq.setDeviceKey(ebookReq.getDeviceKey());
 				historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
 				historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-				historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-				historyReq.setEndDt(sysDate);
+				historyReq.setStartDt("AAAA");
+				historyReq.setEndDt("XXXX");
 				historyReq.setOffset(1);
 				historyReq.setCount(1);
 				historyReq.setProductList(productList);
@@ -206,7 +206,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				// 구매내역 조회 실행
 				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 			} catch (Exception ex) {
-				throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
+				// 구매내역 조회 연동 중 오류가 발생하였습니다.
+				throw new StorePlatformException("SAC_DSP_2001", ex);
 			}
 
 			String prchsId = null; // 구매ID
@@ -278,7 +279,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							// 기기정보 조회
 							deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 						} catch (Exception ex) {
-							throw new StorePlatformException("SAC_DSP_0001", "기기정보 조회 ", ex);
+							// 단말정보 조회 연동 중 오류가 발생하였습니다.
+							throw new StorePlatformException("SAC_DSP_1001", ex);
 						}
 
 						if (deviceRes != null) {

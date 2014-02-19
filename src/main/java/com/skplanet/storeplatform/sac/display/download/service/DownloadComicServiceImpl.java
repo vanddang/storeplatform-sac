@@ -193,7 +193,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 
 			} catch (Exception ex) {
-				throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
+				// 구매내역 조회 연동 중 오류가 발생하였습니다.
+				throw new StorePlatformException("SAC_DSP_2001", ex);
 			}
 
 			String prchsId = null; // 구매ID
@@ -265,7 +266,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 							// 기기정보 조회
 							deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 						} catch (Exception ex) {
-							throw new StorePlatformException("SAC_DSP_0001", "기기정보 조회 ", ex);
+							// 단말정보 조회 연동 중 오류가 발생하였습니다.
+							throw new StorePlatformException("SAC_DSP_1001", ex);
 						}
 
 						if (deviceRes != null) {
