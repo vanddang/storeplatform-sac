@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
  * 
- * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
+ * Updated on : 2014. 2. 7. Updated by : 이승훈, 엔텔스.
  */
 
 public interface ThemeEpubService {
