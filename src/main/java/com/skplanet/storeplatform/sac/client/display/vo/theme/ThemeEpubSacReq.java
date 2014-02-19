@@ -20,6 +20,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class ThemeEpubSacReq extends CommonInfo {
 
+	private static final long serialVersionUID = 1L;
+
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String channelId;
 	private String menuId;
