@@ -17,8 +17,8 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
@@ -68,7 +68,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		SearchSellerRequest schReq = new SearchSellerRequest();
+		SearchMbrSellerRequest schReq = new SearchMbrSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(requestHeader));
 
 		KeySearch keySearch = new KeySearch();
@@ -96,7 +96,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		list.add(keySearch);
 		schReq.setKeySearchList(list);
 
-		SearchSellerResponse schRes = this.sellerSCI.searchSeller(schReq);
+		SearchMbrSellerResponse schRes = this.sellerSCI.searchMbrSeller(schReq);
 
 		DetailInformationSacRes response = new DetailInformationSacRes();
 		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));// 판매자 정보
