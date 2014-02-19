@@ -136,7 +136,7 @@ public class UserModifyController {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	@RequestMapping(value = "/dev/member/user/modifyEmail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, @Validated @RequestBody ModifyEmailReq req) {
 

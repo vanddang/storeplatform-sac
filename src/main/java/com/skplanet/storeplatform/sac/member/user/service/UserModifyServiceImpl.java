@@ -297,82 +297,36 @@ public class UserModifyServiceImpl implements UserModifyService {
 	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, ModifyEmailReq req) {
 
 		/**
-		 * TODO 로직 미정의로 미구현됨.........
+		 * TODO 정확한 로직 미정의로 수정가능성 있음...... (현재는 사용자 이메일정보만 무조건 업데이트함.)
 		 * 
-		 * TODO 로직 미정의로 미구현됨.........
+		 * TODO 정확한 로직 미정의로 수정가능성 있음...... (현재는 사용자 이메일정보만 무조건 업데이트함.)
 		 * 
-		 * TODO 로직 미정의로 미구현됨.........
-		 * 
-		 * TODO 로직 미정의로 미구현됨.........
+		 * TODO 정확한 로직 미정의로 수정가능성 있음...... (현재는 사용자 이메일정보만 무조건 업데이트함.)
 		 */
 
 		/**
-		 * 회원 정보 조회.
+		 * 사용자 기본정보 setting.
 		 */
-		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+		updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserKey(req.getUserKey()); // 사용자 Key
+		userMbr.setUserEmail(req.getNewEmail()); // 신규 이메일
+		updateUserRequest.setUserMbr(userMbr);
 
 		/**
-		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
+		 * SC 사용자 회원 기본정보 수정 요청.
 		 */
-		LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
-		LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
-		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
-
-			LOGGER.info("## ====================================================");
-			LOGGER.info("## One ID 통합회원 [{}]", userInfo.getUserName());
-			LOGGER.info("## ====================================================");
-
-			/**
-			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
-			 */
-			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
-
-				/**
-				 * TODO 통합IDP 회원정보 수정 연동 (cmd - TXUpdateUserInfoIDP)
-				 */
-				// UpdateUserInfoEcReq updateUserInfoEcReq = new UpdateUserInfoEcReq();
-				// updateUserInfoEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 인증키
-				// updateUserInfoEcReq.setKey(userInfo.getImSvcNo()); // 통합서비스 관리번호
-				// updateUserInfoEcReq.setUserType("1"); // 가입자 유형코드 (1:개인)
-				// updateUserInfoEcReq.setIsBizAuth(MemberConstants.USE_N);
-				// updateUserInfoEcReq.setUdtTypeCd("2"); // 업데이트 구분 코드 (1:TN, 2:EM, 3:TN+EM, 4:부가정보)
-				// this.imIdpSCI.updateUserInfo(updateUserInfoEcReq);
-				LOGGER.info("## 통합 >> ========================= 이메일 수정 연동 성공.");
-
-			}
-
-		} else {
-
-			LOGGER.info("## ====================================================");
-			LOGGER.info("## 기존 IDP 회원 [{}]", userInfo.getUserName());
-			LOGGER.info("## ====================================================");
-
-			/**
-			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
-			 */
-			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
-
-				/**
-				 * TODO IDP 이메일 변경 연동 (cmd - modifyAuthInfo)
-				 */
-				// ModifyAuthInfoEcReq modifyAuthInfoEcReq = new ModifyAuthInfoEcReq();
-				// modifyAuthInfoEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 연동 Key
-				// modifyAuthInfoEcReq.setKeyType("1"); // 변경할 인증 정보의 type (1=Email, 2=password, default=1)
-				// modifyAuthInfoEcReq.setUserKey(userInfo.getImMbrNo()); // MBR_NO
-				// modifyAuthInfoEcReq.setPreKey(req.getOldEmail()); // 기존 패스워드
-				// modifyAuthInfoEcReq.setKey(req.getNewEmail()); // 신규 패스워드
-				// this.idpSCI.modifyAuthInfo(modifyAuthInfoEcReq);
-				LOGGER.info("## IDP >> ========================= 이메일 수정 연동 성공.");
-
-			}
-
+		UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
+		if (updateUserResponse.getUserKey() == null || StringUtils.equals(updateUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
 
 		/**
 		 * 결과 setting.
 		 */
 		ModifyEmailRes response = new ModifyEmailRes();
-		response.setUserKey("");
+		response.setUserKey(updateUserResponse.getUserKey());
 
 		return response;
 	}

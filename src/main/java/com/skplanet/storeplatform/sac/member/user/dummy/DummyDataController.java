@@ -12,11 +12,7 @@ package com.skplanet.storeplatform.sac.member.user.dummy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
 /**
@@ -179,26 +175,26 @@ public class DummyDataController {
 	// return res;
 	// }
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return ModifyEmailRes
-	 */
-	@RequestMapping(value = "/member/user/modifyEmail/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public ModifyEmailRes modifyEmail() {
-
-		LOGGER.info("##################################");
-		LOGGER.info("##### 5.1.15. 이메일 주소 수정 #####");
-		LOGGER.info("##################################");
-
-		ModifyEmailRes res = new ModifyEmailRes();
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
+	// /**
+	// * <pre>
+	// * method 설명.
+	// * </pre>
+	// *
+	// * @return ModifyEmailRes
+	// */
+	// @RequestMapping(value = "/member/user/modifyEmail/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public ModifyEmailRes modifyEmail() {
+	//
+	// LOGGER.info("##################################");
+	// LOGGER.info("##### 5.1.15. 이메일 주소 수정 #####");
+	// LOGGER.info("##################################");
+	//
+	// ModifyEmailRes res = new ModifyEmailRes();
+	// res.setUserKey("IW102158844420091030165015");
+	//
+	// return res;
+	// }
 
 	// /**
 	// * <pre>
