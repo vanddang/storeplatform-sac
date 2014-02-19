@@ -71,12 +71,9 @@ public class CreateTermsAgreementTest {
 	 * <pre>
 	 * Store 약관동의 등록.
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test
-	public void test1_createTermsAgreement() throws Exception {
+	public void TEST_A_약관동의등록OR수정() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createTermsAgreement/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")

@@ -67,12 +67,9 @@ public class ModifyTest {
 	 * <pre>
 	 * 회원정보 수정 테스트 (IDP 회원).
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test
-	public void test1_modifyIdp() throws Exception {
+	public void TEST_A_기존IDP회원정보수정() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modify/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -105,7 +102,6 @@ public class ModifyTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ModifyRes res = (ModifyRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -115,12 +111,9 @@ public class ModifyTest {
 	 * <pre>
 	 * 회원정보 수정 테스트 (통합 IDP 회원).
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test
-	public void test2_modifyImIdp() throws Exception {
+	public void TEST_B_통합IDP회원정보수정() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modify/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -153,7 +146,6 @@ public class ModifyTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ModifyRes res = (ModifyRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
