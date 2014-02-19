@@ -34,12 +34,9 @@ public class RequestAuthorizeServiceImpl implements RequestAuthorizeService {
     @Override
     public void authorize(HttpHeaders httpHeaders) {
 
-        String interfaceStatus = this.dbAccessService.selectUsableInterface(httpHeaders.getAuthKey(), httpHeaders.getInterfaceId());
+        String interefaceId = this.dbAccessService.selectUsableInterface(httpHeaders.getAuthKey(), httpHeaders.getInterfaceId());
 
-        if(StringUtils.isEmpty(interfaceStatus))
+        if(StringUtils.isEmpty(interefaceId))
             throw new StorePlatformException("SAC_CMN_0061");
-
-        if(!StringUtil.equals(interfaceStatus, CommonConstants.INTERFACE_STAT_OK))
-            throw new StorePlatformException("SAC_CMN_0062");
     }
 }
