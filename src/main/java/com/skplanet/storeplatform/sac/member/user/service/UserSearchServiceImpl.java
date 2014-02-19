@@ -419,6 +419,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 			sac.setUserType(StringUtil.setTrim(info.getUserType()));
 			sac.setUserEmail(StringUtil.setTrim(info.getUserEmail()));
 
+			if (info.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+				throw new StorePlatformException("SAC_MEM_1300", info.getUserType());
+			}
+
 			sacList.add(sac);
 		} else if (!req.getUserEmail().equals("")) {
 			sacList = this.searchUserEmail(req, sacHeader);
@@ -543,14 +547,22 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		List<SearchIdSac> searchIdList = new ArrayList<SearchIdSac>();
 		for (UserMbr userMbr : scRes.getUserMbrList()) {
-			SearchIdSac sac = new SearchIdSac();
-			sac.setUserId(StringUtil.setTrim(userMbr.getUserID()));
-			sac.setUserType(StringUtil.setTrim(userMbr.getUserType()));
-			sac.setRegDate(StringUtil.setTrim(userMbr.getRegDate()));
-			sac.setImSvcNo(StringUtil.setTrim(userMbr.getImSvcNo()));
-			sac.setUserEmail(StringUtil.setTrim(userMbr.getUserEmail()));
 
-			searchIdList.add(sac);
+			if (!userMbr.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+				SearchIdSac sac = new SearchIdSac();
+				sac.setUserId(StringUtil.setTrim(userMbr.getUserID()));
+				sac.setUserType(StringUtil.setTrim(userMbr.getUserType()));
+				sac.setRegDate(StringUtil.setTrim(userMbr.getRegDate()));
+				sac.setImSvcNo(StringUtil.setTrim(userMbr.getImSvcNo()));
+				sac.setUserEmail(StringUtil.setTrim(userMbr.getUserEmail()));
+
+				searchIdList.add(sac);
+			}
+
+		}
+
+		if (searchIdList.size() == 0) {
+			throw new StorePlatformException("SAC_MEM_0002", "UserEmail Search");
 		}
 
 		List<SearchIdSac> sacList = searchIdList;
