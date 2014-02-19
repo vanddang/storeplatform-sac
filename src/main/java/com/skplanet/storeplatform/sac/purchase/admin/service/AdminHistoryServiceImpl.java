@@ -11,10 +11,8 @@ package com.skplanet.storeplatform.sac.purchase.admin.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.purchase.client.admin.sci.AdminHistorySCI;
 import com.skplanet.storeplatform.sac.client.purchase.admin.vo.AdminHistorySacReq;
 import com.skplanet.storeplatform.sac.client.purchase.admin.vo.AdminHistorySacRes;
 
@@ -28,8 +26,8 @@ public class AdminHistoryServiceImpl implements AdminHistoryService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	private AdminHistorySCI adminHistorySCI;
+	// @Autowired
+	// private AdminHistorySCI adminHistorySCI;
 
 	/**
 	 * 상품별 구매내역 조회 기능을 제공한다.
