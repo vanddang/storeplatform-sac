@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="AppzineDetail">
-    <!-- Appzine 회차별 목록 조회-->
+    <!-- Appzine 상세 조회-->
     <select id="selectAppzineDetail" parameterType="AppzineDetailSacReq" resultType="AppzineDetail">
-	    SELECT A.*
+	    SELECT /* AppzineDetailMapper.xml, selectAppzineDetail, SAC : 유시혁 , 2014-02-18 */
+	       A.*
 	    FROM (
 				SELECT
 					ROW_NUMBER () OVER (ORDER BY A.APPZN_NO DESC) AS RNUM
