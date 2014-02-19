@@ -1259,10 +1259,10 @@ public class IdpServiceImpl implements IdpService {
 				mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no").toString());
 				// 통합회원 유형 코드
 				mbrOneID.setIntgMbrCaseCode(map.get("im_mem_type_cd").toString());
-				// // 가입자 상태코드
-				// mbrOneID.setEntryStatusCode(map.get("user_status_code").toString());
-				// // 사용자 실명 인증여부
-				// mbrOneID.setIsRealName(map.get("is_rname_auth").toString());
+				// 가입자 상태코드
+				mbrOneID.setEntryStatusCode(map.get("user_status_code").toString());
+				// 사용자 실명 인증여부
+				mbrOneID.setIsRealName(map.get("is_rname_auth").toString());
 				mbrOneID.setUserID(map.get("user_id").toString());
 				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
