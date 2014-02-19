@@ -29,6 +29,8 @@ public class DownloadMusicSacReq extends CommonInfo {
 	private String userKey; // 사용자고유키
 	private String dummy; // dummy data check
 	private String imageCd; // 이미지 코드
+	private String prchsDt; // 구매일시
+	private String dwldExprDt; // 다운로드 만료일시
 
 	/**
 	 * 
@@ -249,4 +251,35 @@ public class DownloadMusicSacReq extends CommonInfo {
 	public void setImageCd(String imageCd) {
 		this.imageCd = imageCd;
 	}
+
+	/**
+	 * @return the prchsDt
+	 */
+	public String getPrchsDt() {
+		return this.prchsDt;
+	}
+
+	/**
+	 * @param prchsDt
+	 *            the prchsDt to set
+	 */
+	public void setPrchsDt(String prchsDt) {
+		this.prchsDt = prchsDt;
+	}
+
+	/**
+	 * @return the dwldExprDt
+	 */
+	public String getDwldExprDt() {
+		return this.dwldExprDt;
+	}
+
+	/**
+	 * @param dwldExprDt
+	 *            the dwldExprDt to set
+	 */
+	public void setDwldExprDt(String dwldExprDt) {
+		this.dwldExprDt = dwldExprDt;
+	}
+
 }

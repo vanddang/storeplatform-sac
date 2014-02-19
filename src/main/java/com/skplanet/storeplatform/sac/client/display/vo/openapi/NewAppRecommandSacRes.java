@@ -8,28 +8,27 @@ lose such Confidential Information and
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.display.vo.download;
+package com.skplanet.storeplatform.sac.client.display.vo.openapi;
+
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Component;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * Download 앱 상품 정보 조회 Value Object.
+ * OpenApi Download Best 상품 조회 List Value Object.
  * 
- * Updated on : 2014. 01. 21. Updated by : 이석희, 아이에스플러스.
+ * Updated on : 2014. 02. 10. Updated by : 이석희, SK 플래닛.
  */
-// @ProtobufMapping(BestAppProto.resBestApp.class)
-public class DownloadAppSacRes extends CommonInfo {
+public class NewAppRecommandSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;
-	private Product product;
-	private Component component;
+	private List<Product> productList;
 
 	/**
 	 * 
@@ -59,51 +58,26 @@ public class DownloadAppSacRes extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * 상품 정보.
+	 * 상품 List.
 	 * </pre>
 	 * 
-	 * @return product
+	 * @return productList
 	 */
-	public Product getProduct() {
-		return this.product;
+	public List<Product> getProductList() {
+		return this.productList;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * 상품 정보.
+	 * 상품 List.
 	 * </pre>
 	 * 
-	 * @param product
-	 *            product
+	 * @param productList
+	 *            productList
 	 */
-	public void setProduct(Product product) {
-		this.product = product;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Seed 앱 정보.
-	 * </pre>
-	 * 
-	 * @return Component
-	 */
-	public Component getComponent() {
-		return this.component;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Seed 앱 정보.
-	 * </pre>
-	 * 
-	 * @param component
-	 *            component
-	 */
-	public void setComponent(Component component) {
-		this.component = component;
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
 	}
 
 	@Override
