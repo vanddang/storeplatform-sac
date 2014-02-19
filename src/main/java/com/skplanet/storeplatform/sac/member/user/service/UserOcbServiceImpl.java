@@ -12,16 +12,19 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.MemberPoint;
 import com.skplanet.storeplatform.member.client.common.vo.RemoveMemberPointRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointRequest;
+import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointResponse;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
@@ -33,6 +36,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformation
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 /**
  * 회원 OCB 정보 서비스 (CoreStoreBusiness) 구현체
@@ -67,13 +71,13 @@ public class UserOcbServiceImpl implements UserOcbService {
 		/**
 		 * OCB 등록/수정 요청.
 		 */
-		this.userSCI.updateMemberPoint(updateMemberPointRequest);
+		UpdateMemberPointResponse updateMemberPointResponse = this.userSCI.updateMemberPoint(updateMemberPointRequest);
 
 		/**
 		 * 결과 setting.
 		 */
 		CreateOcbInformationRes response = new CreateOcbInformationRes();
-		response.setUserKey(req.getUserKey());
+		response.setUserKey(updateMemberPointResponse.getUserKey());
 
 		return response;
 	}
@@ -81,12 +85,32 @@ public class UserOcbServiceImpl implements UserOcbService {
 	@Override
 	public RemoveOcbInformationRes removeOcbInformation(SacRequestHeader sacHeader, RemoveOcbInformationReq req) {
 
+		/**
+		 * OCB 조회 요청.
+		 */
+		SearchMemberPointResponse searchMemberPointResponse = null;
+		try {
+			searchMemberPointResponse = this.searchMemberPointList(sacHeader, req.getUserKey());
+		} catch (StorePlatformException spe) {
+			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+				throw new StorePlatformException("SAC_MEM_1701", spe);
+			}
+		}
+
+		/**
+		 * 유효한 카드번호를 삭제 하는것인지 체크 한다.
+		 */
+		for (MemberPoint dbOcbInfo : searchMemberPointResponse.getMemberPointList()) {
+			LOGGER.info("### >> 비교 DB  cardNumber : {}", dbOcbInfo.getCardNumber());
+			LOGGER.info("### >> 비교 REQ cardNumber : {}", req.getCardNumber());
+			if (!StringUtils.equals(dbOcbInfo.getCardNumber(), req.getCardNumber())) {
+				throw new StorePlatformException("SAC_MEM_1700", req.getCardNumber());
+			}
+		}
+
 		RemoveMemberPointRequest removeMemberPointRequest = new RemoveMemberPointRequest();
 		removeMemberPointRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
-		/**
-		 * TODO 삭제 테스트 해봐야 한다. (SC 변경 완료되는 시점에 2014.02.19)
-		 */
 		List<MemberPoint> memberPointList = new ArrayList<MemberPoint>();
 		MemberPoint memberPoint = new MemberPoint();
 		memberPoint.setUserKey(req.getUserKey()); // 사용자 Key
@@ -112,16 +136,14 @@ public class UserOcbServiceImpl implements UserOcbService {
 	@Override
 	public GetOcbInformationRes getOcbInformation(SacRequestHeader sacHeader, GetOcbInformationReq req) {
 
-		SearchMemberPointRequest searchMemberPointRequest = new SearchMemberPointRequest();
-		searchMemberPointRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-		searchMemberPointRequest.setUserKey(req.getUserKey());
-
 		/**
 		 * OCB 조회 요청.
 		 */
-		SearchMemberPointResponse searchMemberPointResponse = this.userSCI.searchMemberPointList(searchMemberPointRequest);
-		LOGGER.info("### searchMemberPointResponse : {}", searchMemberPointResponse.getMemberPointList().toString());
+		SearchMemberPointResponse searchMemberPointResponse = this.searchMemberPointList(sacHeader, req.getUserKey());
 
+		/**
+		 * 결과 setting.
+		 */
 		List<OcbInfo> ocbInfoList = new ArrayList<OcbInfo>();
 		for (MemberPoint dbOcbInfo : searchMemberPointResponse.getMemberPointList()) {
 			OcbInfo ocbInfo = new OcbInfo();
@@ -135,13 +157,25 @@ public class UserOcbServiceImpl implements UserOcbService {
 			ocbInfoList.add(ocbInfo);
 		}
 
-		/**
-		 * 결과 setting.
-		 */
 		GetOcbInformationRes response = new GetOcbInformationRes();
 		response.setOcbInfoList(ocbInfoList);
 
 		return response;
 	}
 
+	private SearchMemberPointResponse searchMemberPointList(SacRequestHeader sacHeader, String userKey) {
+
+		SearchMemberPointRequest searchMemberPointRequest = new SearchMemberPointRequest();
+		searchMemberPointRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		searchMemberPointRequest.setUserKey(userKey);
+
+		/**
+		 * OCB 조회 요청.
+		 */
+		SearchMemberPointResponse searchMemberPointResponse = this.userSCI.searchMemberPointList(searchMemberPointRequest);
+		LOGGER.info("### searchMemberPointResponse : {}", searchMemberPointResponse.getMemberPointList());
+
+		return searchMemberPointResponse;
+
+	}
 }

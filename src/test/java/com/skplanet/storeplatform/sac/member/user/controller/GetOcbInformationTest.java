@@ -71,7 +71,7 @@ public class GetOcbInformationTest {
 	@Test
 	public void test1_getOcbInformation() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/getOcbInformation/v1?userKey=US201401241550022950000616").httpMethod(HttpMethod.GET)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/getOcbInformation/v1?userKey=US201402071133550360001951").httpMethod(HttpMethod.GET)
 				.addHeaders("Accept", "application/json")
 				.success(GetOcbInformationRes.class, new SuccessCallback() {
 					@Override
