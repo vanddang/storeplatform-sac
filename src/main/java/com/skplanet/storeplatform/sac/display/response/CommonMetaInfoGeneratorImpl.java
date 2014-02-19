@@ -353,6 +353,19 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
 			identifierList.add(identifier);
 		}
+		// Cid 설정
+		if (StringUtils.isNotEmpty(metaInfo.getCid())) {
+			this.log.debug("##### Cid Identifier setting");
+			identifier = this.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, metaInfo.getCid());
+			identifierList.add(identifier);
+		}
+		// OutsdContentsId 설정
+		if (StringUtils.isNotEmpty(metaInfo.getOutsdContentsId())) {
+			this.log.debug("##### Cid Identifier setting");
+			identifier = this.generateIdentifier(DisplayConstants.DP_OUTSDCONTENTS_IDENTIFIER_CD,
+					metaInfo.getOutsdContentsId());
+			identifierList.add(identifier);
+		}
 		return identifierList;
 	}
 
