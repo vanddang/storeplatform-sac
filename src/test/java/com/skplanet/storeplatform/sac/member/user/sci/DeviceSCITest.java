@@ -161,8 +161,8 @@ public class DeviceSCITest {
 	@Test
 	public void testNonChangedDeviceHistoryByDeviceId() {
 		ChangedDeviceHistorySacReq request = new ChangedDeviceHistorySacReq();
-		request.setUserKey("US201401280453225170001216");
-		request.setDeviceId("01066786240");
+		request.setUserKey("US201401161113423010000110");
+		request.setDeviceId("01048088880");
 
 		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 		assertEquals(result.getIsChanged(), "N");
@@ -171,10 +171,11 @@ public class DeviceSCITest {
 
 	// 기기변경 이력 없는 test 가능한 Data
 	// DeviceKey / DevieID / UserKey
-	// DE201401280453226380000643 01066786240 US201401280453225170001216
-	// DE201401280455576880000648 01066786240 US201401280455574780001222
-	// DE201402051025014480000919 01066800865 US201402051025014250001616
-	// DE201401271052494600000403 01001231119 US201401271052494470000808
+	// DE201401211728081300000111 01088870008 US201401211728078110000226
+	// DE201401220152138270000145 01048088880 US201401161113423010000110
+	// DE201401220202508980000146 01048088876 US201401161113423010000110
+	// DE201401221005417560000162 01048088877 US201401161113423010000110
+	// DE201401221348405060000148 01048088874 US201401221348402330000305
 
 	/**
 	 * <pre>
@@ -185,8 +186,8 @@ public class DeviceSCITest {
 	@Test
 	public void testNonChangedDeviceHistoryByDeviceKey() {
 		ChangedDeviceHistorySacReq request = new ChangedDeviceHistorySacReq();
-		request.setUserKey("US201401280453225170001216");
-		request.setDeviceKey("DE201401280453226380000643");
+		request.setUserKey("US201401211728078110000226");
+		request.setDeviceKey("DE201401211728081300000111");
 
 		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 		assertEquals(result.getIsChanged(), "N");
