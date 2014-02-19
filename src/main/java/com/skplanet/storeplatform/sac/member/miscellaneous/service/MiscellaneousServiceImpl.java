@@ -522,42 +522,42 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
-	/**
-	 * <pre>
-	 * msisdn으로 userKey 조회하기 - (기타 기능 내 공통 기능 함수로 생성).
-	 * </pre>
-	 * 
-	 * @param commonReq
-	 *            CommonRequest
-	 * @param msisdn
-	 *            String
-	 * @return String
-	 */
-	public String searchUserKey(CommonRequest commonReq, String msisdn) {
-		String userKey = "";
-
-		SearchUserRequest searchUserRequest = new SearchUserRequest();
-		/** 1. 임시 공통헤더 생성 주입 */
-		searchUserRequest.setCommonRequest(commonReq);
-
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-		keySearch.setKeyString(msisdn);
-		keySearchList.add(keySearch);
-		searchUserRequest.setKeySearchList(keySearchList);
-
-		/** 2. deviceId(msisdn)로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
-		SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
-
-		if (searchUserResponse == null || searchUserResponse.getUserMbr() == null) {
-			throw new StorePlatformException("SAC_MEM_0003", "deviceId", msisdn);
-		} else {
-			userKey = searchUserResponse.getUserMbr().getUserKey();
-			LOGGER.debug("## [SAC] Response userKey:" + userKey);
-		}
-		return userKey;
-	}
+	// /**
+	// * <pre>
+	// * msisdn으로 userKey 조회하기 - (기타 기능 내 공통 기능 함수로 생성).
+	// * </pre>
+	// *
+	// * @param commonReq
+	// * CommonRequest
+	// * @param msisdn
+	// * String
+	// * @return String
+	// */
+	// public String searchUserKey(CommonRequest commonReq, String msisdn) {
+	// String userKey = "";
+	//
+	// SearchUserRequest searchUserRequest = new SearchUserRequest();
+	// /** 1. 임시 공통헤더 생성 주입 */
+	// searchUserRequest.setCommonRequest(commonReq);
+	//
+	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+	// KeySearch keySearch = new KeySearch();
+	// keySearch.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+	// keySearch.setKeyString(msisdn);
+	// keySearchList.add(keySearch);
+	// searchUserRequest.setKeySearchList(keySearchList);
+	//
+	// /** 2. deviceId(msisdn)로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
+	// SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
+	//
+	// if (searchUserResponse == null || searchUserResponse.getUserMbr() == null) {
+	// throw new StorePlatformException("SAC_MEM_0003", "deviceId", msisdn);
+	// } else {
+	// userKey = searchUserResponse.getUserMbr().getUserKey();
+	// LOGGER.debug("## [SAC] Response userKey:" + userKey);
+	// }
+	// return userKey;
+	// }
 
 	@Override
 	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) {
