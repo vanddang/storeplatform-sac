@@ -43,6 +43,8 @@ public class MetaInfo {
 	private String imagePath;
 	private String imageNm;
 	private Integer imageSize;
+	private String previewImagePath;
+	private Integer previewImageSize;
 	private String chnlProdId;
 	private String sysDate;
 	private Integer totalCount;
@@ -63,6 +65,7 @@ public class MetaInfo {
 	private String deviceType;
 	private String deviceSubKey;
 	private String userKey;
+	private String company;
 	private String cid;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
@@ -746,6 +749,36 @@ public class MetaInfo {
 	}
 
 	/**
+	 * @return the previewImagePath
+	 */
+	public String getPreviewImagePath() {
+		return this.previewImagePath;
+	}
+
+	/**
+	 * @param previewImagePath
+	 *            the previewImagePath to set
+	 */
+	public void setPreviewImagePath(String previewImagePath) {
+		this.previewImagePath = previewImagePath;
+	}
+
+	/**
+	 * @return the previewImageSize
+	 */
+	public Integer getPreviewImageSize() {
+		return this.previewImageSize;
+	}
+
+	/**
+	 * @param previewImageSize
+	 *            the previewImageSize to set
+	 */
+	public void setPreviewImageSize(Integer previewImageSize) {
+		this.previewImageSize = previewImageSize;
+	}
+
+	/**
 	 * @return the chnlProdId
 	 */
 	public String getChnlProdId() {
@@ -1133,6 +1166,21 @@ public class MetaInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	/**
+	 * @return the company
+	 */
+	public String getCompany() {
+		return this.company;
+	}
+
+	/**
+	 * @param company
+	 *            the company to set
+	 */
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	/**
