@@ -58,7 +58,7 @@ public class SearchIdTest {
 
 	/**
 	 * <pre>
-	 * ID 찾기 : IDP 회원
+	 * ID 찾기 : DeviceId로 찾기
 	 * </pre>
 	 * 
 	 */
@@ -69,7 +69,7 @@ public class SearchIdTest {
 			@Override
 			public Object requestBody() {
 				SearchIdSacReq req = new SearchIdSacReq();
-				req.setDeviceId("01023624159");
+				req.setDeviceId("01099999997");
 
 				logger.debug("request param : {}", req.toString());
 				return req;
@@ -78,7 +78,7 @@ public class SearchIdTest {
 			@Override
 			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 				SearchIdSacRes res = (SearchIdSacRes) result;
-				assertThat(res.getUserId(), notNullValue());
+				assertThat(res.getSearchIdList().get(0).getUserId(), notNullValue());
 				logger.debug("response param : {}", res.toString());
 			}
 		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -87,18 +87,18 @@ public class SearchIdTest {
 
 	/**
 	 * <pre>
-	 * ID 찾기 : MDN 회원
+	 * ID 찾기 : userEmail로 찾기
 	 * </pre>
 	 * 
 	 */
-	@Test(expected = StorePlatformException.class)
+	@Test
 	public void b_searchId() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/searchId/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
 			public Object requestBody() {
 				SearchIdSacReq req = new SearchIdSacReq();
-				req.setDeviceId("01099012701");
+				req.setUserEmail("sinwan123@yahoo.co.kr");
 
 				logger.debug("request param : {}", req.toString());
 				return req;
@@ -107,7 +107,7 @@ public class SearchIdTest {
 			@Override
 			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 				SearchIdSacRes res = (SearchIdSacRes) result;
-				assertThat(res.getUserId(), notNullValue());
+				assertThat(res.getSearchIdList().get(0).getUserId(), notNullValue());
 				logger.debug("response param : {}", res.toString());
 			}
 		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -136,7 +136,36 @@ public class SearchIdTest {
 			@Override
 			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 				SearchIdSacRes res = (SearchIdSacRes) result;
-				assertThat(res.getUserId(), notNullValue());
+				//				assertThat(res.getUserId(), notNullValue());
+				logger.debug("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * ID 찾기 : UserEmail 미입력
+	 * </pre>
+	 * 
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void d_searchId() {
+
+		new TestCaseTemplate(this.mockMvc).url("/member/user/searchId/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchIdSacReq req = new SearchIdSacReq();
+				req.setUserEmail("");
+
+				logger.debug("request param : {}", req.toString());
+				return req;
+			}
+		}).success(SearchIdSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchIdSacRes res = (SearchIdSacRes) result;
+				//				assertThat(res.getUserId(), notNullValue());
 				logger.debug("response param : {}", res.toString());
 			}
 		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
