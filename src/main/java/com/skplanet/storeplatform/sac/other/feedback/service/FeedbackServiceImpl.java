@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
@@ -54,6 +55,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.other.feedback.controller.FeedbackController;
 import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
+import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
 import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
@@ -495,26 +497,25 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setSellerRespTitle(createSellerFeedbackSacReq.getSellerRespTitle());
 		prodNoti.setSellerRespOpin(createSellerFeedbackSacReq.getSellerRespOpin());
 
-		// 회원정보 조회 => LocalSCI call 할 것
-		boolean sellerExist = true;
+		// 회원정보 조회
+		DetailInformationSacReq memberReq = new DetailInformationSacReq();
 
-		if (sellerExist) {
-			// 탈퇴회원 사용후기 등록 수 조회
-			int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		memberReq.setSellerKey(createSellerFeedbackSacReq.getSellerKey());
+		this.sellerSearchSCI.detailInformation(memberReq);
 
-			LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+		// 탈퇴회원 사용후기 등록 수 조회
+		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
 
-			if (count > 0) {
-				int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
-				if (affectedRow <= 0)
-					throw new StorePlatformException("SAC_OTH_1001");
-			} else {
-				int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
-				if (affectedRow <= 0)
-					throw new StorePlatformException("SAC_OTH_1001");
-			}
+		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+
+		if (count > 0) {
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
 		} else {
-			// 회원에서 받은 exception throw
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
 		}
 
 		CreateSellerFeedbackSacRes createSellerFeedbackRes = new CreateSellerFeedbackSacRes();
@@ -532,26 +533,25 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setSellerRespTitle(modifySellerFeedbackSacReq.getSellerRespTitle());
 		prodNoti.setSellerRespOpin(modifySellerFeedbackSacReq.getSellerRespOpin());
 
-		// 회원정보 조회 => LocalSCI call 할 것
-		boolean sellerExist = true;
+		// 회원정보 조회
+		DetailInformationSacReq memberReq = new DetailInformationSacReq();
 
-		if (sellerExist) {
-			// 탈퇴회원 사용후기 등록 수 조회
-			int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		memberReq.setSellerKey(modifySellerFeedbackSacReq.getSellerKey());
+		this.sellerSearchSCI.detailInformation(memberReq);
 
-			LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+		// 탈퇴회원 사용후기 등록 수 조회
+		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
 
-			if (count > 0) {
-				int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
-				if (affectedRow <= 0)
-					throw new StorePlatformException("SAC_OTH_1001");
-			} else {
-				int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
-				if (affectedRow <= 0)
-					throw new StorePlatformException("SAC_OTH_1001");
-			}
+		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+
+		if (count > 0) {
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
 		} else {
-			// 회원에서 받은 exception throw
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
 		}
 
 		ModifySellerFeedbackSacRes modifySellerFeedbackRes = new ModifySellerFeedbackSacRes();
@@ -569,26 +569,25 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setSellerRespTitle("");
 		prodNoti.setSellerRespOpin("");
 
-		// 회원정보 조회 => LocalSCI call 할 것
-		boolean sellerExist = true;
+		// 회원정보 조회
+		DetailInformationSacReq memberReq = new DetailInformationSacReq();
 
-		if (sellerExist) {
-			// 탈퇴회원 사용후기 등록 수 조회
-			int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		memberReq.setSellerKey(removeSellerFeedbackSacReq.getSellerKey());
+		this.sellerSearchSCI.detailInformation(memberReq);
 
-			LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+		// 탈퇴회원 사용후기 등록 수 조회
+		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
 
-			if (count > 0) {
-				int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
-				if (affectedRow <= 0)
-					throw new StorePlatformException("SAC_OTH_1001");
-			} else {
-				int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
-				if (affectedRow <= 0)
-					throw new StorePlatformException("SAC_OTH_1001");
-			}
+		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+
+		if (count > 0) {
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
 		} else {
-			// 회원에서 받은 exception throw
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
 		}
 
 		RemoveSellerFeedbackSacRes removeSellerFeedbackRes = new RemoveSellerFeedbackSacRes();
@@ -598,51 +597,58 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Override
 	public GetScoreSacRes getScore(GetScoreSacReq getScoreSacReq, SacRequestHeader sacRequestHeader) {
-		GetScoreSacRes getScoreRes = new GetScoreSacRes();
-		getScoreRes.setProdId(getScoreSacReq.getProdId());
-		getScoreRes.setTotEvluScore("20");
-		getScoreRes.setAvgEvluScore("4.0");
-		getScoreRes.setAvgEvluScorePct("80.00");
-		getScoreRes.setPaticpersCnt("5");
+		TenantProdStats tenantProdStats = new TenantProdStats();
+
+		tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		tenantProdStats.setProdId(getScoreSacReq.getProdId());
+
+		TenantProdStats res = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
+
+		GetScoreSacRes getScoreRes;
+
+		if (res != null) {
+			getScoreRes = new GetScoreSacRes();
+
+			getScoreRes.setProdId(getScoreSacReq.getProdId());
+			getScoreRes.setTotEvluScore(res.getTotEvluScore());
+			getScoreRes.setAvgEvluScore(res.getAvgEvluScore());
+			getScoreRes.setAvgEvluScorePct(res.getAvgEvluScorePct());
+			getScoreRes.setPaticpersCnt(res.getPaticpersCnt());
+		} else {
+			throw new StorePlatformException("SAC_OTH_9001");
+		}
+
 		return getScoreRes;
 	}
 
 	@Override
 	public ListScorePaticpersSacRes listScoreParticpers(ListScorePaticpersSacReq listScorePaticpersSacReq,
 			SacRequestHeader sacRequestHeader) {
+		MbrAvgScore mbrAvgScore = new MbrAvgScore();
+
+		mbrAvgScore.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		mbrAvgScore.setProdId(listScorePaticpersSacReq.getProdId());
+
+		List<MbrAvgScore> mbrAvgScoreList = this.feedbackRepository.getScoreList(mbrAvgScore);
+
+		List<AvgScore> avgScoreList;
+
+		if (mbrAvgScoreList.size() != 0) {
+			avgScoreList = new ArrayList<AvgScore>();
+			for (int i = 0; i < mbrAvgScoreList.size(); i++) {
+				AvgScore avgScore = new AvgScore();
+
+				avgScore.setAvgScore(mbrAvgScoreList.get(i).getAvgScore());
+				avgScore.setAvgScorePct(mbrAvgScoreList.get(i).getAvgScorePct());
+				avgScore.setPaticpersCnt(mbrAvgScoreList.get(i).getPaticpersCnt());
+
+				avgScoreList.add(avgScore);
+			}
+		} else {
+			throw new StorePlatformException("SAC_OTH_9001");
+		}
+
 		ListScorePaticpersSacRes listScoreRes = new ListScorePaticpersSacRes();
-		List<AvgScore> avgScoreList = new ArrayList<AvgScore>();
-		AvgScore avgScore1 = new AvgScore();
-		avgScore1.setAvgScore("5");
-		avgScore1.setAvgScorePct("0");
-		avgScore1.setPaticpersCnt("0");
-
-		AvgScore avgScore2 = new AvgScore();
-		avgScore2.setAvgScore("4");
-		avgScore2.setAvgScorePct("100");
-		avgScore2.setPaticpersCnt("1");
-
-		AvgScore avgScore3 = new AvgScore();
-		avgScore3.setAvgScore("3");
-		avgScore3.setAvgScorePct("0");
-		avgScore3.setPaticpersCnt("0");
-
-		AvgScore avgScore4 = new AvgScore();
-		avgScore4.setAvgScore("2");
-		avgScore4.setAvgScorePct("100");
-		avgScore4.setPaticpersCnt("1");
-
-		AvgScore avgScore5 = new AvgScore();
-		avgScore5.setAvgScore("1");
-		avgScore5.setAvgScorePct("0");
-		avgScore5.setPaticpersCnt("0");
-
-		avgScoreList.add(avgScore1);
-		avgScoreList.add(avgScore2);
-		avgScoreList.add(avgScore3);
-		avgScoreList.add(avgScore4);
-		avgScoreList.add(avgScore5);
-
 		listScoreRes.setAvgScoreList(avgScoreList);
 
 		return listScoreRes;

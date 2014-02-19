@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScorePaticpersSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackSacReq;
@@ -33,9 +32,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-@WebAppConfiguration
-@TransactionConfiguration
-@Transactional
 public class FeedbackServiceTest {
 
 	@Autowired
@@ -200,7 +196,7 @@ public class FeedbackServiceTest {
 
 	/**
 	 * <pre>
-	 * 판매자 댓글 등록.
+	 * 판매자 댓글 등록 테스트.
 	 * </pre>
 	 */
 	@Test
@@ -218,7 +214,7 @@ public class FeedbackServiceTest {
 
 	/**
 	 * <pre>
-	 * 판매자 댓글 수정.
+	 * 판매자 댓글 수정 테스트.
 	 * </pre>
 	 */
 	@Test
@@ -236,7 +232,7 @@ public class FeedbackServiceTest {
 
 	/**
 	 * <pre>
-	 * 판매자 댓글 삭제.
+	 * 판매자 댓글 삭제 테스트.
 	 * </pre>
 	 */
 	@Test
@@ -248,5 +244,33 @@ public class FeedbackServiceTest {
 		removeSellerFeedbackSacReq.setNotiSeq("300000010");
 
 		this.feedbackService.removeSellerFeedback(removeSellerFeedbackSacReq, this.sacRequestHeader);
+	}
+
+	/**
+	 * <pre>
+	 * 평점, 다운로드 조회 테스트.
+	 * </pre>
+	 */
+	@Test
+	public void testGetScore() {
+		GetScoreSacReq getScoreSacReq = new GetScoreSacReq();
+
+		getScoreSacReq.setProdId(this.prodId);
+
+		this.feedbackService.getScore(getScoreSacReq, this.sacRequestHeader);
+	}
+
+	/**
+	 * <pre>
+	 * 참여수 조회 테스트.
+	 * </pre>
+	 */
+	@Test
+	public void testListScoreParticpers() {
+		ListScorePaticpersSacReq listScorePaticpersSacReq = new ListScorePaticpersSacReq();
+
+		listScorePaticpersSacReq.setProdId(this.prodId);
+
+		this.feedbackService.listScoreParticpers(listScorePaticpersSacReq, this.sacRequestHeader);
 	}
 }
