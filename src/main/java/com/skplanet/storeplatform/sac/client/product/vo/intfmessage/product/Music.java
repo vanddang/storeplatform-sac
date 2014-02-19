@@ -27,13 +27,29 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 public class Music extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<Identifier> identifierList; // 다운로드 ID
+	private Identifier identifier; // 다운로드 ID
+	private List<Identifier> identifierList; // 다운로드 ID List
 	/*
 	 * 제공 음질 및 사이즈 정보 제공(음악의 경우 type을 audio/mp3-192, audio/mp3-128로 구분한다.)
 	 */
 	private List<Source> sourceList;
 	private List<Service> serviceList;
 	private Bell bell; // 컬러링/벨소리 부가 정보
+
+	/**
+	 * @return the identifier
+	 */
+	public Identifier getIdentifier() {
+		return this.identifier;
+	}
+
+	/**
+	 * @param identifier
+	 *            the identifier to set
+	 */
+	public void setIdentifier(Identifier identifier) {
+		this.identifier = identifier;
+	}
 
 	/**
 	 * @return the identifierList
