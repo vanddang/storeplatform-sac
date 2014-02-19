@@ -256,6 +256,9 @@
         
         <!-- 이 상품과 함께 구매한 상품 조회 -->
         <typeAlias alias="BoughtTogetherProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacReq" />
+        
+        <!-- 특정 판매자별 상품 조회 -->
+        <typeAlias alias="SellerProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacReq" />
     </typeAliases>
     
     <typeHandlers>

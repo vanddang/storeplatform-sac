@@ -17,6 +17,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherPr
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.related.RelatedProductListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.related.RelatedProductReq;
+import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -25,6 +27,7 @@ import com.skplanet.storeplatform.sac.display.related.service.AuthorProductListS
 import com.skplanet.storeplatform.sac.display.related.service.BoughtTogetherProductService;
 import com.skplanet.storeplatform.sac.display.related.service.GenreProductListService;
 import com.skplanet.storeplatform.sac.display.related.service.SellerProductListService;
+import com.skplanet.storeplatform.sac.display.related.service.SellerProductService;
 import com.skplanet.storeplatform.sac.display.related.service.SimilarProductService;
 
 @Controller
@@ -49,6 +52,9 @@ public class RelatedProductController {
 
 	@Autowired
 	private BoughtTogetherProductService boughtTogetherProductService;
+
+	@Autowired
+	private SellerProductService sellerProductService;
 
 	@RequestMapping(value = "/contributor/artist/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -78,16 +84,6 @@ public class RelatedProductController {
 		this.logger.debug("RelatedProductController.searchGenreProductList start !!");
 
 		return this.genreProductListService.searchGenreProductList(requestVO);
-	}
-
-	@RequestMapping(value = "/contributor/another/product/list/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public RelatedProductListRes searchSellerProductList(RelatedProductReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
-
-		this.logger.debug("RelatedProductController.searchSellerProductList start !!");
-
-		return this.sellerProductListService.searchSellerProductList(requestVO);
 	}
 
 	/**
@@ -141,5 +137,31 @@ public class RelatedProductController {
 		this.logger.debug("RelatedProductController.searchBoughtTogetherProductList start !!");
 
 		return this.boughtTogetherProductService.searchBoughtTogetherProductList(requestVO, requestHeader);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 특정 판매자별 상품 조회.
+	 * </pre>
+	 * 
+	 * @param SellerProductSacReq
+	 *            requestVO
+	 * @param SacRequestHeader
+	 *            requestHeader
+	 * @returnSellerProductSacRes
+	 * @throws JsonGenerationException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/seller/product/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+
+		this.logger.debug("RelatedProductController.searchSellerProductList start !!");
+
+		return this.sellerProductService.searchSellerProductList(requestVO, requestHeader);
 	}
 }
