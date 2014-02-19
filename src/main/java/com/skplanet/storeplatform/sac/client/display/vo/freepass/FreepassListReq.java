@@ -31,8 +31,8 @@ public class FreepassListReq extends CommonInfo {
 	private String thumbnailImageCd; // 썸네일이미지
 	private String prodStatusCd; // 상품상태
 	private String standardModelCd; // 상품상태
-	
-	
+	private String prodRshpCd;
+
 	// common req 전까지 임시
 	private String tenantId; // 테넌트ID
 	private String langCd; // 언어
@@ -42,7 +42,7 @@ public class FreepassListReq extends CommonInfo {
 	private String dummy; // 더미체크
 
 	public String getTopMenuId() {
-		return topMenuId;
+		return this.topMenuId;
 	}
 
 	public void setTopMenuId(String topMenuId) {
@@ -50,7 +50,7 @@ public class FreepassListReq extends CommonInfo {
 	}
 
 	public String getKind() {
-		return kind;
+		return this.kind;
 	}
 
 	public void setKind(String kind) {
@@ -58,7 +58,7 @@ public class FreepassListReq extends CommonInfo {
 	}
 
 	public String getProductId() {
-		return productId;
+		return this.productId;
 	}
 
 	public void setProductId(String productId) {
@@ -66,7 +66,7 @@ public class FreepassListReq extends CommonInfo {
 	}
 
 	public String getMenuId() {
-		return menuId;
+		return this.menuId;
 	}
 
 	public void setMenuId(String menuId) {
@@ -74,7 +74,7 @@ public class FreepassListReq extends CommonInfo {
 	}
 
 	public String getChannelId() {
-		return channelId;
+		return this.channelId;
 	}
 
 	public void setChannelId(String channelId) {
@@ -82,7 +82,7 @@ public class FreepassListReq extends CommonInfo {
 	}
 
 	public int getOffset() {
-		return offset;
+		return this.offset;
 	}
 
 	public void setOffset(int offset) {
@@ -90,7 +90,7 @@ public class FreepassListReq extends CommonInfo {
 	}
 
 	public int getCount() {
-		return count;
+		return this.count;
 	}
 
 	public void setCount(int count) {
@@ -98,7 +98,7 @@ public class FreepassListReq extends CommonInfo {
 	}
 
 	public String getDummy() {
-		return dummy;
+		return this.dummy;
 	}
 
 	public void setDummy(String dummy) {
@@ -113,11 +113,12 @@ public class FreepassListReq extends CommonInfo {
 	 * @return the tenantId
 	 */
 	public String getTenantId() {
-		return tenantId;
+		return this.tenantId;
 	}
 
 	/**
-	 * @param tenantId the tenantId to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
@@ -127,11 +128,12 @@ public class FreepassListReq extends CommonInfo {
 	 * @return the langCd
 	 */
 	public String getLangCd() {
-		return langCd;
+		return this.langCd;
 	}
 
 	/**
-	 * @param langCd the langCd to set
+	 * @param langCd
+	 *            the langCd to set
 	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
@@ -141,11 +143,12 @@ public class FreepassListReq extends CommonInfo {
 	 * @return the deviceModelCd
 	 */
 	public String getDeviceModelCd() {
-		return deviceModelCd;
+		return this.deviceModelCd;
 	}
 
 	/**
-	 * @param deviceModelCd the deviceModelCd to set
+	 * @param deviceModelCd
+	 *            the deviceModelCd to set
 	 */
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
@@ -155,11 +158,12 @@ public class FreepassListReq extends CommonInfo {
 	 * @return the bannerImageCd
 	 */
 	public String getBannerImageCd() {
-		return bannerImageCd;
+		return this.bannerImageCd;
 	}
 
 	/**
-	 * @param bannerImageCd the bannerImageCd to set
+	 * @param bannerImageCd
+	 *            the bannerImageCd to set
 	 */
 	public void setBannerImageCd(String bannerImageCd) {
 		this.bannerImageCd = bannerImageCd;
@@ -169,11 +173,12 @@ public class FreepassListReq extends CommonInfo {
 	 * @return the thumnailImageCd
 	 */
 	public String getThumbnailImageCd() {
-		return thumbnailImageCd;
+		return this.thumbnailImageCd;
 	}
 
 	/**
-	 * @param thumnailImageCd the thumnailImageCd to set
+	 * @param thumnailImageCd
+	 *            the thumnailImageCd to set
 	 */
 	public void setThumbnailImageCd(String thumnailImageCd) {
 		this.thumbnailImageCd = thumnailImageCd;
@@ -183,11 +188,12 @@ public class FreepassListReq extends CommonInfo {
 	 * @return the prodStatusCd
 	 */
 	public String getProdStatusCd() {
-		return prodStatusCd;
+		return this.prodStatusCd;
 	}
 
 	/**
-	 * @param prodStatusCd the prodStatusCd to set
+	 * @param prodStatusCd
+	 *            the prodStatusCd to set
 	 */
 	public void setProdStatusCd(String prodStatusCd) {
 		this.prodStatusCd = prodStatusCd;
@@ -197,14 +203,30 @@ public class FreepassListReq extends CommonInfo {
 	 * @return the standardModelCd
 	 */
 	public String getStandardModelCd() {
-		return standardModelCd;
+		return this.standardModelCd;
 	}
 
 	/**
-	 * @param standardModelCd the standardModelCd to set
+	 * @param standardModelCd
+	 *            the standardModelCd to set
 	 */
 	public void setStandardModelCd(String standardModelCd) {
 		this.standardModelCd = standardModelCd;
 	}
-	
+
+	/**
+	 * @return the prodRshpCd
+	 */
+	public String getProdRshpCd() {
+		return this.prodRshpCd;
+	}
+
+	/**
+	 * @param prodRshpCd
+	 *            the prodRshpCd to set
+	 */
+	public void setProdRshpCd(String prodRshpCd) {
+		this.prodRshpCd = prodRshpCd;
+	}
+
 }
