@@ -72,7 +72,7 @@ public class CreateOcbInformationTest {
 	 *             Exception
 	 */
 	@Test
-	public void test1_createOcbInformation() throws Exception {
+	public void TEST_A_OCB카드번호등록OR수정() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createOcbInformation/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
