@@ -179,7 +179,7 @@ public class Product extends CommonInfo implements Serializable {
 	private SelectOption selectOption;
 
 	/**
-	 * 상품 선택 옵션 정보 List
+	 * 상품 선택 옵션 정보 List.
 	 */
 	private List<SelectOption> selectOptionList;
 
@@ -230,6 +230,11 @@ public class Product extends CommonInfo implements Serializable {
 	 * 판매상태.
 	 */
 	private String salesStatus;
+
+	/**
+	 * 미리보기 Source List.
+	 */
+	private List<Source> previewSourceList;
 
 	public String getSalesStatus() {
 		return this.salesStatus;
@@ -933,4 +938,20 @@ public class Product extends CommonInfo implements Serializable {
 	public void setDl(List<Encryption> dl) {
 		this.dl = dl;
 	}
+
+	/**
+	 * @return the previewSourceList
+	 */
+	public List<Source> getPreviewSourceList() {
+		return this.previewSourceList;
+	}
+
+	/**
+	 * @param previewSourceList
+	 *            the previewSourceList to set
+	 */
+	public void setPreviewSourceList(List<Source> previewSourceList) {
+		this.previewSourceList = previewSourceList;
+	}
+
 }
