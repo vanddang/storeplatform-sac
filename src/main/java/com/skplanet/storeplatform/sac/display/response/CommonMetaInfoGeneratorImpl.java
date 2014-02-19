@@ -183,11 +183,15 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 */
 	@Override
 	public Source generateSource(String path, Integer size) {
-		Source source = new Source();
-		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-		source.setMediaType(DisplayCommonUtil.getMimeType(path));
-		source.setUrl(path);
-		source.setSize(size);
+		Source source = null;
+
+		if (StringUtils.isNotEmpty(path)) {
+			source = new Source();
+			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+			source.setMediaType(DisplayCommonUtil.getMimeType(path));
+			source.setUrl(path);
+			source.setSize(size);
+		}
 		return source;
 	}
 
@@ -218,15 +222,17 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		Source source = new Source();
 		List<Source> sourceList = new ArrayList<Source>();
 
-		source = this.generateSource(metaInfo);
+		source = this.generateSource(metaInfo.getImagePath(), metaInfo.getImageSize());
 		sourceList.add(source);
 
 		// DLM 이미지
-		source = new Source();
-		source.setType(DisplayConstants.DP_DLM_SOURCE);
-		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getDlmImagePath()));
-		source.setUrl(metaInfo.getDlmImagePath());
-		sourceList.add(source);
+		if (StringUtils.isNotEmpty(metaInfo.getDlmImagePath())) {
+			source = new Source();
+			source.setType(DisplayConstants.DP_DLM_SOURCE);
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getDlmImagePath()));
+			source.setUrl(metaInfo.getDlmImagePath());
+			sourceList.add(source);
+		}
 
 		return sourceList;
 	}
