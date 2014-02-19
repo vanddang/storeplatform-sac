@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ThemeEpub">
     <!-- ebook/코믹 테마상품 조회 -->
-    <select id="selectThemeEpubList" parameterType="ThemeEpub" resultType="ThemeEpub">
+    <select id="selectThemeEpubList" parameterType="ThemeEpubSacReq" resultType="ThemeEpub">
 		SELECT  /* ThemeEpubMapper.XML, selectThemeEpubList, seung hun Lee, 2014-02-17 */     
               COUNT(*) OVER () AS TOTAL_COUNT
             , A.BNR_MENU_ID
@@ -63,8 +63,8 @@
             AND TDB.BNR_MENU_ID = 'DP010917'
             /*AND (TCD.DEVICE_MODEL_CD = -deviceModelCd OR L.DEVICE_MODEL_CD = 'android_standard2')  header param : 단말모델코드 */
             AND TCD.DEVICE_MODEL_CD = 'SHV-E230S'
-            AND TDBE.EXPO_YN = 'Y'
             AND TCD.USE_YN = 'Y'
+            AND TDBE.EXPO_YN = 'Y'
             AND tdbi.MOBILE_WEB_EXPO_YN = 'Y'
         ) A
         ORDER BY RNUM
