@@ -54,11 +54,13 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
@@ -80,6 +82,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSa
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSac;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
@@ -406,40 +409,23 @@ public class UserSearchServiceImpl implements UserSearchService {
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* 회원 정보 조회 */
-		UserInfo info = this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
+		List<SearchIdSac> sacList = new ArrayList<SearchIdSac>();
+		if (!req.getDeviceId().equals("")) {
+			UserInfo info = this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
+			SearchIdSac sac = new SearchIdSac();
+			sac.setImSvcNo(StringUtil.setTrim(info.getImSvcNo()));
+			sac.setRegDate(StringUtil.setTrim(info.getRegDate()));
+			sac.setUserId(StringUtil.setTrim(info.getUserId()));
+			sac.setUserType(StringUtil.setTrim(info.getUserType()));
+			sac.setUserEmail(StringUtil.setTrim(info.getUserEmail()));
 
-		/* 디바이스 단건 조회 */
-		ListDeviceReq scReq = new ListDeviceReq();
-		scReq.setUserKey(info.getUserKey());
-		scReq.setDeviceId(req.getDeviceId());
-		ListDeviceRes scRes = this.deviceService.listDevice(sacHeader, scReq);
-		if (scRes.getDeviceInfoList() == null) {
-			throw new StorePlatformException("SAC_MEM_0002", req.getDeviceId());
+			sacList.add(sac);
+		} else if (!req.getUserEmail().equals("")) {
+			sacList = this.searchUserEmail(req, sacHeader);
 		}
-		DeviceInfo deviceInfo = scRes.getDeviceInfoList().get(0);
+
 		SearchIdSacRes res = new SearchIdSacRes();
-
-		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
-
-			if (info.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
-				// 무선회원
-				throw new StorePlatformException("SAC_MEM_1300", info.getUserType());
-			} else if (info.getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
-				// ID 회원
-				UserInfo deviceIdSearch = this.mcc.getUserBaseInfo("deviceId", deviceInfo.getDeviceId(), sacHeader);
-				res.setUserId(deviceIdSearch.getUserId());
-			}
-		} else {
-			// 통합회원 : 회원연락처와 휴대기기 ID가 일치하는 경우
-			if (info.getUserPhone().equals(deviceInfo.getDeviceId())) {
-				UserInfo deviceIdSearch = this.mcc.getUserBaseInfo("deviceId", deviceInfo.getDeviceId(), sacHeader);
-				res.setUserId(deviceIdSearch.getUserId());
-			} else if (!info.getUserPhone().equals(deviceInfo.getDeviceId())) {
-				throw new StorePlatformException("SAC_MEM_1301", info.getUserPhone(), deviceInfo.getDeviceId());
-			} else if (info.getUserPhone() == null && "".equals(info.getUserPhone())) {
-				throw new StorePlatformException("SAC_MEM_0001", "getUserPhone()");
-			}
-		}
+		res.setSearchIdList(sacList);
 
 		logger.info("SearchIdSacRes : ", res.toString());
 
@@ -486,10 +472,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 				res.setUserPw(ecResFindpass.getTempPasswd());
 
 				if (!req.getUserEmail().equals("")) {
-					res.setSendInfo(req.getUserEmail());
+					res.setSendInfo(StringUtil.setTrim(req.getUserEmail()));
 					res.setSendMean("01");
 				} else if (!req.getUserPhone().equals("")) {
-					res.setSendInfo(req.getUserPhone());
+					res.setSendInfo(StringUtil.setTrim(req.getUserPhone()));
 					res.setSendMean("02");
 				} else if (req.getUserEmail().equals("") && req.getUserPhone().equals("")) {
 					throw new StorePlatformException("SAC_MEM_0001", "userEmail or userPhone");
@@ -543,6 +529,33 @@ public class UserSearchServiceImpl implements UserSearchService {
 		logger.info("SearchIdSacRes : ", res.toString());
 
 		return res;
+	}
+
+	// userEmail 기반 사용자 조회
+	@Override
+	public List<SearchIdSac> searchUserEmail(SearchIdSacReq req, SacRequestHeader sacHeader) {
+
+		SearchUserEmailRequest scReq = new SearchUserEmailRequest();
+		scReq.setCommonRequest(commonRequest);
+		scReq.setUserEmail(req.getUserEmail());
+
+		SearchUserEmailResponse scRes = this.userSCI.searchUserEmail(scReq);
+
+		List<SearchIdSac> searchIdList = new ArrayList<SearchIdSac>();
+		for (UserMbr userMbr : scRes.getUserMbrList()) {
+			SearchIdSac sac = new SearchIdSac();
+			sac.setUserId(StringUtil.setTrim(userMbr.getUserID()));
+			sac.setUserType(StringUtil.setTrim(userMbr.getUserType()));
+			sac.setRegDate(StringUtil.setTrim(userMbr.getRegDate()));
+			sac.setImSvcNo(StringUtil.setTrim(userMbr.getImSvcNo()));
+			sac.setUserEmail(StringUtil.setTrim(userMbr.getUserEmail()));
+
+			searchIdList.add(sac);
+		}
+
+		List<SearchIdSac> sacList = searchIdList;
+
+		return sacList;
 	}
 
 	// 사용자 인증정보 세팅

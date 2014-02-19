@@ -195,12 +195,14 @@ public class UserSearchController {
 		LOGGER.info("============================================ SearchIdSacReq : {}", req.toString());
 
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String userEmail = StringUtil.nvl(req.getUserEmail(), "");
 
-		if ("".equals(deviceId)) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceId()");
+		if ("".equals(deviceId) && "".equals(userEmail)) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId or userEmail");
 		}
 
 		req.setDeviceId(deviceId);
+		req.setUserEmail(userEmail);
 
 		SearchIdSacRes res = this.svc.searchId(sacHeader, req);
 

@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
@@ -25,6 +27,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSa
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSac;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
@@ -207,4 +210,15 @@ public interface UserSearchService {
 	 * @return SearchPasswordSacRes
 	 */
 	public ListTermsAgreementSacRes listTermsAgreement(SacRequestHeader sacHeader, ListTermsAgreementSacReq req);
+
+	/**
+	 * <pre>
+	 * 사용자 정보 조회 userEmail
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 * @param SearchIdSacReq
+	 * @return SearchIdSacRes
+	 */
+	public List<SearchIdSac> searchUserEmail(SearchIdSacReq req, SacRequestHeader sacHeader);
 }
