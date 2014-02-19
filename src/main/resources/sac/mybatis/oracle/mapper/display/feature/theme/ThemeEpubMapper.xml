@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ThemeEpub">
+    <!-- ebook/코믹 테마상품 조회 -->
+    <select id="selectThemeEpubList" parameterType="ThemeEpub" resultType="ThemeEpub">
+		SELECT  /* ThemeEpubMapper.XML, selectThemeEpubList, seung hun Lee, 2014-02-17 */     
+              COUNT(*) OVER () AS TOTAL_COUNT
+            , A.BNR_MENU_ID
+            , A.BNR_SEQ
+            , A.BNR_NM
+            , A.BNR_DESC
+            , A.BNR_INFO
+            , A.PROD_ID
+            , A.IMG_PATH
+            , A.REG_DT
+            , A.MENU_ID
+            , A.BNR_TITLE
+        FROM (
+            SELECT
+                 ROW_NUMBER() OVER(ORDER BY TDBE.EXPO_ORD , TDBE.EXPO_STATUS_CD) RNUM
+                , TDB.BNR_MENU_ID
+                , TDB.BNR_SEQ
+                , TDBE.BNR_NM
+                , TDBE.BNR_DESC
+                , TDB.BNR_INFO
+                , DECODE( TDB.BNR_INFO_TYPE_CD
+                      , 'DP010303'
+                      , ( SELECT P.PROD_ID FROM TB_DP_PROD_DESC P WHERE P.PROD_ID = TDB.BNR_INFO )
+                      , '' ) PROD_ID
+                , TDBI.IMG_PATH
+                , TO_CHAR( TDB.REG_DT, 'YYYYMMDDHH24MISS' ) REG_DT
+                , DECODE(TDB.BNR_INFO_TYPE_CD, 'DP010306', TDB.BNR_INFO) MENU_ID
+            , DECODE( TDB.BNR_INFO_TYPE_CD
+                   , 'DP010303'
+                   , ( SELECT P.PROD_NM FROM TB_DP_PROD_DESC P WHERE P.PROD_ID = TDB.BNR_INFO )
+                   , 'DP010306'
+                   , ( SELECT C.MENU_NM FROM TB_DP_TENANT_MENU C WHERE C.TENANT_MENU_ID = TDB.BNR_INFO AND C.TENANT_ID = TDB.TENANT_ID)
+                   , 'DP010307'
+                   , ( SELECT R.LIST_NM FROM TB_DP_LIST R WHERE R.LIST_ID = TDB.BNR_INFO AND R.LIST_GRP_CD = 'ADR' AND R.TENANT_ID = TDB.TENANT_ID)
+                   , 'DP010309'
+                   , ( SELECT BS.BRAND_SHOP_NM FROM TB_DP_BRAND_SHOP BS WHERE BS.BRAND_SHOP_NO = TDB.BNR_INFO AND BS.TENANT_ID = TDB.TENANT_ID)
+                   , 'DP010310'
+                   ,  TDBE.BNR_NM ) AS BNR_TITLE
+            FROM 
+                TB_DP_BNR TDB
+                , TB_DP_BNR_EXPO TDBE
+                , TB_DP_BNR_IMG TDBI
+                , TB_DP_BNR_DVC TDBD
+                , TB_CM_DEVICE TCD
+            WHERE 1=1
+            AND TDB.TENANT_ID = #{tenantId}
+            AND TDB.BNR_MENU_ID = TDBI.BNR_MENU_ID
+            AND TDB.TENANT_ID = TDBI.TENANT_ID
+            AND TDB.BNR_MENU_ID = TDBE.BNR_MENU_ID
+            AND TDB.TENANT_ID = TDBE.TENANT_ID
+            AND TDB.BNR_MENU_ID = TDBD.BNR_MENU_ID
+            AND TDB.TENANT_ID = TDBD.TENANT_ID
+            AND TDB.BNR_SEQ = TDBI.BNR_SEQ
+            AND TDB.BNR_SEQ = TDBE.BNR_SEQ
+            AND TDB.BNR_SEQ = TDBD.BNR_SEQ
+            AND TDBD.DEVICE_MODEL_CD = TCD.DEVICE_MODEL_CD 
+            /*AND TDB.BNR_MENU_ID = -BnrMenuId*/
+            AND TDB.BNR_MENU_ID = 'DP010917'
+            /*AND (TCD.DEVICE_MODEL_CD = -deviceModelCd OR L.DEVICE_MODEL_CD = 'android_standard2')  header param : 단말모델코드 */
+            AND TCD.DEVICE_MODEL_CD = 'SHV-E230S'
+            AND TDBE.EXPO_YN = 'Y'
+            AND TCD.USE_YN = 'Y'
+            AND tdbi.MOBILE_WEB_EXPO_YN = 'Y'
+        ) A
+        ORDER BY RNUM
+    </select>
+</mapper>
