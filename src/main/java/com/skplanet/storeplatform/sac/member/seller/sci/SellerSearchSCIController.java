@@ -7,6 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -31,6 +35,7 @@ import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
  * Updated on : 2014. 1. 8. Updated by : 한서구, 부르칸.
  */
 @LocalSCI
+@RequestMapping(value = "/member/seller/sci")
 public class SellerSearchSCIController implements SellerSearchSCI {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -57,7 +62,9 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 	 * @return DetailInformationRes
 	 */
 	@Override
-	public DetailInformationSacRes detailInformation(DetailInformationSacReq req) {
+	@RequestMapping(value = "/detailInformation", method = RequestMethod.POST)
+	public @ResponseBody
+	DetailInformationSacRes detailInformation(@Validated DetailInformationSacReq req) {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
