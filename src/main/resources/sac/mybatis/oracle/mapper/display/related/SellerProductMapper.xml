@@ -12,7 +12,7 @@
 		FROM (
 		    SELECT 
 		        COUNT(1) OVER() TOTAL_COUNT
-		        , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, PROD_NM) RNK
+		        , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, A.PROD_NM) RNK
 		        , C.TOP_MENU_ID
 		        , C.MENU_ID
 		        , A.PROD_ID
