@@ -5,7 +5,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * ProductCategory Service 인터페이스(CoreStoreBusiness)
+ * 
  * 
  * Updated on : 2014. 2. 7. Updated by : 이승훈, 엔텔스.
  */

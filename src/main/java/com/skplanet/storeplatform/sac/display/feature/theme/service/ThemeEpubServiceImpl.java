@@ -36,7 +36,7 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeEpubServiceGroup;
 
 /**
- * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
+ * 
  * 
  * Updated on : 2014. 2. 7. Updated by : 이승훈, 엔텔스.
  */
