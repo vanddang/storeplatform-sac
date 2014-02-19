@@ -129,6 +129,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Autowired
 	private MemberCommonComponent memberCommonComponent;
 
+	@Autowired
+	private MemberCommonComponent commService; // 회원 공통 서비스
+
 	/**
 	 * 회원 가입 조회
 	 */
@@ -411,6 +414,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 		/* 회원 정보 조회 */
 		List<SearchIdSac> sacList = new ArrayList<SearchIdSac>();
 		if (!req.getDeviceId().equals("")) {
+
+			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
+			req.setDeviceId(opmdMdn);
+			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+
 			UserInfo info = this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
 			SearchIdSac sac = new SearchIdSac();
 			sac.setImSvcNo(StringUtil.setTrim(info.getImSvcNo()));
