@@ -65,16 +65,13 @@ public class ModifyEmailTest {
 
 	/**
 	 * <pre>
-	 * 회원 이메일 수정 테스트 (IDP 회원).
+	 * 회원 이메일 수정 테스트.
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test
-	public void test1_modifyEmail() throws Exception {
+	public void TEST_A_이메일수정() {
 
-		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_DEV + "/modifyEmail/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modifyEmail/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -86,11 +83,10 @@ public class ModifyEmailTest {
 						 * 기존 IDP 회원
 						 */
 						reqJson.setUserKey("US201402181518403440002941");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
-						// reqJson.setUserAuthKey("4c77e935ee2f4eae8dcf2d22b199d504"); // Fixed userAuthKey
-						reqJson.setOldEmail("111@naver.com"); // 기존 이메일
-						reqJson.setNewEmail("222@naver.com"); // 신규 이메일
-						reqJson.setIsEmailAuth("Y"); // 이메일 인증 여부
+						// reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
+						reqJson.setUserAuthKey("4c77e935ee2f4eae8dcf2d22b199d504"); // Fixed userAuthKey
+						reqJson.setOldEmail("oldEmail@naver.com"); // 기존 이메일
+						reqJson.setNewEmail("newEmail@naver.com"); // 신규 이메일
 
 						return reqJson;
 					}
