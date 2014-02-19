@@ -294,6 +294,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 
 				vodExplain = new VodExplain();
 				vodExplain.setSaleDateInfo(categoryVodBox.getIssueDay());
+				vod.setVodExplain(vodExplain);
 
 				videoInfoList = new ArrayList<VideoInfo>();
 
