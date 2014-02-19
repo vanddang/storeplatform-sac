@@ -113,7 +113,7 @@
                                        (
                                         SELECT ROW_NUMBER( ) OVER ( PARTITION BY A.PROD_ID
                                                                         ORDER BY  DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
-                                                                                , TO_NUMBER( REGEXP_REPLACE( (SELECT CHAPTER FROM UV_TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID), '[^[:digit:]]') ) DESC
+                                                                                , TO_NUMBER( REGEXP_REPLACE( L.CHAPTER, '[^[:digit:]]') ) DESC
                                                                                 , NVL( J.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
                                                                                 , J.UPD_DT DESC ) AS RN         
                                              , B.TOP_MENU_ID
