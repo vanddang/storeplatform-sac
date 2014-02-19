@@ -241,7 +241,12 @@
 		<typeAlias alias="dpTagInfoVO"     			type="com.skplanet.icms.refactoring.deploy.DPTagInfoVO" />
 		<typeAlias alias="dpTenantProductVO"     	type="com.skplanet.icms.refactoring.deploy.DPTenantProductVO" />
 		<typeAlias alias="dpTenantProductPriceVO"   type="com.skplanet.icms.refactoring.deploy.DPTenantProductPriceVO" />
-		<typeAlias alias="ProductVo" 				type="com.skplanet.storeplatform.sac.display.product.vo.ProductVo"/>        
+		<typeAlias alias="ProductVo" 				type="com.skplanet.storeplatform.sac.display.product.vo.ProductVo"/>  
+        
+        <!-- ebook/코믹 테마 상품 조회 -->
+        <typeAlias alias="ThemeEpubSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacReq" />
+        <typeAlias alias="ThemeEpub"  type="com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeEpubServiceGroup" />
+                         
     </typeAliases>
     
     <typeHandlers>
