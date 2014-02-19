@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
@@ -90,7 +94,8 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 			throw new StorePlatformException("SAC_DSP_0002", "recommendId", requestVO.getRecommendId());
 		}
 
-		List<ThemeRecommend> listThemeRecommend = new ArrayList<ThemeRecommend>();
+		List<ThemeRecommend> packageInfo = new ArrayList<ThemeRecommend>();
+		List<ThemeRecommend> productInfo = new ArrayList<ThemeRecommend>();
 		List<String> imageCodeList = new ArrayList<String>();
 		imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 		imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
@@ -98,159 +103,326 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 		imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		mapReq.put("imageCdList", imageCodeList);
+		mapReq.put("recommendId", requestVO.getRecommendId());
 
-		listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList", mapReq,
+		mapReq.put("START_ROW", requestVO.getOffset());
+		mapReq.put("END_ROW", requestVO.getOffset() + requestVO.getCount() - 1);
+
+		if (this.log.isDebugEnabled()) {
+			this.mapPrint(mapReq);
+		}
+		packageInfo = this.commonDAO
+				.queryForList("Isf.ThemeRecommend.getRecomendPkgList", mapReq, ThemeRecommend.class);
+
+		if (packageInfo.isEmpty()) {
+			throw new StorePlatformException("SAC_DSP_0009");
+		}
+
+		Layout layout = this.makeLayout(packageInfo);
+
+		productInfo = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecommendPkgProdList", mapReq,
 				ThemeRecommend.class);
+		if (productInfo.isEmpty()) {
+			throw new StorePlatformException("SAC_DSP_0009");
+		}
 
-		return this.makeThemeRecommendProductResult(listThemeRecommend, requestVO.getFilteredBy());
-	}
+		List<Product> productList = this.makeProductList(productInfo);
 
-	private ThemeRecommendSacRes makeThemeRecommendProductResult(List<ThemeRecommend> resultList, String filteredBy) {
-		ThemeRecommendSacRes response = new ThemeRecommendSacRes();
+		ThemeRecommendSacRes responseVO = new ThemeRecommendSacRes();
 
 		CommonResponse commonResponse = new CommonResponse();
+		commonResponse.setTotalCount(productList.size());
+		responseVO.setCommonRes(commonResponse);
 
-		List<Product> productList = new ArrayList<Product>();
+		responseVO.setLayout(layout);
+		responseVO.setProductList(productList);
 
-		// layout 생성
+		return responseVO;
+
+	}
+
+	private Layout makeLayout(List<ThemeRecommend> resultList) {
+
 		Layout layout = new Layout();
+
+		if (resultList.get(0) != null) {
+			Title title = new Title();
+			title.setText(resultList.get(0).getPkgNm());
+			layout.setTitle(title);
+
+			Menu menu = new Menu();
+			menu.setId(resultList.get(0).getPkgId());
+			menu.setName(resultList.get(0).getPkgNm());
+			layout.setMenu(menu);
+
+			Source source = new Source();
+			source.setUrl(resultList.get(0).getPkgImgPos());
+			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+			layout.setSource(source);
+		}
+
+		return layout;
+	}
+
+	private List<Product> makeProductList(List<ThemeRecommend> resultList) {
+
+		List<Product> listVO = new ArrayList<Product>();
 
 		Iterator<ThemeRecommend> iterator = resultList.iterator();
 		while (iterator.hasNext()) {
+
 			ThemeRecommend mapper = iterator.next();
 
-			Product packageProduct;
-			Product subProduct;
+			Product product;
 			Identifier identifier;
 			Title title;
+			App app;
+			Music music;
+			Accrual accrual;
+			Rights rights;
 			Source source;
+			Support support;
+			Price price;
 			Menu menu;
+			Contributor contributor;
 
 			// Response VO를 만들기위한 생성자
 			List<Menu> menuList;
 			List<Source> sourceList;
+			List<Support> supportList;
 			List<Identifier> identifierList;
 
-			packageProduct = new Product();
+			product = new Product();
 			identifier = new Identifier();
 			title = new Title();
+			app = new App();
+			music = new Music();
+			accrual = new Accrual();
+			rights = new Rights();
+			support = new Support();
 			source = new Source();
+			price = new Price();
+			contributor = new Contributor();
+
+			// 상품ID
+			identifier = new Identifier();
 
 			// Response VO를 만들기위한 생성자
+			menuList = new ArrayList<Menu>();
 			sourceList = new ArrayList<Source>();
+			supportList = new ArrayList<Support>();
 			identifierList = new ArrayList<Identifier>();
 
-			identifier.setType(DisplayConstants.DP_THEME_IDENTIFIER_CD);
-			identifier.setText(mapper.getPkgId());
-			identifierList.add(identifier);
+			Map<String, String> idReqMap = new HashMap<String, String>();
+			idReqMap.put("prodId", mapper.getProdId());
+			idReqMap.put("topMenuId", mapper.getTopMenuId());
+			idReqMap.put("contentsTypeCd", mapper.getContentsTypeCd());
+			idReqMap.put("outsdContentsId", mapper.getOutsdContentsId());
 
-			title.setText(mapper.getPkgNm());
+			title.setText(mapper.getProdNm());
+			product.setTitle(title);
+
+			menu = new Menu();
+			menu.setId(mapper.getTopMenuId());
+			menu.setName(mapper.getTopMenuNm());
+			menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setId(mapper.getMenuId());
+			menu.setName(mapper.getMenuNm());
+			menuList.add(menu);
+			product.setMenuList(menuList);
+
+			accrual.setVoterCount(Integer.valueOf(mapper.getPartCnt()));
+			accrual.setDownloadCount(Integer.valueOf(mapper.getDwldCnt()));
+			accrual.setScore(Double.valueOf(mapper.getAvgScore()));
+			product.setAccrual(accrual);
+
+			/*
+			 * Rights grade
+			 */
+			rights.setGrade(mapper.getProdGrdCd());
+			product.setRights(rights);
 
 			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-			source.setMediaType(DisplayCommonUtil.getMimeType(mapper.getPkgImgPos()));
-			source.setUrl(mapper.getPkgImgPos());
+			source.setMediaType(DisplayCommonUtil.getMimeType(mapper.getFilePos()));
+			source.setUrl(mapper.getFilePos());
 			sourceList.add(source);
+			product.setSourceList(sourceList);
 
-			packageProduct.setTitle(title);
-			packageProduct.setIdentifierList(identifierList);
-			packageProduct.setSourceList(sourceList);
+			/*
+			 * Price text
+			 */
+			price.setText(Integer.valueOf(mapper.getProdAmt())); // 가격
+			price.setFixedPrice(Integer.valueOf(mapper.getProdNetAmt())); // 고정가
+			product.setPrice(price);
 
-			if (StringUtils.equalsIgnoreCase("short", filteredBy)) { // 테마 추천 메인 : 테마 추천 4개 노출
+			// 상품 SVC_GRP_CD 조회
+			// DP000203 : 멀티미디어
+			// DP000206 : Tstore 쇼핑
+			// DP000205 : 소셜쇼핑
+			// DP000204 : 폰꾸미기
+			// DP000201 : 애플리캐이션
+			if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 앱 타입일 경우
 
-				List<Product> subProductList = new ArrayList<Product>();
-
-				subProduct = new Product();
-
-				menuList = new ArrayList<Menu>();
-				sourceList = new ArrayList<Source>();
-				identifierList = new ArrayList<Identifier>();
-
-				title = new Title();
-				source = new Source();
-
-				// 상품ID
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-				identifier.setText(mapper.getProdId1());
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+				identifier.setText(mapper.getProdId());
 				identifierList.add(identifier);
+				product.setIdentifierList(identifierList);
 
-				menu = new Menu();
-				menu.setId(mapper.getTopMenuId1());
-				menu.setName(mapper.getTopMenuNm1());
-				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId(mapper.getMenuId1());
-				menu.setName(mapper.getMenuNm1());
-				menuList.add(menu);
+				app.setAid(mapper.getAid());
+				app.setPackageName(mapper.getApkPkg());
+				app.setVersionCode(mapper.getApkVerCd());
+				app.setVersion(mapper.getProdVer()); // 확인 필요
+				product.setApp(app);
 
-				title.setText(mapper.getProdNm1());
+				// support list
+				support.setText(DisplayConstants.DP_DRM_SUPPORT_NM);
+				support.setText(mapper.getDrm());
+				supportList.add(support);
 
-				source.setMediaType(DisplayCommonUtil.getMimeType(mapper.getProdImgPos1()));
-				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-				source.setUrl(mapper.getProdImgPos1());
-				sourceList.add(source);
+				support.setText(DisplayConstants.DP_IN_APP_SUPPORT_NM);
+				support.setText(mapper.getInAppBilling());
+				supportList.add(support);
 
-				subProduct.setTitle(title);
-				subProduct.setMenuList(menuList);
-				subProduct.setSourceList(sourceList);
-				subProduct.setIdentifierList(identifierList);
+				product.setSupportList(supportList);
 
-				subProductList.add(subProduct);
+			} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 멀티미디어 타입일 경우
 
-				subProduct = new Product();
+				identifierList = this.generateIdentifierList(idReqMap);
+				product.setIdentifierList(identifierList);
 
-				menuList = new ArrayList<Menu>();
-				sourceList = new ArrayList<Source>();
-				identifierList = new ArrayList<Identifier>();
+				// support list
+				if (!StringUtils.isEmpty(mapper.getHdvYn())) {
+					support.setText(DisplayConstants.DP_VOD_HD_SUPPORT_NM);
+					support.setText(mapper.getHdvYn());
+					supportList.add(support);
+				}
 
-				title = new Title();
-				source = new Source();
+				if (!StringUtils.isEmpty(mapper.getDolbySprt_yn())) {
+					support.setText(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM);
+					support.setText(mapper.getDolbySprt_yn());
+					supportList.add(support);
+				}
 
-				// 상품ID
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-				identifier.setText(mapper.getProdId2());
-				identifierList.add(identifier);
+				if (!supportList.isEmpty()) {
+					product.setSupportList(supportList);
+				}
 
-				menu = new Menu();
-				menu.setId(mapper.getTopMenuId2());
-				menu.setName(mapper.getTopMenuNm2());
-				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId(mapper.getMenuId2());
-				menu.setName(mapper.getMenuNm2());
-				menuList.add(menu);
+				if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(mapper.getTopMenuId())
+						|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(mapper.getTopMenuId())) { // 영화/방송
 
-				title.setText(mapper.getProdNm2());
+					contributor.setDirector(mapper.getVodArtistNm2()); // 제작자
+					contributor.setArtist(mapper.getVodArtistNm()); // 출연자
+					contributor.setCompany(mapper.getVodChnlCompNm());
+					Date date = new Date();
+					date.setText(mapper.getVodSaleDt());
+					contributor.setDate(date);
+					product.setContributor(contributor);
 
-				source.setMediaType(DisplayCommonUtil.getMimeType(mapper.getProdImgPos2()));
-				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-				source.setUrl(mapper.getProdImgPos2());
-				sourceList.add(source);
+				} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(mapper.getTopMenuId())
+						|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(mapper.getTopMenuId())) { // Ebook / Comic
 
-				subProduct.setTitle(title);
-				subProduct.setMenuList(menuList);
-				subProduct.setSourceList(sourceList);
-				subProduct.setIdentifierList(identifierList);
+					contributor.setName(mapper.getBookArtistNm()); // 제목
+					contributor.setPainter(mapper.getBookArtistNm2()); //
+					contributor.setPublisher(mapper.getBookChnlCompNm()); // 출판사
+					Date date = new Date();
+					date.setText(mapper.getBookSaleDt()); // 출판년도
+					contributor.setDate(date);
+					product.setContributor(contributor);
 
-				subProductList.add(subProduct);
+				} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(mapper.getTopMenuId())) { // 음원 상품의 경우
+					// music service list set
+					List<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service> serviceList = new ArrayList<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service>();
 
-				packageProduct.setSubProductList(subProductList);
+					com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
+					service.setName(DisplayConstants.DP_MUSIC_SERVICE_MP3);
+					service.setType(mapper.getMp3Sprt());
+					serviceList.add(service);
+
+					service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
+					service.setName(DisplayConstants.DP_MUSIC_SERVICE_BELL);
+					service.setType(mapper.getBellSprt());
+					serviceList.add(service);
+
+					service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
+					service.setName(DisplayConstants.DP_MUSIC_SERVICE_RING);
+					service.setType(mapper.getRingSprt());
+					serviceList.add(service);
+					music.setServiceList(serviceList);
+					product.setMusic(music);
+
+					contributor.setName(mapper.getMusicArtistNm()); // 가수
+					contributor.setAlbum(mapper.getMusicArtistNm3()); // 앨범명
+					contributor.setPublisher(mapper.getMusicChnlCompNm()); // 발행인
+					contributor.setAgency(mapper.getMusicAgencyNm()); // 에이전시
+					product.setContributor(contributor);
+				}
+			} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 쇼핑 상품의 경우
+
+				identifierList = this.generateIdentifierList(idReqMap);
+				product.setIdentifierList(identifierList);
 
 			}
 
-			productList.add(packageProduct);
+			product.setProductExplain(mapper.getProdDesc());
+
+			listVO.add(product);
 
 		} // end of while
 
-		commonResponse.setTotalCount(productList.size());
-		response.setCommonRes(commonResponse);
-		response.setProductList(productList);
-		response.setLayout(layout);
+		return listVO;
+	}
 
-		return response;
+	private List<Identifier> generateIdentifierList(Map<String, String> param) {
+		Identifier identifier = null;
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+
+		String contentsTypeCd = param.get("contentsTypeCd");
+		if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Episode ID 기준검색일 경우 (PD002502)
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText(param.get("prodId"));
+			identifierList.add(identifier);
+
+			if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(param.get("topMenuId"))) {
+				if (param.get("catalogId") != null) {
+					identifier = new Identifier();
+					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+					identifier.setText(param.get("catalogId"));
+					identifierList.add(identifier);
+				} else {
+					if (param.get("prodId") != null) {
+						identifier = new Identifier();
+						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+						identifier.setText(param.get("prodId"));
+						identifierList.add(identifier);
+					}
+				}
+			} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(param.get("topMenuId"))) {
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_SONG_IDENTIFIER_CD);
+				identifier.setText(param.get("outsdContentsId"));
+				identifierList.add(identifier);
+			}
+		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd) // Catalog ID 기준 검색일 경우
+				&& DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(param.get("topMenuId"))) {
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText(param.get("prodId"));
+			identifierList.add(identifier);
+
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText(param.get("catalogId"));
+			identifierList.add(identifier);
+		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Channel ID 기준 검색일 경우
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+			identifier.setText(param.get("prodId"));
+			identifierList.add(identifier);
+		}
+		return identifierList;
 	}
 
 	/*
@@ -399,4 +571,22 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		return response;
 	}
 
+	private void mapPrint(Map<String, Object> mapReq) {
+		// Get Map in Set interface to get key and value
+		Set<Entry<String, Object>> s = mapReq.entrySet();
+		// Move next key and value of Map by iterator
+		Iterator<Entry<String, Object>> it = s.iterator();
+		while (it.hasNext()) {
+			// key=value separator this by Map.Entry to get key and value
+			Entry<String, Object> m = it.next();
+
+			// getKey is used to get key of Map
+			String key = m.getKey();
+
+			// getValue is used to get value of key in Map
+			Object value = m.getValue();
+
+			this.log.debug(key + ":[" + value.toString() + "]");
+		}
+	}
 }

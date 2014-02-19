@@ -70,10 +70,9 @@ public class ThemeRecommendController {
 	 *            공통헤더
 	 * @return RecommendAdminRes 조회 결과
 	 */
-	@RequestMapping(value = "/product/list/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ThemeRecommendSacRes searchThemeRecommendProductList(@RequestBody ThemeRecommendSacReq requestVO,
-			SacRequestHeader header) {
+	public ThemeRecommendSacRes searchThemeRecommendProductList(ThemeRecommendSacReq requestVO, SacRequestHeader header) {
 
 		this.log.debug("searchThemeRecommendProductList start !!");
 		this.log.debug("request {}", requestVO);
