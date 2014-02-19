@@ -145,12 +145,33 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Override
 	public Source generateSource(MetaInfo metaInfo) {
 		Source source = new Source();
+
 		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 		if (StringUtils.isNotEmpty(metaInfo.getImagePath())) {
 			source = this.generateSource(metaInfo.getImagePath(), metaInfo.getImageSize());
 		} else {
 			source = this.generateSource(metaInfo.getFilePath(), metaInfo.getFileSize());
 		}
+		return source;
+	}
+
+	@Override
+	public Source generateSource(String type, String url, Integer size) {
+		Source source = new Source();
+
+		if (StringUtils.isNotEmpty(url)) {
+			source.setMediaType(DisplayCommonUtil.getMimeType(url));
+			source.setUrl(url);
+		}
+
+		if (StringUtils.isNotEmpty(type)) {
+			source.setType(type);
+		}
+
+		if (StringUtils.isNotEmpty(size.toString())) {
+			source.setSize(size);
+		}
+
 		return source;
 	}
 
@@ -376,6 +397,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		distributor.setTel(metaInfo.getExpoSellerTelNo());
 		distributor.setEmail(metaInfo.getExpoSellerEmail());
 		distributor.setSellerKey(metaInfo.getSellerMbrNo());
+		distributor.setCompany(metaInfo.getCompany());
 		return distributor;
 	}
 

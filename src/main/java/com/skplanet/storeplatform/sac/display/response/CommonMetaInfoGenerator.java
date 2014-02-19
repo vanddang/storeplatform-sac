@@ -89,6 +89,17 @@ public interface CommonMetaInfoGenerator {
 	 *            metaInfo
 	 * @return Source
 	 */
+	public Source generateSource(String type, String url, Integer size);
+
+	/**
+	 * <pre>
+	 * 공통 Source 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Source
+	 */
 	public Source generateSource(String path, Integer size);
 
 	/**
