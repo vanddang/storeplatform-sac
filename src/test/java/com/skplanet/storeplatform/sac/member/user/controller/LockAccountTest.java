@@ -73,9 +73,8 @@ public class LockAccountTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test(expected = StorePlatformException.class)
-	public void test1_lockAccount() throws Exception {
+	public void TEST_A_OneID미동의회원계정잠금() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/lockAccount/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -113,7 +112,7 @@ public class LockAccountTest {
 	 */
 	@Ignore
 	@Test
-	public void test2_lockAccount() throws Exception {
+	public void TEST_B_기존IDP회원계정잠금() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/lockAccount/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -149,8 +148,9 @@ public class LockAccountTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
-	public void test3_lockAccount() throws Exception {
+	public void TEST_C_통합회원계정잠금() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/lockAccount/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")

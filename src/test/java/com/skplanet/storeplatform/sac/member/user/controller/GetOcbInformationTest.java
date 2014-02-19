@@ -69,7 +69,7 @@ public class GetOcbInformationTest {
 	 *             Exception
 	 */
 	@Test
-	public void test1_getOcbInformation() throws Exception {
+	public void TEST_A_OCB정보조회() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/getOcbInformation/v1?userKey=US201402071133550360001951").httpMethod(HttpMethod.GET)
 				.addHeaders("Accept", "application/json")
