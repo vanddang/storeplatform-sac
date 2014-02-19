@@ -3,49 +3,52 @@
 <mapper namespace="SellerProduct">
     <!-- 특정 판매자별 상품 조회 -->
     <select id="selectSellerProductList" parameterType="SellerProductSacReq" resultType="ProductBasicInfo">
-		SELECT /* SellerProductMapper.xml, selectSellerProductList, SAC : 유시혁 , 2014-02-18 */
-		    A.TOTAL_COUNT
-		    , A.TOP_MENU_ID
-		    , A.MENU_ID
-		    , A.PROD_ID
-		    , A.CONTENTS_TYPE_CD
-		FROM (
-		    SELECT 
-		        COUNT(1) OVER() TOTAL_COUNT
-		        , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, A.PROD_NM) RNK
-		        , C.TOP_MENU_ID
-		        , C.MENU_ID
-		        , A.PROD_ID
-		        , A.CONTENTS_TYPE_CD
-		    FROM 
-		        TB_DP_PROD A
-		        , TB_DP_MENU_CATEGORY_PROD_MAPG B
-		        , TB_DP_MENU_CATEGORY C
-		        , TB_DP_SPRT_DEVICE D
-		        , TB_DP_TENANT_PROD E
-		        , TB_CM_DEVICE F
-		    WHERE 1=1
-		    AND A.PROD_ID = B.PROD_ID
-		    AND B.MENU_ID = C.MENU_ID
-		    AND A.PROD_ID = D.PROD_ID
-		    AND A.PROD_ID = E.PROD_ID
-		    AND D.DEVICE_MODEL_CD = F.DEVICE_MODEL_CD
-		    AND B.USE_YN ='Y'
-		    AND C.USE_YN ='Y'
-		    AND F.USE_YN = 'Y'
-		    AND E.EXPO_YN = 'Y'
-		    AND A.SVC_GRP_CD ='DP000201'
-		    AND E.PROD_STATUS_CD = 'PD000403'
-		    AND A.SELLER_MBR_NO = #{sellerNo}
-		    AND E.TENANT_ID = #{tenantId}
-		    AND F.DEVICE_MODEL_CD = #{deviceModelCd}
-		    <if test="arrayExceptId != null"> /* 제외 상품ID */
-		        AND A.PROD_ID NOT IN 
-		        <foreach collection="arrayExceptId" item="exceptId" separator="," open="(" close=")">
-		            #{exceptId}
-		        </foreach>
-		    </if> 
-		) A
+        SELECT /* SellerProductMapper.xml, selectSellerProductList, SAC : 유시혁 , 2014-02-18 */
+            A.TOTAL_COUNT
+            , A.TOP_MENU_ID
+            , A.MENU_ID
+            , A.PROD_ID
+            , A.CONTENTS_TYPE_CD
+        FROM (
+            SELECT 
+                COUNT(1) OVER() TOTAL_COUNT
+                , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, G.PROD_NM) RNK
+                , C.TOP_MENU_ID
+                , C.MENU_ID
+                , A.PROD_ID
+                , A.CONTENTS_TYPE_CD
+            FROM 
+                TB_DP_PROD A
+                , TB_DP_MENU_CATEGORY_PROD_MAPG B
+                , TB_DP_MENU_CATEGORY C
+                , TB_DP_SPRT_DEVICE D
+                , TB_DP_TENANT_PROD E
+                , TB_CM_DEVICE F
+            , TB_DP_PROD_DESC G
+            WHERE 1=1
+            AND A.PROD_ID = B.PROD_ID
+            AND B.MENU_ID = C.MENU_ID
+            AND A.PROD_ID = D.PROD_ID
+            AND A.PROD_ID = E.PROD_ID
+            AND D.DEVICE_MODEL_CD = F.DEVICE_MODEL_CD
+            AND A.PROD_ID = G.PROD_ID
+            AND B.USE_YN ='Y'
+            AND C.USE_YN ='Y'
+            AND F.USE_YN = 'Y'
+            AND E.EXPO_YN = 'Y'
+            AND A.SVC_GRP_CD ='DP000201'
+            AND E.PROD_STATUS_CD = 'PD000403'
+            AND A.SELLER_MBR_NO = #{sellerNo}
+            AND E.TENANT_ID = #{tenantId}
+            AND F.DEVICE_MODEL_CD = #{deviceModelCd}
+            AND G.LANG_CD = #{langCd}
+            <if test="arrayExceptId != null"> /* 제외 상품ID */
+                AND A.PROD_ID NOT IN 
+                <foreach collection="arrayExceptId" item="exceptId" separator="," open="(" close=")">
+                    #{exceptId}
+                </foreach>
+            </if> 
+        ) A
         WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
         ORDER BY A.RNK
     </select>
