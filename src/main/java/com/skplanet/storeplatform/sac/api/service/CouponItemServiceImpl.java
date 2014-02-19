@@ -385,6 +385,8 @@ public class CouponItemServiceImpl implements CouponItemService {
 				list.add(crinfo);
 			}
 
+		} catch (CouponException e) {
+			throw e;
 		} catch (Exception e) {
 			this.log.error("COUPON.IF_META_SELECT_LIST FAILED", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
@@ -409,17 +411,16 @@ public class CouponItemServiceImpl implements CouponItemService {
 			if (cnt > 0) {
 				info = (CouponRes) this.commonDAO.queryForObject("Coupon.GET_SPECIAL_PRODUCT_DETAIL", couponCode);
 				if (info == null) {
-					info = new CouponRes();
-					info.setRCode(CouponConstants.COUPON_IF_ERROR_CODE_NOT_SPECIAL);
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_SPECIAL, "특가상품 없음", null);
 				} else
 					info.setRCode("");
 			} else {
-
-				info = new CouponRes();
-				info.setRCode(CouponConstants.COUPON_IF_ERROR_CODE_COUPONCODE);
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_COUPONCODE, "잘못된 쿠폰ID", null);
 
 			}
 
+		} catch (CouponException e) {
+			throw e;
 		} catch (Exception e) {
 			this.log.error("COUPON.GET_SPECIAL_PRODUCT_DETAIL", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
