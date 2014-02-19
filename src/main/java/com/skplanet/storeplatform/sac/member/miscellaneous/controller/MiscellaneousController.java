@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
@@ -287,6 +289,13 @@ public class MiscellaneousController {
 				throw new StorePlatformException("SAC_MEM_3004");
 		}
 		return this.service.getModelCode(request);
+	}
+
+	@RequestMapping(value = "/dev/authorizeAccount/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeAccountRes authorizeAccount(@RequestBody @Validated AuthorizeAccountReq request) {
+
+		return this.service.authorizeAccount(request);
 	}
 
 	/**

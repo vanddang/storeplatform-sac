@@ -14,6 +14,7 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceResponse;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
@@ -82,6 +83,19 @@ public class DeviceSCIController implements DeviceSCI {
 	@RequestMapping(value = "/searchChangedDeviceHistory", method = RequestMethod.POST)
 	public ChangedDeviceHistorySacRes searchChangedDeviceHistory(ChangedDeviceHistorySacReq request) {
 
+		String deviceId = request.getDeviceId();
+		String deviceKey = request.getDeviceKey();
+
+		String errorValue = "userKey 또는 ";
+
+		if (deviceId != null && "".equals(deviceId)) {
+			errorValue = StringUtil.capitalize(errorValue + "deviceId");
+		} else if (deviceKey != null && "".equals(deviceKey)) {
+			errorValue = StringUtil.capitalize(errorValue + "deviceKey");
+		} else {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId 또는 deviceKey"); // 필수파라미터 미입력.
+		}
+
 		// 공통 파라미터 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 		CommonRequest commonRequest = new CommonRequest();
@@ -102,15 +116,16 @@ public class DeviceSCIController implements DeviceSCI {
 
 		ChangedDeviceHistorySacRes changedDeviceHistorySacRes = new ChangedDeviceHistorySacRes();
 
-		if (searchChangedDeviceResponse != null && searchChangedDeviceResponse.getChangedDeviceLog() != null) {
+		if (searchChangedDeviceResponse != null && searchChangedDeviceResponse.getChangedDeviceLog() != null
+				&& searchChangedDeviceResponse.getChangedDeviceLog().getDeviceKey() != null) {
 			LOGGER.info(
 					"[DeviceSCIController.searchChangedDeviceHistory] SC Response userSCI.searchChangedDevice : {}",
 					searchChangedDeviceResponse.getChangedDeviceLog());
 			changedDeviceHistorySacRes.setDeviceKey(searchChangedDeviceResponse.getChangedDeviceLog().getDeviceKey());
 			changedDeviceHistorySacRes.setIsChanged(searchChangedDeviceResponse.getChangedDeviceLog().getIsChanged());
 		} else {
-			throw new StorePlatformException(searchChangedDeviceResponse.getCommonResponse().getResultCode(),
-					searchChangedDeviceResponse.getCommonResponse().getResultMessage());
+			// Response DeviceKey값이 null일 경우, UserKey or DeviceId or DeviceKey 불량
+			throw new StorePlatformException("SAC_MEM_0003", errorValue, "오류");
 		}
 		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] SAC Response : {}", changedDeviceHistorySacRes);
 		return changedDeviceHistorySacRes;

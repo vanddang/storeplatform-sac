@@ -73,14 +73,14 @@ public class SearchUserSCIController implements SearchUserSCI {
 			List<DeviceInfo> deviceList = userDetail.getDeviceInfoList();
 			List<String> deviceIdList = new ArrayList<String>();
 
-			// if (deviceList == null) { // 등록기기 없는경우, size=0 인 List 내려주기.
-			// deviceList = new ArrayList<DeviceInfo>();
-			// } else {
-			// Setting deviceId List.
-			for (int i = 0; i < deviceList.size(); i++) {
-				deviceIdList.add(deviceList.get(i).getDeviceId());
+			if (deviceList == null) { // 등록기기 없는경우, size=0 인 List 내려주기.
+				deviceList = new ArrayList<DeviceInfo>();
+			} else {
+				// Setting deviceId List.
+				for (int i = 0; i < deviceList.size(); i++) {
+					deviceIdList.add(deviceList.get(i).getDeviceId());
+				}
 			}
-			// }
 
 			/* 3. 파라미터 셋팅해서 Response. */
 			searchUserSacRes.setDeviceId(deviceIdList);

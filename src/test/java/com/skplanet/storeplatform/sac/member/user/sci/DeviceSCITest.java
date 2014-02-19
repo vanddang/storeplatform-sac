@@ -192,4 +192,49 @@ public class DeviceSCITest {
 		assertEquals(result.getIsChanged(), "N");
 		assertEquals(result.getDeviceKey(), request.getDeviceKey());
 	}
+
+	/**
+	 * <pre>
+	 * 기기변경이력 조회 SCI TEST.
+	 * - Exception (회원정보 없음 - deviceKey로 조회)
+	 * </pre>
+	 */
+	@Test
+	public void testExceptChangedDeviceHistoryByDeviceKey() {
+		ChangedDeviceHistorySacReq request = new ChangedDeviceHistorySacReq();
+		request.setUserKey("US201401280453225170001216");
+		request.setDeviceKey("DE201401280453226380000643");
+
+		try {
+			ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
+			assertEquals(result.getIsChanged(), "N");
+			assertThat(result.getDeviceKey(), null);
+		} catch (StorePlatformException e) {
+			assertEquals("SAC_MEM_0003", e.getErrorInfo().getCode());
+			LOGGER.info("\nerror >> ", e);
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 기기변경이력 조회 SCI TEST.
+	 * - Exception (회원정보 없음 - deviceId로 조회)
+	 * </pre>
+	 */
+	@Test
+	public void testExceptChangedDeviceHistoryByDeviceId() {
+		ChangedDeviceHistorySacReq request = new ChangedDeviceHistorySacReq();
+		request.setUserKey("US201401280453225170001216");
+		request.setDeviceId("01066786240");
+
+		try {
+			ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
+			assertEquals(result.getIsChanged(), "N");
+			assertThat(result.getDeviceKey(), null);
+		} catch (StorePlatformException e) {
+			assertEquals("SAC_MEM_0003", e.getErrorInfo().getCode());
+			LOGGER.info("\nerror >> ", e);
+		}
+	}
+
 }
