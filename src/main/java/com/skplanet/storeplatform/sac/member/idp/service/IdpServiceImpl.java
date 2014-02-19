@@ -1060,6 +1060,23 @@ public class IdpServiceImpl implements IdpService {
 		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
+		// 휴대폰 번호가 초기값이면 변경하지 않음
+		String getUserTn = map.get("user_tn").toString();
+		if (getUserTn.equals("01000000000")) {
+			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+
+			ImResult imResult = new ImResult();
+
+			imResult.setResult(idpResult);
+			imResult.setCmd("RXInvalidUserTelNoIDP");
+			imResult.setResultText(idpResultText);
+			imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+			imResult.setUserId(map.get("user_id").toString());
+
+			return imResult;
+		}
+
 		// 회원 정보 조회
 		// 공통 헤더
 		CommonRequest commonRequest = new CommonRequest();
