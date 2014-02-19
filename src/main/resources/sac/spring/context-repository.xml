@@ -20,8 +20,11 @@
     <tx:advice id="transactionAdviceForSac" transaction-manager="transactionManagerForSac" >
         <tx:attributes>
            <tx:method name="create*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="update*" propagation="REQUIRED" read-only="false" />
+           <tx:method name="modify*" propagation="REQUIRED" read-only="false" />
            <tx:method name="remove*" propagation="REQUIRED" read-only="false" />
+           <tx:method name="insert*" propagation="REQUIRED" read-only="false" />
+           <tx:method name="update*" propagation="REQUIRED" read-only="false" />
+           <tx:method name="delete*" propagation="REQUIRED" read-only="false" />
         </tx:attributes>
     </tx:advice>
     
