@@ -78,12 +78,9 @@ public class RemoveOcbInformationTest {
 	 * <pre>
 	 * 회원 OCB 정보 등록/수정.
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test
-	public void TEST_A_OCB카드번호등록() throws Exception {
+	public void TEST_A_OCB카드번호등록() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createOcbInformation/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -116,12 +113,9 @@ public class RemoveOcbInformationTest {
 	 * 
 	 * 회원 OCB 정보 삭제 (삭제가능한 유효한 카드번호가 아닐경우).
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void TEST_B_삭제가능한유효한카드번호가아닐경우() throws Exception {
+	public void TEST_B_삭제가능한유효한카드번호가아닐경우() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/removeOcbInformation/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -150,12 +144,9 @@ public class RemoveOcbInformationTest {
 	 * <pre>
 	 * 회원 OCB 정보 삭제.
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test
-	public void TEST_C_OCB카드번호삭제() throws Exception {
+	public void TEST_C_OCB카드번호삭제() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/removeOcbInformation/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")

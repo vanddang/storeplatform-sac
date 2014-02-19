@@ -10,11 +10,11 @@
 package com.skplanet.storeplatform.sac.member.user.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -34,6 +34,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.LockAccountSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.LockAccountSacRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
@@ -67,14 +69,13 @@ public class LockAccountTest {
 
 	/**
 	 * <pre>
+	 * TEST ERROR CASE.
+	 * 
 	 * 회원 계정 잠금 (OneID 미동의 회원).
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void TEST_A_OneID미동의회원계정잠금() throws Exception {
+	public void TEST_A_OneID미동의회원계정잠금() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/lockAccount/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -96,7 +97,6 @@ public class LockAccountTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						LockAccountSacRes res = (LockAccountSacRes) result;
 						assertThat(res.getUserId(), notNullValue());
-						System.out.println(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -106,13 +106,9 @@ public class LockAccountTest {
 	 * <pre>
 	 * 회원 계정 잠금 (IDP 회원).
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
-	@Ignore
 	@Test
-	public void TEST_B_기존IDP회원계정잠금() throws Exception {
+	public void TEST_B_기존IDP회원계정잠금() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/lockAccount/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -134,7 +130,38 @@ public class LockAccountTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						LockAccountSacRes res = (LockAccountSacRes) result;
 						assertThat(res.getUserId(), notNullValue());
-						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 기존IDP회원계정잠금해제및로그인 (IDP 회원).
+	 * </pre>
+	 */
+	@Test
+	public void TEST_C_기존IDP회원계정잠금해제및로그인() {
+
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/authorizeById/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("Accept", "application/json")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						AuthorizeByIdReq reqJson = new AuthorizeByIdReq();
+
+						reqJson.setUserId("sacsimpleuser020691");
+						reqJson.setUserPw("abcd1234");
+						reqJson.setReleaseLock("Y");
+
+						return reqJson;
+					}
+				}).success(AuthorizeByIdRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						AuthorizeByIdRes res = (AuthorizeByIdRes) result;
+						assertEquals(res.getIsLoginSuccess(), "Y"); // 로그인 가능
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -144,13 +171,9 @@ public class LockAccountTest {
 	 * <pre>
 	 * 회원 계정 잠금 (통합IDP 회원).
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
-	@Ignore
 	@Test
-	public void TEST_C_통합회원계정잠금() throws Exception {
+	public void TEST_D_통합회원계정잠금() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/lockAccount/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -172,7 +195,38 @@ public class LockAccountTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						LockAccountSacRes res = (LockAccountSacRes) result;
 						assertThat(res.getUserId(), notNullValue());
-						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 기존IDP회원계정잠금해제및로그인 (IDP 회원).
+	 * </pre>
+	 */
+	@Test
+	public void TEST_E_통합회원계정잠금해제및로그인() {
+
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/authorizeById/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("Accept", "application/json")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						AuthorizeByIdReq reqJson = new AuthorizeByIdReq();
+
+						reqJson.setUserId("simdae07");
+						reqJson.setUserPw("12qwer");
+						reqJson.setReleaseLock("Y");
+
+						return reqJson;
+					}
+				}).success(AuthorizeByIdRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						AuthorizeByIdRes res = (AuthorizeByIdRes) result;
+						assertEquals(res.getIsLoginSuccess(), "Y"); // 로그인 가능
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

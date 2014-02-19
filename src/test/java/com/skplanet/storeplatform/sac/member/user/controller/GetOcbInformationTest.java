@@ -64,12 +64,9 @@ public class GetOcbInformationTest {
 	 * <pre>
 	 * 회원 OCB 정보 삭제.
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test
-	public void TEST_A_OCB정보조회() throws Exception {
+	public void TEST_A_OCB정보조회() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/getOcbInformation/v1?userKey=US201402071133550360001951").httpMethod(HttpMethod.GET)
 				.addHeaders("Accept", "application/json")
