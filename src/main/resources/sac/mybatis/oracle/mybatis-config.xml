@@ -108,7 +108,11 @@
         <typeAlias alias="CategoryWebtoon"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryWebtoon" />
         <!-- 운영자 추천 웹툰 상품 조회 -->   
         <typeAlias alias="RecommendWebtoonSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacReq" />
-        <typeAlias alias="RecommendWebtoon"  type="com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoon" />       
+        <typeAlias alias="RecommendWebtoon"  type="com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoon" />   
+        
+        <!-- 웹툰 상품 상세 조회 -->   
+        <typeAlias alias="WebtoonDetailSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.webtoon.WebtoonDetailSacReq" />
+        <typeAlias alias="WebtoonDetail"  type="com.skplanet.storeplatform.sac.display.webtoon.vo.WebtoonDetail" />
         
         <!-- TODAY 상품 조회 -->
         <typeAlias alias="RecommendTodaySacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacReq" />

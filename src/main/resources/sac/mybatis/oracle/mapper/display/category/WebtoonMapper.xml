@@ -208,4 +208,13 @@
          WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
          ORDER BY RNUM
     </select>    
+    
+    <!-- 웹툰 상품 상세 조회 -->
+    <select id="searchWebtoonDetail" parameterType="RecommendWebtoonSacReq" resultType="WebtoonDetail">
+        SELECT /* WebtoonMapper.xml, searchWebtoonDetail, SAC : 조준일 , 2014-02-19 */
+               PROD_ID
+          FROM TB_DP_PROD
+         WHERE PROD_ID = ''
+    </select>
+    
 </mapper>
