@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -14,15 +16,14 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SearchIdSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	/* 사용자 아이디 */
-	private String userId;
+	private List<SearchIdSac> searchIdList;
 
-	public String getUserId() {
-		return this.userId;
+	public List<SearchIdSac> getSearchIdList() {
+		return this.searchIdList;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setSearchIdList(List<SearchIdSac> searchIdList) {
+		this.searchIdList = searchIdList;
 	}
 
 	public static long getSerialversionuid() {
