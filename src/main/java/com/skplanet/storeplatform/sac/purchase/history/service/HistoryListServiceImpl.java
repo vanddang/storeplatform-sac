@@ -80,32 +80,11 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		String prodArray = "";
 
-		// SC Request Set
+		/*************************************************
+		 * SC Request Setting Start
+		 *************************************************/
 		scRequest.setTenantId(request.getTenantId());
 		scRequest.setUserKey(request.getUserKey());
-		// scRequest.setDeviceKey(request.getDeviceKey());
-		scRequest.setStartDt(request.getStartDt());
-		scRequest.setEndDt(request.getEndDt());
-		scRequest.setPrchsProdType(request.getPrchsProdType());
-		scRequest.setPrchsProdHaveYn(request.getPrchsProdHaveYn());
-		scRequest.setPrchsReqPathCd(request.getPrchsReqPathCd());
-		scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
-		scRequest.setPrchsCaseCd(request.getPrchsCaseCd());
-		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
-
-		List<String> prodList = new ArrayList<String>();
-		if (request.getProductList() != null && request.getProductList().size() > 0) {
-			for (ProductListSac obj : request.getProductList()) {
-				if (!StringUtils.isEmpty(obj.getProdId())) {
-					prodList.add(obj.getProdId());
-				}
-			}
-		}
-
-		// 보유상품 조회일 때만 해당값이 조회 조건으로 사용된다.
-		if (PurchaseConstants.USE_Y.equals(request.getPrchsProdHaveYn())) {
-			scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
-		}
 
 		// TenantProdGrpCd가 요청값으로 전달되면 구매 정책을 확인한다. (Device기반 구매내역관리)
 		// TenantProdGrpCd가 Device기반 정책이면 device_key를 세팅하고 아니면 공백처리하여 쿼리 조건으로 사용되지 않게 처리됨
@@ -119,10 +98,37 @@ public class HistoryListServiceImpl implements HistoryListService {
 			}
 		}
 
+		scRequest.setStartDt(request.getStartDt());
+		scRequest.setEndDt(request.getEndDt());
+		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
+
+		List<String> prodList = new ArrayList<String>();
+		if (request.getProductList() != null && request.getProductList().size() > 0) {
+			for (ProductListSac obj : request.getProductList()) {
+				if (!StringUtils.isEmpty(obj.getProdId())) {
+					prodList.add(obj.getProdId());
+				}
+			}
+		}
 		scRequest.setProductList(prodList);
+		scRequest.setPrchsProdHaveYn(request.getPrchsProdHaveYn());
+		scRequest.setPrchsProdType(request.getPrchsProdType());
+		scRequest.setPrchsCaseCd(request.getPrchsCaseCd());
+		scRequest.setPrchsReqPathCd(request.getPrchsReqPathCd());
 		scRequest.setHidingYn(request.getHidingYn());
-		scRequest.setOffset(request.getOffset());
-		scRequest.setCount(request.getCount());
+		scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
+
+		// 보유상품 조회일 때만 해당값이 조회 조건으로 사용된다.
+		if (PurchaseConstants.USE_Y.equals(request.getPrchsProdHaveYn())) {
+			scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
+		}
+
+		// pageInfo set
+		scRequest.getPage().setNo(request.getOffset());
+		scRequest.getPage().setRows(request.getCount());
+		/*************************************************
+		 * SC Request Setting End
+		 *************************************************/
 
 		// try {
 		// SC Call
@@ -133,53 +139,51 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// }
 
 		// SC객체를 SAC객체로 맵핑작업
+
+		/*************************************************
+		 * SC -> SAC Response Setting Start
+		 *************************************************/
 		for (HistorySc obj : scResponse.getHistoryList()) {
 
 			historySac = new HistorySac();
 
 			// 구매정보 set
 			historySac.setTenantId(obj.getTenantId());
-			historySac.setSystemId(obj.getSystemId());
+			// historySac.setSystemId(obj.getSystemId());
 			historySac.setPrchsId(obj.getPrchsId());
 			historySac.setPrchsDtlId(obj.getPrchsDtlId());
 			historySac.setUseTenantId(obj.getUseTenantId());
 			historySac.setUseUserKey(obj.getUseUserKey());
 			historySac.setUseDeviceKey(obj.getUseDeviceKey());
-			historySac.setPrchsReqPathCd(obj.getPrchsReqPathCd());
-
 			historySac.setPrchsDt(obj.getPrchsDt());
 			historySac.setTotAmt(obj.getTotAmt());
 			historySac.setSendUserKey(obj.getSendUserKey());
 			historySac.setSendDeviceKey(obj.getSendDeviceKey());
-			historySac.setRecvDt(obj.getRecvDt());
-			historySac.setProdId(obj.getProdId());
-			historySac.setProdAmt(obj.getProdAmt());
-			historySac.setProdQty(obj.getProdQty());
-			historySac.setTenantProdGrpCd(obj.getTenantProdGrpCd());
-			historySac.setStatusCd(obj.getStatusCd());
-			historySac.setUseStartDt(obj.getUseStartDt());
-			historySac.setUseExprDt(obj.getUseExprDt());
-			historySac.setHidingYn(obj.getHidingYn());
-			historySac.setCancelReqPathCd(obj.getCancelReqPathCd());
-			historySac.setCancelDt(obj.getCancelDt());
-			historySac.setCpnPublishCd(obj.getCpnPublishCd());
-			historySac.setCpnDlvUrl(obj.getCpnDlvUrl());
-			historySac.setPrchsCaseCd(obj.getPrchsCaseCd());
-			historySac.setRePrchsPmtYn(obj.getRePrchsPmtYn());
-			historySac.setDwldStartDt(obj.getDwldStartDt());
-			historySac.setDwldExprDt(obj.getDwldExprDt());
-			historySac.setPrchsProdType(obj.getPrchsProdType());
-			historySac.setUseFixrateProdId(obj.getUseFixrateProdId());
-			historySac.setResvCol01(obj.getResvCol01());
-			historySac.setResvCol02(obj.getResvCol02());
-			historySac.setResvCol03(obj.getResvCol03());
-			historySac.setResvCol04(obj.getResvCol04());
-			historySac.setResvCol05(obj.getResvCol05());
-
 			// 수신자 정보 set
 			historySac.setRecvTenantId(obj.getRecvTenantId());
 			historySac.setRecvUserKey(obj.getRecvUserKey());
 			historySac.setRecvDeviceKey(obj.getRecvDeviceKey());
+			historySac.setRecvDt(obj.getRecvDt());
+			historySac.setRecvConfPathCd(obj.getRecvConfPathCd());
+			historySac.setTenantProdGrpCd(obj.getTenantProdGrpCd());
+			historySac.setProdId(obj.getProdId());
+			historySac.setProdAmt(obj.getProdAmt());
+			historySac.setProdQty(obj.getProdQty());
+			historySac.setStatusCd(obj.getStatusCd());
+			historySac.setUseStartDt(obj.getUseStartDt());
+			historySac.setUseExprDt(obj.getUseExprDt());
+			historySac.setPrchsReqPathCd(obj.getPrchsReqPathCd());
+			historySac.setHidingYn(obj.getHidingYn());
+			historySac.setCancelReqPathCd(obj.getCancelReqPathCd());
+			historySac.setCancelDt(obj.getCancelDt());
+			historySac.setPrchsCaseCd(obj.getPrchsCaseCd());
+			historySac.setRePrchsPmtYn(obj.getRePrchsPmtYn());
+			historySac.setDwldStartDt(obj.getDwldStartDt());
+			historySac.setDwldExprDt(obj.getDwldExprDt());
+			historySac.setCpnPublishCd(obj.getCpnPublishCd());
+			historySac.setCpnDlvUrl(obj.getCpnDlvUrl());
+			historySac.setEtcSeq(obj.getEtcSeq());
+			historySac.setUseFixrateProdId(obj.getUseFixrateProdId());
 
 			// 정액제 정보 set
 			historySac.setPaymentStartDt(obj.getPaymentStartDt());
@@ -191,11 +195,23 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setClosedReasonCd(obj.getClosedReasonCd());
 			historySac.setClosedReqPathCd(obj.getClosedReqPathCd());
 
+			historySac.setPrchsProdType(obj.getPrchsProdType());
+
+			historySac.setResvCol01(obj.getResvCol01());
+			historySac.setResvCol02(obj.getResvCol02());
+			historySac.setResvCol03(obj.getResvCol03());
+			historySac.setResvCol04(obj.getResvCol04());
+			historySac.setResvCol05(obj.getResvCol05());
+
 			sacHistoryList.add(historySac);
 
 			// 상품정보 조회를 위한 상품ID 셋팅
 			prodArray = prodArray + historySac.getProdId() + "+";
 		}
+
+		/*************************************************
+		 * SC -> SAC Response Setting Start
+		 *************************************************/
 
 		// CategorySpecificReq productReq = new CategorySpecificReq();
 		// this.logger.debug("#######################################" + prodArray);
@@ -249,7 +265,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 		List<ProductCountSac> sacProdList = new ArrayList<ProductCountSac>();
 		ProductCountSac productCountSac = new ProductCountSac();
 
-		// SC Request Set
+		/*************************************************
+		 * SC Request Setting Start
+		 *************************************************/
 		scRequest.setTenantId(request.getTenantId());
 		scRequest.setUserKey(request.getUserKey());
 		// scRequest.setDeviceKey(request.getDeviceKey());
@@ -290,6 +308,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
 		scRequest.setProductList(prodList);
 		scRequest.setHidingYn(request.getHidingYn());
+
+		/*************************************************
+		 * SC Request Setting End
+		 *************************************************/
 
 		// SC Call
 		scResponse = this.historySci.searchHistoryCount(scRequest);
