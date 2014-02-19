@@ -246,7 +246,12 @@
         <!-- ebook/코믹 테마 상품 조회 -->
         <typeAlias alias="ThemeEpubSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacReq" />
         <typeAlias alias="ThemeEpub"  type="com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeEpubServiceGroup" />
-                         
+                                 
+        <!-- 이 상품과 유사 상품 조회 -->
+        <typeAlias alias="SimilarProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacReq" />
+        
+        <!-- 이 상품과 함께 구매한 상품 조회 -->
+        <typeAlias alias="BoughtTogetherProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacReq" />
     </typeAliases>
     
     <typeHandlers>

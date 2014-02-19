@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SimilarProduct">
+    <!-- 이 상품과 유사 상품 조회 -->
+    <select id="selectSimilarProductList" parameterType="SimilarProductSacReq" resultType="ProductBasicInfo">
+        <if test="testYn != null"> /* 임시 테스트 데이터 */
+        WITH TB_DP_SMLR_PROD_MANG AS (
+        SELECT 
+                 C.TOP_MENU_ID STD_PROD_ID
+                , A.PROD_ID SMLR_PROD_ID
+                , ROWNUM SCORE
+        FROM TB_DP_PROD A, TB_DP_MENU_CATEGORY_PROD_MAPG B, TB_DP_MENU_CATEGORY C
+        WHERE A.PROD_ID = B.PROD_ID
+        AND B.MENU_ID = C.MENU_ID
+        )    
+        </if>
+        SELECT /* SimilarProductMapper.xml, selectSimilarProductList, SAC : 유시혁 , 2014-02-18 */
+            A.TOTAL_COUNT
+            , A.TOP_MENU_ID
+            , A.MENU_ID
+            , A.PROD_ID
+            , A.CONTENTS_TYPE_CD
+        FROM (
+            SELECT 
+                COUNT(1) OVER() TOTAL_COUNT
+                , ROW_NUMBER() OVER(ORDER BY SCORE DESC) RNK
+                , A.*
+            FROM (
+                SELECT 
+                    ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
+                    , D.TOP_MENU_ID
+                    , D.MENU_ID
+                    , B.PROD_ID
+                    , A.SCORE
+                    , B.CONTENTS_TYPE_CD
+                FROM 
+                    TB_DP_SMLR_PROD_MANG A
+                    , TB_DP_PROD B
+                    , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                    , TB_DP_MENU_CATEGORY D
+                    , TB_DP_SPRT_DEVICE E
+                    , TB_DP_TENANT_PROD F
+                    , TB_CM_DEVICE G
+                WHERE A.SMLR_PROD_ID = B.PROD_ID
+                AND A.SMLR_PROD_ID = C.PROD_ID
+                AND C.MENU_ID = D.MENU_ID
+                AND A.SMLR_PROD_ID = E.PROD_ID
+                AND A.SMLR_PROD_ID = F.PROD_ID
+                AND E.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
+                AND C.USE_YN ='Y'
+                AND D.USE_YN ='Y'
+                AND G.USE_YN = 'Y'
+                AND F.EXPO_YN = 'Y'
+                AND B.SVC_GRP_CD ='DP000201'
+                AND F.PROD_STATUS_CD = 'PD000403'
+                AND A.STD_PROD_ID = #{productId}
+                AND F.TENANT_ID = #{tenantId}
+                AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                <if test="arrayExceptId != null"> /* 제외 상품ID */
+                    AND A.SMLR_PROD_ID NOT IN 
+                    <foreach collection="arrayExceptId" item="exceptId" separator="," open="(" close=")">
+                        #{exceptId}
+                    </foreach>
+                </if> 
+                UNION ALL
+                SELECT 
+                    ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
+                    , D.TOP_MENU_ID
+                    , D.MENU_ID
+                    , B.PROD_ID
+                    , A.SCORE
+                    , 'PD002501' CONTENTS_TYPE_CD
+                FROM
+                    TB_DP_SMLR_PROD_MANG A
+                    , TB_DP_PROD_RSHP B
+                    , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                    , TB_DP_MENU_CATEGORY D
+                    , TB_DP_PROD E /* 에피소드 */
+                    , TB_DP_TENANT_PROD F /* 에피소드 */
+                    , TB_DP_SPRT_DEVICE G /* 에피소드 */
+                    , TB_CM_DEVICE H
+                WHERE A.SMLR_PROD_ID = B.PROD_ID
+                AND B.PROD_ID = C.PROD_ID
+                AND C.MENU_ID = D.MENU_ID
+                AND B.PART_PROD_ID = E.PROD_ID
+                AND B.PART_PROD_ID = F.PROD_ID
+                AND B.PART_PROD_ID = G.PROD_ID
+                AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                AND C.USE_YN = 'Y'
+                AND D.USE_YN = 'Y'
+                AND H.USE_YN = 'Y'
+                AND F.EXPO_YN = 'Y'
+                AND E.SVC_GRP_CD = 'DP000203'
+                AND E.CONTENTS_TYPE_CD = 'PD002502'
+                AND F.PROD_STATUS_CD = 'PD000403'
+                AND B.PROD_RSHP_CD = 'DP010802'
+                AND 1 = CASE    WHEN D.TOP_MENU_ID = 'DP16' AND H.MUSIC_SPRT_YN = 'Y' THEN 1
+                        WHEN D.TOP_MENU_ID IN ('DP17','DP18') AND DECODE(NVL(E.DRM_YN, 'N'), 'N', 1, NVL(H.VIDEO_DRM_SPRT_YN, 'N'), 1, 0) = 1 THEN 1
+                        WHEN D.TOP_MENU_ID = 'DP13' AND E.META_CLSF_CD IN ('CT19','CT20') AND H.EBOOK_SPRT_YN = 'Y' THEN 1
+                        WHEN D.TOP_MENU_ID = 'DP14' AND DECODE(E.META_CLSF_CD, 'CT21', H.COMIC_SPRT_YN, 'CT22', H.MAGAZINE_SPRT_YN) = 'Y' THEN 1
+                        ELSE 0 END
+                AND A.STD_PROD_ID = #{productId} /* 상품ID */
+                AND F.TENANT_ID = #{tenantId}
+                AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                <if test="arrayExceptId != null"> /* 제외 상품ID */
+                    AND A.SMLR_PROD_ID NOT IN 
+                    <foreach collection="arrayExceptId" item="exceptId" separator="," open="(" close=")">
+                        #{exceptId}
+                    </foreach>
+                </if> 
+            ) A
+            WHERE RNUM = 1
+        ) A
+        WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
+        ORDER BY A.RNK
+    </select>
+            
+</mapper>
