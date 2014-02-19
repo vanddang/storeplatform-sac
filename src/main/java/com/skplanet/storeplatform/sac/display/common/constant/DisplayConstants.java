@@ -278,6 +278,8 @@ public class DisplayConstants {
 	public static final String DP_SOURCE_TYPE_DETAIL = "detail";
 	/** 쇼핑컷상세이미지 */
 	public static final String DP_SOURCE_TYPE_CUT_DETAIL = "cutDetail";
+	/** 미리보기 */
+	public static final String DP_SOURCE_TYPE_PREVIEW = "preview";
 
 	/** 음악 mp3-192 */
 	public static final String DP_SOURCE_TYPE_AUDIO_MP3_192 = "audio/mp3-192";
@@ -314,6 +316,9 @@ public class DisplayConstants {
 	public static final String DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD = "DP0001B4";
 
 	public static final String DP_OPENAPI_APP_REPRESENT_IMAGE_CD = "DP000125";
+
+	public static final String DP_OPENAPI_APP_PREVIEW_IMAGE_CD = "DP000116";
+
 	// 정액제 배너이미지
 	public static final String DP_FREEPASS_BANNER_IMAGE_CD = "DP000197";
 	// 정액제 썸네일이미지
@@ -485,4 +490,10 @@ public class DisplayConstants {
 	// 정액제 상품 자동결제 구분
 	public static final String DP_AUTOPAY_AUTO = "auto"; // 자동결제
 	public static final String DP_AUTOPAY_NORMAL = "normal"; // 일반결제
+
+	/**
+	 * OpenApi Release Type
+	 */
+	public static final String DP_OPENAPI_RELEASETYPE_DAY = "1"; // 1일 이내
+	public static final String DP_OPENAPI_RELEASETYPE_WEEK = "7"; // 7일 이내
 }
