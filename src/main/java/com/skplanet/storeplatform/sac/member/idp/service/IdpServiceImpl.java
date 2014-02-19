@@ -744,7 +744,9 @@ public class IdpServiceImpl implements IdpService {
 			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 
 			UserMbrDevice userMbrDevice = new UserMbrDevice();
+			userMbrDevice.setUserKey(schDeviceRes.getUserKey());
 			userMbrDevice.setDeviceID(mdn);
+			userMbrDevice.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
 			userMbrDevice.setDeviceModelNo(device.getDeviceModelCd());
 			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 : 번호변경
 
@@ -754,6 +756,7 @@ public class IdpServiceImpl implements IdpService {
 			userMbrDeviceDetail.setExtraProfileValue(uacd);
 			userMbrDeviceDetail.setTenantID(tenantId);
 			userMbrDeviceDetail.setUserKey(schDeviceRes.getUserKey());
+			userMbrDeviceDetail.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 			userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
@@ -761,6 +764,7 @@ public class IdpServiceImpl implements IdpService {
 			createDeviceReq.setUserKey(schDeviceRes.getUserKey());
 			createDeviceReq.setIsNew("N");
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
+
 			this.deviceSCI.createDevice(createDeviceReq);
 
 			/* 게임센터 연동 */
@@ -888,7 +892,9 @@ public class IdpServiceImpl implements IdpService {
 			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 
 			UserMbrDevice userMbrDevice = new UserMbrDevice();
+			userMbrDevice.setUserKey(schDeviceRes.getUserKey());
 			userMbrDevice.setDeviceID(mdn);
+			userMbrDevice.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
 			userMbrDevice.setDeviceModelNo(device.getDeviceModelCd());
 			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE); // 휴대기기 변경 유형코드 : 기기변경
 
@@ -898,6 +904,7 @@ public class IdpServiceImpl implements IdpService {
 			userMbrDeviceDetail.setExtraProfileValue(uacd);
 			userMbrDeviceDetail.setTenantID(tenantId);
 			userMbrDeviceDetail.setUserKey(schDeviceRes.getUserKey());
+			userMbrDeviceDetail.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 			userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
@@ -905,6 +912,7 @@ public class IdpServiceImpl implements IdpService {
 			createDeviceReq.setUserKey(schDeviceRes.getUserKey());
 			createDeviceReq.setIsNew("N");
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
+
 			this.deviceSCI.createDevice(createDeviceReq);
 
 			/* 게임센터 연동 */
@@ -953,6 +961,7 @@ public class IdpServiceImpl implements IdpService {
 				return this.FAIL_STR;
 			} else {
 				return this.FAIL_STR;
+
 			}
 		}
 
@@ -1014,7 +1023,7 @@ public class IdpServiceImpl implements IdpService {
 			gameCenterSacReq.setDeviceId(mdn);
 			gameCenterSacReq.setSystemId(systemId);
 			gameCenterSacReq.setTenantId(tenantId);
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_NAME_CHANGE);
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
 
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
