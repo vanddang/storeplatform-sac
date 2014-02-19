@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
+import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceResponse;
@@ -43,8 +44,7 @@ public class DeviceSCIController implements DeviceSCI {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.client.internal.member.sci.DeviceInternalSCI#getDeviceMdn(com.skplanet.storeplatform
+	 * @see com.skplanet.storeplatform.sac.client.internal.member.sci.DeviceSCI#getDeviceMdn(com.skplanet.storeplatform
 	 * .sac .client.internal.member.vo.GetMdnReq)
 	 */
 
@@ -55,13 +55,13 @@ public class DeviceSCIController implements DeviceSCI {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		LOGGER.info("[DeviceInternalSCIController.searchDeviceId] RequestHeader : {}, \nRequestParameter : {}",
-				requestHeader, requestVO);
+		LOGGER.info("[DeviceSCIController.searchDeviceId] RequestHeader : {}, \nRequestParameter : {}", requestHeader,
+				requestVO);
 
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				requestVO.getDeviceKey(), requestVO.getUserKey());
 
-		LOGGER.info("[DeviceInternalSCIController.searchDeviceId] SearchDevice Info : {}", deviceInfo);
+		LOGGER.info("[DeviceSCIController.searchDeviceId] SearchDevice Info : {}", deviceInfo);
 
 		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
 		if (deviceInfo != null && deviceInfo.getDeviceId() != null) {
@@ -75,30 +75,44 @@ public class DeviceSCIController implements DeviceSCI {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceInternalSCI#searchChangedDeviceHistoryList
+	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI#searchChangedDeviceHistoryList
 	 * (com.skplanet .storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq)
 	 */
 	@Override
 	@RequestMapping(value = "/searchChangedDeviceHistory", method = RequestMethod.POST)
 	public ChangedDeviceHistorySacRes searchChangedDeviceHistory(ChangedDeviceHistorySacReq request) {
-		// TODO 1. SC 회원 기기변경이력 조회 기능 호출.
+
+		// 공통 파라미터 셋팅
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
+		// SC 회원 기기변경이력 조회 기능 호출.
 		SearchChangedDeviceRequest searchChangedDeviceRequest = new SearchChangedDeviceRequest();
 		searchChangedDeviceRequest.setUserKey(request.getUserKey());
 		searchChangedDeviceRequest.setDeviceKey(request.getDeviceKey());
 		searchChangedDeviceRequest.setDeviceID(request.getDeviceId());
+		searchChangedDeviceRequest.setCommonRequest(commonRequest);
+
+		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] SC Request userSCI.searchChangedDevice : {}",
+				searchChangedDeviceRequest);
 		SearchChangedDeviceResponse searchChangedDeviceResponse = this.userSCI
 				.searchChangedDevice(searchChangedDeviceRequest);
 
 		ChangedDeviceHistorySacRes changedDeviceHistorySacRes = new ChangedDeviceHistorySacRes();
 
 		if (searchChangedDeviceResponse != null && searchChangedDeviceResponse.getChangedDeviceLog() != null) {
-			// AS-IS TB에서 deviceKey와 deviceId가 동일.
+			LOGGER.info(
+					"[DeviceSCIController.searchChangedDeviceHistory] SC Response userSCI.searchChangedDevice : {}",
+					searchChangedDeviceResponse.getChangedDeviceLog());
 			changedDeviceHistorySacRes.setDeviceKey(searchChangedDeviceResponse.getChangedDeviceLog().getDeviceKey());
 			changedDeviceHistorySacRes.setIsChanged(searchChangedDeviceResponse.getChangedDeviceLog().getIsChanged());
 		} else {
-			throw new StorePlatformException("기기변경 이력이 없습니다.");// ("", ""); // 기기변경 이력이 없습니다.
+			throw new StorePlatformException(searchChangedDeviceResponse.getCommonResponse().getResultCode(),
+					searchChangedDeviceResponse.getCommonResponse().getResultMessage());
 		}
+		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] SAC Response : {}", changedDeviceHistorySacRes);
 		return changedDeviceHistorySacRes;
 
 	}

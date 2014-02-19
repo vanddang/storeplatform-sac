@@ -1,9 +1,9 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,24 +69,13 @@ public class GetOpmdTest {
 
 	/**
 	 * <pre>
-	 * After method.
-	 * </pre>
-	 */
-	@After
-	public void after() {
-		// Debug [RESPONSE-SAC]
-		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
-	}
-
-	/**
-	 * <pre>
-	 * 성공 CASE
-	 * 정상 989로 시작하는 MDN이 Request로 올 경우.
+	 * OPMD 모회선 번호 조회.
+	 * - 검색결과 존재. (989로 시작하는 MDN)
 	 * </pre>
 	 * 
 	 */
 	@Test
-	public void requestOpmdMsisdnTest() {
+	public void testGetOpmdByOpmdMsisdn() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 
@@ -100,7 +89,9 @@ public class GetOpmdTest {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetOpmdRes response = (GetOpmdRes) result;
+						response = (GetOpmdRes) result;
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
+						assertThat(response.getMsisdn(), notNullValue());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -108,19 +99,19 @@ public class GetOpmdTest {
 
 	/**
 	 * <pre>
-	 * 성공 CASE
-	 * 정상 msisdn이 Request Parameter로 넘어온 경우.
+	 * OPMD 모회선 번호 조회.
+	 * - 검색결과 없음. (OPMD번호 아님, msisdn 그대로 반환.)
 	 * </pre>
 	 * 
 	 */
 	@Test
-	public void requestMsisdnTest() {
+	public void testGetOpmdByMsisdn() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 
 					@Override
 					public Object requestBody() {
-						request.setMsisdn("01020284222");
+						request.setMsisdn("01020284280");
 						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
@@ -128,8 +119,9 @@ public class GetOpmdTest {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetOpmdRes response = (GetOpmdRes) result;
-						assertThat(response.getMsisdn(), notNullValue());
+						response = (GetOpmdRes) result;
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
+						assertEquals(response.getMsisdn(), request.getMsisdn());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -137,31 +129,37 @@ public class GetOpmdTest {
 
 	/**
 	 * <pre>
-	 * 성공 CASE
-	 * 유효하지 않은 MDN이 Request로 넘어온 경우.
-	 * msisdn 외 다른 값(MAC-Address, Wifi, ... )이 오면 모번호 조회 하지 않고 그 값 그대로 내려줌.
+	 * OPMD 모회선 번호 조회.
+	 * - Exception. (유효하지 않은 MDN - msisdn 외 다른 값(MAC-Address, Wifi, ... )
 	 * </pre>
 	 * 
 	 */
-	@Test(expected = StorePlatformException.class)
-	public void requestinvalidMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
+	@Test
+	public void testExceptionGetOpmdByMsisdn() {
+		try {
+			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
+					.requestBody(new RequestBodySetter() {
 
-					@Override
-					public Object requestBody() {
-						request.setMsisdn("E1HHADEFVA9");
-						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
-						return request;
-					}
-				}).success(GetOpmdRes.class, new SuccessCallback() {
+						@Override
+						public Object requestBody() {
+							request.setMsisdn("E1HHADEFVA9");
+							LOGGER.debug("[REQUEST(SAC)] JSON : \n{}",
+									TestConvertMapperUtils.convertObjectToJson(request));
+							return request;
+						}
+					}).success(GetOpmdRes.class, new SuccessCallback() {
 
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetOpmdRes response = (GetOpmdRes) result;
-						assertThat(response.getMsisdn(), notNullValue());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							response = (GetOpmdRes) result;
+							assertThat(response.getMsisdn(), notNullValue());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		} catch (StorePlatformException e) {
+			assertEquals("SAC_MEM_3004", e.getErrorInfo().getCode());
+			LOGGER.info("\nerror >> ", e);
+
+		}
 
 	}
 

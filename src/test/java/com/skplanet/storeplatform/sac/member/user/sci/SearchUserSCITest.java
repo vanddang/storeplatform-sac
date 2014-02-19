@@ -55,7 +55,7 @@ public class SearchUserSCITest {
 	/**
 	 * <pre>
 	 * UserKey를 이용한 회원정보 조회 SCI TEST.
-	 * - 검색결과 존재.
+	 * - 검색결과 존재. (회원정보에 등록된 deviceId가 한 개)
 	 * </pre>
 	 */
 	@Test
@@ -71,8 +71,7 @@ public class SearchUserSCITest {
 	/**
 	 * <pre>
 	 * UserKey를 이용한 회원정보 조회 SCI TEST.
-	 * - 검색결과 존재.
-	 * 	 deviceId가 여러개.
+	 * - 검색결과 존재. (회원정보에 등록된 deviceId가 여러개)
 	 * </pre>
 	 */
 	@Test
@@ -88,7 +87,23 @@ public class SearchUserSCITest {
 	/**
 	 * <pre>
 	 * UserKey를 이용한 회원정보 조회 SCI TEST.
-	 * - 검색결과 없음 (Exception) .
+	 * - 검색결과 존재. (회원정보에 등록된 deviceId가 없음)
+	 * </pre>
+	 */
+	@Test
+	public void testNonDeviceIdForSearchUserByUserKey() {
+
+		SearchUserSacReq request = new SearchUserSacReq();
+		request.setUserKey("IF1023001443020090915112936");
+
+		SearchUserSacRes result = this.searchUserSCI.searchUserByUserKey(request);
+		LOGGER.debug("[SearchUserSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
+	}
+
+	/**
+	 * <pre>
+	 * UserKey를 이용한 회원정보 조회 SCI TEST.
+	 * - Exception. (검색된 회원정보 없음)
 	 * </pre>
 	 */
 	@Test

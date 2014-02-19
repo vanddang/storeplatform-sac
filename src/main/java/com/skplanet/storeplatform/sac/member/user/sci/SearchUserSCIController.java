@@ -41,8 +41,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserInternalSCI#searchUserByUserKey(com.
+	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI#searchUserByUserKey(com.
 	 * skplanet .storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq)
 	 */
 	@Override
@@ -50,8 +49,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 	public SearchUserSacRes searchUserByUserKey(SearchUserSacReq request) {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info(
-				"[SearchUserInternalSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}",
+		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}",
 				requestHeader, request);
 
 		// 회원정보 조회 범위 설정.
@@ -65,7 +63,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// 회원 정보 조회 SC API 호출.
 		DetailRes userDetail = this.userSearchService.detail(requestHeader, detailRequest);
-		LOGGER.info("[SearchUserInternalSCIController.searchUserByUserKey] SC UserDetailInfo Response : {}", userDetail);
+		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] SC UserDetailInfo Response : {}", userDetail);
 
 		SearchUserSacRes searchUserSacRes = new SearchUserSacRes();
 
@@ -75,14 +73,14 @@ public class SearchUserSCIController implements SearchUserSCI {
 			List<DeviceInfo> deviceList = userDetail.getDeviceInfoList();
 			List<String> deviceIdList = new ArrayList<String>();
 
-			if (deviceList == null) { // 등록기기 없는경우, size=0 인 List 내려주기.
-				deviceList = new ArrayList<DeviceInfo>();
-			} else {
-				// Setting deviceId List.
-				for (int i = 0; i < deviceList.size(); i++) {
-					deviceIdList.add(deviceList.get(i).getDeviceId());
-				}
+			// if (deviceList == null) { // 등록기기 없는경우, size=0 인 List 내려주기.
+			// deviceList = new ArrayList<DeviceInfo>();
+			// } else {
+			// Setting deviceId List.
+			for (int i = 0; i < deviceList.size(); i++) {
+				deviceIdList.add(deviceList.get(i).getDeviceId());
 			}
+			// }
 
 			/* 3. 파라미터 셋팅해서 Response. */
 			searchUserSacRes.setDeviceId(deviceIdList);
@@ -90,8 +88,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 			searchUserSacRes.setUserType(userDetail.getUserInfo().getUserType());
 			searchUserSacRes.setUserMainStatus(userDetail.getUserInfo().getUserMainStatus());
 			searchUserSacRes.setUserSubStatus(userDetail.getUserInfo().getUserSubStatus());
-			LOGGER.info("[SearchUserInternalSCIController.searchUserByUserKey] SAC UserInfo Response : {}",
-					searchUserSacRes);
+			LOGGER.info("[SearchUserSCIController.searchUserByUserKey] SAC UserInfo Response : {}", searchUserSacRes);
 		} else {
 			throw new StorePlatformException("SAC_MEM_0003", "userKey", request.getUserKey());
 		}

@@ -31,7 +31,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -73,6 +72,7 @@ public class GetPhoneAuthorizationCodeTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 		// [REQUEST] 초기화
 		request = new GetPhoneAuthorizationCodeReq();
+
 	}
 
 	/**
@@ -88,11 +88,11 @@ public class GetPhoneAuthorizationCodeTest {
 
 	/**
 	 * <pre>
-	 * 성공 CASE
-	 * T Store SMS 발송.
+	 * 휴대폰 인증 SMS 발송.
+	 * - SMS 발송 성공 (T Store SMS)
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
+	@Test
 	public void tstoreSmsSendTest() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
