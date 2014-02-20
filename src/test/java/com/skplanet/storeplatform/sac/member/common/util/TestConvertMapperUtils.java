@@ -25,8 +25,11 @@ public class TestConvertMapperUtils {
 		String returnStr = "";
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			if (obj != null)
+			if (obj != null) {
 				returnStr = mapper.writeValueAsString(obj);
+				System.out.println("## >> convertObjectToJson ==============================");
+				System.out.println(returnStr);
+			}
 		} catch (Exception e) {
 			throw new StorePlatformException("", e);
 		}
