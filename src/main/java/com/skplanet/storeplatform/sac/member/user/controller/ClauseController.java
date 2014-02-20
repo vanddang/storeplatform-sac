@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListClauseSacRes;
@@ -55,6 +57,12 @@ public class ClauseController {
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 2.1.33. 약관목록 상세조회 #####");
 		LOGGER.info("####################################################");
+
+		String itemCd = StringUtil.nvl(req.getClauseItemCd(), "");
+
+		if ("".equals(itemCd)) {
+			throw new StorePlatformException("SAC_MEM_0001", "getClauseItemCd()");
+		}
 
 		DetailClauseSacRes res = this.svc.detailClauseList(req);
 

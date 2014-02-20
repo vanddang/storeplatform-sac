@@ -61,13 +61,9 @@ public class UserSearchController {
 		LOGGER.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
 		LOGGER.info("####################################################");
 
-		String userId = StringUtil.nvl(req.getUserId(), "");
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
-
-		if (deviceId.equals("") && deviceKey.equals("") && userId.equals("") && userKey.equals("")) {
-			new StorePlatformException("SAC_MEM_0001", "userId, userKey, deviceId, deviceKey");
+		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")
+				&& StringUtil.nvl(req.getUserId(), "").equals("") && StringUtil.nvl(req.getUserKey(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
 		ExistRes res = this.svc.exist(sacHeader, req);
@@ -102,13 +98,9 @@ public class UserSearchController {
 		LOGGER.info("##### 5.1.9. 회원 정보 조회 #####");
 		LOGGER.info("####################################################");
 
-		String userId = StringUtil.nvl(req.getUserId(), "");
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
-
-		if (deviceId.equals("") && deviceKey.equals("") && userId.equals("") && userKey.equals("")) {
-			new StorePlatformException("SAC_MEM_0001", "userId, userKey, deviceId, deviceKey");
+		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")
+				&& StringUtil.nvl(req.getUserId(), "").equals("") && StringUtil.nvl(req.getUserKey(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
 		LOGGER.info("============================================ DetailReq : {}", req.toString());

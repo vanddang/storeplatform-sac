@@ -175,6 +175,10 @@ public class DeviceController {
 
 		LOGGER.info("###### modifyRepresentationDevice Request : {}", req.toString());
 
+		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceKey || deviceId");
+		}
+
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
 
 		LOGGER.info("###### Final modifyRepresentationDevice Respone : {}", res.toString());
