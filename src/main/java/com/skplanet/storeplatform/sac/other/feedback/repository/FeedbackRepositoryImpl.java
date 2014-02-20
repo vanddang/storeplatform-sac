@@ -116,7 +116,7 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 
 	@Override
 	public Object deleteTenantProdStats(TenantProdStats tenantProdStats) {
-		return this.commonDAO.delete("Feedback.deleteTenantProdStats", tenantProdStats);
+		return this.commonDAO.update("Feedback.deleteTenantProdStats", tenantProdStats);
 	}
 
 	@Override
