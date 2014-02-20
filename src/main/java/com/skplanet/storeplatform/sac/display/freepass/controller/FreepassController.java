@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
@@ -72,7 +73,7 @@ public class FreepassController {
 	 */
 	@RequestMapping(value = "/detail/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FreepassDetailRes searchFreepassDetail(FreepassListReq req, SacRequestHeader header) {
+	public FreepassDetailRes searchFreepassDetail(FreepassDetailReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchFreepassDetail Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
