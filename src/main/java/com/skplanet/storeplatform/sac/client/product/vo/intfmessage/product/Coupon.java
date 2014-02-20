@@ -17,6 +17,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
@@ -95,6 +96,11 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * Identifier 배열.
 	 */
 	private List<Identifier> identifierList;
+	
+	/**
+	 * > Code : 대분류 카테고리시 topClass.
+	 */
+	private List<Menu> menuList;
 
 	/**
 	 * @return Identifier
@@ -312,6 +318,20 @@ public class Coupon extends CommonInfo implements Serializable {
 
 	public void setIdentifierList(List<Identifier> identifierList) {
 		this.identifierList = identifierList;
+	}
+
+	/**
+	 * @return the menuList
+	 */
+	public List<Menu> getMenuList() {
+		return menuList;
+	}
+
+	/**
+	 * @param menuList the menuList to set
+	 */
+	public void setMenuList(List<Menu> menuList) {
+		this.menuList = menuList;
 	}
 
 }
