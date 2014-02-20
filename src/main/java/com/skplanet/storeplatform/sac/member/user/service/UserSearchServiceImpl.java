@@ -565,6 +565,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 				sac.setUserEmail(StringUtil.setTrim(userMbr.getUserEmail()));
 
 				searchIdList.add(sac);
+			} else if (userMbr.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+				throw new StorePlatformException("SAC_MEM_1300", userMbr.getUserType());
 			}
 
 		}
