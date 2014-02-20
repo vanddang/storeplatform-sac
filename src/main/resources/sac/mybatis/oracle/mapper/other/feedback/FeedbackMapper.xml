@@ -121,8 +121,7 @@
     <!-- 사용후기 수정 -->
     <update id="updateProdNoti"  parameterType="ProdNoti">
         /* FeedbackMapper.xml, updateProdNoti, SAC : 김현일 , 2014-02-04 */
-	    UPDATE 
-	           TB_DP_PROD_NOTI
+	    UPDATE TB_DP_PROD_NOTI
 	       SET NOTI_DSCR = #{notiDscr}
 	         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
 	         , TITLE = #{title}
@@ -143,9 +142,8 @@
 	
 	<!-- 사용후기 삭제 -->
 	<update id="deleteProdNoti" parameterType="ProdNoti">
-        /* FeedbackMapper.xml, deleteProdNoti, SAC : 김현일 , 2014-02-04 */
-        UPDATE 
-               TB_DP_PROD_NOTI
+	    /* FeedbackMapper.xml, deleteProdNoti, SAC : 김현일 , 2014-02-04 */
+        UPDATE TB_DP_PROD_NOTI
            SET
                DEL_DT = SYSDATE
              , DEL_YN = 'Y'
@@ -156,7 +154,7 @@
 	 
 	<!-- 사용후기 추천이력 삭제 -->  
 	<delete id="deleteProdNotiGood" parameterType="ProdNotiGood">
-	     /* FeedbackMapper.xml, deleteProdNotiGood, SAC : 김현일 , 2014-02-04 */
+	    /* FeedbackMapper.xml, deleteProdNotiGood, SAC : 김현일 , 2014-02-04 */
 	    DELETE FROM TB_DP_PROD_NOTIGOOD
          WHERE TENANT_ID = #{tenantId}
            AND NOTI_SEQ = #{notiSeq}
@@ -202,7 +200,7 @@
 
     <!-- 회원평가정보 삭제 -->
     <delete id="deleteMbrAvg" parameterType="MbrAvg">
-        DELETE /* FeedbackMapper.xml, deleteMbrAvg, SAC : 김현일 , 2014-02-04 */
+        DELETE /* FeedbackMapper.xml, deleteMbrAvg, SAC : 김현일 , 2014-02-04 */ 
           FROM TB_DP_MBR_AVG
          WHERE TENANT_ID = #{tenantId}
            AND PROD_ID = #{prodId}
@@ -212,8 +210,8 @@
 	
 	<!-- 평점저장(기평가평점 수정) -->
 	<update id="updateTenantProdStats" parameterType="TenantProdStats">
-        UPDATE /* FeedbackMapper.xml, updateTenantProdStats, SAC : 김현일 , 2014-02-04 */
-	           TB_DP_TENANT_PROD_STATS
+	    /* FeedbackMapper.xml, updateTenantProdStats, SAC : 김현일 , 2014-02-04 */
+        UPDATE TB_DP_TENANT_PROD_STATS
 	       SET TOT_EVLU_SCORE = NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore} - #{preAvgScore}
 	           , UPD_ID = #{updId}
 	           , UPD_DT = SYSDATE
@@ -269,12 +267,17 @@
     </select>
     
     <!-- 평점 삭제 -->
-    <delete id="deleteTenantProdStats" parameterType="TenantProdStats">
-        DELETE /* FeedbackMapper.xml, deleteTenantProdStats, SAC : 김현일 , 2014-02-04 */
-          FROM TB_DP_TENANT_PROD_STATS
-         WHERE TENANT_ID = #{tenantId} 
-           AND PROD_ID = #{prodId}    
-    </delete>
+    <update id="deleteTenantProdStats" parameterType="TenantProdStats">
+        /* FeedbackMapper.xml, deleteTenantProdStats, SAC : 김현일 , 2014-02-04 */
+        UPDATE TB_DP_TENANT_PROD_STATS
+           SET TOT_EVLU_SCORE = 0
+               , UPD_ID = #{updId}
+               , UPD_DT = SYSDATE
+               , PATICPERS_CNT = 0
+               , AVG_EVLU_SCORE = 0
+         WHERE TENANT_ID = #{tenantId}
+           AND PROD_ID = #{prodId}
+    </update>
 	
 	 <!-- (탈퇴회원 사용후기) 기 등록 여부 -->
 	 <select id="getProdNotiWDCount" parameterType="ProdNoti" resultType="int">
@@ -804,6 +807,7 @@
     
     <!-- 자기가 작성한 사용후기 갯수 -->
     <select id="getMyProdNotiCount" parameterType="ProdNoti" resultType="int">
+        /* FeedbackMapper.xml, getMyProdNotiCount, SAC : 김현일 , 2014-02-04 */
         SELECT COUNT(*) AS TOTAL_COUNT
           FROM
              (
