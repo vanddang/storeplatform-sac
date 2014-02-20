@@ -1371,7 +1371,10 @@
                               , 'DP006303', 'delivery' ) PROD_CASE_CD
                         ,CONCAT(PI.FILE_PATH,PI.FILE_NM) as FILE_PATH
                         ,J.CONTENTS_TYPE_CD 
-                        ,(select SRC_CONTENT_ID from TB_DP_SHPG_PROD WHERE prod_id=H.PROD_ID ) AS SRC_CONTENT_ID
+                        ,(SELECT SRC_CONTENT_ID 
+                            FROM TB_DP_SHPG_PROD 
+                           WHERE prod_id=H.PROD_ID 
+                         ) AS SRC_CONTENT_ID
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
