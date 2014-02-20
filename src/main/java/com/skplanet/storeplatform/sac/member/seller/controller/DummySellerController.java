@@ -42,6 +42,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationS
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifySubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
@@ -800,6 +801,21 @@ public class DummySellerController {
 	public @ResponseBody
 	AbrogationAuthKeyRes abrogationAuthKey() {
 		AbrogationAuthKeyRes res = new AbrogationAuthKeyRes();
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * Flurry 삭제.
+	 * </pre>
+	 * 
+	 * @return RemoveFlurrySacRes
+	 */
+	@RequestMapping(value = "/removeFlurry/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public RemoveFlurrySacRes removeFlurry() {
+		RemoveFlurrySacRes res = new RemoveFlurrySacRes();
+		res.setSellerKey("IF1023599819420120111013407");
 		return res;
 	}
 

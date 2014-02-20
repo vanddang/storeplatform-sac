@@ -38,6 +38,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -287,6 +289,21 @@ public class SellerController {
 			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
 		}
 		return this.sellerService.abrogationAuthKey(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.30. Flurry 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return RemoveFlurrySacRes
+	 */
+	@RequestMapping(value = "/dev/removeFlurry/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, @RequestBody @Validated RemoveFlurrySacReq req) {
+		return this.sellerService.removeFlurry(header, req);
 	}
 
 }

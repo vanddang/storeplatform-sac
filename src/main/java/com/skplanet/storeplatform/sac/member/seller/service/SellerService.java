@@ -25,6 +25,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -78,4 +80,7 @@ public interface SellerService {
 
 	/** 2.2.28. 판매자 회원 인증키 폐기. */
 	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req);
+
+	/** 2.2.30. Flurry 삭제. */
+	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, RemoveFlurrySacReq req);
 }

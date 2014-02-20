@@ -21,10 +21,13 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSe
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.Document;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.FlurryAuth;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginInfo;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveFlurryRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveFlurryResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
@@ -33,6 +36,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerUpgrade;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateFlurryRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerResponse;
@@ -68,6 +72,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -85,7 +91,7 @@ public class SellerServiceImpl implements SellerService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerServiceImpl.class);
 
 	/**
-	 * SC-SCI.
+	 * SC-SellerSCI.
 	 */
 	@Autowired
 	private SellerSCI sellerSCI;
@@ -333,7 +339,8 @@ public class SellerServiceImpl implements SellerService {
 
 					/** 3. 계정 잠금 해제 요청. */
 					if (StringUtils.equals(req.getReleaseLock(), MemberConstants.USE_Y)
-							&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+							&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
+							&& StringUtils.equals(MemberConstants.USE_N, logInSellerResponse.getIsSubSeller())) {
 						/** 3-1. SC회원 Req 생성 및 주입. */
 						UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
 						updateStatusSellerRequest.setSellerID(req.getSellerId());
@@ -356,6 +363,8 @@ public class SellerServiceImpl implements SellerService {
 						// FailCount '0' Reset
 						loginFailCount = "0";
 					}
+
+					//logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
 
 					if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
 						/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
@@ -520,6 +529,24 @@ public class SellerServiceImpl implements SellerService {
 		/** 2-5. SC회원 - 기본정보변경 Call. */
 		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
 
+		/** Flurry 정보 수정. */
+		if (req.getFlurryAuthList() != null) {
+			UpdateFlurryRequest updateFlurryRequest = new UpdateFlurryRequest();
+			updateFlurryRequest.setCommonRequest(commonRequest);
+			updateFlurryRequest.setSellerKey(req.getSellerKey());
+			List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
+			FlurryAuth flurryAuth = null;
+			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
+				flurryAuth = new FlurryAuth();
+				flurryAuth.setAccessCode(req.getFlurryAuthList().get(i).getAccessCode());
+				flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
+				flurryAuth.setSellerKey(req.getSellerKey());
+				flurryAuthList.add(flurryAuth);
+			}
+			updateFlurryRequest.setFlurryAuthList(flurryAuthList);
+			this.sellerSCI.updateFlurry(updateFlurryRequest);
+		}
+
 		// Debug
 		LOGGER.debug("[SC-UpdateSellerResponse] : \n{}", updateSellerResponse.toString());
 
@@ -556,7 +583,7 @@ public class SellerServiceImpl implements SellerService {
 		// 메인, 서브 상태
 		if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, req.getSellerMainStatus())
 				|| !StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, req.getSellerSubStatus())) {
-
+			throw new StorePlatformException("SAC_MEM_2001", req.getSellerMainStatus(), req.getSellerSubStatus());
 		}
 
 		// 무료, BP
@@ -568,9 +595,9 @@ public class SellerServiceImpl implements SellerService {
 					searchSellerResponse.getSellerMbr().getSellerClass());
 		}
 
-		// SAC_MEM_2004
-
 		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
+
+		updateAccountSellerRequest.setSellerKey(req.getSellerKey());
 
 		SellerMbr sellerMbr = new SellerMbr();
 		// 회원 정보
@@ -633,8 +660,6 @@ public class SellerServiceImpl implements SellerService {
 			updateAccountSellerRequest.setDocumentList(documentList);
 		}
 
-		updateAccountSellerRequest.setSellerKey(req.getSellerKey());
-
 		/** 2. 공통 헤더 생성 및 주입. */
 		updateAccountSellerRequest.setCommonRequest(commonRequest);
 
@@ -666,12 +691,22 @@ public class SellerServiceImpl implements SellerService {
 		// SessionKey 유효성 체크
 		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
 
-		// 수정 가능 회원 Check
-		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
-				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
+		/** 1. Email 중복체크 [REQUEST] 생성 및 주입 */
+		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
 
-		// 이미 사용중인 이메일
-		if (StringUtils.equals(req.getNewEmailAddress(), searchSellerResponse.getSellerMbr().getSellerEmail())) {
+		/** 1-2. SC 헤더 셋팅 */
+		checkDuplicationSellerRequest.setCommonRequest(commonRequest);
+
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_EMAIL);
+		keySearch.setKeyString(req.getNewEmailAddress());
+		List<KeySearch> keySearchs = new ArrayList<KeySearch>();
+		keySearchs.add(keySearch);
+		checkDuplicationSellerRequest.setKeySearchList(keySearchs);
+
+		/** 1-3. SC회원(Email 중복) Call */
+		if (StringUtils.equals(MemberConstants.USE_Y,
+				this.sellerSCI.checkDuplicationSeller(checkDuplicationSellerRequest).getIsRegistered())) {
 			throw new StorePlatformException("SAC_MEM_2012", req.getNewEmailAddress());
 		}
 
@@ -1148,4 +1183,49 @@ public class SellerServiceImpl implements SellerService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 2.2.30. Flurry 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return RemoveFlurrySacRes
+	 */
+	@Override
+	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, RemoveFlurrySacReq req) {
+
+		// 1. CommonRequest Setting
+		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
+		// SC공통 헤더
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+
+		// 2. SessionKey Check
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+
+		// 3. Flurry 삭제
+		RemoveFlurryRequest removeFlurryRequest = new RemoveFlurryRequest();
+		removeFlurryRequest.setCommonRequest(commonRequest);
+
+		removeFlurryRequest.setSellerKey(req.getSellerKey());
+
+		if (req.getFlurryAuthList() != null) {
+			List<FlurryAuth> flurrtAuthList = new ArrayList<FlurryAuth>();
+			FlurryAuth flurryAuth = null;
+			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
+				flurryAuth = new FlurryAuth();
+				flurryAuth.setAccessCode(req.getFlurryAuthList().get(i).getAccessCode());
+				flurryAuth.setSellerKey(req.getSellerKey());
+				flurrtAuthList.add(flurryAuth);
+			}
+			removeFlurryRequest.setFlurryAuthList(flurrtAuthList);
+		}
+
+		RemoveFlurryResponse removeFlurryResponse = this.sellerSCI.removeFlurry(removeFlurryRequest);
+
+		// 4. Response
+		RemoveFlurrySacRes res = new RemoveFlurrySacRes();
+		res.setSellerKey(removeFlurryResponse.getSellerKey());
+		return res;
+	}
 }
