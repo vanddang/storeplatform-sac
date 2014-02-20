@@ -1665,7 +1665,7 @@
     
   <!-- 쇼핑상세(에피소드로 카탈로그 가져오기) 조회-->
     <select id="getChannelByepisode" parameterType="ShoppingReq" resultType="MetaInfo">
-     /* ShoppingMapper.xml.getChannelByepisode,쇼핑상세(에피소드로 채널 가져오기) 조회, 김형식/SK플래닛 , 2014-02-04 */
+     /* ShoppingMapper.xml.getChannelByepisode,쇼핑상세(에피소드로 카탈로그 가져오기) 조회, 김형식/SK플래닛 , 2014-02-04 */
         SELECT 
                CATALOG_ID
           FROM TB_DP_PROD_CATALOG_MAPG
