@@ -77,11 +77,13 @@ public class CreateRealNameReq extends CommonInfo {
 	/**
 	 * 사용자 이름
 	 */
+	@NotEmpty
 	private String userName = "";
 
 	/**
 	 * 사용자/법정대리인 생년월일
 	 */
+	@NotEmpty
 	private String userBirthDay = "";
 
 	/**
