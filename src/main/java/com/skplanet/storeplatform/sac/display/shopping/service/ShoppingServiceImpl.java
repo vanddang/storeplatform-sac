@@ -1347,8 +1347,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.equals("episode", req.getType())) {
 			MetaInfo channelByepisode = this.commonDAO.queryForObject("Shopping.getChannelByepisode", req,
 					MetaInfo.class);
-			req.setProdId(channelByepisode.getProdId());
-			req.setSpecialProdId(req.getPartProdId());
+			if (channelByepisode != null) {
+				req.setProdId(channelByepisode.getProdId());
+				req.setSpecialProdId(req.getPartProdId());
+			} else {
+				throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
+			}
 		}
 
 		// OPTIONAL 파라미터 체크
@@ -1380,7 +1384,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				MetaInfo.class);
 
 		if (resultChannelList == null) {
-			throw new StorePlatformException("SAC_DSP_0001", "쇼핑 상세 확인 ");
+			throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
 		} else {
 			if (resultChannelList.size() > 0) {
 
@@ -1690,7 +1694,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 								}
 							} catch (Exception e) {
-								throw new StorePlatformException("SAC_DSP_0001", "멤버 정보 조회 ", e);
+								throw new StorePlatformException("SAC_DSP_1002", "멤버 정보 조회 ", e);
 							}
 
 							subProductList.add(episodeProduct);
