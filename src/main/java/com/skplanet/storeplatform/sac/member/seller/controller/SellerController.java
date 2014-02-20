@@ -249,13 +249,12 @@ public class SellerController {
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req, BindingResult result) {
-		LOGGER.debug("### 2.2.3. 판매자 회원 탈퇴 [authorize] START ###");
-		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		if (StringUtil.nvl(req.getSellerKey(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
+		} else if (StringUtil.nvl(req.getSecedeReasonCode(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "secedeReasonCode");
+		} else if (StringUtil.nvl(req.getSecedeReasonMessage(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "secedeReasonMessage");
 		}
 		return this.sellerService.withdraw(header, req);
 	}
