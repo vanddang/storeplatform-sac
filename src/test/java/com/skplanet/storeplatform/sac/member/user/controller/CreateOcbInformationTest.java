@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 회원 OCB 정보 등록/수정 테스트.
@@ -84,6 +85,7 @@ public class CreateOcbInformationTest {
 						/* 인증수단 코드 (OR003400 비인증, OR003401 카드번호인증, OR003402 주민번호인증) */
 						reqJson.setAuthMethodCode("OR003401");
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(CreateOcbInformationRes.class, new SuccessCallback() {

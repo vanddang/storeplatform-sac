@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 회원정보 수정 테스트.
@@ -95,6 +96,7 @@ public class ModifyTest {
 						reqJson.setUserDetailAddress("낙성대"); // 상세주소 (Sync 대상 - IDP|통합)
 						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(ModifyRes.class, new SuccessCallback() {
@@ -139,6 +141,7 @@ public class ModifyTest {
 						reqJson.setUserDetailAddress("H스퀘어"); // 상세주소 (Sync 대상 - IDP|통합)
 						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(ModifyRes.class, new SuccessCallback() {

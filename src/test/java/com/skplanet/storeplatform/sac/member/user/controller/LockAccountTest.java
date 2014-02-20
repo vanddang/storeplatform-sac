@@ -39,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.LockAccountSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.LockAccountSacRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 회원 계정 잠금 테스트.
@@ -90,6 +91,7 @@ public class LockAccountTest {
 						 */
 						reqJson.setUserId("simdae99");
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(LockAccountSacRes.class, new SuccessCallback() {
@@ -123,6 +125,7 @@ public class LockAccountTest {
 						 */
 						reqJson.setUserId("sacsimpleuser020691");
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(LockAccountSacRes.class, new SuccessCallback() {
@@ -155,6 +158,7 @@ public class LockAccountTest {
 						reqJson.setUserPw("abcd1234");
 						reqJson.setReleaseLock("Y");
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(AuthorizeByIdRes.class, new SuccessCallback() {
@@ -188,6 +192,7 @@ public class LockAccountTest {
 						 */
 						reqJson.setUserId("simdae07");
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(LockAccountSacRes.class, new SuccessCallback() {
@@ -220,6 +225,7 @@ public class LockAccountTest {
 						reqJson.setUserPw("12qwer");
 						reqJson.setReleaseLock("Y");
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(AuthorizeByIdRes.class, new SuccessCallback() {

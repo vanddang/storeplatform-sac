@@ -38,6 +38,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformation
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 회원 OCB 정보 삭제 테스트.
@@ -95,6 +96,7 @@ public class RemoveOcbInformationTest {
 						/* 인증수단 코드 (OR003400 비인증, OR003401 카드번호인증, OR003402 주민번호인증) */
 						reqJson.setAuthMethodCode("OR003401");
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(CreateOcbInformationRes.class, new SuccessCallback() {
@@ -128,6 +130,7 @@ public class RemoveOcbInformationTest {
 						reqJson.setUserKey("US201401241550022950000616");
 						reqJson.setCardNumber("11111111111111111111111111111111111111");
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(RemoveOcbInformationRes.class, new SuccessCallback() {
@@ -159,6 +162,7 @@ public class RemoveOcbInformationTest {
 						reqJson.setUserKey("US201401241550022950000616");
 						reqJson.setCardNumber("3306-3306-3306-3306");
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(RemoveOcbInformationRes.class, new SuccessCallback() {

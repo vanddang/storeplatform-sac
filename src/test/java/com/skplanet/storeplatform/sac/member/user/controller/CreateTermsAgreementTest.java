@@ -39,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * Store 약관동의 등록 테스트.
@@ -111,6 +112,7 @@ public class CreateTermsAgreementTest {
 						agreementList.add(agreementInfo4);
 						reqJson.setAgreementList(agreementList);
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(CreateTermsAgreementRes.class, new SuccessCallback() {

@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 회원 이메일 수정 테스트.
@@ -88,6 +89,7 @@ public class ModifyEmailTest {
 						reqJson.setOldEmail("oldEmail@naver.com"); // 기존 이메일
 						reqJson.setNewEmail("newEmail@naver.com"); // 신규 이메일
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(ModifyEmailRes.class, new SuccessCallback() {

@@ -39,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacR
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq.PolicyCodeInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * DeviceId를 이용하여 회원 정보 조회 테스트.
@@ -96,6 +97,7 @@ public class DetailByDeviceIdTest {
 						policyCodeInfoList.add(policyCodeInfo1);
 						reqJson.setPolicyCodeList(policyCodeInfoList);
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(DetailByDeviceIdSacRes.class, new SuccessCallback() {
