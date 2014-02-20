@@ -86,12 +86,6 @@ public class UserSearchController {
 		LOGGER.info("##### 5.1.12. 회원 프로비저닝 이력 조회 #####");
 		LOGGER.info("####################################################");
 
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-
-		if (deviceId.equals("")) {
-			new StorePlatformException("SAC_MEM_0001", "deviceId");
-		}
-
 		LOGGER.info("============================================ GetProvisioningHistoryReq : {}", req.toString());
 
 		GetProvisioningHistoryRes res = this.svc.getProvisioningHistory(sacHeader, req);
