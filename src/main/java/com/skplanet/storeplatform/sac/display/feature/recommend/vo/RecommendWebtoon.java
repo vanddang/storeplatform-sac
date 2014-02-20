@@ -18,6 +18,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class RecommendWebtoon extends CommonInfo {
 
+	private static final long serialVersionUID = 1L;
+
 	private int totalCount;
 	private String upMenuId;
 	private String upMenuName;
