@@ -210,11 +210,89 @@
     </select>    
     
     <!-- 웹툰 상품 상세 조회 -->
-    <select id="searchWebtoonDetail" parameterType="RecommendWebtoonSacReq" resultType="WebtoonDetail">
+    <select id="searchWebtoonDetail" parameterType="WebtoonDetailSacReq" resultType="WebtoonDetail">
         SELECT /* WebtoonMapper.xml, searchWebtoonDetail, SAC : 조준일 , 2014-02-19 */
-               PROD_ID
-          FROM TB_DP_PROD
-         WHERE PROD_ID = ''
+               B.PROD_NM
+             , K.PROD_NM AS CHNL_PROD_NM
+             , B.ARTIST1_NM
+             , B.PROD_BASE_DESC
+             , B.PROD_DTL_DESC
+             , B.UPD_DT
+             , C.MENU_ID
+             , E.MENU_NM
+             , D.TOP_MENU_ID
+             , F.MENU_NM AS TOP_MENU_NM
+             , G.CHAPTER
+             , G.BOOK_PAGE_CNT
+             , H.PROD_ID
+             , H.PART_PROD_ID
+             , FN_GETALIAS(I.FILE_PATH) AS FILE_PATH
+             , FN_GETIMAGE(H.PROD_ID, #{imageCd}) AS MAIN_FILE_PATH
+             <![CDATA[
+             , NVL((CASE WHEN (J.AVG_EVLU_SCORE > 0 AND J.AVG_EVLU_SCORE < 1) THEN 1
+                         WHEN J.AVG_EVLU_SCORE > 5 THEN 5
+                         ELSE ROUND(J.AVG_EVLU_SCORE, 1) 
+                     END), 0) AS AVG_EVLU_SCORE
+             ]]>
+             , J.PATICPERS_CNT
+             , A.SELLER_MBR_NO
+             , COUNT(*) OVER() AS TOTAL_COUNT
+          FROM TB_DP_PROD A
+             , TB_DP_PROD_DESC B
+             , TB_DP_MENU_CATEGORY_PROD_MAPG C
+             , TB_DP_MENU_CATEGORY D
+             , TB_DP_MENU_CATEGORY_DESC E
+             , TB_DP_MENU_CATEGORY_DESC F
+             , UV_TB_DP_MULTIMDA_PROD G
+             , TB_DP_PROD_RSHP H
+             , TB_DP_SUB_CONTENTS I
+             , TB_DP_TENANT_PROD_STATS J
+             , TB_DP_PROD_DESC K
+         WHERE A.PROD_ID = #{prodId}
+           AND A.PROD_ID = B.PROD_ID
+           AND B.LANG_CD = #{langCd}
+           AND B.PROD_ID = C.PROD_ID
+           AND C.USE_YN = 'Y'
+           AND C.MENU_ID = D.MENU_ID
+           AND D.USE_YN  = 'Y'
+           AND D.MENU_ID = E.MENU_ID
+           AND E.LANG_CD = #{langCd}
+           AND D.TOP_MENU_ID = F.MENU_ID
+           AND F.LANG_CD = #{langCd}
+           AND C.PROD_ID = G.PROD_ID
+           AND G.PROD_ID = H.PART_PROD_ID
+           AND H.PART_PROD_ID = I.PROD_ID(+)
+           AND H.PART_PROD_ID = J.PROD_ID
+           AND J.TENANT_ID = #{tenantId}
+           AND H.PROD_ID = K.PROD_ID
+           AND K.LANG_CD = #{langCd}
+           AND ROWNUM = 1
+    </select>
+    
+    <select id="getWebtoonPreNext" parameterType="WebtoonDetailSacReq" resultType="String">
+	    SELECT /* WebtoonMapper.xml, getWebtoonPreNext, SAC : 조준일 , 2014-02-20 */
+	           PART_PROD_ID
+		  FROM (SELECT B.PART_PROD_ID
+		          FROM TB_DP_PROD_RSHP A
+		             , TB_DP_PROD_RSHP B
+		             , TB_DP_TENANT_PROD C
+		             , UV_TB_DP_MULTIMDA_PROD D
+		         WHERE A.PART_PROD_ID = #{prodId}
+		           AND A.PROD_ID = B.PROD_ID
+		           AND B.PROD_ID = C.PROD_ID
+		           AND C.TENANT_ID = 'S01'
+		           AND C.PROD_STATUS_CD = 'PD000403'
+		           AND C.PROD_ID = D.PROD_ID
+		           <if test='orderedBy == "pre"'>
+		           AND D.CHAPTER <![CDATA[ < ]]> #{chapter}
+		         ORDER BY D.CHAPTER DESC
+		           </if>
+		           <if test='orderedBy == "next"'>
+		           AND D.CHAPTER <![CDATA[> ]]> #{chapter}
+		         ORDER BY D.CHAPTER ASC
+		           </if>
+		       )
+		 WHERE ROWNUM = 1
     </select>
     
 </mapper>
