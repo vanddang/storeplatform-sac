@@ -546,10 +546,10 @@ public class DeviceServiceImpl implements DeviceService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 
-		if (deviceKey != null && !deviceKey.equals("")) {
+		if (!StringUtil.equals(deviceKey, "")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 			key.setKeyString(deviceKey);
-		} else if (deviceId != null && !deviceId.equals("")) {
+		} else if (!StringUtil.equals(deviceId, "")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			key.setKeyString(deviceId);
 		}
@@ -737,10 +737,10 @@ public class DeviceServiceImpl implements DeviceService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 
-		if (deviceKey != null && !deviceKey.equals("")) {
+		if (!StringUtil.equals(deviceKey, "")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 			key.setKeyString(deviceKey);
-		} else if (deviceId != null && !deviceId.equals("")) {
+		} else if (!StringUtil.equals(deviceId, "")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			key.setKeyString(deviceId);
 		}
