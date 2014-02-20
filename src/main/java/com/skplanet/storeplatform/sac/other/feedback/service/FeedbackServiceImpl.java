@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.other.feedback.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -19,13 +18,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
@@ -54,7 +51,6 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFe
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.other.feedback.controller.FeedbackController;
 import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
@@ -380,54 +376,54 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public ListFeedbackSacRes list(ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
-		TenantProdStats tenantProdStats = new TenantProdStats();
-		tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		tenantProdStats.setProdId(listFeedbackSacReq.getProdId());
-		TenantProdStats getProdEvalInfo = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
-		if (getProdEvalInfo == null) {
-			throw new StorePlatformException("SAC_OTH_9001");
-		}
-		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
-		listFeedbackRes.setAvgEvluScorePcts(getProdEvalInfo.getAvgEvluScorePcts());
-		listFeedbackRes.setAvgEvluScore(getProdEvalInfo.getAvgEvluScore());
-		listFeedbackRes.setDwldCnt(getProdEvalInfo.getDwldCnt());
-		listFeedbackRes.setPaticpersCnt(getProdEvalInfo.getPaticpersCnt());
-		int offset = listFeedbackSacReq.getOffset() == 0 ? 1 : listFeedbackSacReq.getOffset();
-		int count = listFeedbackSacReq.getCount() == 0 ? 10 : (offset + listFeedbackSacReq.getCount()) - 1;
-		ProdNoti prodNoti = new ProdNoti();
-		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		prodNoti.setProdId(listFeedbackSacReq.getProdId());
-		prodNoti.setMbrNo(listFeedbackSacReq.getUserKey());
-		prodNoti.setOrderedBy(listFeedbackSacReq.getOrderedBy());
-		prodNoti.setChnlId(listFeedbackSacReq.getChnlId());
-		prodNoti.setProdType(listFeedbackSacReq.getProdType());
-		prodNoti.setStartRow(String.valueOf(offset));
-		prodNoti.setEndRow(String.valueOf(count));
-		int totalCount = (Integer) this.feedbackRepository.getProdNotiCount(prodNoti);
-		if (totalCount <= 0) {
-			throw new StorePlatformException("SAC_OTH_9001");
-		}
-		listFeedbackRes.setNotiTot(String.valueOf(totalCount));
-		List<ProdNoti> getProdnotiList = this.feedbackRepository.getProdNotiList(prodNoti);
-		if (CollectionUtils.isEmpty(getProdnotiList)) {
-			throw new StorePlatformException("SAC_OTH_9001");
-		}
-		List<Feedback> notiList = new ArrayList<Feedback>();
-		for (ProdNoti res : getProdnotiList) {
-			notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
-		}
-		listFeedbackRes.setNotiList(notiList);
-		return listFeedbackRes;
+		// TenantProdStats tenantProdStats = new TenantProdStats();
+		// tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		// tenantProdStats.setProdId(listFeedbackSacReq.getProdId());
+		// TenantProdStats getProdEvalInfo = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
+		// if (getProdEvalInfo == null) {
+		// throw new StorePlatformException("SAC_OTH_9001");
+		// }
 		// ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
-		// listFeedbackRes.setAvgEvluScorePcts("80,100,20,10,50");
-		// listFeedbackRes.setNotiTot("2");
-		// listFeedbackRes.setAvgEvluScore("2");
-		// listFeedbackRes.setDwldCnt("11103");
-		// listFeedbackRes.setPaticpersCnt("105");
-		//
-		// listFeedbackRes.setNotiList(this.getFeedbackList());
-		//
+		// listFeedbackRes.setAvgEvluScorePcts(getProdEvalInfo.getAvgEvluScorePcts());
+		// listFeedbackRes.setAvgEvluScore(getProdEvalInfo.getAvgEvluScore());
+		// listFeedbackRes.setDwldCnt(getProdEvalInfo.getDwldCnt());
+		// listFeedbackRes.setPaticpersCnt(getProdEvalInfo.getPaticpersCnt());
+		// int offset = listFeedbackSacReq.getOffset() == 0 ? 1 : listFeedbackSacReq.getOffset();
+		// int count = listFeedbackSacReq.getCount() == 0 ? 10 : (offset + listFeedbackSacReq.getCount()) - 1;
+		// ProdNoti prodNoti = new ProdNoti();
+		// prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		// prodNoti.setProdId(listFeedbackSacReq.getProdId());
+		// prodNoti.setMbrNo(listFeedbackSacReq.getUserKey());
+		// prodNoti.setOrderedBy(listFeedbackSacReq.getOrderedBy());
+		// prodNoti.setChnlId(listFeedbackSacReq.getChnlId());
+		// prodNoti.setProdType(listFeedbackSacReq.getProdType());
+		// prodNoti.setStartRow(String.valueOf(offset));
+		// prodNoti.setEndRow(String.valueOf(count));
+		// int totalCount = (Integer) this.feedbackRepository.getProdNotiCount(prodNoti);
+		// if (totalCount <= 0) {
+		// throw new StorePlatformException("SAC_OTH_9001");
+		// }
+		// listFeedbackRes.setNotiTot(String.valueOf(totalCount));
+		// List<ProdNoti> getProdnotiList = this.feedbackRepository.getProdNotiList(prodNoti);
+		// if (CollectionUtils.isEmpty(getProdnotiList)) {
+		// throw new StorePlatformException("SAC_OTH_9001");
+		// }
+		// List<Feedback> notiList = new ArrayList<Feedback>();
+		// for (ProdNoti res : getProdnotiList) {
+		// notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
+		// }
+		// listFeedbackRes.setNotiList(notiList);
 		// return listFeedbackRes;
+		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
+		listFeedbackRes.setAvgEvluScorePcts("80,100,20,10,50");
+		listFeedbackRes.setNotiTot("2");
+		listFeedbackRes.setAvgEvluScore("2");
+		listFeedbackRes.setDwldCnt("11103");
+		listFeedbackRes.setPaticpersCnt("105");
+
+		listFeedbackRes.setNotiList(this.getFeedbackList());
+
+		return listFeedbackRes;
 
 	}
 
@@ -435,60 +431,60 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
 
-		int offset = listMyFeedbackSacReq.getOffset() == 0 ? 1 : listMyFeedbackSacReq.getOffset();
-		int count = listMyFeedbackSacReq.getCount() == 0 ? 100 : (offset + listMyFeedbackSacReq.getCount()) - 1;
-
-		ProdNoti prodNoti = new ProdNoti();
-		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		prodNoti.setProdIds(Arrays.asList((StringUtils.split(listMyFeedbackSacReq.getProdIds(), ","))));
-		prodNoti.setMbrNo(listMyFeedbackSacReq.getUserKey());
-		prodNoti.setChnlId(listMyFeedbackSacReq.getChnlId());
-		prodNoti.setProdType(listMyFeedbackSacReq.getProdType());
-		prodNoti.setDefaultMsg1(DEFAULT_MSG1);
-		prodNoti.setDefaultMsg2(DEFAULT_MSG2);
-		prodNoti.setDefaultMsg3(DEFAULT_MSG3);
-		prodNoti.setDefaultMsg4(DEFAULT_MSG4);
-		prodNoti.setDefaultMsg5(DEFAULT_MSG5);
-		prodNoti.setStartRow(String.valueOf(offset));
-		prodNoti.setEndRow(String.valueOf(count));
-
-		int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
-
-		if (notiTot <= 0) {
-			throw new StorePlatformException("SAC_OTH_9001");
-		}
-
-		ListMyFeedbackSacRes listMyFeedbackSacRes = new ListMyFeedbackSacRes();
-		listMyFeedbackSacRes.setNotiTot(String.valueOf(notiTot));
-
-		List<ProdNoti> getMyProdNotiList = this.feedbackRepository.getMyProdNotiList(prodNoti);
-
-		if (CollectionUtils.isEmpty(getMyProdNotiList)) {
-			throw new StorePlatformException("SAC_OTH_9001");
-		}
-
-		List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
-
-		for (ProdNoti res : getMyProdNotiList) {
-			Feedback feedback = this.setFeedback(res, listMyFeedbackSacReq.getProdType());
-			FeedbackMy feedbackMy = new FeedbackMy();
-			BeanUtils.copyProperties(feedback, feedbackMy);
-			notiMyList.add(feedbackMy);
-		}
-
-		listMyFeedbackSacRes.setNotiList(notiMyList);
-		return listMyFeedbackSacRes;
-		// List<Feedback> notiList = this.getFeedbackList();
+		// int offset = listMyFeedbackSacReq.getOffset() == 0 ? 1 : listMyFeedbackSacReq.getOffset();
+		// int count = listMyFeedbackSacReq.getCount() == 0 ? 100 : (offset + listMyFeedbackSacReq.getCount()) - 1;
+		//
+		// ProdNoti prodNoti = new ProdNoti();
+		// prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		// prodNoti.setProdIds(Arrays.asList((StringUtils.split(listMyFeedbackSacReq.getProdIds(), ","))));
+		// prodNoti.setMbrNo(listMyFeedbackSacReq.getUserKey());
+		// prodNoti.setChnlId(listMyFeedbackSacReq.getChnlId());
+		// prodNoti.setProdType(listMyFeedbackSacReq.getProdType());
+		// prodNoti.setDefaultMsg1(DEFAULT_MSG1);
+		// prodNoti.setDefaultMsg2(DEFAULT_MSG2);
+		// prodNoti.setDefaultMsg3(DEFAULT_MSG3);
+		// prodNoti.setDefaultMsg4(DEFAULT_MSG4);
+		// prodNoti.setDefaultMsg5(DEFAULT_MSG5);
+		// prodNoti.setStartRow(String.valueOf(offset));
+		// prodNoti.setEndRow(String.valueOf(count));
+		//
+		// int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
+		//
+		// if (notiTot <= 0) {
+		// throw new StorePlatformException("SAC_OTH_9001");
+		// }
+		//
+		// ListMyFeedbackSacRes listMyFeedbackSacRes = new ListMyFeedbackSacRes();
+		// listMyFeedbackSacRes.setNotiTot(String.valueOf(notiTot));
+		//
+		// List<ProdNoti> getMyProdNotiList = this.feedbackRepository.getMyProdNotiList(prodNoti);
+		//
+		// if (CollectionUtils.isEmpty(getMyProdNotiList)) {
+		// throw new StorePlatformException("SAC_OTH_9001");
+		// }
+		//
 		// List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
-		// for (Feedback res : notiList) {
-		// FeedbackMy feedbackMy = new FeedbackMy(); // feedbackMy.setTotalCount("10");
-		// BeanUtils.copyProperties(res, feedbackMy);
+		//
+		// for (ProdNoti res : getMyProdNotiList) {
+		// Feedback feedback = this.setFeedback(res, listMyFeedbackSacReq.getProdType());
+		// FeedbackMy feedbackMy = new FeedbackMy();
+		// BeanUtils.copyProperties(feedback, feedbackMy);
 		// notiMyList.add(feedbackMy);
 		// }
-		// ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
-		// listMyFeedbackRes.setNotiTot("2");
-		// listMyFeedbackRes.setNotiList(notiMyList);
-		// return listMyFeedbackRes;
+		//
+		// listMyFeedbackSacRes.setNotiList(notiMyList);
+		// return listMyFeedbackSacRes;
+		List<Feedback> notiList = this.getFeedbackList();
+		List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
+		for (Feedback res : notiList) {
+			FeedbackMy feedbackMy = new FeedbackMy(); // feedbackMy.setTotalCount("10");
+			BeanUtils.copyProperties(res, feedbackMy);
+			notiMyList.add(feedbackMy);
+		}
+		ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
+		listMyFeedbackRes.setNotiTot("2");
+		listMyFeedbackRes.setNotiList(notiMyList);
+		return listMyFeedbackRes;
 
 	}
 
@@ -772,28 +768,29 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setNotiScore(String.valueOf(prodNoti.getNotiScore()));
 
 		// ?? 회원 SCI 연동후, 해당 ID가 기기사용자일경우, mdn을 별표처리한다. 그외는 regId를 셋팅한다.
-		SearchUserSacRes searchUserSacRes = null;
-		try {
-			searchUserSacRes = this.feedbackRepository.searchUserByUserKey(prodNoti.getMbrNo());
-		} catch (Exception e) {
-			searchUserSacRes = null;
-		}
-		String regId = "";
-		if (searchUserSacRes != null
-				&& StringUtils.equals(searchUserSacRes.getUserType(), MemberConstants.USER_TYPE_MOBILE)
-				&& StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
-			String telNo = prodNoti.getMbrTelno();
-			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(StringUtils.substring(telNo, 0, 3));
-			if (telNo.length() < 11) {
-				stringBuffer.append("***");
-			} else {
-				stringBuffer.append("****");
-			}
-			regId = stringBuffer.append(StringUtils.substring(telNo, telNo.length() - 4, telNo.length())).toString();
-		} else {
-			regId = prodNoti.getRegId();
-		}
+		// SearchUserSacRes searchUserSacRes = null;
+		// try {
+		// searchUserSacRes = this.feedbackRepository.searchUserByUserKey(prodNoti.getMbrNo());
+		// } catch (Exception e) {
+		// searchUserSacRes = null;
+		// }
+		// String regId = "";
+		String regId = "010***1234";
+		// if (searchUserSacRes != null
+		// && StringUtils.equals(searchUserSacRes.getUserType(), MemberConstants.USER_TYPE_MOBILE)
+		// && StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
+		// String telNo = prodNoti.getMbrTelno();
+		// StringBuffer stringBuffer = new StringBuffer();
+		// stringBuffer.append(StringUtils.substring(telNo, 0, 3));
+		// if (telNo.length() < 11) {
+		// stringBuffer.append("***");
+		// } else {
+		// stringBuffer.append("****");
+		// }
+		// regId = stringBuffer.append(StringUtils.substring(telNo, telNo.length() - 4, telNo.length())).toString();
+		// } else {
+		// regId = prodNoti.getRegId();
+		// }
 		feedback.setRegId(regId);
 		feedback.setRegDt(prodNoti.getRegDt());
 		feedback.setSellerRespTitle(prodNoti.getSellerRespTitle());
