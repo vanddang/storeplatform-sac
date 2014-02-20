@@ -47,30 +47,12 @@
             TO_CHAR(UPD_DT, 'YYYYMMDDHH24MISS') AS updDt 
         FROM TB_CM_CLAUSE 
         WHERE DP_YN=#{dpYn}
-        AND (SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') FROM DUAL) BETWEEN START_DAY AND END_DAY
-        
-        ORDER BY CLAUSE_ITEM_CD ASC
-    </select>
-    
-    <!-- 약관 목록 상세 조회 -->
-    <select id="getDetailClauseList" parameterType="ClauseDTO" resultType="ClauseDTO">
-		SELECT    /* MemberCommonMapper.xml, getClauseList, SAC : 강신완 , 2014-02-12 */
-            CLAUSE_ID           AS clauseId,
-            CLAUSE_ITEM_CD      AS clauseItemCd,
-            START_DAY           AS startDay,
-            END_DAY             AS endDay,
-            FILE_PATH           AS filePath,
-            FILE_NM             AS fileNm,
-            CLAUSE_VER          AS clauseVer,
-            UP_CLAUSE_ID        AS upClauseId,
-            DP_YN               AS dpYn,
-            REG_ID              AS regId,
-            TO_CHAR(REG_DT, 'YYYYMMDDHH24MISS') AS regDt, 
-            UPD_ID AS updId, 
-            TO_CHAR(UPD_DT, 'YYYYMMDDHH24MISS') AS updDt 
-        FROM TB_CM_CLAUSE 
-        WHERE DP_YN=#{dpYn}
+        <if test='clauseItemCd != null'>
         AND CLAUSE_ITEM_CD = #{clauseItemCd}
+        </if>
+        <if test='clauseItemCd == null'>
+        AND (SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') FROM DUAL) BETWEEN START_DAY AND END_DAY
+        </if>
         
         ORDER BY CLAUSE_ITEM_CD ASC
     </select>

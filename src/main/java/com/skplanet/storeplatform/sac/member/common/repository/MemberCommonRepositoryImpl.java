@@ -53,6 +53,7 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 	public List<Clause> searchClauseList() {
 		Clause dto = new Clause();
 		dto.setDpYn("Y");
+		dto.setClauseItemCd(null);
 		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getClauseList", dto);
 	}
 
@@ -61,6 +62,6 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 		Clause dto = new Clause();
 		dto.setDpYn("Y");
 		dto.setClauseItemCd(clauseItemCd);
-		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getDetailClauseList", dto);
+		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getClauseList", dto);
 	}
 }
