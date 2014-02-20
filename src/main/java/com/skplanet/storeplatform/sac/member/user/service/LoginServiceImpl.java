@@ -337,6 +337,8 @@ public class LoginServiceImpl implements LoginService {
 
 					this.imIdpSCI.authForId(authForIdEcReq);
 
+					throw new StorePlatformException("원아이디 서비스 이용동의 대상인데!!! 인증이 돼냐!!!");
+
 				} catch (StorePlatformException ex) {
 
 					if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
@@ -353,12 +355,15 @@ public class LoginServiceImpl implements LoginService {
 							+ ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 						/* 로그인 실패이력 저장 */
-						LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
+						//LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
 
 						/* 로그인 결과 */
-						res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
-						res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
+						//res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
+						res.setIsLoginSuccess("N");
+						return res;
 
+					} else {
+						throw ex;
 					}
 
 				}
