@@ -6,9 +6,9 @@
 
     <!-- 탈퇴 사유 목록 조회 -->
     <select id="listWithdrawalReason" parameterType="ListWithdrawalReasonReq" resultType="SecedeReson">
-        SELECT 
-            cd_id secedeReasonCode,
-            cd_nm secedeReasonMessage
+        SELECT /* SellerSearchMapper.xml, listWithdrawalReason, SAC : 한서구 , 2014-01-08 */
+            cd_id AS secedeReasonCode,
+            cd_nm AS secedeReasonMessage
         FROM 
             TB_CM_CD 
         WHERE 
@@ -18,17 +18,17 @@
     
     <!-- 나라별 해외은행 정보 조회 -->
     <select id="listBanksByCountry" parameterType="ListBanksByCountryReq" resultType="BanksByCountry">
-        SELECT 
-		    NATION_CD nationCode,
-		    NATION_NM nationName,
-		    ALPHA2_CD alphaCode,
-		    BANK_NO bankNo,
-		    NATION_TEL_NO nationTelNo,
-		    NATION_DESC nationDesc,
-            IBAN_USE_YN ibanUseYn, 
-            ABA_USE_YN abaUseYn, 
-            SORT_USE_YN sortUseYn, 
-            BSB_USE_YN bsbUseYn
+        SELECT /* SellerSearchMapper.xml, listBanksByCountry, SAC : 한서구 , 2014-01-08 */
+		    NATION_CD     AS nationCode,
+		    NATION_NM     AS nationName,
+		    ALPHA2_CD     AS alphaCode,
+		    BANK_NO       AS bankNo,
+		    NATION_TEL_NO AS nationTelNo,
+		    NATION_DESC   AS nationDesc,
+            IBAN_USE_YN   AS ibanUseYn, 
+            ABA_USE_YN    AS abaUseYn, 
+            SORT_USE_YN   AS sortUseYn, 
+            BSB_USE_YN    AS bsbUseYn
 		FROM 
 		    TB_CM_NATION
 		WHERE 
