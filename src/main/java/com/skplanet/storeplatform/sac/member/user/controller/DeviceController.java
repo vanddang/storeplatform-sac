@@ -173,15 +173,7 @@ public class DeviceController {
 	@ResponseBody
 	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req) {
 
-		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
-		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
-		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기 Id
-
 		LOGGER.info("###### modifyRepresentationDevice Request : {}", req.toString());
-
-		if (userKey.equals("") && deviceKey.equals("") && deviceId.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
-		}
 
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
 
@@ -205,10 +197,8 @@ public class DeviceController {
 
 		LOGGER.info("###### Start detailRepresentationDevice Request 가공전 : {}", req.toString());
 
-		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
-
-		if (userKey.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
+		if (StringUtil.nvl(req.getUserKey(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
 		DetailRepresentationDeviceRes res = this.deviceService.detailRepresentationDeviceRes(requestHeader, req);
@@ -243,7 +233,7 @@ public class DeviceController {
 		LOGGER.info("============================================ Start removeDevice Request : {}", req.toString());
 
 		if (userAuthKey.equals("") || userKey.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
+			throw new StorePlatformException("SAC_MEM_0001", "userAuthKey && userKey");
 		} else if (deviceCount == 0) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
@@ -270,18 +260,14 @@ public class DeviceController {
 	@ResponseBody
 	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, @RequestBody SupportAomReq req) {
 
+		LOGGER.info("============================================ Start getSupportAom Request : {}", req.toString());
+
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
-		if (userKey.equals("") && deviceId.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
+		if ("".equals(userKey) && "".equals(deviceId)) {
+			throw new StorePlatformException("SAC_MEM_0001", "userKey or deviceId");
 		}
-
-		LOGGER.info("============================================ Start getSupportAom Request : {}", req.toString());
-
-		req.setUserKey(userKey);
-		req.setDeviceId(deviceId);
-
 		SupportAomRes res = this.deviceService.getSupportAom(requestHeader, req);
 
 		LOGGER.info("============================================ Final getSupportAom Response : {}", res.toString());
