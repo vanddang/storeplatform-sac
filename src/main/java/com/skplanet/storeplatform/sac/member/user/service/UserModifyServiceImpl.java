@@ -769,6 +769,9 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 */
 			SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 
+			/**
+			 * 인증 정보가 존재하면....
+			 */
 			if (schUserRes.getMbrAuth().getSequence() != null || StringUtils.equals(schUserRes.getMbrAuth().getSequence(), "")) {
 				LOGGER.info("####### DB 실명인증 CI    : {}", schUserRes.getMbrAuth().getCi());
 				LOGGER.info("####### DB 실명인증 Birth : {}", schUserRes.getMbrAuth().getBirthDay());
