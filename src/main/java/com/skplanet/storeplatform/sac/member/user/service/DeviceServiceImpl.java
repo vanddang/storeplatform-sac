@@ -598,7 +598,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info(":::::::::::::::::: device update field start ::::::::::::::::::");
 
-		if (deviceModelNo != null && !StringUtils.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
+		if (!StringUtils.equals(deviceModelNo, "") && !StringUtils.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
 
 			LOGGER.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
@@ -608,70 +608,70 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (nativeId != null && !StringUtils.equals(nativeId, userMbrDevice.getNativeID())) {
+		if (!StringUtils.equals(nativeId, "") && !StringUtils.equals(nativeId, userMbrDevice.getNativeID())) {
 
 			LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 			userMbrDevice.setNativeID(nativeId);
 
 		}
 
-		if (deviceAccount != null && !StringUtils.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
+		if (!StringUtils.equals(deviceAccount, "") && !StringUtils.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
 
 			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
 			userMbrDevice.setDeviceAccount(deviceAccount);
 
 		}
 
-		if (deviceTelecom != null && !StringUtils.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
+		if (!StringUtils.equals(deviceTelecom, "") && !StringUtils.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
 
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 
 		}
 
-		if (deviceNickName != null && !StringUtils.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
+		if (!StringUtils.equals(deviceNickName, "") && !StringUtils.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
 
 			LOGGER.info("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
 			userMbrDevice.setDeviceNickName(deviceNickName);
 
 		}
 
-		if (isPrimary != null && !StringUtils.equals(isPrimary, userMbrDevice.getIsPrimary())) {
+		if (!StringUtils.equals(isPrimary, "") && !StringUtils.equals(isPrimary, userMbrDevice.getIsPrimary())) {
 
 			LOGGER.info("[isPrimary] {} -> {}", userMbrDevice.getIsPrimary(), isPrimary);
 			userMbrDevice.setIsPrimary(isPrimary);
 
 		}
 
-		if (isRecvSms != null && !StringUtils.equals(isRecvSms, userMbrDevice.getIsRecvSMS())) {
+		if (!StringUtils.equals(isRecvSms, "") && !StringUtils.equals(isRecvSms, userMbrDevice.getIsRecvSMS())) {
 
 			LOGGER.info("[isRecvSms] {} -> {}", userMbrDevice.getIsRecvSMS(), isRecvSms);
 			userMbrDevice.setIsRecvSMS(isRecvSms);
 
 		}
 
-		if (isAuthenticated != null && !StringUtils.equals(isAuthenticated, userMbrDevice.getIsAuthenticated())) {
+		if (!StringUtils.equals(isAuthenticated, "") && !StringUtils.equals(isAuthenticated, userMbrDevice.getIsAuthenticated())) {
 
 			LOGGER.info("[isAuthenticate] {} -> {}", userMbrDevice.getIsAuthenticated(), isAuthenticated);
 			userMbrDevice.setIsAuthenticated(isAuthenticated);
 
 		}
 
-		if (authenticationDate != null && !StringUtils.equals(authenticationDate, userMbrDevice.getAuthenticationDate())) {
+		if (!StringUtils.equals(authenticationDate, "") && !StringUtils.equals(authenticationDate, userMbrDevice.getAuthenticationDate())) {
 
 			LOGGER.info("[authenticationDate] {} -> {}", userMbrDevice.getAuthenticationDate(), authenticationDate);
 			userMbrDevice.setAuthenticationDate(authenticationDate);
 
 		}
 
-		if (isUsed != null && !StringUtils.equals(isUsed, userMbrDevice.getIsUsed())) {
+		if (!StringUtils.equals(isUsed, "") && !StringUtils.equals(isUsed, userMbrDevice.getIsUsed())) {
 
 			LOGGER.info("[isUsed] {} -> {}", userMbrDevice.getIsUsed(), isUsed);
 			userMbrDevice.setIsUsed(isUsed);
 
 		}
 
-		if (svcMangNum != null && !StringUtils.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
+		if (!StringUtils.equals(svcMangNum, "") && !StringUtils.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
 			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
@@ -781,7 +781,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info(":::::::::::::::::: device update field start ::::::::::::::::::");
 
-		if (deviceModelNo != null && !StringUtils.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
+		if (!StringUtil.equals(deviceModelNo, "") && !StringUtils.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
 
 			if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
@@ -821,7 +821,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (nativeId != null) {
+		if (!StringUtil.equals(nativeId, "")) {
 
 			//nativeId 비교 여부
 			String isNativeIdAuth = deviceInfo.getIsNativeIdAuth();
@@ -861,7 +861,7 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			} else { // 타사
 
-				if (userMbrDevice.getNativeID() == null || StringUtils.equals(userMbrDevice.getNativeID(), "")) {
+				if (StringUtils.equals(userMbrDevice.getNativeID(), "")) {
 					// DB에 저장된 IMEI 값이 없는 경우 최초 인증으로 보고 IMEI 수집
 					LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 					userMbrDevice.setNativeID(nativeId);
@@ -877,63 +877,63 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (deviceAccount != null && !StringUtils.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
+		if (!StringUtils.equals(deviceAccount, "") && !StringUtils.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
 
 			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
 			userMbrDevice.setDeviceAccount(deviceAccount);
 
 		}
 
-		if (deviceTelecom != null && !StringUtils.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
+		if (!StringUtils.equals(deviceTelecom, "") && !StringUtils.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
 
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 
 		}
 
-		if (deviceNickName != null && !StringUtils.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
+		if (!StringUtils.equals(deviceNickName, "") && !StringUtils.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
 
 			LOGGER.info("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
 			userMbrDevice.setDeviceNickName(deviceNickName);
 
 		}
 
-		if (isPrimary != null && !StringUtils.equals(isPrimary, userMbrDevice.getIsPrimary())) {
+		if (!StringUtils.equals(isPrimary, "") && !StringUtils.equals(isPrimary, userMbrDevice.getIsPrimary())) {
 
 			LOGGER.info("[isPrimary] {} -> {}", userMbrDevice.getIsPrimary(), isPrimary);
 			userMbrDevice.setIsPrimary(isPrimary);
 
 		}
 
-		if (isRecvSms != null && !StringUtils.equals(isRecvSms, userMbrDevice.getIsRecvSMS())) {
+		if (!StringUtils.equals(isRecvSms, "") && !StringUtils.equals(isRecvSms, userMbrDevice.getIsRecvSMS())) {
 
 			LOGGER.info("[isRecvSms] {} -> {}", userMbrDevice.getIsRecvSMS(), isRecvSms);
 			userMbrDevice.setIsRecvSMS(isRecvSms);
 
 		}
 
-		if (isAuthenticated != null && !StringUtils.equals(isAuthenticated, userMbrDevice.getIsAuthenticated())) {
+		if (!StringUtils.equals(isAuthenticated, "") && !StringUtils.equals(isAuthenticated, userMbrDevice.getIsAuthenticated())) {
 
 			LOGGER.info("[isAuthenticate] {} -> {}", userMbrDevice.getIsAuthenticated(), isAuthenticated);
 			userMbrDevice.setIsAuthenticated(isAuthenticated);
 
 		}
 
-		if (authenticationDate != null && !StringUtils.equals(authenticationDate, userMbrDevice.getAuthenticationDate())) {
+		if (!StringUtils.equals(authenticationDate, "") && !StringUtils.equals(authenticationDate, userMbrDevice.getAuthenticationDate())) {
 
 			LOGGER.info("[authenticationDate] {} -> {}", userMbrDevice.getAuthenticationDate(), authenticationDate);
 			userMbrDevice.setAuthenticationDate(authenticationDate);
 
 		}
 
-		if (isUsed != null && !StringUtils.equals(isUsed, userMbrDevice.getIsUsed())) {
+		if (!StringUtils.equals(isUsed, "") && !StringUtils.equals(isUsed, userMbrDevice.getIsUsed())) {
 
 			LOGGER.info("[isUsed] {} -> {}", userMbrDevice.getIsUsed(), isUsed);
 			userMbrDevice.setIsUsed(isUsed);
 
 		}
 
-		if (svcMangNum != null && !StringUtils.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
+		if (!StringUtils.equals(svcMangNum, "") && !StringUtils.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
 			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}

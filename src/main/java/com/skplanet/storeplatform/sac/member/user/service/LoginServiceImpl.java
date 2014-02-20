@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -327,12 +328,40 @@ public class LoginServiceImpl implements LoginService {
 			/* 원아이디 서비스 이용동의 간편 가입 대상 확인 */
 			if (chkDupRes.getUserMbr() == null && chkDupRes.getMbrOneID() != null) {
 
-				/* 로그인 결과 */
-				res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
-				res.setLoginStatusCode(chkDupRes.getMbrOneID().getLoginStatusCode());
-				res.setStopStatusCode(chkDupRes.getMbrOneID().getStopStatusCode());
-				res.setIsLoginSuccess("N");
-				return res;
+				/* 인증요청 */
+				AuthForIdEcReq authForIdEcReq = new AuthForIdEcReq();
+				authForIdEcReq.setKey(userId);
+				authForIdEcReq.setUserPasswd(userPw);
+
+				try {
+
+					this.imIdpSCI.authForId(authForIdEcReq);
+
+				} catch (StorePlatformException ex) {
+
+					if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER)) {
+
+						/* 로그인 결과 */
+						res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
+						res.setLoginStatusCode(chkDupRes.getMbrOneID().getLoginStatusCode());
+						res.setStopStatusCode(chkDupRes.getMbrOneID().getStopStatusCode());
+						res.setIsLoginSuccess("N");
+						return res;
+
+					} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+							+ ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+
+						/* 로그인 실패이력 저장 */
+						LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
+
+						/* 로그인 결과 */
+						res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
+						res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
+
+					}
+
+				}
 
 			} else {
 
