@@ -122,6 +122,9 @@ public class FreepassServiceImpl implements FreepassService {
 			if (req.getCount() == 0) {
 				req.setCount(20);
 			}
+			
+			if (StringUtils.isEmpty(req.getKind()))
+				throw new StorePlatformException("SAC_DSP_0003", "kind", req.getKind());
 
 			// 페이지당 노출될 ROW 개수 Default 세팅
 			if ("All".equals(req.getKind())) {
@@ -131,6 +134,9 @@ public class FreepassServiceImpl implements FreepassService {
 			productBasicInfoList = this.commonDAO.queryForList("Freepass.selectFreepassList", req,
 					ProductBasicInfo.class);
 
+			if (productBasicInfoList == null)
+				throw new StorePlatformException("SAC_DSP_0009");
+			
 			// 정액제 상품 메타 조회
 			if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
 				reqMap.put("tenantHeader", header.getTenantHeader());
@@ -203,18 +209,21 @@ public class FreepassServiceImpl implements FreepassService {
 				req.setCount(20);
 			}
 			
+			if (StringUtils.isEmpty(req.getProductId()))
+				throw new StorePlatformException("SAC_DSP_0003", "productId", req.getProductId());
+			
 			retMetaInfo = this.commonDAO.queryForObject("Freepass.selectFreepassDetail",
 					req, MetaInfo.class);
 			
 			if (retMetaInfo == null)
-				throw new StorePlatformException("SAC_DSP_0003", "prodId", retMetaInfo.getProdId());
+				throw new StorePlatformException("SAC_DSP_0005", req.getProductId(), req.getProductId());
 
 			//상품 상태 조회 - 판매중,판매중지,판매종료가 아니면 노출 안함
 			if ( !DisplayConstants.DP_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd()) 
 					&& !DisplayConstants.DP_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd()) 
 					&& !DisplayConstants.DP_SALE_STAT_ING.equals(retMetaInfo.getProdStatusCd()) 
 					) {
-				throw new StorePlatformException("SAC_DSP_0003", "prodStatusCd", retMetaInfo.getProdStatusCd());
+				throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(), retMetaInfo.getProdStatusCd());
 			}
 			
 			log.debug(req.getUserKey());
@@ -227,7 +236,7 @@ public class FreepassServiceImpl implements FreepassService {
 					if ( DisplayConstants.DP_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd()) 
 						|| DisplayConstants.DP_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd()) 
 						) {
-						throw new StorePlatformException("SAC_DSP_0003", "prodStatusCd", retMetaInfo.getProdStatusCd());
+						throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(), retMetaInfo.getProdStatusCd());
 					}
 				}
 			}

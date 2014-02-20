@@ -658,6 +658,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		coupon.setSourceList(this.freepassGenerator.generateSourceList(metaInfo));
 		// Date 생성
 		Date date = this.freepassGenerator.generateDate(metaInfo);
+		// Menu 생성
+		coupon.setMenuList(this.freepassGenerator.generateMenuList(metaInfo));
+
 
 		coupon.setKind(metaInfo.getCmpxProdClsfCd());
 		coupon.setCouponExplain(metaInfo.getProdIntrDscr());

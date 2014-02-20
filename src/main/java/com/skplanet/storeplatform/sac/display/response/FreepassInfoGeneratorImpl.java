@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
@@ -128,6 +129,26 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 				DateUtils.parseDate(metaInfo.getApplyStartDt()), DateUtils.parseDate(metaInfo.getApplyEndDt()));
 
 		return date;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateMenuList(com.skplanet.storeplatform.
+	 * sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Menu> generateMenuList(MetaInfo metaInfo) {
+		Menu menu = new Menu();
+		List<Menu> menuList = new ArrayList<Menu>();
+
+		menu = new Menu();
+		menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+		menu.setId(metaInfo.getTopMenuId());
+		menu.setName(metaInfo.getTopMenuNm());
+		menuList.add(menu);
+		return menuList;
 	}
 
 }
