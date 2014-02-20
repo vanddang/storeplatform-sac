@@ -229,12 +229,18 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				reqMap.put("productBasicInfo", productBasicInfo);
 
 				// Meta 정보 조회
-				MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+				MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
 
 				if (retMetaInfo != null) {
 					// Response Generate
-					Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
-					productList.add(product);
+					if ("DP17".equals(topMenuId)) {
+						Product product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+						productList.add(product);
+					} else {
+						Product product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+						productList.add(product);
+					}
+
 				}
 			}
 			commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
