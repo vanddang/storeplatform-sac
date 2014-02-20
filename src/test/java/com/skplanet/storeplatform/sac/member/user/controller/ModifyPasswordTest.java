@@ -14,7 +14,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -37,6 +36,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 회원 비밀번호 수정 테스트.
@@ -69,13 +69,9 @@ public class ModifyPasswordTest {
 	 * <pre>
 	 * 회원 비밀번호 수정 테스트 (IDP 회원).
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
-	@Ignore
 	@Test
-	public void test1_modifyPassword() throws Exception {
+	public void TEST_A_기존IDP회원비밀번호수정() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modifyPassword/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -92,8 +88,9 @@ public class ModifyPasswordTest {
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 						// reqJson.setUserAuthKey("4c77e935ee2f4eae8dcf2d22b199d504"); // Fixed userAuthKey
 						reqJson.setOldPassword("12qwer"); // 기존 패스워드.
-						reqJson.setNewPassword("12test"); // 신규 패스워드.
+						reqJson.setNewPassword("12qwer"); // 신규 패스워드.
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(ModifyPasswordRes.class, new SuccessCallback() {
@@ -115,7 +112,7 @@ public class ModifyPasswordTest {
 	 *             Exception
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void test2_modifyPassword() throws Exception {
+	public void TEST_B_기존IDP회원비밀번호일치하지않음() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modifyPassword/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -133,6 +130,7 @@ public class ModifyPasswordTest {
 						reqJson.setOldPassword("111111"); // 기존 패스워드.
 						reqJson.setNewPassword("111111"); // 신규 패스워드.
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(ModifyPasswordRes.class, new SuccessCallback() {
@@ -149,13 +147,9 @@ public class ModifyPasswordTest {
 	 * <pre>
 	 * 회원 비밀번호 수정 테스트 (통합 회원).
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
-	@Ignore
 	@Test
-	public void test3_modifyPassword() throws Exception {
+	public void TEST_C_통합IDP회원비밀번호수정() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modifyPassword/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -172,8 +166,9 @@ public class ModifyPasswordTest {
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 						// reqJson.setUserAuthKey("4c77e935ee2f4eae8dcf2d22b199d504"); // Fixed userAuthKey
 						reqJson.setOldPassword("!@34qwer"); // 기존 패스워드.
-						reqJson.setNewPassword("12qwer"); // 신규 패스워드.
+						reqJson.setNewPassword("!@34qwer"); // 신규 패스워드.
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(ModifyPasswordRes.class, new SuccessCallback() {
@@ -190,12 +185,9 @@ public class ModifyPasswordTest {
 	 * <pre>
 	 * 회원 비밀번호 수정 테스트 (통합 회원 - 비밀번호 일치 하지 않음).
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void test4_modifyPassword() throws Exception {
+	public void TEST_D_통합IDP회원비밀번호일치하지않음() {
 
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modifyPassword/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
@@ -214,6 +206,7 @@ public class ModifyPasswordTest {
 						reqJson.setOldPassword("111111"); // 기존 패스워드.
 						reqJson.setNewPassword("111111"); // 신규 패스워드.
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(ModifyPasswordRes.class, new SuccessCallback() {
