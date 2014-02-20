@@ -87,7 +87,6 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		if (req.getDummy() == null) {
 			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 			if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
-				// TODO osm1021 에러 처리 추가 필요
 				throw new StorePlatformException("SAC_DSP_0004", "list",
 						DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
 			}

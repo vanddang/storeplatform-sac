@@ -496,4 +496,8 @@ public class DisplayConstants {
 	 */
 	public static final String DP_OPENAPI_RELEASETYPE_DAY = "1"; // 1일 이내
 	public static final String DP_OPENAPI_RELEASETYPE_WEEK = "7"; // 7일 이내
+
+	/** 사용자구분코드. */
+	public static final String MEMBER_MAIN_STATUS_NORMAL = "US010201"; // 정상
+	public static final String MEMBER_MAIN_STATUS_PAUSE = "US010204"; // 계정잠금/7일이용정지/30일이용정지/영구이용정지
 }

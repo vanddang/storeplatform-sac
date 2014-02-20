@@ -107,7 +107,6 @@ public class PersonalUpdateAlarmServiceImpl implements PersonalUpdateAlarmServic
 			mapReq.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 			mapReq.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 			// List<Object> listPkg = queryForList("updateAlarm.getRecentFromPkgNm", mapReq);
-			// TODO osm1021 ALARM_OFF_DT도 여기서 가져와야 됨.
 			// Package 명으로 해지시 상품 ID 조회
 			List<Map> listPkg = this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", mapReq,
 					Map.class);

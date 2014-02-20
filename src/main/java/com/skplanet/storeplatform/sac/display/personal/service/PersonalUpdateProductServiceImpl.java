@@ -4,6 +4,7 @@
 package com.skplanet.storeplatform.sac.display.personal.service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +21,16 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -68,6 +74,12 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 	@Autowired
 	private AppInfoGenerator appGenerator;
 
+	@Autowired
+	HistoryInternalSCI historyInternalSCI;
+
+	@Autowired
+	SearchUserSCI searchUserSCI;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -84,6 +96,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		Map<String, Object> mapReq = new HashMap<String, Object>();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
+		List<HistorySacIn> listPrchs = null;
 
 		String memberType = req.getMemberType();
 		/**************************************************************
@@ -192,42 +205,58 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 			if (!listPid.isEmpty()) {
 
 				if (memberType.equals("updatedList")) {
+					// 회원일 경우 회원 상태 조회
+					try {
+						SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+						searchUserSacReq.setUserKey(req.getUserKey());
+						SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
 
-					// Oracle SQL 리터럴 수행 방지를 위한 예외처리
-					// int iListPidSize = listPid.size();
-					// int iPidLimited = 0;
-					// if (iListPidSize < 300) {
-					// iPidLimited = 300;
-					// } else if (iListPidSize >= 300 && iListPidSize < 500) {
-					// iPidLimited = 500;
-					// } else if (iListPidSize >= 500 && iListPidSize < 700) {
-					// iPidLimited = 700;
-					// } else if (iListPidSize >= 700 && iListPidSize < 1000) {
-					// iPidLimited = 1000;
-					// }
-					// for (int i = iListPidSize; i < iPidLimited; i++) {
-					// listPid.add("");
-					// }
+						String userMainStatus = searchUserSacRes.getUserMainStatus();
 
-					// 회원의 업데이트 목록 가공
-					// mapReq.put("PID_LIST", listPid);
-
-					// TODO osm1021 추후 LocalSCI 처리로 변환 필요
-					// 기구매 체크
-					ExistenceScReq existenceScReq = new ExistenceScReq();
-					List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
-					for (String prodId : listPid) {
-						ExistenceItemSc existenceItemSc = new ExistenceItemSc();
-						existenceItemSc.setProdId(prodId);
-						existenceItemScList.add(existenceItemSc);
+						// TODO osm1021 예외 처리 및 pass가 안 될때 처리 정리 필요
+						// 정상 일시 정지 회원이 아닐 경우 -> 빈 값으로 return하여 처리 종료
+						if (!DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
+								&& !DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
+							commonResponse.setTotalCount(productList.size());
+							res.setCommonResponse(commonResponse);
+							res.setProductList(productList);
+							return res;
+						}
+					} catch (Exception e) {
+						throw new StorePlatformException("SAC_DSP_1002", e);
 					}
-					existenceScReq.setTenantId(tenantHeader.getTenantId());
-					existenceScReq.setUserKey(req.getUserKey());
-					existenceScReq.setDeviceKey(req.getDeviceKey());
-					// existenceScReq.setExistenceItemSc(existenceItemScList);
-					existenceScReq.setProductList(existenceItemScList);
-					List<ExistenceScRes> listPrchs = this.existenceSacService.searchExistenceList(existenceScReq);
 
+					try {
+						List<ProductListSacIn> productListSacInList = new ArrayList<ProductListSacIn>();
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+						String endDate = sdf.format(new java.util.Date());
+						for (String prodId : listPid) {
+							ProductListSacIn productListSacIn = new ProductListSacIn();
+							productListSacIn.setProdId(prodId);
+							productListSacInList.add(productListSacIn);
+						}
+
+						HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
+						historyListSacReq.setTenantId(tenantHeader.getTenantId());
+						historyListSacReq.setUserKey(req.getUserKey());
+						historyListSacReq.setDeviceKey(req.getDeviceKey());
+						historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+						historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+						historyListSacReq.setEndDt(endDate);
+						// TODO osm1021 offset 제거 필요
+						historyListSacReq.setOffset(1);
+						historyListSacReq.setCount(100);
+						historyListSacReq.setProductList(productListSacInList);
+
+						// 구매내역 조회 실행
+						HistoryListSacInRes historyListSacRes = this.historyInternalSCI
+								.searchHistoryList(historyListSacReq);
+						if (historyListSacRes != null) {
+							listPrchs = historyListSacRes.getHistoryList();
+						}
+					} catch (Exception e) {
+						throw new StorePlatformException("SAC_DSP_2001", e);
+					}
 					// mapReq.remove("PID_LIST");
 
 					String sProdAmt = "";
@@ -251,7 +280,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							boolean isPrchsExists = false;
 							Map<String, String> mapPrchs = null;
 							// for (int j = 0; j < listPrchs.size(); j++) {
-							for (ExistenceScRes prchInfo : listPrchs) {
+							for (HistorySacIn prchInfo : listPrchs) {
 								// mapPrchs = (Map<String, String>) listPrchs.get(j);
 								// 구매한 상품의 상품 Id
 								String prchProdId = prchInfo.getProdId();
