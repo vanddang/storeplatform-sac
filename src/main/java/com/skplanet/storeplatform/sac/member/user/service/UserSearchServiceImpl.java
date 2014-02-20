@@ -1335,10 +1335,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		/**
+		 * 사용자 기본 정보 조회.
+		 */
+		SearchUserResponse userInfo = this.getUserInfo(sacHeader, chkDupRes.getUserMbr().getUserKey());
+
+		/**
 		 * SC 회원의 등록된 휴대기기 상세정보를 조회 연동.
 		 */
 		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-		searchDeviceRequest.setUserKey(chkDupRes.getUserMbr().getUserKey()); // 회원 조회시 내려온 UserKey setting.
+		searchDeviceRequest.setUserKey(userInfo.getUserKey()); // 회원 조회시 내려온 UserKey setting.
 		searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		searchDeviceRequest.setKeySearchList(keySearchList);
 		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
@@ -1346,20 +1351,24 @@ public class UserSearchServiceImpl implements UserSearchService {
 		/**
 		 * 사용자 정보 setting.
 		 */
-		response.setUserKey(chkDupRes.getUserMbr().getUserKey());
-		response.setUserType(chkDupRes.getUserMbr().getUserType());
-		response.setUserName(ObjectUtils.toString(chkDupRes.getUserMbr().getUserName()));
-		response.setUserId(chkDupRes.getUserMbr().getUserID());
-		response.setIsRealNameYn(chkDupRes.getUserMbr().getIsRealName());
+		response.setUserKey(userInfo.getUserKey());
+		response.setUserType(userInfo.getUserMbr().getUserType());
+		response.setUserId(userInfo.getUserMbr().getUserID());
+		response.setIsRealNameYn(userInfo.getUserMbr().getIsRealName());
 
 		/**
-		 * 우선순위 (실명인증 생년월일 > DB생년월일 > null)
+		 * 실명인증정보 (이름, 생년월일) - 우선순위 (본인 실명인증 생년월일 > DB생년월일 > null)
 		 */
-		String userBirthday = this.getUserBirthday(sacHeader, chkDupRes.getUserMbr().getUserKey());
-		if (StringUtil.equals(userBirthday, "") || userBirthday == null) {
-			response.setUserBirthDay(ObjectUtils.toString(chkDupRes.getUserMbr().getUserBirthDay()));
+		if (StringUtils.equals(userInfo.getUserMbr().getIsRealName(), MemberConstants.USE_Y)) {
+
+			response.setUserName(ObjectUtils.toString(userInfo.getMbrAuth().getName()));
+			response.setUserBirthDay(ObjectUtils.toString(userInfo.getMbrAuth().getBirthDay()));
+
 		} else {
-			response.setUserBirthDay(userBirthday);
+
+			response.setUserName(ObjectUtils.toString(userInfo.getUserMbr().getUserName()));
+			response.setUserBirthDay(ObjectUtils.toString(userInfo.getUserMbr().getUserBirthDay()));
+
 		}
 
 		/**
@@ -1378,16 +1387,16 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/**
 	 * <pre>
-	 * 본인 실명인증 생년월일을 조회한다.
+	 * 사용자 정보를 조회한다.
 	 * </pre>
 	 * 
 	 * @param sacHeader
 	 *            공통 헤더
 	 * @param userKey
 	 *            사용자 Key
-	 * @return String (실명인증 생년월일)
+	 * @return SearchUserResponse (사용자 정보)
 	 */
-	private String getUserBirthday(SacRequestHeader sacHeader, String userKey) {
+	private SearchUserResponse getUserInfo(SacRequestHeader sacHeader, String userKey) {
 
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		searchUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
@@ -1403,11 +1412,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 		searchUserRequest.setKeySearchList(keySearchList);
 
 		/**
-		 * 회원 정보조회 (실명 인증정보)
+		 * 회원 정보조회.
 		 */
 		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 
-		return schUserRes.getMbrAuth().getBirthDay();
+		return schUserRes;
 	}
 
 }
