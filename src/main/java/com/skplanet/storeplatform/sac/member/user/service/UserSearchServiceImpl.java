@@ -1179,7 +1179,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		/**
-		 * 단말 정보 setting.
+		 * 사용자 정보/단말 정보 setting.
 		 */
 		this.setDeviceInfo(sacHeader, req, response);
 
@@ -1366,7 +1366,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		/**
-		 * 휴대기기 정보 setting.
+		 * 단말 정보 setting.
 		 */
 		response.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
 		response.setDeviceId(searchDeviceResponse.getUserMbrDevice().getDeviceID());
