@@ -4,17 +4,6 @@
 
 
 
-    <!-- aid로 sellerKey 조회 -->
-    <select id="sellerKey" parameterType="DetailInformationReq" resultType="DetailInformationReq">
-		SELECT 
-		    seller_mbr_no sellerKey
-		FROM 
-		    TB_DP_APP_PROD app
-		left outer JOIN TB_DP_PROD prod 
-		ON app.PROD_ID=prod.PROD_ID
-		WHERE aid=#{aid}
-    </select>
-    
     <!-- 탈퇴 사유 목록 조회 -->
     <select id="listWithdrawalReason" parameterType="ListWithdrawalReasonReq" resultType="SecedeReson">
         SELECT 
@@ -36,10 +25,10 @@
 		    BANK_NO bankNo,
 		    NATION_TEL_NO nationTelNo,
 		    NATION_DESC nationDesc,
-        IBAN_USE_YN ibanUseYn, 
-        ABA_USE_YN abaUseYn, 
-        SORT_USE_YN sortUseYn, 
-        BSB_USE_YN bsbUseYn
+            IBAN_USE_YN ibanUseYn, 
+            ABA_USE_YN abaUseYn, 
+            SORT_USE_YN sortUseYn, 
+            BSB_USE_YN bsbUseYn
 		FROM 
 		    TB_CM_NATION
 		WHERE 

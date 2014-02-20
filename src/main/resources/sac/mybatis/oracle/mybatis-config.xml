@@ -56,9 +56,6 @@
         <typeAlias alias="DeviceDTO"      type="com.skplanet.storeplatform.sac.member.common.vo.Device" />
         <typeAlias alias="ClauseDTO"      type="com.skplanet.storeplatform.sac.member.common.vo.Clause" />
         
-        <!-- 회원-판매자 Aid 조회 -->
-        <typeAlias alias="DetailInformationReq"      type="com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq" />
-        
         <!-- 회원-판매자 탈퇴사유목록 조회 -->
         <typeAlias alias="ListWithdrawalReasonReq"      type="com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonReq" />
         <typeAlias alias="SecedeReson"      type="com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson" />
