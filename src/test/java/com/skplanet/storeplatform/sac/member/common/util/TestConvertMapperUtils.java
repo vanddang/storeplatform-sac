@@ -27,7 +27,6 @@ public class TestConvertMapperUtils {
 			ObjectMapper mapper = new ObjectMapper();
 			if (obj != null) {
 				returnStr = mapper.writeValueAsString(obj);
-				System.out.println("## >> convertObjectToJson ==============================");
 				System.out.println(returnStr);
 			}
 		} catch (Exception e) {
