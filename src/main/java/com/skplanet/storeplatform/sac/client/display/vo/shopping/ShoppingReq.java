@@ -47,6 +47,8 @@ public class ShoppingReq extends CommonInfo {
 	private String deviceKey; // 디바이스키
 	private String userKey; // 사용자고유키
 	private String virtualDeviceModelNo; // android_standard2
+	private String type; // type: channel, episode
+	private String prodRshpCd; // 채널 에피소드 관계
 
 	private Integer offset; // offset
 	private Integer count; // count
@@ -295,6 +297,36 @@ public class ShoppingReq extends CommonInfo {
 	 */
 	public void setSpecialProdId(String specialProdId) {
 		this.specialProdId = specialProdId;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return this.type;
+	}
+
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
+	 * @return the prodRshpCd
+	 */
+	public String getProdRshpCd() {
+		return this.prodRshpCd;
+	}
+
+	/**
+	 * @param prodRshpCd
+	 *            the prodRshpCd to set
+	 */
+	public void setProdRshpCd(String prodRshpCd) {
+		this.prodRshpCd = prodRshpCd;
 	}
 
 	public void setOffset(Integer offset) {
