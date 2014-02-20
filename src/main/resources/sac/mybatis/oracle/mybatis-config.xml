@@ -217,7 +217,10 @@
         <typeAlias alias="DownloadBestSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq" />
         
         <!-- 정액제 상품 조회 -->
-        <typeAlias alias="FreepassListSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq" />        
+        <typeAlias alias="FreepassListSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq" />
+        <typeAlias alias="FreepassDetailSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq" />
+        <typeAlias alias="FreepassMapProduct"  type="com.skplanet.storeplatform.sac.display.freepass.vo.FreepassProdMap" />
+        <typeAlias alias="FreepassDetailInfo"  type="com.skplanet.storeplatform.sac.display.freepass.vo.FreepassDetail" />
                 
         <!-- Vod 보관함 정보 조회 -->
         <typeAlias alias="CategoryVodBoxSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq" />
