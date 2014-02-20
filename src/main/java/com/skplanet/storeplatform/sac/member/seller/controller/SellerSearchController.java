@@ -92,7 +92,7 @@ public class SellerSearchController {
 		req.setAid(aid);
 
 		if (sellerId.equals("") && sellerKey.equals("") && aid.equals(""))
-			throw new StorePlatformException("SAC_MEM_0001", "aid,sellerKey,sellerId");
+			throw new StorePlatformException("SAC_MEM_0001", "aid, sellerKey, sellerId");
 
 		return this.sellerSearchService.detailInformation(header, req);
 	}
@@ -114,7 +114,7 @@ public class SellerSearchController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
 		}
 
 		return this.sellerSearchService.detailAccountInformation(header, req);
@@ -165,7 +165,7 @@ public class SellerSearchController {
 			Stat++;
 
 		if (Stat == 4) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerBizNumber,sellerCompany,sellerEmail,sellerPhone");
+			throw new StorePlatformException("SAC_MEM_0001", "sellerBizNumber, sellerCompany, sellerEmail, sellerPhone");
 		}
 
 		return this.sellerSearchService.searchId(header, req);
@@ -187,7 +187,7 @@ public class SellerSearchController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
 		}
 		return this.sellerSearchService.listPasswordReminderQuestion(header, req);
 	}
@@ -225,7 +225,7 @@ public class SellerSearchController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+			throw new StorePlatformException("SAC_MEM_0001", "sellerId");
 		}
 		return this.sellerSearchService.checkPasswordReminderQuestion(header, req);
 	}
@@ -246,7 +246,7 @@ public class SellerSearchController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+			throw new StorePlatformException("SAC_MEM_0001", "sellerId");
 		}
 		return this.sellerSearchService.searchPassword(header, req);
 	}

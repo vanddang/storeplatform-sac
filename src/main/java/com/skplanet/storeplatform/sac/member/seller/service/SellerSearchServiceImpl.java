@@ -499,7 +499,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		CheckPasswordReminderSellerRequest schReq = new CheckPasswordReminderSellerRequest();
 
-		schReq.setSellerID(req.getSellerID());
+		schReq.setSellerID(req.getSellerId());
 
 		/** 보안질문 리스트 주입 - [시작]. */
 		List<PWReminder> pWReminderList = null;
@@ -510,7 +510,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				pwReminder.setAnswerString(req.getpWReminderList().get(i).getAnswerString());
 				pwReminder.setQuestionID(req.getpWReminderList().get(i).getQuestionID());
 				// pwReminder.setQuestionMessage(req.getpWReminderList().get(i).getQuestionMessage());
-				pwReminder.setSellerID(req.getpWReminderList().get(i).getSellerID());
+				pwReminder.setSellerID(req.getpWReminderList().get(i).getSellerId());
 				pWReminderList.add(pwReminder);
 			}
 			schReq.setPWReminderList(pWReminderList);
