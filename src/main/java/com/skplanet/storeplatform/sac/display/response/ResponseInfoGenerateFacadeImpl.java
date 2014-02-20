@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
@@ -218,6 +219,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
 		// 방송용 Contributor 설정
 		Contributor contributor = this.vodGenerator.generateBroadcastContributor(metaInfo);
+		// 방송용 Vod 설정
+		Vod vod = this.vodGenerator.generateVod(metaInfo);
 
 		product.setTitle(title);
 		product.setPrice(price);
@@ -226,6 +229,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setAccrual(accrual);
 		product.setRights(rights);
 		product.setContributor(contributor);
+		product.setVod(vod);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
 		// Broadcast 상품상세설명
