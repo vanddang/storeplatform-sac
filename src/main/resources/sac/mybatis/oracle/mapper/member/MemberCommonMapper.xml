@@ -32,29 +32,32 @@
     <!-- 약관 목록 조회 -->
     <select id="getClauseList" parameterType="ClauseDTO" resultType="ClauseDTO">
 		SELECT    /* MemberCommonMapper.xml, getClauseList, SAC : 강신완 , 2014-02-12 */
-            CLAUSE_ID           AS clauseId,
-            CLAUSE_ITEM_CD      AS clauseItemCd,
-            START_DAY           AS startDay,
-            END_DAY             AS endDay,
-            FILE_PATH           AS filePath,
-            FILE_NM             AS fileNm,
-            CLAUSE_VER          AS clauseVer,
-            UP_CLAUSE_ID        AS upClauseId,
-            DP_YN               AS dpYn,
-            REG_ID              AS regId,
-            TO_CHAR(REG_DT, 'YYYYMMDDHH24MISS') AS regDt, 
-            UPD_ID AS updId, 
-            TO_CHAR(UPD_DT, 'YYYYMMDDHH24MISS') AS updDt 
-        FROM TB_CM_CLAUSE 
-        WHERE DP_YN=#{dpYn}
+            clause_id           AS clauseId,
+            clause_item_cd      AS clauseItemCd,
+            start_day           AS startDay,
+            end_day             AS endDay,
+            file_path           AS filePath,
+            file_nm             AS fileNm,
+            clause_ver          AS clauseVer,
+            up_clause_id        AS upClauseId,
+            dp_yn               AS dpYn,
+            reg_id              AS regId,
+            TO_CHAR(reg_dt, 'YYYYMMDDHH24MISS') AS regDt, 
+            upd_id AS updId, 
+            TO_CHAR(upd_dt, 'YYYYMMDDHH24MISS') AS updDt 
+         FROM TB_CM_CLAUSE 
+        WHERE dp_yn=#{dpYn}
         <if test='clauseItemCd != null'>
-        AND CLAUSE_ITEM_CD = #{clauseItemCd}
+        AND clause_item_cd = #{clauseItemCd}
         </if>
         <if test='clauseItemCd == null'>
-        AND (SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') FROM DUAL) BETWEEN START_DAY AND END_DAY
+        AND (
+             SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') 
+               FROM DUAL
+            ) BETWEEN start_day AND end_day
         </if>
         
-        ORDER BY CLAUSE_ITEM_CD ASC
+        ORDER BY clause_item_cd ASC
     </select>
 
     <!-- 폰 정보 조회 -->
