@@ -236,6 +236,16 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private List<Source> previewSourceList;
 
+	/**
+	 * 쿠폰코드
+	 */
+	private String couponCode;
+
+	/**
+	 * 아이템코드
+	 */
+	private String itemCode;
+
 	public String getSalesStatus() {
 		return this.salesStatus;
 	}
@@ -952,6 +962,36 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setPreviewSourceList(List<Source> previewSourceList) {
 		this.previewSourceList = previewSourceList;
+	}
+
+	/**
+	 * @return the couponCode
+	 */
+	public String getCouponCode() {
+		return this.couponCode;
+	}
+
+	/**
+	 * @param couponCode
+	 *            the couponCode to set
+	 */
+	public void setCouponCode(String couponCode) {
+		this.couponCode = couponCode;
+	}
+
+	/**
+	 * @return the itemCode
+	 */
+	public String getItemCode() {
+		return this.itemCode;
+	}
+
+	/**
+	 * @param itemCode
+	 *            the itemCode to set
+	 */
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
 	}
 
 }
