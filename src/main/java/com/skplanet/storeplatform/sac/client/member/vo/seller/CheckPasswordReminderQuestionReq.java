@@ -21,17 +21,17 @@ public class CheckPasswordReminderQuestionReq extends CommonInfo {
 
 	/** 판매자회원 ID. */
 	@NotBlank
-	private String sellerID; // SELLERMBR_ID 판매자회원 id
+	private String sellerId; // SELLERMBR_ID 판매자회원 id
 
 	/** 비밀번호 보안질문 Value Object. */
 	private List<PwReminder> pWReminderList;
 
-	public String getSellerID() {
-		return this.sellerID;
+	public String getSellerId() {
+		return this.sellerId;
 	}
 
-	public void setSellerID(String sellerID) {
-		this.sellerID = sellerID;
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
 	}
 
 	public List<PwReminder> getpWReminderList() {

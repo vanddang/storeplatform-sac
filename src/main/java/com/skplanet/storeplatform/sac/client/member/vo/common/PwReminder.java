@@ -32,7 +32,15 @@ public class PwReminder extends CommonInfo {
 	private String sellerKey;
 
 	/** 판매자회원 ID. */
-	private String sellerID;
+	private String sellerId;
+
+	public String getSellerId() {
+		return this.sellerId;
+	}
+
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
+	}
 
 	public String getAnswerString() {
 		return this.answerString;
@@ -64,14 +72,6 @@ public class PwReminder extends CommonInfo {
 
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
-	}
-
-	public String getSellerID() {
-		return this.sellerID;
-	}
-
-	public void setSellerID(String sellerID) {
-		this.sellerID = sellerID;
 	}
 
 }
