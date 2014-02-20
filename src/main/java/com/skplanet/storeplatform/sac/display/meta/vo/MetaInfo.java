@@ -220,6 +220,7 @@ public class MetaInfo {
 	private String opt1Nm;// 옵션 기준점
 	private String optPdNm;// 옵션 값
 	private String subYn;// 옵션 하위 여부
+	private String srcContentId;// 쿠폰코드,아이템코드
 
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
@@ -3323,6 +3324,21 @@ public class MetaInfo {
 
 	public void setCid(String cid) {
 		this.cid = cid;
+	}
+
+	/**
+	 * @return the srcContentId
+	 */
+	public String getSrcContentId() {
+		return this.srcContentId;
+	}
+
+	/**
+	 * @param srcContentId
+	 *            the srcContentId to set
+	 */
+	public void setSrcContentId(String srcContentId) {
+		this.srcContentId = srcContentId;
 	}
 
 }

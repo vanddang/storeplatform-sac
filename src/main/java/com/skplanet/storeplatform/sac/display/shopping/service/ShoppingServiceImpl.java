@@ -141,8 +141,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 			// 상품등급코드 유효값 체크
 			if (!this.commonProdGradeCd(req)) {
-				res.setCommonResponse(commonResponse);
-				return res;
+				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
 			// offset, Count default setting
 			this.commonOffsetCount(req);
@@ -234,8 +233,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			// 상품등급코드 유효값 체크
 			if (!this.commonProdGradeCd(req)) {
-				res.setCommonResponse(commonResponse);
-				return res;
+				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
 
 			// offset, Count default setting
@@ -322,8 +320,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			// 상품등급코드 유효값 체크
 			if (!this.commonProdGradeCd(req)) {
-				res.setCommonResponse(commonResponse);
-				return res;
+				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
 			if (StringUtils.isEmpty(req.getOrderedBy())) {
 				req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
@@ -422,8 +419,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		// 상품등급코드 유효값 체크
 		if (!this.commonProdGradeCd(req)) {
-			res.setCommonResponse(commonResponse);
-			return res;
+			throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
@@ -600,8 +596,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		// 상품등급코드 유효값 체크
 		if (!this.commonProdGradeCd(req)) {
-			res.setCommonResponse(commonResponse);
-			return res;
+			throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
@@ -825,8 +820,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		// 상품등급코드 유효값 체크
 		if (!this.commonProdGradeCd(req)) {
-			res.setCommonResponse(commonResponse);
-			return res;
+			throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 		}
 
 		// offset, Count default setting
@@ -1030,8 +1024,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		// 상품등급코드 유효값 체크
 		if (!this.commonProdGradeCd(req)) {
-			res.setCommonResponse(commonResponse);
-			return res;
+			throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
@@ -1136,8 +1129,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			// 상품등급코드 유효값 체크
 			if (!this.commonProdGradeCd(req)) {
-				res.setCommonResponse(commonResponse);
-				return res;
+				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
 			if (StringUtils.isEmpty(req.getOrderedBy())) {
 				req.setOrderedBy(DisplayConstants.DP_SHOPPING_DOWNLOAD_DEFAULT_ORDERED_OPTION);
@@ -1248,8 +1240,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			// 상품등급코드 유효값 체크
 			if (!this.commonProdGradeCd(req)) {
-				res.setCommonResponse(commonResponse);
-				return res;
+				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
 			if (StringUtils.isEmpty(req.getOrderedBy())) {
 				req.setOrderedBy(DisplayConstants.DP_SHOPPING_DOWNLOAD_DEFAULT_ORDERED_OPTION);
@@ -1341,13 +1332,23 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
-
+		req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
+		if (!"channel".equals(req.getType()) && !"episode".equals(req.getType())) {
+			throw new StorePlatformException("SAC_DSP_0003", "type", req.getType());
+		}
 		if (StringUtils.isEmpty(req.getProdId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "prodId", req.getProdId());
+		}
+
+		if (StringUtils.equals("episode", req.getType())) {
+			MetaInfo channelByepisode = this.commonDAO.queryForObject("Shopping.getChannelByepisode", req,
+					MetaInfo.class);
+			req.setProdId(channelByepisode.getProdId());
+			req.setSpecialProdId(req.getPartProdId());
 		}
 
 		// OPTIONAL 파라미터 체크
@@ -1373,6 +1374,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+
 		// ID list 조회
 		List<MetaInfo> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetail", reqMap,
 				MetaInfo.class);
@@ -1411,8 +1413,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 				for (int i = 0; i < resultChannelList.size(); i++) {
 					MetaInfo shopping = resultChannelList.get(i);
 
-					// 상품 정보 (상품ID)
 					product = new Product();
+					// 쿠폰코드 입력
+					product.setCouponCode(shopping.getSrcContentId());
+
+					// 상품 정보 (상품ID)
 					product.setIdentifierList(this.commonGenerator.generateIdentifierList(shopping));
 
 					// MenuList 생성
@@ -1466,6 +1471,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 							MetaInfo episodeShopping = resultEpisodeList.get(kk);
 
 							episodeProduct = new Product();
+							// 아이템코드 입력
+							episodeProduct.setItemCode(episodeShopping.getSrcContentId());
 
 							// 특가 상품일 경우
 							episodeMenu = new Menu();
@@ -1541,7 +1548,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 									}
 								}
 							} catch (Exception ex) {
-								throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
+								throw new StorePlatformException("SAC_DSP_2001", "구매내역 조회 ", ex);
 							}
 							if (StringUtils.isNotEmpty(prchsId)) {
 								episodeShopping.setPurchaseId(prchsId);
@@ -1698,6 +1705,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					product.setContributor(contributor);
 					product.setSubProductTotalCount(subProductList.size());
 					product.setSubProductList(subProductList);
+
 					productList.add(i, product);
 				}
 				res.setProductList(productList);

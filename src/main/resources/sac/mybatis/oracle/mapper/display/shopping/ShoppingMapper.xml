@@ -1371,6 +1371,7 @@
                               , 'DP006303', 'delivery' ) PROD_CASE_CD
                         ,CONCAT(PI.FILE_PATH,PI.FILE_NM) as FILE_PATH
                         ,J.CONTENTS_TYPE_CD 
+                        ,(select SRC_CONTENT_ID from TB_DP_SHPG_PROD WHERE prod_id=H.PROD_ID ) AS SRC_CONTENT_ID
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -1506,6 +1507,7 @@
                                   AND TSPP.PROD_ID = H.PART_PROD_ID )
                            , 0 ) AS DLY_PRCHS_CNT           
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
+                        ,I.SRC_CONTENT_ID
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -1649,5 +1651,15 @@
            AND IMG_CD =#{cutDetailImageCd}
            AND LANG_CD= #{req.langCd}          /* ko : 한국어 */
          ORDER BY EXPO_ORD            
-    </select>            
+    </select>       
+    
+  <!-- 쇼핑상세(에피소드로 채널 가져오기) 조회-->
+    <select id="getChannelByepisode" parameterType="ShoppingReq" resultType="MetaInfo">
+     /* ShoppingMapper.xml.getChannelByepisode,쇼핑상세(에피소드로 채널 가져오기) 조회, 김형식/SK플래닛 , 2014-02-04 */
+        SELECT 
+               DISTINCT PROD_ID
+          FROM TB_DP_PROD_RSHP
+         WHERE PART_PROD_ID = #{partProdId} 
+           AND PROD_RSHP_CD =#{prodRshpCd}     /*채널-에피소드 상품 관계*/
+    </select>             
 </mapper>
