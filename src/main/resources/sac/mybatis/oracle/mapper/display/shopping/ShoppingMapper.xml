@@ -1343,10 +1343,10 @@
            FROM (
                   SELECT 
                          B.CATALOG_ID 
-                         <if test="req.specialProdId == null">
+                         <if test="req.specialProdId == null and req.type == 'channel'">
                         ,C.CATALOG_NM 
                         </if>
-                        <if test="req.specialProdId != null">
+                        <if test="req.specialProdId != null and req.type == 'channel'">
                         ,O.PROD_NM  as catalogNm
                         </if>
                         ,H.PROD_ID 
@@ -1536,7 +1536,7 @@
                                 ,TB_DP_SPRC_PROD B1
                            WHERE 1=1
                              AND A1.PART_PROD_ID = B1.PROD_ID
-			                 <if test="req.specialProdId != null">
+			                 <if test="req.specialProdId != null ">
 			                 AND B1.PROD_ID  = #{req.specialProdId}
 			                 </if>                             
                              AND B1.EXPO_YN ='Y'
@@ -1574,6 +1574,16 @@
                 <if test="req.specialProdId != null">
                 AND I.PROD_ID = #{req.specialProdId}
                 </if>
+                AND EXISTS (
+                    SELECT 1 
+                    FROM  TB_DP_SPRT_DEVICE DV  
+                         ,TB_CM_DEVICE CM
+                    WHERE 1=1
+                      AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
+                      AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
+                      AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
+                      AND PROD_ID = I.PROD_ID
+                    )                   
                      
            ) KK
            <if test="endRow != null">
@@ -1653,13 +1663,20 @@
          ORDER BY EXPO_ORD            
     </select>       
     
-  <!-- 쇼핑상세(에피소드로 채널 가져오기) 조회-->
+  <!-- 쇼핑상세(에피소드로 카탈로그 가져오기) 조회-->
     <select id="getChannelByepisode" parameterType="ShoppingReq" resultType="MetaInfo">
      /* ShoppingMapper.xml.getChannelByepisode,쇼핑상세(에피소드로 채널 가져오기) 조회, 김형식/SK플래닛 , 2014-02-04 */
         SELECT 
-               DISTINCT PROD_ID
-          FROM TB_DP_PROD_RSHP
-         WHERE PART_PROD_ID = #{partProdId} 
-           AND PROD_RSHP_CD =#{prodRshpCd}     /*채널-에피소드 상품 관계*/
+               CATALOG_ID
+          FROM TB_DP_PROD_CATALOG_MAPG
+         WHERE PROD_ID = ( 
+                           SELECT DISTINCT PROD_ID 
+                             FROM TB_DP_PROD_RSHP
+                            WHERE PART_PROD_ID = #{prodId} 
+                              AND PROD_RSHP_CD = #{prodRshpCd}     /*채널-에피소드 상품 관계*/
+                              AND ROWNUM =1
+                         ) 
+           AND BASE_YN ='Y'
+           AND USE_YN ='Y'
     </select>             
 </mapper>

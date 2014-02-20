@@ -1348,8 +1348,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			MetaInfo channelByepisode = this.commonDAO.queryForObject("Shopping.getChannelByepisode", req,
 					MetaInfo.class);
 			if (channelByepisode != null) {
-				req.setProdId(channelByepisode.getProdId());
-				req.setSpecialProdId(req.getPartProdId());
+				req.setSpecialProdId(req.getProdId());
+				req.setProdId(channelByepisode.getCatalogId());
 			} else {
 				throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
 			}
@@ -1479,11 +1479,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setItemCode(episodeShopping.getSrcContentId());
 
 							// 특가 상품일 경우
-							episodeMenu = new Menu();
-							episodeMenuList = new ArrayList<Menu>();
-							episodeMenu.setType(episodeShopping.getSpecialSale());
-							episodeMenuList.add(episodeMenu);
-							episodeProduct.setMenuList(episodeMenuList);
+							if (!StringUtils.equals("episode", req.getType())) {
+								episodeMenu = new Menu();
+								episodeMenuList = new ArrayList<Menu>();
+								episodeMenu.setType(episodeShopping.getSpecialSale());
+								episodeMenuList.add(episodeMenu);
+								episodeProduct.setMenuList(episodeMenuList);
+							}
 
 							// 채널 상품 정보 (상품ID)
 							episodeIdentifierList = new ArrayList<Identifier>();
