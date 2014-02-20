@@ -12,7 +12,7 @@
         FROM 
             TB_CM_CD 
         WHERE 
-            cd_id LIKE '%US0104%'
+            grp_cd_id = 'US0104'
             AND lang_cd =#{koUsWhether} 
     </select>
     
