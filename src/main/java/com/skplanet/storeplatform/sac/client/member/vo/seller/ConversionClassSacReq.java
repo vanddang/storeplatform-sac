@@ -580,12 +580,16 @@ public class ConversionClassSacReq extends CommonInfo {
 	public static class ExtraDocument {
 
 		/** 서류코드. */
+		@NotBlank
 		public String documentCode;
 		/** 서류경로. */
+		@NotBlank
 		public String documentPath;
 		/** 서류명. */
+		@NotBlank
 		public String documentName;
 		/** 서류사이즈. */
+		@NotBlank
 		public String documentSize;
 
 		public String getDocumentCode() {

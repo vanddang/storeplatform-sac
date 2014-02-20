@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
+import java.util.List;
+
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -8,6 +10,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.FlurryAuth;
 
 /**
  * 2.2.10. 판매자회원 기본정보 수정 [REQUEST]
@@ -126,8 +129,8 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String customerPhone;
 	/** 고객 응대 이메일. */
 	private String customerEmail;
-	/** Flurry 정보. */
-	private String flurryInfo;
+
+	private List<FlurryAuth> flurryAuthList;
 
 	public String getSellerKey() {
 		return this.sellerKey;
@@ -489,12 +492,11 @@ public class ModifyInformationSacReq extends CommonInfo {
 		this.customerEmail = customerEmail;
 	}
 
-	public String getFlurryInfo() {
-		return this.flurryInfo;
+	public List<FlurryAuth> getFlurryAuthList() {
+		return this.flurryAuthList;
 	}
 
-	public void setFlurryInfo(String flurryInfo) {
-		this.flurryInfo = flurryInfo;
+	public void setFlurryAuthList(List<FlurryAuth> flurryAuthList) {
+		this.flurryAuthList = flurryAuthList;
 	}
-
 }
