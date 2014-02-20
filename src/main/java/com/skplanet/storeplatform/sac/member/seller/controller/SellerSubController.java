@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
@@ -56,11 +57,13 @@ public class SellerSubController {
 	public @ResponseBody
 	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req,
 			BindingResult result) {
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+
+		if (StringUtil.nvl(req.getSellerKey(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
+		} else if (StringUtil.nvl(req.getSubSellerID(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "subSellerID");
+		} else if (StringUtil.nvl(req.getMemberPW(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "memberPW");
 		}
 		req.setIsNew("Y");
 		return this.sellerSubService.createSubseller(header, req);
@@ -79,11 +82,13 @@ public class SellerSubController {
 	public @ResponseBody
 	CreateSubsellerRes modifySubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req,
 			BindingResult result) {
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+
+		if (StringUtil.nvl(req.getSellerKey(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
+		} else if (StringUtil.nvl(req.getSubSellerID(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "subSellerID");
+		} else if (StringUtil.nvl(req.getSubSellerKey(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "subSellerKey");
 		}
 		req.setIsNew("N");
 		return this.sellerSubService.createSubseller(header, req);
