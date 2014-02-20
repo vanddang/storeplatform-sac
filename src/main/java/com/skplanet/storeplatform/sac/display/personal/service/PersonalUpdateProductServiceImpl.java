@@ -209,8 +209,9 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					try {
 						SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
 						searchUserSacReq.setUserKey(req.getUserKey());
-						SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
-
+						// SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
+						// TODO osm1021 에러 회피를 위해서 일단 null 추후 삭제
+						SearchUserSacRes searchUserSacRes = null;
 						String userMainStatus = searchUserSacRes.getUserMainStatus();
 
 						// TODO osm1021 예외 처리 및 pass가 안 될때 처리 정리 필요
