@@ -6,6 +6,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
+/**
+ * 웹툰 상품 상세 조회 Request Value Object.
+ * 
+ * Updated on : 2014. 2. 19. Updated by : 조준일, nTels.
+ */
 public class WebtoonDetailSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 

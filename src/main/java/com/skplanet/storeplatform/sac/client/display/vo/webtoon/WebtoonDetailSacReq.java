@@ -13,6 +13,9 @@ public class WebtoonDetailSacReq {
 	private String imageCd; // 이미지 코드
 	private String langCd; // 언어
 
+	private String orderedBy; // 이전회, 다음회 정렬 순서
+	private String chapter; // 상세 현재 챕터
+
 	/**
 	 * 
 	 * <pre>
@@ -137,4 +140,55 @@ public class WebtoonDetailSacReq {
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이전회, 다음회 정렬 순서.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getOrderedBy() {
+		return this.orderedBy;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이전회, 다음회 정렬 순서.
+	 * </pre>
+	 * 
+	 * @param orderedBy
+	 *            orderedBy
+	 */
+	public void setOrderedBy(String orderedBy) {
+		this.orderedBy = orderedBy;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 현재 회차.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getChapter() {
+		return this.chapter;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 현재 회차.
+	 * </pre>
+	 * 
+	 * @param chapter
+	 *            chapter
+	 */
+	public void setChapter(String chapter) {
+		this.chapter = chapter;
+	}
+
 }
