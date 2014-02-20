@@ -330,6 +330,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			// sellerAccount.setStartDate(schRes.getSellerAccount().getStartDate());
 			sellerAccount.setSwiftCode(schRes.getSellerAccount().getSwiftCode());
 			sellerAccount.setTpinCode(schRes.getSellerAccount().getTpinCode());
+
+			sellerAccount.setSellerBizAddress(schRes.getSellerMbr().getSellerBizAddress());
+			sellerAccount.setSellerBizDetailAddress(schRes.getSellerMbr().getSellerBizDetailAddress());
+			sellerAccount.setSellerBizZip(schRes.getSellerMbr().getSellerBizZip());
+
 		}
 
 		DetailAccountInformationRes response = new DetailAccountInformationRes();
@@ -337,7 +342,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		response.setExtraRightList(eList);
 		response.setSellerAccount(sellerAccount);
 		response.setSellerKey(schRes.getSellerKey());
-		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
+		// response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
 		return response;
 
 	}
