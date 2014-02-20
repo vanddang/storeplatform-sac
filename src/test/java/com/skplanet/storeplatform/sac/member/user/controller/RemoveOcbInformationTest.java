@@ -81,8 +81,10 @@ public class RemoveOcbInformationTest {
 	 * </pre>
 	 */
 	@Test
-	public void TEST_A_OCB카드번호등록() {
+	public void TEST_A_OCB카드번호등록() throws Exception {
 
+		Thread.sleep(1000); // 전체 연결 테스트시(AllJunitTest_Simdaejin.java) START_DT가 겹치는 현상을 방지하기위해서 SLEEP 을 주었다.
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createOcbInformation/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -119,6 +121,7 @@ public class RemoveOcbInformationTest {
 	@Test(expected = StorePlatformException.class)
 	public void TEST_B_삭제가능한유효한카드번호가아닐경우() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/removeOcbInformation/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -151,6 +154,7 @@ public class RemoveOcbInformationTest {
 	@Test
 	public void TEST_C_OCB카드번호삭제() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/removeOcbInformation/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {

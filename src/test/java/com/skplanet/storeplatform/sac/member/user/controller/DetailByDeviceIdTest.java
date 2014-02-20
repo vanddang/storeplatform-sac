@@ -76,6 +76,7 @@ public class DetailByDeviceIdTest {
 	@Test
 	public void TEST_A_DeviceID를이용하여회원정보조회() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/detailByDeviceId/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {

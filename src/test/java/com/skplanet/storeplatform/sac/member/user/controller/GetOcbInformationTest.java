@@ -68,6 +68,7 @@ public class GetOcbInformationTest {
 	@Test
 	public void TEST_A_OCB정보조회() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/getOcbInformation/v1?userKey=US201402071133550360001951").httpMethod(HttpMethod.GET)
 				.addHeaders("Accept", "application/json")
 				.success(GetOcbInformationRes.class, new SuccessCallback() {
