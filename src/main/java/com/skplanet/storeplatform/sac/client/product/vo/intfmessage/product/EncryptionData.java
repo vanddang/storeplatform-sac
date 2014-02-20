@@ -32,6 +32,7 @@ public class EncryptionData extends CommonInfo implements Serializable {
 	private String productFee;
 	private String productId;
 	private String purchaseId;
+	private Integer purchasePrice;
 	private String purchaseDate;
 	private List<EncryptionSubContents> subContents;
 	private EncryptionUsagePolicy usagePolicy;
@@ -141,6 +142,21 @@ public class EncryptionData extends CommonInfo implements Serializable {
 	 */
 	public void setPurchaseId(String purchaseId) {
 		this.purchaseId = purchaseId;
+	}
+
+	/**
+	 * @return the purchasePrice
+	 */
+	public Integer getPurchasePrice() {
+		return this.purchasePrice;
+	}
+
+	/**
+	 * @param purchasePrice
+	 *            the purchasePrice to set
+	 */
+	public void setPurchasePrice(Integer purchasePrice) {
+		this.purchasePrice = purchasePrice;
 	}
 
 	/**
