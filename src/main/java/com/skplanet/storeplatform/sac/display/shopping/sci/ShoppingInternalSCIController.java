@@ -56,7 +56,7 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 
 		ShoppingReq sacReq = new ShoppingReq();
 		ShoppingRes sacRes = new ShoppingRes();
-
+		sacReq.setType("channel");
 		sacReq.setTenantId(request.getTenantId());
 		sacReq.setDeviceModelCd(request.getDeviceModelCd());
 		sacReq.setLangCd(request.getLangCd());

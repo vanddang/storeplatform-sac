@@ -27,15 +27,25 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SelectOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SubSelectOption;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.shopping.vo.Shopping;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator;
 
 /**
  * 쇼핑 판매건수 Implements
@@ -56,6 +66,12 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 	@Autowired
 	private SellerSearchSCI sellerSearchSCI;
 
+	@Autowired
+	private CommonMetaInfoGenerator commonGenerator;
+
+	@Autowired
+	private ShoppingInfoGenerator shoppingGenerator;
+
 	@Override
 	public ShoppingRes searchShoppingInternal(ShoppingReq req) {
 		// 공통 응답 변수 선언
@@ -65,13 +81,27 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 		req.setLangCd(req.getLangCd());
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
-
+		req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(req.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
+		if (!"channel".equals(req.getType()) && !"episode".equals(req.getType())) {
+			throw new StorePlatformException("SAC_DSP_0003", "type", req.getType());
+		}
 		if (StringUtils.isEmpty(req.getProdId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "prodId", req.getProdId());
+		}
+
+		if (StringUtils.equals("episode", req.getType())) {
+			MetaInfo channelByepisode = this.commonDAO.queryForObject("Shopping.getChannelByepisode", req,
+					MetaInfo.class);
+			if (channelByepisode != null) {
+				req.setSpecialProdId(req.getProdId());
+				req.setProdId(channelByepisode.getCatalogId());
+			} else {
+				throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
+			}
 		}
 
 		// OPTIONAL 파라미터 체크
@@ -95,28 +125,30 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+
 		// ID list 조회
-		List<Shopping> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetail", reqMap,
-				Shopping.class);
+		List<MetaInfo> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetail", reqMap,
+				MetaInfo.class);
 
 		if (resultChannelList == null) {
-			throw new StorePlatformException("SAC_DSP_0001", "쇼핑 상세 확인 ");
+			throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
 		} else {
 			if (resultChannelList.size() > 0) {
 
 				// Response VO를 만들기위한 생성자
 				Product product = null;
-				Identifier identifier = null;
-
-				List<Identifier> identifierList = null;
+				Source source = null;
 
 				// / 에피소드용
-				Identifier episodeIdentifier = null;
-				List<Identifier> episodeIdentifierList = null;
-
 				Product episodeProduct = null;
-				Price episodePrice = null;
-
+				List<Identifier> episodeIdentifierList = null;
+				Menu episodeMenu = null;
+				List<Menu> episodeMenuList = new ArrayList<Menu>();
+				Rights episodeRights = null;
+				Date episodeDate = null;
+				Distributor distributor = null;
+				List<Date> episodeDateList = null;
+				episodeDateList = new ArrayList<Date>();
 				SalesOption episodeSaleOption = null;
 
 				// / 옵션용
@@ -124,25 +156,57 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 				SubSelectOption subSelectOption = null;
 				List<SelectOption> selectOptionList = new ArrayList<SelectOption>();
 				List<SubSelectOption> subSelectOptionList = new ArrayList<SubSelectOption>();
-				Title option1Title = null;
-				Price option1Price = null;
 				Title option2Title = null;
-				Price option2Price = null;
-
 				List<Product> subProductList = new ArrayList<Product>();
 
 				List<Product> productList = new ArrayList<Product>();
 				// 채널 list 조회
 				for (int i = 0; i < resultChannelList.size(); i++) {
-					Shopping shopping = resultChannelList.get(i);
+					MetaInfo shopping = resultChannelList.get(i);
+
+					product = new Product();
+					// 쿠폰코드 입력
+					product.setCouponCode(shopping.getSrcContentId());
 
 					// 상품 정보 (상품ID)
-					product = new Product();
-					identifierList = new ArrayList<Identifier>();
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
-					identifier.setText(shopping.getCatalogId());
-					identifierList.add(identifier);
+					product.setIdentifierList(this.commonGenerator.generateIdentifierList(shopping));
+
+					// MenuList 생성
+					List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
+
+					// Title 생성
+					Title title = this.commonGenerator.generateTitle(shopping);
+
+					// SourceList 생성
+					List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
+					// 이미지 정보
+					String detailImgCd = "";
+					// 이미지 정보 (상세 이미지 가져오기)
+					for (int qq = 0; qq < 2; qq++) {
+						if (qq == 0) {
+							detailImgCd = DisplayConstants.DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD;
+						} else {
+							detailImgCd = DisplayConstants.DP_SHOPPING_REPRESENT_CUT_DETAIL_IMAGE_CD;
+						}
+						reqMap.put("cutDetailImageCd", detailImgCd);
+						List<MetaInfo> resultImgDetailList = this.commonDAO.queryForList(
+								"Shopping.getShoppingImgDetailList", reqMap, MetaInfo.class);
+						for (int pp = 0; pp < resultImgDetailList.size(); pp++) {
+							source = new Source();
+							if (qq == 0) {
+								source.setType(DisplayConstants.DP_SOURCE_TYPE_DETAIL);
+							} else {
+								source.setExpoOrd(resultImgDetailList.get(pp).getExpoOrd());
+								source.setType(DisplayConstants.DP_SOURCE_TYPE_CUT_DETAIL);
+							}
+							source.setUrl(resultImgDetailList.get(pp).getFilePath());
+							sourceList.add(source);
+						}
+					}
+					// Accrual 생성
+					Accrual accrual = this.shoppingGenerator.generateAccrual(shopping);
+					// Shopping용 Contributor 생성
+					Contributor contributor = this.shoppingGenerator.generateContributor(shopping);
 
 					String deliveryValue = shopping.getProdCaseCd();
 					// 배송상품은 단품이며 기본정보는 동일
@@ -151,33 +215,57 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 					}
 
 					// 에피소드 list 조회
-					List<Shopping> resultEpisodeList = this.commonDAO.queryForList("Shopping.getShoppingEpisodeDetail",
-							reqMap, Shopping.class);
+					List<MetaInfo> resultEpisodeList = this.commonDAO.queryForList("Shopping.getShoppingEpisodeDetail",
+							reqMap, MetaInfo.class);
 					if (resultEpisodeList != null) {
 						for (int kk = 0; kk < resultEpisodeList.size(); kk++) {
-							Shopping episodeShopping = resultEpisodeList.get(kk);
+							MetaInfo episodeShopping = resultEpisodeList.get(kk);
 
 							episodeProduct = new Product();
+							// 아이템코드 입력
+							episodeProduct.setItemCode(episodeShopping.getSrcContentId());
+
+							// 특가 상품일 경우
+							if (!StringUtils.equals("episode", req.getType())) {
+								episodeMenu = new Menu();
+								episodeMenuList = new ArrayList<Menu>();
+								episodeMenu.setType(episodeShopping.getSpecialSale());
+								episodeMenuList.add(episodeMenu);
+								episodeProduct.setMenuList(episodeMenuList);
+							}
 
 							// 채널 상품 정보 (상품ID)
 							episodeIdentifierList = new ArrayList<Identifier>();
-							episodeIdentifier = new Identifier();
-							episodeIdentifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-							episodeIdentifier.setText(episodeShopping.getProdId());
-							episodeIdentifierList.add(episodeIdentifier);
+							episodeIdentifierList.add(this.commonGenerator.generateIdentifier(
+									DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, episodeShopping.getProdId()));
 
 							// 에피소드 상품 정보 (상품ID)
-							episodeIdentifier = new Identifier();
-							episodeIdentifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-							episodeIdentifier.setText(episodeShopping.getPartProdId());
-							episodeIdentifierList.add(episodeIdentifier);
+							episodeIdentifierList.add(this.commonGenerator.generateIdentifier(
+									DisplayConstants.DP_EPISODE_IDENTIFIER_CD, episodeShopping.getPartProdId()));
+							episodeProduct.setIdentifierList(episodeIdentifierList);
 
 							// 에피소드 상품 가격 정보
-							episodePrice = new Price();
-							episodePrice.setFixedPrice(episodeShopping.getProdNetAmt());
-							episodePrice.setDiscountRate(episodeShopping.getDcRate());
-							episodePrice.setText(episodeShopping.getProdAmt());
+							Price episodePrice = this.shoppingGenerator.generatePrice(episodeShopping);
 							episodeProduct.setPrice(episodePrice);
+
+							// 에피소드 날짜 권한 정보
+							episodeDateList = new ArrayList<Date>();
+							episodeRights = new Rights();
+
+							episodeDate = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM,
+									DateUtils.parseDate(episodeShopping.getApplyStartDt()),
+									DateUtils.parseDate(episodeShopping.getApplyEndDt()));
+							episodeDateList.add(episodeDate);
+
+							episodeDate = new Date();
+							episodeDate.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_UNIT_NM);
+							episodeDate.setText(episodeShopping.getUsePeriod());
+
+							episodeDateList.add(episodeDate);
+
+							episodeRights.setGrade(episodeShopping.getProdGrdCd());
+							episodeRights.setDateList(episodeDateList);
+							episodeProduct.setRights(episodeRights);
 
 							// saleOption 셋팅
 							episodeSaleOption = new SalesOption();
@@ -206,11 +294,11 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 							if (deliveryValue.equals("delivery")) {
 								reqMap.put("chnlProdId", episodeShopping.getProdId());
 								// 에피소드 list 조회
-								List<Shopping> resultOptionList = this.commonDAO.queryForList(
-										"Shopping.getShoppingOption", reqMap, Shopping.class);
+								List<MetaInfo> resultOptionList = this.commonDAO.queryForList(
+										"Shopping.getShoppingOption", reqMap, MetaInfo.class);
 								if (resultOptionList != null) {
 									for (int mm = 0; mm < resultOptionList.size(); mm++) {
-										Shopping optionShopping = resultOptionList.get(mm);
+										MetaInfo optionShopping = resultOptionList.get(mm);
 										if (optionShopping.getSubYn().equals("Y")) { // 옵션 1 인 경우
 											selectOption = new SelectOption();
 											// 옵션1 상품 ID
@@ -221,30 +309,23 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 											}
 
 											// 옵션1 상품 정보 (상품명)
-											option1Title = new Title();
-											option1Title.setText(optionShopping.getOptPdNm());
+											Title option1Title = this.commonGenerator.generateTitle(optionShopping);
 											selectOption.setTitle(option1Title);
 											// 옵션1 상품 가격정보
-											option1Price = new Price();
-											option1Price.setFixedPrice(optionShopping.getProdNetAmt());
-											option1Price.setDiscountRate(optionShopping.getDcRate());
-											option1Price.setText(optionShopping.getProdAmt());
+											Price option1Price = this.shoppingGenerator.generatePrice(optionShopping);
 											selectOption.setPrice(option1Price);
 										}
 										if (optionShopping.getSubYn().equals("N")) { // 옵션 2 인 경우
 											subSelectOption = new SubSelectOption();
 											// 옵션2 상품 ID
-											subSelectOption.setSubId(optionShopping.getOpt1Nm());
+											subSelectOption.setSubId(optionShopping.getProdNm());
 
 											// 옵션2 상품 정보 (상품명)
 											option2Title = new Title();
 											option2Title.setText(optionShopping.getOptPdNm());
 											subSelectOption.setSubTitle(option2Title);
 											// 옵션2 상품 가격정보
-											option2Price = new Price();
-											option2Price.setFixedPrice(optionShopping.getProdNetAmt());
-											option2Price.setDiscountRate(optionShopping.getDcRate());
-											option2Price.setText(optionShopping.getProdAmt());
+											Price option2Price = this.shoppingGenerator.generatePrice(optionShopping);
 											subSelectOption.setSubPrice(option2Price);
 
 											subSelectOptionList.add(subSelectOption);
@@ -267,14 +348,26 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 									}
 								}
 							}
+
+							episodeProduct.setSelectOptionList(selectOptionList);
+
 							subProductList.add(episodeProduct);
 						}
 					}
 					// 데이터 매핑
-					product.setPrice(episodePrice);
+					// product.setPrice(episodePrice);
 					product.setSalesOption(episodeSaleOption);
-					product.setSelectOptionList(selectOptionList);
-					product.setIdentifierList(episodeIdentifierList);
+					// product.setSelectOptionList(selectOptionList);
+					// product.setIdentifierList(episodeIdentifierList);
+
+					// product.setMenuList(menuList);
+					// product.setTitle(title);
+					// product.setSourceList(sourceList);
+					// product.setAccrual(accrual);
+					// product.setContributor(contributor);
+					// product.setSubProductTotalCount(subProductList.size());
+					// product.setSubProductList(subProductList);
+
 					productList.add(i, product);
 				}
 				res.setProductList(productList);
@@ -283,6 +376,7 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 			}
 		}
 		return res;
+
 	}
 
 }
