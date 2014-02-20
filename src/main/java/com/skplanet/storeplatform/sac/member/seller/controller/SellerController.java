@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
@@ -103,6 +104,11 @@ public class SellerController {
 	@RequestMapping(value = "/authorizeSimple/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeRes authorizeSimple(SacRequestHeader header, @RequestBody @Validated AuthorizeSimpleReq req) {
+		if (StringUtil.nvl(req.getSellerId(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "sellerId");
+		} else if (StringUtil.nvl(req.getSellerPW(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "sellerPW");
+		}
 		return this.sellerService.authorizeSimple(header, req);
 	}
 
