@@ -7,13 +7,13 @@
     <!-- 탈퇴 사유 목록 조회 -->
     <select id="listWithdrawalReason" parameterType="ListWithdrawalReasonReq" resultType="SecedeReson">
         SELECT /* SellerSearchMapper.xml, listWithdrawalReason, SAC : 한서구 , 2014-01-08 */
-            cd_id AS secedeReasonCode,
-            cd_nm AS secedeReasonMessage
+            CD_ID AS secedeReasonCode,
+            CD_NM AS secedeReasonMessage
         FROM 
             TB_CM_CD 
         WHERE 
-            grp_cd_id = 'US0104'
-            AND lang_cd =#{koUsWhether} 
+            GRP_CD_ID = 'US0104'
+            AND LANG_CD =#{koUsWhether} 
     </select>
     
     <!-- 나라별 해외은행 정보 조회 -->
