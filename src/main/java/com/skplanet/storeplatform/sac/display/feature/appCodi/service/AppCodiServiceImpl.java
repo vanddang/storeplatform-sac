@@ -54,10 +54,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.appCodi.invoker.AppCodiECInvokerImpl;
 import com.skplanet.storeplatform.sac.display.feature.appCodi.vo.AppCodiRes;
-import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -80,12 +78,6 @@ public class AppCodiServiceImpl implements AppCodiService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-
-	@Autowired
-	private MetaInfoService metaInfoService;
-
-	@Autowired
-	private DisplayCommonService displayCommonService;
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
@@ -114,11 +106,11 @@ public class AppCodiServiceImpl implements AppCodiService {
 		String deviceIdType = requestVO.getDeviceIdType();
 		String deviceId = requestVO.getDeviceId();
 
-		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("[searchIntimateMessageList] userKey : {}", userKey);
-		this.log.debug("[searchIntimateMessageList] deviceIdType : {}", deviceIdType);
-		this.log.debug("[searchIntimateMessageList] deviceId : {}", deviceId);
-		this.log.debug("----------------------------------------------------------------");
+		if (this.log.isDebugEnabled()) {
+			this.log.debug("[searchAppCodiList] userKey : {}", userKey);
+			this.log.debug("[searchAppCodiList] deviceIdType : {}", deviceIdType);
+			this.log.debug("[searchAppCodiList] deviceId : {}", deviceId);
+		}
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(userKey)) {
@@ -131,7 +123,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			throw new StorePlatformException("SAC_DSP_0002", "deviceId", deviceId);
 		}
 		// 기기ID유형 유효값 체크
-		if (!"msisdn".equals(deviceIdType)) {
+		if (!StringUtils.equalsIgnoreCase(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN, deviceIdType)) {
 			throw new StorePlatformException("SAC_DSP_0003", "deviceIdType", deviceIdType);
 		}
 
@@ -167,10 +159,12 @@ public class AppCodiServiceImpl implements AppCodiService {
 			// ISF 연동
 			response = this.ecInvoker.invoke(requestVO);
 		} catch (Exception e) {
+			e.printStackTrace();
 			isExists = false;
 		}
 
-		int multiCount = response.getProps().getMultiValues().getCount();
+		int multiCount = (response.getProps().getMultiValues() != null) ? response.getProps().getMultiValues()
+				.getCount() : 0;
 		if (multiCount > 0) {
 			MultiValuesType multis = new MultiValuesType();
 			MultiValueType multi = new MultiValueType();
@@ -492,9 +486,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 		// ISF 연동 실패나 Data 가 없는 경우( 운영자 추천으로 대체 )
 		if (!isExists) {
-			if (this.log.isDebugEnabled()) {
-				this.log.debug("ISF 연동 실패나 Data 가 없는 경우 - 운영자 추천으로 대체");
-			}
+			this.log.info("ISF 연동 실패나 Data 가 없는 경우 - 운영자 추천으로 대체");
+
 			mapReq = new HashMap<String, Object>();
 			if (!"long".equalsIgnoreCase(requestVO.getFilteredBy())) {
 				mapReq.put("START_ROW", "1");
