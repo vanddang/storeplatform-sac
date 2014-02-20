@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.freepass.service;
 
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
@@ -39,7 +40,7 @@ public interface FreepassService {
 	 * @param FreepassListReq
 	 * @return FreepassListRes
 	 */
-	FreepassDetailRes searchFreepassDetail(FreepassListReq req, SacRequestHeader header);
+	FreepassDetailRes searchFreepassDetail(FreepassDetailReq req, SacRequestHeader header);
 	
 	/**
 	 * <pre>
