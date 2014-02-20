@@ -29,6 +29,7 @@ public class NewAppRecommandSacReq extends CommonInfo {
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출될 ROW 개수
 
+	private String prodId; // 상품 Id
 	private String[] arrayProdudctId; // 상품 ID Array
 
 	/**
@@ -149,6 +150,21 @@ public class NewAppRecommandSacReq extends CommonInfo {
 	 */
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	/**
+	 * @return the productId
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            the prodId to set
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
 	/**
