@@ -1325,6 +1325,12 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+
+		req.setDeviceId(deviceId);
+		req.setUserKey(userKey);
+
 		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
