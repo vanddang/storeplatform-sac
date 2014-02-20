@@ -299,4 +299,16 @@ public interface CommonMetaInfoGenerator {
 	 * @return Purchase
 	 */
 	public Purchase generatePurchase(String prchId, String prodId, String prchState, String prchDt, String dwldExprDt);
+
+	/**
+	 * <pre>
+	 * 미리보기 Source List 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Source>
+	 */
+	public Source generatePreviewSourceList(MetaInfo metaInfo);
+
 }

@@ -506,4 +506,19 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		return purchase;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Source generatePreviewSourceList(MetaInfo metaInfo) {
+		Source source = this.generateSource(DisplayConstants.DP_SOURCE_TYPE_PREVIEW, metaInfo.getPreviewImagePath(),
+				metaInfo.getPreviewImageSize());
+		return source;
+	}
+
 }

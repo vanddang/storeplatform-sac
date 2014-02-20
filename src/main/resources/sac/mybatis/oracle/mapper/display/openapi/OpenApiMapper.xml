@@ -60,10 +60,12 @@
 		                           AND E.PROD_STATUS_CD ='PD000403'
 		                           /* =======================================  INPUT PARAMS  ======================================= */
 		                           <if test='inquiryType == "1"'> 
-		                              AND B.REG_ID = #{inquiryValue} --개발자 ID
+		                              AND B.REG_ID = #{inquiryValue}        -- 개발자 ID
 		                           </if>
+                                   <if test='inquiryType == "2"'> 
+                                      AND B.SELLER_MBR_NO = #{inquiryValue} -- 판매자 번호
+                                   </if>		                           
 		                           AND B.PROD_CHRG_YN = #{prodCharge}    --유무료 구분       
-		                           --AND B.SELLER_MBR_NO = '' --판매자 번호
 		                         ORDER BY A.DWLD_QTY
 		                                , C.PROD_NM
 		                       ) IA
@@ -76,4 +78,262 @@
 		   AND KB.LANG_CD = #{langCd}
 		   AND KB.IMG_CD = #{imageCd}
     </select>
+    
+     <select id="searchNewAppList" parameterType="NewAppRecommandSacReq" resultType="MetaInfo">
+		SELECT /*  OpenApi.xml, searchNewAppList, 이석희, 2014-02-18 */
+		        KA.*
+		     , (SELECT MENU_NM 
+		          FROM TB_DP_MENU_CATEGORY_DESC
+		         WHERE MENU_ID = KA.TOP_MENU_ID
+		           AND LANG_CD = #{langCd}
+		           AND ROWNUM = 1) AS TOP_MENU_NM
+		     , (SELECT MENU_NM 
+		          FROM TB_DP_MENU_CATEGORY_DESC TA
+		         WHERE TA.MENU_ID = KA.MENU_ID
+		           AND LANG_CD = #{langCd}
+		           AND ROWNUM = 1) AS MENU_NM  		
+		     , DECODE(INSTR(KB.FILE_PATH, '.', 1, 1), 0, KB.FILE_PATH || KB.FILE_NM, KB.FILE_PATH)  AS IMAGE_PATH
+		     , KB.FILE_SIZE AS IMAGE_SIZE
+		  FROM 
+		       (
+		        SELECT *
+		          FROM 
+		              (       
+		                SELECT COUNT(*) OVER() AS TOTAL_COUNT
+		                     , ROWNUM AS RNUM
+		                     , IA.*  
+		                  FROM
+		                       (
+		                        SELECT  A.PROD_ID
+		                              , A.EXPO_SELLER_NM
+		                              , A.SELLER_MBR_NO
+		                              , A.TOP_MENU_ID
+		                              , A.CONTENTS_TYPE_CD
+		                              , C.PROD_NM
+		                              , C.PROD_BASE_DESC
+		                              , D.AID
+		                              , D.PKG_NM AS APK_PKG_NM
+		                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
+		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE              
+		                              , NVL(G.PROD_AMT, 0) AS PROD_AMT
+		                              , J.MENU_ID              
+		                          FROM
+		                                TB_DP_PROD                    A
+		                              , TB_DP_PROD_RSHP               B
+		                              , TB_DP_PROD_DESC               C
+		                              , TB_DP_APP_PROD                D
+		                              , TB_DP_TENANT_PROD             E
+		                              , TB_DP_TENANT_PROD_STATS       F
+		                              , TB_DP_TENANT_PROD_PRICE       G
+--		                              ,( SELECT PROD_ID, MIN(HIS_DT) AS HIS_DT
+--		                                   FROM TB_DP_TENANT_PROD_HIS
+--		                                  WHERE TENANT_ID = 'S01'
+--		                                    AND PROD_STATUS_CD = 'PD000403'
+--		                                  GROUP BY PROD_ID
+--		                               ) H
+		                              , TB_DP_MENU_CATEGORY_PROD_MAPG I
+		                              , TB_DP_MENU_CATEGORY           J               
+		                         WHERE A.PROD_ID = B.PART_PROD_ID
+		                           AND A.PROD_ID = C.PROD_ID
+		                           AND A.PROD_ID = D.PROD_ID
+		                           AND A.PROD_ID = E.PROD_ID
+		                           AND A.PROD_ID = F.PROD_ID
+		                           AND A.PROD_ID = G.PROD_ID
+--		                           AND H.PROD_ID = A.PROD_ID
+		                           AND A.PROD_ID = I.PROD_ID
+		                           AND E.TENANT_ID = #{tenantId}
+		                           AND E.TENANT_ID = F.TENANT_ID
+		                           AND F.TENANT_ID = G.TENANT_ID
+		                           AND I.MENU_ID = J.MENU_ID
+		                           AND A.TOP_MENU_ID != 'DP02'
+		                           AND A.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
+		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
+		                           AND E.PROD_STATUS_CD ='PD000403'
+		                           AND I.USE_YN ='Y'
+		                           --AND SUBSTR(D.SALE_START_DT,0,8) BETWEEN TO_CHAR(SYSDATE - 7,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')
+		                       ) IA
+		              ) JA
+		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}             
+		       )                     KA
+		        , TB_DP_PROD_IMG     KB              
+		 WHERE KA.PROD_ID = KB.PROD_ID               
+		   AND KB.EXPO_ORD = '1'
+		   AND KB.LANG_CD = #{langCd}
+		   AND KB.IMG_CD = #{imageCd}
+    </select>
+    
+    <select id="searchDayNewAppList" parameterType="NewAppRecommandSacReq" resultType="MetaInfo">
+        SELECT /*  OpenApi.xml, searchDayNewAppList, 이석희, 2014-02-18 */
+               COUNT(*) OVER() AS CUR_CNT                      /*현재페이지의 상품갯수*/
+		     , TOTAL_CNT AS TOTAL_CNT                    /*총상품갯수*/
+		     , KA.PROD_ID AS PROD_ID
+		     , KA.AID AS AID     
+		     , PROD_NM		    
+		     , PROD_BASE_DESC
+		     , PROD_DTL_DESC
+		     , SELLER_MBR_NO
+		     , EXPO_SELLER_NM
+		     , TOP_MENU_ID
+		     , PKG_NM
+		     , KA.REG_DT
+		     , NVL(PROD_AMT, 0 ) AS PROD_AMT
+		     , DECODE(INSTR(KB.FILE_PATH, '.', 1, 1), 0, KB.FILE_PATH || KB.FILE_NM, KB.FILE_PATH) AS IMAGE_PATH
+		     , DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH) AS PREVIEW_IMAGE_PATH
+		     , KB.FILE_SIZE AS IMAGE_SIZE
+		     , KC.FILE_SIZE AS PREVIEW_IMAGE_SIZE            
+		     , (SELECT MENU_NM 
+		          FROM TB_DP_MENU_CATEGORY_DESC
+		         WHERE MENU_ID = TOP_MENU_ID
+		           AND LANG_CD = #{langCd}
+		           AND ROWNUM = 1) AS TOP_MENU_NM  
+		     , MENU_ID
+		     , (SELECT MENU_NM 
+		          FROM TB_DP_MENU_CATEGORY_DESC
+		         WHERE MENU_ID = MENU_ID
+		           AND LANG_CD = #{langCd}
+		           AND ROWNUM = 1) AS MENU_NM        
+		     , NVL(( SELECT MAX(SC.FILE_SIZE)
+		              FROM TB_DP_SUB_CONTENTS SC
+		             WHERE SC.PROD_ID = KA.PROD_ID )
+		           , 0 )                AS FILE_SIZE        /*상품 용량*/           
+		  FROM 
+		      (
+		        SELECT *
+		          FROM 
+		              (
+		                SELECT COUNT(*) OVER() AS TOTAL_CNT
+		                     , ROWNUM AS RNUM
+		                     , IA.*   
+		                  FROM 
+		                       (
+		                        SELECT  A.PROD_ID
+		                              , A.SELLER_MBR_NO
+		                              , A.EXPO_SELLER_NM
+		                              , A.TOP_MENU_ID
+		                              , A.REG_DT
+		                              , C.PROD_NM
+		                              , C.PROD_BASE_DESC
+		                              , C.PROD_DTL_DESC
+		                              , D.AID
+		                              , D.PKG_NM
+		                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
+		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE              
+		                              , NVL(G.PROD_AMT, 0) AS PROD_AMT              
+		                              , J.MENU_ID
+		                          FROM
+		                                TB_DP_PROD                    A
+		                              , TB_DP_PROD_RSHP               B
+		                              , TB_DP_PROD_DESC               C
+		                              , TB_DP_APP_PROD                D
+		                              , TB_DP_TENANT_PROD             E
+		                              , TB_DP_TENANT_PROD_STATS       F
+		                              , TB_DP_TENANT_PROD_PRICE       G
+--		                              ,( SELECT PROD_ID, MIN(HIS_DT) AS HIS_DT
+--		                                   FROM TB_DP_TENANT_PROD_HIS
+--		                                  WHERE PROD_STATUS_CD = 'PD000403'
+--		                                    AND TENANT_ID = 'S01'
+--		                                  GROUP BY PROD_ID
+--		                               ) H
+		                              , TB_DP_MENU_CATEGORY_PROD_MAPG I
+		                              , TB_DP_MENU_CATEGORY           J               
+		                         WHERE A.PROD_ID = B.PART_PROD_ID
+		                           AND A.PROD_ID = C.PROD_ID
+		                           AND A.PROD_ID = D.PROD_ID
+		                           AND A.PROD_ID = E.PROD_ID
+		                           AND A.PROD_ID = F.PROD_ID
+		                           AND A.PROD_ID = G.PROD_ID
+--		                           AND H.PROD_ID = A.PROD_ID
+		                           AND A.PROD_ID = I.PROD_ID
+		                           AND E.TENANT_ID = #{tenantId}
+		                           AND E.TENANT_ID = F.TENANT_ID
+		                           AND E.TENANT_ID = G.TENANT_ID
+		                           AND I.MENU_ID = J.MENU_ID
+		                           AND A.TOP_MENU_ID IN ( 'DP01', 'DP03', 'DP04', 'DP08') /*일반 앱만*/
+		                           AND A.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
+		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
+		                           AND E.PROD_STATUS_CD ='PD000403'
+		                           AND I.USE_YN ='Y'
+		--                           AND SUBSTR(D.SALE_START_DT,0,8) BETWEEN TO_CHAR(SYSDATE - 1,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')   
+		                         ORDER BY A.REG_DT DESC
+		                                , C.PROD_NM
+		                       ) IA
+		              ) JA
+		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}
+		      )                               KA
+		       LEFT OUTER JOIN TB_DP_PROD_IMG KB
+		                    ON KA.PROD_ID  = KB.PROD_ID
+		                   AND KB.IMG_CD   = #{imageCd}
+		                   AND KB.EXPO_ORD = '1'
+		                   AND KB.LANG_CD  = #{langCd}                  
+		       LEFT OUTER JOIN TB_DP_PROD_IMG KC
+		                    ON KA.PROD_ID  = KC.PROD_ID                   
+		                   AND KC.IMG_CD   = #{previewImagecd}
+		                   AND KC.EXPO_ORD = '1'
+		                   AND KC.LANG_CD  = #{langCd}
+    </select>
+    
+    <select id="getPreviewImageList" parameterType="map" resultType="MetaInfo">
+		SELECT /* patch_20120822 OpenApiMapper.xml, getPreviewImageList, Song Hyun Ok, 2012-08-22 */
+		       PROD_ID
+		     , COUNT(*) OVER() AS CUR_CNT
+		     , FILE_PATH AS PREVIEW_IMAGE_PATH
+		     , IMAGE_SIZE AS PREVIEW_IMAGE_SIZE
+		  FROM 
+		       (
+		        /* Game/App 미리보기 */
+		        SELECT KA.FILE_PATH
+		             , KA.IMAGE_SIZE
+		             , KA.PROD_ID
+		          FROM 
+		               (
+		                SELECT JA.AID
+		                     , JA.PROD_ID
+		                     , JA.IMG_CD
+		                     , NVL(JB.FILE_PATH, '/data4/android/noimage_158_211_20131112163000.png')  AS FILE_PATH
+		                     , NVL(JB.FILE_SIZE, 0)  AS IMAGE_SIZE
+		                     , ROW_NUMBER() OVER (PARTITION BY JA.AID ORDER BY JA.AID, DECODE(JB.FILE_PATH, NULL, 1, 0), JA.IMG_CD) RNUM
+		                  FROM (
+		                        SELECT IA.AID, 
+		                               IA.PROD_ID, 
+		                               IB.IMG_CD
+		                          FROM (
+		                                    SELECT A.PROD_ID,
+		                                           B.AID     
+		                                      FROM TB_DP_PROD     A
+		                                          ,TB_DP_APP_PROD B
+		                                     WHERE A.TOP_MENU_ID NOT IN( 'DP02', 'DP09', 'DP14', 'DP17', 'DP18' )
+		                                       AND A.PROD_ID = B.PROD_ID
+		                                       <if test="arrayProdudctId != null">
+		                                       AND A.PROD_ID IN 
+		                                      <foreach collection="arrayProdudctId" item="prodId" separator="," open="(" close=")">
+		                                        #{prodId}
+		                                      </foreach>		                   
+		                                      </if>                    
+		                               ) IA
+		                             , (
+		                                    SELECT 'DP000116' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001D7' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP000117' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001D8' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP000118' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001D9' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP000119' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001E0' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001C5' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001E1' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001C8' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001E2' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001D1' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001E3' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001D4' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001E4' AS IMG_CD FROM DUAL
+		                               ) IB
+		                    )                JA
+		                    , TB_DP_PROD_IMG JB
+		                 WHERE JA.PROD_ID = JB.PROD_ID(+)
+		                   AND JA.IMG_CD  = JB.IMG_CD(+)
+		               ) KA
+               )
+		         <!-- WHERE KA.RNUM <![CDATA[ <= 4 ]]> -->
+    </select>      
 </mapper>

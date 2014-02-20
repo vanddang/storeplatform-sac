@@ -88,7 +88,7 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 
 		String stdDt = this.commonService.getBatchStandardDateString(tenantHeader.getTenantId(),
 				downloadBestSacReq.getListId());
-		downloadBestSacReq.setStdDt(stdDt); // 2014.01.28 이석희 수정 S01 하드코딩에서 헤더에서 get 한 TenantId
+		downloadBestSacReq.setStdDt(stdDt);
 
 		String listId = downloadBestSacReq.getListId();
 		String inquiryType = downloadBestSacReq.getInquiryType();

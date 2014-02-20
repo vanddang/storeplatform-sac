@@ -24,10 +24,13 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommandSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommandSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
 import com.skplanet.storeplatform.sac.display.openapi.service.DownloadBestService;
+import com.skplanet.storeplatform.sac.display.openapi.service.NewAppRecommandService;
 
 /**
  * Open API 관련 Controller
@@ -47,6 +50,9 @@ public class OpenApiController {
 
 	@Autowired
 	private DownloadBestService downloadBestService;
+
+	@Autowired
+	private NewAppRecommandService newAppRecommandService;
 
 	/**
 	 * <pre>
@@ -96,9 +102,28 @@ public class OpenApiController {
 	 */
 	@RequestMapping(value = "/bestDownload/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DownloadBestSacRes downloadApp(SacRequestHeader requestheader,
+	public DownloadBestSacRes downloadBest(SacRequestHeader requestheader,
 			@RequestBody DownloadBestSacReq downloadBestSacReq) {
 		return this.downloadBestService.searchDownloadBestList(requestheader, downloadBestSacReq);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 신규 앱 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param newAppRecommandSacReq
+	 *            newAppRecommandSacReq
+	 * @return NewAppRecommandSacRes
+	 */
+	@RequestMapping(value = "/newAppRecommand/list/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public NewAppRecommandSacRes newAppRecommand(SacRequestHeader requestheader,
+			@RequestBody NewAppRecommandSacReq newAppRecommandSacReq) {
+		return this.newAppRecommandService.searchNewAppRecommandList(requestheader, newAppRecommandSacReq);
 	}
 
 }
