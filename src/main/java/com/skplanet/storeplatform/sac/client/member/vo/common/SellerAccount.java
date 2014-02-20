@@ -33,6 +33,33 @@ public class SellerAccount extends CommonInfo {
 	private String startDate;
 	private String swiftCode;
 	private String tpinCode;
+	private String sellerBizZip;
+	private String sellerBizAddress;
+	private String sellerBizDetailAddress;
+
+	public String getSellerBizZip() {
+		return this.sellerBizZip;
+	}
+
+	public void setSellerBizZip(String sellerBizZip) {
+		this.sellerBizZip = sellerBizZip;
+	}
+
+	public String getSellerBizAddress() {
+		return this.sellerBizAddress;
+	}
+
+	public void setSellerBizAddress(String sellerBizAddress) {
+		this.sellerBizAddress = sellerBizAddress;
+	}
+
+	public String getSellerBizDetailAddress() {
+		return this.sellerBizDetailAddress;
+	}
+
+	public void setSellerBizDetailAddress(String sellerBizDetailAddress) {
+		this.sellerBizDetailAddress = sellerBizDetailAddress;
+	}
 
 	public String getAbaCode() {
 		return this.abaCode;
