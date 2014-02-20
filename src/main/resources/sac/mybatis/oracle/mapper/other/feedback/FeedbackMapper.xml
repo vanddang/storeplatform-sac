@@ -29,7 +29,7 @@
 	                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
 	                       SELECT 'X'
 	                         FROM TB_DP_SHPG_CATALOG P
-	                        WHERE P.CATALOG_ID = #{chnlId}
+	                        WHERE P.CATALOG_ID = #{prodId}
 	                          AND P.CHNL_CNT > 0
 	                       </if>
 	                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
