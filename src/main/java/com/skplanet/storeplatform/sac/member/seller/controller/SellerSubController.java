@@ -111,7 +111,7 @@ public class SellerSubController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
 		}
 		return this.sellerSubService.removeSubseller(header, req);
 	}
@@ -132,7 +132,7 @@ public class SellerSubController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
 		}
 
 		return this.sellerSubService.listSubseller(header, req);
@@ -154,7 +154,7 @@ public class SellerSubController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
 		}
 
 		return this.sellerSubService.detailSubseller(header, req);
