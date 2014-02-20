@@ -953,20 +953,27 @@ public class UserSearchServiceImpl implements UserSearchService {
 			userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
 			userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
 			userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
-			userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
 			userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
 			userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
 			userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
 			userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
 			userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
 			userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
-			userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
 			userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
 			userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
-			userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
 			userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
 			userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
 			userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
+
+			if (schUserRes.getMbrAuth().getIsRealName().equals("Y")) {
+				userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getMbrAuth().getBirthDay()));
+				userInfo.setUserName(StringUtil.setTrim(schUserRes.getMbrAuth().getName()));
+				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
+			} else if (schUserRes.getMbrAuth().getIsRealName().equals("N")) {
+				userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
+				userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
+				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
+			}
 
 			if (schUserRes.getMbrMangItemPtcrList() != null) {
 				for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
