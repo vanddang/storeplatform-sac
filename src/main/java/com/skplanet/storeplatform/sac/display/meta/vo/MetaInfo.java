@@ -45,6 +45,7 @@ public class MetaInfo {
 	private Integer imageSize;
 	private String previewImagePath;
 	private Integer previewImageSize;
+	private Integer previewCurCnt; // preview 이미지 건수
 	private String chnlProdId;
 	private String sysDate;
 	private Integer totalCount;
@@ -777,6 +778,21 @@ public class MetaInfo {
 	 */
 	public void setPreviewImageSize(Integer previewImageSize) {
 		this.previewImageSize = previewImageSize;
+	}
+
+	/**
+	 * @return the previewCurCnt
+	 */
+	public Integer getPreviewCurCnt() {
+		return this.previewCurCnt;
+	}
+
+	/**
+	 * @param previewCurCnt
+	 *            the previewCurCnt to set
+	 */
+	public void setPreviewCurCnt(Integer previewCurCnt) {
+		this.previewCurCnt = previewCurCnt;
 	}
 
 	/**

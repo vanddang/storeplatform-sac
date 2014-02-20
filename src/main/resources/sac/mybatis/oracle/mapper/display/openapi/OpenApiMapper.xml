@@ -164,8 +164,8 @@
     
     <select id="searchDayNewAppList" parameterType="NewAppRecommandSacReq" resultType="MetaInfo">
         SELECT /*  OpenApi.xml, searchDayNewAppList, 이석희, 2014-02-18 */
-               COUNT(*) OVER() AS CUR_CNT                      /*현재페이지의 상품갯수*/
-		     , TOTAL_CNT AS TOTAL_CNT                    /*총상품갯수*/
+               COUNT(*) OVER() AS CUR_CNT                  /*현재페이지의 상품갯수*/
+		     , TOTAL_CNT AS TOTAL_COUNT                    /*총상품갯수*/
 		     , KA.PROD_ID AS PROD_ID
 		     , KA.AID AS AID     
 		     , PROD_NM		    
@@ -174,7 +174,7 @@
 		     , SELLER_MBR_NO
 		     , EXPO_SELLER_NM
 		     , TOP_MENU_ID
-		     , PKG_NM
+		     , PKG_NM AS APK_PKG_NM
 		     , KA.REG_DT
 		     , NVL(PROD_AMT, 0 ) AS PROD_AMT
 		     , DECODE(INSTR(KB.FILE_PATH, '.', 1, 1), 0, KB.FILE_PATH || KB.FILE_NM, KB.FILE_PATH) AS IMAGE_PATH
@@ -303,11 +303,8 @@
 		                                          ,TB_DP_APP_PROD B
 		                                     WHERE A.TOP_MENU_ID NOT IN( 'DP02', 'DP09', 'DP14', 'DP17', 'DP18' )
 		                                       AND A.PROD_ID = B.PROD_ID
-		                                       <if test="arrayProdudctId != null">
-		                                       AND A.PROD_ID IN 
-		                                      <foreach collection="arrayProdudctId" item="prodId" separator="," open="(" close=")">
-		                                        #{prodId}
-		                                      </foreach>		                   
+		                                       <if test="prodId != null">
+		                                       AND A.PROD_ID =#{prodId} 
 		                                      </if>                    
 		                               ) IA
 		                             , (

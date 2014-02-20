@@ -150,18 +150,17 @@ public class NewAppRecommandServiceImpl implements NewAppRecommandService {
 				sourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL,
 						metaInfo.getImagePath(), metaInfo.getImageSize()));
 				/*
-				 * 신규 앱 출시 (1일 이내일때만 미리보기 추가)
+				 * 신규 앱 출시 (신규 앱 출시 1일이내 조회시 정보 노출)
 				 */
 				if (!DisplayConstants.DP_OPENAPI_RELEASETYPE_WEEK.equals(releaseType)) {
 					sourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_PREVIEW,
 							metaInfo.getPreviewImagePath(), metaInfo.getPreviewImageSize()));
+					product.setProductDetailExplain(metaInfo.getProdDtlDesc()); // 상품 상세 설명
 
 				}
 				product.setSourceList(sourceList); // 상품 이미지 정보
 
 				product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품가격
-
-				// product.setAccrual(this.commonGenerator.generateAccrual(metaInfo)); // 참여자 정보
 
 				product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
 
@@ -191,12 +190,13 @@ public class NewAppRecommandServiceImpl implements NewAppRecommandService {
 					arrayProdudctId[index] = metaInfo.getProdId();
 				}
 				index++;
+				newAppRecommandSacReq.setProdId(metaInfo.getProdId());
 				newAppRecommandSacReq.setArrayProdudctId(arrayProdudctId);
 
-				if (downloadBestList.size() == index) {
-					/*
-					 * 미리보기 정보 조회
-					 */
+				/*
+				 * 미리보기 정보 조회 (신규 앱 출시 1일이내 조회시 정보 노출)
+				 */
+				if (!DisplayConstants.DP_OPENAPI_RELEASETYPE_WEEK.equals(releaseType)) {
 					List<MetaInfo> previewList = new ArrayList<MetaInfo>();
 					previewList = this.commonDAO.queryForList("OpenApi.getPreviewImageList", newAppRecommandSacReq,
 							MetaInfo.class);
@@ -208,13 +208,11 @@ public class NewAppRecommandServiceImpl implements NewAppRecommandService {
 						preveiwSourceList.add(this.commonGenerator.generatePreviewSourceList(previewMetaInfo));
 					}
 					product.setPreviewSourceList(preveiwSourceList);
-
 				}
 
 				productList.add(product);
-
+				commonResponse.setTotalCount(metaInfo.getTotalCount());
 			}
-
 		}
 		response.setCommonResponse(commonResponse);
 		response.setProductList(productList);

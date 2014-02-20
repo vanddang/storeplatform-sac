@@ -80,7 +80,6 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 
 		DownloadBestSacRes response = new DownloadBestSacRes();
 		CommonResponse commonResponse = new CommonResponse();
-		int totalCount = 0;
 
 		List<Product> productList = new ArrayList<Product>();
 
@@ -168,8 +167,8 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 
 					productList.add(product);
 
+					commonResponse.setTotalCount(metaInfo.getTotalCount());
 				}
-
 			}
 
 		} else {
