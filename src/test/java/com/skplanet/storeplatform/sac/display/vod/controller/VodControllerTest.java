@@ -43,6 +43,57 @@ public class VodControllerTest {
 	}
 
 	@Test
+	public void searchVodDetail_영화_recent() throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("channelId", "H900558967");
+		param.put("deviceKey", "DE201402201711283140002222");
+		param.put("userKey", "US201402201711282940003170");
+		param.put("orderedBy", "recent");
+		param.put("offset", 1);
+		param.put("count", 20);
+		String json = this.convertMapToJson(param);
+
+		this.mvc.perform(post("/display/vod/detail/v1")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				//TODO: Header 추가
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37\"")
+				//.param("channelId", "H090108973").param("orderedBy", "recent").param("offset", "1").param("count", "20")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(content().contentType("application/json;charset=UTF-8"))
+		;
+	}
+
+	@Test
+	public void searchVodDetail_방송_recent() throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("channelId", "H900540759");
+		param.put("deviceKey", "DE201402201711283140002222");
+		param.put("userKey", "US201402201711282940003170");
+		param.put("orderedBy", "recent");
+		param.put("offset", 1);
+		param.put("count", 20);
+		String json = this.convertMapToJson(param);
+
+		this.mvc.perform(post("/display/vod/detail/v1")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				//TODO: Header 추가
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37\"")
+				//.param("channelId", "H090108973").param("orderedBy", "recent").param("offset", "1").param("count", "20")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(content().contentType("application/json;charset=UTF-8"))
+		;
+	}
+
+
+	@Test
 	public void searchVodDetail_recent() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("channelId", "H000044250");
@@ -112,11 +163,9 @@ public class VodControllerTest {
 		;
 	}
 
-	private String convertMapToJson(Map<String, Object> param) throws IOException,
-			JsonGenerationException, JsonMappingException {
+	private String convertMapToJson(Map<String, Object> param) throws IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-		String json = objectMapper.writeValueAsString(param);
-		return json;
+		return objectMapper.writeValueAsString(param);
 	}
 }

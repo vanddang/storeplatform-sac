@@ -48,8 +48,6 @@ public class VodController {
         req.setDeviceModel(header.getDeviceHeader().getModel());
 
         logger.debug("req={}", req);
-        //FXIME: Test
-        //req.setChannelId("H906023417");
 		return this.vodService.searchVod(req);
 
 	}
