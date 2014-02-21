@@ -449,7 +449,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 				String sEndRow = "4";
 
 				// Range 가 정의된 경우
-				if ("long".equals(requestVO.getFilteredBy())) {
+				if (!StringUtils.equalsIgnoreCase("short", requestVO.getFilteredBy())) {
 					sStartRow = StringUtils.defaultIfEmpty(ObjectUtils.toString(requestVO.getOffset()), "1");
 					sEndRow = ObjectUtils.toString(requestVO.getCount() + requestVO.getOffset() - 1);
 				}
