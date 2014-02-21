@@ -1730,15 +1730,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 								if (memberRes != null) {
 									memberRes.getSellerMbr().getSellerCompany();
 									distributor = new Distributor();
-									distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
-									distributor.setIdentifier(memberRes.getSellerMbr().getSellerId());
-									distributor.setName(memberRes.getSellerMbr().getSellerName());
-									// distributor.setCompany(memberRes.getSellerMbr().getSellerCompany());
-									distributor.setTel(memberRes.getSellerMbr().getRepPhone());
-									distributor.setEmail(memberRes.getSellerMbr().getSellerEmail());
-									distributor.setAddress(memberRes.getSellerMbr().getSellerAddress()
-											+ memberRes.getSellerMbr().getSellerDetailAddress());
-									distributor.setRegNo(memberRes.getSellerMbr().getSellerBizNumber());
+									// distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
+									// distributor.setIdentifier(memberRes.getSellerMbr().getSellerId());
+									// distributor.setName(memberRes.getSellerMbr().getSellerName());
+									// // distributor.setCompany(memberRes.getSellerMbr().getSellerCompany());
+									// distributor.setTel(memberRes.getSellerMbr().getRepPhone());
+									// distributor.setEmail(memberRes.getSellerMbr().getSellerEmail());
+									// distributor.setAddress(memberRes.getSellerMbr().getSellerAddress()
+									// + memberRes.getSellerMbr().getSellerDetailAddress());
+									// distributor.setRegNo(memberRes.getSellerMbr().getSellerBizNumber());
 									episodeProduct.setDistributor(distributor);
 
 								}
