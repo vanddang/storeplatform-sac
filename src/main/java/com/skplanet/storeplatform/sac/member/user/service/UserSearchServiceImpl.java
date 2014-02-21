@@ -48,6 +48,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteReque
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterRequest;
@@ -67,6 +69,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DailyPhoneOs;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -75,6 +78,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
@@ -804,6 +808,55 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		return res;
 
+	}
+
+	/* 각 단말의 OS별 누적 가입자 수 조회 */
+	@Override
+	public ListDailyPhoneOsSacRes listDailyPhoneOs(SacRequestHeader sacHeader) {
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		SearchDeviceOSNumberRequest scReq = new SearchDeviceOSNumberRequest();
+		scReq.setCommonRequest(commonRequest);
+		SearchDeviceOSNumberResponse scRes = this.userSCI.searchDeviceOSNumber(scReq);
+
+		ListDailyPhoneOsSacRes dailyPhoneOsSacList = new ListDailyPhoneOsSacRes();
+		List<DailyPhoneOs> dailyPhoneOsList = new ArrayList<DailyPhoneOs>();
+
+		for (int i = 0; i < scRes.getDeviceSystemStatsList().size(); i++) {
+
+			if (i == 0) {
+				List<String> modelNameList = new ArrayList<String>();
+				String tempModelName = scRes.getDeviceSystemStatsList().get(i).getModelName();
+				modelNameList.add(tempModelName);
+				dailyPhoneOsSacList.setModelName(modelNameList);
+
+				DailyPhoneOs phoneOs = new DailyPhoneOs();
+				phoneOs.setOsVersion(scRes.getDeviceSystemStatsList().get(i).getOsVersion());
+				phoneOs.setEnctryCount(scRes.getDeviceSystemStatsList().get(i).getEntryCount());
+				phoneOs.setModelName(scRes.getDeviceSystemStatsList().get(i).getModelName());
+
+				dailyPhoneOsList.add(phoneOs);
+			} else if (!scRes.getDeviceSystemStatsList().get(i - 1).getModelName().equals(scRes.getDeviceSystemStatsList().get(i).getModelName())) {
+				List<String> modelNameList = new ArrayList<String>();
+				String tempModelName = scRes.getDeviceSystemStatsList().get(i).getModelName();
+				modelNameList.add(tempModelName);
+				dailyPhoneOsSacList.setModelName(modelNameList);
+
+				DailyPhoneOs phoneOs = new DailyPhoneOs();
+				phoneOs.setOsVersion(scRes.getDeviceSystemStatsList().get(i).getOsVersion());
+				phoneOs.setEnctryCount(scRes.getDeviceSystemStatsList().get(i).getEntryCount());
+				phoneOs.setModelName(scRes.getDeviceSystemStatsList().get(i).getModelName());
+
+				dailyPhoneOsList.add(phoneOs);
+			}
+
+		}
+
+		dailyPhoneOsSacList.setDailyPhoneOsList(dailyPhoneOsList);
+
+		return dailyPhoneOsSacList;
 	}
 
 	/* SC API 회원 기본정보 조회 */

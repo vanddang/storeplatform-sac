@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
@@ -221,4 +222,14 @@ public interface UserSearchService {
 	 * @return SearchIdSacRes
 	 */
 	public List<SearchIdSac> searchUserEmail(SearchIdSacReq req, SacRequestHeader sacHeader);
+
+	/**
+	 * <pre>
+	 * 각 단말의 OS별 누적 가입자 수 조회
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 * @return ListDailyPhoneOsSacRes
+	 */
+	public ListDailyPhoneOsSacRes listDailyPhoneOs(SacRequestHeader sacHeader);
 }

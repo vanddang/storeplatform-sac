@@ -29,6 +29,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
@@ -247,5 +248,17 @@ public class UserSearchController {
 		ListTermsAgreementSacRes res = this.svc.listTermsAgreement(sacHeader, req);
 
 		return res;
+	}
+
+	@RequestMapping(value = "/member/user/listDailyPhoneOs/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ListDailyPhoneOsSacRes listDailyPhoneOs(SacRequestHeader sacHeader) {
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 2.1.37. 각 단말의 OS별 누적 가입자 수 조회 #####");
+		LOGGER.info("####################################################");
+
+		ListDailyPhoneOsSacRes dailyPhoneOsList = this.svc.listDailyPhoneOs(sacHeader);
+
+		return dailyPhoneOsList;
 	}
 }
