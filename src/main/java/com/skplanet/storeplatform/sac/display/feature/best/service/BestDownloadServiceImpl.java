@@ -70,11 +70,17 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.BestDownloadService#BestDownloadService(com.skplanet
-	 * .storeplatform.sac.client.product.vo.BestDownloadRequestVO)
+	 * <pre>
+	 * BEST 다운로드 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            공통헤더
+	 * @param bestDownloadReq
+	 *            파라미터
+	 * @return BEST 다운로드 리스트
 	 */
 	@Override
 	public BestDownloadSacRes searchBestDownloadList(SacRequestHeader requestheader, BestDownloadSacReq bestDownloadReq) {

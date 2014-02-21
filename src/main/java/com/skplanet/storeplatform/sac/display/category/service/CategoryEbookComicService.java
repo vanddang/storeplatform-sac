@@ -25,8 +25,11 @@ public interface CategoryEbookComicService {
 	 * 일반 카테고리 ebook/만화 상품 조회.
 	 * </pre>
 	 * 
-	 * @param CategoryAppReq
-	 * @return CategoryAppRes
+	 * @param req
+	 *            파라미터
+	 * @param header
+	 *            공통헤더
+	 * @return 일반 카테고리 ebook/만화 상품 리스트
 	 */
 	CategoryEbookComicSacRes searchEbookComicList(CategoryEbookComicSacReq req, SacRequestHeader header);
 }

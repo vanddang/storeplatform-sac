@@ -69,11 +69,17 @@ public class BestAppServiceImpl implements BestAppService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.BestAppService#BestAppService(com.skplanet
-	 * .storeplatform.sac.client.product.vo.BestAppReqVO)
+	 * <pre>
+	 * BEST 앱 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            공통헤더
+	 * @param bestAppReq
+	 *            파라미터
+	 * @return BEST 앱 리스트
 	 */
 	@Override
 	public BestAppSacRes searchBestAppList(SacRequestHeader requestheader, BestAppSacReq bestAppReq) {

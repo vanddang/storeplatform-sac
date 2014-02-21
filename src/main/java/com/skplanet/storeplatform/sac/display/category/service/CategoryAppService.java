@@ -28,7 +28,7 @@ public interface CategoryAppService {
 	 *            UserDefine 파라미터
 	 * @param header
 	 *            공통헤더
-	 * @return CategoryAppRes
+	 * @return 일반 카테고리 앱 상품 리스트
 	 */
 	CategoryAppSacRes searchAppList(CategoryAppSacReq req, SacRequestHeader header);
 }

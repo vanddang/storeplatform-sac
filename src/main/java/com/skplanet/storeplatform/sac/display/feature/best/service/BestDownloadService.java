@@ -18,10 +18,10 @@ public interface BestDownloadService {
 	 * </pre>
 	 * 
 	 * @param requestheader
-	 *            requestheader
-	 * @param BestDownloadSacReq
-	 *            bestDownloadReq
-	 * @return BestDownloadSacRes
+	 *            공통헤더
+	 * @param bestDownloadReq
+	 *            파라미터
+	 * @return BEST 다운로드 리스트
 	 */
 	BestDownloadSacRes searchBestDownloadList(SacRequestHeader requestheader, BestDownloadSacReq bestDownloadReq);
 }

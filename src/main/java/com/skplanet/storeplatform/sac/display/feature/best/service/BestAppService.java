@@ -18,10 +18,10 @@ public interface BestAppService {
 	 * </pre>
 	 * 
 	 * @param requestheader
-	 *            requestheader
+	 *            공통헤더
 	 * @param bestAppReq
-	 *            bestAppReq
-	 * @return BestAppRes
+	 *            파라미터
+	 * @return BEST 앱 리스트
 	 */
 	BestAppSacRes searchBestAppList(SacRequestHeader requestheader, BestAppSacReq bestAppReq);
 }

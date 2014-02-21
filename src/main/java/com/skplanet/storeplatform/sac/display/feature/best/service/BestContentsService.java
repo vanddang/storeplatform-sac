@@ -12,15 +12,16 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface BestContentsService {
 	/**
+	 * 
 	 * <pre>
 	 * BEST 컨텐츠 리스트 조회.
 	 * </pre>
 	 * 
 	 * @param requestheader
-	 *            requestheader
+	 *            공통헤더
 	 * @param bestContentsReq
-	 *            bestContentsReq
-	 * @return BEST 컨텐츠 상품 리스트
+	 *            파라미터
+	 * @return BEST 컨텐츠 리스트
 	 */
 	BestContentsSacRes searchBestContentsList(SacRequestHeader requestheader, BestContentsSacReq bestContentsReq);
 }

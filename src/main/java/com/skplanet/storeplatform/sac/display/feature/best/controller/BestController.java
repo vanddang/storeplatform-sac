@@ -46,10 +46,10 @@ public class BestController {
 	 * </pre>
 	 * 
 	 * @param requestheader
-	 *            requestheader
+	 *            공통헤더
 	 * @param bestAppReq
-	 *            bestAppReq
-	 * @return BestAppRes
+	 *            파라미터
+	 * @return BEST 앱 리스트
 	 */
 	@RequestMapping(value = "/display/feature/best/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -64,10 +64,10 @@ public class BestController {
 	 * </pre>
 	 * 
 	 * @param requestheader
-	 *            requestheader
+	 *            공통헤더
 	 * @param bestContentsReq
-	 *            bestContentsReq
-	 * @return BestContentsRes
+	 *            파라미터
+	 * @return BEST 컨텐츠 리스트
 	 */
 	@RequestMapping(value = "/display/feature/best/content/list/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -82,10 +82,10 @@ public class BestController {
 	 * </pre>
 	 * 
 	 * @param requestheader
-	 *            requestheader
-	 * @param BestDownloadSacReq
-	 *            bestDownloadReq
-	 * @return BestDownloadSacRes
+	 *            공통헤더
+	 * @param bestDownloadReq
+	 *            파라미터
+	 * @return BEST 다운로드 리스트
 	 */
 	@RequestMapping(value = "/display/feature/best/download/list/v1", method = RequestMethod.GET)
 	@ResponseBody

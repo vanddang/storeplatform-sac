@@ -106,10 +106,10 @@ public class CategoryController {
 	 * </pre>
 	 * 
 	 * @param req
-	 *            req
+	 *            UserDefine 파라미터
 	 * @param header
-	 *            header
-	 * @return CategoryAppRes
+	 *            공통헤더
+	 * @return 일반 카테고리 앱 상품 리스트
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -123,15 +123,16 @@ public class CategoryController {
 	}
 
 	/**
+	 * 
 	 * <pre>
 	 * 일반 카테고리 ebook/만화 상품 조회.
 	 * </pre>
 	 * 
 	 * @param req
-	 *            req
+	 *            파라미터
 	 * @param header
-	 *            header
-	 * @return CategoryEbookComicRes
+	 *            공통헤더
+	 * @return 일반 카테고리 ebook/만화 상품 리스트
 	 */
 	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -145,15 +146,16 @@ public class CategoryController {
 	}
 
 	/**
+	 * 
 	 * <pre>
-	 * 웹툰 상품 조회.
+	 * 일반 카테고리 웹툰 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param header
-	 *            header
 	 * @param req
-	 *            req
-	 * @return CategoryWebtoonRes
+	 *            파라미터
+	 * @param header
+	 *            공통헤더
+	 * @return 일반 카테고리 웹툰 리스트
 	 */
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
 	@ResponseBody

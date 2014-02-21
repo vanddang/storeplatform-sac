@@ -55,16 +55,19 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * 일반 카테고리 앱 상품 조회.
+	 * </pre>
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.category.service.CategoryAppService#searchCategoryAppList(com.skplanet
-	 * .storeplatform.sac.client.display.vo.category.CategoryAppSacReq)
+	 * @param req
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
+	 * @return 일반 카테고리 앱 상품 리스트
 	 */
 	@Override
-	public CategoryAppSacRes searchAppList(CategoryAppSacReq req, SacRequestHeader header)
-			throws StorePlatformException {
+	public CategoryAppSacRes searchAppList(CategoryAppSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAppList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");

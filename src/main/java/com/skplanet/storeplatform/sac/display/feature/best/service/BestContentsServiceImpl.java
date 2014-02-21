@@ -61,11 +61,17 @@ public class BestContentsServiceImpl implements BestContentsService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.BestContentsService#BestContentsService(com.skplanet
-	 * .storeplatform.sac.client.product.vo.bestContentsReqVO)
+	 * <pre>
+	 * BEST 컨텐츠 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            공통헤더
+	 * @param bestContentsReq
+	 *            파라미터
+	 * @return BEST 컨텐츠 리스트
 	 */
 	@Override
 	public BestContentsSacRes searchBestContentsList(SacRequestHeader requestheader, BestContentsSacReq bestContentsReq) {
@@ -140,7 +146,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 		String stdDt = this.commonService.getBatchStandardDateString(tenantHeader.getTenantId(),
 				bestContentsReq.getListId());
-		bestContentsReq.setStdDt(stdDt);// 2014.01.28 이석희 수정 S01 하드코딩에서 헤더에서 get 한 TenantId
+		bestContentsReq.setStdDt(stdDt); // 2014.01.28 이석희 수정 S01 하드코딩에서 헤더에서 get 한 TenantId
 
 		// '+'로 연결 된 상품등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(bestContentsReq.getProdGradeCd())) {

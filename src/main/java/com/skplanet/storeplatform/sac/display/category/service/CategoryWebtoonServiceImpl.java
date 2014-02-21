@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -58,13 +57,16 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	/**
+	 * 
 	 * <pre>
 	 * 일반 카테고리 웹툰 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param CategoryWebtoonSacReq
-	 * @return CategoryWebtoonRes 리스트
-	 * @throws Exception
+	 * @param req
+	 *            파라미터
+	 * @param header
+	 *            공통헤더
+	 * @return 일반 카테고리 웹툰 리스트
 	 */
 	@Override
 	public CategoryWebtoonSacRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonSacReq req) {

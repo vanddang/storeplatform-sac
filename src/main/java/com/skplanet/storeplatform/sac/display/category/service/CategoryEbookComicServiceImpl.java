@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -68,6 +67,18 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
+	/**
+	 * 
+	 * <pre>
+	 * 일반 카테고리 ebook/만화 상품 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            파라미터
+	 * @param header
+	 *            공통헤더
+	 * @return 일반 카테고리 ebook/만화 상품 리스트
+	 */
 	@Override
 	public CategoryEbookComicSacRes searchEbookComicList(CategoryEbookComicSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
