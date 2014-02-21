@@ -9,55 +9,63 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service.common;
 
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.System;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
-*
-* ACL 관련 DB 접근 서비스
-*
-* Updated on : 2014. 2. 17.
-* Updated by : 서대영, SK플래닛
-*/
+ * ACL 관련 DB 접근 서비스
+ * <p/>
+ * Updated on : 2014. 2. 17.
+ * Updated by : 서대영, SK플래닛
+ */
 @Service
 @Transactional
 public class AclDataAccessServiceBatis implements AclDataAccessService {
 
-	private final CommonDAO commonDAO;
+    private final CommonDAO commonDAO;
 
-	@Autowired
-	public AclDataAccessServiceBatis(@Qualifier("sac") CommonDAO commonDAO) {
-		this.commonDAO = commonDAO;
-	}
+    @Autowired
+    public AclDataAccessServiceBatis(@Qualifier("sac") CommonDAO commonDAO) {
+        this.commonDAO = commonDAO;
+    }
 
-	@Override
-	public Interface selectInterfaceById(String interfaceId) {
-		return this.commonDAO.queryForObject("Interface.detail", interfaceId, Interface.class);
-	}
+    @Override
+    public Interface selectInterfaceById(String interfaceId) {
+        return this.commonDAO.queryForObject("Interface.detail", interfaceId, Interface.class);
+    }
 
-	/* (non-Javadoc)
-	 * @see com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService#selectAuthInfoByAuthKey(java.lang.String)
-	 */
-	@Override
-	public AuthKey selectAuthKey(String authKey) {
-		return this.commonDAO.queryForObject("AuthKey.selectAuthKey", authKey, AuthKey.class);
-	}
+    /* (non-Javadoc)
+     * @see com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService#selectAuthInfoByAuthKey(java.lang.String)
+     */
+    @Override
+    public AuthKey selectAuthKey(String authKey) {
+        return this.commonDAO.queryForObject("AuthKey.selectAuthKey", authKey, AuthKey.class);
+    }
 
-	@Override
-	public Tenant selectTenantByAuthKey(String authKey) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Tenant selectTenant(String tenantId) {
+        return this.commonDAO.queryForObject("Tenant.selectTenant", tenantId, Tenant.class);
+    }
+
+    @Override
+    public com.skplanet.storeplatform.sac.runtime.acl.vo.System selectSystem(String tenantId) {
+        return this.commonDAO.queryForObject("System.selectSystem", tenantId, System.class);
+    }
+
+    @Override
+    public com.skplanet.storeplatform.sac.runtime.acl.vo.System selectSystemByIp(System system) {
+        return this.commonDAO.queryForObject("System.selectSystemByIp", system, System.class);
+    }
 
     @Override
     public String selectUsableInterface(String authKey, String interfaceId) {

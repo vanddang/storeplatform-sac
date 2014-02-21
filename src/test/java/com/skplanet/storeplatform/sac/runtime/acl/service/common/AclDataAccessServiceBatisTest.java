@@ -1,8 +1,7 @@
 package com.skplanet.storeplatform.sac.runtime.acl.service.common;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,10 +15,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,11 +46,13 @@ public class AclDataAccessServiceBatisTest {
 		assertTrue(StringUtils.isNotBlank(intf.getUrl()));
 	}
 
+    /*
 	@Test(expected = StorePlatformException.class)
 	public void testValidateInterfaceForInvalidInterfaceID() {
 		String authKey = "25f9aabf90acf38aa2e6d0da49e9eee75";
 		Tenant tenant = this.service.selectTenantByAuthKey(authKey);
 		System.out.println("tenant=" + tenant);
 	}
+	*/
 
 }

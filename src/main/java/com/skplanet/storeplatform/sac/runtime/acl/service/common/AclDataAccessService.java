@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.runtime.acl.service.common;
 
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.System;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
 /**
@@ -35,17 +36,6 @@ public interface AclDataAccessService {
 
 	/**
 	 * <pre>
-	 * AuthKey로 Tenant 정보 조회
-	 * </pre>
-	 * @param authKey
-	 * 인증키
-	 * @return
-	 * Tenant 객체
-	 */
-	Tenant selectTenantByAuthKey(String authKey);
-
-	/**
-	 * <pre>
 	 * Header AuthKey 로 DB AuthKey 정보 조회
 	 * </pre>
 	 * @param authKey
@@ -65,5 +55,32 @@ public interface AclDataAccessService {
      * @return 인터페이스 상태. null인 경우 사용 불가.
      */
     String selectUsableInterface(String authKey, String interfaceId);
+
+    /**
+     * <pre>
+     * Tenant 정보 조회
+     * </pre>
+     * @param tenantId
+     *         시스템ID
+     */
+    Tenant selectTenant(String tenantId);
+
+
+    /**
+	 * <pre>
+	 * System 정보 조회
+	 * </pre>
+	 * @param systemId
+     *         시스템ID
+	 */
+	System selectSystem(String systemId);
+
+	/**
+	 * <pre>
+	 * IP 허용 여부 체크를 위해 정보 조회
+	 * </pre>
+	 * @param system
+	 */
+	System selectSystemByIp(System system);
 
 }
