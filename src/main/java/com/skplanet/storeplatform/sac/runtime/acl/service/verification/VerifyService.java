@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.runtime.acl.service.validation;
+package com.skplanet.storeplatform.sac.runtime.acl.service.verification;
 
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 * Updated on : 2014. 2. 5.
 * Updated by : 서대영, SK 플래닛
 */
-public interface ValidateService {
+public interface VerifyService {
 
 	/**
 	 * <pre>
@@ -26,7 +26,7 @@ public interface ValidateService {
 	 * </pre>
 	 * @param headerMap
 	 */
-	void validateHeaders(HttpHeaders header);
+	void verifyHeaders(HttpHeaders header);
 
 	/**
 	 * <pre>
@@ -34,6 +34,6 @@ public interface ValidateService {
 	 * </pre>
 	 * @param headerMap
 	 */
-	void validateTimestamp(HttpHeaders header);
+	void verifyTimestamp(HttpHeaders header);
 
 }

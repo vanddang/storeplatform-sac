@@ -13,7 +13,7 @@ import org.springframework.integration.annotation.Header;
 
 import com.skplanet.storeplatform.sac.runtime.acl.service.authentication.AuthenticateService;
 import com.skplanet.storeplatform.sac.runtime.acl.service.authorization.AuthorizeService;
-import com.skplanet.storeplatform.sac.runtime.acl.service.validation.ValidateService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.verification.VerifyService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 /**
@@ -27,7 +27,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 public class AclServiceTobeImpl implements AclServiceTobe {
 
 	// @Autowired
-	private ValidateService validator;
+	private VerifyService validator;
 	private AuthenticateService authenticateService;
     private AuthorizeService authorizationService;
 
@@ -37,9 +37,9 @@ public class AclServiceTobeImpl implements AclServiceTobe {
 	@Override
 	public void validate(@Header("httpHeaders") HttpHeaders headers) {
 		// Step 1) 필수 헤더 검사
-		this.validator.validateHeaders(headers);
+		this.validator.verifyHeaders(headers);
 		// Step 2) 요청 시간 검사
-		this.validator.validateTimestamp(headers);
+		this.validator.verifyTimestamp(headers);
 	}
 
 	/**

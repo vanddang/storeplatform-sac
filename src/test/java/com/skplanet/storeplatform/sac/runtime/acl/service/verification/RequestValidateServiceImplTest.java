@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.runtime.acl.service.validation;
+package com.skplanet.storeplatform.sac.runtime.acl.service.verification;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,16 +6,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.runtime.acl.service.verification.VerifyServiceImpl;
 import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 public class RequestValidateServiceImplTest {
 
-	private ValidateServiceImpl validateService;
+	private VerifyServiceImpl validateService;
 
 	@Before
 	public void setUp() {
-		this.validateService = new ValidateServiceImpl();
+		this.validateService = new VerifyServiceImpl();
 	}
 
 	@Test
@@ -23,7 +24,7 @@ public class RequestValidateServiceImplTest {
 		HttpHeaders headers = new HttpHeaders();
 
 		try {
-			this.validateService.validateHeaders(headers);
+			this.validateService.verifyHeaders(headers);
 		} catch (StorePlatformException e) {
 			assertEquals("SAC_CMN_0001", e.getErrorInfo().getCode());
 		}
@@ -31,7 +32,7 @@ public class RequestValidateServiceImplTest {
 		headers.setAuthKey("kasdlkjfsladk;jfskl;adjfk;lasfj");
 
 		try {
-			this.validateService.validateHeaders(headers);
+			this.validateService.verifyHeaders(headers);
 		} catch (StorePlatformException e) {
 			assertEquals("SAC_CMN_0001", e.getErrorInfo().getCode());
 		}
@@ -40,14 +41,14 @@ public class RequestValidateServiceImplTest {
 		headers.setInterfaceId("I01000001");
 
 		try {
-			this.validateService.validateHeaders(headers);
+			this.validateService.verifyHeaders(headers);
 		} catch (StorePlatformException e) {
 			assertEquals("SAC_CMN_0001", e.getErrorInfo().getCode());
 		}
 
 		headers.setGuid("asdfsadsadfsadfsadfwaef");
 
-		this.validateService.validateHeaders(headers);
+		this.validateService.verifyHeaders(headers);
 	}
 
 	@Test(expected=StorePlatformException.class)
@@ -55,11 +56,11 @@ public class RequestValidateServiceImplTest {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setTimestamp(AclUtils.getTimestamp() + "");
-		this.validateService.validateTimestamp(headers); // Success
+		this.validateService.verifyTimestamp(headers); // Success
 
 		Thread.sleep(11000); // Wait 11 sec (Timeout = 10 sec)
 		try {
-			this.validateService.validateTimestamp(headers);
+			this.validateService.verifyTimestamp(headers);
 		} catch (StorePlatformException e) {
 			assertEquals("SAC_CMN_0002", e.getErrorInfo().getCode());
 			throw e;

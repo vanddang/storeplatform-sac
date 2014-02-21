@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.runtime.acl.service.validation;
+package com.skplanet.storeplatform.sac.runtime.acl.service.verification;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,10 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
  * Updated by : 서대영, SK 플래닛
  */
 @Service
-public class ValidateServiceImpl implements ValidateService {
+public class VerifyServiceImpl implements VerifyService {
 
 	@Override
-	public void validateHeaders(HttpHeaders header) {
+	public void verifyHeaders(HttpHeaders header) {
 		String authKey = header.getAuthKey();
 		String systemId = header.getSystemId();
 		String interfaceId = header.getInterfaceId();
@@ -45,7 +45,7 @@ public class ValidateServiceImpl implements ValidateService {
 	}
 
 	@Override
-	public void validateTimestamp(HttpHeaders header) {
+	public void verifyTimestamp(HttpHeaders header) {
 		String requestTimestamp = header.getInterfaceId();
 		if (!AclUtils.isTimeOut(requestTimestamp)) {
 			throw new StorePlatformException("SAC_CMN_0002");
