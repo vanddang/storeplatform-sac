@@ -66,9 +66,12 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 	@Override
 	public Book generateBook(MetaInfo metaInfo) {
 		Book book = new Book();
-		Chapter chapter = new Chapter();
-		chapter.setUnit(metaInfo.getChapter());
-		book.setChapter(chapter);
+		if (StringUtils.isNotEmpty(metaInfo.getBookClsfCd()) && StringUtils.isNotEmpty(metaInfo.getChapter())) {
+			Chapter chapter = new Chapter();
+			chapter.setUnit(metaInfo.getBookClsfCd());
+			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
+			book.setChapter(chapter);
+		}
 		book.setTotalCount(metaInfo.getBookCount());
 
 		if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
