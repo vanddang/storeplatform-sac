@@ -14,13 +14,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <pre>
- * 전처리 에러데이터 Value Object
+ * 전처리 에러데이터 Value Object.
  * </pre>
  * 
  * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
 public class ErrorData extends CommonInfo {
-
+	private static final long serialVersionUID = 1L;
 	/**
 	 *
 	 */
@@ -33,18 +33,32 @@ public class ErrorData extends CommonInfo {
 
 	private String errorMsg;
 
+	/**
+	 * @return the errorCode
+	 */
 	public String getErrorCode() {
 		return this.errorCode;
 	}
 
+	/**
+	 * @param errorCode
+	 *            the errorCode to set
+	 */
 	public void setErrorCode(String errorCode) {
 		this.errorCode = errorCode;
 	}
 
+	/**
+	 * @return the errorMsg
+	 */
 	public String getErrorMsg() {
 		return this.errorMsg;
 	}
 
+	/**
+	 * @param errorMsg
+	 *            the errorMsg to set
+	 */
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
 	}

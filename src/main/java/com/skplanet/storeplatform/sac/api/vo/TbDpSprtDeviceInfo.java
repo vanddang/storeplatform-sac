@@ -13,12 +13,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <pre>
- * 전처리 상품 단말 Value Object
+ * 전처리 상품 단말 Value Object.
  * </pre>
  * 
  * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
 public class TbDpSprtDeviceInfo extends CommonInfo {
+	private static final long serialVersionUID = 1L;
 	private String prodId; //
 	private String deviceModelCd; //
 	private String subContentsId; //
