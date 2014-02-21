@@ -32,23 +32,18 @@ import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListR
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.freepass.vo.FreepassDetail;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.display.freepass.vo.FreepassProdMap;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -62,7 +57,7 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  */
 @Service
 public class FreepassServiceImpl implements FreepassService {
-
+	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -74,10 +69,10 @@ public class FreepassServiceImpl implements FreepassService {
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
-
+	
 	@Autowired
 	HistoryInternalSCI historyInternalSCI;
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -91,7 +86,6 @@ public class FreepassServiceImpl implements FreepassService {
 		// TODO Auto-generated method stub
 
 		// 공통 응답 변수 선언
-		int totalCount = 0;
 		FreepassListRes responseVO = null;
 		CommonResponse commonResponse = new CommonResponse();
 
@@ -121,7 +115,7 @@ public class FreepassServiceImpl implements FreepassService {
 			if (req.getCount() == 0) {
 				req.setCount(20);
 			}
-
+			
 			if (StringUtils.isEmpty(req.getKind()))
 				throw new StorePlatformException("SAC_DSP_0003", "kind", req.getKind());
 
@@ -135,7 +129,7 @@ public class FreepassServiceImpl implements FreepassService {
 
 			if (productBasicInfoList == null)
 				throw new StorePlatformException("SAC_DSP_0009");
-
+			
 			// 정액제 상품 메타 조회
 			if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
 				reqMap.put("tenantHeader", header.getTenantHeader());
@@ -170,26 +164,25 @@ public class FreepassServiceImpl implements FreepassService {
 	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
 	 */
 	@Override
-	public FreepassDetailRes searchFreepassDetail(FreepassDetailReq req, SacRequestHeader header) {
+	public FreepassDetailRes searchFreepassDetail(FreepassDetailReq req,
+			SacRequestHeader header) {
 		// TODO Auto-generated method stub
 
 		// 공통 응답 변수 선언
-		int totalCount = 0;
 		FreepassDetailRes responseVO = new FreepassDetailRes();
 		CommonResponse commonResponse = new CommonResponse();
-
+				
 		Coupon coupon = null;
 		Product product = null;
-		FreepassDetail freepassDetail;
 		List<FreepassProdMap> mapList = null;
 		List<Product> productList = new ArrayList<Product>();
 
 		Map<String, Object> reqMap = new HashMap<String, Object>();
 		ProductBasicInfo productBasicInfo = new ProductBasicInfo();
 		MetaInfo retMetaInfo = null;
-
+				
 		if (StringUtil.nvl(req.getDummy(), "").equals("")) {
-			// 정액제 상품 상세 조회
+			//정액제 상품 상세 조회
 			req.setTenantId(header.getTenantHeader().getTenantId());
 			req.setLangCd(header.getTenantHeader().getLangCd());
 			req.setDeviceModelCd(header.getDeviceHeader().getModel());
@@ -197,7 +190,7 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
 			req.setProdStatusCd(DisplayConstants.DP_SALE_STAT_ING);
 			req.setStandardModelCd(DisplayConstants.DP_ANDROID_STANDARD2_NM);
-
+			
 			// 시작점 ROW Default 세팅
 			if (req.getOffset() == 0) {
 				req.setOffset(1);
@@ -206,55 +199,57 @@ public class FreepassServiceImpl implements FreepassService {
 			if (req.getCount() == 0) {
 				req.setCount(20);
 			}
-
+			
 			if (StringUtils.isEmpty(req.getProductId()))
 				throw new StorePlatformException("SAC_DSP_0003", "productId", req.getProductId());
-
-			retMetaInfo = this.commonDAO.queryForObject("Freepass.selectFreepassDetail", req, MetaInfo.class);
-
+			
+			retMetaInfo = this.commonDAO.queryForObject("Freepass.selectFreepassDetail",
+					req, MetaInfo.class);
+			
 			if (retMetaInfo == null)
 				throw new StorePlatformException("SAC_DSP_0005", req.getProductId(), req.getProductId());
 
-			// 상품 상태 조회 - 판매중,판매중지,판매종료가 아니면 노출 안함
-			if (!DisplayConstants.DP_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
-					&& !DisplayConstants.DP_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())
-					&& !DisplayConstants.DP_SALE_STAT_ING.equals(retMetaInfo.getProdStatusCd())) {
-				throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(),
-						retMetaInfo.getProdStatusCd());
+			//상품 상태 조회 - 판매중,판매중지,판매종료가 아니면 노출 안함
+			if (!DisplayConstants.DP_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd()) 
+					&& !DisplayConstants.DP_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd()) 
+					&& !DisplayConstants.DP_SALE_STAT_ING.equals(retMetaInfo.getProdStatusCd()) 
+					) {
+				throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(), retMetaInfo.getProdStatusCd());
 			}
+			
 
-			this.log.debug(req.getUserKey());
-			// 구매 여부 조회
-			if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
+			//구매 여부 조회
+			if (!StringUtils.isEmpty(req.getUserKey())) {	//userKey가 있을 경우만
 				HistoryCountSacInRes historyCountSacRes = this.getPrchsInfo(req, retMetaInfo);
-				this.log.debug(String.valueOf(historyCountSacRes.getTotalCnt()));
-				// 구매가 있을 경우 : 판매중지,판매중,팬매종료는 노출함
+
+				//구매가 있을 경우 : 판매중지,판매중,팬매종료는 노출함
 				if (historyCountSacRes.getTotalCnt() <= 0) {
-					if (DisplayConstants.DP_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
-							|| DisplayConstants.DP_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())) {
-						throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(),
-								retMetaInfo.getProdStatusCd());
+					if (DisplayConstants.DP_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd()) 
+						|| DisplayConstants.DP_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd()) 
+						) {
+						throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(), retMetaInfo.getProdStatusCd());
 					}
 				}
 			}
-
+			
 			coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
-
-			mapList = this.commonDAO.queryForList("Freepass.selectFreepassMapProduct", req, FreepassProdMap.class);
+			
+			mapList = this.commonDAO.queryForList("Freepass.selectFreepassMapProduct",
+					req, FreepassProdMap.class);
 
 			reqMap.put("tenantHeader", header.getTenantHeader());
 			reqMap.put("deviceHeader", header.getDeviceHeader());
 			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-
+			
 			for (FreepassProdMap prodMap : mapList) {
-				this.log.debug(prodMap.getContentsClsfCd());
+
 				productBasicInfo.setProdId(prodMap.getPartProdId());
 				productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
 				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 				reqMap.put("productBasicInfo", productBasicInfo);
-
+				
 				commonResponse.setTotalCount(prodMap.getTotalCount());
-
+				
 				if ("DP13".equals(retMetaInfo.getTopMenuId())) {
 					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
@@ -273,18 +268,19 @@ public class FreepassServiceImpl implements FreepassService {
 					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 				}
 				productList.add(product);
-
+				
 			}
-
+		
 		} else {
 
 			reqMap.put("tenantHeader", header.getTenantHeader());
 			reqMap.put("deviceHeader", header.getDeviceHeader());
 			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 			reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-			String[] prodIdList = { "H000043398", "H000043398", "H000043398" };
+			String[] prodIdList = {"H000043398", "H000043398", "H000043398"};
+		
 
-			for (int i = 0; i < prodIdList.length; i++) {
+			for (int i = 0 ; i < prodIdList.length ; i++) {
 				productBasicInfo.setProdId(prodIdList[i]);
 				productBasicInfo.setTenantId("S01");
 				productBasicInfo.setContentsTypeCd("PD002501");
@@ -293,11 +289,11 @@ public class FreepassServiceImpl implements FreepassService {
 				product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 				productList.add(product);
 			}
-
-			List<Coupon> couponList = new ArrayList<Coupon>();
-			couponList = this.getDummyCoupon();
-			coupon = couponList.get(0);
-
+		
+			List<Coupon> couponList;
+			couponList = getDummyCoupon();
+			coupon = (Coupon) couponList.get(0);
+		
 			commonResponse = new CommonResponse();
 			commonResponse.setTotalCount(productList.size());
 		}
@@ -338,7 +334,7 @@ public class FreepassServiceImpl implements FreepassService {
 		String[] prodIdList = { "H000043398", "H000043398", "H000043398" };
 		MetaInfo retMetaInfo = null;
 
-		List<Coupon> couponList = new ArrayList<Coupon>();
+		List<Coupon> couponList;
 		couponList = this.getDummyCoupon();
 		coupon = couponList.get(0);
 
@@ -443,48 +439,50 @@ public class FreepassServiceImpl implements FreepassService {
 		return responseVO;
 	}
 
+	/**
+	 * <pre>
+	 * 임시 더미용.
+	 * </pre>
+	 * 
+	 * @return List 
+	 * 			
+	 */
 	public List<Coupon> getDummyCoupon() {
 		// TODO Auto-generated method stub
 		Identifier identifier;
 		Title title;
-		Accrual accrual;
-		Rights rights;
+
 		Source source;
 		Price price;
-		Support support;
-		Menu menu;
+
+
 		Coupon coupon;
 		AutoPay autoPay;
 		Date date;
 
 		// Response VO를 만들기위한 생성자
 		// List<Product> productList = new ArrayList<Product>();
-		List<Menu> menuList;
+
 		List<Source> sourceList;
-		List<Support> supportList;
 		List<Identifier> identifierList;
 		List<Coupon> couponList = new ArrayList<Coupon>();
 
 		for (int i = 0; i < 3; i++) {
-
+			// 상품ID
 			identifier = new Identifier();
 			title = new Title();
-			accrual = new Accrual();
-			rights = new Rights();
+
 			source = new Source();
 			price = new Price();
-			support = new Support();
+
 			coupon = new Coupon();
 			autoPay = new AutoPay();
 			date = new Date();
 
-			// 상품ID
-			identifier = new Identifier();
-
 			// Response VO를 만들기위한 생성자
-			menuList = new ArrayList<Menu>();
+
 			sourceList = new ArrayList<Source>();
-			supportList = new ArrayList<Support>();
+
 			identifierList = new ArrayList<Identifier>();
 
 			identifier.setType("freepass");
@@ -524,15 +522,25 @@ public class FreepassServiceImpl implements FreepassService {
 		}
 		return couponList;
 	}
-
+	
+	/**
+	 * <pre>
+	 * 기구매 체크.
+	 * </pre>
+	 * 
+	 * @param req FreepassDetailReq
+	 * @param metaInfo MetaInfo
+	 * @return HistoryCountSacInRes 
+	 * 			
+	 */
 	public HistoryCountSacInRes getPrchsInfo(FreepassDetailReq req, MetaInfo metaInfo) {
-
+		
 		// 구매내역 조회를 위한 생성자
 		ProductListSacIn productListSacIn = new ProductListSacIn();
 		List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
 		HistoryCountSacInReq historyCountSacReq = new HistoryCountSacInReq();
 		HistoryCountSacInRes historyCountSacRes;
-
+		
 		try {
 			// 정액제 상품ID
 			productListSacIn.setProdId(metaInfo.getProdId());
@@ -549,7 +557,7 @@ public class FreepassServiceImpl implements FreepassService {
 
 			// 구매내역 조회 실행
 			historyCountSacRes = this.historyInternalSCI.searchHistoryCount(historyCountSacReq);
-
+			
 		} catch (Exception ex) {
 			throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 		}

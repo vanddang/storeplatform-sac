@@ -68,10 +68,8 @@ public class FreepassDetail {
 	private String taxClsf;
 	private String langCd;
 	private String tenantId;
-	/** 상품매핑 정보 */
-	private List<FreepassProdMap> freepassProdMapList;
-	/** 중보구매 제한 정보*/
-	private List<FreepassDupPrchsLimt> freepassDupPrchsLimtList;
+	private List<FreepassProdMap> freepassProdMapList;	//상품정보 매핑
+	private List<FreepassDupPrchsLimt> freepassDupPrchsLimtList;	//중복굼 제한 정보
 	/**
 	 * @return the bannerFilePath
 	 */

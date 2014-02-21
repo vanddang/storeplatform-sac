@@ -27,8 +27,12 @@ public interface FreepassService {
 	 * 자융이용권 목록 조회.
 	 * </pre>
 	 * 
-	 * @param FreepassListReq
-	 * @return FreepassListRes
+	 * @param req 
+	 * 			FreepassListReq
+	 * @param header 
+	 * 			SacRequestHeader
+	 * @return FreepassListRes 
+	 * 			FreepassListRes
 	 */
 	FreepassListRes searchFreepassList(FreepassListReq req, SacRequestHeader header);
 	
@@ -37,7 +41,8 @@ public interface FreepassService {
 	 * 자융이용권 상품 목록 조회.
 	 * </pre>
 	 * 
-	 * @param FreepassListReq
+	 * @param req FreepassListReq
+	 * @param header SacRequestHeader
 	 * @return FreepassListRes
 	 */
 	FreepassDetailRes searchFreepassDetail(FreepassDetailReq req, SacRequestHeader header);
@@ -47,7 +52,8 @@ public interface FreepassService {
 	 * 자융이용권 상품 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param FreepassListReq
+	 * @param req FreepassListReq
+	 * @param header SacRequestHeader
 	 * @return FreepassListRes
 	 */
 	SeriespassListRes searchSeriesPassList(FreepassListReq req, SacRequestHeader header);
@@ -57,7 +63,8 @@ public interface FreepassService {
 	 * 특정 상품에 적용할 자유 이용권 조회.
 	 * </pre>
 	 * 
-	 * @param FreepassListReq
+	 * @param req FreepassListReq
+	 * @param header SacRequestHeader
 	 * @return FreepassListRes
 	 */
 	FreepassListRes searchFreepassListByChannel(FreepassListReq req, SacRequestHeader header);
