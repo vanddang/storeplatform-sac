@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -30,7 +28,6 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInf
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
@@ -48,7 +45,7 @@ import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 @Service
 public class DownloadBestServiceImpl implements DownloadBestService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -72,7 +69,7 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 	public DownloadBestSacRes searchDownloadBestList(SacRequestHeader requestheader,
 			DownloadBestSacReq downloadBestSacReq) {
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
-		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+		// DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
 		downloadBestSacReq.setTenantId(tenantHeader.getTenantId());
 		downloadBestSacReq.setLangCd(tenantHeader.getLangCd());
@@ -119,13 +116,14 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 			if ("2".equals(inquiryType)) {
 				// 사업자 등록번호로 Selley Key 조회
 				DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-				DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
 				detailInformationSacReq.setSellerBizNumber(inquiryValue);
-				detailInformationSacRes = this.sellerSearchSCI.detailInformation(detailInformationSacReq);
+				DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
+						.detailInformation(detailInformationSacReq);
+				String sellertKey = detailInformationSacRes.getSellerMbr().getSellerKey();
 
-				if (detailInformationSacRes != null) {
+				if (StringUtils.isNotEmpty(sellertKey)) {
 					// 조회된 Seller Key setting
-					downloadBestSacReq.setInquiryValue(detailInformationSacRes.getSellerMbr().getSellerKey());
+					downloadBestSacReq.setInquiryValue(sellertKey);
 				} else {
 					throw new StorePlatformException("SAC_DSP_0008");
 				}
