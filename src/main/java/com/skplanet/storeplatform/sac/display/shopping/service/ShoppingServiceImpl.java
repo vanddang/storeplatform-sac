@@ -1333,7 +1333,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
-		if (!"channel".equals(req.getType()) && !"episode".equals(req.getType())) {
+		if (!"catalog".equals(req.getType()) && !"episode".equals(req.getType())) {
 			throw new StorePlatformException("SAC_DSP_0003", "type", req.getType());
 		}
 		if (StringUtils.isEmpty(req.getProdId())) {
