@@ -329,7 +329,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							Encryption encryption = new Encryption();
 							encryption.setProductId(prchsProdId);
 							encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-							encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+							encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
 							encryption.setToken(encryptString);
 							encryptionList.add(encryption);
 

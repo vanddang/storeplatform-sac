@@ -12,15 +12,20 @@ import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 
+/**
+ * DownloadAES128Helper Component
+ * 
+ * Updated on : 2014. 02. 21. Updated by : 이태희.
+ */
 @Component
 public class DownloadAES128Helper {
 	@Value("#{propertiesForSac['display.forDownload.encrypt.key'].split(',')}")
-	private List<String> SAC_KEY;
+	private List<String> sacKey;
 
 	@Value("#{propertiesForSac['display.forDownload.encrypt.dl.iv']}")
-	private String SAC_DL_IV;
+	private String sacDlIv;
 
-	private int SAC_RANDOM_NUMBER;
+	private int sacRandomNo;
 
 	/**
 	 * <pre>
@@ -43,10 +48,10 @@ public class DownloadAES128Helper {
 		try {
 			Random random = new Random();
 			int randomNumber = random.nextInt(20);
-			this.setSAC_RANDOM_NUMBER(randomNumber);
+			this.setSacRandomNo(randomNumber);
 
-			row = this.convertBytes(this.SAC_KEY.get(randomNumber));
-			iv = this.convertBytes(this.SAC_DL_IV);
+			row = this.convertBytes(this.sacKey.get(randomNumber));
+			iv = this.convertBytes(this.sacDlIv);
 
 			ivSpec = new IvParameterSpec(iv);
 			key = new SecretKeySpec(row, "AES");
@@ -81,8 +86,8 @@ public class DownloadAES128Helper {
 		Cipher cipher = null;
 
 		try {
-			row = this.convertBytes(this.SAC_KEY.get(this.getSAC_RANDOM_NUMBER()));
-			iv = this.convertBytes(this.SAC_DL_IV);
+			row = this.convertBytes(this.sacKey.get(this.getSacRandomNo()));
+			iv = this.convertBytes(this.sacDlIv);
 
 			ivSpec = new IvParameterSpec(iv);
 			key = new SecretKeySpec(row, "AES");
@@ -134,17 +139,17 @@ public class DownloadAES128Helper {
 	}
 
 	/**
-	 * @return the sAC_RANDOM_NUMBER
+	 * @return the sacRandomNo
 	 */
-	public int getSAC_RANDOM_NUMBER() {
-		return this.SAC_RANDOM_NUMBER;
+	public int getSacRandomNo() {
+		return this.sacRandomNo;
 	}
 
 	/**
-	 * @param sAC_RANDOM_NUMBER
-	 *            the sAC_RANDOM_NUMBER to set
+	 * @param sacRandomNo
+	 *            the sacRandomNo to set
 	 */
-	public void setSAC_RANDOM_NUMBER(int sAC_RANDOM_NUMBER) {
-		this.SAC_RANDOM_NUMBER = sAC_RANDOM_NUMBER;
+	public void setSacRandomNo(int sacRandomNo) {
+		this.sacRandomNo = sacRandomNo;
 	}
 }
