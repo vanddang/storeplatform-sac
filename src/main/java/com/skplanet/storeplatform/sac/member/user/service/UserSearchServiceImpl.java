@@ -824,36 +824,31 @@ public class UserSearchServiceImpl implements UserSearchService {
 		ListDailyPhoneOsSacRes dailyPhoneOsSacList = new ListDailyPhoneOsSacRes();
 		List<DailyPhoneOs> dailyPhoneOsList = new ArrayList<DailyPhoneOs>();
 
+		HashMap<String, String> deviceName = new HashMap<String, String>();
 		for (int i = 0; i < scRes.getDeviceSystemStatsList().size(); i++) {
 
-			if (i == 0) {
-				List<String> modelNameList = new ArrayList<String>();
-				String tempModelName = scRes.getDeviceSystemStatsList().get(i).getModelName();
-				modelNameList.add(tempModelName);
-				dailyPhoneOsSacList.setModelName(modelNameList);
+			// Device 이름 담기
+			String deviceNm = scRes.getDeviceSystemStatsList().get(i).getModelName();
 
-				DailyPhoneOs phoneOs = new DailyPhoneOs();
-				phoneOs.setOsVersion(scRes.getDeviceSystemStatsList().get(i).getOsVersion());
-				phoneOs.setEnctryCount(scRes.getDeviceSystemStatsList().get(i).getEntryCount());
-				phoneOs.setModelName(scRes.getDeviceSystemStatsList().get(i).getModelName());
+			// 중복 검사를 위한 반복문
+			for (int j = 0; j < scRes.getDeviceSystemStatsList().size(); j++) {
+				// 같은 디바이스명
+				if (StringUtils.equals(deviceNm, scRes.getDeviceSystemStatsList().get(j).getModelName())) {
 
-				dailyPhoneOsList.add(phoneOs);
-			} else if (!scRes.getDeviceSystemStatsList().get(i - 1).getModelName().equals(scRes.getDeviceSystemStatsList().get(i).getModelName())) {
-				List<String> modelNameList = new ArrayList<String>();
-				String tempModelName = scRes.getDeviceSystemStatsList().get(i).getModelName();
-				modelNameList.add(tempModelName);
-				dailyPhoneOsSacList.setModelName(modelNameList);
+					DailyPhoneOs dailyPhoneOs = new DailyPhoneOs();
+					// Debug
+					dailyPhoneOs.setModelName(deviceNm);
+					dailyPhoneOs.setOsVersion(scRes.getDeviceSystemStatsList().get(j).getOsVersion());
+					dailyPhoneOs.setEnctryCount(scRes.getDeviceSystemStatsList().get(j).getEntryCount());
+					dailyPhoneOsList.add(dailyPhoneOs);
 
-				DailyPhoneOs phoneOs = new DailyPhoneOs();
-				phoneOs.setOsVersion(scRes.getDeviceSystemStatsList().get(i).getOsVersion());
-				phoneOs.setEnctryCount(scRes.getDeviceSystemStatsList().get(i).getEntryCount());
-				phoneOs.setModelName(scRes.getDeviceSystemStatsList().get(i).getModelName());
-
-				dailyPhoneOsList.add(phoneOs);
+					// Device Name 담고
+					deviceName.put(deviceNm, deviceNm);
+				}
 			}
-
 		}
 
+		dailyPhoneOsSacList.setModelName(new ArrayList<String>(deviceName.values()));
 		dailyPhoneOsSacList.setDailyPhoneOsList(dailyPhoneOsList);
 
 		return dailyPhoneOsSacList;
@@ -1031,8 +1026,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 			if (schUserRes.getMbrMangItemPtcrList() != null) {
 				for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-					logger.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
-					logger.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
+					logger.debug("============================================ UserExtraInfo CODE : {}",
+							ptcr.getExtraProfile());
+					logger.debug("============================================ UserExtraInfo VALUE : {}",
+							ptcr.getExtraProfileValue());
 
 					UserExtraInfo extra = new UserExtraInfo();
 					extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -1046,7 +1043,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		}
 
-		logger.debug("============================================ UserSearch Req : {}", searchUserRequest.getKeySearchList().toString());
+		logger.debug("============================================ UserSearch Req : {}", searchUserRequest
+				.getKeySearchList().toString());
 		logger.debug("============================================ UserSearch Res : {}", userInfo.toString());
 
 		return userInfo;
@@ -1369,7 +1367,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @param response
 	 * @return DetailByDeviceIdSacRes
 	 */
-	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req, DetailByDeviceIdSacRes response) {
+	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req,
+			DetailByDeviceIdSacRes response) {
 
 		/**
 		 * 검색조건 정보 setting.
@@ -1439,7 +1438,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
 		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
-		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo()).getGiftSprtYn());
+		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo())
+				.getGiftSprtYn());
 
 		return response;
 
