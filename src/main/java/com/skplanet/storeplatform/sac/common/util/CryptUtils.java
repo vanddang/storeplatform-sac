@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.other.common;
+package com.skplanet.storeplatform.sac.common.util;
 
 import java.security.Key;
 import java.security.spec.KeySpec;
@@ -67,7 +67,7 @@ public class CryptUtils {
 			KeySpec keySpec = new DESKeySpec(btKey);
 			SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(algorithm);
 			secretKey = secretKeyFactory.generateSecret(keySpec);
-		} else if (algorithm.equals(DESEDE) || algorithm.equals(algorithm.equals(TRIPLEDES))) {
+		} else if (algorithm.equals(DESEDE) || algorithm.equals(TRIPLEDES)) {
 			// 192bit ( 64bit*3)
 			btKey = StringUtils.leftPad(key, 24, "0").getBytes();
 			KeySpec keySpec = new DESedeKeySpec(btKey);
@@ -227,7 +227,7 @@ public class CryptUtils {
 			return null;
 		}
 
-		StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
 		for (byte b : bytes) {
 			result.append(Integer.toString((b & 0xF0) >> 4, 16));
 			result.append(Integer.toString(b & 0x0F, 16));

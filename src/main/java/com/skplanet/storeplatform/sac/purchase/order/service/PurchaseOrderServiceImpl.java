@@ -39,7 +39,7 @@ import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
-import com.skplanet.storeplatform.sac.other.common.CryptUtils;
+import com.skplanet.storeplatform.sac.common.util.CryptUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
