@@ -91,7 +91,7 @@ public class DeviceSCIController implements DeviceSCI {
 		// 필수파라미터 미입력.
 		if ((deviceId == null || "".equals(deviceId)) && (deviceKey == null || "".equals(deviceKey))) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId 또는 deviceKey");
-		} else if (deviceId != null || "".equals(deviceId)) {
+		} else if (deviceId == null || "".equals(deviceId)) {
 			errorValue = StringUtil.capitalize(errorValue + "deviceKey");
 		} else {
 			errorValue = StringUtil.capitalize(errorValue + "deviceId");
