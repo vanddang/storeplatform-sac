@@ -98,6 +98,11 @@ public class CreateReq extends CommonInfo {
 	private String customerPhone;
 	/** 고객 응대 이메일. */
 	private String customerEmail;
+	// 담당자 명
+	private String charger;
+	// 담당자 무선 전화 번호
+	private String chargerPhone;
+
 	/** 법인등록번호. */
 	private String sellerBizCorpNumber;
 
@@ -350,6 +355,22 @@ public class CreateReq extends CommonInfo {
 
 	public void setCustomerEmail(String customerEmail) {
 		this.customerEmail = customerEmail;
+	}
+
+	public String getCharger() {
+		return this.charger;
+	}
+
+	public void setCharger(String charger) {
+		this.charger = charger;
+	}
+
+	public String getChargerPhone() {
+		return this.chargerPhone;
+	}
+
+	public void setChargerPhone(String chargerPhone) {
+		this.chargerPhone = chargerPhone;
 	}
 
 	public String getSellerBizCorpNumber() {
