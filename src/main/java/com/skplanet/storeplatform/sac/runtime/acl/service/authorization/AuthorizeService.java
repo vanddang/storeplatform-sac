@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.runtime.acl.service.authorizaiton;
+package com.skplanet.storeplatform.sac.runtime.acl.service.authorization;
 
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
@@ -18,11 +18,16 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
  * Updated on : 2014. 2. 10.
  * Updated by : 정희원, SK 플래닛
  */
-public interface RequestAuthorizeService {
+public interface AuthorizeService {
 
-    /**
-     * systemId, interfaceId에 해당하는 인가 정보를 확인하여 액세스가 가능한지 확인한다.
-     * @param httpHeaders
-     */
-    public void authorize(HttpHeaders httpHeaders);
+	/**
+	 * 1. Interface 유효성 확인
+	 */
+	void checkInterface(HttpHeaders httpHeaders);
+
+	/**
+	 * 2. Interface, Tenant 간 맵핑 확인
+	 */
+	void checkMapping(HttpHeaders httpHeaders);
+
 }

@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 * Updated on : 2014. 2. 5.
 * Updated by : 서대영, SK 플래닛
 */
-public interface RequestValidateService {
+public interface ValidateService {
 
 	/**
 	 * <pre>
@@ -35,21 +35,5 @@ public interface RequestValidateService {
 	 * @param headerMap
 	 */
 	void validateTimestamp(HttpHeaders header);
-
-	/**
-	 * <pre>
-	 * 인터페이스를 검증한다.
-	 * </pre>
-	 * @param headerMap
-	 */
-	void validateInterface(HttpHeaders header);
-
-	/**
-	 * <pre>
-	 * 시세틈를 검증한다.
-	 * </pre>
-	 * @param headerMap
-	 */
-	void validateService(HttpHeaders header);
 
 }

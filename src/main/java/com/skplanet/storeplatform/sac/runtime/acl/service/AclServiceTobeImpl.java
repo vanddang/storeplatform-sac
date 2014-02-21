@@ -9,11 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service;
 
-import com.skplanet.storeplatform.sac.runtime.acl.service.authorizaiton.RequestAuthorizeService;
 import org.springframework.integration.annotation.Header;
 
 import com.skplanet.storeplatform.sac.runtime.acl.service.authentication.AuthenticateService;
-import com.skplanet.storeplatform.sac.runtime.acl.service.validation.RequestValidateService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.authorization.AuthorizeService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.validation.ValidateService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 /**
@@ -27,40 +27,39 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 public class AclServiceTobeImpl implements AclServiceTobe {
 
 	// @Autowired
-	private RequestValidateService validator;
+	private ValidateService validator;
 	private AuthenticateService authenticateService;
-    private RequestAuthorizeService authorizationService;
+    private AuthorizeService authorizationService;
 
 	/**
 	 * Request를 검증한다. (Interface 및 Timestamp 검사)
 	 */
 	@Override
-	public void validate(@Header("httpHeaders") HttpHeaders header) {
+	public void validate(@Header("httpHeaders") HttpHeaders headers) {
 		// Step 1) 필수 헤더 검사
-		this.validator.validateHeaders(header);
+		this.validator.validateHeaders(headers);
 		// Step 2) 요청 시간 검사
-		this.validator.validateTimestamp(header);
-		// Step 3) 인터페이스 검증
-		this.validator.validateInterface(header);
-		// Step 4) 서비스 검증
-		this.validator.validateService(header);
+		this.validator.validateTimestamp(headers);
 	}
 
 	/**
 	 * Tenant를 인증한다. (등록된 Tenant인지 확인)
 	 */
 	@Override
-	public void authenticate(@Header("httpHeaders") HttpHeaders header) {
+	public void authenticate(@Header("httpHeaders") HttpHeaders headers) {
 		// Step 1) Tenant 인증
-		this.authenticateService.authenticate(header);
+		this.authenticateService.authenticate(headers);
 	}
 
 	/**
 	 * Interface를 인가한다. (호출하는 API에 권한이 있는지 확인)
 	 */
 	@Override
-	public void authorize(@Header("httpHeaders") HttpHeaders header) {
-		this.authorizationService.authorize(header);
+	public void authorize(@Header("httpHeaders") HttpHeaders headers) {
+		// 1. Interface 유효성 확인
+		this.authorizationService.checkInterface(headers);
+    	// 2. Interface, Tenant 간 맵핑 확인
+		this.authorizationService.checkMapping(headers);
 	}
 
 }

@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.runtime.acl.service.validation.RequestValidateService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.validation.ValidateService;
 import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
@@ -23,7 +23,7 @@ public class AclServiceTobeImplTest {
 	private AclServiceTobeImpl aclService;
 
 	@Mock
-	private RequestValidateService requestValidateMock;
+	private ValidateService requestValidateMock;
 
 	@Before
 	public void setUp() throws Exception {
@@ -36,14 +36,14 @@ public class AclServiceTobeImplTest {
 		headers.setRequestUrl("/member/user/createByMdn/v1");
 		headers.setTimestamp(AclUtils.getTimestamp() + "");
 
-		doThrow(new StorePlatformException("SAC_CMN_001")).when(this.requestValidateMock).validateInterface(headers);
+		doThrow(new StorePlatformException("SAC_CMN_001")).when(this.requestValidateMock).validateHeaders(headers);
 		try {
 			this.aclService.validate(headers);
 		} catch (StorePlatformException e) {
 			assertEquals("SAC_CMN_001", e.getErrorInfo().getCode());
 			throw e;
 		} finally {
-			verify(this.requestValidateMock).validateInterface(headers);
+			verify(this.requestValidateMock).validateHeaders(headers);
 		}
 	}
 

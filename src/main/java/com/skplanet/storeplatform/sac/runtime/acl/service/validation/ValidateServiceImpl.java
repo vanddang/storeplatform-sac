@@ -18,8 +18,6 @@ import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.InterfaceStatus;
 
 /**
  *
@@ -29,7 +27,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.InterfaceStatus;
  * Updated by : 서대영, SK 플래닛
  */
 @Service
-public class RequestValidateServiceImpl implements RequestValidateService {
+public class ValidateServiceImpl implements ValidateService {
 
 	@Autowired
 	private AclDataAccessService service;
@@ -57,34 +55,6 @@ public class RequestValidateServiceImpl implements RequestValidateService {
 		if (!AclUtils.isTimeOut(requestTimestamp)) {
 			throw new StorePlatformException("SAC_CMN_0002");
 		}
-	}
-
-	@Override
-	public void validateInterface(HttpHeaders header) {
-		String interfaceId = header.getInterfaceId();
-		String requestUrl = header.getRequestUrl();
-
-		Interface intf = this.service.selectInterfaceById(interfaceId);
-
-		if (intf == null) {
-			throw new StorePlatformException("SAC_CMN_0003");
-		}
-
-		String urlFromDb = intf.getUrl();
-		if (!StringUtils.equalsIgnoreCase(requestUrl, urlFromDb)) {
-			throw new StorePlatformException("SAC_CMN_0004");
-		}
-
-		if (intf.getStatus() != InterfaceStatus.AVAILABLE) {
-			throw new StorePlatformException("SAC_CMN_0005");
-		}
-
-	}
-
-	@Override
-	public void validateService(HttpHeaders header) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
