@@ -92,7 +92,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
+				req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 필수 약관 동의여부 체크
@@ -220,7 +221,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		AgreeUserEcReq agreeUserEcReq = new AgreeUserEcReq();
 		agreeUserEcReq.setKey(req.getUserId());
 		agreeUserEcReq.setKeyType("2"); // 1=IM통합서비스번호, 2=IM통합ID
-		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
+		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + ","
+				+ DateUtil.getTime());
 		agreeUserEcReq.setOcbJoinCode(MemberConstants.USE_N); // 통합포인트 가입 여부 Y=가입, N=미가입
 		agreeUserEcReq.setModifyReqDate(DateUtil.getToday("yyyyMMdd"));
 		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
@@ -241,7 +243,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
+		 * findCommonProfileForServerIDP)
 		 */
 		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
@@ -300,7 +303,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
+				req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 필수 약관 동의여부 체크
@@ -329,7 +333,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		agreeUserEcReq.setKey(req.getUserId());
 		agreeUserEcReq.setKeyType("2"); // 1=IM통합서비스번호, 2=IM통합ID
 		agreeUserEcReq.setUserMdn(sbUserPhone.toString());
-		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
+		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + ","
+				+ DateUtil.getTime());
 		agreeUserEcReq.setOcbJoinCode(MemberConstants.USE_N); // 통합포인트 가입 여부 Y=가입, N=미가입
 		agreeUserEcReq.setModifyReqDate(DateUtil.getToday("yyyyMMdd"));
 		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
@@ -350,7 +355,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
+		 * findCommonProfileForServerIDP)
 		 */
 		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
@@ -487,7 +493,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
+				req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
@@ -747,9 +754,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setNativeId(req.getNativeId()); // 기기 IMEI
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
-			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
-			deviceInfo.setAuthenticationDate(DateUtil.getToday()); // 인증 일시
-			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
 			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
@@ -770,9 +774,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
-			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
-			deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss")); // 인증 일시
-			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
 			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
@@ -793,9 +794,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
-			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
-			deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss")); // 인증 일시
-			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
 			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 

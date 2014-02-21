@@ -133,13 +133,10 @@ public class DeviceUtil {
 		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
 		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setIsPrimary(userMbrDevice.getIsPrimary());
-		deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
-		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
 		deviceInfo.setIsRecvSms(userMbrDevice.getIsRecvSMS());
 		deviceInfo.setNativeId(userMbrDevice.getNativeID());
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setJoinId(userMbrDevice.getJoinId());
-		deviceInfo.setIsUsed(userMbrDevice.getIsUsed());
 		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
@@ -202,13 +199,10 @@ public class DeviceUtil {
 		userMbrDevice.setDeviceTelecom(deviceInfo.getDeviceTelecom());
 		userMbrDevice.setDeviceNickName(deviceInfo.getDeviceNickName());
 		userMbrDevice.setIsPrimary(deviceInfo.getIsPrimary());
-		userMbrDevice.setIsAuthenticated(deviceInfo.getIsAuthenticated());
-		userMbrDevice.setAuthenticationDate(deviceInfo.getAuthenticationDate());
 		userMbrDevice.setIsRecvSMS(deviceInfo.getIsRecvSms());
 		userMbrDevice.setNativeID(deviceInfo.getNativeId());
 		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
 		userMbrDevice.setJoinId(deviceInfo.getJoinId());
-		userMbrDevice.setIsUsed(deviceInfo.getIsUsed());
 		userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 		userMbrDevice.setUserMbrDeviceDetail(getConverterUserMbrDeviceDetailList(deviceInfo));
 

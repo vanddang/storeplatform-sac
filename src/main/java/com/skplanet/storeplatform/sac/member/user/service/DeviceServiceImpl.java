@@ -179,7 +179,7 @@ public class DeviceServiceImpl implements DeviceService {
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
 		/* device header 값 셋팅 */
-		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+		//deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 		/* 휴대기기 주요정보 확인 */
 		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
@@ -235,7 +235,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceKey = this.updateDeviceInfo(requestHeader, deviceInfo);
 
 		/* userAuthKey가 넘오온 경우만 IDP 업데이트 처리 */
-		if (req.getUserAuthKey() != null) {
+		if (req.getUserAuthKey() != null && !StringUtil.equals(req.getUserAuthKey(), "")) {
 			this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 		}
 
@@ -600,7 +600,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUserKey(userMbrDevice.getUserKey());
 
 		/* device header 값 셋팅 */
-		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+		//deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 		/* 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
@@ -610,9 +610,6 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
 		String isPrimary = deviceInfo.getIsPrimary(); // 대표폰 여부
 		String isRecvSms = deviceInfo.getIsRecvSms(); // sms 수신여부
-		String isAuthenticated = deviceInfo.getIsAuthenticated(); // 인증여부
-		String authenticationDate = deviceInfo.getAuthenticationDate(); // 인증일자
-		String isUsed = deviceInfo.getIsUsed(); // 사용여부
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
 
 		LOGGER.info(":::::::::::::::::: device update field start ::::::::::::::::::");
@@ -666,27 +663,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 			LOGGER.info("[isRecvSms] {} -> {}", userMbrDevice.getIsRecvSMS(), isRecvSms);
 			userMbrDevice.setIsRecvSMS(isRecvSms);
-
-		}
-
-		if (!StringUtils.equals(isAuthenticated, "") && !StringUtils.equals(isAuthenticated, userMbrDevice.getIsAuthenticated())) {
-
-			LOGGER.info("[isAuthenticate] {} -> {}", userMbrDevice.getIsAuthenticated(), isAuthenticated);
-			userMbrDevice.setIsAuthenticated(isAuthenticated);
-
-		}
-
-		if (!StringUtils.equals(authenticationDate, "") && !StringUtils.equals(authenticationDate, userMbrDevice.getAuthenticationDate())) {
-
-			LOGGER.info("[authenticationDate] {} -> {}", userMbrDevice.getAuthenticationDate(), authenticationDate);
-			userMbrDevice.setAuthenticationDate(authenticationDate);
-
-		}
-
-		if (!StringUtils.equals(isUsed, "") && !StringUtils.equals(isUsed, userMbrDevice.getIsUsed())) {
-
-			LOGGER.info("[isUsed] {} -> {}", userMbrDevice.getIsUsed(), isUsed);
-			userMbrDevice.setIsUsed(isUsed);
 
 		}
 
@@ -792,9 +768,6 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
 		String isPrimary = deviceInfo.getIsPrimary(); // 대표폰 여부
 		String isRecvSms = deviceInfo.getIsRecvSms(); // sms 수신여부
-		String isAuthenticated = deviceInfo.getIsAuthenticated(); // 인증여부
-		String authenticationDate = deviceInfo.getAuthenticationDate(); // 인증일자
-		String isUsed = deviceInfo.getIsUsed(); // 사용여부
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getDeviceExtraInfoList()); // rooting 여부
 
@@ -928,27 +901,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 			LOGGER.info("[isRecvSms] {} -> {}", userMbrDevice.getIsRecvSMS(), isRecvSms);
 			userMbrDevice.setIsRecvSMS(isRecvSms);
-
-		}
-
-		if (!StringUtils.equals(isAuthenticated, "") && !StringUtils.equals(isAuthenticated, userMbrDevice.getIsAuthenticated())) {
-
-			LOGGER.info("[isAuthenticate] {} -> {}", userMbrDevice.getIsAuthenticated(), isAuthenticated);
-			userMbrDevice.setIsAuthenticated(isAuthenticated);
-
-		}
-
-		if (!StringUtils.equals(authenticationDate, "") && !StringUtils.equals(authenticationDate, userMbrDevice.getAuthenticationDate())) {
-
-			LOGGER.info("[authenticationDate] {} -> {}", userMbrDevice.getAuthenticationDate(), authenticationDate);
-			userMbrDevice.setAuthenticationDate(authenticationDate);
-
-		}
-
-		if (!StringUtils.equals(isUsed, "") && !StringUtils.equals(isUsed, userMbrDevice.getIsUsed())) {
-
-			LOGGER.info("[isUsed] {} -> {}", userMbrDevice.getIsUsed(), isUsed);
-			userMbrDevice.setIsUsed(isUsed);
 
 		}
 
@@ -1121,8 +1073,6 @@ public class DeviceServiceImpl implements DeviceService {
 				addData.setDeviceTelecom(StringUtil.setTrim(info.getDeviceTelecom()));
 				addData.setDeviceNickName(StringUtil.setTrim(info.getDeviceNickName()));
 				addData.setIsPrimary(StringUtil.setTrim(info.getIsPrimary()));
-				addData.setIsAuthenticated(StringUtil.setTrim(info.getIsAuthenticated()));
-				addData.setAuthenticationDate(StringUtil.setTrim(info.getAuthenticationDate()));
 				addData.setIsRecvSms(StringUtil.setTrim(info.getIsRecvSms()));
 				addData.setNativeId(StringUtil.setTrim(info.getNativeId()));
 				addData.setDeviceAccount(StringUtil.setTrim(info.getDeviceAccount()));
@@ -1448,7 +1398,7 @@ public class DeviceServiceImpl implements DeviceService {
 		gameCenterSc.setPreUserKey(gameCenterSacReq.getPreUserKey());
 		gameCenterSc.setRequestDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
 		gameCenterSc.setWorkCode(gameCenterSacReq.getWorkCd());
-		gameCenterSc.setRequestType("0001");
+		gameCenterSc.setRequestType("0001"); //systemId로 변경예정 (DB사이즈가 현재 작음)
 		//gameCenterSc.setFileDate(fileDate);
 		updGameCenterReq.setGameCenter(gameCenterSc);
 

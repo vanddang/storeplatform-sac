@@ -74,11 +74,11 @@ public class DeviceController {
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), "");
 
-		if (!userId.equals("") && isMainDevice.equals("")) {
+		if (!StringUtil.equals(userId, "") && StringUtil.equals(isMainDevice, "")) {
 			throw new StorePlatformException("SAC_MEM_0001", "isMainDevice");
 		}
 
-		if (deviceId.equals("") && deviceKey.equals("") && isMainDevice.equals("")) {
+		if (StringUtil.equals(deviceId, "") && StringUtil.equals(deviceKey, "") && StringUtil.equals(isMainDevice, "")) {
 			throw new StorePlatformException("SAC_MEM_0001", "isMainDevice");
 		}
 
@@ -103,34 +103,49 @@ public class DeviceController {
 	@ResponseBody
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) {
 
-		/* 휴대기기 정보 필수 파라메터 체크 */
 		DeviceInfo deviceInfo = req.getDeviceInfo();
-		if (StringUtil.nvl(deviceInfo.getDeviceId(), "").equals("")) {
+
+		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String regMaxCnt = StringUtil.nvl(req.getRegMaxCnt(), "");
+		String deviceId = StringUtil.nvl(deviceInfo.getDeviceId(), "");
+		String deviceIdType = StringUtil.nvl(deviceInfo.getDeviceIdType(), "");
+		String deviceTelecom = StringUtil.nvl(deviceInfo.getDeviceTelecom(), "");
+		String deviceModelNo = StringUtil.nvl(deviceInfo.getDeviceModelNo(), "");
+		String isPrimary = StringUtil.nvl(deviceInfo.getIsPrimary(), "");
+
+		/* 휴대기기 정보 필수 파라메터 체크 */
+
+		if (StringUtil.equals(userAuthKey, "")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userAuthKey");
+		}
+
+		if (StringUtil.equals(userKey, "")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
+		}
+
+		if (StringUtil.equals(regMaxCnt, "")) {
+			throw new StorePlatformException("SAC_MEM_0001", "regMaxCnt");
+		}
+
+		if (StringUtil.equals(deviceId, "")) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
 
-		if (StringUtil.nvl(deviceInfo.getDeviceIdType(), "").equals("")) {
+		if (StringUtil.equals(deviceIdType, "")) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
 		}
 
-		if (StringUtil.nvl(deviceInfo.getDeviceTelecom(), "").equals("")) {
+		if (StringUtil.equals(deviceTelecom, "")) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
 		}
 
-		if (StringUtil.nvl(deviceInfo.getIsPrimary(), "").equals("")) {
+		if (StringUtil.equals(deviceModelNo, "")) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceModelNo");
+		}
+
+		if (StringUtil.equals(isPrimary, "")) {
 			throw new StorePlatformException("SAC_MEM_0001", "isPrimary");
-		}
-
-		if (StringUtil.nvl(deviceInfo.getIsAuthenticated(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "isAuthenticate");
-		}
-
-		if (StringUtil.nvl(deviceInfo.getIsUsed(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "isUsed");
-		}
-
-		if (StringUtil.nvl(deviceInfo.getAuthenticationDate(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "authenticationDate");
 		}
 
 		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, req);
@@ -150,8 +165,15 @@ public class DeviceController {
 	@RequestMapping(value = "/modifyDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) {
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceInfo().getDeviceKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceInfo().getDeviceId(), "");
 
-		if (StringUtil.nvl(req.getDeviceInfo().getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceInfo().getDeviceId(), "").equals("")) {
+		if (StringUtil.equals(userKey, "")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
+		}
+
+		if (StringUtil.equals(deviceKey, "") && StringUtil.equals(deviceId, "")) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceKey || deviceId");
 		}
 

@@ -105,9 +105,6 @@ public class ModifyDeviceTest {
 						deviceInfo.setDeviceIdType("msisdn ");
 						deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
 						deviceInfo.setIsPrimary("N");
-						deviceInfo.setIsAuthenticated("Y");
-						deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-						deviceInfo.setIsUsed("Y");
 						deviceInfo.setNativeId("358362045580844");
 						deviceInfo.setDeviceAccount("vanddang@gmail.com");
 						deviceInfo.setIsRecvSms("Y");
@@ -183,9 +180,6 @@ public class ModifyDeviceTest {
 						deviceInfo.setDeviceIdType("msisdn ");
 						deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
 						deviceInfo.setIsPrimary("N");
-						deviceInfo.setIsAuthenticated("Y");
-						deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-						deviceInfo.setIsUsed("Y");
 						deviceInfo.setNativeId("358362045580844");
 						deviceInfo.setDeviceAccount("vanddang@gmail.com");
 						deviceInfo.setIsRecvSms("Y");

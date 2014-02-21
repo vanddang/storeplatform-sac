@@ -328,16 +328,17 @@ public class LoginServiceImpl implements LoginService {
 			/* 원아이디 서비스 이용동의 간편 가입 대상 확인 */
 			if (chkDupRes.getUserMbr() == null && chkDupRes.getMbrOneID() != null) {
 
-				/* 인증요청 */
-				AuthForIdEcReq authForIdEcReq = new AuthForIdEcReq();
-				authForIdEcReq.setKey(userId);
-				authForIdEcReq.setUserPasswd(userPw);
-
 				try {
 
+					/* 인증요청 */
+					AuthForIdEcReq authForIdEcReq = new AuthForIdEcReq();
+					authForIdEcReq.setKey(userId);
+					authForIdEcReq.setUserPasswd(userPw);
 					this.imIdpSCI.authForId(authForIdEcReq);
 
-					throw new StorePlatformException("원아이디 서비스 이용동의 대상인데!!! 인증이 돼냐!!!");
+					throw new StorePlatformException("SAC_MEM_1200"); // 원아이디 이용동의 간편가입 대상 정보가 상이합니다.(SC회원 DB 미동의회원, IDP 동의회원)
+
+					//FDS 로그 남김???
 
 				} catch (StorePlatformException ex) {
 
@@ -348,17 +349,16 @@ public class LoginServiceImpl implements LoginService {
 						res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
 						res.setLoginStatusCode(chkDupRes.getMbrOneID().getLoginStatusCode());
 						res.setStopStatusCode(chkDupRes.getMbrOneID().getStopStatusCode());
-						res.setIsLoginSuccess("N");
+						res.setIsLoginSuccess("Y");
 						return res;
 
 					} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 							+ ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
-						/* 로그인 실패이력 저장 */
-						//LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
-
 						/* 로그인 결과 */
-						//res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
+						res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
+						res.setLoginStatusCode(chkDupRes.getMbrOneID().getLoginStatusCode());
+						res.setStopStatusCode(chkDupRes.getMbrOneID().getStopStatusCode());
 						res.setIsLoginSuccess("N");
 						return res;
 
@@ -652,7 +652,7 @@ public class LoginServiceImpl implements LoginService {
 			AuthorizeByIdReq req = new AuthorizeByIdReq();
 			req = (AuthorizeByIdReq) obj;
 
-			if (!StringUtil.equals(req.getDeviceId(), "")) { // deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 update 요청
+			if (req.getDeviceId() != null && !StringUtil.equals(req.getDeviceId(), "")) { // deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 update 요청
 
 				deviceInfo.setDeviceId(req.getDeviceId());
 				deviceInfo.setDeviceIdType(req.getDeviceIdType());
