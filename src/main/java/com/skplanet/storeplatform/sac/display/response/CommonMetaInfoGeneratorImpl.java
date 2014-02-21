@@ -485,7 +485,6 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			List<Identifier> identifierList = new ArrayList<Identifier>();
 			identifierList.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, prchId));
 
-			purchase.setState(prchState);
 			purchase.setIdentifierList(identifierList);
 		} else {
 			List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -504,6 +503,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			purchase.setDateList(dateList);
 		}
 
+		purchase.setState(prchState);
 		return purchase;
 	}
 
