@@ -309,7 +309,7 @@
                     AND TP.TENANT_ID = PR.TENANT_ID
                     AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
                         AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
-                        AND ( SP.DEVICE_MODEL_CD = 'android_standard2' OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
+                        AND ( SP.DEVICE_MODEL_CD = #{virtualDeviceModelNo} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
                         AND EXISTS (
                         SELECT 'X' 
                           FROM TB_CM_DEVICE DV
