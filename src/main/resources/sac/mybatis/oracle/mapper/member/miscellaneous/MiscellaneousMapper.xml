@@ -17,20 +17,20 @@
 	<select id="searchPhoneAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
        /* MiscellaneousMapper.xml, searchPhoneAuthInfo, SAC : 김다슬 , 2014-01-16 */
        SELECT 
-           AUTH_SEQ,
-           AUTH_SIGN,
-           AUTH_VALUE,
+           AUTH_SEQ
+           ,AUTH_SIGN
+           ,AUTH_VALUE
            <if test="timeToLive!=null">
-           TO_CHAR(AUTH_VALUE_CREATE_DT - (SYSDATE - (#{timeToLive}/24/60))) AS CURR_DT,
+           ,TO_CHAR(AUTH_VALUE_CREATE_DT - (SYSDATE - (#{timeToLive}/24/60))) AS CURR_DT  /* 인증코드 생성일자-(현재-생존시간) */
            </if>
-           TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT, 
-           AUTH_COMPT_YN
+           ,TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT 
+           ,AUTH_COMPT_YN
        FROM
            TB_CM_SVC_AUTH
        WHERE
            AUTH_TYPE_CD = #{authTypeCd}
-           AND AUTH_SIGN = #{authSign}
-           AND AUTH_VALUE = #{authValue}
+       AND AUTH_SIGN = #{authSign}
+       AND AUTH_VALUE = #{authValue}
     </select>
 	
 	<!--  휴대폰 SMS & 이메일 인증 여부 업데이트(인증성공) -->
@@ -39,9 +39,9 @@
     UPDATE 
         TB_CM_SVC_AUTH
     SET
-       AUTH_COMPT_YN = 'Y',
-       UPD_ID = 'admin',
-       UPD_DT = SYSDATE
+       AUTH_COMPT_YN = 'Y'
+       ,UPD_ID = 'admin'
+       ,UPD_DT = SYSDATE
     WHERE 
        AUTH_SEQ = #{authSeq}    
     </update>
@@ -51,50 +51,50 @@
         /* MiscellaneousMapper.xml, createServiceAuthCode, SAC : 김다슬 , 2014-01-21 */
         INSERT INTO
             TB_CM_SVC_AUTH(
-                AUTH_SEQ,
+                AUTH_SEQ
                 <if test="mbrNo !=null">
-                MBR_NO,
+                ,MBR_NO
                 </if>
                 <if test="tenantId !=null">
-                TENANT_ID,
+                ,TENANT_ID
                 </if>
-                AUTH_TYPE_CD, /* 인증 타입 (CM010901:SMS, CM010902:Email) */
+                ,AUTH_TYPE_CD  /* 인증 타입 (CM010901:SMS, CM010902:Email) */
                 <if test="authSign !=null">
-                AUTH_SIGN, /* 인증 Signature */
+                ,AUTH_SIGN  /* 인증 Signature */
                 </if>
-                AUTH_VALUE, /* 인증 코드 */
+                ,AUTH_VALUE  /* 인증 코드 */
                 <if test="authEmail !=null">
-                AUTH_EMAIL, /* Email 인증일 경우 수신자 Email 주소 포함 */
+                ,AUTH_EMAIL  /* Email 인증일 경우 수신자 Email 주소 포함 */
                 </if>
-                AUTH_VALUE_CREATE_DT, /* 인증 코드 생성 일자 */
-                AUTH_COMPT_YN, /* 인증 여부 - 초기화 */
-                REG_ID,
-                REG_DT,
-                UPD_ID,
-                UPD_DT
+                ,AUTH_VALUE_CREATE_DT  /* 인증 코드 생성 일자 */
+                ,AUTH_COMPT_YN  /* 인증 여부 - 초기화 */
+                ,REG_ID
+                ,REG_DT
+                ,UPD_ID
+                ,UPD_DT
             )
             VALUES(
                SQ_CM_SVC_AUTH.NEXTVAL,
                <if test="mbrNo !=null">
-               #{mbrNo},
+               ,#{mbrNo}
                </if>
                <if test="tenantId !=null">
-               #{tenantId},
+               ,#{tenantId}
                </if>
-               #{authTypeCd},
+               ,#{authTypeCd}
                <if test="authSign !=null">
-               #{authSign},
+               ,#{authSign}
                </if>
-               #{authValue},
+               ,#{authValue}
                <if test="authEmail !=null">
-               #{authEmail},
+               ,#{authEmail}
                </if>
-               SYSDATE,
-               'N',
-               'admin',
-               SYSDATE,
-               'admin',
-               SYSDATE
+               ,SYSDATE
+               ,'N'
+               ,'admin'
+               ,SYSDATE
+               ,'admin'
+               ,SYSDATE
             )
     </insert>
     
@@ -103,31 +103,32 @@
     <select id="searchEmailAuthYnList" parameterType="ServiceAuth" resultType="ServiceAuth">
     /* MiscellaneousMapper.xml, searchEmailAuthYnList, SAC : 김다슬 , 2014-01-23 */
     SELECT 
-        AUTH_COMPT_YN,
-        AUTH_VALUE
+        AUTH_COMPT_YN
+        ,AUTH_VALUE
     FROM 
         TB_CM_SVC_AUTH
     WHERE
         MBR_NO = #{mbrNo} 
-        AND AUTH_EMAIL = #{authEmail}
+    AND AUTH_EMAIL = #{authEmail}
     </select>
     
     <!-- 이메일 인증코드 정보 확인 -->
     <select id="searchEmailAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
     /* MiscellaneousMapper.xml, searchEmailAuthInfo, SAC : 김다슬 , 2014-01-23 */
     SELECT 
-        AUTH_SEQ,
-        MBR_NO,
-        AUTH_EMAIL,
+        AUTH_SEQ
+        ,MBR_NO
+        ,AUTH_EMAIL
         <if test="timeToLive!=null">
-        TO_CHAR(AUTH_VALUE_CREATE_DT -(SYSDATE -#{timeToLive})) AS CURR_DT,
+        ,TO_CHAR(AUTH_VALUE_CREATE_DT -(SYSDATE -#{timeToLive})) AS CURR_DT
         </if>
-        TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT,
-        AUTH_COMPT_YN
+        ,TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT
+        ,AUTH_COMPT_YN
     FROM 
         TB_CM_SVC_AUTH
     WHERE
-        AUTH_VALUE = #{authValue}
+        AUTH_TYPE_CD = #{authTypeCd}
+        ,AUTH_VALUE = #{authValue}
     </select>
     
     

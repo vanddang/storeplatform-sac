@@ -93,7 +93,7 @@ public class GetPhoneAuthorizationCodeTest {
 	 * </pre>
 	 */
 	@Test
-	public void tstoreSmsSendTest() {
+	public void testGetPhoneAuthorizationCodeForTstore() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 

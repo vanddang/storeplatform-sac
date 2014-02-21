@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -79,12 +78,12 @@ public class ConfirmPhoneAuthorizationCodeTest {
 
 	/**
 	 * <pre>
-	 * 성공 CASE
-	 * 정상 파라미터 전달. - exception??? 왜
+	 * 휴대폰 인증 코드 확인.
+	 * - 정상 인증.
 	 * </pre>
 	 */
 	@Test
-	public void simpleTest() {
+	public void testConfirmPhoneAuthorizationCode() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
@@ -110,12 +109,12 @@ public class ConfirmPhoneAuthorizationCodeTest {
 
 	/**
 	 * <pre>
-	 * Exception.
-	 * 기존 인증된 인증 코드.
+	 * 휴대폰 인증 코드 확인.
+	 * - Exception. (기존 인증된 인증 코드)
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
-	public void terminatedAuthCodeTest() {
+	@Test
+	public void testExceptConfirmPhoneAuthorizationCode() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 

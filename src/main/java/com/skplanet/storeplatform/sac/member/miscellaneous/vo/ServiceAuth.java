@@ -77,10 +77,13 @@ public class ServiceAuth extends CommonInfo {
 	private String updDt;
 
 	/**
-	 * 현재 시간.
+	 * 인증 가능여부 판단하는 파라미터 = 인증코드 생성시각 - (현재 시각 - 인증가능시간).
 	 */
 	private String currDt;
 
+	/**
+	 * 인증 가능 시간.
+	 */
 	private String timeToLive;
 
 	/**
