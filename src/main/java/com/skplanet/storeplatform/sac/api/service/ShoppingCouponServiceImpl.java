@@ -161,10 +161,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			}
 
 			File downloadDir = new File(uploadPath);
-			boolean mkdirFlag = false;
 			// 디렉토리가 존재하지 않으면 만든다.
 			if (!downloadDir.exists()) {
-				mkdirFlag = downloadDir.mkdirs();
+				downloadDir.mkdirs();
 			}
 
 			this.log.info("BrandImgPath(downloadPath) = " + uploadPath);
@@ -307,8 +306,11 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 					}
 				}
 			}
+		} catch (CouponException e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, message, null);
 		} catch (Exception e) {
 			// 정보변경 실패 알림 페이지
+			e.printStackTrace();
 			this.log.error("브랜드,카탈로그 파일 정보 가져오기 실패", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, message, null);
 		}
