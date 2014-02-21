@@ -213,7 +213,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				String prchsCaseCd = null; // 선물 여부
 				String prchsState = null; // 구매상태
 				String prchsProdId = null; // 구매 상품ID
-				// String puchsPrice = null; // 구매 상품금액
+				String puchsPrice = null; // 구매 상품금액
 
 				if (historyRes != null && historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -226,7 +226,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
 						prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 						prchsProdId = historyRes.getHistoryList().get(i).getProdId();
-						// puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
+						puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 
 						// 구매상태 확인
 						downloadAppSacReq.setPrchsDt(prchsDt);
@@ -245,13 +245,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						}
 
 						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("[getDownloadEbookInfo] prchsId : {}", prchsId);
-						this.log.debug("[getDownloadEbookInfo] prchsDt : {}", prchsDt);
-						this.log.debug("[getDownloadEbookInfo] useExprDt : {}", useExprDt);
-						this.log.debug("[getDownloadEbookInfo] dwldExprDt : {}", dwldExprDt);
-						this.log.debug("[getDownloadEbookInfo] prchsCaseCd : {}", prchsCaseCd);
-						this.log.debug("[getDownloadEbookInfo] prchsState : {}", prchsState);
-						this.log.debug("[getDownloadEbookInfo] prchsProdId : {}", prchsProdId);
+						this.log.debug("[getDownloadAppInfo] prchsId : {}", prchsId);
+						this.log.debug("[getDownloadAppInfo] prchsDt : {}", prchsDt);
+						this.log.debug("[getDownloadAppInfo] useExprDt : {}", useExprDt);
+						this.log.debug("[getDownloadAppInfo] dwldExprDt : {}", dwldExprDt);
+						this.log.debug("[getDownloadAppInfo] prchsCaseCd : {}", prchsCaseCd);
+						this.log.debug("[getDownloadAppInfo] prchsState : {}", prchsState);
+						this.log.debug("[getDownloadAppInfo] prchsProdId : {}", prchsProdId);
+						this.log.debug("[getDownloadAppInfo] puchsPrice : {}", puchsPrice);
 						this.log.debug("----------------------------------------------------------------");
 
 						metaInfo.setPurchaseId(prchsId);
@@ -259,6 +260,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						metaInfo.setPurchaseDt(prchsDt);
 						metaInfo.setPurchaseState(prchsState);
 						metaInfo.setPurchaseDwldExprDt(dwldExprDt);
+						metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
 
 						// 구매 정보
 						purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
@@ -311,8 +313,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								Encryption encryption = new Encryption();
 								encryption.setProductId(prchsProdId);
 								encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-								encryption
-										.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+								encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
 								encryption.setToken(encryptString);
 								encryptionList.add(encryption);
 
@@ -364,7 +365,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
 						metaInfo.getDrmYn()));
 				product.setSupportList(supportList);
-				product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));// 상품 메뉴정보
+				product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
 				product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
 				product.setRights(this.commonGenerator.generateRights(metaInfo)); // 권한
 				product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보

@@ -61,9 +61,9 @@ public class DownloadController {
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param downloadAppReq
-	 *            downloadAppReq
-	 * @return DownloadAppRes
+	 * @param downloadAppSacReq
+	 *            downloadAppSacReq
+	 * @return downloadAppSacReq
 	 */
 	@RequestMapping(value = "/app/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -80,8 +80,8 @@ public class DownloadController {
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param downloadMusicReq
-	 *            downloadMusicReq
+	 * @param downloadMusicSacReq
+	 *            downloadMusicSacReq
 	 * @return DownloadMusicSacRes
 	 */
 	@RequestMapping(value = "/music/detail/v1", method = RequestMethod.POST)
@@ -99,9 +99,9 @@ public class DownloadController {
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param downloadVodReq
-	 *            downloadVodReq
-	 * @return DownloadVodRes
+	 * @param downloadVodSacReq
+	 *            downloadVodSacReq
+	 * @return DownloadVodSacRes
 	 */
 	@RequestMapping(value = "/vod/detail/v1", method = RequestMethod.POST)
 	@ResponseBody

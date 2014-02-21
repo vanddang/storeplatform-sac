@@ -119,7 +119,7 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 				detailInformationSacReq.setSellerBizNumber(inquiryValue);
 				DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
 						.detailInformation(detailInformationSacReq);
-				String sellertKey = detailInformationSacRes.getSellerMbr().getSellerKey();
+				String sellertKey = detailInformationSacRes.getSellerMbr().get(0).getSellerCompany();
 
 				if (StringUtils.isNotEmpty(sellertKey)) {
 					// 조회된 Seller Key setting
@@ -168,8 +168,6 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 					commonResponse.setTotalCount(metaInfo.getTotalCount());
 				}
 			}
-
-		} else {
 
 		}
 		response.setCommonResponse(commonResponse);

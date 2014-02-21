@@ -17,8 +17,8 @@ public interface UpdatePurchaseCountService {
 	 * 상품 구매수 업데이트.
 	 * </pre>
 	 * 
-	 * @param req
-	 *            req
+	 * @param reqList
+	 *            reqList
 	 * @return
 	 */
 	public void updatePurchaseCount(List<UpdatePurchaseCountSacReq> reqList);

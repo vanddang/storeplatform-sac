@@ -19,9 +19,9 @@ public interface DownloadMusicService {
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param downloadMusicReq
-	 *            downloadMusicReq
-	 * @return DownloadMusicRes
+	 * @param downloadMusicSacReq
+	 *            downloadMusicSacReq
+	 * @return DownloadMusicSacRes
 	 */
 	DownloadMusicSacRes searchDownloadMusic(SacRequestHeader requestheader, DownloadMusicSacReq downloadMusicSacReq);
 }

@@ -19,9 +19,9 @@ public interface DownloadBestService {
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param downloadAppReq
-	 *            downloadAppReq
-	 * @return DownloadAppRes
+	 * @param downloadBestSacReq
+	 *            downloadBestSacReq
+	 * @return DownloadBestSacRes
 	 */
 	DownloadBestSacRes searchDownloadBestList(SacRequestHeader requestheader, DownloadBestSacReq downloadBestSacReq);
 }

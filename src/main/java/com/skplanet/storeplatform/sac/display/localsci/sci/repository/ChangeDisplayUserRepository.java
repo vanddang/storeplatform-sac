@@ -67,7 +67,8 @@ public interface ChangeDisplayUserRepository {
 	 * </pre>
 	 * 
 	 * @param changeDisplayUser
-	 * @return
+	 *            changeDisplayUser
+	 * @return Object
 	 */
 	public Object changeTenantProdStats(ChangeDisplayUser changeDisplayUser);
 
@@ -79,7 +80,7 @@ public interface ChangeDisplayUserRepository {
 	 * 
 	 * @param changeDisplayUser
 	 *            changeDisplayUser
-	 * @return ObjectObject
+	 * @return Object
 	 */
 	public Object changeMsgMbrMapg(ChangeDisplayUser changeDisplayUser);
 }

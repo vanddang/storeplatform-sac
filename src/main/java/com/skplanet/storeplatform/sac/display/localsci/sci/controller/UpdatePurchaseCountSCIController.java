@@ -25,7 +25,14 @@ public class UpdatePurchaseCountSCIController implements UpdatePurchaseCountSCI 
 	private UpdatePurchaseCountService updatePurchaseCountService;
 
 	/**
+	 * 
+	 * <pre>
 	 * 상품 구매수 업데이트.
+	 * </pre>
+	 * 
+	 * @param reqList
+	 *            reqList
+	 * @return
 	 */
 	@Override
 	public void updatePurchaseCount(@Validated List<UpdatePurchaseCountSacReq> reqList) {

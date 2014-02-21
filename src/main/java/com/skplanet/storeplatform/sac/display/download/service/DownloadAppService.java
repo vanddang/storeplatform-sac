@@ -19,9 +19,9 @@ public interface DownloadAppService {
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param downloadAppReq
-	 *            downloadAppReq
-	 * @return DownloadAppRes
+	 * @param downloadAppSacReq
+	 *            downloadAppSacReq
+	 * @return DownloadAppSacRes
 	 */
 	DownloadAppSacRes searchDownloadApp(SacRequestHeader requestheader, DownloadAppSacReq downloadAppSacReq);
 }

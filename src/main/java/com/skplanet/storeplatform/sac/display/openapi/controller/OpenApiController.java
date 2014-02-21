@@ -73,7 +73,7 @@ public class OpenApiController {
 
 	/**
 	 * <pre>
-	 * App 상세 정보 요청
+	 * App 상세 정보 요청.
 	 * </pre>
 	 * 
 	 * @param req

@@ -186,6 +186,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				String prchsCaseCd = null; // 선물 여부
 				String prchsState = null; // 구매상태
 				String prchsProdId = null; // 구매 상품ID
+				String puchsPrice = null; // 구매 상품금액
 
 				if (historyRes != null && historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -198,6 +199,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
 						prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 						prchsProdId = historyRes.getHistoryList().get(i).getProdId();
+						puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 
 						// 구매상태 확인
 						downloadVodSacReq.setPrchsDt(prchsDt);
@@ -216,13 +218,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						}
 
 						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("[getDownloadEbookInfo] prchsId : {}", prchsId);
-						this.log.debug("[getDownloadEbookInfo] prchsDt : {}", prchsDt);
-						this.log.debug("[getDownloadEbookInfo] useExprDt : {}", useExprDt);
-						this.log.debug("[getDownloadEbookInfo] dwldExprDt : {}", dwldExprDt);
-						this.log.debug("[getDownloadEbookInfo] prchsCaseCd : {}", prchsCaseCd);
-						this.log.debug("[getDownloadEbookInfo] prchsState : {}", prchsState);
-						this.log.debug("[getDownloadEbookInfo] prchsProdId : {}", prchsProdId);
+						this.log.debug("[getDownloadVodkInfo] prchsId : {}", prchsId);
+						this.log.debug("[getDownloadVodkInfo] prchsDt : {}", prchsDt);
+						this.log.debug("[getDownloadVodkInfo] useExprDt : {}", useExprDt);
+						this.log.debug("[getDownloadVodkInfo] dwldExprDt : {}", dwldExprDt);
+						this.log.debug("[getDownloadVodkInfo] prchsCaseCd : {}", prchsCaseCd);
+						this.log.debug("[getDownloadVodkInfo] prchsState : {}", prchsState);
+						this.log.debug("[getDownloadVodkInfo] prchsProdId : {}", prchsProdId);
 						this.log.debug("----------------------------------------------------------------");
 
 						metaInfo.setPurchaseId(prchsId);
@@ -230,6 +232,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						metaInfo.setPurchaseDt(prchsDt);
 						metaInfo.setPurchaseState(prchsState);
 						metaInfo.setPurchaseDwldExprDt(dwldExprDt);
+						metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
 
 						// 구매 정보
 						purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
@@ -291,8 +294,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								Encryption encryption = new Encryption();
 								encryption.setProductId(prchsProdId);
 								encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-								encryption
-										.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSAC_RANDOM_NUMBER()));
+								encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
 								encryption.setToken(encryptString);
 								encryptionList.add(encryption);
 
