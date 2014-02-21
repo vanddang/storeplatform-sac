@@ -91,14 +91,14 @@ public class CreateByAgreementTest {
 						CreateByAgreementReq reqJson = new CreateByAgreementReq();
 
 						// 사용자 아이디
-						reqJson.setUserId("junit02");
+						reqJson.setUserId("junit04");
 
 						// 단말 정보
 						reqJson.setDeviceId("01512341235"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
 						reqJson.setDeviceTelecom("US001202"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
-						reqJson.setDeviceAccount("junit01Test@yahoo.co.kr"); // 기기 계정 (Gmail)
+						reqJson.setDeviceAccount("junit04Test@yahoo.co.kr"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
 						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
 
@@ -138,7 +138,7 @@ public class CreateByAgreementTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateByAgreementRes res = (CreateByAgreementRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						CreateByAgreementTest.this.통합IDP약관동의회원탈퇴("junit02");
+						CreateByAgreementTest.this.통합IDP약관동의회원탈퇴("junit04");
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -162,7 +162,7 @@ public class CreateByAgreementTest {
 						CreateByAgreementReq reqJson = new CreateByAgreementReq();
 
 						// 사용자 아이디
-						reqJson.setUserId("junit02");
+						reqJson.setUserId("junit04");
 
 						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
@@ -191,7 +191,7 @@ public class CreateByAgreementTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateByAgreementRes res = (CreateByAgreementRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						CreateByAgreementTest.this.통합IDP약관동의회원탈퇴("junit02");
+						CreateByAgreementTest.this.통합IDP약관동의회원탈퇴("junit04");
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

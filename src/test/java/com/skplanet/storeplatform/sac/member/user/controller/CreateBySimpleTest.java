@@ -66,8 +66,14 @@ public class CreateBySimpleTest {
 	 * </pre>
 	 */
 	@Before
-	public void before() {
+	public void before() throws Exception {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		/**
+		 * IDP 에러 발생으로...
+		 * 
+		 * 정의된 시간(2초)내에 동일한 요청을 받았습니다.
+		 */
+		Thread.sleep(2000);
 	}
 
 	/**
