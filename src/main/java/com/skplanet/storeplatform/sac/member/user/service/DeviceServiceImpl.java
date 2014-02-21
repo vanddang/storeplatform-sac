@@ -234,15 +234,9 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 휴대기기 정보 수정 */
 		deviceKey = this.updateDeviceInfo(requestHeader, deviceInfo);
 
-		/* 회원 정보 조회 */
-		SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
-
 		/* userAuthKey가 넘오온 경우만 IDP 업데이트 처리 */
 		if (req.getUserAuthKey() != null && !StringUtil.equals(req.getUserAuthKey(), "")) {
-			/* 모바일 회원이 아닌경우 */
-			if (!StringUtil.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
-				this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
-			}
+			this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 		}
 
 		ModifyDeviceRes res = new ModifyDeviceRes();

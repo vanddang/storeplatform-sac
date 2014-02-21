@@ -12,6 +12,7 @@ import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcReq;
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -61,34 +62,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) {
 
-		/* 휴대기기 목록 조회 */
-		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setIsMainDevice("N");
-		listDeviceReq.setUserKey(userKey);
-
-		String userPhoneStr = "";
-
-		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
-		if (listDeviceRes.getDeviceInfoList() != null) {
-			StringBuffer sbUserPhone = new StringBuffer();
-			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
-
-				String imMngNum = deviceInfo.getSvcMangNum();
-				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
-
-				sbUserPhone.append(deviceInfo.getDeviceId());
-				sbUserPhone.append(",");
-				sbUserPhone.append(imMngNum == null ? "" : imMngNum);
-				sbUserPhone.append(",");
-				sbUserPhone.append(uacd == null ? "" : uacd);
-				sbUserPhone.append(",");
-				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
-				sbUserPhone.append("|");
-			}
-			userPhoneStr = sbUserPhone.toString();
-			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
-		}
-
 		/* 회원정보 조회 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -104,21 +77,52 @@ public class UserServiceImpl implements UserService {
 		schUserReq.setKeySearchList(keySearchList);
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
-		if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
-			UpdateAdditionalInfoEcReq req = new UpdateAdditionalInfoEcReq();
-			req.setUserAuthKey(userAuthKey);
-			req.setKey(schUserRes.getUserMbr().getImSvcNo());
-			req.setUserMdn(userPhoneStr);
-			LOGGER.info(req.toString());
-			this.imIdpSCI.updateAdditionalInfo(req);
-		} else {
-			ModifyProfileEcReq req = new ModifyProfileEcReq();
-			req.setKeyType("2"); // idp키로 조회 
-			req.setUserAuthKey(userAuthKey);
-			req.setKey(schUserRes.getUserMbr().getImMbrNo());
-			req.setUserPhone(userPhoneStr);
-			LOGGER.info(req.toString());
-			this.idpSCI.modifyProfile(req);
+		if (!StringUtil.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+			/* 휴대기기 목록 조회 */
+			ListDeviceReq listDeviceReq = new ListDeviceReq();
+			listDeviceReq.setIsMainDevice("N");
+			listDeviceReq.setUserKey(userKey);
+
+			String userPhoneStr = "";
+
+			ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
+			if (listDeviceRes.getDeviceInfoList() != null) {
+				StringBuffer sbUserPhone = new StringBuffer();
+				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
+
+					String imMngNum = deviceInfo.getSvcMangNum();
+					String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
+
+					sbUserPhone.append(deviceInfo.getDeviceId());
+					sbUserPhone.append(",");
+					sbUserPhone.append(imMngNum == null ? "" : imMngNum);
+					sbUserPhone.append(",");
+					sbUserPhone.append(uacd == null ? "" : uacd);
+					sbUserPhone.append(",");
+					sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
+					sbUserPhone.append("|");
+				}
+				userPhoneStr = sbUserPhone.toString();
+				userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+			}
+
+			if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
+				UpdateAdditionalInfoEcReq req = new UpdateAdditionalInfoEcReq();
+				req.setUserAuthKey(userAuthKey);
+				req.setKey(schUserRes.getUserMbr().getImSvcNo());
+				req.setUserMdn(userPhoneStr);
+				LOGGER.info(req.toString());
+				this.imIdpSCI.updateAdditionalInfo(req);
+			} else {
+				ModifyProfileEcReq req = new ModifyProfileEcReq();
+				req.setKeyType("2"); // idp키로 조회 
+				req.setUserAuthKey(userAuthKey);
+				req.setKey(schUserRes.getUserMbr().getImMbrNo());
+				req.setUserPhone(userPhoneStr);
+				LOGGER.info(req.toString());
+				this.idpSCI.modifyProfile(req);
+			}
+
 		}
 
 	}
