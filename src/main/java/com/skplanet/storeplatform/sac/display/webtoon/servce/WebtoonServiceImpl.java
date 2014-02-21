@@ -136,7 +136,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 			identifierList.add(identifier);
 			// 회원번호
 			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_INDIVIDUAL_IDENTIFIER_CD);
+			identifier.setType(DisplayConstants.DP_SELLER_IDENTIFIER_CD);
 			identifier.setText(webtoonDetail.getSellerMbrNo());
 			identifierList.add(identifier);
 
