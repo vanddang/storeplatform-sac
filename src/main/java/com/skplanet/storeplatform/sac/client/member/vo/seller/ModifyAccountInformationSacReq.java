@@ -65,13 +65,13 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	private String repEmail;
 
 	/** 우편번호. */
-	private String sellerZip;
+	private String sellerBizZip;
 
 	/** 주소. */
-	private String sellerAddress;
+	private String sellerBizAddress;
 
 	/** 상세주소. */
-	private String sellerDetailAddress;
+	private String sellerBizDetailAddress;
 
 	/** 벤더코드. */
 	private String vendorCode;
@@ -265,28 +265,28 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 		this.repEmail = repEmail;
 	}
 
-	public String getSellerZip() {
-		return this.sellerZip;
+	public String getSellerBizZip() {
+		return this.sellerBizZip;
 	}
 
-	public void setSellerZip(String sellerZip) {
-		this.sellerZip = sellerZip;
+	public void setSellerBizZip(String sellerBizZip) {
+		this.sellerBizZip = sellerBizZip;
 	}
 
-	public String getSellerAddress() {
-		return this.sellerAddress;
+	public String getSellerBizAddress() {
+		return this.sellerBizAddress;
 	}
 
-	public void setSellerAddress(String sellerAddress) {
-		this.sellerAddress = sellerAddress;
+	public void setSellerBizAddress(String sellerBizAddress) {
+		this.sellerBizAddress = sellerBizAddress;
 	}
 
-	public String getSellerDetailAddress() {
-		return this.sellerDetailAddress;
+	public String getSellerBizDetailAddress() {
+		return this.sellerBizDetailAddress;
 	}
 
-	public void setSellerDetailAddress(String sellerDetailAddress) {
-		this.sellerDetailAddress = sellerDetailAddress;
+	public void setSellerBizDetailAddress(String sellerBizDetailAddress) {
+		this.sellerBizDetailAddress = sellerBizDetailAddress;
 	}
 
 	public String getVendorCode() {
