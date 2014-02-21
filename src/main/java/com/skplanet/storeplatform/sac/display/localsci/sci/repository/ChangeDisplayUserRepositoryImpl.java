@@ -33,6 +33,11 @@ public class ChangeDisplayUserRepositoryImpl implements ChangeDisplayUserReposit
 	}
 
 	@Override
+	public Object changeBadNoti(ChangeDisplayUser changeDisplayUser) {
+		return this.commonDAO.update("LocalSci.changeBadNoti", changeDisplayUser);
+	}
+
+	@Override
 	public Object changeProdNotiGood(ChangeDisplayUser changeDisplayUser) {
 		return this.commonDAO.update("LocalSci.changeProdNotiGood", changeDisplayUser);
 	}

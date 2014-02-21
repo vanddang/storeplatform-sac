@@ -39,6 +39,18 @@ public interface ChangeDisplayUserRepository {
 	/**
 	 * 
 	 * <pre>
+	 * 상품 사용후기 신고 테이블 변경.
+	 * </pre>
+	 * 
+	 * @param changeDisplayUser
+	 *            changeDisplayUser
+	 * @return Object
+	 */
+	public Object changeBadNoti(ChangeDisplayUser changeDisplayUser);
+
+	/**
+	 * 
+	 * <pre>
 	 * 상품 사용후기 추천 테이블 변경.
 	 * </pre>
 	 * 

@@ -24,6 +24,7 @@ public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 	public void changeDisplayUserId(ChangeDisplayUser changeDisplayUser) {
 		this.changeDisplayUserRepository.changeMbrAvg(changeDisplayUser);
 		this.changeDisplayUserRepository.changeProdNoti(changeDisplayUser);
+		this.changeDisplayUserRepository.changeBadNoti(changeDisplayUser);
 		this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
 		this.changeDisplayUserRepository.changeTenantProdStats(changeDisplayUser);
 		this.changeDisplayUserRepository.changeMsgMbrMapg(changeDisplayUser);
@@ -33,6 +34,7 @@ public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 	public void changeDisplayUserKey(ChangeDisplayUser changeDisplayUser) {
 		this.changeDisplayUserRepository.changeMbrAvg(changeDisplayUser);
 		this.changeDisplayUserRepository.changeProdNoti(changeDisplayUser);
+		this.changeDisplayUserRepository.changeBadNoti(changeDisplayUser);
 		this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
 		this.changeDisplayUserRepository.changeMsgMbrMapg(changeDisplayUser);
 	}
