@@ -15,121 +15,139 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Vod 상세 조회 Input Value Object.
- *
+ * <p/>
  * Updated on : 2014. 01. 07. Updated by : 임근대, SK 플래닛.
  */
 public class VodDetailReq extends CommonInfo {
 
-	private static final long serialVersionUID = 3567228512653706925L;
+    private static final long serialVersionUID = 3567228512653706925L;
 
-	/** 체널 ID */
-	@NotEmpty
-	private String channelId;
+    /**
+     * 체널 ID
+     */
+    @NotEmpty
+    private String channelId;
 
-	/** 상품 정렬 순서 */
-	private String orderedBy;
+    /**
+     * 상품 정렬 순서
+     */
+    private String orderedBy;
 
-	/** 시작점 ROW, default : 1 */
-	private Integer offset = 1;
+    /**
+     * 시작점 ROW, default : 1
+     */
+    private Integer offset = 1;
 
-	/** 페이지당 노출될 ROW 개수, default :20 */
-	private Integer count = 20;
+    /**
+     * 페이지당 노출될 ROW 개수, default :20
+     */
+    private Integer count = 20;
 
-	/** 언어 코드 */
-	private String langCd;
+    /**
+     * 언어 코드
+     */
+    private String langCd;
 
-	/** Tenant ID */
-	private String tenantId;
+    /**
+     * Tenant ID
+     */
+    private String tenantId;
 
-	/** 디바이스 모델 */
-	private String deviceModel;
+    /**
+     * 디바이스 모델
+     */
+    private String deviceModel;
 
-	/** 대표이미지 코드 */
-	private String imgCd;
+    /**
+     * 대표이미지 코드
+     */
+    private String imgCd;
 
-	private String userKey;
-	private String deviceKey;
+    private String userKey;
+    private String deviceKey;
 
-	public String getOrderedBy() {
-		return this.orderedBy;
-	}
+    public String getOrderedBy() {
+        return this.orderedBy;
+    }
 
-	public void setOrderedBy(String orderedBy) {
-		this.orderedBy = orderedBy;
-	}
+    public void setOrderedBy(String orderedBy) {
+        this.orderedBy = orderedBy;
+    }
 
-	public Integer getOffset() {
-		return this.offset;
-	}
+    public Integer getOffset() {
+        if(this.offset == null || this.offset < 0) return 1;
+        return this.offset;
+    }
 
-	public void setOffset(Integer offset) {
-		this.offset = offset;
-	}
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
 
-	public Integer getCount() {
-		return this.count;
-	}
+    public Integer getCount() {
+        if(this.count == null || this.count < 0) return 20;
+        return this.count;
+    }
 
-	public void setCount(Integer count) {
-		this.count = count;
-	}
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 
-	public String getLangCd() {
-		return this.langCd;
-	}
+    public String getLangCd() {
+        return this.langCd;
+    }
 
-	public void setLangCd(String langCd) {
-		this.langCd = langCd;
-	}
+    public void setLangCd(String langCd) {
+        this.langCd = langCd;
+    }
 
-	public String getTenantId() {
-		return this.tenantId;
-	}
+    public String getTenantId() {
+        return this.tenantId;
+    }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	public String getDeviceModel() {
-		return this.deviceModel;
-	}
+    public String getDeviceModel() {
+        return this.deviceModel;
+    }
 
-	public void setDeviceModel(String deviceModel) {
-		this.deviceModel = deviceModel;
-	}
+    public void setDeviceModel(String deviceModel) {
+        this.deviceModel = deviceModel;
+    }
 
 
-	public String getImgCd() {
-		return this.imgCd;
-	}
+    public String getImgCd() {
+        return this.imgCd;
+    }
 
-	public void setImgCd(String imgCd) {
-		this.imgCd = imgCd;
-	}
+    public void setImgCd(String imgCd) {
+        this.imgCd = imgCd;
+    }
 
-	public String getChannelId() {
-		return this.channelId;
-	}
+    public String getChannelId() {
+        return this.channelId;
+    }
 
-	public void setChannelId(String channelId) {
-		this.channelId = channelId;
-	}
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
 
-	public String getUserKey() {
-		return this.userKey;
-	}
+    public String getUserKey() {
+        return this.userKey;
+    }
 
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
-	}
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
+    }
 
-	public String getDeviceKey() {
-		return this.deviceKey;
-	}
+    public String getDeviceKey() {
+        return this.deviceKey;
+    }
 
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
-	}
+    public void setDeviceKey(String deviceKey) {
+        this.deviceKey = deviceKey;
+    }
 
 
 }
