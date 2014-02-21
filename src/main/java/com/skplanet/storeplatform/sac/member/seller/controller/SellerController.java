@@ -267,7 +267,7 @@ public class SellerController {
 	 * @param req
 	 * @return RemoveFlurrySacRes
 	 */
-	@RequestMapping(value = "/dev/removeFlurry/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/removeFlurry/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, @RequestBody @Validated RemoveFlurrySacReq req) {
 		return this.sellerService.removeFlurry(header, req);

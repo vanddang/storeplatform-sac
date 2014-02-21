@@ -811,7 +811,7 @@ public class DummySellerController {
 	 * 
 	 * @return RemoveFlurrySacRes
 	 */
-	@RequestMapping(value = "/removeFlurry/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/removeFlurry/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveFlurrySacRes removeFlurry() {
 		RemoveFlurrySacRes res = new RemoveFlurrySacRes();
