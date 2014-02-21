@@ -1343,10 +1343,10 @@
            FROM (
                   SELECT 
                          B.CATALOG_ID 
-                         <if test="req.specialProdId == null and req.type == 'catalog'">
+                         <if test="req.specialProdId == null and req.type == 'channel'">
                         ,C.CATALOG_NM 
                         </if>
-                        <if test="req.specialProdId != null and req.type == 'catalog'">
+                        <if test="req.specialProdId != null and req.type == 'channel'">
                         ,O.PROD_NM  as catalogNm
                         </if>
                         ,H.PROD_ID 
