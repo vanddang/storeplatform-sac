@@ -125,6 +125,7 @@ public class FileUtil {
 				result.append(buff, 0, rsize);
 			}
 		} catch (IOException ioe) {
+			_bufferedReader.close();
 			throw new Exception(ioe);
 		} finally {
 			_bufferedReader.close();
