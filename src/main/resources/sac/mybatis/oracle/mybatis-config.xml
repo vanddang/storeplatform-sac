@@ -252,7 +252,11 @@
         <!-- ebook/코믹 테마 상품 조회 -->
         <typeAlias alias="ThemeEpubSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacReq" />
         <typeAlias alias="ThemeEpub"  type="com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeEpubInfo" />
-                                 
+            
+        <!-- 브렌드샵 테마 조회 -->
+        <typeAlias alias="ThemeBrandshopSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeBrandshopSacReq" />
+        <typeAlias alias="ThemeBrandshop"  type="com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeBrandshopInfo" />
+                             
         <!-- 이 상품과 유사 상품 조회 -->
         <typeAlias alias="SimilarProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacReq" />
         
