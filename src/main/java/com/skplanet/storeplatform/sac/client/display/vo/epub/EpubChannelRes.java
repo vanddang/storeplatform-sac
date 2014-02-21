@@ -12,12 +12,14 @@ package com.skplanet.storeplatform.sac.client.display.vo.epub;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * 이북/코믹 채널 상세 조회 Response Value Object.
  *
  * Updated on : 2014. 01. 07. Updated by : 임근대, SK 플래닛.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class EpubChannelRes extends CommonInfo {
 	private static final long serialVersionUID = -2524545955211375637L;
 	private CommonResponse commonResponse;
