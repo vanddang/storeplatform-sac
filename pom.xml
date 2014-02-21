@@ -106,11 +106,13 @@
 			<artifactId>storeplatform-sac-acl</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
+		<!-- 
         <dependency>
             <groupId>com.skplanet</groupId>
             <artifactId>storeplatform-prototype-rpc-sc-client</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency> 
+		 -->
 		<!-- JDBC Lib -->
 		<!-- NOTE : 프로젝트별로 DBMS가 틀릴 수 있다는 가정하에 JDBC 라이브러리 업무프로젝트레벨에서 선언하여 사용하도록함 -->
 		<dependency>
