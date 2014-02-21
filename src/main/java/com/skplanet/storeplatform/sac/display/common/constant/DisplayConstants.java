@@ -88,7 +88,6 @@ public class DisplayConstants {
 	public static final String DP_PROMOTION_IDENTIFIER_CD = "promotion";
 
 	public static final String DP_OUTSDCONTENTS_IDENTIFIER_CD = "outsdContents ";
-	public static final String DP_SELLER_IDENTIFIER_CD = "seller";
 
 	// //////////////////////////////////// TOP MENU ID //////////////////////////////////////////
 	/**
