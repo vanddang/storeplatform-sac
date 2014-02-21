@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * 기구매 SAC Service 인터페이스 구현체
@@ -38,20 +39,21 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	 * 
 	 * @param existenceReq
 	 *            요청정보
-	 * @return List<ExistenceRes>
+	 * @return List<ExistenceScRes>
 	 */
 	@Override
 	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceReq) {
 
-		// 구매완료건만을 넣기 위한 리스트
-		List<ExistenceScRes> existenceListScRes = new ArrayList<ExistenceScRes>();
-
+		// 기구매내역 조회함
 		List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceReq);
-
-		for (int i = 0; i < resultList.size(); i++) {
-			this.logger.debug("resultList.get(i).getStatusCd() : {}", resultList.get(i).getStatusCd());
-			if (resultList.get(i).getStatusCd() != null && resultList.get(i).getStatusCd().equals("OR000301")) {
-				existenceListScRes.add(resultList.get(i));
+		// 구매상태가 구매완료건만을 넣기 위한 리스트
+		List<ExistenceScRes> existenceListScRes = new ArrayList<ExistenceScRes>();
+		// 구매완료상태만 add 한다.
+		for (ExistenceScRes existenceScRes : resultList) {
+			this.logger.debug("existenceScRes.getStatusCd() : {}", existenceScRes.getStatusCd());
+			if (existenceScRes.getStatusCd() != null
+					&& existenceScRes.getStatusCd().equals(PurchaseConstants.PRCHS_STATUS_COMPT)) {
+				existenceListScRes.add(existenceScRes);
 			}
 		}
 		return existenceListScRes;
