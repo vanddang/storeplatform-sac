@@ -37,6 +37,7 @@ public class FreepassListReq extends CommonInfo {
 	private String tenantId; // 테넌트ID
 	private String langCd; // 언어
 	private String deviceModelCd; // 단말모델
+	private String virtualDeviceModelNo; // android_standard2
 
 	// Dummy Data용
 	private String dummy; // 더미체크
@@ -227,6 +228,21 @@ public class FreepassListReq extends CommonInfo {
 	 */
 	public void setProdRshpCd(String prodRshpCd) {
 		this.prodRshpCd = prodRshpCd;
+	}
+
+	/**
+	 * @return the virtualDeviceModelNo
+	 */
+	public String getVirtualDeviceModelNo() {
+		return this.virtualDeviceModelNo;
+	}
+
+	/**
+	 * @param virtualDeviceModelNo
+	 *            the virtualDeviceModelNo to set
+	 */
+	public void setVirtualDeviceModelNo(String virtualDeviceModelNo) {
+		this.virtualDeviceModelNo = virtualDeviceModelNo;
 	}
 
 }
