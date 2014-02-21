@@ -26,6 +26,9 @@ import com.skplanet.storeplatform.external.client.idp.vo.ServiceSubscriptionChec
 import com.skplanet.storeplatform.external.client.idp.vo.ServiceSubscriptionCheckEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthImageEcRes;
+import com.skplanet.storeplatform.external.client.inicis.sci.InicisSCI;
+import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcReq;
+import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcRes;
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
@@ -34,6 +37,7 @@ import com.skplanet.storeplatform.external.client.uaps.vo.OpmdEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UafmapEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -121,7 +125,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private MessageSourceAccessor messageSourceAccessor; // Message Properties
 
 	@Autowired
-	private MemberCommonComponent commonComponent; // MemberCommon
+	private MemberCommonComponent commonComponent; // 회원 공통기능 컴포넌트
+
+	@Autowired
+	private InicisSCI inicisSCI;
 
 	@Autowired
 	@Qualifier("sac")
@@ -513,7 +520,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
 			LOGGER.info("## 이메일 인증 완료.");
 		} else {
-			throw new StorePlatformException("SAC_MEM_3003");
+			throw new StorePlatformException("SAC_MEM_3003"); // 해당 인증코드가 DB Table에 존재하지 않음.
 		}
 		ConfirmEmailAuthorizationCodeRes response = new ConfirmEmailAuthorizationCodeRes();
 		response.setUserEmail(serviceAuthInfo.getAuthEmail());
@@ -634,9 +641,26 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	@Override
 	public AuthorizeAccountRes authorizeAccount(AuthorizeAccountReq request) {
-		// TODO 1. EC (Inicis 연동) 파라미터 전달, 결제계좌 정보 인증 요청
-		// TODO 2. EC (Inicis 연동) 결제계좌 인증 여부 Response
-		return null;
+		// 1. EC (Inicis 연동) 파라미터 전달, 결제계좌 정보 인증 요청
+		InicisAuthAccountEcReq inicisAuthAccountEcReq = new InicisAuthAccountEcReq();
+		inicisAuthAccountEcReq.setAcctNm(request.getBankAcctName());
+		inicisAuthAccountEcReq.setBankCd(request.getBankCode());
+		inicisAuthAccountEcReq.setAcctNo(request.getBankAccount());
+
+		LOGGER.info("[Miscellaneous.authorizeAccount] Inicis Request : {}", inicisAuthAccountEcReq);
+		InicisAuthAccountEcRes inicisAuthAccountEcRes = this.inicisSCI.authAccount(inicisAuthAccountEcReq);
+
+		// 2. EC (Inicis 연동) 결제계좌 인증 결과 로그.
+		if ("EC_INICIS_1000".equals(inicisAuthAccountEcRes.getResultCode())) {
+			LOGGER.info("결제 계좌정보 인증 성공. ResultCode : {}", inicisAuthAccountEcRes.getResultCode());
+		} else {
+			ErrorInfo errorInfo = new ErrorInfo();
+			errorInfo.setCode(inicisAuthAccountEcRes.getResultCode());
+			errorInfo.setMessage(inicisAuthAccountEcRes.getResultMsg());
+			throw new StorePlatformException(errorInfo);
+		}
+		return new AuthorizeAccountRes();
+
 	}
 
 	/**
