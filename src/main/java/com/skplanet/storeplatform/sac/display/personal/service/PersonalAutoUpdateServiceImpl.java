@@ -20,11 +20,16 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -65,6 +70,12 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 	@Autowired
 	private AppInfoGenerator appGenerator;
 
+	@Autowired
+	SearchUserSCI searchUserSCI;
+
+	@Autowired
+	ExistenceInternalSacSCI existenceInternalSacSCI;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -82,6 +93,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 		Map<String, Object> mapReq = new HashMap<String, Object>();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
+		List<ExistenceRes> listPrchs = null;
 
 		// 다운로드 서버 상태 조회는 & 앱 버전 정보 활용 조회 처리 & 업그레이드 관리이력 조회는 tenant 단에서 처리하기 때문에 제외
 
@@ -146,10 +158,10 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				String sArrPkgInfo[] = null;
 				for (String s : sArrPkgNm) {
 					sArrPkgInfo = StringUtils.split(s, "/");
-					// 단말보다 Version Code 가 높은경우
+					this.log.debug("###########################################");
 					this.log.debug("##### {}'s server version is {} !!!!!!!!!!", sPkgNm, iPkgVerCd);
 					this.log.debug("##### {}'s user   version is {} !!!!!!!!!!", sPkgNm, sArrPkgInfo[1]);
-
+					// 단말보다 Version Code 가 높은경우
 					if (sPkgNm.equals(sArrPkgInfo[0])) {
 						if (iPkgVerCd > NumberUtils.toInt(sArrPkgInfo[1])) {
 							listProd.add(mapPkg);
@@ -160,28 +172,51 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				}
 			}
 
+			try {
+				this.log.debug("##### check user status");
+				SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+				searchUserSacReq.setUserKey(req.getUserKey());
+				SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
+				String userMainStatus = searchUserSacRes.getUserMainStatus();
+				this.log.debug("##### userMainStatus :: {} " + userMainStatus);
+				// TODO osm1021 예외 처리 및 pass가 안 될때 처리 정리 필요
+				// 정상 일시 정지 회원이 아닐 경우 -> 구매 내역이 없는 것으로 간주하고 Update 대상 무료 앱만 Response한다.
+				if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
+						|| DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
+					this.log.debug("##### This user is normal user!!!!");
+				} else {
+					this.log.debug("##### This user is unnormal user!!!!");
+					throw new StorePlatformException("SAC_DSP_0006");
+				}
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_DSP_1002", e);
+			}
+
 			/**************************************************************
 			 * 구매여부 및 최근 업데이트 정보 추출
 			 **************************************************************/
 			if (!listPid.isEmpty()) {
 
-				// TODO osm1021 추후 LocalSCI 처리로 변환 필요
 				// 기구매 체크
-				ExistenceScReq existenceScReq = new ExistenceScReq();
-				List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
-				for (String prodId : listPid) {
-					ExistenceItemSc existenceItemSc = new ExistenceItemSc();
-					existenceItemSc.setProdId(prodId);
-					existenceItemScList.add(existenceItemSc);
-				}
-				existenceScReq.setTenantId(tenantHeader.getTenantId());
-				existenceScReq.setUserKey(req.getUserKey());
-				existenceScReq.setDeviceKey(req.getDeviceKey());
-				// existenceScReq.setExistenceItemSc(existenceItemScList);
-				existenceScReq.setProductList(existenceItemScList);
-				List<ExistenceScRes> listPrchs = this.existenceSacService.searchExistenceList(existenceScReq);
+				try {
+					ExistenceReq existenceReq = new ExistenceReq();
+					List<ExistenceItem> existenceItemList = new ArrayList<ExistenceItem>();
+					for (String prodId : listPid) {
+						ExistenceItem existenceItem = new ExistenceItem();
+						existenceItem.setProdId(prodId);
+						existenceItemList.add(existenceItem);
 
-				// List<Object> listPrchs = queryForList("updateAlarm.getPrchsInfo", mapReq);
+					}
+					existenceReq.setTenantId(tenantHeader.getTenantId());
+					existenceReq.setUserKey(req.getUserKey());
+					existenceReq.setDeviceKey(req.getDeviceKey());
+					existenceReq.setExistenceItem(existenceItemList);
+
+					ExistenceListRes existenceListRes = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
+					listPrchs = existenceListRes.getExistenceListRes();
+				} catch (Exception e) {
+					throw new StorePlatformException("SAC_DSP_2002", e);
+				}
 				if (!listPrchs.isEmpty()) {
 					String sPid = "";
 					Map<String, Object> mapUpdate = null;
@@ -191,7 +226,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 						// Map<String, String> mapPrchs = null;
 
 						// 구매내역이 존재하는 경우만
-						for (ExistenceScRes prchInfo : listPrchs) {
+						for (ExistenceRes prchInfo : listPrchs) {
 							// for (int j = 0; j < listPrchs.size(); j++) {
 							if (sPid.equals(prchInfo.getProdId())) {
 								mapUpdate.put("PRCHS_ID", prchInfo.getPrchsId());
