@@ -25,6 +25,26 @@ public class ParentStatusRes extends CommonInfo {
 
     private String parentStatus;
 
+    private String parentName;
+
+    private String partName;
+
+    public String getPartName() {
+        return partName;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
     public String getParentChannelId() {
         return parentChannelId;
     }
