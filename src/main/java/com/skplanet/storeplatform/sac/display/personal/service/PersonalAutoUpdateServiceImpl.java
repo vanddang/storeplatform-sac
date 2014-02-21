@@ -123,6 +123,8 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 		List<Map> listPkg = this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", mapReq,
 				Map.class);
 		mapReq.remove("PKG_LIST");
+		this.log.debug("##### auto update target list  : {}", listPkg);
+		this.log.debug("##### auto update target cnt   : {}", listPkg.size());
 		if (listPkg.isEmpty()) {
 			throw new StorePlatformException("SAC_DSP_0006");
 		} else {
@@ -145,6 +147,9 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				for (String s : sArrPkgNm) {
 					sArrPkgInfo = StringUtils.split(s, "/");
 					// 단말보다 Version Code 가 높은경우
+					this.log.debug("##### {}'s server version is {} !!!!!!!!!!", sPkgNm, iPkgVerCd);
+					this.log.debug("##### {}'s user   version is {} !!!!!!!!!!", sPkgNm, sArrPkgInfo[1]);
+
 					if (sPkgNm.equals(sArrPkgInfo[0])) {
 						if (iPkgVerCd > NumberUtils.toInt(sArrPkgInfo[1])) {
 							listProd.add(mapPkg);

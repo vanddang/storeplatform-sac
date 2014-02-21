@@ -46,6 +46,7 @@ public class SellerAppListServiceImpl implements SellerAppListService {
 
 		CommonResponse commonResponse = new CommonResponse();
 		SellerAppListRes res = new SellerAppListRes();
+		res.setCommonResponse(commonResponse);
 		// DeviceProfile deviceProfile = this.commonDAO.queryForObject("DeviceProfile.selectDeviceProfile", requestVO,
 		// DeviceProfile.class);
 

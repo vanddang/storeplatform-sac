@@ -23,7 +23,6 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateAlarmReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateAlarmRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -66,13 +65,13 @@ public class PersonalUpdateAlarmServiceImpl implements PersonalUpdateAlarmServic
 
 		CommonResponse commonResponse = new CommonResponse();
 		PersonalUpdateAlarmRes res = new PersonalUpdateAlarmRes();
-		List<Product> productList = new ArrayList<Product>();
+		// List<Product> productList = new ArrayList<Product>();
 		Map<String, Object> mapReq = new HashMap<String, Object>();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
 
 		String sAction = ObjectUtils.toString(mapReq.get("action"));
-		String sAlarms = ObjectUtils.toString(mapReq.get("ALARM_LIST"));
+		// String sAlarms = ObjectUtils.toString(mapReq.get("ALARM_LIST"));
 
 		String sType = req.getType();
 		String sArrProds[] = StringUtils.split(req.getList(), "+");
@@ -160,8 +159,8 @@ public class PersonalUpdateAlarmServiceImpl implements PersonalUpdateAlarmServic
 		} else {
 			this.log.info("## No Alarm data");
 		}
-		Map<String, String> mapDm = new HashMap<String, String>();
 
+		res.setCommonResponse(commonResponse);
 		return res;
 	}
 

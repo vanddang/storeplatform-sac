@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateAlarmReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateAlarmRes;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -81,12 +79,6 @@ public class PersonalController {
 	@ResponseBody
 	public PersonalAutoUpdateRes updateAutoUpdateList(@RequestBody PersonalAutoUpdateReq req, SacRequestHeader header) {
 		return this.personalAutoUpdateService.updateAutoUpdateList(req, header);
-	}
-
-	@RequestMapping(value = "/update/alarm/modify/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public PersonalUpdateAlarmRes updateAlarm(@RequestBody PersonalUpdateAlarmReq req, SacRequestHeader header) {
-		return this.personalUpdateAlarmService.updateAlarm(req, header);
 	}
 
 }

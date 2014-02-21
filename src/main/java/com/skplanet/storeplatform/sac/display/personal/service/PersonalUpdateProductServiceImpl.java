@@ -97,6 +97,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		List<HistorySacIn> listPrchs = null;
+		boolean isNormalUser = false;
 
 		String memberType = req.getMemberType();
 		/**************************************************************
@@ -135,6 +136,9 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 				Map.class);
 		mapReq.remove("PKG_LIST");
 
+		this.log.debug("##### update target list  : {}", listPkg);
+		this.log.debug("##### update target cnt   : {}", listPkg.size());
+
 		if (listPkg.isEmpty()) {
 			throw new StorePlatformException("SAC_DSP_0006");
 		} else {
@@ -171,12 +175,19 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 						mapPkg.put("REQ_APK_VER_CD", sArrPkgInfo[1]);
 						mapPkg.put("REQ_INSTALLER", ((sArrPkgInfo.length > 2) ? sArrPkgInfo[2] : ""));
 
+						this.log.debug("##### {}'s server version is {} !!!!!!!!!!", sPkgNm, iPkgVerCd);
+						this.log.debug("##### {}'s user   version is {} !!!!!!!!!!", sPkgNm, iReqPkgVerCd);
+						this.log.debug("##### Is fake update?????????? : {} ", sFakeYn);
 						if (sFakeYn.equals("Y")) {
 							// Fake Update 대상일 경우( 단말 Version <= 서버 Version )
 							if (iPkgVerCd >= iReqPkgVerCd) {
+								this.log.debug("##### {} is fake update target!!!!!!!!!!", sPkgNm);
 								// Version 이 동일할 경우 +1
 								if (iPkgVerCd == iReqPkgVerCd) {
+									this.log.debug("##### fake update target & same version !!!!!!!!!");
 									mapPkg.put("APK_VER_CD", Integer.toString((iPkgVerCd + 1)));
+									this.log.debug("##### fake update target version up from {} to {}", iPkgVerCd,
+											iPkgVerCd + 1);
 								}
 								listProd.add(mapPkg);
 								listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
@@ -184,6 +195,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 						} else {
 							// 일반 업데이트 대상 ( 단말 Version < 서버 Version )
 							if (iPkgVerCd > iReqPkgVerCd) {
+								this.log.debug("##### {} is normal update target!!!!!!!!!!", sPkgNm);
 								listProd.add(mapPkg);
 								listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
 							}
@@ -205,58 +217,67 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 			if (!listPid.isEmpty()) {
 
 				if (memberType.equals("updatedList")) {
+					this.log.debug("##### Tstore user process start!!!!!!!!!");
 					// 회원일 경우 회원 상태 조회
 					try {
+						this.log.debug("##### check user status");
 						SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
 						searchUserSacReq.setUserKey(req.getUserKey());
-						// SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
-						// TODO osm1021 에러 회피를 위해서 일단 null 추후 삭제
-						SearchUserSacRes searchUserSacRes = null;
+						SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
 						String userMainStatus = searchUserSacRes.getUserMainStatus();
-
+						this.log.debug("##### userMainStatus :: {} " + userMainStatus);
 						// TODO osm1021 예외 처리 및 pass가 안 될때 처리 정리 필요
-						// 정상 일시 정지 회원이 아닐 경우 -> 빈 값으로 return하여 처리 종료
-						if (!DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
-								&& !DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
-							commonResponse.setTotalCount(productList.size());
-							res.setCommonResponse(commonResponse);
-							res.setProductList(productList);
-							return res;
+						// 정상 일시 정지 회원이 아닐 경우 -> 구매 내역이 없는 것으로 간주하고 Update 대상 무료 앱만 Response한다.
+						if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
+								|| DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
+							isNormalUser = true;
+							this.log.debug("##### This user is normal user!!!!");
+						} else {
+							this.log.debug("##### This user is unnormal user!!!! Skip the purchase check!!!!!!!");
 						}
 					} catch (Exception e) {
 						throw new StorePlatformException("SAC_DSP_1002", e);
 					}
 
-					try {
-						List<ProductListSacIn> productListSacInList = new ArrayList<ProductListSacIn>();
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-						String endDate = sdf.format(new java.util.Date());
-						for (String prodId : listPid) {
-							ProductListSacIn productListSacIn = new ProductListSacIn();
-							productListSacIn.setProdId(prodId);
-							productListSacInList.add(productListSacIn);
-						}
+					if (isNormalUser) {
+						try {
+							this.log.debug("##### Purchase check start!!!!!!!!!");
+							List<ProductListSacIn> productListSacInList = new ArrayList<ProductListSacIn>();
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+							String endDate = sdf.format(new java.util.Date());
 
-						HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
-						historyListSacReq.setTenantId(tenantHeader.getTenantId());
-						historyListSacReq.setUserKey(req.getUserKey());
-						historyListSacReq.setDeviceKey(req.getDeviceKey());
-						historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-						historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-						historyListSacReq.setEndDt(endDate);
-						// TODO osm1021 offset 제거 필요
-						historyListSacReq.setOffset(1);
-						historyListSacReq.setCount(100);
-						historyListSacReq.setProductList(productListSacInList);
+							this.log.debug("##### endDate :: {}", endDate);
+							for (String prodId : listPid) {
+								ProductListSacIn productListSacIn = new ProductListSacIn();
+								productListSacIn.setProdId(prodId);
+								productListSacInList.add(productListSacIn);
+							}
 
-						// 구매내역 조회 실행
-						HistoryListSacInRes historyListSacRes = this.historyInternalSCI
-								.searchHistoryList(historyListSacReq);
-						if (historyListSacRes != null) {
-							listPrchs = historyListSacRes.getHistoryList();
+							HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
+							historyListSacReq.setTenantId(tenantHeader.getTenantId());
+							historyListSacReq.setUserKey(req.getUserKey());
+							historyListSacReq.setDeviceKey(req.getDeviceKey());
+							historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+							historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+							historyListSacReq.setEndDt(endDate);
+							// TODO osm1021 offset 제거 필요
+							historyListSacReq.setOffset(1);
+							historyListSacReq.setCount(100);
+							historyListSacReq.setProductList(productListSacInList);
+
+							// 구매내역 조회 실행
+							HistoryListSacInRes historyListSacRes = this.historyInternalSCI
+									.searchHistoryList(historyListSacReq);
+							if (historyListSacRes != null) {
+								listPrchs = historyListSacRes.getHistoryList();
+								this.log.debug("##### Purchase check result size : {}", listPrchs.size());
+								this.log.debug("##### Purchase check result  : {}", listPrchs);
+							} else {
+								this.log.debug("##### No purchase result!!");
+							}
+						} catch (Exception e) {
+							throw new StorePlatformException("SAC_DSP_2001", e);
 						}
-					} catch (Exception e) {
-						throw new StorePlatformException("SAC_DSP_2001", e);
 					}
 					// mapReq.remove("PID_LIST");
 
@@ -279,15 +300,22 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 							// 구매내역이 존재하는 경우 구매 ID Setting
 							boolean isPrchsExists = false;
-							Map<String, String> mapPrchs = null;
 							// for (int j = 0; j < listPrchs.size(); j++) {
 							for (HistorySacIn prchInfo : listPrchs) {
-								// mapPrchs = (Map<String, String>) listPrchs.get(j);
 								// 구매한 상품의 상품 Id
 								String prchProdId = prchInfo.getProdId();
 								// 구매한 상품의 구매 Id
 								String prchID = prchInfo.getPrchsId();
 								if (sPid.equals(prchProdId)) {
+									this.log.debug("##### Hit purchase app & update target !!!!!!!!!!!!");
+									this.log.debug("##### Purchased app's detail info");
+									this.log.debug("##### Pid : {}", sPid);
+									this.log.debug("##### FakeYn : {}", sFakeYn);
+									this.log.debug("##### App price : {}", sProdAmt);
+									this.log.debug("##### Installer : {}", sInstaller);
+									this.log.debug("##### Server app version : {}", iPkgVerCd);
+									this.log.debug("##### User app version : {}", iReqPkgVerCd);
+
 									// 알림설정 미해제인 경우 구매ID Setting
 									if (StringUtils.isEmpty((String) mapPkg.get("ALARM_OFF_DT"))) {
 										// 구매내역 존재 시 업데이트 목록 가공
@@ -295,18 +323,25 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 										// ② 서버 Version = 단말 Version 인 경우
 										// Fake Update 상품이고 Google Play에서 설치(installer가 'com.android.vending') 했으면 업데이트
 										// 대상
+
 										if (iPkgVerCd > iReqPkgVerCd) {
+											this.log.debug("##### Server app version > User app verion");
 											mapPkg.put("PRCHS_ID", prchID);
+											this.log.debug("##### Set PRCH_ID to {}", prchID);
 										} else if (iPkgVerCd == iReqPkgVerCd) {
+											this.log.debug("##### Server app version = User app verion");
 											if (sFakeYn.equals("Y") && sInstaller.equals("com.android.vending")) {
+												this.log.debug("##### Fake update target && install is com.android.vending");
 												mapPkg.put("PRCHS_ID", prchID);
+												this.log.debug("##### Set PRCH_ID to {}", prchID);
 											} else {
+												mapPkg.clear();
 											}
-											mapPkg.clear();
 										} else {
 											mapPkg.clear();
 										}
 									} else {
+										this.log.debug("##### Not alarm setting app!!!!!!!!!!!");
 										mapPkg.clear();
 									}
 
@@ -317,13 +352,18 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 							// 구매내역이 존재하지 않는 경우
 							if (!isPrchsExists) {
+								this.log.debug("##### Tstore user && Has update target && Normal user & Has purchase history =========> But has no update target!!!!!!");
 								// 유료상품은 구매내역이 없으면 업데이트 목록에서 제외
 								if (!sProdAmt.equals("0")) {
+									this.log.debug("##### Remove paid app from update list");
 									mapPkg.clear();
 								} else {
 									// Fake Update 대상일 경우 FUPDATE+상품ID 로 구매ID 생성
 									if (sFakeYn.equals("Y")) {
-										mapPkg.put("PRCHS_ID", "FUPDATE" + sPid);
+										String fupdateId = "FUPDATE" + sPid;
+										this.log.debug("##### It's free app and fake update target");
+										this.log.debug("##### Set purchase id to {}", fupdateId);
+										mapPkg.put("PRCHS_ID", fupdateId);
 									}
 								}
 							}
@@ -334,26 +374,31 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 						}
 
 					} else {
-
+						this.log.debug("##### Tstore user && Has update target && Normal user =========> But has no purchase history!!!!!!");
+						this.log.debug("##### Add result for only free app!!!!!!!!!!");
 						// 구매내역이 없을 경우 무료상품만 리스트에 포함
 						for (int i = 0; i < listProd.size(); i++) {
 							mapPkg = listProd.get(i);
 							sProdAmt = ObjectUtils.toString(mapPkg.get("PROD_AMT"));
+							this.log.debug("##### Add price : {}", sProdAmt);
 							if (sProdAmt.equals("0")) {
 								sFakeYn = ObjectUtils.toString(mapPkg.get("FAKE_YN"));
+								this.log.debug("##### Is fake update target??? : {}" + sFakeYn);
 								// Fake Update 대상일 경우 FUPDATE+상품ID 로 구매ID 생성
 								if (sFakeYn.equals("Y")) {
-									mapPkg.put("PRCHS_ID", "FUPDATE" + mapPkg.get("PROD_ID"));
+									String fupdateId = "FUPDATE" + mapPkg.get("PROD_ID");
+									mapPkg.put("PRCHS_ID", fupdateId);
+									this.log.debug("##### Set purchase id to {}", fupdateId);
 								}
 								listUpdate.add(mapPkg);
 							}
 						}
-
 					}
-
 				} else if (memberType.equals("updatedListForGuest")) {
+					this.log.debug("##### Guest process start!!!!!!!!!");
 					// 비회원일 경우 구매 이력에 상관없이 update 대상 전부를 추가
 					listUpdate.addAll(listProd);
+					this.log.debug("##### Update list for guest : {}", listUpdate);
 				}
 
 				if (listUpdate.isEmpty()) {

@@ -181,7 +181,7 @@ public class DisplayConstants {
 
 	public static final String DP_MENU_TOPCLASS_TYPE = "topClass";
 	public static final String DP_META_CLASS_MENU_TYPE = "metaClass";
-	/** 장르 */
+	/** 장르. */
 	public static final String DP_MENU_TYPE_GENRE = "genre";
 	public static final String DP_MENU_TYPE_SUB_GENRE = "subGenre";
 
@@ -256,38 +256,38 @@ public class DisplayConstants {
 	public static final String DP_EBOOK_PLAY_SUPPORT_NM = "play";
 
 	// //////////////////////////////////// Source Type //////////////////////////////////////////
-	/** 상품 */
+	/** 상품. */
 	public static final String DP_SOURCE_TYPE_PRODUCT = "product";
-	/** 썸네일 */
+	/** 썸네일. */
 	public static final String DP_SOURCE_TYPE_THUMBNAIL = "thumbnail";
-	/** 원본 */
+	/** 원본. */
 	public static final String DP_SOURCE_TYPE_ORIGINAL = "original";
-	/** 동영상 */
+	/** 동영상. */
 	public static final String DP_SOURCE_TYPE_MOVIE = "movie";
-	/** 스크린샷 */
+	/** 스크린샷. */
 	public static final String DP_SOURCE_TYPE_SCREENSHOT = "screenshot";
-	/** 음악 */
+	/** 음악. */
 	public static final String DP_SOURCE_TYPE_MUSIC = "music";
-	/** 바코드이미지 */
+	/** 바코드이미지. */
 	public static final String DP_SOURCE_TYPE_BARCODE = "barcode";
-	/** 배너이미지 */
+	/** 배너이미지. */
 	public static final String DP_SOURCE_TYPE_BANNER = "banner";
-	/** 프로모션이미지 */
+	/** 프로모션이미지. */
 	public static final String DP_SOURCE_TYPE_PROMOTION = "promotion";
-	/** 쇼핑상세이미지 */
+	/** 쇼핑상세이미지. */
 	public static final String DP_SOURCE_TYPE_DETAIL = "detail";
-	/** 쇼핑컷상세이미지 */
+	/** 쇼핑컷상세이미지. */
 	public static final String DP_SOURCE_TYPE_CUT_DETAIL = "cutDetail";
-	/** 미리보기 */
+	/** 미리보기. */
 	public static final String DP_SOURCE_TYPE_PREVIEW = "preview";
 
-	/** 음악 mp3-192 */
+	/** 음악 mp3-192. */
 	public static final String DP_SOURCE_TYPE_AUDIO_MP3_192 = "audio/mp3-192";
-	/** 음악 mp3-128 */
+	/** 음악 mp3-128. */
 	public static final String DP_SOURCE_TYPE_AUDIO_MP3_128 = "audio/mp3-128";
-	/** Intimate Message 배경이미지 */
+	/** Intimate Message 배경이미지. */
 	public static final String DP_SOURCE_TYPE_GNB_BG = "gnb/bg";
-	/** Intimate Message 아이콘 이미지 */
+	/** Intimate Message 아이콘 이미지. */
 	public static final String DP_SOURCE_TYPE_GNB_ICON = "gnb/icon";
 
 	// //////////////////////////////////// 이미지 코드 //////////////////////////////////////////
@@ -345,27 +345,27 @@ public class DisplayConstants {
 
 	// ////////////////////////////////// 날짜 유형 //////////////////////////////////////////
 	public static final String DP_DATE_USAGE_PERIOD = "duration/usagePeriod";
-	/** 등록 날짜 */
+	/** 등록 날짜. */
 	public static final String DP_DATE_REG = "date/reg";
-	/** 판매등록 날짜 */
+	/** 판매등록 날짜. */
 	public static final String DP_DATE_SALE_REG = "date/saleReg";
-	/** 개봉일 */
+	/** 개봉일. */
 	public static final String DP_DATE_RELEASE = "date/release";
-	/** 출판일 */
+	/** 출판일. */
 	public static final String DP_DATE_PUBLISH = "date/publish";
-	/** 방송 날짜 */
+	/** 방송 날짜. */
 	public static final String DP_DATE_BROADCAST = "date/broadcast";
-	/** 발행일 */
+	/** 발행일. */
 	public static final String DP_DATE_ISSUE = "date/issue";
 
 	// ////////////////////////////////// 도서 유형 //////////////////////////////////////////
-	/** 단행본 */
+	/** 단행본. */
 	public static final String DP_BOOK_BOOK = "DP004301";
-	/** 연재 */
+	/** 연재. */
 	public static final String DP_BOOK_SERIAL = "DP004302";
-	/** 잡지 */
+	/** 잡지. */
 	public static final String DP_BOOK_MAGAZINE = "DP004303";
-	/** 웹툰 */
+	/** 웹툰. */
 	public static final String DP_BOOK_WEBTOON = "DP004304";
 
 	// ////////////////////////////////// ETC //////////////////////////////////////////
@@ -422,9 +422,9 @@ public class DisplayConstants {
 	// ////////////////////////////////////// rights //////////////////////////////////////////
 	public static final String DP_RIGHTS_ALLOW_DOMESTIC = "domestic"; // dwldAreaLimitYn 다운로드 지역제한 == 'Y' 일 경우 domestic
 																	  // 리턴
-	/** 바로보기/대여 */
+	/** 바로보기/대여. */
 	public static final String DP_RIGHTS_PLAY = "play";
-	/** 다운로드/소장 */
+	/** 다운로드/소장. */
 	public static final String DP_RIGHTS_STORE = "store";
 
 	// ////////////////////////////////////// preview //////////////////////////////////////////
@@ -432,51 +432,51 @@ public class DisplayConstants {
 	public static final String DP_PREVIEW_LQ = "video/x-freeview-lq";
 
 	/**
-	 * 특정 상품 조회 API 파라미터 제한 개수
+	 * 특정 상품 조회 API 파라미터 제한 개수.
 	 */
-	public static final Integer DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT = new Integer(50);
+	public static final Integer DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT = Integer.valueOf(50);
 
 	/**
-	 * 미지원 단말
+	 * 미지원 단말.
 	 */
 	public static final String DP_ANDROID_STANDARD_NM = "android_standard";
 
 	/**
-	 * 가상 모델명
+	 * 가상 모델명.
 	 */
 	public static final String DP_ANDROID_STANDARD2_NM = "android_standard2";
 
 	/**
-	 * 카테고리 태그
+	 * 카테고리 태그.
 	 */
 	public static final String DP_CATEGORY_TAG_CD = "DP004501";
 	/**
-	 * 키워드 태그
+	 * 키워드 태그.
 	 */
 	public static final String DP_KEYWORD_TAG_CD = "DP004502";
 	/**
-	 * 셀러 태그
+	 * 셀러 태그.
 	 */
 	public static final String DP_SELLER_TAG_CD = "DP004503";
 	/**
-	 * 테이스트 대상 태그
+	 * 테이스트 대상 태그.
 	 */
 	public static final String DP_TASTE_TARGET_CD = "DP004504";
 	/**
-	 * 테이스트 장소 태그
+	 * 테이스트 장소 태그.
 	 */
 	public static final String DP_TASTE_PLACE_CD = "DP004505";
 	/**
-	 * 테이스트 목적 태그
+	 * 테이스트 목적 태그.
 	 */
 	public static final String DP_TASTE_PURPOSE_CD = "DP004506";
 	/**
-	 * 쇼핑/쿠폰 태그
+	 * 쇼핑/쿠폰 태그.
 	 */
 	public static final String DP_SHOPPING_COUPON_CD = "DP004507";
 
 	/**
-	 * 구매
+	 * 구매.
 	 */
 	public static final String PRCHS_PROD_HAVE_YES = "Y"; // 상품보유
 	public static final String PRCHS_PROD_HAVE_NO = "N"; // 상품 미보유
@@ -492,7 +492,7 @@ public class DisplayConstants {
 	public static final String DP_AUTOPAY_NORMAL = "normal"; // 일반결제
 
 	/**
-	 * OpenApi Release Type
+	 * OpenApi Release Type.
 	 */
 	public static final String DP_OPENAPI_RELEASETYPE_DAY = "1"; // 1일 이내
 	public static final String DP_OPENAPI_RELEASETYPE_WEEK = "7"; // 7일 이내

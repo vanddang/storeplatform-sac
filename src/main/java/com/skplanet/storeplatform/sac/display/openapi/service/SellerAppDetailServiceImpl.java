@@ -45,6 +45,7 @@ public class SellerAppDetailServiceImpl implements SellerAppDetailService {
 	public SellerAppDetailRes searchDeviceProfile(SellerAppDetailReq req, SacRequestHeader header) {
 		CommonResponse commonResponse = new CommonResponse();
 		SellerAppDetailRes res = new SellerAppDetailRes();
+		res.setCommonResponse(commonResponse);
 		return res;
 	}
 
