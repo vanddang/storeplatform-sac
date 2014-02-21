@@ -229,7 +229,6 @@ public class IdpServiceImpl implements IdpService {
 			userMbr.setIsParent(isParentApprove); // 법정대리인 동의여부(Y/N)
 			userMbr.setIsMemberPoint(ocbJoinCodeYn); // 통합 포인트 여부 (Y/N)
 
-			// TO DO ... 실명인증정보 공통 내부 메소드로 정의해야 함.
 			MbrAuth mbrAuth = this.getMbrAuthByNew(map, "N");
 
 			createUserRequest.setCommonRequest(commonRequest); // 공통요청
@@ -2840,6 +2839,16 @@ public class IdpServiceImpl implements IdpService {
 						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
 						imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
 
+						if (!newUserID.equals(searchUserResponse.getUserMbr().getUserID())) {
+							// 공통_기타 회원ID 변경 시작
+							ChangeDisplayUserSacReq changeDisplayUserSacReqByUserID = new ChangeDisplayUserSacReq();
+							changeDisplayUserSacReqByUserID.setNewUserId(newUserID);
+							changeDisplayUserSacReqByUserID.setOldUserId(searchUserResponse.getUserMbr().getUserID());
+							changeDisplayUserSacReqByUserID.setTenantId(tenantID);
+							this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReqByUserID);
+							// 공통_기타 회원ID 변경 끝
+						}
+
 					}
 				}
 			} catch (StorePlatformException spe) {
@@ -2879,13 +2888,10 @@ public class IdpServiceImpl implements IdpService {
 		userID = map.get("user_id").toString();
 		ocbJoinCodeYn = map.get("ocb_join_code").toString();
 		boolean siteCodeCheck = false; // 이용동의 사이트중 tstore가 있는지 없는지 체크하기 위한 boolean 변수
-
 		ImResult imResult = new ImResult();
 		imResult.setCmd("rXUpdateAgreeUserIDP");
 		imResult.setUserId(userID);
 		imResult.setImIntSvcNo(imIntSvcNo);
-		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE); // 실패를 기본셋팅
-		imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT); // 실패를 기본셋팅
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantID);
@@ -2930,178 +2936,231 @@ public class IdpServiceImpl implements IdpService {
 		// 1. 통합서비스 번호가 존재시에만 로직 수행 이용동의
 		if (!"".equals(imIntSvcNo)) {
 			// 이용동의 사이트 목록 배포 (신규) 이용동의 사이트 목록 배포 합치기
-			// 1-1. REAL 신규인경우가
-			// 1-2. ONEID에 사이트에가서 TSTORE아이디로 로그인한후 합치기메뉴를 통해 다른 ID를 합친경우
+			// 1-1. REAL 신규인경우
+			// 1-2. ONEID에 사이트에가서 TSTORE아이디로 로그인한후 합치기메뉴를 통해 다른 ID를 합치는경우 oldID param으로 전달되어짐. 이경우 전환처리(수정) 하면 됨
 			if ("null".equals(oldID) || "".equals(oldID)) {
-				LOGGER.debug("JOIN NEW DATA INSERT START");
-				CreateUserRequest createUserRequest = new CreateUserRequest();
-				CreateUserResponse create = null;
-				// 공통으로 사용되는 요청정보
+				// 20140221 방어로직 추가 기존에 타사이트에서 ONEID가입시 TSTORE미동의 회원으로 가입을 했으나
+				// TSOTE에 아이디가 생긴경우가 발생 이경우 통합서비스번호로 조회하여 TSTORE정보가 존재시 수정함.
+				SearchUserRequest searchUserRequest = new SearchUserRequest();
+				searchUserRequest.setCommonRequest(commonRequest);
 
-				// 사용자 기본정보
-				UserMbr userMbr = new UserMbr();
-
-				userMbr.setTenantID(tenantID); // 테넌트 ID
-				userMbr.setSystemID(systemID); // 테넌트의 시스템 ID
-
-				userMbr.setUserKey(""); // 사용자 Key
-				if (map.get("user_key") != null)
-					userMbr.setImMbrNo(map.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key IDP 통합서비스 키
-																		// USERMBR_NO
-				userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // * 사용자 구분 코드 ONEID회원으로 셋팅
-				userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상
-				userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
-				userMbr.setImSvcNo(imIntSvcNo); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호
-				userMbr.setIsImChanged(map.get("is_im_changed").toString()); // 전환가입코드 * * - 전환가입 : Y, 신규가입 : N, 변경가입 :
-																			 // C,
-																			 // 변경전환 : H
-				userMbr.setUserID(userID); // 사용자 ID
-
-				if (map.get("user_tn_nation_cd") != null)
-					userMbr.setUserPhoneCountry(map.get("user_tn_nation_cd").toString()); // 연락처 국가 코드
-
-				if (map.get("user_tn") != null)
-					userMbr.setUserPhone(map.get("user_tn").toString()); // 사용자 연락처
-
-				if (map.get("user_email") != null)
-					userMbr.setUserEmail(map.get("user_email").toString()); // 사용자 이메일 주소
-
-				if (map.get("user_name") != null)
-					userMbr.setUserName(map.get("user_name").toString()); // 사용자 이름
-
-				if (map.get("user_sex") != null)
-					userMbr.setUserSex(map.get("user_sex").toString()); // 사용자 성별
-
-				if (map.get("user_birthday") != null)
-					userMbr.setUserBirthDay(map.get("user_birthday").toString()); // 사용자 생년월일
-
-				if (map.get("user_nation_code") != null)
-					userMbr.setUserCountry(map.get("user_nation_code").toString()); // 사용자 국가 코드
-
-				userMbr.setImSiteCode(map.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
-				// 실명인증 여부 신규인경우 Y로 전달받아도 실명인증정보에서 신규인경우 N으로 수정이됨
-				userMbr.setIsRealName(map.get("is_rname_auth").toString());
-				userMbr.setIsParent(isParentApprove); // 법정대리인 동의여부(Y/N)
-				userMbr.setIsMemberPoint(ocbJoinCodeYn); // 통합 포인트 여부 (Y/N)
-
-				// TO DO ... 실명인증정보 공통 내부 메소드로 정의해야 함.
-				MbrAuth mbrAuth = this.getMbrAuthByNew(map, "N");
-
-				createUserRequest.setCommonRequest(commonRequest); // 공통요청
-				createUserRequest.setUserMbr(userMbr); // 사용자정보
-
-				// 법정대리인 정보 14세미만인 경우 대리인 정보 셋팅
-				if (StringUtils.equals(isParentApprove, MemberConstants.USE_Y)) {
-					createUserRequest.setMbrLglAgent(this.getMbrLglAgent(map)); // 법정대리인
+				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+				KeySearch keySearch = new KeySearch();
+				keySearch.setKeyType("INTG_SVC_NO");
+				keySearch.setKeyString(imIntSvcNo); // 통합 서비스 번호
+				keySearchList.add(keySearch);
+				searchUserRequest.setKeySearchList(keySearchList);
+				SearchUserResponse searchUserResponse = null;
+				try {
+					searchUserResponse = this.userSCI.searchUser(searchUserRequest);
+				} catch (StorePlatformException spe) {
+					searchUserResponse = null; // 정보가 없을경우 null로 셋팅
 				}
 
-				createUserRequest.setMbrAuth(mbrAuth); // 실명인증
+				if (searchUserResponse != null) {
+					map.put("im_reg_date", "");
+					UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
+							searchUserResponse));
+					userKey = updateUserResponse.getUserKey();
+					try {
+						// ONEID에 데이터 입력
+						UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+						updateMbrOneIDRequest.setCommonRequest(commonRequest);
+						MbrOneID mbrOneID = new MbrOneID();
+						mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
+						mbrOneID.setIntgSvcNumber(imIntSvcNo);
+						mbrOneID.setUserKey(userKey); // 내부사용자키를 셋팅
+						mbrOneID.setUserID(userID); // 사용자 ID 셋팅
+						mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
+						mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
 
-				// 신규가입인경우만 이용약관이 들어옴.
-				List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+						if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+							mbrOneID.setIsCi("Y");
+						} else {
+							mbrOneID.setIsCi("N");
+						}
 
-				MbrClauseAgree mca = new MbrClauseAgree();
+						updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+						this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-				mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_ONEID);
-				mca.setIsExtraAgreement("Y");
-				mbrClauseAgreeList.add(mca);
-
-				mca = new MbrClauseAgree();
-				mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID);
-				mca.setIsExtraAgreement("Y");
-				mbrClauseAgreeList.add(mca);
-
-				// 이용약관 배열중 현재 정의가 안된 TAC005는 보류 상태임. 정의 필요
-				if (mbrCaluseAgreeArray != null) {
-
-					// TAC001 US010603 Tstore 이용약관동의
-					mca = new MbrClauseAgree();
-					mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE);
-					mca.setIsExtraAgreement("Y");
-					mbrClauseAgreeList.add(mca);
-
-					// TAC002 US010609 통신과금서비스 이용약관
-					mca = new MbrClauseAgree();
-					mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE);
-					mca.setIsExtraAgreement("Y");
-					mbrClauseAgreeList.add(mca);
-
-					// TAC003 US010604 TSTORE캐쉬이용약관
-					mca = new MbrClauseAgree();
-					mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_CASH);
-					mca.setIsExtraAgreement("Y");
-					mbrClauseAgreeList.add(mca);
-
-					// TAC004 US010605 TSTORE개인정보취급방침
-					mca = new MbrClauseAgree();
-					mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_TSTORE);
-					mca.setIsExtraAgreement("Y");
-					mbrClauseAgreeList.add(mca);
-
-					// TAC005 보류 현재 공통코드 정의가 안되있음
-					// mca = new MbrClauseAgree();
-					// mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID);
-					// mca.setIsExtraAgreement("Y");
-					// mbrClauseAgreeList.add(mca);
-
-					if (mbrCaluseAgreeArray.length < 6) { // 6개 이하인 경우는 선택사항 항목인 US010608이 약관항목에 없는경우 N으로 셋팅
-						// TAC006 US010608 TSTORE정보광고활용
-						mca = new MbrClauseAgree();
-						mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
-						mca.setIsExtraAgreement("N");
-						mbrClauseAgreeList.add(mca);
-					} else {
-						mca = new MbrClauseAgree();
-						mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
-						mca.setIsExtraAgreement("Y");
-						mbrClauseAgreeList.add(mca);
+					} catch (StorePlatformException spe) {
+						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+						imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+						return imResult;
 					}
 
-				}
-
-				createUserRequest.setMbrClauseAgreeList(mbrClauseAgreeList);
-				try {
-					create = this.userSCI.create(createUserRequest); // 가입정보 등록
-					userKey = create.getUserKey();
-				} catch (StorePlatformException spe) {
-					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
-					return imResult;
-				}
-
-				LOGGER.debug("JOIN NEW DATA INSERT COMPLETE");
-
-				LOGGER.debug("JOIN ONEID DATA INSERT START");
-
-				// ONEID에 데이터 입력
-				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-				updateMbrOneIDRequest.setCommonRequest(commonRequest);
-				MbrOneID mbrOneID = new MbrOneID();
-				mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
-				mbrOneID.setIntgSvcNumber(imIntSvcNo);
-				mbrOneID.setUserKey(userKey); // 신규가입때 생성된 내부사용자키를 셋팅
-				mbrOneID.setUserID(userID); // userID
-				mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
-				mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
-
-				if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
-					mbrOneID.setIsCi("Y");
 				} else {
-					mbrOneID.setIsCi("N");
-				}
+					LOGGER.debug("JOIN NEW DATA INSERT START");
+					CreateUserRequest createUserRequest = new CreateUserRequest();
+					CreateUserResponse create = null;
+					// 공통으로 사용되는 요청정보
 
-				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+					// 사용자 기본정보
+					UserMbr userMbr = new UserMbr();
 
-				try {
-					this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
-					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
-				} catch (StorePlatformException spe) {
-					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
-					return imResult;
+					userMbr.setTenantID(tenantID); // 테넌트 ID
+					userMbr.setSystemID(systemID); // 테넌트의 시스템 ID
+
+					userMbr.setUserKey(""); // 사용자 Key
+					if (map.get("user_key") != null)
+						userMbr.setImMbrNo(map.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key IDP 통합서비스 키
+																			// USERMBR_NO
+					userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // * 사용자 구분 코드 ONEID회원으로 셋팅
+					userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상
+					userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
+					userMbr.setImSvcNo(imIntSvcNo); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호
+					userMbr.setIsImChanged(map.get("is_im_changed").toString()); // 전환가입코드 * * - 전환가입 : Y, 신규가입 : N,
+																				 // 변경가입 :
+																				 // C,
+																				 // 변경전환 : H
+					userMbr.setUserID(userID); // 사용자 ID
+
+					if (map.get("user_tn_nation_cd") != null)
+						userMbr.setUserPhoneCountry(map.get("user_tn_nation_cd").toString()); // 연락처 국가 코드
+
+					if (map.get("user_tn") != null)
+						userMbr.setUserPhone(map.get("user_tn").toString()); // 사용자 연락처
+
+					if (map.get("user_email") != null)
+						userMbr.setUserEmail(map.get("user_email").toString()); // 사용자 이메일 주소
+
+					if (map.get("user_name") != null)
+						userMbr.setUserName(map.get("user_name").toString()); // 사용자 이름
+
+					if (map.get("user_sex") != null)
+						userMbr.setUserSex(map.get("user_sex").toString()); // 사용자 성별
+
+					if (map.get("user_birthday") != null)
+						userMbr.setUserBirthDay(map.get("user_birthday").toString()); // 사용자 생년월일
+
+					if (map.get("user_nation_code") != null)
+						userMbr.setUserCountry(map.get("user_nation_code").toString()); // 사용자 국가 코드
+
+					userMbr.setImSiteCode(map.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
+					// 실명인증 여부 신규인경우 Y로 전달받아도 실명인증정보에서 신규인경우 N으로 수정이됨
+					userMbr.setIsRealName(map.get("is_rname_auth").toString());
+					userMbr.setIsParent(isParentApprove); // 법정대리인 동의여부(Y/N)
+					userMbr.setIsMemberPoint(ocbJoinCodeYn); // 통합 포인트 여부 (Y/N)
+
+					// TO DO ... 실명인증정보 공통 내부 메소드로 정의해야 함.
+					MbrAuth mbrAuth = this.getMbrAuthByNew(map, "N");
+
+					createUserRequest.setCommonRequest(commonRequest); // 공통요청
+					createUserRequest.setUserMbr(userMbr); // 사용자정보
+
+					// 법정대리인 정보 14세미만인 경우 대리인 정보 셋팅
+					if (StringUtils.equals(isParentApprove, MemberConstants.USE_Y)) {
+						createUserRequest.setMbrLglAgent(this.getMbrLglAgent(map)); // 법정대리인
+					}
+
+					createUserRequest.setMbrAuth(mbrAuth); // 실명인증
+
+					// 신규가입인경우만 이용약관이 들어옴.
+					List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+
+					MbrClauseAgree mca = new MbrClauseAgree();
+
+					mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_ONEID);
+					mca.setIsExtraAgreement("Y");
+					mbrClauseAgreeList.add(mca);
+
+					mca = new MbrClauseAgree();
+					mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID);
+					mca.setIsExtraAgreement("Y");
+					mbrClauseAgreeList.add(mca);
+
+					// 이용약관 배열중 현재 정의가 안된 TAC005는 보류 상태임. 정의 필요
+					if (mbrCaluseAgreeArray != null) {
+
+						// TAC001 US010603 Tstore 이용약관동의
+						mca = new MbrClauseAgree();
+						mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE);
+						mca.setIsExtraAgreement("Y");
+						mbrClauseAgreeList.add(mca);
+
+						// TAC002 US010609 통신과금서비스 이용약관
+						mca = new MbrClauseAgree();
+						mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE);
+						mca.setIsExtraAgreement("Y");
+						mbrClauseAgreeList.add(mca);
+
+						// TAC003 US010604 TSTORE캐쉬이용약관
+						mca = new MbrClauseAgree();
+						mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_CASH);
+						mca.setIsExtraAgreement("Y");
+						mbrClauseAgreeList.add(mca);
+
+						// TAC004 US010605 TSTORE개인정보취급방침
+						mca = new MbrClauseAgree();
+						mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_TSTORE);
+						mca.setIsExtraAgreement("Y");
+						mbrClauseAgreeList.add(mca);
+
+						// TAC005 보류 현재 공통코드 정의가 안되있음
+						// mca = new MbrClauseAgree();
+						// mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID);
+						// mca.setIsExtraAgreement("Y");
+						// mbrClauseAgreeList.add(mca);
+
+						if (mbrCaluseAgreeArray.length < 6) { // 6개 이하인 경우는 선택사항 항목인 US010608이 약관항목에 없는경우 N으로 셋팅
+							// TAC006 US010608 TSTORE정보광고활용
+							mca = new MbrClauseAgree();
+							mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
+							mca.setIsExtraAgreement("N");
+							mbrClauseAgreeList.add(mca);
+						} else {
+							mca = new MbrClauseAgree();
+							mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
+							mca.setIsExtraAgreement("Y");
+							mbrClauseAgreeList.add(mca);
+						}
+
+					}
+
+					createUserRequest.setMbrClauseAgreeList(mbrClauseAgreeList);
+					try {
+						create = this.userSCI.create(createUserRequest); // 가입정보 등록
+						userKey = create.getUserKey();
+					} catch (StorePlatformException spe) {
+						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+						imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+						return imResult;
+					}
+
+					LOGGER.debug("JOIN NEW DATA INSERT COMPLETE");
+
+					LOGGER.debug("JOIN ONEID DATA INSERT START");
+
+					// ONEID에 데이터 입력
+					UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+					updateMbrOneIDRequest.setCommonRequest(commonRequest);
+					MbrOneID mbrOneID = new MbrOneID();
+					mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
+					mbrOneID.setIntgSvcNumber(imIntSvcNo);
+					mbrOneID.setUserKey(userKey); // 신규가입때 생성된 내부사용자키를 셋팅
+					mbrOneID.setUserID(userID); // userID
+					mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
+					mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
+
+					if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+						mbrOneID.setIsCi("Y");
+					} else {
+						mbrOneID.setIsCi("N");
+					}
+
+					updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+					try {
+						this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
+						imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
+					} catch (StorePlatformException spe) {
+						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+						imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+						return imResult;
+					}
+					LOGGER.debug("JOIN ONEID DATA INSERT COMPLETE");
 				}
-				LOGGER.debug("JOIN ONEID DATA INSERT COMPLETE");
 			} else { // 신규가입이 아닌경우 전환가입/변경전환/변경 가입 oldId != "null" 이 아닌경우 분기
 				map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
 
@@ -3226,18 +3285,22 @@ public class IdpServiceImpl implements IdpService {
 
 			try {
 				/* 게임센터 연동 */
+
 				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 				gameCenterSacReq.setUserKey(userKey);
 				gameCenterSacReq.setSystemId(systemID);
 				gameCenterSacReq.setTenantId(tenantID);
 				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
 				this.deviceService.insertGameCenterIF(gameCenterSacReq);
+
 			} catch (StorePlatformException spe) {
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 				return imResult;
 			}
 		}
+		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
+		imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
 		LOGGER.debug("rXUpdateAgreeUserIDP ------- End");
 		return imResult;
 	}
