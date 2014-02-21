@@ -68,24 +68,9 @@ public class DeviceInfo extends CommonInfo {
 	private String isPrimary;
 
 	/**
-	 * 인증여부.
-	 */
-	private String isAuthenticated;
-
-	/**
-	 * 인증일시.
-	 */
-	private String authenticationDate;
-
-	/**
 	 * SMS 수신 여부.
 	 */
 	private String isRecvSms;
-
-	/**
-	 * 휴대기기 사용 여부.
-	 */
-	private String isUsed;
 
 	/**
 	 * 기기고유 ID.
@@ -258,36 +243,6 @@ public class DeviceInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return isAuthenticated
-	 */
-	public String getIsAuthenticated() {
-		return this.isAuthenticated;
-	}
-
-	/**
-	 * @param isAuthenticated
-	 *            String
-	 */
-	public void setIsAuthenticated(String isAuthenticated) {
-		this.isAuthenticated = isAuthenticated;
-	}
-
-	/**
-	 * @return authenticationDate
-	 */
-	public String getAuthenticationDate() {
-		return this.authenticationDate;
-	}
-
-	/**
-	 * @param authenticationDate
-	 *            String
-	 */
-	public void setAuthenticationDate(String authenticationDate) {
-		this.authenticationDate = authenticationDate;
-	}
-
-	/**
 	 * @return isRecvSms
 	 */
 	public String getIsRecvSms() {
@@ -360,21 +315,6 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	public void setDeviceExtraInfoList(List<DeviceExtraInfo> deviceExtraInfoList) {
 		this.deviceExtraInfoList = deviceExtraInfoList;
-	}
-
-	/**
-	 * @return isUsed
-	 */
-	public String getIsUsed() {
-		return this.isUsed;
-	}
-
-	/**
-	 * @param isUsed
-	 *            String
-	 */
-	public void setIsUsed(String isUsed) {
-		this.isUsed = isUsed;
 	}
 
 	/**
