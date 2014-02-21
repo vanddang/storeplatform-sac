@@ -29,7 +29,7 @@ public interface DisplayCommonService {
 	 *            상품ID
 	 * @param langCd
 	 *            언어코드
-	 * @return
+	 * @return List<MenuItem>
 	 */
 	public List<MenuItem> getMenuItemList(String prodId, String langCd);
 
@@ -38,7 +38,7 @@ public interface DisplayCommonService {
 	 * 
 	 * @param resolution
 	 *            해상도 값(480*720)
-	 * @return
+	 * @return String
 	 */
 	public String getResolutionCode(String resolution);
 
@@ -47,7 +47,7 @@ public interface DisplayCommonService {
 	 * 
 	 * @param deviceId
 	 *            deviceId
-	 * @return
+	 * @return String
 	 */
 	public String getDeviceIdType(String deviceId);
 
