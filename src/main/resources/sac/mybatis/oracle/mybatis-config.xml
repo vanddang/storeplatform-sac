@@ -249,9 +249,13 @@
 		<typeAlias alias="dpTenantProductPriceVO"   type="com.skplanet.icms.refactoring.deploy.DPTenantProductPriceVO" />
 		<typeAlias alias="ProductVo" 				type="com.skplanet.storeplatform.sac.display.product.vo.ProductVo"/>  
         
-        <!-- ebook/코믹 테마 상품 조회 -->
+        <!-- ebook/코믹 테마 조회 -->
         <typeAlias alias="ThemeEpubSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacReq" />
         <typeAlias alias="ThemeEpub"  type="com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeEpubInfo" />
+            
+        <!-- 테마존 테마 상품 조회 -->
+        <typeAlias alias="ThemeThemeZoneSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneSacReq" />
+        <typeAlias alias="ThemeThemeZone"  type="com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeThemeZoneInfo" />
             
         <!-- 브렌드샵 테마 조회 -->
         <typeAlias alias="ThemeBrandshopSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeBrandshopSacReq" />
