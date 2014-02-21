@@ -196,8 +196,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			ShoppingRes response = new ShoppingRes();
-			return response = this.commonDummy(req);
+			return this.commonDummy(req);
 		}
 	}
 
@@ -280,8 +279,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			ShoppingRes response = new ShoppingRes();
-			return response = this.commonDummy(req);
+			return this.commonDummy(req);
 		}
 	}
 
@@ -387,8 +385,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			ShoppingRes response = new ShoppingRes();
-			return response = this.commonDummy(req);
+			return this.commonDummy(req);
 		}
 	}
 
@@ -697,7 +694,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<MetaInfo> hotBrandList = null;
 		List<MetaInfo> detailList = null;
 		List<MetaInfo> menuBrandList = null;
-		MetaInfo shopping = null;
+
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOs().trim().split("/");
@@ -715,9 +712,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// offset, Count default setting
 		this.commonOffsetCount(req);
 		resultList = new ArrayList<MetaInfo>();
-		hotBrandList = new ArrayList<MetaInfo>();
-		detailList = new ArrayList<MetaInfo>();
-		menuBrandList = new ArrayList<MetaInfo>();
+
 		if (!StringUtils.isEmpty(req.getMenuId())) {
 
 			resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
@@ -738,6 +733,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 
 		if (resultList != null) {
+			MetaInfo shopping = null;
 			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
@@ -906,7 +902,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		CommonResponse commonResponse = new CommonResponse();
 		Integer totalCount = 0;
 		List<MetaInfo> resultList = null;
-		MetaInfo shopping = null;
+
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOs().trim().split("/");
@@ -934,11 +930,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 			shoppingReq.setLangCd(req.getLangCd());
 
 			shoppingRes = this.shoppingInternalSCI.searchShoppingList(shoppingReq);
-			// if (shoppingRes != null) {
-			// System.out.println("identifier++" + shoppingRes.getIdentifierList().get(0).getText());
-			// System.out.println("identifier++" + shoppingRes.getPrice().toString());
-			//
-			// }
+			if (shoppingRes != null) {
+				this.log.info("identifier++" + shoppingRes.getIdentifierList().get(0).getText());
+				this.log.info("identifier++" + shoppingRes.getPrice().toString());
+
+			}
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_DSP_0001", "쇼핑 판매 건수 정보 조회 ", e);
 		}
@@ -949,6 +945,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, MetaInfo.class);
 
 		if (resultList != null) {
+			MetaInfo shopping = null;
 			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
@@ -998,7 +995,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
 		List<MetaInfo> resultList = null;
-		MetaInfo shopping = null;
+
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
@@ -1033,6 +1030,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, MetaInfo.class);
 
 		if (resultList != null) {
+			MetaInfo shopping = null;
 			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
@@ -1196,8 +1194,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			ShoppingRes response = new ShoppingRes();
-			return response = this.commonDummy(req);
+			return this.commonDummy(req);
 		}
 	}
 
@@ -1307,8 +1304,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			return res;
 		} else {
-			ShoppingRes response = new ShoppingRes();
-			return response = this.commonDummy(req);
+			return this.commonDummy(req);
 		}
 	}
 
@@ -1396,12 +1392,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Product episodeProduct = null;
 				List<Identifier> episodeIdentifierList = null;
 				Menu episodeMenu = null;
-				List<Menu> episodeMenuList = new ArrayList<Menu>();
+				List<Menu> episodeMenuList = null;
 				Rights episodeRights = null;
 				Date episodeDate = null;
 				Distributor distributor = null;
 				List<Date> episodeDateList = null;
-				episodeDateList = new ArrayList<Date>();
 				SalesOption episodeSaleOption = null;
 
 				// / 옵션용
