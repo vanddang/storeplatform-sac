@@ -261,7 +261,6 @@ public class ShoppingCouponSacController {
 
 		} catch (CouponException ex) {
 			// 1차 Logic 처리시 벌생한 Coupon Exception 처리.
-			map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 			map.put("ERROR_CODE", ex.getErrCode());
 			if (map.get("ERROR_CODE") == null || map.get("ERROR_CODE").equals(""))
 				map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR);
