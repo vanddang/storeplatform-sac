@@ -90,12 +90,22 @@ public class SellerSearchController {
 		req.setSellerKey(sellerKey);
 		req.setAid(aid);
 
+		int Stat = 0;
+		if (sellerId.equals(""))
+			Stat++;
+		if (sellerKey.equals(""))
+			Stat++;
+		if (aid.equals(""))
+			Stat++;
+		if (Stat == 3) {
+			throw new StorePlatformException("SAC_MEM_0001", "aid, sellerKey, sellerId");
+		}
 		return this.sellerSearchService.detailInformation(header, req);
 	}
 
 	/**
 	 * <pre>
-	 * 판매자회원 기본정보조회.
+	 * 판매자회원 기본정보조회 App.
 	 * </pre>
 	 * 
 	 * @param req
