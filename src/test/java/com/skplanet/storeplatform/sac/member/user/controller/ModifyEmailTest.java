@@ -72,6 +72,7 @@ public class ModifyEmailTest {
 	@Test
 	public void TEST_A_이메일수정() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modifyEmail/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {

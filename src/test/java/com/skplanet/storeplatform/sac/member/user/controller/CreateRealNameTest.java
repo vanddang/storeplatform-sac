@@ -74,6 +74,7 @@ public class CreateRealNameTest {
 	@Test
 	public void TEST_A_기존IDP회원실명인증등록_본인() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -121,6 +122,7 @@ public class CreateRealNameTest {
 	@Test
 	public void TEST_B_기존IDP회원실명인증등록_법정대리인() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -170,6 +172,7 @@ public class CreateRealNameTest {
 	@Test
 	public void TEST_C_통합IDP회원실명인증등록_본인() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -217,6 +220,7 @@ public class CreateRealNameTest {
 	@Test
 	public void TEST_D_통합IDP회원실명인증등록_법정대리인() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -264,6 +268,7 @@ public class CreateRealNameTest {
 	@Test
 	public void TEST_E_실명인증등록_법인단말인경우() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -307,6 +312,7 @@ public class CreateRealNameTest {
 	@Test(expected = StorePlatformException.class)
 	public void TEST_F_통합IDP회원실명인증등록_이미통합사이트에서본인인증한회원() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL +
 				"/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")

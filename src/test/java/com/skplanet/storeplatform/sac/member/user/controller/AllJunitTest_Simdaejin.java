@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.member.user.controller;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.springframework.test.context.ActiveProfiles;
@@ -28,18 +27,34 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+		/** 회원 정보 수정 테스트 */
+		ModifyTest.class,
+
+		/** 비밀번호 수정 테스트 */
+		ModifyPasswordTest.class,
+
+		/** 이메일 주소 수정 테스트 */
+		ModifyEmailTest.class,
+
+		/** Store 약관동의 테스트 */
+		CreateTermsAgreementTest.class,
+		ModifyTermsAgreementTest.class,
+
+		/** 실명인증정보 등록 테스트 */
+		CreateRealNameTest.class,
+
 		/** OCB 정보 테스트 */
 		CreateOcbInformationTest.class,
 		GetOcbInformationTest.class,
 		RemoveOcbInformationTest.class,
 
-		/** deviceID로 회원정보조회 테스트 */
+		/** DeviceID를 이용하여 회원 정보 조회 테스트 */
 		DetailByDeviceIdTest.class,
 
 		/** 회원 계정잠금 테스트 */
 		LockAccountTest.class
 })
-@Ignore
+// @Ignore
 public class AllJunitTest_Simdaejin {
 
 	@BeforeClass
