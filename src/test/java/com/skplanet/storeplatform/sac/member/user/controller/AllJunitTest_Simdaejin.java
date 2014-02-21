@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.member.user.controller;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.springframework.test.context.ActiveProfiles;
@@ -59,7 +60,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 		/** 회원 계정잠금 테스트 */
 		LockAccountTest.class
 })
-// @Ignore("전체 jUnit 테스트 돌리지 않음.")
+@Ignore("전체 jUnit 테스트 돌리지 않음.")
 public class AllJunitTest_Simdaejin {
 
 	@BeforeClass
