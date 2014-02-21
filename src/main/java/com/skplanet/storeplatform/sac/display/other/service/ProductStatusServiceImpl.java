@@ -32,10 +32,11 @@ public class ProductStatusServiceImpl implements ProductStatusService {
     private CommonDAO commonDAO;
 
     @Override
-    public ParentAppInfo selectParentInfo(String tenantId, String partProdId) {
+    public ParentAppInfo selectParentInfo(String tenantId, String langCd, String partProdId) {
         Map<String, String> param = new HashMap<String, String>();
         param.put("tenantId", tenantId);
         param.put("partProdId", partProdId);
+        param.put("langCd", langCd);
 
         return commonDAO.queryForObject("OtherParentStatus.selectParentProductStatus", param, ParentAppInfo.class);
     }

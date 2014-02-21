@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.product;
+package com.skplanet.storeplatform.sac.display.other;
 
 import com.skplanet.storeplatform.sac.display.other.service.ProductStatusService;
 import com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo;
@@ -58,7 +58,7 @@ public class ProductStatusServiceTest {
     @Test
     public void selectParentProductStatusTest() {
 
-        ParentAppInfo parentAppInfo = productStatusService.selectParentInfo("S01", "0900121441");
+        ParentAppInfo parentAppInfo = productStatusService.selectParentInfo("S01", "ko", "0900121441");
         assert parentAppInfo.getParentChannelId() != null;
 
     }
@@ -66,7 +66,7 @@ public class ProductStatusServiceTest {
     @Test
     public void selectParentProductStatusTestWithNoData() {
 
-        ParentAppInfo parentAppInfo = productStatusService.selectParentInfo("S01", "");
+        ParentAppInfo parentAppInfo = productStatusService.selectParentInfo("S01", "ko", "");
         assert parentAppInfo == null;
 
     }

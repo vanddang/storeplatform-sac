@@ -23,6 +23,24 @@ public class ParentAppInfo extends CommonInfo {
 
     private String parentChannelId;
     private String parentStatus;
+    private String parentName;
+    private String partName;
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public String getPartName() {
+        return partName;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
+    }
 
     public String getParentChannelId() {
         return parentChannelId;

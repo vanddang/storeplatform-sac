@@ -19,5 +19,5 @@ import com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo;
  */
 public interface ProductStatusService {
 
-    public ParentAppInfo selectParentInfo(String tenantId, String partProdId);
+    public ParentAppInfo selectParentInfo(String tenantId, String langCd, String partProdId);
 }
