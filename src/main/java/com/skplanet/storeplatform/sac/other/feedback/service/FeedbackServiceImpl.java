@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
@@ -239,60 +240,60 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
 		prodNoti.setProdId(createRecommendFeedbackReq.getProdId());
 		prodNoti.setMbrNo(createRecommendFeedbackReq.getUserKey());
-		// 탈퇴회원 사용후기 여부 조회
-		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		// // 탈퇴회원 사용후기 여부 조회
+		// int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		//
+		// if (count > 0) {
+		// // 기 추천여부
+		// count = (Integer) this.feedbackRepository.getProdNotiWDGoodCount(prodNoti);
+		//
+		// if (count > 0) {
+		// throw new StorePlatformException("SAC_OTH_1001");
+		// }
+		//
+		// ProdNotiGood prodNotiGood = new ProdNotiGood();
+		// prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		// prodNotiGood.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
+		// prodNotiGood.setMbrNo(createRecommendFeedbackReq.getUserKey());
+		// prodNotiGood.setRegId(createRecommendFeedbackReq.getUserId());
+		// int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
+		//
+		// if (affectedRow <= 0) {
+		// throw new StorePlatformException("SAC_OTH_1001");
+		// }
+		//
+		// prodNotiGood.setAction("create");
+		// affectedRow = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
+		//
+		// if (affectedRow <= 0) {
+		// throw new StorePlatformException("SAC_OTH_1002");
+		// }
+		// } else {
+
+		int count = (Integer) this.feedbackRepository.getProdNotiGoodCount(prodNoti);
 
 		if (count > 0) {
-			// 기 추천여부
-			count = (Integer) this.feedbackRepository.getProdNotiWDGoodCount(prodNoti);
-
-			if (count > 0) {
-				throw new StorePlatformException("SAC_OTH_1001");
-			}
-
-			ProdNotiGood prodNotiGood = new ProdNotiGood();
-			prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-			prodNotiGood.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
-			prodNotiGood.setMbrNo(createRecommendFeedbackReq.getUserKey());
-			prodNotiGood.setRegId(createRecommendFeedbackReq.getUserId());
-			int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
-
-			if (affectedRow <= 0) {
-				throw new StorePlatformException("SAC_OTH_1001");
-			}
-
-			prodNotiGood.setAction("create");
-			affectedRow = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
-
-			if (affectedRow <= 0) {
-				throw new StorePlatformException("SAC_OTH_1002");
-			}
-		} else {
-
-			count = (Integer) this.feedbackRepository.getProdNotiGoodCount(prodNoti);
-
-			if (count > 0) {
-				throw new StorePlatformException("SAC_OTH_1001");
-			}
-
-			ProdNotiGood prodNotiGood = new ProdNotiGood();
-			prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-			prodNotiGood.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
-			prodNotiGood.setMbrNo(createRecommendFeedbackReq.getUserKey());
-			prodNotiGood.setRegId(createRecommendFeedbackReq.getUserId());
-			int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
-
-			if (affectedRow <= 0) {
-				throw new StorePlatformException("SAC_OTH_1001");
-			}
-
-			prodNotiGood.setAction("create");
-			affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
-
-			if (affectedRow <= 0) {
-				throw new StorePlatformException("SAC_OTH_1002");
-			}
+			throw new StorePlatformException("SAC_OTH_1001");
 		}
+
+		ProdNotiGood prodNotiGood = new ProdNotiGood();
+		prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNotiGood.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
+		prodNotiGood.setMbrNo(createRecommendFeedbackReq.getUserKey());
+		prodNotiGood.setRegId(createRecommendFeedbackReq.getUserId());
+		int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
+
+		if (affectedRow <= 0) {
+			throw new StorePlatformException("SAC_OTH_1001");
+		}
+
+		prodNotiGood.setAction("create");
+		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
+
+		if (affectedRow <= 0) {
+			throw new StorePlatformException("SAC_OTH_1002");
+		}
+		// }
 
 		// 추천은 현재 수정 반영된 1건만 조회.
 		prodNoti.setStartRow("1");
@@ -324,44 +325,44 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setProdId(removeRecommendFeedbackSacReq.getProdId());
 		prodNoti.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
 		// 탈퇴회원 사용후기 여부 조회
-		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		// int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		//
+		// if (count > 0) {
+		// ProdNotiGood prodNotiGood = new ProdNotiGood();
+		// prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		// prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
+		// prodNotiGood.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
+		// int affectedRow = (Integer) this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
+		//
+		// if (affectedRow <= 0) {
+		// throw new StorePlatformException("SAC_OTH_1003");
+		// }
+		//
+		// prodNotiGood.setAction("remove");
+		// affectedRow = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
+		//
+		// if (affectedRow <= 0) {
+		// throw new StorePlatformException("SAC_OTH_1002");
+		// }
+		//
+		// } else {
+		ProdNotiGood prodNotiGood = new ProdNotiGood();
+		prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
+		prodNotiGood.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
+		int affectedRow = (Integer) this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
 
-		if (count > 0) {
-			ProdNotiGood prodNotiGood = new ProdNotiGood();
-			prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-			prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
-			prodNotiGood.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
-			int affectedRow = (Integer) this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
-
-			if (affectedRow <= 0) {
-				throw new StorePlatformException("SAC_OTH_1003");
-			}
-
-			prodNotiGood.setAction("remove");
-			affectedRow = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
-
-			if (affectedRow <= 0) {
-				throw new StorePlatformException("SAC_OTH_1002");
-			}
-
-		} else {
-			ProdNotiGood prodNotiGood = new ProdNotiGood();
-			prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-			prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
-			prodNotiGood.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
-			int affectedRow = (Integer) this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
-
-			if (affectedRow <= 0) {
-				throw new StorePlatformException("SAC_OTH_1003");
-			}
-
-			prodNotiGood.setAction("remove");
-			affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
-
-			if (affectedRow <= 0) {
-				throw new StorePlatformException("SAC_OTH_1002");
-			}
+		if (affectedRow <= 0) {
+			throw new StorePlatformException("SAC_OTH_1003");
 		}
+
+		prodNotiGood.setAction("remove");
+		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
+
+		if (affectedRow <= 0) {
+			throw new StorePlatformException("SAC_OTH_1002");
+		}
+		// }
 
 		// 추천 취소는 현재 수정된 1건만 조회.
 		prodNoti.setStartRow("1");
@@ -421,17 +422,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 		listFeedbackRes.setNotiList(notiList);
 		return listFeedbackRes;
-		// ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
-		// listFeedbackRes.setAvgEvluScorePcts("80,100,20,10,50");
-		// listFeedbackRes.setNotiTot("2");
-		// listFeedbackRes.setAvgEvluScore("2");
-		// listFeedbackRes.setDwldCnt("11103");
-		// listFeedbackRes.setPaticpersCnt("105");
-		//
-		// listFeedbackRes.setNotiList(this.getFeedbackList());
-		//
-		// return listFeedbackRes;
-
 	}
 
 	@Override
@@ -481,18 +471,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		listMyFeedbackSacRes.setNotiList(notiMyList);
 		return listMyFeedbackSacRes;
-		// List<Feedback> notiList = this.getFeedbackList();
-		// List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
-		// for (Feedback res : notiList) {
-		// FeedbackMy feedbackMy = new FeedbackMy(); // feedbackMy.setTotalCount("10");
-		// BeanUtils.copyProperties(res, feedbackMy);
-		// notiMyList.add(feedbackMy);
-		// }
-		// ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
-		// listMyFeedbackRes.setNotiTot("2");
-		// listMyFeedbackRes.setNotiList(notiMyList);
-		// return listMyFeedbackRes;
-
 	}
 
 	@Override
@@ -632,46 +610,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 	/**
 	 * 
 	 * <pre>
-	 * Feedback Sample.
-	 * </pre>
-	 * 
-	 * @return List<Feedback>
-	 */
-	private List<Feedback> getFeedbackList() {
-
-		List<Feedback> notiList = new ArrayList<Feedback>();
-
-		for (int i = 0; i < 2; i++) {
-			Feedback feedback = new Feedback();
-			feedback.setNotiSeq("" + i);
-			feedback.setUserKey("IW11000162200905070014211" + i);
-			feedback.setSellerKey("IF111111111111111111111" + i);
-			feedback.setNotiTitle("좋아요!!(" + i + ")");
-			feedback.setNotiDscr("프로야구 게임 재밌네요~ ㅋㅋ(" + i + ")");
-			feedback.setNotiScore("0");
-			feedback.setRegId("011****5052");
-			feedback.setRegDt("20090606035251");
-			feedback.setSellerRespTitle("");
-			feedback.setSellerRespOpin("");
-			feedback.setSellerRespRegDt("");
-			feedback.setCid("0000000001");
-			feedback.setSelfYn("N");
-			feedback.setSaleYn("N");
-			feedback.setWhose("mine");
-			feedback.setSelfRecomYn("N");
-			feedback.setAvgScore("5");
-			feedback.setNickNm("");
-			feedback.setFbPostYn("N");
-			feedback.setProdId("0000000001");
-			feedback.setCompNm("");
-			notiList.add(feedback);
-		}
-		return notiList;
-	}
-
-	/**
-	 * 
-	 * <pre>
 	 * 평점 등록.
 	 * </pre>
 	 * 
@@ -792,11 +730,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 				// 개발자 정보조회는 Exception 발생할 경우는 Null로 전환
 				detailInformationSacRes = null;
 			}
-			if (detailInformationSacRes != null && detailInformationSacRes.getSellerMbr() != null) {
-				// sellerNickName = detailInformationSacRes.getSellerMbr().g;
-				// sellerCompany = detailInformationSacRes.getSellerMbr().getSellerCompany();
-				// sellerClass = detailInformationSacRes.getSellerMbr().getSellerClass();
-				// charger = detailInformationSacRes.getSellerMbr().getCharger();
+			if (detailInformationSacRes != null && !CollectionUtils.isEmpty(detailInformationSacRes.getSellerMbr())) {
+				SellerMbrSac sellerMbrSac = detailInformationSacRes.getSellerMbr().get(0);
+				sellerNickName = sellerMbrSac.getSellerNickName();
+				sellerCompany = sellerMbrSac.getSellerCompany();
+				sellerClass = sellerMbrSac.getSellerClass();
+				charger = sellerMbrSac.getCharger();
 			}
 		}
 		// 테스트 해보기.
