@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingListSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacRes;
@@ -86,7 +87,7 @@ public class HidingController {
 	 * @return hidingSacReq
 	 */
 	private HidingScReq reqConvert(HidingSacReq hidingSacReq, TenantHeader header) {
-		this.logger.debug("@@@@@@reqConvert@@@@@@@");
+		this.logger.debug("@@@@@@ Hiding reqConvert @@@@@@@");
 		HidingScReq req = new HidingScReq();
 		List<HidingListSc> list = new ArrayList<HidingListSc>();
 
@@ -94,14 +95,15 @@ public class HidingController {
 		req.setUserKey(hidingSacReq.getUserKey());
 		req.setDeviceKey(hidingSacReq.getDeviceKey());
 		req.setSystemId(header.getSystemId());
-		int size = hidingSacReq.getHidingList().size();
-		for (int i = 0; i < size; i++) {
+
+		for (HidingListSac hidingListSac : hidingSacReq.getHidingList()) {
 
 			HidingListSc hidingListSc = new HidingListSc();
 
-			hidingListSc.setPrchsId(hidingSacReq.getHidingList().get(i).getPrchsId());
-			hidingListSc.setPrchsDtlId(hidingSacReq.getHidingList().get(i).getPrchsDtlId());
-			hidingListSc.setHidingYn(hidingSacReq.getHidingList().get(i).getHidingYn());
+			hidingListSc.setPrchsId(hidingListSac.getPrchsId());
+			hidingListSc.setPrchsDtlId(hidingListSac.getPrchsDtlId());
+			hidingListSc.setSendYn(hidingListSac.getSendYn());
+			hidingListSc.setHidingYn(hidingListSac.getHidingYn());
 
 			list.add(hidingListSc);
 		}
@@ -118,17 +120,16 @@ public class HidingController {
 	 * @return List<HidingSacRes>
 	 */
 	private List<HidingSacRes> resConvert(List<HidingScRes> hidingListScRes) {
+		this.logger.debug("@@@@@@ Hiding resConvert @@@@@@@");
 		List<HidingSacRes> res = new ArrayList<HidingSacRes>();
-		int size = hidingListScRes.size();
-		this.logger.debug("@@@@@@resConvert@@@@@@@" + size);
-		for (int i = 0; i < size; i++) {
+
+		for (HidingScRes hidingScRes : hidingListScRes) {
 			HidingSacRes hidingRes = new HidingSacRes();
-			hidingRes.setPrchsId(hidingListScRes.get(i).getPrchsId());
-			hidingRes.setPrchsDtlId(hidingListScRes.get(i).getPrchsDtlId());
-			hidingRes.setResultYn(hidingListScRes.get(i).getResultYn());
+			hidingRes.setPrchsId(hidingScRes.getPrchsId());
+			hidingRes.setPrchsDtlId(hidingScRes.getPrchsDtlId());
+			hidingRes.setResultYn(hidingScRes.getResultYn());
 			res.add(hidingRes);
 		}
-
 		return res;
 	}
 }

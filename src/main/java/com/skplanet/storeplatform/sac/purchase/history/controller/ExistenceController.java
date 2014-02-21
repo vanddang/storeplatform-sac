@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceItemSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacRes;
@@ -104,11 +105,10 @@ public class ExistenceController {
 		req.setPrchsId(existenceSacReq.getPrchsId());
 		// 상품리스트가 없을시 제외
 		if (existenceSacReq.getProductList() != null) {
-			int size = existenceSacReq.getProductList().size();
-			for (int i = 0; i < size; i++) {
+			for (ExistenceItemSac existenceItemSac : existenceSacReq.getProductList()) {
 				ExistenceItemSc existenceItemSc = new ExistenceItemSc();
-				existenceItemSc.setProdId(existenceSacReq.getProductList().get(i).getProdId());
-				existenceItemSc.setTenantProdGrpCd(existenceSacReq.getProductList().get(i).getTenantProdGrpCd());
+				existenceItemSc.setProdId(existenceItemSac.getProdId());
+				existenceItemSc.setTenantProdGrpCd(existenceItemSac.getTenantProdGrpCd());
 				productList.add(existenceItemSc);
 			}
 		}
@@ -131,11 +131,10 @@ public class ExistenceController {
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
 		List<ExistenceSacRes> res = new ArrayList<ExistenceSacRes>();
-		int size = existenceListScRes.size();
-		for (int i = 0; i < size; i++) {
+		for (ExistenceScRes existenceScRes : existenceListScRes) {
 			ExistenceSacRes existenceSacRes = new ExistenceSacRes();
-			existenceSacRes.setPrchsId(existenceListScRes.get(i).getPrchsId());
-			existenceSacRes.setProdId(existenceListScRes.get(i).getProdId());
+			existenceSacRes.setPrchsId(existenceScRes.getPrchsId());
+			existenceSacRes.setProdId(existenceScRes.getProdId());
 
 			res.add(existenceSacRes);
 		}

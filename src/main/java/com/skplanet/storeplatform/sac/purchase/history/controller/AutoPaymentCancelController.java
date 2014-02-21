@@ -80,6 +80,7 @@ public class AutoPaymentCancelController {
 	 */
 	private AutoPaymentCancelScReq reqConvert(AutoPaymentCancelSacReq autoPaymentCancelSacReq, TenantHeader header) {
 
+		this.logger.debug("@@@@@@ AutoPaymentCancelSac reqConvert @@@@@@@");
 		AutoPaymentCancelScReq req = new AutoPaymentCancelScReq();
 
 		req.setTenantId(header.getTenantId());
@@ -102,8 +103,8 @@ public class AutoPaymentCancelController {
 	 * @return AutoPaymentCancelSacRes
 	 */
 	private AutoPaymentCancelSacRes resConvert(AutoPaymentCancelScRes autoPaymentCancelScRes) {
+		this.logger.debug("@@@@@@ AutoPaymentCancelSac resConvert @@@@@@@");
 		AutoPaymentCancelSacRes res = new AutoPaymentCancelSacRes();
-		this.logger.debug("@@@@@@resConvert@@@@@@@");
 		res.setPrchsId(autoPaymentCancelScRes.getPrchsId());
 		res.setResultYn(autoPaymentCancelScRes.getResultYn());
 
