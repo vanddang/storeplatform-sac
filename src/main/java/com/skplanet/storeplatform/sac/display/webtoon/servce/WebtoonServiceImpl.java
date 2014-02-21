@@ -51,9 +51,8 @@ public class WebtoonServiceImpl implements WebtoonService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryVodService#searchVodList(com.skplanet
-	 * .storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq)
+	 * @see com.skplanet.storeplatform.sac.display.webtoon.servce.WebtoonService#searchWebtoonDetail(com.skplanet
+	 * .storeplatform.sac.client.display.vo.webtoon.WebtoonDetailSacReq)
 	 */
 	@Override
 	public WebtoonDetailSacRes searchWebtoonDetail(WebtoonDetailSacReq req, SacRequestHeader header) {
