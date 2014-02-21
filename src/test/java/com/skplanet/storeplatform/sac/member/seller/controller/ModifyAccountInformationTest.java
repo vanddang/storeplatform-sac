@@ -167,12 +167,12 @@ public class ModifyAccountInformationTest {
 						req.setRepFaxArea("");
 						req.setRepPhone("");
 						req.setRepPhoneArea("");
-						req.setSellerAddress("");
+						req.setSellerBizAddress("");
 						req.setSellerBizCategory("업태");
 						req.setSellerBizCorpNumber("xxxx");
 						req.setSellerBizType("");
-						req.setSellerDetailAddress("");
-						req.setSellerZip("");
+						req.setSellerBizDetailAddress("");
+						req.setSellerBizZip("");
 						req.setSwiftCode("xxxx");
 						req.setTpinCode("xxxx");
 						req.setVendorCode("xxxx");
