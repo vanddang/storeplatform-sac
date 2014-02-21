@@ -118,4 +118,36 @@ public class GetPhoneAuthorizationCodeTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 휴대폰 인증 SMS 발송.
+	 * - SMS 발송 성공 (T Store SMS)
+	 * - 통신사정보 없는경우.
+	 * </pre>
+	 */
+	@Test
+	public void testGetPhoneAuthorizationCodeForTstore2() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+
+					@Override
+					public Object requestBody() {
+						request.setSrcId("US004504"); // 휴대폰 인증 SMS
+						request.setTeleSvcId("0"); // 단건 발송
+						request.setRecvMdn("01020284280");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetPhoneAuthorizationCodeRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
+						assertThat(response.getPhoneSign(), notNullValue());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
 }

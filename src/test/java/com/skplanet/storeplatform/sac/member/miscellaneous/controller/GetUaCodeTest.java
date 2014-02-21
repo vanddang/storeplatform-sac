@@ -1,9 +1,9 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,8 +51,6 @@ public class GetUaCodeTest {
 
 	/** [REQUEST]. */
 	private static GetUaCodeReq request;
-	/** [RESPONSE]. */
-	private static GetUaCodeRes response;
 
 	/**
 	 * 
@@ -65,17 +63,6 @@ public class GetUaCodeTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 		// [REQUEST] 초기화
 		request = new GetUaCodeReq();
-	}
-
-	/**
-	 * <pre>
-	 * After method.
-	 * </pre>
-	 */
-	@After
-	public void after() {
-		// Debug [RESPONSE-SAC]
-		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -101,7 +88,7 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes response = (GetUaCodeRes) result;
-						assertSame(response, null);
+						assertThat(response, notNullValue());
 						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -130,7 +117,7 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes response = (GetUaCodeRes) result;
-						assertSame(response, null);
+						assertThat(response, notNullValue());
 						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -159,7 +146,7 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes response = (GetUaCodeRes) result;
-						assertSame(response, null);
+						assertThat(response, notNullValue());
 						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -168,137 +155,112 @@ public class GetUaCodeTest {
 	/**
 	 * <pre>
 	 * UA 코드 정보 조회.
-	 * - Exception. (유효하지 않은 MDN).
+	 * - Exception. (SAC_MEM_3004=유효하지 않은 MDN).
 	 * </pre>
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void testExceptGetUaCodeByMsisdn() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							request.setMsisdn("99999990e29b41d4a716446655012701");
-							LOGGER.debug("[REQUEST(SAC)] JSON : \n{}",
-									TestConvertMapperUtils.convertObjectToJson(request));
-							return request;
-						}
-					}).success(GetUaCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						request.setMsisdn("99999990e29b41d4a716446655012701");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetUaCodeRes response = (GetUaCodeRes) result;
-							assertSame(response, null);
-							LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-		} catch (StorePlatformException e) {
-			assertEquals("SAC_MEM_3004", e.getErrorInfo().getCode());
-			LOGGER.info("\nerror >> ", e);
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						assertThat(response, notNullValue());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 
 	/**
 	 * <pre>
 	 * UA 코드 정보 조회.
-	 * - Exception. (존재하지 않는 회원)
+	 * - Exception. (SC_MEM_9995=존재하지 않는 회원)
 	 * </pre>
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void testExceptGetUaCodeByNonMemberMsisdn() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							request.setMsisdn("01011112222");
-							LOGGER.debug("[REQUEST(SAC)] JSON : \n{}",
-									TestConvertMapperUtils.convertObjectToJson(request));
-							return request;
-						}
-					}).success(GetUaCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						request.setMsisdn("01011112222");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetUaCodeRes response = (GetUaCodeRes) result;
-							assertSame(response, null);
-							LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-		} catch (StorePlatformException e) {
-			assertEquals("SC_MEM_9995", e.getErrorInfo().getCode());
-			LOGGER.info("\nerror >> ", e);
-		}
-
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						assertThat(response, notNullValue());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 
 	/**
 	 * <pre>
 	 * UA 코드 정보 조회.
-	 * - Exception. (필수 파라미터 미입력).
+	 * - Exception. (SAC_MEM_0001=필수 파라미터 미입력).
 	 * </pre>
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void testBlankParameter() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							LOGGER.debug("[REQUEST(SAC)] JSON : \n{}",
-									TestConvertMapperUtils.convertObjectToJson(request));
-							return request;
-						}
-					}).success(GetUaCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetUaCodeRes response = (GetUaCodeRes) result;
-							assertSame(response, null);
-							LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-		} catch (StorePlatformException e) {
-			assertEquals("SAC_MEM_0001", e.getErrorInfo().getCode());
-			LOGGER.info("\nerror >> ", e);
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						assertSame(response, null);
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	/**
 	 * <pre>
 	 * UA 코드 정보 조회.
-	 * - Exception. (DeviceModelNo에 해당하는 UA코드 없음).
+	 * - Exception. (SAC_MEM_3401=DeviceModelNo에 해당하는 UA코드 없음).
 	 * </pre>
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void testExceptGetUaCodeByDeviceModelNo() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							request.setDeviceModelNo("SCH-W777");
-							LOGGER.debug("[REQUEST(SAC)] JSON : \n{}",
-									TestConvertMapperUtils.convertObjectToJson(request));
-							return request;
-						}
-					}).success(GetUaCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						request.setDeviceModelNo("SCH-W777");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetUaCodeRes response = (GetUaCodeRes) result;
-							assertSame(response, null);
-							LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-		} catch (StorePlatformException e) {
-			assertEquals("SAC_MEM_3401", e.getErrorInfo().getCode());
-			LOGGER.info("\nerror >> ", e);
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						assertSame(response, null);
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 }
