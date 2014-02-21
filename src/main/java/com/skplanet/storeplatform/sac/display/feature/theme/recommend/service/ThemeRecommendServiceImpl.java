@@ -45,11 +45,9 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.theme.recommend.invoker.ThemeRecommendInvokerImpl;
+import com.skplanet.storeplatform.sac.display.feature.isf.invoker.IsfEcInvokerImpl;
+import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
 import com.skplanet.storeplatform.sac.display.feature.theme.recommend.vo.ThemeRecommend;
-import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
-import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * 
@@ -66,21 +64,11 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	private ThemeRecommendInvokerImpl ecInvoker;
-
-	@Autowired
-	private MetaInfoService metaInfoService;
-
-	@Autowired
-	private DisplayCommonService displayCommonService;
-
-	@Autowired
-	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+	private IsfEcInvokerImpl invoker;
 
 	@Override
 	public ThemeRecommendSacRes searchThemeRecommendList(ThemeRecommendSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException {
-		// TODO Auto-generated method stub
 
 		Map<String, Object> mapReq = new HashMap<String, Object>();
 
@@ -95,9 +83,9 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		String deviceId = requestVO.getDeviceId();
 
 		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("[searchIntimateMessageList] userKey : {}", userKey);
-		this.log.debug("[searchIntimateMessageList] deviceIdType : {}", deviceIdType);
-		this.log.debug("[searchIntimateMessageList] deviceId : {}", deviceId);
+		this.log.debug("[searchThemeRecommendList] userKey : {}", userKey);
+		this.log.debug("[searchThemeRecommendList] deviceIdType : {}", deviceIdType);
+		this.log.debug("[searchThemeRecommendList] deviceId : {}", deviceId);
 		this.log.debug("----------------------------------------------------------------");
 
 		// 필수 파라미터 체크
@@ -118,7 +106,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		ISFRes response = new ISFRes();
 		try {
 			// ISF 연동
-			response = this.ecInvoker.invoke(requestVO);
+			response = this.invoker.invoke(this.makeRequest(requestVO));
 		} catch (StorePlatformException e) {
 			throw e;
 		}
@@ -199,7 +187,8 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		return this.makeThemeRecommendResult(listThemeRecommend, reason, requestVO.getFilteredBy());
 	}
 
-	private ThemeRecommendSacRes makeThemeRecommendResult(List<ThemeRecommend> resultList, String reason, String filteredBy) {
+	private ThemeRecommendSacRes makeThemeRecommendResult(List<ThemeRecommend> resultList, String reason,
+			String filteredBy) {
 		ThemeRecommendSacRes response = new ThemeRecommendSacRes();
 
 		CommonResponse commonResponse = new CommonResponse();
@@ -464,4 +453,21 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		return response;
 	}
 
+	private IsfEcReq makeRequest(ThemeRecommendSacReq requestVO) {
+
+		IsfEcReq request = new IsfEcReq();
+
+		if ("long".equals(requestVO.getFilteredBy()))
+			request.setId("SVC_MAIN_0002");
+		else
+			request.setId("SVC_MAIN_0004");
+
+		request.setMbn(requestVO.getUserKey());
+		request.setMdn(requestVO.getDeviceId());
+		request.setType(requestVO.getFilteredBy());
+
+		this.log.debug(request.toString());
+
+		return request;
+	}
 }
