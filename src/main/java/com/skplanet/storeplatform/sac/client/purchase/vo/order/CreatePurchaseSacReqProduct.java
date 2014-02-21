@@ -26,7 +26,6 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 
 	@NotBlank
 	private String prodId; // 상품 ID
-	private String tenantProdGrpCd; // 테넌트 상품그룹 코드
 	@NotNull
 	private double prodAmt; // 상품 가격
 	@NotNull
@@ -44,9 +43,8 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 
 	/**
 	 */
-	public CreatePurchaseSacReqProduct(String prodId, String tenantProdGrpCd, double prodAmt, int prodQty) {
+	public CreatePurchaseSacReqProduct(String prodId, double prodAmt, int prodQty) {
 		this.prodId = prodId;
-		this.tenantProdGrpCd = tenantProdGrpCd;
 		this.prodAmt = prodAmt;
 		this.prodQty = prodQty;
 	}
@@ -64,21 +62,6 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	 */
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
-	}
-
-	/**
-	 * @return the tenantProdGrpCd
-	 */
-	public String getTenantProdGrpCd() {
-		return this.tenantProdGrpCd;
-	}
-
-	/**
-	 * @param tenantProdGrpCd
-	 *            the tenantProdGrpCd to set
-	 */
-	public void setTenantProdGrpCd(String tenantProdGrpCd) {
-		this.tenantProdGrpCd = tenantProdGrpCd;
 	}
 
 	/**

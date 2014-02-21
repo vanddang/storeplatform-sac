@@ -14,6 +14,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -36,7 +37,7 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String prchsReqPathCd; // 구매 요청 경로 코드
 	private String mid; // 가맹점 ID
 	private String authKey; // 가맹점 인증키
-	private String resultUrl; // 결과처리 URL
+	private String returnUrl; // 결과처리 URL
 	@NotBlank
 	private String currencyCd; // 통화 코드
 	@NotNull
@@ -47,7 +48,13 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String networkTypeCd; // 네트워크 타입 코드
 	@NotBlank
 	private String prchsCaseCd; // 구매 유형 코드
-	@NotNull
+	private String tenantProdGrpCd; // 테넌트 상품 분류 코드
+	private String imei; // 단말 식별 번호
+	private String uacd; // 단말 모델 식별 번호
+	private String simNo; // SIM Serial Number
+	private String simYn; // SIM 조회 가능 여부
+
+	@NotEmpty
 	private List<CreatePurchaseSacReqProduct> productList; // 구매할 상품 리스트
 
 	/**
@@ -156,18 +163,18 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the resultUrl
+	 * @return the returnUrl
 	 */
-	public String getResultUrl() {
-		return this.resultUrl;
+	public String getReturnUrl() {
+		return this.returnUrl;
 	}
 
 	/**
-	 * @param resultUrl
-	 *            the resultUrl to set
+	 * @param returnUrl
+	 *            the returnUrl to set
 	 */
-	public void setResultUrl(String resultUrl) {
-		this.resultUrl = resultUrl;
+	public void setReturnUrl(String returnUrl) {
+		this.returnUrl = returnUrl;
 	}
 
 	/**
@@ -243,6 +250,81 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	 */
 	public void setPrchsCaseCd(String prchsCaseCd) {
 		this.prchsCaseCd = prchsCaseCd;
+	}
+
+	/**
+	 * @return the tenantProdGrpCd
+	 */
+	public String getTenantProdGrpCd() {
+		return this.tenantProdGrpCd;
+	}
+
+	/**
+	 * @param tenantProdGrpCd
+	 *            the tenantProdGrpCd to set
+	 */
+	public void setTenantProdGrpCd(String tenantProdGrpCd) {
+		this.tenantProdGrpCd = tenantProdGrpCd;
+	}
+
+	/**
+	 * @return the imei
+	 */
+	public String getImei() {
+		return this.imei;
+	}
+
+	/**
+	 * @param imei
+	 *            the imei to set
+	 */
+	public void setImei(String imei) {
+		this.imei = imei;
+	}
+
+	/**
+	 * @return the uacd
+	 */
+	public String getUacd() {
+		return this.uacd;
+	}
+
+	/**
+	 * @param uacd
+	 *            the uacd to set
+	 */
+	public void setUacd(String uacd) {
+		this.uacd = uacd;
+	}
+
+	/**
+	 * @return the simNo
+	 */
+	public String getSimNo() {
+		return this.simNo;
+	}
+
+	/**
+	 * @param simNo
+	 *            the simNo to set
+	 */
+	public void setSimNo(String simNo) {
+		this.simNo = simNo;
+	}
+
+	/**
+	 * @return the simYn
+	 */
+	public String getSimYn() {
+		return this.simYn;
+	}
+
+	/**
+	 * @param simYn
+	 *            the simYn to set
+	 */
+	public void setSimYn(String simYn) {
+		this.simYn = simYn;
 	}
 
 	/**
