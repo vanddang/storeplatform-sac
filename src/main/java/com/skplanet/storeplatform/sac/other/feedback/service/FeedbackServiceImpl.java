@@ -826,10 +826,10 @@ public class FeedbackServiceImpl implements FeedbackService {
 				detailInformationSacRes = null;
 			}
 			if (detailInformationSacRes != null && detailInformationSacRes.getSellerMbr() != null) {
-				sellerNickName = detailInformationSacRes.getSellerMbr().getSellerNickName();
-				sellerCompany = detailInformationSacRes.getSellerMbr().getSellerCompany();
-				sellerClass = detailInformationSacRes.getSellerMbr().getSellerClass();
-				charger = detailInformationSacRes.getSellerMbr().getCharger();
+				// sellerNickName = detailInformationSacRes.getSellerMbr().g;
+				// sellerCompany = detailInformationSacRes.getSellerMbr().getSellerCompany();
+				// sellerClass = detailInformationSacRes.getSellerMbr().getSellerClass();
+				// charger = detailInformationSacRes.getSellerMbr().getCharger();
 			}
 		}
 		// 테스트 해보기.
