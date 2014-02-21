@@ -1727,21 +1727,21 @@ public class ShoppingServiceImpl implements ShoppingService {
 								memberReq.setSellerKey(episodeShopping.getSellerMbrNo());
 								memberReq.setSellerId("");
 								memberRes = this.sellerSearchSCI.detailInformation(memberReq);
-								if (memberRes != null) {
-									memberRes.getSellerMbr().getSellerCompany();
-									distributor = new Distributor();
-									// distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
-									// distributor.setIdentifier(memberRes.getSellerMbr().getSellerId());
-									// distributor.setName(memberRes.getSellerMbr().getSellerName());
-									// // distributor.setCompany(memberRes.getSellerMbr().getSellerCompany());
-									// distributor.setTel(memberRes.getSellerMbr().getRepPhone());
-									// distributor.setEmail(memberRes.getSellerMbr().getSellerEmail());
-									// distributor.setAddress(memberRes.getSellerMbr().getSellerAddress()
-									// + memberRes.getSellerMbr().getSellerDetailAddress());
-									// distributor.setRegNo(memberRes.getSellerMbr().getSellerBizNumber());
-									episodeProduct.setDistributor(distributor);
-
-								}
+								// if (memberRes != null) {
+								// memberRes.getSellerMbr().getSellerCompany();
+								// distributor = new Distributor();
+								// // distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
+								// // distributor.setIdentifier(memberRes.getSellerMbr().getSellerId());
+								// // distributor.setName(memberRes.getSellerMbr().getSellerName());
+								// // // distributor.setCompany(memberRes.getSellerMbr().getSellerCompany());
+								// // distributor.setTel(memberRes.getSellerMbr().getRepPhone());
+								// // distributor.setEmail(memberRes.getSellerMbr().getSellerEmail());
+								// // distributor.setAddress(memberRes.getSellerMbr().getSellerAddress()
+								// // + memberRes.getSellerMbr().getSellerDetailAddress());
+								// // distributor.setRegNo(memberRes.getSellerMbr().getSellerBizNumber());
+								// episodeProduct.setDistributor(distributor);
+								//
+								// }
 							} catch (Exception e) {
 								throw new StorePlatformException("SAC_DSP_1002", "멤버 정보 조회 ", e);
 							}
