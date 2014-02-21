@@ -252,16 +252,23 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerCompany(req.getSellerCompany());
 		// 사업자 등록번호
 		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
-		// 고객 대응 이메일
+		// 담당자 이메일
 		sellerMbr.setCustomerEmail(req.getCustomerEmail());
-		// 고객 대응 전화번호 국가번호
+		// 담당자 유선 전화 국가번호
 		sellerMbr.setCustomerPhoneCountry(req.getCustomerPhoneCountry());
-		// 고객 대응 전화번호
+		// 담당자 유선 전화번호
 		sellerMbr.setCustomerPhone(req.getCustomerPhone());
 		// 법인등록번호
 		sellerMbr.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
 		sellerMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE);
 		sellerMbr.setStopStatusCode(MemberConstants.USER_STOP_STATUS_NOMAL);
+
+		// 담당자 명
+		sellerMbr.setCharger(req.getCharger());
+		// 담당자 무선 전화 번호
+		sellerMbr.setChargerPhone(req.getChargerPhone());
+
+		// sellerMbr.setCustomer
 		createSellerRequest.setSellerMbr(sellerMbr);
 		// Debug
 		LOGGER.debug("==>>[SC] CreateSellerRequest.SellerMbr.toString() : {}", sellerMbr.toString());
