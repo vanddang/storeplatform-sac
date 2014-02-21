@@ -100,6 +100,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 
 		for (int i = 0; resultList != null && i < resultList.size(); i++) {
 			webtoonDetail = resultList.get(i);
+			product = new Product();
 
 			String chapter = resultList.get(i).getChapter();
 			req.setChapter(chapter);
@@ -112,9 +113,6 @@ public class WebtoonServiceImpl implements WebtoonService {
 				req.setOrderedBy("next");
 				nextPartId = (String) this.commonDAO.queryForObject("Webtoon.getWebtoonPreNext", req);
 			}
-
-			webtoonDetail = resultList.get(i);
-			product = new Product();
 
 			// 채널상품ID
 			identifier = new Identifier();
