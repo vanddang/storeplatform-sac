@@ -84,6 +84,12 @@ public class UserSearchController {
 
 		LOGGER.info("============================================ GetProvisioningHistoryReq : {}", req.toString());
 
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+
+		if ("".equals(deviceId)) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+		}
+
 		GetProvisioningHistoryRes res = this.svc.getProvisioningHistory(sacHeader, req);
 
 		LOGGER.info("Final Response : {}", res.toString());
@@ -160,7 +166,7 @@ public class UserSearchController {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
 		if ("".equals(userKey)) {
-			throw new StorePlatformException("SAC_MEM_0001", "userKey()");
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
 		req.setUserKey(userKey);

@@ -61,7 +61,7 @@ public class ClauseController {
 		String itemCd = StringUtil.nvl(req.getClauseItemCd(), "");
 
 		if ("".equals(itemCd)) {
-			throw new StorePlatformException("SAC_MEM_0001", "getClauseItemCd()");
+			throw new StorePlatformException("SAC_MEM_0001", "clauseItemCd()");
 		}
 
 		DetailClauseSacRes res = this.svc.detailClauseList(req);
