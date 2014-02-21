@@ -22,7 +22,14 @@ public class SearchSellerKeySCIController implements SearchSellerKeySCI {
 	private SearchSellerKeyService searchSellerKeyService;
 
 	/**
+	 * 
+	 * <pre>
 	 * App Id로 Seller Key를 조회한다.
+	 * </pre>
+	 * 
+	 * @param aid
+	 *            aid
+	 * @return String
 	 */
 	@Override
 	public String searchSellerKeyForAid(@Validated String aid) {

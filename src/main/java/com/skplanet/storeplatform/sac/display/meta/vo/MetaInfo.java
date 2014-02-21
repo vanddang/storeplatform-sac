@@ -200,7 +200,7 @@ public class MetaInfo {
 	private String soldOut;
 
 	private String planId;
-	private String PlanNm;
+	private String planNm;
 	private String subTitlNm;
 	private String planStartDt;
 	private String planEndDt;
@@ -209,21 +209,21 @@ public class MetaInfo {
 
 	private String allow;
 	private String b2bProdYn;
-	private String mthMaxCnt;// 월_최대_판매_수량
-	private String dlyMaxCnt;// 일_최대_판매_수량
-	private String mthUsrMaxCnt;// 월_회원_최대_구매_수량
-	private String dlyUsrMaxCnt;// 일_회원_최대_구매_수량
-	private String eachMaxCnt;// 1차_최대_구매_수량
+	private String mthMaxCnt; // 월_최대_판매_수량
+	private String dlyMaxCnt; // 일_최대_판매_수량
+	private String mthUsrMaxCnt; // 월_회원_최대_구매_수량
+	private String dlyUsrMaxCnt; // 일_회원_최대_구매_수량
+	private String eachMaxCnt; // 1차_최대_구매_수량
 
-	private String usePlac;// 사용_장소
-	private String useLimtDesc;// 사용_제한_설명
-	private String noticeMatt;// 공지_사항
-	private String prchsCancelDrbkReason;// 구매_취소_환불_사유
+	private String usePlac; // 사용_장소
+	private String useLimtDesc; // 사용_제한_설명
+	private String noticeMatt; // 공지_사항
+	private String prchsCancelDrbkReason; // 구매_취소_환불_사유
 
-	private String opt1Nm;// 옵션 기준점
-	private String optPdNm;// 옵션 값
-	private String subYn;// 옵션 하위 여부
-	private String srcContentId;// 쿠폰코드,아이템코드
+	private String opt1Nm; // 옵션 기준점
+	private String optPdNm; // 옵션 값
+	private String subYn; // 옵션 하위 여부
+	private String srcContentId; // 쿠폰코드,아이템코드
 
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
@@ -858,96 +858,6 @@ public class MetaInfo {
 	}
 
 	/**
-	 * @return the aid
-	 */
-	public String getAid() {
-		return this.aid;
-	}
-
-	/**
-	 * @param aid
-	 *            the aid to set
-	 */
-	public void setAid(String aid) {
-		this.aid = aid;
-	}
-
-	/**
-	 * @return the drmYn
-	 */
-	public String getDrmYn() {
-		return this.drmYn;
-	}
-
-	/**
-	 * @param drmYn
-	 *            the drmYn to set
-	 */
-	public void setDrmYn(String drmYn) {
-		this.drmYn = drmYn;
-	}
-
-	/**
-	 * @return the prodVer
-	 */
-	public String getProdVer() {
-		return this.prodVer;
-	}
-
-	/**
-	 * @param prodVer
-	 *            the prodVer to set
-	 */
-	public void setProdVer(String prodVer) {
-		this.prodVer = prodVer;
-	}
-
-	/**
-	 * @return the apkPkgNm
-	 */
-	public String getApkPkgNm() {
-		return this.apkPkgNm;
-	}
-
-	/**
-	 * @param apkPkgNm
-	 *            the apkPkgNm to set
-	 */
-	public void setApkPkgNm(String apkPkgNm) {
-		this.apkPkgNm = apkPkgNm;
-	}
-
-	/**
-	 * @return the apkVer
-	 */
-	public String getApkVer() {
-		return this.apkVer;
-	}
-
-	/**
-	 * @param apkVer
-	 *            the apkVer to set
-	 */
-	public void setApkVer(String apkVer) {
-		this.apkVer = apkVer;
-	}
-
-	/**
-	 * @return the fakeYn
-	 */
-	public String getFakeYn() {
-		return this.fakeYn;
-	}
-
-	/**
-	 * @param fakeYn
-	 *            the fakeYn to set
-	 */
-	public void setFakeYn(String fakeYn) {
-		this.fakeYn = fakeYn;
-	}
-
-	/**
 	 * @return the prodClsfCd
 	 */
 	public String getProdClsfCd() {
@@ -1230,6 +1140,111 @@ public class MetaInfo {
 	 */
 	public void setCompany(String company) {
 		this.company = company;
+	}
+
+	/**
+	 * @return the cid
+	 */
+	public String getCid() {
+		return this.cid;
+	}
+
+	/**
+	 * @param cid
+	 *            the cid to set
+	 */
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	/**
+	 * @return the aid
+	 */
+	public String getAid() {
+		return this.aid;
+	}
+
+	/**
+	 * @param aid
+	 *            the aid to set
+	 */
+	public void setAid(String aid) {
+		this.aid = aid;
+	}
+
+	/**
+	 * @return the drmYn
+	 */
+	public String getDrmYn() {
+		return this.drmYn;
+	}
+
+	/**
+	 * @param drmYn
+	 *            the drmYn to set
+	 */
+	public void setDrmYn(String drmYn) {
+		this.drmYn = drmYn;
+	}
+
+	/**
+	 * @return the prodVer
+	 */
+	public String getProdVer() {
+		return this.prodVer;
+	}
+
+	/**
+	 * @param prodVer
+	 *            the prodVer to set
+	 */
+	public void setProdVer(String prodVer) {
+		this.prodVer = prodVer;
+	}
+
+	/**
+	 * @return the apkPkgNm
+	 */
+	public String getApkPkgNm() {
+		return this.apkPkgNm;
+	}
+
+	/**
+	 * @param apkPkgNm
+	 *            the apkPkgNm to set
+	 */
+	public void setApkPkgNm(String apkPkgNm) {
+		this.apkPkgNm = apkPkgNm;
+	}
+
+	/**
+	 * @return the apkVer
+	 */
+	public String getApkVer() {
+		return this.apkVer;
+	}
+
+	/**
+	 * @param apkVer
+	 *            the apkVer to set
+	 */
+	public void setApkVer(String apkVer) {
+		this.apkVer = apkVer;
+	}
+
+	/**
+	 * @return the fakeYn
+	 */
+	public String getFakeYn() {
+		return this.fakeYn;
+	}
+
+	/**
+	 * @param fakeYn
+	 *            the fakeYn to set
+	 */
+	public void setFakeYn(String fakeYn) {
+		this.fakeYn = fakeYn;
 	}
 
 	/**
@@ -1908,15 +1923,15 @@ public class MetaInfo {
 	}
 
 	/**
-	 * @return the epsdPlayTime
+	 * @return the epsdPlayTm
 	 */
 	public String getEpsdPlayTm() {
 		return this.epsdPlayTm;
 	}
 
 	/**
-	 * @param epsdPlayTime
-	 *            the epsdPlayTime to set
+	 * @param epsdPlayTm
+	 *            the epsdPlayTm to set
 	 */
 	public void setEpsdPlayTm(String epsdPlayTm) {
 		this.epsdPlayTm = epsdPlayTm;
@@ -2433,6 +2448,21 @@ public class MetaInfo {
 	}
 
 	/**
+	 * @return the updDt
+	 */
+	public String getUpdDt() {
+		return this.updDt;
+	}
+
+	/**
+	 * @param updDt
+	 *            the updDt to set
+	 */
+	public void setUpdDt(String updDt) {
+		this.updDt = updDt;
+	}
+
+	/**
 	 * @return the musicId
 	 */
 	public String getMusicId() {
@@ -2868,194 +2898,6 @@ public class MetaInfo {
 	}
 
 	/**
-	 * @return the tagCd
-	 */
-	public String getTagCd() {
-		return this.tagCd;
-	}
-
-	/**
-	 * @param tagCd
-	 *            the tagCd to set
-	 */
-	public void setTagCd(String tagCd) {
-		this.tagCd = tagCd;
-	}
-
-	/**
-	 * @return the tagNm
-	 */
-	public String getTagNm() {
-		return this.tagNm;
-	}
-
-	/**
-	 * @param tagNm
-	 *            the tagNm to set
-	 */
-	public void setTagNm(String tagNm) {
-		this.tagNm = tagNm;
-	}
-
-	/**
-	 * @return the tagTypeCd
-	 */
-	public String getTagTypeCd() {
-		return this.tagTypeCd;
-	}
-
-	/**
-	 * @param tagTypeCd
-	 *            the tagTypeCd to set
-	 */
-	public void setTagTypeCd(String tagTypeCd) {
-		this.tagTypeCd = tagTypeCd;
-	}
-
-	public String getUpdDt() {
-		return this.updDt;
-	}
-
-	public void setUpdDt(String updDt) {
-		this.updDt = updDt;
-	}
-
-	/**
-	 * @return the prodAlias
-	 */
-	public String getProdAlias() {
-		return this.prodAlias;
-	}
-
-	/**
-	 * @param prodAlias
-	 *            the prodAlias to set
-	 */
-	public void setProdAlias(String prodAlias) {
-		this.prodAlias = prodAlias;
-	}
-
-	/**
-	 * @return the cmpxProdClsfCd
-	 */
-	public String getCmpxProdClsfCd() {
-		return this.cmpxProdClsfCd;
-	}
-
-	/**
-	 * @param cmpxProdClsfCd
-	 *            the cmpxProdClsfCd to set
-	 */
-	public void setCmpxProdClsfCd(String cmpxProdClsfCd) {
-		this.cmpxProdClsfCd = cmpxProdClsfCd;
-	}
-
-	/**
-	 * @return the autoApprYn
-	 */
-	public String getAutoApprYn() {
-		return this.autoApprYn;
-	}
-
-	/**
-	 * @param autoApprYn
-	 *            the autoApprYn to set
-	 */
-	public void setAutoApprYn(String autoApprYn) {
-		this.autoApprYn = autoApprYn;
-	}
-
-	/**
-	 * @return the maxSaleCnt
-	 */
-	public String getMaxSaleCnt() {
-		return this.maxSaleCnt;
-	}
-
-	/**
-	 * @param maxSaleCnt
-	 *            the maxSaleCnt to set
-	 */
-	public void setMaxSaleCnt(String maxSaleCnt) {
-		this.maxSaleCnt = maxSaleCnt;
-	}
-
-	/**
-	 * @return the salePocCd
-	 */
-	public String getSalePocCd() {
-		return this.salePocCd;
-	}
-
-	/**
-	 * @param salePocCd
-	 *            the salePocCd to set
-	 */
-	public void setSalePocCd(String salePocCd) {
-		this.salePocCd = salePocCd;
-	}
-
-	/**
-	 * @return the dupPrchsLimtYn
-	 */
-	public String getDupPrchsLimtYn() {
-		return this.dupPrchsLimtYn;
-	}
-
-	/**
-	 * @param dupPrchsLimtYn
-	 *            the dupPrchsLimtYn to set
-	 */
-	public void setDupPrchsLimtYn(String dupPrchsLimtYn) {
-		this.dupPrchsLimtYn = dupPrchsLimtYn;
-	}
-
-	/**
-	 * @return the bannerFilePath
-	 */
-	public String getBannerFilePath() {
-		return this.bannerFilePath;
-	}
-
-	/**
-	 * @param bannerFilePath
-	 *            the bannerFilePath to set
-	 */
-	public void setBannerFilePath(String bannerFilePath) {
-		this.bannerFilePath = bannerFilePath;
-	}
-
-	/**
-	 * @return the thumbnailFilePath
-	 */
-	public String getThumbnailFilePath() {
-		return this.thumbnailFilePath;
-	}
-
-	/**
-	 * @param thumbnailFilePath
-	 *            the thumbnailFilePath to set
-	 */
-	public void setThumbnailFilePath(String thumbnailFilePath) {
-		this.thumbnailFilePath = thumbnailFilePath;
-	}
-
-	/**
-	 * @return the prodIntrDscr
-	 */
-	public String getProdIntrDscr() {
-		return this.prodIntrDscr;
-	}
-
-	/**
-	 * @param prodIntrDscr
-	 *            the prodIntrDscr to set
-	 */
-	public void setProdIntrDscr(String prodIntrDscr) {
-		this.prodIntrDscr = prodIntrDscr;
-	}
-
-	/**
 	 * @return the specialSale
 	 */
 	public String getSpecialSale() {
@@ -3085,58 +2927,107 @@ public class MetaInfo {
 		this.soldOut = soldOut;
 	}
 
+	/**
+	 * @return the planId
+	 */
 	public String getPlanId() {
 		return this.planId;
 	}
 
+	/**
+	 * @param planId
+	 *            the planId to set
+	 */
 	public void setPlanId(String planId) {
 		this.planId = planId;
 	}
 
+	/**
+	 * @return the planNm
+	 */
 	public String getPlanNm() {
-		return this.PlanNm;
+		return this.planNm;
 	}
 
+	/**
+	 * @param planNm
+	 *            the planNm to set
+	 */
 	public void setPlanNm(String planNm) {
-		this.PlanNm = planNm;
+		this.planNm = planNm;
 	}
 
+	/**
+	 * @return the subTitlNm
+	 */
 	public String getSubTitlNm() {
 		return this.subTitlNm;
 	}
 
+	/**
+	 * @param subTitlNm
+	 *            the subTitlNm to set
+	 */
 	public void setSubTitlNm(String subTitlNm) {
 		this.subTitlNm = subTitlNm;
 	}
 
+	/**
+	 * @return the planStartDt
+	 */
 	public String getPlanStartDt() {
 		return this.planStartDt;
 	}
 
+	/**
+	 * @param planStartDt
+	 *            the planStartDt to set
+	 */
 	public void setPlanStartDt(String planStartDt) {
 		this.planStartDt = planStartDt;
 	}
 
+	/**
+	 * @return the planEndDt
+	 */
 	public String getPlanEndDt() {
 		return this.planEndDt;
 	}
 
+	/**
+	 * @param planEndDt
+	 *            the planEndDt to set
+	 */
 	public void setPlanEndDt(String planEndDt) {
 		this.planEndDt = planEndDt;
 	}
 
+	/**
+	 * @return the przwnerAnnoDt
+	 */
 	public String getPrzwnerAnnoDt() {
 		return this.przwnerAnnoDt;
 	}
 
+	/**
+	 * @param przwnerAnnoDt
+	 *            the przwnerAnnoDt to set
+	 */
 	public void setPrzwnerAnnoDt(String przwnerAnnoDt) {
 		this.przwnerAnnoDt = przwnerAnnoDt;
 	}
 
+	/**
+	 * @return the planGiftNm
+	 */
 	public String getPlanGiftNm() {
 		return this.planGiftNm;
 	}
 
+	/**
+	 * @param planGiftNm
+	 *            the planGiftNm to set
+	 */
 	public void setPlanGiftNm(String planGiftNm) {
 		this.planGiftNm = planGiftNm;
 	}
@@ -3352,29 +3243,6 @@ public class MetaInfo {
 	}
 
 	/**
-	 * @return the prodStatusCd
-	 */
-	public String getProdStatusCd() {
-		return this.prodStatusCd;
-	}
-
-	/**
-	 * @param prodStatusCd
-	 *            the prodStatusCd to set
-	 */
-	public void setProdStatusCd(String prodStatusCd) {
-		this.prodStatusCd = prodStatusCd;
-	}
-
-	public String getCid() {
-		return this.cid;
-	}
-
-	public void setCid(String cid) {
-		this.cid = cid;
-	}
-
-	/**
 	 * @return the srcContentId
 	 */
 	public String getSrcContentId() {
@@ -3387,6 +3255,201 @@ public class MetaInfo {
 	 */
 	public void setSrcContentId(String srcContentId) {
 		this.srcContentId = srcContentId;
+	}
+
+	/**
+	 * @return the tagCd
+	 */
+	public String getTagCd() {
+		return this.tagCd;
+	}
+
+	/**
+	 * @param tagCd
+	 *            the tagCd to set
+	 */
+	public void setTagCd(String tagCd) {
+		this.tagCd = tagCd;
+	}
+
+	/**
+	 * @return the tagNm
+	 */
+	public String getTagNm() {
+		return this.tagNm;
+	}
+
+	/**
+	 * @param tagNm
+	 *            the tagNm to set
+	 */
+	public void setTagNm(String tagNm) {
+		this.tagNm = tagNm;
+	}
+
+	/**
+	 * @return the tagTypeCd
+	 */
+	public String getTagTypeCd() {
+		return this.tagTypeCd;
+	}
+
+	/**
+	 * @param tagTypeCd
+	 *            the tagTypeCd to set
+	 */
+	public void setTagTypeCd(String tagTypeCd) {
+		this.tagTypeCd = tagTypeCd;
+	}
+
+	/**
+	 * @return the prodAlias
+	 */
+	public String getProdAlias() {
+		return this.prodAlias;
+	}
+
+	/**
+	 * @param prodAlias
+	 *            the prodAlias to set
+	 */
+	public void setProdAlias(String prodAlias) {
+		this.prodAlias = prodAlias;
+	}
+
+	/**
+	 * @return the cmpxProdClsfCd
+	 */
+	public String getCmpxProdClsfCd() {
+		return this.cmpxProdClsfCd;
+	}
+
+	/**
+	 * @param cmpxProdClsfCd
+	 *            the cmpxProdClsfCd to set
+	 */
+	public void setCmpxProdClsfCd(String cmpxProdClsfCd) {
+		this.cmpxProdClsfCd = cmpxProdClsfCd;
+	}
+
+	/**
+	 * @return the autoApprYn
+	 */
+	public String getAutoApprYn() {
+		return this.autoApprYn;
+	}
+
+	/**
+	 * @param autoApprYn
+	 *            the autoApprYn to set
+	 */
+	public void setAutoApprYn(String autoApprYn) {
+		this.autoApprYn = autoApprYn;
+	}
+
+	/**
+	 * @return the maxSaleCnt
+	 */
+	public String getMaxSaleCnt() {
+		return this.maxSaleCnt;
+	}
+
+	/**
+	 * @param maxSaleCnt
+	 *            the maxSaleCnt to set
+	 */
+	public void setMaxSaleCnt(String maxSaleCnt) {
+		this.maxSaleCnt = maxSaleCnt;
+	}
+
+	/**
+	 * @return the salePocCd
+	 */
+	public String getSalePocCd() {
+		return this.salePocCd;
+	}
+
+	/**
+	 * @param salePocCd
+	 *            the salePocCd to set
+	 */
+	public void setSalePocCd(String salePocCd) {
+		this.salePocCd = salePocCd;
+	}
+
+	/**
+	 * @return the dupPrchsLimtYn
+	 */
+	public String getDupPrchsLimtYn() {
+		return this.dupPrchsLimtYn;
+	}
+
+	/**
+	 * @param dupPrchsLimtYn
+	 *            the dupPrchsLimtYn to set
+	 */
+	public void setDupPrchsLimtYn(String dupPrchsLimtYn) {
+		this.dupPrchsLimtYn = dupPrchsLimtYn;
+	}
+
+	/**
+	 * @return the bannerFilePath
+	 */
+	public String getBannerFilePath() {
+		return this.bannerFilePath;
+	}
+
+	/**
+	 * @param bannerFilePath
+	 *            the bannerFilePath to set
+	 */
+	public void setBannerFilePath(String bannerFilePath) {
+		this.bannerFilePath = bannerFilePath;
+	}
+
+	/**
+	 * @return the thumbnailFilePath
+	 */
+	public String getThumbnailFilePath() {
+		return this.thumbnailFilePath;
+	}
+
+	/**
+	 * @param thumbnailFilePath
+	 *            the thumbnailFilePath to set
+	 */
+	public void setThumbnailFilePath(String thumbnailFilePath) {
+		this.thumbnailFilePath = thumbnailFilePath;
+	}
+
+	/**
+	 * @return the prodIntrDscr
+	 */
+	public String getProdIntrDscr() {
+		return this.prodIntrDscr;
+	}
+
+	/**
+	 * @param prodIntrDscr
+	 *            the prodIntrDscr to set
+	 */
+	public void setProdIntrDscr(String prodIntrDscr) {
+		this.prodIntrDscr = prodIntrDscr;
+	}
+
+	/**
+	 * @return the prodStatusCd
+	 */
+	public String getProdStatusCd() {
+		return this.prodStatusCd;
+	}
+
+	/**
+	 * @param prodStatusCd
+	 *            the prodStatusCd to set
+	 */
+	public void setProdStatusCd(String prodStatusCd) {
+		this.prodStatusCd = prodStatusCd;
 	}
 
 }
