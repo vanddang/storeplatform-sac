@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ThemeBrandshop">
+    <!-- 브렌드샵 테마 조회 -->
+    <select id="selectThemeBrandshopList" parameterType="ThemeBrandshopSacReq" resultType="ThemeBrandshop">
+		SELECT  /* ThemeBrandshopMapper.XML, selectThemeBrandshopList, seung hun Lee, 2014-02-19 */    
+            TOTAL_COUNT
+          , BRAND_ID
+          , BRAND_SHOP_NM
+          , CATEGORY_NO
+          , MENU_NM
+          , LOG_IMG_POS
+          , BNR_IMG_SIZE
+          , EXPO_ORD
+          , MBR_NO
+        FROM
+		( 		
+            SELECT
+	              COUNT(*) OVER () AS TOTAL_COUNT
+                , ROW_NUMBER() OVER(ORDER BY A.CATEGORY_NO, A.EXPO_ORD) RNUM
+			    , A.BRAND_ID
+			    , A.BRAND_SHOP_NM
+			    , A.CATEGORY_NO
+			    , (SELECT CD_NM FROM TB_CM_CD A1
+		              WHERE A1.CD_ID = A.CATEGORY_NO 
+		              AND ROWNUM = 1) MENU_NM		     
+			    , A.LOG_IMG_POS
+			    , A.BNR_IMG_SIZE
+			    , A.EXPO_ORD
+			    , A.MBR_NO
+		    FROM
+			(
+				SELECT DISTINCT  BS.BRAND_SHOP_NO AS BRAND_ID
+				    , BS.BRAND_SHOP_NM
+				    , BS.CATEGORY_NO
+				    , CONCAT( BS.BNR_IMG_PATH, BS.BNR_IMG_NM ) AS LOG_IMG_POS
+				    , BS.BNR_IMG_SIZE
+				    , BS.EXPO_ORD
+				    , BSS.MBR_NO
+				FROM TB_DP_BRAND_SHOP BS
+				    , TB_DP_BRAND_SHOP_SELLER BSS
+				    , TB_DP_BRAND_SHOP_DVC BSD    
+				    , TB_CM_DEVICE TCD
+				WHERE 1=1
+		        AND BS.TENANT_ID = #{tenantId}
+				AND BS.BRAND_SHOP_NO = BSS.BRAND_SHOP_NO
+				AND BS.TENANT_ID = BSS.TENANT_ID
+				AND BS.BRAND_SHOP_NO = BSD.BRAND_SHOP_NO
+				AND BS.TENANT_ID = BSD.TENANT_ID
+				AND BS.EXPO_YN = 'Y'
+				AND BS.DEL_YN = 'N'
+				AND BSD.DVC_TYPE_CD = TCD.DEVICE_MODEL_CD
+				AND TCD.DEVICE_MODEL_CD = 'SHV-E230S'
+		        /*AND (TCD.DEVICE_MODEL_CD = -deviceModelCd OR L.DEVICE_MODEL_CD = 'android_standard2')  header param : 단말모델코드 */
+				AND TCD.USE_YN = 'Y'
+			) A
+		)
+        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+        ORDER BY RNUM
+    </select>
+</mapper>

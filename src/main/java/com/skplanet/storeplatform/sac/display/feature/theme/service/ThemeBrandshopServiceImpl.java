@@ -10,17 +10,19 @@
 package com.skplanet.storeplatform.sac.display.feature.theme.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeBrandshopSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeBrandshopSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -30,12 +32,16 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeBrandshopInfo;
 
 /**
- * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
  * 
- * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
+ * 
+ * Updated on : 2014. 2. 7. Updated by : 이승훈, 엔텔스.
  */
 
 @Service
@@ -54,9 +60,113 @@ public class ThemeBrandshopServiceImpl implements ThemeBrandshopService {
 	@Override
 	public ThemeBrandshopSacRes searchThemeBrandshopList(ThemeBrandshopSacReq req, SacRequestHeader header) {
 
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setDeviceModelCd(deviceHeader.getModel());
+
 		ThemeBrandshopSacRes res = new ThemeBrandshopSacRes();
+
 		if (req.getDummy() == null) {
-			return res;
+
+			// 필수 파라미터 체크 channelId
+			int offset = 1; // default
+			int count = 20; // default
+
+			if (req.getOffset() != null) {
+				offset = req.getOffset();
+			}
+			req.setOffset(offset);
+
+			if (req.getCount() != null) {
+				count = req.getCount();
+			}
+			count = offset + count - 1;
+			req.setCount(count);
+
+			try {
+
+				CommonResponse commonResponse = new CommonResponse();
+				List<Product> productList = new ArrayList<Product>();
+				// 브렌드샵 테마 조회
+				List<ThemeBrandshopInfo> themeBrandshopList = this.commonDAO.queryForList(
+						"ThemeBrandshop.selectThemeBrandshopList", req, ThemeBrandshopInfo.class);
+
+				if (!themeBrandshopList.isEmpty()) {
+
+					Product product = null;
+
+					// Identifier 설정
+					Identifier identifier = null;
+					List<Identifier> identifierList = new ArrayList<Identifier>();
+					Menu menu = null;
+					List<Menu> menuList = new ArrayList<Menu>();
+					Title title = null;
+
+					List<Source> sourceList = new ArrayList<Source>();
+					Source source = null;
+
+					ThemeBrandshopInfo ThemeBrandshopInfo = null;
+					Map<String, Object> reqMap = new HashMap<String, Object>();
+					reqMap.put("tenantHeader", tenantHeader);
+					reqMap.put("deviceHeader", deviceHeader);
+					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+
+					for (int i = 0; i < themeBrandshopList.size(); i++) {
+						ThemeBrandshopInfo = themeBrandshopList.get(i);
+
+						product = new Product(); // 결과물
+
+						// identifier 정보
+						identifier = new Identifier();
+						identifierList = new ArrayList<Identifier>();
+
+						identifier.setType("brand");
+						identifier.setText(ThemeBrandshopInfo.getBrandId());
+						identifierList.add(identifier);
+						product.setIdentifierList(identifierList);
+
+						// 메뉴 정보
+						menu = new Menu(); // 메뉴
+						menuList = new ArrayList<Menu>(); // 메뉴 리스트
+						menu.setId(ThemeBrandshopInfo.getCategoryNo());
+						menu.setName(ThemeBrandshopInfo.getMenuNm());
+						menu.setType("topClass");
+						menuList.add(menu);
+						product.setMenuList(menuList);
+
+						// title 정보
+						title = new Title();
+						title.setText(ThemeBrandshopInfo.getBrandShopNm());
+						product.setTitle(title);
+
+						// source 정보
+						source = new Source();
+						sourceList = new ArrayList<Source>();
+						source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+						source.setUrl(ThemeBrandshopInfo.getLogImgPos());
+						sourceList.add(source);
+						product.setSourceList(sourceList);
+
+						// 데이터 매핑
+						productList.add(i, product);
+
+					}
+					commonResponse.setTotalCount(themeBrandshopList.get(0).getTotalCount());
+					res.setProductList(productList);
+					res.setCommonResponse(commonResponse);
+				} else {
+					// 조회 결과 없음
+					commonResponse.setTotalCount(0);
+					res.setProductList(productList);
+					res.setCommonResponse(commonResponse);
+				}
+				return res;
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_DSP_0001", "");
+			}
 		} else {
 			return this.generateDummy();
 		}
@@ -77,7 +187,6 @@ public class ThemeBrandshopServiceImpl implements ThemeBrandshopService {
 		Source source = null;
 		Price price = null;
 		Rights rights = null;
-		Date date = null;
 		Accrual accrual = null;
 
 		Product product = null;
@@ -100,7 +209,6 @@ public class ThemeBrandshopServiceImpl implements ThemeBrandshopService {
 		title = new Title();
 		price = new Price();
 		rights = new Rights();
-		date = new Date();
 		accrual = new Accrual();
 
 		layOut = new Layout();
