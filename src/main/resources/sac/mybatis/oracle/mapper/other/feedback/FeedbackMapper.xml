@@ -374,16 +374,7 @@
         SELECT  /* FeedbackMapper.xml, getProdNotiCount, SAC : 김현일 , 2014-02-04 */
            SUM( TOTAL_COUNT ) TOTAL_COUNT
         FROM (
-           SELECT
-             <!-- Shopping -->
-             <if test="prodType == 'shopping'">
-             /*+ index(N IDX_DP_PROD_NOTI_09) */
-             </if>
-             <!-- Shopping 외 -->
-             <if test="prodType != 'shopping'">
-             /*+ index(N IDX_DP_PROD_NOTI_07) */
-             </if>
-                  COUNT(*) AS TOTAL_COUNT
+           SELECT COUNT(*) AS TOTAL_COUNT
              FROM TB_DP_PROD_NOTI N
             WHERE N.TENANT_ID = #{tenantId}
               AND N.DEL_YN = 'N'
@@ -473,28 +464,7 @@
 	                      FROM (
 	                           SELECT *
 	                             FROM (
-	                                  SELECT
-	                                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
-	                                         /*+ ordered use_nl(P) index(N PK_DP_PROD_NOTI) */
-	                                         </if>
-	                                         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(notiSeq)">
-	                                           <!-- Shopping -->
-	                                           <if test="prodType == 'shopping'">
-	                                           /*+ leading(N) use_nl(P) index_desc(N IDX_DP_PROD_NOTI_09) */
-	                                           </if>
-	                                           <!-- Shopping 외 -->
-	                                           <if test="prodType != 'shopping'">
-	                                               <!-- 추천순 -->     
-	                                               <if test="orderedBy == 'recommend'">
-	                                               /*+ leading(P) use_nl(N) index_desc(N IDX_DP_PROD_NOTI_08) */
-	                                               </if>
-	                                               <!-- 최신순 -->
-	                                               <if test="orderedBy == 'recent'">
-	                                               /*+ leading(P) use_nl(N) index_desc(N IDX_DP_PROD_NOTI_01) */
-	                                               </if>
-	                                           </if>
-	                                       </if>
-	                                         N.TENANT_ID
+	                                  SELECT N.TENANT_ID
 	                                       , N.NOTI_SEQ
 	                                       , N.TITLE
 	                                       , N.NOTI_DSCR
@@ -548,28 +518,7 @@
 	                            UNION ALL
 	                           SELECT *
 	                             FROM (
-	                                  SELECT
-                                           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
-                                             /*+ ordered use_nl(P) index(N PK_DP_PROD_NOTI_WD) */
-                                             </if>
-                                             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(notiSeq)">
-                                               <!-- Shopping -->    
-                                               <if test="prodType == 'shopping'">
-                                               /*+ leading(N) use_nl(P) index_desc(N IDX_DP_PROD_NOTI_WD_09) */
-                                               </if>
-                                               <!-- Shopping 외 -->
-                                               <if test="prodType != 'shopping'">
-                                                   <!-- 추천순 --> 
-                                                   <if test="orderedBy == 'recommend'">
-                                                   /*+ leading(P) use_nl(N) index_desc(N IDX_DP_PROD_NOTI_WD_08) */
-                                                   </if>
-                                                   <!-- 최신순 -->
-                                                   <if test="orderedBy == 'recent'">
-                                                   /*+ leading(P) use_nl(N) index_desc(N IDX_DP_PROD_NOTI_WD_01) */
-                                                   </if>
-                                               </if>
-                                           </if>
-                                             N.TENANT_ID
+	                                  SELECT N.TENANT_ID
 	                                       , N.NOTI_SEQ
 	                                       , N.TITLE
 	                                       , N.NOTI_DSCR
@@ -703,16 +652,7 @@
 	                        , MAX( EXPO_SELLER_NM ) AS EXPO_SELLER_NM
 	                     FROM
 	                        (
-	                        SELECT
-	                        <!-- Shopping -->
-	                        <if test="prodType == 'shopping'">
-	                            /*+ leading(N) use_nl(P) index_desc(N IDX_DP_PROD_NOTI_10) */
-	                        </if>
-	                        <!-- Shopping 외 -->
-	                        <if test="prodType != 'shopping'">
-	                            /*+ leading(P) use_nl(N) index(N IDX_DP_PROD_NOTI_06) */
-	                        </if>
-	                               N.TENANT_ID
+	                        SELECT N.TENANT_ID
 	                             , N.NOTI_SEQ
 	                             , N.TITLE
 	                             , N.NOTI_DSCR
@@ -814,16 +754,7 @@
              SELECT MAX( PROD_ID ) AS PROD_ID
                FROM
                   (
-                  SELECT
-                  <!-- Shopping -->
-                  <if test="prodType == 'shopping'">
-                      /*+ leading(N) use_nl(P) index_desc(N IDX_DP_PROD_NOTI_10) */
-                  </if>
-                  <!-- Shopping 외 -->
-                  <if test="prodType != 'shopping'">
-                      /*+ leading(P) use_nl(N) index(N IDX_DP_PROD_NOTI_06) */
-                  </if>
-                         N.PROD_ID
+                  SELECT N.PROD_ID
                     FROM TB_DP_PROD_NOTI  N
                        , TB_DP_PROD  P
                    WHERE N.TENANT_ID = #{tenantId}
