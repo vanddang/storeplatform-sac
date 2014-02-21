@@ -217,6 +217,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			String prchsCaseCd = null; // 선물 여부
 			String prchsState = null; // 구매상태
 			String prchsProdId = null; // 구매 상품ID
+			String prchsPrice = null; // 구매금액
 
 			if (historyRes != null && historyRes.getTotalCnt() > 0) {
 				List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -229,6 +230,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
 					prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 					prchsProdId = historyRes.getHistoryList().get(i).getProdId();
+					prchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 
 					// 구매상태 확인
 					ebookReq.setPrchsDt(prchsDt);
@@ -253,6 +255,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					this.logger.debug("[getDownloadEbookInfo] prchsCaseCd : {}", prchsCaseCd);
 					this.logger.debug("[getDownloadEbookInfo] prchsState : {}", prchsState);
 					this.logger.debug("[getDownloadEbookInfo] prchsProdId : {}", prchsProdId);
+					this.logger.debug("[getDownloadEbookInfo] prchsPrice : {}", prchsPrice);
 					this.logger.debug("----------------------------------------------------------------");
 
 					metaInfo.setPurchaseId(prchsId);
@@ -260,6 +263,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					metaInfo.setPurchaseDt(prchsDt);
 					metaInfo.setPurchaseState(prchsState);
 					metaInfo.setPurchaseDwldExprDt(dwldExprDt);
+					metaInfo.setPurchasePrice(Integer.parseInt(prchsPrice));
 
 					// 구매 정보
 					purchaseList.add(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
