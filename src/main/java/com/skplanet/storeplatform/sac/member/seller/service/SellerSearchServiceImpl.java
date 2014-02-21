@@ -955,6 +955,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
 			sellerMbrRes.setTenantID(sellerMbr.getTenantID());
 			sellerMbrRes.setVendorCode(sellerMbr.getVendorCode());
+			sellerMbrRes.setChargerPhone(sellerMbr.getChargerPhone());
 		}
 		return sellerMbrRes;
 	}
