@@ -29,6 +29,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @Suite.SuiteClasses({
 		/** 회원 가입 테스트 */
 		CreateByMdnTest.class,
+		CreateByAgreementTest.class,
+		CreateBySimpleTest.class,
 
 		/** 회원 정보 수정 테스트 */
 		ModifyTest.class,

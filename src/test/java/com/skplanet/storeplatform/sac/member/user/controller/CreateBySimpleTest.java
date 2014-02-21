@@ -38,7 +38,10 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * ID 회원 간편 가입 (IDP 회원) 테스트.
@@ -69,70 +72,13 @@ public class CreateBySimpleTest {
 
 	/**
 	 * <pre>
-	 * ID 회원 간편 가입 (IDP 회원) [[ 단말정보 미포함 ]].
-	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
-	 */
-	@Test
-	public void test1_createBySimpleId() throws Exception {
-
-		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("Accept", "application/json")
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-
-						CreateBySimpleReq reqJson = new CreateBySimpleReq();
-
-						// 사용자 아이디
-						reqJson.setUserId("idpsimple2"); // 대문자 ID는 가입 불가 IDP 정책.
-						reqJson.setUserPw("abcd1234");
-						reqJson.setUserEmail("idpsimple2@naver.com");
-
-						// 단말 정보
-						reqJson.setDeviceId(""); // 기기 ID
-						reqJson.setDeviceIdType(""); // 기기 ID 타입
-						reqJson.setDeviceTelecom(""); // 통신사
-						reqJson.setNativeId(""); // 기기 고유 ID (IMEI)
-						reqJson.setDeviceAccount(""); // 기기 계정 (Gmail)
-						reqJson.setJoinId(""); // 가입채널코드
-						reqJson.setIsRecvSms(""); // SMS 수신 여부
-
-						// 단말 부가 정보 리스트
-						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
-						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-						deviceExtraInfo.setExtraProfile("");
-						deviceExtraInfo.setExtraProfileValue("");
-
-						deviceExtraList.add(deviceExtraInfo);
-						reqJson.setDeviceExtraInfoList(deviceExtraList);
-
-						return reqJson;
-					}
-				}).success(CreateByAgreementRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateByAgreementRes res = (CreateByAgreementRes) result;
-						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
 	 * ID 회원 간편 가입 (IDP 회원) [[ 단말정보 포함 ]].
 	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
 	 */
 	@Test
-	public void test2_createBySimpleDevice() throws Exception {
+	public void TEST_A_IDP간편가입_단말정보있음() {
 
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
@@ -143,16 +89,16 @@ public class CreateBySimpleTest {
 						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 
 						// 사용자 아이디
-						reqJson.setUserId("sacusertest1"); // 대문자 ID는 가입 불가 IDP 정책.
-						reqJson.setUserPw("abcd1234");
-						reqJson.setUserEmail("sacusertest1@yahoo.co.kr");
+						reqJson.setUserId("junit03"); // 대문자 ID는 가입 불가 IDP 정책.
+						reqJson.setUserPw("12qwer");
+						reqJson.setUserEmail("junit03Test@naver.com");
 
 						// 단말 정보
-						reqJson.setDeviceId("0101234567"); // 기기 ID
+						reqJson.setDeviceId("01512341236"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
 						reqJson.setDeviceTelecom("US001202"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
-						reqJson.setDeviceAccount("sacuser01@yopmail.com"); // 기기 계정 (Gmail)
+						reqJson.setDeviceAccount("junit03Test@naver.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
 						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
 
@@ -165,6 +111,7 @@ public class CreateBySimpleTest {
 						deviceExtraList.add(deviceExtraInfo);
 						reqJson.setDeviceExtraInfoList(deviceExtraList);
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(CreateByAgreementRes.class, new SuccessCallback() {
@@ -172,7 +119,72 @@ public class CreateBySimpleTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateByAgreementRes res = (CreateByAgreementRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
+						CreateBySimpleTest.this.IDP간편가입회원탈퇴("junit03");
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * ID 회원 간편 가입 (IDP 회원) [[ 단말정보 미포함 ]].
+	 * </pre>
+	 */
+	@Test
+	public void TEST_B_IDP간편가입_단말정보없음() {
+
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("Accept", "application/json")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateBySimpleReq reqJson = new CreateBySimpleReq();
+
+						// 사용자 아이디
+						reqJson.setUserId("junit03"); // 대문자 ID는 가입 불가 IDP 정책.
+						reqJson.setUserPw("12qwer");
+						reqJson.setUserEmail("junit03Test@naver.com");
+
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
+						return reqJson;
+					}
+				}).success(CreateByAgreementRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateByAgreementRes res = (CreateByAgreementRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						CreateBySimpleTest.this.IDP간편가입회원탈퇴("junit03");
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * IDP간편가입회원탈퇴.
+	 * </pre>
+	 */
+	public void IDP간편가입회원탈퇴(final String userId) {
+
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/withdraw/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						WithdrawReq reqJson = new WithdrawReq();
+						reqJson.setUserId(userId);
+						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
+
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
+						return reqJson;
+					}
+				}).success(WithdrawRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						WithdrawRes res = (WithdrawRes) result;
+						System.out.println("## IDP간편가입 탈퇴회원 UserKey : " + res.getUserKey());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

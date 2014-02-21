@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 모바일 전용 회원 가입
@@ -145,6 +146,7 @@ public class CreateByMdnTest {
 						agreementList.add(agreement3);
 						reqJson.setAgreementList(agreementList);
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(CreateByMdnRes.class, new SuccessCallback() {
@@ -218,6 +220,7 @@ public class CreateByMdnTest {
 						agreementList.add(agreement3);
 						reqJson.setAgreementList(agreementList);
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(CreateByMdnRes.class, new SuccessCallback() {
@@ -287,6 +290,7 @@ public class CreateByMdnTest {
 						agreementList.add(agreement4);
 						reqJson.setAgreementList(agreementList);
 
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
 				}).success(CreateByMdnRes.class, new SuccessCallback() {
@@ -311,9 +315,11 @@ public class CreateByMdnTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						WithdrawReq req = new WithdrawReq();
-						req.setDeviceId(deviceId);
-						return req;
+						WithdrawReq reqJson = new WithdrawReq();
+						reqJson.setDeviceId(deviceId);
+
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
+						return reqJson;
 					}
 				}).success(WithdrawRes.class, new SuccessCallback() {
 					@Override
