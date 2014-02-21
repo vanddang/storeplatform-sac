@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
@@ -81,6 +82,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 		WebtoonDetail webtoonDetail = new WebtoonDetail();
 		Product product;
 		Identifier identifier;
+		Distributor distributor;
 		Title title;
 		Book book;
 		Accrual accrual;
@@ -134,13 +136,13 @@ public class WebtoonServiceImpl implements WebtoonService {
 			identifier.setType("next");
 			identifier.setText(nextPartId);
 			identifierList.add(identifier);
-			// 회원번호
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_SELLER_IDENTIFIER_CD);
-			identifier.setText(webtoonDetail.getSellerMbrNo());
-			identifierList.add(identifier);
 
 			product.setIdentifierList(identifierList);
+
+			// 회원번호
+			distributor = new Distributor();
+			distributor.setSellerKey(webtoonDetail.getSellerMbrNo());
+			product.setDistributor(distributor);
 
 			// 상품 정보 (상품명)
 			title = new Title();
