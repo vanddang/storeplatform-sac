@@ -240,35 +240,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
 		prodNoti.setProdId(createRecommendFeedbackReq.getProdId());
 		prodNoti.setMbrNo(createRecommendFeedbackReq.getUserKey());
-		// // 탈퇴회원 사용후기 여부 조회
-		// int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
-		//
-		// if (count > 0) {
-		// // 기 추천여부
-		// count = (Integer) this.feedbackRepository.getProdNotiWDGoodCount(prodNoti);
-		//
-		// if (count > 0) {
-		// throw new StorePlatformException("SAC_OTH_1001");
-		// }
-		//
-		// ProdNotiGood prodNotiGood = new ProdNotiGood();
-		// prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		// prodNotiGood.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
-		// prodNotiGood.setMbrNo(createRecommendFeedbackReq.getUserKey());
-		// prodNotiGood.setRegId(createRecommendFeedbackReq.getUserId());
-		// int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1001");
-		// }
-		//
-		// prodNotiGood.setAction("create");
-		// affectedRow = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1002");
-		// }
-		// } else {
 
 		int count = (Integer) this.feedbackRepository.getProdNotiGoodCount(prodNoti);
 
@@ -324,28 +295,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
 		prodNoti.setProdId(removeRecommendFeedbackSacReq.getProdId());
 		prodNoti.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
-		// 탈퇴회원 사용후기 여부 조회
-		// int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
-		//
-		// if (count > 0) {
-		// ProdNotiGood prodNotiGood = new ProdNotiGood();
-		// prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		// prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
-		// prodNotiGood.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
-		// int affectedRow = (Integer) this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1003");
-		// }
-		//
-		// prodNotiGood.setAction("remove");
-		// affectedRow = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
-		//
-		// if (affectedRow <= 0) {
-		// throw new StorePlatformException("SAC_OTH_1002");
-		// }
-		//
-		// } else {
+
 		ProdNotiGood prodNotiGood = new ProdNotiGood();
 		prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
