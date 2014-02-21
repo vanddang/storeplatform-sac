@@ -204,6 +204,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			String prchsCaseCd = null; // 선물 여부
 			String prchsState = null; // 구매상태
 			String prchsProdId = null; // 구매 상품ID
+			String prchsPrice = null; // 구매금액
 
 			if (historyRes.getTotalCnt() > 0) {
 				List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -216,6 +217,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
 					prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 					prchsProdId = historyRes.getHistoryList().get(i).getProdId();
+					prchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 
 					// 구매상태 확인
 					comicReq.setPrchsDt(prchsDt);
@@ -240,6 +242,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					this.logger.debug("[getDownloadComicInfo] prchsCaseCd : {}", prchsCaseCd);
 					this.logger.debug("[getDownloadComicInfo] prchsState : {}", prchsState);
 					this.logger.debug("[getDownloadComicInfo] prchsProdId : {}", prchsProdId);
+					this.logger.debug("[getDownloadComicInfo] prchsPrice : {}", prchsPrice);
 					this.logger.debug("----------------------------------------------------------------");
 
 					metaInfo.setPurchaseId(prchsId);
@@ -247,6 +250,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					metaInfo.setPurchaseDt(prchsDt);
 					metaInfo.setPurchaseState(prchsState);
 					metaInfo.setPurchaseDwldExprDt(dwldExprDt);
+					metaInfo.setPurchasePrice(Integer.parseInt(prchsPrice));
 
 					// 구매 정보
 					purchaseList.add(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
