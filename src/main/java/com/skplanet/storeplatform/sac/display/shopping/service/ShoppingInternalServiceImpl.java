@@ -25,8 +25,6 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -59,12 +57,6 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-
-	@Autowired
-	HistoryInternalSCI historyInternalSCI;
-
-	@Autowired
-	private SellerSearchSCI sellerSearchSCI;
 
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
