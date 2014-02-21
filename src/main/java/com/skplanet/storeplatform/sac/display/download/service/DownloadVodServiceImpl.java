@@ -169,7 +169,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 					historyReq.setEndDt(sysDate);
 					historyReq.setOffset(1);
-					historyReq.setCount(1);
+					historyReq.setCount(productList.size());
 					historyReq.setProductList(productList);
 
 					// 구매내역 조회 실행
@@ -249,7 +249,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 							try {
 								deviceReq = new SearchDeviceIdSacReq();
-								deviceReq.setUserKey("");
+								deviceReq.setUserKey(downloadVodSacReq.getUserKey());
 								deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
 
 								// 기기정보 조회
