@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 public interface OtherTagService {
 	/**
 	 * <pre>
-	 * 태그 목록 조회
+	 * 태그 목록 조회.
 	 * </pre>
 	 * 
 	 * @param req

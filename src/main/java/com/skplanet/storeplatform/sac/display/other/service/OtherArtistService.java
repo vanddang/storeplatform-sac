@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 public interface OtherArtistService {
 	/**
 	 * <pre>
-	 * 아티스트별 정보 조회
+	 * 아티스트별 정보 조회.
 	 * </pre>
 	 * 
 	 * @param req

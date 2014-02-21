@@ -71,7 +71,7 @@ public class OtherController {
 
 	/**
 	 * <pre>
-	 * Tag 조회
+	 * Tag 조회.
 	 * </pre>
 	 * 
 	 * @param req
@@ -88,7 +88,7 @@ public class OtherController {
 
 	/**
 	 * <pre>
-	 * 아티스트별 정보 조회
+	 * 아티스트별 정보 조회.
 	 * </pre>
 	 * 
 	 * @param req
