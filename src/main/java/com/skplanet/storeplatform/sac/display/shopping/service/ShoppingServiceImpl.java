@@ -105,9 +105,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	private ShoppingInfoGenerator shoppingGenerator;
 
 	/**
-	 * <pre>
 	 * 쇼핑 추천/인기 상품 리스트 조회.
-	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req) {
@@ -201,9 +205,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
-	 * 쇼핑 신규 상품 조회 .
-	 * </pre>
+	 * 쇼핑 신규 상품 조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getNewProductList(SacRequestHeader header, ShoppingReq req) {
@@ -284,9 +292,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
-	 *  쇼핑 세부카테고리  상품 조회 .
-	 * </pre>
+	 * 쇼핑 세부카테고리 상품 조회 .
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req) {
@@ -390,9 +402,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
 	 * 특가 상품 리스트 조회.
-	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
@@ -476,9 +492,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
-	 * 기획전  상품  조회.
-	 * </pre>
+	 * 기획전 상품 조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
@@ -556,9 +576,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
 	 * 특정 기획전에 대한 상품 리스트 조회.
-	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req) {
@@ -680,9 +704,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
 	 * 브랜드샵 - 메인 리스트 조회.
-	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getBrandshopMainList(SacRequestHeader header, ShoppingReq req) {
@@ -778,9 +806,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
-	 * 특정 브랜드샵 상품 리스트
-	 * </pre>
+	 * 특정 브랜드샵 상품 리스트.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
@@ -891,9 +923,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
-	 * 쇼핑테마 리스트상품 리스트
-	 * </pre>
+	 * 쇼핑테마 리스트상품 리스트.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getThemeList(SacRequestHeader header, ShoppingReq req) {
@@ -986,9 +1022,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
-	 * 특정 테마 리스트상품 리스트
-	 * </pre>
+	 * 특정 테마 리스트상품 리스트.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
@@ -1089,9 +1129,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
-	 *   특정 카탈로그에 대한 다른 상품 리스트
-	 * </pre>
+	 * 특정 카탈로그에 대한 다른 상품 리스트.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingReq req) {
@@ -1199,9 +1243,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
-	 * 특정 브랜드에 대한 다른 상품 리스트
-	 * </pre>
+	 * 특정 브랜드에 대한 다른 상품 리스트.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingReq req) {
@@ -1309,9 +1357,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
-	 * <pre>
-	 * 쇼핑상세
-	 * </pre>
+	 * 쇼핑상세.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	@Override
 	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req) {
@@ -1333,7 +1385,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
-		if (!"channel".equals(req.getType()) && !"episode".equals(req.getType())) {
+		if (!"catalog".equals(req.getType()) && !"episode".equals(req.getType())) {
 			throw new StorePlatformException("SAC_DSP_0003", "type", req.getType());
 		}
 		if (StringUtils.isEmpty(req.getProdId())) {
@@ -1681,7 +1733,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 									distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
 									distributor.setIdentifier(memberRes.getSellerMbr().getSellerId());
 									distributor.setName(memberRes.getSellerMbr().getSellerName());
-									distributor.setCompany(memberRes.getSellerMbr().getSellerCompany());
+									// distributor.setCompany(memberRes.getSellerMbr().getSellerCompany());
 									distributor.setTel(memberRes.getSellerMbr().getRepPhone());
 									distributor.setEmail(memberRes.getSellerMbr().getSellerEmail());
 									distributor.setAddress(memberRes.getSellerMbr().getSellerAddress()
@@ -1719,6 +1771,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 		return res;
 	}
 
+	/**
+	 * 공통 offset,count 셋팅.
+	 * 
+	 * @param req
+	 *            req
+	 * @return
+	 */
 	private void commonOffsetCount(ShoppingReq req) {
 
 		int offset = 1; // default
@@ -1739,6 +1798,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
 	}
 
+	/**
+	 * 공통 상품 등급 코드 셋팅.
+	 * 
+	 * @param req
+	 *            req
+	 * @return boolean
+	 */
 	private boolean commonProdGradeCd(ShoppingReq req) {
 		boolean result = true;
 		// 상품등급코드 유효값 체크
@@ -1767,17 +1833,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 		return result;
 	}
 
+	/**
+	 * 공통 더미 셋팅.
+	 * 
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
 	private ShoppingRes commonDummy(ShoppingReq req) {
 		ShoppingRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();
 		requestVO.setOffset(1);
 		requestVO.setCount(20);
-		if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-		}
-		if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-			// throw new Exception("systemId 는 필수 파라메터 입니다.");
-		}
 
 		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
 		// shopping.class);
