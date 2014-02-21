@@ -57,6 +57,7 @@ public class MetaInfo {
 	private String purchaseDt;
 	private String purchaseState;
 	private String purchaseDwldExprDt;
+	private Integer purchasePrice;
 	private String bpJoinFileNo;
 	private String bpJoinFileType;
 	private String expiredDate;
@@ -1049,6 +1050,21 @@ public class MetaInfo {
 	 */
 	public void setPurchaseDwldExprDt(String purchaseDwldExprDt) {
 		this.purchaseDwldExprDt = purchaseDwldExprDt;
+	}
+
+	/**
+	 * @return the purchasePrice
+	 */
+	public Integer getPurchasePrice() {
+		return this.purchasePrice;
+	}
+
+	/**
+	 * @param purchasePrice
+	 *            the purchasePrice to set
+	 */
+	public void setPurchasePrice(Integer purchasePrice) {
+		this.purchasePrice = purchasePrice;
 	}
 
 	/**
