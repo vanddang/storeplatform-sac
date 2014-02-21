@@ -25,12 +25,13 @@ public class DummyMember extends CommonInfo {
 	private String systemId; // 시스템 ID
 	private String userKey; // 내부 회원 번호
 	private String userId; // 회원 ID
-	private String deviceKey; // 내부 디바이스 ID
-	private String deviceId; // MDN, MAC 등등
 	private String deviceModelCd; // 디바이스 모델 코드
 	private String userTypeCd; // 사용자 구분 코드: US011501-기기 사용자, US011502-IDP 사용자, US011503-OneID 사용자, null-Tstore 회원 아님
 	private String userStatusCd; // 회원상태코드: US010701-정상, US010702-탈퇴, US010703-대기(가가입), US010704-가입, US010705-전환,
 								 // US010706 : 탈퇴 - US010707-승인대기
+	private String deviceKey; // 내부 디바이스 ID
+	private String deviceId; // MDN, MAC 등등
+	private String telecom; // 통신사
 	private int age; // 연령
 	private boolean bLogin; // 로그인 여부
 
@@ -174,6 +175,21 @@ public class DummyMember extends CommonInfo {
 	 */
 	public int getAge() {
 		return this.age;
+	}
+
+	/**
+	 * @return the telecom
+	 */
+	public String getTelecom() {
+		return this.telecom;
+	}
+
+	/**
+	 * @param telecom
+	 *            the telecom to set
+	 */
+	public void setTelecom(String telecom) {
+		this.telecom = telecom;
 	}
 
 	/**

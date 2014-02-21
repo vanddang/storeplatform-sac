@@ -42,6 +42,7 @@ public class DummyMemberServiceImpl {
 		dummy.setDeviceKey(deviceKey);
 		dummy.setDeviceId("01046353524");
 		dummy.setDeviceModelCd("SHV-E210S");
+		dummy.setTelecom("1");
 		dummy.setUserTypeCd("US011501"); // 사용자 구분 코드 - US011501 : 기기 사용자 - US011502 : IDP 사용자 - US011503 : OneID 사용자 -
 										 // null : Tstore 회원 아님
 		dummy.setUserStatusCd("US010701"); // 회원상태코드: US010701-정상, US010702-탈퇴, US010703-대기(가가입), US010704-가입,

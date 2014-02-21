@@ -44,7 +44,7 @@ public class DummyDeviceServiceImpl {
 		dummy.setDeviceId("01046353524");
 		dummy.setDeviceIdType("msisdn"); // 기기 ID 타입 (msisdn, uuid, macaddress)
 		dummy.setDeviceModelNo("SHV-E210S");
-		dummy.setDeviceTelecom("SKT");
+		dummy.setDeviceTelecom("1");
 
 		return dummy;
 	}

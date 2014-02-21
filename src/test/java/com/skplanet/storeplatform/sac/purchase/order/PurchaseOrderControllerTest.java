@@ -80,11 +80,12 @@ public class PurchaseOrderControllerTest {
 		req.setNetworkTypeCd("DP004401"); // 네트워크 타입 코드
 		req.setMid("MID01");
 		req.setAuthKey("MID01_KEY01");
-		req.setResultUrl("http://localhost:8080/tenant/completePurchase");
+		req.setReturnUrl("http://localhost:8080/tenant/completePurchase");
+		req.setTenantProdGrpCd("DP010101");
 
 		List<CreatePurchaseSacReqProduct> productList = new ArrayList<CreatePurchaseSacReqProduct>();
-		productList.add(new CreatePurchaseSacReqProduct("0000044819", "DP000201", 0.0, 1));
-		productList.add(new CreatePurchaseSacReqProduct("0000044820", "DP000201", 0.0, 1));
+		productList.add(new CreatePurchaseSacReqProduct("0000044819", 0.0, 1));
+		productList.add(new CreatePurchaseSacReqProduct("0000044820", 0.0, 1));
 		req.setProductList(productList);
 
 		ObjectMapper mapper = new ObjectMapper();

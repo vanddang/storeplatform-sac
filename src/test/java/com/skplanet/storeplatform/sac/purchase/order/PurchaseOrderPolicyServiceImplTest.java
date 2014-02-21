@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order;
 
 import java.util.ArrayList;
@@ -59,11 +68,12 @@ public class PurchaseOrderPolicyServiceImplTest {
 		this.createPurchaseReq.setNetworkTypeCd("DP004401"); // 네트워크 타입 코드
 		this.createPurchaseReq.setMid("MID01");
 		this.createPurchaseReq.setAuthKey("MID01_KEY01");
-		this.createPurchaseReq.setResultUrl("http://localhost:8080/tenant/completePurchase");
+		this.createPurchaseReq.setReturnUrl("http://localhost:8080/tenant/completePurchase");
+		this.createPurchaseReq.setTenantProdGrpCd("DP150101");
 
 		List<CreatePurchaseSacReqProduct> productList = new ArrayList<CreatePurchaseSacReqProduct>();
-		productList.add(new CreatePurchaseSacReqProduct("0000044819", "DP150101", 0.0, 1));
-		productList.add(new CreatePurchaseSacReqProduct("0000044820", "DP150102", 0.0, 1));
+		productList.add(new CreatePurchaseSacReqProduct("0000044819", 0.0, 1));
+		productList.add(new CreatePurchaseSacReqProduct("0000044820", 0.0, 1));
 		this.createPurchaseReq.setProductList(productList);
 
 		this.purchaseInfo = new PurchaseOrderInfo(this.createPurchaseReq);
@@ -77,13 +87,14 @@ public class PurchaseOrderPolicyServiceImplTest {
 		this.purchaseInfo.setPrchsReqPathCd(this.createPurchaseReq.getPrchsReqPathCd()); // 구매 요청 경로 코드
 		this.purchaseInfo.setMid(this.createPurchaseReq.getMid()); // 가맹점 ID
 		this.purchaseInfo.setAuthKey(this.createPurchaseReq.getAuthKey()); // 가맹점 인증키
-		this.purchaseInfo.setResultUrl(this.createPurchaseReq.getResultUrl()); // 결과처리 URL
+		this.purchaseInfo.setReturnUrl(this.createPurchaseReq.getReturnUrl()); // 결과처리 URL
 		this.purchaseInfo.setCurrencyCd(this.createPurchaseReq.getCurrencyCd()); // 통화 코드
 		this.purchaseInfo.setTotAmt(this.createPurchaseReq.getTotAmt()); // 총 결제 금액
 		this.purchaseInfo.setRealTotAmt(this.createPurchaseReq.getTotAmt()); // 총 결제 금액
 		this.purchaseInfo.setClientIp(this.createPurchaseReq.getClientIp()); // 클라이언트 IP
 		this.purchaseInfo.setNetworkTypeCd(this.createPurchaseReq.getNetworkTypeCd()); // 네트워크 타입 코드
 		this.purchaseInfo.setPrchsCaseCd(this.createPurchaseReq.getPrchsCaseCd()); // 구매 유형 코드
+		this.purchaseInfo.setTenantProdGrpCd(this.createPurchaseReq.getTenantProdGrpCd()); // 테넌트 상품 분류 코드
 
 		String tenantId = this.purchaseInfo.getTenantId();
 		String systemId = this.purchaseInfo.getSystemId();
@@ -97,7 +108,6 @@ public class PurchaseOrderPolicyServiceImplTest {
 					deviceModelCd);
 
 			product.setProdQty(reqProduct.getProdQty());
-			product.setTenantProdGrpCd(reqProduct.getTenantProdGrpCd());
 			product.setResvCol01(reqProduct.getResvCol01());
 			product.setResvCol02(reqProduct.getResvCol02());
 			product.setResvCol03(reqProduct.getResvCol03());
@@ -124,7 +134,7 @@ public class PurchaseOrderPolicyServiceImplTest {
 
 		this.purchaseInfo.setPurchaseMember(user);
 
-		if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, this.purchaseInfo.getPrchsCaseCd())) {
+		if (StringUtils.equals(this.purchaseInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			user = new DummyMember();
 			user.setTenantId(tenantId);
 			user.setSystemId(systemId);

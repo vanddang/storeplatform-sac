@@ -78,7 +78,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			throw new StorePlatformException("SAC_PUR_0001", "회원정보를 조회할 수 없습니다: " + purchaseOrderInfo.getUserKey());
 		}
 		// 회원상태 체크
-		if ("US010701".equals(userInfo.getUserStatusCd()) == false) {
+		if (StringUtils.equals(userInfo.getUserStatusCd(), "US010701") == false) {
 			throw new StorePlatformException("SAC_PUR_0001", "정상회원이 아닙니다: " + userInfo.getUserStatusCd());
 		}
 
@@ -87,7 +87,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// ----------------------------------------------------------------------------------------------
 		// 선물 수신 회원
 
-		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(purchaseOrderInfo.getPrchsCaseCd())) {
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			// 회원 정보 조회
 			DummyMember recvUserInfo = this.memberPartService.searchDummyUserDetail(
 					purchaseOrderInfo.getRecvTenantId(), purchaseOrderInfo.getSystemId(),
@@ -99,7 +99,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						+ purchaseOrderInfo.getRecvUserKey());
 			}
 			// 회원상태 체크
-			if ("US010701".equals(recvUserInfo.getUserStatusCd()) == false) {
+			if (StringUtils.equals(recvUserInfo.getUserStatusCd(), "US010701") == false) {
 				throw new StorePlatformException("SAC_PUR_0001", "선물 수신회원이 정상회원이 아닙니다: "
 						+ recvUserInfo.getUserStatusCd());
 			}
@@ -123,7 +123,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String tenantId = purchaseOrderInfo.getTenantId();
 		String systemId = purchaseOrderInfo.getSystemId();
 		String useDeviceModelCd = null;
-		if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, purchaseOrderInfo.getPrchsCaseCd())) {
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			useDeviceModelCd = purchaseOrderInfo.getRecvMember().getDeviceModelCd();
 		} else {
 			useDeviceModelCd = purchaseOrderInfo.getPurchaseMember().getDeviceModelCd();
@@ -147,7 +147,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 			// 상품 지원 여부 체크
 			if (productInfo.getbSupport() == false) {
-				if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, purchaseOrderInfo.getPrchsCaseCd())) {
+				if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 					throw new StorePlatformException("SAC_PUR_0001", "선물 수신 단말을 상품이 지원하지 않습니다.");
 				} else {
 					throw new StorePlatformException("SAC_PUR_0001", "해당 단말을 상품이 지원하지 않습니다.");
@@ -156,7 +156,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			productInfo.setProdAmt(reqProduct.getProdAmt()); // 임시적. TAKTODO
 			productInfo.setProdQty(reqProduct.getProdQty());
-			productInfo.setTenantProdGrpCd(reqProduct.getTenantProdGrpCd());
 			totAmt += (reqProduct.getProdAmt() * reqProduct.getProdQty());
 
 			// 상품 가격 체크
@@ -191,7 +190,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String useTenantId = null;
 		String useUserKey = null;
 
-		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(purchaseOrderInfo.getPrchsCaseCd())) {
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			useUserInfo = purchaseOrderInfo.getRecvMember();
 			useTenantId = purchaseOrderInfo.getRecvTenantId();
 			useUserKey = purchaseOrderInfo.getRecvUserKey();
@@ -206,21 +205,22 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
 			// 연령 체크
-			if (StringUtils.equals("PD004404", product.getProdGrdCd()) && useUserInfo.getAge() < 20) {
+			if (StringUtils.equals(product.getProdGrdCd(), "PD004404") && useUserInfo.getAge() < 20) {
 				throw new StorePlatformException("SAC_PUR_0001", "연령제한으로 이용할 수 없는 상품입니다: " + useUserInfo.getAge());
 			}
 
 			// TAKTODO:: 쇼핑상품 경우, 발급 가능 여부 확인
-			if (StringUtils.equals("SHOPPING", product.getSvcGrpCd())) {
+			if (StringUtils.equals(product.getSvcGrpCd(), "SHOPPING")) {
 				this.checkAvailableCouponPublish(product.getCouponCode(), product.getItemCode(), purchaseOrderInfo
 						.getProductList().get(0).getProdQty(), purchaseOrderInfo.getPurchaseMember().getDeviceId());
 			}
+
+			// TAKTODO:: 구매 가능 건수 체크 (쇼핑 특가상품, 정액권 등 한정수량 상품)
 
 			// (동일상품 중복구매 불가 상품) 기구매 체크 대상 ADD
 			if (product.getbDupleProd() == false) {
 				existenceItemSc = new ExistenceItemSc();
 				existenceItemSc.setProdId(product.getProdId());
-				existenceItemSc.setTenantProdGrpCd(product.getTenantProdGrpCd());
 				existenceItemScList.add(existenceItemSc);
 			}
 		}
@@ -235,7 +235,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			List<ExistenceScRes> checkPurchaseResultList = this.existenceSCI.searchExistenceList(existenceScReq);
 			for (ExistenceScRes checkRes : checkPurchaseResultList) {
-				if (PurchaseConstants.PRCHS_STATUS_COMPT.equals(checkRes.getStatusCd())) {
+				if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
 					throw new StorePlatformException("SAC_PUR_0001", "이미 보유한 상품입니다: " + checkRes.getPrchsId());
 				}
 
@@ -245,7 +245,17 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 	}
 
-	// 쇼핑 쿠폰 발급 가능여부 확인
+	/*
+	 * <pre> 쇼핑 쿠폰 발급 가능여부 확인. </pre>
+	 * 
+	 * @param couponCode 쿠폰상품코드
+	 * 
+	 * @param itemCode 쿠폰단품코드
+	 * 
+	 * @param itemCount 쿠폰구매수량
+	 * 
+	 * @param deviceId MDN
+	 */
 	private void checkAvailableCouponPublish(String couponCode, String itemCode, int itemCount, String deviceId) {
 		CouponPublishAvailableSacResult shoppingRes = null;
 		String availCd = null;

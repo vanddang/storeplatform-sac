@@ -41,20 +41,23 @@ public class DummyDisplayServiceImpl {
 
 		DummyProduct dummy = new DummyProduct();
 		dummy.setProdId(prodId);
+		dummy.setProdNm("dummy product");
 		dummy.setProdAmt(0.0);
 		dummy.setProdGrdCd("PD004401");
+		dummy.setAid("AID01");
 		dummy.setAvailableLimitPrchsPathCd(null);
 		dummy.setSvcGrpCd("DP000201");
 		dummy.setSvcTypeCd(null);
 		dummy.setTopCategoryNo(null);
 		dummy.setAvailableLimitCnt(0);
-		dummy.setUsePeriodUnit("PD00310");
-		dummy.setUsePeriodCnt(0);
+		dummy.setUsePeriodUnitCd("PD00310");
+		dummy.setUsePeriod(0);
 		dummy.setbSell(true);
 		dummy.setbLimitProd(false);
 		dummy.setbDupleProd(false);
 		dummy.setbMdnProd(false);
 		dummy.setbSupport(true);
+		dummy.setbFlat(false);
 
 		return dummy;
 	}

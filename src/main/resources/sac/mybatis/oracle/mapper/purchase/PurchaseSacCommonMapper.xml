@@ -25,6 +25,9 @@
          <if test="policyId != null and policyId != ''">
            AND  policy_id = #{policyId}
          </if>
+         <if test="procPatternCd != null and procPatternCd != ''">
+           AND  proc_pattern_cd = #{procPatternCd}
+         </if>
            AND  SYSDATE BETWEEN start_dt AND expr_dt
            AND  (tenant_prod_grp_cd IS NULL OR #{tenantProdGrpCd, jdbcType=VARCHAR} LIKE tenant_prod_grp_cd || '%')
       ORDER BY  policy_prior, policy_seq

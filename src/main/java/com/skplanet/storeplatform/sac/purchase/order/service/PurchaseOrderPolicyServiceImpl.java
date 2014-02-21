@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
+import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchSktPaymentScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchSktPaymentScRes;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
@@ -39,6 +40,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 	@Autowired
 	private PurchaseOrderSCI purchaseOrderSCI;
+	@Autowired
+	private PurchaseOrderSearchSCI purchaseOrderSearchSCI;
 
 	@Autowired
 	private PurchaseTenantPolicyService policyService;
@@ -57,12 +60,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public void checkTenantPolicy(PurchaseOrderInfo purchaseOrderInfo) {
-		String tenantId = purchaseOrderInfo.getTenantId();
-		String tenantProdGrpCd = purchaseOrderInfo.getProductList().get(0).getTenantProdGrpCd(); // TAKTODO:: 상품군이 다른
-																								 // 복수구매 처리 필요: 일단 하나만.
-
-		List<PurchaseTenantPolicy> policyList = this.policyService.searchPurchaseTenantPolicyList(tenantId,
-				tenantProdGrpCd);
+		List<PurchaseTenantPolicy> policyList = this.policyService.searchPurchaseTenantPolicyList(
+				purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getTenantProdGrpCd());
 
 		// TAKTODO:: 항목이 많지 않으니 문자열 비교? 아니면 정수상수 선언 후 switch?
 		for (PurchaseTenantPolicy policy : policyList) {
@@ -92,16 +91,13 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 테넌트 정책 처리패턴 CM011601: SKT후불 구매결제 한도제한.
-	 * </pre>
+	 * <pre> 테넌트 정책 처리패턴 CM011601: SKT후불 구매결제 한도제한. </pre>
 	 * 
-	 * @param purchaseOrderInfo
-	 *            구매진행 정보
-	 * @param policy
-	 *            테넌트 정책 정보
+	 * @param purchaseOrderInfo 구매진행 정보
+	 * 
+	 * @param policy 테넌트 정책 정보
 	 */
 	private void checkSktLimit(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
 		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
@@ -124,7 +120,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		// (정책 적용조건) 과금조건 조회
 		if (StringUtils.isNotBlank(policy.getCondPeriodUnitCd())) {
-			sciRes = this.purchaseOrderSCI.searchSktLimitCondDetail(sciReq);
+			sciRes = this.purchaseOrderSearchSCI.searchSktLimitCondDetail(sciReq);
 			checkVal = (Double) sciRes.getVal();
 
 			if (Double.parseDouble(policy.getCondClsfValue()) == 0) {
@@ -137,7 +133,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		// (정책 체크 값) 정책 요소기준 조회
-		sciRes = this.purchaseOrderSCI.searchSktAmountDetail(sciReq);
+		sciRes = this.purchaseOrderSearchSCI.searchSktAmountDetail(sciReq);
 		checkVal = (Double) sciRes.getVal();
 
 		// TAKTODO:: 제한걸림
@@ -149,16 +145,13 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 테넌트 정책 처리패턴 CM011602: SKT후불 선물수신 한도제한.
-	 * </pre>
+	 * <pre> 테넌트 정책 처리패턴 CM011602: SKT후불 선물수신 한도제한. </pre>
 	 * 
-	 * @param purchaseOrderInfo
-	 *            구매진행 정보
-	 * @param policy
-	 *            테넌트 정책 정보
+	 * @param purchaseOrderInfo 구매진행 정보
+	 * 
+	 * @param policy 테넌트 정책 정보
 	 */
 	private void checkSktRecvLimit(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
 		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
@@ -185,7 +178,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
 
 		// (정책 체크 값) 정책 요소기준 조회
-		sciRes = this.purchaseOrderSCI.searchSktRecvAmountDetail(sciReq);
+		sciRes = this.purchaseOrderSearchSCI.searchSktRecvAmountDetail(sciReq);
 		checkVal = (Double) sciRes.getVal();
 
 		// TAKTODO:: 제한걸림
@@ -196,16 +189,13 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 테넌트 정책 처리패턴 CM011603: 법인명의 제한.
-	 * </pre>
+	 * <pre> 테넌트 정책 처리패턴 CM011603: 법인명의 제한. </pre>
 	 * 
-	 * @param purchaseOrderInfo
-	 *            구매진행 정보
-	 * @param policy
-	 *            테넌트 정책 정보
+	 * @param purchaseOrderInfo 구매진행 정보
+	 * 
+	 * @param policy 테넌트 정책 정보
 	 */
 	private void checkCorporation(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
 		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
@@ -217,7 +207,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 					.getPurchaseMember().getDeviceId());
 		} catch (StorePlatformException e) {
 			// 2014.02.12. 기준 : EC UAPS 에서 비정상 예외 시 9999 리턴, 그 외에는 조회결과 없음(9997) 또는 명의상태에 따른 코드.
-			if (StringUtils.equals("EC_UAPS_9999", e.getErrorInfo().getCode())) {
+			if (StringUtils.equals(e.getErrorInfo().getCode(), "EC_UAPS_9999")) {
 				throw new StorePlatformException("SAC_PUR_0001", e);
 			}
 		}
@@ -231,16 +221,13 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 테넌트 정책 처리패턴 CM011604: SKT 시험폰 결제 허용.
-	 * </pre>
+	 * <pre> 테넌트 정책 처리패턴 CM011604: SKT 시험폰 결제 허용. </pre>
 	 * 
-	 * @param purchaseOrderInfo
-	 *            구매진행 정보
-	 * @param policy
-	 *            테넌트 정책 정보
+	 * @param purchaseOrderInfo 구매진행 정보
+	 * 
+	 * @param policy 테넌트 정책 정보
 	 */
 	private void checkSktTestMdn(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
 		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
@@ -258,7 +245,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 						.getDeviceId());
 			} catch (StorePlatformException e) {
 				// 2014.02.12. 기준 : EC UAPS 에서 비정상 예외 시 9999 리턴, 그 외에는 조회결과 없음(9997) 또는 명의상태에 따른 코드.
-				if (StringUtils.equals("EC_UAPS_9999", e.getErrorInfo().getCode())) {
+				if (StringUtils.equals(e.getErrorInfo().getCode(), "EC_UAPS_9999")) {
 					throw new StorePlatformException("SAC_PUR_0001", e);
 				}
 			}
@@ -272,48 +259,39 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 테넌트 정책 처리패턴 CM011605: 비과금 결제 허용(Test MDN).
-	 * </pre>
+	 * <pre> 테넌트 정책 처리패턴 CM011605: 비과금 결제 허용(Test MDN). </pre>
 	 * 
-	 * @param purchaseOrderInfo
-	 *            구매진행 정보
-	 * @param policy
-	 *            테넌트 정책 정보
+	 * @param purchaseOrderInfo 구매진행 정보
+	 * 
+	 * @param policy 테넌트 정책 정보
 	 */
 	private void checkStoreTestMdn(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
 		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
 
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 테넌트 정책 처리패턴 CM011606: Device기반 구매내역 관리처리.
-	 * </pre>
+	 * <pre> 테넌트 정책 처리패턴 CM011606: Device기반 구매내역 관리처리. </pre>
 	 * 
-	 * @param purchaseOrderInfo
-	 *            구매진행 정보
-	 * @param policy
-	 *            테넌트 정책 정보
+	 * @param purchaseOrderInfo 구매진행 정보
+	 * 
+	 * @param policy 테넌트 정책 정보
 	 */
 	private void checkDeviceBasePurchaseHistory(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
 		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
 
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 테넌트 정책 처리패턴 CM011611: 회원Part 구매차단 코드.
-	 * </pre>
+	 * <pre> 테넌트 정책 처리패턴 CM011611: 회원Part 구매차단 코드. </pre>
 	 * 
-	 * @param purchaseOrderInfo
-	 *            구매진행 정보
-	 * @param policy
-	 *            테넌트 정책 정보
+	 * @param purchaseOrderInfo 구매진행 정보
+	 * 
+	 * @param policy 테넌트 정책 정보
 	 */
 	private void checkBlock(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
 		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());

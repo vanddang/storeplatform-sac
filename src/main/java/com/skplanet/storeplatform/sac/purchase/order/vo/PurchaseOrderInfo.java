@@ -35,7 +35,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String prchsReqPathCd; // 구매 요청 경로 코드
 	private String mid; // 가맹점 ID
 	private String authKey; // 가맹점 인증키
-	private String resultUrl; // 결과처리 URL
+	private String returnUrl; // 테넌트 결과처리 URL
 	private String currencyCd; // 통화 코드
 	private double totAmt; // 총 결제 금액
 	private String clientIp; // 클라이언트 IP
@@ -44,10 +44,16 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String recvTenantId; // 수신자 테넌트 ID
 	private String recvUserKey; // 수신자 내부 회원 번호
 	private String recvDeviceKey; // 수신자 내부 디바이스 ID
+	private String tenantProdGrpCd; // 테넌트 상품 분류 코드
+	private String imei; // 단말 식별 번호
+	private String uacd; // 단말 모델 식별 번호
+	private String simNo; // SIM Serial Number
+	private String simYn; // SIM 조회 가능 여부
 
 	private String deviceModelCd; // 요청 단말 모델 코드
 
 	private String prchsId; // 구매 ID
+	private String prchsDt; // 구매 ID
 	private double realTotAmt; // 최종 결제 총 금액
 
 	private String resultType; // 결과 타입: payment-결제Page 요청진행, free-무료구매 완료
@@ -179,18 +185,18 @@ public class PurchaseOrderInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the resultUrl
+	 * @return the returnUrl
 	 */
-	public String getResultUrl() {
-		return this.resultUrl;
+	public String getReturnUrl() {
+		return this.returnUrl;
 	}
 
 	/**
-	 * @param resultUrl
-	 *            the resultUrl to set
+	 * @param returnUrl
+	 *            the returnUrl to set
 	 */
-	public void setResultUrl(String resultUrl) {
-		this.resultUrl = resultUrl;
+	public void setReturnUrl(String returnUrl) {
+		this.returnUrl = returnUrl;
 	}
 
 	/**
@@ -344,6 +350,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	}
 
 	/**
+	 * @return the prchsDt
+	 */
+	public String getPrchsDt() {
+		return this.prchsDt;
+	}
+
+	/**
+	 * @param prchsDt
+	 *            the prchsDt to set
+	 */
+	public void setPrchsDt(String prchsDt) {
+		this.prchsDt = prchsDt;
+	}
+
+	/**
 	 * @return the realTotAmt
 	 */
 	public double getRealTotAmt() {
@@ -356,6 +377,81 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setRealTotAmt(double realTotAmt) {
 		this.realTotAmt = realTotAmt;
+	}
+
+	/**
+	 * @return the tenantProdGrpCd
+	 */
+	public String getTenantProdGrpCd() {
+		return this.tenantProdGrpCd;
+	}
+
+	/**
+	 * @param tenantProdGrpCd
+	 *            the tenantProdGrpCd to set
+	 */
+	public void setTenantProdGrpCd(String tenantProdGrpCd) {
+		this.tenantProdGrpCd = tenantProdGrpCd;
+	}
+
+	/**
+	 * @return the imei
+	 */
+	public String getImei() {
+		return this.imei;
+	}
+
+	/**
+	 * @param imei
+	 *            the imei to set
+	 */
+	public void setImei(String imei) {
+		this.imei = imei;
+	}
+
+	/**
+	 * @return the uacd
+	 */
+	public String getUacd() {
+		return this.uacd;
+	}
+
+	/**
+	 * @param uacd
+	 *            the uacd to set
+	 */
+	public void setUacd(String uacd) {
+		this.uacd = uacd;
+	}
+
+	/**
+	 * @return the simNo
+	 */
+	public String getSimNo() {
+		return this.simNo;
+	}
+
+	/**
+	 * @param simNo
+	 *            the simNo to set
+	 */
+	public void setSimNo(String simNo) {
+		this.simNo = simNo;
+	}
+
+	/**
+	 * @return the simYn
+	 */
+	public String getSimYn() {
+		return this.simYn;
+	}
+
+	/**
+	 * @param simYn
+	 *            the simYn to set
+	 */
+	public void setSimYn(String simYn) {
+		this.simYn = simYn;
 	}
 
 	/**

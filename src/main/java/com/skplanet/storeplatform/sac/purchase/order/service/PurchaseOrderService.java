@@ -9,8 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
-import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseSc;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
@@ -56,8 +55,9 @@ public interface PurchaseOrderService {
 	 *            구매 ID
 	 * @param useUserKey
 	 *            내부 회원 NO
+	 * @return 구매상세 정보
 	 */
-	public PrchsDtl searchReservedPurchaseDetail(String tenantId, String prchsId, String useUserKey);
+	public CreatePurchaseSc searchReservedPurchaseDetail(String tenantId, String prchsId, String useUserKey);
 
 	/**
 	 * 
@@ -65,30 +65,12 @@ public interface PurchaseOrderService {
 	 * 유료구매 - 구매확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장.
 	 * </pre>
 	 * 
-	 * @param prchsDtl
+	 * @param createPurchaseSc
 	 *            구매상세 정보
 	 * @param notifyPaymentReq
 	 *            결제결과 정보
-	 * @param currencyCd
-	 *            통화코드
-	 * @param networkTypeCd
-	 *            네트워크 타입 코드
 	 */
-	public void updateConfirmPurchase(PrchsDtl prchsDtl, NotifyPaymentSacReq notifyPaymentReq, String currencyCd,
-			String networkTypeCd);
-
-	/**
-	 * 
-	 * <pre>
-	 * 결제 내역 생성.
-	 * </pre>
-	 * 
-	 * @param prchs
-	 *            구매정보
-	 * @param notifyParam
-	 *            결제정보
-	 */
-	public void createPayment(Prchs prchs, NotifyPaymentSacReq notifyParam);
+	public void updateConfirmPurchase(CreatePurchaseSc createPurchaseSc, NotifyPaymentSacReq notifyPaymentReq);
 
 	/**
 	 * 

@@ -21,8 +21,10 @@ public class DummyProduct extends CommonInfo {
 	private static final long serialVersionUID = 201401101L;
 
 	private String prodId; // 상품 ID
+	private String prodNm; // 상품 ID
 	private double prodAmt; // 상품 가격
 	private String prodGrdCd; // 상품 연령 등급 코드
+	private String aid; // AID
 	private String availableLimitPrchsPathCd; // 구매 가능 경로 (웹 / 단말)
 	private String svcGrpCd; // 서비스 그룹 코드
 	private String svcTypeCd; // 서비스 타입 코드
@@ -30,18 +32,19 @@ public class DummyProduct extends CommonInfo {
 	private String topCategoryNo; // TOP 카테고리 번호
 	private boolean bLimitProd; // 한정수량 판매 여부
 	private int availableLimitCnt; // (한정판매 경우) 구매 가능한 수량
-	private String usePeriodUnit; // 사용기간 단위
-	private int usePeriodCnt; // 사용기간 값
+	private String usePeriodUnitCd; // 사용기간 단위
+	private int usePeriod; // 사용기간 값
 	private boolean bDupleProd; // 중복구매 허용 상품 여부
 	private boolean bMdnProd; // MDN 기반 상품 여부: true-MDN기반상품, false-ID기반상품
 	private boolean bSupport; // 단말 지원 상품 여부
+	private boolean bFlat; // 정액상품 여부
+	private String flatType; // 정액상품 타입: 정액권, 시리즈패스권, 이북/코믹 전권 소장/대여
 
 	private String couponCode;
 	private String itemCode;
 
 	// REQ
 	private int prodQty; // 구매 수량
-	private String tenantProdGrpCd;
 	private String resvCol01;
 	private String resvCol02;
 	private String resvCol03;
@@ -61,6 +64,21 @@ public class DummyProduct extends CommonInfo {
 	 */
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
+	}
+
+	/**
+	 * @return the prodNm
+	 */
+	public String getProdNm() {
+		return this.prodNm;
+	}
+
+	/**
+	 * @param prodNm
+	 *            the prodNm to set
+	 */
+	public void setProdNm(String prodNm) {
+		this.prodNm = prodNm;
 	}
 
 	/**
@@ -91,6 +109,21 @@ public class DummyProduct extends CommonInfo {
 	 */
 	public void setProdGrdCd(String prodGrdCd) {
 		this.prodGrdCd = prodGrdCd;
+	}
+
+	/**
+	 * @return the aid
+	 */
+	public String getAid() {
+		return this.aid;
+	}
+
+	/**
+	 * @param aid
+	 *            the aid to set
+	 */
+	public void setAid(String aid) {
+		this.aid = aid;
 	}
 
 	/**
@@ -199,33 +232,33 @@ public class DummyProduct extends CommonInfo {
 	}
 
 	/**
-	 * @return the usePeriodUnit
+	 * @return the usePeriodUnitCd
 	 */
-	public String getUsePeriodUnit() {
-		return this.usePeriodUnit;
+	public String getUsePeriodUnitCd() {
+		return this.usePeriodUnitCd;
 	}
 
 	/**
-	 * @param usePeriodUnit
-	 *            the usePeriodUnit to set
+	 * @param usePeriodUnitCd
+	 *            the usePeriodUnitCd to set
 	 */
-	public void setUsePeriodUnit(String usePeriodUnit) {
-		this.usePeriodUnit = usePeriodUnit;
+	public void setUsePeriodUnitCd(String usePeriodUnitCd) {
+		this.usePeriodUnitCd = usePeriodUnitCd;
 	}
 
 	/**
-	 * @return the usePeriodCnt
+	 * @return the usePeriod
 	 */
-	public int getUsePeriodCnt() {
-		return this.usePeriodCnt;
+	public int getUsePeriod() {
+		return this.usePeriod;
 	}
 
 	/**
-	 * @param usePeriodCnt
-	 *            the usePeriodCnt to set
+	 * @param usePeriod
+	 *            the usePeriod to set
 	 */
-	public void setUsePeriodCnt(int usePeriodCnt) {
-		this.usePeriodCnt = usePeriodCnt;
+	public void setUsePeriod(int usePeriod) {
+		this.usePeriod = usePeriod;
 	}
 
 	/**
@@ -288,21 +321,6 @@ public class DummyProduct extends CommonInfo {
 	 */
 	public void setProdQty(int prodQty) {
 		this.prodQty = prodQty;
-	}
-
-	/**
-	 * @return the tenantProdGrpCd
-	 */
-	public String getTenantProdGrpCd() {
-		return this.tenantProdGrpCd;
-	}
-
-	/**
-	 * @param tenantProdGrpCd
-	 *            the tenantProdGrpCd to set
-	 */
-	public void setTenantProdGrpCd(String tenantProdGrpCd) {
-		this.tenantProdGrpCd = tenantProdGrpCd;
 	}
 
 	/**
@@ -408,6 +426,36 @@ public class DummyProduct extends CommonInfo {
 	 */
 	public void setItemCode(String itemCode) {
 		this.itemCode = itemCode;
+	}
+
+	/**
+	 * @return the bFlat
+	 */
+	public boolean isbFlat() {
+		return this.bFlat;
+	}
+
+	/**
+	 * @param bFlat
+	 *            the bFlat to set
+	 */
+	public void setbFlat(boolean bFlat) {
+		this.bFlat = bFlat;
+	}
+
+	/**
+	 * @return the flatType
+	 */
+	public String getFlatType() {
+		return this.flatType;
+	}
+
+	/**
+	 * @param flatType
+	 *            the flatType to set
+	 */
+	public void setFlatType(String flatType) {
+		this.flatType = flatType;
 	}
 
 }
