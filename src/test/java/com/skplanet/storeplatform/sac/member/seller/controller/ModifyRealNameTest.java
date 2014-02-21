@@ -122,7 +122,7 @@ public class ModifyRealNameTest {
 
 	@Test
 	public void modifyEmailTest() {
-		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/dev/modifyRealName/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/modifyRealName/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override

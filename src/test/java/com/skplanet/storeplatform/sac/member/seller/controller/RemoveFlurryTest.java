@@ -5,6 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -30,6 +33,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq.FlurryAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
@@ -124,12 +128,22 @@ public class RemoveFlurryTest {
 	 */
 	@Test
 	public void testRemoveFlurry() {
-		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/modifyInformation/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/removeFlurry/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-
+						List<FlurryAuth> flurryAuths = new ArrayList<RemoveFlurrySacReq.FlurryAuth>();
+						FlurryAuth flurryAuth1 = new FlurryAuth();
+						flurryAuth1.setAccessCode("A1");
+						flurryAuths.add(flurryAuth1);
+						FlurryAuth flurryAuth2 = new FlurryAuth();
+						flurryAuth2.setAccessCode("A2");
+						flurryAuths.add(flurryAuth2);
+						FlurryAuth flurryAuth3 = new FlurryAuth();
+						flurryAuth3.setAccessCode("A3");
+						flurryAuths.add(flurryAuth3);
+						req.setFlurryAuthList(flurryAuths);
 						// Debug
 						LOGGER.debug("[REQUEST (SAC)-Flurry 삭제] : \n{}",
 								TestConvertMapperUtils.convertObjectToJson(req));

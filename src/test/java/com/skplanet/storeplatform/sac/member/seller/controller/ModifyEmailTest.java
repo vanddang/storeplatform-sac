@@ -126,7 +126,7 @@ public class ModifyEmailTest {
 
 	@Test
 	public void modifyEmailTest() {
-		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/dev/modifyEmail/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/modifyEmail/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override

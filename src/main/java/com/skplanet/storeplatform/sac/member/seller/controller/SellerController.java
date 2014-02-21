@@ -138,14 +138,13 @@ public class SellerController {
 	/**
 	 * <pre>
 	 * 2.2.13. 판매자회원 이메일 수정.
-	 * TODO 개발 작업 : 추후 URL 삭제 => /dev
 	 * </pre>
 	 * 
 	 * @param header
 	 * @param req
 	 * @return ModifyEmailSacRes
 	 */
-	@RequestMapping(value = "/dev/modifyEmail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyEmailSacRes modifyEmail(SacRequestHeader header, @RequestBody @Validated ModifyEmailSacReq req) {
 		return this.sellerService.modifyEmail(header, req);
@@ -154,14 +153,13 @@ public class SellerController {
 	/**
 	 * <pre>
 	 * 2.2.14. 판매자회원 Password 수정.
-	 * TODO 개발 작업 : 추후 URL 삭제 => /dev
 	 * </pre>
 	 * 
 	 * @param header
 	 * @param req
 	 * @return ModifyPasswordSacRes
 	 */
-	@RequestMapping(value = "/dev/modifyPassword/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyPasswordSacRes modifyPassword(SacRequestHeader header, @RequestBody @Validated ModifyPasswordSacReq req) {
 		return this.sellerService.modifyPassword(header, req);
@@ -216,14 +214,13 @@ public class SellerController {
 	/**
 	 * <pre>
 	 * 2.2.18. 판매자회원 실명 인증 정보 수정
-	 * TODO 개발 작업 : 추후 URL 삭제 => /dev
 	 * </pre>
 	 * 
 	 * @param header
 	 * @param req
 	 * @return ModifyRealNameSacRes
 	 */
-	@RequestMapping(value = "/dev/modifyRealName/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/modifyRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, @RequestBody @Validated ModifyRealNameSacReq req) {
 		return this.sellerService.modifyRealName(header, req);

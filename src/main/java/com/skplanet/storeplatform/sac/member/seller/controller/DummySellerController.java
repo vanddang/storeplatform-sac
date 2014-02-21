@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
@@ -500,7 +499,7 @@ public class DummySellerController {
 	 * 
 	 * @return ModifyEmailRes
 	 */
-	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyEmailSacRes modifyEmail() {
 
@@ -517,7 +516,7 @@ public class DummySellerController {
 	 * 
 	 * @return ModifyPasswordRes
 	 */
-	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyPasswordSacRes modifyPassword() {
 
@@ -581,7 +580,7 @@ public class DummySellerController {
 	 * 
 	 * @return ModifyRealNameRes
 	 */
-	@RequestMapping(value = "/modifyRealName/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/modifyRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyRealNameSacRes modifyRealName() {
 

@@ -122,15 +122,13 @@ public class ModifyPasswordTest {
 
 	@Test
 	public void modifyEmailTest() {
-		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/dev/modifyPassword/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/modifyPassword/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						req.setSellerKey("");
-						req.setSessionKey("");
-						req.setNewPW("");
-						req.setOldPW("");
+						req.setNewPW("12345");
+						req.setOldPW("1234");
 						// Debug
 						LOGGER.debug("[REQUEST (SAC)-회원기본정보 수정] : \n{}",
 								TestConvertMapperUtils.convertObjectToJson(req));
