@@ -48,6 +48,8 @@
                 , TB_DP_BNR_DVC TDBD
                 , TB_CM_DEVICE TCD
             WHERE 1=1
+            /*AND TDB.BNR_MENU_ID = -BnrMenuId*/
+            AND TDB.BNR_MENU_ID = 'DP010917'
             AND TDB.TENANT_ID = #{tenantId}
             AND TDB.BNR_MENU_ID = TDBI.BNR_MENU_ID
             AND TDB.TENANT_ID = TDBI.TENANT_ID
@@ -59,8 +61,6 @@
             AND TDB.BNR_SEQ = TDBE.BNR_SEQ
             AND TDB.BNR_SEQ = TDBD.BNR_SEQ
             AND TDBD.DEVICE_MODEL_CD = TCD.DEVICE_MODEL_CD 
-            /*AND TDB.BNR_MENU_ID = -BnrMenuId*/
-            AND TDB.BNR_MENU_ID = 'DP010917'
             /*AND (TCD.DEVICE_MODEL_CD = -deviceModelCd OR L.DEVICE_MODEL_CD = 'android_standard2')  header param : 단말모델코드 */
             AND TCD.DEVICE_MODEL_CD = 'SHV-E230S'
             AND TCD.USE_YN = 'Y'

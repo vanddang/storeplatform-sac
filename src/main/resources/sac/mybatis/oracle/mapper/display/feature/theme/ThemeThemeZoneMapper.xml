@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ThemeThemeZone">
+    <!-- 테마 조회 -->
+    <select id="selectThemeThemeZone" parameterType="ThemeThemeZoneSacReq" resultType="ThemeThemeZone">
+        SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZone, seung hun Lee, 2014-02-21 */ 
+		        TDB.BNR_MENU_ID
+		        , ( SELECT TCM.CD_NM FROM TB_CM_CD TCM where TCM.cd_id = TDB.BNR_MENU_ID) AS BNR_MENU_NM
+		        , TDB.BNR_SEQ
+		        , TDBE.BNR_NM
+		        , TDBI.IMG_PATH
+                , ( SELECT TCM.CD_NM FROM TB_CM_CD TCM where TCM.cd_id = TDBI.IMG_SIZE_CD) AS IMG_SIZE
+		        , DECODE(TDB.BNR_INFO_TYPE_CD, 'DP010306', TDB.BNR_INFO) MENU_ID
+		FROM TB_DP_BNR TDB
+		    , TB_DP_BNR_IMG TDBI
+		    , TB_DP_BNR_EXPO TDBE
+		WHERE 1=1
+        <if test='themezoneId != null'>
+        AND TDB.BNR_MENU_ID = 'DP010917'
+        AND TDB.BNR_SEQ = '2111'           
+        </if>  
+		AND TDB.BNR_MENU_ID = TDBI.BNR_MENU_ID
+		AND TDB.BNR_SEQ = TDBI.BNR_SEQ
+		AND TDB.BNR_MENU_ID = TDBE.BNR_MENU_ID
+		AND TDB.BNR_SEQ = TDBE.BNR_SEQ  
+    </select>
+     
+    <!-- 테마 조회 -->
+    <select id="selectThemeThemeZoneList" parameterType="ThemeThemeZoneSacReq" resultType="ProductBasicInfo">
+		SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZoneList, seung hun Lee, 2014-02-17 */     
+              B.TENANT_ID
+             , B.MENU_ID
+             , B.PROD_ID
+             , B.TOP_MENU_ID
+             , B.META_CLSF_CD
+             , B.SVC_GRP_CD
+             , B.CONTENTS_TYPE_CD
+             , B.TOTAL_COUNT
+          FROM (SELECT A.*
+                     , COUNT(*) OVER () AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
+                  FROM (SELECT A.TENANT_ID
+                             , E.MENU_ID
+                             , C.PROD_ID
+                             , E.TOP_MENU_ID
+                             , F.META_CLSF_CD
+                             , F.SVC_GRP_CD
+                             , F.CONTENTS_TYPE_CD
+                             , B.EXPO_ORD_ALWAYS_YN
+                             , B.EXPO_ORD
+                             , B.EXPO_ORD_SUB
+                             , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS RN
+                          FROM TB_DP_BNR TDB
+                             , TB_DP_LIST A
+                             , TB_DP_LIST_PROD B
+                             , TB_DP_PROD_RSHP C
+                             , TB_DP_MENU_CATEGORY_PROD_MAPG D
+                             , TB_DP_MENU_CATEGORY E
+                             , TB_DP_PROD F  /* 에피소드 */
+                             , TB_DP_TENANT_PROD G
+                             , TB_CM_DEVICE H
+                             , TB_DP_SPRT_DEVICE I
+                       WHERE 1=1
+	                   <if test='themezoneId != null'>
+                       AND TDB.BNR_MENU_ID = 'DP010917'
+                       AND TDB.BNR_SEQ = '2111'             
+	                   </if>
+                       AND TDB.BNR_INFO = A.LIST_ID
+                       AND A.TENANT_ID = #{tenantId}
+                       AND A.LIST_ID = B.LIST_ID
+                       AND A.TENANT_ID = B.TENANT_ID
+                       AND A.EXPO_YN = 'Y'
+                       AND B.EXPO_YN = 'Y'
+                       AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+                       AND C.PROD_RSHP_CD = 'DP010802'
+                       AND B.PROD_ID = D.PROD_ID
+                       AND D.USE_YN = 'Y'
+                       AND D.MENU_ID = E.MENU_ID
+                       AND E.USE_YN = 'Y'
+                       AND C.PART_PROD_ID = F.PROD_ID
+                       --AND F.CONTENTS_TYPE_CD = 'PD002502'
+                       AND F.PROD_ID = G.PROD_ID
+                       AND A.TENANT_ID = G.TENANT_ID
+                       AND G.EXPO_YN = 'Y'
+                       /*AND (H.DEVICE_MODEL_CD = -deviceModelCd OR H.DEVICE_MODEL_CD = 'android_standard2')  header param : 단말모델코드 */
+                       AND H.DEVICE_MODEL_CD = #{deviceModelCd}
+                       AND H.DEVICE_MODEL_CD = I.DEVICE_MODEL_CD
+                       AND C.PART_PROD_ID = I.PROD_ID
+                       AND DECODE( F.TOP_MENU_ID
+                                    , 'DP13'
+                                    , DECODE( H.EBOOK_SPRT_YN
+                                            , 'Y'
+                                            , DECODE( F.META_CLSF_CD
+                                                    , 'CT24'
+                                                    , DECODE( H.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+                                                    , 'CT26'
+                                                    , DECODE( H.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+                                                    , 1 )
+                                            , 0 )
+                                    , 'DP14'
+                                    , DECODE( H.COMIC_SPRT_YN , 'Y', 1 , 0 )
+                                    , 'DP16'
+                                    , DECODE( F.META_CLSF_CD
+                                            , 'CT25'
+                                            , DECODE( H.MUSIC_SPRT_YN, 'Y', 1, 0)
+                                            , 1 )
+                                    , 1 ) = 1
+                          AND ( CASE WHEN F.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+                                     THEN ( SELECT 1
+                                              FROM TB_DP_SUB_CONTENTS SC
+                                             WHERE SC.PROD_ID = C.PART_PROD_ID
+                                               AND SC.SALE_YN = 'Y'
+                                               AND DECODE( H.HDV_SPRT_YN
+                                                         , 'PD005201'
+                                                         , DECODE ( SC.DP_PG_QULT_CD
+                                                                  , 'PD009701', 1
+                                                                  , 'PD009702', 1
+                                                                  , 0)
+                                                         , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+                                               AND ROWNUM  <![CDATA[ <= ]]> 1  )
+                                     ELSE 1
+                                 END ) = 1
+                          AND ( CASE WHEN F.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+                                     THEN DECODE( H.VIDEO_DRM_SPRT_YN
+                                                , 'N'
+                                                , DECODE( NVL( F.DRM_YN, 'N' ), 'N', 1, 0 )
+                                                , 'Y'
+                                                , 1 )
+                                     ELSE 1
+                                 END ) = 1
+                      ) A
+                 WHERE RN = 1
+              ) B
+        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+        ORDER BY RNUM
+    </select>
+</mapper>
