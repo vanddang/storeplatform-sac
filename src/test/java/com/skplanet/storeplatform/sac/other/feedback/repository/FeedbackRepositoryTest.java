@@ -430,24 +430,6 @@ public class FeedbackRepositoryTest {
 	}
 
 	/**
-	 * <pre>
-	 * 판매자 댓글 등록/수정/삭제.
-	 * </pre>
-	 */
-	@Test
-	public void testUpdateSellerRespWD() {
-		ProdNoti prodNoti = new ProdNoti();
-		prodNoti.setTenantId("S01");
-		prodNoti.setNotiSeq("14262");
-		prodNoti.setSellerRespOpin("저희 게임이 재미있다니 정말 다행이군요!.");
-		prodNoti.setSellerRespTitle("고객님 감사합니다.");
-
-		int ret = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
-
-		assertTrue(ret > 0);
-	}
-
-	/**
 	 * 
 	 * <pre>
 	 * 평점, 다운로드 조회.

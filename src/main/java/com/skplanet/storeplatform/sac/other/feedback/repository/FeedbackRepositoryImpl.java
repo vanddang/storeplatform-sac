@@ -210,11 +210,6 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	}
 
 	@Override
-	public Object updateSellerRespWD(ProdNoti prodNoti) {
-		return this.commonDAO.update("Feedback.updateSellerRespWD", prodNoti);
-	}
-
-	@Override
 	public TenantProdStats getProdEvalInfo(TenantProdStats tenantProdStats) {
 		return this.commonDAO.queryForObject("Feedback.getProdEvalInfo", tenantProdStats, TenantProdStats.class);
 	}

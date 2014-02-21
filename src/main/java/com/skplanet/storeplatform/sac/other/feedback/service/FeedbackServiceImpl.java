@@ -511,20 +511,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 		memberReq.setSellerKey(createSellerFeedbackSacReq.getSellerKey());
 		this.feedbackRepository.detailInformation(memberReq);
 
-		// 탈퇴회원 사용후기 등록 수 조회
-		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
-
-		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
-
-		if (count > 0) {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
-		} else {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
-		}
+		int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+		if (affectedRow <= 0)
+			throw new StorePlatformException("SAC_OTH_1001");
 
 		CreateSellerFeedbackSacRes createSellerFeedbackRes = new CreateSellerFeedbackSacRes();
 		createSellerFeedbackRes.setNotiSeq(prodNoti.getNotiSeq());
@@ -547,20 +536,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 		memberReq.setSellerKey(modifySellerFeedbackSacReq.getSellerKey());
 		this.feedbackRepository.detailInformation(memberReq);
 
-		// 탈퇴회원 사용후기 등록 수 조회
-		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
-
-		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
-
-		if (count > 0) {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
-		} else {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
-		}
+		int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+		if (affectedRow <= 0)
+			throw new StorePlatformException("SAC_OTH_1001");
 
 		ModifySellerFeedbackSacRes modifySellerFeedbackRes = new ModifySellerFeedbackSacRes();
 		modifySellerFeedbackRes.setNotiSeq(prodNoti.getNotiSeq());
@@ -583,20 +561,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 		memberReq.setSellerKey(removeSellerFeedbackSacReq.getSellerKey());
 		this.feedbackRepository.detailInformation(memberReq);
 
-		// 탈퇴회원 사용후기 등록 수 조회
-		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
-
-		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
-
-		if (count > 0) {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
-		} else {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
-		}
+		int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+		if (affectedRow <= 0)
+			throw new StorePlatformException("SAC_OTH_1001");
 
 		RemoveSellerFeedbackSacRes removeSellerFeedbackRes = new RemoveSellerFeedbackSacRes();
 		removeSellerFeedbackRes.setNotiSeq(prodNoti.getNotiSeq());

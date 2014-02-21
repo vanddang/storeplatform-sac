@@ -416,18 +416,6 @@ public interface FeedbackRepository {
 	/**
 	 * 
 	 * <pre>
-	 * 탈퇴회원 판매자 댓글 등록/수정/삭제.
-	 * </pre>
-	 * 
-	 * @param prodNoti
-	 *            prodNoti
-	 * @return Object
-	 */
-	public Object updateSellerRespWD(ProdNoti prodNoti);
-
-	/**
-	 * 
-	 * <pre>
 	 * 평점, 다운로드 조회.
 	 * </pre>
 	 * 
