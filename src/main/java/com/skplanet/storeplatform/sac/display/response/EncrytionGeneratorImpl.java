@@ -57,6 +57,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		data.setProductId(metaInfo.getPurchaseProdId());
 		data.setPurchaseId(metaInfo.getPurchaseId());
 		data.setUserKey(metaInfo.getUserKey());
+		data.setPurchasePrice(metaInfo.getPurchasePrice());
 
 		date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getPurchaseDt());
 		data.setPurchaseDate(date.getText());
