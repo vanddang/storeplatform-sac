@@ -24,6 +24,9 @@ public class HidingListSac extends CommonInfo implements Serializable {
 	@Min(1)
 	@NotNull
 	private Integer prchsDtlId; // 상품 아이디
+	// @NotNull
+	// @NotEmpty
+	private String sendYn; // 미보유상품 숨김처리 Y, 보유상품 숨김처리 N
 	@NotNull
 	@NotEmpty
 	private String hidingYn; // 숨김여부
@@ -56,6 +59,21 @@ public class HidingListSac extends CommonInfo implements Serializable {
 	 */
 	public void setPrchsDtlId(Integer prchsDtlId) {
 		this.prchsDtlId = prchsDtlId;
+	}
+
+	/**
+	 * @return the sendYn
+	 */
+	public String getSendYn() {
+		return this.sendYn;
+	}
+
+	/**
+	 * @param sendYn
+	 *            the sendYn to set
+	 */
+	public void setSendYn(String sendYn) {
+		this.sendYn = sendYn;
 	}
 
 	/**
