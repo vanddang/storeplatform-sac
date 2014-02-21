@@ -254,7 +254,7 @@ public class SellerController {
 	@RequestMapping(value = "/removeAuthorizationKey/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header,
-			@RequestBody @Validated AbrogationAuthKeyReq req, BindingResult result) {
+			@RequestBody @Validated AbrogationAuthKeyReq req) {
 		return this.sellerService.abrogationAuthKey(header, req);
 	}
 

@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,14 +54,8 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req,
-			BindingResult result) {
-
-		if (StringUtil.nvl(req.getSellerKey(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
-		} else if (StringUtil.nvl(req.getSubSellerID(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "subSellerID");
-		} else if (StringUtil.nvl(req.getMemberPW(), "").equals("")) {
+	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
+		if (StringUtil.nvl(req.getMemberPW(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "memberPW");
 		}
 		req.setIsNew("Y");
@@ -80,14 +73,8 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateSubsellerRes modifySubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req,
-			BindingResult result) {
-
-		if (StringUtil.nvl(req.getSellerKey(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
-		} else if (StringUtil.nvl(req.getSubSellerID(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "subSellerID");
-		} else if (StringUtil.nvl(req.getSubSellerKey(), "").equals("")) {
+	CreateSubsellerRes modifySubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
+		if (StringUtil.nvl(req.getSubSellerKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerKey");
 		}
 		req.setIsNew("N");
@@ -105,14 +92,7 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req,
-			BindingResult result) {
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
-		}
+	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req) {
 		return this.sellerSubService.removeSubseller(header, req);
 	}
 
@@ -127,14 +107,7 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req, BindingResult result) {
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
-		}
-
+	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req) {
 		return this.sellerSubService.listSubseller(header, req);
 	}
 
@@ -149,14 +122,7 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req, BindingResult result) {
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
-		}
-
+	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req) {
 		return this.sellerSubService.detailSubseller(header, req);
 	}
 

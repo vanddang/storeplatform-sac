@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -91,9 +90,6 @@ public class SellerSearchController {
 		req.setSellerKey(sellerKey);
 		req.setAid(aid);
 
-		if (sellerId.equals("") && sellerKey.equals("") && aid.equals(""))
-			throw new StorePlatformException("SAC_MEM_0001", "aid, sellerKey, sellerId");
-
 		return this.sellerSearchService.detailInformation(header, req);
 	}
 
@@ -119,8 +115,17 @@ public class SellerSearchController {
 		req.setSellerKey(sellerKey);
 		req.setAid(aid);
 
-		if (sellerId.equals("") && sellerKey.equals("") && aid.equals(""))
+		int Stat = 0;
+		if (sellerId.equals(""))
+			Stat++;
+		if (sellerKey.equals(""))
+			Stat++;
+		if (aid.equals(""))
+			Stat++;
+
+		if (Stat == 3) {
 			throw new StorePlatformException("SAC_MEM_0001", "aid, sellerKey, sellerId");
+		}
 
 		return this.sellerSearchService.detailInformationApp(header, req);
 	}
@@ -136,15 +141,7 @@ public class SellerSearchController {
 	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header,
-			@Validated DetailAccountInformationReq req, BindingResult result) {
-
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
-		}
-
+			@Validated DetailAccountInformationReq req) {
 		return this.sellerSearchService.detailAccountInformation(header, req);
 	}
 
@@ -158,10 +155,8 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, SacRequestHeader requestHeader)
-			throws Exception {
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, SacRequestHeader requestHeader) {
 		TenantHeader theader = requestHeader.getTenantHeader();
-
 		LOGGER.debug("------------------------------------language : {}", theader.getLangCd());
 		return this.sellerSearchService.listWithdrawalReason(header, theader.getLangCd());
 	}
@@ -210,13 +205,7 @@ public class SellerSearchController {
 	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
-			@Validated ListPasswordReminderQuestionReq req, BindingResult result) {
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
-		}
+			@Validated ListPasswordReminderQuestionReq req) {
 		return this.sellerSearchService.listPasswordReminderQuestion(header, req);
 	}
 
@@ -248,13 +237,7 @@ public class SellerSearchController {
 	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
-			@RequestBody @Validated CheckPasswordReminderQuestionReq req, BindingResult result) {
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerId");
-		}
+			@RequestBody @Validated CheckPasswordReminderQuestionReq req) {
 		return this.sellerSearchService.checkPasswordReminderQuestion(header, req);
 	}
 
@@ -268,14 +251,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SearchPasswordRes searchPassword(SacRequestHeader header, @RequestBody @Validated SearchPasswordReq req,
-			BindingResult result) {
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerId");
-		}
+	public SearchPasswordRes searchPassword(SacRequestHeader header, @RequestBody @Validated SearchPasswordReq req) {
 		return this.sellerSearchService.searchPassword(header, req);
 	}
 
@@ -289,14 +265,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailInfomationByAuthorizationKey/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailInformationRes searchAuthKey(SacRequestHeader header, @Validated SearchAuthKeyReq req,
-			BindingResult result) {
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
-		}
+	public DetailInformationRes searchAuthKey(SacRequestHeader header, @Validated SearchAuthKeyReq req) {
 		return this.sellerSearchService.searchAuthKey(header, req);
 	}
 
