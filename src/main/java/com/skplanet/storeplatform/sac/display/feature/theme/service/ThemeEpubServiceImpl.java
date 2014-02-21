@@ -99,7 +99,7 @@ public class ThemeEpubServiceImpl implements ThemeEpubService {
 
 				CommonResponse commonResponse = new CommonResponse();
 				List<Product> productList = new ArrayList<Product>();
-				// 웹툰 회차별 List 조회
+				// EBOOK/코믹 테마상품 조회
 				List<ThemeEpubInfo> themeEpubList = this.commonDAO.queryForList("ThemeEpub.selectThemeEpubList", req,
 						ThemeEpubInfo.class);
 
