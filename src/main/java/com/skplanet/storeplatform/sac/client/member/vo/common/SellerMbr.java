@@ -234,6 +234,17 @@ public class SellerMbr extends CommonInfo {
 	/** 서브계정 설명. */
 	private String subSellerMemo; // SUB_ACCT_DESC 서브계정에서 사용 아직 db table 컬럼 추가안됨
 
+	/** 담당자 무선전화. */
+	private String chargerPhone;
+
+	public String getChargerPhone() {
+		return this.chargerPhone;
+	}
+
+	public void setChargerPhone(String chargerPhone) {
+		this.chargerPhone = chargerPhone;
+	}
+
 	public String getRightProfile() {
 		return this.rightProfile;
 	}
