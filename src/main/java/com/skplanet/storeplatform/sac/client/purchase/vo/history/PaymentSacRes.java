@@ -13,6 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class PaymentSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private String prchsId; // 구매ID
 	private String paymentMtdCd; // 결제방법코드
 	private String paymentDt; // 결제일시
 	private Integer paymentAmt; // 결제금액
@@ -21,6 +22,21 @@ public class PaymentSacRes extends CommonInfo implements Serializable {
 	private String resvCol03; // 예빌컬럼03
 	private String resvCol04; // 예빌컬럼04
 	private String resvCol05; // 예빌컬럼05
+
+	/**
+	 * @return the prchsId
+	 */
+	public String getPrchsId() {
+		return this.prchsId;
+	}
+
+	/**
+	 * @param prchsId
+	 *            the prchsId to set
+	 */
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
+	}
 
 	/**
 	 * @return the paymentMtdCd
