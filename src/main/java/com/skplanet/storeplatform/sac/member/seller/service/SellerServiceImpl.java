@@ -56,8 +56,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
@@ -364,7 +362,7 @@ public class SellerServiceImpl implements SellerService {
 						loginFailCount = "0";
 					}
 
-					//logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
+					// logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
 
 					if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
 						/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
@@ -1082,37 +1080,6 @@ public class SellerServiceImpl implements SellerService {
 
 		WithdrawRes response = new WithdrawRes();
 		response.setSellerKey(req.getSellerKey());
-
-		return response;
-	}
-
-	/**
-	 * <pre>
-	 * 판매자 회원 인증키 생성/연장.
-	 * </pre>
-	 * 
-	 * @param CreateAuthKeyReq
-	 * @return CreateAuthKeyRes
-	 */
-	@Override
-	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req) {
-
-		UpdateLoginInfoRequest schReq = new UpdateLoginInfoRequest();
-
-		schReq.setCommonRequest(this.component.getSCCommonRequest(header));
-
-		LoginInfo loginInfo = new LoginInfo();
-		loginInfo.setSellerKey(req.getSellerKey());
-		loginInfo.setIpAddress(req.getIpAddress());
-		// loginInfo.setSessionKey(req.getSellerKey() + "_" + RandomStringUtils.getString(10));
-		loginInfo.setExpireDate(req.getExpireDate());
-
-		schReq.setLoginInfo(loginInfo);
-
-		this.sellerSCI.updateLoginInfo(schReq);
-		CreateAuthKeyRes response = new CreateAuthKeyRes();
-
-		response.setSessionKey(loginInfo.getSessionKey());
 
 		return response;
 	}

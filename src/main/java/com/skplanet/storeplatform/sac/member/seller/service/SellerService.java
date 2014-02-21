@@ -9,8 +9,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
@@ -74,9 +72,6 @@ public interface SellerService {
 
 	/** 2.2.24. 판매자 회원 탈퇴. */
 	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req);
-
-	/** 2.2.26. 판매자 회원 인증키 생성/연장. */
-	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req);
 
 	/** 2.2.28. 판매자 회원 인증키 폐기. */
 	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req);

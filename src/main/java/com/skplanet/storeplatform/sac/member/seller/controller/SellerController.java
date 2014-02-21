@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
@@ -23,8 +21,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
@@ -104,11 +100,6 @@ public class SellerController {
 	@RequestMapping(value = "/authorizeSimple/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeRes authorizeSimple(SacRequestHeader header, @RequestBody @Validated AuthorizeSimpleReq req) {
-		if (StringUtil.nvl(req.getSellerId(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerId");
-		} else if (StringUtil.nvl(req.getSellerPW(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerPW");
-		}
 		return this.sellerService.authorizeSimple(header, req);
 	}
 
@@ -248,31 +239,8 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req, BindingResult result) {
-		if (StringUtil.nvl(req.getSellerKey(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
-		} else if (StringUtil.nvl(req.getSecedeReasonCode(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "secedeReasonCode");
-		} else if (StringUtil.nvl(req.getSecedeReasonMessage(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "secedeReasonMessage");
-		}
+	public WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req) {
 		return this.sellerService.withdraw(header, req);
-	}
-
-	/**
-	 * <pre>
-	 * 판매자 회원 인증키 생성/연장.
-	 * </pre>
-	 * 
-	 * @param header
-	 * @param req
-	 */
-	@RequestMapping(value = "/createAuthorizationKey/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Validated CreateAuthKeyReq req)
-			throws Exception {
-
-		return this.sellerService.createAuthKey(header, req);
 	}
 
 	/**
@@ -287,12 +255,6 @@ public class SellerController {
 	@ResponseBody
 	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header,
 			@RequestBody @Validated AbrogationAuthKeyReq req, BindingResult result) {
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", "sellerKey");
-		}
 		return this.sellerService.abrogationAuthKey(header, req);
 	}
 
