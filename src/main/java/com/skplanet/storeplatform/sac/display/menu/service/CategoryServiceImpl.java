@@ -9,13 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.menu.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,7 @@ import com.skplanet.storeplatform.sac.display.menu.vo.Menu;
 /**
  * Category Service 인터페이스(CoreStoreBusiness) 구현체
  * 
- * Updated on : 2013. 12. 19. Updated by : 윤주영, SK 플래닛.
+ * Updated on : 2013. 12. 19. Updated by : 유시혁, SK 플래닛.
  */
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -53,8 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
 	 * requestVO)
 	 */
 	@Override
-	public MenuListSacRes searchTopCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public MenuListSacRes searchTopCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 헤더 값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
@@ -116,8 +112,7 @@ public class CategoryServiceImpl implements CategoryService {
 	 * requestVO)
 	 */
 	@Override
-	public MenuListSacRes searchSubCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public MenuListSacRes searchSubCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 헤더 값 세팅
 		this.log.debug("헤더 값 세팅");
@@ -135,10 +130,7 @@ public class CategoryServiceImpl implements CategoryService {
 		CommonResponse commonResponse = new CommonResponse();
 		// List<Menu> menuList = new ArrayList<Menu>();
 		// Menu menu1depth;
-		MenuDetail menuDetail2Depth;
-		MenuDetail menuDetail3Depth;
 		List<MenuDetail> menuDetail2DepthList = new ArrayList<MenuDetail>();
-		List<MenuDetail> menuDetail3DepthList = new ArrayList<MenuDetail>();
 		List<Menu> resultList = null;
 
 		// 카테고리 조회
@@ -167,7 +159,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				// 2Depth
 				if (menu.getMenuDepth() == 2) {
-					menuDetail2Depth = new MenuDetail();
+					MenuDetail menuDetail2Depth = new MenuDetail();
 					menuDetail2Depth.setMenuProductCount(menu.getMenuProdCnt());
 					menuDetail2Depth.setBodyFileName(menu.getBodyFileNm());
 					menuDetail2Depth.setBodyFilePath(menu.getBodyFilePath());
@@ -194,12 +186,12 @@ public class CategoryServiceImpl implements CategoryService {
 					menuDetail2Depth.setUseYn(menu.getUseYn());
 					menuDetail2Depth.setMenuIdType(menu.getMenuIdType());
 
-					menuDetail3DepthList = new ArrayList<MenuDetail>();
+					List<MenuDetail> menuDetail3DepthList = new ArrayList<MenuDetail>();
 
 					for (Menu subMenu : resultList) {
 						// 3Depth
 						if (subMenu.getMenuDepth() == 3 && menu.getMenuId().equals(subMenu.getUpMenuId())) {
-							menuDetail3Depth = new MenuDetail();
+							MenuDetail menuDetail3Depth = new MenuDetail();
 							menuDetail3Depth.setMenuProductCount(menu.getMenuProdCnt());
 							menuDetail3Depth.setBodyFileName(subMenu.getBodyFileNm());
 							menuDetail3Depth.setBodyFilePath(subMenu.getBodyFilePath());

@@ -1,10 +1,5 @@
 package com.skplanet.storeplatform.sac.display.menu.service;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -21,26 +16,24 @@ public interface CategoryService {
 	 * 대분류 전시 Menu 조회.
 	 * </pre>
 	 * 
-	 * @param MenuSacReq
-	 *            requestVO
-	 * @param SacRequestHeader
-	 *            requestHeader
+	 * @param requestVO
+	 *            MenuSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return MenuListSacRes
 	 */
-	public MenuListSacRes searchTopCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+	public MenuListSacRes searchTopCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader);
 
 	/**
 	 * <pre>
 	 * 세분류 전시 메뉴 조회.
 	 * </pre>
 	 * 
-	 * @param MenuSacReq
-	 *            requestVO
-	 * @param SacRequestHeader
-	 *            requestHeader
+	 * @param requestVO
+	 *            MenuSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return MenuListSacRes
 	 */
-	public MenuListSacRes searchSubCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+	public MenuListSacRes searchSubCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader);
 }

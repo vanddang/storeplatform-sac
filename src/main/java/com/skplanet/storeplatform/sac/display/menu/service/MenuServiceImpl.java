@@ -9,15 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.menu.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -40,7 +35,7 @@ import com.skplanet.storeplatform.sac.display.menu.vo.Menu;
 @Service
 public class MenuServiceImpl implements MenuService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -53,8 +48,7 @@ public class MenuServiceImpl implements MenuService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public MenuListSacRes searchMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public MenuListSacRes searchMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 헤더 값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
@@ -116,8 +110,7 @@ public class MenuServiceImpl implements MenuService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public MenuDetailSacRes searchMenuDetail(MenuSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public MenuDetailSacRes searchMenuDetail(MenuSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 헤더 값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
