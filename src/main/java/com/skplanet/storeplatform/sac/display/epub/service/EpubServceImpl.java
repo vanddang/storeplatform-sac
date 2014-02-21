@@ -9,42 +9,26 @@
  */
 package com.skplanet.storeplatform.sac.display.epub.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
+import com.skplanet.storeplatform.sac.display.epub.vo.EpubSeries;
+import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
-import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * EPUB Service
@@ -60,13 +44,13 @@ public class EpubServceImpl implements EpubService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.vod.service.VodService#searchVod(com.skplanet.storeplatform.sac.client
-	 * .display.vo.vod.VodDetailReq)
-	 */
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.skplanet.storeplatform.sac.display.vod.service.VodService#searchVod(com.skplanet.storeplatform.sac.client
+     * .display.vo.vod.VodDetailReq)
+     */
 	@Override
 	public EpubChannelRes searchEpubChannel(EpubChannelReq req) {
 		EpubChannelRes res = new EpubChannelRes();
@@ -75,7 +59,7 @@ public class EpubServceImpl implements EpubService {
 		// --------------------------------------------------------
 		// 1. Channel 정보 조회
 		// --------------------------------------------------------
-		EpubDetail epubDetail = this.commonDAO.queryForObject("EpubDetail.selectEpubChannel", req, EpubDetail.class);
+		EpubDetail epubDetail = this.getEpubChannel(req);
 		logger.debug("epubDetail={}", epubDetail);
 		if(epubDetail != null) {
 
@@ -84,19 +68,18 @@ public class EpubServceImpl implements EpubService {
 			MgzinSubscription mzinSubscription = null;
 			// 잡지인 경우 정기구독 정보 제공
 			if (sMetaClsCd.equals("CT24") || sMetaClsCd.equals("CT26")) {
-				mzinSubscription = this.commonDAO.queryForObject("EpubDetail.selectEpubSubscription", req, MgzinSubscription.class);
+				mzinSubscription = getMgzinSubscription(req);
 			}
 
 			this.mapProduct(product, epubDetail, mzinSubscription);
 
 			// 단행인 경우 시리즈 정보를 제공
 			if (sMetaClsCd.equals("CT19")) {
-				List<EpubDetail> epubSeriesList = null;
-				epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubDetail.class);
+				List<EpubSeries> epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubSeries.class);
 
 				//TODO:
-				this.mapSubProductList_dummy(product);
-				//this.mapSubProductList(product, epubSeriesList);
+				//this.mapSubProductList_dummy(product);
+				this.mapSubProductList(product, epubSeriesList);
 			}
 		}
 
@@ -110,17 +93,22 @@ public class EpubServceImpl implements EpubService {
 	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.epub.service.EpubService#searchEpubSeries(com.skplanet.storeplatform.sac
-	 * .client.display.vo.epub.EpubSeriesReq)
+	 * .client.display.vo.epub.EpubDetailReq)
 	 */
 	@Override
 	public EpubSeriesRes searchEpubSeries(EpubSeriesReq req) {
-		EpubSeriesRes res = new EpubSeriesRes();
+        EpubSeriesRes res = new EpubSeriesRes();
 
 		Product product = new Product();
 		// --------------------------------------------------------
 		// 1. Channel 정보 조회
 		// --------------------------------------------------------
-		EpubDetail epubDetail = this.commonDAO.queryForObject("EpubDetail.selectEpubChannel", req, EpubDetail.class);
+        EpubChannelReq channelReq = new EpubChannelReq();
+        channelReq.setChannelId(req.getChannelId());
+        channelReq.setDeviceModel(req.getDeviceModel());
+        channelReq.setTenantId(req.getTenantId());
+        channelReq.setLangCd(req.getLangCd());
+        final EpubDetail epubDetail = getEpubChannel(channelReq);
 		logger.debug("epubDetail={}", epubDetail);
 
 		String sMetaClsCd = epubDetail.getMetaClsfCd();
@@ -128,20 +116,18 @@ public class EpubServceImpl implements EpubService {
 		MgzinSubscription mzinSubscription = null;
 		// 잡지인 경우 정기구독 정보 제공
 		if (sMetaClsCd.equals("CT24") || sMetaClsCd.equals("CT26")) {
-			mzinSubscription = this.commonDAO.queryForObject("EpubDetail.selectEpubSubscription", req,
-					MgzinSubscription.class);
-		}
+            mzinSubscription = getMgzinSubscription(channelReq);
+        }
 
 		this.mapProduct(product, epubDetail, mzinSubscription);
 
 		// 단행인 경우 시리즈 정보를 제공
 		if (sMetaClsCd.equals("CT19")) {
-			List<EpubDetail> epubSeriesList = null;
-			epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubDetail.class);
+			List<EpubSeries> epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubSeries.class);
 
 			// TODO:
-			this.mapSubProductList_dummy(product);
-			// this.mapSubProductList(product, epubSeriesList);
+			//this.mapSubProductList_dummy(product);
+			this.mapSubProductList(product, epubSeriesList);
 		}
 
 		res.setProduct(product);
@@ -149,10 +135,23 @@ public class EpubServceImpl implements EpubService {
 		return res;
 	}
 
-	/**
-	 *
+    private MgzinSubscription getMgzinSubscription(EpubChannelReq channelReq) {
+        return this.commonDAO.queryForObject("EpubDetail.selectEpubSubscription", channelReq, MgzinSubscription.class);
+    }
+
+
+    private EpubDetail getEpubChannel(EpubChannelReq req) {
+        return this.commonDAO.queryForObject("EpubDetail.selectEpubChannel", req, EpubDetail.class);
+    }
+
+
+    /**
+	 * Product
 	 * @param product
-	 * @param epubDetail
+     *          Project 정보
+	 * @param mapperVO
+     *          DB 조회 결과
+     * @param mzinSubscription
 	 */
 	private void mapProduct(Product product, EpubDetail mapperVO, MgzinSubscription mzinSubscription) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
@@ -478,11 +477,12 @@ public class EpubServceImpl implements EpubService {
 
 	/**
 	 *
-	 * @param res
 	 * @param product
+	 * @param epubSeriesList
 	 */
-	private void mapSubProductList(Product product, List<EpubDetail> epubSeriesList) {
-		// TODO:
+	private void mapSubProductList(Product product, List<EpubSeries> epubSeriesList) {
+		logger.debug("epubSeriesList={}", epubSeriesList);
+
 	}
 
 	/*

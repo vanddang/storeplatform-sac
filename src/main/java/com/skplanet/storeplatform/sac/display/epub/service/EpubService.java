@@ -9,10 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.epub.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.*;
 
 /**
  * EPUB Controller

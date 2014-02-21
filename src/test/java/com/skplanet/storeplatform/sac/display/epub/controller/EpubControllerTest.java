@@ -46,6 +46,8 @@ public class EpubControllerTest {
 	public void searchEpubChannel() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("channelId", "H000044572");
+		param.put("deviceKey", "DE201402201711283140002222");
+		param.put("userKey", "US201402201711282940003170");
 		String json = this.convertMapToJson(param);
 
 		this.mvc.perform(
@@ -61,11 +63,10 @@ public class EpubControllerTest {
 	}
 
 	private String convertMapToJson(Map<String, Object> param)
-			throws IOException, JsonGenerationException, JsonMappingException {
+			throws IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper
 				.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-		String json = objectMapper.writeValueAsString(param);
-		return json;
+		return objectMapper.writeValueAsString(param);
 	}
 }

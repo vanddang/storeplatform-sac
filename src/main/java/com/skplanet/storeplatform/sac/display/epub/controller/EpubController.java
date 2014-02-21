@@ -10,6 +10,9 @@
 package com.skplanet.storeplatform.sac.display.epub.controller;
 
 
+import com.skplanet.storeplatform.sac.client.display.vo.epub.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.epub.service.EpubService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.epub.service.EpubService;
 
 /**
  * EBook Controller
@@ -42,11 +38,12 @@ public class EpubController {
 	@Autowired
 	private EpubService epubService;
 
-	/**
-	 * 채널 상품ID를 조건으로 하여 eBook/코믹 상품 상세 정보를 조회한다.
-	 * @param req
-	 * @return EpubDetailRes
-	 */
+    /**
+     * * 채널 상품ID를 조건으로 하여 eBook/코믹 상품 상세 정보를 조회한다.
+     * @param header
+     * @param req
+     * @return
+     */
 	@RequestMapping(value = "/channel/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public EpubChannelRes searchEpubChannel(SacRequestHeader header, @Validated @RequestBody EpubChannelReq req) {
@@ -60,6 +57,7 @@ public class EpubController {
 
 	/**
 	 * 채널 상품ID를 조건으로 하여 eBook/코믹 상품 상세 정보를 조회한다.
+     * @param header
 	 * @param req
 	 * @return EpubDetailRes
 	 */

@@ -106,14 +106,9 @@
 			INNER JOIN TB_DP_TENANT_PROD_PRICE TPP ON P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
 			INNER JOIN TB_DP_PROD_DESC PD		ON P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
 			LEFT OUTER JOIN TB_DP_PROD_IMG PI 		ON PI.PROD_ID = P.CHNL_PROD_ID /* FIXME:이미지 OUTER JOIN 제거 */ AND PI.EXPO_ORD = '1' AND PI.IMG_CD = 'DP006207'
-			INNER JOIN TB_DP_SPRT_DEVICE SPDV		ON P2.PROD_ID = SPDV.PROD_ID
-			INNER JOIN TB_CM_DEVICE DV		ON SPDV.DEVICE_MODEL_CD = DV.DEVICE_MODEL_CD
 			LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS STAT ON STAT.PROD_ID = P2.PROD_ID AND P.TENANT_ID = STAT.TENANT_ID
 		WHERE 1=1
 		 AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT 
-		 
-		 AND DV.DEVICE_MODEL_CD = #{deviceModel}
-		 AND DV.USE_YN = 'Y'
     </select>
     
 	
@@ -135,8 +130,160 @@
 		 ORDER BY EPI.MGZIN_TYPE_CD, TO_NUMBER( P.USE_PERIOD )
 	</select>
 	
-    <select id="selectEpubSeries" parameterType="EpubChannelReq" resultType="EpubDetail">
-        
+    <select id="selectEpubSeries" parameterType="EpubSeriesReq" resultType="EpubSeries">
+		SELECT /* EpubDetailMapper.xml, selectEpubSeries, SAC : 임근대 , 2014-01-28 */
+		        P.TOTAL_COUNT
+		      , P.TENANT_ID, P.LANG_CD, P.CID, P.PROD_STATUS_CD
+		      , P.MENU_ID, P.MENU_NM, P.MENU_DESC, P.TOP_MENU_ID
+			  , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = P.TOP_MENU_ID AND LANG_CD = P.LANG_CD AND ROWNUM = 1) AS TOP_MENU_NM
+		      , P.META_CLSF_CD
+		      , P.PROD_ID, P.CHNL_PROD_ID, P.REG_ID, P.REG_DT
+		      , P.PROD_NM, P.PROD_BASE_DESC, P.PROD_DTL_DESC, P.PROD_INTR_DSCR, P.ARTIST1_NM, P.ARTIST2_NM
+		      , P.PROD_GRD_CD, DECODE( P.CHAPTER, 0, NULL, P.CHAPTER ) AS CHAPTER
+		      , P.STORE_PROD_ID, P.PLAY_PROD_ID
+		      , P.STORE_PROD_AMT, P.PLAY_PROD_AMT
+		      , P.STORE_PROD_NET_AMT, P.PLAY_PROD_NET_AMT
+		      , P.STORE_DRM_YN, P.PLAY_DRM_YN
+		      , P.STORE_PROD_STATUS_CD, P.PLAY_PROD_STATUS_CD
+		      , P.BOOK_CLSF_CD, P.PROD_AMT
+		      , P.USE_PERIOD, P.USE_PERIOD_UNIT_CD
+		      , P.SVC_START_DT , NVL( P.BOOK_PAGE_CNT, 0 ) AS BOOK_PAGE_CNT, P.DRM_YN
+		      , P.SUB_CONTENTS_ID, P.FILE_SIZE, P.PROD_VER
+		      , PI.FILE_PATH  AS IMG_PATH, PI.FILE_NM AS IMG_NM, PI.FILE_SIZE AS IMG_SIZE
+		  FROM
+		     (
+		      SELECT E.*
+		      FROM (
+		          SELECT D.*
+		           , ROWNUM AS RNUM
+		        FROM
+		           (
+		            SELECT COUNT(*) OVER () TOTAL_COUNT
+		                    , C.TENANT_ID, C.LANG_CD, C.CID, C.PROD_STATUS_CD
+		                    , C.MENU_ID , C.MENU_NM, C.MENU_DESC, C.TOP_MENU_ID, C.META_CLSF_CD
+		                    , C.PROD_ID, C.CHNL_PROD_ID, C.REG_ID, C.REG_DT
+		                    , C.PROD_NM, C.PROD_BASE_DESC, C.PROD_DTL_DESC, C.PROD_INTR_DSCR, C.ARTIST1_NM, C.ARTIST2_NM
+		                    , C.PROD_GRD_CD, C.CHAPTER
+		                    , C.STORE_PROD_ID, C.PLAY_PROD_ID
+		                    , C.STORE_PROD_AMT, C.PLAY_PROD_AMT
+		                    , C.STORE_PROD_NET_AMT, C.PLAY_PROD_NET_AMT
+		                    , C.STORE_DRM_YN, C.PLAY_DRM_YN
+		                    , C.STORE_PROD_STATUS_CD, C.PLAY_PROD_STATUS_CD
+		                    , C.BOOK_CLSF_CD, C.PROD_AMT
+		                    , C.USE_PERIOD, C.USE_PERIOD_UNIT_CD
+		                    , C.SVC_START_DT, C.BOOK_PAGE_CNT, C.DRM_YN
+		                    , C.SUB_CONTENTS_ID, C.FILE_SIZE, C.PROD_VER
+		             FROM (
+		                  SELECT 
+		                           MAX(A.TENANT_ID) AS TENANT_ID, MAX(A.LANG_CD) AS LANG_CD, MAX(A.CID) AS CID, MAX(A.PROD_STATUS_CD) AS PROD_STATUS_CD
+		                          , MAX(A.MENU_ID) AS MENU_ID, MAX(A.MENU_NM) AS MENU_NM, MAX(A.MENU_DESC) AS MENU_DESC, MAX(A.TOP_MENU_ID) AS TOP_MENU_ID, MAX(A.META_CLSF_CD) AS META_CLSF_CD
+		                          , MAX(A.PROD_ID) AS PROD_ID, MAX(A.CHNL_PROD_ID) AS CHNL_PROD_ID, MAX(A.REG_ID) AS REG_ID, MAX(A.REG_DT) AS REG_DT
+		                          , MAX(A.PROD_NM) AS PROD_NM, MAX(A.PROD_BASE_DESC) AS PROD_BASE_DESC, MAX(A.PROD_DTL_DESC) AS PROD_DTL_DESC, MAX(A.PROD_INTR_DSCR) AS PROD_INTR_DSCR
+		                          , MAX(A.ARTIST1_NM) AS ARTIST1_NM, MAX(A.ARTIST2_NM) AS ARTIST2_NM
+		                          , MAX(A.PROD_GRD_CD) AS PROD_GRD_CD, MAX(A.CHAPTER) AS CHAPTER
+		                          , MAX(A.BOOK_CLSF_CD) AS BOOK_CLSF_CD, MAX(A.PROD_AMT) AS PROD_AMT
+		                          , MAX(A.USE_PERIOD) AS USE_PERIOD, MAX(A.USE_PERIOD_UNIT_CD) AS USE_PERIOD_UNIT_CD
+		                          , MAX(A.SVC_START_DT) AS SVC_START_DT, MAX(A.BOOK_PAGE_CNT) AS BOOK_PAGE_CNT, MAX(A.DRM_YN) AS DRM_YN
+		                          , MAX(A.SUB_CONTENTS_ID) AS SUB_CONTENTS_ID, MAX(A.FILE_SIZE) AS FILE_SIZE, MAX(A.PROD_VER) AS PROD_VER
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', A.PROD_ID ) ) AS STORE_PROD_ID
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', NULL, A.PROD_ID ) ) AS PLAY_PROD_ID
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', A.PROD_AMT ) ) AS STORE_PROD_AMT
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', NULL, A.PROD_AMT ) ) AS PLAY_PROD_AMT
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', A.PROD_NET_AMT ) ) AS STORE_PROD_NET_AMT
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', NULL, A.PROD_NET_AMT ) ) AS PLAY_PROD_NET_AMT
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', A.DRM_YN ) ) AS STORE_DRM_YN
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', NULL, A.DRM_YN ) ) AS PLAY_DRM_YN
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', A.PROD_STATUS_CD ) ) AS STORE_PROD_STATUS_CD
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', NULL, A.PROD_STATUS_CD ) ) AS PLAY_PROD_STATUS_CD
+		                    FROM
+		                       (
+		                  
+		                  
+		                      SELECT *
+		                      FROM (
+		                          SELECT 
+		                                    G.TENANT_ID, C.LANG_CD, J.CID, G.PROD_STATUS_CD
+		                                    , A.MENU_ID , C.MENU_NM, C.MENU_DESC, J.TOP_MENU_ID, J.META_CLSF_CD
+		                                    , J.PROD_ID, D.PROD_ID AS CHNL_PROD_ID, J.REG_ID, J.REG_DT
+		                                   , Q.PROD_NM, F.PROD_BASE_DESC, F.PROD_DTL_DESC, F.PROD_INTR_DSCR, F.ARTIST1_NM, F.ARTIST2_NM
+		                                   , J.PROD_GRD_CD, TO_NUMBER( P.CHAPTER ) AS CHAPTER
+		                                   , P.BOOK_CLSF_CD, O.PROD_AMT, O.PROD_NET_AMT
+		                                   , J.USE_PERIOD, J.USE_PERIOD_UNIT_CD
+		                                   , P.SVC_START_DT /* SALE_DT */, E.BOOK_PAGE_CNT, J.DRM_YN
+		                                   , M.SUB_CONTENTS_ID, M.FILE_SIZE, M.PROD_VER
+		                                   , ROW_NUMBER() OVER ( PARTITION BY J.PROD_ID ORDER BY M.PROD_VER DESC ) AS RN
+		                          FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
+		                                  INNER JOIN TB_DP_MENU_CATEGORY B		ON A.MENU_ID = B.MENU_ID
+		                                  INNER JOIN TB_DP_MENU_CATEGORY_DESC C	ON A.MENU_ID = C.MENU_ID
+		                                  INNER JOIN TB_DP_PROD D 				ON A.PROD_ID = D.PROD_ID
+		                                  INNER JOIN UV_TB_DP_MULTIMDA_PROD E		ON D.PROD_ID = E.PROD_ID
+		                                  INNER JOIN TB_DP_PROD_DESC F			ON D.PROD_ID = F.PROD_ID AND F.LANG_CD = C.LANG_CD
+		                                  INNER JOIN TB_DP_TENANT_PROD G			ON D.PROD_ID = G.PROD_ID
+		                                  INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
+		                                  INNER JOIN TB_DP_SPRT_DEVICE K			ON D.PROD_ID = K.PROD_ID
+		                                  INNER JOIN TB_CM_DEVICE L				ON K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD
+		                                  INNER JOIN TB_DP_PROD_RSHP I			ON D.PROD_ID = I.PROD_ID
+		                                  INNER JOIN TB_DP_PROD J				ON I.PART_PROD_ID = J.PROD_ID
+		                                  INNER JOIN TB_DP_SUB_CONTENTS M		ON I.PART_PROD_ID = M.PROD_ID
+		                                  INNER JOIN TB_DP_TENANT_PROD N			ON J.PROD_ID = N.PROD_ID AND N.TENANT_ID = G.TENANT_ID
+		                                  INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON J.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
+		                                  INNER JOIN UV_TB_DP_MULTIMDA_PROD P		ON J.PROD_ID = P.PROD_ID
+		                                  INNER JOIN TB_DP_PROD_DESC Q			ON J.PROD_ID = Q.PROD_ID AND C.LANG_CD = Q.LANG_CD
+		                            WHERE 1=1
+										AND G.TENANT_ID = #{tenantId}				/* tenant ID */
+										AND D.PROD_ID = #{channelId} 				/* channel ID */
+										AND C.LANG_CD = #{langCd}					/* 언어 */
+										AND L.DEVICE_MODEL_CD = #{deviceModel} 		/* 단말모델코드 */
+										AND B.USE_YN = 'Y'                        	/* Y : 사용 (사용여부) */
+										AND D.SVC_GRP_CD = 'DP000203'             	/* DP000201 : 멀티미디어 */
+										AND D.CONTENTS_TYPE_CD = 'PD002501'       	/* PD002501 : 채널타입 */
+										AND D.SVC_TYPE_CD = 'DP001116'				/* 서비스 타입 : 이북/코믹 */
+										AND D.TOP_MENU_ID IN ('DP13')				/* 이북 */
+										AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
+										AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */ 
+										AND K.PROD_ID IS NOT NULL                 	/* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
+										AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+										AND J.SVC_GRP_CD = 'DP000203'       		/* 서비스그룹코드 : 멀티미디어 */  
+										AND J.CONTENTS_TYPE_CD = 'PD002502'       /* 컨텐츠 타입코드 : (PD002502:에피소드타입) */ 
+										AND J.TOP_MENU_ID IN ('DP13')				/* 이북 */
+										AND M.SALE_YN ='Y'
+										AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
+										AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
+										AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+										<if test="chapter != null">
+                                        AND TO_NUMBER( P.CHAPTER ) > #chapter#
+										</if>
+
+		                        )
+		                        WHERE RN = 1
+		                        
+		                   ) A
+		                   /* 미구매 체크 */
+		            ) C
+		          /*
+		          FIXME: ORDEREDBY
+
+		          */
+		      ) D
+		    ) E
+		    WHERE RNUM BETWEEN 1 AND 10--#START_ROW# AND #END_ROW#
+		) P
+		LEFT OUTER JOIN TB_DP_PROD_IMG PI 		ON PI.PROD_ID = P.CHNL_PROD_ID /* FIXME:이미지 OUTER JOIN 제거 */ AND PI.EXPO_ORD = '1' AND PI.IMG_CD = 'DP000513'
+		  --, TBL_CCS_CAT CC
+			--, TBL_DP_PROD_IMG PI
+		WHERE 1=1
+		  /*
+		   AND CC.CAT_CD = P.DP_CAT_NO
+		   AND PI.PROD_ID = DECODE( P.META_CLS_CD, 'CT19', P.CHNL_PROD_ID, P.PROD_ID )
+		   AND CC.CAT_GRP_CD = 'CCS00002'
+		   AND PI.IMG_CLS = ( SELECT SUBSTR( FN_GET_ICON_IMG_CLS( #DPI#
+		                                            , 'SC'
+		                              , 'MA'
+		                              , 'EBOOK'
+		                                , 'DP000513' )
+		                 , 1, 10 ) FROM DUAL )
+		    */
+
 	</select>
     
 </mapper>

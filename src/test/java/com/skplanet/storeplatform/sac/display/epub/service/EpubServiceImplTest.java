@@ -1,5 +1,11 @@
 package com.skplanet.storeplatform.sac.display.epub.service;
 
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
+import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -9,15 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
-import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 /**
  * VOD Service
@@ -27,9 +25,8 @@ import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
  */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath*:/spring-test/context-test.xml"})
-@TransactionConfiguration
-@Transactional
+@WebAppConfiguration
+@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class EpubServiceImplTest {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -45,6 +42,8 @@ public class EpubServiceImplTest {
     public void searchEpub_dao_selectEpubChannel() {
     	EpubChannelReq req = new EpubChannelReq();
     	req.setChannelId("H900063921");
+        req.setDeviceKey("DE201402201711283140002222");
+        req.setUserKey("US201402201711282940003170");
     	req.setLangCd("ko");
     	req.setTenantId("S01");
     	req.setDeviceModel("SHV-E110S");
@@ -52,6 +51,19 @@ public class EpubServiceImplTest {
     	req.setOrderedBy("recent");
 		EpubDetail result = this.commonDAO.queryForObject("EpubDetail.selectEpubChannel", req, EpubDetail.class);
 		this.logger.debug("result={}", result);
+    }
+
+    @Test
+    public void searchEpub_dao_selectEpubSeries() {
+    	EpubChannelReq req = new EpubChannelReq();
+    	req.setChannelId("H900009069");
+    	req.setLangCd("ko");
+    	req.setTenantId("S01");
+    	req.setDeviceModel("IM-S330");
+    	req.setImgCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+    	req.setOrderedBy("recent");
+    	EpubDetail result = this.commonDAO.queryForObject("EpubDetail.selectEpubChannel", req, EpubDetail.class);
+    	this.logger.debug("result={}", result);
     }
 
     @Test
