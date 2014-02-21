@@ -94,6 +94,8 @@ public class UserOcbServiceImpl implements UserOcbService {
 		} catch (StorePlatformException spe) {
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 				throw new StorePlatformException("SAC_MEM_1701", spe);
+			} else {
+				throw spe;
 			}
 		}
 
