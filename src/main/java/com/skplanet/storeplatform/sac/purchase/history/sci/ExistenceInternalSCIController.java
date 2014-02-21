@@ -58,10 +58,10 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		this.logger.debug("@@@@@@ Start Internal searchExistenceList @@@@@@");
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		// 필수값 체크
-		if (existenceReq.getTenantId() == null || !existenceReq.getTenantId().equals("")) {
+		if (existenceReq.getTenantId() == null || existenceReq.getTenantId().equals("")) {
 			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
 		}
-		if (existenceReq.getUserKey() == null || !existenceReq.getUserKey().equals("")) {
+		if (existenceReq.getUserKey() == null || existenceReq.getUserKey().equals("")) {
 			throw new StorePlatformException("SAC_PUR_0001", "UserKey");
 		}
 
