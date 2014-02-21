@@ -10,6 +10,6 @@
  * 
  * Updated on : 2014. 1. 27. Updated by : 윤주영, SK 플래닛.
  */
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://isf.sktelecom.com/schema/tstore-response", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.UNQUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://isf.sktelecom.com/schema/tstore-response", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.skplanet.storeplatform.sac.display.feature.appCodi.vo;
 
