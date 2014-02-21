@@ -27,6 +27,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+		/** 회원 가입 테스트 */
+		CreateByMdnTest.class,
+
 		/** 회원 정보 수정 테스트 */
 		ModifyTest.class,
 
@@ -54,7 +57,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 		/** 회원 계정잠금 테스트 */
 		LockAccountTest.class
 })
-// @Ignore
+// @Ignore("전체 jUnit 테스트 돌리지 않음.")
 public class AllJunitTest_Simdaejin {
 
 	@BeforeClass
