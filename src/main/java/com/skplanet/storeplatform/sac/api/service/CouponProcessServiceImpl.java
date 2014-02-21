@@ -49,8 +49,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private String errorCode = "";
 	private String message = "";
-	private String mbrNo = "";
-	private String compNm = "";
+	private final String mbrNo = "";
+	private final String compNm = "";
 	@Autowired
 	private CouponItemService couponItemService;
 
@@ -855,8 +855,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 							couponInfo.getBpId());
 				}
 
-				this.compNm = res.getSellerMbr().getSellerCompany();
-				this.mbrNo = res.getSellerMbr().getSellerKey();
+				// this.compNm = res.getSellerMbr().getSellerCompany();
+				// this.mbrNo = res.getSellerMbr().getSellerKey();
 			} else {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
 						couponInfo.getBpId());
