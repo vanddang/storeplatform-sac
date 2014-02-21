@@ -245,13 +245,13 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 * .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
-	public List<Source> generateSourceList(String mediaType, String type, String url, Integer Size) {
+	public List<Source> generateSourceList(String mediaType, String type, String url, Integer size) {
 		List<Source> sourceList = new ArrayList<Source>();
 		Source source = new Source();
 		source.setMediaType(mediaType);
 		source.setType(type);
 		source.setUrl(url);
-		source.setSize(Size);
+		source.setSize(size);
 		sourceList.add(source);
 		return sourceList;
 	}

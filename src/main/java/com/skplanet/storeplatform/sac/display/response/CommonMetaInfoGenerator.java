@@ -85,8 +85,12 @@ public interface CommonMetaInfoGenerator {
 	 * 공통 Source 객체 생성.
 	 * </pre>
 	 * 
-	 * @param metaInfo
-	 *            metaInfo
+	 * @param type
+	 *            type
+	 * @param url
+	 *            url
+	 * @param size
+	 *            size
 	 * @return Source
 	 */
 	public Source generateSource(String type, String url, Integer size);
@@ -96,8 +100,10 @@ public interface CommonMetaInfoGenerator {
 	 * 공통 Source 객체 생성.
 	 * </pre>
 	 * 
-	 * @param metaInfo
-	 *            metaInfo
+	 * @param path
+	 *            path
+	 * @param size
+	 *            size
 	 * @return Source
 	 */
 	public Source generateSource(String path, Integer size);
@@ -119,6 +125,7 @@ public interface CommonMetaInfoGenerator {
 	 * </pre>
 	 * 
 	 * @param metaInfo
+	 *            metaInfo
 	 * @return List<Source>
 	 */
 	public List<Source> generateDownloadSourceList(MetaInfo metaInfo);
@@ -128,11 +135,17 @@ public interface CommonMetaInfoGenerator {
 	 * 공통 Source List 생성.
 	 * </pre>
 	 * 
-	 * @param metaInfo
-	 *            metaInfo
+	 * @param mediaType
+	 *            mediaType
+	 * @param type
+	 *            type
+	 * @param url
+	 *            url
+	 * @param size
+	 *            size
 	 * @return List<Source>
 	 */
-	public List<Source> generateSourceList(String mediaType, String type, String url, Integer Size);
+	public List<Source> generateSourceList(String mediaType, String type, String url, Integer size);
 
 	/**
 	 * <pre>
@@ -242,9 +255,11 @@ public interface CommonMetaInfoGenerator {
 	 * Webtoon 상품 전용 Date 객체 생성.
 	 * </pre>
 	 * 
-	 * @param metaInfo
-	 *            metaInfo
-	 * @return Book
+	 * @param type
+	 *            type
+	 * @param text
+	 *            text
+	 * @return Date
 	 */
 	public Date generateDate(String type, String text);
 
