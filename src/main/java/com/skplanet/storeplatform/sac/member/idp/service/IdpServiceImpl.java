@@ -1593,12 +1593,10 @@ public class IdpServiceImpl implements IdpService {
 
 		String resultValue = "";
 		String userID = "";
-		String isEmailAuth = ""; // 이메일 인증여부
 		SearchUserResponse searchUserResponse = null;
 
 		imIntSvcNo = map.get("im_int_svc_no").toString();
 		userID = map.get("user_id").toString();
-		isEmailAuth = map.get("is_email_auth").toString();
 
 		ImResult imResult = new ImResult();
 		imResult.setCmd("RXActivateUserIdIDP");
