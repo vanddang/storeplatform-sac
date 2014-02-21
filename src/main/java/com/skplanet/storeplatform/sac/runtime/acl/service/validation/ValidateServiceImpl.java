@@ -10,12 +10,10 @@
 package com.skplanet.storeplatform.sac.runtime.acl.service.validation;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
-import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
@@ -28,9 +26,6 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
  */
 @Service
 public class ValidateServiceImpl implements ValidateService {
-
-	@Autowired
-	private AclDataAccessService service;
 
 	@Override
 	public void validateHeaders(HttpHeaders header) {
