@@ -54,6 +54,7 @@ public class CategoryVodBox {
 	private String btvYn;
 	private String prodNm;
 	private Integer chapter;
+	private String chapterUnit;
 	private String issueDay;
 	private String prodBaseDesc;
 	private String usePeriodUnitCd;
@@ -518,6 +519,14 @@ public class CategoryVodBox {
 
 	public void setMenuNm(String menuNm) {
 		this.menuNm = menuNm;
+	}
+
+	public String getChapterUnit() {
+		return this.chapterUnit;
+	}
+
+	public void setChapterUnit(String chapterUnit) {
+		this.chapterUnit = chapterUnit;
 	}
 
 }

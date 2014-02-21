@@ -172,22 +172,18 @@ public class CategoryController {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param CategoryVodBoxSacReq
-	 *            requestVO
+	 * @param requestVO
+	 *            CategoryVodBoxSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return CategoryVodBoxSacRes
-	 * @throws JsonGenerationException
-	 *             JsonGenerationException
-	 * @throws JsonMappingException
-	 *             JsonMappingException
-	 * @throws IOException
-	 *             IOException
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/vodBox/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryVodBoxSacRes searchVodBoxList(CategoryVodBoxSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public CategoryVodBoxSacRes searchVodBoxList(CategoryVodBoxSacReq requestVO, SacRequestHeader requestHeader) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchVodBoxList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
 		return this.categoryVodBoxService.searchVodBoxList(requestVO, requestHeader);
 	}
 

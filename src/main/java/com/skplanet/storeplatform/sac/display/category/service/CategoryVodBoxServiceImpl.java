@@ -9,13 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,16 +60,19 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * Vod Box 리스트 조회.
+	 * </pre>
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.category.service.CategoryVodBoxService#searchVodBoxList(CategoryVodBoxSacReq
-	 * requestVO)
+	 * @param requestVO
+	 *            CategoryVodBoxSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return CategoryVodBoxSacRes
 	 */
 	@Override
-	public CategoryVodBoxSacRes searchVodBoxList(CategoryVodBoxSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public CategoryVodBoxSacRes searchVodBoxList(CategoryVodBoxSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 헤더 값 세팅
 		this.log.debug("헤더 값 세팅");
@@ -288,7 +288,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				runningTime.setText(categoryVodBox.getEpsdPlayTm());
 				vod.setRunningTime(runningTime);
 				chapter = new Chapter();
-				// chapter.setUnit("회"); // 공통코드 필요
+				chapter.setUnit(categoryVodBox.getChapterUnit());
 				chapter.setText(categoryVodBox.getChapter());
 				vod.setChapter(chapter);
 
