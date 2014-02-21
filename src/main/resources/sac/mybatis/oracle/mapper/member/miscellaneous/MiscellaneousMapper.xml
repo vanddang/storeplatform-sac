@@ -127,8 +127,7 @@
     FROM 
         TB_CM_SVC_AUTH
     WHERE
-        AUTH_TYPE_CD = #{authTypeCd}
-        ,AUTH_VALUE = #{authValue}
+        AUTH_VALUE = #{authValue}
     </select>
     
     
