@@ -2581,7 +2581,6 @@ public class IdpServiceImpl implements IdpService {
 		String req_time = map.get("modify_req_time").toString();
 
 		UpdatePasswordUserRequest updatePasswordUserRequest = new UpdatePasswordUserRequest();
-		UpdatePasswordUserResponse updatePasswordUserResponse = new UpdatePasswordUserResponse();
 		IdpConstants idpConstant = new IdpConstants();
 		MemberConstants memberConstant = new MemberConstants();
 
@@ -2613,7 +2612,8 @@ public class IdpServiceImpl implements IdpService {
 			updatePasswordUserRequest.setMbrPwd(mbrPwd);
 
 			try {
-				updatePasswordUserResponse = this.userSCI.updatePasswordUser(updatePasswordUserRequest);
+				UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI
+						.updatePasswordUser(updatePasswordUserRequest);
 
 				if (updatePasswordUserResponse.getCommonResponse().getResultCode()
 						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
