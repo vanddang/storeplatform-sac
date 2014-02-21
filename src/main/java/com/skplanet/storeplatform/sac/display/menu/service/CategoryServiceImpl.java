@@ -43,11 +43,16 @@ public class CategoryServiceImpl implements CategoryService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * 대분류 전시 Menu 조회.
+	 * </pre>
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuSacReq
-	 * requestVO)
+	 * @param requestVO
+	 *            MenuSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return MenuListSacRes
 	 */
 	@Override
 	public MenuListSacRes searchTopCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader) {
@@ -105,11 +110,16 @@ public class CategoryServiceImpl implements CategoryService {
 		return menuListSacRes;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * 세분류 전시 메뉴 조회.
+	 * </pre>
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchSubCategoryList(MenuSacReq
-	 * requestVO)
+	 * @param requestVO
+	 *            MenuSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return MenuListSacRes
 	 */
 	@Override
 	public MenuListSacRes searchSubCategoryList(MenuSacReq requestVO, SacRequestHeader requestHeader) {

@@ -41,11 +41,16 @@ public class MenuServiceImpl implements MenuService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * 테넌트 메뉴 조회.
+	 * </pre>
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenuList(String tenantId, String
-	 * systemId, String menuId)
+	 * @param requestVO
+	 *            MenuSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return MenuListSacRes
 	 */
 	@Override
 	public MenuListSacRes searchMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader) {
@@ -103,11 +108,16 @@ public class MenuServiceImpl implements MenuService {
 		return menuListSacRes;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * 테넌트 메뉴 상세 조회.
+	 * </pre>
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenu(String tenantId, String
-	 * systemId, String menuId)
+	 * @param requestVO
+	 *            MenuSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return MenuListSacRes
 	 */
 	@Override
 	public MenuDetailSacRes searchMenuDetail(MenuSacReq requestVO, SacRequestHeader requestHeader) {
