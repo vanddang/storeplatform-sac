@@ -608,9 +608,9 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setRepFaxArea(req.getRepFaxArea()); // ("대표팩스번호 국가코드"); FAX_NATION_NO
 		sellerMbr.setRepFax(req.getRepFax()); // ("대표팩스번호"); FAX_NO
 		sellerMbr.setRepEmail(req.getRepEmail()); // ("대표 이메일"); REP_EMAIL
-		sellerMbr.setSellerZip(req.getSellerZip()); // ("사업장 우편번호"); ZIP 우편번호
-		sellerMbr.setSellerAddress(req.getSellerAddress()); // ("사업장 주소"); ADDR
-		sellerMbr.setSellerDetailAddress(req.getSellerDetailAddress()); // ("사업장 상세주소"); DTL_ADDR
+		sellerMbr.setSellerBizAddress(req.getSellerBizAddress());
+		sellerMbr.setSellerBizZip(req.getSellerBizZip());
+		sellerMbr.setSellerBizDetailAddress(req.getSellerBizDetailAddress());
 		sellerMbr.setVendorCode(req.getVendorCode()); // ("벤더 코드"); VENDOR_CD
 		sellerMbr.setIsBizRegistered(req.getIsBizRegistered()); // ("통신판매업 신고여부"); MSALBIZ_DECL_YN
 		sellerMbr.setBizRegNumber(req.getBizRegNumber()); // ("통신판매업 신고번호"); MSALBIZ_DECL_NO
