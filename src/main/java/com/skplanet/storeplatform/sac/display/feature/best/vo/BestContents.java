@@ -15,7 +15,7 @@ package com.skplanet.storeplatform.sac.display.feature.best.vo;
  * Updated on : 2014. 1. 14. Updated by : 이석희, 아이에스플러스.
  */
 public class BestContents {
-	private int totalCount;
+	private Integer totalCount;
 	private String topMenuId;
 	private String menuId;
 	private String menuNm;
@@ -60,9 +60,9 @@ public class BestContents {
 	 * 전체건수.
 	 * </pre>
 	 * 
-	 * @return int
+	 * @return Integer
 	 */
-	public int getTotalCount() {
+	public Integer getTotalCount() {
 		return this.totalCount;
 	}
 
@@ -75,7 +75,7 @@ public class BestContents {
 	 * @param totalCount
 	 *            totalCount
 	 */
-	public void setTotalCount(int totalCount) {
+	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
 	}
 
