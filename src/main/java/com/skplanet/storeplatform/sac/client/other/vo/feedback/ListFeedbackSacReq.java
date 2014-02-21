@@ -35,7 +35,6 @@ public class ListFeedbackSacReq extends CommonInfo {
 	/**
 	 * 회원 Key.
 	 */
-	@NotBlank
 	private String userKey;
 	/**
 	 * 정렬.
