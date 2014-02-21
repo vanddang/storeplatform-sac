@@ -42,70 +42,123 @@ public class FreepassListReq extends CommonInfo {
 	// Dummy Data용
 	private String dummy; // 더미체크
 
+	
+
+	/**
+	 * @return the topMenuId
+	 */
 	public String getTopMenuId() {
-		return this.topMenuId;
+		return topMenuId;
 	}
 
+	/**
+	 * @param topMenuId the topMenuId to set
+	 */
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
 	}
 
+	/**
+	 * @return the kind
+	 */
 	public String getKind() {
-		return this.kind;
+		return kind;
 	}
 
+	/**
+	 * @param kind the kind to set
+	 */
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
 
+	/**
+	 * @return the productId
+	 */
 	public String getProductId() {
-		return this.productId;
+		return productId;
 	}
 
+	/**
+	 * @param productId the productId to set
+	 */
 	public void setProductId(String productId) {
 		this.productId = productId;
 	}
 
+	/**
+	 * @return the menuId
+	 */
 	public String getMenuId() {
-		return this.menuId;
+		return menuId;
 	}
 
+	/**
+	 * @param menuId the menuId to set
+	 */
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
 
+	/**
+	 * @return the channelId
+	 */
 	public String getChannelId() {
-		return this.channelId;
+		return channelId;
 	}
 
+	/**
+	 * @param channelId the channelId to set
+	 */
 	public void setChannelId(String channelId) {
 		this.channelId = channelId;
 	}
 
+	/**
+	 * @return the offset
+	 */
 	public int getOffset() {
-		return this.offset;
+		return offset;
 	}
 
+	/**
+	 * @param offset the offset to set
+	 */
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
 
+	/**
+	 * @return the count
+	 */
 	public int getCount() {
-		return this.count;
+		return count;
 	}
 
+	/**
+	 * @param count the count to set
+	 */
 	public void setCount(int count) {
 		this.count = count;
 	}
 
+	/**
+	 * @return the dummy
+	 */
 	public String getDummy() {
-		return this.dummy;
+		return dummy;
 	}
 
+	/**
+	 * @param dummy the dummy to set
+	 */
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
 	}
 
+	/**
+	 * @return the serialversionuid
+	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}

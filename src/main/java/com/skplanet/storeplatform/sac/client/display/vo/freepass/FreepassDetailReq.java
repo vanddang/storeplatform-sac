@@ -1,5 +1,13 @@
 package com.skplanet.storeplatform.sac.client.display.vo.freepass;
 
+/**
+ * 
+ * FreepassDetailReq Value Object
+ * 
+ * 정액제 req VO
+ * 
+ * Updated on : 2014. 2. 13. Updated by : 서영배, GTSOFT
+ */
 public class FreepassDetailReq {
 
 	private static final long serialVersionUID = 1L;
