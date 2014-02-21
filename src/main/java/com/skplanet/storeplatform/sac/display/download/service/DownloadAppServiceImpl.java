@@ -124,7 +124,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		List<Identifier> identifierList = null;
 
 		Product product = null;
-		Identifier identifier = null;
 		Component component = null;
 
 		if (downloadAppSacReq.getDummy() == null) {
@@ -174,7 +173,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				identifierList = new ArrayList<Identifier>();
 
 				product = new Product();
-				identifier = new Identifier();
 
 				// 구매내역 조회를 위한 생성자
 				ProductListSacIn productListSacIn = null;
@@ -215,6 +213,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				String prchsCaseCd = null; // 선물 여부
 				String prchsState = null; // 구매상태
 				String prchsProdId = null; // 구매 상품ID
+				// String puchsPrice = null; // 구매 상품금액
 
 				if (historyRes != null && historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -227,6 +226,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
 						prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 						prchsProdId = historyRes.getHistoryList().get(i).getProdId();
+						// puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 
 						// 구매상태 확인
 						downloadAppSacReq.setPrchsDt(prchsDt);
@@ -355,9 +355,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				 * 상품 정보
 				 ************************************************************************************************/
 
-				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-						metaInfo.getProdId());
-				identifierList.add(identifier);
+				identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+						metaInfo.getProdId()));
 				product.setIdentifierList(identifierList); // 상품 Id
 				product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
 				product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보

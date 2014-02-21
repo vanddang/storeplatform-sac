@@ -203,9 +203,12 @@ public class NewAppRecommandServiceImpl implements NewAppRecommandService {
 
 					Iterator<MetaInfo> previewIterator = previewList.iterator();
 					List<Source> preveiwSourceList = new ArrayList<Source>();
+					Source source = new Source();
 					while (previewIterator.hasNext()) {
 						MetaInfo previewMetaInfo = previewIterator.next();
-						preveiwSourceList.add(this.commonGenerator.generatePreviewSourceList(previewMetaInfo));
+						source = this.commonGenerator.generatePreviewSourceList(previewMetaInfo);
+						source.setImageCode(previewMetaInfo.getImageCode());
+						preveiwSourceList.add(source);
 					}
 					product.setPreviewSourceList(preveiwSourceList);
 				}

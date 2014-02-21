@@ -273,17 +273,19 @@
     </select>
     
     <select id="getPreviewImageList" parameterType="map" resultType="MetaInfo">
-		SELECT /* patch_20120822 OpenApiMapper.xml, getPreviewImageList, Song Hyun Ok, 2012-08-22 */
+		SELECT /* OpenApiMapper.xml, getPreviewImageList, 이석희, 2012-08-22 */
 		       PROD_ID
 		     , COUNT(*) OVER() AS CUR_CNT
 		     , FILE_PATH AS PREVIEW_IMAGE_PATH
 		     , IMAGE_SIZE AS PREVIEW_IMAGE_SIZE
+		     , IMAGE_CODE
 		  FROM 
 		       (
 		        /* Game/App 미리보기 */
 		        SELECT KA.FILE_PATH
 		             , KA.IMAGE_SIZE
 		             , KA.PROD_ID
+		             , KA.IMG_CD AS IMAGE_CODE
 		          FROM 
 		               (
 		                SELECT JA.AID
@@ -305,7 +307,15 @@
 		                                       AND A.PROD_ID = B.PROD_ID
 		                                       <if test="prodId != null">
 		                                       AND A.PROD_ID =#{prodId} 
-		                                      </if>                    
+		                                      </if>
+		                                      <!-- 
+                                               <if test="arrayProdudctId != null">
+                                               AND A.PROD_ID IN 
+                                              <foreach collection="arrayProdudctId" item="prodId" separator="," open="(" close=")">
+                                                #{prodId}
+                                              </foreach>                           
+                                              </if>
+                                               -->      		                                                          
 		                               ) IA
 		                             , (
 		                                    SELECT 'DP000116' AS IMG_CD FROM DUAL UNION ALL

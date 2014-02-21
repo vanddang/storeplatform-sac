@@ -46,6 +46,7 @@ public class MetaInfo {
 	private String previewImagePath;
 	private Integer previewImageSize;
 	private Integer previewCurCnt; // preview 이미지 건수
+	private String imageCode;
 	private String chnlProdId;
 	private String sysDate;
 	private Integer totalCount;
@@ -793,6 +794,21 @@ public class MetaInfo {
 	 */
 	public void setPreviewCurCnt(Integer previewCurCnt) {
 		this.previewCurCnt = previewCurCnt;
+	}
+
+	/**
+	 * @return the imageCode
+	 */
+	public String getImageCode() {
+		return this.imageCode;
+	}
+
+	/**
+	 * @param imageCode
+	 *            the imageCode to set
+	 */
+	public void setImageCode(String imageCode) {
+		this.imageCode = imageCode;
 	}
 
 	/**
