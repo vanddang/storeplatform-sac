@@ -54,8 +54,9 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.feature.appCodi.invoker.AppCodiECInvokerImpl;
 import com.skplanet.storeplatform.sac.display.feature.appCodi.vo.AppCodiRes;
+import com.skplanet.storeplatform.sac.display.feature.isf.invoker.IsfEcInvoker;
+import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -73,7 +74,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 	private static final Map<String, String> mapReasonCode = new HashMap<String, String>();
 
 	@Autowired
-	private AppCodiECInvokerImpl ecInvoker;
+	private IsfEcInvoker invoker;
 
 	@Autowired
 	@Qualifier("sac")
@@ -157,7 +158,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 		ISFRes response = new ISFRes();
 		try {
 			// ISF 연동
-			response = this.ecInvoker.invoke(requestVO);
+			response = this.invoker.invoke(this.makeRequest(requestVO));
 		} catch (Exception e) {
 			e.printStackTrace();
 			isExists = false;
@@ -998,5 +999,24 @@ public class AppCodiServiceImpl implements AppCodiService {
 		mapReasonCode.put("9218", "우리 또래의 인기 방송");
 		mapReasonCode.put("9299", "우리 또래의 인기 $4");
 		mapReasonCode.put("9399", "신규 사용자의 인기 컨텐츠");
+	}
+
+	private IsfEcReq makeRequest(AppCodiSacReq requestVO) {
+
+		IsfEcReq request = new IsfEcReq();
+
+		if ("long".equals(requestVO.getFilteredBy()))
+			request.setId("SVC_CODI_0001");
+		else
+			request.setId("SVC_MAIN_0003");
+
+		request.setMbn(requestVO.getUserKey());
+		request.setMdn(requestVO.getDeviceId());
+		request.setType(requestVO.getFilteredBy());
+
+		if (this.log.isDebugEnabled()) {
+			this.log.debug(request.toString());
+		}
+		return request;
 	}
 }
