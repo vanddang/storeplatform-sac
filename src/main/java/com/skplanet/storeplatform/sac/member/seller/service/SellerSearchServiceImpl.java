@@ -255,6 +255,120 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
+	 * 판매자회원 기본정보 조회App.
+	 * </pre>
+	 * 
+	 * @param DetailInformationReq
+	 * @return DetailInformationRes
+	 */
+	@Override
+	public DetailInformationRes detailInformationApp(SacRequestHeader header, DetailInformationReq req) {
+
+		SearchSellerRequest schReq = new SearchSellerRequest();
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+
+		KeySearch keySearch = new KeySearch();
+
+		if (!req.getSellerKey().equals("")) {
+			keySearch.setKeyString(req.getSellerKey());
+			keySearch.setKeyType("INSD_SELLERMBR_NO");
+		} else if (!req.getSellerId().equals("")) {
+			keySearch.setKeyString(req.getSellerId());
+			keySearch.setKeyType("SELLERMBR_ID");
+		} else {
+			keySearch.setKeyString(this.searchSellerKeyService.searchSellerKeyForAid(req.getAid()));
+			keySearch.setKeyType("INSD_SELLERMBR_NO");
+		}
+
+		List<KeySearch> list = new ArrayList<KeySearch>();
+		list.add(keySearch);
+		schReq.setKeySearchList(list);
+
+		SearchSellerResponse schRes = this.sellerSCI.searchSeller(schReq);
+
+		SearchFlurryListRequest schReq2 = new SearchFlurryListRequest();
+		schReq2.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		schReq2.setSellerKey(schRes.getSellerKey());
+
+		SearchFlurryListResponse schRes2 = this.sellerSCI.searchFlurryList(schReq2);
+
+		// 판매자 멀티미디어정보
+		List<ExtraRight> eList = new ArrayList<ExtraRight>();
+		ExtraRight extraRightList = null;
+		if (schRes.getExtraRightList() != null)
+			for (int i = 0; i < schRes.getExtraRightList().size(); i++) {
+				extraRightList = new ExtraRight();
+				// extraRightList.setEndDate(schRes.getExtraRightList().get(i).getEndDate());
+				// extraRightList.setRegDate(schRes.getExtraRightList().get(i).getRegDate());
+				extraRightList.setRegID(schRes.getExtraRightList().get(i).getRegID());
+				extraRightList.setRightProfileCode(schRes.getExtraRightList().get(i).getRightProfileCode());
+				// extraRightList.setSellerKey(schRes.getExtraRightList().get(i).getSellerKey());
+				// extraRightList.setSellerRate(schRes.getExtraRightList().get(i).getSellerRate());
+				// extraRightList.setStartDate(schRes.getExtraRightList().get(i).getStartDate());
+				extraRightList.setTenantID(schRes.getExtraRightList().get(i).getTenantID());
+				extraRightList.setTenantRate(schRes.getExtraRightList().get(i).getTenantRate());
+				extraRightList.setUpdateDate(schRes.getExtraRightList().get(i).getUpdateDate());
+				extraRightList.setUpdateID(schRes.getExtraRightList().get(i).getUpdateID());
+
+				eList.add(extraRightList);
+			}
+
+		// 법정대리인정보
+		MbrLglAgent mbrLglAgent = new MbrLglAgent();
+		if (schRes.getMbrLglAgent() != null) {
+			mbrLglAgent.setMemberKey(schRes.getMbrLglAgent().getMemberKey());
+			mbrLglAgent.setParentBirthDay(schRes.getMbrLglAgent().getParentBirthDay());
+			mbrLglAgent.setParentCI(schRes.getMbrLglAgent().getParentCI());
+			mbrLglAgent.setParentDate(schRes.getMbrLglAgent().getParentDate());
+			mbrLglAgent.setParentEmail(schRes.getMbrLglAgent().getParentEmail());
+			mbrLglAgent.setParentMDN(schRes.getMbrLglAgent().getParentMDN());
+			mbrLglAgent.setParentName(schRes.getMbrLglAgent().getParentName());
+			mbrLglAgent.setParentRealNameDate(schRes.getMbrLglAgent().getParentRealNameDate());
+			mbrLglAgent.setParentRealNameMethod(schRes.getMbrLglAgent().getParentRealNameMethod());
+			mbrLglAgent.setParentRealNameSite(schRes.getMbrLglAgent().getParentRealNameSite());
+			mbrLglAgent.setParentTelecom(schRes.getMbrLglAgent().getParentTelecom());
+			mbrLglAgent.setParentType(schRes.getMbrLglAgent().getParentType());
+			mbrLglAgent.setSequence(schRes.getMbrLglAgent().getSequence());
+		}
+
+		// 판매자 탭권한
+		List<TabAuth> tList = new ArrayList<TabAuth>();
+		TabAuth tabAuthList = null;
+		if (schRes.getTabAuthList() != null)
+			for (int i = 0; i < schRes.getTabAuthList().size(); i++) {
+				tabAuthList = new TabAuth();
+				tabAuthList.setTabCode(schRes.getTabAuthList().get(i).getTabCode());
+				tList.add(tabAuthList);
+			}
+
+		// 판매자 플러리 인증정보
+		List<FlurryAuth> fList = new ArrayList<FlurryAuth>();
+		FlurryAuth flurryAuthList = null;
+		if (schRes2.getFlurryAuthList() != null)
+			for (int i = 0; i < schRes2.getFlurryAuthList().size(); i++) {
+				flurryAuthList = new FlurryAuth();
+				flurryAuthList.setAccessCode(schRes2.getFlurryAuthList().get(i).getAccessCode());
+				flurryAuthList.setAuthToken(schRes2.getFlurryAuthList().get(i).getAuthToken());
+				flurryAuthList.setRegDate(schRes2.getFlurryAuthList().get(i).getRegDate());
+				flurryAuthList.setSellerKey(schRes2.getFlurryAuthList().get(i).getSellerKey());
+				flurryAuthList.setUpdateDate(schRes2.getFlurryAuthList().get(i).getUpdateDate());
+				fList.add(flurryAuthList);
+			}
+
+		DetailInformationRes response = new DetailInformationRes();
+		response.setExtraRightList(eList);// 판매자 멀티미디어정보
+		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
+		response.setSellerKey(schRes.getSellerKey());// 판매자Key
+		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));// 판매자 정보
+		response.setTabAuthList(tList);
+		response.setFlurryAuthList(fList);
+
+		return response;
+
+	}
+
+	/**
+	 * <pre>
 	 * 판매자회원 정산정보 조회.
 	 * </pre>
 	 * 

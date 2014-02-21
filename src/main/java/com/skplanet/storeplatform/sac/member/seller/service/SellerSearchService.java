@@ -32,6 +32,9 @@ public interface SellerSearchService {
 	/** 판매자 회원 기본정보조회. */
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req);
 
+	/** 판매자 회원 기본정보조회 App. */
+	public DetailInformationRes detailInformationApp(SacRequestHeader header, DetailInformationReq req);
+
 	/** 판매자 회원 정산정보조회. */
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req);
 

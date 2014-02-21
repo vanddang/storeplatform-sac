@@ -99,6 +99,34 @@ public class SellerSearchController {
 
 	/**
 	 * <pre>
+	 * 판매자회원 기본정보조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return DetailInformationRes
+	 */
+	@RequestMapping(value = "/detailInformationApp/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public DetailInformationRes detailInformationApp(SacRequestHeader header,
+			@RequestBody @Validated DetailInformationReq req) {
+		LOGGER.debug("request param : {}", req.toString());
+
+		String sellerId = StringUtil.nvl(req.getSellerId(), "");
+		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
+		String aid = StringUtil.nvl(req.getAid(), "");
+
+		req.setSellerId(sellerId);
+		req.setSellerKey(sellerKey);
+		req.setAid(aid);
+
+		if (sellerId.equals("") && sellerKey.equals("") && aid.equals(""))
+			throw new StorePlatformException("SAC_MEM_0001", "aid, sellerKey, sellerId");
+
+		return this.sellerSearchService.detailInformationApp(header, req);
+	}
+
+	/**
+	 * <pre>
 	 * 판매자회원 정산정보조회.
 	 * </pre>
 	 * 
