@@ -36,45 +36,96 @@ public class Source extends CommonInfo implements Serializable {
 	private String type;
 	private String url; // Resource URL
 	private String expoOrd; // 노출 순서
+	private String imageCode; // 이미지 코드
 
+	/**
+	 * @return the mediaType
+	 */
 	public String getMediaType() {
 		return this.mediaType;
 	}
 
+	/**
+	 * @param mediaType
+	 *            the mediaType to set
+	 */
 	public void setMediaType(String mediaType) {
 		this.mediaType = mediaType;
 	}
 
+	/**
+	 * @return the size
+	 */
 	public Integer getSize() {
 		return this.size;
 	}
 
+	/**
+	 * @param size
+	 *            the size to set
+	 */
 	public void setSize(Integer size) {
 		this.size = size;
 	}
 
+	/**
+	 * @return the type
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            the type to set
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return the url
+	 */
 	public String getUrl() {
 		return this.url;
 	}
 
+	/**
+	 * @param url
+	 *            the url to set
+	 */
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
+	/**
+	 * @return the expoOrd
+	 */
 	public String getExpoOrd() {
 		return this.expoOrd;
 	}
 
+	/**
+	 * @param expoOrd
+	 *            the expoOrd to set
+	 */
 	public void setExpoOrd(String expoOrd) {
 		this.expoOrd = expoOrd;
+	}
+
+	/**
+	 * @return the imageCode
+	 */
+	public String getImageCode() {
+		return this.imageCode;
+	}
+
+	/**
+	 * @param imageCode
+	 *            the imageCode to set
+	 */
+	public void setImageCode(String imageCode) {
+		this.imageCode = imageCode;
 	}
 
 }
