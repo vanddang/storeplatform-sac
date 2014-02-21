@@ -74,7 +74,7 @@
                 ,UPD_DT
             )
             VALUES(
-               SQ_CM_SVC_AUTH.NEXTVAL,
+               SQ_CM_SVC_AUTH.NEXTVAL
                <if test="mbrNo !=null">
                ,#{mbrNo}
                </if>
@@ -127,7 +127,8 @@
     FROM 
         TB_CM_SVC_AUTH
     WHERE
-        AUTH_VALUE = #{authValue}
+        AUTH_TYPE_CD = 'CM010902'
+    AND AUTH_VALUE = #{authValue}
     </select>
     
     
