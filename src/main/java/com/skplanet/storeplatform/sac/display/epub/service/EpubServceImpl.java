@@ -109,26 +109,29 @@ public class EpubServceImpl implements EpubService {
         channelReq.setTenantId(req.getTenantId());
         channelReq.setLangCd(req.getLangCd());
         final EpubDetail epubDetail = getEpubChannel(channelReq);
-		logger.debug("epubDetail={}", epubDetail);
 
-		String sMetaClsCd = epubDetail.getMetaClsfCd();
+        if(epubDetail != null) {
+            logger.debug("epubDetail={}", epubDetail);
 
-		MgzinSubscription mzinSubscription = null;
-		// 잡지인 경우 정기구독 정보 제공
-		if (sMetaClsCd.equals("CT24") || sMetaClsCd.equals("CT26")) {
-            mzinSubscription = getMgzinSubscription(channelReq);
+            String sMetaClsCd = epubDetail.getMetaClsfCd();
+
+            MgzinSubscription mzinSubscription = null;
+            // 잡지인 경우 정기구독 정보 제공
+            if (sMetaClsCd.equals("CT24") || sMetaClsCd.equals("CT26")) {
+                mzinSubscription = getMgzinSubscription(channelReq);
+            }
+
+            this.mapProduct(product, epubDetail, mzinSubscription);
+
+            // 단행인 경우 시리즈 정보를 제공
+            if (sMetaClsCd.equals("CT19")) {
+                List<EpubSeries> epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubSeries.class);
+
+                // TODO:
+                //this.mapSubProductList_dummy(product);
+                this.mapSubProductList(product, epubSeriesList);
+            }
         }
-
-		this.mapProduct(product, epubDetail, mzinSubscription);
-
-		// 단행인 경우 시리즈 정보를 제공
-		if (sMetaClsCd.equals("CT19")) {
-			List<EpubSeries> epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubSeries.class);
-
-			// TODO:
-			//this.mapSubProductList_dummy(product);
-			this.mapSubProductList(product, epubSeriesList);
-		}
 
 		res.setProduct(product);
 
