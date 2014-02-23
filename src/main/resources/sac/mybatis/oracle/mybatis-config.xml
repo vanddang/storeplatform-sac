@@ -197,7 +197,7 @@
         <!-- 이북 상품상세 정보 조회 -->
         <typeAlias alias="EpubChannelReq"  type="com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq" />
         <typeAlias alias="EpubSeriesReq"  type="com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq" />
-        <typeAlias alias="EpubSeries"  type="com.skplanet.storeplatform.sac.display.epub.vo.EpubSeries" />
+        <!--<typeAlias alias="EpubSeries"  type="com.skplanet.storeplatform.sac.display.epub.vo.EpubSeries" />-->
         <typeAlias alias="EpubDetail"  type="com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail" />
         <typeAlias alias="MgzinSubscription"  type="com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription" />
         

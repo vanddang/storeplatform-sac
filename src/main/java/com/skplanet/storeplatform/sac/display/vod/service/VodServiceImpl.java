@@ -435,8 +435,8 @@ public class VodServiceImpl implements VodService {
 
 	/**
 	 *
-	 * @param res
 	 * @param product
+	 * @param vodDetailList
 	 */
 	private void mapSubProductList(Product product, List<VodDetail> vodDetailList) {
 
@@ -446,11 +446,10 @@ public class VodServiceImpl implements VodService {
 
 		List<Source> sourceList = null;
 		Source source = null;
-
+        Date date;
 
 		if(vodDetailList != null && vodDetailList.size() > 0) {
-			VodDetail temp = null;
-			temp = vodDetailList.get(0);
+			VodDetail temp = vodDetailList.get(0);
 			product.setSubProductTotalCount(temp.getTotalCount());
 
 
@@ -466,39 +465,10 @@ public class VodServiceImpl implements VodService {
 
 				subProduct.setTitle(new Title(mapperVO.getProdNm()));
 
-				//-------------------------------------------
-				// 대표 이미지 (thumbnail)
-				//-------------------------------------------
-				/*
-				List<Source> sourceList = new ArrayList<Source>();
-				source = new Source();
-				source.setMediaType(DisplayCommonUtil.getMimeType(vodDetail.getImgPath()));
-				source.setSize(vodDetail.getImgSize());
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-				source.setUrl(vodDetail.getImgPath()+vodDetail.getImgNm());
-				sourceList.add(source);
-				*/
-				//-------------------------------------------
-				// screenshot
-				//-------------------------------------------
-				/*
-				for (ProductImage screenshotImage : screenshotList) {
-					Source screenshotSource = new Source();
-					screenshotSource.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
-					screenshotSource.setSize(screenshotImage.getFileSize());
-					screenshotSource.setUrl(screenshotImage.getFilePath() + screenshotImage.getFileNm());
-					sourceList.add(screenshotSource);
-				}
-				subProduct.setSourceList(sourceList);
-				*/
-
-				//-------------------------------------------
 				// 상품 설명
-				//-------------------------------------------
 				subProduct.setProductExplain(mapperVO.getProdBaseDesc());
 				subProduct.setProductDetailExplain(mapperVO.getProdDtlDesc());
 				subProduct.setProductIntroduction(mapperVO.getProdIntrDscr());
-
 
 				List<Support> supportList = this.getSupportList(mapperVO);
 				subProduct.setSupportList(supportList);
@@ -506,9 +476,6 @@ public class VodServiceImpl implements VodService {
 				List<Menu> menuList = this.getMenuList(mapperVO);
 
 				subProduct.setMenuList(menuList);
-
-
-				Date date;
 
 				List<Date> dateList = this.getDateList(mapperVO, sdf);
 

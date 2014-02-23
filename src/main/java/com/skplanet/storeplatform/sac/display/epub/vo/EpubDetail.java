@@ -42,9 +42,12 @@ public class EpubDetail extends CommonInfo {
 	/** 상품ID */
 	private String prodId;
 	// private String espdProdId;//에피소드 상품ID
+    /** 채널상품 ID */
+    private String chnlProdId;
 	/** 상품 상태 코드 */
 	private String prodStatusCd;
 
+    private String regId;
 	/** 등록일시 */
 	private Date regDt;
 
@@ -69,8 +72,16 @@ public class EpubDetail extends CommonInfo {
 	/** 도서 목차 */
 	private String bookTbctns;
 
-	/** 다운로드 지역제한 */
+    private String bookClsfCd;
+
+    private Integer bookPageCnt;
+
+    /** 다운로드 지역제한 */
 	private String dwldAreaLimtYn;
+
+    private String subContentsId;
+    private Integer fileSize;
+    private String prodVer;
 	// ---------------------------------------------------
 	// 다운로드 상품
 	// ---------------------------------------------------
@@ -80,6 +91,7 @@ public class EpubDetail extends CommonInfo {
 	private Integer storeProdAmt;
 	/** 다운로드 DRM */
 	private String storeDrmYn;
+    private String storeStatusCd;
 
 	// ---------------------------------------------------
 	// 바로보기 상품
@@ -90,11 +102,14 @@ public class EpubDetail extends CommonInfo {
 	private Integer playProdAmt;
 	/** 바로보기 DRM */
 	private String playDrmYn;
+    private String playStatusCd;
 
 	/** 챕터 */
 	private String chapter;
 	private String chapterUnit;
 
+    private String usePeriod;
+    private String usePeriodUnitCd;
 	private String usagePeriod;
 
 	/** 다운로드 지역제한 */
@@ -748,4 +763,92 @@ public class EpubDetail extends CommonInfo {
 		this.dwldAreaLimtYn = dwldAreaLimtYn;
 	}
 
+
+    public String getChnlProdId() {
+        return this.chnlProdId;
+    }
+
+    public void setChnlProdId(String chnlProdId) {
+        this.chnlProdId = chnlProdId;
+    }
+
+    public String getRegId() {
+        return this.regId;
+    }
+
+    public void setRegId(String regId) {
+        this.regId = regId;
+    }
+
+    public String getBookClsfCd() {
+        return this.bookClsfCd;
+    }
+
+    public void setBookClsfCd(String bookClsfCd) {
+        this.bookClsfCd = bookClsfCd;
+    }
+
+    public Integer getBookPageCnt() {
+        return this.bookPageCnt;
+    }
+
+    public void setBookPageCnt(Integer bookPageCnt) {
+        this.bookPageCnt = bookPageCnt;
+    }
+
+    public String getSubContentsId() {
+        return this.subContentsId;
+    }
+
+    public void setSubContentsId(String subContentsId) {
+        this.subContentsId = subContentsId;
+    }
+
+    public Integer getFileSize() {
+        return this.fileSize;
+    }
+
+    public void setFileSize(Integer fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public String getProdVer() {
+        return this.prodVer;
+    }
+
+    public void setProdVer(String prodVer) {
+        this.prodVer = prodVer;
+    }
+
+    public String getStoreStatusCd() {
+        return this.storeStatusCd;
+    }
+
+    public void setStoreStatusCd(String storeStatusCd) {
+        this.storeStatusCd = storeStatusCd;
+    }
+
+    public String getPlayStatusCd() {
+        return this.playStatusCd;
+    }
+
+    public void setPlayStatusCd(String playStatusCd) {
+        this.playStatusCd = playStatusCd;
+    }
+
+    public String getUsePeriod() {
+        return this.usePeriod;
+    }
+
+    public void setUsePeriod(String usePeriod) {
+        this.usePeriod = usePeriod;
+    }
+
+    public String getUsePeriodUnitCd() {
+        return this.usePeriodUnitCd;
+    }
+
+    public void setUsePeriodUnitCd(String usePeriodUnitCd) {
+        this.usePeriodUnitCd = usePeriodUnitCd;
+    }
 }

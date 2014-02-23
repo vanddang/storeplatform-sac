@@ -120,8 +120,8 @@
 			 , PRC.CHNL_PERIOD_AMT
 			 , PRC.DC_AMT
 		  FROM TB_DP_PROD P
-		    INNER JOIN UV_TB_DP_MULTIMDA_PROD EPI        ON P.PROD_ID = EPI.PROD_ID
-		    INNER JOIN TB_DP_TENANT_PROD_PRICE PRC  ON P.PROD_ID = PRC.PROD_ID
+		    INNER JOIN UV_TB_DP_MULTIMDA_PROD EPI       ON P.PROD_ID = EPI.PROD_ID
+		    INNER JOIN TB_DP_TENANT_PROD_PRICE PRC      ON P.PROD_ID = PRC.PROD_ID
 		 WHERE 1=1
 		   AND PRC.TENANT_ID = #{tenantId}
 		   AND P.PROD_ID = #{channelId}
@@ -130,7 +130,7 @@
 		 ORDER BY EPI.MGZIN_TYPE_CD, TO_NUMBER( P.USE_PERIOD )
 	</select>
 	
-    <select id="selectEpubSeries" parameterType="EpubSeriesReq" resultType="EpubSeries">
+    <select id="selectEpubSeries" parameterType="EpubSeriesReq" resultType="EpubDetail">
 		SELECT /* EpubDetailMapper.xml, selectEpubSeries, SAC : 임근대 , 2014-01-28 */
 		        P.TOTAL_COUNT
 		      , P.TENANT_ID, P.LANG_CD, P.CID, P.PROD_STATUS_CD
@@ -250,9 +250,10 @@
 										AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
 										AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
 										AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
-										<if test="chapter != null">
-                                        AND TO_NUMBER( P.CHAPTER ) > #chapter#
-										</if>
+                                        <if test="filteredBy == 'chapter'">
+                                            /* 특정 회차(chapter)기준 이후 회차 컨텐츠 */
+                                            AND TO_NUMBER( REGEXP_REPLACE( NVL( P.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{chapter}
+                                        </if>
 
 		                        )
 		                        WHERE RN = 1

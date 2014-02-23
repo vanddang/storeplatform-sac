@@ -11,13 +11,15 @@ package com.skplanet.storeplatform.sac.display.epub.service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.*;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
-import com.skplanet.storeplatform.sac.display.epub.vo.EpubSeries;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,10 +77,8 @@ public class EpubServceImpl implements EpubService {
 
 			// 단행인 경우 시리즈 정보를 제공
 			if (sMetaClsCd.equals("CT19")) {
-				List<EpubSeries> epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubSeries.class);
+				List<EpubDetail> epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubDetail.class);
 
-				//TODO:
-				//this.mapSubProductList_dummy(product);
 				this.mapSubProductList(product, epubSeriesList);
 			}
 		}
@@ -100,9 +100,7 @@ public class EpubServceImpl implements EpubService {
         EpubSeriesRes res = new EpubSeriesRes();
 
 		Product product = new Product();
-		// --------------------------------------------------------
 		// 1. Channel 정보 조회
-		// --------------------------------------------------------
         EpubChannelReq channelReq = new EpubChannelReq();
         channelReq.setChannelId(req.getChannelId());
         channelReq.setDeviceModel(req.getDeviceModel());
@@ -125,7 +123,7 @@ public class EpubServceImpl implements EpubService {
 
             // 단행인 경우 시리즈 정보를 제공
             if (sMetaClsCd.equals("CT19")) {
-                List<EpubSeries> epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubSeries.class);
+                List<EpubDetail> epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubDetail.class);
 
                 // TODO:
                 //this.mapSubProductList_dummy(product);
@@ -184,7 +182,7 @@ public class EpubServceImpl implements EpubService {
 		//productIntroduction (상품 소개 내용)
 		product.setProductIntroduction(mapperVO.getProdIntrDscr());
 
-		//TODO: tableOfContents (목차 정보)
+		//tableOfContents (목차 정보)
 		product.setTableOfContents(mapperVO.getBookTbctns());
 
 		//aboutWriter (작가 소개) - prodBaseDesc 컬럼
@@ -196,15 +194,11 @@ public class EpubServceImpl implements EpubService {
 		//rights
 		rights = this.getRights(mapperVO);
 
-		//-------------------------------------------
 		// 메뉴 정보
-		// -------------------------------------------
 		menuList = this.getMenuList(mapperVO);
 		product.setMenuList(menuList);
 
-		// -------------------------------------------
 		// 저작권 정보
-		// -------------------------------------------
 		if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(mapperVO.getTopMenuId())) { // 이북
 			contributor = new Contributor();
 			contributor.setName(mapperVO.getArtist1Nm());
@@ -268,10 +262,6 @@ public class EpubServceImpl implements EpubService {
 		price.setText(mapperVO.getProdAmt());
 		product.setPrice(price);
 		 */
-
-		// TODO: tableOfContents
-
-		//TODO:
 		book =  this.getBook(mapperVO);
 
 
@@ -316,7 +306,7 @@ public class EpubServceImpl implements EpubService {
 			}
 			*/
 		}
-		//book.setSupportList(this.generateSupportList(mapperVO));
+		//book.setSupportList(this.getSupportList(mapperVO));
 		return book;
 	}
 
@@ -358,32 +348,32 @@ public class EpubServceImpl implements EpubService {
 
 		// 소장 정보
 		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
-			rights.setStore(this.generateStore(mapperVO));
+			rights.setStore(this.getStore(mapperVO));
 		}
 		// 대여 정보
 		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
-			rights.setPlay(this.generatePlay(mapperVO));
+			rights.setPlay(this.getPlay(mapperVO));
 		}
 
 		return rights;
 	}
 
-	public List<Support> generateSupportList(EpubDetail mapperVO) {
+	public List<Support> getSupportList(EpubDetail mapperVO) {
 		List<Support> supportList = new ArrayList<Support>();
 		Support support = null;
 		if ("Y".equals(mapperVO.getSupportPlay())) {
-			support = this.generateSupport(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM, "Y");
+			support = this.getSupport(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM, "Y");
 			supportList.add(support);
 		} else {
-			support = this.generateSupport(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM, "N");
+			support = this.getSupport(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM, "N");
 			supportList.add(support);
 		}
 
 		if ("Y".equals(mapperVO.getSupportStore())) {
-			support = this.generateSupport(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM, "Y");
+			support = this.getSupport(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM, "Y");
 			supportList.add(support);
 		} else {
-			support = this.generateSupport(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM, "N");
+			support = this.getSupport(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM, "N");
 			supportList.add(support);
 		}
 		return supportList;
@@ -396,7 +386,7 @@ public class EpubServceImpl implements EpubService {
 	 * @param mapperVO
 	 * @return
 	 */
-	private Play generatePlay(EpubDetail mapperVO) {
+	private Play getPlay(EpubDetail mapperVO) {
 		Play play = new Play();
 
 		List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -404,13 +394,13 @@ public class EpubServceImpl implements EpubService {
 		play.setIdentifierList(identifierList);
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
-		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
+		supportList.add(this.getSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
 		play.setSupportList(supportList);
 
 		mapperVO.setProdAmt(mapperVO.getPlayProdAmt());
 		//TODO :
 		//mapperVO.setProdNetAmt(mapperVO.getPlayProdNetAmt());
-		play.setPrice(this.generatePrice(mapperVO));
+		play.setPrice(this.getPrice(mapperVO));
 
 		Date date = new Date();
 		date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
@@ -429,7 +419,7 @@ public class EpubServceImpl implements EpubService {
 	 * @param mapperVO
 	 * @return
 	 */
-	private Price generatePrice(EpubDetail mapperVO) {
+	private Price getPrice(EpubDetail mapperVO) {
 		Price price = new Price();
 		price.setText(mapperVO.getProdAmt());
 		price.setFixedPrice(mapperVO.getProdNetAmt());
@@ -444,7 +434,7 @@ public class EpubServceImpl implements EpubService {
 	 * @param mapperVO
 	 * @return
 	 */
-	private Store generateStore(EpubDetail mapperVO) {
+	private Store getStore(EpubDetail mapperVO) {
 		Store store = new Store();
 
 		List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -452,13 +442,13 @@ public class EpubServceImpl implements EpubService {
 		store.setIdentifierList(identifierList);
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
-		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
+		supportList.add(this.getSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
 		store.setSupportList(supportList);
 
 		mapperVO.setProdAmt(mapperVO.getStoreProdAmt());
 		//TODO:
 		//mapperVO.setProdNetAmt(mapperVO.getStoreProdNetAmt());
-		//store.setPrice(this.generatePrice(mapperVO));
+		//store.setPrice(this.getPrice(mapperVO));
 
 		return store;
 	}
@@ -472,7 +462,7 @@ public class EpubServceImpl implements EpubService {
 	 * @param storeDrmYn
 	 * @return
 	 */
-	private Support generateSupport(String dpDrmSupportNm, String storeDrmYn) {
+	private Support getSupport(String dpDrmSupportNm, String storeDrmYn) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -483,8 +473,49 @@ public class EpubServceImpl implements EpubService {
 	 * @param product
 	 * @param epubSeriesList
 	 */
-	private void mapSubProductList(Product product, List<EpubSeries> epubSeriesList) {
-		logger.debug("epubSeriesList={}", epubSeriesList);
+	private void mapSubProductList(Product product, List<EpubDetail> epubSeriesList) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
+
+        List<Source> sourceList = null;
+        Source source = null;
+        Date date;
+
+        List<Product> subProjectList = new ArrayList<Product>();
+
+        if(epubSeriesList != null && epubSeriesList.size() > 0) {
+            logger.debug("epubSeriesList={}", epubSeriesList);
+            EpubDetail temp = epubSeriesList.get(0);
+            product.setSubProductTotalCount(temp.getTotalCount());
+
+            for(EpubDetail mapperVO : epubSeriesList) {
+                Product subProduct = new Product();
+
+                List<Identifier> identifierList = new ArrayList<Identifier>();
+
+                identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getProdId()));
+                identifierList.add(new Identifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, mapperVO.getCid()));
+                subProduct.setIdentifierList(identifierList);
+
+                subProduct.setTitle(new Title(mapperVO.getProdNm()));
+
+                // 상품 설명
+                subProduct.setProductExplain(mapperVO.getProdBaseDesc());
+                subProduct.setProductDetailExplain(mapperVO.getProdDtlDesc());
+                subProduct.setProductIntroduction(mapperVO.getProdIntrDscr());
+
+                //TODO: rights
+                Rights rights = getRights(mapperVO);
+                subProduct.setRights(rights);
+
+                Book book = getBook(mapperVO);
+                subProduct.setBook(book);
+
+                subProjectList.add(subProduct);
+
+            }
+        }
+        product.setSubProductList(subProjectList);
 
 	}
 
@@ -521,6 +552,10 @@ public class EpubServceImpl implements EpubService {
 		return res;
 	}
 
+    /**
+     * @deprecated dummy
+     * @param product
+     */
 	private void mapSubProductList_dummy(Product product) {
 		// subProjectList
 		List<Product> subProjectList = new ArrayList<Product>();
