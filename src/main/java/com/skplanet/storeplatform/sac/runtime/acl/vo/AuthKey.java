@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.vo;
 
-import java.util.Date;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
+import java.util.Date;
 
 /**
  *
@@ -21,77 +21,152 @@ public class AuthKey extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+    /** 테넌트 ID */
 	private String tenantId;
+    /** AuthKey */
 	private String authKey;
-	private String authTypeCd;
-	private Date issuDt;
-	private Date exprDt;
-	private String statusCd;
-	private String tenantStatusCd;
-	private String secret;
+    /**
+     * 키 타입 (테스트/상용)
+     * {@link com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyType}
+     */
+	private AuthKeyType authKeyType;
+	private String authKeyTypeCd;
+	private String authKeyTypeNm;
 
-	public String getTenantId() {
-		return this.tenantId;
-	}
+    /** 발급일 */
+    private Date issuDt;
+    /** 만료일 */
+    private Date exprDt;
+    /**
+     * 상태
+     * {@link com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyStatus}
+     */
+    private AuthKeyStatus status;
+    private String statusCd;
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    /**
+     * Auth 유형 (MAC/IP)
+     * {@link com.skplanet.storeplatform.sac.runtime.acl.vo.AuthType}
+     */
+    private AuthType authType;
+    private String authTypeCd;
+    private String authTypeNm;
 
-	public String getAuthKey() {
-		return this.authKey;
-	}
+    /** secret */
+    private String secret;
+    /** 사용기한 체크 Y/N  */
+	private String usableDateYn;
 
-	public void setAuthKey(String authKey) {
-		this.authKey = authKey;
-	}
 
-	public String getAuthTypeCd() {
-		return this.authTypeCd;
-	}
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	public void setAuthTypeCd(String authTypeCd) {
-		this.authTypeCd = authTypeCd;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	public Date getIssuDt() {
-		return this.issuDt;
-	}
+    public String getAuthKey() {
+        return authKey;
+    }
 
-	public void setIssuDt(Date issuDt) {
-		this.issuDt = issuDt;
-	}
+    public void setAuthKey(String authKey) {
+        this.authKey = authKey;
+    }
 
-	public Date getExprDt() {
-		return this.exprDt;
-	}
+    public AuthKeyType getAuthKeyType() {
+        return authKeyType;
+    }
 
-	public void setExprDt(Date exprDt) {
-		this.exprDt = exprDt;
-	}
+    public void setAuthKeyType(AuthKeyType authKeyType) {
+        this.authKeyType = authKeyType;
+    }
 
-	public String getStatusCd() {
-		return this.statusCd;
-	}
+    public String getAuthKeyTypeCd() {
+        return authKeyTypeCd;
+    }
 
-	public void setStatusCd(String statusCd) {
-		this.statusCd = statusCd;
-	}
+    public void setAuthKeyTypeCd(String authKeyTypeCd) {
+        this.authKeyTypeCd = authKeyTypeCd;
+    }
 
-	public String getTenantStatusCd() {
-		return this.tenantStatusCd;
-	}
+    public String getAuthKeyTypeNm() {
+        return authKeyTypeNm;
+    }
 
-	public void setTenantStatusCd(String tenantStatusCd) {
-		this.tenantStatusCd = tenantStatusCd;
-	}
+    public void setAuthKeyTypeNm(String authKeyTypeNm) {
+        this.authKeyTypeNm = authKeyTypeNm;
+    }
 
-	public String getSecret() {
-		return this.secret;
-	}
+    public Date getIssuDt() {
+        return issuDt;
+    }
 
-	public void setSecret(String secret) {
-		this.secret = secret;
-	}
+    public void setIssuDt(Date issuDt) {
+        this.issuDt = issuDt;
+    }
 
+    public Date getExprDt() {
+        return exprDt;
+    }
+
+    public void setExprDt(Date exprDt) {
+        this.exprDt = exprDt;
+    }
+
+    public AuthKeyStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AuthKeyStatus status) {
+        this.status = status;
+    }
+
+    public String getStatusCd() {
+        return statusCd;
+    }
+
+    public void setStatusCd(String statusCd) {
+        this.statusCd = statusCd;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public String getUsableDateYn() {
+        return usableDateYn;
+    }
+
+    public void setUsableDateYn(String usableDateYn) {
+        this.usableDateYn = usableDateYn;
+    }
+
+    public AuthType getAuthType() {
+        return authType;
+    }
+
+    public void setAuthType(AuthType authType) {
+        this.authType = authType;
+    }
+
+    public String getAuthTypeCd() {
+        return authTypeCd;
+    }
+
+    public void setAuthTypeCd(String authTypeCd) {
+        this.authTypeCd = authTypeCd;
+    }
+
+    public String getAuthTypeNm() {
+        return authTypeNm;
+    }
+
+    public void setAuthTypeNm(String authTypeNm) {
+        this.authTypeNm = authTypeNm;
+    }
 }
