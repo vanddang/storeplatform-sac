@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="System">
+
+    <resultMap id="SystemResultMap" type="System" autoMapping="true">
+        <id property="STATUS" column="STATUS_CD"/>
+    </resultMap>
+
+    <!-- System 정보 조회  -->
+    <select id="selectSystem" parameterType="string" resultMap="SystemResultMap">
+   	  SELECT /* SystemMapper.selectSystem, 시스템 정보 조회, 임근대/SK플래닛, 2014-02-20 */
+   	          A.SYSTEM_ID, A.TENANT_ID, A.SYSTEM_CD, A.SYSTEM_NM, A.STATUS_CD
+		FROM TB_FW_SYSTEM A
+		WHERE 1=1
+		  AND A.SYSTEM_ID = #{systemId}
+    </select>
+
+
+    <!-- IP 정보로 System 정보 조회  -->
+    <select id="selectSystemByIp" parameterType="System" resultMap="SystemResultMap">
+   	  SELECT /* SystemMapper.selectSystem, 시스템 정보 조회, 임근대/SK플래닛, 2014-02-20 */
+            A.SYSTEM_ID, B.IP
+		FROM TB_FW_SYSTEM A
+		    LEFT OUTER JOIN TB_FW_IP B ON A.SYSTEM_ID = B.SYSTEM_ID
+		WHERE 1=1
+		  AND A.SYSTEM_ID = #{systemId}
+		  AND B.IP = #{ip}
+    </select>
+
+    
+</mapper>

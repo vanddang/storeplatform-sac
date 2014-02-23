@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AclTenant">
+
+    <resultMap id="TenantResultMap" type="Tenant" autoMapping="true">
+        <id property="STATUS" column="STATUS_CD"/>
+    </resultMap>
+
+    <!-- System 정보 조회  -->
+    <select id="selectTenant" parameterType="string" resultMap="TenantResultMap">
+   	  SELECT /* TenantMapper.selectTenant, 테넌트  정보 조회, 임근대/SK플래닛, 2014-02-20 */
+   	          A.TENANT_ID, A.TENANT_NM, A.STATUS_CD
+		FROM TB_FW_TENANT A
+		WHERE 1=1
+		  AND A.TENANT_ID = #{tenantId}
+    </select>
+
+
+    
+</mapper>
