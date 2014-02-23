@@ -48,9 +48,19 @@ public class EpubSeriesReq extends CommonInfo {
     private String tenantId;
     private String deviceModel;
 
+    private String filteredBy;
+
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
 
     public String getBookTypeCd() {
-        return this.bookTypeCd;
+        return bookTypeCd;
     }
 
     public void setBookTypeCd(String bookTypeCd) {
@@ -58,7 +68,7 @@ public class EpubSeriesReq extends CommonInfo {
     }
 
     public String getOrderedBy() {
-        return this.orderedBy;
+        return orderedBy;
     }
 
     public void setOrderedBy(String orderedBy) {
@@ -66,8 +76,7 @@ public class EpubSeriesReq extends CommonInfo {
     }
 
     public Integer getOffset() {
-        if(this.offset == null || this.offset < 0) return 1;
-        return this.offset;
+        return offset;
     }
 
     public void setOffset(Integer offset) {
@@ -75,47 +84,15 @@ public class EpubSeriesReq extends CommonInfo {
     }
 
     public Integer getCount() {
-        if(this.count == null || this.count < 0) return 20;
-        return this.count;
+        return count;
     }
 
     public void setCount(Integer count) {
         this.count = count;
     }
-    public String getLangCd() {
-        return this.langCd;
-    }
-
-    public void setLangCd(String langCd) {
-        this.langCd = langCd;
-    }
-
-    public String getTenantId() {
-        return this.tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public String getDeviceModel() {
-        return this.deviceModel;
-    }
-
-    public void setDeviceModel(String deviceModel) {
-        this.deviceModel = deviceModel;
-    }
-
-    public String getChannelId() {
-        return this.channelId;
-    }
-
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
-    }
 
     public String getUserKey() {
-        return this.userKey;
+        return userKey;
     }
 
     public void setUserKey(String userKey) {
@@ -123,11 +100,42 @@ public class EpubSeriesReq extends CommonInfo {
     }
 
     public String getDeviceKey() {
-        return this.deviceKey;
+        return deviceKey;
     }
 
     public void setDeviceKey(String deviceKey) {
         this.deviceKey = deviceKey;
     }
 
+    public String getLangCd() {
+        return langCd;
+    }
+
+    public void setLangCd(String langCd) {
+        this.langCd = langCd;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public String getDeviceModel() {
+        return deviceModel;
+    }
+
+    public void setDeviceModel(String deviceModel) {
+        this.deviceModel = deviceModel;
+    }
+
+    public String getFilteredBy() {
+        return filteredBy;
+    }
+
+    public void setFilteredBy(String filteredBy) {
+        this.filteredBy = filteredBy;
+    }
 }
