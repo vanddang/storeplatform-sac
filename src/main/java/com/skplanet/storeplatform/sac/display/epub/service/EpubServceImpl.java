@@ -77,7 +77,13 @@ public class EpubServceImpl implements EpubService {
 
 			// 단행인 경우 시리즈 정보를 제공
 			if (sMetaClsCd.equals("CT19")) {
-				List<EpubDetail> epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubDetail.class);
+                EpubSeriesReq epubSeriesReq = new EpubSeriesReq();
+                epubSeriesReq.setTenantId(req.getTenantId());
+                epubSeriesReq.setChannelId(req.getChannelId());
+                epubSeriesReq.setLangCd(req.getLangCd());
+                epubSeriesReq.setDeviceModel(req.getDeviceModel());
+
+				List<EpubDetail> epubSeriesList = getEpubSeries(epubSeriesReq);
 
 				this.mapSubProductList(product, epubSeriesList);
 			}
@@ -88,13 +94,17 @@ public class EpubServceImpl implements EpubService {
 		return res;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.epub.service.EpubService#searchEpubSeries(com.skplanet.storeplatform.sac
-	 * .client.display.vo.epub.EpubDetailReq)
-	 */
+    private List<EpubDetail> getEpubSeries(EpubSeriesReq epubSeriesReq) {
+        return this.commonDAO.queryForList("EpubDetail.selectEpubSeries", epubSeriesReq, EpubDetail.class);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.skplanet.storeplatform.sac.display.epub.service.EpubService#searchEpubSeries(com.skplanet.storeplatform.sac
+     * .client.display.vo.epub.EpubDetailReq)
+     */
 	@Override
 	public EpubSeriesRes searchEpubSeries(EpubSeriesReq req) {
         EpubSeriesRes res = new EpubSeriesRes();
@@ -123,7 +133,7 @@ public class EpubServceImpl implements EpubService {
 
             // 단행인 경우 시리즈 정보를 제공
             if (sMetaClsCd.equals("CT19")) {
-                List<EpubDetail> epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubDetail.class);
+                List<EpubDetail> epubSeriesList = getEpubSeries(req);
 
                 // TODO:
                 //this.mapSubProductList_dummy(product);
