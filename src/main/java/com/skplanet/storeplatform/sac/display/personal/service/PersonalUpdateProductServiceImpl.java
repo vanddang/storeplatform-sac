@@ -264,7 +264,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							historyListSacReq.setEndDt(endDate);
 							// TODO osm1021 offset 제거 필요
 							historyListSacReq.setOffset(1);
-							historyListSacReq.setCount(productListSacInList.size());
+							historyListSacReq.setCount(1000);
 							historyListSacReq.setProductList(productListSacInList);
 
 							// 구매내역 조회 실행
