@@ -89,14 +89,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
-		// ?? 회원 정보 조회 회원SCI 조회.
+		// 회원 SCI 연동, 회원조회, 없으면 Exception.
 		this.feedbackRepository.searchUserByUserKey(createFeedbackSacReq.getUserKey());
 
-		// 평점 저장
+		// 평점 저장.
 		this.setMbrAvgTenantProdStats(createFeedbackSacReq, sacRequestHeader);
 
 		String notiSeq = "";
 
+		// 사용후기 내용이 있으면.
 		if (StringUtils.isNotEmpty(createFeedbackSacReq.getNotiDscr())) {
 
 			ProdNoti prodNoti = new ProdNoti();
@@ -112,12 +113,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 			prodNoti.setPkgVer(createFeedbackSacReq.getPkgVer());
 			prodNoti.setChnlId(createFeedbackSacReq.getChnlId());
 			prodNoti.setRegId(createFeedbackSacReq.getUserId());
+			// 기등록여부 확인.
 			ProdNoti getRegProdNoti = this.feedbackRepository.getRegProdNoti(prodNoti);
 			if (getRegProdNoti == null) {
+				// 등록.
 				int affectedRow = (Integer) this.feedbackRepository.insertProdNoti(prodNoti);
 				if (affectedRow <= 0)
 					throw new StorePlatformException("SAC_OTH_1001");
 			} else {
+				// 에러.
 				throw new StorePlatformException("SAC_OTH_1001");
 			}
 			notiSeq = prodNoti.getNotiSeq();
@@ -132,7 +136,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public ModifyFeedbackSacRes modify(ModifyFeedbackSacReq modifyFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
-		// ?? 회원 정보 조회 회원SCI 조회.
+		// 회원 SCI 연동, 회원조회, 없으면 Exception.
 		this.feedbackRepository.searchUserByUserKey(modifyFeedbackSacReq.getUserKey());
 
 		// 평점 저장.
@@ -140,24 +144,22 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		String notiSeq = "";
 
+		// 사용후기 내용이 있으면.
 		if (StringUtils.isNotEmpty(modifyFeedbackSacReq.getNotiDscr())) {
 			ProdNoti prodNoti = new ProdNoti();
 			prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 			prodNoti.setNotiSeq(modifyFeedbackSacReq.getNotiSeq());
 			prodNoti.setMbrNo(modifyFeedbackSacReq.getUserKey());
-			// prodNoti.setProdId(modifyFeedbackSacReq.getProdId());
 			prodNoti.setTitle(modifyFeedbackSacReq.getNotiTitle());
 			prodNoti.setNotiDscr(modifyFeedbackSacReq.getNotiDscr());
-			// prodNoti.setRegId(createFeedbackSacReq.getUserId());
-			// prodNoti.setMbrTelno(createFeedbackSacReq.getDeviceId());
-			// prodNoti.setFbPostYn(createFeedbackSacReq.getFbSendYN());
 			prodNoti.setDeviceModelCd(sacRequestHeader.getDeviceHeader().getModel());
 			prodNoti.setPkgVer(modifyFeedbackSacReq.getPkgVer());
-			// prodNoti.setChnlId(modifyFeedbackSacReq.getChnlId());
 
+			// 사용후기 수정.
 			int affectedRow = (Integer) this.feedbackRepository.updateProdNoti(prodNoti);
 
 			if (affectedRow > 0) {
+				// 사용후기가 수정되면 사용후기 추천은 삭제한다.
 				ProdNotiGood prodNotiGood = new ProdNotiGood();
 				prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 				prodNotiGood.setNotiSeq(modifyFeedbackSacReq.getNotiSeq());
@@ -178,7 +180,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public RemoveFeedbackSacRes remove(RemoveFeedbackSacReq removeFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
-		// ?? 회원 정보 조회 회원SCI 조회.
+		// 회원 SCI 연동, 회원조회, 없으면 Exception.
 		this.feedbackRepository.searchUserByUserKey(removeFeedbackSacReq.getUserKey());
 
 		// 기 평가여부 조회
@@ -188,16 +190,21 @@ public class FeedbackServiceImpl implements FeedbackService {
 		mbrAvg.setProdId(removeFeedbackSacReq.getProdId());
 		MbrAvg getRegMbrAvg = this.feedbackRepository.getRegMbrAvg(mbrAvg);
 		if (getRegMbrAvg != null) {
+			// 기 평가가 존재하면 삭제.
 			this.feedbackRepository.deleteMbrAvg(mbrAvg);
 			TenantProdStats tenantProdStats = new TenantProdStats();
 			tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 			tenantProdStats.setProdId(removeFeedbackSacReq.getProdId());
 			tenantProdStats.setUpdId(removeFeedbackSacReq.getUserId());
+			// 상품 통계가 존재하면.
 			TenantProdStats getTenantProdStats = this.feedbackRepository.getTenantProdStats(tenantProdStats);
 			if (getTenantProdStats != null) {
+				// 참여수가 1일경우 삭제.(모두 0으로 업데이트).
 				if (NumberUtils.toInt(getTenantProdStats.getPaticpersCnt(), 0) == 1) {
 					this.feedbackRepository.deleteTenantProdStats(tenantProdStats);
 				} else {
+
+					// 그외는 업데이트한다.
 					TenantProdStats updateTenantProdStats = new TenantProdStats();
 					updateTenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 					updateTenantProdStats.setProdId(removeFeedbackSacReq.getProdId());
@@ -210,11 +217,10 @@ public class FeedbackServiceImpl implements FeedbackService {
 			}
 		}
 
+		// 사용후기 삭제, DEL_YN = 'Y'.
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		prodNoti.setNotiSeq(removeFeedbackSacReq.getNotiSeq());
-		// 삭제는 DEL_YN만 셋팅해준다.
-		// prodNoti.setNotiDscr(StringUtils.EMPTY);
 		prodNoti.setMbrNo(removeFeedbackSacReq.getUserKey());
 		int affectedRow = (Integer) this.feedbackRepository.deleteProdNoti(prodNoti);
 		if (affectedRow <= 0) {
@@ -232,9 +238,10 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public CreateRecommendFeedbackSacRes createRecommend(CreateRecommendFeedbackSacReq createRecommendFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
 
-		// ?? 회원 정보 조회 회원SCI 조회.
+		// 회원 SCI 연동, 회원조회, 없으면 Exception.
 		this.feedbackRepository.searchUserByUserKey(createRecommendFeedbackReq.getUserKey());
 
+		// 기 추천여부 조회.
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		prodNoti.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
@@ -247,6 +254,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			throw new StorePlatformException("SAC_OTH_1001");
 		}
 
+		// 사용후기 추천 등록.
 		ProdNotiGood prodNotiGood = new ProdNotiGood();
 		prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		prodNotiGood.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
@@ -258,36 +266,43 @@ public class FeedbackServiceImpl implements FeedbackService {
 			throw new StorePlatformException("SAC_OTH_1001");
 		}
 
+		// 사용후기 추천 업데이트.
 		prodNotiGood.setAction("create");
 		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
 
 		if (affectedRow <= 0) {
 			throw new StorePlatformException("SAC_OTH_1002");
 		}
-		// }
 
-		// 추천은 현재 수정 반영된 1건만 조회.
 		prodNoti.setStartRow("1");
 		prodNoti.setEndRow("1");
+		// 등록된 사용후기 조회.
 		ProdNoti res = this.feedbackRepository.getProdNoti(prodNoti);
 
 		if (res == null) {
 			throw new StorePlatformException("SAC_OTH_9001");
 		}
 
+		// 판매자 요청 리스트.
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
-		// notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
 		SellerMbrSac sellerMbrSac = new SellerMbrSac();
 		sellerMbrSac.setSellerKey(res.getSellerMbrNo());
 		sellerMbrSacList.add(sellerMbrSac);
 
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
-		DetailInformationSacRes detailInformationSacRes = this.feedbackRepository
-				.detailInformation(detailInformationSacReq);
+		DetailInformationSacRes detailInformationSacRes = null;
+		// 판매자 조회.
+		try {
+			detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
+		} catch (Exception e) {
+			detailInformationSacRes = null;
+		}
 
+		// 응답 셋팅.
 		Feedback feedback = this.setFeedback(res, "", detailInformationSacRes);
 
+		// 응답.
 		CreateRecommendFeedbackSacRes createRecommendFeedbackSacRes = new CreateRecommendFeedbackSacRes();
 		BeanUtils.copyProperties(feedback, createRecommendFeedbackSacRes);
 
@@ -298,8 +313,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public RemoveRecommendFeedbackSacRes removeRecommend(RemoveRecommendFeedbackSacReq removeRecommendFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
 
-		// ?? 회원 정보 조회 회원SCI 조회.
-		// this.feedbackRepository.searchUserByUserKey(removeRecommendFeedbackSacReq.getUserKey());
+		// 회원 SCI 연동, 회원조회, 없으면 Exception.
+		this.feedbackRepository.searchUserByUserKey(removeRecommendFeedbackSacReq.getUserKey());
 
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
@@ -307,6 +322,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setProdId(removeRecommendFeedbackSacReq.getProdId());
 		prodNoti.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
 
+		// 사용후기 추천 삭제.
 		ProdNotiGood prodNotiGood = new ProdNotiGood();
 		prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
@@ -317,36 +333,44 @@ public class FeedbackServiceImpl implements FeedbackService {
 			throw new StorePlatformException("SAC_OTH_1003");
 		}
 
+		// 사용후기 추천 업데이트.
 		prodNotiGood.setAction("remove");
 		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
 
 		if (affectedRow <= 0) {
 			throw new StorePlatformException("SAC_OTH_1002");
 		}
-		// }
 
-		// 추천 취소는 현재 수정된 1건만 조회.
 		prodNoti.setStartRow("1");
 		prodNoti.setEndRow("1");
+
+		// 삭제된 사용후기 조회.
 		ProdNoti res = this.feedbackRepository.getProdNoti(prodNoti);
 
 		if (res == null) {
 			throw new StorePlatformException("SAC_OTH_9001");
 		}
 
+		// 판매자 요청 리스트.
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
-		// notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
 		SellerMbrSac sellerMbrSac = new SellerMbrSac();
 		sellerMbrSac.setSellerKey(res.getSellerMbrNo());
 		sellerMbrSacList.add(sellerMbrSac);
 
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
-		DetailInformationSacRes detailInformationSacRes = this.feedbackRepository
-				.detailInformation(detailInformationSacReq);
+		DetailInformationSacRes detailInformationSacRes = null;
+		// 판매자 조회.
+		try {
+			detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
+		} catch (Exception e) {
+			detailInformationSacRes = null;
+		}
 
+		// 응답셋팅.
 		Feedback feedback = this.setFeedback(res, "", detailInformationSacRes);
 
+		// 응답
 		RemoveRecommendFeedbackSacRes removeRecommendFeedbackSacRes = new RemoveRecommendFeedbackSacRes();
 		BeanUtils.copyProperties(feedback, removeRecommendFeedbackSacRes);
 
@@ -356,6 +380,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public ListFeedbackSacRes list(ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
+		// 사용후기 평균평점.
 		TenantProdStats tenantProdStats = new TenantProdStats();
 		tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		tenantProdStats.setProdId(listFeedbackSacReq.getProdId());
@@ -368,6 +393,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		listFeedbackRes.setAvgEvluScore(getProdEvalInfo.getAvgEvluScore());
 		listFeedbackRes.setDwldCnt(getProdEvalInfo.getDwldCnt());
 		listFeedbackRes.setPaticpersCnt(getProdEvalInfo.getPaticpersCnt());
+		// 페이징 처리.
 		int offset = listFeedbackSacReq.getOffset() == 0 ? 1 : listFeedbackSacReq.getOffset();
 		int count = listFeedbackSacReq.getCount() == 0 ? 10 : (offset + listFeedbackSacReq.getCount()) - 1;
 		ProdNoti prodNoti = new ProdNoti();
@@ -379,41 +405,46 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setProdType(listFeedbackSacReq.getProdType());
 		prodNoti.setStartRow(String.valueOf(offset));
 		prodNoti.setEndRow(String.valueOf(count));
+		// 사용후기 카운트.
 		int totalCount = (Integer) this.feedbackRepository.getProdNotiCount(prodNoti);
 		if (totalCount <= 0) {
 			throw new StorePlatformException("SAC_OTH_9001");
 		}
 		listFeedbackRes.setNotiTot(String.valueOf(totalCount));
+		// 사용후기 목록.
 		List<ProdNoti> getProdnotiList = this.feedbackRepository.getProdNotiList(prodNoti);
 		if (CollectionUtils.isEmpty(getProdnotiList)) {
 			throw new StorePlatformException("SAC_OTH_9001");
 		}
+
 		List<Feedback> notiList = new ArrayList<Feedback>();
 
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 		Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
 
+		// 판매자 요청 리스트.
 		for (ProdNoti res : getProdnotiList) {
-			// 판매자 회원정보 가져오기.
-			// notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
 			SellerMbrSac sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setSellerKey(res.getSellerMbrNo());
 			sellerMbrSacSet.add(sellerMbrSac);
 		}
+
 		sellerMbrSacList.addAll(sellerMbrSacSet);
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
 		DetailInformationSacRes detailInformationSacRes = null;
 
+		// 판매자 조회.
 		try {
 			this.feedbackRepository.detailInformation(detailInformationSacReq);
 		} catch (Exception e) {
 			detailInformationSacRes = null;
 		}
+		// 응답셋팅.
 		for (ProdNoti res : getProdnotiList) {
 			notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType(), detailInformationSacRes));
 		}
-
+		// 응답.
 		listFeedbackRes.setNotiList(notiList);
 		return listFeedbackRes;
 	}
@@ -422,6 +453,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
 
+		// 페이징 처리.
 		int offset = listMyFeedbackSacReq.getOffset() == 0 ? 1 : listMyFeedbackSacReq.getOffset();
 		int count = listMyFeedbackSacReq.getCount() == 0 ? 100 : (offset + listMyFeedbackSacReq.getCount()) - 1;
 
@@ -439,12 +471,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setStartRow(String.valueOf(offset));
 		prodNoti.setEndRow(String.valueOf(count));
 
+		// 사용후기 카운트.
 		int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
 
 		if (notiTot <= 0) {
 			throw new StorePlatformException("SAC_OTH_9001");
 		}
 
+		// 사용후기 목록.
 		ListMyFeedbackSacRes listMyFeedbackSacRes = new ListMyFeedbackSacRes();
 		listMyFeedbackSacRes.setNotiTot(String.valueOf(notiTot));
 
@@ -459,9 +493,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 		Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
 
+		// 판매자 요청 리스트.
 		for (ProdNoti res : getMyProdNotiList) {
-			// 판매자 회원정보 가져오기.
-			// notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
 			SellerMbrSac sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setSellerKey(res.getSellerMbrNo());
 			sellerMbrSacSet.add(sellerMbrSac);
@@ -469,16 +502,21 @@ public class FeedbackServiceImpl implements FeedbackService {
 		sellerMbrSacList.addAll(sellerMbrSacSet);
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
-		DetailInformationSacRes detailInformationSacRes = this.feedbackRepository
-				.detailInformation(detailInformationSacReq);
-
+		DetailInformationSacRes detailInformationSacRes = null;
+		// 판매자 조회.
+		try {
+			detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
+		} catch (Exception e) {
+			detailInformationSacRes = null;
+		}
+		// 응답셋팅.
 		for (ProdNoti res : getMyProdNotiList) {
 			Feedback feedback = this.setFeedback(res, listMyFeedbackSacReq.getProdType(), detailInformationSacRes);
 			FeedbackMy feedbackMy = new FeedbackMy();
 			BeanUtils.copyProperties(feedback, feedbackMy);
 			notiMyList.add(feedbackMy);
 		}
-
+		// 응답
 		listMyFeedbackSacRes.setNotiList(notiMyList);
 		return listMyFeedbackSacRes;
 	}
