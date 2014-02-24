@@ -454,7 +454,29 @@ public class UserModifyServiceImpl implements UserModifyService {
 					updateGuardianEcReq.setParentBirthday(req.getUserBirthDay());
 					updateGuardianEcReq.setParentEmail(req.getParentEmail());
 					updateGuardianEcReq.setParentApproveDate(req.getRealNameDate()); // 법정대리인동의일자 (YYYYMMDD)
-					this.imIdpSCI.updateGuardian(updateGuardianEcReq);
+
+					try {
+						this.imIdpSCI.updateGuardian(updateGuardianEcReq);
+					} catch (StorePlatformException spe) {
+
+						if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + "2402X000")) {
+
+							/**
+							 * IDP 에러 [[ 2402X000 : 법정대리인 동의된 회원입니다.]] ==> Skip 처리 한다.
+							 * 
+							 * 2014.02.21 임재호K 협의. (IDP의 실명인증과 SAC의 실명인증은 별개로 본다.)
+							 */
+							LOGGER.info("## >> Skip 처리 한다.");
+							LOGGER.info("## >> Error Code : {}", spe.getErrorInfo().getCode());
+							LOGGER.info("## >> Error Msg  : {}", spe.getErrorInfo().getMessage());
+
+						} else {
+
+							throw spe;
+
+						}
+
+					}
 
 				} else { // 법인
 
