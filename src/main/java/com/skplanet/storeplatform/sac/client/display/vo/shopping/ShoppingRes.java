@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 
 /**
  * <pre>
- * 쇼핑 Value Object
+ * 쇼핑 Value Object.
  * </pre>
  * 
  * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
@@ -33,18 +33,17 @@ public class ShoppingRes extends CommonInfo {
 	private Layout layOut;
 	private List<Product> productList;
 
-	public List<Product> getProductList() {
-		return this.productList;
-	}
-
-	public void setProductList(List<Product> productList) {
-		this.productList = productList;
-	}
-
+	/**
+	 * @return the commonResponse
+	 */
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
+	/**
+	 * @param commonResponse
+	 *            the commonResponse to set
+	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
@@ -62,6 +61,21 @@ public class ShoppingRes extends CommonInfo {
 	 */
 	public void setLayOut(Layout layOut) {
 		this.layOut = layOut;
+	}
+
+	/**
+	 * @return the productList
+	 */
+	public List<Product> getProductList() {
+		return this.productList;
+	}
+
+	/**
+	 * @param productList
+	 *            the productList to set
+	 */
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
 	}
 
 }
