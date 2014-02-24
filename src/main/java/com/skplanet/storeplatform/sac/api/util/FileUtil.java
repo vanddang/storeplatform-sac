@@ -128,13 +128,11 @@ public class FileUtil {
 			while (-1 != (rsize = bufferedReader.read(buff, 0, BUFFER_SIZE))) {
 				result.append(buff, 0, rsize);
 			}
+			bufferedReader.close();
 		} catch (IOException ioe) {
 			bufferedReader.close();
 			throw new Exception(ioe);
-		} finally {
-			bufferedReader.close();
 		}
-
 		return result.toString();
 	}
 
