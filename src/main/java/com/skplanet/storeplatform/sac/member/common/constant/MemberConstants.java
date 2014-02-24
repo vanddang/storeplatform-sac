@@ -26,6 +26,7 @@ public final class MemberConstants {
 
 	public static final String SC_ERROR_DARK = "SC_MEM_9991"; // SC 알수없는에러(보통 DB에 2건이상 존재할때)
 	public static final String SC_ERROR_NO_DATA = "SC_MEM_9982"; // SC 검색결과 없음
+	public static final String SC_ERROR_NO_USERKEY = "SC_MEM_9995"; // 회원키 없음
 
 	/** EC IDP 에러 코드 문자열. */
 	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";

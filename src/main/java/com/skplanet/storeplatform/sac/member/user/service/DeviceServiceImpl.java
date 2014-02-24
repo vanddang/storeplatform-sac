@@ -759,7 +759,19 @@ public class DeviceServiceImpl implements DeviceService {
 		schDeviceReq.setUserKey(deviceInfo.getUserKey());
 		schDeviceReq.setKeySearchList(keySearchList);
 
-		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
+		SearchDeviceResponse schDeviceRes = null;
+
+		try {
+
+			schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
+
+		} catch (StorePlatformException ex) {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+			} else {
+				throw ex;
+			}
+		}
 
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
 
@@ -977,7 +989,18 @@ public class DeviceServiceImpl implements DeviceService {
 		key.setKeyString(keyString);
 		keySearchList.add(key);
 		schUserReq.setKeySearchList(keySearchList);
-		return this.userSCI.searchUser(schUserReq);
+
+		try {
+			return this.userSCI.searchUser(schUserReq);
+		} catch (StorePlatformException ex) {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)
+					|| ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_USERKEY)) {
+				throw new StorePlatformException("SAC_MEM_0003", "userKey", keyString);
+			} else {
+				throw ex;
+			}
+		}
+
 	}
 
 	/**
