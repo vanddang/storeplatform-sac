@@ -24,8 +24,8 @@ public class HidingListSac extends CommonInfo implements Serializable {
 	@Min(1)
 	@NotNull
 	private Integer prchsDtlId; // 상품 아이디
-	// @NotNull
-	// @NotEmpty
+	@NotNull
+	@NotEmpty
 	private String sendYn; // 미보유상품 숨김처리 Y, 보유상품 숨김처리 N
 	@NotNull
 	@NotEmpty

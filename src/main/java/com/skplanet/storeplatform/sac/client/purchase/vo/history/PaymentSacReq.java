@@ -10,10 +10,9 @@
 package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -28,12 +27,7 @@ public class PaymentSacReq extends CommonInfo implements Serializable {
 
 	private String tenantId; // Tenant ID
 	@NotNull
-	@NotEmpty
-	private String userKey; // 내부사용자번호
-	private String deviceKey; // 내부디바이스ID
-	@NotNull
-	@NotEmpty
-	private String prchsId; // 구매ID
+	private List<String> prchsIdList; // 구매ID
 
 	/**
 	 * @return the tenantId
@@ -51,48 +45,18 @@ public class PaymentSacReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the userKey
+	 * @return the prchsIdList
 	 */
-	public String getUserKey() {
-		return this.userKey;
+	public List<String> getPrchsIdList() {
+		return this.prchsIdList;
 	}
 
 	/**
-	 * @param userKey
-	 *            the userKey to set
+	 * @param prchsIdList
+	 *            the prchsIdList to set
 	 */
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
-	}
-
-	/**
-	 * @return the deviceKey
-	 */
-	public String getDeviceKey() {
-		return this.deviceKey;
-	}
-
-	/**
-	 * @param deviceKey
-	 *            the deviceKey to set
-	 */
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
-	}
-
-	/**
-	 * @return the prchsId
-	 */
-	public String getPrchsId() {
-		return this.prchsId;
-	}
-
-	/**
-	 * @param prchsId
-	 *            the prchsId to set
-	 */
-	public void setPrchsId(String prchsId) {
-		this.prchsId = prchsId;
+	public void setPrchsIdList(List<String> prchsIdList) {
+		this.prchsIdList = prchsIdList;
 	}
 
 }
