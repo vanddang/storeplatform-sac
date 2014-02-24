@@ -398,10 +398,10 @@ public class ShoppingCouponSacController {
 			if (couponReq == null) {
 				result = false;
 				sb.append("Parameter정보가 없습니다.");
-			} else if (!couponReq.checkTX_ID()) {
+			} else if (!couponReq.checkTxId()) {
 				result = false;
 				sb.append("TX_ID 형식에 맞지 않습니다. [22자리]\n");
-			} else if (!couponReq.checkTX_TYPE()) {
+			} else if (!couponReq.checkTxType()) {
 				result = false;
 				sb.append("TX_TYPE 형식에 맞지 않습니다. [2자리]\n");
 			}
@@ -674,7 +674,7 @@ public class ShoppingCouponSacController {
 			}
 			this.log.debug("-------------------jade 추가 E---------------------------------------------");
 
-			if (couponReq.checkTX_TYPE()) {
+			if (couponReq.checkTxType()) {
 
 				switch (TX_TYPE_CODE.get(couponReq.getTxType())) {
 
