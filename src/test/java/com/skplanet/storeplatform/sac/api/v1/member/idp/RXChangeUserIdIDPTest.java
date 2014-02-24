@@ -37,9 +37,9 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class RXDeleteUserIdIDPTest {
+public class RXChangeUserIdIDPTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RXDeleteUserIdIDPTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RXChangeUserIdIDPTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -59,11 +59,11 @@ public class RXDeleteUserIdIDPTest {
 
 	/**
 	 * <pre>
-	 * 전체 서비스 사이트 해지배포.
+	 * 통합 ID 변경 배포.
 	 * </pre>
 	 */
 	@Test
-	public void rXDeleteUserIdIDP() {//
+	public void rXChangeUserIdIDP() {//
 
 		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
@@ -71,21 +71,23 @@ public class RXDeleteUserIdIDPTest {
 					public Object requestBody() {
 						ProvisioningReq req = new ProvisioningReq();
 						req.setCmd("RXDeleteUserIdIDP");
-						/* 전체 서비스 사이트 해지배포 시작 */
+						/* 통합 ID 변경 배포 시작 */
 						HashMap<String, String> resultMap = new HashMap<String, String>();
 
 						resultMap.put("tenantID", "S01"); // 현재 하드코딩 파라미터가 정상으로 전달되어지면 지워야함.
 						resultMap.put("systemID", "S001");
 
-						resultMap.put("is_email_auth", "Y");
-						resultMap.put("user_status_code", "10");
-						resultMap.put("trx_no", "900002013101609194051508");
-						resultMap.put("sp_id", "OMP10000");
-						resultMap.put("im_int_svc_no", "200000545221");
 						resultMap.put("target_sst_cd", "41100");
-						resultMap.put("user_id", "test0127@test0127.com");
+						resultMap.put("new_user_id", "vktmxl1234_0001_xxx");
+						resultMap.put("modify_req_time", "112658");
+						resultMap.put("im_int_svc_no", "200000550246");
+						resultMap.put("modify_req_date", "20131001");
+						resultMap.put("user_key", "IM120000055024620131212101129");
+						resultMap.put("sp_id", "OMP10000");
+						resultMap.put("modify_sst_code", "90300");
+						resultMap.put("trx_no", "900002013100111265856456");
 
-						/* 전체 서비스 사이트 해지배포 끝 */
+						/* 통합 ID 변경 배포 끝 */
 						req.setReqParam(resultMap);
 
 						LOGGER.info("request param : {}", req.toString());
@@ -96,8 +98,8 @@ public class RXDeleteUserIdIDPTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ProvisioningRes res = (ProvisioningRes) result;
 						assertThat(res.getImResult(), notNullValue());
-						assertThat(res.getImResult().getCmd(), is("RXDeleteUserIdIDP"));
-						assertEquals("test0127@test0127.com", res.getImResult().getUserId());
+						assertThat(res.getImResult().getCmd(), is("RXChangeUserIdIDP"));
+						assertEquals("vktmxl1234_0001_xxx", res.getImResult().getUserId());
 						LOGGER.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
