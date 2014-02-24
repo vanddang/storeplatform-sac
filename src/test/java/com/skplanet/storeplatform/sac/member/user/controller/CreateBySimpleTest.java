@@ -73,7 +73,7 @@ public class CreateBySimpleTest {
 		 * 
 		 * 정의된 시간(2초)내에 동일한 요청을 받았습니다.
 		 */
-		Thread.sleep(2000);
+		Thread.sleep(5000);
 	}
 
 	/**
