@@ -220,6 +220,8 @@ public class CategoryController {
 	 * 
 	 * @param req
 	 *            req
+	 * @param bindingResult
+	 *            bindingResult
 	 * @param header
 	 *            header
 	 * @return CategorySpecificSacRes
