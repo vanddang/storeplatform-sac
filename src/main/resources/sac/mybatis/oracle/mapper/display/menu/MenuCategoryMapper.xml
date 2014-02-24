@@ -241,13 +241,12 @@
 		                    
 		                    /* 이북 */
 		                    <if test="topMenuId == 'DP13'">
-		                    AND C.META_CLSF_CD IN ('CT19','CT20')
 		                    AND G.EBOOK_SPRT_YN = 'Y'
 		                    </if>
 		                    
 		                    /* 코믹 */
 		                    <if test="topMenuId == 'DP14'">
-		                    AND DECODE(C.META_CLSF_CD, 'CT21', G.COMIC_SPRT_YN, 'CT22', G.MAGAZINE_SPRT_YN) = 'Y'
+		                    AND G.COMIC_SPRT_YN = 'Y'
 		                    </if>
 		                    
 		                    AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
