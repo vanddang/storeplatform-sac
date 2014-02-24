@@ -53,7 +53,6 @@ public class HistoryListController {
 	 * @param requestHeader
 	 *            공통헤더정보
 	 * @return HistoryListSacRes
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -67,7 +66,7 @@ public class HistoryListController {
 	}
 
 	/**
-	 * 구매내역건수 조회 기능을 제공한다.
+	 * 구매건수 조회 기능을 제공한다.
 	 * 
 	 * @param request
 	 *            구매내역요청

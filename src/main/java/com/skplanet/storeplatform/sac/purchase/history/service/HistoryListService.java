@@ -33,7 +33,7 @@ public interface HistoryListService {
 	public HistoryListSacRes searchHistoryList(HistoryListSacReq request);
 
 	/**
-	 * 구매내역건수 조회 기능을 제공한다.
+	 * 구매건수 조회 기능을 제공한다.
 	 * 
 	 * @param request
 	 *            구매내역요청

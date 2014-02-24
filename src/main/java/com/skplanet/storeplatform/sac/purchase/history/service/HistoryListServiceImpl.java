@@ -61,8 +61,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 * 
 	 * @param request
 	 *            구매내역요청
-	 * @param requestHeader
-	 *            공통헤더정보
 	 * @return HistoryListSacRes
 	 */
 	@Override
@@ -122,6 +120,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		if (PurchaseConstants.USE_Y.equals(request.getPrchsProdHaveYn())) {
 			scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
 		}
+		scRequest.setGiftRecvConfYn(request.getGiftRecvConfYn());
 
 		// pageInfo set
 		scRequest.getPage().setNo(request.getOffset());
@@ -202,6 +201,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setResvCol03(obj.getResvCol03());
 			historySac.setResvCol04(obj.getResvCol04());
 			historySac.setResvCol05(obj.getResvCol05());
+			historySac.setDrmYn(obj.getDrmYn());
+			historySac.setAlarmYn(obj.getAlarmYn());
 
 			sacHistoryList.add(historySac);
 
@@ -246,7 +247,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 	}
 
 	/**
-	 * 구매내역건수 조회 기능을 제공한다.
+	 * 구매건수 조회 기능을 제공한다.
 	 * 
 	 * @param request
 	 *            구매내역요청
@@ -279,11 +280,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setPrchsReqPathCd(request.getPrchsReqPathCd());
 		scRequest.setPrchsCaseCd(request.getPrchsCaseCd());
 		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
-
-		// 보유상품 조회일 때만 해당값이 조회 조건으로 사용된다.
-		if (PurchaseConstants.USE_Y.equals(request.getPrchsProdHaveYn())) {
-			scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
-		}
+		scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
 
 		// TenantProdGrpCd가 요청값으로 전달되면 구매 정책을 확인한다. (Device기반 구매내역관리)
 		// TenantProdGrpCd가 Device기반 정책이면 device_key를 세팅하고 아니면 공백처리하여 쿼리 조건으로 사용되지 않게 처리됨
@@ -305,9 +302,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 				}
 			}
 		}
-		scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
 		scRequest.setProductList(prodList);
 		scRequest.setHidingYn(request.getHidingYn());
+		scRequest.setGiftRecvConfYn(request.getGiftRecvConfYn());
 
 		/*************************************************
 		 * SC Request Setting End

@@ -50,7 +50,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 	private HistoryListService service;
 
 	/**
-	 * 구매내역 조회 기능을 제공한다(보유상품).
+	 * 구매내역 조회 기능을 제공한다.
 	 * 
 	 * @param request
 	 *            구매내역요청
@@ -98,6 +98,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		sacReq.setUseFixrateProdId(request.getUseFixrateProdId());
 		sacReq.setProductList(productList);
 		sacReq.setHidingYn(request.getHidingYn());
+		sacReq.setGiftRecvConfYn(request.getGiftRecvConfYn());
 		sacReq.setOffset(request.getOffset());
 		sacReq.setCount(request.getCount());
 
@@ -148,6 +149,8 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 			historySacIn.setResvCol03(obj.getResvCol03());
 			historySacIn.setResvCol04(obj.getResvCol04());
 			historySacIn.setResvCol05(obj.getResvCol05());
+			historySacIn.setDrmYn(obj.getDrmYn());
+			historySacIn.setAlarmYn(obj.getAlarmYn());
 
 			// 수신자 정보 set
 			historySacIn.setRecvTenantId(obj.getRecvTenantId());
@@ -176,7 +179,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 	}
 
 	/**
-	 * 구매내역 건수 조회(보유상품).
+	 * 구매건수 조회 기능을 제공한다.
 	 * 
 	 * @param request
 	 *            구매내역요청
@@ -214,6 +217,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		sacReq.setUseFixrateProdId(request.getUseFixrateProdId());
 		sacReq.setProductList(productList);
 		sacReq.setHidingYn(request.getHidingYn());
+		sacReq.setGiftRecvConfYn(request.getGiftRecvConfYn());
 
 		sacRes = this.service.searchHistoryCount(sacReq);
 
