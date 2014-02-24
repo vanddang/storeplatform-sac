@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -43,11 +44,14 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceSystemStats;
 import com.skplanet.storeplatform.member.client.user.sci.vo.GameCenter;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterRequest;
@@ -67,6 +71,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DailyPhone;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DailyPhoneOs;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -75,6 +81,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
@@ -807,66 +814,50 @@ public class UserSearchServiceImpl implements UserSearchService {
 	}
 
 	/* 각 단말의 OS별 누적 가입자 수 조회 */
-	//	@Override
-	//	public ListDailyPhoneOsSacRes listDailyPhoneOs(SacRequestHeader sacHeader) {
-	//		/* 헤더 정보 셋팅 */
-	//		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-	//		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-	//
-	//		SearchDeviceOSNumberRequest scReq = new SearchDeviceOSNumberRequest();
-	//		scReq.setCommonRequest(commonRequest);
-	//		SearchDeviceOSNumberResponse scRes = this.userSCI.searchDeviceOSNumber(scReq);
-	//
-	//		ListDailyPhoneOsSacRes dailyPhoneOsSacList = new ListDailyPhoneOsSacRes();
-	//		List<DailyPhoneOs> phoneOsList = new ArrayList<DailyPhoneOs>();
-	//		List<DailyPhone> dailyPhoneList = new ArrayList<DailyPhone>();
-	//		List<DailyPhone> dailyPhoneList2 = new ArrayList<DailyPhone>();
-	//
-	//		HashMap<String, Object> resOsMap = new HashMap<String, Object>();
-	//
-	//		for (int i = 0; i < scRes.getDeviceSystemStatsList().size(); i++) {
-	//			// Debug
-	//			DailyPhone dailyPhone = new DailyPhone();
-	//			DailyPhoneOs dailyPhoneOs = new DailyPhoneOs();
-	//
-	//			//			dailyPhone.setModelName(scRes.getDeviceSystemStatsList().get(j).getModelName());
-	//			//			dailyPhone.setOsVersion(scRes.getDeviceSystemStatsList().get(j).getOsVersion());
-	//			//			dailyPhone.setEnctryCount(scRes.getDeviceSystemStatsList().get(j).getEntryCount());
-	//			//			dailyPhoneList.add(dailyPhone);
-	//
-	//			//					resOsMap.put(scRes.getDeviceSystemStatsList().get(i).getModelName() + "_list", dailyPhoneList);
-	//			// Device Name 담고
-	//
-	//			dailyPhoneOs.setModelName(scRes.getDeviceSystemStatsList().get(i).getModelName());
-	//
-	//			dailyPhone.setOsVersion(StringUtil.setTrim(scRes.getDeviceSystemStatsList().get(i).getOsVersion()));
-	//			dailyPhone.setEnctryCount(StringUtil.setTrim(scRes.getDeviceSystemStatsList().get(i).getEntryCount()));
-	//			dailyPhone.setModelName(StringUtil.setTrim(scRes.getDeviceSystemStatsList().get(i).getModelName()));
-	//
-	//			dailyPhoneList.add(dailyPhone);
-	//			dailyPhoneOs.setPhoneOsList(dailyPhoneList);
-	//
-	//			if (phoneOsList.size() != 0) {
-	//				if (phoneOsList.get(i - 1).getModelName().equals(scRes.getDeviceSystemStatsList().get(i).getModelName())) {
-	//					dailyPhone.setOsVersion(StringUtil.setTrim(scRes.getDeviceSystemStatsList().get(i).getOsVersion()));
-	//					dailyPhone.setEnctryCount(StringUtil.setTrim(scRes.getDeviceSystemStatsList().get(i).getEntryCount()));
-	//					dailyPhone.setModelName(StringUtil.setTrim(scRes.getDeviceSystemStatsList().get(i).getModelName()));
-	//
-	//					dailyPhoneList.add(dailyPhone);
-	//					dailyPhoneOs.setPhoneOsList(dailyPhoneList);
-	//
-	//				}
-	//			}
-	//
-	//			phoneOsList.add(dailyPhoneOs);
-	//
-	//		}
-	//		dailyPhoneOsSacList.setDailyPhoneList(phoneOsList);
-	//
-	//		//		dailyPhoneOsSacList.setDailyPhoneNameList(dailyPhoneNameList);
-	//		return dailyPhoneOsSacList;
-	//
-	//	}
+	@Override
+	public ListDailyPhoneOsSacRes listDailyPhoneOs(SacRequestHeader sacHeader) {
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		SearchDeviceOSNumberRequest scReq = new SearchDeviceOSNumberRequest();
+		scReq.setCommonRequest(commonRequest);
+		SearchDeviceOSNumberResponse scRes = this.userSCI.searchDeviceOSNumber(scReq);
+
+		Iterator<List<DeviceSystemStats>> it = scRes.getDeviceSystemStatsMap().values().iterator();
+
+		List<DailyPhoneOs> phoneOsList = new ArrayList<DailyPhoneOs>();
+
+		while (it.hasNext()) {
+			List<DeviceSystemStats> deviceSystemStats = it.next();
+
+			List<DailyPhone> dailyPhoneList = new ArrayList<DailyPhone>();
+
+			DailyPhoneOs dailyPhoneOs = new DailyPhoneOs();
+
+			for (DeviceSystemStats stats : deviceSystemStats) {
+				DailyPhone dailyPhone = new DailyPhone();
+
+				dailyPhone.setOsVersion(StringUtil.setTrim(stats.getOsVersion()));
+				dailyPhone.setEnctryCount(StringUtil.setTrim(stats.getEntryCount()));
+				//				dailyPhone.setModelName(StringUtil.setTrim(stats.getModelName()));
+
+				dailyPhoneList.add(dailyPhone);
+				dailyPhoneOs.setPhoneOsList(dailyPhoneList);
+				dailyPhoneOs.setModelName(StringUtil.setTrim(stats.getModelName()));
+
+			}
+
+			phoneOsList.add(dailyPhoneOs);
+
+		}
+		ListDailyPhoneOsSacRes dailyPhoneOsSacList = new ListDailyPhoneOsSacRes();
+		dailyPhoneOsSacList.setDailyPhoneList(phoneOsList);
+
+		return dailyPhoneOsSacList;
+
+	}
+
 	/* SC API 회원 기본정보 조회 */
 	@Override
 	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader) {
