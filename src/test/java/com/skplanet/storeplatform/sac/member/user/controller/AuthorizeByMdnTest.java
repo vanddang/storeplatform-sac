@@ -82,11 +82,11 @@ public class AuthorizeByMdnTest {
 
 	/**
 	 * <pre>
-	 * 정상 케이스.
+	 * 모바일회원 정상.
 	 * </pre>
 	 */
 	@Test
-	public void shouldAuthorizeByMdn() {
+	public void shouldAuthorizeByMdn01() {
 
 		try {
 
@@ -102,9 +102,9 @@ public class AuthorizeByMdnTest {
 						public Object requestBody() {
 
 							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-							req.setDeviceId("01066786225");
+							req.setDeviceId("01066786220");
 							req.setDeviceIdType("msisdn");
-							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
 							req.setNativeId("358362045580842");
 							req.setIsAutoUpdate("N");
 							req.setDeviceAccount("vanddang@gmail.com");
