@@ -425,6 +425,7 @@ public class LoginServiceImpl implements LoginService {
 					setLoginStatusEcReq.setKey(userId);
 					setLoginStatusEcReq.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
 					this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
+					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
 				/* 인증요청 */
@@ -491,6 +492,7 @@ public class LoginServiceImpl implements LoginService {
 				if (StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 					/* 로그인 상태코드 정상처리 */
 					this.updateLoginStatus(requestHeader, MemberConstants.USER_LOGIN_STATUS_NOMAL, MemberConstants.KEY_TYPE_MBR_ID, userId);
+					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
 				/* 단말정보 update */
