@@ -91,7 +91,7 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 			MetaInfo channelByepisode = this.commonDAO.queryForObject("Shopping.getChannelByepisode", req,
 					MetaInfo.class);
 			if (channelByepisode != null) {
-				req.setSpecialProdId(req.getProductId());
+				req.setSpecialProdId(req.getSpecialProdId());
 				req.setProductId(channelByepisode.getCatalogId());
 			} else {
 				throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
@@ -366,7 +366,7 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 				}
 				res.setProductList(productList);
 			} else {
-				throw new StorePlatformException("SAC_DSP_0001", "쇼핑 상세 확인 ");
+				throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
 			}
 		}
 		return res;
