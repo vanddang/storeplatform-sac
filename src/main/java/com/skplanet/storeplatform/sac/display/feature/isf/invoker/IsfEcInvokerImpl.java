@@ -15,11 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.skplanet.storeplatform.external.client.isf.vo.ISFReq;
 import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
 
 /**
@@ -71,6 +73,12 @@ public class IsfEcInvokerImpl implements IsfEcInvoker {
 				m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 				m1.marshal(isfRes, System.out);
 			}
+		} catch (RestClientException re) {
+			ErrorInfo error = new ErrorInfo();
+			error.setCode("SAC_DSP_0010");
+			error.setMessage(re.getLocalizedMessage());
+
+			throw new StorePlatformException(error, re);
 		} catch (StorePlatformException se) {
 			throw se;
 		} catch (Exception e) {
