@@ -86,8 +86,6 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 					"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
 
-			this.log.debug("##### parameter cnt : {}", prodIdList.size());
-			this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
 			if (productBasicInfoList != null) {
 				Map<String, Object> paramMap = new HashMap<String, Object>();
 				paramMap.put("tenantHeader", header.getTenantHeader());
