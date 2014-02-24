@@ -2,7 +2,6 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -28,6 +28,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 
 /**
  * 휴대폰 인증 코드 확인 JUnit Test.
@@ -44,14 +45,15 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmPhoneAuthorizationCodeTest.class);
 
 	@Autowired
+	private MiscellaneousService miscellaneousService;
+
+	@Autowired
 	private WebApplicationContext wac;
 
 	private MockMvc mockMvc;
 
 	/** [REQUEST]. */
 	private static ConfirmPhoneAuthorizationCodeReq request;
-	/** [RESPONSE]. */
-	private static ConfirmPhoneAuthorizationCodeRes response;
 
 	/**
 	 * <pre>
@@ -67,17 +69,6 @@ public class ConfirmPhoneAuthorizationCodeTest {
 
 	/**
 	 * <pre>
-	 * Restoration parameter after JUnit Test.
-	 * </pre>
-	 */
-	@After
-	public void after() {
-		// Debug [RESPONSE-SAC]
-		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
-	}
-
-	/**
-	 * <pre>
 	 * 휴대폰 인증 코드 확인.
 	 * - 정상 인증.
 	 * </pre>
@@ -86,12 +77,11 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	public void testConfirmPhoneAuthorizationCode() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-
 					@Override
 					public Object requestBody() {
 						request.setUserPhone("01012344241");
-						request.setPhoneAuthCode("707539");
-						request.setPhoneSign("f59e3e2bee644efa8922cfc4e23787df");
+						request.setPhoneAuthCode("528934");
+						request.setPhoneSign("71a008abaa174b92aeb05bcc98403bee");
 						request.setTimeToLive("3");
 						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
@@ -102,6 +92,7 @@ public class ConfirmPhoneAuthorizationCodeTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ConfirmPhoneAuthorizationCodeRes response = (ConfirmPhoneAuthorizationCodeRes) result;
 						assertEquals(response.getUserPhone(), request.getUserPhone());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -113,8 +104,9 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	 * - Exception. (기존 인증된 인증 코드)
 	 * </pre>
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void testExceptConfirmPhoneAuthorizationCode() {
+
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
