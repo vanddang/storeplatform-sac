@@ -93,56 +93,50 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
 						DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
 			}
 
-			try {
-				// 상품 기본 정보 List 조회
-				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-						"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
+			// 상품 기본 정보 List 조회
+			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+					"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
+			this.log.debug("##### parameter cnt : {}", prodIdList.size());
+			this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
+			if (productBasicInfoList != null) {
+				Map<String, Object> paramMap = new HashMap<String, Object>();
+				paramMap.put("tenantHeader", header.getTenantHeader());
+				paramMap.put("deviceHeader", header.getDeviceHeader());
+				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				paramMap.put("lang", "ko");
 
-				this.log.debug("##### parameter cnt : {}", prodIdList.size());
-				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
-				if (productBasicInfoList != null) {
-					Map<String, Object> paramMap = new HashMap<String, Object>();
-					paramMap.put("tenantHeader", header.getTenantHeader());
-					paramMap.put("deviceHeader", header.getDeviceHeader());
-					paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-					paramMap.put("lang", "ko");
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					String topMenuId = productBasicInfo.getTopMenuId();
+					String svcGrpCd = productBasicInfo.getSvcGrpCd();
+					paramMap.put("productBasicInfo", productBasicInfo);
 
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						String topMenuId = productBasicInfo.getTopMenuId();
-						String svcGrpCd = productBasicInfo.getSvcGrpCd();
-						paramMap.put("productBasicInfo", productBasicInfo);
+					this.log.debug("##### Top Menu Id : {}", topMenuId);
+					this.log.debug("##### Service Group Cd : {}", svcGrpCd);
 
-						this.log.debug("##### Top Menu Id : {}", topMenuId);
-						this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+					// 상품 SVC_GRP_CD 조회
+					// DP000203 : 멀티미디어
+					// DP000206 : Tstore 쇼핑
+					// DP000205 : 소셜쇼핑
+					// DP000204 : 폰꾸미기
+					// DP000201 : 애플리캐이션
 
-						// 상품 SVC_GRP_CD 조회
-						// DP000203 : 멀티미디어
-						// DP000206 : Tstore 쇼핑
-						// DP000205 : 소셜쇼핑
-						// DP000204 : 폰꾸미기
-						// DP000201 : 애플리캐이션
-
-						// APP 상품의 경우
-						if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-							paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-							this.log.debug("##### Search for app specific product");
-							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo",
-									paramMap, MetaInfo.class);
-							if (metaInfo != null) {
-								product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
-								productList.add(product);
-							}
+					// APP 상품의 경우
+					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+						this.log.debug("##### Search for app specific product");
+						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo", paramMap,
+								MetaInfo.class);
+						if (metaInfo != null) {
+							product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
+							productList.add(product);
 						}
 					}
 				}
-				commonResponse.setTotalCount(productList.size());
-				res.setCommonResponse(commonResponse);
-				res.setProductList(productList);
-				return res;
-
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_DSP_0001", "");
 			}
+			commonResponse.setTotalCount(productList.size());
+			res.setCommonResponse(commonResponse);
+			res.setProductList(productList);
+			return res;
 
 		} else {
 			return this.generateDummy();

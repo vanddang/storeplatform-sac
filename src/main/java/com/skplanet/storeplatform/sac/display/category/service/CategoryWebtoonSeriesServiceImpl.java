@@ -122,40 +122,35 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 			// 웹툰 Top Menu ID.
 			req.setTopMenuId(DisplayConstants.DP_WEBTOON_TOP_MENU_ID);
 
-			try {
+			// 웹툰 회차별 List 조회
+			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+					"Webtoon.selectWebtoonSeriesList", req, ProductBasicInfo.class);
 
-				// 웹툰 회차별 List 조회
-				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-						"Webtoon.selectWebtoonSeriesList", req, ProductBasicInfo.class);
+			if (!productBasicInfoList.isEmpty()) {
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
+					MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
 
-				if (!productBasicInfoList.isEmpty()) {
-					Map<String, Object> reqMap = new HashMap<String, Object>();
-					reqMap.put("tenantHeader", tenantHeader);
-					reqMap.put("deviceHeader", deviceHeader);
-					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-						MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
-
-						if (retMetaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
-							productList.add(product);
-						}
+					if (retMetaInfo != null) {
+						product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
+						productList.add(product);
 					}
-					commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				} else {
-					// 조회 결과 없음
-					commonResponse.setTotalCount(0);
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
 				}
-				return res;
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_DSP_0001", "");
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
 			}
+			return res;
 		} else {
 			return this.generateDummy();
 		}

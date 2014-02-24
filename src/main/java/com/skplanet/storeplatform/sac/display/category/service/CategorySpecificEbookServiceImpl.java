@@ -96,67 +96,60 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 						DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
 			}
 
-			try {
-				// 상품 기본 정보 List 조회
-				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-						"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
+			// 상품 기본 정보 List 조회
+			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+					"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
 
-				this.log.debug("##### parameter cnt : {}", prodIdList.size());
-				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
-				if (productBasicInfoList != null) {
-					Map<String, Object> paramMap = new HashMap<String, Object>();
-					paramMap.put("tenantHeader", header.getTenantHeader());
-					paramMap.put("deviceHeader", header.getDeviceHeader());
-					paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-					paramMap.put("lang", "ko");
+			this.log.debug("##### parameter cnt : {}", prodIdList.size());
+			this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
+			if (productBasicInfoList != null) {
+				Map<String, Object> paramMap = new HashMap<String, Object>();
+				paramMap.put("tenantHeader", header.getTenantHeader());
+				paramMap.put("deviceHeader", header.getDeviceHeader());
+				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				paramMap.put("lang", "ko");
 
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						String topMenuId = productBasicInfo.getTopMenuId();
-						String svcGrpCd = productBasicInfo.getSvcGrpCd();
-						paramMap.put("productBasicInfo", productBasicInfo);
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					String topMenuId = productBasicInfo.getTopMenuId();
+					String svcGrpCd = productBasicInfo.getSvcGrpCd();
+					paramMap.put("productBasicInfo", productBasicInfo);
 
-						this.log.debug("##### Top Menu Id : {}", topMenuId);
-						this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+					this.log.debug("##### Top Menu Id : {}", topMenuId);
+					this.log.debug("##### Service Group Cd : {}", svcGrpCd);
 
-						// 상품 SVC_GRP_CD 조회
-						// DP000203 : 멀티미디어
-						// DP000206 : Tstore 쇼핑
-						// DP000205 : 소셜쇼핑
-						// DP000204 : 폰꾸미기
-						// DP000201 : 애플리캐이션
+					// 상품 SVC_GRP_CD 조회
+					// DP000203 : 멀티미디어
+					// DP000206 : Tstore 쇼핑
+					// DP000205 : 소셜쇼핑
+					// DP000204 : 폰꾸미기
+					// DP000201 : 애플리캐이션
 
-						// ebook/코믹 상품의 경우
-						if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-									|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
-																								  // 경우
+					// ebook/코믹 상품의 경우
+					if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
+																							  // 경우
 
-								paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-								this.log.debug("##### Search for EbookComic specific product");
-								metaInfo = this.commonDAO.queryForObject(
-										"CategorySpecificProduct.getEbookComicMetaInfo", paramMap, MetaInfo.class);
-								if (metaInfo != null) {
-									if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-										product = this.responseInfoGenerateFacade
-												.generateSpecificEbookProduct(metaInfo);
-									} else {
-										product = this.responseInfoGenerateFacade
-												.generateSpecificComicProduct(metaInfo);
-									}
-									productList.add(product);
+							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+							this.log.debug("##### Search for EbookComic specific product");
+							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
+									paramMap, MetaInfo.class);
+							if (metaInfo != null) {
+								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+									product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
+								} else {
+									product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
 								}
+								productList.add(product);
 							}
 						}
 					}
 				}
-				commonResponse.setTotalCount(productList.size());
-				res.setCommonResponse(commonResponse);
-				res.setProductList(productList);
-				return res;
-
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_DSP_0001", "");
 			}
+			commonResponse.setTotalCount(productList.size());
+			res.setCommonResponse(commonResponse);
+			res.setProductList(productList);
+			return res;
 		} else {
 			return this.generateDummy();
 		}
