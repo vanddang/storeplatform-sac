@@ -29,6 +29,16 @@ public class ParentStatusRes extends CommonInfo {
 
     private String partName;
 
+    private int partPrice;
+
+    public int getPartPrice() {
+        return partPrice;
+    }
+
+    public void setPartPrice(int partPrice) {
+        this.partPrice = partPrice;
+    }
+
     public String getPartName() {
         return partName;
     }
