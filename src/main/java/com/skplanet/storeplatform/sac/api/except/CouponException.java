@@ -21,7 +21,6 @@ import com.skplanet.storeplatform.sac.api.vo.ErrorData;
  */
 public class CouponException extends RuntimeException {
 	private ErrorData errorData;
-	private String requestTime;
 	private String errValue;
 
 	/**
@@ -59,7 +58,7 @@ public class CouponException extends RuntimeException {
 	/**
 	 * @return ErrorData
 	 */
-	public ErrorData getError_data() {
+	public ErrorData getErrorData() {
 		return this.errorData;
 	}
 
@@ -67,29 +66,14 @@ public class CouponException extends RuntimeException {
 	 * @param errorData
 	 *            errorData
 	 */
-	public void setError_data(ErrorData errorData) {
+	public void setErrorData(ErrorData errorData) {
 		this.errorData = errorData;
 	}
 
 	/**
 	 * @return String
 	 */
-	public String getRequest_time() {
-		return this.requestTime;
-	}
-
-	/**
-	 * @param requestTime
-	 *            requestTime
-	 */
-	public void setRequest_time(String requestTime) {
-		this.requestTime = requestTime;
-	}
-
-	/**
-	 * @return String
-	 */
-	public String getErr_value() {
+	public String getErrValue() {
 		return this.errValue;
 	}
 
@@ -97,7 +81,7 @@ public class CouponException extends RuntimeException {
 	 * @param errValue
 	 *            errValue
 	 */
-	public void setErr_valu(String errValue) {
+	public void setErrValue(String errValue) {
 		this.errValue = errValue;
 	}
 }

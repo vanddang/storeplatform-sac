@@ -285,7 +285,7 @@ public class ShoppingCouponSacController {
 			if (map.get("ERROR_CODE") == null || map.get("ERROR_CODE").equals(""))
 				map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR);
 			map.put("ERROR_MSG", ex.getMessage());
-			map.put("ERROR_VALUE", ex.getErr_value());
+			map.put("ERROR_VALUE", ex.getErrValue());
 			this.sendResponseData(couponReq, map, couponRes, null);
 			result = false;
 

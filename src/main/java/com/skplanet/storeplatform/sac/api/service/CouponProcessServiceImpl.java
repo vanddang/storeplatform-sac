@@ -1039,7 +1039,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				this.couponItemService.updateCouponStatus(newCouponCode, dpStatusCode, upType, itemCode);
 
 			} catch (CouponException e) {
-				throw new CouponException(e.getErrCode(), e.getError_data().getErrorMsg(), null);
+				throw new CouponException(e.getErrCode(), e.getErrorData().getErrorMsg(), null);
 			} catch (Exception e) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
 			} finally {
