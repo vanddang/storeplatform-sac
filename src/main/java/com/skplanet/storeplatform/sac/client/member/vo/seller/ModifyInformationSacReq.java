@@ -123,13 +123,16 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String sellerCompany;
 	/** 사업자 등록번호. */
 	private String sellerBizNumber;
-	/** 고객 응대 전화번호 국가코드. */
+	/** 담당자 유선 전화번호 국가코드. */
 	private String customerPhoneCountry;
-	/** 고객 응대 전화번호. */
+	/** 담당자 유선 전화번호. */
 	private String customerPhone;
-	/** 고객 응대 이메일. */
+	/** 담당자 이메일. */
 	private String customerEmail;
-
+	/** 담당자 명. */
+	private String charger;
+	/** 담당자 무선 전화번호. */
+	private String chargerphone;
 	private List<FlurryAuth> flurryAuthList;
 
 	public String getSellerKey() {
@@ -490,6 +493,22 @@ public class ModifyInformationSacReq extends CommonInfo {
 
 	public void setCustomerEmail(String customerEmail) {
 		this.customerEmail = customerEmail;
+	}
+
+	public String getCharger() {
+		return this.charger;
+	}
+
+	public void setCharger(String charger) {
+		this.charger = charger;
+	}
+
+	public String getChargerphone() {
+		return this.chargerphone;
+	}
+
+	public void setChargerphone(String chargerphone) {
+		this.chargerphone = chargerphone;
 	}
 
 	public List<FlurryAuth> getFlurryAuthList() {

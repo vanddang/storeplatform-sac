@@ -87,22 +87,20 @@ public class CreateReq extends CommonInfo {
 	private String sellerDI;
 	/** 실명인증수단 코드. */
 	private String realNameMethod;
-
 	/** 회사명. */
 	private String sellerCompany;
 	/** 사업자 등록번호. */
 	private String sellerBizNumber;
-	/** 고객 응대 전화번호 국가코드. */
+	/** 담당자 유선전화번호 국가코드. */
 	private String customerPhoneCountry;
-	/** 고객 전화번호. */
+	/** 담당자 유선전화번호. */
 	private String customerPhone;
-	/** 고객 응대 이메일. */
+	/** 담당자 이메일. */
 	private String customerEmail;
-	// 담당자 명
+	/** 담당자 명. */
 	private String charger;
-	// 담당자 무선 전화 번호
+	/** 담당자 무선 전화 번호. */
 	private String chargerPhone;
-
 	/** 법인등록번호. */
 	private String sellerBizCorpNumber;
 
