@@ -650,7 +650,7 @@
                                    <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
                                    <if test="prodType != 'shopping'">
                                     UNION  ALL
-                                   SELECT  ic.tenant_id AS tenant_id                               
+                                   SELECT  NULL AS tenant_id                               
                                          , NULL AS noti_seq
                                          , NULL AS title
                                          , NULL AS noti_dscr
@@ -784,7 +784,7 @@
                 FROM ( 
                       SELECT  avg_score
                             , NVL (avg_count, 0) AS paticpers_cnt
-                            , NVL (ROUND ( (avg_count / paticpers_cnt) * 100, 1), 0) AS avg_score_pct
+                            , NVL (ROUND ( (avg_count / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) * 100, 1), 0) AS avg_score_pct
                         FROM  (
                                SELECT  ib.avg_score
                                      , avg_count
@@ -829,7 +829,7 @@
                          ELSE ROUND (avg_evlu_score, 1)
               END), 0) AS avg_evlu_score
             , NVL (paticpers_cnt, 0) AS paticpers_cnt
-            , TRIM ( NVL ( TO_CHAR ( (tot_evlu_score / paticpers_cnt) / 5.0 * 100, '99900.00'), '0')) AS avg_evlu_score_pct
+            , TRIM ( NVL ( TO_CHAR ( (tot_evlu_score / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) / 5.0 * 100, '99900.00'), '0')) AS avg_evlu_score_pct
         FROM  tb_dp_tenant_prod_stats
        WHERE  tenant_id = #{tenantId}
          AND  prod_id = #{prodId}            
@@ -840,7 +840,7 @@
       SELECT  /* FeedbackMapper.getScoreList, 참여수 조회, 남궁석호/SK플래닛, 2014-02-13 */
               avg_score
             , NVL (avg_count, 0) AS paticpers_cnt
-            , NVL (ROUND ( (avg_count / paticpers_cnt) * 100, 1), 0) AS avg_score_pct
+            , NVL (ROUND ( (avg_count / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) * 100, 1), 0) AS avg_score_pct
         FROM (
               SELECT  ib.avg_score
                     , avg_count
