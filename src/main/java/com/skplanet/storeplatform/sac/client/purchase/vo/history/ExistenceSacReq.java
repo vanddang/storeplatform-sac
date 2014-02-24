@@ -12,10 +12,6 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -28,8 +24,6 @@ public class ExistenceSacReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
-	@NotNull
-	@NotEmpty
 	private String userKey; // 내부사용자번호
 	private String deviceKey; // 내부디바이스ID
 	private String prchsId; // 구매ID
