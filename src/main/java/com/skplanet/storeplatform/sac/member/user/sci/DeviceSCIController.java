@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,7 +47,7 @@ public class DeviceSCIController implements DeviceSCI {
 	@Override
 	@RequestMapping(value = "/searchDeviceId", method = RequestMethod.POST)
 	public @ResponseBody
-	SearchDeviceIdSacRes searchDeviceId(@Validated SearchDeviceIdSacReq requestVO) {
+	SearchDeviceIdSacRes searchDeviceId(@RequestBody @Validated SearchDeviceIdSacReq requestVO) {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
@@ -75,7 +76,8 @@ public class DeviceSCIController implements DeviceSCI {
 	 */
 	@Override
 	@RequestMapping(value = "/searchChangedDeviceHistory", method = RequestMethod.POST)
-	public ChangedDeviceHistorySacRes searchChangedDeviceHistory(ChangedDeviceHistorySacReq request) {
+	public ChangedDeviceHistorySacRes searchChangedDeviceHistory(
+			@RequestBody @Validated ChangedDeviceHistorySacReq request) {
 
 		// 공통 파라미터 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
