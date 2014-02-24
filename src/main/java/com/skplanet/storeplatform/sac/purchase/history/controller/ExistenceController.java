@@ -74,7 +74,7 @@ public class ExistenceController {
 		TenantHeader header = requestHeader.getTenantHeader();
 
 		// 필수값 체크
-		this.purchaseCommonUtils.getBindingValid(bindingResult);
+		// this.purchaseCommonUtils.getBindingValid(bindingResult);
 		ExistenceListSacRes existenceListSacRes = new ExistenceListSacRes();
 
 		existenceListSacRes.setExistenceList(this.resConvert(this.existenceSacService.searchExistenceList(this

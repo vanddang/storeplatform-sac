@@ -61,9 +61,6 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		if (existenceReq.getTenantId() == null || existenceReq.getTenantId().equals("")) {
 			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
 		}
-		if (existenceReq.getUserKey() == null || existenceReq.getUserKey().equals("")) {
-			throw new StorePlatformException("SAC_PUR_0001", "UserKey");
-		}
 
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
 

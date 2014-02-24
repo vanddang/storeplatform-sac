@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.PaymentListSCI;
+import com.skplanet.storeplatform.purchase.client.history.vo.PaymentListScRes;
 import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScRes;
 
 /**
  * 선물확인 SAC Service 인터페이스 구현체
@@ -41,7 +41,7 @@ public class PaymentSearchSacServiceImpl implements PaymentSearchSacService {
 	 * @return List<PaymentScRes>
 	 */
 	@Override
-	public List<PaymentScRes> searchPaymentList(PaymentScReq paymentScReq) {
+	public List<PaymentListScRes> searchPaymentList(PaymentScReq paymentScReq) {
 
 		return this.paymentListSCI.searchPaymentList(paymentScReq);
 	}

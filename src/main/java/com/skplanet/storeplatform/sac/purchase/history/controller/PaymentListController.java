@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.purchase.client.history.vo.PaymentListScRes;
 import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.PaymentListSacRes;
@@ -62,18 +63,17 @@ public class PaymentListController {
 	 */
 	@RequestMapping(value = "/history/payment/search/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public PaymentListSacRes searchPaymentList(@RequestBody @Validated PaymentSacReq paymentSacReq,
+	public List<PaymentListSacRes> searchPaymentList(@RequestBody @Validated PaymentSacReq paymentSacReq,
 			BindingResult bindingResult, SacRequestHeader requestHeader) {
 		// 필수값 체크
 		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
 		TenantHeader header = requestHeader.getTenantHeader();
-		PaymentListSacRes response = new PaymentListSacRes();
+		// PaymentListSacRes response = new PaymentListSacRes();
+		//
+		// response.setPaymentList();
 
-		response.setPaymentList(this.resConvert(this.paymentSearchSacService.searchPaymentList(this.reqConvert(
-				paymentSacReq, header))));
-
-		return response;
+		return this.resConvert(this.paymentSearchSacService.searchPaymentList(this.reqConvert(paymentSacReq, header)));
 	}
 
 	/**
@@ -91,9 +91,8 @@ public class PaymentListController {
 		PaymentScReq req = new PaymentScReq();
 
 		req.setTenantId(header.getTenantId());
-		req.setUserKey(paymentSacReq.getUserKey());
-		req.setDeviceKey(paymentSacReq.getDeviceKey());
-		req.setPrchsId(paymentSacReq.getPrchsId());
+
+		req.setPrchsId(paymentSacReq.getPrchsIdList());
 
 		return req;
 	}
@@ -103,26 +102,36 @@ public class PaymentListController {
 	 * 
 	 * @param paymentListScRes
 	 *            요청정보
-	 * @return List<PaymentSacRes>
+	 * @return List<PaymentListSacRes>
 	 */
-	private List<PaymentSacRes> resConvert(List<PaymentScRes> paymentListScRes) {
-		List<PaymentSacRes> res = new ArrayList<PaymentSacRes>();
+	private List<PaymentListSacRes> resConvert(List<PaymentListScRes> paymentListScRes) {
 		this.logger.debug("@@@@@@resConvert@@@@@@@");
-		int size = paymentListScRes.size();
-		for (int i = 0; i < size; i++) {
-			PaymentSacRes paymentSacRes = new PaymentSacRes();
-			paymentSacRes.setPaymentMtdCd(paymentListScRes.get(i).getPaymentMtdCd());
-			paymentSacRes.setPaymentDt(paymentListScRes.get(i).getPaymentDt());
-			paymentSacRes.setPaymentAmt(paymentListScRes.get(i).getPaymentAmt());
-			paymentSacRes.setResvCol01(paymentListScRes.get(i).getResvCol01());
-			paymentSacRes.setResvCol02(paymentListScRes.get(i).getResvCol02());
-			paymentSacRes.setResvCol03(paymentListScRes.get(i).getResvCol03());
-			paymentSacRes.setResvCol04(paymentListScRes.get(i).getResvCol04());
-			paymentSacRes.setResvCol05(paymentListScRes.get(i).getResvCol05());
+		// 리턴리스트
+		List<PaymentListSacRes> resList = new ArrayList<PaymentListSacRes>();
 
-			res.add(paymentSacRes);
+		for (PaymentListScRes list : paymentListScRes) {
+
+			// 결재내역
+			PaymentListSacRes paymentListSacRes = new PaymentListSacRes();
+			// 결내역리스트
+			List<PaymentSacRes> paymentList = new ArrayList<PaymentSacRes>();
+			// 구매ID셋팅
+			paymentListSacRes.setPrchsId(list.getPrchsId());
+
+			for (PaymentScRes paymentScRes : list.getPaymentList()) {
+
+				PaymentSacRes paymentSacRes = new PaymentSacRes();
+				paymentSacRes.setPaymentAmt(paymentScRes.getPaymentAmt());
+				paymentSacRes.setPaymentDt(paymentScRes.getPaymentDt());
+				paymentSacRes.setPaymentMtdCd(paymentScRes.getPaymentMtdCd());
+				paymentList.add(paymentSacRes);
+
+			}
+			paymentListSacRes.setPaymentList(paymentList);
+
+			resList.add(paymentListSacRes);
 		}
 
-		return res;
+		return resList;
 	}
 }
