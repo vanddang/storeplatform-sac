@@ -4,903 +4,878 @@
 
 	<!-- 사용후기 기등록 여부 조회  -->
 	<select id="getRegProdNoti" parameterType="ProdNoti" resultType="ProdNoti">
-		SELECT /* FeedbackMapper.xml, getRegProdNoti, SAC : 김현일 , 2014-02-04 */ 
-	           *
-	      FROM
-	         (
-	         SELECT N.NOTI_SEQ
-	              , N.NOTI_DSCR
-	           FROM TB_DP_PROD_NOTI N
-	                 WHERE 1 = 1
-	            AND N.MBR_NO = #{mbrNo}
-	            AND N.TENANT_ID = #{tenantId}
-	        <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-	            AND N.PROD_ID = #{chnlId}
-	            AND N.CATALOG_ID = #{prodId}
-	        </if>
-	        <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
-	            AND N.PROD_ID = #{prodId}
-	        </if>
-	            AND N.NOTI_TYPE_CD = 'DP000401'
-	            AND N.DEL_YN = 'N'
-	            AND N.BAD_NOTI_YN IN ( 'N', 'R' )
-	            AND N.SPAM_YN = 'N'
-	            AND EXISTS (
-	                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-	                       SELECT 'X'
-	                         FROM TB_DP_SHPG_CATALOG P
-	                        WHERE P.CATALOG_ID = #{prodId}
-	                          AND P.CHNL_CNT > 0
-	                       </if>
-	                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
-                           SELECT 'X'
-	                         FROM TB_DP_PROD P
-	                        WHERE P.PROD_ID = N.PROD_ID
-	                       </if>
-	                       )
-	          ORDER BY REG_DT DESC
-	         )
-	     WHERE ROWNUM <![CDATA[<=]]> 1
+      SELECT  /* FeedbackMapper.getRegProdNoti, 사용후기 기등록 여부 조회, 김현일/SK플래닛, 2014-02-04 */ 
+              noti_seq
+            , noti_dscr
+        FROM
+             (
+              SELECT  a.noti_seq
+                    , a.noti_dscr
+                FROM  tb_dp_prod_noti a
+               WHERE  1 = 1
+                 AND  a.mbr_no = #{mbrNo}
+                 AND  a.tenant_id = #{tenantId}
+                 <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                 AND  a.prod_id = #{chnlId}
+                 AND  a.catalog_id = #{prodId}
+                 </if>
+                 <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
+                 AND  a.prod_id = #{prodId}
+                 </if>
+                 AND  a.noti_type_cd = 'DP000401'
+                 AND  a.del_yn = 'N'
+                 AND  a.bad_noti_yn IN ( 'N', 'R' )
+                 AND  a.spam_yn = 'N'
+                 AND EXISTS (
+                             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                             SELECT  'X'
+                               FROM  tb_dp_shpg_catalog sa
+                              WHERE  sa.catalog_id = #{prodId}
+                                AND  sa.chnl_cnt > 0
+                             </if>
+                             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
+                             SELECT  'X'
+                               FROM  tb_dp_prod sa
+                              WHERE  sa.prod_id = a.prod_id
+                             </if>
+                             )
+                ORDER BY reg_dt DESC
+              )
+       WHERE  ROWNUM <![CDATA[<=]]> 1
 	</select>
 	
 	<!-- 사용후기 등록  -->
 	<insert id="insertProdNoti" parameterType="ProdNoti">
-	   /* FeedbackMapper.xml, insertProdNoti, SAC : 김현일 , 2014-02-04 */
-	   <selectKey keyProperty="notiSeq" resultType="string" order="BEFORE">
-	       SELECT SQ_DP_PROD_NOTI.NEXTVAL
-             FROM DUAL
-	   </selectKey>
-       INSERT INTO TB_DP_PROD_NOTI ( TENANT_ID
-                                     , NOTI_SEQ
-                                     , NOTI_TYPE_CD
-                                     , MBR_NO
-                                     <!-- Shopping -->
-                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-                                     , PROD_ID
-                                     , CATALOG_ID
-                                     </if>
-                                     <!-- Shopping 외 -->
-                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
-                                     , PROD_ID
-                                     </if>
-                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
-                                     , TITLE
-                                     </if>
-                                     , NOTI_DSCR
-                                     , NOTI_SCORE
-                                     , SPAM_YN
-                                     , BAD_NOTI_YN
-                                     , DEL_YN
-                                     , REG_ID
-                                     , REG_DT
-                                     , MBR_TELNO
-                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
-                                     , FB_POST_YN
-                                     </if>
-                                     , REG_LOC
-                                     , DEVICE_MODEL_CD
-                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
-                                     , PKG_VER
-                                     </if>
-                                     )
-                              VALUES ( #{tenantId}
-                                     , #{notiSeq}
-                                     , 'DP000401'
-                                     , #{mbrNo}
-                                     <!-- Shopping -->
-                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-                                     , #{chnlId}
-                                     , #{prodId}
-                                     </if>
-                                     <!-- Shopping 외 -->
-                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
-                                     , #{prodId}
-                                     </if>
-                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
-                                     , #{title}
-                                     </if>
-                                     , #{notiDscr}
-                                     , 0
-                                     , 'N'
-                                     , 'N'
-                                     , 'N'
-                                     , #{regId}
-                                     , SYSDATE
-                                     , #{mbrTelno}
-                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
-                                     , #{fbPostYn}
-                                     </if>
-                                     , 'US004201'
-                                     , #{deviceModelCd}
-                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
-                                     , #{pkgVer}
-                                     </if>
-                                     )
+      <selectKey keyProperty="notiSeq" resultType="string" order="BEFORE">
+      SELECT  sq_dp_prod_noti.NEXTVAL
+        FROM  DUAL
+      </selectKey>
+      INSERT  /* FeedbackMapper.insertProdNoti, 사용후기 등록, 김현일/SK플래닛, 2014-02-04 */ 
+        INTO  tb_dp_prod_noti 
+      ( tenant_id
+      , noti_seq
+      , noti_type_cd
+      , mbr_no
+      <!-- Shopping -->
+      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+      , prod_id
+      , catalog_id
+      </if>
+      <!-- Shopping 외 -->
+      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
+      , prod_id
+      </if>
+      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
+      , title
+      </if>
+      , noti_dscr
+      , noti_score
+      , spam_yn            
+      , bad_noti_yn          
+      , del_yn            
+      , reg_id            
+      , reg_dt            
+      , mbr_telno            
+      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
+      , fb_post_yn
+      </if>
+      , reg_loc
+      , device_model_cd
+      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
+      , pkg_ver
+      </if>
+      )
+      VALUES
+      ( 
+        #{tenantId}
+      , #{notiSeq}
+      , 'DP000401'
+      , #{mbrNo}
+      <!-- Shopping -->
+      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+      , #{chnlId}
+      , #{prodId}
+      </if>
+      <!-- Shopping 외 -->
+      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
+      , #{prodId}
+      </if>
+      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
+      , #{title}
+      </if>
+      , #{notiDscr}
+      , 0
+      , 'N'
+      , 'N'
+      , 'N'
+      , #{regId}
+      , SYSDATE
+      , #{mbrTelno}
+      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
+      , #{fbPostYn}
+      </if>
+      , 'US004201'
+      , #{deviceModelCd}
+      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
+      , #{pkgVer}
+      </if>
+      )
 	</insert>
 	
     <!-- 사용후기 수정 -->
     <update id="updateProdNoti"  parameterType="ProdNoti">
-        /* FeedbackMapper.xml, updateProdNoti, SAC : 김현일 , 2014-02-04 */
-	    UPDATE TB_DP_PROD_NOTI
-	       SET NOTI_DSCR = #{notiDscr}
-	         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
-	         , TITLE = #{title}
-	         </if>
-	         , UPD_DT = SYSDATE
-	         , NOTI_SCORE = 0
-	         , SELLER_RESP_OPIN = NULL
-	         , SELLER_RESP_REG_DT = NULL
-	         , REG_LOC = 'US004201'
-	         , DEVICE_MODEL_CD = #{deviceModelCd}
-	         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
-	         , PKG_VER = #{pkgVer}
-	         </if>
-	     WHERE TENANT_ID = #{tenantId}
-	       AND NOTI_SEQ = #{notiSeq}
-	       AND MBR_NO = #{mbrNo}
+      UPDATE  /* FeedbackMapper.updateProdNoti, 사용후기 수정, 김현일/SK플래닛 , 2014-02-04 */
+              tb_dp_prod_noti
+         SET  noti_dscr = #{notiDscr}
+            <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
+            , title = #{title}
+            </if>
+            , upd_dt = SYSDATE
+            , noti_score = 0
+            , seller_resp_opin = NULL
+            , seller_resp_reg_dt = NULL
+            , reg_loc = 'US004201'
+            , device_model_cd = #{deviceModelCd}
+            <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
+            , pkg_ver = #{pkgVer}
+            </if>
+       WHERE  tenant_id = #{tenantId}
+         AND  noti_seq = #{notiSeq}
+         AND  mbr_no = #{mbrNo}
     </update>
 	
 	<!-- 사용후기 삭제 -->
 	<update id="deleteProdNoti" parameterType="ProdNoti">
-	    /* FeedbackMapper.xml, deleteProdNoti, SAC : 김현일 , 2014-02-04 */
-        UPDATE TB_DP_PROD_NOTI
-           SET
-               DEL_DT = SYSDATE
-             , DEL_YN = 'Y'
-         WHERE TENANT_ID = #{tenantId}
-           AND NOTI_SEQ = #{notiSeq}
-           AND MBR_NO = #{mbrNo}	   
+      UPDATE  /* FeedbackMapper.deleteProdNoti, 사용후기 삭제, 김현일/SK플래닛, 2014-02-04 */
+              tb_dp_prod_noti
+         SET  del_dt = SYSDATE
+            , del_yn = 'Y'
+       WHERE  tenant_id = #{tenantId}
+         AND  noti_seq = #{notiSeq}
+         AND  mbr_no = #{mbrNo}
 	</update>
 	 
 	<!-- 사용후기 추천이력 삭제 -->  
 	<delete id="deleteProdNotiGood" parameterType="ProdNotiGood">
-	    /* FeedbackMapper.xml, deleteProdNotiGood, SAC : 김현일 , 2014-02-04 */
-	    DELETE FROM TB_DP_PROD_NOTIGOOD
-         WHERE TENANT_ID = #{tenantId}
-           AND NOTI_SEQ = #{notiSeq}
-           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(mbrNo)">
-           AND MBR_NO = #{mbrNo}
-           </if>
+      DELETE  /* FeedbackMapper.deleteProdNotiGood, 사용후기 추천이력 삭제, 김현일/SK플래닛, 2014-02-04 */
+        FROM  tb_dp_prod_notigood
+       WHERE  tenant_id = #{tenantId}
+         AND  noti_seq = #{notiSeq}
+         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(mbrNo)">
+         AND  mbr_no = #{mbrNo}
+         </if>
 	</delete>
 	
 	<!-- 기 평가 평점 조회 -->
 	<select id="getRegMbrAvg" parameterType="MbrAvg" resultType="MbrAvg">
-	    SELECT /* FeedbackMapper.xml, getRegMbrAvg, SAC : 김현일 , 2014-02-04 */
-	           AVG_SCORE
-	      FROM TB_DP_MBR_AVG
-	     WHERE TENANT_ID = #{tenantId} 
-	       AND MBR_NO = #{mbrNo}
-	       AND PROD_ID = #{prodId}	
+      SELECT  /* FeedbackMapper.getRegMbrAvg, 기 평가 평점 조회, 김현일/SK플래닛 , 2014-02-04 */
+              avg_score
+        FROM  tb_dp_mbr_avg
+       WHERE  tenant_id = #{tenantId} 
+         AND  mbr_no = #{mbrNo}
+         AND  prod_id = #{prodId}
 	</select>
 	
 	<!-- 회원별 평가 저장 -->
 	<insert id="mergeMbrAvg" parameterType="MbrAvg" useGeneratedKeys="false">
-	    /* FeedbackMapper.xml, mergeMbrAvg, SAC : 김현일 , 2014-02-04 */
-	    MERGE INTO TB_DP_MBR_AVG
-	    USING DUAL
-	       ON ( TENANT_ID = #{tenantId} AND PROD_ID = #{prodId} AND MBR_NO = #{mbrNo} )
-	     WHEN NOT MATCHED THEN
-	        INSERT ( TENANT_ID
-	               , MBR_NO
-	               , PROD_ID
-	               , AVG_SCORE
-	               , REG_ID
-	               , REG_DT )
-	        VALUES ( #{tenantId}
-	               , #{mbrNo}
-	               , #{prodId}
-	               , #{avgScore}
-	               , #{regId}
-	               , SYSDATE )
-	     WHEN MATCHED THEN
-	        UPDATE
-	           SET AVG_SCORE = #{avgScore}
-	             , REG_DT = SYSDATE
+      MERGE  /* FeedbackMapper.mergeMbrAvg, 회원별 평가 저장, 김현일/SK플래닛 , 2014-02-04 */ 
+       INTO  tb_dp_mbr_avg
+      USING  DUAL
+         ON  ( 
+                   tenant_id = #{tenantId} 
+              AND  prod_id = #{prodId} 
+              AND  mbr_no = #{mbrNo} 
+             )
+       WHEN  NOT MATCHED 
+       THEN
+             INSERT 
+             ( 
+               tenant_id
+             , mbr_no
+             , prod_id
+             , avg_score
+             , reg_id
+             , reg_dt 
+             )
+             VALUES 
+             ( 
+               #{tenantId}
+             , #{mbrNo}
+             , #{prodId}
+             , #{avgScore}
+             , #{regId}
+             , SYSDATE 
+             )
+       WHEN  MATCHED 
+       THEN
+             UPDATE
+                SET  avg_score = #{avgScore}
+                   , reg_dt = SYSDATE
 	</insert>
 
     <!-- 회원평가정보 삭제 -->
     <delete id="deleteMbrAvg" parameterType="MbrAvg">
-        DELETE /* FeedbackMapper.xml, deleteMbrAvg, SAC : 김현일 , 2014-02-04 */ 
-          FROM TB_DP_MBR_AVG
-         WHERE TENANT_ID = #{tenantId}
-           AND PROD_ID = #{prodId}
-           AND MBR_NO = #{mbrNo}
+      DELETE  /* FeedbackMapper.deleteMbrAvg, 회원평가정보 삭제, 김현일/SK플래닛, 2014-02-04 */ 
+        FROM  tb_dp_mbr_avg
+       WHERE  tenant_id = #{tenantId}
+         AND  prod_id = #{prodId}
+         AND  mbr_no = #{mbrNo}
     </delete>
 	
 	
 	<!-- 평점저장(기평가평점 수정) -->
 	<update id="updateTenantProdStats" parameterType="TenantProdStats">
-	    /* FeedbackMapper.xml, updateTenantProdStats, SAC : 김현일 , 2014-02-04 */
-        UPDATE TB_DP_TENANT_PROD_STATS
-	       SET TOT_EVLU_SCORE = NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore} - #{preAvgScore}
-	           , UPD_ID = #{updId}
-	           , UPD_DT = SYSDATE
-	           <if test="action == 'create'">
-	           , AVG_EVLU_SCORE = ( ( NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore} - #{preAvgScore} ) / NVL(PATICPERS_CNT, 0) )
-	           </if>
-	           <if test="action == 'remove'">
-	           , PATICPERS_CNT = PATICPERS_CNT - 1
-	           , AVG_EVLU_SCORE = ( ( NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore} - #{preAvgScore} ) / (NVL(PATICPERS_CNT, 0) - 1) )
-	           </if>
-	     WHERE TENANT_ID = #{tenantId}
-	       AND PROD_ID = #{prodId}
+      UPDATE  /* FeedbackMapper.updateTenantProdStats, 평점저장(기평가평점 수정), 김현일/SK플래닛, 2014-02-04 */
+              tb_dp_tenant_prod_stats
+         SET  tot_evlu_score = NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore}
+            , upd_id = #{updId}
+            , upd_dt = SYSDATE
+            <if test="action == 'create'">
+            , avg_evlu_score = ( ( NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore} ) / NVL(paticpers_cnt, 0) )
+            </if>
+            <if test="action == 'remove'">
+            , paticpers_cnt = paticpers_cnt - 1
+            , avg_evlu_score = ( ( NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore} ) / (NVL(paticpers_cnt, 0) - 1) )
+            </if>
+       WHERE  tenant_id = #{tenantId}
+         AND  prod_id = #{prodId}
     </update>
 	
 	<!-- 평점저장 -->
 	<insert id="mergeTenantProdStats" parameterType="TenantProdStats" useGeneratedKeys="false">
-	    /* FeedbackMapper.xml, mergeTenantProdStats, SAC : 김현일 , 2014-02-04 */
-	    MERGE INTO TB_DP_TENANT_PROD_STATS
-	    USING DUAL
-	       ON ( TENANT_ID = #{tenantId} AND PROD_ID = #{prodId} )
-	    WHEN NOT MATCHED THEN
-	        INSERT ( TENANT_ID
-	               , PROD_ID
-	               , AVG_EVLU_SCORE
-	               , TOT_EVLU_SCORE
-	               , PATICPERS_CNT
-	               , REG_ID
-	               , REG_DT )
-	        VALUES ( #{tenantId}
-	               , #{prodId}
-	               , #{avgEvluScore}
-	               , #{avgEvluScore}
-	               , 1
-	               , #{regId}
-	               , SYSDATE )
-	    WHEN MATCHED THEN
-	        UPDATE
-	           SET AVG_EVLU_SCORE = ((NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore}) / (NVL(PATICPERS_CNT, 0) + 1))
-	                , TOT_EVLU_SCORE = NVL(TOT_EVLU_SCORE, 0) + #{avgEvluScore}
-	                , PATICPERS_CNT = NVL(PATICPERS_CNT, 0) + 1
-	             , UPD_ID = #{updId}
-	             , UPD_DT = SYSDATE
+      MERGE  /* FeedbackMapper.mergeTenantProdStats, 평점저장, 김현일/SK플래닛, 2014-02-04 */
+       INTO  tb_dp_tenant_prod_stats
+      USING  DUAL
+         ON  ( 
+                   tenant_id = #{tenantId} 
+              AND  prod_id = #{prodId}
+             )
+       WHEN  NOT MATCHED 
+       THEN
+             INSERT 
+             ( 
+               tenant_id
+             , prod_id
+             , avg_evlu_score
+             , tot_evlu_score
+             , paticpers_cnt
+             , reg_id
+             , reg_dt 
+             )
+             VALUES 
+             ( 
+               #{tenantId}
+             , #{prodId}
+             , #{avgEvluScore}
+             , #{avgEvluScore}
+             , 1
+             , #{regId}
+             , SYSDATE )
+       WHEN  MATCHED 
+       THEN
+             UPDATE
+                SET  avg_evlu_score = ((NVL(tot_evlu_score, 0) + #{avgEvluScore}) / (NVL(paticpers_cnt, 0) + 1))
+                   , tot_evlu_score = NVL(tot_evlu_score, 0) + #{avgEvluScore}
+                   , paticpers_cnt = NVL(paticpers_cnt, 0) + 1
+                   , upd_id = #{updId}
+                   , upd_dt = SYSDATE
 	</insert>
 	
 	<!-- 평점 조회 -->
     <select id="getTenantProdStats" parameterType="TenantProdStats" resultType="TenantProdStats">
-	    SELECT /* FeedbackMapper.xml, getTenantProdStats, SAC : 김현일 , 2014-02-04 */
-	           AVG_EVLU_SCORE
-	         , PATICPERS_CNT
-	      FROM TB_DP_TENANT_PROD_STATS
-	     WHERE TENANT_ID = #{tenantId} 
-	       AND PROD_ID = #{prodId}
+      SELECT  /* FeedbackMapper.xml.getTenantProdStats, 평점조회, 김현일/SK플래닛, 2014-02-04 */
+              avg_evlu_score
+            , paticpers_cnt
+        FROM  tb_dp_tenant_prod_stats
+       WHERE  tenant_id = #{tenantId} 
+         AND  prod_id = #{prodId}
     </select>
     
     <!-- 평점 삭제 -->
     <update id="deleteTenantProdStats" parameterType="TenantProdStats">
-        /* FeedbackMapper.xml, deleteTenantProdStats, SAC : 김현일 , 2014-02-04 */
-        UPDATE TB_DP_TENANT_PROD_STATS
-           SET TOT_EVLU_SCORE = 0
-               , UPD_ID = #{updId}
-               , UPD_DT = SYSDATE
-               , PATICPERS_CNT = 0
-               , AVG_EVLU_SCORE = 0
-         WHERE TENANT_ID = #{tenantId}
-           AND PROD_ID = #{prodId}
+      UPDATE  /* FeedbackMapper.deleteTenantProdStats, 평점삭제, 김현일/SK플래닛, 2014-02-04 */
+              tb_dp_tenant_prod_stats
+         SET  tot_evlu_score = 0
+            , upd_id = #{updId}
+            , upd_dt = SYSDATE
+            , paticpers_cnt = 0
+            , avg_evlu_score = 0
+       WHERE  tenant_id = #{tenantId}
+         AND  prod_id = #{prodId}
     </update>
 	
 	 <!-- (탈퇴회원 사용후기) 기 등록 여부 -->
-	 <select id="getProdNotiWDCount" parameterType="ProdNoti" resultType="int">
-	    SELECT /* FeedbackMapper.xml, getProdNotiWDCount, SAC : 김현일 , 2014-02-04 */
-	           COUNT(*)
-	      FROM TB_DP_PROD_NOTI_WD N
-	     WHERE N.TENANT_ID = #{tenantId}
-	       AND N.NOTI_SEQ = #{notiSeq}
+	<select id="getProdNotiWDCount" parameterType="ProdNoti" resultType="int">
+      SELECT  /* FeedbackMapper.getProdNotiWDCount, 탈퇴회원 사용후기 기등록 여부, 김현일/SK플래닛, 2014-02-04 */
+              COUNT(*)
+        FROM  tb_dp_prod_noti_wd
+       WHERE  tenant_id = #{tenantId}
+         AND  noti_seq = #{notiSeq}
     </select>
 	
     <!-- (탈퇴회원 사용후기) 기 추천 여부 -->
     <select id="getProdNotiWDGoodCount" parameterType="ProdNoti" resultType="int">
-	    SELECT /* FeedbackMapper.xml, getProdNotiWDGoodCount, SAC : 김현일 , 2014-02-04 */
-	           COUNT(*)
-	      FROM TB_DP_PROD_NOTI_WD N
-	         , TB_DP_PROD_NOTIGOOD NG
-	     WHERE N.TENANT_ID = NG.TENANT_ID
-	       AND N.NOTI_SEQ = NG.NOTI_SEQ
-	       AND N.NOTI_TYPE_CD = 'DP000401'
-	       AND N.DEL_YN = 'N'
-	       AND N.BAD_NOTI_YN IN ( 'N', 'R' )
-	       AND N.SPAM_YN = 'N'
-	       AND N.PROD_ID = #{prodId}
-	       AND NG.NOTI_SEQ = #{notiSeq}
-	       AND NG.MBR_NO = #{mbrNo}
-	       AND NG.TENANT_ID = #{tenantId}
+      SELECT  /* FeedbackMapper.getProdNotiWDGoodCount, 탈퇴회원 사용후기 기추천 여부, 김현일/SK플래닛, 2014-02-04 */
+              COUNT(*)
+        FROM  tb_dp_prod_noti_wd a
+            , tb_dp_prod_notigood b
+       WHERE  a.tenant_id = b.tenant_id
+         AND  a.noti_seq = b.noti_seq
+         AND  a.noti_type_cd = 'DP000401'
+         AND  a.del_yn = 'N'
+         AND  a.bad_noti_yn IN ( 'N', 'R' )
+         AND  a.spam_yn = 'N'
+         AND  a.prod_id = #{prodId}
+         AND  b.noti_seq = #{notiSeq}
+         AND  b.mbr_no = #{mbrNo}
+         AND  b.tenant_id = #{tenantId}
     </select>	
 	
 	<!-- 사용후기 추천 등록 -->
 	<insert id="insertProdNotiGood" parameterType="ProdNotiGood">
-	    /* FeedbackMapper.xml, insertProdNotiGood, SAC : 김현일 , 2014-02-04 */
-	    INSERT INTO TB_DP_PROD_NOTIGOOD ( TENANT_ID
-	                                     , NOTI_SEQ
-	                                     , MBR_NO
-	                                     , REG_ID
-	                                     , REG_DT )
-	                              VALUES ( #{tenantId}
-	                                     , #{notiSeq}
-	                                     , #{mbrNo}
-	                                     , #{regId}
-	                                     , SYSDATE )
+      INSERT  /* FeedbackMapper.insertProdNotiGood, 사용후기 추천 등록, 김현일/SK플래닛, 2014-02-04 */
+        INTO  tb_dp_prod_notigood 
+      ( 
+        tenant_id
+      , noti_seq
+      , mbr_no
+      , reg_id
+      , reg_dt 
+      )
+      VALUES 
+      ( #{tenantId}
+      , #{notiSeq}
+      , #{mbrNo}
+      , #{regId}
+      , SYSDATE 
+      )
 	</insert>
 	
 	<!-- (탈퇴 회원 후기) 추천 수 증감처리 -->
     <update id="updateProdNotiWDGood" parameterType="ProdNotiGood">
-	    /* FeedbackMapper.xml, updateProdNotiWDGood, SAC : 김현일 , 2014-02-04 */
-	    UPDATE TB_DP_PROD_NOTI_WD
-	       <if test="action == 'create'">
-	       SET NOTI_SCORE = NVL(NOTI_SCORE, 0) + 1
-	       </if>
-	       <if test="action == 'remove'">
-           SET NOTI_SCORE = NVL(NOTI_SCORE, 0) - 1
-           </if>
-	           , UPD_DT = SYSDATE
-	     WHERE TENANT_ID = #{tenantId} 
-	       AND NOTI_SEQ = #{notiSeq}   
+      UPDATE  /* FeedbackMapper.updateProdNotiWDGood, 탈퇴회원후기 추천수 증감처리, 김현일/SK플래닛, 2014-02-04 */
+              tb_dp_prod_noti_wd
+         <if test="action == 'create'">
+         SET  noti_score = NVL(noti_score, 0) + 1
+         </if>
+         <if test="action == 'remove'">
+         SET  noti_score = NVL(noti_score, 0) - 1
+         </if>
+            , upd_dt = SYSDATE
+       WHERE  tenant_id = #{tenantId} 
+         AND  noti_seq = #{notiSeq}  
     </update>
     
     <!-- (일반회원 사용후기) 기 추천 여부 -->
     <select id="getProdNotiGoodCount" parameterType="ProdNoti" resultType="int">
-        SELECT /* FeedbackMapper.xml, getProdNotiGoodCount, SAC : 김현일 , 2014-02-04 */
-               COUNT(*)
-          FROM TB_DP_PROD_NOTI N
-             , TB_DP_PROD_NOTIGOOD NG
-         WHERE N.TENANT_ID = NG.TENANT_ID
-           AND N.NOTI_SEQ = NG.NOTI_SEQ
-           AND N.NOTI_TYPE_CD = 'DP000401'
-           AND N.DEL_YN = 'N'
-           AND N.BAD_NOTI_YN IN ( 'N', 'R' )
-           AND N.SPAM_YN = 'N'
-           AND N.PROD_ID = #{prodId}
-           AND NG.NOTI_SEQ = #{notiSeq}
-           AND NG.MBR_NO = #{mbrNo}
-           AND NG.TENANT_ID = #{tenantId}
+      SELECT  /* FeedbackMapper.getProdNotiGoodCount, 일반회원 사용후기 기추천 여부, 김현일/SK플래닛, 2014-02-04 */
+              COUNT(*)
+        FROM  tb_dp_prod_noti a
+            , tb_dp_prod_notigood b
+       WHERE  a.tenant_id = b.tenant_id
+         AND  a.noti_seq = b.noti_seq
+         AND  a.noti_type_cd = 'DP000401'
+         AND  a.del_yn = 'N'
+         AND  a.bad_noti_yn IN ( 'N', 'R' )
+         AND  a.spam_yn = 'N'
+         AND  a.prod_id = #{prodId}
+         AND  b.noti_seq = #{notiSeq}
+         AND  b.mbr_no = #{mbrNo}
+         AND  b.tenant_id = #{tenantId}
     </select>
     
     <!-- (일반회원 후기) 추천 수 증감처리 -->
     <update id="updateProdNotiGood" parameterType="ProdNotiGood">
-        /* FeedbackMapper.xml, updateProdNotiGood, SAC : 김현일 , 2014-02-04 */
-        UPDATE TB_DP_PROD_NOTI
-           <if test="action == 'create'">
-           SET NOTI_SCORE = NVL(NOTI_SCORE, 0) + 1
-           </if>
-           <if test="action == 'remove'">
-           SET NOTI_SCORE = NVL(NOTI_SCORE, 0) - 1
-           </if>
-               , UPD_DT = SYSDATE
-         WHERE TENANT_ID = #{tenantId} 
-           AND NOTI_SEQ = #{notiSeq}   
+      UPDATE  /* FeedbackMapper.updateProdNotiGood, 일반회원 후기 추천수 증감처리, 김현일/SK플래닛, 2014-02-04 */
+              tb_dp_prod_noti
+         <if test="action == 'create'">
+         SET  noti_score = NVL(noti_score, 0) + 1
+         </if>
+         <if test="action == 'remove'">
+         SET  noti_score = NVL(noti_score, 0) - 1
+         </if>
+            , upd_dt = SYSDATE
+       WHERE  tenant_id = #{tenantId} 
+         AND  noti_seq = #{notiSeq}  
     </update>
     
     <!-- 사용후기 전체 갯수 조회 -->
     <select id="getProdNotiCount" parameterType="ProdNoti" resultType="int">
-        SELECT  /* FeedbackMapper.xml, getProdNotiCount, SAC : 김현일 , 2014-02-04 */
-           SUM( TOTAL_COUNT ) TOTAL_COUNT
-        FROM (
-           SELECT COUNT(*) AS TOTAL_COUNT
-             FROM TB_DP_PROD_NOTI N
-            WHERE N.TENANT_ID = #{tenantId}
-              AND N.DEL_YN = 'N'
-              AND N.BAD_NOTI_YN IN ( 'N', 'R' )
-              AND N.SPAM_YN = 'N'
-              AND N.NOTI_TYPE_CD = 'DP000401'
-             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
-              AND N.NOTI_SEQ = #{notiSeq}
-             </if>
-             <!-- Shopping -->
-             <if test="prodType == 'shopping'">
-              AND N.CATALOG_ID = #{prodId}
-              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-              AND N.PROD_ID = #{chnlId}
-              </if>
-             </if>
-             <!-- Shopping 외 -->
-             <if test="prodType != 'shopping'">
-              AND N.PROD_ID = #{prodId}
-             </if>
-            UNION ALL
-           SELECT COUNT(*) AS TOTAL_COUNT
-             FROM TB_DP_PROD_NOTI_WD N
-            WHERE N.TENANT_ID = #{tenantId}
-              AND N.DEL_YN = 'N'
-              AND N.BAD_NOTI_YN IN ( 'N', 'R' )
-              AND N.SPAM_YN = 'N'
-              AND N.NOTI_TYPE_CD = 'DP000401'
-             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
-              AND N.NOTI_SEQ = #{notiSeq}
-             </if>
-             <!-- Shopping -->
-             <if test="prodType == 'shopping'">
-              AND N.CATALOG_ID = #{prodId}
-              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-              AND N.PROD_ID = #{chnlId}
-              </if>
-             </if>
-             <!-- Shopping 외 -->
-             <if test="prodType != 'shopping'">
-              AND N.PROD_ID = #{prodId}
-             </if>
-           )              
+      SELECT  /* FeedbackMapper.getProdNotiCount, 사용후기 전체 갯수 조회, 김현일/SK플래닛, 2014-02-04 */
+              COUNT(*) AS total_count
+        FROM  tb_dp_prod_noti
+       WHERE  tenant_id = #{tenantId}
+         AND  del_yn = 'N'
+         AND  bad_noti_yn IN ( 'N', 'R' )
+         AND  spam_yn = 'N'
+         AND  noti_type_cd = 'DP000401'
+         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
+         AND  noti_seq = #{notiSeq}
+         </if>
+         <!-- Shopping -->
+         <if test="prodType == 'shopping'">
+         AND  catalog_id = #{prodId}
+         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+         AND  prod_id = #{chnlId}
+         </if>
+         </if>
+         <!-- Shopping 외 -->
+         <if test="prodType != 'shopping'">
+         AND  prod_id = #{prodId}
+         </if>             
     </select>
     
     <!-- 사용후기 전체 목록 조회 -->
     <select id="getProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
-	    SELECT /* FeedbackMapper.xml, getProdNotiList, SAC : 김현일 , 2014-02-04 */
-	            N.NOTI_SEQ
-	          , N.MBR_NO
-	          , N.SELLER_MBR_NO
-	          , N.TITLE
-	          , N.NOTI_DSCR
-	          , NVL( N.NOTI_SCORE, 0 ) AS NOTI_SCORE
-	          , N.MBR_TELNO
-	          , N.REG_ID
-	          , TO_CHAR(N.REG_DT,'YYYYMMDDHH24MISS') AS REG_DT
-	          , N.SELLER_RESP_TITLE
-	          , N.SELLER_RESP_OPIN
-	          , NVL2( N.SELLER_RESP_OPIN, TO_CHAR( N.SELLER_RESP_REG_DT, 'YYYYMMDDHH24MISS' ), NULL ) AS SELLER_RESP_REG_DT
-	          , N.CID
-	          , DECODE( N.MBR_NO, #{mbrNo}, 'Y', 'N' ) AS SELF_YN
-	          , DECODE( N.MBR_NO, N.SELLER_MBR_NO, 'Y','N' ) AS SALE_YN
-	          , DECODE( N.MBR_NO, N.SELLER_MBR_NO, 'seller', #{mbrNo}, 'mine', '' ) AS WHOSE
-	           , ( CASE WHEN ( SELECT COUNT(*)
-	                               FROM TB_DP_PROD_NOTIGOOD NG
-	                             WHERE NG.TENANT_ID = N.TENANT_ID
-	                             AND NG.MBR_NO = #{mbrNo}
-	                             AND NG.NOTI_SEQ = N.NOTI_SEQ ) > 0 THEN 'Y'
-	                     ELSE 'N'
-	                 END ) AS NOTI_YN
-	          , ( SELECT AVG_SCORE FROM TB_DP_MBR_AVG WHERE TENANT_ID = N.TENANT_ID AND PROD_ID = N.PROD_ID AND MBR_NO = N.MBR_NO ) AS AVG_SCORE
-	          , N.FB_POST_YN
-	          , N.PROD_ID
-	          , N.EXPO_SELLER_NM
-	          , N.SVC_GRP_CD
-	       FROM
-	          (
-	          SELECT A.*
-	            FROM
-	               (
-	               SELECT NOTI.*
-	                    , ROWNUM AS RNUM
-	                 FROM
-	                    (
-	                    SELECT N.*
-	                      FROM (
-	                           SELECT *
-	                             FROM (
-	                                  SELECT N.TENANT_ID
-	                                       , N.NOTI_SEQ
-	                                       , N.TITLE
-	                                       , N.NOTI_DSCR
-	                                       , N.REG_DT
-	                                       , N.MBR_NO
-	                                       , N.REG_ID
-	                                       , N.MBR_TELNO
-	                                       , N.NOTI_SCORE
-	                                       , N.SELLER_RESP_TITLE
-	                                       , N.SELLER_RESP_OPIN
-	                                       , N.SELLER_RESP_REG_DT
-	                                       , N.PROD_ID
-	                                       , N.FB_POST_YN
-	                                       , P.SELLER_MBR_NO AS SELLER_MBR_NO
-	                                       , P.CID
-	                                       , P.SVC_GRP_CD
-	                                       , P.EXPO_SELLER_NM
-	                                    FROM TB_DP_PROD_NOTI N
-	                                       , TB_DP_PROD P
-	                                   WHERE N.TENANT_ID = #{tenantId}
-	                                       AND P.PROD_ID = N.PROD_ID
-	                                   <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
-	                                       AND N.NOTI_SEQ = #{notiSeq}
-	                                   </if>
-	                                   <!-- Shopping -->
-	                                   <if test="prodType == 'shopping'">
-	                                       AND N.CATALOG_ID = #{prodId}
-	                                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-	                                       AND N.PROD_ID = #{chnlId}
-	                                       </if>
-	                                   </if>
-	                                   <!-- Shopping 외 -->
-	                                   <if test="prodType != 'shopping'">
-	                                       AND N.PROD_ID = #{prodId}
-	                                   </if>
-                                           AND N.NOTI_TYPE_CD = 'DP000401'
-                                           AND N.DEL_YN = 'N'
-                                           AND N.BAD_NOTI_YN IN ( 'N', 'R' )
-                                           AND N.SPAM_YN = 'N'
-                                       <!-- 추천순 -->    
-                                       <if test="orderedBy == 'recommend'">
-                                           ORDER BY N.NOTI_SCORE DESC
-                                                  , N.REG_DT DESC
-                                       </if>
-                                       <!-- 최신순 -->    
-                                       <if test="orderedBy == 'recent'">
-                                           ORDER BY N.REG_DT DESC
-                                       </if>
-	                                  ) M
-	                            WHERE ROWNUM <![CDATA[<=]]> #{endRow}
-	                            UNION ALL
-	                           SELECT *
-	                             FROM (
-	                                  SELECT N.TENANT_ID
-	                                       , N.NOTI_SEQ
-	                                       , N.TITLE
-	                                       , N.NOTI_DSCR
-	                                       , N.REG_DT
-	                                       , N.MBR_NO
-	                                       , N.REG_ID
-	                                       , N.MBR_TELNO
-	                                       , N.NOTI_SCORE
-	                                       , N.SELLER_RESP_TITLE
-	                                       , N.SELLER_RESP_OPIN
-	                                       , N.SELLER_RESP_REG_DT
-	                                       , N.PROD_ID
-	                                       , N.FB_POST_YN
-	                                       , P.SELLER_MBR_NO AS SELLER_MBR_NO
-	                                       , P.CID
-	                                       , P.SVC_GRP_CD
-	                                       , P.EXPO_SELLER_NM
-	                                    FROM TB_DP_PROD_NOTI_WD N
-	                                       , TB_DP_PROD P
-	                                   WHERE N.TENANT_ID = #{tenantId}
-	                                       AND P.PROD_ID = N.PROD_ID
-                                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
-                                           AND N.NOTI_SEQ = #{notiSeq}
-                                       </if>
-                                       <!-- Shopping -->
-                                       <if test="prodType == 'shopping'">
-                                           AND N.CATALOG_ID = #{prodId}
-                                           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-                                           AND N.PROD_ID = #{chnlId}
-                                           </if>
-                                       </if>
-                                       <!-- Shopping 외 -->
-                                       <if test="prodType != 'shopping'">
-                                           AND N.PROD_ID = #{prodId}
-                                       </if>
-                                           AND N.NOTI_TYPE_CD = 'DP000401'
-                                           AND N.DEL_YN = 'N'
-                                           AND N.BAD_NOTI_YN IN ( 'N', 'R' )
-                                           AND N.SPAM_YN = 'N'
-                                       <!-- 추천순 -->    
-                                       <if test="orderedBy == 'recommend'">
-                                           ORDER BY N.NOTI_SCORE DESC
-                                                  , N.REG_DT DESC
-                                       </if>
-                                       <!-- 최신순 -->
-                                       <if test="orderedBy == 'recent'">
-                                           ORDER BY N.REG_DT DESC
-                                       </if>	                 
-	                                  ) M
-	                            WHERE ROWNUM <![CDATA[<=]]> #{endRow}
-	                           ) N
-	                    <!-- 추천순 -->       
-                        <if test="orderedBy == 'recommend'">
-                        ORDER BY N.NOTI_SCORE DESC
-                               , N.REG_DT DESC
-                        </if>
-                        <!-- 최신순 -->
-                        <if test="orderedBy == 'recent'">
-                        ORDER BY N.REG_DT DESC
-                        </if>       
-	                    ) NOTI
-	                 WHERE ROWNUM <![CDATA[<=]]> #{endRow}
-	                 ) A
-	           WHERE A.RNUM BETWEEN #{startRow} AND #{endRow}
-	           ) N
+      SELECT  /* FeedbackMapper.getProdNotiList, 사용후기 전체 목록 조회, 김현일/SK플래닛, 2014-02-04 */
+              a.noti_seq
+            , a.mbr_no
+            , a.seller_mbr_no
+            , a.title
+            , a.noti_dscr
+            , NVL( a.noti_score, 0 ) AS noti_score
+            , a.mbr_telno
+            , a.reg_id
+            , TO_CHAR(a.reg_dt,'YYYYMMDDHH24MISS') AS reg_dt
+            , a.seller_resp_title
+            , a.seller_resp_opin
+            , NVL2( a.seller_resp_opin, TO_CHAR( a.seller_resp_reg_dt, 'YYYYMMDDHH24MISS' ), NULL ) AS seller_resp_reg_dt
+            , a.cid
+            , DECODE( a.mbr_no, #{mbrNo}, 'Y', 'N' ) AS self_yn
+            , DECODE( a.mbr_no, a.seller_mbr_no, 'Y','N' ) AS sale_yn
+            , DECODE( a.mbr_no, a.seller_mbr_no, 'seller', #{mbrNo}, 'mine', '' ) AS whose
+            , ( CASE WHEN ( 
+                           SELECT  COUNT(*)
+                             FROM  tb_dp_prod_notigood l
+                            WHERE  l.tenant_id = a.tenant_id
+                              AND  l.mbr_no = #{mbrNo}
+                              AND  l.noti_seq = a.noti_seq 
+                           ) > 0 THEN 'Y'
+                     ELSE 'N'
+               END ) AS noti_yn
+            , ( 
+              SELECT  avg_score 
+                FROM  tb_dp_mbr_avg 
+               WHERE  tenant_id = a.tenant_id 
+                 AND  prod_id = a.prod_id 
+                 AND  mbr_no = a.mbr_no 
+              ) AS avg_score
+            , a.fb_post_yn
+            , a.prod_id
+            , a.expo_seller_nm
+            , a.svc_grp_cd
+       FROM (
+             SELECT  ia.*
+               FROM  (
+                      SELECT  ia.*
+                            , ROWNUM AS rnum
+                        FROM (
+                              SELECT ia.tenant_id
+                                   , ia.noti_seq
+                                   , ia.title
+                                   , ia.noti_dscr
+                                   , ia.reg_dt
+                                   , ia.mbr_no
+                                   , ia.reg_id
+                                   , ia.mbr_telno
+                                   , ia.noti_score
+                                   , ia.seller_resp_title
+                                   , ia.seller_resp_opin
+                                   , ia.seller_resp_reg_dt
+                                   , ia.prod_id
+                                   , ia.fb_post_yn
+                                   , ib.seller_mbr_no as seller_mbr_no
+                                   , ib.cid
+                                   , ib.svc_grp_cd
+                                   , ib.expo_seller_nm
+                               FROM  tb_dp_prod_noti ia
+                                   , tb_dp_prod ib
+                              WHERE  ia.tenant_id = #{tenantId}
+                                AND  ib.prod_id = ia.prod_id
+                                <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
+                                AND  ia.noti_seq = #{notiSeq}
+                                </if>
+                                <!-- Shopping -->
+                                <if test="prodType == 'shopping'">
+                                AND  ia.catalog_id = #{prodId}
+                                <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                                AND  ia.prod_id = #{chnlId} 
+                                </if>
+                                </if>
+                                <!-- Shopping 외 -->
+                                <if test="prodType != 'shopping'">
+                                AND  ia.prod_id = #{prodId}
+                                </if>
+                                AND  ia.noti_type_cd = 'DP000401'
+                                AND  ia.del_yn = 'N'
+                                AND  ia.bad_noti_yn IN ( 'N', 'R' )
+                                AND  ia.spam_yn = 'N'
+                                <!-- 추천순 -->    
+                              <if test="orderedBy == 'recommend'">
+                              ORDER 
+                                 BY  ia.noti_score DESC
+                                   , ia.reg_dt DESC
+                              </if>
+                              <!-- 최신순 -->    
+                              <if test="orderedBy == 'recent'">
+                              ORDER 
+                                 BY  ia.reg_dt DESC
+                              </if>
+                              ) ia
+                       WHERE  ROWNUM <![CDATA[<=]]> #{endRow}
+                     ) ia
+              WHERE  ia.rnum BETWEEN #{startRow} AND #{endRow}     
+            ) a
     </select>
     
     <!-- 자기가작성한 사용후기.  -->
     <select id="getMyProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
-	    SELECT /* FeedbackMapper.xml, getProdNotiList, SAC : 김현일 , 2014-02-04 */
-	           N.NOTI_SEQ
-	         , N.MBR_NO
-	         , N.SELLER_MBR_NO
-	         , NVL2( N.TITLE, N.TITLE, NVL2( N.NOTI_DSCR, NULL, DEFAULT_MSG ) ) AS TITLE
-	         , NVL2( N.NOTI_DSCR, N.NOTI_DSCR, DEFAULT_MSG ) AS NOTI_DSCR
-	         , NVL( N.NOTI_SCORE, 0 ) AS NOTI_SCORE
-	         , N.MBR_TELNO
-             , N.REG_ID
-	         , TO_CHAR(N.REG_DT,'YYYYMMDDHH24MISS') AS REG_DT
-	         , N.SELLER_RESP_TITLE
-	         , N.SELLER_RESP_OPIN
-	         , NVL2( N.SELLER_RESP_OPIN, TO_CHAR(N.SELLER_RESP_REG_DT,'YYYYMMDDHH24MISS'), NULL ) AS SELLER_RESP_REG_DT
-	         , N.CID
-	         , 'mine' AS WHOSE
-	         , ( CASE WHEN ( SELECT COUNT(*)
-	                           FROM TB_DP_PROD_NOTIGOOD NG
-	                          WHERE NG.TENANT_ID = N.TENANT_ID
-	                            AND NG.MBR_NO = #{mbrNo}
-	                            AND NG.NOTI_SEQ = N.NOTI_SEQ ) > 0 THEN 'Y'
-	                  ELSE 'N'
-	              END ) AS NOTI_YN
-	         , N.AVG_SCORE
-	         , N.FB_POST_YN
-	         , N.PROD_ID
-	         , N.EXPO_SELLER_NM
-	         , N.SVC_GRP_CD
-	      FROM
-	         (
-	         SELECT N.*
-	              , DECODE( N.AVG_SCORE
-	                      , 1, #{defaultMsg1}
-	                      , 2, #{defaultMsg2}
-	                      , 3, #{defaultMsg3}
-	                      , 4, #{defaultMsg4}
-	                      , 5, #{defaultMsg5}
-	                      , NULL ) AS DEFAULT_MSG
-	           FROM
-	              (
-	              SELECT NOTI.*
-	                   , ROWNUM AS RNUM
-	                FROM
-	                   (
-	                   SELECT MAX( TENANT_ID ) AS TENANT_ID
-	                        , MAX( NOTI_SEQ ) AS NOTI_SEQ
-	                        , MAX( TITLE ) AS TITLE
-	                        , MAX( NOTI_DSCR ) AS NOTI_DSCR
-	                        , MAX( REG_DT ) AS REG_DT
-	                        , MAX( MBR_NO ) AS MBR_NO
-	                        , MAX( REG_ID ) AS REG_ID
-	                        , MAX( MBR_TELNO ) AS MBR_TELNO
-	                        , MAX( NOTI_SCORE ) AS NOTI_SCORE
-	                        , MAX( SELLER_RESP_TITLE ) AS SELLER_RESP_TITLE
-	                        , MAX( SELLER_RESP_OPIN ) AS SELLER_RESP_OPIN
-	                        , MAX( SELLER_RESP_REG_DT ) AS SELLER_RESP_REG_DT
-	                        , MAX( FB_POST_YN ) AS FB_POST_YN
-	                        , MAX( PROD_ID ) AS PROD_ID
-	                        , MAX( SELLER_MBR_NO ) AS SELLER_MBR_NO
-	                        , MAX( CID ) AS CID
-	                        , MAX( SVC_GRP_CD ) AS SVC_GRP_CD
-	                        , MAX( AVG_SCORE ) AS AVG_SCORE
-	                        , MAX( EXPO_SELLER_NM ) AS EXPO_SELLER_NM
-	                     FROM
-	                        (
-	                        SELECT N.TENANT_ID
-	                             , N.NOTI_SEQ
-	                             , N.TITLE
-	                             , N.NOTI_DSCR
-	                             , N.REG_DT
-	                             , N.MBR_NO
-	                             , N.REG_ID
-	                             , N.MBR_TELNO
-	                             , N.NOTI_SCORE
-	                             , N.SELLER_RESP_TITLE
-	                             , N.SELLER_RESP_OPIN
-	                             , N.SELLER_RESP_REG_DT
-	                             , N.FB_POST_YN
-	                             , N.PROD_ID
-	                             , P.SELLER_MBR_NO AS SELLER_MBR_NO
-	                             , P.CID
-	                             , P.SVC_GRP_CD
-	                             , P.EXPO_SELLER_NM
-	                             , NULL AVG_SCORE
-	                          FROM TB_DP_PROD_NOTI  N
-	                             , TB_DP_PROD  P
-	                         WHERE N.TENANT_ID = #{tenantId}
-	                           AND P.PROD_ID = N.PROD_ID
-	                           AND N.MBR_NO = #{mbrNo}
-	                    <!-- Shopping -->
-	                    <if test="prodType == 'shopping'">
-	                        <if test="prodIds != null">
-	                           AND N.CATALOG_ID IN
-	                           <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-	                               #{prodId}
-	                           </foreach>
-	                        </if>
-	                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-	                            AND N.PROD_ID = #{chnlId}
-	                       </if>
-	                    </if>
-	                    <!-- Shopping 외 -->
-	                    <if test="prodType != 'shopping'">
-	                        <if test="prodIds != null">
-                               AND N.PROD_ID IN
-                               <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-                                   #{prodId}
-                               </foreach>
-                            </if>
-	                    </if>
-	                           AND N.NOTI_TYPE_CD = 'DP000401'
-	                           AND N.DEL_YN = 'N'
-	                           AND N.BAD_NOTI_YN IN ( 'N', 'R' )
-	                           AND N.SPAM_YN = 'N'
-	                    <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
-	                    <if test="prodType != 'shopping'">
-	                        UNION ALL
-	                        SELECT MA.TENANT_ID AS TENANT_ID                               
-	                             , NULL AS NOTI_SEQ
-	                             , NULL AS TITLE
-	                             , NULL AS NOTI_DSCR
-	                             , MA.REG_DT AS REG_DT
-	                             , MA.MBR_NO AS MBR_NO
-	                             , NULL AS REG_ID
-	                             , NULL AS MBR_TELNO
-	                             , NULL AS NOTI_SCORE
-	                             , NULL AS SELLER_RESP_TITLE
-	                             , NULL AS SELLER_RESP_OPIN
-	                             , NULL AS SELLER_RESP_REG_DT
-	                             , NULL AS FB_POST_YN
-	                             , MA.PROD_ID
-	                             , NULL AS SELLER_MBR_NO
-	                             , NULL AS CID
-	                             , NULL AS SVC_GRP_CD
-	                             , NULL AS EXPO_SELLER_NM
-	                             , MA.AVG_SCORE
-	                        FROM TB_DP_MBR_AVG MA
-	                       WHERE MA.TENANT_ID = #{tenantId} 
-	                         AND MA.MBR_NO = #{mbrNo} 
-	                        <if test="prodType != 'shopping'">
-	                            <if test="prodIds != null">
-	                               AND MA.PROD_ID IN
-	                               <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-	                                   #{prodId}
-	                               </foreach>
-	                            </if>
-	                        </if>
-	                      </if>
-	                        )
-	                    GROUP BY PROD_ID
-	                    ORDER BY REG_DT DESC
-	                   ) NOTI
-	               WHERE ROWNUM <![CDATA[<=]]> #{endRow}
-	              ) N
-	          WHERE N.RNUM BETWEEN #{startRow} AND #{endRow}
-	         ) N
+      SELECT  /* FeedbackMapper.getProdNotiList, 자기가작성한 사용후기, 김현일/SK플래닛, 2014-02-04 */
+              a.noti_seq
+            , a.mbr_no
+            , a.seller_mbr_no
+            , NVL2( a.title, a.title, NVL2( a.noti_dscr, NULL, default_msg ) ) AS title
+            , NVL2( a.noti_dscr, a.noti_dscr, default_msg ) AS noti_dscr
+            , NVL( a.noti_score, 0 ) AS noti_score
+            , a.mbr_telno
+            , a.reg_id
+            , TO_CHAR(a.reg_dt,'YYYYMMDDHH24MISS') AS reg_dt
+            , a.seller_resp_title
+            , a.seller_resp_opin
+            , NVL2( a.seller_resp_opin, TO_CHAR(a.seller_resp_reg_dt,'YYYYMMDDHH24MISS'), NULL ) AS seller_resp_reg_dt
+            , a.cid
+            , 'mine' AS WHOSE
+            , ( CASE WHEN ( 
+                           SELECT  COUNT(*)
+                             FROM  tb_dp_prod_notigood l
+                            WHERE  l.tenant_id = a.tenant_id
+                              AND  l.mbr_no = #{mbrNo}
+                              AND  l.noti_seq = a.noti_seq 
+                          ) > 0 THEN 'Y'
+                     ELSE 'N'
+              END ) AS noti_yn
+            , a.avg_score
+            , a.fb_post_yn
+            , a.prod_id
+            , a.expo_seller_nm
+            , a.svc_grp_cd
+       FROM
+            (
+             SELECT  ia.*
+                   , DECODE
+                    ( ia.avg_score
+                    , 1, #{defaultMsg1}
+                    , 2, #{defaultMsg2}
+                    , 3, #{defaultMsg3}
+                    , 4, #{defaultMsg4}
+                    , 5, #{defaultMsg5}
+                    , NULL 
+                    ) AS default_msg
+               FROM
+                    (
+                     SELECT  ia.*
+                           , ROWNUM AS rnum
+                       FROM
+                            (
+                             SELECT  MAX( tenant_id ) AS tenant_id
+                                   , MAX( noti_seq ) AS noti_seq
+                                   , MAX( title ) AS title
+                                   , MAX( noti_dscr ) AS noti_dscr
+                                   , MAX( reg_dt ) AS reg_dt
+                                   , MAX( mbr_no ) AS mbr_no
+                                   , MAX( reg_id ) AS reg_id
+                                   , MAX( mbr_telno ) AS mbr_telno
+                                   , MAX( noti_score ) AS noti_score
+                                   , MAX( seller_resp_title ) AS seller_resp_title
+                                   , MAX( seller_resp_opin ) AS seller_resp_opin
+                                   , MAX( seller_resp_reg_dt ) AS seller_resp_reg_dt
+                                   , MAX( fb_post_yn ) AS fb_post_yn
+                                   , MAX( prod_id ) AS prod_id
+                                   , MAX( seller_mbr_no ) AS seller_mbr_no
+                                   , MAX( cid ) AS cid
+                                   , MAX( svc_grp_cd ) AS svc_grp_cd
+                                   , MAX( avg_score ) AS avg_score
+                                   , MAX( expo_seller_nm ) AS expo_seller_nm
+                              FROM
+                                  (
+                                   SELECT  ia.tenant_id
+                                         , ia.noti_seq
+                                         , ia.title
+                                         , ia.noti_dscr
+                                         , ia.reg_dt
+                                         , ia.mbr_no
+                                         , ia.reg_id
+                                         , ia.mbr_telno
+                                         , ia.noti_score
+                                         , ia.seller_resp_title
+                                         , ia.seller_resp_opin
+                                         , ia.seller_resp_reg_dt
+                                         , ia.fb_post_yn
+                                         , ia.prod_id
+                                         , ib.seller_mbr_no as seller_mbr_no
+                                         , ib.cid
+                                         , ib.svc_grp_cd
+                                         , ib.expo_seller_nm
+                                         , NULL avg_score
+                                     FROM  tb_dp_prod_noti ia
+                                         , tb_dp_prod ib
+                                    WHERE  ia.tenant_id = #{tenantId}
+                                      AND  ib.prod_id = ia.prod_id
+                                      AND  ia.mbr_no = #{mbrNo}
+                                      <!-- Shopping -->
+                                      <if test="prodType == 'shopping'">
+                                      <if test="prodIds != null">
+                                      AND  ia.catalog_id IN
+                                      <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                                      #{prodId}
+                                      </foreach>
+                                      </if>
+                                      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                                      AND  ia.prod_id = #{chnlId}
+                                      </if>
+                                      </if>
+                                      <!-- Shopping 외 -->
+                                      <if test="prodType != 'shopping'">
+                                      <if test="prodIds != null">
+                                      AND  ia.prod_id IN
+                                      <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                                      #{prodId}
+                                      </foreach>
+                                      </if>
+                                      </if>
+                                      AND  ia.noti_type_cd = 'DP000401'
+                                      AND  ia.del_yn = 'N'
+                                      AND  ia.bad_noti_yn IN ( 'N', 'R' )
+                                      AND  ia.spam_yn = 'N'
+                                   <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
+                                   <if test="prodType != 'shopping'">
+                                    UNION  ALL
+                                   SELECT  ic.tenant_id AS tenant_id                               
+                                         , NULL AS noti_seq
+                                         , NULL AS title
+                                         , NULL AS noti_dscr
+                                         , ic.reg_dt AS reg_dt
+                                         , ic.mbr_no AS mbr_no
+                                         , NULL AS reg_id
+                                         , NULL AS mbr_telno
+                                         , NULL AS noti_score
+                                         , NULL AS seller_resp_title
+                                         , NULL AS seller_resp_opin
+                                         , NULL AS seller_resp_reg_dt
+                                         , NULL AS fb_post_yn
+                                         , ic.prod_id
+                                         , NULL AS seller_mbr_no
+                                         , NULL AS cid
+                                         , NULL AS svc_grp_cd
+                                         , NULL AS expo_seller_nm
+                                         , ic.avg_score
+                                     FROM  tb_dp_mbr_avg ic
+                                    WHERE  ic.tenant_id = #{tenantId} 
+                                      AND  ic.mbr_no = #{mbrNo} 
+                                      <if test="prodType != 'shopping'">
+                                      <if test="prodIds != null">
+                                      AND  ic.prod_id IN
+                                      <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                                      #{prodId}
+                                      </foreach>
+                                      </if>
+                                      </if>
+                                   </if>
+                                 )
+                             GROUP 
+                                BY  prod_id
+                             ORDER 
+                                BY  reg_dt DESC
+                             ) ia
+                      WHERE  ROWNUM <![CDATA[<=]]> #{endRow}
+                    ) ia
+              WHERE ia.rnum BETWEEN #{startRow} AND #{endRow}
+            ) a
     </select>
     
     <!-- 자기가 작성한 사용후기 갯수 -->
     <select id="getMyProdNotiCount" parameterType="ProdNoti" resultType="int">
-        /* FeedbackMapper.xml, getMyProdNotiCount, SAC : 김현일 , 2014-02-04 */
-        SELECT COUNT(*) AS TOTAL_COUNT
-          FROM
-             (
-             SELECT MAX( PROD_ID ) AS PROD_ID
-               FROM
-                  (
-                  SELECT N.PROD_ID
-                    FROM TB_DP_PROD_NOTI  N
-                       , TB_DP_PROD  P
-                   WHERE N.TENANT_ID = #{tenantId}
-                     AND P.PROD_ID = N.PROD_ID
-                     AND N.MBR_NO = #{mbrNo}
-              <!-- Shopping -->
-              <if test="prodType == 'shopping'">
-                  <if test="prodIds != null">
-                     AND N.CATALOG_ID IN
-                     <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-                         #{prodId}
-                     </foreach>
-                  </if>
-                 <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-                      AND N.PROD_ID = #{chnlId}
-                 </if>
-              </if>
-              <!-- Shopping 외 -->
-              <if test="prodType != 'shopping'">
-                  <if test="prodIds != null">
-                     AND N.PROD_ID IN
-                     <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-                         #{prodId}
-                     </foreach>
-                  </if>
-              </if>
-                     AND N.NOTI_TYPE_CD = 'DP000401'
-                     AND N.DEL_YN = 'N'
-                     AND N.BAD_NOTI_YN IN ( 'N', 'R' )
-                     AND N.SPAM_YN = 'N'
-              <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
-              <if test="prodType != 'shopping'">
-                  UNION ALL
-                  SELECT MA.PROD_ID
-                  FROM TB_DP_MBR_AVG MA
-                 WHERE MA.TENANT_ID = #{tenantId} 
-                   AND MA.MBR_NO = #{mbrNo} 
-                  <if test="prodType != 'shopping'">
-                      <if test="prodIds != null">
-                         AND MA.PROD_ID IN
-                         <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-                             #{prodId}
-                         </foreach>
-                      </if>
-                  </if>
-                </if>
-                  )
-              GROUP BY PROD_ID
-             ) NOTI
+      SELECT  /* FeedbackMapper.getMyProdNotiCount, 자기가 작성한 사용후기 갯수, 김현일/SK플래닛, 2014-02-04 */
+              COUNT(*) AS total_count
+        FROM (
+              SELECT MAX(prod_id) AS prod_id
+                FROM
+                    (
+                     SELECT  la.prod_id
+                       FROM  tb_dp_prod_noti la
+                           , tb_dp_prod lb
+                      WHERE  la.tenant_id = #{tenantId}
+                        AND  lb.prod_id = lb.prod_id
+                        AND  la.mbr_no = #{mbrNo}
+                        <!-- Shopping -->
+                        <if test="prodType == 'shopping'">
+                        <if test="prodIds != null">
+                        AND  la.catalog_id IN
+                        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                        #{prodId}
+                        </foreach>
+                        </if>
+                        <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                        AND  la.prod_id = #{chnlId}
+                        </if>
+                        </if>
+                        <!-- Shopping 외 -->
+                        <if test="prodType != 'shopping'">
+                        <if test="prodIds != null">
+                        AND  la.prod_id IN
+                        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                        #{prodId}
+                        </foreach>
+                        </if>
+                        </if> 
+                        AND  la.noti_type_cd = 'DP000401'
+                        AND  la.del_yn = 'N'
+                        AND  la.bad_noti_yn IN ( 'N', 'R' )
+                        AND  la.spam_yn = 'N'
+                        <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
+                        <if test="prodType != 'shopping'">
+                     UNION  ALL
+                    SELECT  lc.prod_id
+                      FROM  tb_dp_mbr_avg lc
+                     WHERE  lc.tenant_id = #{tenantId} 
+                       AND  lc.mbr_no = #{mbrNo} 
+                       <if test="prodType != 'shopping'">
+                       <if test="prodIds != null">
+                       AND  lc.prod_id IN
+                       <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                       #{prodId}
+                       </foreach>
+                       </if>
+                       </if>
+                       </if>
+                    )
+               GROUP 
+                  BY  prod_id
+             ) 
     </select>
 
     <!-- 판매자 댓글 -->
     <update id="updateSellerResp" parameterType="ProdNoti">
-        UPDATE  /* FeedbackMapper.xml, updateSellerResp, SAC : 남궁석호 , 2014-02-10 */
-                TB_DP_PROD_NOTI
-           SET  SELLER_RESP_OPIN = #{sellerRespOpin}
-              , SELLER_RESP_TITLE = #{sellerRespTitle}
-              , SELLER_RESP_REG_DT = SYSDATE
-         WHERE  TENANT_ID = #{tenantId}
-           AND  NOTI_SEQ = #{notiSeq}
+      UPDATE  /* FeedbackMapper.updateSellerResp, 판매자 댓글, 남궁석호/SK플래닛, 2014-02-10 */
+              tb_dp_prod_noti
+         SET  seller_resp_opin = #{sellerRespOpin}
+            , seller_resp_title = #{sellerRespTitle}
+            , seller_resp_reg_dt = SYSDATE
+       WHERE  tenant_id = #{tenantId}
+         AND  noti_seq = #{notiSeq}
     </update>
 
     <!-- 탈퇴 회원 사용후기 판매자 댓글 -->
     <update id="updateSellerRespWD" parameterType="ProdNoti">
-        UPDATE  /* FeedbackMapper.xml, updateSellerRespWD, SAC : 남궁석호 , 2014-02-10 */
-                TB_DP_PROD_NOTI_WD
-           SET  SELLER_RESP_OPIN = #{sellerRespOpin}
-              , SELLER_RESP_TITLE = #{sellerRespTitle}
-              , SELLER_RESP_REG_DT = SYSDATE
-         WHERE  TENANT_ID = #{tenantId}
-           AND  NOTI_SEQ = #{notiSeq}
+      UPDATE  /* FeedbackMapper.updateSellerRespWD, 탈퇴회원 사용후기 판매자 댓글, 남궁석호/SK플래닛, 2014-02-10 */
+              tb_dp_prod_noti_wd
+         SET  seller_resp_opin = #{sellerRespOpin}
+            , seller_resp_title = #{sellerRespTitle}
+            , seller_resp_reg_dt = SYSDATE
+       WHERE  tenant_id = #{tenantId}
+         AND  noti_seq = #{notiSeq}
     </update>
 
     <!-- 평점, 다운로드 조회 -->
     <select id="getProdEvalInfo" parameterType="TenantProdStats" resultType="TenantProdStats">
-        SELECT  /* FeedbackMapper.xml, getProdEvalInfo, SAC : 남궁석호 , 2014-02-13 */
-                (SELECT RTRIM ( XMLAGG ( XMLELEMENT (A, CONCAT (AVG_SCORE_PCT, ',')).EXTRACT ('//text()')), ',')
-                   FROM (  SELECT   AVG_SCORE
-                                  , NVL (AVG_COUNT, 0) AS PATICPERS_CNT
-                                  , NVL (ROUND ( (AVG_COUNT / PATICPERS_CNT) * 100, 1), 0) AS AVG_SCORE_PCT
-                             FROM   (SELECT TA.AVG_SCORE
-                                          , AVG_COUNT
-                                          , (SELECT PATICPERS_CNT
-                                               FROM TB_DP_TENANT_PROD_STATS
-                                              WHERE TENANT_ID = #{tenantId}
-                                                AND PROD_ID = #{prodId}) AS PATICPERS_CNT
-                                       FROM (SELECT AVG_SCORE
-                                                  , COUNT (AVG_SCORE) AS AVG_COUNT
-                                               FROM TB_DP_MBR_AVG
-                                              WHERE TENANT_ID = #{tenantId}
-                                                AND PROD_ID = #{prodId}
-                                           GROUP BY AVG_SCORE) MA
-                                          , (SELECT AVG_SCORE
-                                               FROM (SELECT '1' AS AVG_SCORE FROM DUAL
-                                                     UNION ALL
-                                                     SELECT '2' AS AVG_SCORE FROM DUAL
-                                                     UNION ALL
-                                                     SELECT '3' AS AVG_SCORE FROM DUAL
-                                                     UNION ALL
-                                                     SELECT '4' AS AVG_SCORE FROM DUAL
-                                                     UNION ALL
-                                                     SELECT '5' AS AVG_SCORE FROM DUAL)) TA
-                                      WHERE MA.AVG_SCORE(+) = TA.AVG_SCORE)
-                         ORDER BY   AVG_SCORE DESC)) AS AVG_EVLU_SCORE_PCTS
-                         , NVL (TOT_EVLU_SCORE, 0) TOT_EVLU_SCORE
-                         , NVL (PRCHS_CNT, 0) AS DWLD_CNT
-                         , NVL ((CASE   WHEN (AVG_EVLU_SCORE <![CDATA[>]]> 0 AND AVG_EVLU_SCORE <![CDATA[<]]> 1) THEN 1
-                                        WHEN AVG_EVLU_SCORE <![CDATA[>]]> 5 THEN 5
-                                        ELSE ROUND (AVG_EVLU_SCORE, 1)
-                                END), 0) AS AVG_EVLU_SCORE
-                         , NVL (PATICPERS_CNT, 0) AS PATICPERS_CNT
-                         , TRIM ( NVL ( TO_CHAR ( (TOT_EVLU_SCORE / PATICPERS_CNT) / 5.0 * 100, '99900.00'), '0')) AS AVG_EVLU_SCORE_PCT
-          FROM TB_DP_TENANT_PROD_STATS
-         WHERE TENANT_ID = #{tenantId}
-           AND PROD_ID = #{prodId}
+      SELECT  /* FeedbackMapper.getProdEvalInfo, 평점 다운로드 조회, 남궁석호/SK플래닛 , 2014-02-13 */
+             (
+              SELECT  RTRIM ( XMLAGG ( XMLELEMENT (A, CONCAT (avg_score_pct, ',')).EXTRACT ('//text()')), ',')
+                FROM ( 
+                      SELECT  avg_score
+                            , NVL (avg_count, 0) AS paticpers_cnt
+                            , NVL (ROUND ( (avg_count / paticpers_cnt) * 100, 1), 0) AS avg_score_pct
+                        FROM  (
+                               SELECT  ib.avg_score
+                                     , avg_count
+                                     , (
+                                        SELECT  paticpers_cnt
+                                          FROM  tb_dp_tenant_prod_stats
+                                         WHERE  tenant_id = #{tenantId}
+                                           AND  prod_id = #{prodId}) AS paticpers_cnt
+                                          FROM  (
+                                                 SELECT  avg_score
+                                                       , COUNT (avg_score) AS avg_count
+                                                   FROM  tb_dp_mbr_avg
+                                                  WHERE  tenant_id = #{tenantId}
+                                                    AND  prod_id = #{prodId}
+                                                  GROUP
+                                                     BY  avg_score
+                                                ) ia
+                                              , (
+                                                SELECT  avg_score
+                                                  FROM (
+                                                        SELECT  '1' AS avg_score FROM DUAL
+                                                         UNION  ALL
+                                                        SELECT  '2' AS avg_score FROM DUAL
+                                                         UNION  ALL
+                                                        SELECT  '3' AS avg_score FROM DUAL
+                                                         UNION  ALL
+                                                        SELECT  '4' AS avg_score FROM DUAL
+                                                         UNION  ALL
+                                                        SELECT  '5' AS avg_score FROM DUAL
+                                                        )
+                                                ) ib
+                                         WHERE  ia.avg_score(+) = ib.avg_score
+                                       )
+                                       ORDER
+                                          BY avg_score DESC
+                               )
+             ) AS avg_evlu_score_pcts
+            , NVL (tot_evlu_score, 0) AS tot_evlu_score
+            , NVL (prchs_cnt, 0) AS dwld_cnt
+            , NVL ((CASE WHEN (avg_evlu_score <![CDATA[>]]> 0 AND avg_evlu_score <![CDATA[<]]> 1) THEN 1
+                         WHEN avg_evlu_score <![CDATA[>]]> 5                                      THEN 5
+                         ELSE ROUND (avg_evlu_score, 1)
+              END), 0) AS avg_evlu_score
+            , NVL (paticpers_cnt, 0) AS paticpers_cnt
+            , TRIM ( NVL ( TO_CHAR ( (tot_evlu_score / paticpers_cnt) / 5.0 * 100, '99900.00'), '0')) AS avg_evlu_score_pct
+        FROM  tb_dp_tenant_prod_stats
+       WHERE  tenant_id = #{tenantId}
+         AND  prod_id = #{prodId}            
     </select>
     
     <!-- 참여수 조회 -->
     <select id="getScoreList" parameterType="MbrAvgScore" resultType="MbrAvgScore">
-        SELECT  /* FeedbackMapper.xml, getScoreList, SAC : 남궁석호 , 2014-02-13 */
-                AVG_SCORE
-              , NVL (AVG_COUNT, 0) AS PATICPERS_CNT
-              , NVL (ROUND ( (AVG_COUNT / PATICPERS_CNT) * 100, 1), 0) AS AVG_SCORE_PCT
-          FROM  (SELECT TA.AVG_SCORE
-                      , AVG_COUNT
-                      , (SELECT PATICPERS_CNT
-                           FROM TB_DP_TENANT_PROD_STATS
-                          WHERE TENANT_ID = #{tenantId}
-                            AND PROD_ID = #{prodId}) AS PATICPERS_CNT
-                   FROM (SELECT AVG_SCORE
-                              , COUNT (AVG_SCORE) AS AVG_COUNT
-                           FROM TB_DP_MBR_AVG
-                          WHERE TENANT_ID = #{tenantId}
-                            AND PROD_ID = #{prodId}
-                       GROUP BY AVG_SCORE) MA
-                      , (SELECT AVG_SCORE
-                           FROM (SELECT '1' AS AVG_SCORE FROM DUAL
-                                 UNION ALL
-                                 SELECT '2' AS AVG_SCORE FROM DUAL
-                                 UNION ALL
-                                 SELECT '3' AS AVG_SCORE FROM DUAL
-                                 UNION ALL
-                                 SELECT '4' AS AVG_SCORE FROM DUAL
-                                 UNION ALL
-                                 SELECT '5' AS AVG_SCORE FROM DUAL)) TA
-                  WHERE MA.AVG_SCORE(+) = TA.AVG_SCORE)
-      ORDER BY AVG_SCORE DESC
+      SELECT  /* FeedbackMapper.getScoreList, 참여수 조회, 남궁석호/SK플래닛, 2014-02-13 */
+              avg_score
+            , NVL (avg_count, 0) AS paticpers_cnt
+            , NVL (ROUND ( (avg_count / paticpers_cnt) * 100, 1), 0) AS avg_score_pct
+        FROM (
+              SELECT  ib.avg_score
+                    , avg_count
+                    , (
+                       SELECT  paticpers_cnt
+                         FROM  tb_dp_tenant_prod_stats
+                        WHERE  tenant_id = #{tenantId}
+                          AND  prod_id = #{prodId}
+                      ) AS paticpers_cnt
+                FROM  (
+                       SELECT  avg_score
+                             , COUNT (avg_score) AS avg_count
+                         FROM  tb_dp_mbr_avg
+                        WHERE  tenant_id = #{tenantId}
+                          AND  prod_id = #{prodId}
+                        GROUP 
+                           BY  avg_score
+                      ) ia
+                    , (
+                       SELECT  avg_score
+                         FROM  (
+                                SELECT  '1' AS avg_score FROM DUAL
+                                 UNION  ALL
+                                SELECT  '2' AS avg_score FROM DUAL
+                                 UNION  ALL
+                                SELECT  '3' AS avg_score FROM DUAL
+                                 UNION  ALL
+                                SELECT  '4' AS avg_score FROM DUAL
+                                 UNION  ALL
+                                SELECT  '5' AS avg_score FROM DUAL
+                               )
+                      ) ib
+               WHERE  ia.avg_score(+) = ib.avg_score
+             )
+       ORDER 
+          BY  avg_score DESC
     </select>
 </mapper>
