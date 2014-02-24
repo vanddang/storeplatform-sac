@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.shopping.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.Shoppi
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
@@ -1722,31 +1724,50 @@ public class ShoppingServiceImpl implements ShoppingService {
 							// 판매자정보 셋팅
 							DetailInformationSacReq memberReq = new DetailInformationSacReq();
 							DetailInformationSacRes memberRes = new DetailInformationSacRes();
+							SellerMbrSac sellerMbrSac = new SellerMbrSac();
+							List<SellerMbrSac> sellerMbrSacList = null;
 							try {
-								// memberReq.setSellerKey(episodeShopping.getSellerMbrNo());
-								// memberReq.setSellerId("");
-								// memberRes = this.sellerSearchSCI.detailInformation(memberReq);
-								// if (memberRes != null) {
-								// memberRes.getSellerMbr().getSellerCompany();
-								// distributor = new Distributor();
-								// // distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
-								// // distributor.setIdentifier(memberRes.getSellerMbr().getSellerId());
-								// // distributor.setName(memberRes.getSellerMbr().getSellerName());
-								// // // distributor.setCompany(memberRes.getSellerMbr().getSellerCompany());
-								// // distributor.setTel(memberRes.getSellerMbr().getRepPhone());
-								// // distributor.setEmail(memberRes.getSellerMbr().getSellerEmail());
-								// // distributor.setAddress(memberRes.getSellerMbr().getSellerAddress()
-								// // + memberRes.getSellerMbr().getSellerDetailAddress());
-								// // distributor.setRegNo(memberRes.getSellerMbr().getSellerBizNumber());
-								// episodeProduct.setDistributor(distributor);
-								//
-								// }
+								sellerMbrSacList = new ArrayList<SellerMbrSac>();
+								sellerMbrSac.setSellerKey(episodeShopping.getSellerMbrNo());
+								sellerMbrSac.setSellerId("");
+								sellerMbrSacList.add(sellerMbrSac);
+								memberReq.setSellerMbrSacList(sellerMbrSacList);
+								memberRes = this.sellerSearchSCI.detailInformation(memberReq);
+								if (memberRes != null) {
+									Map sellerMbrListMap = memberRes.getSellerMbrListMap();
+									Iterator<String> keys = sellerMbrListMap.keySet().iterator();
+									distributor = new Distributor();
+									while (keys.hasNext()) {
+										String entry = keys.next();
+										// if (StringUtils.equals(entry, "sellerID")) {
+										// distributor.setIdentifier((String) sellerMbrListMap.get(entry));
+										// }
+										System.out.println("entry::" + entry);
+										System.out.println("resultMap.get(entry)::" + sellerMbrListMap.get(entry));
+										// Map sellerMbrListMap2 = sellerMbrListMap.get(entry);
+
+									}
+									// System.out.println("(String) sellerMbrListMap.get(sellerID)::"
+									// + (String) sellerMbrListMap.get("sellerID"));
+									// distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
+									// distributor.setIdentifier((String) sellerMbrListMap.get("sellerID"));
+									// distributor.setName((String) sellerMbrListMap.get("sellerName"));
+									// distributor.setCompany((String) sellerMbrListMap.get("sellerCompany"));
+									// distributor.setTel((String) sellerMbrListMap.get("sellerBizNumber"));
+									// distributor.setEmail((String) sellerMbrListMap.get("repEmail"));
+									// distributor.setAddress((String) sellerMbrListMap.get("sellerAddress")
+									// + (String) sellerMbrListMap.get("sellerDetailAddress"));
+									// distributor.setRegNo((String) sellerMbrListMap.get("sellerBizNumber"));
+									episodeProduct.setDistributor(distributor);
+
+								}
 							} catch (Exception e) {
 								throw new StorePlatformException("SAC_DSP_1002", "멤버 정보 조회 ", e);
 							}
 
 							subProductList.add(episodeProduct);
 						}
+
 					}
 					// 데이터 매핑
 
