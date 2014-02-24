@@ -433,9 +433,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		String[] drivedFileNameForDrived = { "_260x170", "_177x177", "_114x114", "_29x29", "_56x56", "_27x27", "_25x25" };
 
 		// TBL_DP_PROD_IMG.IMG_CLS 설정
-		String[] imgClsCode = { CouponConstants.BRAND_IMG_260x170, CouponConstants.BRAND_IMG_177x177,
-				CouponConstants.BRAND_IMG_114x114, CouponConstants.BRAND_IMG_29x29, CouponConstants.BRAND_IMG_56x56,
-				CouponConstants.BRAND_IMG_27x27, CouponConstants.BRAND_IMG_25x25 };
+		String[] imgClsCode = { CouponConstants.BRAND_IMG_260_170, CouponConstants.BRAND_IMG_177_177,
+				CouponConstants.BRAND_IMG_114_114, CouponConstants.BRAND_IMG_29_29, CouponConstants.BRAND_IMG_56_56,
+				CouponConstants.BRAND_IMG_27_27, CouponConstants.BRAND_IMG_25_25 };
 
 		// 파일 생성 크기
 		int[][] imageSizeForDrived = { { 260, 170 }, { 177, 177 }, { 114, 114 }, { 29, 29 }, { 56, 56 }, { 27, 27 },
@@ -510,13 +510,13 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		String[] drivedFileNameForDrivedDtl = { "_684x" };
 
 		// TBL_DP_PROD_IMG.IMG_CLS 설정
-		String[] imgClsCodeTop = { CouponConstants.CATALOG_TOP_IMG_60x60, CouponConstants.CATALOG_TOP_IMG_120x120,
-				CouponConstants.CATALOG_TOP_IMG_130x130, CouponConstants.CATALOG_TOP_IMG_40x40,
-				CouponConstants.CATALOG_TOP_IMG_80x80, CouponConstants.CATALOG_TOP_IMG_110x110,
-				CouponConstants.CATALOG_TOP_IMG_180x180, CouponConstants.CATALOG_TOP_IMG_182x182,
-				CouponConstants.CATALOG_TOP_IMG_31x30 };
+		String[] imgClsCodeTop = { CouponConstants.CATALOG_TOP_IMG_60_60, CouponConstants.CATALOG_TOP_IMG_120_120,
+				CouponConstants.CATALOG_TOP_IMG_130_130, CouponConstants.CATALOG_TOP_IMG_40_40,
+				CouponConstants.CATALOG_TOP_IMG_80_80, CouponConstants.CATALOG_TOP_IMG_110_110,
+				CouponConstants.CATALOG_TOP_IMG_180_180, CouponConstants.CATALOG_TOP_IMG_182_182,
+				CouponConstants.CATALOG_TOP_IMG_31_30 };
 
-		String[] imgClsCodeDtl = { CouponConstants.CATALOG_DTL_IMG_684x };
+		String[] imgClsCodeDtl = { CouponConstants.CATALOG_DTL_IMG_684_X };
 
 		// String IMAGE_TYPE = "PNG";
 
@@ -618,7 +618,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName1 + "을 생성 하였습니다.");
 
 				this.brandCatalogProdImgInfo.setProdId(dpCatalogInfo.getCreateCatalogId());
-				this.brandCatalogProdImgInfo.setImgCls(CouponConstants.CATALOG_DTL_IMG_684xY);
+				this.brandCatalogProdImgInfo.setImgCls(CouponConstants.CATALOG_DTL_IMG_684_XY);
 				this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
 				this.brandCatalogProdImgInfo.setFilePos(uploadDir1);
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName1);

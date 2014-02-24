@@ -100,30 +100,30 @@ public class CouponConstants {
 	public static final String PCD_FOR_REPOSITORY_PATH = "PD011906"; // 쇼핑쿠폰
 
 	// 브랜드 IMG_CLS
-	public static final String BRAND_IMG_260x170 = "DP0001A4";
-	public static final String BRAND_IMG_177x177 = "DP0001B9";
-	public static final String BRAND_IMG_114x114 = "DP0001B8";
+	public static final String BRAND_IMG_260_170 = "DP0001A4";
+	public static final String BRAND_IMG_177_177 = "DP0001B9";
+	public static final String BRAND_IMG_114_114 = "DP0001B8";
 	// public static final String BRAND_IMG_82x82 = "DP000199";
-	public static final String BRAND_IMG_29x29 = "DP0001B5";
-	public static final String BRAND_IMG_56x56 = "DP0001B6";
+	public static final String BRAND_IMG_29_29 = "DP0001B5";
+	public static final String BRAND_IMG_56_56 = "DP0001B6";
 	// 2013.06.24 이미지 추가
-	public static final String BRAND_IMG_27x27 = "DP0001B7";
-	public static final String BRAND_IMG_25x25 = "DP0001B2";
+	public static final String BRAND_IMG_27_27 = "DP0001B7";
+	public static final String BRAND_IMG_25_25 = "DP0001B2";
 
 	// 카탈로그 대표이미지 IMG_CLS
-	public static final String CATALOG_TOP_IMG_60x60 = "DP000165";
-	public static final String CATALOG_TOP_IMG_120x120 = "DP000167";
-	public static final String CATALOG_TOP_IMG_130x130 = "DP000191";
-	public static final String CATALOG_TOP_IMG_40x40 = "DP000164";
-	public static final String CATALOG_TOP_IMG_80x80 = "DP000166";
-	public static final String CATALOG_TOP_IMG_110x110 = "DP0001A0";
-	public static final String CATALOG_TOP_IMG_180x180 = "DP000168";
-	public static final String CATALOG_TOP_IMG_182x182 = "DP0001A3";
-	public static final String CATALOG_TOP_IMG_31x30 = "DP0001B3";
+	public static final String CATALOG_TOP_IMG_60_60 = "DP000165";
+	public static final String CATALOG_TOP_IMG_120_120 = "DP000167";
+	public static final String CATALOG_TOP_IMG_130_130 = "DP000191";
+	public static final String CATALOG_TOP_IMG_40_40 = "DP000164";
+	public static final String CATALOG_TOP_IMG_80_80 = "DP000166";
+	public static final String CATALOG_TOP_IMG_110_110 = "DP0001A0";
+	public static final String CATALOG_TOP_IMG_180_180 = "DP000168";
+	public static final String CATALOG_TOP_IMG_182_182 = "DP0001A3";
+	public static final String CATALOG_TOP_IMG_31_30 = "DP0001B3";
 
 	// 카탈로그 상세이미지 IMG_CLS
-	public static final String CATALOG_DTL_IMG_684x = "DP0001B0"; // 가변길이 684x 세로 최대 1170
-	public static final String CATALOG_DTL_IMG_684xY = "DP0001B4"; // 카칼로그 상세이미지 684xY
+	public static final String CATALOG_DTL_IMG_684_X = "DP0001B0"; // 가변길이 684x 세로 최대 1170
+	public static final String CATALOG_DTL_IMG_684_XY = "DP0001B4"; // 카칼로그 상세이미지 684xY
 
 	// 카탈로그 셀러TAG
 	public static final String TAG_TYPE_FOR_COUPON_TAG = "DP004507"; // 셀러TAG 태그타입(쇼핑용)
