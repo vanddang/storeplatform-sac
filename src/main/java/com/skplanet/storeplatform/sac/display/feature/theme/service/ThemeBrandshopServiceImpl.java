@@ -100,12 +100,12 @@ public class ThemeBrandshopServiceImpl implements ThemeBrandshopService {
 
 					// Identifier 설정
 					Identifier identifier = null;
-					List<Identifier> identifierList = new ArrayList<Identifier>();
+					List<Identifier> identifierList = null;
 					Menu menu = null;
-					List<Menu> menuList = new ArrayList<Menu>();
+					List<Menu> menuList = null;
 					Title title = null;
 
-					List<Source> sourceList = new ArrayList<Source>();
+					List<Source> sourceList = null;
 					Source source = null;
 
 					ThemeBrandshopInfo ThemeBrandshopInfo = null;
@@ -212,7 +212,6 @@ public class ThemeBrandshopServiceImpl implements ThemeBrandshopService {
 		accrual = new Accrual();
 
 		layOut = new Layout();
-		title = new Title();
 		// title 설정
 		title.setText("브랜드샵 이름");
 		// source 설정
@@ -232,7 +231,6 @@ public class ThemeBrandshopServiceImpl implements ThemeBrandshopService {
 
 		// Identifier 설정
 		identifierList = new ArrayList<Identifier>();
-		identifier = new Identifier();
 		identifier.setType("episodeId");
 		identifier.setText("H900063306");
 		identifierList.add(identifier);
@@ -264,7 +262,6 @@ public class ThemeBrandshopServiceImpl implements ThemeBrandshopService {
 		// rights 설정
 		rights.setGrade("PD004401");
 
-		product = new Product();
 		product.setIdentifierList(identifierList);
 		product.setTitle(title);
 		product.setPrice(price);
