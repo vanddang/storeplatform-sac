@@ -120,6 +120,7 @@ public class CreateDeviceTest {
 							deviceInfo.setDeviceAccount("vanddang@gmail.com");
 							deviceInfo.setIsRecvSms("Y");
 							deviceInfo.setDeviceNickName("SHP-110S(임시)");
+							deviceInfo.setDeviceModelNo("SHP-110S");
 
 							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
