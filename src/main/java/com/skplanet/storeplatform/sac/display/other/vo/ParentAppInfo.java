@@ -25,6 +25,15 @@ public class ParentAppInfo extends CommonInfo {
     private String parentStatus;
     private String parentName;
     private String partName;
+    private int partPrice;
+
+    public int getPartPrice() {
+        return partPrice;
+    }
+
+    public void setPartPrice(int partPrice) {
+        this.partPrice = partPrice;
+    }
 
     public String getParentName() {
         return parentName;

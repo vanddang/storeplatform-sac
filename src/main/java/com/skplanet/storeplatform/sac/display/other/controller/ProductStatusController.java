@@ -45,6 +45,7 @@ public class ProductStatusController {
         parentStatusRes.setParentChannelId(parentAppInfo.getParentChannelId());
         parentStatusRes.setParentName(parentAppInfo.getParentName());
         parentStatusRes.setPartName(parentAppInfo.getPartName());
+        parentStatusRes.setPartPrice(parentAppInfo.getPartPrice());
 
         return parentStatusRes;
     }

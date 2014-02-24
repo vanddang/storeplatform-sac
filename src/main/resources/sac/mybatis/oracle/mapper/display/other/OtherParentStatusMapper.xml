@@ -2,12 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="OtherParentStatus">
     
-    <select id="selectParentProductStatus" parameterType="java.util.HashMap" resultType="com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo">
+    <select id="selectParentProductStatus" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo">
         SELECT /* ProductStatus.xml, selectParentProductStatus, SAC : 정희원 , 2014-02-17 */
             RS.PROD_ID as "parentChannelId",
             TP.PROD_STATUS_CD as "parentStatus",
             PARDESC.PROD_NM as "parentName",
-            PRTDESC.PROD_NM as "partName"
+            PRTDESC.PROD_NM as "partName",
+            TPRC.PROD_AMT as "partPrice"
         FROM
                 TB_DP_PROD_RSHP RS
                 INNER JOIN TB_DP_PROD_DESC PRTDESC
@@ -16,12 +17,15 @@
                     ON PARDESC.PROD_ID = RS.PROD_ID
                 INNER JOIN TB_DP_TENANT_PROD TP
                     ON TP.PROD_ID = RS.PROD_ID
+                INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+                    ON TPRC.PROD_ID = RS.PART_PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
         WHERE 1=1
               AND RS.PROD_RSHP_CD = 'DP010801'
               AND RS.PART_PROD_ID = #{partProdId}
               AND TP.TENANT_ID = #{tenantId}
               AND PARDESC.LANG_CD = #{langCd}
               AND PRTDESC.LANG_CD = PARDESC.LANG_CD
+              AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
     </select>
 
 </mapper>
