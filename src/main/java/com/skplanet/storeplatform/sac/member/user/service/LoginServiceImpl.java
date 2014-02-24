@@ -167,7 +167,7 @@ public class LoginServiceImpl implements LoginService {
 			this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 			/* 로그인 성공이력 저장 */
-			LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
+			LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
 
 			/* 로그인 결과 */
 			res.setUserKey(userKey);
@@ -193,7 +193,7 @@ public class LoginServiceImpl implements LoginService {
 				this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 				/* 로그인 성공이력 저장 */
-				LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
+				LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
 
 				/* 로그인 결과 */
 				res.setUserKey(userKey);
@@ -439,7 +439,7 @@ public class LoginServiceImpl implements LoginService {
 				this.updateLoginDeviceInfo(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 				/* 로그인 성공이력 저장 */
-				LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
+				LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
 
 				/* 로그인 결과 */
 				res.setUserAuthKey(authForIdEcRes.getUserAuthKey());
@@ -458,7 +458,7 @@ public class LoginServiceImpl implements LoginService {
 						.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
-					LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
+					LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
 
 					/* 로그인 결과 */
 					res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
@@ -497,7 +497,7 @@ public class LoginServiceImpl implements LoginService {
 				this.updateLoginDeviceInfo(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 				/* 로그인 성공이력 저장 */
-				LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
+				LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
 
 				/* 로그인 결과 */
 				res.setUserAuthKey(authForIdEcRes.getUserAuthKey());
@@ -515,7 +515,7 @@ public class LoginServiceImpl implements LoginService {
 				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
-					LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
+					LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
 
 					/* 로그인 결과 */
 					res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
@@ -689,7 +689,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            클라이언트 ip
 	 * @return LoginUserResponse
 	 */
-	public LoginUserResponse insertloginHistory(SacRequestHeader requestHeader, String userId, String userPw, String isSuccess, String isMobile,
+	public LoginUserResponse insertLoginHistory(SacRequestHeader requestHeader, String userId, String userPw, String isSuccess, String isMobile,
 			String ipAddress) {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());

@@ -62,6 +62,7 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
@@ -129,6 +130,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private ChangeDisplayUserSCI changeDisplayUserSCI;
+
+	@Autowired
+	private HistoryInternalSCI historyInternalSCI;
 
 	/*
 	 * (non-Javadoc)
