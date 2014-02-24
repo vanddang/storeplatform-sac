@@ -130,12 +130,12 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 					Product product = null;
 					// Identifier 설정
 					Identifier identifier = null;
-					List<Identifier> identifierList = new ArrayList<Identifier>();
+					List<Identifier> identifierList = null;
 					Menu menu = null;
-					List<Menu> menuList = new ArrayList<Menu>();
+					List<Menu> menuList = null;
 					Title title = null;
 
-					List<Source> sourceList = new ArrayList<Source>();
+					List<Source> sourceList = null;
 					Source source = null;
 					Rights rights = null;
 					Layout layout = new Layout();
@@ -295,13 +295,11 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		CommonResponse commonResponse = new CommonResponse();
 		ThemeThemeZoneSacRes res = new ThemeThemeZoneSacRes();
 
-		productList = new ArrayList<Product>();
 		menuList = new ArrayList<Menu>();
 
 		product = new Product();
 		identifier = new Identifier();
 		source = new Source();
-		title = new Title();
 		price = new Price();
 		rights = new Rights();
 		contributor = new Contributor();
@@ -328,7 +326,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 		// Identifier 설정
 		identifierList = new ArrayList<Identifier>();
-		identifier = new Identifier();
 		identifier.setType("episodeId");
 		identifier.setText("H900063306");
 		identifierList.add(identifier);
@@ -363,7 +360,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
 		sourceList.add(source);
 
-		product = new Product();
 		product.setIdentifierList(identifierList);
 		product.setTitle(title);
 		product.setPrice(price);
