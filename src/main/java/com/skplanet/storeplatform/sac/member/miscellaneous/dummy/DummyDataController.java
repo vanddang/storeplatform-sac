@@ -4,10 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
 
 /**
  * 
@@ -337,25 +333,25 @@ public class DummyDataController {
 	// return response;
 	// }
 
-	/**
-	 * <pre>
-	 * 2.3.15. 결제 계좌 정보 인증.
-	 * </pre>
-	 * 
-	 * @return AuthorizeAccountRes
-	 */
-	@RequestMapping(value = "/authorizeAccount/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public AuthorizeAccountRes authorizeAccount() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("####### 2.3.15. 결제 계좌 정보 인증    ################");
-		LOGGER.info("####################################################");
-
-		AuthorizeAccountRes response = new AuthorizeAccountRes();
-
-		return response;
-	}
+	// /**
+	// * <pre>
+	// * 2.3.15. 결제 계좌 정보 인증.
+	// * </pre>
+	// *
+	// * @return AuthorizeAccountRes
+	// */
+	// @RequestMapping(value = "/authorizeAccount/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public AuthorizeAccountRes authorizeAccount() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("####### 2.3.15. 결제 계좌 정보 인증    ################");
+	// LOGGER.info("####################################################");
+	//
+	// AuthorizeAccountRes response = new AuthorizeAccountRes();
+	//
+	// return response;
+	// }
 
 	// /**
 	// * <pre>

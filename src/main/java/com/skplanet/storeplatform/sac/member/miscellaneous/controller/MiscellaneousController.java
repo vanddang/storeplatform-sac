@@ -291,7 +291,15 @@ public class MiscellaneousController {
 		return this.service.getModelCode(request);
 	}
 
-	@RequestMapping(value = "/dev/authorizeAccount/v1", method = RequestMethod.POST)
+	/**
+	 * <pre>
+	 * 결제 계좌 정보 인증.
+	 * </pre>
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/authorizeAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeAccountRes authorizeAccount(@RequestBody @Validated AuthorizeAccountReq request) {
 
