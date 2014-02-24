@@ -1387,18 +1387,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (!"catalog".equals(req.getType()) && !"episode".equals(req.getType())) {
 			throw new StorePlatformException("SAC_DSP_0003", "type", req.getType());
 		}
-		if (StringUtils.isEmpty(req.getProdId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "prodId", req.getProdId());
+		if ("catalog".equals(req.getType())) {
+			if (StringUtils.isEmpty(req.getProductId())) {
+				throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
+			}
 		}
 
 		if (StringUtils.equals("episode", req.getType())) {
 			MetaInfo channelByepisode = this.commonDAO.queryForObject("Shopping.getChannelByepisode", req,
 					MetaInfo.class);
 			if (channelByepisode != null) {
-				req.setSpecialProdId(req.getProdId());
-				req.setProdId(channelByepisode.getCatalogId());
+				req.setSpecialProdId(req.getSpecialProdId());
+				req.setProductId(channelByepisode.getCatalogId());
 			} else {
-				throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
+				throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
 			}
 		}
 
@@ -1431,7 +1433,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				MetaInfo.class);
 
 		if (resultChannelList == null) {
-			throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
+			throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
 		} else {
 			if (resultChannelList.size() > 0) {
 
@@ -1525,7 +1527,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setItemCode(episodeShopping.getSrcContentId());
 
 							// 특가 상품일 경우
-							if (!StringUtils.equals("episode", req.getType())) {
+							if (StringUtils.equals("episode", req.getType())) {
 								episodeMenu = new Menu();
 								episodeMenuList = new ArrayList<Menu>();
 								episodeMenu.setType(episodeShopping.getSpecialSale());
@@ -1764,7 +1766,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				commonResponse.setTotalCount(1);
 				res.setCommonResponse(commonResponse);
 			} else {
-				throw new StorePlatformException("SAC_DSP_0001", "쇼핑 상세 확인 ");
+				throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
 			}
 		}
 		return res;

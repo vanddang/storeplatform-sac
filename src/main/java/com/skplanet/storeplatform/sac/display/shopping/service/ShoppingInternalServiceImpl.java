@@ -81,18 +81,20 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 		if (!"channel".equals(req.getType()) && !"episode".equals(req.getType())) {
 			throw new StorePlatformException("SAC_DSP_0003", "type", req.getType());
 		}
-		if (StringUtils.isEmpty(req.getProdId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "prodId", req.getProdId());
+		if ("catalog".equals(req.getType())) {
+			if (StringUtils.isEmpty(req.getProductId())) {
+				throw new StorePlatformException("SAC_DSP_0002", "prodId", req.getProductId());
+			}
 		}
 
 		if (StringUtils.equals("episode", req.getType())) {
 			MetaInfo channelByepisode = this.commonDAO.queryForObject("Shopping.getChannelByepisode", req,
 					MetaInfo.class);
 			if (channelByepisode != null) {
-				req.setSpecialProdId(req.getProdId());
-				req.setProdId(channelByepisode.getCatalogId());
+				req.setSpecialProdId(req.getProductId());
+				req.setProductId(channelByepisode.getCatalogId());
 			} else {
-				throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
+				throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
 			}
 		}
 
@@ -123,7 +125,7 @@ public class ShoppingInternalServiceImpl implements ShoppingInternalService {
 				MetaInfo.class);
 
 		if (resultChannelList == null) {
-			throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
+			throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
 		} else {
 			if (resultChannelList.size() > 0) {
 
