@@ -11,7 +11,9 @@ package com.skplanet.storeplatform.sac.other.feedback.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
@@ -28,7 +30,6 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
@@ -58,7 +59,6 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedb
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants.SellerConstants;
 import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
@@ -275,7 +275,18 @@ public class FeedbackServiceImpl implements FeedbackService {
 			throw new StorePlatformException("SAC_OTH_9001");
 		}
 
-		Feedback feedback = this.setFeedback(res, "");
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		// notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
+		SellerMbrSac sellerMbrSac = new SellerMbrSac();
+		sellerMbrSac.setSellerKey(res.getSellerMbrNo());
+		sellerMbrSacList.add(sellerMbrSac);
+
+		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+		DetailInformationSacRes detailInformationSacRes = this.feedbackRepository
+				.detailInformation(detailInformationSacReq);
+
+		Feedback feedback = this.setFeedback(res, "", detailInformationSacRes);
 
 		CreateRecommendFeedbackSacRes createRecommendFeedbackSacRes = new CreateRecommendFeedbackSacRes();
 		BeanUtils.copyProperties(feedback, createRecommendFeedbackSacRes);
@@ -323,7 +334,18 @@ public class FeedbackServiceImpl implements FeedbackService {
 			throw new StorePlatformException("SAC_OTH_9001");
 		}
 
-		Feedback feedback = this.setFeedback(res, "");
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		// notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
+		SellerMbrSac sellerMbrSac = new SellerMbrSac();
+		sellerMbrSac.setSellerKey(res.getSellerMbrNo());
+		sellerMbrSacList.add(sellerMbrSac);
+
+		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+		DetailInformationSacRes detailInformationSacRes = this.feedbackRepository
+				.detailInformation(detailInformationSacReq);
+
+		Feedback feedback = this.setFeedback(res, "", detailInformationSacRes);
 
 		RemoveRecommendFeedbackSacRes removeRecommendFeedbackSacRes = new RemoveRecommendFeedbackSacRes();
 		BeanUtils.copyProperties(feedback, removeRecommendFeedbackSacRes);
@@ -367,9 +389,31 @@ public class FeedbackServiceImpl implements FeedbackService {
 			throw new StorePlatformException("SAC_OTH_9001");
 		}
 		List<Feedback> notiList = new ArrayList<Feedback>();
+
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
+
 		for (ProdNoti res : getProdnotiList) {
-			notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
+			// 판매자 회원정보 가져오기.
+			// notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
+			SellerMbrSac sellerMbrSac = new SellerMbrSac();
+			sellerMbrSac.setSellerKey(res.getSellerMbrNo());
+			sellerMbrSacSet.add(sellerMbrSac);
 		}
+		sellerMbrSacList.addAll(sellerMbrSacSet);
+		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+		DetailInformationSacRes detailInformationSacRes = null;
+
+		try {
+			this.feedbackRepository.detailInformation(detailInformationSacReq);
+		} catch (Exception e) {
+			detailInformationSacRes = null;
+		}
+		for (ProdNoti res : getProdnotiList) {
+			notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType(), detailInformationSacRes));
+		}
+
 		listFeedbackRes.setNotiList(notiList);
 		return listFeedbackRes;
 	}
@@ -412,8 +456,24 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
 
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
+
 		for (ProdNoti res : getMyProdNotiList) {
-			Feedback feedback = this.setFeedback(res, listMyFeedbackSacReq.getProdType());
+			// 판매자 회원정보 가져오기.
+			// notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType()));
+			SellerMbrSac sellerMbrSac = new SellerMbrSac();
+			sellerMbrSac.setSellerKey(res.getSellerMbrNo());
+			sellerMbrSacSet.add(sellerMbrSac);
+		}
+		sellerMbrSacList.addAll(sellerMbrSacSet);
+		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+		DetailInformationSacRes detailInformationSacRes = this.feedbackRepository
+				.detailInformation(detailInformationSacReq);
+
+		for (ProdNoti res : getMyProdNotiList) {
+			Feedback feedback = this.setFeedback(res, listMyFeedbackSacReq.getProdType(), detailInformationSacRes);
 			FeedbackMy feedbackMy = new FeedbackMy();
 			BeanUtils.copyProperties(feedback, feedbackMy);
 			notiMyList.add(feedbackMy);
@@ -436,7 +496,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// 회원정보 조회
 		DetailInformationSacReq memberReq = new DetailInformationSacReq();
 
-		memberReq.setSellerKey(createSellerFeedbackSacReq.getSellerKey());
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		SellerMbrSac sellerMbrSac = new SellerMbrSac();
+		sellerMbrSac.setSellerKey(createSellerFeedbackSacReq.getSellerKey());
+		sellerMbrSacList.add(sellerMbrSac);
+		memberReq.setSellerMbrSacList(sellerMbrSacList);
+
 		this.feedbackRepository.detailInformation(memberReq);
 
 		int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
@@ -461,8 +526,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// 회원정보 조회
 		DetailInformationSacReq memberReq = new DetailInformationSacReq();
 
-		memberReq.setSellerKey(modifySellerFeedbackSacReq.getSellerKey());
-		this.feedbackRepository.detailInformation(memberReq);
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		SellerMbrSac sellerMbrSac = new SellerMbrSac();
+		sellerMbrSac.setSellerKey(modifySellerFeedbackSacReq.getSellerKey());
+		sellerMbrSacList.add(sellerMbrSac);
+		memberReq.setSellerMbrSacList(sellerMbrSacList);
 
 		int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
 		if (affectedRow <= 0)
@@ -486,7 +554,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// 회원정보 조회
 		DetailInformationSacReq memberReq = new DetailInformationSacReq();
 
-		memberReq.setSellerKey(removeSellerFeedbackSacReq.getSellerKey());
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		SellerMbrSac sellerMbrSac = new SellerMbrSac();
+		sellerMbrSac.setSellerKey(removeSellerFeedbackSacReq.getSellerKey());
+		sellerMbrSacList.add(sellerMbrSac);
+		memberReq.setSellerMbrSacList(sellerMbrSacList);
+
 		this.feedbackRepository.detailInformation(memberReq);
 
 		int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
@@ -620,7 +693,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	 * @param prodNoti
 	 * @return
 	 */
-	private Feedback setFeedback(ProdNoti prodNoti, String prodType) {
+	private Feedback setFeedback(ProdNoti prodNoti, String prodType, DetailInformationSacRes detailInformationSacRes) {
 		Feedback feedback = new Feedback();
 		feedback.setNotiSeq(prodNoti.getNotiSeq());
 		feedback.setUserKey(prodNoti.getMbrNo());
@@ -630,29 +703,29 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setNotiScore(String.valueOf(prodNoti.getNotiScore()));
 
 		// ?? 회원 SCI 연동후, 해당 ID가 기기사용자일경우, mdn을 별표처리한다. 그외는 regId를 셋팅한다.
-		SearchUserSacRes searchUserSacRes = null;
-		try {
-			searchUserSacRes = this.feedbackRepository.searchUserByUserKey(prodNoti.getMbrNo());
-		} catch (Exception e) {
-			searchUserSacRes = null;
-		}
-		String regId = "";
-		// String regId = "010***1234";
-		if (searchUserSacRes != null
-				&& StringUtils.equals(searchUserSacRes.getUserType(), MemberConstants.USER_TYPE_MOBILE)
-				&& StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
-			String telNo = prodNoti.getMbrTelno();
-			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(StringUtils.substring(telNo, 0, 3));
-			if (telNo.length() < 11) {
-				stringBuffer.append("***");
-			} else {
-				stringBuffer.append("****");
-			}
-			regId = stringBuffer.append(StringUtils.substring(telNo, telNo.length() - 4, telNo.length())).toString();
-		} else {
-			regId = prodNoti.getRegId();
-		}
+		// SearchUserSacRes searchUserSacRes = null;
+		// try {
+		// searchUserSacRes = this.feedbackRepository.searchUserByUserKey(prodNoti.getMbrNo());
+		// } catch (Exception e) {
+		// searchUserSacRes = null;
+		// }
+		// String regId = "";
+		String regId = "010***1234";
+		// if (searchUserSacRes != null
+		// && StringUtils.equals(searchUserSacRes.getUserType(), MemberConstants.USER_TYPE_MOBILE)
+		// && StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
+		// String telNo = prodNoti.getMbrTelno();
+		// StringBuffer stringBuffer = new StringBuffer();
+		// stringBuffer.append(StringUtils.substring(telNo, 0, 3));
+		// if (telNo.length() < 11) {
+		// stringBuffer.append("***");
+		// } else {
+		// stringBuffer.append("****");
+		// }
+		// regId = stringBuffer.append(StringUtils.substring(telNo, telNo.length() - 4, telNo.length())).toString();
+		// } else {
+		// regId = prodNoti.getRegId();
+		// }
 		feedback.setRegId(regId);
 		feedback.setRegDt(prodNoti.getRegDt());
 		feedback.setSellerRespTitle(prodNoti.getSellerRespTitle());
@@ -671,22 +744,39 @@ public class FeedbackServiceImpl implements FeedbackService {
 		String sellerClass = "";
 		String charger = "";
 		if (StringUtils.isNotBlank(prodNoti.getSellerMbrNo())) {
-			DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-			detailInformationSacReq.setSellerKey(prodNoti.getSellerMbrNo());
-			DetailInformationSacRes detailInformationSacRes = null;
-			try {
-				detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
-			} catch (Exception e) {
-				// 개발자 정보조회는 Exception 발생할 경우는 Null로 전환
-				detailInformationSacRes = null;
+			if (detailInformationSacRes != null
+					&& !CollectionUtils.isEmpty(detailInformationSacRes.getSellerMbrListMap())) {
+				LOGGER.debug("feedback sellerMap : {}",
+						detailInformationSacRes.getSellerMbrListMap().get(prodNoti.getSellerMbrNo()));
+				// Map sellerMap = (Map) detailInformationSacRes.getSellerMbrListMap().get(prodNoti.getSellerMbrNo());
+				// SellerMbrSac sellerMbrSac = (SellerMbrSac) detailInformationSacRes.getSellerMbrListMap().get(
+				// prodNoti.getSellerMbrNo());
+				// if (!CollectionUtils.isEmpty(sellerMap)) {
+				// sellerNickName = (String) sellerMap.get("sellerNickName");
+				// sellerCompany = (String) sellerMap.get("sellerCompany");
+				// sellerClass = (String) sellerMap.get("sellerClass");
+				// charger = (String) sellerMap.get("charger");
+				// }
+
 			}
-			if (detailInformationSacRes != null && !CollectionUtils.isEmpty(detailInformationSacRes.getSellerMbr())) {
-				SellerMbrSac sellerMbrSac = detailInformationSacRes.getSellerMbr().get(0);
-				sellerNickName = sellerMbrSac.getSellerNickName();
-				sellerCompany = sellerMbrSac.getSellerCompany();
-				sellerClass = sellerMbrSac.getSellerClass();
-				charger = sellerMbrSac.getCharger();
-			}
+
+			// DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+			// detailInformationSacReq.setSellerKey(prodNoti.getSellerMbrNo());
+			// DetailInformationSacRes detailInformationSacRes = null;
+			// try {
+			// detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
+			// } catch (Exception e) {
+			// // 개발자 정보조회는 Exception 발생할 경우는 Null로 전환
+			// detailInformationSacRes = null;
+			// }
+			// if (detailInformationSacRes != null && !CollectionUtils.isEmpty(detailInformationSacRes.getSellerMbr()))
+			// {
+			// SellerMbrSac sellerMbrSac = detailInformationSacRes.getSellerMbr().get(0);
+			// sellerNickName = sellerMbrSac.getSellerNickName();
+			// sellerCompany = sellerMbrSac.getSellerCompany();
+			// sellerClass = sellerMbrSac.getSellerClass();
+			// charger = sellerMbrSac.getCharger();
+			// }
 		}
 		// 테스트 해보기.
 
