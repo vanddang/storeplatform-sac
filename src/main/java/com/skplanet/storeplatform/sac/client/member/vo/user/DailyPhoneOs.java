@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -14,30 +16,10 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class DailyPhoneOs extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+
 	private String modelName;
-	private String enctryCount;
 
-	private String osVersion;
-
-	public String getEnctryCount() {
-		return this.enctryCount;
-	}
-
-	public void setEnctryCount(String enctryCount) {
-		this.enctryCount = enctryCount;
-	}
-
-	public String getOsVersion() {
-		return this.osVersion;
-	}
-
-	public void setOsVersion(String osVersion) {
-		this.osVersion = osVersion;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+	private List<DailyPhone> phoneOsList;
 
 	public String getModelName() {
 		return this.modelName;
@@ -45,6 +27,18 @@ public class DailyPhoneOs extends CommonInfo {
 
 	public void setModelName(String modelName) {
 		this.modelName = modelName;
+	}
+
+	public List<DailyPhone> getPhoneOsList() {
+		return this.phoneOsList;
+	}
+
+	public void setPhoneOsList(List<DailyPhone> phoneOsList) {
+		this.phoneOsList = phoneOsList;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }
