@@ -91,7 +91,7 @@ public class DetailInformationSCITest {
 		DetailInformationSacRes res = this.sellerSearchSCI.detailInformation(req);
 
 		assertThat(res.getSellerMbrListMap(), notNullValue());
-		LOGGER.debug("response param : {}", res.toString());
+		LOGGER.debug("response param----- : {}", res.toString());
 	}
 
 }
