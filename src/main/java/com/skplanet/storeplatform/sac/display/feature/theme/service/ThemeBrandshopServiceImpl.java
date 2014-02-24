@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeBrandshopSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeBrandshopSacRes;
@@ -86,87 +85,82 @@ public class ThemeBrandshopServiceImpl implements ThemeBrandshopService {
 			count = offset + count - 1;
 			req.setCount(count);
 
-			try {
+			CommonResponse commonResponse = new CommonResponse();
+			List<Product> productList = new ArrayList<Product>();
+			// 브렌드샵 테마 조회
+			List<ThemeBrandshopInfo> themeBrandshopList = this.commonDAO.queryForList(
+					"ThemeBrandshop.selectThemeBrandshopList", req, ThemeBrandshopInfo.class);
 
-				CommonResponse commonResponse = new CommonResponse();
-				List<Product> productList = new ArrayList<Product>();
-				// 브렌드샵 테마 조회
-				List<ThemeBrandshopInfo> themeBrandshopList = this.commonDAO.queryForList(
-						"ThemeBrandshop.selectThemeBrandshopList", req, ThemeBrandshopInfo.class);
+			if (!themeBrandshopList.isEmpty()) {
 
-				if (!themeBrandshopList.isEmpty()) {
+				Product product = null;
 
-					Product product = null;
+				// Identifier 설정
+				Identifier identifier = null;
+				List<Identifier> identifierList = null;
+				Menu menu = null;
+				List<Menu> menuList = null;
+				Title title = null;
 
-					// Identifier 설정
-					Identifier identifier = null;
-					List<Identifier> identifierList = null;
-					Menu menu = null;
-					List<Menu> menuList = null;
-					Title title = null;
+				List<Source> sourceList = null;
+				Source source = null;
 
-					List<Source> sourceList = null;
-					Source source = null;
+				ThemeBrandshopInfo ThemeBrandshopInfo = null;
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-					ThemeBrandshopInfo ThemeBrandshopInfo = null;
-					Map<String, Object> reqMap = new HashMap<String, Object>();
-					reqMap.put("tenantHeader", tenantHeader);
-					reqMap.put("deviceHeader", deviceHeader);
-					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				for (int i = 0; i < themeBrandshopList.size(); i++) {
+					ThemeBrandshopInfo = themeBrandshopList.get(i);
 
-					for (int i = 0; i < themeBrandshopList.size(); i++) {
-						ThemeBrandshopInfo = themeBrandshopList.get(i);
+					product = new Product(); // 결과물
 
-						product = new Product(); // 결과물
+					// identifier 정보
+					identifier = new Identifier();
+					identifierList = new ArrayList<Identifier>();
 
-						// identifier 정보
-						identifier = new Identifier();
-						identifierList = new ArrayList<Identifier>();
+					identifier.setType("brand");
+					identifier.setText(ThemeBrandshopInfo.getBrandId());
+					identifierList.add(identifier);
+					product.setIdentifierList(identifierList);
 
-						identifier.setType("brand");
-						identifier.setText(ThemeBrandshopInfo.getBrandId());
-						identifierList.add(identifier);
-						product.setIdentifierList(identifierList);
+					// 메뉴 정보
+					menu = new Menu(); // 메뉴
+					menuList = new ArrayList<Menu>(); // 메뉴 리스트
+					menu.setId(ThemeBrandshopInfo.getCategoryNo());
+					menu.setName(ThemeBrandshopInfo.getMenuNm());
+					menu.setType("topClass");
+					menuList.add(menu);
+					product.setMenuList(menuList);
 
-						// 메뉴 정보
-						menu = new Menu(); // 메뉴
-						menuList = new ArrayList<Menu>(); // 메뉴 리스트
-						menu.setId(ThemeBrandshopInfo.getCategoryNo());
-						menu.setName(ThemeBrandshopInfo.getMenuNm());
-						menu.setType("topClass");
-						menuList.add(menu);
-						product.setMenuList(menuList);
+					// title 정보
+					title = new Title();
+					title.setText(ThemeBrandshopInfo.getBrandShopNm());
+					product.setTitle(title);
 
-						// title 정보
-						title = new Title();
-						title.setText(ThemeBrandshopInfo.getBrandShopNm());
-						product.setTitle(title);
+					// source 정보
+					source = new Source();
+					sourceList = new ArrayList<Source>();
+					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+					source.setUrl(ThemeBrandshopInfo.getLogImgPos());
+					sourceList.add(source);
+					product.setSourceList(sourceList);
 
-						// source 정보
-						source = new Source();
-						sourceList = new ArrayList<Source>();
-						source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-						source.setUrl(ThemeBrandshopInfo.getLogImgPos());
-						sourceList.add(source);
-						product.setSourceList(sourceList);
+					// 데이터 매핑
+					productList.add(i, product);
 
-						// 데이터 매핑
-						productList.add(i, product);
-
-					}
-					commonResponse.setTotalCount(themeBrandshopList.get(0).getTotalCount());
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				} else {
-					// 조회 결과 없음
-					commonResponse.setTotalCount(0);
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
 				}
-				return res;
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_DSP_0001", "");
+				commonResponse.setTotalCount(themeBrandshopList.get(0).getTotalCount());
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
 			}
+			return res;
 		} else {
 			return this.generateDummy();
 		}

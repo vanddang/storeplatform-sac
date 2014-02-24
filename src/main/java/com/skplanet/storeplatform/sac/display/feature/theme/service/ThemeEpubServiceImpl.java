@@ -95,95 +95,90 @@ public class ThemeEpubServiceImpl implements ThemeEpubService {
 				throw new StorePlatformException("SAC_DSP_0002", "filteredBy", req.getFilteredBy());
 			}
 
-			try {
+			CommonResponse commonResponse = new CommonResponse();
+			List<Product> productList = new ArrayList<Product>();
+			// EBOOK/코믹 테마상품 조회
+			List<ThemeEpubInfo> themeEpubList = this.commonDAO.queryForList("ThemeEpub.selectThemeEpubList", req,
+					ThemeEpubInfo.class);
 
-				CommonResponse commonResponse = new CommonResponse();
-				List<Product> productList = new ArrayList<Product>();
-				// EBOOK/코믹 테마상품 조회
-				List<ThemeEpubInfo> themeEpubList = this.commonDAO.queryForList("ThemeEpub.selectThemeEpubList", req,
-						ThemeEpubInfo.class);
+			if (!themeEpubList.isEmpty()) {
 
-				if (!themeEpubList.isEmpty()) {
+				Product product = null;
 
-					Product product = null;
+				// Identifier 설정
+				Identifier identifier = null;
+				List<Identifier> identifierList;
+				Menu menu = null;
+				List<Menu> menuList;
+				Title title = null;
 
-					// Identifier 설정
-					Identifier identifier = null;
-					List<Identifier> identifierList;
-					Menu menu = null;
-					List<Menu> menuList;
-					Title title = null;
+				List<Source> sourceList;
+				Source source = null;
 
-					List<Source> sourceList;
-					Source source = null;
+				ThemeEpubInfo ThemeEpubInfo = null;
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-					ThemeEpubInfo ThemeEpubInfo = null;
-					Map<String, Object> reqMap = new HashMap<String, Object>();
-					reqMap.put("tenantHeader", tenantHeader);
-					reqMap.put("deviceHeader", deviceHeader);
-					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				for (int i = 0; i < themeEpubList.size(); i++) {
+					ThemeEpubInfo = themeEpubList.get(i);
 
-					for (int i = 0; i < themeEpubList.size(); i++) {
-						ThemeEpubInfo = themeEpubList.get(i);
+					product = new Product(); // 결과물
 
-						product = new Product(); // 결과물
+					// identifier 정보
+					identifier = new Identifier();
+					identifierList = new ArrayList<Identifier>();
 
-						// identifier 정보
-						identifier = new Identifier();
-						identifierList = new ArrayList<Identifier>();
+					identifier.setType("theme");
+					identifier.setText(ThemeEpubInfo.getBnrSeq());
+					identifierList.add(identifier);
+					product.setIdentifierList(identifierList);
 
-						identifier.setType("theme");
-						identifier.setText(ThemeEpubInfo.getBnrSeq());
-						identifierList.add(identifier);
-						product.setIdentifierList(identifierList);
-
-						// 메뉴 정보
-						menu = new Menu(); // 메뉴
-						menuList = new ArrayList<Menu>(); // 메뉴 리스트
-						if ("ebook".equals(filteredBy)) {
-							menu.setId("DP000513");
-							menu.setName("이북");
-						} else if ("comic".equals(filteredBy)) {
-							menu.setId("DP000514");
-							menu.setName("만화");
-						}
-						menu.setType("topClass");
-						menuList.add(menu);
-						product.setMenuList(menuList);
-
-						// title 정보
-						title = new Title();
-						title.setText(ThemeEpubInfo.getBnrNm());
-						product.setTitle(title);
-
-						// productExplain
-						product.setProductExplain(ThemeEpubInfo.getBnrDesc());
-
-						// source 정보
-						source = new Source();
-						sourceList = new ArrayList<Source>();
-						source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-						source.setUrl(ThemeEpubInfo.getImgPath());
-						sourceList.add(source);
-						product.setSourceList(sourceList);
-
-						// 데이터 매핑
-						productList.add(i, product);
-
+					// 메뉴 정보
+					menu = new Menu(); // 메뉴
+					menuList = new ArrayList<Menu>(); // 메뉴 리스트
+					if ("ebook".equals(filteredBy)) {
+						menu.setId("DP000513");
+						menu.setName("이북");
+					} else if ("comic".equals(filteredBy)) {
+						menu.setId("DP000514");
+						menu.setName("만화");
 					}
-					commonResponse.setTotalCount(themeEpubList.get(0).getTotalCount());
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				} else {
-					// 조회 결과 없음
-					commonResponse.setTotalCount(0);
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
+					menu.setType("topClass");
+					menuList.add(menu);
+					product.setMenuList(menuList);
+
+					// title 정보
+					title = new Title();
+					title.setText(ThemeEpubInfo.getBnrNm());
+					product.setTitle(title);
+
+					// productExplain
+					product.setProductExplain(ThemeEpubInfo.getBnrDesc());
+
+					// source 정보
+					source = new Source();
+					sourceList = new ArrayList<Source>();
+					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+					source.setUrl(ThemeEpubInfo.getImgPath());
+					sourceList.add(source);
+					product.setSourceList(sourceList);
+
+					// 데이터 매핑
+					productList.add(i, product);
+
 				}
-				return res;
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_DSP_0001", "");
+				commonResponse.setTotalCount(themeEpubList.get(0).getTotalCount());
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
 			}
+			return res;
 		} else {
 			return this.generateDummy();
 		}

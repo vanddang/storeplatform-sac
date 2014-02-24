@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneSacReq;
@@ -107,160 +106,153 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 			String themezoneId = req.getThemezoneId();
 
-			try {
+			CommonResponse commonResponse = new CommonResponse();
+			List<Product> productList = new ArrayList<Product>();
 
-				CommonResponse commonResponse = new CommonResponse();
-				List<Product> productList = new ArrayList<Product>();
+			Map<String, Object> reqMap = new HashMap<String, Object>();
+			reqMap.put("tenantHeader", tenantHeader);
+			reqMap.put("deviceHeader", deviceHeader);
+			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-				Map<String, Object> reqMap = new HashMap<String, Object>();
-				reqMap.put("tenantHeader", tenantHeader);
-				reqMap.put("deviceHeader", deviceHeader);
-				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+			// 테마 조회
+			List<ThemeThemeZoneInfo> ThemeThemeZoneInfoMeta = this.commonDAO.queryForList(
+					"ThemeThemeZone.selectThemeThemeZone", req, ThemeThemeZoneInfo.class);
 
-				// 테마 조회
-				List<ThemeThemeZoneInfo> ThemeThemeZoneInfoMeta = this.commonDAO.queryForList(
-						"ThemeThemeZone.selectThemeThemeZone", req, ThemeThemeZoneInfo.class);
+			// 테마상품 조회
+			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+					"ThemeThemeZone.selectThemeThemeZoneList", req, ProductBasicInfo.class);
 
-				// 테마상품 조회
-				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-						"ThemeThemeZone.selectThemeThemeZoneList", req, ProductBasicInfo.class);
+			if (!productBasicInfoList.isEmpty()) {
 
-				if (!productBasicInfoList.isEmpty()) {
+				Product product = null;
+				// Identifier 설정
+				Identifier identifier = null;
+				List<Identifier> identifierList = null;
+				Menu menu = null;
+				List<Menu> menuList = null;
+				Title title = null;
 
-					Product product = null;
-					// Identifier 설정
-					Identifier identifier = null;
-					List<Identifier> identifierList = null;
-					Menu menu = null;
-					List<Menu> menuList = null;
-					Title title = null;
+				List<Source> sourceList = null;
+				Source source = null;
+				Rights rights = null;
+				Layout layout = new Layout();
 
-					List<Source> sourceList = null;
-					Source source = null;
-					Rights rights = null;
-					Layout layout = new Layout();
+				// layout 설정
+				if (!(StringUtils.isEmpty(themezoneId))) {
+					ThemeThemeZoneInfo themeThemeZoneInfo = null;
+					themeThemeZoneInfo = ThemeThemeZoneInfoMeta.get(0);
+					layout = new Layout();
 
-					// layout 설정
-					if (!(StringUtils.isEmpty(themezoneId))) {
-						ThemeThemeZoneInfo themeThemeZoneInfo = null;
-						themeThemeZoneInfo = ThemeThemeZoneInfoMeta.get(0);
-						layout = new Layout();
+					title = new Title();
+					title.setText(themeThemeZoneInfo.getBnrNm());
+					layout.setTitle(title);
 
+					// source 정보
+					source = new Source();
+					sourceList = new ArrayList<Source>();
+					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+					source.setUrl(themeThemeZoneInfo.getImgPath());
+					sourceList.add(source);
+					layout.setSource(source);
+
+					// 메뉴 정보
+					menu = new Menu(); // 메뉴
+					menu.setId(themeThemeZoneInfo.getBnrMenuId());
+					menu.setName(themeThemeZoneInfo.getBnrMenuNm());
+					layout.setMenu(menu);
+
+				}
+
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					String topMenuId = productBasicInfo.getTopMenuId();
+					String svcGrpCd = productBasicInfo.getSvcGrpCd();
+
+					product = new Product(); // 결과물
+
+					// identifier 정보
+					identifier = new Identifier();
+					identifierList = new ArrayList<Identifier>();
+
+					identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+					identifier.setText(productBasicInfo.getPartProdId());
+					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+					identifier.setText(productBasicInfo.getProdId());
+					identifierList.add(identifier);
+					product.setIdentifierList(identifierList);
+					MetaInfo retMetaInfo = null;
+
+					// APP 상품의 경우
+					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+						reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+						retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+
+					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
+						// 영화/방송 상품의 경우
+						reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+							retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+
+							// 영화용 Contributor 설정
+							Contributor contributor = this.vodGenerator.generateMovieContributor(retMetaInfo);
+							product.setContributor(contributor);
+						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
+																							  // 경우
+							retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+							// Ebook용 Contributor 설정
+							Contributor contributor = this.ebookComicGenerator.generateEbookContributor(retMetaInfo);
+							product.setContributor(contributor);
+						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
+							retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+							// Music용 Contributor 설정
+							Contributor contributor = this.musicGenerator.generateContributor(retMetaInfo);
+							product.setContributor(contributor);
+						} else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // WEBTOON 상품의 경우
+							retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+							// Comic용 Contributor 설정
+							Contributor contributor = this.ebookComicGenerator.generateComicContributor(retMetaInfo);
+							product.setContributor(contributor);
+						}
+					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
+						retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					}
+					if (retMetaInfo != null) {
+						// title 정보
 						title = new Title();
-						title.setText(themeThemeZoneInfo.getBnrNm());
-						layout.setTitle(title);
+						title.setText(retMetaInfo.getProdNm());
+						product.setTitle(title);
 
-						// source 정보
-						source = new Source();
-						sourceList = new ArrayList<Source>();
-						source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-						source.setUrl(themeThemeZoneInfo.getImgPath());
-						sourceList.add(source);
-						layout.setSource(source);
+						// right 정보
+						rights = new Rights();
+						rights.setGrade(retMetaInfo.getProdGrdCd());
+						product.setRights(rights);
 
 						// 메뉴 정보
 						menu = new Menu(); // 메뉴
-						menu.setId(themeThemeZoneInfo.getBnrMenuId());
-						menu.setName(themeThemeZoneInfo.getBnrMenuNm());
-						layout.setMenu(menu);
-
+						menuList = new ArrayList<Menu>(); // 메뉴 리스트
+						menu.setId(retMetaInfo.getMenuId());
+						menu.setName(retMetaInfo.getMenuNm());
+						menuList.add(menu);
+						product.setMenuList(menuList);
+						productList.add(product);
 					}
 
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						String topMenuId = productBasicInfo.getTopMenuId();
-						String svcGrpCd = productBasicInfo.getSvcGrpCd();
-
-						product = new Product(); // 결과물
-
-						// identifier 정보
-						identifier = new Identifier();
-						identifierList = new ArrayList<Identifier>();
-
-						identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-						identifier.setText(productBasicInfo.getPartProdId());
-						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-						identifier.setText(productBasicInfo.getProdId());
-						identifierList.add(identifier);
-						product.setIdentifierList(identifierList);
-						MetaInfo retMetaInfo = null;
-
-						// APP 상품의 경우
-						if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-							reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-							retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
-
-						} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
-							// 영화/방송 상품의 경우
-							reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-									|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-								retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-
-								// 영화용 Contributor 설정
-								Contributor contributor = this.vodGenerator.generateMovieContributor(retMetaInfo);
-								product.setContributor(contributor);
-							} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-									|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
-																								  // 경우
-								retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-								// Ebook용 Contributor 설정
-								Contributor contributor = this.ebookComicGenerator
-										.generateEbookContributor(retMetaInfo);
-								product.setContributor(contributor);
-							} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-								retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
-								// Music용 Contributor 설정
-								Contributor contributor = this.musicGenerator.generateContributor(retMetaInfo);
-								product.setContributor(contributor);
-							} else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // WEBTOON 상품의 경우
-								retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
-								// Comic용 Contributor 설정
-								Contributor contributor = this.ebookComicGenerator
-										.generateComicContributor(retMetaInfo);
-								product.setContributor(contributor);
-							}
-						} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
-							retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
-						}
-						if (retMetaInfo != null) {
-							// title 정보
-							title = new Title();
-							title.setText(retMetaInfo.getProdNm());
-							product.setTitle(title);
-
-							// right 정보
-							rights = new Rights();
-							rights.setGrade(retMetaInfo.getProdGrdCd());
-							product.setRights(rights);
-
-							// 메뉴 정보
-							menu = new Menu(); // 메뉴
-							menuList = new ArrayList<Menu>(); // 메뉴 리스트
-							menu.setId(retMetaInfo.getMenuId());
-							menu.setName(retMetaInfo.getMenuNm());
-							menuList.add(menu);
-							product.setMenuList(menuList);
-							productList.add(product);
-						}
-
-					}
-					commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-					res.setProductList(productList);
-					if (!(StringUtils.isEmpty(themezoneId))) {
-						res.setLayOut(layout);
-					}
-					res.setCommonResponse(commonResponse);
-				} else {
-					// 조회 결과 없음
-					commonResponse.setTotalCount(0);
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
 				}
-				return res;
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_DSP_0001", "");
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+				res.setProductList(productList);
+				if (!(StringUtils.isEmpty(themezoneId))) {
+					res.setLayOut(layout);
+				}
+				res.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
 			}
+			return res;
 		} else {
 			return this.generateDummy();
 		}
