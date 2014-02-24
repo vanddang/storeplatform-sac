@@ -41,8 +41,6 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 
 /**
  * <pre>
@@ -910,29 +908,29 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean validateBusinessPartner(DpCouponInfo couponInfo) {
 		this.log.info("■■■■■ validateBusinessPartner ■■■■■");
-		DetailInformationSacReq req = new DetailInformationSacReq();
-		DetailInformationSacRes res = new DetailInformationSacRes();
-		try {
-			req.setSellerKey("");
-			req.setSellerId(couponInfo.getBpId());
-			res = this.sellerSearchSCI.detailInformation(req);
-			if (res != null) {
-				this.log.info("sdf");
-				// if (StringUtils.isBlank(res.getSellerMbr().getSellerCompany())) {
-				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
-				// couponInfo.getBpId());
-				// }
-
-				// this.compNm = res.getSellerMbr().getSellerCompany();
-				// this.mbrNo = res.getSellerMbr().getSellerKey();
-			} else {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
-						couponInfo.getBpId());
-			}
-		} catch (Exception e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", couponInfo.getBpId());
-
-		}
+		// DetailInformationSacReq req = new DetailInformationSacReq();
+		// DetailInformationSacRes res = new DetailInformationSacRes();
+		// try {
+		// // req.setSellerKey("");
+		// // req.setSellerId(couponInfo.getBpId());
+		// // res = this.sellerSearchSCI.detailInformation(req);
+		// if (res != null) {
+		// this.log.info("sdf");
+		// // if (StringUtils.isBlank(res.getSellerMbr().getSellerCompany())) {
+		// // throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
+		// // couponInfo.getBpId());
+		// // }
+		//
+		// // this.compNm = res.getSellerMbr().getSellerCompany();
+		// // this.mbrNo = res.getSellerMbr().getSellerKey();
+		// } else {
+		// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
+		// couponInfo.getBpId());
+		// }
+		// } catch (Exception e) {
+		// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", couponInfo.getBpId());
+		//
+		// }
 		// this.compNm = "GTSOFT";
 		// this.mbrNo = "IF1023541432620111207152255";
 		return true;
