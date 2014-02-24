@@ -1,7 +1,10 @@
 package com.skplanet.storeplatform.sac.member.seller.sci;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +21,12 @@ import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -95,11 +100,43 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 
 		SearchMbrSellerResponse schRes = this.sellerSCI.searchMbrSeller(schReq);
 
+		Iterator<String> it = schRes.getSellerMbrListMap().keySet().iterator();
+		List<SellerMbr> sellerMbrs = new ArrayList<SellerMbr>();
+		SellerMbr sellerMbr = null;
+
+		List<SellerMbrSac> sellerMbrSacs = new ArrayList<SellerMbrSac>();
+		SellerMbrSac sellerMbrSac = null;
+		Map<String, List<SellerMbrSac>> sellerMbrSacMap = new HashMap<String, List<SellerMbrSac>>();
+		while (it.hasNext()) {
+			String key = it.next();
+			sellerMbrs = (List<SellerMbr>) schRes.getSellerMbrListMap().get(key);
+			for (int i = 0; i < sellerMbrs.size(); i++) {
+				sellerMbrSac = new SellerMbrSac();
+				sellerMbrSac.setSellerKey(sellerMbrs.get(i).getSellerKey());
+				sellerMbrSac.setSellerId(sellerMbrs.get(i).getSellerID());
+				sellerMbrSac.setSellerClass(sellerMbrs.get(i).getSellerClass());
+				sellerMbrSac.setCharger(sellerMbrs.get(i).getCharger());
+				sellerMbrSac.setSellerCompany(sellerMbrs.get(i).getSellerCompany());
+				sellerMbrSac.setSellerNickName(sellerMbrs.get(i).getSellerNickName());
+				sellerMbrSac.setSellerBizNumber(sellerMbrs.get(i).getSellerBizNumber());
+				sellerMbrSac.setSellerName(sellerMbrs.get(i).getSellerName());
+				sellerMbrSac.setRepPhone(sellerMbrs.get(i).getRepPhone());
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(i).getSellerEmail());
+				sellerMbrSac.setSellerAddress(sellerMbrs.get(i).getSellerAddress());
+				sellerMbrSac.setSellerDetailAddress(sellerMbrs.get(i).getSellerDetailAddress());
+				sellerMbrSac.setBizRegNumber(sellerMbrs.get(i).getBizRegNumber());
+				sellerMbrSacs.add(sellerMbrSac);
+			}
+			sellerMbrSacMap.put(key, sellerMbrSacs);
+		}
+
 		DetailInformationSacRes response = new DetailInformationSacRes();
 
-		response.setSellerMbrListMap(schRes.getSellerMbrListMap());
+		response.setSellerMbrListMap(sellerMbrSacMap);
+
+		response.setSellerMbrListMap(sellerMbrSacMap);
 
 		return response;
-	}
 
+	}
 }
