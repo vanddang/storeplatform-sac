@@ -967,8 +967,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 			shoppingRes = this.shoppingInternalSCI.searchShoppingList(shoppingReq);
 			if (shoppingRes != null) {
-				this.log.info("identifier++" + shoppingRes.getIdentifierList().get(0).getText());
-				this.log.info("identifier++" + shoppingRes.getPrice().toString());
+				this.log.info("sdfsdf");
 
 			}
 		} catch (Exception e) {
