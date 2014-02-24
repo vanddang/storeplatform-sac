@@ -24,7 +24,7 @@ public class MenuSacReq extends CommonInfo {
 
 	private String menuId; // 메뉴ID
 
-	private String topMenuId; // 메뉴ID
+	private String topMenuId; // 탑 메뉴ID
 
 	private String systemId; // 시스템ID
 
@@ -32,50 +32,152 @@ public class MenuSacReq extends CommonInfo {
 
 	private String langCd; // language code
 
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getTenantId() {
 		return this.tenantId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트ID.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            String
+	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getMenuId() {
 		return this.menuId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴ID.
+	 * </pre>
+	 * 
+	 * @param menuId
+	 *            String
+	 */
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시스템ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getSystemId() {
 		return this.systemId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시스템ID.
+	 * </pre>
+	 * 
+	 * @param systemId
+	 *            String
+	 */
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * device model code.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getDeviceModelCd() {
 		return this.deviceModelCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * device model code.
+	 * </pre>
+	 * 
+	 * @param deviceModelCd
+	 *            String
+	 */
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * language code.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getLangCd() {
 		return this.langCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * language code.
+	 * </pre>
+	 * 
+	 * @param langCd
+	 *            String
+	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 탑 메뉴ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getTopMenuId() {
 		return this.topMenuId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 탑 메뉴ID.
+	 * </pre>
+	 * 
+	 * @param topMenuId
+	 *            String
+	 */
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
 	}

@@ -30,18 +30,52 @@ public class MenuListSacRes extends CommonInfo {
 	private CommonResponse commonResponse;
 	private List<MenuDetail> menuDetailList;
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @return CommonResponse
+	 */
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @param commonResponse
+	 *            CommonResponse
+	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 상세 리스트.
+	 * </pre>
+	 * 
+	 * @return List<MenuDetail>
+	 */
 	public List<MenuDetail> getMenuDetailList() {
 		return this.menuDetailList;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 상세 리스트.
+	 * </pre>
+	 * 
+	 * @param menuDetailList
+	 *            List<MenuDetail>
+	 */
 	public void setMenuDetailList(List<MenuDetail> menuDetailList) {
 		this.menuDetailList = menuDetailList;
 	}

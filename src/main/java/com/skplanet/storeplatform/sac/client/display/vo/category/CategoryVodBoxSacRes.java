@@ -32,18 +32,52 @@ public class CategoryVodBoxSacRes extends CommonInfo implements Serializable {
 
 	private List<Product> productList;
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @return CommonResponse
+	 */
 	public CommonResponse getCommonRes() {
 		return this.commonRes;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @param commonRes
+	 *            CommonResponse
+	 */
 	public void setCommonRes(CommonResponse commonRes) {
 		this.commonRes = commonRes;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상품 리스트.
+	 * </pre>
+	 * 
+	 * @return List<Product>
+	 */
 	public List<Product> getProductList() {
 		return this.productList;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상품 리스트.
+	 * </pre>
+	 * 
+	 * @param productList
+	 *            List<Product>
+	 */
 	public void setProductList(List<Product> productList) {
 		this.productList = productList;
 	}

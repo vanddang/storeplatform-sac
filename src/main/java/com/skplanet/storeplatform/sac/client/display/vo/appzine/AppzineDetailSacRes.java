@@ -28,18 +28,52 @@ public class AppzineDetailSacRes extends CommonInfo {
 	private CommonResponse commonResponse;
 	private Appzine appzineDetail;
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @return CommonResponse
+	 */
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @param commonResponse
+	 *            CommonResponse
+	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 앱진 상세 정보.
+	 * </pre>
+	 * 
+	 * @return Appzine
+	 */
 	public Appzine getAppzineDetail() {
 		return this.appzineDetail;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 앱진 상세 정보.
+	 * </pre>
+	 * 
+	 * @param appzineDetail
+	 *            Appzine
+	 */
 	public void setAppzineDetail(Appzine appzineDetail) {
 		this.appzineDetail = appzineDetail;
 	}

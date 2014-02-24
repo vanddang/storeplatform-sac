@@ -32,82 +32,252 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	private String langCd; // 언어코드
 	private String testYn; // 테스트 여부
 
+	/**
+	 * 
+	 * <pre>
+	 * 상품 아이디.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getProductId() {
 		return this.productId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상품 아이디.
+	 * </pre>
+	 * 
+	 * @param productId
+	 *            String
+	 */
 	public void setProductId(String productId) {
 		this.productId = productId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 제외 상품 아이디.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getExceptId() {
 		return this.exceptId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 제외 상품 아이디.
+	 * </pre>
+	 * 
+	 * @param exceptId
+	 *            String
+	 */
 	public void setExceptId(String exceptId) {
 		this.exceptId = exceptId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시작점 ROW.
+	 * </pre>
+	 * 
+	 * @return Integer
+	 */
 	public Integer getOffset() {
 		return this.offset;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시작점 ROW.
+	 * </pre>
+	 * 
+	 * @param offset
+	 *            Integer
+	 */
 	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 페이지당 노출 ROW 수.
+	 * </pre>
+	 * 
+	 * @return Integer
+	 */
 	public Integer getCount() {
 		return this.count;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 페이지당 노출 ROW 수.
+	 * </pre>
+	 * 
+	 * @param count
+	 *            Integer
+	 */
 	public void setCount(Integer count) {
 		this.count = count;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getTenantId() {
 		return this.tenantId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 ID.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            String
+	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시스템Id.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getSystemId() {
 		return this.systemId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시스템Id.
+	 * </pre>
+	 * 
+	 * @param systemId
+	 *            String
+	 */
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 단말모델코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getDeviceModelCd() {
 		return this.deviceModelCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 단말모델코드.
+	 * </pre>
+	 * 
+	 * @param deviceModelCd
+	 *            String
+	 */
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 언어코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getLangCd() {
 		return this.langCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 언어코드.
+	 * </pre>
+	 * 
+	 * @param langCd
+	 *            String
+	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 제외 상품 아이디 배열.
+	 * </pre>
+	 * 
+	 * @return String[]
+	 */
 	public String[] getArrayExceptId() {
 		return this.arrayExceptId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 제외 상품 아이디 배열.
+	 * </pre>
+	 * 
+	 * @param arrayExceptId
+	 *            String[]
+	 */
 	public void setArrayExceptId(String[] arrayExceptId) {
 		this.arrayExceptId = arrayExceptId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 테스트 여부.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getTestYn() {
 		return this.testYn;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 테스트 여부.
+	 * </pre>
+	 * 
+	 * @param testYn
+	 *            String
+	 */
 	public void setTestYn(String testYn) {
 		this.testYn = testYn;
 	}

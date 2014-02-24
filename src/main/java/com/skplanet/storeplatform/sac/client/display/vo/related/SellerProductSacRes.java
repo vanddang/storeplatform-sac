@@ -32,18 +32,52 @@ public class SellerProductSacRes extends CommonInfo implements Serializable {
 
 	private List<Product> productList;
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @return CommonResponse
+	 */
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @param commonResponse
+	 *            CommonResponse
+	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상품 리스트.
+	 * </pre>
+	 * 
+	 * @return List<Product>
+	 */
 	public List<Product> getProductList() {
 		return this.productList;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상품 리스트.
+	 * </pre>
+	 * 
+	 * @param productList
+	 *            List<Product>
+	 */
 	public void setProductList(List<Product> productList) {
 		this.productList = productList;
 	}

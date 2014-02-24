@@ -30,18 +30,52 @@ public class AppzineVolListSacRes extends CommonInfo {
 	private CommonResponse commonResponse;
 	private List<Appzine> appzineVolList;
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @return CommonResponse
+	 */
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @param commonResponse
+	 *            CommonResponse
+	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 앱진 회차별 리스트.
+	 * </pre>
+	 * 
+	 * @return List<Appzine>
+	 */
 	public List<Appzine> getAppzineVolList() {
 		return this.appzineVolList;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 앱진 회차별 리스트.
+	 * </pre>
+	 * 
+	 * @param appzineVolList
+	 *            List<Appzine>
+	 */
 	public void setAppzineVolList(List<Appzine> appzineVolList) {
 		this.appzineVolList = appzineVolList;
 	}

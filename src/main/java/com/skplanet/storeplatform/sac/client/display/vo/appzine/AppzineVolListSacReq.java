@@ -34,58 +34,177 @@ public class AppzineVolListSacReq extends CommonInfo {
 
 	private Integer count; // 페이지당 노출될 ROW 개수
 
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getTenantId() {
 		return this.tenantId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트ID.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            String
+	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getMenuId() {
 		return this.menuId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴ID.
+	 * </pre>
+	 * 
+	 * @param menuId
+	 *            String
+	 */
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시스템ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getSystemId() {
 		return this.systemId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시스템ID.
+	 * </pre>
+	 * 
+	 * @param systemId
+	 *            String
+	 */
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * device model code.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getDeviceModelCd() {
 		return this.deviceModelCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * device model code.
+	 * </pre>
+	 * 
+	 * @param deviceModelCd
+	 *            String
+	 */
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * language code.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getLangCd() {
 		return this.langCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * language code.
+	 * </pre>
+	 * 
+	 * @param langCd
+	 *            String
+	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시작점 ROW.
+	 * </pre>
+	 * 
+	 * @return Integer
+	 */
 	public Integer getOffset() {
 		return this.offset;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 시작점 ROW.
+	 * </pre>
+	 * 
+	 * @param offset
+	 *            Integer
+	 */
 	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 페이지당 노출될 ROW 개수.
+	 * </pre>
+	 * 
+	 * @return Integer
+	 */
 	public Integer getCount() {
 		return this.count;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 페이지당 노출될 ROW 개수.
+	 * </pre>
+	 * 
+	 * @param count
+	 *            Integer
+	 */
 	public void setCount(Integer count) {
 		this.count = count;
 	}

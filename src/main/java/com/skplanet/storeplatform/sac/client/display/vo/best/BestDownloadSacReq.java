@@ -439,7 +439,7 @@ public class BestDownloadSacReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * 배치완료 기준일시
+	 * 배치완료 기준일시.
 	 * </pre>
 	 * 
 	 * @return the stdDt
@@ -451,7 +451,7 @@ public class BestDownloadSacReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * 배치완료 기준일시
+	 * 배치완료 기준일시.
 	 * </pre>
 	 * 
 	 * @param stdDt

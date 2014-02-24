@@ -28,18 +28,52 @@ public class MenuDetailSacRes extends CommonInfo {
 	private CommonResponse commonResponse;
 	private MenuDetail menuDetail;
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @return CommonResponse
+	 */
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @param commonResponse
+	 *            CommonResponse
+	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 상세 정보.
+	 * </pre>
+	 * 
+	 * @return MenuDetail
+	 */
 	public MenuDetail getMenuDetail() {
 		return this.menuDetail;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 상세 정보.
+	 * </pre>
+	 * 
+	 * @param menuDetail
+	 *            MenuDetail
+	 */
 	public void setMenuDetail(MenuDetail menuDetail) {
 		this.menuDetail = menuDetail;
 	}
