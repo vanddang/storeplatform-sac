@@ -50,6 +50,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordRemin
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
@@ -262,23 +263,15 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return DetailInformationRes
 	 */
 	@Override
-	public DetailInformationRes detailInformationApp(SacRequestHeader header, DetailInformationReq req) {
+	public DetailInformationRes detailInformationApp(SacRequestHeader header, DetailInformationForProductReq req) {
 
 		SearchSellerRequest schReq = new SearchSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		KeySearch keySearch = new KeySearch();
 
-		if (!req.getSellerKey().equals("")) {
-			keySearch.setKeyString(req.getSellerKey());
-			keySearch.setKeyType("INSD_SELLERMBR_NO");
-		} else if (!req.getSellerId().equals("")) {
-			keySearch.setKeyString(req.getSellerId());
-			keySearch.setKeyType("SELLERMBR_ID");
-		} else {
-			keySearch.setKeyString(this.searchSellerKeyService.searchSellerKeyForAid(req.getAid()));
-			keySearch.setKeyType("INSD_SELLERMBR_NO");
-		}
+		keySearch.setKeyString(req.getSellerKey());
+		keySearch.setKeyType("INSD_SELLERMBR_NO");
 
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);

@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordRemin
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
@@ -111,31 +112,11 @@ public class SellerSearchController {
 	 * @param req
 	 * @return DetailInformationRes
 	 */
-	@RequestMapping(value = "/detailInformationApp/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/detailInformationForProduct/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailInformationRes detailInformationApp(SacRequestHeader header,
-			@RequestBody @Validated DetailInformationReq req) {
+			@RequestBody @Validated DetailInformationForProductReq req) {
 		LOGGER.debug("request param : {}", req.toString());
-
-		String sellerId = StringUtil.nvl(req.getSellerId(), "");
-		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
-		String aid = StringUtil.nvl(req.getAid(), "");
-
-		req.setSellerId(sellerId);
-		req.setSellerKey(sellerKey);
-		req.setAid(aid);
-
-		int Stat = 0;
-		if (sellerId.equals(""))
-			Stat++;
-		if (sellerKey.equals(""))
-			Stat++;
-		if (aid.equals(""))
-			Stat++;
-
-		if (Stat == 3) {
-			throw new StorePlatformException("SAC_MEM_0001", "aid, sellerKey, sellerId");
-		}
 
 		return this.sellerSearchService.detailInformationApp(header, req);
 	}

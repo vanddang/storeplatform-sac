@@ -4,6 +4,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordRemin
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
@@ -33,7 +34,7 @@ public interface SellerSearchService {
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req);
 
 	/** 판매자 회원 기본정보조회 App. */
-	public DetailInformationRes detailInformationApp(SacRequestHeader header, DetailInformationReq req);
+	public DetailInformationRes detailInformationApp(SacRequestHeader header, DetailInformationForProductReq req);
 
 	/** 판매자 회원 정산정보조회. */
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req);
