@@ -9,15 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.related.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,15 +54,20 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.SimilarProductListService#searchSimilarProductList(
-	 * RelatedProductRequest requestVO)
+	 * <pre>
+	 * 유사 상품 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            SimilarProductSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return SimilarProductSacRes
 	 */
 	@Override
-	public SimilarProductSacRes searchSimilarProductList(SimilarProductSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public SimilarProductSacRes searchSimilarProductList(SimilarProductSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 헤더 값 세팅
 		this.log.debug("헤더 값 세팅");
@@ -159,109 +161,6 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 		}
 		this.log.debug("이 상품과 유사 상품 조회 결과 : " + commonResponse.getTotalCount() + "건");
 		similarProductSacRes.setCommonResponse(commonResponse);
-
-		// int totalCount = 1;
-		//
-		// RelatedProductListRes responseVO = null;
-		// CommonResponse commonResponse = null;
-		//
-		// if (true) {
-		//
-		// // Response VO를 만들기위한 생성자
-		// List<Product> productList = new ArrayList<Product>();
-		// List<Menu> menuList = new ArrayList<Menu>();
-		// List<Source> sourceList = new ArrayList<Source>();
-		//
-		// for (int i = 1; i <= totalCount; i++) {
-		// Product product = new Product();
-		//
-		// Identifier identifier = new Identifier();
-		// Title title = new Title();
-		// Price price = new Price();
-		// Menu menu = new Menu();
-		// Source source = new Source();
-		// Accrual accrual = new Accrual();
-		// Rights rights = new Rights();
-		// App app = new App();
-		//
-		// // 상품ID
-		// identifier = new Identifier();
-		// identifier.setText("0000254239");
-		//
-		// // App
-		// app.setAid("OA00254239");
-		// app.setPackageName("net.hwado.paid.PDFGenerator");
-		// app.setSize(1280765);
-		// app.setVersionCode("1");
-		// app.setVersion("1.0");
-		//
-		// /*
-		// * Menu(메뉴정보) Id, Name, Type
-		// */
-		// menu.setId("MN000504");
-		// menu.setName("생활/위치");
-		// menu.setType("topClass");
-		// menuList.add(menu);
-		// menu = new Menu();
-		// menu.setId("MN04003");
-		// menu.setName("유틸리티");
-		// menu.setType("");
-		// menuList.add(menu);
-		//
-		// /*
-		// * TITLE
-		// */
-		// title.setText("PDF 생성기");
-		//
-		// price.setText(1000);
-		//
-		// /*
-		// * source mediaType, size, type, url
-		// */
-		// source.setMediaType("image/png");
-		// source.setSize(0);
-		// source.setType("thumbNail");
-		// source.setUrl("http://wap.tstore.co.kr/images/IF1423022570420091207142717/0000254239/thumbnail/0000254239_130_130_0_91.PNG");
-		// sourceList.add(source);
-		//
-		// /*
-		// * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
-		// */
-		// accrual.setDownloadCount(246);
-		// accrual.setVoterCount(2);
-		// accrual.setScore(3.0);
-		//
-		// rights.setGrade("0");
-		//
-		// product = new Product();
-		// product.setProductExplain("PDF 생성기,PDF Generator,HWADO,hwado,www.hwado.net,HWADOTECH");
-		// product.setIdentifier(identifier);
-		// product.setPrice(price);
-		// product.setApp(app);
-		// product.setMenuList(menuList);
-		// product.setAccrual(accrual);
-		// product.setTitle(title);
-		// product.setRights(rights);
-		// product.setSourceList(sourceList);
-		//
-		// productList.add(product);
-		//
-		// }
-		//
-		// responseVO = new RelatedProductListRes();
-		// commonResponse = new CommonResponse();
-		// responseVO.setProductList(productList);
-		// commonResponse.setTotalCount(totalCount);
-		// responseVO.setCommonRes(commonResponse);
-		//
-		// ObjectMapper objectMapper = new ObjectMapper();
-		// objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-		// String json = objectMapper.writeValueAsString(responseVO);
-		//
-		// this.log.debug("test json : {}", json);
-		// // System.out.println(json);
-		//
-		// }
 		return similarProductSacRes;
 	}
 

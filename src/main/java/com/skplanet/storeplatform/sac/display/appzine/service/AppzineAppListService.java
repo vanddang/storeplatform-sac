@@ -1,10 +1,5 @@
 package com.skplanet.storeplatform.sac.display.appzine.service;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineAppListSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineAppListSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -18,16 +13,15 @@ public interface AppzineAppListService {
 
 	/**
 	 * <pre>
-	 * Appzine 앱 목록 조회
+	 * Appzine 앱 목록 조회.
 	 * </pre>
 	 * 
-	 * @param AppzineAppListSacRes
-	 *            reqeustVO
-	 * @param SacRequestHeader
-	 *            requestHeader
+	 * @param requestVO
+	 *            AppzineAppListSacRes
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return AppzineAppListSacRes
 	 */
-	public AppzineAppListSacRes searchAppzineAppList(AppzineAppListSacReq reqeustVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+	public AppzineAppListSacRes searchAppzineAppList(AppzineAppListSacReq requestVO, SacRequestHeader requestHeader);
 
 }

@@ -1,10 +1,5 @@
 package com.skplanet.storeplatform.sac.display.related.service;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -17,15 +12,17 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 public interface SimilarProductService {
 
 	/**
+	 * 
 	 * <pre>
 	 * 유사 상품 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param SimilarProductSacReq
-	 *            requestVO
+	 * @param requestVO
+	 *            SimilarProductSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return SimilarProductSacRes
 	 */
-	public SimilarProductSacRes searchSimilarProductList(SimilarProductSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+	public SimilarProductSacRes searchSimilarProductList(SimilarProductSacReq requestVO, SacRequestHeader requestHeader);
 
 }

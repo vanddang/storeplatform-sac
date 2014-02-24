@@ -100,7 +100,6 @@
         <!-- 메뉴/카테고리 조회 -->
         <typeAlias alias="MenuSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq" />
         <typeAlias alias="Menu"  type="com.skplanet.storeplatform.sac.display.menu.vo.Menu" />
-        <typeAlias alias="MenuCategory"  type="com.skplanet.storeplatform.sac.display.menu.vo.MenuCategory" />
                             
         <!-- 일반카테고리 웹툰 상품 조회 -->                                                            
         <typeAlias alias="CategoryWebtoonSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacReq" />

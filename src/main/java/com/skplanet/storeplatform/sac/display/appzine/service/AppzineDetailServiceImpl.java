@@ -9,14 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.appzine.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -39,21 +34,25 @@ import com.skplanet.storeplatform.sac.display.appzine.vo.AppzineDetail;
 @Service
 public class AppzineDetailServiceImpl implements AppzineDetailService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * Appzine 회차별 목록 조회.
+	 * </pre>
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenuList(String tenantId, String
-	 * systemId, String menuId)
+	 * @param requestVO
+	 *            AppzineDetailSacRes
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return AppzineDetailSacRes
 	 */
 	@Override
-	public AppzineDetailSacRes searchAppzineDetail(AppzineDetailSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public AppzineDetailSacRes searchAppzineDetail(AppzineDetailSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 헤더 값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
@@ -99,6 +98,7 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 			 * ETC
 			 */
 			appzine.setBackgroundImagePath(appzineDetail.getBgImgPath());
+			appzine.setThemeHtml(appzineDetail.getThemeHtml());
 			appzine.setThemeUpImage(appzineDetail.getExpoYn());
 			appzine.setPopularTitleImage480(appzineDetail.getPopularTitlImg480());
 			appzine.setPopularTitleImage800(appzineDetail.getPopularTitlImg800());
@@ -107,7 +107,7 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 			appzine.setEventName(appzineDetail.getEventNm());
 			appzine.setEventUrl(appzineDetail.getEventUrl());
 			appzine.setEventImage480(appzineDetail.getEventImg480());
-			appzine.setEventImage880(appzineDetail.getEventImg800());
+			appzine.setEventImage800(appzineDetail.getEventImg800());
 			appzine.setTitleImage(appzineDetail.getTitleImg());
 
 			appzineDetailSacRes.setAppzineDetail(appzine);

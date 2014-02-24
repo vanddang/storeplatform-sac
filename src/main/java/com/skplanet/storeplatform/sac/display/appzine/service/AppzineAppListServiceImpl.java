@@ -9,15 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.appzine.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -39,21 +34,25 @@ import com.skplanet.storeplatform.sac.display.appzine.vo.AppzineAppList;
 @Service
 public class AppzineAppListServiceImpl implements AppzineAppListService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * Appzine 앱 목록 조회.
+	 * </pre>
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenuList(String tenantId, String
-	 * systemId, String menuId)
+	 * @param requestVO
+	 *            AppzineAppListSacRes
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return AppzineAppListSacRes
 	 */
 	@Override
-	public AppzineAppListSacRes searchAppzineAppList(AppzineAppListSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public AppzineAppListSacRes searchAppzineAppList(AppzineAppListSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 요청값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
@@ -92,6 +91,8 @@ public class AppzineAppListServiceImpl implements AppzineAppListService {
 				appzine.setAppUrl(appzineAppList.getAppUrl());
 				appzine.setImage480(appzineAppList.getImg480());
 				appzine.setImage800(appzineAppList.getImg800());
+				appzine.setTitleImage(appzineAppList.getTitleImg());
+				appzine.setThemeUpImage(appzineAppList.getThemeUpImg());
 
 				appzineList.add(appzine);
 			}

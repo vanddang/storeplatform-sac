@@ -9,14 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.appzine.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -38,21 +33,25 @@ import com.skplanet.storeplatform.sac.display.appzine.vo.AppzineVolList;
 @Service
 public class AppzineVolListServiceImpl implements AppzineVolListService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * Appzine 회차별 목록 조회.
+	 * </pre>
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenuList(String tenantId, String
-	 * systemId, String menuId)
+	 * @param requestVO
+	 *            AppzineVolListSacRes
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return AppzineVolListSacRes
 	 */
 	@Override
-	public AppzineVolListSacRes searchAppzineVolList(AppzineVolListSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public AppzineVolListSacRes searchAppzineVolList(AppzineVolListSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 요청값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());

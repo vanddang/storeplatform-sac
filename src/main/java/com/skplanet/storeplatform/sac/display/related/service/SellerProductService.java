@@ -1,10 +1,5 @@
 package com.skplanet.storeplatform.sac.display.related.service;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-
 import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -17,15 +12,17 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 public interface SellerProductService {
 
 	/**
+	 * 
 	 * <pre>
 	 * 특정 판매자별 상품 조회.
 	 * </pre>
 	 * 
-	 * @param SellerProductSacReq
-	 *            requestVO
+	 * @param requestVO
+	 *            SellerProductSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return SellerProductSacRes
 	 */
-	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader);
 
 }

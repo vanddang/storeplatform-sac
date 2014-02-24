@@ -9,15 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.related.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,15 +54,20 @@ public class SellerProductServiceImpl implements SellerProductService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.SellerProductListService#searchSellerProductList(
-	 * RelatedProductRequest requestVO)
+	 * <pre>
+	 * 특정 판매자별 상품 조회.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            SellerProductSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return SellerProductSacRes
 	 */
 	@Override
-	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 헤더 값 세팅
 		this.log.debug("헤더 값 세팅");

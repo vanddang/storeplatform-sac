@@ -17,15 +17,14 @@ package com.skplanet.storeplatform.sac.display.menu.vo;
 public class Menu {
 
 	private Integer totalCount;
-
 	private Integer menuProdCnt;
-	private String tenantId; // tenant id
-	private String menuId; // menu id
-	private String systemId; // system id
-	private String menuNm; // menu Nm
-	private String menuEngNm; // menu English Nm
-	private String menuDesc; // menu description
-	private Integer menuDepth; // menu depth
+	private String tenantId;
+	private String menuId;
+	private String systemId;
+	private String menuNm;
+	private String menuEngNm;
+	private String menuDesc;
+	private Integer menuDepth;
 	private String infrMenuYn;
 	private String upMenuId;
 	private Integer expoOrd;
@@ -47,7 +46,7 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * 전체건수.
+	 * 총 건수.
 	 * </pre>
 	 * 
 	 * @return Integer
@@ -59,11 +58,11 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * 전체건수.
+	 * 총 건수.
 	 * </pre>
 	 * 
-	 * @param Integer
-	 *            totalCount
+	 * @param totalCount
+	 *            Integer
 	 */
 	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
@@ -72,7 +71,32 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * 테넌트_ID.
+	 * 메뉴 별 상품 건수.
+	 * </pre>
+	 * 
+	 * @return Integer
+	 */
+	public Integer getMenuProdCnt() {
+		return this.menuProdCnt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 별 상품 건수.
+	 * </pre>
+	 * 
+	 * @param menuProdCnt
+	 *            Integer
+	 */
+	public void setMenuProdCnt(Integer menuProdCnt) {
+		this.menuProdCnt = menuProdCnt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 ID.
 	 * </pre>
 	 * 
 	 * @return String
@@ -84,11 +108,11 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * 테넌트_ID.
+	 * 테넌트 ID.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            tenantId
+	 * @param tenantId
+	 *            String
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
@@ -97,7 +121,7 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * 테넌트_메뉴.
+	 * 메뉴_ID.
 	 * </pre>
 	 * 
 	 * @return String
@@ -109,11 +133,11 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * 테넌트_메뉴.
+	 * 메뉴_ID.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            menuId
+	 * @param menuId
+	 *            String
 	 */
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
@@ -137,8 +161,8 @@ public class Menu {
 	 * 시스템_ID.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            systemId
+	 * @param systemId
+	 *            String
 	 */
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
@@ -162,8 +186,8 @@ public class Menu {
 	 * 메뉴_명.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            menuNm
+	 * @param menuNm
+	 *            String
 	 */
 	public void setMenuNm(String menuNm) {
 		this.menuNm = menuNm;
@@ -187,8 +211,8 @@ public class Menu {
 	 * 메뉴_영문_명.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            menuEngNm
+	 * @param menuEngNm
+	 *            String
 	 */
 	public void setMenuEngNm(String menuEngNm) {
 		this.menuEngNm = menuEngNm;
@@ -212,8 +236,8 @@ public class Menu {
 	 * 메뉴_설명.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            menuDesc
+	 * @param menuDesc
+	 *            String
 	 */
 	public void setMenuDesc(String menuDesc) {
 		this.menuDesc = menuDesc;
@@ -237,8 +261,8 @@ public class Menu {
 	 * 메뉴_깊이.
 	 * </pre>
 	 * 
-	 * @param Integer
-	 *            menuDepth
+	 * @param menuDepth
+	 *            Integer
 	 */
 	public void setMenuDepth(Integer menuDepth) {
 		this.menuDepth = menuDepth;
@@ -262,8 +286,8 @@ public class Menu {
 	 * 하위_메뉴_여부.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            infrMenuYn
+	 * @param infrMenuYn
+	 *            String
 	 */
 	public void setInfrMenuYn(String infrMenuYn) {
 		this.infrMenuYn = infrMenuYn;
@@ -287,8 +311,8 @@ public class Menu {
 	 * 상위_메뉴_ID.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            upMenuId
+	 * @param upMenuId
+	 *            String
 	 */
 	public void setUpMenuId(String upMenuId) {
 		this.upMenuId = upMenuId;
@@ -312,8 +336,8 @@ public class Menu {
 	 * 노출_순서.
 	 * </pre>
 	 * 
-	 * @param Integer
-	 *            expoOrd
+	 * @param expoOrd
+	 *            Integer
 	 */
 	public void setExpoOrd(Integer expoOrd) {
 		this.expoOrd = expoOrd;
@@ -337,8 +361,8 @@ public class Menu {
 	 * 대상_URL.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            targetUrl
+	 * @param targetUrl
+	 *            String
 	 */
 	public void setTargetUrl(String targetUrl) {
 		this.targetUrl = targetUrl;
@@ -362,8 +386,8 @@ public class Menu {
 	 * 검색_파일_경로.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            searchFilePath
+	 * @param searchFilePath
+	 *            String
 	 */
 	public void setSearchFilePath(String searchFilePath) {
 		this.searchFilePath = searchFilePath;
@@ -387,8 +411,8 @@ public class Menu {
 	 * 검색_파일_명.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            searchFileNm
+	 * @param searchFileNm
+	 *            String
 	 */
 	public void setSearchFileNm(String searchFileNm) {
 		this.searchFileNm = searchFileNm;
@@ -397,7 +421,7 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * BODY_파일_경로.
+	 * 검색_파일_경로.
 	 * </pre>
 	 * 
 	 * @return String
@@ -409,11 +433,11 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * BODY_파일_경로.
+	 * 검색_파일_경로.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            bodyFilePath
+	 * @param bodyFilePath
+	 *            String
 	 */
 	public void setBodyFilePath(String bodyFilePath) {
 		this.bodyFilePath = bodyFilePath;
@@ -437,8 +461,8 @@ public class Menu {
 	 * BODY_파일_명.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            bodyFileNm
+	 * @param bodyFileNm
+	 *            String
 	 */
 	public void setBodyFileNm(String bodyFileNm) {
 		this.bodyFileNm = bodyFileNm;
@@ -462,8 +486,8 @@ public class Menu {
 	 * BODY_파일_크기.
 	 * </pre>
 	 * 
-	 * @param Integer
-	 *            bodyFileSize
+	 * @param bodyFileSize
+	 *            Integer
 	 */
 	public void setBodyFileSize(Integer bodyFileSize) {
 		this.bodyFileSize = bodyFileSize;
@@ -487,8 +511,8 @@ public class Menu {
 	 * MAIN_ON_파일_경로.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            mainOnFilePath
+	 * @param mainOnFilePath
+	 *            String
 	 */
 	public void setMainOnFilePath(String mainOnFilePath) {
 		this.mainOnFilePath = mainOnFilePath;
@@ -512,8 +536,8 @@ public class Menu {
 	 * MAIN_ON_파일_명.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            mainOnFileNm
+	 * @param mainOnFileNm
+	 *            String
 	 */
 	public void setMainOnFileNm(String mainOnFileNm) {
 		this.mainOnFileNm = mainOnFileNm;
@@ -522,7 +546,7 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * MAIN_ON_파일_경로.
+	 * MAIN_OFF_파일_경로.
 	 * </pre>
 	 * 
 	 * @return String
@@ -534,11 +558,11 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * MAIN_ON_파일_경로.
+	 * MAIN_OFF_파일_경로.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            mainOffFilePath
+	 * @param mainOffFilePath
+	 *            String
 	 */
 	public void setMainOffFilePath(String mainOffFilePath) {
 		this.mainOffFilePath = mainOffFilePath;
@@ -562,8 +586,8 @@ public class Menu {
 	 * MAIN_OFF_파일_명.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            mainOffFileNm
+	 * @param mainOffFileNm
+	 *            String
 	 */
 	public void setMainOffFileNm(String mainOffFileNm) {
 		this.mainOffFileNm = mainOffFileNm;
@@ -587,8 +611,8 @@ public class Menu {
 	 * 랭킹_파일_경로.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            rankFilePath
+	 * @param rankFilePath
+	 *            String
 	 */
 	public void setRankFilePath(String rankFilePath) {
 		this.rankFilePath = rankFilePath;
@@ -612,8 +636,8 @@ public class Menu {
 	 * 랭킹_파일_명.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            rankFileNm
+	 * @param rankFileNm
+	 *            String
 	 */
 	public void setRankFileNm(String rankFileNm) {
 		this.rankFileNm = rankFileNm;
@@ -637,8 +661,8 @@ public class Menu {
 	 * 사용_여부.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            useYn
+	 * @param useYn
+	 *            String
 	 */
 	public void setUseYn(String useYn) {
 		this.useYn = useYn;
@@ -647,7 +671,7 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * 메뉴 ID 타입(어플:A,멀티미디어:M).
+	 * 메뉴_ID_타입(어플:A,멀티미디어:M).
 	 * </pre>
 	 * 
 	 * @return String
@@ -659,20 +683,14 @@ public class Menu {
 	/**
 	 * 
 	 * <pre>
-	 * 메뉴 ID 타입(어플:A,멀티미디어:M).
+	 * 메뉴_ID_타입(어플:A,멀티미디어:M).
 	 * </pre>
 	 * 
 	 * @param menuIdType
+	 *            String
 	 */
 	public void setMenuIdType(String menuIdType) {
 		this.menuIdType = menuIdType;
 	}
 
-	public Integer getMenuProdCnt() {
-		return this.menuProdCnt;
-	}
-
-	public void setMenuProdCnt(Integer menuProdCnt) {
-		this.menuProdCnt = menuProdCnt;
-	}
 }

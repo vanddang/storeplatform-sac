@@ -17,9 +17,9 @@ import com.skplanet.storeplatform.sac.display.menu.service.MenuService;
 
 /**
  * 
- * Calss 설명(메뉴 조회, 대분류/세분류 카테고리 조회 컨트롤러)
+ * 메뉴 조회 Controller.
  * 
- * Updated on : 2013. 12. 20. Updated by : 윤주영, SK 플래닛.
+ * Updated on : 2013. 12. 20. Updated by : 유시혁.
  */
 @Controller
 @RequestMapping("/display/menu")

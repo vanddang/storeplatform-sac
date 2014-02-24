@@ -1,9 +1,5 @@
 package com.skplanet.storeplatform.sac.display.appzine.controller;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,18 +40,19 @@ public class AppzineController {
 	private AppzineAppListService appzineAppListService;
 
 	/**
-	 * <-pre> Appzine 회차별 목록 조회. </pre>
+	 * <pre>
+	 * Appzine 회차별 목록 조회.
+	 * </pre>
 	 * 
-	 * @param AppzineVolListSacReq
-	 *            requestVO
-	 * @param SacRequestHeader
-	 *            requestHeader
+	 * @param requestVO
+	 *            AppzineVolListSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return AppzineVolListSacRes
 	 */
 	@RequestMapping(value = "/vol/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public AppzineVolListSacRes searchAappzineVolList(AppzineVolListSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public AppzineVolListSacRes searchAappzineVolList(AppzineVolListSacReq requestVO, SacRequestHeader requestHeader) {
 
 		this.logger.debug("AppzineVolListService.searchAappzineVolList start !!");
 
@@ -63,18 +60,19 @@ public class AppzineController {
 	}
 
 	/**
-	 * <-pre> Appzine 상세정보 조회. </pre>
+	 * <pre>
+	 * Appzine 상세정보 조회.
+	 * </pre>
 	 * 
-	 * @param AppzineDetailSacReq
-	 *            requestVO
-	 * @param SacRequestHeader
-	 *            requestHeader
+	 * @param requestVO
+	 *            AppzineDetailSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return AppzineDetailSacRes
 	 */
 	@RequestMapping(value = "/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public AppzineDetailSacRes searchAappzineDetail(AppzineDetailSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public AppzineDetailSacRes searchAappzineDetail(AppzineDetailSacReq requestVO, SacRequestHeader requestHeader) {
 
 		this.logger.debug("AppzineDetailService.searchAappzineDetail start !!");
 
@@ -82,18 +80,19 @@ public class AppzineController {
 	}
 
 	/**
-	 * <-pre> Appzine 앱 목록 조회. </pre>
+	 * <pre>
+	 * Appzine 앱 목록 조회.
+	 * </pre>
 	 * 
-	 * @param AppzineAppListSacReq
-	 *            requestVO
-	 * @param SacRequestHeader
-	 *            requestHeader
+	 * @param requestVO
+	 *            AppzineAppListSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return AppzineAppListSacRes
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public AppzineAppListSacRes searchAappzineAppList(AppzineAppListSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public AppzineAppListSacRes searchAappzineAppList(AppzineAppListSacReq requestVO, SacRequestHeader requestHeader) {
 
 		this.logger.debug("AppzineAppistService.searchAappzineAppList start !!");
 

@@ -18,6 +18,8 @@
 		        , A.APP_URL
 		        , A.IMG_480
 		        , A.IMG_800
+                , A.TITLE_IMG
+                , A.THEME_UP_IMG
 		    FROM TB_DP_APPZN_NEW_APP A
 		    WHERE A.TENANT_ID = #{tenantId}
 		    AND A.APP_TYPE = #{appType}

@@ -42,7 +42,8 @@
 		    , A.PROD_STATUS_CD
 		    , A.BTV_YN
 		    , A.PROD_NM
-		    , REGEXP_REPLACE( CHAPTER, '[^[:digit:]]' ) AS CHAPTER
+            , REGEXP_REPLACE( A.CHAPTER, '[^[:digit:]]') AS CHAPTER /* 회차의 수 */
+            , NVL(REGEXP_REPLACE( A.CHAPTER, '[[:digit:], ]'), '회') AS CHAPTER_UNIT /* 회차 단위 */
 		    , TO_CHAR(A.ISSUE_DAY,'YYYYMMDDHH24MISS') ISSUE_DAY
 		    , A.PROD_BASE_DESC
 		    , A.USE_PERIOD_UNIT_CD
