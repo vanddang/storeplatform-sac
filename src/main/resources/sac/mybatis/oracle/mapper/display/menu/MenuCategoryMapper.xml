@@ -311,32 +311,41 @@
 		                    A.MENU_ID
 		                    , COUNT(1) MENU_PROD_CNT
 		                FROM (
-		                    SELECT
-		                        DISTINCT A.MENU_ID, B.CATALOG_ID
-		                    FROM
-		                        TB_DP_MENU_CATEGORY A
-		                        , TB_DP_SHPG_CATALOG B
-		                        , TB_DP_MENU_SHPG_MAPG C
-		                        , TB_DP_PROD_CATALOG_MAPG D /* 채널 */
-		                        , TB_DP_PROD_RSHP E
-		                        , TB_DP_SHPG_PROD F /* 에피 */
-		                        , TB_DP_TENANT_PROD G /* 에피 */
-		                    WHERE 1=1
-		                    AND A.MENU_ID = C.MENU_ID
-		                    AND B.CATALOG_ID = C.CATALOG_ID
-		                    AND B.CATALOG_ID = D.CATALOG_ID
-		                    AND D.PROD_ID = E.PROD_ID
-		                    AND E.PART_PROD_ID = F.PROD_ID
-		                    AND E.PART_PROD_ID = G.PROD_ID
-		                    AND NVL(B.CHNL_CNT, 0) > 0
-		                    AND A.USE_YN ='Y'
-		                    AND C.USE_YN ='Y'
-		                    AND D.USE_YN ='Y'
-		                    AND G.EXPO_YN = 'Y'
-		                    AND NVL(F.B2B_PROD_YN, 'N') != 'Y'
-		                    AND G.PROD_STATUS_CD = 'PD000403'
-		                    AND G.TENANT_ID = #{tenantId} /* 테넌트ID */
-		                    AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+                            SELECT
+                                DISTINCT A.MENU_ID, B.CATALOG_ID
+                            FROM
+                                TB_DP_MENU_CATEGORY A
+                                , TB_DP_SHPG_CATALOG B
+                                , TB_DP_MENU_SHPG_MAPG C
+                                , TB_DP_PROD_CATALOG_MAPG D /* 채널 */
+                                , TB_DP_PROD_RSHP E
+                                , TB_DP_SHPG_PROD F /* 에피 */
+                                , TB_DP_TENANT_PROD G /* 에피 */
+                                , TB_DP_SPRC_PROD H
+                                , TB_DP_SPRT_DEVICE I
+                                , TB_CM_DEVICE J
+                            WHERE 1=1
+                            AND A.MENU_ID = C.MENU_ID
+                            AND B.CATALOG_ID = C.CATALOG_ID
+                            AND B.CATALOG_ID = D.CATALOG_ID
+                            AND D.PROD_ID = E.PROD_ID
+                            AND E.PART_PROD_ID = F.PROD_ID
+                            AND E.PART_PROD_ID = G.PROD_ID
+                            AND E.PART_PROD_ID = H.PROD_ID
+                            AND E.PART_PROD_ID = I.PROD_ID
+                            AND I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
+                            AND NVL(B.CHNL_CNT, 0) > 0
+                            AND A.USE_YN ='Y'
+                            AND C.USE_YN ='Y'
+                            AND D.USE_YN ='Y'
+                            AND G.EXPO_YN = 'Y'
+                            AND NVL(F.B2B_PROD_YN, 'N') != 'Y'
+                            AND G.PROD_STATUS_CD = 'PD000403'
+                            AND SYSDATE BETWEEN  H.SPRC_APPLY_START_DT AND H.SPRC_APPLY_END_DT
+                            AND J.SCL_SHPG_SPRT_YN = 'Y'
+                            AND (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = 'android_standard2') /* 단말모델코드 */
+                            AND G.TENANT_ID = #{tenantId} /* 테넌트ID */
+                            AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
 		                ) A
 		                GROUP BY A.MENU_ID
 		            ) C
