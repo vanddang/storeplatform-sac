@@ -31,8 +31,6 @@ import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDResponse
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ChangedDeviceLog;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
@@ -2327,45 +2325,48 @@ public class IdpServiceImpl implements IdpService {
 
 		try {
 
-			/* 회원 유무 조회 */
+			/* 휴대기기 정보조회 - 서비스 관리 번호 */
+			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+			searchDeviceRequest.setCommonRequest(commonRequest);
+
 			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 			KeySearch key = new KeySearch();
-			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			key.setKeyString(mdn);
+			key.setKeyType(MemberConstants.KEY_TYPE_SVC_MANG_NO);
+			key.setKeyString(svcMngNum);
 			keySearchList.add(key);
 
-			CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
-			chkDupReq.setCommonRequest(commonRequest);
-			chkDupReq.setKeySearchList(keySearchList);
+			searchDeviceRequest.setKeySearchList(keySearchList);
+			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
-			CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
+			/* 유통망 추천앱 스케줄 저장 */
+			UpdateUserMbrSegmentRequest req = new UpdateUserMbrSegmentRequest();
+			req.setCommonRequest(commonRequest);
+			UserMbrSegment userMbrSegment = new UserMbrSegment();
+			userMbrSegment.setDeviceID(mdn);
+			userMbrSegment.setSvcMangNum(svcMngNum);
+			userMbrSegment.setUserKey(schDeviceRes.getUserKey());
+			userMbrSegment.setEcgNumber(min);
+			req.setUserMbrSegment(userMbrSegment);
+			this.userSCI.updateUserMbrSegment(req);
+
+			/* IDP로그 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
+			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_JOIN_ECG);
+			changeDeviceLog.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
+			changeDeviceLog.setUserKey(schDeviceRes.getUserKey());
+			changeDeviceLog.setMessageIDP(requestUrl);
+			changeDeviceLog.setPreData("");
+			changeDeviceLog.setSvcMangNum(svcMngNum);
+			changeDeviceLog.setDeviceID(mdn);
+			//changeDeviceLog.setDeviceKey(deviceKey);
+			//changeDeviceLog.setDeviceCode(deviceCode);
+			//changeDeviceLog.setIsChanged(isChanged);
 
-			if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
-				/* 유통망 추천앱 스케줄 저장 */
-				UpdateUserMbrSegmentRequest req = new UpdateUserMbrSegmentRequest();
-				req.setCommonRequest(commonRequest);
-				UserMbrSegment userMbrSegment = new UserMbrSegment();
-				userMbrSegment.setDeviceID(mdn);
-				userMbrSegment.setSvcMangNum(svcMngNum);
-				userMbrSegment.setUserKey(chkDupRes.getUserMbr().getUserKey());
-				userMbrSegment.setEcgNumber(min);
-				req.setUserMbrSegment(userMbrSegment);
-				this.userSCI.updateUserMbrSegment(req);
+			this.insertIdpLog(commonRequest, changeDeviceLog);
 
-				/* IDP로그 저장 */
-				changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_JOIN_ECG);
-				changeDeviceLog.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
-				changeDeviceLog.setUserKey(chkDupRes.getUserMbr().getUserKey());
-				changeDeviceLog.setMessageIDP(requestUrl);
-				changeDeviceLog.setPreData("");
-				changeDeviceLog.setSvcMangNum(svcMngNum);
-				changeDeviceLog.setDeviceID(mdn);
-				//changeDeviceLog.setDeviceKey(deviceKey);
-				//changeDeviceLog.setDeviceCode(deviceCode);
-				//changeDeviceLog.setIsChanged(isChanged);
+		} catch (StorePlatformException ex) {
 
-			} else {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				/* 비회원인 경우 */
 				UpdateNonMbrSegmentRequest req = new UpdateNonMbrSegmentRequest();
 				req.setCommonRequest(commonRequest);
@@ -2376,6 +2377,7 @@ public class IdpServiceImpl implements IdpService {
 				this.userSCI.updateNonMbrSegment(req);
 
 				/* IDP로그 저장 */
+				ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
 				changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_JOIN_ECG);
 				changeDeviceLog.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
 				changeDeviceLog.setMessageIDP(requestUrl);
@@ -2386,12 +2388,11 @@ public class IdpServiceImpl implements IdpService {
 				//changeDeviceLog.setDeviceKey(deviceKey);
 				//changeDeviceLog.setDeviceCode(deviceCode);
 				//changeDeviceLog.setIsChanged(isChanged);
+
+				this.insertIdpLog(commonRequest, changeDeviceLog);
+			} else {
+				return this.FAIL_STR;
 			}
-
-			this.insertIdpLog(commonRequest, changeDeviceLog);
-		} catch (StorePlatformException ex) {
-
-			return this.FAIL_STR;
 
 		}
 
