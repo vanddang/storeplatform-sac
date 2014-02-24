@@ -104,11 +104,13 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		List<SellerMbr> sellerMbrs = new ArrayList<SellerMbr>();
 		SellerMbr sellerMbr = null;
 
-		List<SellerMbrSac> sellerMbrSacs = new ArrayList<SellerMbrSac>();
+		List<SellerMbrSac> sellerMbrSacs = null;
 		SellerMbrSac sellerMbrSac = null;
 		Map<String, List<SellerMbrSac>> sellerMbrSacMap = new HashMap<String, List<SellerMbrSac>>();
+
 		while (it.hasNext()) {
 			String key = it.next();
+			sellerMbrSacs = new ArrayList<SellerMbrSac>();
 			sellerMbrs = (List<SellerMbr>) schRes.getSellerMbrListMap().get(key);
 			for (int i = 0; i < sellerMbrs.size(); i++) {
 				sellerMbrSac = new SellerMbrSac();
@@ -131,8 +133,6 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		}
 
 		DetailInformationSacRes response = new DetailInformationSacRes();
-
-		response.setSellerMbrListMap(sellerMbrSacMap);
 
 		response.setSellerMbrListMap(sellerMbrSacMap);
 
