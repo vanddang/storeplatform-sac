@@ -1724,9 +1724,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 							DetailInformationSacReq memberReq = new DetailInformationSacReq();
 							DetailInformationSacRes memberRes = new DetailInformationSacRes();
 							try {
-								memberReq.setSellerKey(episodeShopping.getSellerMbrNo());
-								memberReq.setSellerId("");
-								memberRes = this.sellerSearchSCI.detailInformation(memberReq);
+								// memberReq.setSellerKey(episodeShopping.getSellerMbrNo());
+								// memberReq.setSellerId("");
+								// memberRes = this.sellerSearchSCI.detailInformation(memberReq);
 								// if (memberRes != null) {
 								// memberRes.getSellerMbr().getSellerCompany();
 								// distributor = new Distributor();
