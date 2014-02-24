@@ -3,6 +3,9 @@ package com.skplanet.storeplatform.sac.member.seller.sci;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.MockRequestAttributeInitializer;
@@ -67,11 +71,26 @@ public class DetailInformationSCITest {
 		DetailInformationSacReq req = new DetailInformationSacReq();
 
 		// req.setSellerKey("IF1023229565820110106110241");
-		req.setSellerBizNumber("2432412");
+
+		List<SellerMbrSac> sellerMbrSacs = new ArrayList<SellerMbrSac>();
+		for (int i = 0; i < 3; i++) {
+			SellerMbrSac sellerMbrSac = new SellerMbrSac();
+			if (i == 0) {
+				sellerMbrSac.setSellerBizNumber("2432412");
+				sellerMbrSacs.add(sellerMbrSac);
+			} else if (i == 1) {
+				sellerMbrSac.setSellerKey("IF1023498592920130510112417");
+				sellerMbrSacs.add(sellerMbrSac);
+			} else if (i == 2) {
+				sellerMbrSac.setSellerKey("IF1023479054520130204101236");
+				sellerMbrSacs.add(sellerMbrSac);
+			}
+		}
+		req.setSellerMbrSacList(sellerMbrSacs);
 
 		DetailInformationSacRes res = this.sellerSearchSCI.detailInformation(req);
 
-		assertThat(res.getSellerMbr(), notNullValue());
+		assertThat(res.getSellerMbrListMap(), notNullValue());
 		LOGGER.debug("response param : {}", res.toString());
 	}
 
