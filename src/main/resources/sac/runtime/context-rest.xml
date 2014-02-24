@@ -39,7 +39,7 @@
                 <property name="supportedMediaTypes" value="application/json; charset=UTF-8" />
                 <property name="prettyPrint" value="true" />
             </bean> 
-        </mvc:message-converters> 
+        </mvc:message-converters>
     </mvc:annotation-driven>   
      
     <!-- defined interceptors -->
@@ -51,7 +51,12 @@
                 <property name="defaultLanguage" value="#{propertiesForSac['skp.common.default.language']}" />
                 <property name="paramName" value="selectLanguage" />
             </bean>
-        </mvc:interceptor>  
+        </mvc:interceptor>   
+         <!-- set "SacRequestHeader" of response header   -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="com.skplanet.storeplatform.sac.common.header.intercepter.SacRequestHeaderIntercepter"/>
+        </mvc:interceptor> 
         <!-- set "x-sac-result-code" of response header   -->
         <mvc:interceptor>
             <mvc:mapping path="/**" />
