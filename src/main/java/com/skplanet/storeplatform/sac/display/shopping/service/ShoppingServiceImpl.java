@@ -1387,20 +1387,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (!"catalog".equals(req.getType()) && !"episode".equals(req.getType())) {
 			throw new StorePlatformException("SAC_DSP_0003", "type", req.getType());
 		}
-		if ("catalog".equals(req.getType())) {
-			if (StringUtils.isEmpty(req.getProductId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
-			}
-		}
 
-		if (StringUtils.equals("episode", req.getType())) {
-			MetaInfo channelByepisode = this.commonDAO.queryForObject("Shopping.getChannelByepisode", req,
-					MetaInfo.class);
-			if (channelByepisode != null) {
-				req.setSpecialProdId(req.getSpecialProdId());
-				req.setProductId(channelByepisode.getCatalogId());
-			} else {
-				throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
+		if (StringUtils.isEmpty(req.getProductId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
+		}
+		if (StringUtils.isEmpty(req.getSpecialProdId())) { // 특가 상품이 아닌경우
+			if ("episode".equals(req.getType())) {
+				MetaInfo channelByEpisode = this.commonDAO.queryForObject("Shopping.getChannelByepisode", req,
+						MetaInfo.class);
+				if (channelByEpisode != null) {
+					req.setSpecialProdId(req.getProductId());
+					req.setProductId(channelByEpisode.getCatalogId());
+				} else {
+					throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
+				}
 			}
 		}
 
@@ -1527,13 +1527,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setItemCode(episodeShopping.getSrcContentId());
 
 							// 특가 상품일 경우
-							if (StringUtils.equals("episode", req.getType())) {
-								episodeMenu = new Menu();
-								episodeMenuList = new ArrayList<Menu>();
-								episodeMenu.setType(episodeShopping.getSpecialSale());
-								episodeMenuList.add(episodeMenu);
-								episodeProduct.setMenuList(episodeMenuList);
-							}
+							episodeMenu = new Menu();
+							episodeMenuList = new ArrayList<Menu>();
+							episodeMenu.setType(episodeShopping.getSpecialSale());
+							episodeMenuList.add(episodeMenu);
+							episodeProduct.setMenuList(episodeMenuList);
 
 							// 채널 상품 정보 (상품ID)
 							episodeIdentifierList = new ArrayList<Identifier>();

@@ -1425,7 +1425,7 @@
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                 AND K.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */
-                AND B.CATALOG_ID = #{req.prodId}
+                AND B.CATALOG_ID = #{req.productId}
                 <if test="req.specialProdId != null">
                 AND I.PROD_ID = #{req.specialProdId}
                 </if>
@@ -1573,7 +1573,7 @@
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                 AND K.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */
-                AND B.CATALOG_ID = #{req.prodId}
+                AND B.CATALOG_ID = #{req.productId}
                 <if test="req.specialProdId != null">
                 AND I.PROD_ID = #{req.specialProdId}
                 </if>
@@ -1660,7 +1660,7 @@
                  CONCAT(FILE_PATH,FILE_NM) FILE_PATH 
                , EXPO_ORD
           FROM TB_DP_PROD_IMG
-         WHERE PROD_ID = #{req.prodId} 
+         WHERE PROD_ID = #{req.productId} 
            AND IMG_CD =#{cutDetailImageCd}
            AND LANG_CD= #{req.langCd}          /* ko : 한국어 */
          ORDER BY EXPO_ORD            
@@ -1675,7 +1675,7 @@
          WHERE PROD_ID = ( 
                            SELECT DISTINCT PROD_ID 
                              FROM TB_DP_PROD_RSHP
-                            WHERE PART_PROD_ID = #{prodId} 
+                            WHERE PART_PROD_ID = #{productId} 
                               AND PROD_RSHP_CD = #{prodRshpCd}     /*채널-에피소드 상품 관계*/
                               AND ROWNUM =1
                          ) 
