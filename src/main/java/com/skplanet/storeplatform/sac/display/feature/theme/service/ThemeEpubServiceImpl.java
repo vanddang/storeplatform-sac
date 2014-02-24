@@ -109,12 +109,12 @@ public class ThemeEpubServiceImpl implements ThemeEpubService {
 
 					// Identifier 설정
 					Identifier identifier = null;
-					List<Identifier> identifierList = new ArrayList<Identifier>();
+					List<Identifier> identifierList;
 					Menu menu = null;
-					List<Menu> menuList = new ArrayList<Menu>();
+					List<Menu> menuList;
 					Title title = null;
 
-					List<Source> sourceList = new ArrayList<Source>();
+					List<Source> sourceList;
 					Source source = null;
 
 					ThemeEpubInfo ThemeEpubInfo = null;
@@ -208,11 +208,7 @@ public class ThemeEpubServiceImpl implements ThemeEpubService {
 		CommonResponse commonResponse = new CommonResponse();
 		ThemeEpubSacRes res = new ThemeEpubSacRes();
 
-		productList = new ArrayList<Product>();
 		sourceList = new ArrayList<Source>();
-
-		product = new Product();
-		identifier = new Identifier();
 		source = new Source();
 		title = new Title();
 
