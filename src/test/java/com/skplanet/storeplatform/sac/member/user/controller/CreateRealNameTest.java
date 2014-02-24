@@ -194,7 +194,7 @@ public class CreateRealNameTest {
 						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
 						reqJson.setUserPhone("01090556567"); // 사용자 전화번호
 						reqJson.setDeviceTelecom("US001202"); // 이동 통신사
-						reqJson.setUserName("홍말똥"); // 사용자 이름
+						reqJson.setUserName("개명함"); // 사용자 이름
 						reqJson.setUserBirthDay("19790101"); // 사용자 생년월일
 						reqJson.setUserSex("M"); // 사용자 성별
 						reqJson.setResident("local"); // 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
@@ -306,7 +306,7 @@ public class CreateRealNameTest {
 	 * <pre>
 	 * TEST ERROR CASE.
 	 * 
-	 * 실명인증정보 수정 테스트 (통합회원 - 이미 통합사이트에서 본인인증한 회원).
+	 * 실명인증정보 수정 테스트 (통합회원 - 이미 통합사이트에서 본인인증한 회원이 t-store 에서 개명요청을 할경우).
 	 * </pre>
 	 */
 	@Test(expected = StorePlatformException.class)
