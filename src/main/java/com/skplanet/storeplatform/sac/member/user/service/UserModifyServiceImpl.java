@@ -401,9 +401,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 					 */
 					UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 					userInfoIdpSearchServerEcReq.setKey(userInfo.getImSvcNo()); // 통합서비스 관리번호
-					LOGGER.info("## IDP Request : {}", userInfoIdpSearchServerEcReq);
 					UserInfoIdpSearchServerEcRes userInfoIdpSearchServerEcRes = this.imIdpSCI.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
-					LOGGER.info("## IDP Response : {}", userInfoIdpSearchServerEcRes);
 
 					/**
 					 * OnedID 조회 정보와 Request 로 받은 정보와 비교 로직 수행.
@@ -434,7 +432,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 						updateUserNameEcReq.setUserCi(req.getUserCi());
 						updateUserNameEcReq.setUserDi(req.getUserDi());
 						updateUserNameEcReq.setRnameAuthDate(req.getRealNameDate());
-						LOGGER.info("## IDP Request : {}", updateUserNameEcReq);
 						this.imIdpSCI.updateUserName(updateUserNameEcReq);
 					}
 
@@ -457,7 +454,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 					updateGuardianEcReq.setParentBirthday(req.getUserBirthDay());
 					updateGuardianEcReq.setParentEmail(req.getParentEmail());
 					updateGuardianEcReq.setParentApproveDate(req.getRealNameDate()); // 법정대리인동의일자 (YYYYMMDD)
-					LOGGER.info("## IDP Request : {}", updateGuardianEcReq);
 					this.imIdpSCI.updateGuardian(updateGuardianEcReq);
 
 				} else { // 법인
@@ -796,6 +792,15 @@ public class UserModifyServiceImpl implements UserModifyService {
 		}
 
 		LOGGER.info("### oneIdRealNameType : {}", oneIdRealNameType);
+
+		/**
+		 * 타사이트에서 실명인증을 하고 t-Store 에서 개명 신청을 시도할 경우.
+		 */
+		if (StringUtils.equals(oneIdRealNameType, "R")) {
+			if (!StringUtils.equals(idpResult.getModifySstCode(), MemberConstants.SSO_SST_CD_TSTORE)) {
+				throw new StorePlatformException("SAC_MEM_1402", idpResult.getModifySstCode());
+			}
+		}
 
 		return oneIdRealNameType;
 	}
