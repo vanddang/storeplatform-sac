@@ -917,6 +917,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			req.setSellerId(couponInfo.getBpId());
 			res = this.sellerSearchSCI.detailInformation(req);
 			if (res != null) {
+				this.log.info("sdf");
 				// if (StringUtils.isBlank(res.getSellerMbr().getSellerCompany())) {
 				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
 				// couponInfo.getBpId());

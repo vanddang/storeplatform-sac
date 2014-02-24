@@ -430,17 +430,16 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	 */
 	public boolean brandImgResize(DpBrandInfo dpBrandInfo) {
 		// 파일명 끝에 추가할 명칭
-		String[] DERIVED_FILE_NAME_FOR_DERIVED = { "_260x170", "_177x177", "_114x114", "_29x29", "_56x56", "_27x27",
-				"_25x25" };
+		String[] drivedFileNameForDrived = { "_260x170", "_177x177", "_114x114", "_29x29", "_56x56", "_27x27", "_25x25" };
 
 		// TBL_DP_PROD_IMG.IMG_CLS 설정
-		String[] IMG_CLS_CODE = { CouponConstants.BRAND_IMG_260x170, CouponConstants.BRAND_IMG_177x177,
+		String[] imgClsCode = { CouponConstants.BRAND_IMG_260x170, CouponConstants.BRAND_IMG_177x177,
 				CouponConstants.BRAND_IMG_114x114, CouponConstants.BRAND_IMG_29x29, CouponConstants.BRAND_IMG_56x56,
 				CouponConstants.BRAND_IMG_27x27, CouponConstants.BRAND_IMG_25x25 };
 
 		// 파일 생성 크기
-		int[][] IMAGE_SIZE_FOR_DERIVED = { { 260, 170 }, { 177, 177 }, { 114, 114 }, { 29, 29 }, { 56, 56 },
-				{ 27, 27 }, { 25, 25 } };
+		int[][] imageSizeForDrived = { { 260, 170 }, { 177, 177 }, { 114, 114 }, { 29, 29 }, { 56, 56 }, { 27, 27 },
+				{ 25, 25 } };
 		// String IMAGE_TYPE = "PNG";
 
 		String targetFileName = null;
@@ -459,13 +458,13 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			srcFileName = brandImgPath.substring(brandImgPath.lastIndexOf(File.separator)).replace(File.separator, "");
 			tmpFileName = srcFileName.substring(0, srcFileName.lastIndexOf(".")); // 파일명
 			fileExt = srcFileName.substring(srcFileName.lastIndexOf(".") + 1); // 확장자
-			for (int i = 0; i < DERIVED_FILE_NAME_FOR_DERIVED.length; i++) {
+			for (int i = 0; i < drivedFileNameForDrived.length; i++) {
 
-				targetFileName = tmpFileName + DERIVED_FILE_NAME_FOR_DERIVED[i] + "." + fileExt; // fileExt 대신 타입으로 확장자
-																								 // PNG
+				targetFileName = tmpFileName + drivedFileNameForDrived[i] + "." + fileExt; // fileExt 대신 타입으로 확장자
+																						   // PNG
 
-				int width = IMAGE_SIZE_FOR_DERIVED[i][0];
-				int height = IMAGE_SIZE_FOR_DERIVED[i][1];
+				int width = imageSizeForDrived[i][0];
+				int height = imageSizeForDrived[i][1];
 
 				// 이미지 리사이즈 처리
 				File srcFile = new File(uploadDir + srcFileName);
@@ -478,7 +477,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				// log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
 
 				this.brandCatalogProdImgInfo.setProdId(dpBrandInfo.getCreateBrandId());
-				this.brandCatalogProdImgInfo.setImgCls(IMG_CLS_CODE[i]);
+				this.brandCatalogProdImgInfo.setImgCls(imgClsCode[i]);
 				this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
 				this.brandCatalogProdImgInfo.setFilePos(uploadDir);
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName);
@@ -506,18 +505,18 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	public boolean catalogImgResize(DpCatalogInfo dpCatalogInfo) {
 
 		// 파일명 끝에 추가할 명칭
-		String[] DERIVED_FILE_NAME_FOR_DERIVED_TOP = { "_60x60", "_120x120", "_130x130", "_40x40", "_80x80",
-				"_110x110", "_180x180", "_182x182", "_31x30" };
-		String[] DERIVED_FILE_NAME_FOR_DERIVED_DTL = { "_684x" };
+		String[] drivedFileNameForDrivedTop = { "_60x60", "_120x120", "_130x130", "_40x40", "_80x80", "_110x110",
+				"_180x180", "_182x182", "_31x30" };
+		String[] drivedFileNameForDrivedDtl = { "_684x" };
 
 		// TBL_DP_PROD_IMG.IMG_CLS 설정
-		String[] IMG_CLS_CODE_TOP = { CouponConstants.CATALOG_TOP_IMG_60x60, CouponConstants.CATALOG_TOP_IMG_120x120,
+		String[] imgClsCodeTop = { CouponConstants.CATALOG_TOP_IMG_60x60, CouponConstants.CATALOG_TOP_IMG_120x120,
 				CouponConstants.CATALOG_TOP_IMG_130x130, CouponConstants.CATALOG_TOP_IMG_40x40,
 				CouponConstants.CATALOG_TOP_IMG_80x80, CouponConstants.CATALOG_TOP_IMG_110x110,
 				CouponConstants.CATALOG_TOP_IMG_180x180, CouponConstants.CATALOG_TOP_IMG_182x182,
 				CouponConstants.CATALOG_TOP_IMG_31x30 };
 
-		String[] IMG_CLS_CODE_DTL = { CouponConstants.CATALOG_DTL_IMG_684x };
+		String[] imgClsCodeDtl = { CouponConstants.CATALOG_DTL_IMG_684x };
 
 		// String IMAGE_TYPE = "PNG";
 
@@ -561,17 +560,17 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			int nHeightSize = oHeight * 684 / oWidth;
 
 			// 파일 생성 크기
-			int[][] IMAGE_SIZE_FOR_DERIVED_TOP = { { 60, 60 }, { 120, 120 }, { 130, 130 }, { 40, 40 }, { 80, 80 },
+			int[][] imageSizeForDrived = { { 60, 60 }, { 120, 120 }, { 130, 130 }, { 40, 40 }, { 80, 80 },
 					{ 110, 110 }, { 180, 180 }, { 182, 182 }, { 31, 30 } };
-			int[][] IMAGE_SIZE_FOR_DERIVED_DTL = { { 684, nHeightSize } };
+			int[][] imageSizeForDrivedDtl = { { 684, nHeightSize } };
 
 			// 카탈로그 대표이미지 리사이즈
-			for (int i = 0; i < DERIVED_FILE_NAME_FOR_DERIVED_TOP.length; i++) {
+			for (int i = 0; i < drivedFileNameForDrivedTop.length; i++) {
 
-				targetFileName = tmpFileName + DERIVED_FILE_NAME_FOR_DERIVED_TOP[i] + "." + fileExt;
+				targetFileName = tmpFileName + drivedFileNameForDrivedTop[i] + "." + fileExt;
 
-				int width = IMAGE_SIZE_FOR_DERIVED_TOP[i][0];
-				int height = IMAGE_SIZE_FOR_DERIVED_TOP[i][1];
+				int width = imageSizeForDrived[i][0];
+				int height = imageSizeForDrived[i][1];
 				int seq = 1;
 
 				// 이미지 리사이즈 처리
@@ -587,7 +586,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
 
 				this.brandCatalogProdImgInfo.setProdId(dpCatalogInfo.getCreateCatalogId());
-				this.brandCatalogProdImgInfo.setImgCls(IMG_CLS_CODE_TOP[i]);
+				this.brandCatalogProdImgInfo.setImgCls(imgClsCodeTop[i]);
 				this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
 				this.brandCatalogProdImgInfo.setFilePos(uploadDir);
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName);
@@ -598,12 +597,12 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			}
 
 			// 카탈로그 상세이미지 리사이즈
-			for (int i = 0; i < DERIVED_FILE_NAME_FOR_DERIVED_DTL.length; i++) {
+			for (int i = 0; i < drivedFileNameForDrivedDtl.length; i++) {
 
-				targetFileName1 = tmpFileName1 + DERIVED_FILE_NAME_FOR_DERIVED_DTL[i] + "." + fileExt1;
+				targetFileName1 = tmpFileName1 + drivedFileNameForDrivedDtl[i] + "." + fileExt1;
 
-				int width = IMAGE_SIZE_FOR_DERIVED_DTL[i][0];
-				int height = IMAGE_SIZE_FOR_DERIVED_DTL[i][1];
+				int width = imageSizeForDrivedDtl[i][0];
+				int height = imageSizeForDrivedDtl[i][1];
 				int seq = 1;
 
 				// 이미지 리사이즈 처리
@@ -628,7 +627,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				// 카탈로그이미지 2013.06.24 이미지 추가684xY
 				this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
 
-				this.brandCatalogProdImgInfo.setImgCls(IMG_CLS_CODE_DTL[i]);
+				this.brandCatalogProdImgInfo.setImgCls(imgClsCodeDtl[i]);
 
 				// 이미지 세로길이가 1170보다 클경우
 				if (nHeightSize > 1170) {
