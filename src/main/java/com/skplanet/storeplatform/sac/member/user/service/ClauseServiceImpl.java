@@ -53,16 +53,10 @@ public class ClauseServiceImpl implements ClauseService {
 			clauseRes.setClauseId(StringUtil.setTrim(clause.getClauseId()));
 			clauseRes.setClauseItemCd(StringUtil.setTrim(clause.getClauseItemCd()));
 			clauseRes.setClauseVer(StringUtil.setTrim(clause.getClauseVer()));
-			clauseRes.setDpYn(StringUtil.setTrim(clause.getDpYn()));
 			clauseRes.setEndDay(StringUtil.setTrim(clause.getEndDay()));
 			clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
 			clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
-			clauseRes.setRegDt(StringUtil.setTrim(clause.getRegDt()));
-			clauseRes.setRegId(StringUtil.setTrim(clause.getRegId()));
 			clauseRes.setStartDay(StringUtil.setTrim(clause.getStartDay()));
-			clauseRes.setUpClauseId(StringUtil.setTrim(clause.getUpClauseId()));
-			clauseRes.setUpdDt(StringUtil.setTrim(clause.getUpdDt()));
-			clauseRes.setUpdId(StringUtil.setTrim(clause.getUpdId()));
 
 			clauseSacResList.add(clauseRes);
 		}
@@ -89,16 +83,10 @@ public class ClauseServiceImpl implements ClauseService {
 			clauseRes.setClauseId(StringUtil.setTrim(clause.getClauseId()));
 			clauseRes.setClauseItemCd(StringUtil.setTrim(clause.getClauseItemCd()));
 			clauseRes.setClauseVer(StringUtil.setTrim(clause.getClauseVer()));
-			clauseRes.setDpYn(StringUtil.setTrim(clause.getDpYn()));
 			clauseRes.setEndDay(StringUtil.setTrim(clause.getEndDay()));
 			clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
 			clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
-			clauseRes.setRegDt(StringUtil.setTrim(clause.getRegDt()));
-			clauseRes.setRegId(StringUtil.setTrim(clause.getRegId()));
 			clauseRes.setStartDay(StringUtil.setTrim(clause.getStartDay()));
-			clauseRes.setUpClauseId(StringUtil.setTrim(clause.getUpClauseId()));
-			clauseRes.setUpdDt(StringUtil.setTrim(clause.getUpdDt()));
-			clauseRes.setUpdId(StringUtil.setTrim(clause.getUpdId()));
 
 			detailClauseList.add(clauseRes);
 		}
