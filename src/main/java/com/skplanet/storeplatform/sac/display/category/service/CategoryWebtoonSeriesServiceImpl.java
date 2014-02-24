@@ -17,7 +17,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -189,7 +188,7 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 		List<Source> sourceList = null;
 		List<Support> supportList = null;
 		Product product = null;
-		List<Product> productList = new ArrayList<Product>();
+		List<Product> productList;
 		CommonResponse commonResponse = new CommonResponse();
 		CategoryWebtoonSeriesSacRes res = new CategoryWebtoonSeriesSacRes();
 
@@ -198,7 +197,6 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 		sourceList = new ArrayList<Source>();
 		supportList = new ArrayList<Support>();
 
-		product = new Product();
 		identifier = new Identifier();
 		accrual = new Accrual();
 		rights = new Rights();
