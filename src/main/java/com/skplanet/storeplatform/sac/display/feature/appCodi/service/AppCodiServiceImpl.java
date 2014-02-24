@@ -1010,6 +1010,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 		else
 			request.setId("SVC_MAIN_0003");
 
+		request.setChCode("M");
 		request.setMbn(requestVO.getUserKey());
 		request.setMdn(requestVO.getDeviceId());
 		request.setType(requestVO.getFilteredBy());

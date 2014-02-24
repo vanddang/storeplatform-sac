@@ -462,6 +462,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		else
 			request.setId("SVC_MAIN_0004");
 
+		request.setChCode("M");
 		request.setMbn(requestVO.getUserKey());
 		request.setMdn(requestVO.getDeviceId());
 		request.setType(requestVO.getFilteredBy());
