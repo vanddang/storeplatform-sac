@@ -525,6 +525,8 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setCustomerPhoneCountry(req.getCustomerPhoneCountry());
 		sellerMbr.setCustomerPhone(req.getCustomerPhone());
 		sellerMbr.setCustomerEmail(req.getCustomerEmail());
+		sellerMbr.setCharger(req.getCharger());
+		sellerMbr.setChargerPhone(req.getChargerphone());
 
 		updateSellerRequest.setSellerMbr(sellerMbr);
 
