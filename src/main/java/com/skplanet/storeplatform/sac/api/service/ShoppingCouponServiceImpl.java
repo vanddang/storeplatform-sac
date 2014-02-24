@@ -142,7 +142,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			// log.info("repositoryPath : " + repositoryPath);
 
 			// 브랜드 이미지 처리
-			if (dpCatalogInfo == null) {
+			if (dpBrandInfo != null) {
 
 				this.log.info("filepath : " + dpBrandInfo.getBrandImgPath());
 
@@ -160,7 +160,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			}
 
 			// 카탈로그 이미지 처리
-			if (dpBrandInfo == null) {
+			if (dpCatalogInfo != null) {
 				this.log.info("dpCatalogInfo.getCreateCatalogId() : " + dpCatalogInfo.getCreateCatalogId());
 				// 다운로드할 파일 리스트
 				fileList.add(dpCatalogInfo.getTopImgPath());
