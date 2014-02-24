@@ -32,16 +32,15 @@ public class HistoryListSacReq extends PurchaseHeaderSacReq {
 	private String hidingYn; // 숨김여부
 	private String prchsStatusCd; // 구매상태
 	private String useFixrateProdId; // 정액권ID
+	@NotBlank
+	private String prchsProdHaveYn; // 상품보유여부
+	private String prchsReqPathCd; // 구매요청경로코드
+	private String giftRecvConfYn; // 선물수신확인여부
 	@Min(1)
 	private int offset; // 오프셋
 	@Min(1)
 	@Max(100)
 	private int count; // 데이터갯수
-
-	@NotBlank
-	private String prchsProdHaveYn; // 상품보유여부
-
-	private String prchsReqPathCd; // 구매요청경로코드
 
 	/**
 	 * @return the prchsReqPathCd
@@ -266,6 +265,21 @@ public class HistoryListSacReq extends PurchaseHeaderSacReq {
 	 */
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	/**
+	 * @return the giftRecvConfYn
+	 */
+	public String getGiftRecvConfYn() {
+		return this.giftRecvConfYn;
+	}
+
+	/**
+	 * @param giftRecvConfYn
+	 *            the giftRecvConfYn to set
+	 */
+	public void setGiftRecvConfYn(String giftRecvConfYn) {
+		this.giftRecvConfYn = giftRecvConfYn;
 	}
 
 }
