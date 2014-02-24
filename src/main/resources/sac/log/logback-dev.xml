@@ -75,18 +75,22 @@
         <level value="DEBUG" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
+    <logger name="org.springframework" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </logger>
     
     <!-- plandas 로그 -->
     <logger name="com.skplanet.plandasj" additivity="false">
-        <level value="INFO" />
+        <level value="debug" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
     <logger name="com.skplanet.spring" additivity="false">
-        <level value="INFO" />
+        <level value="debug" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
     <logger name="org.apache.zookeeper" additivity="false">
-        <level value="ERROR" />
+        <level value="debug" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
     

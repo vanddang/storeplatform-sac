@@ -61,7 +61,7 @@
         <property name="sqlSessionTemplate" ref="sqlSessionTemplateForSac" />
     </bean>
     
-    <beans profile="dev,stag,real">
+    <beans profile="dev,qa,real">
         <jee:jndi-lookup id="defaultDataSourceForSac" jndi-name="#{propertiesForSac['jdbc.jndi.lookup']}" /> 
     </beans>
     <beans profile="local">

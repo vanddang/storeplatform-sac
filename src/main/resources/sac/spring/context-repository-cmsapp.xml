@@ -58,7 +58,7 @@
         <property name="sqlSessionTemplate" ref="sqlSessionTemplateForCmsApp" />
     </bean>
     
-    <beans profile="dev,stag,real">
+    <beans profile="dev,qa,real">
         <jee:jndi-lookup id="defaultDataSourceForCmsApp" jndi-name="#{propertiesForSac['cmsapp.jdbc.jndi.lookup']}" /> 
     </beans>
     <beans profile="local">

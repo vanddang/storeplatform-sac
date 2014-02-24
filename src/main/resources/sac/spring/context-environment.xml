@@ -38,14 +38,14 @@
 	    </bean>    
     </beans>    
         
-    <beans profile="stag"> 
+    <beans profile="qa"> 
 	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
 	        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>        
 	        <property name="logbackPath">
 	            <list>
-	               <value>sac/log/logback-stag.xml</value>
-		           <value>member/log/logback-stag.xml</value>
-		           <value>purchase/log/logback-stag.xml</value>
+	               <value>sac/log/logback-qa.xml</value>
+		           <value>member/log/logback-qa.xml</value>
+		           <value>purchase/log/logback-qa.xml</value>
 	            </list>
 	        </property>
 	    </bean>
@@ -84,12 +84,12 @@
         </bean>
     </beans>
 
-    <beans profile="stag">   
-        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.stag.properties" /> 
+    <beans profile="qa">   
+        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.qa.properties" /> 
         <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
             <property name="fileEncoding" value="UTF-8" />
             <property name="locations" >
-                <list merge="true"><value>classpath:sac/conf/external.stag.properties</value></list>
+                <list merge="true"><value>classpath:sac/conf/external.qa.properties</value></list>
             </property>
         </bean>
     </beans>
