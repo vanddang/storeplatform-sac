@@ -91,7 +91,7 @@ public class CouponConstants {
 	public static final String COUPON_SALE_TYPE_SHIPPING_PROD = "3"; // 배송상품
 
 	// 브랜드,카탈로그 Path
-	public static final String Brand_Catalog_Path = "COUPON"; // 브랜드, 카탈로그 path
+	public static final String BRAND_CATALOG_PATH = "COUPON"; // 브랜드, 카탈로그 path
 
 	// 브랜드, 카탈로그 REPOSITORY_TYPE
 	public static final String TYPE_FOR_REPOSITORY_PATH = "PD011801"; // M/M
@@ -129,14 +129,14 @@ public class CouponConstants {
 	public static final String TAG_TYPE_FOR_COUPON_TAG = "DP004507"; // 셀러TAG 태그타입(쇼핑용)
 
 	/**
-	 * 상품 CUD 타입 정의
+	 * 상품 CUD 타입 정의.
 	 */
 	public static final String CONTENT_CUD_TYPE_CREATE = "C";
 	public static final String CONTENT_CUD_TYPE_UPDATE = "U";
 	public static final String CONTENT_CUD_TYPE_DELETE = "D";
 
 	/**
-	 * 상품 정보 타입 정의
+	 * 상품 정보 타입 정의.
 	 */
 	public final static String PAY_CODE_TIME = "PD00292"; // 과금유형(기간정액제)
 	public final static String PAY_CODE_GIFTCARD = "DP006301"; // 상품권
@@ -148,11 +148,11 @@ public class CouponConstants {
 	public final static String CUPON_SVC_GRP_CD = "DP000206"; // MALL 구분 코드(쇼핑쿠폰)
 	public final static String CHNL_TP_CD_CUPON = "DP001117"; // 채널 타입 코드(쇼핑쿠폰)
 
-	/** 연령제한 기본값 - 전체이용가 */
+	/** 연령제한 기본값 - 전체이용가. */
 	public static final String AGE_RESTRICTIONS_DEFAULT_COMMON_CODE = "PD004401";
 	public static final String AGE_RESTRICTIONS_19RESTRICT = "PD004404";
 
-	/** 상품 전시 상태 **/
+	/** 상품 전시 상태. **/
 	public static final String DP_STATUS_PREPARE_SERVICE = "PD000402"; // 판매대기
 	public static final String DP_STATUS_IN_SERVICE = "PD000403"; // 판매중
 	public static final String DP_STATUS_STOP_SERVICE = "PD000404"; // 판매중지
@@ -160,7 +160,7 @@ public class CouponConstants {
 	public static final String DP_STATUS_FORBID_SERVICE = "PD000405"; // 판매금지(다운로드 불가)
 	public static final String DP_STATUS_FORBID_SERVICE_DL_AVIL = "PD000409"; // 판매금지(다운로드 허용)
 
-	/** 상품 사용기간 단위 **/
+	/** 상품 사용기간 단위. **/
 	public static final String USE_PERIOD_UNIT_NONE = "PD00310"; // 무제한 -> 다운로드
 	public static final String USE_PERIOD_UNIT_TIME = "PD00311";
 	public static final String USE_PERIOD_UNIT_DAY = "PD00312"; // 기간제(일) -> 바로보기
@@ -185,8 +185,10 @@ public class CouponConstants {
 	/**
 	 * 4091 error code 가 아닌 경우에는 아리와 같은 메세지로 쇼핑쿠폰에 전송함.
 	 * 
-	 * @param @code
-	 * @param @errorMsg
+	 * @param code
+	 *            code
+	 * @param errorMsg
+	 *            errorMsg
 	 * @return @String
 	 */
 	public static String getCouponErrorMsg(String code, String errorMsg) {
@@ -211,6 +213,13 @@ public class CouponConstants {
 				.equals(COUPON_IF_ERROR_CODE_DB_ETC)) ? errorMsg : code;
 	}
 
+	/**
+	 * getCouponParamId 체크.
+	 * 
+	 * @param txType
+	 *            txType
+	 * @return String
+	 */
 	public static String getCouponParamId(String txType) {
 		if (txType == null)
 			return null;

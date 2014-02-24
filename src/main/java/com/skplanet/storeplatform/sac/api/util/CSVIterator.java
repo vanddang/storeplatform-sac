@@ -21,6 +21,16 @@ public class CSVIterator implements Iterator<String[]> {
 	private final CSVReader reader;
 	private String[] nextLine;
 
+	/**
+	 * <pre>
+	 * CSVIterator.
+	 * </pre>
+	 * 
+	 * @param reader
+	 *            reader
+	 * @throws IOException
+	 *             IOException
+	 */
 	public CSVIterator(CSVReader reader) throws IOException {
 		this.reader = reader;
 		this.nextLine = reader.readNext();

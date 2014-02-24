@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * 일자, 시간과 관련된 다수의 기능
+ * 일자, 시간과 관련된 다수의 기능.
  * <p>
  * 일자패턴 사용시의 문법
  * 
@@ -67,7 +67,7 @@ import java.util.TimeZone;
 
 public class DateUtil {
 	/**
-	 * 문자열의 값이 일자값인지 검증
+	 * 문자열의 값이 일자값인지 검증.
 	 * 
 	 * @param textDate
 	 *            일자값을 가진 8자리 문자열 예) '20010806'
@@ -83,9 +83,12 @@ public class DateUtil {
 	}
 
 	/**
-	 * 내부적인 Date Value Check용 임
+	 * 내부적인 Date Value Check용 임.
 	 * 
 	 * @param textDate
+	 *            textDate
+	 * @throws Exception
+	 *             Exception
 	 */
 	private static void dateCheck(String textDate) throws Exception {
 		if (textDate.length() != 8)
@@ -103,11 +106,13 @@ public class DateUtil {
 	}
 
 	/**
-	 * 일자값을 가진 8자리 문자열로 Calendar 객체를 생성
+	 * 일자값을 가진 8자리 문자열로 Calendar 객체를 생성.
 	 * 
 	 * @param textDate
 	 *            일자값을 가진 8자리 문자열 예) '20010806'
 	 * @return Calendar 객체
+	 * @throws Exception
+	 *             Exception
 	 */
 	public static Calendar getCalendar(String textDate) throws Exception {
 		// dateCheck(textDate);
@@ -130,11 +135,13 @@ public class DateUtil {
 	}
 
 	/**
-	 * 일자값을 가진 8자리 문자열로 Date 객체를 생성
+	 * 일자값을 가진 8자리 문자열로 Date 객체를 생성.
 	 * 
 	 * @param textDate
 	 *            일자값을 가진 8자리 문자열 예) '20010806'
 	 * @return Date 객체
+	 * @throws Exception
+	 *             Exception
 	 */
 	public static Date getDate(String textDate) throws Exception {
 		return getCalendar(textDate).getTime();
@@ -160,6 +167,8 @@ public class DateUtil {
 	 * @param date
 	 *            원하는 일자의 Date 객체
 	 * @return 주어진 패턴의 일자
+	 * @throws Exception
+	 *             Exception
 	 */
 	public static String getDateString(Date date) throws Exception {
 		return getDateString(date, "yyyyMMdd");
@@ -173,6 +182,8 @@ public class DateUtil {
 	 * @param pattern
 	 *            원하는 일자 패턴
 	 * @return 주어진 패턴의 일자
+	 * @throws Exception
+	 *             Exception
 	 */
 	public static String getDateString(String textDate, String pattern) throws Exception {
 		String date = null;
@@ -185,7 +196,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 주어진 패턴 날짜형 시스템일자를 구함
+	 * 주어진 패턴 날짜형 시스템일자를 구함.
 	 * 
 	 * @param pattern
 	 *            원하는 일자 패턴
@@ -196,10 +207,9 @@ public class DateUtil {
 	}
 
 	/**
-	 * 기본패턴('yyyyMMdd') 날짜형 시스템일자를 구함
+	 * 기본패턴('yyyyMMdd') 날짜형 시스템일자를 구함.
 	 * 
-	 * @param pattern
-	 *            원하는 일자 패턴
+	 * 
 	 * @return 기본형('yyyyMMdd')의 시스템 일자
 	 */
 	public static String getToday() {
@@ -207,10 +217,8 @@ public class DateUtil {
 	}
 
 	/**
-	 * 기본패턴('HHmmss') 날짜형 시스템시간을 구함
+	 * 기본패턴('HHmmss') 날짜형 시스템시간을 구함.
 	 * 
-	 * @param pattern
-	 *            원하는 일자 패턴
 	 * @return 기본형('HHmmss')의 시스템 시간
 	 */
 	public static String getTime() {
@@ -218,7 +226,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 지정한 분리자를 이용한 시스템일자를 구함
+	 * 지정한 분리자를 이용한 시스템일자를 구함.
 	 * 
 	 * @param delmt
 	 *            원하는 분리자 문자 예) ':', '/' ...
@@ -229,7 +237,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 지정된 일자로 부터 일정기간 이후의 일자를 구함
+	 * 지정된 일자로 부터 일정기간 이후의 일자를 구함.
 	 * 
 	 * @param fromDate
 	 *            시작일자
@@ -238,6 +246,8 @@ public class DateUtil {
 	 * @param both
 	 *            양편넣기 여부
 	 * @return 일정기간 이후의 일자 ('yyyyMMdd')
+	 * @throws Exception
+	 *             Exception
 	 */
 	public static String getToDate(String fromDate, int termDays, boolean both) throws Exception {
 		if (both)
@@ -248,15 +258,17 @@ public class DateUtil {
 	}
 
 	/**
-	 * 지정된 시간으로부터 몇분 전후 구함
+	 * 지정된 시간으로부터 몇분 전후 구함.
 	 * 
 	 * @param fromDate
 	 *            시작일자
-	 * @param termDays
+	 * @param termMins
 	 *            원하는 기간 분
 	 * @param both
 	 *            양편넣기 여부
 	 * @return 일정기간 이후의 일자 ('yyyyMMdd')
+	 * @throws Exception
+	 *             Exception
 	 */
 	public static String getToMinute(String fromDate, int termMins, boolean both) throws Exception {
 		if (both)
@@ -277,6 +289,7 @@ public class DateUtil {
 	 *            양편넣기 여부
 	 * @return 일정기간 이후의 개월 ('yyyyMMdd')
 	 * @throws Exception
+	 *             Exception
 	 */
 	public static String getToMonth(String fromDate, int termMonths, boolean both) throws Exception {
 		if (both)
@@ -293,6 +306,7 @@ public class DateUtil {
 	 *            현재 일자
 	 * @return 현재일자의 마지막 월 일자
 	 * @throws Exception
+	 *             Exception
 	 */
 	public static String getLastDayOfMonth(String date) throws Exception {
 		Calendar cal = getCalendar(date);
@@ -314,13 +328,15 @@ public class DateUtil {
 	 * @param termDays
 	 *            원하는 기간
 	 * @return 일정기간 이후의 일자 ('yyyyMMdd')
+	 * @throws Exception
+	 *             Exception
 	 */
 	public static String getToDate(String fromDate, int termDays) throws Exception {
 		return getToDate(fromDate, termDays, false);
 	}
 
 	/**
-	 * 시작일로부터 종료일까지의 일수를 구함
+	 * 시작일로부터 종료일까지의 일수를 구함.
 	 * 
 	 * @param fromDate
 	 *            시작일자
@@ -356,7 +372,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 시작일로부터 종료일까지의 일수를 구함
+	 * 시작일로부터 종료일까지의 일수를 구함.
 	 * 
 	 * @param fromDate
 	 *            시작일자
@@ -365,6 +381,8 @@ public class DateUtil {
 	 * @param both
 	 *            양편넣기 여부
 	 * @return 시작일자로 부터 종료일까지의 일수
+	 * @throws Exception
+	 *             Exception
 	 */
 	public static int getDiffDays(String fromDate, String toDate, boolean both) throws Exception {
 		return getDiffDays(getDate(fromDate), getDate(toDate), both);
@@ -378,17 +396,19 @@ public class DateUtil {
 	 * @param toDate
 	 *            종료일자
 	 * @return 시작일자로 부터 종료일까지의 일수
+	 * @throws Exception
+	 *             Exception
 	 */
 	public static int getDiffDays(String fromDate, String toDate) throws Exception {
 		return getDiffDays(getDate(fromDate), getDate(toDate), false);
 	}
 
 	/**
-	 * yyyyMMdd의 문자열을 yyyy-MM-dd로 변경
+	 * yyyyMMdd의 문자열을 yyyy-MM-dd로 변경.
 	 * 
 	 * @param date
 	 *            날짜 문자열
-	 * @return
+	 * @return String
 	 */
 	public static String changeDateString(String date) {
 		if (date.equals("")) {
@@ -396,17 +416,18 @@ public class DateUtil {
 		}
 
 		String yyyy = date.substring(0, 4);
-		String MM = date.substring(4, 6);
+		String mm = date.substring(4, 6);
 		String dd = date.substring(6);
 
-		return yyyy + "-" + MM + "-" + dd;
+		return yyyy + "-" + mm + "-" + dd;
 	}
 
 	/**
-	 * 어제 날짜 구하기
+	 * 어제 날짜 구하기.
 	 * 
 	 * @param today
-	 * @return
+	 *            today
+	 * @return Date
 	 */
 	public static Date getYesterday(Date today) {
 		if (today == null)
@@ -417,20 +438,12 @@ public class DateUtil {
 		return yesterday;
 	}
 
-	public static void main(String[] args) {
-		try {
-			// log.info(getLastDayOfMonth("20040101"));
-		} catch (Exception e) {
-
-		}
-	}
-
 	/**
-	 * yyyyMMdd의 문자열을 yyyy-MM-dd로 변경
+	 * yyyyMMdd의 문자열을 yyyy-mm-dd로 변경.
 	 * 
 	 * @param date
 	 *            날짜 문자열
-	 * @return
+	 * @return String
 	 */
 	public static String changeDateStringForCouPonBiz(String date) {
 		if (date.equals("")) {
@@ -438,21 +451,21 @@ public class DateUtil {
 		}
 
 		String yyyy = date.substring(0, 4);
-		String MM = date.substring(4, 6);
+		String mm = date.substring(4, 6);
 		String dd = date.substring(6, 8);
 
 		if (date.length() > 10) {
-			String HH = date.substring(8, 10);
-			String mm = date.substring(10, 12);
+			String hh = date.substring(8, 10);
+			String mm1 = date.substring(10, 12);
 
-			return yyyy + "-" + MM + "-" + dd + " " + HH + ":" + mm;
+			return yyyy + "-" + mm + "-" + dd + " " + hh + ":" + mm1;
 		} else {
-			return yyyy + "-" + MM + "-" + dd;
+			return yyyy + "-" + mm + "-" + dd;
 		}
 	}
 
 	/**
-	 * yyyyMMddhhmmss 의 문자열을 yyyyMMdd로 변경
+	 * yyyyMMddhhmmss 의 문자열을 yyyyMMdd로 변경.
 	 * 
 	 * @param date
 	 *            날짜 문자열
@@ -464,9 +477,9 @@ public class DateUtil {
 		}
 		if (date.length() > 8) {
 			String yyyy = date.substring(0, 4);
-			String MM = date.substring(4, 6);
+			String mm = date.substring(4, 6);
 			String dd = date.substring(6, 8);
-			return yyyy + MM + dd;
+			return yyyy + mm + dd;
 		} else {
 			return date;
 		}

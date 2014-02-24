@@ -13,95 +13,147 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  * Created on : 2013-12-23 Created by : 김형식, SK 플래닛. Last Updated on : 2013-12-23 Last Updated by : 김형식, SK 플래닛
  */
 public interface ShoppingService {
-
 	/**
-	 * <pre>
 	 * 쇼핑 추천/인기 상품 리스트 조회.
-	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
+
 	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
-	 * 쇼핑 신규 상품 조회 .
-	 * </pre>
+	 * 쇼핑 신규 상품 조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingRes getNewProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
-	 * 쇼핑 세부카테고리  상품 조회 .
-	 * </pre>
+	 * 쇼핑 세부카테고리 상품 조회 .
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
 	 * 특가 상품 리스트 조회.
-	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
-	 * 기획전  상품  조회.
-	 * </pre>
+	 * 기획전 상품 조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
 	 * 특정 기획전에 대한 상품 리스트 조회.
-	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
 	 * 브랜드샵 - 메인 리스트 조회.
-	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingRes getBrandshopMainList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
-	 * 특정 브랜드샵 상품 리스트
-	 * </pre>
+	 * 특정 브랜드샵 상품 리스트.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
-	 * 쇼핑테마 리스트상품 리스트
-	 * </pre>
+	 * 쇼핑테마 리스트상품 리스트.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingRes getThemeList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
-	 * 특정 테마 리스트상품 리스트
-	 * </pre>
+	 * 특정 테마 리스트상품 리스트.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
-	 *  특정 카탈로그에 대한 다른 상품 리스트
-	 * </pre>
+	 * 특정 카탈로그에 대한 다른 상품 리스트.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
-	 * 특정 브랜드에 대한 다른 상품 리스트
-	 * </pre>
+	 * 특정 브랜드에 대한 다른 상품 리스트.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * <pre>
-	 * 쇼핑상세
-	 * </pre>
+	 * 쇼핑상세.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
 	 */
 	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req);
 }

@@ -14,6 +14,13 @@ import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 
+/**
+ * <pre>
+ * 브랜드 카탈로그 서비스 인터페이스 Imple.
+ * </pre>
+ * 
+ * Created on : 2014-01-03 Created by : 김형식, SK 플래닛. Last Updated on : 2014-01-03 Last Updated by : 김형식, SK 플래닛
+ */
 @Service
 public class BrandCatalogServiceImpl implements BrandCatalogService {
 
@@ -23,8 +30,11 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	private CommonDAO commonDAO;
 
 	/**
-	 * brandId seq 가져오기
+	 * <pre>
+	 * 브랜드 정보(brandId) SEQ 가져오기.
+	 * </pre>
 	 * 
+	 * @return String
 	 */
 	@Override
 	public String searchCreateBrandId() {
@@ -34,10 +44,11 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * 카테고리가 있는지 조회
+	 * 카테고리가 있는지 조회.
 	 * 
-	 * @param dpBrandInfo
-	 * @throws CouponException
+	 * @param dpCatNo
+	 *            dpCatNo
+	 * @return int
 	 */
 
 	public int selectCountBrandCategory(String dpCatNo) {
@@ -47,10 +58,11 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * 브랜드가 있는지 조회
+	 * 브랜드가 있는지 조회.
 	 * 
-	 * @param dpBrandInfo
-	 * @throws CouponException
+	 * @param brandId
+	 *            brandId
+	 * @return int
 	 */
 
 	public int selectBrandCountCudType(String brandId) {
@@ -64,10 +76,11 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * 카탈로그가 있는지 조회
+	 * 카탈로그가 있는지 조회.
 	 * 
-	 * @param dpBrandInfo
-	 * @throws CouponException
+	 * @param catalogId
+	 *            catalogId
+	 * @return int
 	 */
 
 	public int selectCatalogCountCudType(String catalogId) {
@@ -81,13 +94,14 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * brand 정보 넣기
+	 * <pre>
+	 * 브랜드 정보 입력.
+	 * </pre>
 	 * 
 	 * @param dpBrandInfo
-	 * @throws CouponException
+	 *            brandInfo
+	 * 
 	 */
-
-	// @Autowired
 	@Override
 	public void insertBrandInfo(DpBrandInfo dpBrandInfo) {
 
@@ -112,12 +126,14 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 		}
 	}
 
-	//
 	/**
-	 * brand 정보 수정
+	 * <pre>
+	 * 브랜드 정보 수정.
+	 * </pre>
 	 * 
 	 * @param dpBrandInfo
-	 * @throws CouponException
+	 *            brandInfo
+	 * @return
 	 */
 
 	@Override
@@ -143,8 +159,11 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * ㅊatalogId seq 가져오기
+	 * <pre>
+	 * 브랜드 정보(catalogId) SEQ 가져오기.
+	 * </pre>
 	 * 
+	 * @return String
 	 */
 	@Override
 	public String searchCreateCatalogId() {
@@ -154,10 +173,13 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * Catalog 정보 넣기
+	 * <pre>
+	 * 카탈로그 정보 입력.
+	 * </pre>
 	 * 
 	 * @param dpCatalogInfo
-	 * @throws CouponException
+	 *            catalogInfo
+	 * @return
 	 */
 
 	@Override
@@ -186,10 +208,13 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * Catalog 정보 수정
+	 * <pre>
+	 * 카탈로그 정보 수정.
+	 * </pre>
 	 * 
 	 * @param dpCatalogInfo
-	 * @throws CouponException
+	 *            catalogInfo
+	 * @return
 	 */
 
 	@Override
@@ -221,10 +246,13 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * Catalog Tag 넣기
+	 * <pre>
+	 * 태그 정보 저장.
+	 * </pre>
 	 * 
-	 * @param dpCatalogInfo
-	 * @throws CouponException
+	 * @param tagInfo
+	 *            tagInfo
+	 * @return
 	 */
 
 	@Override
@@ -240,7 +268,13 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * TBL_TAG_INFO를 삭제 한다.
+	 * <pre>
+	 * 태그 정보 삭제.
+	 * </pre>
+	 * 
+	 * @param cid
+	 *            cid
+	 * @return
 	 */
 	@Override
 	public void deleteTblTagInfo(String cid) {
@@ -271,7 +305,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	/**
 	 * 전시 상품 이미지 테이블에 삭제 한다.
 	 * 
-	 * @param dpProdImgInfo
+	 * @param prodId
 	 *            전시 상품 이미지 정보
 	 */
 	@Override
@@ -285,7 +319,13 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * 브랜드 Brand_Id SELECT
+	 * <pre>
+	 * 브랜드 정보(brandId)가져오기.
+	 * </pre>
+	 * 
+	 * @param brandId
+	 *            brandId
+	 * @return String
 	 */
 	@Override
 	public String getCreateBrandId(String brandId) {
@@ -307,7 +347,13 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	}
 
 	/**
-	 * 카탈로그 Catalog_Id SELECT
+	 * <pre>
+	 * 카탈로그 정보(catalogId)가져오기.
+	 * </pre>
+	 * 
+	 * @param catalogId
+	 *            catalogId
+	 * @return String
 	 */
 	@Override
 	public String getCreateCatalogId(String catalogId) {

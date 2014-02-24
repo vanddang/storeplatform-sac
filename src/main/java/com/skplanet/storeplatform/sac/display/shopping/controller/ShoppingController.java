@@ -34,7 +34,9 @@ public class ShoppingController {
 	 * 쇼핑 추천/인기 상품 리스트 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -53,7 +55,9 @@ public class ShoppingController {
 	 * 쇼핑 신규 상품 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -72,7 +76,9 @@ public class ShoppingController {
 	 * 쇼핑 세부카테고리  상품 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -91,7 +97,9 @@ public class ShoppingController {
 	 * 특가 상품 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -110,7 +118,9 @@ public class ShoppingController {
 	 * 기획전 상품 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -129,7 +139,9 @@ public class ShoppingController {
 	 * 특정 기획전에 대한 상품 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -148,7 +160,9 @@ public class ShoppingController {
 	 * 브랜드샵 - 메인  조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -167,7 +181,9 @@ public class ShoppingController {
 	 * 특정 브랜드샵 상품 리스트 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -186,7 +202,9 @@ public class ShoppingController {
 	 * 쇼핑 테마 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -205,7 +223,9 @@ public class ShoppingController {
 	 * 특정 테마에 대한 상품 리스트 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -224,7 +244,9 @@ public class ShoppingController {
 	 * 특정 카테고리의 다른 상품 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -243,7 +265,9 @@ public class ShoppingController {
 	 * 특정 브랜드의 다른 상품 조회– GET.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */
@@ -262,7 +286,9 @@ public class ShoppingController {
 	 * 상품 상세 – POST.
 	 * </pre>
 	 * 
-	 * @param ShoppingReq
+	 * @param header
+	 *            header
+	 * @param req
 	 *            req
 	 * @return ShoppingRes
 	 */

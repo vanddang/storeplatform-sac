@@ -79,7 +79,8 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 	}
 
 	/**
-	 * @param salesOption
+	 * @param reqVo
+	 *            reqVo
 	 * @return SalesOptionSac
 	 */
 	private SalesOptionSac setSaleOption(SalesOption reqVo) {
@@ -95,12 +96,12 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 
 	/**
 	 * <pre>
-	 * VO 복사
+	 * VO 복사.
 	 * </pre>
 	 * 
-	 * @param Object
+	 * @param obj1
 	 *            obj1
-	 * @param Object
+	 * @param obj2
 	 *            obj2
 	 * @return
 	 */
@@ -132,14 +133,14 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 	}
 
 	/**
-	 * 특정 클래스의 내용을 invoke
+	 * 특정 클래스의 내용을 invoke.
 	 * 
 	 * @param obj
-	 *            Method Invoke할 오브젝트
+	 *            obj
 	 * @param methodName
-	 *            Method Name
+	 *            methodName Name
 	 * @param objList
-	 *            Parameter Object List
+	 *            objList
 	 * @return boolean
 	 */
 	private boolean invoke(Object obj, String methodName, Object[] objList) {

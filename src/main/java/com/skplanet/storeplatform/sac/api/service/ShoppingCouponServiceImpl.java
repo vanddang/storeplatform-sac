@@ -30,6 +30,13 @@ import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 
+/**
+ * <pre>
+ * 쿠폰아이템 서비스 인터페이스 imple.
+ * </pre>
+ * 
+ * Created on : 2014-01-03 Created by : 김형식, SK 플래닛. Last Updated on : 2014-01-03 Last Updated by : 김형식, SK 플래닛
+ */
 @Service
 public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
@@ -39,19 +46,25 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 	public final BrandCatalogProdImgInfo brandCatalogProdImgInfo;
 
+	/**
+	 * <pre>
+	 * 브랜드 카탈로그 이미지 정보.
+	 * </pre>
+	 * 
+	 */
 	public ShoppingCouponServiceImpl() {
 		this.brandCatalogProdImgInfo = new BrandCatalogProdImgInfo();
 	}
 
 	@Override
 	public boolean insertBrandInfo(DpBrandInfo dpBrandInfo) {
-		String BrandImgPath = null;
-		String DecodeBrandImgPath = null;
+		String brandImgPath = null;
+		String decodeBrandImgPath = null;
 		String message = "";
 		try {
-			BrandImgPath = dpBrandInfo.getBrandImgPath();
-			DecodeBrandImgPath = URLDecoder.decode(BrandImgPath, "utf-8");
-			dpBrandInfo.setBrandImgPath(DecodeBrandImgPath);
+			brandImgPath = dpBrandInfo.getBrandImgPath();
+			decodeBrandImgPath = URLDecoder.decode(brandImgPath, "utf-8");
+			dpBrandInfo.setBrandImgPath(decodeBrandImgPath);
 
 			// CUD_TYPE에 따라 INSERT/UPDATE
 			if ("C".equalsIgnoreCase(dpBrandInfo.getCudType())) {
@@ -87,16 +100,19 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			throw new CouponException(e.getErrCode(), message, null);
 		} catch (UnsupportedEncodingException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
-		} finally {
 		}
 
 		return true;
 	}
 
 	/**
-	 * 브랜드,카탈로그 파일 이미지 처리
+	 * 브랜드,카탈로그 파일 이미지 처리.
 	 * 
-	 * @return
+	 * @param dpBrandInfo
+	 *            dpBrandInfo
+	 * @param dpCatalogInfo
+	 *            dpCatalogInfo
+	 * @return boolean
 	 */
 	public boolean inputBrandFile(DpBrandInfo dpBrandInfo, DpCatalogInfo dpCatalogInfo) {
 
@@ -135,7 +151,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				// 파일저장 경로
 				uploadPath = // "/data5/SMILE_DATA5/COUPON"
-				repositoryPath + File.separator + CouponConstants.Brand_Catalog_Path + File.separator
+				repositoryPath + File.separator + CouponConstants.BRAND_CATALOG_PATH + File.separator
 						+ DateUtil.getToday("yyyyMM") + File.separator + DateUtil.getToday("dd") + File.separator
 						+ dpBrandInfo.getCreateBrandId();
 
@@ -152,7 +168,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				// 파일저장 경로
 				uploadPath = // "/data5/SMILE_DATA5/COUPON"
-				repositoryPath + File.separator + CouponConstants.Brand_Catalog_Path + File.separator
+				repositoryPath + File.separator + CouponConstants.BRAND_CATALOG_PATH + File.separator
 						+ DateUtil.getToday("yyyyMM") + File.separator + DateUtil.getToday("dd") + File.separator
 						+ dpCatalogInfo.getCreateCatalogId();
 
@@ -166,7 +182,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				downloadDir.mkdirs();
 			}
 
-			this.log.info("BrandImgPath(downloadPath) = " + uploadPath);
+			this.log.info("brandImgPath(downloadPath) = " + uploadPath);
 
 			for (int i = 0; i < fileList.size(); i++) {
 				downloadUrl = fileList.get(i);
@@ -321,30 +337,30 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	/**
 	 * 카탈로그 정보를 추가한다.
 	 * 
-	 * @param dpBrandInfo
-	 * @throws CouponException
-	 * @throws UnsupportedEncodingException
+	 * @param dpCatalogInfo
+	 *            dpCatalogInfo
+	 * @return boolean
 	 */
 	@Override
 	public boolean insertCatalogInfo(DpCatalogInfo dpCatalogInfo) {
 
-		String TopImgPath = null;
-		String DtlImgPath = null;
-		String DecodeTopImgPath = null;
-		String DecodeTopDtlImgPath = null;
+		String topImgPath = null;
+		String dtlImgPath = null;
+		String decodeTopImgPath = null;
+		String decodeTopDtlImgPath = null;
 		String message = "";
 		try {
 
 			this.log.info("dpCatalogInfo.getCatalogId() = " + dpCatalogInfo.getCatalogId());
 
-			TopImgPath = dpCatalogInfo.getTopImgPath();
-			DtlImgPath = dpCatalogInfo.getDtlImgPath();
+			topImgPath = dpCatalogInfo.getTopImgPath();
+			dtlImgPath = dpCatalogInfo.getDtlImgPath();
 
-			DecodeTopImgPath = URLDecoder.decode(TopImgPath, "utf-8");
-			DecodeTopDtlImgPath = URLDecoder.decode(DtlImgPath, "utf-8");
+			decodeTopImgPath = URLDecoder.decode(topImgPath, "utf-8");
+			decodeTopDtlImgPath = URLDecoder.decode(dtlImgPath, "utf-8");
 
-			dpCatalogInfo.setTopImgPath(DecodeTopImgPath);
-			dpCatalogInfo.setDtlImgPath(DecodeTopDtlImgPath);
+			dpCatalogInfo.setTopImgPath(decodeTopImgPath);
+			dpCatalogInfo.setDtlImgPath(decodeTopDtlImgPath);
 
 			// CUD_TYPE에 따라 INSERT/UPDATE
 			if ("C".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
@@ -400,16 +416,17 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			throw new CouponException(e.getErrCode(), message, null);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-		} finally {
 		}
 
 		return true;
 	}
 
 	/**
-	 * 브랜드 이미지파일 리사이즈 처리
+	 * 브랜드 이미지파일 리사이즈 처리.
 	 * 
-	 * @return
+	 * @param dpBrandInfo
+	 *            dpBrandInfo
+	 * @return boolean
 	 */
 	public boolean brandImgResize(DpBrandInfo dpBrandInfo) {
 		// 파일명 끝에 추가할 명칭
@@ -452,10 +469,10 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				// 이미지 리사이즈 처리
 				File srcFile = new File(uploadDir + srcFileName);
-				String out_file = uploadDir + targetFileName;
+				String outFile = uploadDir + targetFileName;
 
 				// 이미지 리사이즈
-				if (!ImageUtil.setImgScale(srcFile, out_file, width, height, uploadDir)) {
+				if (!ImageUtil.setImgScale(srcFile, outFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
 				// log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
@@ -480,9 +497,11 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	}
 
 	/**
-	 * 카탈로그 이미지파일 리사이즈 처리
+	 * 카탈로그 이미지파일 리사이즈 처리.
 	 * 
-	 * @return
+	 * @param dpCatalogInfo
+	 *            dpCatalogInfo
+	 * @return boolean
 	 */
 	public boolean catalogImgResize(DpCatalogInfo dpCatalogInfo) {
 
@@ -557,12 +576,12 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				// 이미지 리사이즈 처리
 				File srcFile = new File(uploadDir + srcFileName);
-				String out_file = uploadDir + targetFileName;
+				String outFile = uploadDir + targetFileName;
 
 				// 이미지 리사이즈
-				ImageUtil.setImgScale(srcFile, out_file, width, height, uploadDir);
+				ImageUtil.setImgScale(srcFile, outFile, width, height, uploadDir);
 				// 이미지 리사이즈
-				if (!ImageUtil.setImgScale(srcFile, out_file, width, height, uploadDir)) {
+				if (!ImageUtil.setImgScale(srcFile, outFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
 				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
@@ -589,13 +608,13 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				// 이미지 리사이즈 처리
 				File srcFile1 = new File(uploadDir1 + srcFileName1);
-				String cutOut_file = uploadDir1 + targetFileName1;
+				String cutOutFile = uploadDir1 + targetFileName1;
 
 				// 이미지 리사이즈
-				if (!ImageUtil.setImgScale(srcFile1, cutOut_file, width, height, uploadDir)) {
+				if (!ImageUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
-				ImageUtil.setImgScale(srcFile1, cutOut_file, width, height, uploadDir1);
+				ImageUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir1);
 
 				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName1 + "을 생성 하였습니다.");
 
@@ -621,23 +640,23 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 					// 이미지를 1170사이즈까지 잘라서 저장
 					for (seq = 1; nHeightSize < height; seq++) {
 
-						String ResizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
+						String resizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
 						// 이미지 리사이즈
-						if (!ImageUtil.setImgScale(srcFile1, cutOut_file, width, height, uploadDir)) {
+						if (!ImageUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir)) {
 							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ",
 									null);
 						}
-						ImageUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + ResizetargetFileName1, 0, cY,
+						ImageUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
 								width, 1170);
-						this.brandCatalogProdImgInfo.setFileNm(ResizetargetFileName1);
-						// log.info("■■■■■BrandImgResize■■■■■ : " + ResizetargetFileName1 + "을 생성 하였습니다.");
+						this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
+						// log.info("■■■■■BrandImgResize■■■■■ : " + resizetargetFileName1 + "을 생성 하였습니다.");
 
 						cY = nHeightSize;
 						nHeightSize = nHeightSize + 1170;
 
 						this.brandCatalogProdImgInfo.setSeq(seq);
 						this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
-						this.brandCatalogProdImgInfo.setFileNm(ResizetargetFileName1);
+						this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
 
 						// TBL_DP_PROD_IMG 테이블에 INSERT/UPDATE
 						this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
@@ -647,17 +666,17 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 							this.log.info("■■■■■이미지 마지막 1170보다 작은 이미지 생성■■■■■");
 							seq = seq + 1;
 
-							ResizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
-							this.log.info("ResizetargetFileName1" + ResizetargetFileName1);
+							resizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
+							this.log.info("resizetargetFileName1" + resizetargetFileName1);
 
-							ImageUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + ResizetargetFileName1, 0,
+							ImageUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0,
 									cY, width, height - cY);
-							this.brandCatalogProdImgInfo.setFileNm(ResizetargetFileName1);
-							// log.info("■■■■■BrandImgResize■■■■■ : " + ResizetargetFileName1 + "을 생성 하였습니다.");
+							this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
+							// log.info("■■■■■BrandImgResize■■■■■ : " + resizetargetFileName1 + "을 생성 하였습니다.");
 
 							this.brandCatalogProdImgInfo.setSeq(seq);
 							this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
-							this.brandCatalogProdImgInfo.setFileNm(ResizetargetFileName1);
+							this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
 
 							// TBL_DP_PROD_IMG 테이블에 INSERT/UPDATE
 							this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
@@ -683,8 +702,10 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	}
 
 	/**
-	 * TBL_TAG_INFO 정보를 설정
+	 * TBL_TAG_INFO 정보를 설정.
 	 * 
+	 * @param dpCatalogInfo
+	 *            dpCatalogInfo
 	 * @return boolean
 	 */
 	public boolean catalogTagList(DpCatalogInfo dpCatalogInfo) {
@@ -720,7 +741,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	/**
 	 * 해당 쿼리에 해당하는 BRAND_ID를 리턴한다.
 	 * 
-	 * @return
+	 * @param brandId
+	 *            brandId
+	 * @return String
 	 */
 	public String getCreateBrandId(String brandId) {
 		this.log.info("<<<BrandCatalogService>>> getBrandId...");
@@ -730,7 +753,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	/**
 	 * 해당 쿼리에 해당하는 CATALOG_ID를 리턴한다.
 	 * 
-	 * @return
+	 * @param catalogId
+	 *            ++9+
+	 * @return String
 	 */
 	public String getCreateCatalogId(String catalogId) {
 		this.log.info("<<<BrandCatalogService>>> getCreateCatalogId...");

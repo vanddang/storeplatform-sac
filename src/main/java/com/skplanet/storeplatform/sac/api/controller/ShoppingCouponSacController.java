@@ -69,7 +69,7 @@ public class ShoppingCouponSacController {
 	 * 쇼핑쿠폰 전처리– POST.
 	 * </pre>
 	 * 
-	 * @param CouponReq
+	 * @param couponReq
 	 *            couponReq
 	 * @return CouponRes
 	 */
@@ -92,6 +92,13 @@ public class ShoppingCouponSacController {
 
 	}
 
+	/**
+	 * <pre>
+	 * 쇼핑쿠폰 전처리 배치– GET.
+	 * </pre>
+	 * 
+	 * @return ShoppingRes
+	 */
 	@RequestMapping(value = "/api/couponStateUpdateStart/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ShoppingRes couponStateUpdateStart() {
@@ -106,14 +113,27 @@ public class ShoppingCouponSacController {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			Date yesDate = DateUtil.getYesterday(sdf.parse(nowTime));
 			String yesterdayTime = DateUtil.getDateString(yesDate, "yyyyMMdd");
-			this.couponProcessService.CouponStateUpdateStart(yesterdayTime);
+			this.couponProcessService.couponStateUpdateStart(yesterdayTime);
 		} catch (Exception e) {
-			// this.log.error("couponStateUpdateStart 생성 중 예외 발생 - ( 쿠폰(아이템) 상태변경 Batch  Call 에러 )", e);
+			this.log.error("couponStateUpdateStart 생성 중 예외 발생 - ( 쿠폰(아이템) 상태변경 Batch  Call 에러 )", e);
 		}
 		return null;
 
 	}
 
+	/**
+	 * <pre>
+	 * dePloy.
+	 * </pre>
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @param couponRes
+	 *            couponRes
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
 	private boolean dePloy(CouponReq couponReq, CouponRes couponRes) throws Exception {
 
 		this.log.info("<CouponControl> dePloy...");
@@ -284,9 +304,9 @@ public class ShoppingCouponSacController {
 	/**
 	 * 브랜드 정보를 추가한다.
 	 * 
-	 * @param DpBrandInfo
+	 * @param dpBrandInfo
 	 *            dpBrandInfo
-	 * @throws
+	 * @return boolean
 	 */
 	private boolean insertBrandInfo(DpBrandInfo dpBrandInfo) {
 		boolean result = this.shoppingCouponService.insertBrandInfo(dpBrandInfo);
@@ -297,9 +317,9 @@ public class ShoppingCouponSacController {
 	/**
 	 * 카탈로그 정보를 추가한다.
 	 * 
-	 * @param DpCatalogInfo
+	 * @param dpCatalogInfo
 	 *            dpCatalogInfo
-	 * @throws
+	 * @return boolean
 	 */
 	private boolean insertCatalogInfo(DpCatalogInfo dpCatalogInfo) {
 		boolean result = this.shoppingCouponService.insertCatalogInfo(dpCatalogInfo);
@@ -310,9 +330,9 @@ public class ShoppingCouponSacController {
 	/**
 	 * 쿠폰 정보를 추가한다.
 	 * 
-	 * @param CouponReq
+	 * @param couponReq
 	 *            couponReq
-	 * @response boolean
+	 * @return boolean
 	 */
 	private boolean insertCouponInfo(CouponReq couponReq) {
 		boolean result = this.couponProcessService.insertCouponInfo(couponReq);
@@ -323,9 +343,9 @@ public class ShoppingCouponSacController {
 	/**
 	 * 상품 상태 변경한다.
 	 * 
-	 * @param CouponReq
+	 * @param couponReq
 	 *            couponReq
-	 * @response boolean
+	 * @return boolean
 	 */
 	private boolean updateForCouponStatus(CouponReq couponReq) {
 		boolean result = this.couponProcessService.updateForCouponStatus(couponReq);
@@ -336,9 +356,9 @@ public class ShoppingCouponSacController {
 	/**
 	 * 특가 상품 목록 조회 한다.
 	 * 
-	 * @param String
-	 *            [] couponCodes
-	 * @response List<CouponRes>
+	 * @param couponCodes
+	 *            couponCodes
+	 * @return List<CouponRes>
 	 */
 	private List<CouponRes> getSpecialProductList(String[] couponCodes) {
 		List<CouponRes> result = this.couponProcessService.getSpecialProductList(couponCodes);
@@ -349,9 +369,9 @@ public class ShoppingCouponSacController {
 	/**
 	 * 특가 상품 상세 조회 한다.
 	 * 
-	 * @param String
+	 * @param couponCode
 	 *            couponCode
-	 * @response CouponRes
+	 * @return CouponRes
 	 */
 	private CouponRes getSpecialProductDetail(String couponCode) {
 		CouponRes result = this.couponProcessService.getSpecialProductDetail(couponCode);
@@ -359,6 +379,15 @@ public class ShoppingCouponSacController {
 
 	}
 
+	/**
+	 * 특가 상품 상세 조회 한다.
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @param errorData
+	 *            errorData
+	 * @return boolean
+	 */
 	private boolean doValidParameter1(CouponReq couponReq, ErrorData errorData) {
 		this.log.info("<CouponControl> doValidParameter1...");
 		StringBuffer sb = new StringBuffer();
@@ -395,6 +424,17 @@ public class ShoppingCouponSacController {
 
 	}
 
+	/**
+	 * 브랜드 파라미터 셋팅 조회 한다.
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @param brandInfo
+	 *            brandInfo
+	 * @param errorData
+	 *            errorData
+	 * @return boolean
+	 */
 	private boolean doValidParameterBD(CouponReq couponReq, DpBrandInfo brandInfo, ErrorData errorData) {
 		this.log.info("<CouponControl> doValidParameterBD...");
 		StringBuffer sb = new StringBuffer();
@@ -442,6 +482,17 @@ public class ShoppingCouponSacController {
 
 	}
 
+	/**
+	 * 카탈로그 파라미터 셋팅 조회 한다.
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @param catalogInfo
+	 *            catalogInfo
+	 * @param errorData
+	 *            errorData
+	 * @return boolean
+	 */
 	private boolean doValidParameterCT(CouponReq couponReq, DpCatalogInfo catalogInfo, ErrorData errorData) {
 		this.log.info("<CouponControl> doValidParameterCT...");
 		StringBuffer sb = new StringBuffer();
@@ -455,7 +506,7 @@ public class ShoppingCouponSacController {
 			catalogInfo.setCatalogNm(couponReq.getCatalogName());
 			catalogInfo.setTopImgPath(couponReq.getCatalogImage1());
 			catalogInfo.setDtlImgPath(couponReq.getCatalogImage2());
-			catalogInfo.setIntroText(couponReq.getIntro_text());
+			catalogInfo.setIntroText(couponReq.getIntroText());
 			catalogInfo.setCatalogTag(couponReq.getTag());
 
 			if (catalogInfo.getCatalogId().equals("") || catalogInfo.getCatalogId() == null) {
@@ -520,6 +571,15 @@ public class ShoppingCouponSacController {
 
 	}
 
+	/**
+	 * 쿠폰,아이템 파라미터 셋팅 조회 한다.
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @param errorData
+	 *            errorData
+	 * @return boolean
+	 */
 	private boolean doValidParameterCP(CouponReq couponReq, ErrorData errorData) {
 		String couponProdId = "";
 		String itemProdId = "";
@@ -570,7 +630,19 @@ public class ShoppingCouponSacController {
 
 	}
 
-	// 쇼핑쿠폰 API 응답은 XML 으로 전송한다.
+	/**
+	 * 쇼핑쿠폰 API 응답은 XML 으로 전송한다.
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @param map
+	 *            map
+	 * @param couponRes
+	 *            couponRes
+	 * @param couponList
+	 *            couponList
+	 * @return boolean
+	 */
 	private boolean sendResponseData(CouponReq couponReq, Map<String, String> map, CouponRes couponRes,
 			List<CouponRes> couponList) {
 		this.log.info("<CouponControl> sendResponseData...");
@@ -659,15 +731,15 @@ public class ShoppingCouponSacController {
 				case LS:
 					xmlSb.append("<rData>");
 					xmlSb.append("<eventList><![CDATA[");
-					String seperator_comma = "";
+					String seperatorComma = "";
 					String eventList = "";
 					int j = 0;
 					if (couponList != null) {
 						for (CouponRes couponInfo : couponList) {
 							if (j > 0)
-								seperator_comma = ",";
-							xmlSb.append(seperator_comma + couponInfo.getCouponCode() + ":" + couponInfo.getSpecialYN());
-							eventList = eventList + seperator_comma + couponInfo.getCouponCode() + ":"
+								seperatorComma = ",";
+							xmlSb.append(seperatorComma + couponInfo.getCouponCode() + ":" + couponInfo.getSpecialYN());
+							eventList = eventList + seperatorComma + couponInfo.getCouponCode() + ":"
 									+ couponInfo.getSpecialYN();
 
 							j++;
@@ -708,17 +780,17 @@ public class ShoppingCouponSacController {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-
 		}
 		return success;
 	}
 
 	/**
-	 * 쿠폰 정보 유효성 체크
+	 * 쿠폰 정보 유효성 체크.
 	 * 
 	 * @param couponInfo
-	 * 
+	 *            couponInfo
+	 * @param errorData
+	 *            errorData
 	 * @return boolean
 	 */
 	private boolean doValidateCouponInfo(DpCouponInfo couponInfo, ErrorData errorData) {
@@ -888,10 +960,12 @@ public class ShoppingCouponSacController {
 	}
 
 	/**
-	 * 쿠폰 정보 유효성 체크
+	 * 아이템 정보 유효성 체크.
 	 * 
-	 * @param CouponInfo
-	 *            couponInfo
+	 * @param itemInfo
+	 *            itemInfo
+	 * @param errorData
+	 *            errorData
 	 * @return boolean
 	 */
 	private boolean doValidateItemInfo(DpItemInfo itemInfo, ErrorData errorData) {

@@ -23,8 +23,23 @@ import java.io.FileOutputStream;
 
 import javax.imageio.ImageIO;
 
+/**
+ * ImageResizing 이미지 리사이즈 기능을 제공한다.
+ */
 public class ImageResizing {
-
+	/**
+	 * ImageResizing 이미지 리사이즈 기능을 제공한다.
+	 * 
+	 * @param soruce
+	 *            soruce
+	 * @param width
+	 *            width
+	 * @param height
+	 *            height
+	 * @return Image
+	 * @throws Exception
+	 *             Exception
+	 */
 	public static Image resizing(Image soruce, int width, int height)
 
 	throws Exception {
@@ -37,7 +52,20 @@ public class ImageResizing {
 
 	}
 
-	public boolean ImageResizing(String imgResdFile, String imgWriteFile, int targetWidth, int targetHeight) {
+	/**
+	 * ImageResizing 이미지 리사이즈 기능을 제공한다.
+	 * 
+	 * @param imgResdFile
+	 *            imgResdFile
+	 * @param imgWriteFile
+	 *            imgWriteFile
+	 * @param targetWidth
+	 *            targetWidth
+	 * @param targetHeight
+	 *            targetHeight
+	 * @return boolean
+	 */
+	public boolean imageResizing(String imgResdFile, String imgWriteFile, int targetWidth, int targetHeight) {
 
 		boolean result = false;
 

@@ -52,12 +52,12 @@ public class CSVParser {
 	public static final char DEFAULT_ESCAPE_CHARACTER = '\\';
 
 	/**
-	 * The default strict quote behavior to use if none is supplied to the constructor
+	 * The default strict quote behavior to use if none is supplied to the constructor.
 	 */
 	public static final boolean DEFAULT_STRICT_QUOTES = false;
 
 	/**
-	 * The default leading whitespace behavior to use if none is supplied to the constructor
+	 * The default leading whitespace behavior to use if none is supplied to the constructor.
 	 */
 	public static final boolean DEFAULT_IGNORE_LEADING_WHITESPACE = true;
 
@@ -163,6 +163,8 @@ public class CSVParser {
 	 *            if true, characters outside the quotes are ignored
 	 * @param ignoreLeadingWhiteSpace
 	 *            if true, white space in front of a quote in a field is ignored
+	 * @param ignoreQuotations
+	 *            if true, white space in front of a quote in a field is ignored
 	 */
 	public CSVParser(char separator, char quotechar, char escape, boolean strictQuotes,
 			boolean ignoreLeadingWhiteSpace, boolean ignoreQuotations) {
@@ -180,11 +182,34 @@ public class CSVParser {
 		this.ignoreQuotations = ignoreQuotations;
 	}
 
+	/**
+	 * Constructs CSVReader with supplied separator and quote char. Allows setting the "strict quotes" and
+	 * "ignore leading whitespace" flags
+	 * 
+	 * @param separator
+	 *            the delimiter to use for separating entries
+	 * @param quotechar
+	 *            the character to use for quoted elements
+	 * @param escape
+	 *            the character to use for escaping a separator or quote
+	 * @return boolean
+	 */
 	private boolean anyCharactersAreTheSame(char separator, char quotechar, char escape) {
 		return this.isSameCharacter(separator, quotechar) || this.isSameCharacter(separator, escape)
 				|| this.isSameCharacter(quotechar, escape);
 	}
 
+	/**
+	 * <pre>
+	 * isSameCharacter.
+	 * </pre>
+	 * 
+	 * @param c1
+	 *            c1
+	 * @param c2
+	 *            c2
+	 * @return boolean
+	 */
 	private boolean isSameCharacter(char c1, char c2) {
 		return c1 != NULL_CHARACTER && c1 == c2;
 	}
@@ -196,10 +221,32 @@ public class CSVParser {
 		return this.pending != null;
 	}
 
+	/**
+	 * <pre>
+	 * parseLineMulti.
+	 * </pre>
+	 * 
+	 * @param nextLine
+	 *            nextLine
+	 * @return String[]
+	 * @throws IOException
+	 *             IOException
+	 */
 	public String[] parseLineMulti(String nextLine) throws IOException {
 		return this.parseLine(nextLine, true);
 	}
 
+	/**
+	 * <pre>
+	 * parseLine.
+	 * </pre>
+	 * 
+	 * @param nextLine
+	 *            nextLine
+	 * @return String[]
+	 * @throws IOException
+	 *             IOException
+	 */
 	public String[] parseLine(String nextLine) throws IOException {
 		return this.parseLine(nextLine, false);
 	}
@@ -210,9 +257,10 @@ public class CSVParser {
 	 * @param nextLine
 	 *            the string to parse
 	 * @param multi
+	 *            multi
 	 * @return the comma-tokenized list of elements, or null if nextLine is null
 	 * @throws IOException
-	 *             if bad things happen during the read
+	 *             IOException
 	 */
 	private String[] parseLine(String nextLine, boolean multi) throws IOException {
 
@@ -236,7 +284,7 @@ public class CSVParser {
 		if (this.pending != null) {
 			sb.append(this.pending);
 			this.pending = null;
-			inQuotes = !this.ignoreQuotations;// true;
+			inQuotes = !this.ignoreQuotations; // true;
 		}
 		for (int i = 0; i < nextLine.length(); i++) {
 
@@ -304,7 +352,7 @@ public class CSVParser {
 	}
 
 	/**
-	 * precondition: the current character is a quote or an escape
+	 * precondition: the current character is a quote or an escape.
 	 * 
 	 * @param nextLine
 	 *            the current line
@@ -321,7 +369,7 @@ public class CSVParser {
 	}
 
 	/**
-	 * precondition: the current character is an escape
+	 * precondition: the current character is an escape.
 	 * 
 	 * @param nextLine
 	 *            the current line
@@ -338,7 +386,7 @@ public class CSVParser {
 	}
 
 	/**
-	 * precondition: sb.length() > 0
+	 * precondition: sb.length() > 0.
 	 * 
 	 * @param sb
 	 *            A sequence of characters to examine

@@ -14,7 +14,7 @@ import com.skplanet.storeplatform.sac.api.vo.ErrorData;
 
 /**
  * <pre>
- * 전처리 쿠폰 Exception Value Object
+ * 전처리 쿠폰 Exception Value Object.
  * </pre>
  * 
  * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
@@ -27,48 +27,77 @@ public class CouponException extends RuntimeException {
 	/**
 	 * Exception 시에는 tx_id = null 로와도 무방함.
 	 * 
-	 * @param error_code
-	 * @param error_message
-	 * @param err_value
-	 * @param request_time
+	 * @param errorCode
+	 *            errorCode
+	 * @param errorMessage
+	 *            errorMessage
+	 * @param errValue
+	 *            errValue
 	 */
-	public CouponException(String error_code, String error_message, String err_value) {
+	public CouponException(String errorCode, String errorMessage, String errValue) {
 		this.errorData = new ErrorData();
-		this.errorData.setErrorCode(error_code);
-		this.errorData.setErrorMsg(error_message);
-		this.errValue = err_value;
+		this.errorData.setErrorCode(errorCode);
+		this.errorData.setErrorMsg(errorMessage);
+		this.errValue = errValue;
 	}
 
+	/**
+	 * @return String
+	 */
 	@Override
 	public String getMessage() {
 		return this.errorData.getErrorMsg();
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getErrCode() {
 		return this.errorData.getErrorCode();
 	}
 
+	/**
+	 * @return ErrorData
+	 */
 	public ErrorData getError_data() {
 		return this.errorData;
 	}
 
-	public void setError_data(ErrorData error_data) {
-		this.errorData = error_data;
+	/**
+	 * @param errorData
+	 *            errorData
+	 */
+	public void setError_data(ErrorData errorData) {
+		this.errorData = errorData;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getRequest_time() {
 		return this.requestTime;
 	}
 
-	public void setRequest_time(String request_time) {
-		this.requestTime = request_time;
+	/**
+	 * @param requestTime
+	 *            requestTime
+	 */
+	public void setRequest_time(String requestTime) {
+		this.requestTime = requestTime;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getErr_value() {
 		return this.errValue;
 	}
 
-	public void setErr_valu(String err_value) {
-		this.errValue = err_value;
+	/**
+	 * @param errValue
+	 *            errValue
+	 */
+	public void setErr_valu(String errValue) {
+		this.errValue = errValue;
 	}
 }

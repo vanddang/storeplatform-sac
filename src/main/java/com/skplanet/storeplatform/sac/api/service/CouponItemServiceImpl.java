@@ -30,6 +30,13 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 
+/**
+ * <pre>
+ * 쿠폰,아이템 서비스 인터페이스 Imple.
+ * </pre>
+ * 
+ * Created on : 2014-01-03 Created by : 김형식, SK 플래닛. Last Updated on : 2014-01-03 Last Updated by : 김형식, SK 플래닛
+ */
 @Service
 public class CouponItemServiceImpl implements CouponItemService {
 
@@ -40,8 +47,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
-	 * 쿠폰ID 생성
+	 * 쿠폰ID 생성.
 	 * </pre>
+	 * 
+	 * @return String
 	 */
 	@Override
 	public String couponGenerateId() {
@@ -54,8 +63,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
-	 * 아이템ID 생성
+	 * 아이템ID 생성.
 	 * </pre>
+	 * 
+	 * @return String
 	 */
 	@Override
 	public String itemGenerateId() {
@@ -68,8 +79,12 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
-	 * 쿠폰ID,아이템ID 가져오기
+	 * 쿠폰ID,아이템ID 가져오기.
 	 * </pre>
+	 * 
+	 * @param scrContentId
+	 *            scrContentId
+	 * @return int
 	 */
 	@Override
 	public int getCouponItemCountCudType(String scrContentId) {
@@ -82,8 +97,12 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
-	 * 쿠폰ID,아이템ID 가져오기
+	 * 쿠폰ID,아이템ID 가져오기.
 	 * </pre>
+	 * 
+	 * @param scrContentId
+	 *            scrContentId
+	 * @return String
 	 */
 	@Override
 	public String getGenerateId(String scrContentId) {
@@ -98,6 +117,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_PROD 테이블 입력및 수정한다.
 	 * </pre>
+	 * 
+	 * @param tblDpProdList
+	 *            tblDpProdList
+	 * @return
 	 */
 
 	@Override
@@ -120,6 +143,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_SHPG_PROD 테이블 입력및 수정한다.
 	 * </pre>
+	 * 
+	 * @param tbDpShpgProdList
+	 *            tbDpShpgProdList
+	 * @return
 	 */
 
 	@Override
@@ -143,6 +170,9 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_PROD_DESC 테이블 입력및 수정한다.
 	 * </pre>
+	 * 
+	 * @param tbDpProdDescList
+	 *            tbDpProdDescList
 	 */
 
 	@Override
@@ -166,6 +196,9 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_PROD_RSHP 테이블 입력및 수정한다.
 	 * </pre>
+	 * 
+	 * @param tbDpProdRshpList
+	 *            tbDpProdRshpList
 	 */
 
 	@Override
@@ -187,6 +220,9 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_TENANT_PROD 테이블 입력및 수정한다.
 	 * </pre>
+	 * 
+	 * @param tbDpTenantProdList
+	 *            tbDpTenantProdList
 	 */
 
 	@Override
@@ -210,8 +246,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_TENANT_PROD_PRICE 테이블 입력및 수정한다.
 	 * </pre>
+	 * 
+	 * @param tbDpTenantProdPriceList
+	 *            tbDpTenantProdPriceList
 	 */
-
 	@Override
 	public void insertTbDpTenantProdPriceInfo(List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList) {
 		try {
@@ -233,8 +271,12 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_PROD_CATALOG_MAPG 테이블 입력및 수정한다.
 	 * </pre>
+	 * 
+	 * @param tbDpProdCatalogMapg
+	 *            tbDpProdCatalogMapg
+	 * @param prodId
+	 *            prodId
 	 */
-
 	@Override
 	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String prodId) {
 		try {
@@ -257,8 +299,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_PROD_OPT 테이블 입력및 수정한다.
 	 * </pre>
+	 * 
+	 * @param tbDpProdOptList
+	 *            tbDpProdOptList
 	 */
-
 	@Override
 	public void insertTbDpProdOptInfo(List<TbDpProdOpt> tbDpProdOptList) {
 		try {
@@ -283,8 +327,11 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
-	 * TB_DP_SPRT_DEVICE 테이블 입력및 수정한다.
+	 * TB_DP_SPRT_DEVICE 테이블 입력한다.
 	 * </pre>
+	 * 
+	 * @param tbDpSprtDeviceList
+	 *            tbDpSprtDeviceList
 	 */
 
 	@Override
@@ -304,9 +351,13 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
-	 * TBL_TAG_INFO 테이블 입력한다.
+	 * TBL_TAG_INFO 테이블 입력및 수정한다.
 	 * </pre>
+	 * 
+	 * @param tagList
+	 *            tagList
 	 */
+
 	@Override
 	public void insertTblTagInfo(ArrayList<DpCatalogTagInfo> tagList) {
 		try {
@@ -329,6 +380,15 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 상태값을 변경 한다.
 	 * </pre>
+	 * 
+	 * @param couponCode
+	 *            couponCode
+	 * @param dpStatusCode
+	 *            dpStatusCode
+	 * @param upType
+	 *            upType
+	 * @param itemCode
+	 *            itemCode
 	 */
 	@Override
 	public void updateCouponStatus(String couponCode, String dpStatusCode, String upType, String itemCode) {
@@ -366,6 +426,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 특가 상품 목록 조회 한다.
 	 * </pre>
+	 * 
+	 * @param couponCodes
+	 *            couponCodes
+	 * @return List<CouponRes>
 	 */
 	@Override
 	public List<CouponRes> getSpecialProductList(String[] couponCodes) {
@@ -399,6 +463,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 특가 상품 상세 조회 한다.
 	 * </pre>
+	 * 
+	 * @param couponCode
+	 *            couponCode
+	 * @return CouponRes
 	 */
 
 	@Override
@@ -429,6 +497,13 @@ public class CouponItemServiceImpl implements CouponItemService {
 		return info;
 	}
 
+	/**
+	 * 쿠폰(아이템) 판매상태 변경.
+	 * 
+	 * @param couponList
+	 *            couponList
+	 * @return ArrayList<String>
+	 */
 	@Override
 	public ArrayList<String> updateBatchForCouponStatus(ArrayList<CouponReq> couponList) {
 		ArrayList<String> result = new ArrayList<String>();

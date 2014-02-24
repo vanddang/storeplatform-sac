@@ -21,14 +21,14 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * 공통적으로 필요한 데이터 변환기능 및 문자열 조작기능등이 구현되어 있음
+ * 공통적으로 필요한 데이터 변환기능 및 문자열 조작기능등이 구현되어 있음.
  */
 public class StringUtil extends StringUtils {
 	public static final int RIGHT = 1;
 	public static final int LEFT = 2;
 
 	/**
-	 * 주어진 문자열을 이용하여 지정한 위치로부터 원하는 길이만큼의 문자열을 구함
+	 * 주어진 문자열을 이용하여 지정한 위치로부터 원하는 길이만큼의 문자열을 구함.
 	 * 
 	 * @param str
 	 *            원하는 문자열 가지고 있는 문자열
@@ -43,7 +43,7 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 주어진 문자열을 이용하여 지정한 위치로부터 끝까지의 문자열을 구함
+	 * 주어진 문자열을 이용하여 지정한 위치로부터 끝까지의 문자열을 구함.
 	 * 
 	 * @param str
 	 *            원하는 문자열 가지고 있는 문자열
@@ -142,9 +142,10 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 문자열을 기본분리자(white space)로 분리하여 문자열배열을 생성함
+	 * 문자열을 기본분리자(white space)로 분리하여 문자열배열을 생성함.
 	 * 
 	 * @param str
+	 *            str
 	 * @return 문자열 배열
 	 */
 	public static String[] toStringArray(String str) {
@@ -157,9 +158,10 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * Vector에 저장된 객체들을 이용하여 문자열 배열을 생성함
+	 * Vector에 저장된 객체들을 이용하여 문자열 배열을 생성함.
 	 * 
 	 * @param vt
+	 *            vt
 	 * @return 문자열 배열
 	 */
 	public static String[] toStringArray(Vector vt) {
@@ -174,8 +176,11 @@ public class StringUtil extends StringUtils {
 	 * 주어진 문자열에서 지정한 문자열값을 지정한 문자열로 치환후 그결과 문자열을 리턴함.
 	 * 
 	 * @param src
+	 *            src
 	 * @param from
+	 *            from
 	 * @param to
+	 *            to
 	 * @return 문자열
 	 */
 	public static String replace(String src, String from, String to) {
@@ -199,7 +204,9 @@ public class StringUtil extends StringUtils {
 	 * 주어진문자열이 지정한 길이를 초과하는 경우 짤라내고 '...'을 붙여 리턴함.
 	 * 
 	 * @param str
+	 *            str
 	 * @param limit
+	 *            limit
 	 * @return 문자열
 	 */
 	public static String cutString(String str, int limit) {
@@ -336,15 +343,15 @@ public class StringUtil extends StringUtils {
 	 * 
 	 * @param str
 	 *            대상 String
-	 * @param Len
+	 * @param len
 	 *            길이
 	 * @return 결과 String
 	 */
-	public static String getLeft(String str, int Len) {
+	public static String getLeft(String str, int len) {
 		if (str.equals(null))
 			return "";
 
-		return str.substring(0, Len);
+		return str.substring(0, len);
 	}
 
 	/**
@@ -352,11 +359,11 @@ public class StringUtil extends StringUtils {
 	 * 
 	 * @param str
 	 *            대상 String
-	 * @param Len
+	 * @param len
 	 *            길이
 	 * @return 결과 String
 	 */
-	public static String getRight(String str, int Len) {
+	public static String getRight(String str, int len) {
 		if (str.equals(null))
 			return "";
 
@@ -365,7 +372,7 @@ public class StringUtil extends StringUtils {
 			dest = dest + str.charAt(i);
 
 		str = dest;
-		str = str.substring(0, Len);
+		str = str.substring(0, len);
 		dest = "";
 
 		for (int i = (str.length() - 1); i >= 0; i--)
@@ -445,7 +452,8 @@ public class StringUtil extends StringUtils {
 		if (str == null || (strLen = str.length()) == 0) {
 			return str;
 		}
-		return new StringBuffer(strLen).append(Character.toTitleCase(str.charAt(0))).append(str.substring(1)).toString();
+		return new StringBuffer(strLen).append(Character.toTitleCase(str.charAt(0))).append(str.substring(1))
+				.toString();
 	}
 
 	/**
@@ -468,6 +476,13 @@ public class StringUtil extends StringUtils {
 		return errTrace;
 	}
 
+	/**
+	 * escapeXml 변환한다.
+	 * 
+	 * @param s
+	 *            s
+	 * @return String
+	 */
 	public static String escapeXml(String s) {
 		if (s == null)
 			return "";
@@ -486,8 +501,8 @@ public class StringUtil extends StringUtils {
 	/**
 	 * Html Tag정보를 Text형태로 변환한다.
 	 * 
-	 * @param Html정보
-	 *            입력
+	 * @param s
+	 *            s
 	 * @return Text정보 반환
 	 */
 	public static String escapeHtmlTag(String s) {
@@ -513,13 +528,21 @@ public class StringUtil extends StringUtils {
 		return sb.toString();
 	}
 
+	/**
+	 * sqlInjectionStringCheck.
+	 * 
+	 * @param checkStr
+	 *            checkStr
+	 * @return boolean
+	 */
 	public static boolean sqlInjectionStringCheck(String checkStr) {
 
 		if (checkStr == null || checkStr.equals(""))
 			return false;
 
-		int idx = StringUtils.indexOfAny(checkStr.toLowerCase(), new String[] { "\'", "\"", "\\", "/", ";", ":", "<", ">", "=", "%", "union ",
-				"select ", "insert ", "delete ", "update ", "drop ", " or ", " and ", "--", "create " });
+		int idx = StringUtils.indexOfAny(checkStr.toLowerCase(), new String[] { "\'", "\"", "\\", "/", ";", ":", "<",
+				">", "=", "%", "union ", "select ", "insert ", "delete ", "update ", "drop ", " or ", " and ", "--",
+				"create " });
 
 		if (idx > -1)
 			return true; // 검색문자열 존재
@@ -528,6 +551,13 @@ public class StringUtil extends StringUtils {
 
 	}
 
+	/**
+	 * isInteger.
+	 * 
+	 * @param value
+	 *            value
+	 * @return boolean
+	 */
 	public static boolean isInteger(String value) {
 		try {
 			Integer num = new Integer(value);
@@ -538,10 +568,11 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 보안 점검을 위해 <,>,",',&,%,!,-- 값 막기"
+	 * 보안 점검을 위해 <,>,",',&,%,!,-- 값 막기".
 	 * 
 	 * @param param
-	 * @return
+	 *            param
+	 * @return String
 	 */
 	public static String removeSpecial(String param) {
 		if (param == null)
@@ -565,23 +596,25 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 모든 특수문자 제거
+	 * 모든 특수문자 제거.
 	 * 
 	 * @param param
-	 * @return
+	 *            param
+	 * @return String
 	 */
 	public static String removeSpecialAll(String param) {
 
-		String[] filter_word = { "", "\\.", "\\?", "\\/", "\\~", "\\!", "\\@", "\\#", "\\$", "\\%", "\\^", "\\&", "\\*", "\\(", "\\)", "\\_", "\\+",
-				"\\=", "\\|", "\\\\", "\\}", "\\]", "\\{", "\\[", "\\\"", "\\'", "\\:", "\\;", "\\<", "\\,", "\\>", "\\.", "\\?", "\\/", "\\-", "\\`" };
+		String[] filterWord = { "", "\\.", "\\?", "\\/", "\\~", "\\!", "\\@", "\\#", "\\$", "\\%", "\\^", "\\&", "\\*",
+				"\\(", "\\)", "\\_", "\\+", "\\=", "\\|", "\\\\", "\\}", "\\]", "\\{", "\\[", "\\\"", "\\'", "\\:",
+				"\\;", "\\<", "\\,", "\\>", "\\.", "\\?", "\\/", "\\-", "\\`" };
 
 		String temp = "";
 
 		if (param == null)
 			param = "";
 		else {
-			for (int i = 0; i < filter_word.length; i++) {
-				temp = param.replaceAll(filter_word[i], "");
+			for (int i = 0; i < filterWord.length; i++) {
+				temp = param.replaceAll(filterWord[i], "");
 				param = temp;
 			}
 		}
@@ -590,23 +623,25 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 콤마(,)를 제외한 모든 특수문자 제거
+	 * 콤마(,)를 제외한 모든 특수문자 제거.
 	 * 
 	 * @param param
-	 * @return
+	 *            param
+	 * @return String
 	 */
 	public static String removeSpecialAllExceptComma(String param) {
 
-		String[] filter_word = { " ", "\\.", "\\?", "\\/", "\\~", "\\!", "\\@", "\\#", "\\$", "\\%", "\\^", "\\&", "\\*", "\\(", "\\)", "\\_", "\\+",
-				"\\=", "\\|", "\\\\", "\\}", "\\]", "\\{", "\\[", "\\\"", "\\'", "\\:", "\\;", "\\<", "\\>", "\\.", "\\?", "\\/", "\\-", "\\`" };
+		String[] filterWord = { " ", "\\.", "\\?", "\\/", "\\~", "\\!", "\\@", "\\#", "\\$", "\\%", "\\^", "\\&",
+				"\\*", "\\(", "\\)", "\\_", "\\+", "\\=", "\\|", "\\\\", "\\}", "\\]", "\\{", "\\[", "\\\"", "\\'",
+				"\\:", "\\;", "\\<", "\\>", "\\.", "\\?", "\\/", "\\-", "\\`" };
 
 		String temp = "";
 
 		if (param == null)
 			param = "";
 		else {
-			for (int i = 0; i < filter_word.length; i++) {
-				temp = param.replaceAll(filter_word[i], "");
+			for (int i = 0; i < filterWord.length; i++) {
+				temp = param.replaceAll(filterWord[i], "");
 				param = temp;
 			}
 		}
@@ -615,12 +650,15 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * byte 단위로 substring
+	 * byte 단위로 substring.
 	 * 
 	 * @param str
+	 *            str
 	 * @param i
+	 *            i
 	 * @param trail
-	 * @return
+	 *            trail
+	 * @return String
 	 */
 	public static String substrb(String str, int i, String trail) {
 
@@ -650,16 +688,17 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * byte 단위로 substring
+	 * byte 단위로 substring.
 	 * 
 	 * @param str
+	 *            str
 	 * @param beginIndex
 	 *            0부터 시작
 	 * @param endIndex
 	 *            substr할 바이트 수. 2-byte문자의 경우 바이트가 부족하면 그 앞 글자까지만 자름.
 	 * @param bytesForDB
 	 *            2-byte문자(한글 등)의 DB에서의 바이트 수. 예를들어 오라클/UTF-8이면 3바이트임
-	 * @return
+	 * @return String
 	 */
 	public static String substrb(String str, int beginIndex, int endIndex, int bytesForDB) {
 
@@ -680,9 +719,9 @@ public class StringUtil extends StringUtils {
 					// blen++; // 한 글자의 바이트 수에 따라 밑에서 증가시킴
 					slen++;
 
-					if (c > 127) { // 2-byte character..
+					if (c > 127)
 						blen = blen + bytesForDB;
-					}
+
 					// 20111110 서영배 - UTF-8 에서 탭과 개행문자는 1바이트로 인식
 					// else if(c == '\t') { // tab은 2바이트로 처리. WEB상에서 2byte로 처리되는 듯.(textarea)
 					// blen = blen + 2;
@@ -703,7 +742,7 @@ public class StringUtil extends StringUtils {
 				tmp = tmp.substring(beginIndex, slen);
 			}
 		} catch (UnsupportedEncodingException ue) {
-
+			ue.getMessage();
 		}
 
 		return tmp;
@@ -760,18 +799,15 @@ public class StringUtil extends StringUtils {
 	/**
 	 * 입력받은 XML 에서 특정 태그로 둘러쌓은 값을 반환한다.
 	 * 
-	 * ex) String xml =
-	 * "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
-	 * "<sqlmap><simplexml>TestValue</simplexml> </sqlmap>"; String tmp =
-	 * StringUtil.extractTagValue(xml, "simplexml"); log.info("TMP=" + tmp);
-	 * ----
-	 * ----------------------------------------------------------------------
-	 * ------ ===> TMP=TestValue
+	 * ex) String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + log.info("TMP=" + tmp); ----
+	 * ---------------------------------------------------------------------- ------ ===> TMP=TestValue
 	 * 
 	 * 
+	 * @param xmlStr
+	 *            xmlStr
 	 * @param tagName
-	 *            tag name
-	 * @return tag value
+	 *            tagName
+	 * @return String
 	 */
 	public static String extractTagValue(String xmlStr, String tagName) {
 		String preTag = "<" + tagName + ">";
@@ -823,7 +859,7 @@ public class StringUtil extends StringUtils {
 	 *            원본 문자열
 	 * @param replacement
 	 *            대체할 문자열
-	 * @return
+	 * @return String
 	 */
 	public static String replaceAllTags(String str, String replacement) {
 
@@ -841,7 +877,7 @@ public class StringUtil extends StringUtils {
 	 *            원본 문자열
 	 * @param replacement
 	 *            대체할 문자열
-	 * @return
+	 * @return String
 	 */
 	public static String replaceAllTagsExceptA(String str, String replacement) {
 
@@ -859,7 +895,7 @@ public class StringUtil extends StringUtils {
 	 *            변환할 태그. &lt;br&gt;의 형태로 사용
 	 * @param replacement
 	 *            대체 문자
-	 * @return
+	 * @return String
 	 */
 	public static String changeTag(String str, String tag, String replacement) {
 
@@ -873,7 +909,9 @@ public class StringUtil extends StringUtils {
 	 * 지정한 charset으로 문자열을 변환하여 반환한다.
 	 * 
 	 * @param str
+	 *            str
 	 * @param charset
+	 *            charset
 	 * @return 변환 실패하면 null
 	 */
 	public static String changeCharset(String str, String charset) {
@@ -893,7 +931,7 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 지정된 길이만큼 특정 문자열을 가지고 확장
+	 * 지정된 길이만큼 특정 문자열을 가지고 확장.
 	 * 
 	 * @param src
 	 *            원본 문자열
@@ -901,7 +939,7 @@ public class StringUtil extends StringUtils {
 	 *            길이
 	 * @param with
 	 *            특정 문자열
-	 * @return
+	 * @return String
 	 */
 	public static String extendStrWith(String src, int length, String with) {
 
@@ -916,6 +954,17 @@ public class StringUtil extends StringUtils {
 		return src;
 	}
 
+	/**
+	 * extendStrWith.
+	 * 
+	 * @param src
+	 *            원본 문자열
+	 * @param length
+	 *            길이
+	 * @param with
+	 *            특정 문자열
+	 * @return String
+	 */
 	public static String extendStrWith(int src, int length, String with) {
 
 		return extendStrWith(String.valueOf(src), length, with);
@@ -928,8 +977,7 @@ public class StringUtil extends StringUtils {
 	 *            원본
 	 * @param prefix
 	 *            특정
-	 * @return 원본이나 특정 문자열이 null 또는 공백이면 false, 특정 문자열로 시작하지 않아도 false, 특정 문자열로
-	 *         시작하면 true
+	 * @return 원본이나 특정 문자열이 null 또는 공백이면 false, 특정 문자열로 시작하지 않아도 false, 특정 문자열로 시작하면 true
 	 */
 	public static boolean startsWith(String str, String prefix) {
 
@@ -940,15 +988,15 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 태그의 갯수를 제한
+	 * 태그의 갯수를 제한.
 	 * 
 	 * @param src
 	 *            구분자로 연결된 태그 모음. null/공백이면 공백 반환
 	 * @param limit
 	 *            최대 갯수. 0이하면 원본 반환
-	 * @param reg
+	 * @param regex
 	 *            구분자. null/공백이면 원본 반환
-	 * @return
+	 * @return String
 	 */
 	public static String cutTagCount(String src, int limit, String regex) {
 
@@ -978,7 +1026,7 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 태그의 갯수를 제한
+	 * 태그의 갯수를 제한.
 	 * 
 	 * @param src
 	 *            구분자로 연결된 태그 모음. null/공백이면 공백 반환
@@ -1057,7 +1105,7 @@ public class StringUtil extends StringUtils {
 	/**
 	 * ID 마스크 처리 끝 2자리를 * 처리한다.
 	 * 
-	 * @param ID
+	 * @param id
 	 *            : 아이디
 	 * @return String
 	 */
@@ -1111,7 +1159,8 @@ public class StringUtil extends StringUtils {
 			if (kName.length() == 2) {
 				kName = kName.substring(0, 1) + "*";
 			} else {
-				kName = kName.substring(0, 1) + convStar(kName.length() - 2) + kName.substring(kName.length() - 1, kName.length());
+				kName = kName.substring(0, 1) + convStar(kName.length() - 2)
+						+ kName.substring(kName.length() - 1, kName.length());
 				;
 			}
 		} else {
@@ -1121,7 +1170,13 @@ public class StringUtil extends StringUtils {
 		return kName;
 	}
 
-	// size 만큼 * mask 처리
+	/**
+	 * convStar.
+	 * 
+	 * @param lengthSize
+	 *            : 한글 이름
+	 * @return String
+	 */
 	public static String convStar(int lengthSize) {
 
 		if (lengthSize < 1) {
@@ -1137,7 +1192,7 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 해외이름 마스크 처리 (해외이름만 사용가능) 4번째부터 3글자
+	 * 해외이름 마스크 처리 (해외이름만 사용가능) 4번째부터 3글자.
 	 * 
 	 * @param fName
 	 *            : 해외 이름
@@ -1156,7 +1211,13 @@ public class StringUtil extends StringUtils {
 		return maskName;
 	}
 
-	// size 만큼 * mask 처리
+	/**
+	 * convFstar.
+	 * 
+	 * @param lengthSize
+	 *            lengthSize
+	 * @return String
+	 */
 	public static String convFstar(int lengthSize) {
 
 		if (lengthSize < 3) {
@@ -1175,7 +1236,7 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 이메일 마스크 처리 아이디부분 끝 2자리
+	 * 이메일 마스크 처리 아이디부분 끝 2자리.
 	 * 
 	 * @param email
 	 *            : 이메일
@@ -1203,7 +1264,7 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 이메일 정합성 확인
+	 * 이메일 정합성 확인.
 	 * 
 	 * @param email
 	 *            : 이메일
@@ -1217,7 +1278,7 @@ public class StringUtil extends StringUtils {
 	}
 
 	/**
-	 * 한글이 한자라도 있으면 한글(이름)으로 인식
+	 * 한글이 한자라도 있으면 한글(이름)으로 인식.
 	 * 
 	 * @param str
 	 *            : 이름.
@@ -1227,7 +1288,8 @@ public class StringUtil extends StringUtils {
 		for (int i = 0; i < str.length(); i++) {
 			char ch = str.charAt(i);
 			Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(ch);
-			if (UnicodeBlock.HANGUL_SYLLABLES.equals(unicodeBlock) || UnicodeBlock.HANGUL_COMPATIBILITY_JAMO.equals(unicodeBlock)
+			if (UnicodeBlock.HANGUL_SYLLABLES.equals(unicodeBlock)
+					|| UnicodeBlock.HANGUL_COMPATIBILITY_JAMO.equals(unicodeBlock)
 					|| UnicodeBlock.HANGUL_JAMO.equals(unicodeBlock)) {
 				return true;
 			}

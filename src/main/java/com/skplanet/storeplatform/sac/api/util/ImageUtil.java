@@ -36,26 +36,23 @@ public class ImageUtil {
 	 * 
 	 * @param inImgfle
 	 *            소스파일
-	 * @param out_file
+	 * @param outFile
 	 *            변경 후 이미지 파일명 (경로포함)
 	 * @param targetWidth
+	 *            targetWidth
 	 * @param targetHeight
+	 *            targetHeight
 	 * @param directoryName
 	 *            변경 후 이미지 저장 디렉토리 명
-	 * @return
+	 * @return boolean
 	 */
-	public static boolean setImgScale(File inImgfle, String out_file, int targetWidth, int targetHeight,
+	public static boolean setImgScale(File inImgfle, String outFile, int targetWidth, int targetHeight,
 			String directoryName) {
 		try {
-			if (inImgfle.isFile()) {
-				// log.info("소스 파일이 존재한다.");
-			} else {
-
-				// this.log.debug("소스 파일이 존재하지 않는다.");
+			if (!inImgfle.isFile()) {
 				return false;
 			}
-
-			File outputfile = new File(out_file);
+			File outputfile = new File(outFile);
 			if (outputfile.exists() == true) {
 				// this.log.info("변경하려는 파일과 동일한 파일이 존재하여 삭제합나디. 파일명 [" + outputfile.getName() + "]");
 				outputfile.delete();
@@ -65,12 +62,12 @@ public class ImageUtil {
 				if (!FileUtil.directoryCheck(directoryName))
 					FileUtil.createDirectory(directoryName);
 			} else {
-				if (!FileUtil.directoryCheck(out_file))
-					FileUtil.createDirectory(out_file);
+				if (!FileUtil.directoryCheck(outFile))
+					FileUtil.createDirectory(outFile);
 			}
 			ImageResizing imgResize = new ImageResizing();
 			boolean isOk = false;
-			isOk = imgResize.ImageResizing(inImgfle.getPath(), out_file, targetWidth, targetHeight);
+			isOk = imgResize.imageResizing(inImgfle.getPath(), outFile, targetWidth, targetHeight);
 			// log.info("isOk::::"+isOk);
 
 			if (!isOk) {
@@ -78,13 +75,28 @@ public class ImageUtil {
 			}
 		} catch (Exception e) {
 			e.getStackTrace();
-		} finally {
-
 		}
 
 		return true;
 	}
 
+	/**
+	 * cutImage2.
+	 * 
+	 * @param srcFile
+	 *            srcFile
+	 * @param destFile
+	 *            destFile
+	 * @param cX
+	 *            cX
+	 * @param cY
+	 *            cY
+	 * @param dW
+	 *            dW
+	 * @param dH
+	 *            dH
+	 * @return boolean
+	 */
 	public static String cutImage2(String srcFile, String destFile, int cX, int cY, int dW, int dH) {
 
 		ImageIcon img = new ImageIcon(srcFile);
@@ -108,6 +120,18 @@ public class ImageUtil {
 		return destFile;
 	}
 
+	/**
+	 * imageToBufferedImage.
+	 * 
+	 * @param im
+	 *            im
+	 * @param width
+	 *            width
+	 * @param height
+	 *            height
+	 * 
+	 * @return BufferedImage
+	 */
 	private static BufferedImage imageToBufferedImage(Image im, int width, int height) {
 		BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
 		Graphics g2d = copy.createGraphics();

@@ -25,10 +25,30 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 
+/**
+ * <pre>
+ * IcmsJobPrint.
+ * </pre>
+ * 
+ * Created on : 2014-01-03 Created by : 김형식, SK 플래닛. Last Updated on : 2014-01-03 Last Updated by : 김형식, SK 플래닛
+ */
 public class IcmsJobPrint {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+	/**
+	 * <pre>
+	 * printBrand.
+	 * </pre>
+	 * 
+	 * @param info
+	 *            info
+	 * @param title
+	 *            title
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
 	public static boolean printBrand(DpBrandInfo info, String title) throws Exception {
 
 		StringBuffer debugMsg = new StringBuffer();
@@ -53,12 +73,25 @@ public class IcmsJobPrint {
 		} catch (Exception e) {
 			// this.log.error("■■■■■printBrand()■■■■■ : " + e.getMessage());
 			// this.log.debug(e);
-			// throw new ServiceException("printBrand  Fail", e);
+			throw new ServiceException("printBrand  Fail", e);
 		}
 
 		return true;
 	}
 
+	/**
+	 * <pre>
+	 * printCatalog.
+	 * </pre>
+	 * 
+	 * @param info
+	 *            info
+	 * @param title
+	 *            title
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
 	public static boolean printCatalog(DpCatalogInfo info, String title) throws Exception {
 
 		StringBuffer debugMsg = new StringBuffer();
@@ -93,6 +126,19 @@ public class IcmsJobPrint {
 		return true;
 	}
 
+	/**
+	 * <pre>
+	 * printCatalog.
+	 * </pre>
+	 * 
+	 * @param info
+	 *            info
+	 * @param title
+	 *            title
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
 	public static boolean printTblDpProd(TbDpProdInfo info, String title) throws Exception {
 
 		StringBuffer debugMsg = new StringBuffer();
@@ -132,6 +178,19 @@ public class IcmsJobPrint {
 		return true;
 	}
 
+	/**
+	 * <pre>
+	 * printCatalog.
+	 * </pre>
+	 * 
+	 * @param info
+	 *            info
+	 * @param title
+	 *            title
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
 	public static boolean printTbDpShpgProd(TbDpShpgProdInfo info, String title) throws Exception {
 
 		StringBuffer debugMsg = new StringBuffer();
@@ -182,6 +241,19 @@ public class IcmsJobPrint {
 		return true;
 	}
 
+	/**
+	 * <pre>
+	 * printCatalog.
+	 * </pre>
+	 * 
+	 * @param info
+	 *            info
+	 * @param title
+	 *            title
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
 	public static boolean printTbDpProdDesc(TbDpProdDescInfo info, String title) throws Exception {
 
 		StringBuffer debugMsg = new StringBuffer();
@@ -212,6 +284,19 @@ public class IcmsJobPrint {
 		return true;
 	}
 
+	/**
+	 * <pre>
+	 * printCatalog.
+	 * </pre>
+	 * 
+	 * @param info
+	 *            info
+	 * @param title
+	 *            title
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
 	public static boolean printTbDpProdRshp(TbDpProdRshpInfo info, String title) throws Exception {
 
 		StringBuffer debugMsg = new StringBuffer();
@@ -239,7 +324,20 @@ public class IcmsJobPrint {
 		return true;
 	}
 
-	public static boolean TbDpProdCatalogMapg(TbDpProdCatalogMapgInfo info, String title) throws Exception {
+	/**
+	 * <pre>
+	 * printCatalog.
+	 * </pre>
+	 * 
+	 * @param info
+	 *            info
+	 * @param title
+	 *            title
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
+	public static boolean tbDpProdCatalogMapg(TbDpProdCatalogMapgInfo info, String title) throws Exception {
 
 		StringBuffer debugMsg = new StringBuffer();
 
@@ -266,6 +364,19 @@ public class IcmsJobPrint {
 		return true;
 	}
 
+	/**
+	 * <pre>
+	 * printCatalog.
+	 * </pre>
+	 * 
+	 * @param info
+	 *            info
+	 * @param title
+	 *            title
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
 	public static boolean printTbDpProdOpt(TbDpProdOpt info, String title) throws Exception {
 
 		StringBuffer debugMsg = new StringBuffer();
@@ -297,6 +408,19 @@ public class IcmsJobPrint {
 		return true;
 	}
 
+	/**
+	 * <pre>
+	 * printCatalog.
+	 * </pre>
+	 * 
+	 * @param info
+	 *            info
+	 * @param title
+	 *            title
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
 	public static boolean printTbTenantDpProd(TbDpTenantProdInfo info, String title) throws Exception {
 
 		StringBuffer debugMsg = new StringBuffer();
@@ -329,6 +453,19 @@ public class IcmsJobPrint {
 		return true;
 	}
 
+	/**
+	 * <pre>
+	 * printCatalog.
+	 * </pre>
+	 * 
+	 * @param info
+	 *            info
+	 * @param title
+	 *            title
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
 	public static boolean printTbTenantDpProdPrice(TbDpTenantProdPriceInfo info, String title) throws Exception {
 
 		StringBuffer debugMsg = new StringBuffer();

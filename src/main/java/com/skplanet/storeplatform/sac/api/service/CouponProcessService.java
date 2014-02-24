@@ -16,15 +16,23 @@ public interface CouponProcessService {
 
 	/**
 	 * <pre>
-	 * 쿠폰 정보 입력
+	 * 쿠폰 정보 입력.
 	 * </pre>
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return boolean
 	 */
 	public boolean insertCouponInfo(CouponReq couponReq);
 
 	/**
 	 * <pre>
-	 * 상태 변경
+	 * 상태 변경.
 	 * </pre>
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return boolean
 	 */
 	public boolean updateForCouponStatus(CouponReq couponReq);
 
@@ -32,6 +40,10 @@ public interface CouponProcessService {
 	 * <pre>
 	 * 특가 상품 목록 조회 한다.
 	 * </pre>
+	 * 
+	 * @param couponCodes
+	 *            couponCodes
+	 * @return List<CouponRes>
 	 */
 	public List<CouponRes> getSpecialProductList(String[] couponCodes);
 
@@ -39,14 +51,22 @@ public interface CouponProcessService {
 	 * <pre>
 	 * 특가 상품 상세 조회 한다.
 	 * </pre>
+	 * 
+	 * @param couponCode
+	 *            couponCode
+	 * @return CouponRes
 	 */
 	public CouponRes getSpecialProductDetail(String couponCode);
 
 	/**
 	 * <pre>
-	 * 쿠폰(아이템) Batch 처리 호출 메소드 (수동 호출용)
+	 * 쿠폰(아이템) Batch 처리 호출 메소드 (수동 호출용).
 	 * </pre>
+	 * 
+	 * @param nowTime
+	 *            nowTime
+	 * @return
 	 */
-	public void CouponStateUpdateStart(String nowTime);
+	public void couponStateUpdateStart(String nowTime);
 
 }
