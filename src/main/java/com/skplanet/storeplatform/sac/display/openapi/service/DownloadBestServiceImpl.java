@@ -116,16 +116,17 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 			if ("2".equals(inquiryType)) {
 				// 사업자 등록번호로 Selley Key 조회
 				DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-				detailInformationSacReq.setSellerBizNumber(inquiryValue);
+				// detailInformationSacReq.setSellerBizNumber(inquiryValue);
 				DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
 						.detailInformation(detailInformationSacReq);
-				String sellertKey = detailInformationSacRes.getSellerMbr().get(0).getSellerCompany();
+				// String sellertKey = detailInformationSacRes.getSellerMbr().get(0).getSellerCompany();
+				String selleryKey = "";
 
-				if (StringUtils.isNotEmpty(sellertKey)) {
+				if (StringUtils.isNotEmpty(selleryKey)) {
 					// 조회된 Seller Key setting
-					downloadBestSacReq.setInquiryValue(sellertKey);
+					downloadBestSacReq.setInquiryValue(selleryKey);
 				} else {
-					throw new StorePlatformException("SAC_DSP_0008");
+					// throw new StorePlatformException("SAC_DSP_0008");
 				}
 			}
 

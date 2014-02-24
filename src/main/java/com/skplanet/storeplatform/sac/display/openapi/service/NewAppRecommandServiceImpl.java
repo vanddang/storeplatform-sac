@@ -174,9 +174,9 @@ public class NewAppRecommandServiceImpl implements NewAppRecommandService {
 				try {
 					DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 					DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
-					detailInformationSacReq.setSellerKey(metaInfo.getSellerMbrNo());
+					// detailInformationSacReq.setSellerKey(metaInfo.getSellerMbrNo());
 					detailInformationSacRes = this.sellerSearchSCI.detailInformation(detailInformationSacReq);
-					company = detailInformationSacRes.getSellerMbr().get(0).getSellerCompany();
+					// company = detailInformationSacRes.getSellerMbr().get(0).getSellerCompany();
 
 				} catch (Exception e) {
 					company = "";
