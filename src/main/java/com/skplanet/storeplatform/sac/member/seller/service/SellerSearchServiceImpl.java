@@ -504,41 +504,42 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerAccount.setSellerBizDetailAddress(schRes.getSellerMbr().getSellerBizDetailAddress());
 			sellerAccount.setSellerBizZip(schRes.getSellerMbr().getSellerBizZip());
 
-		}
-		SellerMbr sellerMbr = new SellerMbr();
-		sellerMbr.setSellerKey(schRes.getSellerMbr().getSellerKey());
-		sellerMbr.setSellerBizType(schRes.getSellerMbr().getSellerBizType()); // INDT_NM 업종명 종목 종목
-		sellerMbr.setSellerBizCategory(schRes.getSellerMbr().getSellerBizCategory()); // COND_NM 업태명 업태 업태
-		sellerMbr.setSellerBizCorpNumber(schRes.getSellerMbr().getSellerBizCorpNumber()); // ("법인등록번호"); CORP_REG_NO
-		sellerMbr.setRepPhoneArea(schRes.getSellerMbr().getRepFaxArea()); // ("대표전화번호 국가코드"); REP_TEL_NATION_NO
-		sellerMbr.setRepPhone(schRes.getSellerMbr().getRepPhone()); // ("대표전화번호"); REP_TEL_NO
-		sellerMbr.setRepFaxArea(schRes.getSellerMbr().getRepFaxArea()); // ("대표팩스번호 국가코드"); FAX_NATION_NO
-		sellerMbr.setRepFax(schRes.getSellerMbr().getRepFax()); // ("대표팩스번호"); FAX_NO
-		sellerMbr.setRepEmail(schRes.getSellerMbr().getRepEmail()); // ("대표 이메일"); REP_EMAIL
-		sellerMbr.setSellerBizAddress(schRes.getSellerMbr().getSellerBizAddress());
-		sellerMbr.setSellerBizZip(schRes.getSellerMbr().getSellerBizZip());
-		sellerMbr.setSellerBizDetailAddress(schRes.getSellerMbr().getSellerBizDetailAddress());
-		sellerMbr.setVendorCode(schRes.getSellerMbr().getVendorCode()); // ("벤더 코드"); VENDOR_CD
-		sellerMbr.setIsBizRegistered(schRes.getSellerMbr().getIsBizRegistered()); // ("통신판매업 신고여부"); MSALBIZ_DECL_YN
-		sellerMbr.setBizRegNumber(schRes.getSellerMbr().getBizRegNumber()); // ("통신판매업 신고번호"); MSALBIZ_DECL_NO
-		sellerMbr.setBizUnregReason(schRes.getSellerMbr().getBizUnregReason()); // ("통신판매업 미신고사유  코드");
-																				// MSALBIZ_UNDECL_REASON_CD
-		sellerMbr.setIsBizTaxable(schRes.getSellerMbr().getIsBizTaxable()); // ("간이과세여부"); // EASY_TXN_YN 간이 과세 여부 #####
-																			// 전환 쪽에서 사용
-		sellerMbr.setBizGrade(schRes.getSellerMbr().getBizGrade()); // ("심의등급코드"); DELIB_GRD_CD 심의 등급코드
-		sellerMbr.setIsDeductible(schRes.getSellerMbr().getIsDeductible()); // ("자동차감가능대상여부"); AUTO_DED_POSB_TARGET_YN
-		sellerMbr.setMarketCode(schRes.getSellerMbr().getMarketCode()); // ("입점상점코드"); LNCHG_MALL_CD 입점 상점코드
-		sellerMbr.setMarketStatus(schRes.getSellerMbr().getMarketStatus()); // ("입점상태코드"); LNCHG_MBR_STATUS_CD
-		sellerMbr.setIsAccountReal(schRes.getSellerMbr().getIsAccountReal()); // ("   계좌인증여부"); // ACCT_AUTH_YN 계좌 인증여부
-																			  // 컬럼
-		sellerMbr.setIsOfficialAuth(schRes.getSellerMbr().getIsOfficialAuth());
+			sellerAccount.setSellerBizType(schRes.getSellerMbr().getSellerBizType()); // INDT_NM 업종명 종목 종목
+			sellerAccount.setSellerBizCategory(schRes.getSellerMbr().getSellerBizCategory()); // COND_NM 업태명 업태 업태
+			sellerAccount.setSellerBizCorpNumber(schRes.getSellerMbr().getSellerBizCorpNumber()); // ("법인등록번호");
+																								  // CORP_REG_NO
+			sellerAccount.setRepPhoneArea(schRes.getSellerMbr().getRepPhoneArea()); // ("대표전화번호 국가코드");
+																					// REP_TEL_NATION_NO
+			sellerAccount.setRepPhone(schRes.getSellerMbr().getRepPhone()); // ("대표전화번호"); REP_TEL_NO
+			sellerAccount.setRepFaxArea(schRes.getSellerMbr().getRepFaxArea()); // ("대표팩스번호 국가코드"); FAX_NATION_NO
+			sellerAccount.setRepFax(schRes.getSellerMbr().getRepFax()); // ("대표팩스번호"); FAX_NO
+			sellerAccount.setRepEmail(schRes.getSellerMbr().getRepEmail()); // ("대표 이메일"); REP_EMAIL
+			sellerAccount.setVendorCode(schRes.getSellerMbr().getVendorCode()); // ("벤더 코드"); VENDOR_CD
+			sellerAccount.setIsBizRegistered(schRes.getSellerMbr().getIsBizRegistered()); // ("통신판매업 신고여부");
+																						  // MSALBIZ_DECL_YN
+			sellerAccount.setBizRegNumber(schRes.getSellerMbr().getBizRegNumber()); // ("통신판매업 신고번호"); MSALBIZ_DECL_NO
+			sellerAccount.setBizUnregReason(schRes.getSellerMbr().getBizUnregReason()); // ("통신판매업 미신고사유  코드");
+			// MSALBIZ_UNDECL_REASON_CD
+			sellerAccount.setIsBizTaxable(schRes.getSellerMbr().getIsBizTaxable()); // ("간이과세여부"); // EASY_TXN_YN 간이 과세
+																					// 여부 #####
+			// 전환 쪽에서 사용
+			sellerAccount.setBizGrade(schRes.getSellerMbr().getBizGrade()); // ("심의등급코드"); DELIB_GRD_CD 심의 등급코드
+			sellerAccount.setIsDeductible(schRes.getSellerMbr().getIsDeductible()); // ("자동차감가능대상여부");
+																					// AUTO_DED_POSB_TARGET_YN
+			sellerAccount.setMarketCode(schRes.getSellerMbr().getMarketCode()); // ("입점상점코드"); LNCHG_MALL_CD 입점 상점코드
+			sellerAccount.setMarketStatus(schRes.getSellerMbr().getMarketStatus()); // ("입점상태코드"); LNCHG_MBR_STATUS_CD
+			sellerAccount.setIsAccountReal(schRes.getSellerMbr().getIsAccountReal()); // ("   계좌인증여부"); // ACCT_AUTH_YN
+																					  // 계좌 인증여부
+			// 컬럼
+			sellerAccount.setIsOfficialAuth(schRes.getSellerMbr().getIsOfficialAuth());
 
+		}
 		DetailAccountInformationRes response = new DetailAccountInformationRes();
 		response.setDocumentList(dList);
 		response.setExtraRightList(eList);
 		response.setSellerAccount(sellerAccount);
 		response.setSellerKey(schRes.getSellerKey());
-		response.setSellerMbr(sellerMbr);
+		// response.setSellerMbr(sellerMbr);
 		return response;
 
 	}
