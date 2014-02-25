@@ -76,7 +76,7 @@ public class DetailInformationSCITest {
 		for (int i = 0; i < 3; i++) {
 			SellerMbrSac sellerMbrSac = new SellerMbrSac();
 			if (i == 0) {
-				sellerMbrSac.setSellerBizNumber("2432412");
+				sellerMbrSac.setSellerBizNumber("1352668460");
 				sellerMbrSacs.add(sellerMbrSac);
 			} else if (i == 1) {
 				sellerMbrSac.setSellerKey("IF1023498592920130510112417");
