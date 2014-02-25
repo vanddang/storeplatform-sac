@@ -24,7 +24,6 @@ public class CreateSubsellerReq extends CommonInfo {
 	private String subSellerKey;
 
 	/** 서브계정 ID. */
-	@NotBlank
 	private String subSellerID;
 
 	/** 서브계정 비밀번호. */
