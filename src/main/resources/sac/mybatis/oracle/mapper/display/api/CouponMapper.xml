@@ -17,8 +17,9 @@
         SELECT 
              COUNT(*) CNT
         FROM TB_DP_SHPG_PROD A
-            ,TB_DP_PROD_RSHP B
+            ,TB_DP_PROD B
         WHERE A.PROD_ID = B.PROD_ID
+          AND B.CONTENTS_TYPE_CD ='PD002501'
           AND A.SRC_CONTENT_ID= #{scrContentId}
     </select>
     
@@ -28,8 +29,9 @@
         SELECT 
              COUNT(*) CNT
         FROM TB_DP_SHPG_PROD A
-            ,TB_DP_PROD_RSHP B
-        WHERE A.PROD_ID = B.PART_PROD_ID
+            ,TB_DP_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND B.CONTENTS_TYPE_CD ='PD002502'
           AND A.SRC_CONTENT_ID= #{scrContentId}
     </select>    
     
@@ -39,8 +41,9 @@
         SELECT 
           A.PROD_ID
         FROM TB_DP_SHPG_PROD A
-            ,TB_DP_PROD_RSHP B
+            ,TB_DP_PROD B
         WHERE A.PROD_ID = B.PROD_ID
+          AND B.CONTENTS_TYPE_CD ='PD002501'
           AND A.SRC_CONTENT_ID= #{scrContentId}
     </select>
      
@@ -50,8 +53,9 @@
         SELECT 
           A.PROD_ID
         FROM TB_DP_SHPG_PROD A
-            ,TB_DP_PROD_RSHP B
-        WHERE A.PROD_ID = B.PART_PROD_ID
+            ,TB_DP_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND B.CONTENTS_TYPE_CD ='PD002502'
           AND A.SRC_CONTENT_ID= #{scrContentId}
     </select>       
     
