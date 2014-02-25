@@ -141,7 +141,7 @@ public interface CommonMetaInfoGenerator {
 	 *            size
 	 * @return List<Source>
 	 */
-	public List<Source> generateBannerSourceList(String path, String type);
+	public List<Source> generateBannerSourceList(MetaInfo metaInfo);
 
 	/**
 	 * <pre>

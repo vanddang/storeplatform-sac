@@ -199,19 +199,36 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateBannerSource(java.lang.String)
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateBannerSourceList(java.lang.String
+	 * , java.lang.String)
 	 */
 	@Override
-	public List<Source> generateBannerSourceList(String path) {
+	public List<Source> generateBannerSourceList(MetaInfo metaInfo) {
 		List<Source> sourceList = null;
 
-		if (StringUtils.isNotEmpty(path)) {
+		if (StringUtils.isEmpty(metaInfo.getScSamplUrl())) {
+			if (StringUtils.isNotEmpty(metaInfo.getImagePath())) {
+				Source source = new Source();
+				sourceList = new ArrayList<Source>();
+				source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getImagePath()));
+				source.setUrl(metaInfo.getImagePath());
+				sourceList.add(source);
+			}
+		} else {
 			Source source = new Source();
 			sourceList = new ArrayList<Source>();
-			source.setMediaType(DisplayCommonUtil.getMimeType(path));
-			source.setUrl(path);
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
+			source.setType(DisplayConstants.DP_PREVIEW_LQ);
+			source.setUrl(metaInfo.getScSamplUrl());
+			sourceList.add(source);
+
+			source = new Source();
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
+			source.setType(DisplayConstants.DP_PREVIEW_HQ);
+			source.setUrl(metaInfo.getSamplUrl());
 			sourceList.add(source);
 		}
+
 		return sourceList;
 	}
 
