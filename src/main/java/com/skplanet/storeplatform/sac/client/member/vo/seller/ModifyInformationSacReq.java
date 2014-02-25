@@ -3,7 +3,6 @@ package com.skplanet.storeplatform.sac.client.member.vo.seller;
 import java.util.List;
 
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -28,21 +27,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 	/** 인증키. */
 	@NotBlank
 	private String sessionKey;
-	/** 판매자 구분코드. */
-	@NotBlank
-	private String sellerClass;
-	/** 판매자 분류코드. */
-	@NotBlank
-	private String sellerCategory;
-	/** 판매자 main 상태코드. */
-	@NotBlank
-	private String sellerMainStatus;
-	/** 판매자 sub 상태코드. */
-	@NotBlank
-	private String sellerSubStatus;
-	/** 판매자 ID. */
-	@NotBlank
-	private String sellerId;
 	/** 이동통신사. */
 	private String sellerTelecom;
 	/** 전화번호 국가코드. */
@@ -51,8 +35,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String sellerPhone;
 	/** SMS 수신 여부. */
 	private String isRecvSMS;
-	/** 판매자 이메일. */
-	private String sellerEmail;
 	/** 이메일수신 여부. */
 	private String isRecvEmail;
 	/** 판매자 이름. */
@@ -60,7 +42,7 @@ public class ModifyInformationSacReq extends CommonInfo {
 	/** 판매자 성별. */
 	private String sellerSex;
 	/** 판매자 생년월일. */
-	@Size(max = 8)
+	// @Size(max = 8)
 	private String sellerBirthDay;
 	/** 우편번호. */
 	private String sellerZip;
@@ -82,43 +64,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 	@NotBlank
 	@Pattern(regexp = "^Y|^N")
 	private String isDomestic;
-	/** 법정대리인 동의여부. */
-	@NotBlank
-	@Pattern(regexp = "^Y|^N")
-	private String isParent;
-	/** 법정대리인 동의일시. */
-	private String parentDate;
-	/** 법정대리인 관계코드. */
-	private String parentType;
-	/** 법정대리인 이름. */
-	private String parentName;
-	/** 법정대리인 생년월일. */
-	private String parentBirthDay;
-	/** 법정대리인 이메일. */
-	private String parentEmail;
-	/** 법정대리인 휴대폰 번호. */
-	private String parentMDN;
-	/** 법정대리인 이동통신사. */
-	private String parentTelecom;
-	/** 법정대리인 실명인증 일시. */
-	private String parentRealNameDate;
-	/** 법정대리인 CI. */
-	private String parentCI;
-	/** 법정대리인 실명인증수단 코드. */
-	private String parentRealNameMethod;
-	/** 실명인증 여부. */
-	@NotBlank
-	@Pattern(regexp = "^Y|^N")
-	private String isRealName;
-	/** 실명인증 일시. */
-	@Size(max = 14)
-	private String realNameDate;
-	/** CI. */
-	private String sellerCI;
-	/** DI. */
-	private String sellerDI;
-	/** 실명인증수단 코드. */
-	private String realNameMethod;
 	/** 회사명. */
 	private String sellerCompany;
 	/** 사업자 등록번호. */
@@ -151,46 +96,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 		this.sessionKey = sessionKey;
 	}
 
-	public String getSellerClass() {
-		return this.sellerClass;
-	}
-
-	public void setSellerClass(String sellerClass) {
-		this.sellerClass = sellerClass;
-	}
-
-	public String getSellerCategory() {
-		return this.sellerCategory;
-	}
-
-	public void setSellerCategory(String sellerCategory) {
-		this.sellerCategory = sellerCategory;
-	}
-
-	public String getSellerMainStatus() {
-		return this.sellerMainStatus;
-	}
-
-	public void setSellerMainStatus(String sellerMainStatus) {
-		this.sellerMainStatus = sellerMainStatus;
-	}
-
-	public String getSellerSubStatus() {
-		return this.sellerSubStatus;
-	}
-
-	public void setSellerSubStatus(String sellerSubStatus) {
-		this.sellerSubStatus = sellerSubStatus;
-	}
-
-	public String getSellerId() {
-		return this.sellerId;
-	}
-
-	public void setSellerId(String sellerId) {
-		this.sellerId = sellerId;
-	}
-
 	public String getSellerTelecom() {
 		return this.sellerTelecom;
 	}
@@ -221,14 +126,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 
 	public void setIsRecvSMS(String isRecvSMS) {
 		this.isRecvSMS = isRecvSMS;
-	}
-
-	public String getSellerEmail() {
-		return this.sellerEmail;
-	}
-
-	public void setSellerEmail(String sellerEmail) {
-		this.sellerEmail = sellerEmail;
 	}
 
 	public String getIsRecvEmail() {
@@ -327,134 +224,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 		this.isDomestic = isDomestic;
 	}
 
-	public String getIsParent() {
-		return this.isParent;
-	}
-
-	public void setIsParent(String isParent) {
-		this.isParent = isParent;
-	}
-
-	public String getParentDate() {
-		return this.parentDate;
-	}
-
-	public void setParentDate(String parentDate) {
-		this.parentDate = parentDate;
-	}
-
-	public String getParentType() {
-		return this.parentType;
-	}
-
-	public void setParentType(String parentType) {
-		this.parentType = parentType;
-	}
-
-	public String getParentName() {
-		return this.parentName;
-	}
-
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
-	}
-
-	public String getParentBirthDay() {
-		return this.parentBirthDay;
-	}
-
-	public void setParentBirthDay(String parentBirthDay) {
-		this.parentBirthDay = parentBirthDay;
-	}
-
-	public String getParentEmail() {
-		return this.parentEmail;
-	}
-
-	public void setParentEmail(String parentEmail) {
-		this.parentEmail = parentEmail;
-	}
-
-	public String getParentMDN() {
-		return this.parentMDN;
-	}
-
-	public void setParentMDN(String parentMDN) {
-		this.parentMDN = parentMDN;
-	}
-
-	public String getParentTelecom() {
-		return this.parentTelecom;
-	}
-
-	public void setParentTelecom(String parentTelecom) {
-		this.parentTelecom = parentTelecom;
-	}
-
-	public String getParentRealNameDate() {
-		return this.parentRealNameDate;
-	}
-
-	public void setParentRealNameDate(String parentRealNameDate) {
-		this.parentRealNameDate = parentRealNameDate;
-	}
-
-	public String getParentCI() {
-		return this.parentCI;
-	}
-
-	public void setParentCI(String parentCI) {
-		this.parentCI = parentCI;
-	}
-
-	public String getParentRealNameMethod() {
-		return this.parentRealNameMethod;
-	}
-
-	public void setParentRealNameMethod(String parentRealNameMethod) {
-		this.parentRealNameMethod = parentRealNameMethod;
-	}
-
-	public String getIsRealName() {
-		return this.isRealName;
-	}
-
-	public void setIsRealName(String isRealName) {
-		this.isRealName = isRealName;
-	}
-
-	public String getRealNameDate() {
-		return this.realNameDate;
-	}
-
-	public void setRealNameDate(String realNameDate) {
-		this.realNameDate = realNameDate;
-	}
-
-	public String getSellerCI() {
-		return this.sellerCI;
-	}
-
-	public void setSellerCI(String sellerCI) {
-		this.sellerCI = sellerCI;
-	}
-
-	public String getSellerDI() {
-		return this.sellerDI;
-	}
-
-	public void setSellerDI(String sellerDI) {
-		this.sellerDI = sellerDI;
-	}
-
-	public String getRealNameMethod() {
-		return this.realNameMethod;
-	}
-
-	public void setRealNameMethod(String realNameMethod) {
-		this.realNameMethod = realNameMethod;
-	}
-
 	public String getSellerCompany() {
 		return this.sellerCompany;
 	}
@@ -518,4 +287,5 @@ public class ModifyInformationSacReq extends CommonInfo {
 	public void setFlurryAuthList(List<FlurryAuth> flurryAuthList) {
 		this.flurryAuthList = flurryAuthList;
 	}
+
 }

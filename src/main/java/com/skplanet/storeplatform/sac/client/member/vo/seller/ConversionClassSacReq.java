@@ -23,20 +23,20 @@ public class ConversionClassSacReq extends CommonInfo {
 	private String sessionKey;
 	/** 판매자 key. */
 	private String sellerKey;
-	/** 현재 구분코드. */
-	private String sellerClass;
-	/** 판매자 분류코드. */
-	private String sellerCategory;
+	// /** 현재 구분코드. */
+	// private String sellerClass;
+	// /** 판매자 분류코드. */
+	// private String sellerCategory;
 	/** 신청 구분코드. */
 	private String sellerClassTo;
-	/** 판매자 분류코드. */
-	private String sellerCategoryTo;
-	/** 판매자 main 상태코드. */
-	private String sellerMainStatus;
-	/** 판매자 sub 상태코드. */
-	private String sellerSubStatus;
-	/** 판매자 ID. */
-	private String sellerId;
+	// /** 판매자 분류코드. */
+	// private String sellerCategoryTo;
+	// /** 판매자 main 상태코드. */
+	// private String sellerMainStatus;
+	// /** 판매자 sub 상태코드. */
+	// private String sellerSubStatus;
+	// /** 판매자 ID. */
+	// private String sellerId;
 	/** 법인등록번호. */
 	private String sellerBizCorpNumber;
 	/** CEO명. */
@@ -156,21 +156,21 @@ public class ConversionClassSacReq extends CommonInfo {
 		this.sellerKey = sellerKey;
 	}
 
-	public String getSellerClass() {
-		return this.sellerClass;
-	}
-
-	public void setSellerClass(String sellerClass) {
-		this.sellerClass = sellerClass;
-	}
-
-	public String getSellerCategory() {
-		return this.sellerCategory;
-	}
-
-	public void setSellerCategory(String sellerCategory) {
-		this.sellerCategory = sellerCategory;
-	}
+	// public String getSellerClass() {
+	// return this.sellerClass;
+	// }
+	//
+	// public void setSellerClass(String sellerClass) {
+	// this.sellerClass = sellerClass;
+	// }
+	//
+	// public String getSellerCategory() {
+	// return this.sellerCategory;
+	// }
+	//
+	// public void setSellerCategory(String sellerCategory) {
+	// this.sellerCategory = sellerCategory;
+	// }
 
 	public String getSellerClassTo() {
 		return this.sellerClassTo;
@@ -180,37 +180,37 @@ public class ConversionClassSacReq extends CommonInfo {
 		this.sellerClassTo = sellerClassTo;
 	}
 
-	public String getSellerCategoryTo() {
-		return this.sellerCategoryTo;
-	}
-
-	public void setSellerCategoryTo(String sellerCategoryTo) {
-		this.sellerCategoryTo = sellerCategoryTo;
-	}
-
-	public String getSellerMainStatus() {
-		return this.sellerMainStatus;
-	}
-
-	public void setSellerMainStatus(String sellerMainStatus) {
-		this.sellerMainStatus = sellerMainStatus;
-	}
-
-	public String getSellerSubStatus() {
-		return this.sellerSubStatus;
-	}
-
-	public void setSellerSubStatus(String sellerSubStatus) {
-		this.sellerSubStatus = sellerSubStatus;
-	}
-
-	public String getSellerId() {
-		return this.sellerId;
-	}
-
-	public void setSellerId(String sellerId) {
-		this.sellerId = sellerId;
-	}
+	// public String getSellerCategoryTo() {
+	// return this.sellerCategoryTo;
+	// }
+	//
+	// public void setSellerCategoryTo(String sellerCategoryTo) {
+	// this.sellerCategoryTo = sellerCategoryTo;
+	// }
+	//
+	// public String getSellerMainStatus() {
+	// return this.sellerMainStatus;
+	// }
+	//
+	// public void setSellerMainStatus(String sellerMainStatus) {
+	// this.sellerMainStatus = sellerMainStatus;
+	// }
+	//
+	// public String getSellerSubStatus() {
+	// return this.sellerSubStatus;
+	// }
+	//
+	// public void setSellerSubStatus(String sellerSubStatus) {
+	// this.sellerSubStatus = sellerSubStatus;
+	// }
+	//
+	// public String getSellerId() {
+	// return this.sellerId;
+	// }
+	//
+	// public void setSellerId(String sellerId) {
+	// this.sellerId = sellerId;
+	// }
 
 	public String getSellerBizCorpNumber() {
 		return this.sellerBizCorpNumber;
