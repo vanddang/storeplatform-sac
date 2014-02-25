@@ -772,7 +772,7 @@ public class IdpServiceImpl implements IdpService {
 			UserMbrDevice userMbrDevice = new UserMbrDevice();
 			userMbrDevice.setUserKey(userKey);
 			userMbrDevice.setDeviceID(mdn);
-			userMbrDevice.setDeviceKey(deviceKey);
+			//userMbrDevice.setDeviceKey(deviceKey);
 			userMbrDevice.setDeviceModelNo(modelCd);
 			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 : 번호변경
 
@@ -782,7 +782,7 @@ public class IdpServiceImpl implements IdpService {
 			userMbrDeviceDetail.setExtraProfileValue(uacd);
 			userMbrDeviceDetail.setTenantID(tenantId);
 			userMbrDeviceDetail.setUserKey(userKey);
-			userMbrDeviceDetail.setDeviceKey(deviceKey);
+			//userMbrDeviceDetail.setDeviceKey(deviceKey);
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 			userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
@@ -847,13 +847,18 @@ public class IdpServiceImpl implements IdpService {
 					/* 단말 정보 조회 */
 					Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
+					if (device == null) {
+						uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
+						modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+					}
+
 					/* 휴대기기 정보 업데이트 */
 					CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 					UserMbrDevice userMbrDevice = new UserMbrDevice();
 					userMbrDevice.setUserKey(userKey);
 					userMbrDevice.setDeviceID(mdn);
-					userMbrDevice.setDeviceKey(deviceKey);
-					userMbrDevice.setDeviceModelNo(device.getDeviceModelCd());
+					//userMbrDevice.setDeviceKey(deviceKey);
+					userMbrDevice.setDeviceModelNo(modelCd);
 					userMbrDevice.setSvcMangNum(svcMngNum);
 					userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 					userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 :
@@ -865,7 +870,7 @@ public class IdpServiceImpl implements IdpService {
 					userMbrDeviceDetail.setExtraProfileValue(uacd);
 					userMbrDeviceDetail.setTenantID(tenantId);
 					userMbrDeviceDetail.setUserKey(userKey);
-					userMbrDeviceDetail.setDeviceKey(deviceKey);
+					//userMbrDeviceDetail.setDeviceKey(deviceKey);
 					userMbrDeviceDetailList.add(userMbrDeviceDetail);
 					userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
@@ -1057,7 +1062,7 @@ public class IdpServiceImpl implements IdpService {
 			UserMbrDevice userMbrDevice = new UserMbrDevice();
 			userMbrDevice.setUserKey(userKey);
 			userMbrDevice.setDeviceID(mdn);
-			userMbrDevice.setDeviceKey(deviceKey);
+			//userMbrDevice.setDeviceKey(deviceKey);
 			userMbrDevice.setDeviceModelNo(modelCd);
 			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE); // 휴대기기 변경 유형코드 : 기기변경
 
@@ -1067,7 +1072,7 @@ public class IdpServiceImpl implements IdpService {
 			userMbrDeviceDetail.setExtraProfileValue(uacd);
 			userMbrDeviceDetail.setTenantID(tenantId);
 			userMbrDeviceDetail.setUserKey(userKey);
-			userMbrDeviceDetail.setDeviceKey(deviceKey);
+			//userMbrDeviceDetail.setDeviceKey(deviceKey);
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 			userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
