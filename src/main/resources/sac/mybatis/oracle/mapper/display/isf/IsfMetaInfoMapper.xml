@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Isf.MetaInfo">
+    <select id="getMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
+       SELECT /* IsfMetaInfoMapper.xml, getMusicMetaInfo, Yun JuYoung, 2014-02-06 */
+            , CP.PROD_ID 
+            , CP.PART_PROD_ID
+            , C.MENU_ID
+            , CD.MENU_NM
+            , CD.MENU_DESC
+            , C.TOP_MENU_ID
+            , CD2.MENU_NM AS TOP_MENU_NM
+            , CD2.MENU_DESC AS TOP_MENU_DESC
+            , MP.OUTSD_CONTENTS_ID -- 외부_컨텐츠_ID
+            , PD.PROD_NM
+            , PD.PROD_DTL_DESC
+            , TPP.PROD_AMT
+            , P.PROD_GRD_CD
+            , P.META_CLSF_CD
+            , PD.ARTIST1_NM
+            , PD.ARTIST2_NM
+            , PD.ARTIST3_NM                        
+            , MP.CHNL_COMP_NM
+            , MP.AGENCY_NM
+            , MP.ISSUE_DAY
+            , 'Y' AS MP3_SPRT_YN
+            , MP.BELL_SPRT_YN
+            , MP.COLORRING_SPRT_YN
+            , CONCAT(PI.FILE_PATH, PI.FILE_NM) AS FILE_PATH
+            , PI.FILE_NM
+            , PI.FILE_SIZE
+            , P.CONTENTS_TYPE_CD
+         FROM UV_TB_DP_MULTIMDA_PROD MP
+            , TB_DP_PROD P
+            , TB_DP_PROD_DESC PD
+            , TB_DP_PROD_RSHP CP
+            , TB_DP_TENANT_PROD TP
+            , TB_DP_TENANT_PROD_PRICE TPP
+            , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
+            , TB_DP_MENU_CATEGORY C
+            , TB_DP_MENU_CATEGORY_DESC CD
+            , TB_DP_MENU_CATEGORY_DESC CD2
+            , UV_TB_DP_MULTIMDA_PROD MP2
+            , TB_DP_PROD P2
+            , TB_DP_TENANT_PROD TP2
+            , TB_DP_PROD_IMG PI
+        WHERE MP.PROD_ID = CP.PART_PROD_ID
+          AND P.PROD_ID = CP.PART_PROD_ID
+          AND CPM.PROD_ID = CP.PART_PROD_ID
+          AND C.MENU_ID = CPM.MENU_ID
+          AND CD.MENU_ID = C.MENU_ID
+          AND CD2.MENU_ID = C.TOP_MENU_ID
+          AND CD2.LANG_CD = CD.LANG_CD
+          AND P2.PROD_ID = CP.PROD_ID -- CHANNEL PROD ID
+          AND P2.META_CLSF_CD = P.META_CLSF_CD
+          AND TP2.PROD_ID = P2.PROD_ID
+          AND TP2.TENANT_ID = TP.TENANT_ID
+          AND TP2.PROD_STATUS_CD = TP.PROD_STATUS_CD
+          AND TP2.EXPO_YN = TP.EXPO_YN
+          AND MP2.PROD_ID = P2.PROD_ID
+          AND TP.PROD_ID = P.PROD_ID
+          AND TPP.PROD_ID = TP.PROD_ID
+          AND TPP.TENANT_ID = TP.TENANT_ID
+          AND PD.PROD_ID = P.PROD_ID
+          AND PI.PROD_ID = CP.PROD_ID
+          <if test='prodStatusCd != null'>
+          AND TP.PROD_STATUS_CD = 'PD000403'   -- 판매중
+          </if>
+          AND TP.EXPO_YN = 'Y'                 -- 노출 여부
+          AND P2.CONTENTS_TYPE_CD = 'PD002501' -- 채널
+          AND P.CONTENTS_TYPE_CD = 'PD002502'  -- 에피소드
+          <if test='productBasicInfo.metaClsfCd != null'>
+          AND P.META_CLSF_CD = #{productBasicInfo.metaClsfCd}          -- 통합 뮤직
+          </if>
+          AND CPM.USE_YN = 'Y'
+          AND C.USE_YN = 'Y'
+       -----------------------------------------------------------------------------
+       -- INPUT PARAMETER
+       ----------------------------------------------------------------------------- 
+          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+            AND CP.PROD_ID = #{productBasicInfo.prodId}
+          </if>
+          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+            AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
+          </if>
+          AND P.TOP_MENU_ID = #{productBasicInfo.topMenuId}
+          AND PI.IMG_CD = #{imageCd}
+          AND TP.TENANT_ID = #{tenantHeader.tenantId}
+          AND PD.LANG_CD = #{tenantHeader.langCd}
+          AND CD.LANG_CD = #{tenantHeader.langCd}
+          AND ROWNUM = 1
+    </select>
+</mapper>

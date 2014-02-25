@@ -455,4 +455,96 @@
 	            , P.PROD_NM
     </select>
     
+    
+    <!-- 테마추천 상품 리스트 -->
+    <select id="getBasicRecommendPkgProdList" parameterType="Map" resultType="ProductBasicInfo">
+    SELECT /* IsfThemeRecommendMapper.xml, getBasicRecommendPkgProdList, Yun JuYoung, 2014-02-25 */
+           S.*
+      FROM
+          (
+          SELECT 
+                 P.PROD_ID
+               , P.SVC_GRP_CD
+               , P.SVC_TYPE_CD
+               , P.CONTENTS_TYPE_CD
+               , P.META_CLSF_CD
+               , P.TOP_MENU_ID
+               , P2.PROD_ID AS PART_PROD_ID
+               , ROW_NUMBER( ) OVER ( PARTITION BY CP.PROD_ID
+                                          ORDER BY P.REG_DT DESC ) AS RN
+            FROM TB_DP_RECOM_PKG_DTL DP
+               , TB_DP_PROD_RSHP CP
+               , TB_DP_MENU_CATEGORY_PROD_MAPG C
+               , TB_DP_SPRT_DEVICE SH
+               , TB_CM_DEVICE PI
+               , TB_DP_PROD P
+               , TB_DP_TENANT_PROD TP
+               , TB_DP_PROD P2
+               , TB_DP_TENANT_PROD TP2
+           WHERE CP.PROD_ID = DP.PROD_ID  -- CHANNEL ID
+             AND CP.PROD_ID = C.PROD_ID
+             AND SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
+             AND SH.PROD_ID = CP.PART_PROD_ID
+             AND P.PROD_ID = CP.PART_PROD_ID
+             AND TP.PROD_ID = P.PROD_ID
+             AND P2.PROD_ID = CP.PROD_ID
+             AND TP2.PROD_ID = P2.PROD_ID
+             AND DP.PKG_ID = #{recommendId}
+             AND DP.EXPO_YN = 'Y'
+             AND C.USE_YN = 'Y'
+             AND C.BASE_YN = 'Y'
+             AND (PI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PI.DEVICE_MODEL_CD = 'android_standard2')
+             AND PI.USE_YN = 'Y'
+             AND TP.PROD_STATUS_CD = 'PD000403'
+             AND TP.EXPO_YN = 'Y'
+             AND TP2.PROD_STATUS_CD = 'PD000403'
+             AND TP2.EXPO_YN = 'Y'
+             AND CP.PROD_RSHP_CD = 'DP010802'
+             AND DECODE( P.TOP_MENU_ID
+                  , 'DP13'
+                  , DECODE( PI.EBOOK_SPRT_YN
+                          , 'Y'
+                          , DECODE( P.META_CLSF_CD
+                                  , 'CT24'
+                                  , DECODE( PI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+                                  , 'CT26'
+                                  , DECODE( PI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+                                  , 1 )
+                          , 0 )
+                  , 'DP14'
+                  , DECODE( PI.COMIC_SPRT_YN , 'Y', 1 , 0 )
+                  , 'DP15'
+                  , 0
+                  , 'DP16'
+                  , DECODE( P.META_CLSF_CD
+                          , 'CT25'
+                          , DECODE( PI.MUSIC_SPRT_YN, 'Y', 1, 0)
+                          , 1 )
+                  , 1 ) = 1
+             AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+                        THEN ( SELECT 1
+                                FROM TB_DP_SUB_CONTENTS SC
+                               WHERE SC.PROD_ID = CP.PART_PROD_ID
+                                 AND SC.SALE_YN = 'Y'
+                                 AND DECODE( PI.HDV_SPRT_YN
+                                           , 'PD005201'
+                                           , DECODE ( SC.DP_PG_QULT_CD
+                                                    , 'PD009701', 1
+                                                    , 'PD009702', 1
+                                                    , DECODE( PI.SD_VIDEO_SPRT_YN , 'Y', 1 , 0 ) )
+                                           , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+                                 AND ROWNUM <![CDATA[<=]]> 1  )
+                        ELSE 1
+                    END ) = 1
+             AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+                        THEN DECODE( PI.VIDEO_DRM_SPRT_YN
+                                  , 'PD005200'
+                                  , DECODE( NVL( P.DRM_YN, 'N' ), 'N', 1, 0 )
+                                  , 'PD005201'
+                                  , 1 )
+                        ELSE 1
+                    END ) = 1
+           ) S
+        WHERE S.RN = 1
+    </select>    
 </mapper>
