@@ -3,6 +3,9 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,18 +28,16 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.MockRequestAttributeInitializer;
 
 /**
- * 단말 정보 관련 내부메소드 호출 SCI Controller Test.
+ * 회원정보 관련 내부메소드 호출 SCI Controller Test.
  * 
- * Updated on : 2014. 2. 24. Updated by : 김다슬, 인크로스.
+ * Updated on : 2014. 2. 25. Updated by : 김다슬, 인크로스.
  */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,9 +45,8 @@ import com.skplanet.storeplatform.sac.common.util.MockRequestAttributeInitialize
 @WebAppConfiguration
 @TransactionConfiguration
 @Transactional
-public class DeviceSCIControllerTest {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceSCIControllerTest.class);
+public class SearchUserSCIControllerTest {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SearchUserSCIControllerTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -71,56 +71,25 @@ public class DeviceSCIControllerTest {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
-	/**
-	 * <pre>
-	 * 단말 ID 정보(msisdn|uuid|mac) 조회.
-	 * </pre>
-	 * 
-	 * @throws Exception
-	 */
 	@Test
-	public void testSearchDeviceId() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchDeviceId").httpMethod(HttpMethod.POST)
+	public void testSearchUserByUserKey() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByUserKey").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						SearchDeviceIdSacReq searchDeviceIdSacReq = new SearchDeviceIdSacReq();
-						searchDeviceIdSacReq.setUserKey("US201402110557052730002230");
-						searchDeviceIdSacReq.setDeviceKey("DE201402120409541480001552");
-						return searchDeviceIdSacReq;
+						SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+						List<String> userKeyList = new ArrayList<String>();
+						userKeyList.add("IW1023284651220101007215215"); // 회원정보에 등록된 deviceId가 한 개.
+						userKeyList.add("IM142100006719244201304082142"); // 회원정보에 등록된 deviceId가 여러개.
+						userKeyList.add("IW1024171529820110627132506"); // 회원정보 없음.
+
+						searchUserSacReq.setUserKeyList(userKeyList);
+						return searchUserSacReq;
 					}
-				}).success(SearchDeviceIdSacRes.class, new SuccessCallback() {
+				}).success(SearchUserSacRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						SearchDeviceIdSacRes res = (SearchDeviceIdSacRes) result;
-						LOGGER.info("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 기기변경 이력 조회.
-	 * </pre>
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testSearchChangedDeviceHistory() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchChangedDeviceHistory").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						ChangedDeviceHistorySacReq changedDeviceHistorySacReq = new ChangedDeviceHistorySacReq();
-						changedDeviceHistorySacReq.setUserKey("IW1023090104420100127095457");
-						changedDeviceHistorySacReq.setDeviceId("01064779017"); // deviceKey = '01064779017'
-						return changedDeviceHistorySacReq;
-					}
-				}).success(ChangedDeviceHistorySacRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ChangedDeviceHistorySacRes res = (ChangedDeviceHistorySacRes) result;
+						SearchUserSacRes res = (SearchUserSacRes) result;
 						LOGGER.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
