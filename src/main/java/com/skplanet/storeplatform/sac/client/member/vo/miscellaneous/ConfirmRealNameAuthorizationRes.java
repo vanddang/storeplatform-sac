@@ -16,27 +16,41 @@ public class ConfirmRealNameAuthorizationRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 연계정보
+	 * 연계정보.
 	 */
 	private String userCI;
 
 	/**
-	 * 중복가입 확인정보
+	 * 중복가입 확인정보.
 	 */
 	private String userDI;
 
+	/**
+	 * @return the userCI
+	 */
 	public String getUserCI() {
 		return this.userCI;
 	}
 
+	/**
+	 * @param userCI
+	 *            the userCI to set
+	 */
 	public void setUserCI(String userCI) {
 		this.userCI = userCI;
 	}
 
+	/**
+	 * @return the userDI
+	 */
 	public String getUserDI() {
 		return this.userDI;
 	}
 
+	/**
+	 * @param userDI
+	 *            the userDI to set
+	 */
 	public void setUserDI(String userDI) {
 		this.userDI = userDI;
 	}

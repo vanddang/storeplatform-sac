@@ -16,26 +16,40 @@ public class ConfirmEmailAuthorizationCodeRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 사용자 고유 Key
+	 * 사용자 고유 Key.
 	 */
 	private String userKey;
 	/**
-	 * 인증 Email 주소
+	 * 인증 Email 주소.
 	 */
 	private String userEmail;
 
+	/**
+	 * @return the userKey
+	 */
 	public String getUserKey() {
 		return this.userKey;
 	}
 
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
 	}
 
+	/**
+	 * @return the userEmail
+	 */
 	public String getUserEmail() {
 		return this.userEmail;
 	}
 
+	/**
+	 * @param userEmail
+	 *            the userEmail to set
+	 */
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}

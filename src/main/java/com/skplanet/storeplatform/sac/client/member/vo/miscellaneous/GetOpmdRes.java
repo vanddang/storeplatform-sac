@@ -16,7 +16,7 @@ public class GetOpmdRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 모회선 번호
+	 * 모회선 번호.
 	 */
 	private String msisdn;
 

@@ -15,12 +15,22 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class ConfirmPhoneAuthorizationCodeRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 휴대폰 번호.
+	 */
 	private String userPhone;
 
+	/**
+	 * @return the userPhone
+	 */
 	public String getUserPhone() {
 		return this.userPhone;
 	}
 
+	/**
+	 * @param userPhone
+	 *            the userPhone to set
+	 */
 	public void setUserPhone(String userPhone) {
 		this.userPhone = userPhone;
 	}

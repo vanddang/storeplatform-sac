@@ -19,12 +19,12 @@ public class GetModelCodeReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * MDN
+	 * MDN.
 	 */
 	private String msisdn;
 
 	/**
-	 * UA 코드
+	 * UA 코드.
 	 */
 	private String uaCd;
 

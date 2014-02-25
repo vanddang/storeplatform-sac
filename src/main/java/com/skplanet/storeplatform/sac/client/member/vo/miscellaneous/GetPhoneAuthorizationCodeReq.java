@@ -77,14 +77,7 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	}
 
 	/**
-	 * @param srcId
-	 */
-	public void setSrcId(String srcId) {
-		this.srcId = srcId;
-	}
-
-	/**
-	 * @return String : teleSvcId
+	 * @return the teleSvcId
 	 */
 	public String getTeleSvcId() {
 		return this.teleSvcId;
@@ -92,9 +85,18 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 
 	/**
 	 * @param teleSvcId
+	 *            the teleSvcId to set
 	 */
 	public void setTeleSvcId(String teleSvcId) {
 		this.teleSvcId = teleSvcId;
+	}
+
+	/**
+	 * @param srcId
+	 *            the srcId to set
+	 */
+	public void setSrcId(String srcId) {
+		this.srcId = srcId;
 	}
 
 }

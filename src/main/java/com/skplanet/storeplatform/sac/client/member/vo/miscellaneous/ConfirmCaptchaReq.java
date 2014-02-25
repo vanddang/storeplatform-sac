@@ -17,19 +17,19 @@ public class ConfirmCaptchaReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 인증 코드 (사용자가 입력한 Captcha 문자)
+	 * 인증 코드 (사용자가 입력한 Captcha 문자).
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String authCode;
 
 	/**
-	 * 인증 코드 확인을 위한 Signature
+	 * 인증 코드 확인을 위한 Signature.
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String imageSign;
 
 	/**
-	 * 인증 코드 확인을 위한 Signature Data
+	 * 인증 코드 확인을 위한 Signature Data.
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String signData;

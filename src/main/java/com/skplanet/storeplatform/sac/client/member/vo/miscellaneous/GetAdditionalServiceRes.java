@@ -14,7 +14,7 @@ public class GetAdditionalServiceRes extends AdditionalServicInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 각 부가서비스별 가입여부 결과
+	 * 각 부가서비스별 가입여부 결과.
 	 */
 	private String svcJoinResult;
 

@@ -17,13 +17,13 @@ public class AdditionalServicInfo extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 휴대폰 번호
+	 * 휴대폰 번호.
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String msisdn;
 
 	/**
-	 * 부가서비스 코드
+	 * 부가서비스 코드.
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String svcCode;

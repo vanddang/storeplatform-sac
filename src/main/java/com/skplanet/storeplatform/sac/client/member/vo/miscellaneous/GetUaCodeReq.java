@@ -16,27 +16,41 @@ public class GetUaCodeReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 휴대폰 번호
+	 * 휴대폰 번호.
 	 */
 	private String msisdn;
 
 	/**
-	 * 단말 모델명
+	 * 단말 모델명.
 	 */
 	private String deviceModelNo;
 
+	/**
+	 * @return the msisdn
+	 */
 	public String getMsisdn() {
 		return this.msisdn;
 	}
 
+	/**
+	 * @param msisdn
+	 *            the msisdn to set
+	 */
 	public void setMsisdn(String msisdn) {
 		this.msisdn = msisdn;
 	}
 
+	/**
+	 * @return the deviceModelNo
+	 */
 	public String getDeviceModelNo() {
 		return this.deviceModelNo;
 	}
 
+	/**
+	 * @param deviceModelNo
+	 *            the deviceModelNo to set
+	 */
 	public void setDeviceModelNo(String deviceModelNo) {
 		this.deviceModelNo = deviceModelNo;
 	}

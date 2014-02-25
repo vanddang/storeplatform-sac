@@ -17,12 +17,12 @@ public class ConfirmEmailAuthorizationCodeReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 이메일 인증 코드
+	 * 이메일 인증 코드.
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String emailAuthCode;
 	/**
-	 * 인증 코드 생존 시간 ( 일 단위 )
+	 * 인증 코드 생존 시간 ( 일 단위 ).
 	 */
 	private String timeToLive;
 

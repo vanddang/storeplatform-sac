@@ -15,7 +15,7 @@ public class CreateAdditionalServiceReq extends AdditionalServicInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * MDN에 대한 서비스 관리번호
+	 * MDN에 대한 서비스 관리번호.
 	 */
 	private String svcMngNum;
 

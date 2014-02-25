@@ -17,19 +17,19 @@ public class AuthorizeAccountReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 예금주명
+	 * 예금주명.
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String bankAcctName;
 
 	/**
-	 * 은행 코드
+	 * 은행 코드.
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String bankCode;
 
 	/**
-	 * 계좌 번호
+	 * 계좌 번호.
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String bankAccount;

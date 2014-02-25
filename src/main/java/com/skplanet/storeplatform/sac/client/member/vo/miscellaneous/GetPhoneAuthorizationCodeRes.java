@@ -16,7 +16,7 @@ public class GetPhoneAuthorizationCodeRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 인증 Signature
+	 * 인증 Signature.
 	 */
 	private String phoneSign;
 

@@ -20,7 +20,7 @@ public class GetModelCodeRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 단말 모델 번호
+	 * 단말 모델 번호.
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceModelNo;

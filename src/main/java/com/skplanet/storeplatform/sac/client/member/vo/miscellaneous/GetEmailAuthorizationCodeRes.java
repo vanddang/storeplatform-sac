@@ -16,14 +16,21 @@ public class GetEmailAuthorizationCodeRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 이메일 인증 코드
+	 * 이메일 인증 코드.
 	 */
 	private String emailAuthCode;
 
+	/**
+	 * @return the emailAuthCode
+	 */
 	public String getEmailAuthCode() {
 		return this.emailAuthCode;
 	}
 
+	/**
+	 * @param emailAuthCode
+	 *            the emailAuthCode to set
+	 */
 	public void setEmailAuthCode(String emailAuthCode) {
 		this.emailAuthCode = emailAuthCode;
 	}

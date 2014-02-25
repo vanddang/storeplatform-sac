@@ -17,7 +17,7 @@ public class GetOpmdReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 자회선 번호
+	 * 자회선 번호.
 	 */
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String msisdn;
@@ -30,7 +30,8 @@ public class GetOpmdReq extends CommonInfo {
 	}
 
 	/**
-	 * @parma msisdn
+	 * @param msisdn
+	 *            the msisdn to set
 	 */
 	public void setMsisdn(String msisdn) {
 		this.msisdn = msisdn;

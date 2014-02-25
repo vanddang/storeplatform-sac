@@ -16,14 +16,21 @@ public class GetUaCodeRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * UA 코드
+	 * UA 코드.
 	 */
 	private String uaCd;
 
+	/**
+	 * @return the uaCd
+	 */
 	public String getUaCd() {
 		return this.uaCd;
 	}
 
+	/**
+	 * @param uaCd
+	 *            the uaCd to set
+	 */
 	public void setUaCd(String uaCd) {
 		this.uaCd = uaCd;
 	}

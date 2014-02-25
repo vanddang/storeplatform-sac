@@ -16,17 +16,17 @@ public class GetCaptchaRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Captch 문자 (인증코드)
+	 * Captch 문자. (인증코드)
 	 */
 	private String imageData;
 
 	/**
-	 * 인증 코드 확인을 위한 Signature
+	 * 인증 코드 확인을 위한 Signature.
 	 */
 	private String imageSign;
 
 	/**
-	 * 인증 코드 확인을 위한 Signature Data
+	 * 인증 코드 확인을 위한 Signature Data.
 	 */
 	private String signData;
 
