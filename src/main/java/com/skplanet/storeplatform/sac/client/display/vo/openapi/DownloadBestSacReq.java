@@ -32,6 +32,7 @@ public class DownloadBestSacReq extends CommonInfo {
 	private Integer count; // 페이지당 노출될 ROW 개수
 
 	private String dummy; // dummy check
+	private String[] arraySellerKey; // SellerKey Array
 
 	/**
 	 * @return the tenantId
@@ -196,6 +197,21 @@ public class DownloadBestSacReq extends CommonInfo {
 	 */
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
+	}
+
+	/**
+	 * @return the arraySellerKey
+	 */
+	public String[] getArraySellerKey() {
+		return this.arraySellerKey;
+	}
+
+	/**
+	 * @param arraySellerKey
+	 *            the arraySellerKey to set
+	 */
+	public void setArraySellerKey(String[] arraySellerKey) {
+		this.arraySellerKey = arraySellerKey;
 	}
 
 }
