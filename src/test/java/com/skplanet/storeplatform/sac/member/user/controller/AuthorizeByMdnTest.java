@@ -104,15 +104,141 @@ public class AuthorizeByMdnTest {
 							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 							req.setDeviceId("01066786220");
 							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
+
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * OneID에 붙은 MDN 정상.
+	 * </pre>
+	 */
+	@Test
+	public void shouldAuthorizeByMdn02() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01099020311");
+							req.setDeviceIdType("msisdn");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
-							req.setNativeId("358362045580842");
-							req.setIsAutoUpdate("N");
-							req.setDeviceAccount("vanddang@gmail.com");
+
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 모바일 회원 정상 (모든 휴대기기 정보 수정 포함).
+	 * </pre>
+	 */
+	@Test
+	public void shouldAuthorizeByMdn04() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01066786220");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
+							req.setNativeId("A0000031648EE9");
+							req.setDeviceAccount("aaaa@gmail.com");
 
 							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+
 							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
-							deviceExtraInfo.setExtraProfileValue("1.0");
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN);
+							deviceExtraInfo.setExtraProfileValue("Y");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN);
+							deviceExtraInfo.setExtraProfileValue("Y");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN);
+							deviceExtraInfo.setExtraProfileValue("Y");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN);
+							deviceExtraInfo.setExtraProfileValue("Y");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
+							deviceExtraInfo.setExtraProfileValue("Y");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
+							deviceExtraInfo.setExtraProfileValue("20140214154500");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_EMBEDDED_YN);
+							deviceExtraInfo.setExtraProfileValue("Y");
 							deviceExtraInfoList.add(deviceExtraInfo);
 
 							deviceExtraInfo = new DeviceExtraInfo();
@@ -120,7 +246,156 @@ public class AuthorizeByMdnTest {
 							deviceExtraInfo.setExtraProfileValue("N");
 							deviceExtraInfoList.add(deviceExtraInfo);
 
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN);
+							deviceExtraInfo.setExtraProfileValue("Y");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
 							req.setDeviceExtraInfoList(deviceExtraInfoList);
+
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * nativeId 비교 성공 케이스(자사).
+	 * </pre>
+	 */
+	@Test
+	public void shouldAuthorizeByMdn05() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01048088874");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+							req.setNativeId("012962008247725");
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * SC회원 미존재.
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void shouldAuthorizeByMdnError01() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01099992701");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
+
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * IDP 미가입 모바일회원.
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void shouldAuthorizeByMdnError02() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01087299198");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
@@ -150,7 +425,7 @@ public class AuthorizeByMdnTest {
 	 * </pre>
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void shouldAuthorizeByMdn02() {
+	public void shouldAuthorizeByMdnError03() {
 
 		try {
 
@@ -169,22 +444,6 @@ public class AuthorizeByMdnTest {
 							req.setDeviceId("01066786221");
 							req.setDeviceIdType("msisdn");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
-							req.setNativeId("358362045580842");
-							req.setIsAutoUpdate("N");
-							req.setDeviceAccount("vanddang@gmail.com");
-
-							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
-							deviceExtraInfo.setExtraProfileValue("1.0");
-							deviceExtraInfoList.add(deviceExtraInfo);
-
-							deviceExtraInfo = new DeviceExtraInfo();
-							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
-							deviceExtraInfo.setExtraProfileValue("N");
-							deviceExtraInfoList.add(deviceExtraInfo);
-
-							req.setDeviceExtraInfoList(deviceExtraInfoList);
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
