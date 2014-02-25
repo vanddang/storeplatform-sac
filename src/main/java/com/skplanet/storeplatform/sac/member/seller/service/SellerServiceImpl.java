@@ -444,70 +444,14 @@ public class SellerServiceImpl implements SellerService {
 		/** 2. 기본정보수정 [REQUEST] 생성 및 주입. */
 		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
 
-		/** 2-1. 실명인증 정보 생성 및 주입. */
-		if (StringUtils.equals(req.getIsRealName(), MemberConstants.USE_Y)) {
-			MbrAuth mbrAuth = new MbrAuth();
-			// 실명인증여부
-			mbrAuth.setIsRealName(req.getIsRealName());
-			// CI
-			mbrAuth.setCi(req.getSellerCI());
-			// DI
-			mbrAuth.setDi(req.getSellerDI());
-			//
-			mbrAuth.setMemberCategory(req.getSellerCategory());
-			// 인증방법코드
-			mbrAuth.setRealNameMethod(req.getRealNameMethod());
-			// 통신사 코드
-			mbrAuth.setTelecom(req.getSellerTelecom());
-			// 무선 전화번호
-			mbrAuth.setPhone(req.getSellerPhone());
-			// 생년월일
-			mbrAuth.setBirthDay(req.getSellerBirthDay());
-			// 성별
-			mbrAuth.setSex(req.getSellerSex());
-			// 회원명
-			mbrAuth.setName(req.getSellerName());
-			// 실명 인증사이트
-			// mbrAuth.setRealNameSite(req.getRealNameSystemId());
-			mbrAuth.setRealNameSite(commonRequest.getSystemID());
-
-			updateSellerRequest.setMbrAuth(mbrAuth);
-		}
-
-		/** 2-2. 법정 대리인 정보 생성 및 주입. */
-		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
-			MbrLglAgent mbrLglAgent = new MbrLglAgent();
-
-			mbrLglAgent.setIsParent(req.getIsParent());
-			mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod());
-			mbrLglAgent.setParentName(req.getParentName());
-			mbrLglAgent.setParentType(req.getParentType());
-			mbrLglAgent.setParentDate(req.getParentDate());
-			mbrLglAgent.setParentEmail(req.getParentEmail());
-			mbrLglAgent.setParentBirthDay(req.getParentBirthDay());
-			mbrLglAgent.setParentTelecom(req.getParentTelecom());
-			mbrLglAgent.setParentMDN(req.getParentMDN());
-			mbrLglAgent.setParentCI(req.getParentCI());
-			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate());
-			mbrLglAgent.setParentRealNameSite(commonRequest.getSystemID());
-			//
-			mbrLglAgent.setMemberKey(req.getSellerKey());
-
-			updateSellerRequest.setMbrLglAgent(mbrLglAgent);
-		}
-
 		/** 2-3. 판매자 정보 생성 및 주입. */
 		SellerMbr sellerMbr = new SellerMbr();
 		sellerMbr.setSellerKey(req.getSellerKey());
-		sellerMbr.setSellerClass(req.getSellerClass());
-		sellerMbr.setSellerCategory(req.getSellerCategory());
-		sellerMbr.setSellerMainStatus(req.getSellerMainStatus());
-		sellerMbr.setSellerSubStatus(req.getSellerSubStatus());
-		sellerMbr.setSellerID(req.getSellerId());
 		sellerMbr.setSellerTelecom(req.getSellerTelecom());
 		sellerMbr.setSellerPhoneCountry(req.getSellerPhoneCountry());
 		sellerMbr.setSellerPhone(req.getSellerPhone());
 		sellerMbr.setIsRecvSMS(req.getIsRecvSMS());
+		sellerMbr.setIsRecvEmail(req.getIsRecvEmail());
 		sellerMbr.setSellerName(req.getSellerName());
 		sellerMbr.setSellerSex(req.getSellerSex());
 		sellerMbr.setSellerBirthDay(req.getSellerBirthDay());
@@ -519,7 +463,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerCountry(req.getSellerCountry());
 		sellerMbr.setSellerLanguage(req.getSellerLanguage());
 		sellerMbr.setIsDomestic(req.getIsDomestic());
-		sellerMbr.setIsParent(req.getIsParent());
 		sellerMbr.setSellerCompany(req.getSellerCompany());
 		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
 		sellerMbr.setCustomerPhoneCountry(req.getCustomerPhoneCountry());
@@ -588,9 +531,12 @@ public class SellerServiceImpl implements SellerService {
 				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
 
 		// 메인, 서브 상태
-		if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, req.getSellerMainStatus())
-				|| !StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, req.getSellerSubStatus())) {
-			throw new StorePlatformException("SAC_MEM_2001", req.getSellerMainStatus(), req.getSellerSubStatus());
+		if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+				.getSellerMainStatus())
+				|| !StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+						.getSellerSubStatus())) {
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 		}
 
 		// 무료, BP
@@ -861,23 +807,23 @@ public class SellerServiceImpl implements SellerService {
 		// 판매자 정보
 		SellerMbr sellerMbr = new SellerMbr();
 		sellerMbr.setSellerKey(req.getSellerKey());
-		sellerMbr.setSellerID(req.getSellerId());
-		sellerMbr.setSellerMainStatus(req.getSellerMainStatus()); // 정상 회원
-		sellerMbr.setSellerClass(req.getSellerClass());
-		sellerMbr.setSellerCategory(req.getSellerCategory()); //
-		sellerMbr.setSellerSubStatus(req.getSellerSubStatus()); // US000804 전환신청
+		sellerMbr.setSellerID(searchSellerResponse.getSellerMbr().getSellerID());
+		sellerMbr.setSellerClass(searchSellerResponse.getSellerMbr().getSellerClass());
+		sellerMbr.setSellerCategory(searchSellerResponse.getSellerMbr().getSellerCategory());
+		sellerMbr.setSellerMainStatus(searchSellerResponse.getSellerMbr().getSellerMainStatus());
+		sellerMbr.setSellerSubStatus(MemberConstants.SUB_STATUS_TURN_MOTION);
 		upgradeSellerRequest.setSellerMbr(sellerMbr);
 
 		// 전환 정보
 		SellerUpgrade sellerUpgrade = new SellerUpgrade();
 
 		sellerUpgrade.setSellerKey(req.getSellerKey());
-		sellerUpgrade.setSellerClassTo(req.getSellerCategoryTo());
+		sellerUpgrade.setBankAccount(req.getBankAccount());
+		sellerUpgrade.setSellerClassTo(req.getSellerClassTo());
 		sellerUpgrade.setRepEmail(req.getRepEmail());
 		sellerUpgrade.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
 		sellerUpgrade.setSellerBizType(req.getSellerBizType());
 		sellerUpgrade.setSellerBizCategory(req.getSellerBizCategory());
-		sellerUpgrade.setBankAccount(req.getBankAccount());
 		sellerUpgrade.setBankCode(req.getBankCode());
 		sellerUpgrade.setBankAcctName(req.getBankAcctName());
 		sellerUpgrade.setIsAccountReal(req.getIsAccountReal());
@@ -912,7 +858,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setSellerTelecom(req.getSellerTelecom());
 		sellerUpgrade.setCeoName(req.getCeoName());
 		sellerUpgrade.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
-		sellerUpgrade.setSellerClassTo(req.getSellerClassTo());
 		sellerUpgrade.setSellerCompany(req.getSellerCompany());
 		sellerUpgrade.setSellerBizNumber(req.getSellerBizNumber());
 		sellerUpgrade.setIsOfficialAuth(req.getIsOfficialAuth());

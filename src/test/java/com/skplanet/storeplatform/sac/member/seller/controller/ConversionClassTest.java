@@ -113,7 +113,6 @@ public class ConversionClassTest {
 		// 로그인 결과 검증
 		if (StringUtils.equals(TestMemberConstant.USE_Y, authorizeRes.getIsLoginSuccess())) {
 			// 정보수정의 위한 데이터 주입
-			req.setSellerId(authorizeRes.getSellerMbr().getSellerId());
 			req.setSellerKey(authorizeRes.getSellerMbr().getSellerKey());
 			req.setSessionKey(authorizeRes.getSessionKey());
 		} else {
@@ -136,12 +135,7 @@ public class ConversionClassTest {
 					public Object requestBody() {
 						req.setSellerKey("SE201402051029143200000587");
 						req.setSessionKey("fd6697b8e02e4d9f84d8438bf0bf7b1e");
-						req.setSellerId("sctest5");
 
-						req.setSellerClass("US010101");
-						req.setSellerCategory("US011301");
-						req.setSellerMainStatus("US010201");
-						req.setSellerSubStatus("US010301");
 						req.setSellerClassTo("US010103"); // BIZ_KIND_CD(US000901,US000904) 신청
 						req.setRepEmail("aind050@yopmail.com"); // ("대표 이메일"); 회원 REP_EMAIL > 전환 CHRGPERS_EMAIL
 						req.setSellerBizCorpNumber("123123123");// ("법인등록번호"); CORP_REG_NO

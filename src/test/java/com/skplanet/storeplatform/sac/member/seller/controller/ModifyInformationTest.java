@@ -85,8 +85,8 @@ public class ModifyInformationTest {
 		authorizeReq = new AuthorizeReq();
 
 		// 로그인 데이터 주입
-		authorizeReq.setSellerId("sctest5");
-		authorizeReq.setSellerPW("123456");
+		authorizeReq.setSellerId("changTest02");
+		authorizeReq.setSellerPW("1234");
 		authorizeReq.setExpireDate("2");
 
 		// 로그인 콜
@@ -109,7 +109,7 @@ public class ModifyInformationTest {
 		// 로그인 결과 검증
 		if (StringUtils.equals(TestMemberConstant.USE_Y, authorizeRes.getIsLoginSuccess())) {
 			// 정보수정의 위한 데이터 주입
-			req.setSellerId(authorizeReq.getSellerId());
+			// req.setSellerId(authorizeReq.getSellerId());
 			req.setSellerKey(authorizeRes.getSellerMbr().getSellerKey());
 			req.setSessionKey(authorizeRes.getSessionKey());
 		} else {
@@ -135,34 +135,34 @@ public class ModifyInformationTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						req.setSellerClass("US010101");
-						req.setSellerCategory("US011301");
-						req.setSellerMainStatus("US010201");
-						req.setSellerSubStatus("US010301");
+						// req.setSellerClass("US010101");
+						// req.setSellerCategory("US011301");
+						// req.setSellerMainStatus("US010201");
+						// req.setSellerSubStatus("US010301");
 						req.setSellerTelecom("US001201");
-						req.setSellerEmail("test@testgmail.com");
+						// req.setSellerEmail("test@testgmail.com");
 						req.setSellerCountry("ko");
 						req.setSellerLanguage("ko");
 						req.setSellerBirthDay("19900325");
 						req.setIsDomestic("Y");
-						req.setIsParent("Y");
-						req.setIsRealName("Y");
-						req.setParentType("abc");
-						req.setSellerCI("XXXXXXXGGXXXXX");
-						req.setSellerDI("GGGGGGXXXXXGGG");
-						req.setRealNameMethod("US011101");
+						// req.setIsParent("Y");
+						// req.setIsRealName("Y");
+						// req.setParentType("abc");
+						// req.setSellerCI("XXXXXXXGGXXXXX");
+						// req.setSellerDI("GGGGGGXXXXXGGG");
+						// req.setRealNameMethod("US011101");
 						req.setSellerPhone("010XXXX2345");
 						req.setSellerSex("M");
 						req.setSellerName("국내개인무료사용자2");
-						req.setParentRealNameMethod("US011101");
-						req.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1");
-						req.setParentBirthDay("19750325");
-						req.setParentTelecom("US001202");
-						req.setParentEmail("parent_test@test.com");
-						req.setParentRealNameDate("20140206000000");
-						req.setParentMDN("0102904XXXX");
-						req.setParentName("딘윈체스터");
-						req.setParentDate("20140205230000");
+						// req.setParentRealNameMethod("US011101");
+						// req.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1");
+						// req.setParentBirthDay("19750325");
+						// req.setParentTelecom("US001202");
+						// req.setParentEmail("parent_test@test.com");
+						// req.setParentRealNameDate("20140206000000");
+						// req.setParentMDN("0102904XXXX");
+						// req.setParentName("딘윈체스터");
+						// req.setParentDate("20140205230000");
 						req.setSellerCompany("Supernatural");
 						req.setIsRecvSMS("Y");
 						req.setIsRecvEmail("Y");
