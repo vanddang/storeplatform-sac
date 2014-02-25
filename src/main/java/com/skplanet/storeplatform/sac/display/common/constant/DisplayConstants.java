@@ -413,7 +413,7 @@ public class DisplayConstants {
 	public static final String DP_BANNER_TYPE_URL = "url"; // 배너타입 : 내부 URL
 	public static final String DP_BANNER_TYPE_CATEGORY = "category"; // 배너타입 : 카테고리
 	public static final String DP_BANNER_TYPE_THEME_ZONE = "themeZone"; // 배너타입 : 운영자 임의 추천
-	public static final String DP_BANNER_TYPE_BRAND_SHOP_CATEGORY = "brandShopCategory"; // 배너타입 : 브랜드샵 목록
+	public static final String DP_BANNER_TYPE_BRAND_SHOP_CATEGORY = "brandShopCategory"; // 배너타입 : 브랜드샵 리스트
 	public static final String DP_BANNER_TYPE_BRAND_SHOP = "brandShop"; // 배너타입 : 특정 브랜드샵
 	public static final String DP_BANNER_TYPE_THEME_RECOMM = "themeRecomm"; // 배너타입 : 상황별 추천
 	public static final String DP_BANNER_TYPE_APP_GUIDE = "appGuide"; // 배너타입 : 앱가이드 테마
