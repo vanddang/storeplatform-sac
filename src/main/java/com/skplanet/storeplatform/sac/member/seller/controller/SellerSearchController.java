@@ -113,10 +113,10 @@ public class SellerSearchController {
 	 * @param req
 	 * @return DetailInformationRes
 	 */
-	@RequestMapping(value = "/detailInformationForProduct/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/detailInformationForProduct/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailInformationForProductRes detailInformationApp(SacRequestHeader header,
-			@RequestBody @Validated DetailInformationForProductReq req) {
+			@Validated DetailInformationForProductReq req) {
 		LOGGER.debug("request param : {}", req.toString());
 
 		return this.sellerSearchService.detailInformationApp(header, req);
