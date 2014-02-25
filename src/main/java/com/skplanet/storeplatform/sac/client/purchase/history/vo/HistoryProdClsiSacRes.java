@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.client.purchase.admin.vo;
+package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
 import java.util.List;
 
@@ -9,12 +9,12 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
  */
-public class AdminHistorySacRes extends CommonInfo {
+public class HistoryProdClsiSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
 	private int totalCnt;
-	private List<AdminHistorySac> historyList;
+	private List<HistoryProdClsiSac> historyList;
 
 	/**
 	 * @return the totalCnt
@@ -34,7 +34,7 @@ public class AdminHistorySacRes extends CommonInfo {
 	/**
 	 * @return the historyList
 	 */
-	public List<AdminHistorySac> getHistoryList() {
+	public List<HistoryProdClsiSac> getHistoryList() {
 		return this.historyList;
 	}
 
@@ -42,7 +42,7 @@ public class AdminHistorySacRes extends CommonInfo {
 	 * @param historyList
 	 *            the historyList to set
 	 */
-	public void setHistoryList(List<AdminHistorySac> historyList) {
+	public void setHistoryList(List<HistoryProdClsiSac> historyList) {
 		this.historyList = historyList;
 	}
 

@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.client.purchase.admin.vo;
+package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -12,7 +12,7 @@ import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseHeaderSa
  * 
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
  */
-public class AdminHistorySacReq extends PurchaseHeaderSacReq {
+public class HistoryProdClsiSacReq extends PurchaseHeaderSacReq {
 
 	private static final long serialVersionUID = 1L;
 
