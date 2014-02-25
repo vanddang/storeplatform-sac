@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,7 +55,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/specific/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DeviceProfileRes searchSpecificDetail(DeviceProfileReq req, SacRequestHeader header) {
+	public DeviceProfileRes searchSpecificDetail(@Validated DeviceProfileReq req, SacRequestHeader header) {
 		return this.deviceProfileService.searchDeviceProfile(req, header);
 	}
 
