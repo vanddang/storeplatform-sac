@@ -25,6 +25,7 @@ public class PurchaseCancelSacResult extends PurchaseCommonSacResult {
 	private Integer totCnt;
 	private Integer successCnt;
 	private Integer failCnt;
+
 	private List<PurchaseCancelDetailSacResult> prchsCancelList;
 
 	/**

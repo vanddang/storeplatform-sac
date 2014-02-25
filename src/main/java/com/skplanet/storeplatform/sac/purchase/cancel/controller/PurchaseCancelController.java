@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,9 +58,7 @@ public class PurchaseCancelController {
 	@RequestMapping(value = "/user/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public PurchaseCancelByUserSacRes cancelPurchaseByUser(SacRequestHeader sacRequestHeader,
-			@RequestBody @Validated PurchaseCancelByUserSacReq purchaseCancelByUserSacReq, BindingResult bindingResult) {
-
-		// TODO : Request Validation
+			@RequestBody @Validated PurchaseCancelByUserSacReq purchaseCancelByUserSacReq) {
 
 		PurchaseCancelSacParam purchaseCancelSacParam = this.convertReqForCancelPurchaseByUser(sacRequestHeader,
 				purchaseCancelByUserSacReq);
@@ -121,6 +118,10 @@ public class PurchaseCancelController {
 		// common parameter setting.
 		ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelByUserSacReq, purchaseCancelSacParam);
 
+		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByUserSacReq.getCancelReqPathCd());
+		// request user type setting.
+		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_USER);
+
 		// parameter setting.
 		List<PurchaseCancelDetailSacParam> prchsCancelList = new ArrayList<PurchaseCancelDetailSacParam>();
 		for (PurchaseCancelByUserDetailSacReq purchaseCancelByUserDetailSacReq : purchaseCancelByUserSacReq
@@ -129,17 +130,12 @@ public class PurchaseCancelController {
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
 
 			purchaseCancelDetailSacParam.setPrchsId(purchaseCancelByUserDetailSacReq.getPrchsId());
-			purchaseCancelDetailSacParam.setCancelReqPathCd(purchaseCancelByUserDetailSacReq.getCancelReqPathCd());
-			purchaseCancelDetailSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_USER);
 
 			prchsCancelList.add(purchaseCancelDetailSacParam);
 
 		}
 
 		purchaseCancelSacParam.setPrchsCancelList(prchsCancelList);
-
-		// request user type setting.
-		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_USER);
 
 		return purchaseCancelSacParam;
 

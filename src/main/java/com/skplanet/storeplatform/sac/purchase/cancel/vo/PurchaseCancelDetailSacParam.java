@@ -26,15 +26,15 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String prchsId;
-	private String cancelReqPathCd;
-
-	private Integer prchsCancelByType; // 구매 취소 요청자 구분(사용자 / 운영자).
 
 	/** 구매 내역. */
 	private Prchs prchs;
 
 	/** 구매 상세 내역 리스트. */
-	private List<PrchsDtl> prchsDtl;
+	private List<PrchsDtl> prchsDtlList;
+
+	/** 구매 상세 내역 상품 정보. */
+	private List<PrchsProdDtl> prchsProdDtlList;
 
 	/** 결제 내역 리스트. */
 	private List<Payment> paymentList;
@@ -45,6 +45,8 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	private Integer prchsCancelCnt;
 	private Integer prchsDtlCancelCnt;
 	private Integer paymentCancelCnt;
+
+	/** RO 삭제 데이터 */
 
 	/**
 	 * @return the prchsId
@@ -59,36 +61,6 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	 */
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
-	}
-
-	/**
-	 * @return the cancelReqPathCd
-	 */
-	public String getCancelReqPathCd() {
-		return this.cancelReqPathCd;
-	}
-
-	/**
-	 * @param cancelReqPathCd
-	 *            the cancelReqPathCd to set
-	 */
-	public void setCancelReqPathCd(String cancelReqPathCd) {
-		this.cancelReqPathCd = cancelReqPathCd;
-	}
-
-	/**
-	 * @return the prchsCancelByType
-	 */
-	public Integer getPrchsCancelByType() {
-		return this.prchsCancelByType;
-	}
-
-	/**
-	 * @param prchsCancelByType
-	 *            the prchsCancelByType to set
-	 */
-	public void setPrchsCancelByType(Integer prchsCancelByType) {
-		this.prchsCancelByType = prchsCancelByType;
 	}
 
 	/**
@@ -107,18 +79,33 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	}
 
 	/**
-	 * @return the prchsDtl
+	 * @return the prchsDtlList
 	 */
-	public List<PrchsDtl> getPrchsDtl() {
-		return this.prchsDtl;
+	public List<PrchsDtl> getPrchsDtlList() {
+		return this.prchsDtlList;
 	}
 
 	/**
-	 * @param prchsDtl
-	 *            the prchsDtl to set
+	 * @param prchsDtlList
+	 *            the prchsDtlList to set
 	 */
-	public void setPrchsDtl(List<PrchsDtl> prchsDtl) {
-		this.prchsDtl = prchsDtl;
+	public void setPrchsDtlList(List<PrchsDtl> prchsDtlList) {
+		this.prchsDtlList = prchsDtlList;
+	}
+
+	/**
+	 * @return the prchsProdDtlList
+	 */
+	public List<PrchsProdDtl> getPrchsProdDtlList() {
+		return this.prchsProdDtlList;
+	}
+
+	/**
+	 * @param prchsProdDtlList
+	 *            the prchsProdDtlList to set
+	 */
+	public void setPrchsProdDtlList(List<PrchsProdDtl> prchsProdDtlList) {
+		this.prchsProdDtlList = prchsProdDtlList;
 	}
 
 	/**

@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.external.client.arm.sci.ArmSCI;
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.AomSendEcReq;
 import com.skplanet.storeplatform.external.client.message.vo.AomSendEcRes;
-import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsProdDtl;
 
 /**
  * 구매 취소 repository implements.
@@ -33,15 +33,15 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	private ArmSCI armSCI;
 
 	@Override
-	public String aomPush(PrchsDtl prchsDtl) {
+	public String aomPush(PrchsProdDtl prchsProdDtl) {
 
 		AomSendEcReq aomSendEcReq = new AomSendEcReq();
 
-		aomSendEcReq.setDeviceId(prchsDtl.getUseInsdDeviceId());
+		aomSendEcReq.setDeviceId(prchsProdDtl.getDeviceId());
 		aomSendEcReq.setClientType("AM000102");
 		aomSendEcReq.setSvcType("AM000205");
 		aomSendEcReq.setProdType("AM000301");
-		aomSendEcReq.setMsg("KR_ARM_TS/A4/" + prchsDtl.getUseInsdDeviceId() + "/" + prchsDtl.getProdId());
+		aomSendEcReq.setMsg("KR_ARM_TS/A4/" + prchsProdDtl.getDeviceId() + "/" + prchsProdDtl.getDeviceId());
 		aomSendEcReq.setAomStat("AM000401");
 
 		AomSendEcRes aomSendEcRes = this.messageSCI.aomSend(aomSendEcReq);

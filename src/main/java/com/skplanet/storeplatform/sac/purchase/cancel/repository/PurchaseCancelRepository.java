@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.repository;
 
-import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsProdDtl;
 
 /**
  * 구매 취소 repository Interface.
@@ -24,10 +24,10 @@ public interface PurchaseCancelRepository {
 	 * 구매 취소 시 Aom Message Push.
 	 * </pre>
 	 * 
-	 * @param prchsDtl
-	 *            prchsDtl
+	 * @param prchsProdDtl
+	 *            prchsProdDtl
 	 * @return String
 	 */
-	String aomPush(PrchsDtl prchsDtl);
+	String aomPush(PrchsProdDtl prchsProdDtl);
 
 }

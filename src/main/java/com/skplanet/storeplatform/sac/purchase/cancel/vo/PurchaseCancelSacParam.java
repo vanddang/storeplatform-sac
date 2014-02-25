@@ -23,6 +23,7 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 	private static final long serialVersionUID = 1L;
 
 	private Integer prchsCancelByType; // 구매 취소 요청자 구분(사용자 / 운영자).
+	private String cancelReqPathCd;
 
 	private List<PurchaseCancelDetailSacParam> prchsCancelList;
 
@@ -39,6 +40,21 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 	 */
 	public void setPrchsCancelByType(Integer prchsCancelByType) {
 		this.prchsCancelByType = prchsCancelByType;
+	}
+
+	/**
+	 * @return the cancelReqPathCd
+	 */
+	public String getCancelReqPathCd() {
+		return this.cancelReqPathCd;
+	}
+
+	/**
+	 * @param cancelReqPathCd
+	 *            the cancelReqPathCd to set
+	 */
+	public void setCancelReqPathCd(String cancelReqPathCd) {
+		this.cancelReqPathCd = cancelReqPathCd;
 	}
 
 	/**
