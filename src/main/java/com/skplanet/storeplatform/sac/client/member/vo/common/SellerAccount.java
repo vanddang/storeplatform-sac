@@ -37,6 +37,178 @@ public class SellerAccount extends CommonInfo {
 	private String sellerBizAddress;
 	private String sellerBizDetailAddress;
 
+	private String sellerBizType;
+	private String sellerBizCategory;
+	private String sellerBizCorpNumber;
+	private String repPhoneArea;
+	private String repPhone;
+	private String repFaxArea;
+	private String repFax;
+	private String repEmail;
+	private String vendorCode;
+	private String isBizRegistered;
+	private String bizRegNumber;
+	private String bizUnregReason;
+	private String isBizTaxable;
+	private String bizGrade;
+	private String isDeductible;
+	private String marketCode;
+	private String marketStatus;
+	private String isAccountReal;
+	private String isOfficialAuth;
+
+	public String getSellerBizType() {
+		return this.sellerBizType;
+	}
+
+	public void setSellerBizType(String sellerBizType) {
+		this.sellerBizType = sellerBizType;
+	}
+
+	public String getSellerBizCategory() {
+		return this.sellerBizCategory;
+	}
+
+	public void setSellerBizCategory(String sellerBizCategory) {
+		this.sellerBizCategory = sellerBizCategory;
+	}
+
+	public String getSellerBizCorpNumber() {
+		return this.sellerBizCorpNumber;
+	}
+
+	public void setSellerBizCorpNumber(String sellerBizCorpNumber) {
+		this.sellerBizCorpNumber = sellerBizCorpNumber;
+	}
+
+	public String getRepPhoneArea() {
+		return this.repPhoneArea;
+	}
+
+	public void setRepPhoneArea(String repPhoneArea) {
+		this.repPhoneArea = repPhoneArea;
+	}
+
+	public String getRepPhone() {
+		return this.repPhone;
+	}
+
+	public void setRepPhone(String repPhone) {
+		this.repPhone = repPhone;
+	}
+
+	public String getRepFaxArea() {
+		return this.repFaxArea;
+	}
+
+	public void setRepFaxArea(String repFaxArea) {
+		this.repFaxArea = repFaxArea;
+	}
+
+	public String getRepFax() {
+		return this.repFax;
+	}
+
+	public void setRepFax(String repFax) {
+		this.repFax = repFax;
+	}
+
+	public String getRepEmail() {
+		return this.repEmail;
+	}
+
+	public void setRepEmail(String repEmail) {
+		this.repEmail = repEmail;
+	}
+
+	public String getVendorCode() {
+		return this.vendorCode;
+	}
+
+	public void setVendorCode(String vendorCode) {
+		this.vendorCode = vendorCode;
+	}
+
+	public String getIsBizRegistered() {
+		return this.isBizRegistered;
+	}
+
+	public void setIsBizRegistered(String isBizRegistered) {
+		this.isBizRegistered = isBizRegistered;
+	}
+
+	public String getBizRegNumber() {
+		return this.bizRegNumber;
+	}
+
+	public void setBizRegNumber(String bizRegNumber) {
+		this.bizRegNumber = bizRegNumber;
+	}
+
+	public String getBizUnregReason() {
+		return this.bizUnregReason;
+	}
+
+	public void setBizUnregReason(String bizUnregReason) {
+		this.bizUnregReason = bizUnregReason;
+	}
+
+	public String getIsBizTaxable() {
+		return this.isBizTaxable;
+	}
+
+	public void setIsBizTaxable(String isBizTaxable) {
+		this.isBizTaxable = isBizTaxable;
+	}
+
+	public String getBizGrade() {
+		return this.bizGrade;
+	}
+
+	public void setBizGrade(String bizGrade) {
+		this.bizGrade = bizGrade;
+	}
+
+	public String getIsDeductible() {
+		return this.isDeductible;
+	}
+
+	public void setIsDeductible(String isDeductible) {
+		this.isDeductible = isDeductible;
+	}
+
+	public String getMarketCode() {
+		return this.marketCode;
+	}
+
+	public void setMarketCode(String marketCode) {
+		this.marketCode = marketCode;
+	}
+
+	public String getMarketStatus() {
+		return this.marketStatus;
+	}
+
+	public void setMarketStatus(String marketStatus) {
+		this.marketStatus = marketStatus;
+	}
+
+	public String getIsAccountReal() {
+		return this.isAccountReal;
+	}
+
+	public void setIsAccountReal(String isAccountReal) {
+		this.isAccountReal = isAccountReal;
+	}
+
+	public String getIsOfficialAuth() {
+		return this.isOfficialAuth;
+	}
+
+	public void setIsOfficialAuth(String isOfficialAuth) {
+		this.isOfficialAuth = isOfficialAuth;
+	}
+
 	public String getSellerBizZip() {
 		return this.sellerBizZip;
 	}
