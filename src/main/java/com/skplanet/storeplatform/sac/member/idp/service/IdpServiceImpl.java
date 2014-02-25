@@ -48,6 +48,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateNonMbrSegmentRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
@@ -793,13 +795,13 @@ public class IdpServiceImpl implements IdpService {
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
 			/* 구매한도/선물수신한도 mdn 변경 */
-			//			UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
-			//			updPolicyKeyReq.setCommonRequest(commonRequest);
-			//			updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
-			//			updPolicyKeyReq.setNewLimitPolicyKey(mdn);
-			//			this.userSCI.updatePolicyKey(updPolicyKeyReq);
+			UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
+			updPolicyKeyReq.setCommonRequest(commonRequest);
+			updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
+			updPolicyKeyReq.setNewLimitPolicyKey(mdn);
+			UpdatePolicyKeyResponse updPolicyKeyRes = this.userSCI.updatePolicyKey(updPolicyKeyReq);
 
-			LOGGER.info("::: 구매/선물수신한도 변경 카운트 : {}");
+			LOGGER.info("::: 구매/선물수신한도 변경 카운트 : {}", updPolicyKeyRes.getUpdateCount());
 
 			result = this.SUCCESS_STR;
 
@@ -824,6 +826,9 @@ public class IdpServiceImpl implements IdpService {
 					keySearchList.add(key);
 
 					searchDeviceRequest.setKeySearchList(keySearchList);
+
+					LOGGER.info("::: searchDeviceRequest : {}", searchDeviceRequest.getCommonRequest().toString());
+					LOGGER.info("::: searchDeviceRequest : {}", searchDeviceRequest.getKeySearchList().toString());
 					SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
 					beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
