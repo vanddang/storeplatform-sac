@@ -94,6 +94,33 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * <pre>
+	 * 쇼핑쿠폰 파일 전처리– POST.
+	 * </pre>
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return CouponRes
+	 */
+	@RequestMapping(value = "/api/fileCouponInterface/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CouponRes apiFileCouponInterface(@RequestBody CouponReq couponReq) {
+
+		this.log.debug("----------------------------------------------------------------");
+		this.log.debug("fileCouponInterface Controller started!!");
+		this.log.debug("----------------------------------------------------------------");
+		CouponRes couponRes = new CouponRes();
+		try {
+			this.fileBrandCatalog(couponReq, couponRes);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return couponRes;
+
+	}
+
+	/**
+	 * <pre>
 	 * 쇼핑쿠폰 전처리 배치– GET.
 	 * </pre>
 	 * 
@@ -302,6 +329,56 @@ public class ShoppingCouponSacController {
 	}
 
 	/**
+	 * <pre>
+	 * fileBrandCatalog.
+	 * </pre>
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @param couponRes
+	 *            couponRes
+	 * @return boolean
+	 * @throws Exception
+	 *             Exception
+	 */
+	private boolean fileBrandCatalog(CouponReq couponReq, CouponRes couponRes) {
+
+		this.log.info("<CouponControl> file...");
+
+		boolean result = false;
+
+		boolean success = false;
+		switch (TX_TYPE_CODE.get(couponReq.getTxType())) {
+		case BD:
+			// brand 작업을 호출한다.
+			DpBrandInfo brandInfo = new DpBrandInfo();
+			brandInfo.setCreateBrandId(couponReq.getCreateBrandId());
+			brandInfo.setBrandImgPath(couponReq.getBrandImgPath());
+			// 정보 setting
+			success = this.shoppingCouponService.insertFileBrandInfo(brandInfo);
+			if (success) {
+				result = true;
+			}
+			break;
+		case CT:
+			// 카달로그 작업을 호출한다.
+			DpCatalogInfo catalogInfo = new DpCatalogInfo();
+			catalogInfo.setCreateCatalogId(couponReq.getCreateCatalogId());
+			catalogInfo.setTopImgPath(couponReq.getTopImgPath());
+			catalogInfo.setDtlImgPath(couponReq.getDtlImgPath());
+			success = this.shoppingCouponService.insertFileCatalogInfo(catalogInfo);
+			if (success) {
+				result = true;
+			}
+			break;
+		default:
+			break;
+		}
+		couponRes.setFileFlag(result);
+		return result;
+	}
+
+	/**
 	 * 브랜드 정보를 추가한다.
 	 * 
 	 * @param dpBrandInfo
@@ -506,7 +583,7 @@ public class ShoppingCouponSacController {
 			catalogInfo.setCatalogNm(couponReq.getCatalogName());
 			catalogInfo.setTopImgPath(couponReq.getCatalogImage1());
 			catalogInfo.setDtlImgPath(couponReq.getCatalogImage2());
-			catalogInfo.setIntroText(couponReq.getIntroText());
+			catalogInfo.setIntroText(couponReq.getIntro_text());
 			catalogInfo.setCatalogTag(couponReq.getTag());
 
 			if (catalogInfo.getCatalogId().equals("") || catalogInfo.getCatalogId() == null) {

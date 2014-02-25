@@ -1,20 +1,13 @@
 package com.skplanet.storeplatform.sac.api.service;
 
 import java.awt.Image;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
-import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.ImageUtil;
 import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
@@ -90,12 +82,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				this.brandCatalogService.deleteDpProdImg(brandID);
 			}
 
-			// 이미지 가져옴
-			this.inputBrandFile(dpBrandInfo, null);
-
-			// 이미지 리사이즈 처리
-			this.brandImgResize(dpBrandInfo);
-
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), message, null);
 		} catch (UnsupportedEncodingException e) {
@@ -103,235 +89,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		}
 
 		return true;
-	}
-
-	/**
-	 * 브랜드,카탈로그 파일 이미지 처리.
-	 * 
-	 * @param dpBrandInfo
-	 *            dpBrandInfo
-	 * @param dpCatalogInfo
-	 *            dpCatalogInfo
-	 * @return boolean
-	 */
-	public boolean inputBrandFile(DpBrandInfo dpBrandInfo, DpCatalogInfo dpCatalogInfo) {
-
-		// log.info("<inputBrandFile> inputBrandFile...");
-
-		String repositoryPath = null;
-
-		OutputStream os = null;
-		URLConnection urlcon = null;
-		InputStream is = null;
-		String uploadPath = null;
-
-		String downloadUrl = "";
-		String orgDownloadFileName = "";
-		String renFileName = "";
-		// String downloadFilePath2 = "";
-		ArrayList<String> fileList = new ArrayList<String>();
-		File destFile = null;
-		File copyFile = null;
-		String message = "";
-		try {
-
-			// repositoryPath = getLabelForQuery(new String[] { CouponConstants.PCD_FOR_REPOSITORY_PATH,
-			// CouponConstants.TYPE_FOR_REPOSITORY_PATH });
-
-			repositoryPath = "/data1/SMILE_DATA";
-			// log.info("repositoryPath : " + repositoryPath);
-
-			// 브랜드 이미지 처리
-			if (dpBrandInfo != null) {
-
-				this.log.info("filepath : " + dpBrandInfo.getBrandImgPath());
-
-				// 다운로드할 파일 리스트
-				fileList.add(dpBrandInfo.getBrandImgPath());
-
-				// 파일저장 경로
-				uploadPath = // "/data5/SMILE_DATA5/COUPON"
-				repositoryPath + File.separator + CouponConstants.BRAND_CATALOG_PATH + File.separator
-						+ DateUtil.getToday("yyyyMM") + File.separator + DateUtil.getToday("dd") + File.separator
-						+ dpBrandInfo.getCreateBrandId();
-
-				this.log.info("uploadPath : " + uploadPath);
-				dpBrandInfo.setBrandImgPath(uploadPath);
-			}
-
-			// 카탈로그 이미지 처리
-			if (dpCatalogInfo != null) {
-				this.log.info("dpCatalogInfo.getCreateCatalogId() : " + dpCatalogInfo.getCreateCatalogId());
-				// 다운로드할 파일 리스트
-				fileList.add(dpCatalogInfo.getTopImgPath());
-				fileList.add(dpCatalogInfo.getDtlImgPath());
-
-				// 파일저장 경로
-				uploadPath = // "/data5/SMILE_DATA5/COUPON"
-				repositoryPath + File.separator + CouponConstants.BRAND_CATALOG_PATH + File.separator
-						+ DateUtil.getToday("yyyyMM") + File.separator + DateUtil.getToday("dd") + File.separator
-						+ dpCatalogInfo.getCreateCatalogId();
-
-				this.log.info("uploadPath : " + uploadPath);
-
-			}
-
-			File downloadDir = new File(uploadPath);
-			// 디렉토리가 존재하지 않으면 만든다.
-			if (!downloadDir.exists()) {
-				downloadDir.mkdirs();
-			}
-
-			this.log.info("brandImgPath(downloadPath) = " + uploadPath);
-
-			for (int i = 0; i < fileList.size(); i++) {
-				downloadUrl = fileList.get(i);
-
-				if (!"".equals(downloadUrl)) {
-
-					// 다운로드 파일명 추출
-					orgDownloadFileName = downloadUrl.substring(downloadUrl.lastIndexOf("/")).replace("/", "");
-					this.log.info("downloadFileName : " + orgDownloadFileName);
-
-					// 파일명.확장자 형식 체크
-					int fileOk = orgDownloadFileName.indexOf(".");
-
-					this.log.info("fileOk : " + fileOk);
-
-					if (fileOk != -1) {
-
-						this.log.info("File DownLoad Start!!");
-
-						String downloadFilePath = uploadPath + File.separator + orgDownloadFileName;
-						this.log.info("downloadFilePath : " + downloadFilePath);
-
-						try {
-
-							this.log.info("File URLConnection Start!!");
-
-							URL url = new URL(downloadUrl);
-							try {
-
-								urlcon = url.openConnection();
-								this.log.info("File URLConnection OK!!");
-
-							} catch (Exception e) {
-
-								this.log.info("다운로드 URL에 접속 1차 실패!!");
-
-								try {
-
-									urlcon = url.openConnection();
-									this.log.info("File URLConnection OK!!");
-
-								} catch (Exception e1) {
-
-									this.log.info("다운로드 URL에 접속 2차 실패!!");
-									throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR,
-											"다운로드 URL에 접속 2차 실패!!", null);
-								}
-							}
-
-							try {
-
-								this.log.info("File DownLoad Start!!");
-
-								copyFile = new File(downloadFilePath);
-
-								if (copyFile.exists()) {
-									renFileName = orgDownloadFileName.substring(0, fileOk) + DateUtil.getTime() + "("
-											+ i + ")"
-											+ orgDownloadFileName.substring(orgDownloadFileName.lastIndexOf("."));
-
-									this.log.info("DateUtil.getTime()" + DateUtil.getTime());
-									this.log.info("renFileName : " + renFileName);
-									destFile = new File(uploadPath, renFileName);
-									FileUtils.copyFile(copyFile, destFile);
-									downloadFilePath = uploadPath + File.separator + renFileName;
-
-									os = new BufferedOutputStream(new FileOutputStream(downloadFilePath));
-									is = urlcon.getInputStream();
-									int readFileValue;
-
-									while ((readFileValue = is.read()) != -1) {
-										os.write(readFileValue);
-									}
-
-									is.close();
-									os.close();
-
-									this.log.info("File DownLoad OK!!");
-
-								} else {
-
-									os = new BufferedOutputStream(new FileOutputStream(downloadFilePath));
-									is = urlcon.getInputStream();
-									int readFileValue;
-
-									while ((readFileValue = is.read()) != -1) {
-										os.write(readFileValue);
-									}
-
-									is.close();
-									os.close();
-
-									this.log.info("File DownLoad OK!!");
-								}
-
-								// Catalog 이미지가 두개라 처리.
-								if (i == 0) {
-									if (dpCatalogInfo == null) {
-										dpBrandInfo.setBrandImgPath(downloadFilePath);
-										this.log.info("dpBrandInfo.getBrandImgPath() : "
-												+ dpBrandInfo.getBrandImgPath());
-									}
-									if (dpBrandInfo == null) {
-										dpCatalogInfo.setTopImgPath(downloadFilePath);
-										this.log.info("dpCatalogInfo.setTopImgPath() : "
-												+ dpCatalogInfo.getTopImgPath());
-									}
-
-								}
-								if (i == 1) {
-									if (dpBrandInfo == null) {
-										// downloadFilePath2 = uploadPath + File.separator + renFileName;
-										dpCatalogInfo.setDtlImgPath(downloadFilePath);
-										this.log.info("dpCatalogInfo.getDtlImgPath() : "
-												+ dpCatalogInfo.getDtlImgPath());
-									}
-
-								}
-
-							} catch (CouponException e) {
-								// this.log.info("파일 다운로드 중 오류 발생!!");
-								// this.message = "파일 다운로드 중 오류 발생!!";
-								throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR,
-										"파일 다운로드 중 오류 발생!!", null);
-
-							}
-
-						} catch (CouponException e) {
-							// this.log.error(e);
-							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, message, null);
-
-						}
-					} else {
-						this.log.info("filePath url에 파일정보가 없습니다!");
-						message = "filePath url에 파일정보가 없습니다!";
-						return false;
-					}
-				}
-			}
-		} catch (CouponException e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, message, null);
-		} catch (Exception e) {
-			// 정보변경 실패 알림 페이지
-			e.printStackTrace();
-			this.log.error("브랜드,카탈로그 파일 정보 가져오기 실패", e);
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, message, null);
-		}
-		return true;
-
 	}
 
 	/**
@@ -401,13 +158,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				this.brandCatalogService.deleteTblTagInfo(catalogID);
 
 			}
-
-			// 이미지 가져옴
-			this.log.info("이미지 처리 시작");
-			this.inputBrandFile(null, dpCatalogInfo);
-
-			// 이미지 리사이즈 처리
-			this.catalogImgResize(dpCatalogInfo);
 
 			// 카탈로그 태그정보 처리
 			this.catalogTagList(dpCatalogInfo);
@@ -759,6 +509,30 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	public String getCreateCatalogId(String catalogId) {
 		this.log.info("<<<BrandCatalogService>>> getCreateCatalogId...");
 		return this.brandCatalogService.getCreateCatalogId(catalogId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.api.service.ShoppingCouponService#insertFileBrandInfo(com.skplanet.storeplatform
+	 * .sac.api.vo.DpBrandInfo)
+	 */
+	@Override
+	public boolean insertFileBrandInfo(DpBrandInfo brandInfo) {
+		return this.brandImgResize(brandInfo);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.api.service.ShoppingCouponService#insertFileCatalogInfo(com.skplanet.storeplatform
+	 * .sac.api.vo.DpCatalogInfo)
+	 */
+	@Override
+	public boolean insertFileCatalogInfo(DpCatalogInfo catalogInfo) {
+		return this.catalogImgResize(catalogInfo);
 	}
 
 }

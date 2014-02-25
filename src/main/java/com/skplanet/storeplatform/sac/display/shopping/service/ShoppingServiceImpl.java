@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
@@ -1733,17 +1734,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 								sellerMbrSacList.add(sellerMbrSac);
 								memberReq.setSellerMbrSacList(sellerMbrSacList);
 								memberRes = this.sellerSearchSCI.detailInformation(memberReq);
+								List<SellerMbr> sellerMbrs = new ArrayList<SellerMbr>();
+
 								if (memberRes != null) {
 									Map sellerMbrListMap = memberRes.getSellerMbrListMap();
 									Iterator<String> keys = sellerMbrListMap.keySet().iterator();
 									distributor = new Distributor();
 									while (keys.hasNext()) {
-										String entry = keys.next();
-										// if (StringUtils.equals(entry, "sellerID")) {
-										// distributor.setIdentifier((String) sellerMbrListMap.get(entry));
-										// }
-										System.out.println("entry::" + entry);
-										System.out.println("resultMap.get(entry)::" + sellerMbrListMap.get(entry));
+										String key = keys.next();
+										sellerMbrs = (List<SellerMbr>) sellerMbrListMap.get(key);
+										for (int ll = 0; ll < sellerMbrs.size(); ll++) {
+											System.out.println("_>>>>" + sellerMbrs.get(ll).getSellerKey());
+
+										}
 										// Map sellerMbrListMap2 = sellerMbrListMap.get(entry);
 
 									}
