@@ -199,6 +199,24 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateBannerSource(java.lang.String)
+	 */
+	@Override
+	public Source generateBannerSource(String path) {
+		Source source = null;
+
+		if (StringUtils.isNotEmpty(path)) {
+			source = new Source();
+			source.setMediaType(DisplayCommonUtil.getMimeType(path));
+			source.setUrl(path);
+		}
+		return source;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
 	 */
