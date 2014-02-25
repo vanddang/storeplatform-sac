@@ -11,6 +11,9 @@ package com.skplanet.storeplatform.sac.client.purchase.cancel.vo;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSacReq;
@@ -24,8 +27,27 @@ public class PurchaseCancelByUserSacReq extends PurchaseCommonSacReq {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank
+	private String cancelReqPathCd;
+
 	@NotEmpty
+	@Valid
 	private List<PurchaseCancelByUserDetailSacReq> prchsCancelList;
+
+	/**
+	 * @return the cancelReqPathCd
+	 */
+	public String getCancelReqPathCd() {
+		return this.cancelReqPathCd;
+	}
+
+	/**
+	 * @param cancelReqPathCd
+	 *            the cancelReqPathCd to set
+	 */
+	public void setCancelReqPathCd(String cancelReqPathCd) {
+		this.cancelReqPathCd = cancelReqPathCd;
+	}
 
 	/**
 	 * @return the prchsCancelList

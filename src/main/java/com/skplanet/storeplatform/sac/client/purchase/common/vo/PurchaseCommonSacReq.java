@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.common.vo;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -22,9 +20,7 @@ public class PurchaseCommonSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	@NotBlank
 	private String userKey;
-	@NotBlank
 	private String deviceKey;
 
 	/**
