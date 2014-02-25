@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore;
@@ -50,7 +51,7 @@ public interface FeedbackRepository {
 	 *            userKey
 	 * @return SearchUserSacRes
 	 */
-	public SearchUserSacRes searchUserByUserKey(String userKey);
+	public SearchUserSacRes searchUserByUserKey(SearchUserSacReq searchUserSacReq);
 
 	/**
 	 * 

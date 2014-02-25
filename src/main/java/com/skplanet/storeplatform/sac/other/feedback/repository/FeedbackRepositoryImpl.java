@@ -53,9 +53,7 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	}
 
 	@Override
-	public SearchUserSacRes searchUserByUserKey(String userKey) {
-		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-		searchUserSacReq.setUserKey(userKey);
+	public SearchUserSacRes searchUserByUserKey(SearchUserSacReq searchUserSacReq) {
 		return this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
 	}
 
