@@ -87,8 +87,6 @@ public class DisplayConstants {
 	public static final String DP_FREEPASS_IDENTIFIER_CD = "freepass";
 	public static final String DP_PROMOTION_IDENTIFIER_CD = "promotion";
 	public static final String DP_BANNER_IDENTIFIER_CD = "banner";
-	public static final String DP_PRODUCT_IDENTIFIER_CD = "product";
-
 	public static final String DP_OUTSDCONTENTS_IDENTIFIER_CD = "outsdContents ";
 
 	// //////////////////////////////////// TOP MENU ID //////////////////////////////////////////
@@ -409,6 +407,16 @@ public class DisplayConstants {
 	public static final String DP_BANNER_INTERNAL_URL_CD = "DP010310"; // 내부URL연결
 	public static final String DP_BANNER_SITUATIONAL_RECOMM_CD = "DP010311"; // 상황별 추천리스트 연결
 	public static final String DP_BANNER_THEME_RECOMM_CD = "DP010312"; // 테마추천 리스트 연결
+
+	public static final String DP_BANNER_TYPE_PRODUCT = "product"; // 배너타입 : 상품
+	public static final String DP_BANNER_TYPE_EXTERNAL_URL = "externalUrl"; // 배너타입 : 외부 URL
+	public static final String DP_BANNER_TYPE_URL = "url"; // 배너타입 : 내부 URL
+	public static final String DP_BANNER_TYPE_CATEGORY = "category"; // 배너타입 : 카테고리
+	public static final String DP_BANNER_TYPE_THEME_ZONE = "themeZone"; // 배너타입 : 운영자 임의 추천
+	public static final String DP_BANNER_TYPE_BRAND_SHOP_CATEGORY = "brandShopCategory"; // 배너타입 : 브랜드샵 목록
+	public static final String DP_BANNER_TYPE_BRAND_SHOP = "brandShop"; // 배너타입 : 특정 브랜드샵
+	public static final String DP_BANNER_TYPE_THEME_RECOMM = "themeRecomm"; // 배너타입 : 상황별 추천
+	public static final String DP_BANNER_TYPE_APP_GUIDE = "appGuide"; // 배너타입 : 앱가이드 테마
 
 	/*
 	 * 배너 탑 코드
