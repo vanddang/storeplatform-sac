@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 @ActiveProfiles(value = "local")
@@ -73,11 +73,11 @@ public class DetailInformationAppTest {
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
-				}).success(DetailInformationRes.class, new SuccessCallback() {
+				}).success(DetailInformationForProductRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailInformationRes res = (DetailInformationRes) result;
-						assertThat(res.getSellerKey(), notNullValue());
+						DetailInformationForProductRes res = (DetailInformationForProductRes) result;
+						assertThat(res.getSellerMbrList(), notNullValue());
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
