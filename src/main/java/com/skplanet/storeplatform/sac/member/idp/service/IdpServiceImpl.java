@@ -2803,11 +2803,6 @@ public class IdpServiceImpl implements IdpService {
 				removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
 				this.userSCI.remove(removeUserRequest);
 
-				RemoveMbrOneIDRequest removeMbrOneIDRequest = new RemoveMbrOneIDRequest();
-				removeMbrOneIDRequest.setCommonRequest(commonRequest);
-				removeMbrOneIDRequest.setImSvcNo(imIntSvcNo);
-				this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
-
 			} catch (StorePlatformException spe) {
 
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
