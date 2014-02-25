@@ -1,6 +1,5 @@
 package com.skplanet.storeplatform.sac.purchase.constant;
 
-
 /**
  * 구매 관련 상수
  * 
@@ -80,7 +79,7 @@ public final class PurchaseConstants {
 	public static final String POLICY_PATTERN_CORP_DEVICE = "CM011603"; // 법인명의 제한
 	public static final String POLICY_PATTERN_SKT_TEST_DEVICE = "CM011604"; // 시험폰 결제 허용
 	public static final String POLICY_PATTERN_STORE_TEST_DEVICE = "CM011605"; // 비과금 결제 허용
-	public static final String POLICY_PATTERN_PRCHSHST_DEVICE = "CM011606"; // Device기반 구매내역 관리처리
+	public static final String POLICY_PATTERN_DEVICE_BASED_PRCHSHST = "CM011606"; // Device기반 구매내역 관리처리
 	public static final String POLICY_PATTERN_ADMIN_CANCEL_CHARGED = "CM011607"; // 유료상품 Admin 결제취소 허용
 	public static final String POLICY_PATTERN_USER_CANCEL_CHARGED = "CM011608"; // 유료상품 사용자 결제취소 허용
 	public static final String POLICY_PATTERN_ADMIN_CANCEL_FREE = "CM011609"; // 무료상품 Admin 결제취소 허용
