@@ -88,7 +88,7 @@ public class ModifyAccountInformationTest {
 		authorizeReq = new AuthorizeReq();
 
 		// 로그인 데이터 주입
-		authorizeReq.setSellerId("qatest023");
+		authorizeReq.setSellerId("changTest05");
 		authorizeReq.setSellerPW("1234");
 		authorizeReq.setExpireDate("100");
 

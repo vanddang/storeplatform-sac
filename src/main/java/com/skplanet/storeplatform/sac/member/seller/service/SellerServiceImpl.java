@@ -576,7 +576,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setMarketCode(req.getMarketCode()); // ("입점상점코드"); LNCHG_MALL_CD 입점 상점코드
 		sellerMbr.setMarketStatus(req.getMarketStatus()); // ("입점상태코드"); LNCHG_MBR_STATUS_CD
 		sellerMbr.setIsAccountReal(req.getIsAccountReal()); // ("   계좌인증여부"); // ACCT_AUTH_YN 계좌 인증여부 컬럼
-
+		sellerMbr.setIsOfficialAuth(req.getIsOfficialAuth()); // 공인인증여부
 		updateAccountSellerRequest.setSellerMbr(sellerMbr);
 
 		// 정산정보
