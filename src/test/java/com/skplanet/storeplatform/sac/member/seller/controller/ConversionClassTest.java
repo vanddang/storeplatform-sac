@@ -135,7 +135,6 @@ public class ConversionClassTest {
 					public Object requestBody() {
 						req.setSellerKey("SE201402051029143200000587");
 						req.setSessionKey("fd6697b8e02e4d9f84d8438bf0bf7b1e");
-
 						req.setSellerClassTo("US010103"); // BIZ_KIND_CD(US000901,US000904) 신청
 						req.setRepEmail("aind050@yopmail.com"); // ("대표 이메일"); 회원 REP_EMAIL > 전환 CHRGPERS_EMAIL
 						req.setSellerBizCorpNumber("123123123");// ("법인등록번호"); CORP_REG_NO
