@@ -23,7 +23,6 @@ public class ModifyRealNameSacReq extends CommonInfo {
 	@NotBlank
 	private String sellerKey;
 	/** 법정대리인 관계코드. */
-	@NotBlank
 	private String parentType;
 	/** 실명인증 대상. */
 	@NotBlank
