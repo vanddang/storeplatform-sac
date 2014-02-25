@@ -272,6 +272,9 @@
         
         <!-- 특정 판매자별 상품 조회 -->
         <typeAlias alias="SellerProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacReq" />
+        
+                <!-- 신규 회원 추천 상품 조회 -->
+        <typeAlias alias="RecommandNewMemberProductReq"  type="com.skplanet.storeplatform.sac.client.display.vo.personal.RecommandNewMemberProductReq" />
     </typeAliases>
     
     <typeHandlers>

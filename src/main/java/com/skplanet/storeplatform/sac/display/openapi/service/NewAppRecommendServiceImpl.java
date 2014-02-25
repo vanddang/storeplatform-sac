@@ -22,8 +22,8 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommandSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommandSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
@@ -46,7 +46,7 @@ import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
  * Updated on : 2014. 1. 21. Updated by : 이석희, 인크로스.
  */
 @Service
-public class NewAppRecommandServiceImpl implements NewAppRecommandService {
+public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -69,67 +69,61 @@ public class NewAppRecommandServiceImpl implements NewAppRecommandService {
 	 * .storeplatform.sac.client.product.vo.downloadBestSacReqVO)
 	 */
 	@Override
-	public NewAppRecommandSacRes searchNewAppRecommandList(SacRequestHeader requestheader,
-			NewAppRecommandSacReq newAppRecommandSacReq) {
+	public NewAppRecommendSacRes searchNewAppRecommendList(SacRequestHeader requestheader,
+			NewAppRecommendSacReq newAppRecommendSacReq) {
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
 
-		newAppRecommandSacReq.setTenantId(tenantHeader.getTenantId());
-		newAppRecommandSacReq.setLangCd(tenantHeader.getLangCd());
-		newAppRecommandSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
-		newAppRecommandSacReq.setPreviewImagecd(DisplayConstants.DP_OPENAPI_APP_PREVIEW_IMAGE_CD);
+		newAppRecommendSacReq.setTenantId(tenantHeader.getTenantId());
+		newAppRecommendSacReq.setLangCd(tenantHeader.getLangCd());
+		newAppRecommendSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
+		newAppRecommendSacReq.setPreviewImagecd(DisplayConstants.DP_OPENAPI_APP_PREVIEW_IMAGE_CD);
 
-		NewAppRecommandSacRes response = new NewAppRecommandSacRes();
+		NewAppRecommendSacRes response = new NewAppRecommendSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
 		int index = 0;
 		int offset = 1; // default
 		int count = 20; // default
 
-		if (newAppRecommandSacReq.getOffset() != null) {
-			offset = newAppRecommandSacReq.getOffset();
+		if (newAppRecommendSacReq.getOffset() != null) {
+			offset = newAppRecommendSacReq.getOffset();
 		}
-		newAppRecommandSacReq.setOffset(offset); // set offset
+		newAppRecommendSacReq.setOffset(offset); // set offset
 
-		if (newAppRecommandSacReq.getCount() != null) {
-			count = newAppRecommandSacReq.getCount();
+		if (newAppRecommendSacReq.getCount() != null) {
+			count = newAppRecommendSacReq.getCount();
 		}
 		count = offset + count - 1;
-		newAppRecommandSacReq.setCount(count); // set count
+		newAppRecommendSacReq.setCount(count); // set count
 
 		Identifier identifier = new Identifier();
 		List<Product> productList = new ArrayList<Product>();
 
 		Product product = null;
 
-		String releaseType = newAppRecommandSacReq.getReleaseType();
-		// String sellerKey = newAppRecommandSacReq.getSellerKey();
+		String releaseType = newAppRecommendSacReq.getReleaseType();
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(releaseType)) {
 			throw new StorePlatformException("SAC_DSP_0002", "releaseType", releaseType);
 		}
 
-		// 필수 파라미터 체크
-		// if (StringUtils.isEmpty(sellerKey)) {
-		// throw new StorePlatformException("SAC_DSP_0002", "sellerKey", sellerKey);
-		// }
-
-		List<MetaInfo> downloadBestList = null;
-		// OpenApi 다운로드 Best 상품 조회
+		List<MetaInfo> newAppRecommend = null;
+		// OpenApi 신규 앱 추천 상품 조회
 
 		if (DisplayConstants.DP_OPENAPI_RELEASETYPE_WEEK.equals(releaseType)) {
-			downloadBestList = this.commonDAO.queryForList("OpenApi.searchNewAppList", newAppRecommandSacReq,
+			newAppRecommend = this.commonDAO.queryForList("OpenApi.searchNewAppList", newAppRecommendSacReq,
 					MetaInfo.class);
 		} else {
-			downloadBestList = this.commonDAO.queryForList("OpenApi.searchDayNewAppList", newAppRecommandSacReq,
+			newAppRecommend = this.commonDAO.queryForList("OpenApi.searchDayNewAppList", newAppRecommendSacReq,
 					MetaInfo.class);
 		}
 
-		if (downloadBestList.size() != 0) {
+		if (newAppRecommend.size() != 0) {
 
-			Iterator<MetaInfo> iterator = downloadBestList.iterator();
+			Iterator<MetaInfo> iterator = newAppRecommend.iterator();
 			List<Identifier> identifierList = null;
-			String[] arrayProdudctId = new String[downloadBestList.size()];
+			String[] arrayProdudctId = new String[newAppRecommend.size()];
 			while (iterator.hasNext()) {
 				String company = null;
 
@@ -175,9 +169,6 @@ public class NewAppRecommandServiceImpl implements NewAppRecommandService {
 				DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
 				List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 				SellerMbrSac sellerMbrSac = new SellerMbrSac();
-				this.log.debug("#########################################################");
-				this.log.debug("sellerMbrNo	:	" + metaInfo.getSellerMbrNo());
-				this.log.debug("#########################################################");
 				sellerMbrSac.setSellerKey(metaInfo.getSellerMbrNo());
 				sellerMbrSacList.add(sellerMbrSac);
 				detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
@@ -205,15 +196,15 @@ public class NewAppRecommandServiceImpl implements NewAppRecommandService {
 					arrayProdudctId[index] = metaInfo.getProdId();
 				}
 				index++;
-				newAppRecommandSacReq.setProdId(metaInfo.getProdId());
-				newAppRecommandSacReq.setArrayProdudctId(arrayProdudctId);
+				newAppRecommendSacReq.setProdId(metaInfo.getProdId());
+				newAppRecommendSacReq.setArrayProdudctId(arrayProdudctId);
 
 				/*
 				 * 미리보기 정보 조회 (신규 앱 출시 1일이내 조회시 정보 노출)
 				 */
 				if (!DisplayConstants.DP_OPENAPI_RELEASETYPE_WEEK.equals(releaseType)) {
 					List<MetaInfo> previewList = new ArrayList<MetaInfo>();
-					previewList = this.commonDAO.queryForList("OpenApi.getPreviewImageList", newAppRecommandSacReq,
+					previewList = this.commonDAO.queryForList("OpenApi.getPreviewImageList", newAppRecommendSacReq,
 							MetaInfo.class);
 
 					Iterator<MetaInfo> previewIterator = previewList.iterator();

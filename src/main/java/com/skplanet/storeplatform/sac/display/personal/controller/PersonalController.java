@@ -22,10 +22,13 @@ import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpd
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductRes;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommandNewMemberProductReq;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommandNewMemberProductRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpdateService;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateAlarmService;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService;
+import com.skplanet.storeplatform.sac.display.personal.service.RecommandNewMemberProductService;
 
 /**
  * 개인화 관련 Controller
@@ -45,6 +48,9 @@ public class PersonalController {
 
 	@Autowired
 	private PersonalUpdateAlarmService personalUpdateAlarmService;
+
+	@Autowired
+	private RecommandNewMemberProductService recommandNewMemberProductService;
 
 	/**
 	 * <pre>
@@ -79,6 +85,24 @@ public class PersonalController {
 	@ResponseBody
 	public PersonalAutoUpdateRes updateAutoUpdateList(@RequestBody PersonalAutoUpdateReq req, SacRequestHeader header) {
 		return this.personalAutoUpdateService.updateAutoUpdateList(req, header);
+	}
+
+	/**
+	 * <pre>
+	 * 신규 가입 고객 추천 상품 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return DeviceProductProvisioningRes
+	 */
+	@RequestMapping(value = "/recommandNewMember/product/List/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public RecommandNewMemberProductRes recommandNewMemberProductList(SacRequestHeader header,
+			RecommandNewMemberProductReq req) {
+		return this.recommandNewMemberProductService.recommandNewMemberProductList(header, req);
 	}
 
 }

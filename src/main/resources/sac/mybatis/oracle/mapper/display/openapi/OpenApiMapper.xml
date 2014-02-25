@@ -84,7 +84,7 @@
 		   AND KB.IMG_CD = #{imageCd}
     </select>
     
-     <select id="searchNewAppList" parameterType="NewAppRecommandSacReq" resultType="MetaInfo">
+     <select id="searchNewAppList" parameterType="NewAppRecommendSacReq" resultType="MetaInfo">
 		SELECT /*  OpenApi.xml, searchNewAppList, 이석희, 2014-02-18 */
 		        KA.*
 		     , (SELECT MENU_NM 
@@ -98,7 +98,7 @@
 		           AND LANG_CD = #{langCd}
 		           AND ROWNUM = 1) AS MENU_NM  		
 		     , DECODE(INSTR(KB.FILE_PATH, '.', 1, 1), 0, KB.FILE_PATH || KB.FILE_NM, KB.FILE_PATH)  AS IMAGE_PATH
-		     , KB.FILE_SIZE AS IMAGE_SIZE
+		     , NVL(KB.FILE_SIZE, 0) AS IMAGE_SIZE
 		  FROM 
 		       (
 		        SELECT *
@@ -159,15 +159,15 @@
 		                       ) IA
 		              ) JA
 		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}             
-		       )                     KA
-		        , TB_DP_PROD_IMG     KB              
-		 WHERE KA.PROD_ID = KB.PROD_ID               
-		   AND KB.EXPO_ORD = '1'
-		   AND KB.LANG_CD = #{langCd}
-		   AND KB.IMG_CD = #{imageCd}
+		       )                               KA
+                LEFT OUTER JOIN TB_DP_PROD_IMG KB
+                             ON KA.PROD_ID  = KB.PROD_ID
+                            AND KB.IMG_CD   = #{imageCd}
+                            AND KB.EXPO_ORD = '1'
+                            AND KB.LANG_CD  = #{langCd}  
     </select>
     
-    <select id="searchDayNewAppList" parameterType="NewAppRecommandSacReq" resultType="MetaInfo">
+    <select id="searchDayNewAppList" parameterType="NewAppRecommendSacReq" resultType="MetaInfo">
         SELECT /*  OpenApi.xml, searchDayNewAppList, 이석희, 2014-02-18 */
                COUNT(*) OVER() AS CUR_CNT                  /*현재페이지의 상품갯수*/
 		     , TOTAL_CNT AS TOTAL_COUNT                    /*총상품갯수*/
