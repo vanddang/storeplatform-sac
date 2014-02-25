@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -54,6 +55,17 @@ public class DetailInformationRes extends CommonInfo {
 
 	/** Flurry 인증정보 Value Object 목록. */
 	private List<FlurryAuth> flurryAuthList;
+
+	/** 판매자 정보 리스트 Value Object 목록. */
+	private Map<String, List<SellerMbr>> sellerMbrListMap;
+
+	public Map<String, List<SellerMbr>> getSellerMbrListMap() {
+		return this.sellerMbrListMap;
+	}
+
+	public void setSellerMbrListMap(Map<String, List<SellerMbr>> sellerMbrListMap) {
+		this.sellerMbrListMap = sellerMbrListMap;
+	}
 
 	public List<FlurryAuth> getFlurryAuthList() {
 		return this.flurryAuthList;
