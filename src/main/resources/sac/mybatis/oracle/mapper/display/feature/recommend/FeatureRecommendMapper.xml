@@ -68,7 +68,7 @@
 		 ORDER BY RNUM
     </select>    
     
-    <!-- TODAY 상품 조회 (더미 -수정예정) -->
+    <!-- TODAY 상품 조회 -->
     <select id="selectRecommendTodayList" parameterType="RecommendTodaySacReq" resultType="ProductBasicInfo">
 	    SELECT /* FeatureRecommendMapper.xml, selectRecommendTodayList, SAC : 조준일 , 2014-02-06 */
 	           B.TENANT_ID
@@ -118,9 +118,9 @@
 		                   AND A.EXPO_YN = 'Y'
 		                   AND B.EXPO_YN = 'Y'
 		                   AND A.TENANT_ID = #{tenantId}
-		                   --AND A.LIST_ID = listId
+		                   AND A.LIST_ID = #{listId}
 		                   AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
-		                   --AND TO_CHAR(B.STD_DT, 'YYYYMMDDHH24MISS') = stdDt
+		                   AND TO_CHAR(B.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
 		                   <if test='topMenuId == "DP16"'>
 		                   AND B.PROD_ID = C.PART_PROD_ID  /* MUSIC 에피소드 */
 		                   </if>
