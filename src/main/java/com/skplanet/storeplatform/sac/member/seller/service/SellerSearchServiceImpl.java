@@ -309,7 +309,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrSac = new SellerMbr();
 			sellerMbrSac.setAppStat("Top");
 			if (!StringUtil.nvl(sellerMbrs.get(0).getCharger(), "").equals(""))
-				sellerMbrSac.setCharger(sellerMbrs.get(0).getCharger());
+				sellerMbrSac.setSellerName(sellerMbrs.get(0).getCharger());
 			sellerMbrSacs.add(sellerMbrSac);
 		}
 		// 내국인/외국인, 개인사업자 or 법인 사업자
@@ -318,7 +318,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrSac = new SellerMbr();
 			sellerMbrSac.setAppStat("Top");
 			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
-				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
+				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerCompany());
 			sellerMbrSacs.add(sellerMbrSac);
 		}
 
@@ -331,12 +331,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerName(), "").equals(""))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerName());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getCharger(), "").equals(""))
-				sellerMbrSac.setCharger(sellerMbrs.get(0).getCharger());
+				sellerMbrSac.setSellerName(sellerMbrs.get(0).getCharger());
 
 			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
-				sellerMbrSac.setRepEmail(sellerMbrs.get(0).getRepEmail());
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
-				sellerMbrSac.setCustomerEmail(sellerMbrs.get(0).getCustomerEmail());
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
 
@@ -353,12 +353,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
 
 			if (!StringUtil.nvl(sellerMbrs.get(0).getCeoName(), "").equals(""))
-				sellerMbrSac.setCeoName(sellerMbrs.get(0).getCeoName());
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCeoName());
 
 			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
-				sellerMbrSac.setRepEmail(sellerMbrs.get(0).getRepEmail());
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
-				sellerMbrSac.setCustomerEmail(sellerMbrs.get(0).getCustomerEmail());
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
 
@@ -370,9 +370,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 						+ sellerMbrs.get(0).getSellerDetailAddress());
 
 			if (!StringUtil.nvl(sellerMbrs.get(0).getRepPhone(), "").equals(""))
-				sellerMbrSac.setRepPhone(sellerMbrs.get(0).getRepPhone());
+				sellerMbrSac.setSellerPhone(sellerMbrs.get(0).getRepPhone());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerPhone(), "").equals(""))
-				sellerMbrSac.setCustomerPhone(sellerMbrs.get(0).getCustomerPhone());
+				sellerMbrSac.setSellerPhone(sellerMbrs.get(0).getCustomerPhone());
 
 			sellerMbrSacs.add(sellerMbrSac);
 		}
@@ -384,12 +384,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerName(), "").equals(""))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerName());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
-				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
+				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerCompany());
 
 			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
-				sellerMbrSac.setRepEmail(sellerMbrs.get(0).getRepEmail());
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
-				sellerMbrSac.setCustomerEmail(sellerMbrs.get(0).getCustomerEmail());
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
 
@@ -404,12 +404,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
 				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerName(), "").equals(""))
-				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerName());
+				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerName());
 
 			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
-				sellerMbrSac.setRepEmail(sellerMbrs.get(0).getRepEmail());
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
-				sellerMbrSac.setCustomerEmail(sellerMbrs.get(0).getCustomerEmail());
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
 			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
 
