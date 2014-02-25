@@ -290,7 +290,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 							if (this.log.isDebugEnabled()) {
 								this.log.debug("##### Search for music meta info product");
 							}
-							metaInfo = this.commonDAO.queryForObject("Isf.AppCodi.getMusicMetaInfo", paramMap,
+							metaInfo = this.commonDAO.queryForObject("Isf.MetaInfo.getMusicMetaInfo", paramMap,
 									MetaInfo.class);
 							if (metaInfo != null) {
 								product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
