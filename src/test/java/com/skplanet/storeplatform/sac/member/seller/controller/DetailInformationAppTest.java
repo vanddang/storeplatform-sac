@@ -21,11 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
@@ -62,18 +60,9 @@ public class DetailInformationAppTest {
 	@Test
 	public void detailInformationFull() {
 		new TestCaseTemplate(this.mockMvc)
-				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/detailInformationForProduct/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						DetailInformationForProductReq req = new DetailInformationForProductReq();
-
-						req.setSellerKey("IF1023229565820110106110241");
-
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(DetailInformationForProductRes.class, new SuccessCallback() {
+				.url(TestMemberConstant.PREFIX_SELLER_PATH
+						+ "/detailInformationForProduct/v1?sellerKey=IF1023229565820110106110241")
+				.httpMethod(HttpMethod.GET).success(DetailInformationForProductRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailInformationForProductRes res = (DetailInformationForProductRes) result;
@@ -83,4 +72,5 @@ public class DetailInformationAppTest {
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
+
 }
