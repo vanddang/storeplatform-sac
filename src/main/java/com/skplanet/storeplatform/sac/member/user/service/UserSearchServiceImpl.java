@@ -1498,6 +1498,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public Map<String, UserInfoByUserKey> searchUserByUserKey(SacRequestHeader sacHeader, SearchUserReq request) {
 
+		// 공통파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
@@ -1507,8 +1508,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchMbrUserRequest searchMbrUserRequest = new SearchMbrUserRequest();
 		searchMbrUserRequest.setUserKeyList(userKeyList);
 		searchMbrUserRequest.setCommonRequest(commonRequest);
-
+		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC UserSCI.searchMbrUser() 호출.");
 		SearchMbrUserResponse searchMbrUserResponse = this.userSCI.searchMbrUser(searchMbrUserRequest);
+
 		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse
 				.getCommonResponse().getResultCode());
 
