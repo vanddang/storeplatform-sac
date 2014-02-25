@@ -12,8 +12,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.theme.BrandShopThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.BrandShopThemeRes;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.EbookComicThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.EbookComicThemeRes;
-import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeBrandshopSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeBrandshopSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneSacReq;
@@ -23,7 +21,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeZoneRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.theme.service.BrandShopThemeService;
 import com.skplanet.storeplatform.sac.display.feature.theme.service.EbookComicThemeService;
-import com.skplanet.storeplatform.sac.display.feature.theme.service.ThemeBrandshopService;
 import com.skplanet.storeplatform.sac.display.feature.theme.service.ThemeEpubService;
 import com.skplanet.storeplatform.sac.display.feature.theme.service.ThemeThemeZoneService;
 import com.skplanet.storeplatform.sac.display.feature.theme.service.ThemeZoneService;
@@ -53,9 +50,6 @@ public class ThemeController {
 
 	@Autowired
 	private ThemeThemeZoneService themeThemeZoneService;
-
-	@Autowired
-	private ThemeBrandshopService themeBrandshopService;
 
 	/**
 	 * 
@@ -138,24 +132,6 @@ public class ThemeController {
 	@ResponseBody
 	public ThemeThemeZoneSacRes searchThemeThemeZoneList(ThemeThemeZoneSacReq req, SacRequestHeader header) {
 		return this.themeThemeZoneService.searchThemeThemeZoneList(req, header);
-
-	}
-
-	/**
-	 * <pre>
-	 * 브렌드샵 테마 상품 조회 Input Value Object.
-	 * </pre>
-	 * 
-	 * @param req
-	 *            req
-	 * @param header
-	 *            header
-	 * @return ThemeThemeZoneSacRes
-	 */
-	@RequestMapping(value = "/display/feature/theme/brandshop/list/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public ThemeBrandshopSacRes searchThemeBrandshopList(ThemeBrandshopSacReq req, SacRequestHeader header) {
-		return this.themeBrandshopService.searchThemeBrandshopList(req, header);
 
 	}
 }
