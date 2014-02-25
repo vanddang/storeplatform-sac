@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpd
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
@@ -178,10 +179,17 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 
 				try {
 					this.log.debug("##### check user status");
+					String userKey = req.getUserKey();
+					this.log.debug("##### userKey :: {} " + userKey);
 					SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-					searchUserSacReq.setUserKey(req.getUserKey());
+					List<String> userKeyList = new ArrayList<String>();
+					userKeyList.add(userKey);
+					searchUserSacReq.setUserKeyList(userKeyList);
 					SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
-					String userMainStatus = searchUserSacRes.getUserMainStatus();
+					Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
+					UserInfoSac userInfoSac = userInfo.get(userKey);
+					String userMainStatus = userInfoSac.getUserMainStatus();
+
 					this.log.debug("##### userMainStatus :: {} " + userMainStatus);
 					// TODO osm1021 예외 처리 및 pass가 안 될때 처리 정리 필요
 					// 정상 일시 정지 회원이 아닐 경우 -> 업데이트 내역이 없는 것으로 간주한다.
