@@ -30,6 +30,9 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
@@ -59,6 +62,7 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedb
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants.SellerConstants;
 import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
@@ -90,7 +94,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
 		// 회원 SCI 연동, 회원조회, 없으면 Exception.
-		this.feedbackRepository.searchUserByUserKey(createFeedbackSacReq.getUserKey());
+		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+		List<String> userKeyList = new ArrayList<String>();
+		userKeyList.add(createFeedbackSacReq.getUserKey());
+		searchUserSacReq.setUserKeyList(userKeyList);
+		this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 
 		// 평점 저장.
 		this.setMbrAvgTenantProdStats(createFeedbackSacReq, sacRequestHeader);
@@ -137,7 +145,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public ModifyFeedbackSacRes modify(ModifyFeedbackSacReq modifyFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
 		// 회원 SCI 연동, 회원조회, 없으면 Exception.
-		this.feedbackRepository.searchUserByUserKey(modifyFeedbackSacReq.getUserKey());
+		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+		List<String> userKeyList = new ArrayList<String>();
+		userKeyList.add(modifyFeedbackSacReq.getUserKey());
+		searchUserSacReq.setUserKeyList(userKeyList);
+		this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 
 		// 평점 저장.
 		this.setMbrAvgTenantProdStats(modifyFeedbackSacReq, sacRequestHeader);
@@ -181,7 +193,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public RemoveFeedbackSacRes remove(RemoveFeedbackSacReq removeFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 
 		// 회원 SCI 연동, 회원조회, 없으면 Exception.
-		this.feedbackRepository.searchUserByUserKey(removeFeedbackSacReq.getUserKey());
+		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+		List<String> userKeyList = new ArrayList<String>();
+		userKeyList.add(removeFeedbackSacReq.getUserKey());
+		searchUserSacReq.setUserKeyList(userKeyList);
+		this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 
 		// 기 평가여부 조회
 		MbrAvg mbrAvg = new MbrAvg();
@@ -239,7 +255,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 			SacRequestHeader sacRequestHeader) {
 
 		// 회원 SCI 연동, 회원조회, 없으면 Exception.
-		this.feedbackRepository.searchUserByUserKey(createRecommendFeedbackReq.getUserKey());
+		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+		List<String> userKeyList = new ArrayList<String>();
+		userKeyList.add(createRecommendFeedbackReq.getUserKey());
+		searchUserSacReq.setUserKeyList(userKeyList);
+		this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 
 		// 기 추천여부 조회.
 		ProdNoti prodNoti = new ProdNoti();
@@ -299,8 +319,21 @@ public class FeedbackServiceImpl implements FeedbackService {
 			detailInformationSacRes = null;
 		}
 
+		// 회원 조회 요청.
+		userKeyList.clear();
+		userKeyList.add(res.getMbrNo());
+		searchUserSacReq.setUserKeyList(userKeyList);
+		SearchUserSacRes searchUserSacRes = null;
+
+		// 회원 조회.
+		try {
+			searchUserSacRes = this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		} catch (Exception e) {
+			searchUserSacRes = null;
+		}
+
 		// 응답 셋팅.
-		Feedback feedback = this.setFeedback(res, "", detailInformationSacRes);
+		Feedback feedback = this.setFeedback(res, "", detailInformationSacRes, searchUserSacRes);
 
 		// 응답.
 		CreateRecommendFeedbackSacRes createRecommendFeedbackSacRes = new CreateRecommendFeedbackSacRes();
@@ -314,7 +347,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 			SacRequestHeader sacRequestHeader) {
 
 		// 회원 SCI 연동, 회원조회, 없으면 Exception.
-		this.feedbackRepository.searchUserByUserKey(removeRecommendFeedbackSacReq.getUserKey());
+		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+		List<String> userKeyList = new ArrayList<String>();
+		userKeyList.add(removeRecommendFeedbackSacReq.getUserKey());
+		searchUserSacReq.setUserKeyList(userKeyList);
+		this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
@@ -367,8 +404,21 @@ public class FeedbackServiceImpl implements FeedbackService {
 			detailInformationSacRes = null;
 		}
 
+		// 회원 조회 요청.
+		userKeyList.clear();
+		userKeyList.add(res.getMbrNo());
+		searchUserSacReq.setUserKeyList(userKeyList);
+		SearchUserSacRes searchUserSacRes = null;
+
+		// 회원 조회.
+		try {
+			searchUserSacRes = this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		} catch (Exception e) {
+			searchUserSacRes = null;
+		}
+
 		// 응답셋팅.
-		Feedback feedback = this.setFeedback(res, "", detailInformationSacRes);
+		Feedback feedback = this.setFeedback(res, "", detailInformationSacRes, searchUserSacRes);
 
 		// 응답
 		RemoveRecommendFeedbackSacRes removeRecommendFeedbackSacRes = new RemoveRecommendFeedbackSacRes();
@@ -418,17 +468,18 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 
 		List<Feedback> notiList = new ArrayList<Feedback>();
-
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 		Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
-
-		// 판매자 요청 리스트.
+		List<String> userKeyList = new ArrayList<String>();
+		Set<String> userKeySet = new HashSet<String>();
+		// 회원/ 판매자 요청 리스트.
 		for (ProdNoti res : getProdnotiList) {
 			SellerMbrSac sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setSellerKey(res.getSellerMbrNo());
 			sellerMbrSacSet.add(sellerMbrSac);
+			userKeySet.add(res.getMbrNo());
 		}
-
+		// 판매자 조회 요청.
 		sellerMbrSacList.addAll(sellerMbrSacSet);
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
@@ -436,13 +487,28 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 판매자 조회.
 		try {
-			this.feedbackRepository.detailInformation(detailInformationSacReq);
+			detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
 		} catch (Exception e) {
 			detailInformationSacRes = null;
 		}
+
+		// 회원 조회 요청.
+		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+		userKeyList.addAll(userKeySet);
+		searchUserSacReq.setUserKeyList(userKeyList);
+		SearchUserSacRes searchUserSacRes = null;
+
+		// 회원 조회.
+		try {
+			searchUserSacRes = this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		} catch (Exception e) {
+			searchUserSacRes = null;
+		}
+
 		// 응답셋팅.
 		for (ProdNoti res : getProdnotiList) {
-			notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType(), detailInformationSacRes));
+			notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType(), detailInformationSacRes,
+					searchUserSacRes));
 		}
 		// 응답.
 		listFeedbackRes.setNotiList(notiList);
@@ -489,29 +555,49 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 
 		List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
-
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 		Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
+		List<String> userKeyList = new ArrayList<String>();
+		Set<String> userKeySet = new HashSet<String>();
 
 		// 판매자 요청 리스트.
 		for (ProdNoti res : getMyProdNotiList) {
 			SellerMbrSac sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setSellerKey(res.getSellerMbrNo());
 			sellerMbrSacSet.add(sellerMbrSac);
+			userKeySet.add(res.getMbrNo());
 		}
+
+		// 판매자 요청.
 		sellerMbrSacList.addAll(sellerMbrSacSet);
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
 		DetailInformationSacRes detailInformationSacRes = null;
+
 		// 판매자 조회.
 		try {
 			detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
 		} catch (Exception e) {
 			detailInformationSacRes = null;
 		}
+
+		// 회원 조회 요청.
+		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+		userKeyList.addAll(userKeySet);
+		searchUserSacReq.setUserKeyList(userKeyList);
+		SearchUserSacRes searchUserSacRes = null;
+
+		// 회원 조회.
+		try {
+			searchUserSacRes = this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		} catch (Exception e) {
+			searchUserSacRes = null;
+		}
+
 		// 응답셋팅.
 		for (ProdNoti res : getMyProdNotiList) {
-			Feedback feedback = this.setFeedback(res, listMyFeedbackSacReq.getProdType(), detailInformationSacRes);
+			Feedback feedback = this.setFeedback(res, listMyFeedbackSacReq.getProdType(), detailInformationSacRes,
+					searchUserSacRes);
 			FeedbackMy feedbackMy = new FeedbackMy();
 			BeanUtils.copyProperties(feedback, feedbackMy);
 			notiMyList.add(feedbackMy);
@@ -731,7 +817,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 	 * @param prodNoti
 	 * @return
 	 */
-	private Feedback setFeedback(ProdNoti prodNoti, String prodType, DetailInformationSacRes detailInformationSacRes) {
+	private Feedback setFeedback(ProdNoti prodNoti, String prodType, DetailInformationSacRes detailInformationSacRes,
+			SearchUserSacRes searchUserSacRes) {
 		Feedback feedback = new Feedback();
 		feedback.setNotiSeq(prodNoti.getNotiSeq());
 		feedback.setUserKey(prodNoti.getMbrNo());
@@ -740,30 +827,44 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setNotiDscr(prodNoti.getNotiDscr());
 		feedback.setNotiScore(String.valueOf(prodNoti.getNotiScore()));
 
-		// ?? 회원 SCI 연동후, 해당 ID가 기기사용자일경우, mdn을 별표처리한다. 그외는 regId를 셋팅한다.
-		// SearchUserSacRes searchUserSacRes = null;
-		// try {
-		// searchUserSacRes = this.feedbackRepository.searchUserByUserKey(prodNoti.getMbrNo());
-		// } catch (Exception e) {
-		// searchUserSacRes = null;
-		// }
-		// String regId = "";
-		String regId = "010***1234";
-		// if (searchUserSacRes != null
-		// && StringUtils.equals(searchUserSacRes.getUserType(), MemberConstants.USER_TYPE_MOBILE)
-		// && StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
-		// String telNo = prodNoti.getMbrTelno();
-		// StringBuffer stringBuffer = new StringBuffer();
-		// stringBuffer.append(StringUtils.substring(telNo, 0, 3));
-		// if (telNo.length() < 11) {
-		// stringBuffer.append("***");
-		// } else {
-		// stringBuffer.append("****");
-		// }
-		// regId = stringBuffer.append(StringUtils.substring(telNo, telNo.length() - 4, telNo.length())).toString();
-		// } else {
-		// regId = prodNoti.getRegId();
-		// }
+		String regId = "";
+		if (searchUserSacRes != null) {
+			if (!CollectionUtils.isEmpty(searchUserSacRes.getUserInfo())) {
+				UserInfoSac userInfoSac = searchUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
+				if (userInfoSac != null) {
+					if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)
+							&& StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
+						String telNo = "";
+						if (prodNoti.getNotiSeq() != null) {
+							telNo = prodNoti.getMbrTelno();
+						} else {
+							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) {
+								telNo = userInfoSac.getDeviceIdList().get(0);
+							} else {
+								telNo = userInfoSac.getUserId();
+							}
+						}
+						StringBuffer stringBuffer = new StringBuffer();
+						stringBuffer.append(StringUtils.substring(telNo, 0, 3));
+						if (telNo.length() < 11) {
+							stringBuffer.append("***");
+						} else {
+							stringBuffer.append("****");
+						}
+						regId = stringBuffer.append(StringUtils.substring(telNo, telNo.length() - 4, telNo.length()))
+								.toString();
+					} else {
+						regId = userInfoSac.getUserId();
+					}
+				} else {
+					regId = prodNoti.getRegId();
+				}
+			} else {
+				regId = prodNoti.getRegId();
+			}
+		} else {
+			regId = prodNoti.getRegId();
+		}
 		feedback.setRegId(regId);
 		feedback.setRegDt(prodNoti.getRegDt());
 		feedback.setSellerRespTitle(prodNoti.getSellerRespTitle());
@@ -784,37 +885,19 @@ public class FeedbackServiceImpl implements FeedbackService {
 		if (StringUtils.isNotBlank(prodNoti.getSellerMbrNo())) {
 			if (detailInformationSacRes != null
 					&& !CollectionUtils.isEmpty(detailInformationSacRes.getSellerMbrListMap())) {
-				LOGGER.debug("feedback sellerMap : {}",
-						detailInformationSacRes.getSellerMbrListMap().get(prodNoti.getSellerMbrNo()));
-				// Map sellerMap = (Map) detailInformationSacRes.getSellerMbrListMap().get(prodNoti.getSellerMbrNo());
-				// SellerMbrSac sellerMbrSac = (SellerMbrSac) detailInformationSacRes.getSellerMbrListMap().get(
-				// prodNoti.getSellerMbrNo());
-				// if (!CollectionUtils.isEmpty(sellerMap)) {
-				// sellerNickName = (String) sellerMap.get("sellerNickName");
-				// sellerCompany = (String) sellerMap.get("sellerCompany");
-				// sellerClass = (String) sellerMap.get("sellerClass");
-				// charger = (String) sellerMap.get("charger");
-				// }
+
+				List<SellerMbrSac> sellerMbarSacList = detailInformationSacRes.getSellerMbrListMap().get(
+						prodNoti.getSellerMbrNo());
+
+				if (!CollectionUtils.isEmpty(sellerMbarSacList)) {
+					SellerMbrSac sellerMbrSac = sellerMbarSacList.get(0);
+					sellerNickName = sellerMbrSac.getSellerNickName();
+					sellerCompany = sellerMbrSac.getSellerCompany();
+					sellerClass = sellerMbrSac.getSellerClass();
+					charger = sellerMbrSac.getCharger();
+				}
 
 			}
-
-			// DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-			// detailInformationSacReq.setSellerKey(prodNoti.getSellerMbrNo());
-			// DetailInformationSacRes detailInformationSacRes = null;
-			// try {
-			// detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
-			// } catch (Exception e) {
-			// // 개발자 정보조회는 Exception 발생할 경우는 Null로 전환
-			// detailInformationSacRes = null;
-			// }
-			// if (detailInformationSacRes != null && !CollectionUtils.isEmpty(detailInformationSacRes.getSellerMbr()))
-			// {
-			// SellerMbrSac sellerMbrSac = detailInformationSacRes.getSellerMbr().get(0);
-			// sellerNickName = sellerMbrSac.getSellerNickName();
-			// sellerCompany = sellerMbrSac.getSellerCompany();
-			// sellerClass = sellerMbrSac.getSellerClass();
-			// charger = sellerMbrSac.getCharger();
-			// }
 		}
 		// 테스트 해보기.
 
@@ -836,8 +919,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 				} else if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_LEGAL_BUSINESS)) {
 					nickNm = sellerCompany;
 					// 기타 추가 될 사항있음으로 기본으로 회사명을 노출
-				} else {
-					nickNm = sellerCompany;
 				}
 			}
 		}
