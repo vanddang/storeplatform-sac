@@ -128,12 +128,19 @@ public class IdpServiceImpl implements IdpService {
 		String imIntSvcNo = ""; // 통합서비스번호
 		String userID = ""; // 사용자 ID
 		String ocbJoinCodeYn = ""; // 통합포인트 가입여부
+		String joinSstCode = ""; // 가입서비스 사이트 코드
+		String joinDate = ""; // 가입일자 (ONEID)
+		String joinTime = ""; // 가입시간 (ONEID)
 
 		tenantID = map.get("tenantID").toString();
 		systemID = map.get("systemID").toString();
 		imIntSvcNo = map.get("im_int_svc_no").toString();
 		userID = map.get("user_id").toString();
 		ocbJoinCodeYn = map.get("ocb_join_code").toString();
+		joinSstCode = map.get("join_sst_code").toString();
+		joinDate = map.get("join_date").toString();
+		joinTime = map.get("join_time").toString();
+
 		// LOGGER.debug("JOIN_SST_LIST START");
 
 		String joinSiteTotalList = map.get("join_sst_list").toString(); // 이용동의사이트정보
@@ -327,6 +334,8 @@ public class IdpServiceImpl implements IdpService {
 			mbrOneID.setUserID(userID); // userID
 			mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
 			mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
+			mbrOneID.setIntgSiteCode(joinSstCode); // 가입 서비스 사이트 코드
+			mbrOneID.setEntryDate(joinDate + joinTime); // 가입일시
 
 			if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
 				mbrOneID.setIsCi("Y");
@@ -449,6 +458,8 @@ public class IdpServiceImpl implements IdpService {
 				mbrOneID.setUserID(userID); // 사용자 ID 셋팅
 				mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
 				mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
+				mbrOneID.setIntgSiteCode(joinSstCode); // 가입 서비스 사이트 코드
+				mbrOneID.setEntryDate(joinDate + joinTime); // 가입일시
 
 				if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
 					mbrOneID.setIsCi("Y");
@@ -3027,7 +3038,11 @@ public class IdpServiceImpl implements IdpService {
 			if (searchUserResponse != null) {
 				UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 				updateUserRequest.setCommonRequest(commonRequest);
-				updateUserRequest.setMbrAuth(searchUserResponse.getMbrAuth());
+				if (searchUserResponse.getMbrAuth() != null) {// 실명인증 정보가 있어야 셋팅
+					if (searchUserResponse.getMbrAuth().getIsRealName().equals(MemberConstants.USE_Y)) {
+						updateUserRequest.setMbrAuth(searchUserResponse.getMbrAuth());//
+					}
+				}
 				UserMbr userMbr = searchUserResponse.getUserMbr();
 				userMbr.setImSvcNo(imIntSvcNo); // 통합서비스 번호 M
 				userMbr.setUserID(userID); // mbrID M
@@ -3171,12 +3186,19 @@ public class IdpServiceImpl implements IdpService {
 		String userID = ""; // 사용자 ID
 		String oldID = "";
 		String ocbJoinCodeYn = ""; // 통합포인트 가입여부
+		String joinSstCode = ""; // 가입서비스 사이트 코드
+		String joinDate = ""; // 가입일자 (ONEID)
+		String joinTime = ""; // 가입시간 (ONEID)
 
 		tenantID = map.get("tenantID").toString();
 		systemID = map.get("systemID").toString();
 		imIntSvcNo = map.get("im_int_svc_no").toString();
 		userID = map.get("user_id").toString();
 		ocbJoinCodeYn = map.get("ocb_join_code").toString();
+		joinSstCode = map.get("join_sst_code").toString();
+		joinDate = map.get("join_date").toString();
+		joinTime = map.get("join_time").toString();
+
 		boolean siteCodeCheck = false; // 이용동의 사이트중 tstore가 있는지 없는지 체크하기 위한 boolean 변수
 		ImResult imResult = new ImResult();
 		imResult.setCmd("rXUpdateAgreeUserIDP");
@@ -3431,6 +3453,8 @@ public class IdpServiceImpl implements IdpService {
 					mbrOneID.setUserID(userID); // userID
 					mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
 					mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
+					mbrOneID.setIntgSiteCode(joinSstCode); // 가입 서비스 사이트 코드
+					mbrOneID.setEntryDate(joinDate + joinTime); // 가입일시
 
 					if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
 						mbrOneID.setIsCi("Y");
@@ -3570,6 +3594,8 @@ public class IdpServiceImpl implements IdpService {
 					mbrOneID.setUserID(userID); // 사용자 ID 셋팅
 					mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
 					mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
+					mbrOneID.setIntgSiteCode(joinSstCode); // 가입 서비스 사이트 코드
+					mbrOneID.setEntryDate(joinDate + joinTime); // 가입일시
 
 					if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
 						mbrOneID.setIsCi("Y");
