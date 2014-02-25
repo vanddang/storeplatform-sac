@@ -4,102 +4,104 @@
 
 	<!-- UA 코드 정보 조회 -->
 	<select id="getUaCode" parameterType="String" resultType="String">
-		/* MiscellaneousMapper.xml, getUaCode, SAC : 김다슬 , 2014-01-09 */
-		SELECT
-		  UA_CD
-		FROM
-		  TB_CM_DEVICE
-		WHERE
-		  DEVICE_MODEL_CD = #{deviceModelNo}
+		SELECT  /* MiscellaneousMapper.xml, getUaCode, SAC : 김다슬 , 2014-01-09 */
+		        UA_CD
+		  FROM  TB_CM_DEVICE
+		 WHERE  DEVICE_MODEL_CD = #{deviceModelNo}
 	</select>
 	
 	<!-- 휴대폰 SMS 인증 코드 및 Signature 일치 여부 및 인증코드 만료시간 확인 -->
 	<select id="searchPhoneAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
-       /* MiscellaneousMapper.xml, searchPhoneAuthInfo, SAC : 김다슬 , 2014-01-16 */
-       SELECT 
-           AUTH_SEQ
-           ,AUTH_SIGN
-           ,AUTH_VALUE
-           <if test="timeToLive!=null">
-           ,TO_CHAR(AUTH_VALUE_CREATE_DT - (SYSDATE - (#{timeToLive}/24/60))) AS CURR_DT  /* 인증코드 생성일자-(현재-생존시간) */
-           </if>
-           ,TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT 
-           ,AUTH_COMPT_YN
-       FROM
-           TB_CM_SVC_AUTH
-       WHERE
-           AUTH_TYPE_CD = #{authTypeCd}
-       AND AUTH_SIGN = #{authSign}
-       AND AUTH_VALUE = #{authValue}
+       SELECT  /* MiscellaneousMapper.xml, searchPhoneAuthInfo, SAC : 김다슬 , 2014-01-16 */
+               AUTH_SEQ
+             , AUTH_SIGN
+             , AUTH_VALUE
+               <if test="timeToLive!=null">
+             , TO_CHAR(AUTH_VALUE_CREATE_DT - (SYSDATE - (#{timeToLive}/24/60))) AS CURR_DT  /* 인증코드 생성일자-(현재-생존시간) */
+               </if>
+             , TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT 
+             , AUTH_COMPT_YN
+         FROM  TB_CM_SVC_AUTH
+        WHERE  AUTH_TYPE_CD = #{authTypeCd}
+          AND  AUTH_SIGN = #{authSign}
+          AND  AUTH_VALUE = #{authValue}
     </select>
 	
 	<!--  휴대폰 SMS & 이메일 인증 여부 업데이트(인증성공) -->
     <update id="updateServiceAuthYn" parameterType="String">
     /* MiscellaneousMapper.xml, updateServiceAuthYn, SAC : 김다슬 , 2014-01-16 */
-    UPDATE 
-        TB_CM_SVC_AUTH
-    SET
-       AUTH_COMPT_YN = 'Y'
-       ,UPD_ID = 'admin'
-       ,UPD_DT = SYSDATE
-    WHERE 
-       AUTH_SEQ = #{authSeq}    
+    UPDATE  TB_CM_SVC_AUTH
+       SET  AUTH_COMPT_YN = 'Y'
+          , UPD_ID = 'admin'
+          , UPD_DT = SYSDATE
+     WHERE  AUTH_SEQ = #{authSeq}    
     </update>
     
     <!-- 휴대폰 SMS & 이메일 인증 코드 정보 저장 -->
     <insert id="createServiceAuthCode" parameterType="ServiceAuth">
-        /* MiscellaneousMapper.xml, createServiceAuthCode, SAC : 김다슬 , 2014-01-21 */
-        INSERT INTO
-            TB_CM_SVC_AUTH(
-                AUTH_SEQ
-                <if test="mbrNo !=null">
-                ,MBR_NO
-                </if>
-                <if test="tenantId !=null">
-                ,TENANT_ID
-                </if>
-                ,AUTH_TYPE_CD  /* 인증 타입 (CM010901:SMS, CM010902:Email) */
-                <if test="authSign !=null">
-                ,AUTH_SIGN  /* 인증 Signature */
-                </if>
-                ,AUTH_VALUE  /* 인증 코드 */
-                <if test="authEmail !=null">
-                ,AUTH_EMAIL  /* Email 인증일 경우 수신자 Email 주소 포함 */
-                </if>
-                ,AUTH_VALUE_CREATE_DT  /* 인증 코드 생성 일자 */
-                ,AUTH_COMPT_YN  /* 인증 여부 - 초기화 */
-                ,REG_ID
-                ,REG_DT
-                ,UPD_ID
-                ,UPD_DT
-            )
-            VALUES(
-               SQ_CM_SVC_AUTH.NEXTVAL
-               <if test="mbrNo !=null">
-               ,#{mbrNo}
-               </if>
-               <if test="tenantId !=null">
-               ,#{tenantId}
-               </if>
-               ,#{authTypeCd}
-               <if test="authSign !=null">
-               ,#{authSign}
-               </if>
-               ,#{authValue}
-               <if test="authEmail !=null">
-               ,#{authEmail}
-               </if>
-               ,SYSDATE
-               ,'N'
-               ,'admin'
-               ,SYSDATE
-               ,'admin'
-               ,SYSDATE
-            )
+    /* MiscellaneousMapper.xml, createServiceAuthCode, SAC : 김다슬 , 2014-01-21 */
+    INSERT INTO TB_CM_SVC_AUTH  
+              (
+                 AUTH_SEQ
+                 <if test="mbrNo !=null">
+               , MBR_NO
+                 </if>
+                 <if test="tenantId !=null">
+               , TENANT_ID
+                 </if>
+               , AUTH_TYPE_CD  /* 인증 타입 (CM010901:SMS, CM010902:Email) */
+                 <if test="authSign !=null">
+               , AUTH_SIGN  /* 인증 Signature */
+                 </if>
+               , AUTH_VALUE  /* 인증 코드 */
+                 <if test="authEmail !=null">
+               , AUTH_EMAIL  /* Email 인증일 경우 수신자 Email 주소 포함 */
+                 </if>
+               , AUTH_VALUE_CREATE_DT  /* 인증 코드 생성 일자 */
+               , AUTH_COMPT_YN  /* 인증 여부 - 초기화 */
+               , REG_ID
+               , REG_DT
+               , UPD_ID
+               , UPD_DT
+              )
+        VALUES(
+                 SQ_CM_SVC_AUTH.NEXTVAL
+                 <if test="mbrNo !=null">
+               , #{mbrNo}
+                 </if>
+                 <if test="tenantId !=null">
+               , #{tenantId}
+                 </if>
+               , #{authTypeCd}
+                 <if test="authSign !=null">
+               , #{authSign}
+                 </if>
+               , #{authValue}
+                 <if test="authEmail !=null">
+               , #{authEmail}
+                 </if>
+               , SYSDATE
+               , 'N'
+               , 'admin'
+               , SYSDATE
+               , 'admin'
+               , SYSDATE
+              )
     </insert>
     
     
     <!-- 이메일 인증 여부 확인 (기존 인증회원 여부 체크)-->
+    <select id="searchEmailAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
+    SELECT  /* MiscellaneousMapper.xml, searchEmailAuthYn, SAC : 김다슬 , 2014-01-23 */ 
+            AUTH_SEQ
+          , AUTH_VALUE
+      FROM  TB_CM_SVC_AUTH
+     WHERE  MBR_NO = #{mbrNo} 
+       AND  AUTH_EMAIL = #{authEmail}
+       AND  AUTH_COMPT_YN = 'N'
+    </select>
+    
+     <!-- 이메일 인증 여부 확인 (기존 인증회원 여부 체크)삭제 예정-->
     <select id="searchEmailAuthYnList" parameterType="ServiceAuth" resultType="ServiceAuth">
     /* MiscellaneousMapper.xml, searchEmailAuthYnList, SAC : 김다슬 , 2014-01-23 */
     SELECT 
@@ -112,23 +114,30 @@
     AND AUTH_EMAIL = #{authEmail}
     </select>
     
+    <!-- 기존 이메일 인증코드 인증만료 시간 연장 -->
+    <update id="updateServiceAuthTime" parameterType="String">
+    /* MiscellaneousMapper.xml, updateServiceAuthTime, SAC : 김다슬 , 2014-02-25 */
+    UPDATE  TB_CM_SVC_AUTH
+       SET  REG_DT = SYSDATE
+          , UPD_ID = 'admin'
+          , UPD_DT = SYSDATE
+     WHERE  AUTH_SEQ = #{authSeq}    
+    </update>
+    
     <!-- 이메일 인증코드 정보 확인 -->
     <select id="searchEmailAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
-    /* MiscellaneousMapper.xml, searchEmailAuthInfo, SAC : 김다슬 , 2014-01-23 */
-    SELECT 
-        AUTH_SEQ
-        ,MBR_NO
-        ,AUTH_EMAIL
-        <if test="timeToLive!=null">
-        ,TO_CHAR(AUTH_VALUE_CREATE_DT -(SYSDATE -#{timeToLive})) AS CURR_DT
-        </if>
-        ,TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT
-        ,AUTH_COMPT_YN
-    FROM 
-        TB_CM_SVC_AUTH
-    WHERE
-        AUTH_TYPE_CD = 'CM010902'
-    AND AUTH_VALUE = #{authValue}
+    SELECT  /* MiscellaneousMapper.xml, searchEmailAuthInfo, SAC : 김다슬 , 2014-01-23 */
+            AUTH_SEQ
+          , MBR_NO
+          , AUTH_EMAIL
+            <if test="timeToLive!=null">
+          , TO_CHAR(AUTH_VALUE_CREATE_DT -(SYSDATE -#{timeToLive})) AS CURR_DT
+            </if>
+          , TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT
+          , AUTH_COMPT_YN
+      FROM  TB_CM_SVC_AUTH
+     WHERE  AUTH_TYPE_CD = 'CM010902'
+       AND  AUTH_VALUE = #{authValue}
     </select>
     
     

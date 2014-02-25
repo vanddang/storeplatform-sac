@@ -442,32 +442,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		serviceAuthReq.setAuthEmail(request.getUserEmail());
 		serviceAuthReq.setMbrNo(request.getUserKey());
 
-		/** 1. 기존 인증코드 발급 여부 및 인증 여부 확인 */
-		List<ServiceAuth> serviceAuthList = this.commonDao.queryForList("Miscellaneous.searchEmailAuthYnList",
-				serviceAuthReq, ServiceAuth.class);
+		// 1. 기존 인증코드 발급 여부 및 인증 여부 확인
+		ServiceAuth authYnInfo = this.commonDao.queryForObject("Miscellaneous.searchEmailAuthYn", serviceAuthReq,
+				ServiceAuth.class);
 
-		String isAuthEmail = "Y";
-		String authCode = "";
-		if (serviceAuthList != null) {
-			for (int i = 0; i < serviceAuthList.size(); i++) {
-				if (serviceAuthList.get(i).getAuthComptYn().equals("N")) {
-					isAuthEmail = "N";
-					authCode = serviceAuthList.get(i).getAuthValue();
-				}
-			}
-		}
+		String authCode = null;
+		if (authYnInfo == null || "N".equals(authYnInfo.getAuthComptYn())) {
 
-		LOGGER.info("## 인증코드 신규 발급 여부 : {}", isAuthEmail);
-
-		if (isAuthEmail.equals("N")) { // 기존 인증코드 발급하고 인증하지 않은 경우.
-			LOGGER.info("이미 발급된 회원 입니다. 동일 인증코드 전달.");
-			LOGGER.info("## authCode : {}", authCode);
-		} else if (isAuthEmail.equals("Y") || serviceAuthList == null) { // 신규 인증 - NULL 또는 기존에 인증했으나 무효화된 값들을 가지고 있는경우.
-			/** 2. 이메일 인증 코드 생성 - GUID 수준의 난수 */
+			// 2. 이메일 인증 코드 생성 - GUID 수준의 난수
 			authCode = UUID.randomUUID().toString().replace("-", "");
 			LOGGER.debug("## authCode : {}", authCode);
 
-			/** 3. DB에 저장(TB_CM_SVC_AUTH) - 인증서비스 코드, 인증코드, 회원Key, 인증 Email 주소 */
+			// 3. DB에 저장(TB_CM_SVC_AUTH) - 인증서비스 코드, 인증코드, 회원Key, 인증 Email 주소
 			ServiceAuth serviceAuthInfo = new ServiceAuth();
 			serviceAuthInfo.setTenantId(tenantId);
 			serviceAuthInfo.setAuthTypeCd("CM010902");
@@ -478,10 +464,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			LOGGER.info("## TB에 저장할 값들 serviceAuthInfo : {}", serviceAuthInfo);
 			this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
+		} else {
+			authCode = authYnInfo.getAuthValue();
+			// 미인증 상태의 인증코드 존재.
+			LOGGER.info("이미 발급된 회원 입니다. 기존 발급된 인증코드 전달. authCode : {}", authCode);
+			// 인증 시간이 만료된 코드도 있으므로, 인증코드 생성시간 업데이트.
+			this.commonDao.update("Miscellaneous.updateServiceAuthTime", authYnInfo.getAuthSeq());
 		}
 
-		/** 4. 인증코드 Response */
-
+		// 4. 인증코드 Response
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
 		response.setEmailAuthCode(authCode);
 		LOGGER.info("## 이메일 인증 코드 발급 완료. response : {}", response.getEmailAuthCode());
