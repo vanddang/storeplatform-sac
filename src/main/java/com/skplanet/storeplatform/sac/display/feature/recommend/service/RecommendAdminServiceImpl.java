@@ -79,15 +79,6 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
 		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
-		if (StringUtils.isEmpty(requestVO.getTenantId()))
-			requestVO.setTenantId("S01");
-		if (StringUtils.isEmpty(requestVO.getDeviceModelCd()))
-			requestVO.setDeviceModelCd("SHW-M180L");
-		if (StringUtils.isEmpty(requestVO.getListId()))
-			requestVO.setListId("ADM000000013");
-		if (StringUtils.isEmpty(requestVO.getTopMenuId()))
-			requestVO.setTopMenuId("DP01");
-
 		// tenantId 필수 파라미터 체크
 		if (StringUtils.isEmpty(requestVO.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
