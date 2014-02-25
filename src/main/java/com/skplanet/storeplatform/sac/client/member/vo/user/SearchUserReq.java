@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -22,7 +21,6 @@ public class SearchUserReq extends CommonInfo {
 	/**
 	 * 회원 키.
 	 */
-	@NotBlank
 	private List<String> userKeyList;
 
 	/**
