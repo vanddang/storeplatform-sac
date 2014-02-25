@@ -14,6 +14,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SellerMbr extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	private String appStat;
+
 	/** Tenant id. */
 	private String tenantID;
 
@@ -236,6 +238,14 @@ public class SellerMbr extends CommonInfo {
 
 	/** 담당자 무선전화. */
 	private String chargerPhone;
+
+	public String getAppStat() {
+		return this.appStat;
+	}
+
+	public void setAppStat(String appStat) {
+		this.appStat = appStat;
+	}
 
 	public String getChargerPhone() {
 		return this.chargerPhone;
