@@ -87,7 +87,7 @@ public class UserExtraInfoTest {
 	 * 
 	 */
 	@Test
-	public void c_updateUserExtraInfo() {
+	public void b_updateUserExtraInfo() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/modifyAdditionalInformation/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
@@ -135,7 +135,7 @@ public class UserExtraInfoTest {
 	 *             Exception
 	 */
 	@Test
-	public void b_removeUserExtraInfo() {
+	public void c_removeUserExtraInfo() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/removeAdditionalInformation/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {

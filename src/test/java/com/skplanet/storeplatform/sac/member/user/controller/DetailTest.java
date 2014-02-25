@@ -3,9 +3,12 @@ package com.skplanet.storeplatform.sac.member.user.controller;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -34,6 +36,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class DetailTest {
 	private static final Logger logger = LoggerFactory.getLogger(DetailTest.class);
@@ -61,7 +64,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailUserKey() {
+	public void TEST_A_회원정보조회_UserKey() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
@@ -75,7 +78,7 @@ public class DetailTest {
 				searchExtent.setMbrPnshInfoYn("Y");
 				searchExtent.setMbrLglAgentInfoYn("Y");
 
-				req.setUserKey("IW1023284651220101007215215");
+				req.setUserKey("IM142100008461807201305271845");
 				req.setSearchExtent(searchExtent);
 
 				logger.debug("request param : {}", req.toString());
@@ -100,7 +103,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailUserId() {
+	public void TEST_B_회원정보조회_UserId() {
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
 			public Object requestBody() {
@@ -113,7 +116,7 @@ public class DetailTest {
 				searchExtent.setMbrPnshInfoYn("Y");
 				searchExtent.setMbrLglAgentInfoYn("Y");
 
-				req.setUserId("shop_3292");
+				req.setUserId("sacsimpleuser020694");
 				req.setSearchExtent(searchExtent);
 
 				logger.debug("request param : {}", req.toString());
@@ -137,7 +140,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailDeviceId() {
+	public void TEST_C_회원정보조회_DeviceId() {
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
 			public Object requestBody() {
@@ -150,7 +153,7 @@ public class DetailTest {
 				searchExtent.setMbrPnshInfoYn("Y");
 				searchExtent.setMbrLglAgentInfoYn("Y");
 
-				req.setDeviceId("01094993599");
+				req.setDeviceId("01714020605");
 				req.setSearchExtent(searchExtent);
 
 				logger.debug("request param : {}", req.toString());
@@ -175,7 +178,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailDeviceKey() {
+	public void TEST_D_회원정보조회_DeviceKey() {
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
 			public Object requestBody() {
@@ -188,7 +191,7 @@ public class DetailTest {
 				searchExtent.setMbrPnshInfoYn("Y");
 				searchExtent.setMbrLglAgentInfoYn("Y");
 
-				req.setDeviceKey("DE201401221858516600000160");
+				req.setDeviceKey("DE201402120522137350001556");
 				req.setSearchExtent(searchExtent);
 
 				logger.debug("request param : {}", req.toString());
@@ -211,24 +214,39 @@ public class DetailTest {
 	 * 회원 정보 조회 Parameter : userKey
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
-	public void detailUserKeyException() {
+	@Test
+	public void TEST_E_회원정보조회_UserKeyNon() {
+		try {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				DetailReq req = new DetailReq();
-				req.setUserKey("");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(DetailRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				DetailRes res = (DetailRes) result;
+			new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+				@Override
+				public Object requestBody() {
+					DetailReq req = new DetailReq();
+					req.setUserKey("");
+					logger.debug("request param : {}", req.toString());
+
+					try {
+						ObjectMapper objMapper = new ObjectMapper();
+						logger.info("Request : {}", objMapper.writeValueAsString(req));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					return req;
+				}
+			}).success(DetailRes.class, new SuccessCallback() {
+				@Override
+				public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+					DetailRes res = (DetailRes) result;
+					logger.info("response param : {}", res.toString());
+
+				}
+			}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -237,22 +255,28 @@ public class DetailTest {
 	 * 회원 정보 조회 Parameter : userId
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
-	public void detailUserIdException() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				DetailReq req = new DetailReq();
-				req.setUserId("");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(DetailRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				DetailRes res = (DetailRes) result;
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	@Test
+	public void TEST_F_회원정보조회_UserIdNon() {
+		try {
+
+			new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+				@Override
+				public Object requestBody() {
+					DetailReq req = new DetailReq();
+					req.setUserId("");
+					logger.debug("request param : {}", req.toString());
+					return req;
+				}
+			}).success(DetailRes.class, new SuccessCallback() {
+				@Override
+				public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+					DetailRes res = (DetailRes) result;
+					logger.info("response param : {}", res.toString());
+				}
+			}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -260,22 +284,28 @@ public class DetailTest {
 	 * 회원 정보 조회 Parameter : deviceId
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
-	public void detailDeviceIdException() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				DetailReq req = new DetailReq();
-				req.setDeviceId("");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(DetailRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				DetailRes res = (DetailRes) result;
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	@Test
+	public void TEST_G_회원정보조회_DeviceIdNon() {
+		try {
+			new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+				@Override
+				public Object requestBody() {
+					DetailReq req = new DetailReq();
+					req.setDeviceId("");
+					logger.debug("request param : {}", req.toString());
+					return req;
+				}
+			}).success(DetailRes.class, new SuccessCallback() {
+				@Override
+				public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+					DetailRes res = (DetailRes) result;
+					logger.info("response param : {}", res.toString());
+				}
+			}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -284,22 +314,28 @@ public class DetailTest {
 	 * 회원 정보 조회 Parameter : deviceKey
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
-	public void detailDeviceKeyException() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				DetailReq req = new DetailReq();
-				req.setDeviceKey("");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(DetailRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				DetailRes res = (DetailRes) result;
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	@Test
+	public void TEST_H_회원정보조회_DeviceKeyNon() {
+		try {
+
+			new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+				@Override
+				public Object requestBody() {
+					DetailReq req = new DetailReq();
+					req.setDeviceKey("");
+					logger.debug("request param : {}", req.toString());
+					return req;
+				}
+			}).success(DetailRes.class, new SuccessCallback() {
+				@Override
+				public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+					DetailRes res = (DetailRes) result;
+					logger.info("response param : {}", res.toString());
+				}
+			}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// ======================================= 정보 조회 범위별 ========================
@@ -310,7 +346,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailUserKeyExceptAll() {
+	public void TEST_I_회원정보조회_기본조회() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
@@ -349,7 +385,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailUserKeyExceptUserInfo() {
+	public void TEST_J_회원정보조회_사용자정보_제외() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
@@ -388,7 +424,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailUserKeyExceptDeviceInfo() {
+	public void TEST_K_회원정보조회_디바이스정보_제외() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
@@ -427,7 +463,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailUserKeyExceptAgreeInfo() {
+	public void TEST_L_회원정보조회_약관동의_제외() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
@@ -466,7 +502,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailUserKeyExceptMbrLglInfo() {
+	public void TEST_M_회원정보조회_법정대리인_제외() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
@@ -505,7 +541,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailUserKeyExceptMbrPnshInfo() {
+	public void TEST_N_회원정보조회_징계정보_제외() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
@@ -544,7 +580,7 @@ public class DetailTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailUserKeyExceptMbrAuthInfo() {
+	public void TEST_O_회원정보조회_실명인증_제외() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detail/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
