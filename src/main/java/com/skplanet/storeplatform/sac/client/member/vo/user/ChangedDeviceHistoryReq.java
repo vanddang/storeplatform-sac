@@ -25,7 +25,7 @@ public class ChangedDeviceHistoryReq extends CommonInfo {
 	private String userKey;
 
 	/**
-	 * 기기 ID
+	 * 기기 ID.
 	 */
 	private String deviceId;
 

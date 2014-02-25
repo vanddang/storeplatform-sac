@@ -18,7 +18,7 @@ public class ChangedDeviceHistoryRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 기기 변경 여부 (Y/N)
+	 * 기기 변경 여부. (Y/N)
 	 */
 	private String isChanged;
 
