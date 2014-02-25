@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.display.shopping.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -1737,19 +1736,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 								List<SellerMbr> sellerMbrs = new ArrayList<SellerMbr>();
 
 								if (memberRes != null) {
-									Map sellerMbrListMap = memberRes.getSellerMbrListMap();
-									Iterator<String> keys = sellerMbrListMap.keySet().iterator();
-									distributor = new Distributor();
-									while (keys.hasNext()) {
-										String key = keys.next();
-										sellerMbrs = (List<SellerMbr>) sellerMbrListMap.get(key);
-										for (int ll = 0; ll < sellerMbrs.size(); ll++) {
-											System.out.println("_>>>>" + sellerMbrs.get(ll).getSellerKey());
-
-										}
-										// Map sellerMbrListMap2 = sellerMbrListMap.get(entry);
-
-									}
+									// Map sellerMbrListMap = memberRes.getSellerMbrListMap();
+									// Iterator<String> keys = sellerMbrListMap.keySet().iterator();
+									// distributor = new Distributor();
+									// while (keys.hasNext()) {
+									// String key = keys.next();
+									// sellerMbrs = (List<SellerMbr>) sellerMbrListMap.get(key);
+									// for (int ll = 0; ll < sellerMbrs.size(); ll++) {
+									// System.out.println("_>>>>" + sellerMbrs.get(ll).getSellerKey());
+									//
+									// }
+									// // Map sellerMbrListMap2 = sellerMbrListMap.get(entry);
+									//
+									// }
 									// System.out.println("(String) sellerMbrListMap.get(sellerID)::"
 									// + (String) sellerMbrListMap.get("sellerID"));
 									// distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
