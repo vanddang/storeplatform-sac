@@ -27,14 +27,6 @@ public class SellerMbr extends CommonInfo {
 
 	private String isOfficialAuth;
 
-	public String getIsOfficialAuth() {
-		return this.isOfficialAuth;
-	}
-
-	public void setIsOfficialAuth(String isOfficialAuth) {
-		this.isOfficialAuth = isOfficialAuth;
-	}
-
 	/** 상위 판매자 키. */
 	private String parentSellerKey; // UP_INSD_SELLERMBR_NO 상위 판매자키
 
@@ -248,6 +240,42 @@ public class SellerMbr extends CommonInfo {
 
 	/** 담당자 무선전화. */
 	private String chargerPhone;
+
+	private String sellerBizAddress;
+	private String sellerBizZip;
+	private String sellerBizDetailAddress;
+
+	public String getSellerBizAddress() {
+		return this.sellerBizAddress;
+	}
+
+	public void setSellerBizAddress(String sellerBizAddress) {
+		this.sellerBizAddress = sellerBizAddress;
+	}
+
+	public String getSellerBizZip() {
+		return this.sellerBizZip;
+	}
+
+	public void setSellerBizZip(String sellerBizZip) {
+		this.sellerBizZip = sellerBizZip;
+	}
+
+	public String getSellerBizDetailAddress() {
+		return this.sellerBizDetailAddress;
+	}
+
+	public void setSellerBizDetailAddress(String sellerBizDetailAddress) {
+		this.sellerBizDetailAddress = sellerBizDetailAddress;
+	}
+
+	public String getIsOfficialAuth() {
+		return this.isOfficialAuth;
+	}
+
+	public void setIsOfficialAuth(String isOfficialAuth) {
+		this.isOfficialAuth = isOfficialAuth;
+	}
 
 	public String getAppStat() {
 		return this.appStat;
