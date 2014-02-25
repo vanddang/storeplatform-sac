@@ -21,10 +21,17 @@ public class GetIndividualPolicyRes extends CommonInfo {
 	/** 정책 리스트. */
 	private List<IndividualPolicyInfo> policyList;
 
+	/**
+	 * @return the policyList
+	 */
 	public List<IndividualPolicyInfo> getPolicyList() {
 		return this.policyList;
 	}
 
+	/**
+	 * @param policyList
+	 *            the policyList to set
+	 */
 	public void setPolicyList(List<IndividualPolicyInfo> policyList) {
 		this.policyList = policyList;
 	}

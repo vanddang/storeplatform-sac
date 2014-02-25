@@ -19,10 +19,17 @@ public class CreateRes extends CommonInfo {
 	/** 판매자 회원 정보. */
 	private SellerMbr sellerMbr;
 
+	/**
+	 * @return the sellerMbr
+	 */
 	public SellerMbr getSellerMbr() {
 		return this.sellerMbr;
 	}
 
+	/**
+	 * @param sellerMbr
+	 *            the sellerMbr to set
+	 */
 	public void setSellerMbr(SellerMbr sellerMbr) {
 		this.sellerMbr = sellerMbr;
 	}

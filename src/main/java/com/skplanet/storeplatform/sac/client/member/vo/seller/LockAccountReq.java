@@ -20,10 +20,17 @@ public class LockAccountReq extends CommonInfo {
 	@NotBlank
 	private String sellerId;
 
+	/**
+	 * @return the sellerId
+	 */
 	public String getSellerId() {
 		return this.sellerId;
 	}
 
+	/**
+	 * @param sellerId
+	 *            the sellerId to set
+	 */
 	public void setSellerId(String sellerId) {
 		this.sellerId = sellerId;
 	}

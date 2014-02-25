@@ -32,27 +32,49 @@ public class ModifyEmailSacReq extends CommonInfo {
 	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String newEmailAddress;
 
+	/**
+	 * @return the sessionKey
+	 */
 	public String getSessionKey() {
 		return this.sessionKey;
 	}
 
+	/**
+	 * @param sessionKey
+	 *            the sessionKey to set
+	 */
 	public void setSessionKey(String sessionKey) {
 		this.sessionKey = sessionKey;
 	}
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
+	/**
+	 * @return the newEmailAddress
+	 */
 	public String getNewEmailAddress() {
 		return this.newEmailAddress;
 	}
 
+	/**
+	 * @param newEmailAddress
+	 *            the newEmailAddress to set
+	 */
 	public void setNewEmailAddress(String newEmailAddress) {
 		this.newEmailAddress = newEmailAddress;
 	}
+
 }

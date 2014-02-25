@@ -15,12 +15,20 @@ public class ConfirmRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 판매자 Key. */
 	private String sellerKey;
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}

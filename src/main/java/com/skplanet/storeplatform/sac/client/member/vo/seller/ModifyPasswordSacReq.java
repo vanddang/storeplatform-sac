@@ -29,34 +29,62 @@ public class ModifyPasswordSacReq extends CommonInfo {
 	@NotBlank
 	private String newPW;
 
+	/**
+	 * @return the sessionKey
+	 */
 	public String getSessionKey() {
 		return this.sessionKey;
 	}
 
+	/**
+	 * @param sessionKey
+	 *            the sessionKey to set
+	 */
 	public void setSessionKey(String sessionKey) {
 		this.sessionKey = sessionKey;
 	}
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
+	/**
+	 * @return the oldPW
+	 */
 	public String getOldPW() {
 		return this.oldPW;
 	}
 
+	/**
+	 * @param oldPW
+	 *            the oldPW to set
+	 */
 	public void setOldPW(String oldPW) {
 		this.oldPW = oldPW;
 	}
 
+	/**
+	 * @return the newPW
+	 */
 	public String getNewPW() {
 		return this.newPW;
 	}
 
+	/**
+	 * @param newPW
+	 *            the newPW to set
+	 */
 	public void setNewPW(String newPW) {
 		this.newPW = newPW;
 	}

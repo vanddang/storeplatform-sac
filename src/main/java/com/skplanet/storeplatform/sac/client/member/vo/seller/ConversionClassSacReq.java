@@ -23,20 +23,8 @@ public class ConversionClassSacReq extends CommonInfo {
 	private String sessionKey;
 	/** 판매자 key. */
 	private String sellerKey;
-	// /** 현재 구분코드. */
-	// private String sellerClass;
-	// /** 판매자 분류코드. */
-	// private String sellerCategory;
 	/** 신청 구분코드. */
 	private String sellerClassTo;
-	// /** 판매자 분류코드. */
-	// private String sellerCategoryTo;
-	// /** 판매자 main 상태코드. */
-	// private String sellerMainStatus;
-	// /** 판매자 sub 상태코드. */
-	// private String sellerSubStatus;
-	// /** 판매자 ID. */
-	// private String sellerId;
 	/** 법인등록번호. */
 	private String sellerBizCorpNumber;
 	/** CEO명. */
@@ -132,444 +120,739 @@ public class ConversionClassSacReq extends CommonInfo {
 	/** 서류 리스트. */
 	private List<ExtraDocument> extraDocumentList;
 
-	public List<ExtraDocument> getExtraDocumentList() {
-		return this.extraDocumentList;
-	}
-
-	public void setExtraDocumentList(List<ExtraDocument> extraDocumentList) {
-		this.extraDocumentList = extraDocumentList;
-	}
-
+	/**
+	 * @return the sessionKey
+	 */
 	public String getSessionKey() {
 		return this.sessionKey;
 	}
 
+	/**
+	 * @param sessionKey
+	 *            the sessionKey to set
+	 */
 	public void setSessionKey(String sessionKey) {
 		this.sessionKey = sessionKey;
 	}
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
-	// public String getSellerClass() {
-	// return this.sellerClass;
-	// }
-	//
-	// public void setSellerClass(String sellerClass) {
-	// this.sellerClass = sellerClass;
-	// }
-	//
-	// public String getSellerCategory() {
-	// return this.sellerCategory;
-	// }
-	//
-	// public void setSellerCategory(String sellerCategory) {
-	// this.sellerCategory = sellerCategory;
-	// }
-
+	/**
+	 * @return the sellerClassTo
+	 */
 	public String getSellerClassTo() {
 		return this.sellerClassTo;
 	}
 
+	/**
+	 * @param sellerClassTo
+	 *            the sellerClassTo to set
+	 */
 	public void setSellerClassTo(String sellerClassTo) {
 		this.sellerClassTo = sellerClassTo;
 	}
 
-	// public String getSellerCategoryTo() {
-	// return this.sellerCategoryTo;
-	// }
-	//
-	// public void setSellerCategoryTo(String sellerCategoryTo) {
-	// this.sellerCategoryTo = sellerCategoryTo;
-	// }
-	//
-	// public String getSellerMainStatus() {
-	// return this.sellerMainStatus;
-	// }
-	//
-	// public void setSellerMainStatus(String sellerMainStatus) {
-	// this.sellerMainStatus = sellerMainStatus;
-	// }
-	//
-	// public String getSellerSubStatus() {
-	// return this.sellerSubStatus;
-	// }
-	//
-	// public void setSellerSubStatus(String sellerSubStatus) {
-	// this.sellerSubStatus = sellerSubStatus;
-	// }
-	//
-	// public String getSellerId() {
-	// return this.sellerId;
-	// }
-	//
-	// public void setSellerId(String sellerId) {
-	// this.sellerId = sellerId;
-	// }
-
+	/**
+	 * @return the sellerBizCorpNumber
+	 */
 	public String getSellerBizCorpNumber() {
 		return this.sellerBizCorpNumber;
 	}
 
+	/**
+	 * @param sellerBizCorpNumber
+	 *            the sellerBizCorpNumber to set
+	 */
 	public void setSellerBizCorpNumber(String sellerBizCorpNumber) {
 		this.sellerBizCorpNumber = sellerBizCorpNumber;
 	}
 
+	/**
+	 * @return the ceoName
+	 */
 	public String getCeoName() {
 		return this.ceoName;
 	}
 
+	/**
+	 * @param ceoName
+	 *            the ceoName to set
+	 */
 	public void setCeoName(String ceoName) {
 		this.ceoName = ceoName;
 	}
 
+	/**
+	 * @return the charger
+	 */
 	public String getCharger() {
 		return this.charger;
 	}
 
+	/**
+	 * @param charger
+	 *            the charger to set
+	 */
 	public void setCharger(String charger) {
 		this.charger = charger;
 	}
 
+	/**
+	 * @return the repEmail
+	 */
 	public String getRepEmail() {
 		return this.repEmail;
 	}
 
+	/**
+	 * @param repEmail
+	 *            the repEmail to set
+	 */
 	public void setRepEmail(String repEmail) {
 		this.repEmail = repEmail;
 	}
 
+	/**
+	 * @return the cordedTelephone
+	 */
 	public String getCordedTelephone() {
 		return this.cordedTelephone;
 	}
 
+	/**
+	 * @param cordedTelephone
+	 *            the cordedTelephone to set
+	 */
 	public void setCordedTelephone(String cordedTelephone) {
 		this.cordedTelephone = cordedTelephone;
 	}
 
+	/**
+	 * @return the chargerPhone
+	 */
 	public String getChargerPhone() {
 		return this.chargerPhone;
 	}
 
+	/**
+	 * @param chargerPhone
+	 *            the chargerPhone to set
+	 */
 	public void setChargerPhone(String chargerPhone) {
 		this.chargerPhone = chargerPhone;
 	}
 
+	/**
+	 * @return the isRecvSMS
+	 */
 	public String getIsRecvSMS() {
 		return this.isRecvSMS;
 	}
 
+	/**
+	 * @param isRecvSMS
+	 *            the isRecvSMS to set
+	 */
 	public void setIsRecvSMS(String isRecvSMS) {
 		this.isRecvSMS = isRecvSMS;
 	}
 
+	/**
+	 * @return the isOfficialAuth
+	 */
 	public String getIsOfficialAuth() {
 		return this.isOfficialAuth;
 	}
 
+	/**
+	 * @param isOfficialAuth
+	 *            the isOfficialAuth to set
+	 */
 	public void setIsOfficialAuth(String isOfficialAuth) {
 		this.isOfficialAuth = isOfficialAuth;
 	}
 
+	/**
+	 * @return the bankAccount
+	 */
 	public String getBankAccount() {
 		return this.bankAccount;
 	}
 
+	/**
+	 * @param bankAccount
+	 *            the bankAccount to set
+	 */
 	public void setBankAccount(String bankAccount) {
 		this.bankAccount = bankAccount;
 	}
 
+	/**
+	 * @return the bankAcctName
+	 */
 	public String getBankAcctName() {
 		return this.bankAcctName;
 	}
 
+	/**
+	 * @param bankAcctName
+	 *            the bankAcctName to set
+	 */
 	public void setBankAcctName(String bankAcctName) {
 		this.bankAcctName = bankAcctName;
 	}
 
+	/**
+	 * @return the bankCode
+	 */
 	public String getBankCode() {
 		return this.bankCode;
 	}
 
+	/**
+	 * @param bankCode
+	 *            the bankCode to set
+	 */
 	public void setBankCode(String bankCode) {
 		this.bankCode = bankCode;
 	}
 
+	/**
+	 * @return the isAccountReal
+	 */
 	public String getIsAccountReal() {
 		return this.isAccountReal;
 	}
 
+	/**
+	 * @param isAccountReal
+	 *            the isAccountReal to set
+	 */
 	public void setIsAccountReal(String isAccountReal) {
 		this.isAccountReal = isAccountReal;
 	}
 
+	/**
+	 * @return the sellerCompany
+	 */
 	public String getSellerCompany() {
 		return this.sellerCompany;
 	}
 
+	/**
+	 * @param sellerCompany
+	 *            the sellerCompany to set
+	 */
 	public void setSellerCompany(String sellerCompany) {
 		this.sellerCompany = sellerCompany;
 	}
 
+	/**
+	 * @return the sellerBizNumber
+	 */
 	public String getSellerBizNumber() {
 		return this.sellerBizNumber;
 	}
 
+	/**
+	 * @param sellerBizNumber
+	 *            the sellerBizNumber to set
+	 */
 	public void setSellerBizNumber(String sellerBizNumber) {
 		this.sellerBizNumber = sellerBizNumber;
 	}
 
+	/**
+	 * @return the sellerBizCategory
+	 */
 	public String getSellerBizCategory() {
 		return this.sellerBizCategory;
 	}
 
+	/**
+	 * @param sellerBizCategory
+	 *            the sellerBizCategory to set
+	 */
 	public void setSellerBizCategory(String sellerBizCategory) {
 		this.sellerBizCategory = sellerBizCategory;
 	}
 
+	/**
+	 * @return the sellerBizType
+	 */
 	public String getSellerBizType() {
 		return this.sellerBizType;
 	}
 
+	/**
+	 * @param sellerBizType
+	 *            the sellerBizType to set
+	 */
 	public void setSellerBizType(String sellerBizType) {
 		this.sellerBizType = sellerBizType;
 	}
 
+	/**
+	 * @return the repPhoneArea
+	 */
 	public String getRepPhoneArea() {
 		return this.repPhoneArea;
 	}
 
+	/**
+	 * @param repPhoneArea
+	 *            the repPhoneArea to set
+	 */
 	public void setRepPhoneArea(String repPhoneArea) {
 		this.repPhoneArea = repPhoneArea;
 	}
 
+	/**
+	 * @return the repPhone
+	 */
 	public String getRepPhone() {
 		return this.repPhone;
 	}
 
+	/**
+	 * @param repPhone
+	 *            the repPhone to set
+	 */
 	public void setRepPhone(String repPhone) {
 		this.repPhone = repPhone;
 	}
 
+	/**
+	 * @return the repFaxArea
+	 */
 	public String getRepFaxArea() {
 		return this.repFaxArea;
 	}
 
+	/**
+	 * @param repFaxArea
+	 *            the repFaxArea to set
+	 */
 	public void setRepFaxArea(String repFaxArea) {
 		this.repFaxArea = repFaxArea;
 	}
 
+	/**
+	 * @return the repFax
+	 */
 	public String getRepFax() {
 		return this.repFax;
 	}
 
+	/**
+	 * @param repFax
+	 *            the repFax to set
+	 */
 	public void setRepFax(String repFax) {
 		this.repFax = repFax;
 	}
 
+	/**
+	 * @return the sellerBizZip
+	 */
 	public String getSellerBizZip() {
 		return this.sellerBizZip;
 	}
 
+	/**
+	 * @param sellerBizZip
+	 *            the sellerBizZip to set
+	 */
 	public void setSellerBizZip(String sellerBizZip) {
 		this.sellerBizZip = sellerBizZip;
 	}
 
+	/**
+	 * @return the sellerBizAddress
+	 */
 	public String getSellerBizAddress() {
 		return this.sellerBizAddress;
 	}
 
+	/**
+	 * @param sellerBizAddress
+	 *            the sellerBizAddress to set
+	 */
 	public void setSellerBizAddress(String sellerBizAddress) {
 		this.sellerBizAddress = sellerBizAddress;
 	}
 
+	/**
+	 * @return the sellerBizDetailAddress
+	 */
 	public String getSellerBizDetailAddress() {
 		return this.sellerBizDetailAddress;
 	}
 
+	/**
+	 * @param sellerBizDetailAddress
+	 *            the sellerBizDetailAddress to set
+	 */
 	public void setSellerBizDetailAddress(String sellerBizDetailAddress) {
 		this.sellerBizDetailAddress = sellerBizDetailAddress;
 	}
 
+	/**
+	 * @return the isBizRegistered
+	 */
 	public String getIsBizRegistered() {
 		return this.isBizRegistered;
 	}
 
+	/**
+	 * @param isBizRegistered
+	 *            the isBizRegistered to set
+	 */
 	public void setIsBizRegistered(String isBizRegistered) {
 		this.isBizRegistered = isBizRegistered;
 	}
 
+	/**
+	 * @return the bizRegNumber
+	 */
 	public String getBizRegNumber() {
 		return this.bizRegNumber;
 	}
 
+	/**
+	 * @param bizRegNumber
+	 *            the bizRegNumber to set
+	 */
 	public void setBizRegNumber(String bizRegNumber) {
 		this.bizRegNumber = bizRegNumber;
 	}
 
+	/**
+	 * @return the bizUnregReason
+	 */
 	public String getBizUnregReason() {
 		return this.bizUnregReason;
 	}
 
+	/**
+	 * @param bizUnregReason
+	 *            the bizUnregReason to set
+	 */
 	public void setBizUnregReason(String bizUnregReason) {
 		this.bizUnregReason = bizUnregReason;
 	}
 
+	/**
+	 * @return the sellerTelecom
+	 */
 	public String getSellerTelecom() {
 		return this.sellerTelecom;
 	}
 
+	/**
+	 * @param sellerTelecom
+	 *            the sellerTelecom to set
+	 */
 	public void setSellerTelecom(String sellerTelecom) {
 		this.sellerTelecom = sellerTelecom;
 	}
 
+	/**
+	 * @return the bankName
+	 */
 	public String getBankName() {
 		return this.bankName;
 	}
 
+	/**
+	 * @param bankName
+	 *            the bankName to set
+	 */
 	public void setBankName(String bankName) {
 		this.bankName = bankName;
 	}
 
+	/**
+	 * @return the bankBranchCode
+	 */
 	public String getBankBranchCode() {
 		return this.bankBranchCode;
 	}
 
+	/**
+	 * @param bankBranchCode
+	 *            the bankBranchCode to set
+	 */
 	public void setBankBranchCode(String bankBranchCode) {
 		this.bankBranchCode = bankBranchCode;
 	}
 
+	/**
+	 * @return the bankBranch
+	 */
 	public String getBankBranch() {
 		return this.bankBranch;
 	}
 
+	/**
+	 * @param bankBranch
+	 *            the bankBranch to set
+	 */
 	public void setBankBranch(String bankBranch) {
 		this.bankBranch = bankBranch;
 	}
 
+	/**
+	 * @return the bankAddress
+	 */
 	public String getBankAddress() {
 		return this.bankAddress;
 	}
 
+	/**
+	 * @param bankAddress
+	 *            the bankAddress to set
+	 */
 	public void setBankAddress(String bankAddress) {
 		this.bankAddress = bankAddress;
 	}
 
+	/**
+	 * @return the bankLocation
+	 */
 	public String getBankLocation() {
 		return this.bankLocation;
 	}
 
+	/**
+	 * @param bankLocation
+	 *            the bankLocation to set
+	 */
 	public void setBankLocation(String bankLocation) {
 		this.bankLocation = bankLocation;
 	}
 
+	/**
+	 * @return the swiftCode
+	 */
 	public String getSwiftCode() {
 		return this.swiftCode;
 	}
 
+	/**
+	 * @param swiftCode
+	 *            the swiftCode to set
+	 */
 	public void setSwiftCode(String swiftCode) {
 		this.swiftCode = swiftCode;
 	}
 
+	/**
+	 * @return the ibanCode
+	 */
 	public String getIbanCode() {
 		return this.ibanCode;
 	}
 
+	/**
+	 * @param ibanCode
+	 *            the ibanCode to set
+	 */
 	public void setIbanCode(String ibanCode) {
 		this.ibanCode = ibanCode;
 	}
 
+	/**
+	 * @return the abaCode
+	 */
 	public String getAbaCode() {
 		return this.abaCode;
 	}
 
+	/**
+	 * @param abaCode
+	 *            the abaCode to set
+	 */
 	public void setAbaCode(String abaCode) {
 		this.abaCode = abaCode;
 	}
 
+	/**
+	 * @return the tpinCode
+	 */
 	public String getTpinCode() {
 		return this.tpinCode;
 	}
 
+	/**
+	 * @param tpinCode
+	 *            the tpinCode to set
+	 */
 	public void setTpinCode(String tpinCode) {
 		this.tpinCode = tpinCode;
 	}
 
+	/**
+	 * @return the ceoBirthDay
+	 */
 	public String getCeoBirthDay() {
 		return this.ceoBirthDay;
 	}
 
+	/**
+	 * @param ceoBirthDay
+	 *            the ceoBirthDay to set
+	 */
 	public void setCeoBirthDay(String ceoBirthDay) {
 		this.ceoBirthDay = ceoBirthDay;
 	}
 
+	/**
+	 * @return the sellerLanguage
+	 */
 	public String getSellerLanguage() {
 		return this.sellerLanguage;
 	}
 
+	/**
+	 * @param sellerLanguage
+	 *            the sellerLanguage to set
+	 */
 	public void setSellerLanguage(String sellerLanguage) {
 		this.sellerLanguage = sellerLanguage;
 	}
 
+	/**
+	 * @return the vendorCode
+	 */
 	public String getVendorCode() {
 		return this.vendorCode;
 	}
 
+	/**
+	 * @param vendorCode
+	 *            the vendorCode to set
+	 */
 	public void setVendorCode(String vendorCode) {
 		this.vendorCode = vendorCode;
 	}
 
+	/**
+	 * @return the isBizTaxable
+	 */
 	public String getIsBizTaxable() {
 		return this.isBizTaxable;
 	}
 
+	/**
+	 * @param isBizTaxable
+	 *            the isBizTaxable to set
+	 */
 	public void setIsBizTaxable(String isBizTaxable) {
 		this.isBizTaxable = isBizTaxable;
 	}
 
+	/**
+	 * @return the bizGrade
+	 */
 	public String getBizGrade() {
 		return this.bizGrade;
 	}
 
+	/**
+	 * @param bizGrade
+	 *            the bizGrade to set
+	 */
 	public void setBizGrade(String bizGrade) {
 		this.bizGrade = bizGrade;
 	}
 
+	/**
+	 * @return the isDeductible
+	 */
 	public String getIsDeductible() {
 		return this.isDeductible;
 	}
 
+	/**
+	 * @param isDeductible
+	 *            the isDeductible to set
+	 */
 	public void setIsDeductible(String isDeductible) {
 		this.isDeductible = isDeductible;
 	}
 
+	/**
+	 * @return the marketCode
+	 */
 	public String getMarketCode() {
 		return this.marketCode;
 	}
 
+	/**
+	 * @param marketCode
+	 *            the marketCode to set
+	 */
 	public void setMarketCode(String marketCode) {
 		this.marketCode = marketCode;
 	}
 
+	/**
+	 * @return the marketStatus
+	 */
 	public String getMarketStatus() {
 		return this.marketStatus;
 	}
 
+	/**
+	 * @param marketStatus
+	 *            the marketStatus to set
+	 */
 	public void setMarketStatus(String marketStatus) {
 		this.marketStatus = marketStatus;
 	}
 
+	/**
+	 * @return the accountRealDate
+	 */
 	public String getAccountRealDate() {
 		return this.accountRealDate;
 	}
 
+	/**
+	 * @param accountRealDate
+	 *            the accountRealDate to set
+	 */
 	public void setAccountRealDate(String accountRealDate) {
 		this.accountRealDate = accountRealDate;
+	}
+
+	/**
+	 * @return the extraDocumentList
+	 */
+	public List<ExtraDocument> getExtraDocumentList() {
+		return this.extraDocumentList;
+	}
+
+	/**
+	 * @param extraDocumentList
+	 *            the extraDocumentList to set
+	 */
+	public void setExtraDocumentList(List<ExtraDocument> extraDocumentList) {
+		this.extraDocumentList = extraDocumentList;
 	}
 
 	/**
@@ -592,36 +875,65 @@ public class ConversionClassSacReq extends CommonInfo {
 		@NotBlank
 		public String documentSize;
 
+		/**
+		 * @return the documentCode
+		 */
 		public String getDocumentCode() {
 			return this.documentCode;
 		}
 
+		/**
+		 * @param documentCode
+		 *            the documentCode to set
+		 */
 		public void setDocumentCode(String documentCode) {
 			this.documentCode = documentCode;
 		}
 
+		/**
+		 * @return the documentPath
+		 */
 		public String getDocumentPath() {
 			return this.documentPath;
 		}
 
+		/**
+		 * @param documentPath
+		 *            the documentPath to set
+		 */
 		public void setDocumentPath(String documentPath) {
 			this.documentPath = documentPath;
 		}
 
+		/**
+		 * @return the documentName
+		 */
 		public String getDocumentName() {
 			return this.documentName;
 		}
 
+		/**
+		 * @param documentName
+		 *            the documentName to set
+		 */
 		public void setDocumentName(String documentName) {
 			this.documentName = documentName;
 		}
 
+		/**
+		 * @return the documentSize
+		 */
 		public String getDocumentSize() {
 			return this.documentSize;
 		}
 
+		/**
+		 * @param documentSize
+		 *            the documentSize to set
+		 */
 		public void setDocumentSize(String documentSize) {
 			this.documentSize = documentSize;
 		}
+
 	}
 }

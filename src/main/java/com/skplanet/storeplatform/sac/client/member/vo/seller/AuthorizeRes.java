@@ -19,7 +19,7 @@ public class AuthorizeRes extends CommonInfo {
 	private SellerMbr sellerMbr;
 	/** 로그인 실패 횟수 . */
 	private String loginFailCount;
-	/** 로그인 성공 여부 */
+	/** 로그인 성공 여부. */
 	private String isLoginSuccess;
 	/** 인증키. */
 	private String sessionKey;
@@ -29,69 +29,125 @@ public class AuthorizeRes extends CommonInfo {
 	private String isSubSeller;
 	/** 로그인 상태. */
 	private String loginStatusCode;
-	/** Sub Seller Key */
+	/** Sub Seller Key. */
 	private String subSellerKey;
 
+	/**
+	 * @return the sellerMbr
+	 */
 	public SellerMbr getSellerMbr() {
 		return this.sellerMbr;
 	}
 
+	/**
+	 * @param sellerMbr
+	 *            the sellerMbr to set
+	 */
 	public void setSellerMbr(SellerMbr sellerMbr) {
 		this.sellerMbr = sellerMbr;
 	}
 
+	/**
+	 * @return the loginFailCount
+	 */
 	public String getLoginFailCount() {
 		return this.loginFailCount;
 	}
 
+	/**
+	 * @param loginFailCount
+	 *            the loginFailCount to set
+	 */
 	public void setLoginFailCount(String loginFailCount) {
 		this.loginFailCount = loginFailCount;
 	}
 
+	/**
+	 * @return the isLoginSuccess
+	 */
 	public String getIsLoginSuccess() {
 		return this.isLoginSuccess;
 	}
 
+	/**
+	 * @param isLoginSuccess
+	 *            the isLoginSuccess to set
+	 */
 	public void setIsLoginSuccess(String isLoginSuccess) {
 		this.isLoginSuccess = isLoginSuccess;
 	}
 
+	/**
+	 * @return the sessionKey
+	 */
 	public String getSessionKey() {
 		return this.sessionKey;
 	}
 
+	/**
+	 * @param sessionKey
+	 *            the sessionKey to set
+	 */
 	public void setSessionKey(String sessionKey) {
 		this.sessionKey = sessionKey;
 	}
 
+	/**
+	 * @return the expireDate
+	 */
 	public String getExpireDate() {
 		return this.expireDate;
 	}
 
+	/**
+	 * @param expireDate
+	 *            the expireDate to set
+	 */
 	public void setExpireDate(String expireDate) {
 		this.expireDate = expireDate;
 	}
 
+	/**
+	 * @return the isSubSeller
+	 */
 	public String getIsSubSeller() {
 		return this.isSubSeller;
 	}
 
+	/**
+	 * @param isSubSeller
+	 *            the isSubSeller to set
+	 */
 	public void setIsSubSeller(String isSubSeller) {
 		this.isSubSeller = isSubSeller;
 	}
 
+	/**
+	 * @return the loginStatusCode
+	 */
 	public String getLoginStatusCode() {
 		return this.loginStatusCode;
 	}
 
+	/**
+	 * @param loginStatusCode
+	 *            the loginStatusCode to set
+	 */
 	public void setLoginStatusCode(String loginStatusCode) {
 		this.loginStatusCode = loginStatusCode;
 	}
 
+	/**
+	 * @return the subSellerKey
+	 */
 	public String getSubSellerKey() {
 		return this.subSellerKey;
 	}
 
+	/**
+	 * @param subSellerKey
+	 *            the subSellerKey to set
+	 */
 	public void setSubSellerKey(String subSellerKey) {
 		this.subSellerKey = subSellerKey;
 	}

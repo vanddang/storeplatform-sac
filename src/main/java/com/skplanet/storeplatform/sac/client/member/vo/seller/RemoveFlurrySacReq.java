@@ -21,42 +21,75 @@ public class RemoveFlurrySacReq extends CommonInfo {
 	private String sellerKey;
 
 	/** Flurry List. */
-	public List<FlurryAuth> getFlurryAuthList() {
-		return this.flurryAuthList;
-	}
+	private List<FlurryAuth> flurryAuthList;
 
+	/**
+	 * @return the sessionKey
+	 */
 	public String getSessionKey() {
 		return this.sessionKey;
 	}
 
+	/**
+	 * @param sessionKey
+	 *            the sessionKey to set
+	 */
 	public void setSessionKey(String sessionKey) {
 		this.sessionKey = sessionKey;
 	}
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
-	private List<FlurryAuth> flurryAuthList;
+	/**
+	 * @return the flurryAuthList
+	 */
+	public List<FlurryAuth> getFlurryAuthList() {
+		return this.flurryAuthList;
+	}
 
+	/**
+	 * @param flurryAuthList
+	 *            the flurryAuthList to set
+	 */
 	public void setFlurryAuthList(List<FlurryAuth> flurryAuthList) {
 		this.flurryAuthList = flurryAuthList;
 	}
 
+	/**
+	 * FlurryAuth 정보
+	 * 
+	 * Updated on : 2014. 2. 25. Updated by : Rejoice, Burkhan
+	 */
 	public static class FlurryAuth {
 
 		/** Access 코드. */
 		@NotBlank
 		private String accessCode;
 
+		/**
+		 * @return the accessCode
+		 */
 		public String getAccessCode() {
 			return this.accessCode;
 		}
 
+		/**
+		 * @param accessCode
+		 *            the accessCode to set
+		 */
 		public void setAccessCode(String accessCode) {
 			this.accessCode = accessCode;
 		}

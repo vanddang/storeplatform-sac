@@ -21,13 +21,13 @@ public class AuthorizeReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/** 판매자 회원 ID */
+	/** 판매자 회원 ID. */
 	@NotBlank
 	private String sellerId;
-	/** 판매자 회원 PW */
+	/** 판매자 회원 PW. */
 	@NotBlank
 	private String sellerPW;
-	/** 계정 잠금 해제 요청 ('Y'/'N') */
+	/** 계정 잠금 해제 요청 ('Y'/'N'). */
 	private String releaseLock;
 	/** 만료일시. */
 	@NotBlank
@@ -36,43 +36,79 @@ public class AuthorizeReq extends CommonInfo {
 	/** IP 주소. */
 	private String ipAddress;
 
+	/**
+	 * @return the sellerId
+	 */
 	public String getSellerId() {
 		return this.sellerId;
 	}
 
+	/**
+	 * @param sellerId
+	 *            the sellerId to set
+	 */
 	public void setSellerId(String sellerId) {
 		this.sellerId = sellerId;
 	}
 
+	/**
+	 * @return the sellerPW
+	 */
 	public String getSellerPW() {
 		return this.sellerPW;
 	}
 
+	/**
+	 * @param sellerPW
+	 *            the sellerPW to set
+	 */
 	public void setSellerPW(String sellerPW) {
 		this.sellerPW = sellerPW;
 	}
 
+	/**
+	 * @return the releaseLock
+	 */
 	public String getReleaseLock() {
 		return this.releaseLock;
 	}
 
+	/**
+	 * @param releaseLock
+	 *            the releaseLock to set
+	 */
 	public void setReleaseLock(String releaseLock) {
 		this.releaseLock = releaseLock;
 	}
 
+	/**
+	 * @return the expireDate
+	 */
 	public String getExpireDate() {
 		return this.expireDate;
 	}
 
+	/**
+	 * @param expireDate
+	 *            the expireDate to set
+	 */
 	public void setExpireDate(String expireDate) {
 		this.expireDate = expireDate;
 	}
 
+	/**
+	 * @return the ipAddress
+	 */
 	public String getIpAddress() {
 		return this.ipAddress;
 	}
 
+	/**
+	 * @param ipAddress
+	 *            the ipAddress to set
+	 */
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
+
 }

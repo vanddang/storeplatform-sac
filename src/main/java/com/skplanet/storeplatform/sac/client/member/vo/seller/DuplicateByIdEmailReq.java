@@ -25,19 +25,34 @@ public class DuplicateByIdEmailReq extends CommonInfo {
 	@NotBlank
 	private String keyString;
 
+	/**
+	 * @return the keyType
+	 */
 	public String getKeyType() {
 		return this.keyType;
 	}
 
+	/**
+	 * @param keyType
+	 *            the keyType to set
+	 */
 	public void setKeyType(String keyType) {
 		this.keyType = keyType;
 	}
 
+	/**
+	 * @return the keyString
+	 */
 	public String getKeyString() {
 		return this.keyString;
 	}
 
+	/**
+	 * @param keyString
+	 *            the keyString to set
+	 */
 	public void setKeyString(String keyString) {
 		this.keyString = keyString;
 	}
+
 }

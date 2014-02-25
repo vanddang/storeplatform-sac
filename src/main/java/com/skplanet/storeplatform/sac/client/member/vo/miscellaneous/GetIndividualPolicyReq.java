@@ -27,18 +27,32 @@ public class GetIndividualPolicyReq extends CommonInfo {
 	 */
 	private List<PolicyCode> policyCodeList;
 
+	/**
+	 * @return the key
+	 */
 	public String getKey() {
 		return this.key;
 	}
 
+	/**
+	 * @param key
+	 *            the key to set
+	 */
 	public void setKey(String key) {
 		this.key = key;
 	}
 
+	/**
+	 * @return the policyCodeList
+	 */
 	public List<PolicyCode> getPolicyCodeList() {
 		return this.policyCodeList;
 	}
 
+	/**
+	 * @param policyCodeList
+	 *            the policyCodeList to set
+	 */
 	public void setPolicyCodeList(List<PolicyCode> policyCodeList) {
 		this.policyCodeList = policyCodeList;
 	}
@@ -56,12 +70,20 @@ public class GetIndividualPolicyReq extends CommonInfo {
 		@NotBlank
 		public String policyCode;
 
+		/**
+		 * @return the policyCode
+		 */
 		public String getPolicyCode() {
 			return this.policyCode;
 		}
 
+		/**
+		 * @param policyCode
+		 *            the policyCode to set
+		 */
 		public void setPolicyCode(String policyCode) {
 			this.policyCode = policyCode;
 		}
+
 	}
 }

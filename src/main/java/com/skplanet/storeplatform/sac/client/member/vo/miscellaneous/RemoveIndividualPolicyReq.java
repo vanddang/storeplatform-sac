@@ -27,19 +27,34 @@ public class RemoveIndividualPolicyReq extends CommonInfo {
 	@NotBlank
 	private String key;
 
+	/**
+	 * @return the policyCode
+	 */
 	public String getPolicyCode() {
 		return this.policyCode;
 	}
 
+	/**
+	 * @param policyCode
+	 *            the policyCode to set
+	 */
 	public void setPolicyCode(String policyCode) {
 		this.policyCode = policyCode;
 	}
 
+	/**
+	 * @return the key
+	 */
 	public String getKey() {
 		return this.key;
 	}
 
+	/**
+	 * @param key
+	 *            the key to set
+	 */
 	public void setKey(String key) {
 		this.key = key;
 	}
+
 }

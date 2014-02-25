@@ -15,10 +15,17 @@ public class LockAccountRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 
+	 */
 	public LockAccountRes() {
 		super();
 	}
 
+	/**
+	 * @param sellerId
+	 *            String
+	 */
 	public LockAccountRes(String sellerId) {
 		super();
 		this.sellerId = sellerId;
@@ -27,10 +34,17 @@ public class LockAccountRes extends CommonInfo {
 	/** 판매자 회원 ID. */
 	private String sellerId;
 
+	/**
+	 * @return the sellerId
+	 */
 	public String getSellerId() {
 		return this.sellerId;
 	}
 
+	/**
+	 * @param sellerId
+	 *            the sellerId to set
+	 */
 	public void setSellerId(String sellerId) {
 		this.sellerId = sellerId;
 	}

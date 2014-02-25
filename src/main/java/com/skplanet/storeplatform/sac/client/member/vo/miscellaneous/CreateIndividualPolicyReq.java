@@ -36,35 +36,64 @@ public class CreateIndividualPolicyReq extends CommonInfo {
 	@NotBlank
 	private String regId;
 
+	/**
+	 * @return the policyCode
+	 */
 	public String getPolicyCode() {
 		return this.policyCode;
 	}
 
+	/**
+	 * @param policyCode
+	 *            the policyCode to set
+	 */
 	public void setPolicyCode(String policyCode) {
 		this.policyCode = policyCode;
 	}
 
+	/**
+	 * @return the key
+	 */
 	public String getKey() {
 		return this.key;
 	}
 
+	/**
+	 * @param key
+	 *            the key to set
+	 */
 	public void setKey(String key) {
 		this.key = key;
 	}
 
+	/**
+	 * @return the value
+	 */
 	public String getValue() {
 		return this.value;
 	}
 
+	/**
+	 * @param value
+	 *            the value to set
+	 */
 	public void setValue(String value) {
 		this.value = value;
 	}
 
+	/**
+	 * @return the regId
+	 */
 	public String getRegId() {
 		return this.regId;
 	}
 
+	/**
+	 * @param regId
+	 *            the regId to set
+	 */
 	public void setRegId(String regId) {
 		this.regId = regId;
 	}
+
 }

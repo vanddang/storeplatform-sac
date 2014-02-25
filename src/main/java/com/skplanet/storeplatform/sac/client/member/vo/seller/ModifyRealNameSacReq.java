@@ -59,146 +59,272 @@ public class ModifyRealNameSacReq extends CommonInfo {
 	/** 동의일시. */
 	private String parentDate;
 
+	/**
+	 * @return the sessionKey
+	 */
 	public String getSessionKey() {
 		return this.sessionKey;
 	}
 
+	/**
+	 * @param sessionKey
+	 *            the sessionKey to set
+	 */
 	public void setSessionKey(String sessionKey) {
 		this.sessionKey = sessionKey;
 	}
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
+	/**
+	 * @return the parentType
+	 */
 	public String getParentType() {
 		return this.parentType;
 	}
 
+	/**
+	 * @param parentType
+	 *            the parentType to set
+	 */
 	public void setParentType(String parentType) {
 		this.parentType = parentType;
 	}
 
+	/**
+	 * @return the isOwn
+	 */
 	public String getIsOwn() {
 		return this.isOwn;
 	}
 
+	/**
+	 * @param isOwn
+	 *            the isOwn to set
+	 */
 	public void setIsOwn(String isOwn) {
 		this.isOwn = isOwn;
 	}
 
+	/**
+	 * @return the parentBirthDay
+	 */
 	public String getParentBirthDay() {
 		return this.parentBirthDay;
 	}
 
+	/**
+	 * @param parentBirthDay
+	 *            the parentBirthDay to set
+	 */
 	public void setParentBirthDay(String parentBirthDay) {
 		this.parentBirthDay = parentBirthDay;
 	}
 
+	/**
+	 * @return the parentEmail
+	 */
 	public String getParentEmail() {
 		return this.parentEmail;
 	}
 
+	/**
+	 * @param parentEmail
+	 *            the parentEmail to set
+	 */
 	public void setParentEmail(String parentEmail) {
 		this.parentEmail = parentEmail;
 	}
 
+	/**
+	 * @return the isRealName
+	 */
 	public String getIsRealName() {
 		return this.isRealName;
 	}
 
+	/**
+	 * @param isRealName
+	 *            the isRealName to set
+	 */
 	public void setIsRealName(String isRealName) {
 		this.isRealName = isRealName;
 	}
 
+	/**
+	 * @return the realNameDate
+	 */
 	public String getRealNameDate() {
 		return this.realNameDate;
 	}
 
+	/**
+	 * @param realNameDate
+	 *            the realNameDate to set
+	 */
 	public void setRealNameDate(String realNameDate) {
 		this.realNameDate = realNameDate;
 	}
 
+	/**
+	 * @return the sellerCI
+	 */
 	public String getSellerCI() {
 		return this.sellerCI;
 	}
 
+	/**
+	 * @param sellerCI
+	 *            the sellerCI to set
+	 */
 	public void setSellerCI(String sellerCI) {
 		this.sellerCI = sellerCI;
 	}
 
+	/**
+	 * @return the sellerDI
+	 */
 	public String getSellerDI() {
 		return this.sellerDI;
 	}
 
+	/**
+	 * @param sellerDI
+	 *            the sellerDI to set
+	 */
 	public void setSellerDI(String sellerDI) {
 		this.sellerDI = sellerDI;
 	}
 
+	/**
+	 * @return the realNameMethod
+	 */
 	public String getRealNameMethod() {
 		return this.realNameMethod;
 	}
 
+	/**
+	 * @param realNameMethod
+	 *            the realNameMethod to set
+	 */
 	public void setRealNameMethod(String realNameMethod) {
 		this.realNameMethod = realNameMethod;
 	}
 
+	/**
+	 * @return the sellerTelecom
+	 */
 	public String getSellerTelecom() {
 		return this.sellerTelecom;
 	}
 
+	/**
+	 * @param sellerTelecom
+	 *            the sellerTelecom to set
+	 */
 	public void setSellerTelecom(String sellerTelecom) {
 		this.sellerTelecom = sellerTelecom;
 	}
 
+	/**
+	 * @return the sellerPhone
+	 */
 	public String getSellerPhone() {
 		return this.sellerPhone;
 	}
 
+	/**
+	 * @param sellerPhone
+	 *            the sellerPhone to set
+	 */
 	public void setSellerPhone(String sellerPhone) {
 		this.sellerPhone = sellerPhone;
 	}
 
+	/**
+	 * @return the sellerName
+	 */
 	public String getSellerName() {
 		return this.sellerName;
 	}
 
+	/**
+	 * @param sellerName
+	 *            the sellerName to set
+	 */
 	public void setSellerName(String sellerName) {
 		this.sellerName = sellerName;
 	}
 
+	/**
+	 * @return the sellerBirthDay
+	 */
 	public String getSellerBirthDay() {
 		return this.sellerBirthDay;
 	}
 
+	/**
+	 * @param sellerBirthDay
+	 *            the sellerBirthDay to set
+	 */
 	public void setSellerBirthDay(String sellerBirthDay) {
 		this.sellerBirthDay = sellerBirthDay;
 	}
 
+	/**
+	 * @return the isDomestic
+	 */
 	public String getIsDomestic() {
 		return this.isDomestic;
 	}
 
+	/**
+	 * @param isDomestic
+	 *            the isDomestic to set
+	 */
 	public void setIsDomestic(String isDomestic) {
 		this.isDomestic = isDomestic;
 	}
 
+	/**
+	 * @return the sex
+	 */
 	public String getSex() {
 		return this.sex;
 	}
 
+	/**
+	 * @param sex
+	 *            the sex to set
+	 */
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
 
+	/**
+	 * @return the parentDate
+	 */
 	public String getParentDate() {
 		return this.parentDate;
 	}
 
+	/**
+	 * @param parentDate
+	 *            the parentDate to set
+	 */
 	public void setParentDate(String parentDate) {
 		this.parentDate = parentDate;
 	}
