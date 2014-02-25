@@ -3,24 +3,26 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByUserKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
@@ -36,62 +38,59 @@ public class SearchUserSCIController implements SearchUserSCI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchUserSCIController.class);
 
 	@Autowired
-	private UserSearchService userSearchService; // 회원 조회 서비스 인터페이스.
+	private UserSearchService userSearchService;
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI#searchUserByUserKey(com.
-	 * skplanet .storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq)
+	 * @see
+	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI#searchUserByUserKey(com.skplanet
+	 * .storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq)
 	 */
 	@Override
 	@RequestMapping(value = "/searchUserByUserKey", method = RequestMethod.POST)
-	public SearchUserSacRes searchUserByUserKey(SearchUserSacReq request) {
+	@ResponseBody
+	public SearchUserSacRes searchUserByUserKey(@RequestBody @Validated SearchUserSacReq request) {
 
+		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}",
 				requestHeader, request);
 
-		// 회원정보 조회 범위 설정.
-		SearchExtentReq searchExtent = new SearchExtentReq();
-		searchExtent.setUserInfoYn("Y");
-		searchExtent.setDeviceInfoYn("Y");
+		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] SC UserInfo Response : {}", "");
 
-		DetailReq detailRequest = new DetailReq();
-		detailRequest.setUserKey(request.getUserKey());
-		detailRequest.setSearchExtent(searchExtent);
+		List<String> userKeyList = request.getUserKeyList();
+		SearchUserReq searchUserReq = new SearchUserReq();
+		searchUserReq.setUserKeyList(userKeyList);
 
-		// 회원 정보 조회 SC API 호출.
-		DetailRes userDetail = this.userSearchService.detail(requestHeader, detailRequest);
-		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] SC UserDetailInfo Response : {}", userDetail);
+		Map<String, UserInfoByUserKey> userInfoMap = this.userSearchService.searchUserByUserKey(requestHeader,
+				searchUserReq);
+
+		Map<String, UserInfoSac> resMap = new HashMap<String, UserInfoSac>();
+		UserInfoSac userInfoSac;
+
+		for (int i = 0; i < userInfoMap.size(); i++) {
+			if (userInfoMap.get(userKeyList.get(i)) != null) {
+				userInfoSac = new UserInfoSac();
+				// userInfoSac.setUserKey(userInfoMap.get(userKeyList.get(i)).getUserKey());
+				userInfoSac.setUserId(userInfoMap.get(userKeyList.get(i)).getUserId());
+				userInfoSac.setUserMainStatus(userInfoMap.get(userKeyList.get(i)).getUserMainStatus());
+				userInfoSac.setUserSubStatus(userInfoMap.get(userKeyList.get(i)).getUserSubStatus());
+				userInfoSac.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
+				// 등록기기(deviceIdList) 없는경우, SC 회원에서 size=0인 List로 내려주기로함.
+				userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIdList());
+
+				resMap.put(userKeyList.get(i), userInfoSac);
+			}
+			// userKey에해당하는 회원정보 없을 경우, Map에 안내려줌.
+			// else {
+			// // userKey에해당하는 회원정보 없을 경우, userKey에 null 맵핑해서 전달.
+			// resMap.put(userKeyList.get(i), new UserInfoSac());
+			// }
+		}
 
 		SearchUserSacRes searchUserSacRes = new SearchUserSacRes();
-
-		// 회원 정보가 존재할 경우
-		if (userDetail != null && userDetail.getUserInfo() != null) {
-
-			List<DeviceInfo> deviceList = userDetail.getDeviceInfoList();
-			List<String> deviceIdList = new ArrayList<String>();
-
-			if (deviceList == null) { // 등록기기 없는경우, size=0 인 List 내려주기.
-				deviceList = new ArrayList<DeviceInfo>();
-			} else {
-				// Setting deviceId List.
-				for (int i = 0; i < deviceList.size(); i++) {
-					deviceIdList.add(deviceList.get(i).getDeviceId());
-				}
-			}
-
-			/* 3. 파라미터 셋팅해서 Response. */
-			searchUserSacRes.setDeviceId(deviceIdList);
-			searchUserSacRes.setUserId(userDetail.getUserInfo().getUserId());
-			searchUserSacRes.setUserType(userDetail.getUserInfo().getUserType());
-			searchUserSacRes.setUserMainStatus(userDetail.getUserInfo().getUserMainStatus());
-			searchUserSacRes.setUserSubStatus(userDetail.getUserInfo().getUserSubStatus());
-			LOGGER.info("[SearchUserSCIController.searchUserByUserKey] SAC UserInfo Response : {}", searchUserSacRes);
-		} else {
-			throw new StorePlatformException("SAC_MEM_0003", "userKey", request.getUserKey());
-		}
+		searchUserSacRes.setUserInfo(resMap);
 
 		return searchUserSacRes;
 	}

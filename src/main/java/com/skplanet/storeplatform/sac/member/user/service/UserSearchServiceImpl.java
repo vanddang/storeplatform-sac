@@ -58,11 +58,14 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
@@ -94,7 +97,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByUserKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -840,7 +845,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 				dailyPhone.setOsVersion(StringUtil.setTrim(stats.getOsVersion()));
 				dailyPhone.setEnctryCount(StringUtil.setTrim(stats.getEntryCount()));
-				//				dailyPhone.setModelName(StringUtil.setTrim(stats.getModelName()));
+				// dailyPhone.setModelName(StringUtil.setTrim(stats.getModelName()));
 
 				dailyPhoneList.add(dailyPhone);
 				dailyPhoneOs.setPhoneOsList(dailyPhoneList);
@@ -1030,8 +1035,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 			if (schUserRes.getMbrMangItemPtcrList() != null) {
 				for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-					logger.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
-					logger.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
+					logger.debug("============================================ UserExtraInfo CODE : {}",
+							ptcr.getExtraProfile());
+					logger.debug("============================================ UserExtraInfo VALUE : {}",
+							ptcr.getExtraProfileValue());
 
 					UserExtraInfo extra = new UserExtraInfo();
 					extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -1045,7 +1052,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		}
 
-		logger.debug("============================================ UserSearch Req : {}", searchUserRequest.getKeySearchList().toString());
+		logger.debug("============================================ UserSearch Req : {}", searchUserRequest
+				.getKeySearchList().toString());
 		logger.debug("============================================ UserSearch Res : {}", userInfo.toString());
 
 		return userInfo;
@@ -1368,7 +1376,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @param response
 	 * @return DetailByDeviceIdSacRes
 	 */
-	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req, DetailByDeviceIdSacRes response) {
+	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req,
+			DetailByDeviceIdSacRes response) {
 
 		/**
 		 * 검색조건 정보 setting.
@@ -1438,7 +1447,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
 		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
-		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo()).getGiftSprtYn());
+		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo())
+				.getGiftSprtYn());
 
 		return response;
 
@@ -1476,6 +1486,64 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 
 		return schUserRes;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#searchUserByUserKey(com.skplanet.storeplatform
+	 * .sac.client.member.vo.user.SearchUserReq)
+	 */
+	@Override
+	public Map<String, UserInfoByUserKey> searchUserByUserKey(SacRequestHeader sacHeader, SearchUserReq request) {
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		List<String> userKeyList = request.getUserKeyList();
+
+		SearchMbrUserRequest searchMbrUserRequest = new SearchMbrUserRequest();
+		searchMbrUserRequest.setUserKeyList(userKeyList);
+		searchMbrUserRequest.setCommonRequest(commonRequest);
+
+		SearchMbrUserResponse searchMbrUserResponse = this.userSCI.searchMbrUser(searchMbrUserRequest);
+		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse
+				.getCommonResponse().getResultCode());
+
+		Map<String, UserMbrStatus> userInfoMap = searchMbrUserResponse.getUserMbrStatusMap();
+
+		Map<String, UserInfoByUserKey> resMap = new HashMap<String, UserInfoByUserKey>();
+		UserInfoByUserKey userInfoByUserKey;
+
+		if (userInfoMap != null && !"".equals(userInfoMap)) {
+			for (int i = 0; i < userKeyList.size(); i++) {
+				if (userInfoMap.get(userKeyList.get(i)) != null) {
+					userInfoByUserKey = new UserInfoByUserKey();
+					userInfoByUserKey.setUserKey(userInfoMap.get(userKeyList.get(i)).getUserKey());
+					userInfoByUserKey.setUserId(userInfoMap.get(userKeyList.get(i)).getUserID());
+					userInfoByUserKey.setUserMainStatus(userInfoMap.get(userKeyList.get(i)).getUserMainStatus());
+					userInfoByUserKey.setUserSubStatus(userInfoMap.get(userKeyList.get(i)).getUserSubStatus());
+					userInfoByUserKey.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
+					// 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
+					userInfoByUserKey.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
+
+					resMap.put(userKeyList.get(i), userInfoByUserKey);
+				}
+				// userKey에해당하는 회원정보 없을 경우, Map에 안내려줌.
+				// else {
+				// // userKey에해당하는 회원정보 없을 경우, userKey에 null 맵핑해서 전달.
+				// resMap.put(userKeyList.get(i), new UserInfoByUserKey());
+				// }
+			}
+			logger.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserInfo Response : {}", resMap);
+
+		} else {
+			throw new StorePlatformException("SAC_MEM_0003", "userKey", "");
+		}
+
+		return resMap;
 	}
 
 }
