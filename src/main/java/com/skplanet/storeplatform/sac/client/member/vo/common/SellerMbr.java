@@ -25,6 +25,16 @@ public class SellerMbr extends CommonInfo {
 	/** 판매자 ID. */
 	private String sellerId;
 
+	private String isOfficialAuth;
+
+	public String getIsOfficialAuth() {
+		return this.isOfficialAuth;
+	}
+
+	public void setIsOfficialAuth(String isOfficialAuth) {
+		this.isOfficialAuth = isOfficialAuth;
+	}
+
 	/** 상위 판매자 키. */
 	private String parentSellerKey; // UP_INSD_SELLERMBR_NO 상위 판매자키
 
