@@ -101,19 +101,6 @@
        AND  AUTH_COMPT_YN = 'N'
     </select>
     
-     <!-- 이메일 인증 여부 확인 (기존 인증회원 여부 체크)삭제 예정-->
-    <select id="searchEmailAuthYnList" parameterType="ServiceAuth" resultType="ServiceAuth">
-    /* MiscellaneousMapper.xml, searchEmailAuthYnList, SAC : 김다슬 , 2014-01-23 */
-    SELECT 
-        AUTH_COMPT_YN
-        ,AUTH_VALUE
-    FROM 
-        TB_CM_SVC_AUTH
-    WHERE
-        MBR_NO = #{mbrNo} 
-    AND AUTH_EMAIL = #{authEmail}
-    </select>
-    
     <!-- 기존 이메일 인증코드 인증만료 시간 연장 -->
     <update id="updateServiceAuthTime" parameterType="String">
     /* MiscellaneousMapper.xml, updateServiceAuthTime, SAC : 김다슬 , 2014-02-25 */
