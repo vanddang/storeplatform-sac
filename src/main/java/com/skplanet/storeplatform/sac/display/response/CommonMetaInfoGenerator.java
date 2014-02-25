@@ -110,19 +110,6 @@ public interface CommonMetaInfoGenerator {
 
 	/**
 	 * <pre>
-	 * 배너 Source 객체 생성.
-	 * </pre>
-	 * 
-	 * @param path
-	 *            path
-	 * @param size
-	 *            size
-	 * @return Source
-	 */
-	public Source generateBannerSource(String path);
-
-	/**
-	 * <pre>
 	 * 공통 Source List 생성.
 	 * </pre>
 	 * 
@@ -142,6 +129,19 @@ public interface CommonMetaInfoGenerator {
 	 * @return List<Source>
 	 */
 	public List<Source> generateDownloadSourceList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 배너 Source List 객체 생성.
+	 * </pre>
+	 * 
+	 * @param path
+	 *            path
+	 * @param size
+	 *            size
+	 * @return List<Source>
+	 */
+	public List<Source> generateBannerSourceList(String path);
 
 	/**
 	 * <pre>
