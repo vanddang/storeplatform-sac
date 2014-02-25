@@ -3,7 +3,6 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,9 +16,11 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
@@ -40,6 +41,8 @@ import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@TransactionConfiguration
+@Transactional
 public class GetModelCodeTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GetModelCodeTest.class);
 
@@ -67,24 +70,13 @@ public class GetModelCodeTest {
 	}
 
 	/**
-	 * <pre>
-	 * After method.
-	 * </pre>
-	 */
-	@After
-	public void after() {
-		// Debug [RESPONSE-SAC]
-		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
-	}
-
-	/**
 	 * 
 	 * <pre>
 	 * 성공 CASE.
 	 * </pre>
 	 */
 	@Test
-	public void successTest() {
+	public void testGetModelCode() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getModelCode/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 

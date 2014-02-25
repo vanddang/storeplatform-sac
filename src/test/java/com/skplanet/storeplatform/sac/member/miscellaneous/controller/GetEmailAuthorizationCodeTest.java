@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAut
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
- * 이메일 인증 코드 생성.
+ * 이메일 인증 코드 생성 Junit Test.
  * 
  * Updated on : 2014. 1. 23. Updated by : 김다슬, 인크로스.
  */
@@ -79,18 +79,47 @@ public class GetEmailAuthorizationCodeTest {
 
 	/**
 	 * <pre>
-	 * 성공 CASE.
+	 * 이메일 인증 코드 생성.
+	 * - 최초 발급.
 	 * </pre>
 	 */
 	@Test
-	public void simpleTest() {
+	public void testGetEmailAuthorizationCode() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getEmailAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 					@Override
 					public Object requestBody() {
-						request.setUserEmail("daseul428@incross.com");
-						request.setUserKey("US201401232110223470000502");
+						request.setUserEmail("vanddang@gmail.com");
+						request.setUserKey("US201402170712090930002827");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetEmailAuthorizationCodeRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetEmailAuthorizationCodeRes response = (GetEmailAuthorizationCodeRes) result;
+						assertThat(response.getEmailAuthCode(), notNullValue());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	}
+
+	/**
+	 * <pre>
+	 * 이메일 인증 코드 생성.
+	 * - 인증코드 발급되어있으나 인증되지 않은 코드 내려줌.
+	 * </pre>
+	 */
+	@Test
+	public void testGetEmailAuthorizationCode2() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getEmailAuthorizationCode/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+
+					@Override
+					public Object requestBody() {
+						request.setUserEmail("vanddang@gmail.com");
+						request.setUserKey("US201402170712090930002827");
 						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}

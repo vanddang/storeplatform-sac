@@ -17,9 +17,11 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -41,6 +43,8 @@ import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@TransactionConfiguration
+@Transactional
 public class GetOpmdTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GetOpmdTest.class);
 
@@ -90,8 +94,8 @@ public class GetOpmdTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						response = (GetOpmdRes) result;
-						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 						assertThat(response.getMsisdn(), notNullValue());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -120,8 +124,8 @@ public class GetOpmdTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						response = (GetOpmdRes) result;
-						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 						assertEquals(response.getMsisdn(), request.getMsisdn());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -130,36 +134,30 @@ public class GetOpmdTest {
 	/**
 	 * <pre>
 	 * OPMD 모회선 번호 조회.
-	 * - Exception. (유효하지 않은 MDN - msisdn 외 다른 값(MAC-Address, Wifi, ... )
+	 * - Exception. (SAC_MEM_3004 - 유효하지 않은 MDN - msisdn 외 다른 값(MAC-Address, Wifi, ... )
 	 * </pre>
 	 * 
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void testExceptionGetOpmdByMsisdn() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							request.setMsisdn("E1HHADEFVA9");
-							LOGGER.debug("[REQUEST(SAC)] JSON : \n{}",
-									TestConvertMapperUtils.convertObjectToJson(request));
-							return request;
-						}
-					}).success(GetOpmdRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						request.setMsisdn("E1HHADEFVA9");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetOpmdRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							response = (GetOpmdRes) result;
-							assertThat(response.getMsisdn(), notNullValue());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-		} catch (StorePlatformException e) {
-			assertEquals("SAC_MEM_3004", e.getErrorInfo().getCode());
-			LOGGER.info("\nerror >> ", e);
-
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						response = (GetOpmdRes) result;
+						assertThat(response.getMsisdn(), notNullValue());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 

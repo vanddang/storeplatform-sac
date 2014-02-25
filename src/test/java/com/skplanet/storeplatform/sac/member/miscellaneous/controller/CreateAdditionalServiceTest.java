@@ -5,7 +5,6 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,9 +18,11 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -43,6 +44,8 @@ import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@TransactionConfiguration
+@Transactional
 public class CreateAdditionalServiceTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CreateAdditionalServiceTest.class);
 
@@ -53,8 +56,6 @@ public class CreateAdditionalServiceTest {
 
 	/** [REQUEST]. */
 	private static CreateAdditionalServiceReq request;
-	/** [RESPONSE]. */
-	private static CreateAdditionalServiceRes response;
 
 	/**
 	 * 
@@ -67,17 +68,6 @@ public class CreateAdditionalServiceTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 		// [REQUEST] 초기화
 		request = new CreateAdditionalServiceReq();
-	}
-
-	/**
-	 * <pre>
-	 * After method.
-	 * </pre>
-	 */
-	@After
-	public void after() {
-		// Debug [RESPONSE-SAC]
-		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -95,7 +85,7 @@ public class CreateAdditionalServiceTest {
 
 					@Override
 					public Object requestBody() {
-						request.setMsisdn("01032954056");
+						request.setMsisdn("01048088874");
 						request.setSvcCode("NA00004184");
 						request.setSvcMngNum("");
 						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
@@ -108,6 +98,7 @@ public class CreateAdditionalServiceTest {
 						CreateAdditionalServiceRes response = (CreateAdditionalServiceRes) result;
 						assertEquals(response.getMsisdn(), request.getMsisdn());
 						assertEquals(response.getClass(), request.getSvcCode());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
@@ -120,33 +111,28 @@ public class CreateAdditionalServiceTest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void testAdditionalServiceAlreadyJoined() {
-		try {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/createAdditionalService/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/createAdditionalService/v1")
-					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						request.setMsisdn("01048088874");
+						request.setSvcCode("NA00004184");
+						request.setSvcMngNum("");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(CreateAdditionalServiceRes.class, new SuccessCallback() {
 
-						@Override
-						public Object requestBody() {
-							request.setMsisdn("01032954056");
-							request.setSvcCode("NA00004184");
-							request.setSvcMngNum("");
-							LOGGER.debug("[REQUEST(SAC)] JSON : \n{}",
-									TestConvertMapperUtils.convertObjectToJson(request));
-							return request;
-						}
-					}).success(CreateAdditionalServiceRes.class, new SuccessCallback() {
-
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							CreateAdditionalServiceRes response = (CreateAdditionalServiceRes) result;
-							assertEquals(response.getMsisdn(), request.getMsisdn());
-							assertEquals(response.getClass(), request.getSvcCode());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-		} catch (StorePlatformException e) {
-			LOGGER.info("\nerror >> ", e);
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateAdditionalServiceRes response = (CreateAdditionalServiceRes) result;
+						assertEquals(response.getMsisdn(), request.getMsisdn());
+						assertEquals(response.getClass(), request.getSvcCode());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 }

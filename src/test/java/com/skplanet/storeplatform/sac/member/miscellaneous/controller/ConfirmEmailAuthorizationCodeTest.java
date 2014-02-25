@@ -6,7 +6,6 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,9 +19,11 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -44,6 +45,8 @@ import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@TransactionConfiguration
+@Transactional
 public class ConfirmEmailAuthorizationCodeTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmEmailAuthorizationCodeTest.class);
 
@@ -54,8 +57,6 @@ public class ConfirmEmailAuthorizationCodeTest {
 
 	/** [REQUEST]. */
 	private static ConfirmEmailAuthorizationCodeReq request;
-	/** [RESPONSE]. */
-	private static ConfirmEmailAuthorizationCodeRes response;
 
 	/**
 	 * <pre>
@@ -71,29 +72,18 @@ public class ConfirmEmailAuthorizationCodeTest {
 
 	/**
 	 * <pre>
-	 * After method.
-	 * </pre>
-	 */
-	@After
-	public void after() {
-		// Debug [RESPONSE-SAC]
-		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
-	}
-
-	/**
-	 * <pre>
-	 * 성공 CASE
-	 * 정상 파라미터 전달.
+	 * 이메일 인증코드 확인
+	 * - 최초 인증
 	 * </pre>
 	 */
 	@Test
-	public void simpleTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmEmailAuthorizationCode/v1")
+	public void testConfirmedEmailAuthCode() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/confirmEmailAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 					@Override
 					public Object requestBody() {
-						request.setEmailAuthCode("84f9f1febcfe4d129e84138cc7baf3da");
+						request.setEmailAuthCode("0964bc58dd29425fb1fbafbd218bb863");
 						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
@@ -104,6 +94,39 @@ public class ConfirmEmailAuthorizationCodeTest {
 						ConfirmEmailAuthorizationCodeRes response = (ConfirmEmailAuthorizationCodeRes) result;
 						assertThat(response.getUserEmail(), notNullValue());
 						assertThat(response.getUserKey(), notNullValue());
+						LOGGER.debug("[RESPONSE(SAC)] JSON : \n{}",
+								TestConvertMapperUtils.convertObjectToJson(response));
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 이메일 인증코드 확인.
+	 * - 인증코드 발급되어있으나 인증되지 않은 코드.
+	 * </pre>
+	 */
+	@Test
+	public void testConfirmedEmailAuthCode2() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/confirmEmailAuthorizationCode/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+
+					@Override
+					public Object requestBody() {
+						request.setEmailAuthCode("0964bc58dd29425fb1fbafbd218bb863");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(ConfirmEmailAuthorizationCodeRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ConfirmEmailAuthorizationCodeRes response = (ConfirmEmailAuthorizationCodeRes) result;
+						assertThat(response.getUserEmail(), notNullValue());
+						assertThat(response.getUserKey(), notNullValue());
+						LOGGER.debug("[RESPONSE(SAC)] JSON : \n{}",
+								TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -112,35 +135,31 @@ public class ConfirmEmailAuthorizationCodeTest {
 	/**
 	 * <pre>
 	 * 성공 CASE
-	 * 기 인증 회원.  // Json 에러 확인 필요.
+	 * 기 인증 회원.
 	 * </pre>
 	 */
-	@Test
-	public void testAlreadyConfirmedEmailAuthCode() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmEmailAuthorizationCode/v1")
-					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+	@Test(expected = StorePlatformException.class)
+	public void testExceptConfirmedEmailAuthCode() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/confirmEmailAuthorizationCode/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							request.setEmailAuthCode("c4a566d90d2a4440991eca80f404611a");
-							LOGGER.debug("[REQUEST(SAC)] JSON : \n{}",
-									TestConvertMapperUtils.convertObjectToJson(request));
-							return request;
-						}
-					}).success(ConfirmEmailAuthorizationCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						request.setEmailAuthCode("c4a566d90d2a4440991eca80f404611a");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(ConfirmEmailAuthorizationCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							ConfirmEmailAuthorizationCodeRes response = (ConfirmEmailAuthorizationCodeRes) result;
-							assertThat(response.getUserEmail(), notNullValue());
-							assertThat(response.getUserKey(), notNullValue());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-		} catch (StorePlatformException e) {
-			// assertEquals("SAC_MEM_3001", e.getErrorInfo().getCode());
-			LOGGER.info("\nerror >> ", e);
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ConfirmEmailAuthorizationCodeRes response = (ConfirmEmailAuthorizationCodeRes) result;
+						assertThat(response.getUserEmail(), notNullValue());
+						assertThat(response.getUserKey(), notNullValue());
+						LOGGER.debug("[RESPONSE(SAC)] JSON : \n{}",
+								TestConvertMapperUtils.convertObjectToJson(response));
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 }
