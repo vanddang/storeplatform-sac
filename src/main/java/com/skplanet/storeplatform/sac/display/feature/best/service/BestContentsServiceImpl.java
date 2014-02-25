@@ -157,7 +157,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 		if (bestContentsReq.getDummy() == null) { // dummy 호출이 아닐때
 			// ID list 조회
 			List<ProductBasicInfo> productBasicInfoList = null;
-			if ("movie".equals(bestContentsReq.getFilteredBy()) || "boardcast".equals(bestContentsReq.getFilteredBy())
+			if ("movie".equals(bestContentsReq.getFilteredBy()) || "broadcast".equals(bestContentsReq.getFilteredBy())
 					|| "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 				// 영화, 방송 상품List 조회 (Step 1)
 				productBasicInfoList = this.commonDAO.queryForList("BestContents.selectBestContentsVodList",
@@ -177,7 +177,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 					reqMap.put("productBasicInfo", productBasicInfo);
 					MetaInfo retMetaInfo = null;
 					if ("movie".equals(bestContentsReq.getFilteredBy())
-							|| "boardcast".equals(bestContentsReq.getFilteredBy())
+							|| "broadcast".equals(bestContentsReq.getFilteredBy())
 							|| "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 						// 영화, 방송 Meta 정보 조회 (Step 2)
 						reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
