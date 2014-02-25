@@ -87,6 +87,7 @@ public class DisplayConstants {
 	public static final String DP_FREEPASS_IDENTIFIER_CD = "freepass";
 	public static final String DP_PROMOTION_IDENTIFIER_CD = "promotion";
 	public static final String DP_BANNER_IDENTIFIER_CD = "banner";
+	public static final String DP_PRODUCT_IDENTIFIER_CD = "product";
 
 	public static final String DP_OUTSDCONTENTS_IDENTIFIER_CD = "outsdContents ";
 
