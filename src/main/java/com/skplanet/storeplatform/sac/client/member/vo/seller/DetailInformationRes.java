@@ -32,6 +32,9 @@ public class DetailInformationRes extends CommonInfo {
 	/** 판매자 정보 Value Object. */
 	private SellerMbr sellerMbr;
 
+	/** 판매자 정보 Value List. */
+	private List<SellerMbr> sellerMbrList;
+
 	/** 비밀번호 Value Object. */
 	private MbrPwd mbrPwd; // PW변경일시 ( TB_US_SELLERMBR_PWD 테이블에서 가져오기)
 
@@ -58,6 +61,14 @@ public class DetailInformationRes extends CommonInfo {
 
 	/** 판매자 정보 리스트 Value Object 목록. */
 	private Map<String, List<SellerMbr>> sellerMbrListMap;
+
+	public List<SellerMbr> getSellerMbrList() {
+		return this.sellerMbrList;
+	}
+
+	public void setSellerMbrList(List<SellerMbr> sellerMbrList) {
+		this.sellerMbrList = sellerMbrList;
+	}
 
 	public Map<String, List<SellerMbr>> getSellerMbrListMap() {
 		return this.sellerMbrListMap;
