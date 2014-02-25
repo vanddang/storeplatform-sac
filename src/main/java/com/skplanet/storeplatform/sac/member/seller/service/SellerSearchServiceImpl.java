@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
@@ -29,6 +31,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequ
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListRequest;
@@ -36,6 +40,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListR
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.BanksByCountry;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
@@ -51,6 +56,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordRemin
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
@@ -263,9 +269,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return DetailInformationRes
 	 */
 	@Override
-	public DetailInformationRes detailInformationApp(SacRequestHeader header, DetailInformationForProductReq req) {
+	public DetailInformationForProductRes detailInformationApp(SacRequestHeader header,
+			DetailInformationForProductReq req) {
 
-		SearchSellerRequest schReq = new SearchSellerRequest();
+		SearchMbrSellerRequest schReq = new SearchMbrSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		KeySearch keySearch = new KeySearch();
@@ -277,84 +284,139 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		list.add(keySearch);
 		schReq.setKeySearchList(list);
 
-		SearchSellerResponse schRes = this.sellerSCI.searchSeller(schReq);
+		SearchMbrSellerResponse schRes = this.sellerSCI.searchMbrSeller(schReq);
 
-		SearchFlurryListRequest schReq2 = new SearchFlurryListRequest();
-		schReq2.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
-		schReq2.setSellerKey(schRes.getSellerKey());
+		Iterator<String> it = schRes.getSellerMbrListMap().keySet().iterator();
+		List<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr> sellerMbrs = new ArrayList<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr>();
 
-		SearchFlurryListResponse schRes2 = this.sellerSCI.searchFlurryList(schReq2);
+		List<SellerMbr> sellerMbrSacs = null;
+		SellerMbr sellerMbrSac = null;
 
-		// 판매자 멀티미디어정보
-		List<ExtraRight> eList = new ArrayList<ExtraRight>();
-		ExtraRight extraRightList = null;
-		if (schRes.getExtraRightList() != null)
-			for (int i = 0; i < schRes.getExtraRightList().size(); i++) {
-				extraRightList = new ExtraRight();
-				// extraRightList.setEndDate(schRes.getExtraRightList().get(i).getEndDate());
-				// extraRightList.setRegDate(schRes.getExtraRightList().get(i).getRegDate());
-				extraRightList.setRegID(schRes.getExtraRightList().get(i).getRegID());
-				extraRightList.setRightProfileCode(schRes.getExtraRightList().get(i).getRightProfileCode());
-				// extraRightList.setSellerKey(schRes.getExtraRightList().get(i).getSellerKey());
-				// extraRightList.setSellerRate(schRes.getExtraRightList().get(i).getSellerRate());
-				// extraRightList.setStartDate(schRes.getExtraRightList().get(i).getStartDate());
-				extraRightList.setTenantID(schRes.getExtraRightList().get(i).getTenantID());
-				extraRightList.setTenantRate(schRes.getExtraRightList().get(i).getTenantRate());
-				extraRightList.setUpdateDate(schRes.getExtraRightList().get(i).getUpdateDate());
-				extraRightList.setUpdateID(schRes.getExtraRightList().get(i).getUpdateID());
+		String key = it.next();
+		sellerMbrSacs = new ArrayList<SellerMbr>();
+		sellerMbrs = (List<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr>) schRes
+				.getSellerMbrListMap().get(key);
 
-				eList.add(extraRightList);
-			}
-
-		// 법정대리인정보
-		MbrLglAgent mbrLglAgent = new MbrLglAgent();
-		if (schRes.getMbrLglAgent() != null) {
-			mbrLglAgent.setMemberKey(schRes.getMbrLglAgent().getMemberKey());
-			mbrLglAgent.setParentBirthDay(schRes.getMbrLglAgent().getParentBirthDay());
-			mbrLglAgent.setParentCI(schRes.getMbrLglAgent().getParentCI());
-			mbrLglAgent.setParentDate(schRes.getMbrLglAgent().getParentDate());
-			mbrLglAgent.setParentEmail(schRes.getMbrLglAgent().getParentEmail());
-			mbrLglAgent.setParentMDN(schRes.getMbrLglAgent().getParentMDN());
-			mbrLglAgent.setParentName(schRes.getMbrLglAgent().getParentName());
-			mbrLglAgent.setParentRealNameDate(schRes.getMbrLglAgent().getParentRealNameDate());
-			mbrLglAgent.setParentRealNameMethod(schRes.getMbrLglAgent().getParentRealNameMethod());
-			mbrLglAgent.setParentRealNameSite(schRes.getMbrLglAgent().getParentRealNameSite());
-			mbrLglAgent.setParentTelecom(schRes.getMbrLglAgent().getParentTelecom());
-			mbrLglAgent.setParentType(schRes.getMbrLglAgent().getParentType());
-			mbrLglAgent.setSequence(schRes.getMbrLglAgent().getSequence());
+		if (sellerMbrs.get(0).getIsDomestic() == null || sellerMbrs.get(0).getSellerClass() == null) {
+			throw new StorePlatformException("SAC_MEM_2101");
 		}
 
-		// 판매자 탭권한
-		List<TabAuth> tList = new ArrayList<TabAuth>();
-		TabAuth tabAuthList = null;
-		if (schRes.getTabAuthList() != null)
-			for (int i = 0; i < schRes.getTabAuthList().size(); i++) {
-				tabAuthList = new TabAuth();
-				tabAuthList.setTabCode(schRes.getTabAuthList().get(i).getTabCode());
-				tList.add(tabAuthList);
-			}
+		/* 상단 */
+		// 내국인, 개인
+		if (sellerMbrs.get(0).getIsDomestic().equals("Y") && sellerMbrs.get(0).getSellerClass().equals("US010101")) {
+			sellerMbrSac = new SellerMbr();
+			sellerMbrSac.setAppStat("Top");
+			if (!StringUtil.nvl(sellerMbrs.get(0).getCharger(), "").equals(""))
+				sellerMbrSac.setCharger(sellerMbrs.get(0).getCharger());
+			sellerMbrSacs.add(sellerMbrSac);
+		}
+		// 내국인/외국인, 개인사업자 or 법인 사업자
+		else if (sellerMbrs.get(0).getSellerClass().equals("US010102")
+				|| sellerMbrs.get(0).getSellerClass().equals("US010103")) {
+			sellerMbrSac = new SellerMbr();
+			sellerMbrSac.setAppStat("Top");
+			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
+				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
+			sellerMbrSacs.add(sellerMbrSac);
+		}
 
-		// 판매자 플러리 인증정보
-		List<FlurryAuth> fList = new ArrayList<FlurryAuth>();
-		FlurryAuth flurryAuthList = null;
-		if (schRes2.getFlurryAuthList() != null)
-			for (int i = 0; i < schRes2.getFlurryAuthList().size(); i++) {
-				flurryAuthList = new FlurryAuth();
-				flurryAuthList.setAccessCode(schRes2.getFlurryAuthList().get(i).getAccessCode());
-				flurryAuthList.setAuthToken(schRes2.getFlurryAuthList().get(i).getAuthToken());
-				flurryAuthList.setRegDate(schRes2.getFlurryAuthList().get(i).getRegDate());
-				flurryAuthList.setSellerKey(schRes2.getFlurryAuthList().get(i).getSellerKey());
-				flurryAuthList.setUpdateDate(schRes2.getFlurryAuthList().get(i).getUpdateDate());
-				fList.add(flurryAuthList);
-			}
+		/* 하단 */
+		// 내국인, 개인
+		if (sellerMbrs.get(0).getIsDomestic().equals("Y") && sellerMbrs.get(0).getSellerClass().equals("US010101")) {
+			sellerMbrSac = new SellerMbr();
+			sellerMbrSac.setAppStat("Lower");
 
-		DetailInformationRes response = new DetailInformationRes();
-		response.setExtraRightList(eList);// 판매자 멀티미디어정보
-		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
-		response.setSellerKey(schRes.getSellerKey());// 판매자Key
-		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));// 판매자 정보
-		response.setTabAuthList(tList);
-		response.setFlurryAuthList(fList);
+			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerName(), "").equals(""))
+				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerName());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getCharger(), "").equals(""))
+				sellerMbrSac.setCharger(sellerMbrs.get(0).getCharger());
+
+			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
+				sellerMbrSac.setRepEmail(sellerMbrs.get(0).getRepEmail());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
+				sellerMbrSac.setCustomerEmail(sellerMbrs.get(0).getCustomerEmail());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
+
+			sellerMbrSacs.add(sellerMbrSac);
+		}
+		// 내국인, 개인사업자 OR 법인 사업자
+		else if (sellerMbrs.get(0).getIsDomestic().equals("Y")
+				&& (sellerMbrs.get(0).getSellerClass().equals("US010102") || sellerMbrs.get(0).getSellerClass()
+						.equals("US010103"))) {
+			sellerMbrSac = new SellerMbr();
+			sellerMbrSac.setAppStat("Lower");
+
+			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
+				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
+
+			if (!StringUtil.nvl(sellerMbrs.get(0).getCeoName(), "").equals(""))
+				sellerMbrSac.setCeoName(sellerMbrs.get(0).getCeoName());
+
+			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
+				sellerMbrSac.setRepEmail(sellerMbrs.get(0).getRepEmail());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
+				sellerMbrSac.setCustomerEmail(sellerMbrs.get(0).getCustomerEmail());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
+
+			if (!StringUtil.nvl(sellerMbrs.get(0).getBizRegNumber(), "").equals(""))
+				sellerMbrSac.setBizRegNumber(sellerMbrs.get(0).getBizRegNumber());
+
+			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerAddress(), "").equals(""))
+				sellerMbrSac.setSellerAddress(sellerMbrs.get(0).getSellerAddress() + " "
+						+ sellerMbrs.get(0).getSellerDetailAddress());
+
+			if (!StringUtil.nvl(sellerMbrs.get(0).getRepPhone(), "").equals(""))
+				sellerMbrSac.setRepPhone(sellerMbrs.get(0).getRepPhone());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerPhone(), "").equals(""))
+				sellerMbrSac.setCustomerPhone(sellerMbrs.get(0).getCustomerPhone());
+
+			sellerMbrSacs.add(sellerMbrSac);
+		}
+		// 외국인, 개인
+		else if (sellerMbrs.get(0).getIsDomestic().equals("N") && sellerMbrs.get(0).getSellerClass().equals("US010101")) {
+			sellerMbrSac = new SellerMbr();
+			sellerMbrSac.setAppStat("Lower");
+
+			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerName(), "").equals(""))
+				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerName());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
+				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
+
+			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
+				sellerMbrSac.setRepEmail(sellerMbrs.get(0).getRepEmail());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
+				sellerMbrSac.setCustomerEmail(sellerMbrs.get(0).getCustomerEmail());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
+
+			sellerMbrSacs.add(sellerMbrSac);
+		}
+		// 외국인, 개인사업자or법인사업자
+		else if (sellerMbrs.get(0).getIsDomestic().equals("N")
+				&& (sellerMbrs.get(0).getSellerClass().equals("US010102") || sellerMbrs.get(0).getSellerClass()
+						.equals("US010103"))) {
+			sellerMbrSac = new SellerMbr();
+			sellerMbrSac.setAppStat("Lower");
+			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
+				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerName(), "").equals(""))
+				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerName());
+
+			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
+				sellerMbrSac.setRepEmail(sellerMbrs.get(0).getRepEmail());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
+				sellerMbrSac.setCustomerEmail(sellerMbrs.get(0).getCustomerEmail());
+			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
+				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
+
+			sellerMbrSacs.add(sellerMbrSac);
+		}
+
+		DetailInformationForProductRes response = new DetailInformationForProductRes();
+
+		response.setSellerMbrList(sellerMbrSacs);
 
 		return response;
 

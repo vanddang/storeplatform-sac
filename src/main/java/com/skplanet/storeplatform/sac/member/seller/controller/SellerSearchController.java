@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordRemin
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
@@ -114,7 +115,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailInformationForProduct/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailInformationRes detailInformationApp(SacRequestHeader header,
+	public DetailInformationForProductRes detailInformationApp(SacRequestHeader header,
 			@RequestBody @Validated DetailInformationForProductReq req) {
 		LOGGER.debug("request param : {}", req.toString());
 
