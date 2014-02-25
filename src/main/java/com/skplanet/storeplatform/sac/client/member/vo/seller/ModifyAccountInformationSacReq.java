@@ -88,6 +88,9 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	/** 계좌 인증여부. */
 	private String isAccountReal;
 
+	/** 공인인증여부. */
+	private String isOfficialAuth;
+
 	/** 계좌인증일시. ex (YYYYMMDDHH24MISS) ("20130122162853") 2013-01-22 16:28:53. */
 	private String accountRealDate;
 
@@ -305,6 +308,14 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 
 	public void setMarketStatus(String marketStatus) {
 		this.marketStatus = marketStatus;
+	}
+
+	public String getIsOfficialAuth() {
+		return this.isOfficialAuth;
+	}
+
+	public void setIsOfficialAuth(String isOfficialAuth) {
+		this.isOfficialAuth = isOfficialAuth;
 	}
 
 	public String getIsAccountReal() {
