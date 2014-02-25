@@ -180,7 +180,7 @@ public class IdpServiceImpl implements IdpService {
 		}
 
 		String oldID = map.get("old_id").toString();
-		isParentApprove = map.get("is_parent_approve").toString();
+		isParentApprove = map.get("is_parent_approve").toString(); // *법정대리인 여부를 TB_US_USERMBR엔 정보 저장을 하지 않음*
 
 		if ("null".equals(oldID) || "".equals(oldID)) { // 신규가입경우 기존 Tstore에 없던 회원가입요청시 전환가입 대상자중 Tstore 미가입자로 Tstore에
 														// 가입이 안되어있는경우는 신규가입으로 판단
@@ -234,7 +234,6 @@ public class IdpServiceImpl implements IdpService {
 			userMbr.setImSiteCode(map.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
 			// 실명인증 여부 신규인경우 Y로 전달받아도 실명인증정보에서 신규인경우 N으로 수정이됨
 			userMbr.setIsRealName(map.get("is_rname_auth").toString());
-			userMbr.setIsParent(isParentApprove); // 법정대리인 동의여부(Y/N)
 			userMbr.setIsMemberPoint(ocbJoinCodeYn); // 통합 포인트 여부 (Y/N)
 
 			MbrAuth mbrAuth = this.getMbrAuthByNew(map, "N");
@@ -626,7 +625,6 @@ public class IdpServiceImpl implements IdpService {
 		if (hashMap.get("user_nation_code") != null)
 			getUserMbr.setUserCountry(hashMap.get("user_nation_code").toString()); // 사용자 국가 코드
 		getUserMbr.setImSiteCode(hashMap.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
-		getUserMbr.setIsParent(hashMap.get("is_parent_approve").toString()); // 법정대리인 동의여부(Y/N)
 		getUserMbr.setIsMemberPoint(hashMap.get("ocb_join_code").toString()); // 통합 포인트 여부 (Y/N)
 
 		if (searchUserResponse.getMbrAuth() != null) {
@@ -3283,7 +3281,7 @@ public class IdpServiceImpl implements IdpService {
 		if (null != map.get("old_id")) { // null check
 			oldID = map.get("old_id").toString();
 		}
-		isParentApprove = map.get("is_parent_approve").toString();
+		isParentApprove = map.get("is_parent_approve").toString(); // *법정대리인 여부를 TB_US_USERMBR엔 정보 저장을 하지 않음*
 
 		// 1. 통합서비스 번호가 존재시에만 로직 수행 이용동의
 		if (!"".equals(imIntSvcNo)) {
@@ -3391,10 +3389,8 @@ public class IdpServiceImpl implements IdpService {
 					userMbr.setImSiteCode(map.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
 					// 실명인증 여부 신규인경우 Y로 전달받아도 실명인증정보에서 신규인경우 N으로 수정이됨
 					userMbr.setIsRealName(map.get("is_rname_auth").toString());
-					userMbr.setIsParent(isParentApprove); // 법정대리인 동의여부(Y/N)
 					userMbr.setIsMemberPoint(ocbJoinCodeYn); // 통합 포인트 여부 (Y/N)
 
-					// TO DO ... 실명인증정보 공통 내부 메소드로 정의해야 함.
 					MbrAuth mbrAuth = this.getMbrAuthByNew(map, "N");
 
 					createUserRequest.setCommonRequest(commonRequest); // 공통요청
