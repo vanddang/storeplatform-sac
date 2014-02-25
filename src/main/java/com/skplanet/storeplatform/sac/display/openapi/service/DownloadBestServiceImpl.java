@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacR
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -115,18 +116,32 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 
 			if ("2".equals(inquiryType)) {
 				// 사업자 등록번호로 Selley Key 조회
+				String[] arraySellerKey = null;
 				DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-				// detailInformationSacReq.setSellerBizNumber(inquiryValue);
-				DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
-						.detailInformation(detailInformationSacReq);
-				// String sellertKey = detailInformationSacRes.getSellerMbr().get(0).getSellerCompany();
-				String selleryKey = "";
+				List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+				SellerMbrSac sellerMbrSac = new SellerMbrSac();
+				sellerMbrSac.setSellerBizNumber(inquiryValue);
+				sellerMbrSacList.add(sellerMbrSac);
+				detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+				try {
+					DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
+							.detailInformation(detailInformationSacReq);
 
-				if (StringUtils.isNotEmpty(selleryKey)) {
+					Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
+					List<SellerMbrSac> sellerMbrs = new ArrayList<SellerMbrSac>();
+					sellerMbrSac = new SellerMbrSac();
+					while (it.hasNext()) {
+						String key = it.next();
+						sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
+						arraySellerKey = new String[sellerMbrs.size()];
+						for (int i = 0; i < sellerMbrs.size(); i++) {
+							arraySellerKey[i] = sellerMbrs.get(i).getSellerKey();
+						}
+					}
 					// 조회된 Seller Key setting
-					downloadBestSacReq.setInquiryValue(selleryKey);
-				} else {
-					// throw new StorePlatformException("SAC_DSP_0008");
+					downloadBestSacReq.setArraySellerKey(arraySellerKey);
+				} catch (Exception e) {
+					downloadBestSacReq.setArraySellerKey(arraySellerKey);
 				}
 			}
 

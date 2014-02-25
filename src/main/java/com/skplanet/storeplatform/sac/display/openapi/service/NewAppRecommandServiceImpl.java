@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommandS
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -171,12 +172,27 @@ public class NewAppRecommandServiceImpl implements NewAppRecommandService {
 				/*
 				 * 판매자 정보중 회사명 Seller Key는 Null로 Set해서 공개하지 않는다.
 				 */
+				DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+				DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
+				List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+				SellerMbrSac sellerMbrSac = new SellerMbrSac();
+				this.log.debug("#########################################################");
+				this.log.debug("sellerMbrNo	:	" + metaInfo.getSellerMbrNo());
+				this.log.debug("#########################################################");
+				sellerMbrSac.setSellerKey(metaInfo.getSellerMbrNo());
+				sellerMbrSacList.add(sellerMbrSac);
+				detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+
 				try {
-					DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-					DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
-					// detailInformationSacReq.setSellerKey(metaInfo.getSellerMbrNo());
 					detailInformationSacRes = this.sellerSearchSCI.detailInformation(detailInformationSacReq);
-					// company = detailInformationSacRes.getSellerMbr().get(0).getSellerCompany();
+					Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
+					List<SellerMbrSac> sellerMbrs = new ArrayList<SellerMbrSac>();
+					sellerMbrSac = new SellerMbrSac();
+					while (it.hasNext()) {
+						String key = it.next();
+						sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
+						company = sellerMbrs.get(0).getSellerCompany();
+					}
 
 				} catch (Exception e) {
 					company = "";

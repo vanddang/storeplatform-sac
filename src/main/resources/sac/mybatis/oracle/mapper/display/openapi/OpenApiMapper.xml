@@ -62,8 +62,13 @@
 		                           <if test='inquiryType == "1"'> 
 		                              AND B.REG_ID = #{inquiryValue}        -- 개발자 ID
 		                           </if>
-                                   <if test='inquiryType == "2"'> 
-                                      AND B.SELLER_MBR_NO = #{inquiryValue} -- 판매자 번호
+                                   <if test='inquiryType == "2"'>
+                                      <if test="arraySellerKey != null">
+                                      AND B.SELLER_MBR_NO IN 
+                                     <foreach collection="arraySellerKey" item="sellerKey" separator="," open="(" close=")">
+                                       #{sellerKey}
+                                     </foreach>                           
+                                     </if> 
                                    </if>		                           
 		                           AND B.PROD_CHRG_YN = #{prodCharge}    --유무료 구분       
 		                         ORDER BY A.DWLD_QTY
