@@ -91,7 +91,7 @@ public class CouponConstants {
 	public static final String COUPON_SALE_TYPE_SHIPPING_PROD = "3"; // 배송상품
 
 	// 브랜드,카탈로그 Path
-	public static final String BRAND_CATALOG_PATH = "COUPON"; // 브랜드, 카탈로그 path
+	public static final String BRAND_CATALOG_PATH = "shopping"; // 브랜드, 카탈로그 path
 
 	// 브랜드, 카탈로그 REPOSITORY_TYPE
 	public static final String TYPE_FOR_REPOSITORY_PATH = "PD011801"; // M/M
