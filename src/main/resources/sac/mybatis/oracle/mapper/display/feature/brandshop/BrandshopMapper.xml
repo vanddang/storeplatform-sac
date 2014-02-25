@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Brandshop">
+    <!-- 브렌드샵 테마 조회 -->
+    <select id="selectBrandshop" parameterType="BrandshopSacReq" resultType="Brandshop">
+		SELECT  /* BrandshopMapper.XML, selectBrandshop, seung hun Lee, 2014-02-19 */    
+            TOTAL_COUNT
+          , BRAND_ID
+          , BRAND_SHOP_NM
+          , CATEGORY_NO
+          , MENU_NM
+          , LOG_IMG_POS
+          , BNR_IMG_SIZE
+          , EXPO_ORD
+          , MBR_NO
+        FROM
+		( 		
+            SELECT
+	              COUNT(*) OVER () AS TOTAL_COUNT
+                , ROW_NUMBER() OVER(ORDER BY A.CATEGORY_NO, A.EXPO_ORD) RNUM
+			    , A.BRAND_ID
+			    , A.BRAND_SHOP_NM
+			    , A.CATEGORY_NO
+			    , (SELECT CD_NM FROM TB_CM_CD A1
+		              WHERE A1.CD_ID = A.CATEGORY_NO 
+		              AND ROWNUM = 1) MENU_NM		     
+			    , A.LOG_IMG_POS
+			    , A.BNR_IMG_SIZE
+			    , A.EXPO_ORD
+			    , A.MBR_NO
+		    FROM
+			(
+				SELECT DISTINCT  BS.BRAND_SHOP_NO AS BRAND_ID
+				    , BS.BRAND_SHOP_NM
+				    , BS.CATEGORY_NO
+				    , CONCAT( BS.BNR_IMG_PATH, BS.BNR_IMG_NM ) AS LOG_IMG_POS
+				    , BS.BNR_IMG_SIZE
+				    , BS.EXPO_ORD
+				    , BSS.MBR_NO
+	            FROM TB_DP_BRAND_SHOP BS
+	                , TB_DP_BRAND_SHOP_SELLER BSS
+	                , TB_DP_BRAND_SHOP_DVC BSD  
+	                , TB_DP_PROD_RSHP A
+	                , TB_DP_MENU_CATEGORY_PROD_MAPG B
+	                , TB_DP_MENU_CATEGORY C
+	                , TB_DP_PROD D  
+	                , TB_DP_TENANT_PROD E
+	                , TB_CM_DEVICE F
+	                , TB_DP_SPRT_DEVICE G
+	                , TB_DP_PROD_DESC H
+	            WHERE 1=1
+	            AND BS.TENANT_ID = #{tenantId}    
+	            AND BS.BRAND_SHOP_NO = BSS.BRAND_SHOP_NO
+	            AND BS.TENANT_ID = BSS.TENANT_ID
+	            AND BS.BRAND_SHOP_NO = BSD.BRAND_SHOP_NO
+	            AND BS.TENANT_ID = BSD.TENANT_ID
+	            AND BS.EXPO_YN = 'Y'
+	            AND BS.DEL_YN = 'N'  
+	            AND BSS.MBR_NO = D.SELLER_MBR_NO
+	            AND A.PART_PROD_ID = D.PROD_ID
+	            AND A.PROD_RSHP_CD = 'DP010802'
+	            AND A.PROD_ID = B.PROD_ID
+	            AND B.USE_YN = 'Y'
+	            AND B.MENU_ID = C.MENU_ID
+	            AND C.USE_YN = 'Y'
+	            AND D.PROD_ID = E.PROD_ID
+	            AND D.PROD_ID = H.PROD_ID
+	            AND BS.TENANT_ID = E.TENANT_ID
+	            AND BSD.DVC_TYPE_CD = F.DEVICE_MODEL_CD
+	            AND F.DEVICE_MODEL_CD = 'SHV-E230S'
+	            AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
+	            AND F.USE_YN = 'Y'
+	            AND A.PART_PROD_ID = G.PROD_ID
+	            AND DECODE( D.TOP_MENU_ID
+	                        , 'DP13'
+	                        , DECODE( F.EBOOK_SPRT_YN
+	                                , 'Y'
+	                                , DECODE( D.META_CLSF_CD
+	                                        , 'CT24'
+	                                        , DECODE( F.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+	                                        , 'CT26'
+	                                        , DECODE( F.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+	                                        , 1 )
+	                                , 0 )
+	                        , 'DP14'
+	                        , DECODE( F.COMIC_SPRT_YN , 'Y', 1 , 0 )
+	                        , 'DP16'
+	                        , DECODE( D.META_CLSF_CD
+	                                , 'CT25'
+	                                , DECODE( F.MUSIC_SPRT_YN, 'Y', 1, 0)
+	                                , 1 )
+	                        , 1 ) = 1
+	              AND ( CASE WHEN D.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+	                         THEN ( SELECT 1
+	                                  FROM TB_DP_SUB_CONTENTS SC
+	                                 WHERE SC.PROD_ID = A.PART_PROD_ID
+	                                   AND SC.SALE_YN = 'Y'
+	                                   AND DECODE( F.HDV_SPRT_YN
+	                                             , 'PD005201'
+	                                             , DECODE ( SC.DP_PG_QULT_CD
+	                                                      , 'PD009701', 1
+	                                                      , 'PD009702', 1
+	                                                      , 0)
+	                                             , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+	                                   AND ROWNUM  <![CDATA[ <= ]]> 1  )
+	                         ELSE 1
+	                     END ) = 1
+	              AND ( CASE WHEN D.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+	                         THEN DECODE( F.VIDEO_DRM_SPRT_YN
+	                                    , 'N'
+	                                    , DECODE( NVL( D.DRM_YN, 'N' ), 'N', 1, 0 )
+	                                    , 'Y'
+	                                    , 1 )
+	                         ELSE 1
+	                     END ) = 1
+			) A
+		)
+        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+        ORDER BY RNUM
+    </select>
+</mapper>
