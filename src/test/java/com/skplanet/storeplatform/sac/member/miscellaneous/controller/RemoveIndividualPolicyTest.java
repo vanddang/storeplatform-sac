@@ -59,7 +59,7 @@ public class RemoveIndividualPolicyTest {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * before.
 	 * </pre>
 	 */
 	@Before
@@ -71,6 +71,11 @@ public class RemoveIndividualPolicyTest {
 		xStoreAuthInfo = "authKey=114127c7ef42667669819dad5df8d820c;ist=N";
 	}
 
+	/**
+	 * <pre>
+	 * After.
+	 * </pre>
+	 */
 	@After
 	public void after() {
 		// Debug [RESPONSE-SAC]

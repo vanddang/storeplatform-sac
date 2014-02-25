@@ -117,6 +117,11 @@ public class ModifyInformationTest {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@After
 	public void after() {
 		// Debug

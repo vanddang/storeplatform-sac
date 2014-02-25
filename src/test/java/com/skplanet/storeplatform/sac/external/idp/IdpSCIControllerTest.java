@@ -47,6 +47,11 @@ import com.skplanet.storeplatform.external.client.idp.vo.SimpleJoinEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthImageEcRes;
 
+/**
+ * Calss 설명
+ * 
+ * Updated on : 2014. 2. 25. Updated by : Rejoice, Burkhan
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration

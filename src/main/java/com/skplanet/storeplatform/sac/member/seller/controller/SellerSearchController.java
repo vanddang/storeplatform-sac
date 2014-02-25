@@ -60,7 +60,10 @@ public class SellerSearchController {
 	 * 2.2.2 판매자 회원 ID/Email 중복 조회.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            DuplicateByIdEmailReq
 	 * @return DuplicateByIdEmailRes
 	 */
 	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.POST)

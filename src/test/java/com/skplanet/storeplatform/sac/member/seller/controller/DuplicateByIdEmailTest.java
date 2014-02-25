@@ -69,6 +69,11 @@ public class DuplicateByIdEmailTest {
 		req = new DuplicateByIdEmailReq();
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@After
 	public void after() {
 		LOGGER.debug("[RESPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));

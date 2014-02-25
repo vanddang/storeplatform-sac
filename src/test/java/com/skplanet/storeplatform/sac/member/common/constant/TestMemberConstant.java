@@ -1,5 +1,10 @@
 package com.skplanet.storeplatform.sac.member.common.constant;
 
+/**
+ * 임시 회원 상수들
+ * 
+ * Updated on : 2014. 2. 25. Updated by : Rejoice, Burkhan
+ */
 public final class TestMemberConstant {
 
 	public static final String PREFIX_SELLER_LOCAL_PATH = "/dev/member/seller";

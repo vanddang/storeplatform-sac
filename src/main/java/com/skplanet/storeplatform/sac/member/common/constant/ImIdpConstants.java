@@ -1,5 +1,10 @@
 package com.skplanet.storeplatform.sac.member.common.constant;
 
+/**
+ * Calss 설명
+ * 
+ * Updated on : 2014. 2. 25. Updated by : Rejoice, Burkhan
+ */
 public final class ImIdpConstants {
 
 	/** 요청 수행 성공 (1000). */
@@ -85,8 +90,8 @@ public final class ImIdpConstants {
 
 	public static final String IDP_RES_CODE_PHONE_STATUS_HALT = "2024X000";
 
-	public static final String IDP_RES_CODE_USER_STOP = "2025E073";// 계정 잠금 상태
-	public static final String IDP_RES_CODE_USER_NOT_CHANGE = "2025X000";// 변경 가능한 회원상태가 아닙
+	public static final String IDP_RES_CODE_USER_STOP = "2025E073"; // 계정 잠금 상태
+	public static final String IDP_RES_CODE_USER_NOT_CHANGE = "2025X000"; // 변경 가능한 회원상태가 아닙
 
 	/** 이미 서비스에 등록한 사용자 (2100). */
 	public static final String IDP_RES_CODE_ALREADY_JOIN = "2100X000";
@@ -126,7 +131,7 @@ public final class ImIdpConstants {
 	public static final String IDP_RES_CODE_USER_DATA_NOT_EXIST = "2208X000";
 	/** 가입신청 상태이므로 로그인 실패 (2215). */
 	public static final String IDP_RES_CODE_INVALID_USER_INFO = "2215X000";
-	/** 로그인 제한 상태 (2222) */
+	/** 로그인 제한 상태 (2222). */
 	public static final String IDP_RES_CODE_LOGIN_RESTRICT = "2222X000";
 	/** 한신정 연동 실패 (4000). */
 	public static final String IDP_RES_CODE_NICE_LINKAGE_FAIL = "4000X000";
@@ -173,7 +178,7 @@ public final class ImIdpConstants {
 	public static final String SSO_SST_TSTORE = "Tstore";
 	public static final String SSO_SST_TCLOUD = "Tcloud";
 	public static final String SSO_SST_TMAP = "Tmap";
-	public static final String sSO_SST_DEVCENTER = "통합개발자 센터";
+	public static final String SSO_SST_DEVCENTER = "통합개발자 센터";
 	public static final String SSO_SST_C_PORTAL = "Context Portal";
 	public static final String SSO_SST_NOP = "NOP";
 }

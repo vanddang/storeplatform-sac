@@ -297,7 +297,8 @@ public class MiscellaneousController {
 	 * </pre>
 	 * 
 	 * @param request
-	 * @return
+	 *            AuthorizeAccountReq
+	 * @return AuthorizeAccountRes
 	 */
 	@RequestMapping(value = "/authorizeAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -312,7 +313,9 @@ public class MiscellaneousController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            GetIndividualPolicyReq
 	 * @return GetIndividualPolicyRes
 	 */
 	@RequestMapping(value = "/getIndividualPolicy/v1", method = RequestMethod.POST)
@@ -328,7 +331,9 @@ public class MiscellaneousController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            CreateIndividualPolicyReq
 	 * @return CreateIndividualPolicyRes
 	 */
 	@RequestMapping(value = "/createIndividualPolicy/v1", method = RequestMethod.POST)
@@ -344,7 +349,9 @@ public class MiscellaneousController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            RemoveIndividualPolicyReq
 	 * @return RemoveIndividualPolicyRes
 	 */
 	@RequestMapping(value = "/removeIndividualPolicy/v1", method = RequestMethod.POST)

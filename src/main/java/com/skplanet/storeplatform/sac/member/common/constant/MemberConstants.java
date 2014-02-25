@@ -120,7 +120,7 @@ public final class MemberConstants {
 	public static final String DEVICE_EXTRA_ROOTING_YN = "US011412"; // 루팅 여부
 	public static final String DEVICE_EXTRA_TCLOUD_SUPPORT_YN = "US011413"; // T CLOUD 지원여부
 
-	/** 기기변경 유형 코드 */
+	/** 기기변경 유형 코드. */
 	public static final String DEVICE_CHANGE_TYPE_USER_SELECT = "US012001"; // 사용자선택
 	public static final String DEVICE_CHANGE_TYPE_MODEL_CHANGE = "US012002"; // 기기변경
 	public static final String DEVICE_CHANGE_TYPE_NUMBER_CHANGE = "US012003"; // 번호변경
@@ -143,12 +143,12 @@ public final class MemberConstants {
 	public static final String DEVICE_ID_TYPE_UUID = "uuid";
 	public static final String DEVICE_ID_TYPE_MACADDRESS = "mac";
 
-	/** 실명인증 수단 코드 판단 값 */
+	/** 실명인증 수단 코드 판단 값. */
 	public static final String REAL_NAME_AUTH_TYPE_MOBILE = "1"; // 휴대폰
 	public static final String REAL_NAME_AUTH_TYPE_IPIN = "2"; // IPIN
 	public static final String REAL_NAME_AUTH_TYPE_ETC = "9"; // 기타
 
-	/** 실명인증 수단 코드 */
+	/** 실명인증 수단 코드. */
 	public static final String REAL_NAME_AUTH_MOBILE = "US011101"; // 휴대폰인증
 	public static final String REAL_NAME_AUTH_IPIN = "US011102"; // IPIN인증
 

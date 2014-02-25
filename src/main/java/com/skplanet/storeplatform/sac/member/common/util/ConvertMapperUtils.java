@@ -20,6 +20,7 @@ public class ConvertMapperUtils {
 	 * </pre>
 	 * 
 	 * @param obj
+	 *            Object
 	 * @return Object
 	 */
 	public static Object convertObject(Object obj) {
@@ -55,7 +56,8 @@ public class ConvertMapperUtils {
 	 * </pre>
 	 * 
 	 * @param obj
-	 * @return
+	 *            Object
+	 * @return String
 	 */
 	public static String convertObjectToJson(Object obj) {
 		String returnStr = "";

@@ -130,6 +130,11 @@ public class ModifyAccountInformationTest {
 		LOGGER.debug("[RESPONSE(SAC)-회원정산정보 수정] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@Test
 	public void testModifyAccountInformation() {
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/modifyInformation/v1")

@@ -546,6 +546,7 @@ public class MemberCommonComponent {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @return CommonRequest
 	 */
 	public CommonRequest getSCCommonRequest(SacRequestHeader header) {
@@ -562,8 +563,11 @@ public class MemberCommonComponent {
 	 * </pre>
 	 * 
 	 * @param commonRequest
+	 *            CommonRequest
+	 * @param sessionKey
+	 *            String
 	 * @param sellerKey
-	 * @return SearchAuthKeyRes
+	 *            String
 	 */
 	public void checkSessionKey(CommonRequest commonRequest, String sessionKey, String sellerKey) {
 		SearchLoginInfoRequest req = new SearchLoginInfoRequest();
@@ -590,6 +594,7 @@ public class MemberCommonComponent {
 	 * </pre>
 	 * 
 	 * @param commonRequest
+	 *            CommonRequest
 	 * @param keyType
 	 *            : 검색조건
 	 * @param key

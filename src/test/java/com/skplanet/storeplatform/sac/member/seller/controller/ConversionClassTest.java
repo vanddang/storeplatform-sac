@@ -120,12 +120,22 @@ public class ConversionClassTest {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@After
 	public void after() {
 		// Debug
 		LOGGER.debug("[RESPONSE(SAC)-회원기본정보 수정] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@Test
 	public void testConversionClassRes() {
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/conversionClass/v1")
@@ -137,11 +147,11 @@ public class ConversionClassTest {
 						req.setSessionKey("fd6697b8e02e4d9f84d8438bf0bf7b1e");
 						req.setSellerClassTo("US010103"); // BIZ_KIND_CD(US000901,US000904) 신청
 						req.setRepEmail("aind050@yopmail.com"); // ("대표 이메일"); 회원 REP_EMAIL > 전환 CHRGPERS_EMAIL
-						req.setSellerBizCorpNumber("123123123");// ("법인등록번호"); CORP_REG_NO
+						req.setSellerBizCorpNumber("123123123"); // ("법인등록번호"); CORP_REG_NO
 						req.setSellerBizType("업종"); // INDT_NM 업종명 종목 종목
 						req.setSellerBizCategory("업태"); // COND_NM 업태명 업태 업태
 						req.setBankAccount("0112233322511"); // ACCT_NO 계좌번호
-						req.setBankCode("123");// BANK_CD 은행코드
+						req.setBankCode("123"); // BANK_CD 은행코드
 						req.setBankAcctName("홍길동"); // DEPSTR_NM 예금자명
 						req.setIsAccountReal("Y"); // ACCT_AUTH_YN 계좌인증여부
 						req.setIsBizTaxable("N"); // EASY_TXNPERS_YN 간이과세여부
@@ -159,16 +169,16 @@ public class ConversionClassTest {
 						req.setBankAddress("XXXX"); // FR_BANK_ADDR 외국은행주소
 						req.setBankLocation("XXXX"); // FR_BANK_LOC 외국은행 위치
 						req.setTpinCode("XXXX"); // FR_TIN_NO 외국 tpin 번호
-						req.setVendorCode("XXXX");// VENDOR_CD 벤더코드
+						req.setVendorCode("XXXX"); // VENDOR_CD 벤더코드
 						req.setRepPhoneArea("XXXX"); // REP_TEL_NATION_NO 대표전화 국가 번호
 						req.setRepFaxArea("XXXX"); // FAX_TEL_NATION_NO member 테이블네 넣을때는 FAX_NATION_NO 넣으면 될듯
 						req.setBizGrade("XXXX"); // DELIB_GRD_CD 심의등급코드 TB_US_SELLERMBR 에만 있음 테이블에 추가됨
-						req.setIsDeductible("Y");// AUTO_DED_POSB_TARGET_YN 자동차감가능대상여부 TB_US_SELLERMBR 에만
+						req.setIsDeductible("Y"); // AUTO_DED_POSB_TARGET_YN 자동차감가능대상여부 TB_US_SELLERMBR 에만
 						req.setMarketCode("XXXX"); // LNCHG_MALL_CD 입점 상점코드 ##### 전환 쪽에서 사용
 						req.setMarketStatus("XXXX"); // LNCHG_MBR_STATUS_CD 입점 회원 상태코드 ##### 전환 쪽에서 사용
 						req.setAccountRealDate("20110124135542"); // ACCT_AUTH_DT 계좌인증일시
 						req.setSellerBizZip("120757"); // ENPRPL_ZIP 우편번호
-						req.setSellerBizAddress("서울시 서대문구 대현동");// ENPRPL_ADDR 주소 의경우
+						req.setSellerBizAddress("서울시 서대문구 대현동"); // ENPRPL_ADDR 주소 의경우
 						req.setSellerBizDetailAddress("럭키 아파트 101동 909호");
 						req.setCeoBirthDay("231123"); // CEO_BIRTH
 						req.setSellerLanguage("KO"); // LANG_CD

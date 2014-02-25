@@ -190,7 +190,9 @@ public interface MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            GetIndividualPolicyReq
 	 * @return GetIndividualPolicyRes
 	 */
 	public GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header, GetIndividualPolicyReq req);
@@ -201,7 +203,9 @@ public interface MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            CreateIndividualPolicyReq
 	 * @return CreateIndividualPolicyRes
 	 */
 	public CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header, CreateIndividualPolicyReq req);
@@ -212,7 +216,9 @@ public interface MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            RemoveIndividualPolicyReq
 	 * @return RemoveIndividualPolicyRes
 	 */
 	public RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header, RemoveIndividualPolicyReq req);

@@ -113,7 +113,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private DeviceSCI deviceSCI; // 회원 Component 휴대기기 기능 Interface.
 
 	@Autowired
-	private IdpSCI idpSCI;// IDP 연동 Interface.
+	private IdpSCI idpSCI; // IDP 연동 Interface.
 
 	@Autowired
 	private MessageSCI messageSCI; // 기타 Component 메시지전송 기능 Interface.
@@ -669,7 +669,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            GetIndividualPolicyReq
 	 * @return GetIndividualPolicyRes
 	 */
 	@Override
@@ -726,7 +728,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            CreateIndividualPolicyReq
 	 * @return CreateIndividualPolicyRes
 	 */
 	@Override
@@ -777,7 +781,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            RemoveIndividualPolicyReq
 	 * @return RemoveIndividualPolicyRes
 	 */
 	@Override

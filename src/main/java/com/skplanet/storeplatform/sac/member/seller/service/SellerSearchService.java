@@ -28,7 +28,17 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  */
 public interface SellerSearchService {
 
-	/** 2.2.2. 판매자 회원 ID/Email 중복 조회 */
+	/**
+	 * <pre>
+	 * 2.2.2. 판매자 회원 ID/Email 중복 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            DuplicateByIdEmailReq
+	 * @return DuplicateByIdEmailRes
+	 */
 	public DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, DuplicateByIdEmailReq req);
 
 	/** 판매자 회원 기본정보조회. */

@@ -106,7 +106,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            CreateReq
 	 * @return CreateRes
 	 */
 	@Override
@@ -303,7 +305,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            AuthorizeReq
 	 * @return AuthorizeRes
 	 */
 	@Override
@@ -428,7 +432,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ModifyInformationSacReq
 	 * @return ModifyInformationRes
 	 */
 	@Override
@@ -514,7 +520,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ModifyAccountInformationSacReq
 	 * @return ModifyAccountInformationRes
 	 */
 	@Override
@@ -558,7 +566,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerBizType(req.getSellerBizType()); // INDT_NM 업종명 종목 종목
 		sellerMbr.setSellerBizCategory(req.getSellerBizCategory()); // COND_NM 업태명 업태 업태
 		sellerMbr.setSellerBizCorpNumber(req.getSellerBizCorpNumber()); // ("법인등록번호"); CORP_REG_NO
-		sellerMbr.setRepPhoneArea(req.getRepFaxArea()); // ("대표전화번호 국가코드"); REP_TEL_NATION_NO
+		sellerMbr.setRepPhoneArea(req.getRepPhoneArea()); // ("대표전화번호 국가코드"); REP_TEL_NATION_NO
 		sellerMbr.setRepPhone(req.getRepPhone()); // ("대표전화번호"); REP_TEL_NO
 		sellerMbr.setRepFaxArea(req.getRepFaxArea()); // ("대표팩스번호 국가코드"); FAX_NATION_NO
 		sellerMbr.setRepFax(req.getRepFax()); // ("대표팩스번호"); FAX_NO
@@ -633,7 +641,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ModifyEmailSacReq
 	 * @return ModifyEmailSacRes
 	 */
 	@Override
@@ -683,7 +693,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ModifyPasswordSacReq
 	 * @return ModifyPasswordSacRes
 	 */
 	@Override
@@ -724,7 +736,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ConfirmReq
 	 * @return ConfirmRes
 	 */
 	@Override
@@ -778,7 +792,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ConversionClassSacReq
 	 * @return ConversionClassResSacRes
 	 */
 	@Override
@@ -906,7 +922,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            LockAccountReq
 	 * @return LockAccountRes
 	 */
 	@Override
@@ -952,7 +970,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ModifyRealNameSacReq
 	 * @return ModifyRealNameSacRes
 	 */
 	@Override
@@ -1110,7 +1130,9 @@ public class SellerServiceImpl implements SellerService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            RemoveFlurrySacReq
 	 * @return RemoveFlurrySacRes
 	 */
 	@Override

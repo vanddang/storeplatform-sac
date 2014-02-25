@@ -63,7 +63,7 @@ public class GetIndividualPolicyTest {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * before.
 	 * </pre>
 	 */
 	@Before
@@ -131,6 +131,11 @@ public class GetIndividualPolicyTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 실패 CASE.
+	 * </pre>
+	 */
 	@Test
 	public void getIndividualPolicyNonData() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getIndividualPolicy/v1")

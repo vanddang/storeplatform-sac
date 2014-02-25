@@ -118,12 +118,22 @@ public class ModifyEmailTest {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@After
 	public void after() {
 		// Debug
 		LOGGER.debug("[RESPONSE(SAC)-Password 수정] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@Test
 	public void modifyEmailTest() {
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/modifyEmail/v1")

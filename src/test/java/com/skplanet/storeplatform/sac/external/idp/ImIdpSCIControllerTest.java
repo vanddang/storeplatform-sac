@@ -19,7 +19,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.AgreeUserEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.CheckIdStatusIdpImEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.CheckIdStatusIdpImEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.FindJoinServiceListIDPEcReq;
@@ -46,6 +45,11 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearch
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoSearchServerEcRes;
 
+/**
+ * Calss 설명
+ * 
+ * Updated on : 2014. 2. 25. Updated by : Rejoice, Burkhan
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -231,7 +235,7 @@ public class ImIdpSCIControllerTest {
 	@Test
 	public void testCheckIdStatusIdpIm() {
 		CheckIdStatusIdpImEcReq req = new CheckIdStatusIdpImEcReq();
-		CheckIdStatusIdpImEcRes res = this.imIdpSCI.checkIdStatusIdpIm(req);
+		CommonRes res = this.imIdpSCI.checkIdStatusIdpIm(req);
 		LOGGER.debug(res.toString());
 	}
 

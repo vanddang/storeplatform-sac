@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,7 +65,10 @@ public class SellerController {
 	 * 2.2.1. 판매자 회원 가입.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            CreateReq
 	 * @return CreateRes
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
@@ -80,8 +82,11 @@ public class SellerController {
 	 * 2.2.3. 판매자 회원 인증.
 	 * </pre>
 	 * 
-	 * @param AuthorizeReq
-	 * @return AuthorizeRes : JSON
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeReq
+	 * @return AuthorizeRes
 	 */
 	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -109,7 +114,9 @@ public class SellerController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ModifyInformationSacReq
 	 * @return ModifyInformationRes
 	 */
 	@RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
@@ -125,7 +132,9 @@ public class SellerController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ModifyAccountInformationSacReq
 	 * @return ModifyAccountInformationRes
 	 */
 	@RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
@@ -141,7 +150,9 @@ public class SellerController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ModifyEmailSacReq
 	 * @return ModifyEmailSacRes
 	 */
 	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
@@ -156,7 +167,9 @@ public class SellerController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ModifyPasswordSacReq
 	 * @return ModifyPasswordSacRes
 	 */
 	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
@@ -171,7 +184,9 @@ public class SellerController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ConfirmReq
 	 * @return ConfirmRes
 	 */
 	@RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
@@ -186,7 +201,9 @@ public class SellerController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ConversionClassSacReq
 	 * @return ConversionClassResSacRes
 	 */
 	@RequestMapping(value = "/conversionClass/v1", method = RequestMethod.POST)
@@ -201,13 +218,15 @@ public class SellerController {
 	 * 2.2.17. 판매자회원 계정 잠금.
 	 * </pre>
 	 * 
-	 * @param LockAccountReq
-	 * @return LockAccountRes : JSON
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            LockAccountReq
+	 * @return LockAccountRes
 	 */
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req,
-			BindingResult result) throws Exception {
+	public LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req) {
 		return this.sellerService.lockAccount(header, req);
 	}
 
@@ -217,7 +236,9 @@ public class SellerController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ModifyRealNameSacReq
 	 * @return ModifyRealNameSacRes
 	 */
 	@RequestMapping(value = "/modifyRealName/v1", method = RequestMethod.POST)
@@ -261,7 +282,9 @@ public class SellerController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            RemoveFlurrySacReq
 	 * @return RemoveFlurrySacRes
 	 */
 	@RequestMapping(value = "/removeFlurry/v1", method = RequestMethod.POST)

@@ -106,7 +106,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            DuplicateByIdEmailReq
 	 * @return DuplicateByIdEmailRes
 	 */
 	@Override
