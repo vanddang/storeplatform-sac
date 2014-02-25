@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,15 +111,15 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			requestVO.setStdDt(stdDt);
 		}
 
-		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
+		// prodGradeCd 배열로 변경
 		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
-			try {
-				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
-			} catch (Exception ex) {
-				throw new StorePlatformException("SAC_DSP_9999", ex);
-			}
+			// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
+			// try {
+			// requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
+			// } catch (Exception ex) {
+			// throw new StorePlatformException("SAC_DSP_9999", ex);
+			// }
 
-			// prodGradeCd 배열로 변경
 			String[] prodGradeCdArr = requestVO.getProdGradeCd().split("\\+");
 			requestVO.setProdGradeCdArr(prodGradeCdArr);
 		}

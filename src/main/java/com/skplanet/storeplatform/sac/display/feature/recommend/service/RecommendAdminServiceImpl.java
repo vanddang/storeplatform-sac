@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.recommend.service;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,28 +116,28 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			requestVO.setStdDt(stdDt);
 		}
 
-		// topMenuId encode 처리(테넌트에서 인코딩하여 넘길 시 encode 제거 필요)
+		// topMenuId 배열로 변경
 		if (!StringUtils.isEmpty(requestVO.getTopMenuId())) {
-			try {
-				requestVO.setTopMenuId(URLEncoder.encode(requestVO.getTopMenuId(), "UTF-8"));
-			} catch (Exception ex) {
-				throw new StorePlatformException("SAC_DSP_9999", ex);
-			}
+			// topMenuId encode 처리(테넌트에서 인코딩하여 넘길 시 encode 제거 필요)
+			// try {
+			// requestVO.setTopMenuId(URLEncoder.encode(requestVO.getTopMenuId(), "UTF-8"));
+			// } catch (Exception ex) {
+			// throw new StorePlatformException("SAC_DSP_9999", ex);
+			// }
 
-			// topMenuId 배열로 변경
 			String[] topMenuIdArr = requestVO.getTopMenuId().split("\\+");
 			requestVO.setTopMenuIdArr(topMenuIdArr);
 		}
 
-		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 encode 제거 필요)
+		// prodGradeCd 배열로 변경
 		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
-			try {
-				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
-			} catch (Exception ex) {
-				throw new StorePlatformException("SAC_DSP_9999", ex);
-			}
+			// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 encode 제거 필요)
+			// try {
+			// requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
+			// } catch (Exception ex) {
+			// throw new StorePlatformException("SAC_DSP_9999", ex);
+			// }
 
-			// prodGradeCd 배열로 변경
 			String[] prodGradeCdArr = requestVO.getProdGradeCd().split("\\+");
 			requestVO.setProdGradeCdArr(prodGradeCdArr);
 		}
