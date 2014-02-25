@@ -50,6 +50,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
@@ -487,30 +489,32 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 
-			SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
-			SearchUserResponse preSchUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, previousUserKey);
+			SearchRealNameRequest schRealNameReq = new SearchRealNameRequest();
+			schRealNameReq.setCommonRequest(commonRequest);
+			schRealNameReq.setUserKey(previousUserKey);
+			SearchRealNameResponse preSchRealNameRes = this.userSCI.searchRealName(schRealNameReq);
+
+			schRealNameReq.setUserKey(userKey);
+			SearchRealNameResponse schRealNameRes = this.userSCI.searchRealName(schRealNameReq);
 
 			/* 5. 실명인증 비교 후 초기화 */
-			if (StringUtil.equals(schUserRes.getMbrAuth().getIsRealName(), "Y") && StringUtil.equals(preSchUserRes.getMbrAuth().getIsRealName(), "Y")) { // 기등록 회원, 현재 회원 모두 실명인증이
-																																							// 되어 있다면
+			if (preSchRealNameRes.getMbrAuth() != null && schRealNameRes.getMbrAuth() != null) {
 
-				if (!StringUtil.equals(schUserRes.getMbrAuth().getName(), preSchUserRes.getMbrAuth().getName())
-						|| !StringUtil.equals(schUserRes.getMbrAuth().getBirthDay(), preSchUserRes.getMbrAuth().getBirthDay())
-						|| !StringUtil.equals(schUserRes.getMbrAuth().getSex(), preSchUserRes.getMbrAuth().getSex())) { // 이름,
-																														// 생년월일,
-																														// 성별이
-																														// 다른경우
-																														// 초기화
+				if (!StringUtil.equals(preSchRealNameRes.getMbrAuth().getName(), schRealNameRes.getMbrAuth().getName())
+						|| !StringUtil.equals(preSchRealNameRes.getMbrAuth().getBirthDay(), schRealNameRes.getMbrAuth().getBirthDay())
+						|| !StringUtil.equals(preSchRealNameRes.getMbrAuth().getSex(), schRealNameRes.getMbrAuth().getSex())) { // 이름 생년월일 성별이 다른경우 초기화
 
 					UpdateRealNameRequest updRealNameReq = new UpdateRealNameRequest();
 					updRealNameReq.setCommonRequest(commonRequest);
 					updRealNameReq.setIsRealName("N");
 					updRealNameReq.setUserKey(userKey);
 					this.userSCI.updateRealName(updRealNameReq);
-
+					LOGGER.info("::: realName init : {}", userKey);
 				}
 
 			}
+
+			SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
 			/* 6. 통합회원에 휴대기기 등록시 무선회원 해지 */
 			if (schUserRes.getUserMbr().getImSvcNo() != null) {
