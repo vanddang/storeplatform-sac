@@ -18,12 +18,6 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class ChangedDeviceHistoryReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	public interface GroupChangedDeviceHistoryDeviceKey {
-	}
-
-	public interface GroupChangedDeviceHistoryDeviceId {
-	}
-
 	/**
 	 * 회원 키.
 	 */
