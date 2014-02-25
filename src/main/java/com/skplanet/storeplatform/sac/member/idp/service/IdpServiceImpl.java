@@ -48,7 +48,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateNonMbrSegmentRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
@@ -160,19 +159,15 @@ public class IdpServiceImpl implements IdpService {
 		for (int i = 0; i < tempSplit.length; i++) {
 			String[] tmpSplit = tempSplit[i].split(",");
 
-			if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0]
-					&& MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
+			if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0] && MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
 
-				if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4])
-						&& !"null".equals(tmpSplit[4])) {
+				if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4]) && !"null".equals(tmpSplit[4])) {
 					LOGGER.debug("RXCREATEUSERIDP old_id : " + tmpSplit[4]);
 					map.put("old_id", tmpSplit[4]);
-				} else if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4])
-						&& "null".equals(tmpSplit[4])) {
+				} else if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4]) && "null".equals(tmpSplit[4])) {
 					map.put("old_id", "null");
 				}
-				if (tmpSplit.length >= 2 && null != tmpSplit[1] && !"".equals(tmpSplit[1])
-						&& !"null".equals(tmpSplit[1])) {
+				if (tmpSplit.length >= 2 && null != tmpSplit[1] && !"".equals(tmpSplit[1]) && !"null".equals(tmpSplit[1])) {
 					mbrCaluseAgreeArray = tmpSplit[1].split("\\^");
 				}
 				break;
@@ -207,7 +202,7 @@ public class IdpServiceImpl implements IdpService {
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
 			userMbr.setImSvcNo(imIntSvcNo); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호
 			userMbr.setIsImChanged(map.get("is_im_changed").toString()); // 전환가입코드 * * - 전환가입 : Y, 신규가입 : N, 변경가입 : C,
-																		 // 변경전환 : H
+																			// 변경전환 : H
 			userMbr.setUserID(userID); // 사용자 ID
 
 			if (map.get("user_tn_nation_cd") != null)
@@ -580,8 +575,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @param searchUserResponse
 	 * @return tag UpdateUserRequest
 	 */
-	private UpdateUserRequest getUpdateUserRequest(HashMap<String, String> hashMap,
-			SearchUserResponse searchUserResponse) {
+	private UpdateUserRequest getUpdateUserRequest(HashMap<String, String> hashMap, SearchUserResponse searchUserResponse) {
 		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 
 		CommonRequest commonRequest = new CommonRequest();
@@ -598,7 +592,7 @@ public class IdpServiceImpl implements IdpService {
 
 		if (hashMap.get("user_key") != null)
 			getUserMbr.setImMbrNo(hashMap.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key . IDP 통합서비스
-																	   // 키 USERMBR_NO
+																		// 키 USERMBR_NO
 		getUserMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // 사용자 구분 코드
 		getUserMbr.setUserMainStatus(searchUserResponse.getUserMbr().getUserMainStatus()); // 사용자 메인 상태 코드
 		getUserMbr.setUserSubStatus(searchUserResponse.getUserMbr().getUserSubStatus()); // 사용자 서브 상태 코드
@@ -660,7 +654,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrLglAgent.setIsParent(hashMap.get("is_parent_approve").toString()); // 법정대리인 동의여부(Y/N)
 			mbrLglAgent.setTenantID(hashMap.get("tenantID").toString()); // 테넌트 ID
 			mbrLglAgent.setParentRealNameMethod(hashMap.get("parent_rname_auth_type").toString()); // LGL_AGENT_AUTH_MTD_CD
-																								   // 법정대리인 인증방법코드
+																									// 법정대리인 인증방법코드
 			mbrLglAgent.setParentName(hashMap.get("parent_name").toString()); // LGL_AGENT_FLNM 법정대리인 이름
 			mbrLglAgent.setParentType(hashMap.get("parent_type").toString()); // LGL_AGENT_RSHP 법정대리인 관계, API :
 			mbrLglAgent.setParentDate(hashMap.get("parent_approve_date").toString()); // LGL_AGENT_AGREE_DT 동의 일시
@@ -696,6 +690,11 @@ public class IdpServiceImpl implements IdpService {
 		String tenantId = StringUtil.nvl(map.get("tenantID"), "");
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
 
+		String userKey = null;
+		String deviceKey = null;
+		String modelCd = null;
+
+		String result = null;
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
 		commonRequest.setSystemID(systemId);
@@ -715,6 +714,8 @@ public class IdpServiceImpl implements IdpService {
 			searchDeviceRequest.setKeySearchList(keySearchList);
 			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 			beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
+			userKey = schDeviceRes.getUserMbrDevice().getUserKey();
+			deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
 			/* 번호 변경 DCD 연동 */
 
@@ -723,10 +724,12 @@ public class IdpServiceImpl implements IdpService {
 
 			if (device == null) {
 
-				uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+				uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
+				modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 
 			} else {
 
+				modelCd = device.getDeviceModelCd();
 				if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
 
 					/* 테스트 단말여부 확인 */
@@ -756,10 +759,10 @@ public class IdpServiceImpl implements IdpService {
 			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 
 			UserMbrDevice userMbrDevice = new UserMbrDevice();
-			userMbrDevice.setUserKey(schDeviceRes.getUserKey());
+			userMbrDevice.setUserKey(userKey);
 			userMbrDevice.setDeviceID(mdn);
-			userMbrDevice.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
-			userMbrDevice.setDeviceModelNo(device.getDeviceModelCd());
+			userMbrDevice.setDeviceKey(deviceKey);
+			userMbrDevice.setDeviceModelNo(modelCd);
 			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 : 번호변경
 
 			List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
@@ -767,13 +770,13 @@ public class IdpServiceImpl implements IdpService {
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
 			userMbrDeviceDetail.setExtraProfileValue(uacd);
 			userMbrDeviceDetail.setTenantID(tenantId);
-			userMbrDeviceDetail.setUserKey(schDeviceRes.getUserKey());
-			userMbrDeviceDetail.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
+			userMbrDeviceDetail.setUserKey(userKey);
+			userMbrDeviceDetail.setDeviceKey(deviceKey);
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 			userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
 			createDeviceReq.setCommonRequest(commonRequest);
-			createDeviceReq.setUserKey(schDeviceRes.getUserKey());
+			createDeviceReq.setUserKey(userKey);
 			createDeviceReq.setIsNew("N");
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
 
@@ -781,7 +784,7 @@ public class IdpServiceImpl implements IdpService {
 
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(schDeviceRes.getUserKey());
+			gameCenterSacReq.setUserKey(userKey);
 			gameCenterSacReq.setDeviceId(mdn);
 			gameCenterSacReq.setPreDeviceId(beMdn);
 			gameCenterSacReq.setSystemId(systemId);
@@ -789,148 +792,118 @@ public class IdpServiceImpl implements IdpService {
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
+			/* 구매한도/선물수신한도 mdn 변경 */
+			//			UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
+			//			updPolicyKeyReq.setCommonRequest(commonRequest);
+			//			updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
+			//			updPolicyKeyReq.setNewLimitPolicyKey(mdn);
+			//			this.userSCI.updatePolicyKey(updPolicyKeyReq);
+
+			LOGGER.info("::: 구매/선물수신한도 변경 카운트 : {}");
+
+			result = this.SUCCESS_STR;
+
+		} catch (StorePlatformException ex) {
+
+			LOGGER.info("::: Exception : {}", ex.getErrorInfo().getCode());
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+
+				/* skt 서비스 관리번호로 조회결과 없는경우 device_id로 조회하여 정보 업데이트 */
+				LOGGER.info("<changeMobileNumber> NOT EXIST MEMBER. SVC_MGMT_NUM[ {} ]", svcMngNum);
+
+				try {
+
+					/* 이전 deviceId로 휴대기기 조회 */
+					SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+					searchDeviceRequest.setCommonRequest(commonRequest);
+
+					List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+					KeySearch key = new KeySearch();
+					key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+					key.setKeyString(beMdn);
+					keySearchList.add(key);
+
+					searchDeviceRequest.setKeySearchList(keySearchList);
+					SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
+					beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
+					userKey = schDeviceRes.getUserMbrDevice().getUserKey();
+					deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
+
+					/* 단말 정보 조회 */
+					Device device = this.mcc.getPhoneInfoByUacd(uacd);
+
+					/* 휴대기기 정보 업데이트 */
+					CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+					UserMbrDevice userMbrDevice = new UserMbrDevice();
+					userMbrDevice.setUserKey(userKey);
+					userMbrDevice.setDeviceID(mdn);
+					userMbrDevice.setDeviceKey(deviceKey);
+					userMbrDevice.setDeviceModelNo(device.getDeviceModelCd());
+					userMbrDevice.setSvcMangNum(svcMngNum);
+					userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+					userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 : 번호변경
+
+					List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+					UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+					userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+					userMbrDeviceDetail.setExtraProfileValue(uacd);
+					userMbrDeviceDetail.setTenantID(tenantId);
+					userMbrDeviceDetail.setUserKey(userKey);
+					userMbrDeviceDetail.setDeviceKey(deviceKey);
+					userMbrDeviceDetailList.add(userMbrDeviceDetail);
+					userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
+
+					createDeviceReq.setCommonRequest(commonRequest);
+					createDeviceReq.setUserKey(userKey);
+					createDeviceReq.setIsNew("N");
+					createDeviceReq.setUserMbrDevice(userMbrDevice);
+
+					this.deviceSCI.createDevice(createDeviceReq);
+
+					result = this.SUCCESS_STR;
+
+				} catch (StorePlatformException e) {
+					LOGGER.info("::: Exception : {}", ex.getErrorInfo().getCode());
+					if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+						result = this.FAIL_NODATA_STR;
+					} else {
+						result = this.FAIL_STR;
+					}
+				}
+
+			} else {
+
+				result = this.FAIL_STR;
+			}
+
+		} finally {
+
+			LOGGER.info("::: result : {}", result);
+
 			/* IDP로그 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
 			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
 			changeDeviceLog.setDeviceID(mdn);
 			changeDeviceLog.setMessageIDP(requestUrl);
-			changeDeviceLog.setPreData(beMdn);
-			changeDeviceLog.setSvcMangNum(svcMngNum);
-			changeDeviceLog.setTenantID(tenantId);
-			changeDeviceLog.setUserKey(schDeviceRes.getUserKey());
-			changeDeviceLog.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
-			// changeDeviceLog.setDeviceCode(deviceCode);
-			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertIdpLog(commonRequest, changeDeviceLog);
-
-			/* 구매한도/선물수신한도 이관 */
-			UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
-			updPolicyKeyReq.setCommonRequest(commonRequest);
-			updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
-			updPolicyKeyReq.setNewLimitPolicyKey(mdn);
-			this.userSCI.updatePolicyKey(updPolicyKeyReq);
-
-		} catch (StorePlatformException ex) {
-
-			try {
-				if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-
-					/* skt 서비스 관리번호로 조회결과 없는경우 device_id로 조회하여 정보 업데이트 */
-					LOGGER.info("<changeMobileNumber> NOT EXIST MEMBER. SVC_MGMT_NUM[ {} ]", svcMngNum);
-
-					try {
-
-						/* 이전 deviceId로 휴대기기 조회 */
-						SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-						searchDeviceRequest.setCommonRequest(commonRequest);
-
-						List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-						KeySearch key = new KeySearch();
-						key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-						key.setKeyString(beMdn);
-						keySearchList.add(key);
-
-						searchDeviceRequest.setKeySearchList(keySearchList);
-						SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
-						beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
-
-						/* 단말 정보 조회 */
-						Device device = this.mcc.getPhoneInfoByUacd(uacd);
-
-						/* 휴대기기 정보 업데이트 */
-						CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
-						UserMbrDevice userMbrDevice = new UserMbrDevice();
-						userMbrDevice.setUserKey(schDeviceRes.getUserKey());
-						userMbrDevice.setDeviceID(mdn);
-						userMbrDevice.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
-						userMbrDevice.setDeviceModelNo(device.getDeviceModelCd());
-						userMbrDevice.setSvcMangNum(svcMngNum);
-						userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-						userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경
-																										   // 유형코드 :
-																										   // 번호변경
-
-						List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
-						UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-						userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
-						userMbrDeviceDetail.setExtraProfileValue(uacd);
-						userMbrDeviceDetail.setTenantID(tenantId);
-						userMbrDeviceDetail.setUserKey(schDeviceRes.getUserKey());
-						userMbrDeviceDetail.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
-						userMbrDeviceDetailList.add(userMbrDeviceDetail);
-						userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
-
-						createDeviceReq.setCommonRequest(commonRequest);
-						createDeviceReq.setUserKey(schDeviceRes.getUserKey());
-						createDeviceReq.setIsNew("N");
-						createDeviceReq.setUserMbrDevice(userMbrDevice);
-
-						this.deviceSCI.createDevice(createDeviceReq);
-
-						/* IDP로그 저장 */
-						ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-						changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
-
-						changeDeviceLog.setDeviceID(mdn);
-						changeDeviceLog.setMessageIDP(requestUrl);
-						changeDeviceLog.setPreData(beMdn);
-						changeDeviceLog.setSvcMangNum(svcMngNum);
-						changeDeviceLog.setTenantID(tenantId);
-						changeDeviceLog.setUserKey("-");
-						// changeDeviceLog.setDeviceCode(deviceCode);
-						// changeDeviceLog.setDeviceKey(deviceKey);
-						// changeDeviceLog.setIsChanged(isChanged);
-						this.insertIdpLog(commonRequest, changeDeviceLog);
-
-						return this.SUCCESS_STR;
-
-					} catch (StorePlatformException e) {
-
-						/* IDP로그 저장 */
-						ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-						changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
-
-						changeDeviceLog.setDeviceID(mdn);
-						changeDeviceLog.setMessageIDP(requestUrl);
-						changeDeviceLog.setPreData("ERROR");
-						changeDeviceLog.setSvcMangNum(svcMngNum);
-						changeDeviceLog.setTenantID(tenantId);
-						changeDeviceLog.setUserKey("-");
-						// changeDeviceLog.setDeviceCode(deviceCode);
-						// changeDeviceLog.setDeviceKey(deviceKey);
-						// changeDeviceLog.setIsChanged(isChanged);
-						this.insertIdpLog(commonRequest, changeDeviceLog);
-
-						return this.FAIL_STR;
-
-					}
-
-				} else {
-
-					/* IDP로그 저장 */
-					ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-					changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
-
-					changeDeviceLog.setDeviceID(mdn);
-					changeDeviceLog.setMessageIDP(requestUrl);
-					changeDeviceLog.setPreData("ERROR");
-					changeDeviceLog.setSvcMangNum(svcMngNum);
-					changeDeviceLog.setTenantID(tenantId);
-					changeDeviceLog.setUserKey("-");
-					// changeDeviceLog.setDeviceCode(deviceCode);
-					// changeDeviceLog.setDeviceKey(deviceKey);
-					// changeDeviceLog.setIsChanged(isChanged);
-					this.insertIdpLog(commonRequest, changeDeviceLog);
-
-					return this.FAIL_STR;
-				}
-			} catch (StorePlatformException e) {
-				return this.FAIL_STR;
+			if (StringUtil.equals(result, this.SUCCESS_STR)) {
+				changeDeviceLog.setPreData(beMdn);
+			} else if (StringUtil.equals(result, this.FAIL_NODATA_STR)) {
+				changeDeviceLog.setPreData("FAIL");
+			} else {
+				changeDeviceLog.setPreData("ERROR");
 			}
 
+			changeDeviceLog.setSvcMangNum(svcMngNum);
+			changeDeviceLog.setTenantID(tenantId);
+			changeDeviceLog.setUserKey(userKey == null ? "-" : userKey);
+			changeDeviceLog.setDeviceKey(deviceKey);
+			//changeDeviceLog.setDeviceCode(deviceCode);
+			//changeDeviceLog.setIsChanged(isChanged);
+			this.insertIdpLog(commonRequest, changeDeviceLog);
 		}
 
-		return this.SUCCESS_STR;
+		return result;
 	}
 
 	/**
@@ -977,6 +950,12 @@ public class IdpServiceImpl implements IdpService {
 		String beforeV4SprtYn = null; // 이전 단말 DCD 지원여부
 		String v4SprtYn = null; // 변경될 단말 DCD 지원여부
 		String preData = null;
+
+		String userKey = null;
+		String deviceKey = null;
+		String modelCd = null;
+		String result = null;
+
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
 		commonRequest.setSystemID(systemId);
@@ -995,6 +974,8 @@ public class IdpServiceImpl implements IdpService {
 
 			searchDeviceRequest.setKeySearchList(keySearchList);
 			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+			userKey = schDeviceRes.getUserMbrDevice().getUserKey();
+			deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
 			/* 이전 단말의 DCD 지원여부 조회 */
 			Device beforeDevice = this.mcc.getPhoneInfo(schDeviceRes.getUserMbrDevice().getDeviceModelNo());
@@ -1008,11 +989,13 @@ public class IdpServiceImpl implements IdpService {
 				LOGGER.info(
 						"<idpChangeMobile> NOT SUPPORT DEVICE.(기기변경 대상 단말이 존재하지 않음- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
 						mdn, null, uacd, svcMngNum);
-				uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+				uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
+				modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 				v4SprtYn = "N"; // V4 무조건 해지
 
 			} else {
 
+				modelCd = device.getDeviceModelCd();
 				v4SprtYn = device.getItoppV4SprtYn() == null ? "N" : device.getItoppV4SprtYn(); // DCD 연동 지원여부
 
 				if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
@@ -1039,9 +1022,8 @@ public class IdpServiceImpl implements IdpService {
 					}
 
 					if (StringUtil.equals(isTestModel, "Y")) {
-						LOGGER.info(
-								"<idpChangeMobile> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
-								mdn, device.getDeviceModelCd(), uacd, svcMngNum);
+						LOGGER.info("<idpChangeMobile> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
+								device.getDeviceModelCd(), uacd, svcMngNum);
 					} else {
 						LOGGER.info(
 								"<idpChangeMobile> NOT SUPPORT DEVICE.(기기변경 대상 단말이 존재하지 않음- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
@@ -1057,10 +1039,10 @@ public class IdpServiceImpl implements IdpService {
 			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 
 			UserMbrDevice userMbrDevice = new UserMbrDevice();
-			userMbrDevice.setUserKey(schDeviceRes.getUserKey());
+			userMbrDevice.setUserKey(userKey);
 			userMbrDevice.setDeviceID(mdn);
-			userMbrDevice.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
-			userMbrDevice.setDeviceModelNo(device.getDeviceModelCd());
+			userMbrDevice.setDeviceKey(deviceKey);
+			userMbrDevice.setDeviceModelNo(modelCd);
 			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE); // 휴대기기 변경 유형코드 : 기기변경
 
 			List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
@@ -1068,13 +1050,13 @@ public class IdpServiceImpl implements IdpService {
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
 			userMbrDeviceDetail.setExtraProfileValue(uacd);
 			userMbrDeviceDetail.setTenantID(tenantId);
-			userMbrDeviceDetail.setUserKey(schDeviceRes.getUserKey());
-			userMbrDeviceDetail.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
+			userMbrDeviceDetail.setUserKey(userKey);
+			userMbrDeviceDetail.setDeviceKey(deviceKey);
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 			userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
 			createDeviceReq.setCommonRequest(commonRequest);
-			createDeviceReq.setUserKey(schDeviceRes.getUserKey());
+			createDeviceReq.setUserKey(userKey);
 			createDeviceReq.setIsNew("N");
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
 
@@ -1082,107 +1064,80 @@ public class IdpServiceImpl implements IdpService {
 
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(schDeviceRes.getUserKey());
+			gameCenterSacReq.setUserKey(userKey);
 			gameCenterSacReq.setDeviceId(mdn);
 			gameCenterSacReq.setSystemId(systemId);
 			gameCenterSacReq.setTenantId(tenantId);
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
-			/* IDP로그 저장 */
-			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE);
-			changeDeviceLog.setDeviceID(mdn);
-			changeDeviceLog.setMessageIDP(requestUrl);
-			changeDeviceLog.setPreData(preData);
-			changeDeviceLog.setSvcMangNum(svcMngNum);
-			changeDeviceLog.setTenantID(tenantId);
-			changeDeviceLog.setUserKey(schDeviceRes.getUserKey());
-			changeDeviceLog.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
-			// changeDeviceLog.setDeviceCode(deviceCode);
-			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertIdpLog(commonRequest, changeDeviceLog);
-
 			/* DCD 연동 */
 			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
-						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
+						device.getDeviceModelCd(), uacd, svcMngNum);
 
 				/* 기존에 구매했던 DCD 상품 조회 */
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
-						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
+						device.getDeviceModelCd(), uacd, svcMngNum);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
-						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
+						device.getDeviceModelCd(), uacd, svcMngNum);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info(
-						"<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
-						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
+						device.getDeviceModelCd(), uacd, svcMngNum);
 
 			}
+
+			result = this.SUCCESS_STR;
 
 		} catch (StorePlatformException ex) {
 
-			/* IDP로그 저장 */
-			try {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 
-				if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				result = this.FAIL_NODATA_STR;
 
-					LOGGER.info("<idpChangeMobile> NOT EXIST MEMBER. SVC_MGMT_NUM[ {} ]", svcMngNum);
+			} else {
 
-					/* IDP로그 저장 */
-					ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-					changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE);
+				result = this.FAIL_STR;
 
-					changeDeviceLog.setDeviceID(mdn);
-					changeDeviceLog.setMessageIDP(requestUrl);
-					changeDeviceLog.setPreData("FAIL");
-					changeDeviceLog.setSvcMangNum(svcMngNum);
-					changeDeviceLog.setTenantID(tenantId);
-					changeDeviceLog.setUserKey("-");
-					// changeDeviceLog.setDeviceCode(deviceCode);
-					// changeDeviceLog.setDeviceKey(deviceKey);
-					// changeDeviceLog.setIsChanged(isChanged);
-					this.insertIdpLog(commonRequest, changeDeviceLog);
-
-					return this.FAIL_NODATA_STR;
-
-				} else {
-
-					/* IDP로그 저장 */
-					ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-					changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE);
-
-					changeDeviceLog.setDeviceID(mdn);
-					changeDeviceLog.setMessageIDP(requestUrl);
-					changeDeviceLog.setPreData("ERROR");
-					changeDeviceLog.setSvcMangNum(svcMngNum);
-					changeDeviceLog.setTenantID(tenantId);
-					changeDeviceLog.setUserKey("-");
-					// changeDeviceLog.setDeviceCode(deviceCode);
-					// changeDeviceLog.setDeviceKey(deviceKey);
-					// changeDeviceLog.setIsChanged(isChanged);
-					this.insertIdpLog(commonRequest, changeDeviceLog);
-
-					return this.FAIL_STR;
-
-				}
-
-			} catch (StorePlatformException e) {
-				return this.FAIL_STR;
 			}
 
+		} finally {
+
+			/* IDP로그 저장 */
+			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
+			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE);
+			changeDeviceLog.setDeviceID(mdn);
+			changeDeviceLog.setMessageIDP(requestUrl);
+			if (StringUtil.equals(result, this.SUCCESS_STR)) {
+				changeDeviceLog.setPreData(preData);
+			} else if (StringUtil.equals(result, this.FAIL_NODATA_STR)) {
+				changeDeviceLog.setPreData("FAIL");
+			} else {
+				changeDeviceLog.setPreData("ERROR");
+			}
+			if (userKey == null) {
+				changeDeviceLog.setUserKey("-");
+			} else {
+				changeDeviceLog.setUserKey(userKey);
+			}
+			changeDeviceLog.setSvcMangNum(svcMngNum);
+			changeDeviceLog.setTenantID(tenantId);
+			changeDeviceLog.setDeviceKey(deviceKey);
+			//changeDeviceLog.setDeviceCode(deviceCode);
+			//changeDeviceLog.setIsChanged(isChanged);
+			this.insertIdpLog(commonRequest, changeDeviceLog);
 		}
 
-		return this.SUCCESS_STR;
+		return result;
 	}
 
 	/*
@@ -1206,6 +1161,10 @@ public class IdpServiceImpl implements IdpService {
 		String tenantId = StringUtil.nvl(map.get("tenantID"), "");
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
 
+		String userKey = null;
+		String deviceKey = null;
+		String result = null;
+
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
 		commonRequest.setSystemID(systemId);
@@ -1224,20 +1183,22 @@ public class IdpServiceImpl implements IdpService {
 
 			searchDeviceRequest.setKeySearchList(keySearchList);
 			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+			userKey = schDeviceRes.getUserKey();
+			deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
 			/* 휴대기기 삭제 요청 */
 			List<String> removeKeyList = new ArrayList<String>();
-			removeKeyList.add(schDeviceRes.getUserMbrDevice().getDeviceKey());
+			removeKeyList.add(deviceKey);
 
 			RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
 			removeDeviceReq.setCommonRequest(commonRequest);
-			removeDeviceReq.setUserKey(schDeviceRes.getUserKey());
+			removeDeviceReq.setUserKey(userKey);
 			removeDeviceReq.setDeviceKey(removeKeyList);
 			this.deviceSCI.removeDevice(removeDeviceReq);
 
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(schDeviceRes.getUserKey());
+			gameCenterSacReq.setUserKey(userKey);
 			gameCenterSacReq.setDeviceId(mdn);
 			gameCenterSacReq.setSystemId(systemId);
 			gameCenterSacReq.setTenantId(tenantId);
@@ -1245,67 +1206,46 @@ public class IdpServiceImpl implements IdpService {
 
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
+			result = this.SUCCESS_STR;
+
+		} catch (StorePlatformException ex) {
+
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+
+				result = this.FAIL_NODATA_STR;
+
+			} else {
+
+				result = this.FAIL_STR;
+			}
+
+		} finally {
+
 			/* IDP로그 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
 			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE);
 			changeDeviceLog.setDeviceID(mdn);
 			changeDeviceLog.setMessageIDP(requestUrl);
-			changeDeviceLog.setPreData("");
+			if (StringUtil.equals(result, this.SUCCESS_STR)) {
+				changeDeviceLog.setPreData("");
+			} else if (StringUtil.equals(result, this.FAIL_NODATA_STR)) {
+				changeDeviceLog.setPreData("FAIL");
+			} else {
+				changeDeviceLog.setPreData("ERROR");
+			}
+			if (userKey == null) {
+				changeDeviceLog.setUserKey("-");
+			} else {
+				changeDeviceLog.setUserKey(userKey);
+			}
 			changeDeviceLog.setSvcMangNum(svcMngNum);
 			changeDeviceLog.setTenantID(tenantId);
-			changeDeviceLog.setUserKey(schDeviceRes.getUserKey());
-			changeDeviceLog.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
-			// changeDeviceLog.setDeviceCode(deviceCode);
-			// changeDeviceLog.setIsChanged(isChanged);
+			changeDeviceLog.setDeviceKey(deviceKey);
+			//changeDeviceLog.setDeviceCode(deviceCode);
+			//changeDeviceLog.setIsChanged(isChanged);
 			this.insertIdpLog(commonRequest, changeDeviceLog);
-
-		} catch (StorePlatformException ex) {
-
-			/* IDP로그 저장 */
-
-			try {
-				if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-
-					/* IDP로그 저장 */
-					ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-					changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE);
-
-					changeDeviceLog.setDeviceID(mdn);
-					changeDeviceLog.setMessageIDP(requestUrl);
-					changeDeviceLog.setPreData("FAIL");
-					changeDeviceLog.setSvcMangNum(svcMngNum);
-					changeDeviceLog.setTenantID(tenantId);
-					changeDeviceLog.setUserKey("-");
-					// changeDeviceLog.setDeviceCode(deviceCode);
-					// changeDeviceLog.setDeviceKey(deviceKey);
-					// changeDeviceLog.setIsChanged(isChanged);
-					this.insertIdpLog(commonRequest, changeDeviceLog);
-					return this.FAIL_NODATA_STR;
-
-				} else {
-
-					/* IDP로그 저장 */
-					ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-					changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE);
-
-					changeDeviceLog.setDeviceID(mdn);
-					changeDeviceLog.setMessageIDP(requestUrl);
-					changeDeviceLog.setPreData("ERROR");
-					changeDeviceLog.setSvcMangNum(svcMngNum);
-					changeDeviceLog.setTenantID(tenantId);
-					changeDeviceLog.setUserKey("-");
-					// changeDeviceLog.setDeviceCode(deviceCode);
-					// changeDeviceLog.setDeviceKey(deviceKey);
-					// changeDeviceLog.setIsChanged(isChanged);
-					this.insertIdpLog(commonRequest, changeDeviceLog);
-					return this.FAIL_STR;
-				}
-			} catch (StorePlatformException e) {
-				return this.FAIL_STR;
-			}
-
 		}
-		return this.SUCCESS_STR;
+		return result;
 	}
 
 	/*
@@ -1428,8 +1368,7 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
 		} catch (StorePlatformException spe) {
-			LOGGER.debug("RXSetLoginConditionIDP ------- update state excetion error code = "
-					+ spe.getErrorInfo().getCode());
+			LOGGER.debug("RXSetLoginConditionIDP ------- update state excetion error code = " + spe.getErrorInfo().getCode());
 		}
 
 		// 미동의 회원 정보 수정
@@ -1443,8 +1382,7 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-			if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
-					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
+			if (updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
 				// 성공이면
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
@@ -1529,8 +1467,7 @@ public class IdpServiceImpl implements IdpService {
 
 				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-				if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
+				if (updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
 					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 				}
@@ -1599,8 +1536,7 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-			if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
-					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
+			if (updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
 				// 성공이면
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
@@ -1728,10 +1664,8 @@ public class IdpServiceImpl implements IdpService {
 
 				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-				if (updateRealNameResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
-						&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
-								.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+				if (updateRealNameResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
+						&& updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 				}
@@ -1823,8 +1757,7 @@ public class IdpServiceImpl implements IdpService {
 
 				UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
 				LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
-				if (updateRealNameResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+				if (updateRealNameResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 				}
@@ -1902,8 +1835,7 @@ public class IdpServiceImpl implements IdpService {
 
 				// 조회되어진 사용자의 상태값이 정상이 아닌경우에 사용자 상태변경 정상 상태로 TB_US_USERMBR 데이터를 수정함
 				if (!MemberConstants.MAIN_STATUS_NORMAL.equals(searchUserResponse.getUserMbr().getUserMainStatus())
-						|| !MemberConstants.SUB_STATUS_NORMAL
-								.equals(searchUserResponse.getUserMbr().getUserSubStatus())) {
+						|| !MemberConstants.SUB_STATUS_NORMAL.equals(searchUserResponse.getUserMbr().getUserSubStatus())) {
 					UpdateStatusUserRequest updateStatusUserRequest = new UpdateStatusUserRequest();
 
 					updateStatusUserRequest.setCommonRequest(commonRequest);
@@ -1920,8 +1852,7 @@ public class IdpServiceImpl implements IdpService {
 
 					updateStatusUserRequest.setKeySearchList(updateKeySearchList);
 
-					UpdateStatusUserResponse updateStatusUserResponse = this.userSCI
-							.updateStatus(updateStatusUserRequest);
+					UpdateStatusUserResponse updateStatusUserResponse = this.userSCI.updateStatus(updateStatusUserRequest);
 
 					resultValue = updateStatusUserResponse.getCommonResponse().getResultCode();
 
@@ -1979,9 +1910,11 @@ public class IdpServiceImpl implements IdpService {
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
 		String svcMngNum = StringUtil.nvl(map.get("svc_mng_num"), "");
-		String userKey = StringUtil.nvl(map.get("user_key"), "");
+		String mbrNo = StringUtil.nvl(map.get("user_key"), "");
 		String tenantId = StringUtil.nvl(map.get("tenantID"), "");
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
+		String userKey = null;
+		String result = null;
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
@@ -1993,13 +1926,15 @@ public class IdpServiceImpl implements IdpService {
 			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 			KeySearch key = new KeySearch();
 			key.setKeyType(MemberConstants.KEY_TYPE_USERMBR_NO);
-			key.setKeyString(userKey);
+			key.setKeyString(mbrNo);
 			keySearchList.add(key);
 
 			SearchUserRequest schUserReq = new SearchUserRequest();
 			schUserReq.setCommonRequest(commonRequest);
 			schUserReq.setKeySearchList(keySearchList);
 			SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
+
+			userKey = schUserRes.getUserKey();
 
 			/* 회원 탈퇴 처리 */
 			RemoveUserRequest removeUserReq = new RemoveUserRequest();
@@ -2019,30 +1954,42 @@ public class IdpServiceImpl implements IdpService {
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
+			result = this.SUCCESS_STR;
+		} catch (StorePlatformException ex) {
+
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				result = this.FAIL_NODATA_STR;
+			} else {
+				result = this.FAIL_STR;
+			}
+
+		} finally {
 			/* IDP로그 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
 			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_EMAIL_JOIN_COMPLETE);
 			changeDeviceLog.setDeviceID(mdn);
 			changeDeviceLog.setMessageIDP(requestUrl);
-			changeDeviceLog.setPreData("");
+			if (StringUtil.equals(result, this.SUCCESS_STR)) {
+				changeDeviceLog.setPreData("");
+			} else if (StringUtil.equals(result, this.FAIL_NODATA_STR)) {
+				changeDeviceLog.setPreData("FAIL");
+			} else {
+				changeDeviceLog.setPreData("ERROR");
+			}
 			changeDeviceLog.setSvcMangNum(svcMngNum);
 			changeDeviceLog.setTenantID(tenantId);
-			changeDeviceLog.setUserKey(schUserRes.getUserKey());
-			// changeDeviceLog.setDeviceKey(deviceKey);
-			// changeDeviceLog.setDeviceCode(deviceCode);
-			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertIdpLog(commonRequest, changeDeviceLog);
-		} catch (StorePlatformException ex) {
-
-			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				return this.FAIL_NODATA_STR;
+			if (userKey == null) {
+				changeDeviceLog.setUserKey("-");
 			} else {
-				return this.FAIL_STR;
+				changeDeviceLog.setUserKey(userKey);
 			}
-
+			//changeDeviceLog.setDeviceKey(deviceKey);
+			//changeDeviceLog.setDeviceCode(deviceCode);
+			//changeDeviceLog.setIsChanged(isChanged);
+			this.insertIdpLog(commonRequest, changeDeviceLog);
 		}
 
-		return this.SUCCESS_STR;
+		return result;
 	}
 
 	/*
@@ -2064,10 +2011,12 @@ public class IdpServiceImpl implements IdpService {
 		// http://sbeta.itopping.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=adjustWiredProfile&user_key=IF1023548360620120726182243&user_id=expertman99&is_rname_auth=N&is_foreign=N]
 		// svcMngNum [ null] mdn [ null] modelId [ null]
 
-		// cmd=adjustWiredProfile&is_foreign=N&user_sex=F&user_key=IF1023112421620111107130852&user_id=newjungyb&user_birthday=19880903&user_email=vanddang1234@gadf.com&is_rname_auth=Y&user_name=반범진&user_social_number=8312101
+		//cmd=adjustWiredProfile&is_foreign=N&user_sex=F&user_key=IF1023112421620111107130852&user_id=newjungyb&user_birthday=19880903&user_email=vanddang1234@gadf.com&is_rname_auth=Y&user_name=반범진&user_social_number=8312101
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String imIntSvcNo = StringUtil.nvl(map.get("im_int_svc_no"), "");
 		String imMbrNo = StringUtil.nvl(map.get("user_key"), "");
+		String userKey = null;
+		String result = null;
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
@@ -2088,7 +2037,7 @@ public class IdpServiceImpl implements IdpService {
 				schUserReq.setKeySearchList(keySearchList);
 				SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
-				String userKey = schUserRes.getUserKey();
+				userKey = schUserRes.getUserKey();
 
 				/* 변경정보 셋팅 */
 				UserMbr userMbr = new UserMbr();
@@ -2175,15 +2124,23 @@ public class IdpServiceImpl implements IdpService {
 
 							/* uacd */
 							String uaCd = phoneInfo[2];
+
+							/* 단말코드 조회 */
+							Device device = this.mcc.getPhoneInfoByUacd(uaCd);
+							String deviceModelNo = null;
+							if (device == null) {
+								deviceModelNo = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+								uaCd = MemberConstants.NOT_SUPPORT_HP_UACODE;
+							} else {
+								deviceModelNo = device.getDeviceModelCd();
+							}
+
 							LOGGER.info("uaCd : {}", uaCd);
 
 							/* 통신사명 */
 							String deviceTelecom = phoneInfo[3];
 							LOGGER.info("deviceTelecom : {}", deviceTelecom);
 
-							/* 단말코드 조회 */
-							Device device = this.mcc.getPhoneInfoByUacd(uaCd);
-							String deviceModelNo = device.getDeviceModelCd();
 							LOGGER.info("deviceModelCd : {}", deviceModelNo);
 
 							for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
@@ -2266,15 +2223,23 @@ public class IdpServiceImpl implements IdpService {
 
 						/* uacd */
 						String uaCd = phoneInfo[2];
+
+						/* 단말코드 조회 */
+						Device device = this.mcc.getPhoneInfoByUacd(uaCd);
+						String deviceModelNo = null;
+						if (device == null) {
+							uaCd = MemberConstants.NOT_SUPPORT_HP_UACODE;
+							deviceModelNo = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+						} else {
+							deviceModelNo = device.getDeviceModelCd();
+						}
+
 						LOGGER.info("uaCd : {}", uaCd);
 
 						/* 통신사명 */
 						String deviceTelecom = phoneInfo[3];
 						LOGGER.info("deviceTelecom : {}", deviceTelecom);
 
-						/* 단말코드 조회 */
-						Device device = this.mcc.getPhoneInfoByUacd(uaCd);
-						String deviceModelNo = device.getDeviceModelCd();
 						LOGGER.info("deviceModelCd : {}", deviceModelNo);
 
 						for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
@@ -2341,32 +2306,45 @@ public class IdpServiceImpl implements IdpService {
 					}
 				}
 
-				/* IDP로그 저장 */
-				ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-				changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODIFY_PROFILE);
-				changeDeviceLog.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
-				changeDeviceLog.setUserKey(schUserRes.getUserKey());
-				changeDeviceLog.setMessageIDP(requestUrl);
-				changeDeviceLog.setPreData("");
-				changeDeviceLog.setSvcMangNum("-");
-				// changeDeviceLog.setDeviceID(mdn);
-				// changeDeviceLog.setDeviceKey(deviceKey);
-				// changeDeviceLog.setDeviceCode(deviceCode);
-				// changeDeviceLog.setIsChanged(isChanged);
-				this.insertIdpLog(commonRequest, changeDeviceLog);
 			}
+
+			result = this.SUCCESS_STR;
 
 		} catch (StorePlatformException ex) {
 			ex.printStackTrace();
 			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				return this.FAIL_NODATA_STR;
+				result = this.FAIL_NODATA_STR;
 			} else {
-				return this.FAIL_STR;
+				result = this.FAIL_STR;
 			}
 
+		} finally {
+			/* IDP로그 저장 */
+			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
+			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODIFY_PROFILE);
+			changeDeviceLog.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
+			if (StringUtil.equals(result, this.SUCCESS_STR)) {
+				changeDeviceLog.setPreData("");
+			} else if (StringUtil.equals(result, this.FAIL_NODATA_STR)) {
+				changeDeviceLog.setPreData("FAIL");
+			} else if (StringUtil.equals(result, this.FAIL_STR)) {
+				changeDeviceLog.setPreData("ERROR");
+			}
+			if (userKey == null) {
+				changeDeviceLog.setUserKey("-");
+			} else {
+				changeDeviceLog.setUserKey(userKey);
+			}
+			changeDeviceLog.setMessageIDP(requestUrl);
+			changeDeviceLog.setSvcMangNum("-");
+			//changeDeviceLog.setDeviceID(mdn);
+			//changeDeviceLog.setDeviceKey(deviceKey);
+			//changeDeviceLog.setDeviceCode(deviceCode);
+			//changeDeviceLog.setIsChanged(isChanged);
+			this.insertIdpLog(commonRequest, changeDeviceLog);
 		}
 
-		return this.SUCCESS_STR;
+		return result;
 	}
 
 	/*
@@ -2388,6 +2366,9 @@ public class IdpServiceImpl implements IdpService {
 		String min = StringUtil.nvl(map.get("min"), "");
 		String svcMngNum = StringUtil.nvl(map.get("svc_mng_num"), "");
 
+		String userKey = null;
+		String result = null;
+
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
 		commonRequest.setSystemID(StringUtil.nvl(map.get("systemID"), ""));
@@ -2406,6 +2387,7 @@ public class IdpServiceImpl implements IdpService {
 
 			searchDeviceRequest.setKeySearchList(keySearchList);
 			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+			userKey = schDeviceRes.getUserKey();
 
 			/* 유통망 추천앱 스케줄 저장 */
 			UpdateUserMbrSegmentRequest req = new UpdateUserMbrSegmentRequest();
@@ -2413,63 +2395,61 @@ public class IdpServiceImpl implements IdpService {
 			UserMbrSegment userMbrSegment = new UserMbrSegment();
 			userMbrSegment.setDeviceID(mdn);
 			userMbrSegment.setSvcMangNum(svcMngNum);
-			userMbrSegment.setUserKey(schDeviceRes.getUserKey());
+			userMbrSegment.setUserKey(userKey);
 			userMbrSegment.setEcgNumber(min);
 			req.setUserMbrSegment(userMbrSegment);
 			this.userSCI.updateUserMbrSegment(req);
 
-			/* IDP로그 저장 */
-			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_JOIN_ECG);
-			changeDeviceLog.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
-			changeDeviceLog.setUserKey(schDeviceRes.getUserKey());
-			changeDeviceLog.setMessageIDP(requestUrl);
-			changeDeviceLog.setPreData("");
-			changeDeviceLog.setSvcMangNum(svcMngNum);
-			changeDeviceLog.setDeviceID(mdn);
-			// changeDeviceLog.setDeviceKey(deviceKey);
-			// changeDeviceLog.setDeviceCode(deviceCode);
-			// changeDeviceLog.setIsChanged(isChanged);
-
-			this.insertIdpLog(commonRequest, changeDeviceLog);
+			result = this.SUCCESS_STR;
 
 		} catch (StorePlatformException ex) {
 
-			try {
-				if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-					/* 비회원인 경우 */
-					UpdateNonMbrSegmentRequest req = new UpdateNonMbrSegmentRequest();
-					req.setCommonRequest(commonRequest);
-					NonMbrSegment nonMbrSegment = new NonMbrSegment();
-					nonMbrSegment.setDeviceID(mdn);
-					nonMbrSegment.setSvcMangNum(svcMngNum);
-					req.setNonMbrSegment(nonMbrSegment);
-					this.userSCI.updateNonMbrSegment(req);
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 
-					/* IDP로그 저장 */
-					ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-					changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_JOIN_ECG);
-					changeDeviceLog.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
-					changeDeviceLog.setMessageIDP(requestUrl);
-					changeDeviceLog.setPreData("");
-					changeDeviceLog.setSvcMangNum(svcMngNum);
-					changeDeviceLog.setDeviceID(mdn);
-					changeDeviceLog.setUserKey("NON_MEMBERS");
-					// changeDeviceLog.setDeviceKey(deviceKey);
-					// changeDeviceLog.setDeviceCode(deviceCode);
-					// changeDeviceLog.setIsChanged(isChanged);
+				result = this.FAIL_NODATA_STR;
 
-					this.insertIdpLog(commonRequest, changeDeviceLog);
-				} else {
-					return this.FAIL_STR;
-				}
-			} catch (StorePlatformException e) {
-				return this.FAIL_STR;
+			} else {
+				result = this.FAIL_STR;
 			}
+		} finally {
+			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
+			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_JOIN_ECG);
+			changeDeviceLog.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
+			if (StringUtil.equals(result, this.SUCCESS_STR)) {
+				changeDeviceLog.setPreData("");
+			} else if (StringUtil.equals(result, this.FAIL_NODATA_STR)) {
 
+				changeDeviceLog.setPreData("");
+				/* 비회원인 경우 후 성공처리 */
+				UpdateNonMbrSegmentRequest req = new UpdateNonMbrSegmentRequest();
+				req.setCommonRequest(commonRequest);
+				NonMbrSegment nonMbrSegment = new NonMbrSegment();
+				nonMbrSegment.setDeviceID(mdn);
+				nonMbrSegment.setSvcMangNum(svcMngNum);
+				req.setNonMbrSegment(nonMbrSegment);
+				this.userSCI.updateNonMbrSegment(req);
+
+				result = this.SUCCESS_STR;
+
+			} else if (StringUtil.equals(result, this.FAIL_STR)) {
+				changeDeviceLog.setPreData("ERROR");
+			}
+			if (userKey == null) {
+				changeDeviceLog.setUserKey("-");
+			} else {
+				changeDeviceLog.setUserKey(userKey);
+			}
+			changeDeviceLog.setMessageIDP(requestUrl);
+			changeDeviceLog.setSvcMangNum(svcMngNum);
+			changeDeviceLog.setDeviceID(mdn);
+			//changeDeviceLog.setDeviceKey(deviceKey);
+			//changeDeviceLog.setDeviceCode(deviceCode);
+			//changeDeviceLog.setIsChanged(isChanged);
+
+			this.insertIdpLog(commonRequest, changeDeviceLog);
 		}
 
-		return this.SUCCESS_STR;
+		return result;
 	}
 
 	/*
@@ -2642,8 +2622,7 @@ public class IdpServiceImpl implements IdpService {
 				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 				imResult.setUserId(userID);
 				imResult.setIsCancelAble(delYN);
-				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
-						LocaleContextHolder.getLocale());
+				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"), LocaleContextHolder.getLocale());
 				String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
 				LOGGER.debug("rXPreCheckDeleteUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
 				imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
@@ -2722,8 +2701,7 @@ public class IdpServiceImpl implements IdpService {
 				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 				imResult.setUserId(userID);
 				imResult.setIsCancelAble(delYN);
-				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
-						LocaleContextHolder.getLocale());
+				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"), LocaleContextHolder.getLocale());
 				String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
 				LOGGER.debug("RXPreCheckDisagreeUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
 				imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
@@ -2818,8 +2796,7 @@ public class IdpServiceImpl implements IdpService {
 			for (int i = 0; i < tempSplit.length; i++) {
 				String[] tmpSplit = tempSplit[i].split(",");
 				LOGGER.debug("====JSH====" + tempSplit[i]);
-				if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0]
-						&& MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
+				if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0] && MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
 					siteCodeCheck = true;
 					break;
 				}
@@ -2828,7 +2805,7 @@ public class IdpServiceImpl implements IdpService {
 
 		// 이용동의 해지인 경우
 		if (!siteCodeCheck) { // tStore 이용동의 해지 join_sst_list 안에 tstore 41100 이 없으면 siteCodeCheck=false로 셋팅되서 tstore이용동의
-							  // 해지 상태임.
+								// 해지 상태임.
 			try {
 				searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 			} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
@@ -2951,11 +2928,9 @@ public class IdpServiceImpl implements IdpService {
 			updatePasswordUserRequest.setMbrPwd(mbrPwd);
 
 			try {
-				UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI
-						.updatePasswordUser(updatePasswordUserRequest);
+				UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI.updatePasswordUser(updatePasswordUserRequest);
 
-				if (updatePasswordUserResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+				if (updatePasswordUserResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 				}
@@ -3010,11 +2985,9 @@ public class IdpServiceImpl implements IdpService {
 		updatePasswordUserRequest.setMbrPwd(mbrPwd);
 
 		try {
-			UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI
-					.updatePasswordUser(updatePasswordUserRequest);
+			UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI.updatePasswordUser(updatePasswordUserRequest);
 
-			if (updatePasswordUserResponse.getCommonResponse().getResultCode()
-					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+			if (updatePasswordUserResponse.getCommonResponse().getResultCode().equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
@@ -3091,7 +3064,7 @@ public class IdpServiceImpl implements IdpService {
 				userMbr.setUserKey(searchUserResponse.getUserMbr().getUserKey());
 				updateUserRequest.setUserMbr(userMbr);
 				if (searchUserResponse.getMbrLglAgent().getIsParent().equals(MemberConstants.USE_Y)) { // 법정대리인 정보가
-																									   // 있는경우만 셋팅
+																										// 있는경우만 셋팅
 					updateUserRequest.setMbrLglAgent(searchUserResponse.getMbrLglAgent());
 				}
 
@@ -3259,19 +3232,15 @@ public class IdpServiceImpl implements IdpService {
 		String[] tempSplit = joinSiteTotalList.split("\\|");
 		for (int i = 0; i < tempSplit.length; i++) {
 			String[] tmpSplit = tempSplit[i].split(",");
-			if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0]
-					&& MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
+			if (null != tmpSplit && tmpSplit.length >= 1 && null != tmpSplit[0] && MemberConstants.SSO_SST_CD_TSTORE.equals(tmpSplit[0])) {
 				siteCodeCheck = true; // join_sst_list 문자열에 tstore 41100 이용동의가 있는경우
-				if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4])
-						&& !"null".equals(tmpSplit[4])) {
+				if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4]) && !"null".equals(tmpSplit[4])) {
 					LOGGER.debug("RXUPDATEAGREEUSERIDP old_id : " + tmpSplit[4]);
 					map.put("old_id", tmpSplit[4]);
-				} else if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4])
-						&& "null".equals(tmpSplit[4])) {
+				} else if (tmpSplit.length >= 5 && null != tmpSplit[4] && !"".equals(tmpSplit[4]) && "null".equals(tmpSplit[4])) {
 					map.put("old_id", "null");
 				}
-				if (tmpSplit.length >= 2 && null != tmpSplit[1] && !"".equals(tmpSplit[1])
-						&& !"null".equals(tmpSplit[1])) {
+				if (tmpSplit.length >= 2 && null != tmpSplit[1] && !"".equals(tmpSplit[1]) && !"null".equals(tmpSplit[1])) {
 					mbrCaluseAgreeArray = tmpSplit[1].split("\\^");
 				}
 				break;
@@ -3309,8 +3278,7 @@ public class IdpServiceImpl implements IdpService {
 
 				if (searchUserResponse != null) {
 					map.put("im_reg_date", "");
-					UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
-							searchUserResponse));
+					UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
 					userKey = updateUserResponse.getUserKey();
 					try {
 						// ONEID에 데이터 입력
@@ -3360,9 +3328,9 @@ public class IdpServiceImpl implements IdpService {
 					userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
 					userMbr.setImSvcNo(imIntSvcNo); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호
 					userMbr.setIsImChanged(map.get("is_im_changed").toString()); // 전환가입코드 * * - 전환가입 : Y, 신규가입 : N,
-																				 // 변경가입 :
-																				 // C,
-																				 // 변경전환 : H
+																					// 변경가입 :
+																					// C,
+																					// 변경전환 : H
 					userMbr.setUserID(userID); // 사용자 ID
 
 					if (map.get("user_tn_nation_cd") != null)
@@ -3556,8 +3524,7 @@ public class IdpServiceImpl implements IdpService {
 							searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 						}
 
-						updateUserResponse = this.userSCI
-								.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
+						updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
 						LOGGER.debug("전환가입 정보 입력 완료");
 
 					} catch (StorePlatformException spe) {
@@ -3594,8 +3561,7 @@ public class IdpServiceImpl implements IdpService {
 							searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 						}
 
-						updateUserResponse = this.userSCI
-								.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
+						updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
 						LOGGER.debug("변경가입,변경전환 정보 입력 완료");
 
 						// TO DO... 구매에서 사용되는 회원ID 변경할수 있는 API 호출 대기중 ...
