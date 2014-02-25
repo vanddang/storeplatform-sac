@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.device;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -13,6 +15,7 @@ public class DeviceProfileReq extends CommonInfo {
 	/**
 	 * 모델명
 	 */
+	@NotBlank
 	private String deviceModelNo;
 
 	public String getDeviceModelNo() {
