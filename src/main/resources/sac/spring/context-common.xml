@@ -22,8 +22,10 @@
                            http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
                            http://www.springframework.org/schema/task
                            http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+    
 
     <context:component-scan base-package="com.skplanet.storeplatform.sac.runtime" name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator"/>
+    
     <context:component-scan base-package="com.skplanet.storeplatform.sac" name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator"/>
 
     <bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
@@ -33,26 +35,12 @@
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
             <list merge="true">
-                <value>classpath:sac/messages/messages</value><!-- 삭제 예정 -->
-                <value>classpath:sac/messages/sac</value>
-                <value>classpath:sac/messages/sac_member</value>
-                <value>classpath:sac/messages/sac_display</value>
-                <value>classpath:sac/messages/sac_purchase</value>
-                <value>classpath:sac/messages/sac_other</value>
-                
-                <value>classpath:sac/messages/messages</value><!-- 삭제 예정 -->
-                <value>classpath:sac/messages/messages_sac</value>
-                <value>classpath:sac/messages/messages_sac_member</value>
-                <value>classpath:sac/messages/messages_sac_display</value>
-                <value>classpath:sac/messages/messages_sac_purchase</value>
-                <value>classpath:sac/messages/messages_sac_other</value>
-                
-                <!-- 결정 -->
-                <value>classpath:sac/messages/messages</value><!-- 삭제 예정 -->
-                <value>classpath:sac/messages/messages</value>
+                <value>classpath:messages/messages</value>
+                <value>classpath:sac/messages/messages_common</value>
                 <value>classpath:sac/messages/messages_member</value>
                 <value>classpath:sac/messages/messages_display</value>
                 <value>classpath:sac/messages/messages_purchase</value>
+                <value>classpath:sac/messages/messages_cms</value>
                 <value>classpath:sac/messages/messages_other</value>
             </list>
         </property>
