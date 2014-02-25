@@ -119,10 +119,10 @@ public class OpenApiController {
 	 *            newAppRecommandSacReq
 	 * @return NewAppRecommandSacRes
 	 */
-	@RequestMapping(value = "/newAppRecommand/list/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/newAppRecommand/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public NewAppRecommandSacRes newAppRecommand(SacRequestHeader requestheader,
-			NewAppRecommandSacReq newAppRecommandSacReq) {
+			@RequestBody NewAppRecommandSacReq newAppRecommandSacReq) {
 		return this.newAppRecommandService.searchNewAppRecommandList(requestheader, newAppRecommandSacReq);
 	}
 
