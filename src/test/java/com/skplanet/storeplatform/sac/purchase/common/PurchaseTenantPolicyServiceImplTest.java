@@ -54,7 +54,7 @@ public class PurchaseTenantPolicyServiceImplTest {
 				tenantProdGrpCd);
 		assertThat(policyList.size(), not(0));
 
-		String procPatternCd = "policy008";
+		String procPatternCd = "CM011606";
 		policyList = this.policyService.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd, procPatternCd);
 		assertThat(policyList.size(), not(0));
 	}
