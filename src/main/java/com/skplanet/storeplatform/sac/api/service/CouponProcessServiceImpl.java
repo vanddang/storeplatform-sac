@@ -967,14 +967,14 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean validateCouponItemCount(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, String cudType) {
 		if ("C".equals(cudType)) {
-			if (this.couponItemService.getCouponItemCountCudType(couponInfo.getCouponCode()) > 0) {
+			if (this.couponItemService.getCouponCountCudType(couponInfo.getCouponCode()) > 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_COUPONID,
 						"해당 Coupon_Id로 등록한 coupon가 있습니다.", couponInfo.getCouponCode());
 			}
 		}
 		for (int i = 0; i < itemInfoList.size(); i++) {
 			if ("C".equals(itemInfoList.get(i).getCudType())) {
-				if (this.couponItemService.getCouponItemCountCudType(itemInfoList.get(i).getItemCode()) > 0) {
+				if (this.couponItemService.getItemCountCudType(itemInfoList.get(i).getItemCode()) > 0) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_ITEMID,
 							"해당 Item_Id로 등록한 item이 있습니다.", itemInfoList.get(i).getItemCode());
 				}

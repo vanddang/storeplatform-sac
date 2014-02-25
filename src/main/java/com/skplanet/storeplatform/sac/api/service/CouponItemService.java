@@ -45,14 +45,25 @@ public interface CouponItemService {
 
 	/**
 	 * <pre>
-	 * 쿠폰 , 아이템 유효성 검증.
+	 * 쿠폰 유효성 검증.
 	 * </pre>
 	 * 
 	 * @param scrContentId
 	 *            scrContentId
 	 * @return int
 	 */
-	public int getCouponItemCountCudType(String scrContentId);
+	public int getCouponCountCudType(String scrContentId);
+
+	/**
+	 * <pre>
+	 * 아이템 유효성 검증.
+	 * </pre>
+	 * 
+	 * @param scrContentId
+	 *            scrContentId
+	 * @return int
+	 */
+	public int getItemCountCudType(String scrContentId);
 
 	/**
 	 * <pre>

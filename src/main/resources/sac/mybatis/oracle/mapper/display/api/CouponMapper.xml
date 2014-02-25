@@ -11,14 +11,29 @@
     </select>
   
 
-    <!--쿠폰ID,아이템ID 가져오기COUNT 조회-->
-    <select id="getCouponItemCountCudType" parameterType="String" resultType="int">
-        /* BrandCatalogMapper.xml, SELECT_CATALOG_COUNT_CUDTYPE,쿠폰ID,아이템ID 가져오기COUNT 조회, 김형식/SK플래닛 , 2013-12-30 */
+    <!--쿠폰ID 가져오기COUNT 조회-->
+    <select id="getCouponCountCudType" parameterType="String" resultType="int">
+        /* CouponMapper.xml, getCouponCountCudType ,쿠폰ID 가져오기COUNT 조회, 김형식/SK플래닛 , 2013-12-30 */
         SELECT 
              COUNT(*) CNT
-        FROM TB_DP_SHPG_PROD
-        WHERE SRC_CONTENT_ID= #{scrContentId}
+        FROM TB_DP_SHPG_PROD A
+            ,TB_DP_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND B.CONTENTS_TYPE_CD ='PD002501'
+          AND A.SRC_CONTENT_ID= #{scrContentId}
     </select>
+    
+   <!--아이템ID 가져오기COUNT 조회-->
+    <select id="getItemCountCudType" parameterType="String" resultType="int">
+        /* CouponMapper.xml, getItemCountCudType ,아이템ID 가져오기COUNT 조회, 김형식/SK플래닛 , 2013-12-30 */
+        SELECT 
+             COUNT(*) CNT
+        FROM TB_DP_SHPG_PROD A
+            ,TB_DP_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND B.CONTENTS_TYPE_CD ='PD002502'
+          AND A.SRC_CONTENT_ID= #{scrContentId}
+    </select>    
     
     <!--쿠폰ID 가져오기 조회-->
     <select id="getCouponGenerateId" resultType="String"  parameterType="String">
