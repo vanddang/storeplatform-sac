@@ -14,6 +14,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -41,6 +42,9 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 
 /**
  * <pre>
@@ -54,8 +58,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private String errorCode = "";
 	private String message = "";
-	private final String mbrNo = "";
-	private final String compNm = "";
+	private String mbrNo = "";
+	private String compNm = "";
 	@Autowired
 	private CouponItemService couponItemService;
 
@@ -908,29 +912,43 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean validateBusinessPartner(DpCouponInfo couponInfo) {
 		this.log.info("■■■■■ validateBusinessPartner ■■■■■");
-		// DetailInformationSacReq req = new DetailInformationSacReq();
-		// DetailInformationSacRes res = new DetailInformationSacRes();
-		// try {
-		// // req.setSellerKey("");
-		// // req.setSellerId(couponInfo.getBpId());
-		// // res = this.sellerSearchSCI.detailInformation(req);
-		// if (res != null) {
-		// this.log.info("sdf");
-		// // if (StringUtils.isBlank(res.getSellerMbr().getSellerCompany())) {
-		// // throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
-		// // couponInfo.getBpId());
-		// // }
-		//
-		// // this.compNm = res.getSellerMbr().getSellerCompany();
-		// // this.mbrNo = res.getSellerMbr().getSellerKey();
-		// } else {
-		// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
-		// couponInfo.getBpId());
-		// }
-		// } catch (Exception e) {
-		// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", couponInfo.getBpId());
-		//
-		// }
+
+		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+		DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		SellerMbrSac sellerMbrSac = new SellerMbrSac();
+		this.log.debug("#########################################################");
+		this.log.debug("sellerMbrNo	:	" + couponInfo.getBpId());
+		this.log.debug("#########################################################");
+		sellerMbrSac.setSellerId(couponInfo.getBpId());
+		sellerMbrSacList.add(sellerMbrSac);
+		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+
+		try {
+			detailInformationSacRes = this.sellerSearchSCI.detailInformation(detailInformationSacReq);
+			Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
+			List<SellerMbrSac> sellerMbrs = new ArrayList<SellerMbrSac>();
+			sellerMbrSac = new SellerMbrSac();
+			while (it.hasNext()) {
+				String key = it.next();
+				sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
+				if (sellerMbrs != null) {
+					if (StringUtils.isBlank(sellerMbrs.get(0).getSellerCompany())) {
+						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
+								couponInfo.getBpId());
+					}
+					this.compNm = sellerMbrs.get(0).getSellerCompany();
+					this.mbrNo = sellerMbrs.get(0).getSellerKey();
+
+				} else {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
+							couponInfo.getBpId());
+				}
+			}
+
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", couponInfo.getBpId());
+		}
 		// this.compNm = "GTSOFT";
 		// this.mbrNo = "IF1023541432620111207152255";
 		return true;
