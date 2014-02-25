@@ -45,8 +45,7 @@ public class CmsServiceImpl implements CmsService {
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
-	// TODO love
-	// @Autowired
+	@Autowired
 	private AmqpTemplate cmsAmqpTemplate;
 
 	@Autowired

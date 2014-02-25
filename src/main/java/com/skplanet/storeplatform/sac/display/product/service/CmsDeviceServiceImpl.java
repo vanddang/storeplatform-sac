@@ -45,8 +45,7 @@ public class CmsDeviceServiceImpl implements CmsDeviceService {
 	@Qualifier("cmsApp")
 	private CommonDAO commonDAO;
 
-	// TODO love
-	// @Autowired
+	@Autowired
 	private AmqpTemplate deviceMappingRabbitTemplate;
 
 	/**

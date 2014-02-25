@@ -33,12 +33,27 @@
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
             <list merge="true">
-                <value>classpath:sac/messages/messages</value>
+                <value>classpath:sac/messages/messages</value><!-- 삭제 예정 -->
                 <value>classpath:sac/messages/sac</value>
                 <value>classpath:sac/messages/sac_member</value>
                 <value>classpath:sac/messages/sac_display</value>
                 <value>classpath:sac/messages/sac_purchase</value>
                 <value>classpath:sac/messages/sac_other</value>
+                
+                <value>classpath:sac/messages/messages</value><!-- 삭제 예정 -->
+                <value>classpath:sac/messages/messages_sac</value>
+                <value>classpath:sac/messages/messages_sac_member</value>
+                <value>classpath:sac/messages/messages_sac_display</value>
+                <value>classpath:sac/messages/messages_sac_purchase</value>
+                <value>classpath:sac/messages/messages_sac_other</value>
+                
+                <!-- 결정 -->
+                <value>classpath:sac/messages/messages</value><!-- 삭제 예정 -->
+                <value>classpath:sac/messages/messages</value>
+                <value>classpath:sac/messages/messages_member</value>
+                <value>classpath:sac/messages/messages_display</value>
+                <value>classpath:sac/messages/messages_purchase</value>
+                <value>classpath:sac/messages/messages_other</value>
             </list>
         </property>
         <property name="defaultEncoding" value="utf-8" />

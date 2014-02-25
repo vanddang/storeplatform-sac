@@ -19,12 +19,16 @@
 
     <tx:advice id="transactionAdviceForSac" transaction-manager="transactionManagerForSac" >
         <tx:attributes>
-           <tx:method name="create*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="modify*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="remove*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="insert*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="update*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="delete*" propagation="REQUIRED" read-only="false" />
+           <tx:method name="create*" propagation="REQUIRED" read-only="false" /> <!-- 생성 -->
+           <tx:method name="insert*" propagation="REQUIRED" read-only="false" /> <!-- 생성 -->
+
+           <tx:method name="update*" propagation="REQUIRED" read-only="false" /> <!-- 수정 -->
+           <tx:method name="modify*" propagation="REQUIRED" read-only="false" /> <!-- 수정 -->
+
+           <tx:method name="remove*" propagation="REQUIRED" read-only="false" /> <!-- 삭제 -->
+           <tx:method name="delete*" propagation="REQUIRED" read-only="false" /> <!-- 삭제 -->
+
+           <tx:method name="execute*" propagation="REQUIRED" read-only="false" /> <!-- 생성,수정,삭제등 복합 비지니스 -->
         </tx:attributes>
     </tx:advice>
     
