@@ -23,6 +23,10 @@ public class DetailRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	private String code;
+
+	private String message;
+
 	/* 사용자 변동성 여부 */
 	private String isChangeSubject;
 
@@ -126,4 +130,19 @@ public class DetailRes extends CommonInfo {
 		return serialVersionUID;
 	}
 
+	public String getCode() {
+		return this.code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getMessage() {
+		return this.message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 }

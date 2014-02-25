@@ -14,6 +14,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SearchPasswordSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+	private String code;
+	private String message;
 	private String userPw; // 사용자PW (임시)
 	private String sendMean; // 발송수단
 	private String sendInfo; // 발송정보
@@ -44,6 +46,22 @@ public class SearchPasswordSacRes extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getCode() {
+		return this.code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getMessage() {
+		return this.message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 }
