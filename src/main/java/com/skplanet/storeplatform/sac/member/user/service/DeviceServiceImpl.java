@@ -450,7 +450,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 2. 기등록된 회원이 존재하는지 확인 */
 		String previousUserKey = createDeviceRes.getPreviousUserKey();
-		if (previousUserKey != null) {
+		String previousDeviceKey = createDeviceRes.getPreviousDeviceKey();
+		if (previousUserKey != null && previousDeviceKey != null) {
 
 			LOGGER.info(":::: [PreviousUserKey] {}", previousUserKey);
 			LOGGER.info(":::: [NowUserKey] {}", userKey);
@@ -546,10 +547,12 @@ public class DeviceServiceImpl implements DeviceService {
 		gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
 		gameCenterSacReq.setSystemId(systemId);
 		gameCenterSacReq.setTenantId(tenantId);
-		if (previousUserKey != null) {
+		if (previousUserKey != null && previousDeviceKey != null) {
 			gameCenterSacReq.setPreUserKey(previousUserKey);
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
+		} else {
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 		}
-		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 
 		this.insertGameCenterIF(gameCenterSacReq);
 
