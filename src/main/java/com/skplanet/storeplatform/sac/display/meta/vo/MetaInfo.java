@@ -159,6 +159,8 @@ public class MetaInfo {
 	private String isbn;
 	private String mgzinCoverYn;
 	private String dlmImagePath;
+	private String samplUrl;
+	private String scSamplUrl;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -2430,6 +2432,36 @@ public class MetaInfo {
 	 */
 	public void setDlmImagePath(String dlmImagePath) {
 		this.dlmImagePath = dlmImagePath;
+	}
+
+	/**
+	 * @return the samplUrl
+	 */
+	public String getSamplUrl() {
+		return this.samplUrl;
+	}
+
+	/**
+	 * @param samplUrl
+	 *            the samplUrl to set
+	 */
+	public void setSamplUrl(String samplUrl) {
+		this.samplUrl = samplUrl;
+	}
+
+	/**
+	 * @return the scSamplUrl
+	 */
+	public String getScSamplUrl() {
+		return this.scSamplUrl;
+	}
+
+	/**
+	 * @param scSamplUrl
+	 *            the scSamplUrl to set
+	 */
+	public void setScSamplUrl(String scSamplUrl) {
+		this.scSamplUrl = scSamplUrl;
 	}
 
 	/**
