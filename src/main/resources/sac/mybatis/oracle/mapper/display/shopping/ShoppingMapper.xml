@@ -90,7 +90,8 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
-                        AND K.TENANT_ID = M.TENANT_ID 
+                        AND K.TENANT_ID = M.TENANT_ID
+                        AND K.TENANT_ID = L.TENANT_ID 
                         AND B.CATALOG_ID = M.PROD_ID   
                         AND I.PROD_ID = N.PROD_ID(+)     
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
@@ -199,6 +200,7 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND I.PROD_ID = N.PROD_ID(+)  
+                        AND K.TENANT_ID = L.TENANT_ID 
                          <if test="req.partProdId != null">
                          AND I.PROD_ID = #{req.partProdId}
                          </if>                        
@@ -337,6 +339,7 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
+                        AND K.TENANT_ID = L.TENANT_ID 
                         <if test='req.orderedBy == "download"'>
                         AND K.TENANT_ID = M.TENANT_ID 
                         AND B.CATALOG_ID = M.PROD_ID                             
@@ -516,6 +519,7 @@
                         AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID
                         AND I.PROD_ID = O.PROD_ID
+                        AND K.TENANT_ID = L.TENANT_ID 
                         AND N.EXPO_YN ='Y'
                         AND N.CPN_ID IS NOT NULL
                       
@@ -672,6 +676,7 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND B.CATALOG_ID = M.CATALOG_ID
+                        AND K.TENANT_ID = L.TENANT_ID 
                         AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
                         AND M.PLAN_ID = #{req.planId}  
                         AND I.PROD_ID = N.PROD_ID(+)     
@@ -861,6 +866,7 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
+                        AND K.TENANT_ID = L.TENANT_ID 
                         AND I.PROD_ID = N.PROD_ID(+)  
                         AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                         AND NVL(B.CHNL_CNT, 0) > 0          
@@ -998,6 +1004,7 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
+                        AND K.TENANT_ID = L.TENANT_ID 
                         AND B.CATALOG_ID = M.CATALOG_ID
                         AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
                         AND M.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
@@ -1139,6 +1146,7 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
+                        AND K.TENANT_ID = L.TENANT_ID
                         <if test='req.orderedBy == "download"'>
                         AND K.TENANT_ID = M.TENANT_ID 
                         AND B.CATALOG_ID = M.PROD_ID                             
@@ -1286,6 +1294,7 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
+                        AND K.TENANT_ID = L.TENANT_ID
                         <if test='req.orderedBy == "download"'>
                         AND K.TENANT_ID = M.TENANT_ID 
                         AND B.CATALOG_ID = M.PROD_ID                             
@@ -1408,6 +1417,7 @@
                 AND I.PROD_ID = K.PROD_ID
                 AND I.PROD_ID = L.PROD_ID
                 AND I.PROD_ID = O.PROD_ID
+                AND K.TENANT_ID = L.TENANT_ID
                 AND C.CATALOG_ID = PI.PROD_ID
                 AND PI.IMG_CD = #{imageCd}                
                 AND I.PROD_ID = M.PROD_ID(+)                           
@@ -1558,6 +1568,7 @@
                 AND I.PROD_ID = J.PROD_ID
                 AND I.PROD_ID = K.PROD_ID
                 AND I.PROD_ID = L.PROD_ID
+                AND K.TENANT_ID = L.TENANT_ID
                 AND I.PROD_ID = N.PROD_ID(+)
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                 AND NVL(B.CHNL_CNT, 0) > 0          

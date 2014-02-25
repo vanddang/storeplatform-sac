@@ -785,6 +785,7 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
+                        AND K.TENANT_ID = L.TENANT_ID 
                         AND C.CATALOG_ID = PI.PROD_ID
                         AND PI.IMG_CD = #{imageCd}
                         AND PI.EXPO_ORD ='1'
