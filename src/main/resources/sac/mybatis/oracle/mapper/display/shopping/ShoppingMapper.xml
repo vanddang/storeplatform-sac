@@ -1384,6 +1384,7 @@
                             FROM TB_DP_SHPG_PROD 
                            WHERE prod_id=H.PROD_ID 
                          ) AS SRC_CONTENT_ID
+                        ,K.PROD_STATUS_CD
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -1431,7 +1432,6 @@
                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
-                AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                 AND K.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */
@@ -1521,6 +1521,7 @@
                            , 0 ) AS DLY_PRCHS_CNT           
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
                         ,I.SRC_CONTENT_ID
+                        ,K.PROD_STATUS_CD
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -1580,7 +1581,6 @@
                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
-                AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                 AND K.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */

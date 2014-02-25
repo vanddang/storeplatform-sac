@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.shopping.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
@@ -1636,7 +1636,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeRights.setGrade(episodeShopping.getProdGrdCd());
 							episodeRights.setDateList(episodeDateList);
 							episodeProduct.setRights(episodeRights);
-
+							// 에피소드 상품 판매 상태 코드
+							episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
 							// saleOption 셋팅
 							episodeSaleOption = new SalesOption();
 							episodeSaleOption.setBtob(episodeShopping.getB2bProdYn()); // B2B_상품_여부
@@ -1722,57 +1723,50 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setSelectOptionList(selectOptionList);
 
 							// 판매자정보 셋팅
-							DetailInformationSacReq memberReq = new DetailInformationSacReq();
-							DetailInformationSacRes memberRes = new DetailInformationSacRes();
+
+							DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+							DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
+							List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 							SellerMbrSac sellerMbrSac = new SellerMbrSac();
-							List<SellerMbrSac> sellerMbrSacList = null;
+							this.log.debug("#########################################################");
+							this.log.debug("sellerMbrNo	:	" + episodeShopping.getSellerMbrNo());
+							this.log.debug("#########################################################");
+							sellerMbrSac.setSellerKey(episodeShopping.getSellerMbrNo());
+							sellerMbrSacList.add(sellerMbrSac);
+							detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+
 							try {
-								sellerMbrSacList = new ArrayList<SellerMbrSac>();
-								sellerMbrSac.setSellerKey(episodeShopping.getSellerMbrNo());
-								sellerMbrSac.setSellerId("");
-								sellerMbrSacList.add(sellerMbrSac);
-								memberReq.setSellerMbrSacList(sellerMbrSacList);
-								memberRes = this.sellerSearchSCI.detailInformation(memberReq);
-								List<SellerMbr> sellerMbrs = new ArrayList<SellerMbr>();
-
-								if (memberRes != null) {
-									// Map sellerMbrListMap = memberRes.getSellerMbrListMap();
-									// Iterator<String> keys = sellerMbrListMap.keySet().iterator();
-									// distributor = new Distributor();
-									// while (keys.hasNext()) {
-									// String key = keys.next();
-									// sellerMbrs = (List<SellerMbr>) sellerMbrListMap.get(key);
-									// for (int ll = 0; ll < sellerMbrs.size(); ll++) {
-									// System.out.println("_>>>>" + sellerMbrs.get(ll).getSellerKey());
-									//
-									// }
-									// // Map sellerMbrListMap2 = sellerMbrListMap.get(entry);
-									//
-									// }
-									// System.out.println("(String) sellerMbrListMap.get(sellerID)::"
-									// + (String) sellerMbrListMap.get("sellerID"));
-									// distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
-									// distributor.setIdentifier((String) sellerMbrListMap.get("sellerID"));
-									// distributor.setName((String) sellerMbrListMap.get("sellerName"));
-									// distributor.setCompany((String) sellerMbrListMap.get("sellerCompany"));
-									// distributor.setTel((String) sellerMbrListMap.get("sellerBizNumber"));
-									// distributor.setEmail((String) sellerMbrListMap.get("repEmail"));
-									// distributor.setAddress((String) sellerMbrListMap.get("sellerAddress")
-									// + (String) sellerMbrListMap.get("sellerDetailAddress"));
-									// distributor.setRegNo((String) sellerMbrListMap.get("sellerBizNumber"));
-									episodeProduct.setDistributor(distributor);
-
+								detailInformationSacRes = this.sellerSearchSCI
+										.detailInformation(detailInformationSacReq);
+								Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
+								List<SellerMbrSac> sellerMbrs = new ArrayList<SellerMbrSac>();
+								sellerMbrSac = new SellerMbrSac();
+								distributor = new Distributor();
+								while (it.hasNext()) {
+									String key = it.next();
+									sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
+									distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
+									distributor.setIdentifier(sellerMbrs.get(0).getSellerId());
+									distributor.setName(sellerMbrs.get(0).getSellerName());
+									distributor.setCompany(sellerMbrs.get(0).getSellerCompany());
+									distributor.setTel(sellerMbrs.get(0).getRepPhone());
+									distributor.setEmail(sellerMbrs.get(0).getSellerEmail());
+									distributor.setAddress(sellerMbrs.get(0).getSellerAddress()
+											+ sellerMbrs.get(0).getSellerDetailAddress());
+									distributor.setRegNo(sellerMbrs.get(0).getSellerBizNumber());
 								}
+								episodeProduct.setDistributor(distributor);
+
 							} catch (Exception e) {
 								throw new StorePlatformException("SAC_DSP_1002", "멤버 정보 조회 ", e);
 							}
-
 							subProductList.add(episodeProduct);
 						}
 
 					}
 					// 데이터 매핑
-
+					// 채널 상품 판매 상태 코드
+					product.setSalesStatus(shopping.getProdStatusCd());
 					product.setMenuList(menuList);
 					product.setTitle(title);
 					product.setSourceList(sourceList);
