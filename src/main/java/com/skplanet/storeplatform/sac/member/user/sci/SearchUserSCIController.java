@@ -57,8 +57,6 @@ public class SearchUserSCIController implements SearchUserSCI {
 		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}",
 				requestHeader, request);
 
-		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] SC UserInfo Response : {}", "");
-
 		List<String> userKeyList = request.getUserKeyList();
 		SearchUserReq searchUserReq = new SearchUserReq();
 		searchUserReq.setUserKeyList(userKeyList);
@@ -69,7 +67,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		Map<String, UserInfoSac> resMap = new HashMap<String, UserInfoSac>();
 		UserInfoSac userInfoSac;
 
-		for (int i = 0; i < userInfoMap.size(); i++) {
+		for (int i = 0; i < userKeyList.size(); i++) {
 			if (userInfoMap.get(userKeyList.get(i)) != null) {
 				userInfoSac = new UserInfoSac();
 				// userInfoSac.setUserKey(userInfoMap.get(userKeyList.get(i)).getUserKey());
