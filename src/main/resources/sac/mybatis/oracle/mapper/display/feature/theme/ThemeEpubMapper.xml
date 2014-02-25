@@ -4,7 +4,7 @@
     <!-- ebook/코믹 테마상품 조회 -->
     <select id="selectThemeEpubList" parameterType="ThemeEpubSacReq" resultType="ThemeEpub">
 		SELECT  /* ThemeEpubMapper.XML, selectThemeEpubList, seung hun Lee, 2014-02-17 */     
-              COUNT(*) OVER () AS TOTAL_COUNT
+              TOTAL_COUNT
             , A.BNR_MENU_ID
             , A.BNR_SEQ
             , A.BNR_NM
@@ -16,8 +16,9 @@
             , A.MENU_ID
             , A.BNR_TITLE
         FROM (
-            SELECT
-                 ROW_NUMBER() OVER(ORDER BY TDBE.EXPO_ORD , TDBE.EXPO_STATUS_CD) RNUM
+            SELECT 
+                COUNT(*) OVER () AS TOTAL_COUNT
+                , ROW_NUMBER() OVER(ORDER BY TDBE.EXPO_ORD , TDBE.EXPO_STATUS_CD) RNUM
                 , TDB.BNR_MENU_ID
                 , TDB.BNR_SEQ
                 , TDBE.BNR_NM

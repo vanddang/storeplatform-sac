@@ -164,9 +164,14 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				}
 
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
 					String topMenuId = productBasicInfo.getTopMenuId();
 					String svcGrpCd = productBasicInfo.getSvcGrpCd();
+
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("req", req);
+					reqMap.put("tenantHeader", tenantHeader);
+					reqMap.put("deviceHeader", deviceHeader);
+					reqMap.put("lang", tenantHeader.getLangCd());
 
 					product = new Product(); // 결과물
 
@@ -181,7 +186,8 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 					identifierList.add(identifier);
 					product.setIdentifierList(identifierList);
 					MetaInfo retMetaInfo = null;
-
+					System.out.println(svcGrpCd);
+					System.out.println("22222");
 					// APP 상품의 경우
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 						reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
@@ -193,27 +199,38 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
 							retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-
 							// 영화용 Contributor 설정
-							Contributor contributor = this.vodGenerator.generateMovieContributor(retMetaInfo);
-							product.setContributor(contributor);
+							if (retMetaInfo != null) {
+								Contributor contributor = this.vodGenerator.generateMovieContributor(retMetaInfo);
+								product.setContributor(contributor);
+							}
 						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
 																							  // 경우
 							retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+							System.out.println("333333");
 							// Ebook용 Contributor 설정
-							Contributor contributor = this.ebookComicGenerator.generateEbookContributor(retMetaInfo);
-							product.setContributor(contributor);
+							if (retMetaInfo != null) {
+								Contributor contributor = this.ebookComicGenerator
+										.generateEbookContributor(retMetaInfo);
+								product.setContributor(contributor);
+							}
+							System.out.println("444");
 						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 							retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
 							// Music용 Contributor 설정
-							Contributor contributor = this.musicGenerator.generateContributor(retMetaInfo);
-							product.setContributor(contributor);
+							if (retMetaInfo != null) {
+								Contributor contributor = this.musicGenerator.generateContributor(retMetaInfo);
+								product.setContributor(contributor);
+							}
 						} else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // WEBTOON 상품의 경우
 							retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
 							// Comic용 Contributor 설정
-							Contributor contributor = this.ebookComicGenerator.generateComicContributor(retMetaInfo);
-							product.setContributor(contributor);
+							if (retMetaInfo != null) {
+								Contributor contributor = this.ebookComicGenerator
+										.generateComicContributor(retMetaInfo);
+								product.setContributor(contributor);
+							}
 						}
 					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
 						retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);

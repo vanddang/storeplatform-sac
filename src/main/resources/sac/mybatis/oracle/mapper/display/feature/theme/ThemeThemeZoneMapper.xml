@@ -25,12 +25,13 @@
 		AND TDB.BNR_SEQ = TDBE.BNR_SEQ  
     </select>
      
-    <!-- 테마 조회 -->
+    <!-- 테마 상품 조회 -->
     <select id="selectThemeThemeZoneList" parameterType="ThemeThemeZoneSacReq" resultType="ProductBasicInfo">
 		SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZoneList, seung hun Lee, 2014-02-17 */     
               B.TENANT_ID
              , B.MENU_ID
              , B.PROD_ID
+             , B.PART_PROD_ID
              , B.TOP_MENU_ID
              , B.META_CLSF_CD
              , B.SVC_GRP_CD
@@ -42,6 +43,7 @@
                   FROM (SELECT A.TENANT_ID
                              , E.MENU_ID
                              , C.PROD_ID
+                             , C.PART_PROD_ID
                              , E.TOP_MENU_ID
                              , F.META_CLSF_CD
                              , F.SVC_GRP_CD
@@ -67,24 +69,23 @@
 	                   </if>
                        AND TDB.BNR_INFO = A.LIST_ID
                        AND A.TENANT_ID = #{tenantId}
+                       AND B.TENANT_ID = #{tenantId}
+                       AND G.TENANT_ID = #{tenantId}
                        AND A.LIST_ID = B.LIST_ID
-                       AND A.TENANT_ID = B.TENANT_ID
                        AND A.EXPO_YN = 'Y'
                        AND B.EXPO_YN = 'Y'
                        AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+                       AND B.PROD_ID = C.PROD_ID
                        AND C.PROD_RSHP_CD = 'DP010802'
                        AND B.PROD_ID = D.PROD_ID
                        AND D.USE_YN = 'Y'
                        AND D.MENU_ID = E.MENU_ID
                        AND E.USE_YN = 'Y'
                        AND C.PART_PROD_ID = F.PROD_ID
-                       --AND F.CONTENTS_TYPE_CD = 'PD002502'
                        AND F.PROD_ID = G.PROD_ID
-                       AND A.TENANT_ID = G.TENANT_ID
                        AND G.EXPO_YN = 'Y'
-                       /*AND (H.DEVICE_MODEL_CD = -deviceModelCd OR H.DEVICE_MODEL_CD = 'android_standard2')  header param : 단말모델코드 */
                        AND H.DEVICE_MODEL_CD = #{deviceModelCd}
-                       AND H.DEVICE_MODEL_CD = I.DEVICE_MODEL_CD
+                       AND I.DEVICE_MODEL_CD = #{deviceModelCd}
                        AND C.PART_PROD_ID = I.PROD_ID
                        AND DECODE( F.TOP_MENU_ID
                                     , 'DP13'
