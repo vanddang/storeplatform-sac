@@ -56,14 +56,25 @@ public interface CouponItemService {
 
 	/**
 	 * <pre>
-	 * 쿠폰ID,아이템ID 가져오기.
+	 * 쿠폰ID 가져오기.
 	 * </pre>
 	 * 
 	 * @param scrContentId
 	 *            scrContentId
 	 * @return String
 	 */
-	public String getGenerateId(String scrContentId);
+	public String getCouponGenerateId(String scrContentId);
+
+	/**
+	 * <pre>
+	 * 아이템ID 가져오기.
+	 * </pre>
+	 * 
+	 * @param scrContentId
+	 *            scrContentId
+	 * @return String
+	 */
+	public String getItemGenerateId(String scrContentId);
 
 	/**
 	 * <pre>

@@ -1017,13 +1017,13 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 
 			// 기등록된 컨텐트 존재여부 확인 old쿠폰ID,아이템ID로 new쿠폰ID,아이템ID 가져오기 조회
-			String newCouponCode = this.couponItemService.getGenerateId(couponCode);
+			String newCouponCode = this.couponItemService.getCouponGenerateId(couponCode);
 
 			if (StringUtils.isBlank(newCouponCode)) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_COUPONID, null, null);
 			}
 			if ((StringUtils.equalsIgnoreCase(upType, "1"))) { // 1=단품상태변경 item 값은 필수
-				itemCode = this.couponItemService.getGenerateId(itemCode);
+				itemCode = this.couponItemService.getItemGenerateId(itemCode);
 				if (StringUtils.isBlank(itemCode)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_ITEMID, null, null);
 				}
@@ -1187,7 +1187,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 					info.setUpType("1"); // 0=상품상태변경, 1=단품상태변경
 				}
 
-				String newCouponId = this.couponItemService.getGenerateId(nextLine[1].toString());
+				String newCouponId = this.couponItemService.getCouponGenerateId(nextLine[1].toString());
 				if (StringUtils.isBlank(newCouponId)) { // content_id 값이 없으면 log에 남기기
 					nonContentId = "nonContentId::" + sf.format(now.getTime()) + ">>>>쿠폰코드::::"
 							+ nextLine[1].toString();
@@ -1196,7 +1196,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				}
 				if ((StringUtils.equalsIgnoreCase(info.getUpType(), "1"))) { // 1=단품상태변경 item 값은 필수
 					info.setItemCode(nextLine[2].toString()); // 아이템 코드
-					newItemId = this.couponItemService.getGenerateId(nextLine[2].toString());
+					newItemId = this.couponItemService.getItemGenerateId(nextLine[2].toString());
 					if (StringUtils.isBlank(newItemId)) {
 						nonItemId = "nonItemId::" + sf.format(now.getTime()) + ">>>>아이템코드::::" + nextLine[2].toString();
 						strFirstValueTot.append(nonItemId + lineSeparator);

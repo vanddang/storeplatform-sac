@@ -97,7 +97,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
-	 * 쿠폰ID,아이템ID 가져오기.
+	 * 쿠폰ID 가져오기.
 	 * </pre>
 	 * 
 	 * @param scrContentId
@@ -105,9 +105,27 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * @return String
 	 */
 	@Override
-	public String getGenerateId(String scrContentId) {
+	public String getCouponGenerateId(String scrContentId) {
 		try {
-			return (String) this.commonDAO.queryForObject("Coupon.getGenerateId", scrContentId);
+			return (String) this.commonDAO.queryForObject("Coupon.getCouponGenerateId", scrContentId);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 아이템ID 가져오기.
+	 * </pre>
+	 * 
+	 * @param scrContentId
+	 *            scrContentId
+	 * @return String
+	 */
+	@Override
+	public String getItemGenerateId(String scrContentId) {
+		try {
+			return (String) this.commonDAO.queryForObject("Coupon.getItemGenerateId", scrContentId);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
 		}

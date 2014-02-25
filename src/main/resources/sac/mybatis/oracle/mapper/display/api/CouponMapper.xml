@@ -19,14 +19,29 @@
         FROM TB_DP_SHPG_PROD
         WHERE SRC_CONTENT_ID= #{scrContentId}
     </select>
-
-    <!--쿠폰ID,아이템ID 가져오기 조회-->
-    <select id="getGenerateId" resultType="String"  parameterType="String">
-       /* CouponMapper.xml, getCouponGenerateId, 쿠폰ID,아이템ID 가져오기 조회, 김형식/SK플래닛 , 2013-01-08 */
-       SELECT 
-         PROD_ID
+    
+    <!--쿠폰ID 가져오기 조회-->
+    <select id="getCouponGenerateId" resultType="String"  parameterType="String">
+       /* CouponMapper.xml, getCouponGenerateId, 쿠폰ID 가져오기 조회, 김형식/SK플래닛 , 2013-01-08 */
+        SELECT 
+          A.PROD_ID
         FROM TB_DP_SHPG_PROD A
-        WHERE SRC_CONTENT_ID= #{scrContentId}
+            ,TB_DP_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND B.CONTENTS_TYPE_CD ='PD002501'
+          AND A.SRC_CONTENT_ID= #{scrContentId}
+    </select>
+     
+    <!--아이템ID 가져오기 조회-->
+    <select id="getItemGenerateId" resultType="String"  parameterType="String">
+       /* CouponMapper.xml, getItemGenerateId, 아이템ID 가져오기 조회, 김형식/SK플래닛 , 2013-01-08 */
+        SELECT 
+          A.PROD_ID
+        FROM TB_DP_SHPG_PROD A
+            ,TB_DP_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND B.CONTENTS_TYPE_CD ='PD002502'
+          AND A.SRC_CONTENT_ID= #{scrContentId}
     </select>       
     
     <!--TB_DP_PROD 테이블에 INSERT-->    
