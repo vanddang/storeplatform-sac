@@ -12,8 +12,11 @@ package com.skplanet.storeplatform.sac.purchase.cancel.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.external.client.arms.sci.ArmsSCI;
-import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
+import com.skplanet.storeplatform.external.client.arm.sci.ArmSCI;
+import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
+import com.skplanet.storeplatform.external.client.message.vo.AomSendEcReq;
+import com.skplanet.storeplatform.external.client.message.vo.AomSendEcRes;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 
 /**
  * 구매 취소 repository implements.
@@ -24,10 +27,40 @@ import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
 public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 	@Autowired
-	private PurchaseCancelSCI purchaseCancelSCI;
+	private MessageSCI messageSCI;
 
 	@Autowired
-	private ArmsSCI armsSCI;
+	private ArmSCI armSCI;
+
+	@Override
+	public String aomPush(PrchsDtl prchsDtl) {
+
+		AomSendEcReq aomSendEcReq = new AomSendEcReq();
+
+		aomSendEcReq.setDeviceId(prchsDtl.getUseInsdDeviceId());
+		aomSendEcReq.setClientType("AM000102");
+		aomSendEcReq.setSvcType("AM000205");
+		aomSendEcReq.setProdType("AM000301");
+		aomSendEcReq.setMsg("KR_ARM_TS/A4/" + prchsDtl.getUseInsdDeviceId() + "/" + prchsDtl.getProdId());
+		aomSendEcReq.setAomStat("AM000401");
+
+		AomSendEcRes aomSendEcRes = this.messageSCI.aomSend(aomSendEcReq);
+
+		return aomSendEcRes.getResultStatus();
+
+	}
+
+	// aom message 발송.
+	/*
+	 * AomSendEcReq aomSendEcReq = new AomSendEcReq(); // this.aomModel.setMdn(purchaseCancel.getHandsetNo());
+	 * aomSendEcReq.setDeviceId(purchaseCancelDetailSacParam.getPrchsDtl().get(0).getUseInsdDeviceId()); //
+	 * this.aomModel.setClientType("AM000102"); // 클라이언트 구분 ARM Client aomSendEcReq.setClientType(""); //
+	 * this.aomModel.setServiceType("AM000205"); // 서비스 구분 AM000205(ARM초기화) aomSendEcReq.setSvcType(""); //
+	 * this.aomModel.setProdType("AM000301"); // 상품 구분 AM000301(어플) aomSendEcReq.setProdType(""); // String aomMessage =
+	 * "KR_ARM_TS/A4/" + purchaseCancel.getHandsetNo() + "/" + appId; aomSendEcReq.setMsg(""); // if (tokenCnt > 0) {
+	 * this.aomModel.setStat("AM000401"); or else { this.aomModel.setStat("AM000405"); // AM000401
+	 * aomSendEcReq.setAomStat("");
+	 */
 
 	/*
 	 * public List<PurchaseDetail> getPurchaseDtlList(PurchaseCommonSacParam purchaseCommonSacParam,

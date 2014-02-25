@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.repository;
 
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 
 /**
  * 구매 취소 repository Interface.
@@ -20,17 +21,13 @@ public interface PurchaseCancelRepository {
 	/**
 	 * 
 	 * <pre>
-	 * 구매 취소 후 라이센스 삭제 요청.
+	 * 구매 취소 시 Aom Message Push.
 	 * </pre>
 	 * 
-	 * @param purchaseCommonParam
-	 *            구매 취소 요청 공통 VO.
-	 * @param purchaseCancelParamDetail
-	 *            구매 취소 요청 VO.
-	 * @return PurchaseCancelParamDetail
-	 * @return PurchaseCancelParamDetail
+	 * @param prchsDtl
+	 *            prchsDtl
+	 * @return String
 	 */
-	// public PurchaseCancelParamDetail removeLicense(PurchaseCommonSacParam purchaseCommonParam,
-	// PurchaseCancelParamDetail purchaseCancelParamDetail);
+	String aomPush(PrchsDtl prchsDtl);
 
 }
