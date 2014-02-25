@@ -80,7 +80,6 @@ public class NewAppRecommandServiceImpl implements NewAppRecommandService {
 
 		NewAppRecommandSacRes response = new NewAppRecommandSacRes();
 		CommonResponse commonResponse = new CommonResponse();
-		String sellerKey = newAppRecommandSacReq.getSellerKey();
 
 		int index = 0;
 		int offset = 1; // default
