@@ -503,7 +503,7 @@
                       , TB_DP_PROD                    J /* 에피소드 상품 */
                       , UV_TB_DP_MULTIMDA_PROD        L /* 에피소드 상품 */
                       , TB_DP_PROD_IMG                M /* 채널 상품 이미지 */
-                      , TB_DP_TENANT_PROD_STATS       N /* 채널 Tenant 상품 상태 */
+                      , TB_DP_TENANT_PROD_STATS       N /* 채널 Tenant 상품 통계 건수 */
                       , TB_DP_TENANT_PROD_PRICE       O /* 에피소드 Tenant 상품 가격 */
                  WHERE A.MENU_ID = B.MENU_ID
                    AND A.MENU_ID = C.MENU_ID
@@ -647,7 +647,7 @@
                       , TB_DP_PROD                    J /* 에피소드 상품 */
                       , UV_TB_DP_MULTIMDA_PROD        L /* 에피소드 상품 */
                       , TB_DP_PROD_IMG                M /* 채널 상품 이미지 */
-                      , TB_DP_TENANT_PROD_STATS       N /* 채널 Tenant 상품 상태 */
+                      , TB_DP_TENANT_PROD_STATS       N /* 채널 Tenant 상품 통계 건수 */
                       , TB_DP_TENANT_PROD_PRICE       O /* 에피소드 Tenant 상품 가격 */
                  WHERE A.MENU_ID = B.MENU_ID
                    AND A.MENU_ID = C.MENU_ID
