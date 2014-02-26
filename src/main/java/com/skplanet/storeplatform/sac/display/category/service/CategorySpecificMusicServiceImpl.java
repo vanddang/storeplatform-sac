@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -53,6 +54,9 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	private MetaInfoService metaInfoService;
 
 	/*
 	 * (non-Javadoc)
@@ -116,12 +120,13 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 
 						// TODO dummy data 꼭 삭제할것
 						paramMap.put("stdDt", "20110806");
-
-						this.log.debug("##### Search for Music specific product");
-						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", paramMap,
-								MetaInfo.class);
+						metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
+						// metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo",
+						// paramMap,
+						// MetaInfo.class);
 						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
+							// product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
+							product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
 							productList.add(product);
 						}
 					}

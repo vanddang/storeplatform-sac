@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -63,6 +64,9 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
+	@Autowired
+	private MetaInfoService metaInfoService;
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
@@ -129,14 +133,19 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
 							this.log.debug("##### Search for Vod specific product");
-							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo",
-									paramMap, MetaInfo.class);
+							// metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo",
+							// paramMap, MetaInfo.class);
+
+							metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
 							if (metaInfo != null) {
 								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.responseInfoGenerateFacade.generateSpecificMovieProduct(metaInfo);
+									// product =
+									// this.responseInfoGenerateFacade.generateSpecificMovieProduct(retMetaInfo);
+									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
 								} else {
-									product = this.responseInfoGenerateFacade
-											.generateSpecificBroadcastProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
+									// product = this.responseInfoGenerateFacade
+									// .generateSpecificBroadcastProduct(retMetaInfo);
 								}
 								productList.add(product);
 							}

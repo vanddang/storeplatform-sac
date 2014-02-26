@@ -43,6 +43,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -65,6 +66,9 @@ public class CategorySpecificWebtoonServiceImpl implements CategorySpecificWebto
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	private MetaInfoService metaInfoService;
 
 	/*
 	 * (non-Javadoc)
@@ -127,9 +131,9 @@ public class CategorySpecificWebtoonServiceImpl implements CategorySpecificWebto
 						if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // Webtoon 상품의 경우
 
 							paramMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-							this.log.debug("##### Search for WebtoonComic specific product");
-							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
-									paramMap, MetaInfo.class);
+							// metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
+							// paramMap, MetaInfo.class);
+							metaInfo = this.metaInfoService.getWebtoonMetaInfo(paramMap);
 							if (metaInfo != null) {
 								product = this.responseInfoGenerateFacade.generateSpecificWebtoonProduct(metaInfo);
 								productList.add(product);

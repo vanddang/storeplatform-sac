@@ -41,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -60,6 +61,9 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
+	@Autowired
+	private MetaInfoService metaInfoService;
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
@@ -122,9 +126,12 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
 					// APP 상품의 경우
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						this.log.debug("##### Search for app specific product");
-						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo", paramMap,
-								MetaInfo.class);
+						metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+
+						// paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+						// this.log.debug("##### Search for app specific product");
+						// metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo", paramMap,
+						// MetaInfo.class);
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
 							productList.add(product);

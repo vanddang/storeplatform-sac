@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -66,6 +67,9 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	private MetaInfoService metaInfoService;
 
 	/*
 	 * (non-Javadoc)
@@ -129,14 +133,17 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 																							  // 경우
 
 							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-							this.log.debug("##### Search for EbookComic specific product");
-							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
-									paramMap, MetaInfo.class);
+							// this.log.debug("##### Search for EbookComic specific product");
+							// metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
+							// paramMap, MetaInfo.class);
+							metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
 							if (metaInfo != null) {
 								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
+									// product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
 								} else {
-									product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
+									// product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
 								}
 								productList.add(product);
 							}
