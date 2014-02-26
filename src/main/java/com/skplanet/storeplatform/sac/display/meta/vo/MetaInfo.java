@@ -161,6 +161,7 @@ public class MetaInfo {
 	private String dlmImagePath;
 	private String samplUrl;
 	private String scSamplUrl;
+	private String mallCd;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -2462,6 +2463,21 @@ public class MetaInfo {
 	 */
 	public void setScSamplUrl(String scSamplUrl) {
 		this.scSamplUrl = scSamplUrl;
+	}
+
+	/**
+	 * @return the mallCd
+	 */
+	public String getMallCd() {
+		return this.mallCd;
+	}
+
+	/**
+	 * @param mallCd
+	 *            the mallCd to set
+	 */
+	public void setMallCd(String mallCd) {
+		this.mallCd = mallCd;
 	}
 
 	/**
