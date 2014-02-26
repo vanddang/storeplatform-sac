@@ -314,7 +314,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrSacs.add(sellerMbrSac);
 		}
 		// 내국인/외국인, 개인사업자 or 법인 사업자
-		else if (sellerMbrs.get(0).getIsDomestic().equals("Y")
+		else if (sellerMbrs.get(0).getIsDomestic().equals("N")
 				&& (sellerMbrs.get(0).getSellerClass().equals("US010101")
 						|| sellerMbrs.get(0).getSellerClass().equals("US010102") || sellerMbrs.get(0).getSellerClass()
 						.equals("US010103"))) {
