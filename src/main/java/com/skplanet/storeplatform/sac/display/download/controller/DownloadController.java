@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.display.download.controller;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +86,7 @@ public class DownloadController {
 	@RequestMapping(value = "/music/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadMusicSacRes downloadMusic(SacRequestHeader requestheader,
-			@RequestBody @Validated @Valid DownloadMusicSacReq downloadMusicSacReq) {
+			@RequestBody @Validated DownloadMusicSacReq downloadMusicSacReq) {
 		return this.downloadMusicService.searchDownloadMusic(requestheader, downloadMusicSacReq);
 	}
 
@@ -125,7 +123,7 @@ public class DownloadController {
 	@RequestMapping(value = "/ebook/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader,
-			@RequestBody DownloadEbookSacReq downloadEbookReq) {
+			@RequestBody @Validated DownloadEbookSacReq downloadEbookReq) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getDownloadEbookInfo started.");
 		this.logger.debug("downloadEbookReq : {}", downloadEbookReq.toString());
@@ -148,7 +146,7 @@ public class DownloadController {
 	@RequestMapping(value = "/comic/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader,
-			@RequestBody DownloadComicSacReq downloadComicReq) {
+			@RequestBody @Validated DownloadComicSacReq downloadComicReq) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getDownloadComicInfo started.");
 		this.logger.debug("downloadComicReq : {}", downloadComicReq.toString());

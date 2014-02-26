@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.EbookComicThemeReq;
@@ -92,14 +91,14 @@ public class EbookComicThemeServiceImpl implements EbookComicThemeService {
 				sourceList.add(source);
 
 				bannerList = new ArrayList<Banner>();
-				banner.setBase("/category/themeZone");
-				banner.setIdentifier(identifierList);
-				banner.setSizeType("A");
-				banner.setType("themeZone");
-				banner.setTitle(title);
-				banner.setBannerId("AR00001359");
-				banner.setTitleName(titleName);
-				banner.setThemeInfo("베스트 로맨스 도서 37종 50프로 할인 이벤트");
+				// banner.setBase("/category/themeZone");
+				// banner.setIdentifier(identifierList);
+				// banner.setSizeType("A");
+				// banner.setType("themeZone");
+				// banner.setTitle(title);
+				// banner.setBannerId("AR00001359");
+				// banner.setTitleName(titleName);
+				// banner.setThemeInfo("베스트 로맨스 도서 37종 50프로 할인 이벤트");
 				banner.setSourceList(sourceList);
 				bannerList.add(banner);
 
@@ -130,15 +129,15 @@ public class EbookComicThemeServiceImpl implements EbookComicThemeService {
 				sourceList.add(source);
 
 				bannerList = new ArrayList<Banner>();
-				banner.setBase("/category/themeZone");
-				banner.setIdentifier(identifierList);
-				banner.setSizeType("A");
-				banner.setType("themeZone");
-				banner.setTitle(title);
-				banner.setBannerId("AR00001386");
-				banner.setTitleName(titleName);
-				banner.setThemeInfo("반전에 반전을 거듭하는 묘미~황성 작품들만 모아보기");
-				banner.setSourceList(sourceList);
+				// banner.setBase("/category/themeZone");
+				// banner.setIdentifier(identifierList);
+				// banner.setSizeType("A");
+				// banner.setType("themeZone");
+				// banner.setTitle(title);
+				// banner.setBannerId("AR00001386");
+				// banner.setTitleName(titleName);
+				// banner.setThemeInfo("반전에 반전을 거듭하는 묘미~황성 작품들만 모아보기");
+				// banner.setSourceList(sourceList);
 				bannerList.add(banner);
 
 			}
