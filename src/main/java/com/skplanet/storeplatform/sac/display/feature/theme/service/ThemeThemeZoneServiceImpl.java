@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneSacReq;
@@ -104,7 +105,37 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 			count = offset + count - 1;
 			req.setCount(count);
 
-			String themezoneId = req.getThemezoneId();
+			String prodCharge = req.getProdCharge();
+			String listId = req.getListId();
+
+			// 필수 파라미터 체크 listId
+			if (StringUtils.isEmpty(listId)) {
+				throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
+			}
+
+			// 상품의 유료/무료 구분 기본 설정
+			if (StringUtils.isEmpty(prodCharge)) {
+				req.setProdCharge("A");
+			}
+
+			if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+				String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+				for (int i = 0; i < arrayProdGradeCd.length; i++) {
+					if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+						if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+								&& !"PD004403".equals(arrayProdGradeCd[i])) {
+							throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+									arrayProdGradeCd[i]);
+						}
+					}
+				}
+			}
+
+			// '+'로 연결 된 상품등급코드를 배열로 전달
+			if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+				String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+				req.setArrayProdGradeCd(arrayProdGradeCd);
+			}
 
 			CommonResponse commonResponse = new CommonResponse();
 			List<Product> productList = new ArrayList<Product>();
@@ -138,7 +169,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				Layout layout = new Layout();
 
 				// layout 설정
-				if (!(StringUtils.isEmpty(themezoneId))) {
+				if (!ThemeThemeZoneInfoMeta.isEmpty()) {
 					ThemeThemeZoneInfo themeThemeZoneInfo = null;
 					themeThemeZoneInfo = ThemeThemeZoneInfoMeta.get(0);
 					layout = new Layout();
@@ -146,14 +177,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 					title = new Title();
 					title.setText(themeThemeZoneInfo.getBnrNm());
 					layout.setTitle(title);
-
-					// source 정보
-					source = new Source();
-					sourceList = new ArrayList<Source>();
-					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(themeThemeZoneInfo.getImgPath());
-					sourceList.add(source);
-					layout.setSource(source);
 
 					// 메뉴 정보
 					menu = new Menu(); // 메뉴
@@ -259,7 +282,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				}
 				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
 				res.setProductList(productList);
-				if (!(StringUtils.isEmpty(themezoneId))) {
+				if (!ThemeThemeZoneInfoMeta.isEmpty()) {
 					res.setLayOut(layout);
 				}
 				res.setCommonResponse(commonResponse);

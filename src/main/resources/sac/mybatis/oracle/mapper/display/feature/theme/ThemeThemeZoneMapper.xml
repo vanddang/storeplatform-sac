@@ -4,25 +4,28 @@
     <!-- 테마 조회 -->
     <select id="selectThemeThemeZone" parameterType="ThemeThemeZoneSacReq" resultType="ThemeThemeZone">
         SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZone, seung hun Lee, 2014-02-21 */ 
-		        TDB.BNR_MENU_ID
-		        , ( SELECT TCM.CD_NM FROM TB_CM_CD TCM where TCM.cd_id = TDB.BNR_MENU_ID) AS BNR_MENU_NM
-		        , TDB.BNR_SEQ
-		        , TDBE.BNR_NM
-		        , TDBI.IMG_PATH
-                , ( SELECT TCM.CD_NM FROM TB_CM_CD TCM where TCM.cd_id = TDBI.IMG_SIZE_CD) AS IMG_SIZE
-		        , DECODE(TDB.BNR_INFO_TYPE_CD, 'DP010306', TDB.BNR_INFO) MENU_ID
-		FROM TB_DP_BNR TDB
-		    , TB_DP_BNR_IMG TDBI
-		    , TB_DP_BNR_EXPO TDBE
-		WHERE 1=1
-        <if test='themezoneId != null'>
-        AND TDB.BNR_MENU_ID = 'DP010917'
-        AND TDB.BNR_SEQ = '2111'           
-        </if>  
-		AND TDB.BNR_MENU_ID = TDBI.BNR_MENU_ID
-		AND TDB.BNR_SEQ = TDBI.BNR_SEQ
-		AND TDB.BNR_MENU_ID = TDBE.BNR_MENU_ID
-		AND TDB.BNR_SEQ = TDBE.BNR_SEQ  
+              BNR_MENU_NM
+			, BNR_MENU_ID
+            , BNR_NM
+	   FROM
+               ( SELECT 
+                     TDL.LIST_NM AS BNR_MENU_NM
+                    ,TDL.LIST_ID AS BNR_MENU_ID
+                    , TDL.LIST_NM AS BNR_NM
+	            FROM TB_DP_LIST TDL
+	                WHERE TDL.LIST_ID = #{listId}        
+	            UNION ALL
+	            SELECT 
+                     ( SELECT TCM.CD_NM FROM TB_CM_CD TCM where TCM.CD_ID = TDB.BNR_MENU_ID) AS BNR_MENU_NM
+                     , TDB.BNR_MENU_ID
+                     , TDBE.BNR_NM
+                FROM TB_DP_BNR TDB
+                    , TB_DP_BNR_EXPO TDBE
+                WHERE 1=1
+                AND TDB.BNR_INFO = #{listId}
+                AND TDB.BNR_MENU_ID = TDBE.BNR_MENU_ID
+                AND TDB.BNR_SEQ = TDBE.BNR_SEQ          
+				) A
     </select>
      
     <!-- 테마 상품 조회 -->
@@ -52,26 +55,28 @@
                              , B.EXPO_ORD
                              , B.EXPO_ORD_SUB
                              , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS RN
-                          FROM TB_DP_BNR TDB
-                             , TB_DP_LIST A
+                          FROM  TB_DP_LIST A
                              , TB_DP_LIST_PROD B
                              , TB_DP_PROD_RSHP C
                              , TB_DP_MENU_CATEGORY_PROD_MAPG D
                              , TB_DP_MENU_CATEGORY E
-                             , TB_DP_PROD F  /* 에피소드 */
+                             , TB_DP_PROD F  
                              , TB_DP_TENANT_PROD G
                              , TB_CM_DEVICE H
                              , TB_DP_SPRT_DEVICE I
                        WHERE 1=1
-	                   <if test='themezoneId != null'>
-                       AND TDB.BNR_MENU_ID = 'DP010917'
-                       AND TDB.BNR_SEQ = '2111'             
+	                   <if test='listId != null'>
+                          <if test='listId == "TAR"'>
+                            AND A.LIST_GRP_CD = 'TAR'
+                          </if>
+                          <if test='listId != "TAR"'>
+                            AND A.LIST_ID = #{listId}
+                          </if>
 	                   </if>
-                       AND TDB.BNR_INFO = A.LIST_ID
+                       AND A.LIST_ID = B.LIST_ID
                        AND A.TENANT_ID = #{tenantId}
                        AND B.TENANT_ID = #{tenantId}
                        AND G.TENANT_ID = #{tenantId}
-                       AND A.LIST_ID = B.LIST_ID
                        AND A.EXPO_YN = 'Y'
                        AND B.EXPO_YN = 'Y'
                        AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
@@ -83,6 +88,15 @@
                        AND E.USE_YN = 'Y'
                        AND C.PART_PROD_ID = F.PROD_ID
                        AND F.PROD_ID = G.PROD_ID
+                       <if test='prodCharge != "A"'>
+                         AND  F.PROD_CHRG_YN = #{prodCharge}       /* 상품유료여부 */
+                       </if>
+                       <if test="arrayProdGradeCd != null">
+                          AND F.PROD_GRD_CD IN
+                            <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                              #{prodGradeCd}
+                            </foreach>
+                       </if>
                        AND G.EXPO_YN = 'Y'
                        AND H.DEVICE_MODEL_CD = #{deviceModelCd}
                        AND I.DEVICE_MODEL_CD = #{deviceModelCd}
