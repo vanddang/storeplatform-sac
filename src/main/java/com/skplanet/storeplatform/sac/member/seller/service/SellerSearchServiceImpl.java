@@ -887,7 +887,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 */
 	private List<SellerMbr> sellerMbrList(
 			List<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr> sellerMbr) {
-
 		List<SellerMbr> sList = new ArrayList<SellerMbr>();
 		SellerMbr sellerMbrRes = null;
 		if (sellerMbr != null)
@@ -905,6 +904,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrRes.setCordedTelephoneCountry(sellerMbr.get(i).getCordedTelephoneCountry());
 				sellerMbrRes.setCustomerEmail(sellerMbr.get(i).getCustomerEmail());
 				sellerMbrRes.setCustomerPhone(sellerMbr.get(i).getCustomerPhone());
+				sellerMbrRes.setChargerPhone(sellerMbr.get(i).getChargerPhone());
 				sellerMbrRes.setCustomerPhoneCountry(sellerMbr.get(i).getCustomerPhoneCountry());
 				sellerMbrRes.setIsAccountReal(sellerMbr.get(i).getIsAccountReal());
 				sellerMbrRes.setIsBizRegistered(sellerMbr.get(i).getIsBizRegistered());
@@ -925,10 +925,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrRes.setRepPhone(sellerMbr.get(i).getRepPhone());
 				sellerMbrRes.setRepPhoneArea(sellerMbr.get(i).getRepPhoneArea());
 				sellerMbrRes.setRightProfile(sellerMbr.get(i).getRightProfileList());
-				sellerMbrRes.setSecedeDate(sellerMbr.get(i).getSecedeDate());
-				sellerMbrRes.setSecedePathCd(sellerMbr.get(i).getSecedePathCd());
-				sellerMbrRes.setSecedeReasonCode(sellerMbr.get(i).getSecedeReasonCode());
-				sellerMbrRes.setSecedeReasonMessage(sellerMbr.get(i).getSecedeReasonMessage());
 				sellerMbrRes.setSellerAddress(sellerMbr.get(i).getSellerAddress());
 				sellerMbrRes.setSellerBirthDay(sellerMbr.get(i).getSellerBirthDay());
 				sellerMbrRes.setSellerBizCategory(sellerMbr.get(i).getSellerBizCategory());
@@ -956,7 +952,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrRes.setSellerSubStatus(sellerMbr.get(i).getSellerSubStatus());
 				sellerMbrRes.setSellerTelecom(sellerMbr.get(i).getSellerTelecom());
 				sellerMbrRes.setSellerZip(sellerMbr.get(i).getSellerZip());
-				sellerMbrRes.setTenantID(sellerMbr.get(i).getTenantID());
 				sellerMbrRes.setVendorCode(sellerMbr.get(i).getVendorCode());
 				sList.add(sellerMbrRes);
 			}
@@ -987,6 +982,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setCordedTelephoneCountry(sellerMbr.getCordedTelephoneCountry());
 			sellerMbrRes.setCustomerEmail(sellerMbr.getCustomerEmail());
 			sellerMbrRes.setCustomerPhone(sellerMbr.getCustomerPhone());
+			sellerMbrRes.setChargerPhone(sellerMbr.getChargerPhone());
 			sellerMbrRes.setCustomerPhoneCountry(sellerMbr.getCustomerPhoneCountry());
 			sellerMbrRes.setIsAccountReal(sellerMbr.getIsAccountReal());
 			sellerMbrRes.setIsBizRegistered(sellerMbr.getIsBizRegistered());
@@ -1007,10 +1003,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
 			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
 			sellerMbrRes.setRightProfile(sellerMbr.getRightProfileList());
-			sellerMbrRes.setSecedeDate(sellerMbr.getSecedeDate());
-			sellerMbrRes.setSecedePathCd(sellerMbr.getSecedePathCd());
-			sellerMbrRes.setSecedeReasonCode(sellerMbr.getSecedeReasonCode());
-			sellerMbrRes.setSecedeReasonMessage(sellerMbr.getSecedeReasonMessage());
 			sellerMbrRes.setSellerAddress(sellerMbr.getSellerAddress());
 			sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
 			sellerMbrRes.setSellerBizCategory(sellerMbr.getSellerBizCategory());
@@ -1038,9 +1030,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setSellerSubStatus(sellerMbr.getSellerSubStatus());
 			sellerMbrRes.setSellerTelecom(sellerMbr.getSellerTelecom());
 			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
-			sellerMbrRes.setTenantID(sellerMbr.getTenantID());
 			sellerMbrRes.setVendorCode(sellerMbr.getVendorCode());
-			sellerMbrRes.setChargerPhone(sellerMbr.getChargerPhone());
 		}
 		return sellerMbrRes;
 	}
