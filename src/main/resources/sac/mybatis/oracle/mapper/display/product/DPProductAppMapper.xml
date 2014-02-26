@@ -29,7 +29,24 @@
 			<result property="pkgVerCd"         column="PKG_VER_CD"				/>
 			<result property="dbmUpdtDt"   		column="DBM_UPDT_DT"			/>
 			<result property="gameCentrId" 		column="GAME_CENTR_ID"			/>
-			<result property="gameCentrVerCd"   column="GAME_CENTR_VER_CD"		/> 			
+			<result property="gameCentrVerCd"   column="GAME_CENTR_VER_CD"		/> 	
+			<result property="saleStrtDt"   	column="SALE_STRT_DT"			/>	
+			<result property="fullProdId"   	column="FULL_PROD_ID"			/>
+			<result property="saleStatusInfo"   column="SALE_STATUS_INFO"		/>
+			<result property="dcmfPid"   		column="DCMF_PID"				/>
+			<result property="usePeriod"   		column="USE_PERIOD"				/>
+			<result property="dupPrchsPmtYn"   	column="DUP_PRCHS_PMT_YN"		/>
+			<result property="serverIpAuthYn"   column="SERVER_IP_AUTH_YN"		/>
+			<result property="serverPrdCnt"   	column="SERVER_PRD_CNT"			/>
+			<result property="serverIp"   		column="SERVER_IP"			/>
+			<result property="appSvcCase"   	column="APP_SVC_CASE"			/>
+			<result property="dvlprCase"   		column="DVLPR_CASE"				/>
+			<result property="prodIssuServerExneCase"   column="PROD_ISSU_SERVER_EXNE_CASE"		/>
+			<result property="prodCase"   		column="PROD_CASE"				/>
+			<result property="prodKind"   		column="PROD_KIND"				/>
+			<result property="periodisttProdAuthMandYn" column="PERIODISTT_PROD_AUTH_MAND_YN"	/>
+			<result property="appLimtYn"   		column="APP_LIMT_YN"			/>
+			<result property="verifyPath"   	column="VERIFY_PATH"			/>				
 	</resultMap>
 
 
@@ -63,6 +80,23 @@
 			,DBM_UPDT_DT
 			,GAME_CENTR_ID
 			,GAME_CENTR_VER_CD  
+			,SALE_STRT_DT
+			,FULL_PROD_ID
+			,SALE_STATUS_INFO
+			,DCMF_PID
+			,USE_PERIOD
+			,DUP_PRCHS_PMT_YN
+			,SERVER_IP_AUTH_YN
+			,SERVER_PRD_CNT
+			,SERVER_IP
+			,APP_SVC_CASE
+			,DVLPR_CASE
+			,PROD_ISSU_SERVER_EXNE_CASE
+			,PROD_CASE
+			,PROD_KIND
+			,PERIODISTT_PROD_AUTH_MAND_YN
+			,APP_LIMT_YN
+			,VERIFY_PATH			
 	  	FROM TB_DP_APP_PROD
 		WHERE PROD_ID = #{prodId}
   	</select>
@@ -96,7 +130,24 @@
 			,PKG_VER_CD
 			,DBM_UPDT_DT
 			,GAME_CENTR_ID
-			,GAME_CENTR_VER_CD  			
+			,GAME_CENTR_VER_CD
+			,SALE_STRT_DT 
+			,FULL_PROD_ID
+			,SALE_STATUS_INFO
+			,DCMF_PID
+			,USE_PERIOD
+			,DUP_PRCHS_PMT_YN
+			,SERVER_IP_AUTH_YN
+			,SERVER_PRD_CNT
+			,SERVER_IP
+			,APP_SVC_CASE
+			,DVLPR_CASE
+			,PROD_ISSU_SERVER_EXNE_CASE
+			,PROD_CASE
+			,PROD_KIND
+			,PERIODISTT_PROD_AUTH_MAND_YN
+			,APP_LIMT_YN
+			,VERIFY_PATH			 			
 		)
 		VALUES(
 			#{prodId}
@@ -125,7 +176,24 @@
 			,#{pkgVerCd, jdbcType=INTEGER}
 			,TO_DATE(#{dbmUpdtDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
 			,#{gameCentrId, jdbcType=VARCHAR}
-			,#{gameCentrVerCd, jdbcType=VARCHAR}      
+			,#{gameCentrVerCd, jdbcType=VARCHAR}
+			,TO_DATE(#{saleStrtDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')    
+			,#{fullProdId, jdbcType=VARCHAR}
+			,#{saleStatusInfo, jdbcType=VARCHAR}
+			,#{dcmfPid, jdbcType=VARCHAR}
+			,#{usePeriod, jdbcType=INTEGER}
+			,#{dupPrchsPmtYn, jdbcType=VARCHAR}
+			,#{serverIpAuthYn, jdbcType=VARCHAR}
+			,#{serverPrdCnt, jdbcType=INTEGER}
+			,#{serverIp, jdbcType=VARCHAR}
+			,#{appSvcCase, jdbcType=VARCHAR}
+			,#{dvlprCase, jdbcType=VARCHAR}
+			,#{prodIssuServerExneCase, jdbcType=VARCHAR}
+			,#{prodCase, jdbcType=VARCHAR}
+			,#{prodKind, jdbcType=VARCHAR}
+			,#{periodisttProdAuthMandYn, jdbcType=VARCHAR}
+			,#{appLimtYn, jdbcType=VARCHAR}
+			,#{verifyPath, jdbcType=VARCHAR}  			  
 		 )
 	</insert>
     	

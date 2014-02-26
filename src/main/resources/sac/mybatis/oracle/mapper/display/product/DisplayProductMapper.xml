@@ -9,7 +9,7 @@
 		FROM 
 			TB_DP_LIST_PROD 
 		WHERE 
-			PROD_ID = '0000633377' 
+			PROD_ID = #{prodId} 
 			AND TENANT_ID = 'S01'
 			AND LIST_ID = 'ADM000000001'
     </select> 
@@ -98,37 +98,7 @@
 		WHERE T1.INSD_SELLERMBR_NO = #{mbrNo}
 	</select>
     
-    <!-- 정산율 처리 -->
-<!-- 	<parameterMap id="SpRegistProdMap" class="java.util.HashMap">
-		<parameter property="p_prod_id" jdbcType="VARCHAR"  javaType="java.lang.String" mode="IN" />
-		<parameter property="p_settl_rt" jdbcType="INTEGER"  javaType="java.lang.String" mode="IN" />
-		<parameter property="p_reg_id" jdbcType="VARCHAR"  javaType="java.lang.String" mode="IN" />
-		<parameter property="rtn" jdbcType="VARCHAR"  javaType="java.lang.String" mode="OUT" />
-	</parameterMap>   
-    
-	<procedure id="Display_Product.sp_regist_prod" parameterType="SpRegistProdMap">
-	    CALL SP_REGIST_PROD(?,?,null,null,null,?,?)
-	</procedure>
-	
-	  
-	  
-	<resultMap id="SpRegistProdMap" type="hashmap"></resultMap>
-     
-    <select id="Display_Product.sp_regist_prod" statementType="CALLABLE">
-        { 
-            CALL SP_REGIST_PROD(
-                #{p_prod_id},
-                #{p_settl_rt},
-                null,
-                null,
-                null,
-                #{p_reg_id},
-                #{rtn, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String, resultMap=SpRegistProdMap}
-            )
-        }
-    </select>
-	  
-	  -->
+ 
 	
     <!-- 운영자 추천상품 삭제 -->
     <delete id="Display_Product.deleteAdminRecommand" parameterType="ProductVo">
@@ -175,34 +145,5 @@
 		WHERE 
 			SC.PROD_ID = #{prodId}
     </update>
-    
-    <!-- 통합정산 연동 -->
-    <insert id="Display_Product.insertTotalSalesHis" parameterType="ProductVo">
-        INSERT /* DisplayProductMapper.xml, Display_Product.insertTotalSalesHis, mhcha123, 2014-01-24 */ 
-        INTO TBL_TOTAL_SALES_HIS (
-            PROD_ID, DEPLOY_YN, INS_DTTM
-        ) VALUES (
-            #{prodId}, 'N', TO_CHAR (SYSDATE, 'yyyyMMddhh24MISS')
-        )
-    </insert>
-    
-    <update id="Display_Product.updateTotalSalesHis" parameterType="ProductVo">
-        MERGE /* DisplayProductMapper.xml, Display_Product.updateTotalSalesHis, mhcha123, 2014-01-24 */ 
-        INTO TBL_TOTAL_SALES_HIS
-        USING DUAL
-        ON (
-            PROD_ID = #{prodId}
-        )
-        WHEN NOT MATCHED THEN
-            INSERT (
-                PROD_ID, DEPLOY_YN, DEPLOY_CNT, INS_DTTM
-            ) VALUES ( 
-                #{prodId}, 'N', 0, TO_CHAR (SYSDATE, 'yyyyMMddhh24MISS')
-            )
-        WHEN MATCHED THEN
-            UPDATE SET
-	            DEPLOY_YN = 'N'
-	            , UPD_DTTM = TO_CHAR (SYSDATE, 'yyyyMMddhh24MISS')
-    </update> 
     
 </mapper>

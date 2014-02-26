@@ -37,7 +37,7 @@
 
     <update id="Display_Device.updateDpSubConts" parameterType="dpProductSubContsVO">
         UPDATE /* DisplayDeviceMapper.xml, Display_Device.updateDpSubConts, mhcha123, 2014-02-12 */
-            TBL_DP_SUB_CONTS
+            TB_DP_SUB_CONTENTS
         SET
             UPD_DT = SYSDATE
             <if test="lcdSize != null">

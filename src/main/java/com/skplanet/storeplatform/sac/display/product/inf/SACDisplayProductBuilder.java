@@ -436,11 +436,6 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 										log.info("CMS New Free Data Insert");
 										this.prodService.registNewFreeData(pv);
 										
-										// 판매상태 기록
-										// DA 파트 테이블 이관 논의 중 
-										log.info("CMS Sale Stat History Check");
-										this.prodService.registSaleStatHis(pv);
-										
 										// 판매중인 상품의 카테고리 대분류가 변경될시 운영자추천상품 - SUB 상품 삭제
 										log.info("CMS 운영자 추천 상품 삭제 여부 Check | " + oldProdStatCd);
 										if (IFConstants.CONTENT_SALE_STAT_ING.equals(oldProdStatCd)) {
