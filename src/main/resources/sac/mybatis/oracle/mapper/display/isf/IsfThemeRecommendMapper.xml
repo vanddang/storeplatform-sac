@@ -372,15 +372,19 @@
 	                           AND TP.PROD_ID = P.PROD_ID
 	                           AND PD.PROD_ID = P.PROD_ID
 	                           AND MP.PROD_ID(+) = P.PROD_ID
+                               AND PP.TENANT_ID = #{tenantHeader.tenantId}
 	                           AND PP.PROD_ID = P.PROD_ID
 	                           AND AP.PROD_ID(+) = P.PROD_ID
 	                           AND P2.PROD_ID = CP.PROD_ID
+                               AND TP2.TENANT_ID = TP.TENANT_ID
 	                           AND TP2.PROD_ID = P2.PROD_ID
 	                           AND PD2.PROD_ID = P2.PROD_ID
 	                           AND MP2.PROD_ID(+) = P2.PROD_ID
+                               AND PP2.TENANT_ID = #{tenantHeader.tenantId}
 	                           AND PP2.PROD_ID = P2.PROD_ID
 	                           AND PD.LANG_CD = #{tenantHeader.langCd}
 	                           AND PD2.LANG_CD = #{tenantHeader.langCd}
+                               AND DP.TENANT_ID = #{tenantHeader.tenantId}
 	                           AND DP.PKG_ID = #{recommendId}
 	                           AND DP.EXPO_YN = 'Y'
 	                           AND C.USE_YN = 'Y'
@@ -391,6 +395,7 @@
 	                           AND TP.EXPO_YN = 'Y'
 	                           AND TP2.PROD_STATUS_CD = 'PD000403'
 	                           AND TP2.EXPO_YN = 'Y'
+                               AND TP.TENANT_ID = #{tenantHeader.tenantId}
 	                           AND CP.PROD_RSHP_CD = 'DP010802'
 	                           AND DECODE( P.TOP_MENU_ID
 	                                , 'DP13'
@@ -486,9 +491,12 @@
              AND SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
              AND SH.PROD_ID = CP.PART_PROD_ID
              AND P.PROD_ID = CP.PART_PROD_ID
+             AND TP.TENANT_ID = #{tenantHeader.tenantId}
              AND TP.PROD_ID = P.PROD_ID
              AND P2.PROD_ID = CP.PROD_ID
+             AND TP2.TENANT_ID = #{tenantHeader.tenantId}
              AND TP2.PROD_ID = P2.PROD_ID
+             AND DP.TENANT_ID = #{tenantHeader.tenantId}
              AND DP.PKG_ID = #{recommendId}
              AND DP.EXPO_YN = 'Y'
              AND C.USE_YN = 'Y'
