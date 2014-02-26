@@ -53,12 +53,12 @@
               , TB.PROD_BASE_DESC 
               , TB.PROD_GRD_CD
               , DECODE( NVL( TB.PROD_CLSF_CD, 'PD000601' )
-								            , 'PD000601', 'PAID'
-								            , 'PD000602', 'LIBRARY'
-								            , 'PD000603', 'VM'
-								            , 'PD000604', 'FREE'
-								            , 'PD000605', 'PAID-RSS'
-								            , 'PD000606', 'FREE-RSS' )  AS PROD_CLSF_CD
+								            , 'PD000601', 'paid'
+								            , 'PD000602', 'library'
+								            , 'PD000603', 'vm'
+								            , 'PD000604', 'free'
+								            , 'PD000605', 'paid-rss'
+								            , 'PD000606', 'free-rss' )  AS PROD_CLSF_CD
               , DECODE( TB.PART_PARENT_CLSF_CD, 'PD012301', 'Y', 'N' ) AS IAB_YN
               , TB.DRM_YN
               , TB.CONTENTS_TYPE_CD
@@ -163,7 +163,9 @@
 		       , E.REG_DT
 		       , E.PLAY_TM
 		       , E.CHAPTER
+		       , E.POSS_LEND_CLSF_CD
 		       , E.DOLBY_SPRT_YN
+		       , 'paid' as PROD_CLSF_CD
 		       , F.PROD_NM
 		       , F.ARTIST1_NM
 		       , F.ARTIST2_NM

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -65,7 +66,7 @@ public class PersonalController {
 	 */
 	@RequestMapping(value = "/update/product/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public PersonalUpdateProductRes searchUpdateProductList(@RequestBody PersonalUpdateProductReq req,
+	public PersonalUpdateProductRes searchUpdateProductList(@Validated @RequestBody PersonalUpdateProductReq req,
 			SacRequestHeader header) {
 		return this.personalUpdateProductService.searchUpdateProductList(req, header);
 	}
@@ -83,7 +84,8 @@ public class PersonalController {
 	 */
 	@RequestMapping(value = "/update/autoUpdate/status/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public PersonalAutoUpdateRes updateAutoUpdateList(@RequestBody PersonalAutoUpdateReq req, SacRequestHeader header) {
+	public PersonalAutoUpdateRes updateAutoUpdateList(@Validated @RequestBody PersonalAutoUpdateReq req,
+			SacRequestHeader header) {
 		return this.personalAutoUpdateService.updateAutoUpdateList(req, header);
 	}
 

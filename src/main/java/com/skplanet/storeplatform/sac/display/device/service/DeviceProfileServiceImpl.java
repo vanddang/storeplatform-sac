@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.device.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfile;
 
@@ -46,12 +48,17 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 	 * java.lang.String)
 	 */
 	@Override
-	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq requestVO, SacRequestHeader header) {
+	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq req, SacRequestHeader header) {
 		// TODO Auto-generated method stub
 
 		CommonResponse commonResponse = new CommonResponse();
 		DeviceProfileRes deviceProfileResponse = new DeviceProfileRes();
-		DeviceProfile deviceProfile = this.commonDAO.queryForObject("DeviceProfile.selectDeviceProfile", requestVO,
+		TenantHeader tenantHeader = header.getTenantHeader();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantHeader", tenantHeader);
+		paramMap.put("req", req);
+
+		DeviceProfile deviceProfile = this.commonDAO.queryForObject("DeviceProfile.selectDeviceProfile", paramMap,
 				DeviceProfile.class);
 
 		// DeviceHeader Profile 조회

@@ -72,7 +72,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/product/provisioning/get/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DeviceProductProvisioningRes searchProductProvisioning(DeviceProductProvisioningReq req,
+	public DeviceProductProvisioningRes searchProductProvisioning(@Validated DeviceProductProvisioningReq req,
 			SacRequestHeader header) {
 		return this.deviceProductProvisioningService.searchProductProvisioning(req, header);
 	}

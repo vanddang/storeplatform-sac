@@ -28,7 +28,8 @@
 		SELECT DEVICE_MODEL_CD                                                                     /* 모델 코드 */
 		      , (SELECT CD_NM
 		           FROM TB_CM_CD
-		          WHERE CD_ID = MNFT_COMP_CD)
+		          WHERE CD_ID = MNFT_COMP_CD
+		          AND   LANG_CD = #{tenantHeader.langCd})
 		          AS MAKE_COMP_NM
 		      ,MODEL_NM                                                                             /* 모델 명 */
 		      ,UA_CD                                                                                /* UA 코드 */
@@ -51,25 +52,21 @@
 		      ,VM_TYPE_CD
 		      , (SELECT CD_NM
 		           FROM TB_CM_CD
-		          WHERE CD_ID = VM_TYPE_CD)
+		          WHERE CD_ID = VM_TYPE_CD
+		            AND LANG_CD = #{tenantHeader.langCd})
 		          AS VM_TYPE_NM                                                                     /*VM_타입_코드 */
 		      , (SELECT REPLACE (SUBSTR (CD_NM, 1, INSTR (CD_NM, '(') - 1), 'X', '*')
 		           FROM TB_CM_CD
-		          WHERE CD_ID = LCD_SIZE_CD)
+		          WHERE CD_ID = LCD_SIZE_CD
+		            AND LANG_CD = #{tenantHeader.langCd})
 		          AS LCD_SIZE_NM                                                                    /*LCD_크기_명 */
 		      ,CMNT_COMP_CD                                                                         /*통신회사 코드 */
 		      ,REP_DEVICE_YN  
 		      ,DEVICE_TYPE_CD                                                                      /*대표_기기_여부 */
 		  FROM TB_CM_DEVICE
 		 WHERE USE_YN = 'Y'
-		 <!-- 
-		  <if test="uaCd != null">
-		   AND REP_YN = 'Y'
-           AND UA_CD = #uaCd#
-		  </if>
-		   -->
 		  <if test="deviceModelNo != null">
-		   AND DEVICE_MODEL_CD = #{deviceModelNo}
+		   AND DEVICE_MODEL_CD = #{req.deviceModelNo}
 		  </if>
  	</select>
 </mapper>
