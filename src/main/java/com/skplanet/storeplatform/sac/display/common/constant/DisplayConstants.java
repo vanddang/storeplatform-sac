@@ -457,6 +457,16 @@ public class DisplayConstants {
 	public static final String DP_ANDROID_STANDARD2_NM = "android_standard2";
 
 	/**
+	 * 가상 프로비저닝 모델명 (앱).
+	 */
+	public static final String DP_ANY_PHONE_4APP = "ANY-PHONE-4APP";
+
+	/**
+	 * 가상 프로비저닝 모델명 (멀티미디어).
+	 */
+	public static final String DP_ANY_PHONE_4MM = "ANY-PHONE-4MM";
+
+	/**
 	 * 카테고리 태그.
 	 */
 	public static final String DP_CATEGORY_TAG_CD = "DP004501";
