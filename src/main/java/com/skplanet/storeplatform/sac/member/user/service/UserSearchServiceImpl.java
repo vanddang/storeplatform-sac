@@ -294,8 +294,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchGameCenterRequest scReq = new SearchGameCenterRequest();
 		scReq.setCommonRequest(commonRequest);
 		if (!deviceId.equals("")) {
-			String workCd = "US003206";
-			scReq.setWorkCode(workCd);
+			scReq.setWorkCode(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
 			scReq.setDeviceID(req.getDeviceId());
 			this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
 		}
