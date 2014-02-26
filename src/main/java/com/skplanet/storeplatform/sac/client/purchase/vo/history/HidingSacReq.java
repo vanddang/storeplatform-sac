@@ -36,6 +36,9 @@ public class HidingSacReq extends CommonInfo implements Serializable {
 	@NotNull
 	@NotEmpty
 	private String deviceKey; // 내부디바이스ID
+	@NotNull
+	@NotEmpty
+	private String sendYn; // 미보유상품 숨김처리 Y, 보유상품 숨김처리 N
 	@NotEmpty
 	@NotNull
 	@Valid
@@ -99,6 +102,21 @@ public class HidingSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return the sendYn
+	 */
+	public String getSendYn() {
+		return this.sendYn;
+	}
+
+	/**
+	 * @param sendYn
+	 *            the sendYn to set
+	 */
+	public void setSendYn(String sendYn) {
+		this.sendYn = sendYn;
 	}
 
 	/**

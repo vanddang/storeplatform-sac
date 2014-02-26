@@ -14,7 +14,6 @@ public class PaymentSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String paymentMtdCd; // 결제방법코드
-	private String paymentDt; // 결제일시
 	private Integer paymentAmt; // 결제금액
 
 	/**
@@ -30,21 +29,6 @@ public class PaymentSacRes extends CommonInfo implements Serializable {
 	 */
 	public void setPaymentMtdCd(String paymentMtdCd) {
 		this.paymentMtdCd = paymentMtdCd;
-	}
-
-	/**
-	 * @return the paymentDt
-	 */
-	public String getPaymentDt() {
-		return this.paymentDt;
-	}
-
-	/**
-	 * @param paymentDt
-	 *            the paymentDt to set
-	 */
-	public void setPaymentDt(String paymentDt) {
-		this.paymentDt = paymentDt;
 	}
 
 	/**
