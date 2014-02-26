@@ -101,8 +101,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		SearchMbrSellerResponse schRes = this.sellerSCI.searchMbrSeller(schReq);
 
 		Iterator<String> it = schRes.getSellerMbrListMap().keySet().iterator();
-		List<SellerMbr> sellerMbrs = new ArrayList<SellerMbr>();
-		SellerMbr sellerMbr = null;
+		// List<SellerMbr> sellerMbrs = new ArrayList<SellerMbr>();
 
 		List<SellerMbrSac> sellerMbrSacs = null;
 		SellerMbrSac sellerMbrSac = null;
@@ -111,7 +110,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		while (it.hasNext()) {
 			String key = it.next();
 			sellerMbrSacs = new ArrayList<SellerMbrSac>();
-			sellerMbrs = (List<SellerMbr>) schRes.getSellerMbrListMap().get(key);
+			List<SellerMbr> sellerMbrs = (List<SellerMbr>) schRes.getSellerMbrListMap().get(key);
 			for (int i = 0; i < sellerMbrs.size(); i++) {
 				sellerMbrSac = new SellerMbrSac();
 				sellerMbrSac.setSellerKey(sellerMbrs.get(i).getSellerKey());
