@@ -57,6 +57,8 @@ public class SellerSubController {
 	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
 		if (StringUtil.nvl(req.getMemberPW(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "memberPW");
+		} else if (StringUtil.nvl(req.getSubSellerID(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "subSellerID");
 		}
 		req.setIsNew("Y");
 		return this.sellerSubService.createSubseller(header, req);
