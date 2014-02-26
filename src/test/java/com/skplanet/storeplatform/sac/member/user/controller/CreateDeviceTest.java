@@ -81,7 +81,7 @@ public class CreateDeviceTest {
 	}
 
 	String userAuthKey = "114127c7ef42667669819dad5df8d820c";
-	String userKey = "US201401280706367180001249";
+	String userKey = "US201401271926064310001061";
 	String mdn = "01099999997";
 
 	/**
@@ -108,7 +108,7 @@ public class CreateDeviceTest {
 							CreateDeviceReq req = new CreateDeviceReq();
 							req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
 							req.setUserKey(CreateDeviceTest.this.userKey);
-							req.setRegMaxCnt("5");
+							req.setRegMaxCnt("100");
 
 							DeviceInfo deviceInfo = new DeviceInfo();
 							deviceInfo.setUserKey(CreateDeviceTest.this.userKey);

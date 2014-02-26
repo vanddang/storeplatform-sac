@@ -312,7 +312,7 @@ public class ModifyDeviceTest {
 	 * 정상케이스 서비스 호출.
 	 * </pre>
 	 */
-	@Test
+	@Deprecated
 	public void shouldModifyDeviceService() {
 
 		TenantHeader tenantHeader = new TenantHeader();

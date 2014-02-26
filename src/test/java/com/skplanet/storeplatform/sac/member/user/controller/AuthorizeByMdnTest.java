@@ -86,7 +86,7 @@ public class AuthorizeByMdnTest {
 	 * </pre>
 	 */
 	@Test
-	public void shouldAuthorizeByMdn01() {
+	public void shouldAuthorizeByMdnSuccess() {
 
 		try {
 
@@ -134,7 +134,7 @@ public class AuthorizeByMdnTest {
 	 * </pre>
 	 */
 	@Test
-	public void shouldAuthorizeByMdn02() {
+	public void shouldAuthorizeByMdnSuccessOneId() {
 
 		try {
 
@@ -182,7 +182,7 @@ public class AuthorizeByMdnTest {
 	 * </pre>
 	 */
 	@Test
-	public void shouldAuthorizeByMdn04() {
+	public void shouldAuthorizeByMdnSucessAllDeviceInfo() {
 
 		try {
 
@@ -281,7 +281,7 @@ public class AuthorizeByMdnTest {
 	 * </pre>
 	 */
 	@Test
-	public void shouldAuthorizeByMdn05() {
+	public void shouldAuthorizeByMdnSuccessSktNativeId() {
 
 		try {
 
@@ -325,11 +325,60 @@ public class AuthorizeByMdnTest {
 
 	/**
 	 * <pre>
+	 * nativeId 비교 성공 케이스(타사).
+	 * </pre>
+	 */
+	@Test
+	public void shouldAuthorizeByMdnSuccessNotSktNativeId() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01066786220");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
+							req.setNativeId("A0000031648EE9");
+							req.setIsNativeIdAuth("Y");
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
 	 * SC회원 미존재.
 	 * </pre>
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void shouldAuthorizeByMdnError01() {
+	public void shouldAuthorizeByMdnErrorScNoUSer() {
 
 		try {
 
@@ -377,7 +426,7 @@ public class AuthorizeByMdnTest {
 	 * </pre>
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void shouldAuthorizeByMdnError02() {
+	public void shouldAuthorizeByMdnErrorIdpNoUser() {
 
 		try {
 
@@ -425,7 +474,7 @@ public class AuthorizeByMdnTest {
 	 * </pre>
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void shouldAuthorizeByMdnError03() {
+	public void shouldAuthorizeByMdnErrorDeviceAuthYn() {
 
 		try {
 
@@ -444,6 +493,160 @@ public class AuthorizeByMdnTest {
 							req.setDeviceId("01066786221");
 							req.setDeviceIdType("msisdn");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
+
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * nativeId 비교 오류 자사 Exception (ICAS IMEI와 단말 IMEI값이 불일치 합니다.).
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void shouldAuthorizeByMdnErrorSktNativeId() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01048088874");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+							req.setNativeId("358362045580842");
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * nativeId 비교 오류 타사 Exception (DB IMEI와 단말 IMEI값이 불일치 합니다.).
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void shouldAuthorizeByMdnErrorNotSktNativeId() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01066786220");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
+							req.setNativeId("358362045580842");
+							req.setIsNativeIdAuth("Y");
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * nativeId 비교 오류 타사 Exception (DB IMEI와 단말 IMEI값이 불일치 합니다.).
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void shouldAuthorizeByMdnErrorNotSktNativeId02() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01066786220");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
+							req.setNativeId("358362045580842");
+
+							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+							deviceExtraInfo.setExtraProfileValue("Y");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							req.setDeviceExtraInfoList(deviceExtraInfoList);
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
@@ -489,21 +692,21 @@ public class AuthorizeByMdnTest {
 		header.setTenantHeader(tenantHeader);
 
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-		req.setDeviceId("01066786225");
+		req.setDeviceId("01066786220");
 		req.setDeviceIdType("msisdn");
 		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
-		req.setNativeId("358362045580842");
-		req.setDeviceAccount("vanddang444@gmail.com");
-		req.setIsAutoUpdate("N");
-
-		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
-		deviceExtraInfo.setExtraProfileValue("N");
-		deviceExtraInfoList.add(deviceExtraInfo);
-
-		req.setDeviceExtraInfoList(deviceExtraInfoList);
+		//		req.setNativeId("358362045580842");
+		//		req.setDeviceAccount("vanddang444@gmail.com");
+		//		req.setIsAutoUpdate("N");
+		//
+		//		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		//		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		//		deviceExtraInfo = new DeviceExtraInfo();
+		//		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+		//		deviceExtraInfo.setExtraProfileValue("N");
+		//		deviceExtraInfoList.add(deviceExtraInfo);
+		//
+		//		req.setDeviceExtraInfoList(deviceExtraInfoList);
 
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
