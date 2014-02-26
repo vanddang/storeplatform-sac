@@ -70,10 +70,10 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 			} else if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_MEMBER_BLOCK_CD)) {
 				this.checkBlock(purchaseOrderInfo, policy); // CM011611: 회원Part 구매 차단 정책코드
-				// 조용진 PurchaseConstants.POLICY_PATTERN_PRCHSHST_DEVICE 없음 에러 빌드를 위해 주석처리
-				// } else if (StringUtils.equals(policy.getProcPatternCd(),
-				// PurchaseConstants.POLICY_PATTERN_PRCHSHST_DEVICE)) {
-				// this.checkDeviceBasePurchaseHistory(purchaseOrderInfo, policy); // CM011606: Device 기반 구매내역 관리
+
+			} else if (StringUtils.equals(policy.getProcPatternCd(),
+					PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST)) {
+				this.checkDeviceBasePurchaseHistory(purchaseOrderInfo, policy); // CM011606: Device 기반 구매내역 관리
 
 				// ///////////// TAKTODO:: 이하는 현재 위치에서 미사용, 일단 같이 작성.
 			} else if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_SKT_PRCHS_LIMIT)) {
@@ -270,6 +270,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	private void checkStoreTestMdn(PurchaseOrderInfo purchaseOrderInfo, PurchaseTenantPolicy policy) {
 		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
+
+		// TAKTODO:: 회원의 정책 코드 비교
 
 	}
 
