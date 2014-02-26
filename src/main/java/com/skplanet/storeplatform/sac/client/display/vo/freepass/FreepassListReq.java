@@ -38,6 +38,9 @@ public class FreepassListReq extends CommonInfo {
 	private String langCd; // 언어
 	private String deviceModelCd; // 단말모델
 	private String virtualDeviceModelNo; // android_standard2
+	
+	// topMenuId 복수개 허용
+	private String[] arrTopMenuId; // topMenuId 복수개
 
 	// Dummy Data용
 	private String dummy; // 더미체크
@@ -298,4 +301,19 @@ public class FreepassListReq extends CommonInfo {
 		this.virtualDeviceModelNo = virtualDeviceModelNo;
 	}
 
+	/**
+	 * @return the arrTopMenuId
+	 */
+	public String[] getArrTopMenuId() {
+		return arrTopMenuId;
+	}
+
+	/**
+	 * @param arrTopMenuId the arrTopMenuId to set
+	 */
+	public void setArrTopMenuId(String[] arrTopMenuId) {
+		this.arrTopMenuId = arrTopMenuId;
+	}
+
+	
 }
