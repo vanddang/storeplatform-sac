@@ -23,7 +23,6 @@ public class PrchsProdDtl extends CommonInfo {
 	private String deviceId;
 	private String prodId;
 	private String appId;
-	private String shoppingProdYn;
 
 	/**
 	 * @return the deviceId
@@ -68,21 +67,6 @@ public class PrchsProdDtl extends CommonInfo {
 	 */
 	public void setAppId(String appId) {
 		this.appId = appId;
-	}
-
-	/**
-	 * @return the shoppingProdYn
-	 */
-	public String getShoppingProdYn() {
-		return this.shoppingProdYn;
-	}
-
-	/**
-	 * @param shoppingProdYn
-	 *            the shoppingProdYn to set
-	 */
-	public void setShoppingProdYn(String shoppingProdYn) {
-		this.shoppingProdYn = shoppingProdYn;
 	}
 
 }

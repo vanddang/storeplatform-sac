@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.sci.ShoppingInternalSCI;
@@ -36,7 +37,7 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 	private ShoppingService shoppingService;
 
 	@Override
-	public CouponUseStatusSacInRes getCouponUseStatus(CouponUseStatusSacInReq couponUseStatusSacInReq) {
+	public CouponUseStatusSacInRes getCouponUseStatus(@Validated CouponUseStatusSacInReq couponUseStatusSacInReq) {
 
 		CouponUseStatusSacParam couponUseStatusSacParam = this.convertReqForGetCouponUseStatus(couponUseStatusSacInReq);
 

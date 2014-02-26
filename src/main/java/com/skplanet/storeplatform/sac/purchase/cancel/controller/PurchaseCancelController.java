@@ -21,6 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByAdminDetailSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByAdminDetailSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByAdminSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByAdminSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserDetailSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserDetailSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacReq;
@@ -79,24 +83,20 @@ public class PurchaseCancelController {
 	 * @param purchaseCancelReq
 	 * @return
 	 */
-	/*
-	 * @RequestMapping(value = "/byAdmin/v1", method = RequestMethod.POST)
-	 * 
-	 * @ResponseBody public PurchaseCancelRes cancelPurchaseByAdmin(SacRequestHeader sacRequestHeader,
-	 * 
-	 * @RequestBody PurchaseCancelReq purchaseCancelReq) {
-	 * 
-	 * PurchaseCancelParam purchaseCancelParam = new PurchaseCancelParam(sacRequestHeader, purchaseCancelReq);
-	 * 
-	 * PurchaseCancelResult purchaseCancelResult = null; //
-	 * this.purchaseCancelService.cancelPurchaseList(purchaseCancelParam);
-	 * 
-	 * PurchaseCancelRes purchaseCancelRes = this.setResponse(purchaseCancelResult);
-	 * 
-	 * return purchaseCancelRes;
-	 * 
-	 * }
-	 */
+	@RequestMapping(value = "/admin/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public PurchaseCancelByAdminSacRes cancelPurchaseByAdmin(SacRequestHeader sacRequestHeader,
+			@RequestBody @Validated PurchaseCancelByAdminSacReq purchaseCancelByAdminSacReq) {
+
+		PurchaseCancelSacParam purchaseCancelSacParam = this.convertReqForCancelPurchaseByAdmin(sacRequestHeader,
+				purchaseCancelByAdminSacReq);
+
+		PurchaseCancelSacResult purchaseCancelSacResult = this.purchaseCancelService
+				.cancelPurchaseList(purchaseCancelSacParam);
+
+		return this.convertResForCancelPurchaseByAdmin(purchaseCancelSacResult);
+
+	}
 
 	/**
 	 * 
@@ -119,6 +119,7 @@ public class PurchaseCancelController {
 		ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelByUserSacReq, purchaseCancelSacParam);
 
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByUserSacReq.getCancelReqPathCd());
+		purchaseCancelSacParam.setForceCancelYn("N");
 		// request user type setting.
 		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_USER);
 
@@ -179,27 +180,65 @@ public class PurchaseCancelController {
 
 	}
 
-	/*
-	 * private PurchaseCancelRes setResponse(PurchaseCancelResult purchaseCancelResult) { PurchaseCancelRes
-	 * purchaseCancelRes = new PurchaseCancelRes();
-	 * 
-	 * purchaseCancelRes.setTotCnt(purchaseCancelResult.getTotCnt());
-	 * purchaseCancelRes.setSuccessCnt(purchaseCancelResult.getSuccessCnt());
-	 * purchaseCancelRes.setFailCnt(purchaseCancelResult.getFailCnt());
-	 * 
-	 * List<PurchaseCancelResDetail> prchsCancelResultList = new ArrayList<PurchaseCancelResDetail>(); for
-	 * (PurchaseCancelResultDetail purchaseCancelResultDetail : purchaseCancelResult.getPrchsCancelResultList()) {
-	 * PurchaseCancelResDetail purchaseCancelResDetail = new PurchaseCancelResDetail();
-	 * 
-	 * purchaseCancelResDetail.setPrchsId(purchaseCancelResultDetail.getPrchsId());
-	 * purchaseCancelResDetail.setPrchsCancelResultCd(purchaseCancelResultDetail.getPrchsCancelResultCd());
-	 * purchaseCancelResDetail.setPrchsCancelResultMsg(purchaseCancelResultDetail.getPrchsCancelResultMsg());
-	 * 
-	 * prchsCancelResultList.add(purchaseCancelResDetail); }
-	 * 
-	 * purchaseCancelRes.setPrchsCancelResultList(prchsCancelResultList);
-	 * 
-	 * return purchaseCancelRes; }
-	 */
+	private PurchaseCancelSacParam convertReqForCancelPurchaseByAdmin(SacRequestHeader sacRequestHeader,
+			PurchaseCancelByAdminSacReq purchaseCancelByAdminSacReq) {
+
+		PurchaseCancelSacParam purchaseCancelSacParam = new PurchaseCancelSacParam();
+
+		// common parameter setting.
+		ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelByAdminSacReq, purchaseCancelSacParam);
+
+		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByAdminSacReq.getCancelReqPathCd());
+		purchaseCancelSacParam.setForceCancelYn(purchaseCancelByAdminSacReq.getForceCancelYn());
+		// request admin type setting.
+		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_ADMIN);
+
+		// parameter setting.
+		List<PurchaseCancelDetailSacParam> prchsCancelList = new ArrayList<PurchaseCancelDetailSacParam>();
+		for (PurchaseCancelByAdminDetailSacReq purchaseCancelByAdminDetailSacReq : purchaseCancelByAdminSacReq
+				.getPrchsCancelList()) {
+
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
+
+			purchaseCancelDetailSacParam.setPrchsId(purchaseCancelByAdminDetailSacReq.getPrchsId());
+
+			prchsCancelList.add(purchaseCancelDetailSacParam);
+
+		}
+
+		purchaseCancelSacParam.setPrchsCancelList(prchsCancelList);
+
+		return purchaseCancelSacParam;
+
+	}
+
+	private PurchaseCancelByAdminSacRes convertResForCancelPurchaseByAdmin(
+			PurchaseCancelSacResult purchaseCancelSacResult) {
+
+		PurchaseCancelByAdminSacRes purchaseCancelByAdminSacRes = new PurchaseCancelByAdminSacRes();
+
+		// response setting.
+		purchaseCancelByAdminSacRes.setTotCnt(purchaseCancelSacResult.getTotCnt());
+		purchaseCancelByAdminSacRes.setSuccessCnt(purchaseCancelSacResult.getSuccessCnt());
+		purchaseCancelByAdminSacRes.setFailCnt(purchaseCancelSacResult.getFailCnt());
+
+		List<PurchaseCancelByAdminDetailSacRes> prchsCancelList = new ArrayList<PurchaseCancelByAdminDetailSacRes>();
+		for (PurchaseCancelDetailSacResult purchaseCancelDetailSacResult : purchaseCancelSacResult.getPrchsCancelList()) {
+
+			PurchaseCancelByAdminDetailSacRes purchaseCancelByAdminDetailSacRes = new PurchaseCancelByAdminDetailSacRes();
+
+			purchaseCancelByAdminDetailSacRes.setPrchsId(purchaseCancelDetailSacResult.getPrchsId());
+			purchaseCancelByAdminDetailSacRes.setResultCd(purchaseCancelDetailSacResult.getResultCd());
+			purchaseCancelByAdminDetailSacRes.setResultMsg(purchaseCancelDetailSacResult.getResultMsg());
+
+			prchsCancelList.add(purchaseCancelByAdminDetailSacRes);
+
+		}
+
+		purchaseCancelByAdminSacRes.setPrchsCancelList(prchsCancelList);
+
+		return purchaseCancelByAdminSacRes;
+
+	}
 
 }

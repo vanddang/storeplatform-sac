@@ -208,8 +208,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			prchsProdDtl.setDeviceId(searchDeviceIdSacRes.getDeviceId());
 
 			// TODO : 전시쪽 정보 가져와서 쇼핑쿠폰 일 경우 태운다. prchsDtl.getProdId();
-			prchsProdDtl.setAppId("");
-			prchsProdDtl.setShoppingProdYn("");
+			if (StringUtils.contains(PurchaseConstants.APP_TENANT_PROD_GRP_CD, prchsDtl.getTenantProdGrpCd())) {
+				// 전시쪽 정보 가져와서 appId 셋팅.
+				prchsProdDtl.setAppId("");
+			}
 
 			prchsProdDtlList.add(prchsProdDtl);
 
@@ -403,7 +405,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		// 쇼핑쿠폰 취소 요청.
 		CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
 		couponPublishCancelEcReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-		couponPublishCancelEcReq.setForceFlag("N");
+		couponPublishCancelEcReq.setForceFlag(purchaseCancelSacParam.getForceCancelYn());
 		try {
 			this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);
 		} catch (Exception e) {
@@ -427,21 +429,34 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
 
 		for (PrchsProdDtl prchsProdDtl : purchaseCancelDetailSacParam.getPrchsProdDtlList()) {
+			if (StringUtils.isBlank(prchsProdDtl.getAppId())) {
+				// appId가 있는 경우만 ro삭제 진행.
+				continue;
+			}
 			// 각 상품 별 RO 삭제.
 			// AOM Message Push.
 			String resultMsg = "";
-			resultMsg = this.purchaseCancelRepository.aomPush(prchsProdDtl);
+			try {
+				resultMsg = this.purchaseCancelRepository.aomPush(prchsProdDtl);
 
-			this.logger.info("removeRO.AomPush result ===== {}", resultMsg);
+				this.logger.info("removeRO.AomPush result ===== {}", resultMsg);
+			} catch (Exception e) {
+				this.logger.info("aom push fail! ========= {}", e.toString());
+			}
 
 			// ARM License 삭제 요청.
 			RemoveLicenseEcReq removeLicenseEcReq = new RemoveLicenseEcReq();
 			removeLicenseEcReq.setAppId(prchsProdDtl.getAppId());
 			removeLicenseEcReq.setMdn(prchsProdDtl.getDeviceId());
-			RemoveLicenseEcRes removeLicenseEcRes = this.armSCI.removeLicense(removeLicenseEcReq);
+			RemoveLicenseEcRes removeLicenseEcRes;
+			try {
+				removeLicenseEcRes = this.armSCI.removeLicense(removeLicenseEcReq);
 
-			this.logger.info("removeRO.ArmPush result ===== {} ====== {}", removeLicenseEcRes.getResultCd(),
-					removeLicenseEcRes.getResultMsg());
+				this.logger.info("removeRO.ArmPush result ===== {} ====== {}", removeLicenseEcRes.getResultCd(),
+						removeLicenseEcRes.getResultMsg());
+			} catch (Exception e) {
+				this.logger.info("arm license remove fail! ========= {}", e.toString());
+			}
 
 		}
 

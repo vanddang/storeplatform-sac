@@ -24,6 +24,7 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 
 	private Integer prchsCancelByType; // 구매 취소 요청자 구분(사용자 / 운영자).
 	private String cancelReqPathCd;
+	private String forceCancelYn;
 
 	private List<PurchaseCancelDetailSacParam> prchsCancelList;
 
@@ -55,6 +56,21 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 	 */
 	public void setCancelReqPathCd(String cancelReqPathCd) {
 		this.cancelReqPathCd = cancelReqPathCd;
+	}
+
+	/**
+	 * @return the forceCancelYn
+	 */
+	public String getForceCancelYn() {
+		return this.forceCancelYn;
+	}
+
+	/**
+	 * @param forceCancelYn
+	 *            the forceCancelYn to set
+	 */
+	public void setForceCancelYn(String forceCancelYn) {
+		this.forceCancelYn = forceCancelYn;
 	}
 
 	/**
