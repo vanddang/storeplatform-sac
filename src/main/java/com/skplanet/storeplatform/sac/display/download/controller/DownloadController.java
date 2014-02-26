@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -68,7 +69,7 @@ public class DownloadController {
 	@RequestMapping(value = "/app/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadAppSacRes downloadApp(SacRequestHeader requestheader,
-			@RequestBody DownloadAppSacReq downloadAppSacReq) {
+			@RequestBody @Validated DownloadAppSacReq downloadAppSacReq) {
 		return this.downloadAppService.searchDownloadApp(requestheader, downloadAppSacReq);
 	}
 
@@ -87,7 +88,7 @@ public class DownloadController {
 	@RequestMapping(value = "/music/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadMusicSacRes downloadMusic(SacRequestHeader requestheader,
-			@RequestBody @Valid DownloadMusicSacReq downloadMusicSacReq) {
+			@RequestBody @Validated @Valid DownloadMusicSacReq downloadMusicSacReq) {
 		return this.downloadMusicService.searchDownloadMusic(requestheader, downloadMusicSacReq);
 	}
 
@@ -106,7 +107,7 @@ public class DownloadController {
 	@RequestMapping(value = "/vod/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadVodSacRes downloadVod(SacRequestHeader requestheader,
-			@RequestBody DownloadVodSacReq downloadVodSacReq) {
+			@RequestBody @Validated DownloadVodSacReq downloadVodSacReq) {
 		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodSacReq);
 	}
 

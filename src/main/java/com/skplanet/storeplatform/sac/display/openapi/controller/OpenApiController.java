@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -103,7 +104,7 @@ public class OpenApiController {
 	@RequestMapping(value = "/bestDownload/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadBestSacRes downloadBest(SacRequestHeader requestheader,
-			@RequestBody DownloadBestSacReq downloadBestSacReq) {
+			@RequestBody @Validated DownloadBestSacReq downloadBestSacReq) {
 		return this.downloadBestService.searchDownloadBestList(requestheader, downloadBestSacReq);
 	}
 
@@ -122,7 +123,7 @@ public class OpenApiController {
 	@RequestMapping(value = "/newAppRecommend/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public NewAppRecommendSacRes newAppRecommend(SacRequestHeader requestheader,
-			@RequestBody NewAppRecommendSacReq newAppRecommendSacReq) {
+			@RequestBody @Validated NewAppRecommendSacReq newAppRecommendSacReq) {
 		return this.newAppRecommendService.searchNewAppRecommendList(requestheader, newAppRecommendSacReq);
 	}
 
