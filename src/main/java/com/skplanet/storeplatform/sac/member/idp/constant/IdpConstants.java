@@ -36,6 +36,10 @@ public final class IdpConstants {
 	public static final String IM_IDP_RESPONSE_SUCCESS_CODE_TEXT = "SP 프로비저닝 성공";
 	public static final String IM_IDP_RESPONSE_FAIL_CODE_TEXT = "SP 프로비저닝 실패";
 
+	public static final String IDP_RESPONSE_SUCCESS_CODE = "100"; // SP 프로비져닝 성공
+	public static final String IDP_RESPONSE_FAIL_CODE = "109"; // SP 프로비져닝 실패(FAIL응답 받음)
+	public static final String IDP_RESPONSE_NO_DATA = "600"; // SP 프로비져닝 실패(데이터 없음)
+
 	public static final String IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE = "9999N005";
 	public static final String IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT = "은 존재 하지 않는 회원 입니다.";
 
