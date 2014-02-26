@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.device;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -13,14 +15,17 @@ public class DeviceProductProvisioningReq extends CommonInfo {
 	/**
 	 * 상품 유형.
 	 */
+	@NotBlank
 	private String productType;
 	/**
 	 * 상품 Id list.(episode ID만 가능)
 	 */
+	@NotBlank
 	private String list;
 	/**
 	 * 단말 모델명.
 	 */
+	@NotBlank
 	private String deviceModelNo;
 
 	/**

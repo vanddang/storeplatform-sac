@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.personal;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -10,42 +12,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class PersonalAutoUpdateReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	private String policy;
-	private String digest;
+	@NotBlank
 	private String packageInfo;
 	private Integer updLimitCnt = 0;
+	@NotBlank
 	private String deviceKey;
+	@NotBlank
 	private String userKey;
-
-	/**
-	 * @return the policy
-	 */
-	public String getPolicy() {
-		return this.policy;
-	}
-
-	/**
-	 * @param policy
-	 *            the policy to set
-	 */
-	public void setPolicy(String policy) {
-		this.policy = policy;
-	}
-
-	/**
-	 * @return the digest
-	 */
-	public String getDigest() {
-		return this.digest;
-	}
-
-	/**
-	 * @param digest
-	 *            the digest to set
-	 */
-	public void setDigest(String digest) {
-		this.digest = digest;
-	}
 
 	/**
 	 * @return the packageInfo
