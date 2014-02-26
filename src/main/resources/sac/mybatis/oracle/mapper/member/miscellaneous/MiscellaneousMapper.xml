@@ -105,7 +105,7 @@
     <update id="updateServiceAuthTime" parameterType="String">
     /* MiscellaneousMapper.xml, updateServiceAuthTime, SAC : 김다슬 , 2014-02-25 */
     UPDATE  TB_CM_SVC_AUTH
-       SET  REG_DT = SYSDATE
+       SET  AUTH_VALUE_CREATE_DT = SYSDATE
           , UPD_ID = 'admin'
           , UPD_DT = SYSDATE
      WHERE  AUTH_SEQ = #{authSeq}    
