@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.related.AuthorProductSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.related.AuthorProductSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacReq;
@@ -15,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSac
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.related.service.AuthorProductService;
 import com.skplanet.storeplatform.sac.display.related.service.BoughtTogetherProductService;
 import com.skplanet.storeplatform.sac.display.related.service.SellerProductService;
 import com.skplanet.storeplatform.sac.display.related.service.SimilarProductService;
@@ -39,6 +42,9 @@ public class RelatedProductController {
 
 	@Autowired
 	private SellerProductService sellerProductService;
+
+	@Autowired
+	private AuthorProductService authorProductService;
 
 	/**
 	 * 
@@ -102,5 +108,26 @@ public class RelatedProductController {
 		this.logger.debug("RelatedProductController.searchSellerProductList start !!");
 
 		return this.sellerProductService.searchSellerProductList(requestVO, requestHeader);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 특정 작가별 상품 조회.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            AuthorProductSacReq
+	 * @param requestHeader
+	 *            AuthorProductSacReq
+	 * @return AuthorProductSacRes
+	 */
+	@RequestMapping(value = "/author/product/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public AuthorProductSacRes searchAuthorProductList(AuthorProductSacReq requestVO, SacRequestHeader requestHeader) {
+
+		this.logger.debug("RelatedProductController.searchAuthorProductList start !!");
+
+		return this.authorProductService.searchAuthorProductList(requestVO, requestHeader);
 	}
 }

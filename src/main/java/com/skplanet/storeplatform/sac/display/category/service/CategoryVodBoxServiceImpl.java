@@ -86,6 +86,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
 		requestVO.setDuration(requestVO.getDuration() != null ? requestVO.getDuration() : 30);
 		requestVO.setChapter(requestVO.getChapter() != null ? requestVO.getChapter() : 0);
+		requestVO.setRegDate(requestVO.getRegDate() != null ? requestVO.getRegDate() : "20000101000000");
 
 		// 필수 파라미터 체크
 		this.log.debug("필수 파라미터 체크");
@@ -96,8 +97,6 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		} else if (!requestVO.getFilteredBy().equals("duration") && !requestVO.getFilteredBy().equals("chapter")
 				&& !requestVO.getFilteredBy().equals("regDate")) {
 			throw new StorePlatformException("SAC_DSP_0003", "filteredBy", requestVO.getFilteredBy());
-		} else if (requestVO.getFilteredBy().equals("regDate") && StringUtils.isEmpty(requestVO.getRegDate())) {
-			throw new StorePlatformException("SAC_DSP_0003", "regDate", requestVO.getRegDate());
 		}
 
 		CategoryVodBoxSacRes categoryVodBoxSacRes = new CategoryVodBoxSacRes();

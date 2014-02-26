@@ -280,6 +280,9 @@
         
                 <!-- 에피소드 ID를 이용하여 상품 정보 조회(LocalSCI)-->
         <typeAlias alias="ProductInfo"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo" />
+
+        <!-- 특정 작가별 상품 조회 -->
+        <typeAlias alias="AuthorProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.AuthorProductSacReq" />
     </typeAliases>
     
     <typeHandlers>

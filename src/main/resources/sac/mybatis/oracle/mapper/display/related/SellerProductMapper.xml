@@ -24,7 +24,7 @@
                 , TB_DP_SPRT_DEVICE D
                 , TB_DP_TENANT_PROD E
                 , TB_CM_DEVICE F
-            , TB_DP_PROD_DESC G
+                , TB_DP_PROD_DESC G
             WHERE 1=1
             AND A.PROD_ID = B.PROD_ID
             AND B.MENU_ID = C.MENU_ID

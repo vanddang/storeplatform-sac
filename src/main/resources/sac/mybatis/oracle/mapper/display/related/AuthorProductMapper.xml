@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AuthorProduct">
+    <!-- 특정 작가별 상품 조회 -->
+    <select id="selectAuthorProductList" parameterType="AuthorProductSacReq" resultType="ProductBasicInfo">
+        SELECT /* AuthorProductMapper.xml, selectAuthorProductList, SAC : 유시혁 , 2014-02-26 */
+            A.TOTAL_COUNT
+            , A.TOP_MENU_ID
+            , A.MENU_ID
+            , A.PROD_ID
+            , A.CONTENTS_TYPE_CD
+        FROM (
+            SELECT 
+                COUNT(1) OVER() TOTAL_COUNT
+                , ROW_NUMBER() OVER(ORDER BY A.UPD_DT DESC, A.PROD_NM) RNK
+                , A.*
+            FROM (
+                SELECT 
+                    ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY E.ROWID) RNUM
+                    , D.TOP_MENU_ID
+                    , D.MENU_ID
+                    , A.PROD_ID
+                    , A.PROD_NM
+                    , I.UPD_DT
+                    , I.CONTENTS_TYPE_CD
+                FROM
+                    TB_DP_PROD_DESC A
+                    , TB_DP_PROD_RSHP B
+                    , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                    , TB_DP_MENU_CATEGORY D
+                    , TB_DP_PROD E /* 에피소드 */
+                    , TB_DP_TENANT_PROD F /* 에피소드 */
+                    , TB_DP_SPRT_DEVICE G /* 에피소드 */
+                    , TB_CM_DEVICE H
+                    , TB_DP_PROD I /* 채널 */
+                    , TB_DP_TENANT_PROD J /* 채널 */
+                    , TB_DP_PROD K
+                WHERE A.PROD_ID = B.PROD_ID
+                AND B.PROD_ID = C.PROD_ID
+                AND C.MENU_ID = D.MENU_ID
+                AND B.PART_PROD_ID = E.PROD_ID
+                AND B.PART_PROD_ID = F.PROD_ID
+                AND B.PART_PROD_ID = G.PROD_ID
+                AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                AND A.PROD_ID = I.PROD_ID
+                AND A.PROD_ID = J.PROD_ID
+                AND F.TENANT_ID = J.TENANT_ID
+                AND D.TOP_MENU_ID = K.TOP_MENU_ID
+                AND C.USE_YN = 'Y'
+                AND D.USE_YN = 'Y'
+                AND H.USE_YN = 'Y'
+                AND F.EXPO_YN = 'Y'
+                AND E.SVC_GRP_CD = 'DP000203'
+                AND E.CONTENTS_TYPE_CD = 'PD002502'
+                AND I.CONTENTS_TYPE_CD = 'PD002501'
+                AND F.PROD_STATUS_CD = 'PD000403'
+                AND J.PROD_STATUS_CD = 'PD000403'
+                AND B.PROD_RSHP_CD = 'DP010802'
+                AND 1 = CASE
+                        WHEN D.TOP_MENU_ID = 'DP13' AND H.EBOOK_SPRT_YN = 'Y' THEN 1
+                        WHEN D.TOP_MENU_ID = 'DP14' AND H.COMIC_SPRT_YN = 'Y' THEN 1
+                        ELSE 0 END
+
+                <if test="filteredBy == 'author'"> /* 작가 */
+                AND A.ARTIST1_NM = #{authorName}
+                </if>
+                
+                <if test="filteredBy == 'painter'"> /* 그림 작가 */
+                AND A.ARTIST2_NM = #{authorName}
+                </if>
+                
+                <if test="filteredBy == 'translator'"> /* 번역가 */
+                AND A.ARTIST3_NM = #{authorName}
+                </if>
+                
+                AND A.PROD_ID != #{exceptId} /* 제외 상품 ID : H001541415 */
+                AND K.PROD_ID = #{exceptId} /* 상품 ID(탑메뉴ID를 얻기 위한) : H001541415*/
+                AND F.TENANT_ID = #{tenantId}
+                AND A.LANG_CD = #{langCd}
+                AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+            ) A
+            WHERE RNUM = 1
+        ) A
+        WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
+        ORDER BY A.RNK
+    </select>
+            
+</mapper>
