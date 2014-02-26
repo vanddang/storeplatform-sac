@@ -80,20 +80,6 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 		req.setDeviceModelCd(header.getDeviceHeader().getModel());
 		req.setLangCd(header.getTenantHeader().getLangCd());
 
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			req.setTenantId("S01");
-			req.setImageCd("DP000196");
-			req.setLangCd("ko");
-			req.setDeviceModelCd("SHV-E330SSO");
-		} else {
-			req.setTenantId("S01");
-			req.setSystemId(header.getTenantHeader().getSystemId());
-			req.setImageCd("DP000196");
-			req.setLangCd("ko");
-			req.setDeviceModelCd("SHV-E330SSO");
-		}
-
 		// tenantId 필수 파라미터 체크
 		if (StringUtils.isEmpty(req.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
@@ -102,6 +88,15 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 		// listId 필수 파라미터 체크
 		if (StringUtils.isEmpty(req.getListId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
+		}
+
+		// 시작점 ROW Default 세팅
+		if (req.getOffset() == null) {
+			req.setOffset(1);
+		}
+		// 페이지당 노출될 ROW 개수 Default 세팅
+		if (req.getCount() == null) {
+			req.setCount(20);
 		}
 
 		// 배치완료 기준일시 조회

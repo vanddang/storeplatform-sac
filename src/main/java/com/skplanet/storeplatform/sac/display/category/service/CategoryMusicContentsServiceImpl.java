@@ -72,8 +72,6 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		String filteredBy; // 차트 구분 코드
 		String orderedBy;
 		String menuId;
-		int offset; // 시작점 ROW
-		int count; // 페이지당 노출 ROW 수
 
 		filteredBy = requestVO.getFilteredBy(); // 차트 구분 코드
 		orderedBy = requestVO.getOrderedBy();
@@ -84,17 +82,13 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
 		requestVO.setLangCd(requestHeader.getTenantHeader().getLangCd());
 
-		offset = requestVO.getOffset(); // 시작점 ROW
-		count = requestVO.getCount(); // 페이지당 노출 ROW 수
-
-		// rownum 디폴트값 세팅
-		if (offset <= 0) {
-			offset = 1;
-			requestVO.setOffset(offset);
+		// 시작점 ROW Default 세팅
+		if (requestVO.getOffset() == null) {
+			requestVO.setOffset(1);
 		}
-		if (count <= 0) {
-			count = 20;
-			requestVO.setCount(count);
+		// 페이지당 노출될 ROW 개수 Default 세팅
+		if (requestVO.getCount() == null) {
+			requestVO.setCount(20);
 		}
 
 		MusicContentsSacRes responseVO = new MusicContentsSacRes();

@@ -84,11 +84,11 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 		}
 
 		// 시작점 ROW Default 세팅
-		if (requestVO.getOffset() == 0) {
+		if (requestVO.getOffset() == null) {
 			requestVO.setOffset(1);
 		}
 		// 페이지당 노출될 ROW 개수 Default 세팅
-		if (requestVO.getCount() == 0) {
+		if (requestVO.getCount() == null) {
 			requestVO.setCount(20);
 		}
 
