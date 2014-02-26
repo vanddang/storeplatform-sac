@@ -13,6 +13,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailR
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -56,7 +58,7 @@ public interface FreepassService {
 	 * @param header SacRequestHeader
 	 * @return FreepassListRes
 	 */
-	SeriespassListRes searchSeriesPassList(FreepassListReq req, SacRequestHeader header);
+	SeriespassListRes searchSeriesPassList(FreepassSeriesReq req, SacRequestHeader header);
 	
 	/**
 	 * <pre>
@@ -67,5 +69,5 @@ public interface FreepassService {
 	 * @param header SacRequestHeader
 	 * @return FreepassListRes
 	 */
-	FreepassListRes searchFreepassListByChannel(FreepassListReq req, SacRequestHeader header);
+	FreepassListRes searchFreepassListByChannel(FreepassSpecificReq req, SacRequestHeader header);
 }

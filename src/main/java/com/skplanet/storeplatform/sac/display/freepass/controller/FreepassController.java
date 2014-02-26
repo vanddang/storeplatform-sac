@@ -22,6 +22,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailR
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
@@ -96,7 +98,7 @@ public class FreepassController {
 	 */
 	@RequestMapping(value = "/series/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SeriespassListRes searchSeriespassList(FreepassListReq req, SacRequestHeader header) {
+	public SeriespassListRes searchSeriespassList(FreepassSeriesReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSeriespassList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
@@ -107,7 +109,7 @@ public class FreepassController {
 
 	/**
 	 * <pre>
-	 * 특정 상품에 적용할 자유 이용권 조회– GET.
+	 * 특정 상품에 적용할 자유 이용권 조회? GET.
 	 * </pre>
 	 * 
 	 * @param req
@@ -118,7 +120,7 @@ public class FreepassController {
 	 */
 	@RequestMapping(value = "/specific/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FreepassListRes searchFreepassListByChannel(FreepassListReq req, SacRequestHeader header) {
+	public FreepassListRes searchFreepassListByChannel(FreepassSpecificReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchFreepassListByChannel Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
