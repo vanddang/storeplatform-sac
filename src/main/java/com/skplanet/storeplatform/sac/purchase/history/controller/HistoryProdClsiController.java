@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,9 +54,9 @@ public class HistoryProdClsiController {
 	@RequestMapping(value = "/prodClsiList/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public HistoryProdClsiSacRes searchHistoryProdClsiList(@RequestBody @Validated HistoryProdClsiSacReq request,
-			BindingResult bindingResult, SacRequestHeader sacRequestHeader) {
+			SacRequestHeader sacRequestHeader) {
 
-		this.purchaseCommonUtils.getBindingValid(bindingResult);
+		// this.purchaseCommonUtils.getBindingValid(bindingResult);
 		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
 		return this.historyProdClsiService.searchHistoryProdClsiList(request);

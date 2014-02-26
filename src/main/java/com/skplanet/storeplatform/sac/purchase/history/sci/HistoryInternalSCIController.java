@@ -12,12 +12,10 @@ package com.skplanet.storeplatform.sac.purchase.history.sci;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInReq;
@@ -59,16 +57,6 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 	@Override
 	public HistoryListSacInRes searchHistoryList(HistoryListSacInReq request) {
 		this.LOGGER.debug(">>>> >>> HistoryListSacInRes: {}", request);
-
-		if (StringUtils.isBlank(request.getTenantId()) || StringUtils.isBlank(request.getUserKey())
-				|| StringUtils.isBlank(request.getStartDt()) || StringUtils.isBlank(request.getEndDt())
-				|| StringUtils.isBlank(request.getPrchsProdHaveYn())) {
-			throw new StorePlatformException("SAC_PUR_0006");
-		}
-
-		if (request.getOffset() < 0 || request.getCount() < 0) {
-			throw new StorePlatformException("SAC_PUR_0006");
-		}
 
 		HistoryListSacReq sacReq = new HistoryListSacReq();
 		HistoryListSacRes sacRes = new HistoryListSacRes();
@@ -114,7 +102,6 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 
 			// 구매정보 set
 			historySacIn.setTenantId(obj.getTenantId());
-			historySacIn.setSystemId(obj.getSystemId());
 			historySacIn.setPrchsId(obj.getPrchsId());
 			historySacIn.setPrchsDtlId(obj.getPrchsDtlId());
 			historySacIn.setUseTenantId(obj.getUseTenantId());
@@ -151,6 +138,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 			historySacIn.setResvCol05(obj.getResvCol05());
 			historySacIn.setDrmYn(obj.getDrmYn());
 			historySacIn.setAlarmYn(obj.getAlarmYn());
+			historySacIn.setPermitDeviceYn(obj.getPermitDeviceYn());
 
 			// 수신자 정보 set
 			historySacIn.setRecvTenantId(obj.getRecvTenantId());

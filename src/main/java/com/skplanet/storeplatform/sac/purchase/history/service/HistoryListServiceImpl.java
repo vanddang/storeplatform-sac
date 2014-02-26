@@ -83,18 +83,19 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 *************************************************/
 		scRequest.setTenantId(request.getTenantId());
 		scRequest.setUserKey(request.getUserKey());
+		scRequest.setDeviceKey(request.getDeviceKey());
 
-		// TenantProdGrpCd가 요청값으로 전달되면 구매 정책을 확인한다. (Device기반 구매내역관리)
-		// TenantProdGrpCd가 Device기반 정책이면 device_key를 세팅하고 아니면 공백처리하여 쿼리 조건으로 사용되지 않게 처리됨
-		if (StringUtils.isNotBlank(request.getTenantProdGrpCd())) {
-			List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
-					.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
-							PurchaseConstants.POLICY_ID_008);
-
-			if (purchaseTenantPolicyList.size() > 0) {
-				scRequest.setDeviceKey(request.getDeviceKey());
-			}
-		}
+		// // TenantProdGrpCd가 요청값으로 전달되면 구매 정책을 확인한다. (Device기반 구매내역관리)
+		// // TenantProdGrpCd가 Device기반 정책이면 device_key를 세팅하고 아니면 공백처리하여 쿼리 조건으로 사용되지 않게 처리됨
+		// if (StringUtils.isNotBlank(request.getTenantProdGrpCd())) {
+		// List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
+		// .searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
+		// PurchaseConstants.POLICY_ID_008);
+		//
+		// if (purchaseTenantPolicyList.size() > 0) {
+		// scRequest.setDeviceKey(request.getDeviceKey());
+		// }
+		// }
 
 		scRequest.setStartDt(request.getStartDt());
 		scRequest.setEndDt(request.getEndDt());
@@ -125,6 +126,19 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// pageInfo set
 		scRequest.getPage().setNo(request.getOffset());
 		scRequest.getPage().setRows(request.getCount());
+
+		/**
+		 * 구매정책을 조회하여 list에 셋팅
+		 */
+		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
+				.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
+						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
+
+		List<String> mdnCategoryList = new ArrayList<String>();
+		for (PurchaseTenantPolicy obj : purchaseTenantPolicyList) {
+			mdnCategoryList.add(obj.getTenantProdGrpCd());
+		}
+		scRequest.setMdnCategoryList(mdnCategoryList);
 		/*************************************************
 		 * SC Request Setting End
 		 *************************************************/
@@ -148,7 +162,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 			// 구매정보 set
 			historySac.setTenantId(obj.getTenantId());
-			// historySac.setSystemId(obj.getSystemId());
 			historySac.setPrchsId(obj.getPrchsId());
 			historySac.setPrchsDtlId(obj.getPrchsDtlId());
 			historySac.setUseTenantId(obj.getUseTenantId());
@@ -184,6 +197,17 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setEtcSeq(obj.getEtcSeq());
 			historySac.setUseFixrateProdId(obj.getUseFixrateProdId());
 
+			historySac.setPrchsProdType(obj.getPrchsProdType());
+			historySac.setDrmYn(obj.getDrmYn());
+			historySac.setAlarmYn(obj.getAlarmYn());
+			historySac.setPermitDeviceYn(obj.getPermitDeviceYn());
+
+			historySac.setResvCol01(obj.getResvCol01());
+			historySac.setResvCol02(obj.getResvCol02());
+			historySac.setResvCol03(obj.getResvCol03());
+			historySac.setResvCol04(obj.getResvCol04());
+			historySac.setResvCol05(obj.getResvCol05());
+
 			// 정액제 정보 set
 			historySac.setPaymentStartDt(obj.getPaymentStartDt());
 			historySac.setPaymentEndDt(obj.getPaymentEndDt());
@@ -193,16 +217,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setClosedDt(obj.getClosedDt());
 			historySac.setClosedReasonCd(obj.getClosedReasonCd());
 			historySac.setClosedReqPathCd(obj.getClosedReqPathCd());
-
-			historySac.setPrchsProdType(obj.getPrchsProdType());
-
-			historySac.setResvCol01(obj.getResvCol01());
-			historySac.setResvCol02(obj.getResvCol02());
-			historySac.setResvCol03(obj.getResvCol03());
-			historySac.setResvCol04(obj.getResvCol04());
-			historySac.setResvCol05(obj.getResvCol05());
-			historySac.setDrmYn(obj.getDrmYn());
-			historySac.setAlarmYn(obj.getAlarmYn());
 
 			sacHistoryList.add(historySac);
 
@@ -271,7 +285,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 *************************************************/
 		scRequest.setTenantId(request.getTenantId());
 		scRequest.setUserKey(request.getUserKey());
-		// scRequest.setDeviceKey(request.getDeviceKey());
+		scRequest.setDeviceKey(request.getDeviceKey());
 		scRequest.setStartDt(request.getStartDt());
 		scRequest.setEndDt(request.getEndDt());
 		scRequest.setPrchsProdType(request.getPrchsProdType());
@@ -281,18 +295,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setPrchsCaseCd(request.getPrchsCaseCd());
 		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
 		scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
-
-		// TenantProdGrpCd가 요청값으로 전달되면 구매 정책을 확인한다. (Device기반 구매내역관리)
-		// TenantProdGrpCd가 Device기반 정책이면 device_key를 세팅하고 아니면 공백처리하여 쿼리 조건으로 사용되지 않게 처리됨
-		if (StringUtils.isNotBlank(request.getTenantProdGrpCd())) {
-			List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
-					.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
-							PurchaseConstants.POLICY_ID_008);
-
-			if (purchaseTenantPolicyList.size() > 0) {
-				scRequest.setDeviceKey(request.getDeviceKey());
-			}
-		}
 
 		List<String> prodList = new ArrayList<String>();
 		if (request.getProductList() != null && request.getProductList().size() > 0) {

@@ -66,8 +66,8 @@ public class HistoryProdClsiServiceImpl implements HistoryProdClsiService {
 		scRequest.setEndDt(request.getEndDt());
 		scRequest.setProdId(request.getProdId());
 		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
-		// scRequest.setOffset(request.getOffset());
-		// scRequest.setCount(request.getCount());
+		scRequest.setOffset(request.getOffset());
+		scRequest.setCount(request.getCount());
 		// pageInfo set
 		scRequest.getPage().setNo(request.getOffset());
 		scRequest.getPage().setRows(request.getCount());
@@ -95,7 +95,6 @@ public class HistoryProdClsiServiceImpl implements HistoryProdClsiService {
 
 			// 구매정보 set
 			historySac.setTenantId(obj.getTenantId());
-			// historySac.setSystemId(obj.getSystemId());
 			historySac.setPrchsId(obj.getPrchsId());
 			historySac.setPrchsDtlId(obj.getPrchsDtlId());
 			historySac.setUseTenantId(obj.getUseTenantId());
@@ -132,6 +131,8 @@ public class HistoryProdClsiServiceImpl implements HistoryProdClsiService {
 			historySac.setResvCol03(obj.getResvCol03());
 			historySac.setResvCol04(obj.getResvCol04());
 			historySac.setResvCol05(obj.getResvCol05());
+			historySac.setDrmYn(obj.getDrmYn());
+			historySac.setAlarmYn(obj.getAlarmYn());
 
 			sacHistoryList.add(historySac);
 		}

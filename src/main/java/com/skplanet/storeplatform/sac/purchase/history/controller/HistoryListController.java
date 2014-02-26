@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,9 +56,9 @@ public class HistoryListController {
 	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public HistoryListSacRes searchHistoryList(@RequestBody @Validated HistoryListSacReq request,
-			BindingResult bindingResult, SacRequestHeader sacRequestHeader) {
+			SacRequestHeader sacRequestHeader) {
 
-		this.purchaseCommonUtils.getBindingValid(bindingResult);
+		// this.purchaseCommonUtils.getBindingValid(bindingResult);
 		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
 		return this.historyListService.searchHistoryList(request);
@@ -76,10 +75,10 @@ public class HistoryListController {
 	 */
 	@RequestMapping(value = "/count/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public HistoryCountSacRes searchHistoryCount(@RequestBody HistoryCountSacReq request, BindingResult bindingResult,
+	public HistoryCountSacRes searchHistoryCount(@RequestBody HistoryCountSacReq request,
 			SacRequestHeader sacRequestHeader) {
 
-		this.purchaseCommonUtils.getBindingValid(bindingResult);
+		// this.purchaseCommonUtils.getBindingValid(bindingResult);
 		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
 		return this.historyListService.searchHistoryCount(request);
