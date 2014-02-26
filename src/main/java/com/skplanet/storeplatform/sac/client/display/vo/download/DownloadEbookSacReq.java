@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.download;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -17,17 +19,27 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 01. 27. Updated by : 이태희.
  */
 public class DownloadEbookSacReq extends CommonInfo {
-
 	private static final long serialVersionUID = 1L;
+
+	@NotBlank
 	private String idType; // ID유형
+	@NotBlank
 	private String productId; // 상품ID
+	@NotBlank
 	private String deviceKey; // 디바이스키
+	@NotBlank
 	private String userKey; // 사용자고유키
+
 	private String prchsDt; // 구매일시
+
 	private String dwldExprDt; // 다운로드 만료일시
+
 	private String tenantId; // 테넌트ID
+
 	private String langCd; // 언어코드
+
 	private String deviceModelCd; // 디바이스모델코드
+
 	private String imageCd; // 이미지코드
 
 	/**

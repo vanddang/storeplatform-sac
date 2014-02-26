@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -17,13 +19,19 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 02. 06. Updated by : 이태희.
  */
 public class IntimateMessageSacReq extends CommonInfo {
-
 	private static final long serialVersionUID = 1L;
+
+	@NotBlank
 	private String userKey; // 사용자고유키
+	@NotBlank
 	private String deviceKey; // 디바이스키
+
 	private Integer offset; // 시작점 ROW
+
 	private Integer count; // 페이지당 노출될 ROW 개수
+
 	private String tenantId; // 테넌트ID
+
 	private String deviceChangeFlag; // 기기변경 구분
 
 	/**
