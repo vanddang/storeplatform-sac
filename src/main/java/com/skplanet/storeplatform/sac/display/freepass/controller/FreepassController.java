@@ -71,7 +71,7 @@ public class FreepassController {
 	 *            header
 	 * @return CategoryAppRes
 	 */
-	@RequestMapping(value = "/detail/list/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detail/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public FreepassDetailRes searchFreepassDetail(FreepassDetailReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
