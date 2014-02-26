@@ -3,21 +3,19 @@
 <mapper namespace="Download">
 <!-- 패키지명으로 상품 ID 조회 -->
     <select id="getProductIdForPackageName" resultType="String">
-     SELECT  /* DownloadMapper.xml, getProductIdForPackageName, SAC : 이석희 , 2014-01-23 */
-             A.PROD_ID
-           , D.APK_PKG_NM
-       FROM  TB_DP_PROD                    A
-           , TB_DP_APP_PROD                B
-           , TB_DP_SPRT_DEVICE             C
-           , TB_DP_SUB_CONTENTS            D
-           , TB_CM_DEVICE                  E
-      WHERE  A.PROD_ID = B.PROD_ID
-        AND  A.PROD_ID = C.PROD_ID
-        AND  A.PROD_ID = D.PROD_ID
-        AND  C.SUB_CONTENTS_ID = D.SUB_CONTENTS_ID
-        AND  C.DEVICE_MODEL_CD = E.DEVICE_MODEL_CD
-        AND  D.APK_PKG_NM = #{packageName}
-        AND  E.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */                           
+	 SELECT  /* DownloadMapper.xml, getProductIdForPackageName, SAC : 이석희 , 2014-01-23 */
+	         A.PROD_ID
+	       , D.APK_PKG_NM
+	   FROM  TB_DP_PROD                    A
+	       , TB_DP_APP_PROD                B
+	       , TB_DP_SUB_CONTENTS            D
+	       , TB_DP_SPRT_DEVICE             C
+	  WHERE  D.PROD_ID = A.PROD_ID
+	    AND  D.SUB_CONTENTS_ID = C.SUB_CONTENTS_ID
+	    AND  C.PROD_ID = A.PROD_ID
+	    AND  A.PROD_ID = B.PROD_ID        
+	    AND  C.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+	    AND  D.APK_PKG_NM = #{packageName}                          
     </select>
 
     <!-- 상품정보요청(for download) App -->
@@ -350,7 +348,7 @@
 		                                  , IA.CHAPTER
 		                                  , IA.USE_PERIOD
 		                                  , IA.USE_PERIOD_UNIT_CD
-		                                  , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = IA.USE_PERIOD_UNIT_CD) AS USE_PERIOD_UNIT_CD_NM
+		                                  , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = IA.USE_PERIOD_UNIT_CD AND LANG_CD = #{langCd}) AS USE_PERIOD_UNIT_CD_NM
 		                                  , IA.DWLD_AREA_LIMT_YN
 		                                  , IA.EPSD_PLAY_TM
 		                                  , IA.PROD_GRD_CD
