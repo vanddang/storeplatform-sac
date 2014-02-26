@@ -211,6 +211,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		// 법정대리인정보
 		MbrLglAgent mbrLglAgent = new MbrLglAgent();
 		if (schRes.getMbrLglAgent() != null) {
+			mbrLglAgent.setIsParent(schRes.getMbrLglAgent().getIsParent());
 			mbrLglAgent.setMemberKey(schRes.getMbrLglAgent().getMemberKey());
 			mbrLglAgent.setParentBirthDay(schRes.getMbrLglAgent().getParentBirthDay());
 			mbrLglAgent.setParentCI(schRes.getMbrLglAgent().getParentCI());
