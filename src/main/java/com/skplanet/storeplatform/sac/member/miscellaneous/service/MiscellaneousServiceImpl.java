@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_METHOD;
-import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_PROTOCOL;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageRes;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinSupServiceRequestEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinSupServiceRequestEcRes;
@@ -376,24 +374,11 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			LOGGER.debug("## >> Sign_data : {} ", waterMarkAuthImageEcRes.getSignData());
 
 			LOGGER.info("## waterMarkImageUrl 정상 발급.");
-			HTTP_PROTOCOL protocol = null;
-			HTTP_METHOD method = null;
 			String urlPath = waterMarkImageUrl.substring(waterMarkImageUrl.indexOf("/watermark"));
-
-			if (waterMarkImageUrl.substring(0, 5).equals("https")) {
-				protocol = HTTP_PROTOCOL.HTTPS;
-				method = HTTP_METHOD.POST;
-			} else {
-				protocol = HTTP_PROTOCOL.HTTP;
-				method = HTTP_METHOD.GET;
-			}
-
-			LOGGER.debug("## Request to ImageSCI >> Protocol : {}, Method : {}, UrlPath : {}", protocol, method,
-					urlPath);
+			
 
 			ImageReq req = new ImageReq();
-			req.setMethod(method); // GET or POST
-			req.setProtocol(protocol); // HTTP or HTTPS
+			req.setProtocol(waterMarkImageUrl.substring(0, 5).equals("https") ? "https" : "http"); // HTTP or HTTPS
 			req.setUrlPath(urlPath);
 			ImageRes imageRes = this.imageSCI.convert(req);
 

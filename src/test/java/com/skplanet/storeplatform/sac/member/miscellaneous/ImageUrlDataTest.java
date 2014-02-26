@@ -17,8 +17,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_METHOD;
-import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_PROTOCOL;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageRes;
 
 @ActiveProfiles(value = "local")
@@ -37,8 +35,7 @@ public class ImageUrlDataTest {
 	public void testImageUrlData() {
 
 		ImageReq req = new ImageReq();
-		req.setMethod(HTTP_METHOD.GET);
-		req.setProtocol(HTTP_PROTOCOL.HTTPS);
+		req.setProtocol("https");
 		req.setUrlPath("watermark/20140121/10182_1390276368209.jpeg");
 		ImageRes res = this.imageSCI.convert(req);
 		assertThat(res.getImgData(), notNullValue());
