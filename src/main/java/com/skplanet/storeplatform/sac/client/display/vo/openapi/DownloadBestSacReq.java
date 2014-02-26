@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.openapi;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -24,9 +26,13 @@ public class DownloadBestSacReq extends CommonInfo {
 	private String imageCd; // 이미지 코드
 	private String stdDt; // 기준일시
 
+	@NotBlank
 	private String listId; // listId
+	@NotBlank
 	private String inquiryType; // 조회구분
+	@NotBlank
 	private String inquiryValue; // 조회구분에 따른 판매자 ID / 또는 사업자 번호
+	@NotBlank
 	private String prodCharge; // 유/무료 구분
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출될 ROW 개수

@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.download;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -29,13 +29,13 @@ public class DownloadAppSacReq extends CommonInfo {
 	private String lcdSize; // lcd 크기
 	private String category; // 상품 유형
 
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String filteredBy; // 조회유형
 	private String productId; // 상품Id
 	private String packageName; // 패키지명
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String deviceKey; // device key
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String userKey; // 판매자 회원번호
 	private String dummy; // dummy data check
 	private String imageCd; // 이미지 코드

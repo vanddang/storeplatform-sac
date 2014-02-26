@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.openapi;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -24,6 +26,7 @@ public class NewAppRecommendSacReq extends CommonInfo {
 	private String imageCd; // 원본 이미지 코드
 	private String previewImagecd; // 미리보기 이미지 코드
 
+	@NotBlank
 	private String releaseType; // 출시구분
 	private String sellerKey; // 판매자 회원 key
 	private Integer offset; // 시작점 ROW

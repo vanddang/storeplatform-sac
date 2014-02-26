@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.download;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -25,15 +25,14 @@ public class DownloadVodSacReq extends CommonInfo {
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String category; // 상품 유형
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String productId; // 상품Id
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String idType; // Id 유형
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String deviceKey; // device Key
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String userKey; // 사용자 Key
 	private String imageCd; // 이미지 코드
 	private String dummy; // dummy data check
