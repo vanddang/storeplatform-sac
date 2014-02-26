@@ -15,7 +15,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 
 	// 구매정보
 	private String tenantId;
-	private String systemId;
 	private String prchsId;
 	private String prchsDtlId;
 	private String useTenantId;
@@ -52,11 +51,7 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String prchsProdType;
 	private String drmYn;
 	private String alarmYn;
-	private String resvCol01;
-	private String resvCol02;
-	private String resvCol03;
-	private String resvCol04;
-	private String resvCol05;
+	private String permitDeviceYn;
 
 	// 자동결제정보
 	private String paymentStartDt; // 결제시작일시
@@ -68,25 +63,12 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String closedReasonCd; // 해지사유코드
 	private String closedReqPathCd; // 해지요청경로
 
-	// 상품정보
-	// private Product product;
-
-	// private String prodNm; // 상품명
-	// private String prodImgUrl;
-	//
-	// private List<Menu> menuList;
-	// private List<Source> sourceList;
-	//
-	//
-	// private String menuId; // 메뉴ID
-	// private String menuName; // 메뉴명
-	//
-	// private String grade; // 이용등급
-
-	//
-	// // 앱정보
-	// private String packageName; // 패키지명
-	// private String versionCode; // 패키지 버전 코드
+	// 예비컬럼
+	private String resvCol01;
+	private String resvCol02;
+	private String resvCol03;
+	private String resvCol04;
+	private String resvCol05;
 
 	/**
 	 * @return the tenantId
@@ -116,21 +98,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
-	}
-
-	/**
-	 * @return the systemId
-	 */
-	public String getSystemId() {
-		return this.systemId;
-	}
-
-	/**
-	 * @param systemId
-	 *            the systemId to set
-	 */
-	public void setSystemId(String systemId) {
-		this.systemId = systemId;
 	}
 
 	/**
@@ -851,6 +818,21 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setAlarmYn(String alarmYn) {
 		this.alarmYn = alarmYn;
+	}
+
+	/**
+	 * @return the permitDeviceYn
+	 */
+	public String getPermitDeviceYn() {
+		return this.permitDeviceYn;
+	}
+
+	/**
+	 * @param permitDeviceYn
+	 *            the permitDeviceYn to set
+	 */
+	public void setPermitDeviceYn(String permitDeviceYn) {
+		this.permitDeviceYn = permitDeviceYn;
 	}
 
 }

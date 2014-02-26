@@ -46,6 +46,8 @@ public class HistoryProdClsiSac extends CommonInfo implements Serializable {
 	private String etcSeq;
 	private String useFixrateProdId;
 	private String prchsProdType;
+	private String drmYn;
+	private String alarmYn;
 	private String resvCol01;
 	private String resvCol02;
 	private String resvCol03;
@@ -605,6 +607,36 @@ public class HistoryProdClsiSac extends CommonInfo implements Serializable {
 	 */
 	public void setResvCol05(String resvCol05) {
 		this.resvCol05 = resvCol05;
+	}
+
+	/**
+	 * @return the drmYn
+	 */
+	public String getDrmYn() {
+		return this.drmYn;
+	}
+
+	/**
+	 * @param drmYn
+	 *            the drmYn to set
+	 */
+	public void setDrmYn(String drmYn) {
+		this.drmYn = drmYn;
+	}
+
+	/**
+	 * @return the alarmYn
+	 */
+	public String getAlarmYn() {
+		return this.alarmYn;
+	}
+
+	/**
+	 * @param alarmYn
+	 *            the alarmYn to set
+	 */
+	public void setAlarmYn(String alarmYn) {
+		this.alarmYn = alarmYn;
 	}
 
 }
