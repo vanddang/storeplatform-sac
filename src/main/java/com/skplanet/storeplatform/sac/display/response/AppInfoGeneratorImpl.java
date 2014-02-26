@@ -142,7 +142,7 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 	public List<Identifier> generateIdentifierList(MetaInfo metaInfo) {
 		Identifier identifier = new Identifier();
 		List<Identifier> identifierList = new ArrayList<Identifier>();
-		identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+		identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 		identifier.setText(metaInfo.getPartProdId());
 		identifierList.add(identifier);
 		return identifierList;
