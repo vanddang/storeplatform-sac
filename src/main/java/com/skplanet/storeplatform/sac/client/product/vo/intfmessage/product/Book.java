@@ -103,6 +103,8 @@ public class Book extends CommonInfo implements Serializable {
 	 */
 	private String mgzinCoverYn;
 
+	private String mallCd;
+
 	/**
 	 * @return the type
 	 */
@@ -371,5 +373,20 @@ public class Book extends CommonInfo implements Serializable {
 	 */
 	public void setMgzinCoverYn(String mgzinCoverYn) {
 		this.mgzinCoverYn = mgzinCoverYn;
+	}
+
+	/**
+	 * @return the mallCd
+	 */
+	public String getMallCd() {
+		return this.mallCd;
+	}
+
+	/**
+	 * @param mallCd
+	 *            the mallCd to set
+	 */
+	public void setMallCd(String mallCd) {
+		this.mallCd = mallCd;
 	}
 }
