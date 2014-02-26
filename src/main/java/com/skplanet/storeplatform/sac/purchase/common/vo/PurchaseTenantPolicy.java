@@ -17,6 +17,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 2. 5. Updated by : 이승택, nTels.
  */
+/**
+ * Calss 설명
+ * 
+ * Updated on : 2014. 2. 26. Updated by : 이승택, nTels.
+ */
 public class PurchaseTenantPolicy extends CommonInfo {
 	private static final long serialVersionUID = 201402051L;
 
@@ -122,6 +127,8 @@ public class PurchaseTenantPolicy extends CommonInfo {
 	 * 정책 우선순위
 	 */
 	private long policyPrior;
+
+	private boolean ignoreTenantProdGrpCd; // 정책 조회 조건으로 사용. 정책 기준 테넌트상품그룹코드 무시여부 (Y/N)
 
 	/**
 	 * @return the tenantId
@@ -346,6 +353,21 @@ public class PurchaseTenantPolicy extends CommonInfo {
 	 */
 	public void setPolicyPrior(long policyPrior) {
 		this.policyPrior = policyPrior;
+	}
+
+	/**
+	 * @return the ignoreTenantProdGrpCd
+	 */
+	public boolean getIgnoreTenantProdGrpCd() {
+		return this.ignoreTenantProdGrpCd;
+	}
+
+	/**
+	 * @param ignoreTenantProdGrpCd
+	 *            the ignoreTenantProdGrpCd to set
+	 */
+	public void setIgnoreTenantProdGrpCd(boolean ignoreTenantProdGrpCd) {
+		this.ignoreTenantProdGrpCd = ignoreTenantProdGrpCd;
 	}
 
 }
