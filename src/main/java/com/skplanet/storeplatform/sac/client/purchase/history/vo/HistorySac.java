@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -69,6 +70,8 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String resvCol03;
 	private String resvCol04;
 	private String resvCol05;
+
+	private HashMap<String, Object> productInfo;
 
 	/**
 	 * @return the tenantId
@@ -833,6 +836,21 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setPermitDeviceYn(String permitDeviceYn) {
 		this.permitDeviceYn = permitDeviceYn;
+	}
+
+	/**
+	 * @return the productInfo
+	 */
+	public HashMap<String, Object> getProductInfo() {
+		return this.productInfo;
+	}
+
+	/**
+	 * @param productInfo
+	 *            the productInfo to set
+	 */
+	public void setProductInfo(HashMap<String, Object> productInfo) {
+		this.productInfo = productInfo;
 	}
 
 }
