@@ -1665,8 +1665,13 @@ public class IdpServiceImpl implements IdpService {
 				if (map.get("user_name") != null)
 					mbrAuth.setName(map.get("user_name").toString());
 				mbrAuth.setMemberKey(searchUserRespnse.getMbrAuth().getMemberKey());
-				if (map.get("rname_auth_mns_code") != null)
-					mbrAuth.setRealNameMethod(map.get("rname_auth_mns_code").toString());
+				if (map.get("rname_auth_mns_code") != null) {
+					if (map.get("rname_auth_mns_code").toString().equals("1")) {// 휴대폰 인증{
+						mbrAuth.setRealNameMethod(memberConstant.REAL_NAME_AUTH_MOBILE);
+					} else if (map.get("rname_auth_mns_code").toString().equals("2")) {// 아이핀 인증
+						mbrAuth.setRealNameMethod(memberConstant.REAL_NAME_AUTH_IPIN);
+					}
+				}
 
 				updateRealNameRequest.setUserMbrAuth(mbrAuth);
 
