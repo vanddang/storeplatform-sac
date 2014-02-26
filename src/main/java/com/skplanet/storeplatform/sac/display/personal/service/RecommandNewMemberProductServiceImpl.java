@@ -158,9 +158,12 @@ public class RecommandNewMemberProductServiceImpl implements RecommandNewMemberP
 				if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
 					// 배치완료 기준일시 조회
 					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-					reqMap.put("stdDt", req.getStdDt().substring(0, 8));
+					// reqMap.put("stdDt", req.getStdDt().substring(0, 8)); //배치 완료 기준일시 현재 데이터 미일치로 아래 하드코딩
+					reqMap.put("stdDt", "20131007");
+
 					productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
 					productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+					productBasicInfo.setTopMenuId(topMenuId);
 					reqMap.put("productBasicInfo", productBasicInfo);
 
 					MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
@@ -193,6 +196,17 @@ public class RecommandNewMemberProductServiceImpl implements RecommandNewMemberP
 
 			} else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) { // 쇼핑
 
+				// 채널 ID로 상품 조회
+				productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
+				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+				reqMap.put("productBasicInfo", productBasicInfo);
+				// 쇼핑 Meta 정보 조회
+				MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+				if (retMetaInfo != null) {
+					// 쇼핑 Response Generate
+					Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+					productList.add(product);
+				}
 			}
 
 			res.setCommonResponse(commonResponse);
