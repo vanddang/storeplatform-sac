@@ -21,11 +21,15 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 	private Integer offset = 1; // offset
 	private Integer count = 20; // count
 	private String tenantId; // 테넌트ID
+	private String listId; // 리스트ID
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
 	private String topMenuId; // TOP 메뉴 아이디
 	private String bnrMenuId; // 배너 메뉴 아이디
-	private String themezoneId; // 테마존 아이디
+	private String prodCharge; // 상품의 유료/무료 구분
+	private String prodGradeCd; // 상품 등급 코드
+	private String[] arrayProdGradeCd; // 상품등급코드 Array
+	private String b2bProd; // B2B 상품 구분
 
 	// TODO osm1021 dummy data가 필요없어지면 삭제할것
 	private String dummy;
@@ -46,12 +50,12 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 		this.count = count;
 	}
 
-	public String getTenantId() {
-		return this.tenantId;
+	public String getListId() {
+		return this.listId;
 	}
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
+	public void setListId(String listId) {
+		this.listId = listId;
 	}
 
 	public String getLangCd() {
@@ -86,6 +90,30 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 		this.bnrMenuId = bnrMenuId;
 	}
 
+	public String getProdCharge() {
+		return this.prodCharge;
+	}
+
+	public void setProdCharge(String prodCharge) {
+		this.prodCharge = prodCharge;
+	}
+
+	public String getProdGradeCd() {
+		return this.prodGradeCd;
+	}
+
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
+	}
+
+	public String getB2bProd() {
+		return this.b2bProd;
+	}
+
+	public void setB2bProd(String b2bProd) {
+		this.b2bProd = b2bProd;
+	}
+
 	public String getDummy() {
 		return this.dummy;
 	}
@@ -94,12 +122,20 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 		this.dummy = dummy;
 	}
 
-	public String getThemezoneId() {
-		return this.themezoneId;
+	public String getTenantId() {
+		return this.tenantId;
 	}
 
-	public void setThemezoneId(String themezoneId) {
-		this.themezoneId = themezoneId;
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public String[] getArrayProdGradeCd() {
+		return this.arrayProdGradeCd;
+	}
+
+	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
+		this.arrayProdGradeCd = arrayProdGradeCd;
 	}
 
 }
