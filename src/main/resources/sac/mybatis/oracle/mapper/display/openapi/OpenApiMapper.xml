@@ -6,7 +6,7 @@
 		SELECT /* OpenApi.xml, searchDownloadBestList, 이석희, 2014-02-10 */
 		       KA.*
 		     , DECODE(INSTR(KB.FILE_PATH, '.', 1, 1), 0, KB.FILE_PATH || KB.FILE_NM, KB.FILE_PATH)  AS IMAGE_PATH
-		     , KB.FILE_SIZE AS IMAGE_SIZE
+		     , NVL(KB.FILE_SIZE, 0) AS IMAGE_SIZE
 		  FROM 
 		       (
 		        SELECT JA.*
@@ -118,6 +118,7 @@
 		                              , C.PROD_BASE_DESC
 		                              , D.AID
 		                              , D.PKG_NM AS APK_PKG_NM
+		                              , D.SALE_STRT_DT
 		                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
 		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE              
 		                              , NVL(G.PROD_AMT, 0) AS PROD_AMT
@@ -130,12 +131,6 @@
 		                              , TB_DP_TENANT_PROD             E
 		                              , TB_DP_TENANT_PROD_STATS       F
 		                              , TB_DP_TENANT_PROD_PRICE       G
---		                              ,( SELECT PROD_ID, MIN(HIS_DT) AS HIS_DT
---		                                   FROM TB_DP_TENANT_PROD_HIS
---		                                  WHERE TENANT_ID = 'S01'
---		                                    AND PROD_STATUS_CD = 'PD000403'
---		                                  GROUP BY PROD_ID
---		                               ) H
 		                              , TB_DP_MENU_CATEGORY_PROD_MAPG I
 		                              , TB_DP_MENU_CATEGORY           J               
 		                         WHERE A.PROD_ID = B.PART_PROD_ID
@@ -155,7 +150,9 @@
 		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
 		                           AND E.PROD_STATUS_CD ='PD000403'
 		                           AND I.USE_YN ='Y'
-		                           --AND SUBSTR(D.SALE_START_DT,0,8) BETWEEN TO_CHAR(SYSDATE - 7,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')
+                                   AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 7,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')
+                                 ORDER BY A.REG_DT DESC
+                                        , C.PROD_NM
 		                       ) IA
 		              ) JA
 		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}             
@@ -180,12 +177,13 @@
 		     , EXPO_SELLER_NM
 		     , TOP_MENU_ID
 		     , PKG_NM AS APK_PKG_NM
+		     , SALE_STRT_DT
 		     , KA.REG_DT
 		     , NVL(PROD_AMT, 0 ) AS PROD_AMT
 		     , DECODE(INSTR(KB.FILE_PATH, '.', 1, 1), 0, KB.FILE_PATH || KB.FILE_NM, KB.FILE_PATH) AS IMAGE_PATH
 		     , DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH) AS PREVIEW_IMAGE_PATH
-		     , KB.FILE_SIZE AS IMAGE_SIZE
-		     , KC.FILE_SIZE AS PREVIEW_IMAGE_SIZE            
+		     , NVL(KB.FILE_SIZE, 0) AS IMAGE_SIZE
+		     , NVL(KC.FILE_SIZE, 0) AS PREVIEW_IMAGE_SIZE            
 		     , (SELECT MENU_NM 
 		          FROM TB_DP_MENU_CATEGORY_DESC
 		         WHERE MENU_ID = TOP_MENU_ID
@@ -221,6 +219,7 @@
 		                              , C.PROD_DTL_DESC
 		                              , D.AID
 		                              , D.PKG_NM
+		                              , D.SALE_STRT_DT
 		                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
 		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE              
 		                              , NVL(G.PROD_AMT, 0) AS PROD_AMT              
@@ -233,12 +232,6 @@
 		                              , TB_DP_TENANT_PROD             E
 		                              , TB_DP_TENANT_PROD_STATS       F
 		                              , TB_DP_TENANT_PROD_PRICE       G
---		                              ,( SELECT PROD_ID, MIN(HIS_DT) AS HIS_DT
---		                                   FROM TB_DP_TENANT_PROD_HIS
---		                                  WHERE PROD_STATUS_CD = 'PD000403'
---		                                    AND TENANT_ID = 'S01'
---		                                  GROUP BY PROD_ID
---		                               ) H
 		                              , TB_DP_MENU_CATEGORY_PROD_MAPG I
 		                              , TB_DP_MENU_CATEGORY           J               
 		                         WHERE A.PROD_ID = B.PART_PROD_ID
@@ -247,7 +240,6 @@
 		                           AND A.PROD_ID = E.PROD_ID
 		                           AND A.PROD_ID = F.PROD_ID
 		                           AND A.PROD_ID = G.PROD_ID
---		                           AND H.PROD_ID = A.PROD_ID
 		                           AND A.PROD_ID = I.PROD_ID
 		                           AND E.TENANT_ID = #{tenantId}
 		                           AND E.TENANT_ID = F.TENANT_ID
@@ -258,7 +250,7 @@
 		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
 		                           AND E.PROD_STATUS_CD ='PD000403'
 		                           AND I.USE_YN ='Y'
-		--                           AND SUBSTR(D.SALE_START_DT,0,8) BETWEEN TO_CHAR(SYSDATE - 1,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')   
+                                   AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 1,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')   
 		                         ORDER BY A.REG_DT DESC
 		                                , C.PROD_NM
 		                       ) IA
