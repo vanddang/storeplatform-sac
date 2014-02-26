@@ -139,6 +139,8 @@
               , LA.PROD_NM
               , REGEXP_REPLACE( LA.CHAPTER, '[^[:digit:]]') AS CHAPTER /* 회차의 수 */
               , NVL(REGEXP_REPLACE( LA.CHAPTER, '[[:digit:], ]'), '회') AS CHAPTER_UNIT /* 회차 단위 */
+              , LA.SAMPL_URL
+              , LA.SC_SAMPL_URL
               , LA.PROD_BASE_DESC
               , LA.PROD_GRD_CD
               , LA.ARTIST1_NM
@@ -210,6 +212,8 @@
                            , H.CHNL_PERIOD_AMT
                            , H.CHNL_UNLMT_AMT
                            , L.CHAPTER
+                           , L.SAMPL_URL
+                           , L.SC_SAMPL_URL
                            , M.FILE_PATH
                            , M.FILE_NM
                            , M.FILE_SIZE

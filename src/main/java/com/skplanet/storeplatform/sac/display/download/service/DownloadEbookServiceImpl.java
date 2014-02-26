@@ -200,7 +200,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 				historyReq.setEndDt(sysDate);
 				historyReq.setOffset(1);
-				historyReq.setCount(1);
+				historyReq.setCount(1000);
 				historyReq.setProductList(productList);
 
 				// 구매내역 조회 실행
