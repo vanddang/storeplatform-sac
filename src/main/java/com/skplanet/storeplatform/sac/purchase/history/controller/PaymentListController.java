@@ -10,7 +10,9 @@
 package com.skplanet.storeplatform.sac.purchase.history.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,17 +65,17 @@ public class PaymentListController {
 	 */
 	@RequestMapping(value = "/history/payment/search/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public List<PaymentListSacRes> searchPaymentList(@RequestBody @Validated PaymentSacReq paymentSacReq,
+	public Map<String, List<PaymentListSacRes>> searchPaymentList(@RequestBody @Validated PaymentSacReq paymentSacReq,
 			BindingResult bindingResult, SacRequestHeader requestHeader) {
 		// 필수값 체크
 		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
 		TenantHeader header = requestHeader.getTenantHeader();
-		// PaymentListSacRes response = new PaymentListSacRes();
-		//
-		// response.setPaymentList();
 
-		return this.resConvert(this.paymentSearchSacService.searchPaymentList(this.reqConvert(paymentSacReq, header)));
+		Map<String, List<PaymentListSacRes>> res = new HashMap<String, List<PaymentListSacRes>>();
+		res.put("paymentList",
+				this.resConvert(this.paymentSearchSacService.searchPaymentList(this.reqConvert(paymentSacReq, header))));
+		return res;
 	}
 
 	/**
@@ -122,7 +124,6 @@ public class PaymentListController {
 
 				PaymentSacRes paymentSacRes = new PaymentSacRes();
 				paymentSacRes.setPaymentAmt(paymentScRes.getPaymentAmt());
-				paymentSacRes.setPaymentDt(paymentScRes.getPaymentDt());
 				paymentSacRes.setPaymentMtdCd(paymentScRes.getPaymentMtdCd());
 				paymentList.add(paymentSacRes);
 

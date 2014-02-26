@@ -92,9 +92,10 @@ public class HidingController {
 		List<HidingListSc> list = new ArrayList<HidingListSc>();
 
 		req.setTenantId(header.getTenantId());
+		req.setSystemId(header.getSystemId());
 		req.setUserKey(hidingSacReq.getUserKey());
 		req.setDeviceKey(hidingSacReq.getDeviceKey());
-		req.setSystemId(header.getSystemId());
+		req.setSendYn(hidingSacReq.getSendYn());
 
 		for (HidingListSac hidingListSac : hidingSacReq.getHidingList()) {
 
@@ -102,7 +103,6 @@ public class HidingController {
 
 			hidingListSc.setPrchsId(hidingListSac.getPrchsId());
 			hidingListSc.setPrchsDtlId(hidingListSac.getPrchsDtlId());
-			hidingListSc.setSendYn(hidingListSac.getSendYn());
 			hidingListSc.setHidingYn(hidingListSac.getHidingYn());
 
 			list.add(hidingListSc);

@@ -48,14 +48,14 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 	 * @return
 	 */
 	@Override
-	public void createInterworking(InterworkingSacReq interworkingSacReq) {
+	public void createInterworking(InterworkingSacReq interworkingSacReq, String temp) {
 
 		/**
 		 * 상품ID로 전시호출후 응답값이 (인터파크,씨네21)일 경우 배치를 위해 생성될 table에 insert후 인터파크일 경우에는 실시간 연동처리를 한다. 전시쪽에서 조회가 어떻게 될지 몰라 현재
 		 * 구현을 위해 test변수 temp을 사용한다.
 		 */
 		// value interpark, cine21
-		String temp = "interpark";
+		// String temp = "interpark";
 
 		if (temp.equals("interpark") || temp.equals("cine21")) {
 			this.logger.debug("@@@@@@@@@@@@ Interworking @@@@@@@@@@@@ {}", interworkingSacReq.getPrchsId());

@@ -26,5 +26,5 @@ public interface InterworkingSacService {
 	 *            요청정보
 	 * @return
 	 */
-	public void createInterworking(InterworkingSacReq interworkingSacReq);
+	public void createInterworking(InterworkingSacReq interworkingSacReq, String temp);
 }
