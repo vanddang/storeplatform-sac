@@ -20,11 +20,11 @@ public class IntimateMessageSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String userKey; // 사용자고유키
-	private String deviceIdType; // 기기ID유형
-	private String deviceId; // 기기ID
+	private String deviceKey; // 디바이스키
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출될 ROW 개수
 	private String tenantId; // 테넌트ID
+	private String deviceChangeFlag; // 기기변경 구분
 
 	/**
 	 * @return the userKey
@@ -42,33 +42,18 @@ public class IntimateMessageSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the deviceIdType
+	 * @return the deviceKey
 	 */
-	public String getDeviceIdType() {
-		return this.deviceIdType;
+	public String getDeviceKey() {
+		return this.deviceKey;
 	}
 
 	/**
-	 * @param deviceIdType
-	 *            the deviceIdType to set
+	 * @param deviceKey
+	 *            the deviceKey to set
 	 */
-	public void setDeviceIdType(String deviceIdType) {
-		this.deviceIdType = deviceIdType;
-	}
-
-	/**
-	 * @return the deviceId
-	 */
-	public String getDeviceId() {
-		return this.deviceId;
-	}
-
-	/**
-	 * @param deviceId
-	 *            the deviceId to set
-	 */
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 	/**
@@ -114,5 +99,20 @@ public class IntimateMessageSacReq extends CommonInfo {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the deviceChangeFlag
+	 */
+	public String getDeviceChangeFlag() {
+		return this.deviceChangeFlag;
+	}
+
+	/**
+	 * @param deviceChangeFlag
+	 *            the deviceChangeFlag to set
+	 */
+	public void setDeviceChangeFlag(String deviceChangeFlag) {
+		this.deviceChangeFlag = deviceChangeFlag;
 	}
 }
