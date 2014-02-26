@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -141,7 +142,7 @@ public class ListDeviceTest {
 
 							ListDeviceReq req = new ListDeviceReq();
 							req.setUserId("vanddangtest020");
-							req.setIsMainDevice("Y");
+							req.setIsMainDevice("N");
 
 							ObjectMapper objMapper = new ObjectMapper();
 
@@ -188,8 +189,8 @@ public class ListDeviceTest {
 						public Object requestBody() {
 
 							ListDeviceReq req = new ListDeviceReq();
-							req.setUserKey("US201401280706367180001249");
-							req.setDeviceId("01066786200");
+							req.setUserKey("US201402110557052730002230");
+							req.setDeviceId("01066786221");
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
@@ -235,8 +236,102 @@ public class ListDeviceTest {
 						public Object requestBody() {
 
 							ListDeviceReq req = new ListDeviceReq();
-							req.setUserKey("US201401280706367180001249");
-							req.setDeviceKey("DE201402140234115260001735");
+							req.setUserKey("US201402110557052730002230");
+							req.setDeviceKey("DE201402120409541480001552");
+
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(ListDeviceRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							ListDeviceRes res = (ListDeviceRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 정보 없음.
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void shouldDeviceListNoData() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/listDevice/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							ListDeviceReq req = new ListDeviceReq();
+							req.setUserKey("US991401241840125650000649");
+							req.setIsMainDevice("N");
+
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							return req;
+						}
+					}).success(ListDeviceRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							ListDeviceRes res = (ListDeviceRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 정보 없음.
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void shouldDeviceListNoData02() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/listDevice/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							ListDeviceReq req = new ListDeviceReq();
+							req.setUserKey("US201401241840125650000649");
+							req.setDeviceKey("DE201401241840125800000296sss");
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
@@ -265,7 +360,7 @@ public class ListDeviceTest {
 	 * 휴대기기 목록조회 서비스 호출.
 	 * </pre>
 	 */
-	@Test
+	@Deprecated
 	public void shouldDeviceListService() {
 
 		TenantHeader tenantHeader = new TenantHeader();
