@@ -38,9 +38,9 @@ public class MusicContentsSacReq extends CommonInfo {
 
 	private String tenantId;
 
-	private int offset = 1; // 시작점 ROW
+	private Integer offset; // 시작점 ROW
 
-	private int count = 20; // 페이지당 노출 ROW 수
+	private Integer count; // 페이지당 노출 ROW 수
 
 	private String chartClsfCd;
 
@@ -179,9 +179,9 @@ public class MusicContentsSacReq extends CommonInfo {
 	 * offset.
 	 * </pre>
 	 * 
-	 * @return int
+	 * @return Integer
 	 */
-	public int getOffset() {
+	public Integer getOffset() {
 		return this.offset;
 	}
 
@@ -194,7 +194,7 @@ public class MusicContentsSacReq extends CommonInfo {
 	 * @param offset
 	 *            offset
 	 */
-	public void setOffset(int offset) {
+	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
 
@@ -204,9 +204,9 @@ public class MusicContentsSacReq extends CommonInfo {
 	 * count.
 	 * </pre>
 	 * 
-	 * @return int
+	 * @return Integer
 	 */
-	public int getCount() {
+	public Integer getCount() {
 		return this.count;
 	}
 
@@ -219,7 +219,7 @@ public class MusicContentsSacReq extends CommonInfo {
 	 * @param count
 	 *            count
 	 */
-	public void setCount(int count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
 

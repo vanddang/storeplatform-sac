@@ -13,8 +13,8 @@ public class RecommendAdminSacReq {
 	private String prodCharge; // 유무료 구분
 	private String prodGradeCd; // 상품 등급
 	private String topMenuId; // 메뉴ID
-	private int offset; // offset
-	private int count; // count
+	private Integer offset; // offset
+	private Integer count; // count
 
 	// common req 전까지 임시
 	private String tenantId; // 메뉴ID
@@ -131,9 +131,9 @@ public class RecommendAdminSacReq {
 	 * offset.
 	 * </pre>
 	 * 
-	 * @return int
+	 * @return Integer
 	 */
-	public int getOffset() {
+	public Integer getOffset() {
 		return this.offset;
 	}
 
@@ -146,7 +146,7 @@ public class RecommendAdminSacReq {
 	 * @param offset
 	 *            offset
 	 */
-	public void setOffset(int offset) {
+	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
 
@@ -156,9 +156,9 @@ public class RecommendAdminSacReq {
 	 * count.
 	 * </pre>
 	 * 
-	 * @return int
+	 * @return Integer
 	 */
-	public int getCount() {
+	public Integer getCount() {
 		return this.count;
 	}
 
@@ -171,7 +171,7 @@ public class RecommendAdminSacReq {
 	 * @param count
 	 *            count
 	 */
-	public void setCount(int count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
 
