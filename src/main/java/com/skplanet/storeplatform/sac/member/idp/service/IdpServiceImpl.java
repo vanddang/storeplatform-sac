@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ChangedDeviceLog;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDCDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
@@ -732,9 +733,6 @@ public class IdpServiceImpl implements IdpService {
 			userKey = schDeviceRes.getUserMbrDevice().getUserKey();
 			deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
-			/* 번호 변경 DCD 연동 */
-			DCDInfo dcdInfo = new DCDInfo();
-
 			/* 단말 정보 조회 */
 			Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
@@ -914,6 +912,20 @@ public class IdpServiceImpl implements IdpService {
 			changeDeviceLog.setMessageIDP(requestUrl);
 			if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_SUCCESS_CODE)) {
 				changeDeviceLog.setPreData(beMdn);
+
+				/* 번호 변경 DCD 연동 */
+				DCDInfo dcdInfo = new DCDInfo();
+				dcdInfo.setRegChannel(systemId);
+				dcdInfo.setTenantID(tenantId);
+				dcdInfo.setEntryClass(IdpConstants.DCD_ENTRY_CHANGE_NUMBER); // 번호변경
+				dcdInfo.setServiceNumber(svcMngNum);
+				dcdInfo.setDeviceID(null);
+				dcdInfo.setRegDeviceID(mdn);
+				dcdInfo.setPriorityClass("0");
+				dcdInfo.setProductID(null);
+				dcdInfo.setTID(DateUtil.getToday("yyyyMMddhhmmss") + "004010"); // TODO. 현재는 not null로 되어있어서 셋팅함. 추후 없어짐
+				this.insertDceInfo(commonRequest, dcdInfo);
+
 			} else if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_NO_DATA)) {
 				changeDeviceLog.setPreData("FAIL");
 			} else {
@@ -947,10 +959,24 @@ public class IdpServiceImpl implements IdpService {
 		createChangeDeviceReq.setCommonRequest(commonRequest);
 		createChangeDeviceReq.setChangedDeviceLog(changeDeviceLog);
 
-		LOGGER.info(":::: createChangeDeviceReq : {}", createChangeDeviceReq.getCommonRequest().toString());
-		LOGGER.info(":::: createChangeDeviceReq : {}", createChangeDeviceReq.getChangedDeviceLog().toString());
-
 		this.userSCI.createChangedDevice(createChangeDeviceReq);
+	}
+
+	/**
+	 * <pre>
+	 * DCD 정보 저장
+	 * </pre>
+	 * 
+	 * @param commonRequest
+	 *            CommonRequest
+	 * @param dcdInfo
+	 *            DCDInfo
+	 */
+	public void insertDceInfo(CommonRequest commonRequest, DCDInfo dcdInfo) {
+		CreateDCDRequest createDcdReq = new CreateDCDRequest();
+		createDcdReq.setCommonRequest(commonRequest);
+		createDcdReq.setDCDInfo(dcdInfo);
+		this.userSCI.createDCD(createDcdReq);
 	}
 
 	/*
@@ -1098,6 +1124,7 @@ public class IdpServiceImpl implements IdpService {
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
 			/* DCD 연동 */
+			DCDInfo dcdInfo = new DCDInfo();
 			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
 
 				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
@@ -1105,22 +1132,53 @@ public class IdpServiceImpl implements IdpService {
 
 				/* 기존에 구매했던 DCD 상품 조회 */
 
+				/* 기존번호 상품별로 DCD 단말해지 */
+
+				dcdInfo.setEntryClass(IdpConstants.DCD_ENTRY_SECEDE); // 해지
+				dcdInfo.setProductID("A000Z00001");
+
 			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
 
 				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
 						device.getDeviceModelCd(), uacd, svcMngNum);
+
+				dcdInfo.setEntryClass(IdpConstants.DCD_ENTRY_CHANGE_MODEL); // 기기변경
+				dcdInfo.setProductID(null);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
 
 				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
 						device.getDeviceModelCd(), uacd, svcMngNum);
 
+				dcdInfo.setEntryClass(IdpConstants.DCD_ENTRY_JOIN); // 가입
+				dcdInfo.setProductID("A000Z00001");
+
+				/* 기존에 구입했던 DCD 상품조회 */
+
+				/* 상품 DCD 가입처리 */
+
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
 
 				LOGGER.info("<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
 						device.getDeviceModelCd(), uacd, svcMngNum);
 
+				/* 기존에 구매했던 DCD 상품 조회 */
+
+				/* 기존번호 상품별로 DCD 단말해지 */
+
+				dcdInfo.setEntryClass(IdpConstants.DCD_ENTRY_SECEDE); // 해지
+				dcdInfo.setProductID("A000Z00001");
+
 			}
+
+			dcdInfo.setRegChannel(systemId);
+			dcdInfo.setTenantID(tenantId);
+			dcdInfo.setServiceNumber(svcMngNum);
+			dcdInfo.setDeviceID(mdn);
+			dcdInfo.setRegDeviceID(null);
+			dcdInfo.setPriorityClass("0");
+			dcdInfo.setTID(DateUtil.getToday("yyyyMMddhhmmss") + "004010"); // TODO. 현재는 not null로 되어있어서 셋팅함. 추후 없어짐
+			this.insertDceInfo(commonRequest, dcdInfo);
 
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 

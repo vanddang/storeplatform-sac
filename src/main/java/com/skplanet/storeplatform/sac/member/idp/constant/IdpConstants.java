@@ -48,4 +48,13 @@ public final class IdpConstants {
 
 	public static final String LOGIN_STATUS_RELEASE = "10"; // 로그인 가능
 	public static final String LOGIN_STATUS_LOCK = "20"; // 로그인 제한
+
+	/**
+	 * DCD 연동 코드
+	 * */
+	public static final String DCD_ENTRY_JOIN = "4097"; // 가입
+	public static final String DCD_ENTRY_SECEDE = "4099"; // 해지
+	public static final String DCD_ENTRY_CHANGE_NUMBER = "4105"; // 번호변경
+	public static final String DCD_ENTRY_CHANGE_MODEL = "4109"; // 기기변경
+
 }
