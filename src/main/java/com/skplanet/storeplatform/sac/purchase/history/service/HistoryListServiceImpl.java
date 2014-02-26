@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.history.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -25,6 +26,10 @@ import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScRes;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistorySc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ProductCountSc;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ProductInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
@@ -32,7 +37,6 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacR
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistorySac;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductCountSac;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
-import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -51,10 +55,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 	private HistorySCI historySci;
 
 	@Autowired
-	private CategorySpecificProductService productService;
+	private PurchaseTenantPolicyService purchaseTenantPolicyService;
 
 	@Autowired
-	private PurchaseTenantPolicyService purchaseTenantPolicyService;
+	private ProductInfoSCI productInfoSCI;
 
 	/**
 	 * 구매내역 조회 기능을 제공한다.
@@ -76,7 +80,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		List<HistorySac> sacHistoryList = new ArrayList<HistorySac>();
 		HistorySac historySac = new HistorySac();
 
-		String prodArray = "";
+		List<String> prodIdList = new ArrayList<String>();
 
 		/*************************************************
 		 * SC Request Setting Start
@@ -84,19 +88,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setTenantId(request.getTenantId());
 		scRequest.setUserKey(request.getUserKey());
 		scRequest.setDeviceKey(request.getDeviceKey());
-
-		// // TenantProdGrpCd가 요청값으로 전달되면 구매 정책을 확인한다. (Device기반 구매내역관리)
-		// // TenantProdGrpCd가 Device기반 정책이면 device_key를 세팅하고 아니면 공백처리하여 쿼리 조건으로 사용되지 않게 처리됨
-		// if (StringUtils.isNotBlank(request.getTenantProdGrpCd())) {
-		// List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
-		// .searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
-		// PurchaseConstants.POLICY_ID_008);
-		//
-		// if (purchaseTenantPolicyList.size() > 0) {
-		// scRequest.setDeviceKey(request.getDeviceKey());
-		// }
-		// }
-
 		scRequest.setStartDt(request.getStartDt());
 		scRequest.setEndDt(request.getEndDt());
 		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
@@ -143,15 +134,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 * SC Request Setting End
 		 *************************************************/
 
-		// try {
-		// SC Call
+		/**
+		 * Purchase SC Call
+		 */
 		scResponse = this.historySci.searchHistoryList(scRequest);
-		// } catch (Exception ex) {
-		// TODO : 추후 메세지 추가후 처리함
-		// throw new StorePlatformException("구매SC 호출중 오류발생", ex);
-		// }
-
-		// SC객체를 SAC객체로 맵핑작업
 
 		/*************************************************
 		 * SC -> SAC Response Setting Start
@@ -221,37 +207,42 @@ public class HistoryListServiceImpl implements HistoryListService {
 			sacHistoryList.add(historySac);
 
 			// 상품정보 조회를 위한 상품ID 셋팅
-			prodArray = prodArray + historySac.getProdId() + "+";
+			prodIdList.add(historySac.getProdId());
 		}
-
 		/*************************************************
 		 * SC -> SAC Response Setting Start
 		 *************************************************/
 
-		// CategorySpecificReq productReq = new CategorySpecificReq();
-		// this.logger.debug("#######################################" + prodArray);
-		// productReq.setList(prodArray);
-		//
-		// // TODO : 테스트용 데이터 받기
-		// // productReq.setDummy("dummy");
-		//
-		// // 상품정보조회
-		// CategorySpecificRes productRes = this.productService.getSpecificProductList(productReq, requestHeader);
-		//
-		// List<Product> resProdList = productRes.getProductList();
-		// this.logger.debug("prodList ==== " + resProdList.toString());
-		// for (History obj : sacHistoryList) {
-		//
-		// for (Product product : resProdList) {
-		//
-		// if (obj.getProdId().equals(product.getIdentifierList().get(0).getText())) {
-		// // obj.setProduct(product); //
-		// obj.setProdNm(product.getTitle().getText());
-		// obj.setGrade(product.getRights().getGrade());
-		// break;
-		// }
-		// }
-		// }
+		/*************************************************
+		 * 상품정보 Mapping Start
+		 **************************************************/
+		ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
+		ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
+
+		productInfoSacReq.setDeviceModelNo(request.getModel());
+		productInfoSacReq.setList(prodIdList);
+
+		if (prodIdList.size() > 0) {
+			productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
+
+			if (productInfoSacRes != null) {
+				HashMap<String, Object> prodMap = new HashMap<String, Object>();
+				for (HistorySac obj : sacHistoryList) {
+					for (ProductInfo info : productInfoSacRes.getProductList()) {
+						if (obj.getProdId().equals(info.getProdId())) {
+							prodMap = new HashMap<String, Object>();
+							prodMap.put("productList", info);
+							obj.setProductInfo(prodMap);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		/*************************************************
+		 * 상품정보 Mapping End
+		 **************************************************/
 
 		response.setHistoryList(sacHistoryList);
 		response.setTotalCnt(scResponse.getTotalCnt());

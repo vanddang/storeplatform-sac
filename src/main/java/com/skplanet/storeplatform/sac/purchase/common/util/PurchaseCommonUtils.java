@@ -40,7 +40,7 @@ public class PurchaseCommonUtils {
 	 */
 	public void getBindingValid(BindingResult bindingResult) {
 
-		// 필수값 체크
+		// 필수값 체크 추후 삭제할거임~~~
 		if (bindingResult.hasErrors()) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
 			for (FieldError error : errors) {
@@ -70,8 +70,28 @@ public class PurchaseCommonUtils {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * Header 정보를 셋팅한다.
+	 * </pre>
+	 * 
+	 * @param purchaseHeaderSacReq
+	 * @param sacRequestHeader
+	 */
 	public void setHeader(PurchaseHeaderSacReq purchaseHeaderSacReq, SacRequestHeader sacRequestHeader) {
 		purchaseHeaderSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		purchaseHeaderSacReq.setSystemId(sacRequestHeader.getTenantHeader().getSystemId());
+		purchaseHeaderSacReq.setLangCd(sacRequestHeader.getTenantHeader().getLangCd());
+
+		purchaseHeaderSacReq.setModel(sacRequestHeader.getDeviceHeader().getModel());
+		purchaseHeaderSacReq.setDpi(sacRequestHeader.getDeviceHeader().getDpi());
+		purchaseHeaderSacReq.setResolution(sacRequestHeader.getDeviceHeader().getResolution());
+		purchaseHeaderSacReq.setOs(sacRequestHeader.getDeviceHeader().getOs());
+		purchaseHeaderSacReq.setPkg(sacRequestHeader.getDeviceHeader().getPkg());
+		purchaseHeaderSacReq.setSvc(sacRequestHeader.getDeviceHeader().getSvc());
+
+		purchaseHeaderSacReq.setType(sacRequestHeader.getNetworkHeader().getType());
+		purchaseHeaderSacReq.setOperator(sacRequestHeader.getNetworkHeader().getOperator());
+		purchaseHeaderSacReq.setSimOperator(sacRequestHeader.getNetworkHeader().getSimOperator());
 	}
 }
