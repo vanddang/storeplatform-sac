@@ -360,7 +360,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
 
 		LOGGER.info("## IDP Service 호출.");
-		// IdpReceiverM idpReciver = this.idpService.warterMarkImageUrl();
 		WaterMarkAuthImageEcRes waterMarkAuthImageEcRes = this.idpSCI.warterMarkImageUrl();
 
 		if (waterMarkAuthImageEcRes != null && waterMarkImageUrl != null) {
@@ -375,7 +374,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			LOGGER.info("## waterMarkImageUrl 정상 발급.");
 			String urlPath = waterMarkImageUrl.substring(waterMarkImageUrl.indexOf("/watermark"));
-			
 
 			ImageReq req = new ImageReq();
 			req.setProtocol(waterMarkImageUrl.substring(0, 5).equals("https") ? "https" : "http"); // HTTP or HTTPS
