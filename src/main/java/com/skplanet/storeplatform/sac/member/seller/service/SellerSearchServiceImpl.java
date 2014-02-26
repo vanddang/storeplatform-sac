@@ -366,7 +366,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
 
 			if (!StringUtil.nvl(sellerMbrs.get(0).getCeoName(), "").equals(""))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCeoName());
+				sellerMbrSac.setSellerName(sellerMbrs.get(0).getCeoName());
 
 			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
