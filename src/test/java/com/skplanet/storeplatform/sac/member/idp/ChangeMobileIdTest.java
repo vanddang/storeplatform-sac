@@ -127,11 +127,11 @@ public class ChangeMobileIdTest {
 			map.put("systemID", "W");
 			map.put("tenantID", "S01");
 
-			map.put("mdn", "01049545098");
-			map.put("svc_mng_num", "aaaa");
+			map.put("mdn", "01048088874");
+			map.put("svc_mng_num", "1242345410");
 			map.put("model_id", "SSMF");
-			map.put("be_mdn", "01049545098");
-			map.put("min", "1049545098");
+			//map.put("be_mdn", "01048088874");
+			map.put("min", "1048088874");
 
 			this.idpService.executeChangeMobileID(map);
 
