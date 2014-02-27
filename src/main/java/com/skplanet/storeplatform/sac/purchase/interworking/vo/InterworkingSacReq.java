@@ -10,10 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.interworking.vo;
 
 import java.io.Serializable;
-
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -25,34 +22,15 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class InterworkingSacReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@NotNull
-	@NotEmpty
 	private String tenantId;
-	@NotNull
-	@NotEmpty
 	private String systemId;
-	@NotNull
-	@NotEmpty
-	private String prchsId;
-	@NotNull
-	@NotEmpty
 	private String userKey;
 	private String deviceKey;
-	@NotNull
-	@NotEmpty
-	private String sellermbrNo;
-	@NotNull
-	@NotEmpty
-	private String prodId;
-	@NotNull
-	@NotEmpty
-	private String compContentsId;
-	@NotNull
-	@NotEmpty
+	private String prchsId;
 	private String prchsDt;
-	private Integer prodAmt;
 	private String prchsCancelDt;
 	private String fileMakeYn;
+	private List<InterworkingSac> interworkingListSac;
 
 	/**
 	 * @return the tenantId
@@ -82,21 +60,6 @@ public class InterworkingSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
-	}
-
-	/**
-	 * @return the prchsId
-	 */
-	public String getPrchsId() {
-		return this.prchsId;
-	}
-
-	/**
-	 * @param prchsId
-	 *            the prchsId to set
-	 */
-	public void setPrchsId(String prchsId) {
-		this.prchsId = prchsId;
 	}
 
 	/**
@@ -130,48 +93,18 @@ public class InterworkingSacReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the sellermbrNo
+	 * @return the prchsId
 	 */
-	public String getSellermbrNo() {
-		return this.sellermbrNo;
+	public String getPrchsId() {
+		return this.prchsId;
 	}
 
 	/**
-	 * @param sellermbrNo
-	 *            the sellermbrNo to set
+	 * @param prchsId
+	 *            the prchsId to set
 	 */
-	public void setSellermbrNo(String sellermbrNo) {
-		this.sellermbrNo = sellermbrNo;
-	}
-
-	/**
-	 * @return the prodId
-	 */
-	public String getProdId() {
-		return this.prodId;
-	}
-
-	/**
-	 * @param prodId
-	 *            the prodId to set
-	 */
-	public void setProdId(String prodId) {
-		this.prodId = prodId;
-	}
-
-	/**
-	 * @return the compContentsId
-	 */
-	public String getCompContentsId() {
-		return this.compContentsId;
-	}
-
-	/**
-	 * @param compContentsId
-	 *            the compContentsId to set
-	 */
-	public void setCompContentsId(String compContentsId) {
-		this.compContentsId = compContentsId;
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
 	}
 
 	/**
@@ -187,21 +120,6 @@ public class InterworkingSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setPrchsDt(String prchsDt) {
 		this.prchsDt = prchsDt;
-	}
-
-	/**
-	 * @return the prodAmt
-	 */
-	public Integer getProdAmt() {
-		return this.prodAmt;
-	}
-
-	/**
-	 * @param prodAmt
-	 *            the prodAmt to set
-	 */
-	public void setProdAmt(Integer prodAmt) {
-		this.prodAmt = prodAmt;
 	}
 
 	/**
@@ -232,6 +150,21 @@ public class InterworkingSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setFileMakeYn(String fileMakeYn) {
 		this.fileMakeYn = fileMakeYn;
+	}
+
+	/**
+	 * @return the interworkingListSac
+	 */
+	public List<InterworkingSac> getInterworkingListSac() {
+		return this.interworkingListSac;
+	}
+
+	/**
+	 * @param interworkingListSac
+	 *            the interworkingListSac to set
+	 */
+	public void setInterworkingListSac(List<InterworkingSac> interworkingListSac) {
+		this.interworkingListSac = interworkingListSac;
 	}
 
 }

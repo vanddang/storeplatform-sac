@@ -38,11 +38,11 @@ public class CreateOrderReq extends CommonInfo {
 	/**
 	 * 상품 판매가.
 	 */
-	private Integer price; // PROD_AMT
+	private Double price; // PROD_AMT
 	/**
 	 * 수량.
 	 */
-	private String qty;
+	private Integer qty;
 	/**
 	 * 플래그.
 	 */
@@ -120,7 +120,7 @@ public class CreateOrderReq extends CommonInfo {
 	 * 
 	 * @return String
 	 */
-	public Integer getPrice() {
+	public Double getPrice() {
 		return this.price;
 	}
 
@@ -129,7 +129,7 @@ public class CreateOrderReq extends CommonInfo {
 	 * @param price
 	 *            price
 	 */
-	public void setPrice(Integer price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
@@ -137,7 +137,7 @@ public class CreateOrderReq extends CommonInfo {
 	 * 
 	 * @return String
 	 */
-	public String getQty() {
+	public Integer getQty() {
 		return this.qty;
 	}
 
@@ -146,7 +146,7 @@ public class CreateOrderReq extends CommonInfo {
 	 * @param qty
 	 *            qty
 	 */
-	public void setQty(String qty) {
+	public void setQty(Integer qty) {
 		this.qty = qty;
 	}
 

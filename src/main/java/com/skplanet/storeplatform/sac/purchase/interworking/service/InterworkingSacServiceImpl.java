@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.interworking.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,12 @@ import com.skplanet.storeplatform.external.client.interpark.vo.CreateOrderEcReq;
 import com.skplanet.storeplatform.external.client.interpark.vo.CreateOrderEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.interworking.sci.InterworkingSCI;
+import com.skplanet.storeplatform.purchase.client.interworking.vo.InterworkingSc;
 import com.skplanet.storeplatform.purchase.client.interworking.vo.InterworkingScReq;
 import com.skplanet.storeplatform.purchase.client.interworking.vo.InterworkingScRes;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.CreateOrderReq;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.CreateOrderRes;
+import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSac;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSacReq;
 
 /**
@@ -73,12 +78,18 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 
 					createOrderReq.setRevOrdNo(interworkingSacReq.getPrchsId());
 					createOrderReq.setOrdDts(interworkingSacReq.getPrchsDt());
-					createOrderReq.setPrdNo(interworkingSacReq.getCompContentsId());
-					createOrderReq.setItemNo(interworkingSacReq.getProdId());
-					createOrderReq.setPrice(interworkingSacReq.getProdAmt());
 
-					// interpark 실시간 연동처리
-					this.createOrder(createOrderReq);
+					for (InterworkingSac interworkingSac : interworkingSacReq.getInterworkingListSac()) {
+						createOrderReq.setPrdNo(interworkingSac.getCompContentsId());
+						createOrderReq.setItemNo(interworkingSac.getProdId());
+						createOrderReq.setPrice(interworkingSac.getProdAmt());
+						createOrderReq.setQty(1);
+						createOrderReq.setFlag("01");
+
+						// interpark 실시간 연동처리
+						// this.createOrder(createOrderReq);
+					}
+
 				} catch (StorePlatformException ex) {
 					if (ex.getErrorInfo().getCode().equals("EC_INTERPARK_9996")) {
 						throw new StorePlatformException("SAC_PUR_3000");
@@ -153,16 +164,24 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 
 		req.setTenantId(interworkingSacReq.getTenantId());
 		req.setSystemId(interworkingSacReq.getSystemId());
-		req.setPrchsId(interworkingSacReq.getPrchsId());
 		req.setInsdUsermbrNo(interworkingSacReq.getUserKey());
 		req.setInsdDeviceId(interworkingSacReq.getDeviceKey());
-		req.setCompContentsId(interworkingSacReq.getCompContentsId());
-		req.setFileMakeYn(interworkingSacReq.getFileMakeYn());
-		req.setPrchsCancelDt(interworkingSacReq.getPrchsDt());
+		req.setPrchsId(interworkingSacReq.getPrchsId());
 		req.setPrchsDt(interworkingSacReq.getPrchsDt());
-		req.setProdAmt(interworkingSacReq.getProdAmt());
-		req.setProdId(interworkingSacReq.getProdId());
-		req.setSellermbrNo(interworkingSacReq.getSellermbrNo());
+		// req.setPrchsCancelDt(interworkingSacReq.getPrchsDt());
+		req.setFileMakeYn(interworkingSacReq.getFileMakeYn());
+		List<InterworkingSc> list = new ArrayList<InterworkingSc>();
+		for (InterworkingSac interworkingSac : interworkingSacReq.getInterworkingListSac()) {
+			InterworkingSc interworkingSc = new InterworkingSc();
+
+			interworkingSc.setMallCd(interworkingSac.getMallCd());
+			interworkingSc.setProdId(interworkingSac.getProdId());
+			interworkingSc.setSellermbrNo(interworkingSac.getSellermbrNo());
+			interworkingSc.setProdAmt(interworkingSac.getProdAmt());
+			interworkingSc.setCompContentsId(interworkingSac.getCompContentsId());
+			list.add(interworkingSc);
+		}
+		req.setInterworkingListSc(list);
 
 		return req;
 	}
