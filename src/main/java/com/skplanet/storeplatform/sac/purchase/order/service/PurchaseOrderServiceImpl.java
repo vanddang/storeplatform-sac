@@ -51,7 +51,6 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes
 import com.skplanet.storeplatform.sac.common.util.CryptUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.service.InterworkingSacService;
-import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSacReq;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
@@ -314,15 +313,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 씨네21, 인터파크
 		// TAKTODO:: 판매자 회원번호 조회, COMP_CONTS_ID, MALL_CD 조회
 
-		InterworkingSacReq interworkingSacReq = new InterworkingSacReq();
-		interworkingSacReq.setTenantId(createPurchaseSc.getTenantId());
-		interworkingSacReq.setSystemId(createPurchaseSc.getSystemId());
-		interworkingSacReq.setPrchsId(createPurchaseSc.getPrchsId());
-		interworkingSacReq.setUserKey(createPurchaseSc.getUseInsdUsermbrNo());
-		interworkingSacReq.setPrchsDt(createPurchaseSc.getPrchsDt());
-		interworkingSacReq.setProdId(createPurchaseSc.getProdId());
-		interworkingSacReq.setSellermbrNo("");
-		interworkingSacReq.setCompContentsId("");
+		// InterworkingSacReq interworkingSacReq = new InterworkingSacReq();
+		// interworkingSacReq.setTenantId(createPurchaseSc.getTenantId());
+		// interworkingSacReq.setSystemId(createPurchaseSc.getSystemId());
+		// interworkingSacReq.setPrchsId(createPurchaseSc.getPrchsId());
+		// interworkingSacReq.setUserKey(createPurchaseSc.getUseInsdUsermbrNo());
+		// interworkingSacReq.setPrchsDt(createPurchaseSc.getPrchsDt());
+		// interworkingSacReq.setProdId(createPurchaseSc.getProdId());
+		// interworkingSacReq.setSellermbrNo("");
+		// interworkingSacReq.setCompContentsId("");
 		// TAKTODO:임시주석 this.interworkingSacService.createInterworking(interworkingSacReq);
 
 		// 전시Part 상품 구매건수 증가
