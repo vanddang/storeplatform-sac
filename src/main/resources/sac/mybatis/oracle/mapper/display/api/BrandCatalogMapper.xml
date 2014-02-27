@@ -200,6 +200,7 @@
           , CATALOG_DTL_DESC = #{catalogDesc}
           , UPD_DT    = SYSDATE
         WHERE CATALOG_ID = #{createCatalogId}
+          AND LANG_CD= 'ko'
     </update>       
            
     <!--카탈로그_카테고리 매핑 테이블에 UPDATE-->
