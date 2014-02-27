@@ -125,22 +125,22 @@ public class DeviceUtil {
 	public static DeviceInfo getConverterDeviceInfo(UserMbrDevice userMbrDevice) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setUserKey(userMbrDevice.getUserKey());
-		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
-		deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
-		deviceInfo.setTenantId(userMbrDevice.getTenantID());
-		deviceInfo.setDeviceModelNo(userMbrDevice.getDeviceModelNo());
-		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
-		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
-		deviceInfo.setIsPrimary(userMbrDevice.getIsPrimary());
-		deviceInfo.setIsRecvSms(userMbrDevice.getIsRecvSMS());
-		deviceInfo.setNativeId(userMbrDevice.getNativeID());
-		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
-		deviceInfo.setJoinId(userMbrDevice.getJoinId());
-		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
-		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
-		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
-		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
+		deviceInfo.setUserKey(StringUtil.nvl(userMbrDevice.getUserKey(), ""));
+		deviceInfo.setDeviceKey(StringUtil.nvl(userMbrDevice.getDeviceKey(), ""));
+		deviceInfo.setDeviceId(StringUtil.nvl(userMbrDevice.getDeviceID(), ""));
+		deviceInfo.setTenantId(StringUtil.nvl(userMbrDevice.getTenantID(), ""));
+		deviceInfo.setDeviceModelNo(StringUtil.nvl(userMbrDevice.getDeviceModelNo(), ""));
+		deviceInfo.setDeviceTelecom(StringUtil.nvl(userMbrDevice.getDeviceTelecom(), ""));
+		deviceInfo.setDeviceNickName(StringUtil.nvl(userMbrDevice.getDeviceNickName(), ""));
+		deviceInfo.setIsPrimary(StringUtil.nvl(userMbrDevice.getIsPrimary(), ""));
+		deviceInfo.setIsRecvSms(StringUtil.nvl(userMbrDevice.getIsRecvSMS(), ""));
+		deviceInfo.setNativeId(StringUtil.nvl(userMbrDevice.getNativeID(), ""));
+		deviceInfo.setDeviceAccount(StringUtil.nvl(userMbrDevice.getDeviceAccount(), ""));
+		deviceInfo.setJoinId(StringUtil.nvl(userMbrDevice.getJoinId(), ""));
+		deviceInfo.setDeviceNickName(StringUtil.nvl(userMbrDevice.getDeviceNickName(), ""));
+		deviceInfo.setDeviceAccount(StringUtil.nvl(userMbrDevice.getDeviceAccount(), ""));
+		deviceInfo.setSvcMangNum(StringUtil.nvl(userMbrDevice.getSvcMangNum(), ""));
+		deviceInfo.setAuthenticationDate(StringUtil.nvl(userMbrDevice.getAuthenticationDate(), ""));
 		//deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
 		deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
 		if (userMbrDevice.getUserMbrDeviceDetail() != null) {
