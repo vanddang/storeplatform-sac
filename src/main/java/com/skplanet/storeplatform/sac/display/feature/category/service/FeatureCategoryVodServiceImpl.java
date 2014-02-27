@@ -137,7 +137,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			// throw new StorePlatformException("SAC_DSP_9999", ex);
 			// }
 
-			String[] prodGradeCdArr = req.getProdGradeCd().split("\\+");
+			String[] prodGradeCdArr = StringUtils.split(req.getProdGradeCd(), "+");
 			req.setProdGradeCdArr(prodGradeCdArr);
 		}
 

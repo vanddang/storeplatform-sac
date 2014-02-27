@@ -112,7 +112,7 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 			// throw new StorePlatformException("SAC_DSP_9999", ex);
 			// }
 
-			String[] prodGradeCdArr = requestVO.getProdGradeCd().split("\\+");
+			String[] prodGradeCdArr = StringUtils.split(requestVO.getProdGradeCd(), "+");
 			requestVO.setProdGradeCdArr(prodGradeCdArr);
 		}
 

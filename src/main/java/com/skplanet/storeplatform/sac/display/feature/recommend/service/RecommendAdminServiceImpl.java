@@ -125,7 +125,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			// throw new StorePlatformException("SAC_DSP_9999", ex);
 			// }
 
-			String[] topMenuIdArr = requestVO.getTopMenuId().split("\\+");
+			String[] topMenuIdArr = StringUtils.split(requestVO.getTopMenuId(), "+");
 			requestVO.setTopMenuIdArr(topMenuIdArr);
 		}
 
@@ -138,7 +138,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			// throw new StorePlatformException("SAC_DSP_9999", ex);
 			// }
 
-			String[] prodGradeCdArr = requestVO.getProdGradeCd().split("\\+");
+			String[] prodGradeCdArr = StringUtils.split(requestVO.getProdGradeCd(), "+");
 			requestVO.setProdGradeCdArr(prodGradeCdArr);
 		}
 
