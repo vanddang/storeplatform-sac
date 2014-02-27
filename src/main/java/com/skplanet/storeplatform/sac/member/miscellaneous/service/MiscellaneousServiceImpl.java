@@ -684,8 +684,11 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
 				policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
 				policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
+				policyInfo.setLimitAmount(policyResponse.getLimitTargetList().get(i).getLimitAmount());
+				policyInfo.setPreLimitAmount(policyResponse.getLimitTargetList().get(i).getPreLimitAmount());
+				policyInfo.setPermissionType(policyResponse.getLimitTargetList().get(i).getPermissionType());
+				policyInfo.setIsUsed(policyResponse.getLimitTargetList().get(i).getIsUsed());
 				policyInfos.add(policyInfo);
-
 				LOGGER.debug("==>>[SAC] IndividualPolicyInfo[{}].toString() : {}", i, policyInfo.toString());
 			}
 		}
@@ -720,6 +723,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		limitTarget.setLimitPolicyKey(req.getKey());
 		limitTarget.setPolicyApplyValue(req.getValue());
 		limitTarget.setRegID(req.getRegId());
+		limitTarget.setLimitAmount(req.getLimitAmount());
+		limitTarget.setPreLimitAmount(req.getPreLimitAmount());
+		limitTarget.setPermissionType(req.getPermissionType());
+		limitTarget.setIsUsed(req.getIsUsed());
 
 		limitTargets.add(limitTarget);
 		updatePolicyRequest.setLimitTargetList(limitTargets);
