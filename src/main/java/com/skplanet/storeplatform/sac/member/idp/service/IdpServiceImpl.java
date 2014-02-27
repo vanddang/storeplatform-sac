@@ -88,13 +88,13 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXCreateUserIDP(HashMap<String, String> map) {
+	public ImResult executeRXCreateUserIDP(HashMap<String, String> map) {
 		// System.out.println("rXCreateUserIDP ------- ");
 		/*
 		 * map 정보중 리턴값중 이용동의 사이트정보의 old_id 값 null을 판단 신규가입 , 전환가입/변경가입/변경전환 분기처리
 		 */
 
-		LOGGER.debug("excuteRXCreateUserIDP ------- Start");
+		LOGGER.debug("executeRXCreateUserIDP ------- Start");
 
 		String isParentApprove = ""; // 법정 대리인 동의 여부
 
@@ -160,7 +160,7 @@ public class IdpServiceImpl implements IdpService {
 
 		// response object create & setting initialized
 		ImResult imResult = new ImResult();
-		imResult.setCmd("excuteRXCreateUserIDP");
+		imResult.setCmd("executeRXCreateUserIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userID);
 		String[] mbrCaluseAgreeArray = null;
@@ -709,7 +709,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXInvalidUserTelNoIDP(HashMap map) {
+	public ImResult executeRXInvalidUserTelNoIDP(HashMap map) {
 		// Service Method이름은 Provisioning 및 Rx 기능의 'cmd' 값과 동일 해야 함.
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		UpdateUserRequest userVo = new UpdateUserRequest();
@@ -790,7 +790,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXSetLoginConditionIDP(HashMap map) {
+	public ImResult executeRXSetLoginConditionIDP(HashMap map) {
 
 		UpdateStatusUserRequest updateUserVo = new UpdateStatusUserRequest();
 		MemberConstants memberConstant = new MemberConstants();
@@ -864,7 +864,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return ImResult
 	 */
 	@Override
-	public ImResult excuteRXCreateUserIdIDP(HashMap map) {
+	public ImResult executeRXCreateUserIdIDP(HashMap map) {
 
 		LOGGER.debug("rXCreateUserIdIDP ------- Testing Start");
 
@@ -947,7 +947,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return ImResult
 	 */
 	@Override
-	public ImResult excuteRXSetSuspendUserIdIDP(HashMap map) {
+	public ImResult executeRXSetSuspendUserIdIDP(HashMap map) {
 		UpdateStatusUserRequest updateUserVo = new UpdateStatusUserRequest();
 		MemberConstants memberConstant = new MemberConstants();
 		IdpConstants idpConstant = new IdpConstants();
@@ -1024,7 +1024,7 @@ public class IdpServiceImpl implements IdpService {
 	 */
 
 	@Override
-	public ImResult excuteRXUpdateUserNameIDP(HashMap map) {
+	public ImResult executeRXUpdateUserNameIDP(HashMap map) {
 		// 실명 인증 정보
 		UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
 		MemberConstants memberConstant = new MemberConstants();
@@ -1160,7 +1160,7 @@ public class IdpServiceImpl implements IdpService {
 	 */
 
 	@Override
-	public ImResult excuteRXUpdateGuardianInfoIDP(HashMap map) {
+	public ImResult executeRXUpdateGuardianInfoIDP(HashMap map) {
 		// 실명 인증 정보
 		UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
 		MemberConstants memberConstant = new MemberConstants();
@@ -1264,7 +1264,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXActivateUserIdIDP(HashMap<String, String> map) {
+	public ImResult executeRXActivateUserIdIDP(HashMap<String, String> map) {
 		LOGGER.debug("rXActivateUserIdIDP ------- Start");
 
 		String imIntSvcNo = map.get("im_int_svc_no").toString(); // 통합 서비스 번호
@@ -1279,7 +1279,7 @@ public class IdpServiceImpl implements IdpService {
 		isEmailAuth = map.get("is_email_auth").toString();
 
 		ImResult imResult = new ImResult();
-		imResult.setCmd("excuteRXActivateUserIdIDP");
+		imResult.setCmd("executeRXActivateUserIdIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userID);
 
@@ -1384,12 +1384,12 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXDeleteUserIdIDP(HashMap<String, String> map) {
+	public ImResult executeRXDeleteUserIdIDP(HashMap<String, String> map) {
 		ImResult imResult = new ImResult();
 		String imIntSvcNo = map.get("im_int_svc_no").toString(); // 통합 서비스 번호
 		String userId = map.get("user_id").toString(); // 회원 ID
 		String userKey = "";
-		imResult.setCmd("excuteRXDeleteUserIdIDP");
+		imResult.setCmd("executeRXDeleteUserIdIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userId);
 
@@ -1475,7 +1475,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXPreCheckDeleteUserIDP(HashMap map) {
+	public ImResult executeRXPreCheckDeleteUserIDP(HashMap map) {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		IdpConstants idpConstant = new IdpConstants();
 		ImResult imResult = new ImResult();
@@ -1555,7 +1555,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXPreCheckDisagreeUserIDP(HashMap map) {
+	public ImResult executeRXPreCheckDisagreeUserIDP(HashMap map) {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		IdpConstants idpConstant = new IdpConstants();
 		ImResult imResult = new ImResult();
@@ -1633,7 +1633,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXSetOCBDisagreeIDP(HashMap map) {
+	public ImResult executeRXSetOCBDisagreeIDP(HashMap map) {
 
 		IdpConstants idpConstant = new IdpConstants();
 		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
@@ -1657,14 +1657,14 @@ public class IdpServiceImpl implements IdpService {
 
 	/*
 	 * 
-	 * <pre> 이용해지변경 프로파일 배포 - CMD : excuteRXUpdateDisagreeUserIDP . </pre>
+	 * <pre> 이용해지변경 프로파일 배포 - CMD : executeRXUpdateDisagreeUserIDP . </pre>
 	 * 
 	 * @param map Request 받은 Parameter Map
 	 * 
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXUpdateDisagreeUserIDP(HashMap<String, String> map) {
+	public ImResult executeRXUpdateDisagreeUserIDP(HashMap<String, String> map) {
 		ImResult imResult = new ImResult();
 		String imIntSvcNo = map.get("im_int_svc_no").toString(); // 통합 서비스 번호
 		String userID = map.get("user_id").toString(); // 회원 ID
@@ -1673,7 +1673,7 @@ public class IdpServiceImpl implements IdpService {
 		SearchUserResponse searchUserResponse = null;
 		boolean siteCodeCheck = false;
 
-		imResult.setCmd("excuteRXUpdateDisagreeUserIDP");
+		imResult.setCmd("executeRXUpdateDisagreeUserIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userID);
 
@@ -1781,7 +1781,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXTerminateRetryIDP(HashMap map) {
+	public ImResult executeRXTerminateRetryIDP(HashMap map) {
 		IdpConstants idpConstant = new IdpConstants();
 		String idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
@@ -1803,7 +1803,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXUpdateUserPwdIDP(HashMap map) {
+	public ImResult executeRXUpdateUserPwdIDP(HashMap map) {
 		// request의 변경 시간 정보 사용
 		String req_date = map.get("modify_req_date").toString();
 		String req_time = map.get("modify_req_time").toString();
@@ -1874,7 +1874,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXChangePWDIDP(HashMap map) {
+	public ImResult executeRXChangePWDIDP(HashMap map) {
 
 		/*
 		 * UpdatePasswordUserRequest updatePasswordUserRequest = new UpdatePasswordUserRequest(); IdpConstants
@@ -1921,14 +1921,14 @@ public class IdpServiceImpl implements IdpService {
 
 	/*
 	 * 
-	 * <pre> 변경된 공통프로파일 배포 - CMD : excuteRXUpdateUserInfoIDP . </pre>
+	 * <pre> 변경된 공통프로파일 배포 - CMD : executeRXUpdateUserInfoIDP . </pre>
 	 * 
 	 * @param map Request 받은 Parameter Map
 	 * 
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXUpdateUserInfoIDP(HashMap<String, String> map) {
+	public ImResult executeRXUpdateUserInfoIDP(HashMap<String, String> map) {
 		ImResult imResult = new ImResult();
 		String imIntSvcNo = map.get("im_int_svc_no").toString(); // 통합 서비스 번호
 		String userID = map.get("user_id").toString(); // 회원 ID
@@ -1938,7 +1938,7 @@ public class IdpServiceImpl implements IdpService {
 		tenantID = map.get("tenantID").toString();
 		systemID = map.get("systemID").toString();
 
-		imResult.setCmd("excuteRXUpdateUserInfoIDP");
+		imResult.setCmd("executeRXUpdateUserInfoIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userID);
 
@@ -2006,9 +2006,9 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXChangeUserIdIDP(HashMap<String, String> map) {
+	public ImResult executeRXChangeUserIdIDP(HashMap<String, String> map) {
 		ImResult imResult = new ImResult();
-		imResult.setCmd("excuteRXChangeUserIdIDP");
+		imResult.setCmd("executeRXChangeUserIdIDP");
 
 		String tenantID = "";
 		String systemID = "";
@@ -2101,8 +2101,8 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult excuteRXUpdateAgreeUserIDP(HashMap<String, String> map) {
-		LOGGER.debug("excuteRXUpdateAgreeUserIDP ------- Start");
+	public ImResult executeRXUpdateAgreeUserIDP(HashMap<String, String> map) {
+		LOGGER.debug("executeRXUpdateAgreeUserIDP ------- Start");
 
 		String isParentApprove = ""; // 법정 대리인 동의 여부
 		String tenantID = "";
@@ -2170,7 +2170,7 @@ public class IdpServiceImpl implements IdpService {
 
 		boolean siteCodeCheck = false; // 이용동의 사이트중 tstore가 있는지 없는지 체크하기 위한 boolean 변수
 		ImResult imResult = new ImResult();
-		imResult.setCmd("excuteRXUpdateAgreeUserIDP");
+		imResult.setCmd("executeRXUpdateAgreeUserIDP");
 		imResult.setUserId(userID);
 		imResult.setImIntSvcNo(imIntSvcNo);
 
