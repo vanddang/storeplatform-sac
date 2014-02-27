@@ -97,23 +97,22 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 							}
 							productList.add(product);
 						}
-					}
-				} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-						|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
+					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
 
-					paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					this.log.debug("##### Search for EbookComic specific product");
-					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getEbookComicMetaInfo", paramMap,
-							ProductInfo.class);
-					if (product != null) {
-						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-							// TODO osm1021 특별한 처리가 필요할 경우 처리 필요
-						} else {
-							// TODO osm1021 특별한 처리가 필요할 경우 처리 필요
+						paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+						this.log.debug("##### Search for EbookComic specific product");
+						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getEbookComicMetaInfo",
+								paramMap, ProductInfo.class);
+						if (product != null) {
+							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+								// TODO osm1021 특별한 처리가 필요할 경우 처리 필요
+							} else {
+								// TODO osm1021 특별한 처리가 필요할 경우 처리 필요
+							}
+							productList.add(product);
 						}
-						productList.add(product);
 					}
-
 				} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 					// 배치완료 기준일시 조회
 					// TODO 기준 ListID가 없기 때문에 일단 멜론 Top 100으로 고정

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -59,14 +61,18 @@ public class ProductInfoSCITest {
 		list.add("0000044857");
 		list.add("0000048923");
 		req.setList(list);
-		// req.setDeviceModelNo("SHW-M100S");
+		req.setDeviceModelNo("SHW-M100S");
 
 		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
 		List<ProductInfo> productList = res.getProductList();
 		this.log.debug("##### productInfo cnt : ", productList.size());
+		for (ProductInfo productInfo : productList) {
+			this.log.debug("##### App productInfo VO : {}",
+					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
+		}
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(productList);
-		this.log.debug("##### App productInfo : {}", json);
+		this.log.debug("##### App productInfo json: {}", json);
 
 	}
 
@@ -87,15 +93,111 @@ public class ProductInfoSCITest {
 		list.add("H000044277");
 		list.add("H000043978");
 		list.add("H000043950");
+		list.add("H001424269");
 		req.setList(list);
-		// req.setDeviceModelNo("SHW-M100S");
+		req.setDeviceModelNo("SHW-M100S");
 
 		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
 		List<ProductInfo> productList = res.getProductList();
 		this.log.debug("##### productInfo cnt : ", productList.size());
+		for (ProductInfo productInfo : productList) {
+			this.log.debug("##### Broadcast productInfo VO : {}",
+					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
+		}
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(productList);
-		this.log.debug("##### Broadcast productInfo : {}", json);
+		this.log.debug("##### Broadcast productInfo Json : {}", json);
 
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 영화 정보 조회.
+	 * </pre>
+	 * 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonGenerationException
+	 */
+	@Test
+	public void searchMovieProductList() throws JsonGenerationException, JsonMappingException, IOException {
+		ProductInfoSacReq req = new ProductInfoSacReq();
+		List<String> list = new ArrayList<String>();
+		list.add("H900566456");
+		req.setList(list);
+		req.setDeviceModelNo("SHW-M100S");
+
+		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
+		List<ProductInfo> productList = res.getProductList();
+		this.log.debug("##### productInfo cnt : ", productList.size());
+		for (ProductInfo productInfo : productList) {
+			this.log.debug("##### Movie productInfo VO : {}",
+					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
+		}
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(productList);
+		this.log.debug("##### Movie productInfo  JSON : {}", json);
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Ebook 정보 조회.
+	 * </pre>
+	 * 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonGenerationException
+	 */
+	@Test
+	public void searchEbookProductList() throws JsonGenerationException, JsonMappingException, IOException {
+		ProductInfoSacReq req = new ProductInfoSacReq();
+		List<String> list = new ArrayList<String>();
+		list.add("H900566456");
+		req.setList(list);
+		req.setDeviceModelNo("SHW-M100S");
+
+		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
+		List<ProductInfo> productList = res.getProductList();
+		this.log.debug("##### productInfo cnt : ", productList.size());
+		for (ProductInfo productInfo : productList) {
+			this.log.debug("##### Ebook productInfo VO : {}",
+					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
+		}
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(productList);
+		this.log.debug("##### Ebook productInfo  JSON : {}", json);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Comic 정보 조회.
+	 * </pre>
+	 * 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonGenerationException
+	 */
+	@Test
+	public void searchComicProductList() throws JsonGenerationException, JsonMappingException, IOException {
+		ProductInfoSacReq req = new ProductInfoSacReq();
+		List<String> list = new ArrayList<String>();
+		list.add("H900566456");
+		req.setList(list);
+		req.setDeviceModelNo("SHW-M100S");
+
+		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
+		List<ProductInfo> productList = res.getProductList();
+		this.log.debug("##### productInfo cnt : ", productList.size());
+		for (ProductInfo productInfo : productList) {
+			this.log.debug("##### Comic productInfo VO : {}",
+					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
+		}
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(productList);
+		this.log.debug("##### Comic productInfo  JSON : {}", json);
 	}
 }

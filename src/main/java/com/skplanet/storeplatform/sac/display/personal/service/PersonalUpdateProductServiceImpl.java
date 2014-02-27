@@ -48,6 +48,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Upda
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
@@ -446,8 +447,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					product.setTitle(title);
 
 					Source source = this.commonGenerator.generateSource(
-							ObjectUtils.toString(updateTargetApp.get("IMAGE_PATH")),
-							((BigDecimal) updateTargetApp.get("IMAGE_SIZE")).intValue());
+							ObjectUtils.toString(updateTargetApp.get("IMAGE_PATH")), null);
 					sourceList.add(source);
 					product.setSourceList(sourceList);
 
@@ -470,10 +470,12 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							(String) updateTargetApp.get("APK_PKG_NM"),
 							ObjectUtils.toString(updateTargetApp.get("APK_VER")),
 							ObjectUtils.toString(updateTargetApp.get("PROD_VER")),
-							((BigDecimal) updateTargetApp.get("FILE_SIZE")).intValue(), null, null, null);
+							((BigDecimal) updateTargetApp.get("FILE_SIZE")).intValue(), null, null,
+							ObjectUtils.toString(updateTargetApp.get("FILE_PATH")));
 
 					Update update = this.appGenerator.generateUpdate(
-							new Date(null, ObjectUtils.toString(updateTargetApp.get("UPD_DT"))), null);
+							new Date(null, DateUtils.parseDate(ObjectUtils.toString(updateTargetApp.get("UPD_DT")))),
+							null);
 					updateList.add(update);
 					history.setUpdate(updateList);
 					app.setHistory(history);

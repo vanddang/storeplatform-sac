@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Upda
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
@@ -287,10 +288,12 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 							(String) updateTargetApp.get("APK_PKG_NM"),
 							ObjectUtils.toString(updateTargetApp.get("APK_VER")),
 							ObjectUtils.toString(updateTargetApp.get("PROD_VER")),
-							((BigDecimal) updateTargetApp.get("FILE_SIZE")).intValue(), null, null, null);
+							((BigDecimal) updateTargetApp.get("FILE_SIZE")).intValue(), null, null,
+							ObjectUtils.toString(updateTargetApp.get("FILE_PATH")));
 
 					Update update = this.appGenerator.generateUpdate(
-							new Date(null, ObjectUtils.toString(updateTargetApp.get("UPD_DT"))), null);
+							new Date(null, DateUtils.parseDate(ObjectUtils.toString(updateTargetApp.get("UPD_DT")))),
+							null);
 					updateList.add(update);
 					history.setUpdate(updateList);
 					app.setHistory(history);

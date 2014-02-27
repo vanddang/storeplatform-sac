@@ -36,6 +36,7 @@
                  ,SC.APK_PKG_NM
                  ,SC.APK_VER
                  ,SC.FILE_SIZE
+                 ,SC.FILE_PATH
                  ,PI.FILE_PATH as IMAGE_PATH
                  ,PI.FILE_SIZE as IMAGE_SIZE
                  ,TPP.PROD_AMT
