@@ -45,6 +45,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
  * <pre>
@@ -847,7 +848,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				DpItemInfo itemInfo = itemInfoList.get(i);
 				tdsd = new TbDpSprtDeviceInfo();
 				tdsd.setProdId(itemInfo.getProdId()); // 에피소드 상품
-				tdsd.setDeviceModelCd(CouponConstants.ANDROID_STANDARD2);
+				tdsd.setDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 				tdsd.setCudType(itemInfo.getCudType());
 				tdsd.setRegId(couponInfo.getBpId());
 				tdsd.setUpdId(couponInfo.getBpId());
