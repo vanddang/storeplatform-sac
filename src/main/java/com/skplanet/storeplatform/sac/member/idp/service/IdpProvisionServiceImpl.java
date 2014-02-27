@@ -340,7 +340,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 	/**
 	 * <pre>
-	 * IDP 로그 저장
+	 * IDP 로그 저장.
 	 * </pre>
 	 * 
 	 * @param commonRequest
@@ -358,7 +358,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 	/**
 	 * <pre>
-	 * DCD 정보 저장
+	 * DCD 정보 저장.
 	 * </pre>
 	 * 
 	 * @param commonRequest

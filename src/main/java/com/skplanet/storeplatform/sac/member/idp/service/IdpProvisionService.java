@@ -50,7 +50,7 @@ public interface IdpProvisionService {
 	/**
 	 * 
 	 * <pre>
-	 * 가입 승인 만료 정보 Provisioning (유선, 통합 회원)
+	 * 가입 승인 만료 정보 Provisioning (유선, 통합 회원).
 	 * - CMD : joinComplete
 	 * </pre>
 	 * 
@@ -63,7 +63,7 @@ public interface IdpProvisionService {
 	/**
 	 * 
 	 * <pre>
-	 * 프로파일 변경 Provisioning (유선, 통합 회원)
+	 * 프로파일 변경 Provisioning (유선, 통합 회원).
 	 * - CMD : adjustWiredProfile
 	 * </pre>
 	 * 
@@ -76,7 +76,7 @@ public interface IdpProvisionService {
 	/**
 	 * 
 	 * <pre>
-	 * 부가서비스 가입 Provisioning
+	 * 부가서비스 가입 Provisioning.
 	 * - CMD : ecgJoinedTStore
 	 * </pre>
 	 * 
@@ -89,7 +89,7 @@ public interface IdpProvisionService {
 	/**
 	 * 
 	 * <pre>
-	 * 부가서비스 해지 Provisioning
+	 * 부가서비스 해지 Provisioning.
 	 * - CMD : ecgScededTStore
 	 * </pre>
 	 * 
