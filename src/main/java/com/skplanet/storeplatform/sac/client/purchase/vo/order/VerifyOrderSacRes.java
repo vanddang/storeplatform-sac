@@ -20,9 +20,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class VerifyOrderSacRes extends CommonInfo {
 	private static final long serialVersionUID = 201420261L;
 
-	private String userKey; // 결제 사용자 고유 키
 	private String mdn; // 결제 단말 번호
-	private String mid; // 가맹점 ID
 	private String flgMbrStatus; // 회원상태 (0-비정상, 1-정상)
 	private String flgProductStatus; // 상품상태 (0-구매불가상품, 1-구매가능상품)
 	private String flgTeleBillingAgree; // 통신과금 동의여부 (Y/N)
@@ -49,21 +47,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String noMdnDelivery; // 선물수신자 MDN
 
 	/**
-	 * @return the userKey
-	 */
-	public String getUserKey() {
-		return this.userKey;
-	}
-
-	/**
-	 * @param userKey
-	 *            the userKey to set
-	 */
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
-	}
-
-	/**
 	 * @return the mdn
 	 */
 	public String getMdn() {
@@ -76,21 +59,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setMdn(String mdn) {
 		this.mdn = mdn;
-	}
-
-	/**
-	 * @return the mid
-	 */
-	public String getMid() {
-		return this.mid;
-	}
-
-	/**
-	 * @param mid
-	 *            the mid to set
-	 */
-	public void setMid(String mid) {
-		this.mid = mid;
 	}
 
 	/**
