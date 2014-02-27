@@ -254,7 +254,7 @@ public class SearchIdTest {
 	 * 
 	 */
 	@Test
-	public void F_TEST_오류_디바이스아이디_사용자키없음() {
+	public void G_TEST_오류_디바이스아이디_사용자키없음() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/user/searchId/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 				@Override
