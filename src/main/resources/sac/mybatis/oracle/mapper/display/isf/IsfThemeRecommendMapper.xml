@@ -41,7 +41,8 @@
     <!-- 테마추천 메인 -->
     <select id="getRecomendPkgMainList" parameterType="Map" resultType="ThemeRecommend">
     SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgMainList, Yun JuYoung, 2014-02-13 */
-           PKG_ID
+           COUNT(*) OVER () AS TOTAL_COUNT
+         , PKG_ID
          , PKG_NM
          , PKG_IMG_POS
          , REGEXP_SUBSTR( PROD_INF1, '[^^]+', 1, 1 ) AS TOP_MENU_ID1
@@ -151,7 +152,7 @@
                       AND TP2.PROD_STATUS_CD = 'PD000403'
                       AND TP.TENANT_ID = #{tenantHeader.tenantId}
                       AND (PHI.DEVICE_MODEL_CD = #{deviceHeader.model}
-                        OR PHI.DEVICE_MODEL_CD = 'android_standard2')
+                        OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
                       AND PHI.USE_YN = 'Y'
                       AND DECODE( P.TOP_MENU_ID
                                 , 'DP000513'
@@ -389,7 +390,7 @@
 	                           AND DP.EXPO_YN = 'Y'
 	                           AND C.USE_YN = 'Y'
 	                           AND C.BASE_YN = 'Y'
-                               AND (PI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PI.DEVICE_MODEL_CD = 'android_standard2')
+                               AND (PI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PI.DEVICE_MODEL_CD = #{virtualDeviceModel})
 	                           AND PI.USE_YN = 'Y'
 	                           AND TP.PROD_STATUS_CD = 'PD000403'
 	                           AND TP.EXPO_YN = 'Y'
@@ -468,7 +469,8 @@
       FROM
           (
           SELECT 
-                 P.PROD_ID
+                 COUNT(P.PROD_ID) OVER() AS TOTAL_COUNT
+               , P.PROD_ID
                , P.SVC_GRP_CD
                , P.SVC_TYPE_CD
                , P.CONTENTS_TYPE_CD
@@ -501,7 +503,7 @@
              AND DP.EXPO_YN = 'Y'
              AND C.USE_YN = 'Y'
              AND C.BASE_YN = 'Y'
-             AND (PI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PI.DEVICE_MODEL_CD = 'android_standard2')
+             AND (PI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PI.DEVICE_MODEL_CD = #{virtualDeviceModel})
              AND PI.USE_YN = 'Y'
              AND TP.PROD_STATUS_CD = 'PD000403'
              AND TP.EXPO_YN = 'Y'

@@ -7,7 +7,8 @@
       FROM
           (
           SELECT
-                 P.PROD_ID
+                 COUNT(P.PROD_ID) OVER() AS TOTAL_COUNT
+               , P.PROD_ID
                , P.SVC_GRP_CD
                , P.SVC_TYPE_CD
                , P.CONTENTS_TYPE_CD
@@ -49,7 +50,7 @@
               AND TP2.PROD_STATUS_CD = 'PD000403'
               AND TP2.EXPO_YN = 'Y'
               AND (PHI.DEVICE_MODEL_CD = #{deviceHeader.model}
-                OR PHI.DEVICE_MODEL_CD = 'android_standard2')
+                OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
               AND PHI.USE_YN = 'Y'
               AND DECODE( P.TOP_MENU_ID
                         , 'DP13'
@@ -303,7 +304,7 @@
                                     AND TP2.TENANT_ID = #{tenantHeader.tenantId}
 		                            AND TP2.PROD_STATUS_CD = 'PD000403'
 		                            AND TP2.EXPO_YN = 'Y'
-		                            AND (PHI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PHI.DEVICE_MODEL_CD = 'android_standard2')
+		                            AND (PHI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
 		                            AND PHI.USE_YN = 'Y'
 		                            AND DECODE( P.TOP_MENU_ID
 		                                , 'DP13'
