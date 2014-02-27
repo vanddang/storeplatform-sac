@@ -20,153 +20,127 @@
 
     <!-- 상품정보요청(for download) App -->
     <select id="getDownloadAppInfo" parameterType="DownloadAppSacReq" resultType="MetaInfo">
-    SELECT  /* DownloadMapper.xml, getDownloadAppInfo, SAC : 이석희 , 2014-01-23 */
-            TA.*
-	      , NVL(TB.PROD_ID, ' ') AS SEED_PRODUCT_ID
-	      , TB.CASE_REF_CD AS SEED_CASE_REF_CD
-	      , TB.USE_YN AS SEED_USE_YN
-	      , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
-	  FROM 
-	       (
-			SELECT  COUNT(*) OVER() AS TOTAL_COUNT
-			      , KA.TOP_MENU_ID
-			      , (SELECT MENU_NM 
-			           FROM TB_DP_MENU_CATEGORY_DESC
-			          WHERE MENU_ID = KA.TOP_MENU_ID
-			            AND LANG_CD = #{langCd}
-			            AND ROWNUM = 1) AS TOP_MENU_NM        
-			      , KA.MENU_ID
-			      , KA.MENU_NM
-			      , KA.PROD_ID
-			      , KA.AID
-			      , KA.PROD_NM
-			      , KA.PROD_BASE_DESC
-			      , DECODE(KA.PROD_CHRG_YN, 'Y', 'paid', 'free') AS PROD_CHRG
-			      , KA.PROD_GRD_CD
-			      , KA.CONTENTS_TYPE_CD
-			      , KA.META_CLSF_CD
-                  , KA.SELLER_MBR_NO
-                  , KA.EXPO_SELLER_NM
-                  , KA.EXPO_SELLER_TELNO
-                  , KA.EXPO_SELLER_EMAIL			      
-			      , KA.PART_PARENT_CLSF_CD
-			      , KA.DRM_YN
-			      , DECODE( KA.PROD_CLSF_CD , 'PD000601', 'paid' , 'PD000602', 'library' , 'PD000603', 'vm' , 'PD000604', 'free' , 'PD000605', 'paid-rss' , 'PD000606', 'free-rss' , 'paid' ) AS PROD_CLSF_CD
-			--      , KA.PROD_CLSF_CD
-			      , KA.VER_MAJOR || '.' || KA.VER_MINOR AS PROD_VER
-			      , NVL2( KA.PKG_NM, KA.PKG_NM, KB.APK_PKG_NM ) AS APK_PKG_NM
-			      , NVL2( KB.APK_VER, KB.APK_VER, KA.PKG_VER_CD ) AS APK_VER
-			      ,( PLAT_CLSF_CD_NM || DECODE( KA.PLAT_CLSF_CD , 'PD005606' , ' ' || ( <![CDATA[
-			                                                                            SELECT MIN(VM_VER) || '~' || MAX(VM_VER)
-			                                                                              FROM
-			                                                                                   (
-			                                                                                   SELECT VM_VER
-			                                                                                     FROM
-			                                                                                          (
-			                                                                                          SELECT TRIM( REGEXP_SUBSTR( VM_VER, '[^,]+', 1, ROWNUM ) ) AS VM_VER
-			                                                                                            FROM
-			                                                                                                 (
-			                                                                                                 SELECT RTRIM( XMLAGG( XMLELEMENT( A, CONCAT( REPLACE( SC.VM_VER, ';', ',' ), ',' ) ) .EXTRACT( '//text()' ) ORDER BY SC.VM_VER ), ',' ) AS VM_VER
-			                                                                                                   FROM TB_DP_SUB_CONTENTS SC
-			                                                                                                  WHERE SC.PROD_ID = #{productId}  ) CONNECT BY ROWNUM <= LENGTH( REGEXP_REPLACE( VM_VER, '[^,]' ) ) + 1  )
-			                                                                                                  GROUP BY VM_VER  ) ]]>
-			                                                                                                 )
-			                                                                                          )
-			                                                                           ) AS SUPPORTED_OS      
-                  , KA.PLAT_CLSF_CD
-                  , KA.GAME_CENTR_VER_CD
-                  , NVL(KA.GAME_CENTR_ID, ' ') AS GAME_CENTR_ID         			                                                                           
-			      , NVL2( KB.FILE_SIZE, KB.FILE_SIZE, ( SELECT MAX(FILE_SIZE) FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = KA.PROD_ID ) ) AS APK_FILE_SIZE
-			      , KB.SUB_CONTENTS_ID
-			      , KB.FILE_PATH AS FILE_PATH
-			      , KC.FILE_PATH AS IMAGE_PATH
-			      , KC.FILE_SIZE AS IMAGE_SIZE
-			  FROM (
-			        SELECT  COUNT(B.PROD_ID) OVER() AS TOTAL_COUNT
-			               , A.MENU_ID
-                           , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC T WHERE T.MENU_ID = A.MENU_ID AND LANG_CD= #{langCd}) AS MENU_NM
-			               , D.TOP_MENU_ID
-			               , B.PROD_ID
-			               , D.PROD_CHRG_YN
-			               , D.PROD_GRD_CD
-			               , D.CONTENTS_TYPE_CD
-			               , D.META_CLSF_CD
-			               , D.REG_DT
-                           , D.SELLER_MBR_NO
-                           , D.EXPO_SELLER_NM
-                           , D.EXPO_SELLER_TELNO
-                           , D.EXPO_SELLER_EMAIL
-                           , D.DRM_YN 			               
-			               , E.AID
-			               , E.VER_MAJOR
-			               , E.VER_MINOR
-			               , E.PART_PARENT_CLSF_CD
-			               , E.PKG_VER_CD
-			               , E.PROD_CLSF_CD
-                           , E.GAME_CENTR_VER_CD
-                           , E.GAME_CENTR_ID			               
-			               , E.PKG_NM
-			               , E.PLAT_CLSF_CD
-			               , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = E.PLAT_CLSF_CD) AS PLAT_CLSF_CD_NM
-			               , F.PROD_NM
-			               , F.PROD_BASE_DESC
-			               , G.TENANT_ID
-			               , I.SUB_CONTENTS_ID
-			           FROM  TB_DP_MENU_CATEGORY           A
-			               , TB_DP_MENU_CATEGORY_PROD_MAPG B
-			               , TB_DP_PROD                    D
-			               , TB_DP_APP_PROD                E
-			               , TB_DP_PROD_DESC               F
-			               , TB_DP_TENANT_PROD             G
-			               , TB_DP_TENANT_PROD_PRICE       H
-			               , TB_DP_SPRT_DEVICE             I
-			               , TB_CM_DEVICE                  J
-			          WHERE  A.MENU_ID = B.MENU_ID
-			            AND  B.PROD_ID = D.PROD_ID
-			            AND  B.PROD_ID = E.PROD_ID
-			            AND  B.PROD_ID = F.PROD_ID
-			            AND  B.PROD_ID = G.PROD_ID
-			            AND  G.TENANT_ID = H.TENANT_ID
-			            AND  G.PROD_ID = H.PROD_ID
-			            AND  B.PROD_ID = I.PROD_ID
-			            AND  A.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
-			            AND  B.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
-			            AND  D.SVC_GRP_CD = 'DP000201'            /* DP000201 : 애플리캐이션 */
-			            AND  D.PROD_ID = #{productId}             /* param : product Id */
-			            AND  F.LANG_CD = #{langCd}                     /* ko : 한국어 */
-			            AND  G.PROD_STATUS_CD IN ( 'PD000403', 'PD000404', 'PD000409', 'PD000410' )      
-			            AND  G.EXPO_YN = 'Y'                      /* Y : 노출 (노출여부) */
-			            AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
-			            AND  G.TENANT_ID = #{tenantId}            /* 테넌트ID */
-			            AND  D.TOP_MENU_ID  <![CDATA[ <> ]]>  'DP02' /* DP02 : 폰꾸미기 */
-			            AND  I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
-			            AND  J.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
-			            AND  J.USE_YN ='Y'
-			            AND DECODE( J.UA_CD , '9999' , NVL2( E.PART_PARENT_CLSF_CD, 0, 1 ) + DECODE( D.DRM_YN, 'N', 1, 0 ) + DECODE( D.PROD_CHRG_YN, 'N', 1, 0 ) , 3 ) = 3    
-	--		            AND EXISTS
-	--		                  (
-	--		                  SELECT 'X'
-	--		                    FROM TB_DP_SUB_CONTENTS SC
-	--		                   WHERE SC.PROD_ID = B.PROD_ID
-	--		                     AND SC.SALE_YN = 'Y'
-	--		                     AND VM_VER LIKE '%'||'4.0'||'%'
-    --                           AND LCD_SIZE = ''
-	--		                  )
-	                                
-			       )                   KA
-			      , TB_DP_SUB_CONTENTS KB
-			      , TB_DP_PROD_IMG     KC
-			 WHERE  KA.PROD_ID = KB.PROD_ID(+)
-			   AND  KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID(+)
-			   AND  KA.PROD_ID = KC.PROD_ID
-               AND  KB.SALE_YN = 'Y'
-               AND  KB.VM_VER  LIKE '%'||#{osVersion}||'%' /* Provisioning OS VERSION 체크 */
-               AND  KB.LCD_SIZE LIKE '%'|| (SELECT REPLACE(#{lcdSize}, '*', 'X') FROM DUAL) ||'%' /* Provisioning  LCD SIZE 체크 */			   
-			   AND  KC.EXPO_ORD = '1'
-			   AND  KC.LANG_CD = #{langCd}
-			   AND  KC.IMG_CD = #{imageCd} 
-           ) TA LEFT OUTER JOIN TB_DP_SEED_MAPP TB 
-		         ON TA.PROD_ID = TB.PROD_ID			              
+	  SELECT  /* DownloadMapper.xml, getDownloadAppInfo, SAC : 이석희 , 2014-01-23 */
+	            TA.*
+	          , NVL(TB.PROD_ID, ' ') AS SEED_PRODUCT_ID
+	          , TB.CASE_REF_CD AS SEED_CASE_REF_CD
+	          , TB.USE_YN AS SEED_USE_YN
+	          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
+	      FROM 
+	           (
+	            SELECT  COUNT(*) OVER() AS TOTAL_COUNT
+	                  , KA.TOP_MENU_ID
+	                  , (SELECT MENU_NM 
+	                       FROM TB_DP_MENU_CATEGORY_DESC
+	                      WHERE MENU_ID = KA.TOP_MENU_ID
+	                        AND LANG_CD = #{langCd}
+	                        AND ROWNUM = 1) AS TOP_MENU_NM        
+	                  , KA.MENU_ID
+	                  , KA.MENU_NM
+	                  , KA.PROD_ID
+	                  , KA.AID
+	                  , KA.PROD_NM
+	                  , KA.PROD_BASE_DESC
+	                  , DECODE(KA.PROD_CHRG_YN, 'Y', 'paid', 'free') AS PROD_CHRG
+	                  , KA.PROD_GRD_CD
+	                  , KA.CONTENTS_TYPE_CD
+	                  , KA.META_CLSF_CD
+	                  , KA.SELLER_MBR_NO
+	                  , KA.EXPO_SELLER_NM
+	                  , KA.EXPO_SELLER_TELNO
+	                  , KA.EXPO_SELLER_EMAIL                  
+	                  , KA.PART_PARENT_CLSF_CD
+	                  , KA.DRM_YN
+	                  , DECODE( KA.PROD_CLSF_CD , 'PD000601', 'paid' , 'PD000602', 'library' , 'PD000603', 'vm' , 'PD000604', 'free' , 'PD000605', 'paid-rss' , 'PD000606', 'free-rss' , 'paid' ) AS PROD_CLSF_CD
+	            --      , KA.PROD_CLSF_CD
+	                  , KA.VER_MAJOR || '.' || KA.VER_MINOR AS PROD_VER
+	                  , NVL2( KA.PKG_NM, KA.PKG_NM, KB.APK_PKG_NM ) AS APK_PKG_NM
+	                  , NVL2( KB.APK_VER, KB.APK_VER, KA.PKG_VER_CD ) AS APK_VER   
+	                  , KA.PLAT_CLSF_CD
+	                  , KA.GAME_CENTR_VER_CD
+	                  , NVL(KA.GAME_CENTR_ID, ' ') AS GAME_CENTR_ID                                                                                                
+	                  , NVL2( KB.FILE_SIZE, KB.FILE_SIZE, ( SELECT MAX(FILE_SIZE) FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = KA.PROD_ID ) ) AS APK_FILE_SIZE
+	                  , KB.SUB_CONTENTS_ID
+	                  , (PLAT_CLSF_CD_NM || KB.VM_VER) AS SUPPORTED_OS
+	                  , KB.FILE_PATH AS FILE_PATH
+	                  , KC.FILE_PATH AS IMAGE_PATH
+	                  , KC.FILE_SIZE AS IMAGE_SIZE
+	              FROM (
+	                    SELECT  COUNT(B.PROD_ID) OVER() AS TOTAL_COUNT
+	                           , A.MENU_ID
+	                           , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC T WHERE T.MENU_ID = A.MENU_ID AND LANG_CD= #{langCd}) AS MENU_NM
+	                           , D.TOP_MENU_ID
+	                           , B.PROD_ID
+	                           , D.PROD_CHRG_YN
+	                           , D.PROD_GRD_CD
+	                           , D.CONTENTS_TYPE_CD
+	                           , D.META_CLSF_CD
+	                           , D.REG_DT
+	                           , D.SELLER_MBR_NO
+	                           , D.EXPO_SELLER_NM
+	                           , D.EXPO_SELLER_TELNO
+	                           , D.EXPO_SELLER_EMAIL
+	                           , D.DRM_YN                          
+	                           , E.AID
+	                           , E.VER_MAJOR
+	                           , E.VER_MINOR
+	                           , E.PART_PARENT_CLSF_CD
+	                           , E.PKG_VER_CD
+	                           , E.PROD_CLSF_CD
+	                           , E.GAME_CENTR_VER_CD
+	                           , E.GAME_CENTR_ID                           
+	                           , E.PKG_NM
+	                           , E.PLAT_CLSF_CD
+	                           , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = E.PLAT_CLSF_CD) AS PLAT_CLSF_CD_NM
+	                           , F.PROD_NM
+	                           , F.PROD_BASE_DESC
+	                           , G.TENANT_ID
+	                           , I.SUB_CONTENTS_ID
+	                       FROM  TB_DP_MENU_CATEGORY           A
+	                           , TB_DP_MENU_CATEGORY_PROD_MAPG B
+	                           , TB_DP_PROD                    D
+	                           , TB_DP_APP_PROD                E
+	                           , TB_DP_PROD_DESC               F
+	                           , TB_DP_TENANT_PROD             G
+	                           , TB_DP_TENANT_PROD_PRICE       H
+	                           , TB_DP_SPRT_DEVICE             I
+	                           , TB_CM_DEVICE                  J
+	                      WHERE  A.MENU_ID = B.MENU_ID
+	                        AND  B.PROD_ID = D.PROD_ID
+	                        AND  B.PROD_ID = E.PROD_ID
+	                        AND  B.PROD_ID = F.PROD_ID
+	                        AND  B.PROD_ID = G.PROD_ID
+	                        AND  G.TENANT_ID = H.TENANT_ID
+	                        AND  G.PROD_ID = H.PROD_ID
+	                        AND  B.PROD_ID = I.PROD_ID
+	                        AND  A.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
+	                        AND  B.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
+	                        AND  D.SVC_GRP_CD = 'DP000201'            /* DP000201 : 애플리캐이션 */
+	                        AND  D.PROD_ID = #{productId}             /* param : product Id */
+	                        AND  F.LANG_CD = #{langCd}                     /* ko : 한국어 */
+	                        AND  G.PROD_STATUS_CD IN ( 'PD000403', 'PD000404', 'PD000409', 'PD000410' )      
+	                        AND  G.EXPO_YN = 'Y'                      /* Y : 노출 (노출여부) */
+	                        AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+	                        AND  G.TENANT_ID = #{tenantId}            /* 테넌트ID */
+	                        AND  D.TOP_MENU_ID  <![CDATA[ <> ]]>  'DP02' /* DP02 : 폰꾸미기 */
+	                        AND  I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
+	                        AND  J.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+	                        AND  J.USE_YN ='Y'
+	                        AND DECODE( J.UA_CD , '9999' , NVL2( E.PART_PARENT_CLSF_CD, 0, 1 ) + DECODE( D.DRM_YN, 'N', 1, 0 ) + DECODE( D.PROD_CHRG_YN, 'N', 1, 0 ) , 3 ) = 3    
+	                   )                   KA
+	                  , TB_DP_SUB_CONTENTS KB
+	                  , TB_DP_PROD_IMG     KC
+	             WHERE  KA.PROD_ID = KB.PROD_ID(+)
+	               AND  KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID(+)
+	               AND  KA.PROD_ID = KC.PROD_ID
+	               AND  KB.SALE_YN = 'Y'
+	               AND  KB.VM_VER  LIKE '%'||#{osVersion}||'%' /* Provisioning OS VERSION 체크 */
+	               AND  KB.LCD_SIZE LIKE '%'|| (SELECT REPLACE(#{lcdSize}, '*', 'X') FROM DUAL) ||'%' /* Provisioning  LCD SIZE 체크 */              
+	               AND  KC.EXPO_ORD = '1'
+	               AND  KC.LANG_CD = #{langCd}
+	               AND  KC.IMG_CD = #{imageCd} 
+	           ) TA LEFT OUTER JOIN TB_DP_SEED_MAPP TB 
+	                 ON TA.PROD_ID = TB.PROD_ID                       
     </select>
     
     <!-- 상품정보요청(for download) Vod -->

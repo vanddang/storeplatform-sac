@@ -26,8 +26,10 @@
               , TB.VER_MAJOR || '.' || TB.VER_MINOR AS PROD_VER
               , TB.APK_PKG_NM
               , TB.APK_VER
-              , TB.FILE_SIZE
-              , TB.FILE_PATH
+--              , TB.FILE_SIZE
+--              , TB.FILE_PATH
+              , TB.IMAGE_PATH
+              , TB.IMAGE_SIZE
               , NVL(TB.PATICPERS_CNT, 0) AS PATICPERS_CNT
               , NVL(TB.PRCHS_CNT, 0) AS PRCHS_CNT
                 <![CDATA[       
@@ -65,8 +67,10 @@
                       , I.SUB_CONTENTS_ID
                       , J.APK_PKG_NM
                       , J.APK_VER
-                      , J.FILE_SIZE
-                      , K.FILE_PATH
+--                      , J.FILE_SIZE
+--                      , J.FILE_PATH
+                      , K.FILE_PATH AS IMAGE_PATH
+                      , K.FILE_SIZE AS IMAGE_SIZE
                       , L.PATICPERS_CNT
                       , L.PRCHS_CNT
                       , L.AVG_EVLU_SCORE

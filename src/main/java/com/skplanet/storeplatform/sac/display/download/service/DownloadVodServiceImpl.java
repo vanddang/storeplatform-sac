@@ -341,8 +341,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						metaInfo.getHdcpYn()));
 				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM,
 						metaInfo.getHdvYn()));
-				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM,
-						metaInfo.getBtvYn()));
+				// supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM,
+				// metaInfo.getBtvYn()));
 				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM,
 						metaInfo.getDolbySprtYn()));
 				product.setSupportList(supportList);

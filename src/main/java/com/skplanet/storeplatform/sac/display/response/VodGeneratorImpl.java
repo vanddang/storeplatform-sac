@@ -154,7 +154,7 @@ public class VodGeneratorImpl implements VodGenerator {
 		 * 일반화질 정보
 		 */
 		if (StringUtils.isNotEmpty(metaInfo.getNmBtvCid())) {
-			videoInfo.setBtvcid(metaInfo.getNmBtvCid());
+			// videoInfo.setBtvcid(metaInfo.getNmBtvCid());
 			videoInfo.setPictureSize(metaInfo.getNmDpPicRatio());
 			videoInfo.setPixel(metaInfo.getNmDpPixel());
 			videoInfo.setScid(metaInfo.getNmSubContsId());
@@ -170,7 +170,7 @@ public class VodGeneratorImpl implements VodGenerator {
 		 */
 		if (StringUtils.isNotEmpty(metaInfo.getSdBtvCid())) {
 			videoInfo = new VideoInfo();
-			videoInfo.setBtvcid(metaInfo.getSdBtvCid());
+			// videoInfo.setBtvcid(metaInfo.getSdBtvCid());
 			videoInfo.setPictureSize(metaInfo.getSdDpPicRatio());
 			videoInfo.setPixel(metaInfo.getSdDpPixel());
 			videoInfo.setScid(metaInfo.getSdSubContsId());
@@ -186,7 +186,7 @@ public class VodGeneratorImpl implements VodGenerator {
 		 */
 		if (StringUtils.isNotEmpty(metaInfo.getHdBtvCid())) {
 			videoInfo = new VideoInfo();
-			videoInfo.setBtvcid(metaInfo.getHdBtvCid());
+			// videoInfo.setBtvcid(metaInfo.getHdBtvCid());
 			videoInfo.setPictureSize(metaInfo.getHdDpPicRatio());
 			videoInfo.setPixel(metaInfo.getHdDpPixel());
 			videoInfo.setScid(metaInfo.getHdSubContsId());

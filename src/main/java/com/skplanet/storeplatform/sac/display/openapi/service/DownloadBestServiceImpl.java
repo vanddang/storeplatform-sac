@@ -87,6 +87,21 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 				downloadBestSacReq.getListId());
 		downloadBestSacReq.setStdDt(stdDt);
 
+		int index = 0;
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (downloadBestSacReq.getOffset() != null) {
+			offset = downloadBestSacReq.getOffset();
+		}
+		downloadBestSacReq.setOffset(offset); // set offset
+
+		if (downloadBestSacReq.getCount() != null) {
+			count = downloadBestSacReq.getCount();
+		}
+		count = offset + count - 1;
+		downloadBestSacReq.setCount(count); // set count
+
 		String listId = downloadBestSacReq.getListId();
 		String inquiryType = downloadBestSacReq.getInquiryType();
 		String inquiryValue = downloadBestSacReq.getInquiryValue();

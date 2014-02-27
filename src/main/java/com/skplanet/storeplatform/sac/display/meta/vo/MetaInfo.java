@@ -86,6 +86,7 @@ public class MetaInfo {
 	private String seedCaseRefCd;
 	private String supportedOs;
 	private String seedUseYn;
+	private String packFee;
 
 	// ////////////////////////// 멀티미디어 상품 변수 ////////////////////////////
 	private String vodTitlNm;
@@ -1368,6 +1369,21 @@ public class MetaInfo {
 	 */
 	public void setSeedUseYn(String seedUseYn) {
 		this.seedUseYn = seedUseYn;
+	}
+
+	/**
+	 * @return the packFee
+	 */
+	public String getPackFee() {
+		return this.packFee;
+	}
+
+	/**
+	 * @param packFee
+	 *            the packFee to set
+	 */
+	public void setPackFee(String packFee) {
+		this.packFee = packFee;
 	}
 
 	/**
