@@ -140,6 +140,9 @@ public class DeviceUtil {
 		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
+		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
+		//deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
+		deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
 		if (userMbrDevice.getUserMbrDeviceDetail() != null) {
 			deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 		}
