@@ -260,72 +260,9 @@ public class LoginServiceImpl implements LoginService {
 		/* 회원정보 조회 */
 		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId);
 
-		/* 회원 상태 확인 */
-		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
+		/* 원아이디 서비스 이용동의 간편 가입 대상 및 가가입 상태 체크 */
+		if (!StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
 
-			/* 원아이디 가가입 상태인 경우 */
-			if (chkDupRes.getMbrOneID() != null && StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) {
-
-				Map<String, String> mapSiteCd = new HashMap<String, String>();
-				mapSiteCd.put("10100", "네이트");
-				mapSiteCd.put("10200", "싸이월드");
-				mapSiteCd.put("20100", "11st");
-				mapSiteCd.put("30100", "멜론");
-				mapSiteCd.put("40100", "Planet X 개발자센터");
-				mapSiteCd.put("40300", "Smart Touch Platform");
-				mapSiteCd.put("41000", "IDP");
-				mapSiteCd.put("41100", "T store");
-				mapSiteCd.put("41200", "T cloud");
-				mapSiteCd.put("41300", "T map");
-				mapSiteCd.put("41400", "SimpleSync");
-				mapSiteCd.put("41500", "T-Ad");
-				mapSiteCd.put("41600", "T-MapHot");
-				mapSiteCd.put("41700", "J-Store");
-				mapSiteCd.put("41800", "Gold-In-City");
-				mapSiteCd.put("41900", "T-MapNavi");
-				mapSiteCd.put("42100", "OK Cashbag");
-				mapSiteCd.put("42200", "기프티콘");
-				mapSiteCd.put("45000", "Landing Page");
-				mapSiteCd.put("50000", "NAP");
-				mapSiteCd.put("50100", "상생혁신센터");
-				mapSiteCd.put("80100", "BSS");
-				mapSiteCd.put("80200", "ISF");
-				mapSiteCd.put("80300", "BoSS VOC");
-				mapSiteCd.put("90000", "One ID");
-				mapSiteCd.put("90100", "Admin");
-				mapSiteCd.put("90200", "OAuth");
-				mapSiteCd.put("90300", "One ID 사이트");
-				mapSiteCd.put("90400", "mOTP");
-
-				// 가가입 상태 - 가입신청 사이트 정보
-				String joinSst = chkDupRes.getMbrOneID().getIntgSiteCode();
-				String joinSstCd = null;
-				String joinSstNm = null;
-
-				for (Entry<String, String> entry : mapSiteCd.entrySet()) {
-					if (StringUtils.contains(joinSst, entry.getKey())) {
-						joinSstCd = entry.getKey();
-						joinSstNm = entry.getValue();
-						break;
-					}
-				}
-
-				if (StringUtils.isEmpty(joinSstCd)) {
-					joinSstCd = "90000"; // One ID
-					joinSstNm = mapSiteCd.get(joinSstCd);
-				}
-
-				/* 로그인 결과 */
-				res.setJoinSiteCd(joinSstCd);
-				res.setJoinSiteNm(joinSstNm);
-				res.setIsLoginSuccess("N");
-				return res;
-
-			}
-
-		} else {
-
-			/* 원아이디 서비스 이용동의 간편 가입 대상 확인 */
 			if (chkDupRes.getUserMbr() == null && chkDupRes.getMbrOneID() != null) {
 
 				try {
@@ -343,7 +280,7 @@ public class LoginServiceImpl implements LoginService {
 				} catch (StorePlatformException ex) {
 
 					if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER)) {
+							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER)) { // 서비스 간편가입 대상
 
 						/* 로그인 결과 */
 						res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
@@ -353,12 +290,70 @@ public class LoginServiceImpl implements LoginService {
 						return res;
 
 					} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-							+ ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+							+ ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) { // 서비스 간편가입 대상이나 패스워드 틀림
 
 						/* 로그인 결과 */
 						res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
 						res.setLoginStatusCode(chkDupRes.getMbrOneID().getLoginStatusCode());
 						res.setStopStatusCode(chkDupRes.getMbrOneID().getStopStatusCode());
+						res.setIsLoginSuccess("N");
+						return res;
+
+					} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+							+ ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입 상태인 경우
+
+						Map<String, String> mapSiteCd = new HashMap<String, String>();
+						mapSiteCd.put("10100", "네이트");
+						mapSiteCd.put("10200", "싸이월드");
+						mapSiteCd.put("20100", "11st");
+						mapSiteCd.put("30100", "멜론");
+						mapSiteCd.put("40100", "Planet X 개발자센터");
+						mapSiteCd.put("40300", "Smart Touch Platform");
+						mapSiteCd.put("41000", "IDP");
+						mapSiteCd.put("41100", "T store");
+						mapSiteCd.put("41200", "T cloud");
+						mapSiteCd.put("41300", "T map");
+						mapSiteCd.put("41400", "SimpleSync");
+						mapSiteCd.put("41500", "T-Ad");
+						mapSiteCd.put("41600", "T-MapHot");
+						mapSiteCd.put("41700", "J-Store");
+						mapSiteCd.put("41800", "Gold-In-City");
+						mapSiteCd.put("41900", "T-MapNavi");
+						mapSiteCd.put("42100", "OK Cashbag");
+						mapSiteCd.put("42200", "기프티콘");
+						mapSiteCd.put("45000", "Landing Page");
+						mapSiteCd.put("50000", "NAP");
+						mapSiteCd.put("50100", "상생혁신센터");
+						mapSiteCd.put("80100", "BSS");
+						mapSiteCd.put("80200", "ISF");
+						mapSiteCd.put("80300", "BoSS VOC");
+						mapSiteCd.put("90000", "One ID");
+						mapSiteCd.put("90100", "Admin");
+						mapSiteCd.put("90200", "OAuth");
+						mapSiteCd.put("90300", "One ID 사이트");
+						mapSiteCd.put("90400", "mOTP");
+
+						// 가가입 상태 - 가입신청 사이트 정보
+						String joinSst = chkDupRes.getMbrOneID().getIntgSiteCode();
+						String joinSstCd = null;
+						String joinSstNm = null;
+
+						for (Entry<String, String> entry : mapSiteCd.entrySet()) {
+							if (StringUtils.contains(joinSst, entry.getKey())) {
+								joinSstCd = entry.getKey();
+								joinSstNm = entry.getValue();
+								break;
+							}
+						}
+
+						if (StringUtils.isEmpty(joinSstCd)) {
+							joinSstCd = "90000"; // One ID
+							joinSstNm = mapSiteCd.get(joinSstCd);
+						}
+
+						/* 로그인 결과 */
+						res.setJoinSiteCd(joinSstCd);
+						res.setJoinSiteNm(joinSstNm);
 						res.setIsLoginSuccess("N");
 						return res;
 
