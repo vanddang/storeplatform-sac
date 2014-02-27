@@ -160,7 +160,7 @@ public class IdpServiceImpl implements IdpService {
 
 		// response object create & setting initialized
 		ImResult imResult = new ImResult();
-		imResult.setCmd("executeRXCreateUserIDP");
+		imResult.setCmd("RXCreateUserIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userID);
 		String[] mbrCaluseAgreeArray = null;
@@ -1279,7 +1279,7 @@ public class IdpServiceImpl implements IdpService {
 		isEmailAuth = map.get("is_email_auth").toString();
 
 		ImResult imResult = new ImResult();
-		imResult.setCmd("executeRXActivateUserIdIDP");
+		imResult.setCmd("RXActivateUserIdIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userID);
 
@@ -1389,7 +1389,7 @@ public class IdpServiceImpl implements IdpService {
 		String imIntSvcNo = map.get("im_int_svc_no").toString(); // 통합 서비스 번호
 		String userId = map.get("user_id").toString(); // 회원 ID
 		String userKey = "";
-		imResult.setCmd("executeRXDeleteUserIdIDP");
+		imResult.setCmd("RXDeleteUserIdIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userId);
 
@@ -1673,7 +1673,7 @@ public class IdpServiceImpl implements IdpService {
 		SearchUserResponse searchUserResponse = null;
 		boolean siteCodeCheck = false;
 
-		imResult.setCmd("executeRXUpdateDisagreeUserIDP");
+		imResult.setCmd("RXUpdateDisagreeUserIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userID);
 
@@ -1938,7 +1938,7 @@ public class IdpServiceImpl implements IdpService {
 		tenantID = map.get("tenantID").toString();
 		systemID = map.get("systemID").toString();
 
-		imResult.setCmd("executeRXUpdateUserInfoIDP");
+		imResult.setCmd("RXUpdateUserInfoIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userID);
 
@@ -2008,7 +2008,7 @@ public class IdpServiceImpl implements IdpService {
 	@Override
 	public ImResult executeRXChangeUserIdIDP(HashMap<String, String> map) {
 		ImResult imResult = new ImResult();
-		imResult.setCmd("executeRXChangeUserIdIDP");
+		imResult.setCmd("RXChangeUserIdIDP");
 
 		String tenantID = "";
 		String systemID = "";
@@ -2170,7 +2170,7 @@ public class IdpServiceImpl implements IdpService {
 
 		boolean siteCodeCheck = false; // 이용동의 사이트중 tstore가 있는지 없는지 체크하기 위한 boolean 변수
 		ImResult imResult = new ImResult();
-		imResult.setCmd("executeRXUpdateAgreeUserIDP");
+		imResult.setCmd("RXUpdateAgreeUserIDP");
 		imResult.setUserId(userID);
 		imResult.setImIntSvcNo(imIntSvcNo);
 
