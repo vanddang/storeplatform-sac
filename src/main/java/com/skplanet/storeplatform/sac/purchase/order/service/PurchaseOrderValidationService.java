@@ -22,6 +22,17 @@ public interface PurchaseOrderValidationService {
 	/**
 	 * 
 	 * <pre>
+	 * 비과금 구매요청 적합성 체크.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매 주문 정보
+	 */
+	public void validateFreeCharge(PurchaseOrderInfo purchaseOrderInfo);
+
+	/**
+	 * 
+	 * <pre>
 	 * 회원 적합성 체크.
 	 * </pre>
 	 * 

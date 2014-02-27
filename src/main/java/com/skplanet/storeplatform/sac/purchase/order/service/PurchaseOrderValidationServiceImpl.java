@@ -46,14 +46,44 @@ import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailabl
 public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidationService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	private final List<String> freeChargeReqCdList;
+
 	private final PurchaseMemberPartService memberPartService = new PurchaseMemberPartServiceImpl();
 	private final PurchaseDisplayPartService displayPartService = new PurchaseDisplayPartServiceImpl();
+
+	public PurchaseOrderValidationServiceImpl() {
+		// TAKTODO:: 비과금 요청 허용 코드 목록 관리
+		this.freeChargeReqCdList = new ArrayList<String>();
+		this.freeChargeReqCdList.add("OR000408"); // 정식판전환
+		this.freeChargeReqCdList.add("OR000421"); // B2B Gateway(정산)
+		this.freeChargeReqCdList.add("OR000422"); // B2B Gateway(비정산)
+		this.freeChargeReqCdList.add("OR000413"); // T혜택 이벤트
+		this.freeChargeReqCdList.add("OR000420"); // T freemium(DRM)
+	}
 
 	@Autowired
 	private ExistenceSCI existenceSCI;
 
 	@Autowired
 	private ShoppingService shoppingService;
+
+	/**
+	 * 
+	 * <pre>
+	 * 비과금 구매요청 적합성 체크.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매 주문 정보
+	 */
+	@Override
+	public void validateFreeCharge(PurchaseOrderInfo purchaseOrderInfo) {
+		if (this.freeChargeReqCdList.contains(purchaseOrderInfo.getPrchsReqPathCd()) == false) {
+			throw new StorePlatformException("SAC_PUR_0001", "구매요청 권한이 없습니다..");
+		}
+
+		purchaseOrderInfo.setFreeChargeReq(true); // 비과금 요청
+	}
 
 	/**
 	 * 
@@ -159,20 +189,27 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			totAmt += (reqProduct.getProdAmt() * reqProduct.getProdQty());
 
 			// 상품 가격 체크
-			if (reqProduct.getProdAmt() != productInfo.getProdAmt()) {
-				throw new StorePlatformException("SAC_PUR_0001", "상품가격이 맞지 않습니다.");
+			if (purchaseOrderInfo.isFreeChargeReq() == false) {
+				if (reqProduct.getProdAmt() != productInfo.getProdAmt()) {
+					throw new StorePlatformException("SAC_PUR_0001", "상품가격이 맞지 않습니다.");
+				}
 			}
 
 			productInfoList.add(productInfo);
 		}
 
 		// 결제 총 금액 & 상품 가격 총합 체크
-		if (totAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
-			throw new StorePlatformException("SAC_PUR_0001", "구매요청 금액이 정상적이지 않습니다.(" + totAmt + ":"
-					+ purchaseOrderInfo.getCreatePurchaseReq().getTotAmt() + ")");
+		if (purchaseOrderInfo.isFreeChargeReq() == false) {
+			if (totAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
+				throw new StorePlatformException("SAC_PUR_0001", "구매요청 금액이 정상적이지 않습니다.(" + totAmt + ":"
+						+ purchaseOrderInfo.getCreatePurchaseReq().getTotAmt() + ")");
+			}
+
+			purchaseOrderInfo.setRealTotAmt(totAmt);
+		} else {
+			purchaseOrderInfo.setRealTotAmt(0);
 		}
 
-		purchaseOrderInfo.setRealTotAmt(totAmt);
 	}
 
 	/**

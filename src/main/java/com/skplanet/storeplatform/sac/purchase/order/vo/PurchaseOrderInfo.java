@@ -55,6 +55,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String prchsId; // 구매 ID
 	private String prchsDt; // 구매 ID
 	private double realTotAmt; // 최종 결제 총 금액
+	private boolean freeChargeReq; // 비과금 요청 여부
 
 	private String resultType; // 결과 타입: payment-결제Page 요청진행, free-무료구매 완료
 	private String paymentPageUrl; // 결제Page_URL
@@ -564,6 +565,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public CreatePurchaseSacReq getCreatePurchaseReq() {
 		return this.createPurchaseReq;
+	}
+
+	/**
+	 * @return the freeChargeReq
+	 */
+	public boolean isFreeChargeReq() {
+		return this.freeChargeReq;
+	}
+
+	/**
+	 * @param freeChargeReq
+	 *            the freeChargeReq to set
+	 */
+	public void setFreeChargeReq(boolean freeChargeReq) {
+		this.freeChargeReq = freeChargeReq;
 	}
 
 }

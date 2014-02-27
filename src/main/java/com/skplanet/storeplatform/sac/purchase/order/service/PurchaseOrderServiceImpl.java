@@ -48,9 +48,9 @@ import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublish
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdatePurchaseCountSCI;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
-import com.skplanet.storeplatform.sac.common.util.CryptUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.service.InterworkingSacService;
+import com.skplanet.storeplatform.sac.purchase.order.Seed128Util;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
@@ -111,6 +111,41 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	@Override
 	public void createFreePurchase(PurchaseOrderInfo purchaseOrderInfo) {
 		this.createPurchaseByType(purchaseOrderInfo, CREATE_PURCHASE_TYPE_COMPLETED);
+
+		// TAKTODO:: 비과금 요청 처리, 일단 여기에 소스 때려박음
+		List<Payment> paymentList = new ArrayList<Payment>();
+		Payment payment = null;
+		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
+			payment = new Payment();
+			payment.setTenantId(purchaseOrderInfo.getTenantId());
+			payment.setPrchsId(purchaseOrderInfo.getPrchsId());
+			payment.setPaymentDtlId(1);
+			payment.setInsdUsermbrNo(purchaseOrderInfo.getPurchaseMember().getUserKey());
+			payment.setInsdDeviceId(purchaseOrderInfo.getPurchaseMember().getDeviceKey());
+			payment.setPrchsDt(purchaseOrderInfo.getPrchsDt());
+			payment.setTotAmt(0.0);
+
+			payment.setPaymentMtdCd("OR000697");
+			payment.setPaymentAmt(product.getProdAmt());
+			payment.setPaymentDt(purchaseOrderInfo.getPrchsDt());
+			payment.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+
+			payment.setTid(purchaseOrderInfo.getPrchsId());
+
+			payment.setRegId(purchaseOrderInfo.getSystemId());
+			payment.setUpdId(purchaseOrderInfo.getSystemId());
+
+			paymentList.add(payment);
+		}
+
+		// 결제 내역 생성 요청
+		CreatePaymentScReq reqPayment = new CreatePaymentScReq();
+		reqPayment.setPaymentList(paymentList);
+
+		CreatePaymentScRes res = this.purchaseOrderSCI.createPayment(reqPayment);
+		if (res.getCount() < 1 || res.getCount() != paymentList.size()) {
+			throw new StorePlatformException("SAC_PUR_0001", "결제내역 저장 처리 중 에러 발생");
+		}
 	}
 
 	/**
@@ -162,13 +197,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 구매인증 응답 데이터 처리
 		// TAKTODO:: 아래 항목들 모두 처리 필요
 
-		VerifyOrderSacRes res = new VerifyOrderSacRes();
+		String tempDeviceId;
 		if (StringUtils.equals(createPurchaseSc.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			res.setUserKey(createPurchaseSc.getSendInsdUsermbrNo());
+			tempDeviceId = createPurchaseSc.getSendInsdDeviceId();
 		} else {
-			res.setUserKey(createPurchaseSc.getUseInsdUsermbrNo());
+			tempDeviceId = createPurchaseSc.getUseInsdDeviceId();
 		}
-		res.setMdn(res.getUserKey()); // [회원Part] MDN 조회
+		VerifyOrderSacRes res = new VerifyOrderSacRes();
+		res.setMdn(tempDeviceId); // [회원Part] MDN 조회
 		res.setFlgMbrStatus(USER_STATUS_NORMAL); // [회원Part] 회원 (상태) 조회
 		res.setFlgProductStatus(PRODUCT_STATUS_NORMAL); // [전시Part] 상품 조회
 		res.setFlgTeleBillingAgree("Y"); // [회원Part] 통신과금 동의여부 조회
@@ -657,8 +693,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 암호화
 		String eData = param.makeEncDataFormat();
-		eData = CryptUtils.encrypt(CryptUtils.AES128_CTR, "5", eData);
-		eData = Base64.encodeBase64String(eData.getBytes());
+		// eData = CryptUtils.encrypt(CryptUtils.AES128_CTR, "5", eData);
+		// eData = Base64.encodeBase64String(eData.getBytes());
+		try {
+			eData = Seed128Util.getSeedEncrypt(eData, "qnqnsdbfyghk0001");
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_0001", "구매요청 처리 중 에러 발생");
+		}
 		param.seteData(eData);
 
 		// Token

@@ -135,25 +135,26 @@ public class PurchaseOrderController {
 		this.logger.debug("PRCHS,INFO,CREATE,REQ,{},{}", tenantHeader, req);
 
 		// ------------------------------------------------------------------------------
-		// 요청 값 검증
-
-		this.isValidRequestParameterForCreatePurchase(req);
-
-		// ------------------------------------------------------------------------------
 		// 구매진행 정보 세팅
 
 		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, tenantHeader);
 
 		// ------------------------------------------------------------------------------
+		// 권한 체크
+
+		// TAKTODO:: 임시로 여기서 그냥.
+		this.validationService.validateFreeCharge(purchaseOrderInfo);
+
+		// ------------------------------------------------------------------------------
 		// 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
 		// TAKTODO::
 
-		// this.preCheckBeforeProcessOrder(purchaseOrderInfo);
+		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
 
 		// ------------------------------------------------------------------------------
 		// TAKTODO:: 비과금 구매완료 처리
 
-		// this.orderService.createFreePurchase(purchaseOrderInfo);
+		this.orderService.createFreePurchase(purchaseOrderInfo);
 
 		purchaseOrderInfo.setResultType("free");
 
