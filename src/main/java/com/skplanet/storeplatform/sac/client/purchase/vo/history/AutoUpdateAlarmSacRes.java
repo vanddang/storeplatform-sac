@@ -20,23 +20,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class AutoUpdateAlarmSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String prchsId; // 구매ID
 	private String resultYn; // 업데이트 성공여부(Y,N)
-
-	/**
-	 * @return the prchsId
-	 */
-	public String getPrchsId() {
-		return this.prchsId;
-	}
-
-	/**
-	 * @param prchsId
-	 *            the prchsId to set
-	 */
-	public void setPrchsId(String prchsId) {
-		this.prchsId = prchsId;
-	}
 
 	/**
 	 * @return the resultYn

@@ -10,9 +10,7 @@
 package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -24,45 +22,44 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 2. 25. Updated by : 조용진, NTELS.
  */
-public class AutoUpdateAlarmSacReq extends CommonInfo implements Serializable {
+public class AutoUpdateAlarmSac extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
 	@NotEmpty
-	private String userKey; // 내부사용자번호
-//	@NotEmpty
-//	@NotNull
-//	@Valid
-	private List<AutoUpdateAlarmSac> productList; // 알람YN
+	private String prodId; // 상품 ID
+	@NotNull
+	@NotEmpty
+	private String alarmYn; // 알람YN
 
 	/**
-	 * @return the userKey
+	 * @return the prodId
 	 */
-	public String getUserKey() {
-		return this.userKey;
+	public String getProdId() {
+		return this.prodId;
 	}
 
 	/**
-	 * @param userKey
-	 *            the userKey to set
+	 * @param prodId
+	 *            the prodId to set
 	 */
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
 	/**
-	 * @return the productList
+	 * @return the alarmYn
 	 */
-	public List<AutoUpdateAlarmSac> getProductList() {
-		return this.productList;
+	public String getAlarmYn() {
+		return this.alarmYn;
 	}
 
 	/**
-	 * @param productList
-	 *            the productList to set
+	 * @param alarmYn
+	 *            the alarmYn to set
 	 */
-	public void setProductList(List<AutoUpdateAlarmSac> productList) {
-		this.productList = productList;
+	public void setAlarmYn(String alarmYn) {
+		this.alarmYn = alarmYn;
 	}
 
 }
