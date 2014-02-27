@@ -16,6 +16,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -62,6 +63,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
  * 
  * Updated on : 2014. 2. 27. Updated by : 반범진, 지티소프트.
  */
+@Service
 public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdpServiceImpl.class);
@@ -261,7 +263,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					userMbrDevice.setSvcMangNum(svcMngNum);
 					userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 					userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 :
-																										// 번호변경
+																									   // 번호변경
 
 					List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 					UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
@@ -468,8 +470,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					}
 
 					if (StringUtil.equals(isTestModel, "Y")) {
-						LOGGER.info("<idpChangeMobile> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-								device.getDeviceModelCd(), uacd, svcMngNum);
+						LOGGER.info(
+								"<idpChangeMobile> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+								mdn, device.getDeviceModelCd(), uacd, svcMngNum);
 					} else {
 						LOGGER.info(
 								"<idpChangeMobile> NOT SUPPORT DEVICE.(기기변경 대상 단말이 존재하지 않음- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
@@ -521,8 +524,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			DCDInfo dcdInfo = new DCDInfo();
 			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
 
 				/* 기존에 구매했던 DCD 상품 조회 */
 
@@ -533,16 +536,16 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
 
 				dcdInfo.setEntryClass(IdpConstants.DCD_ENTRY_CHANGE_MODEL); // 기기변경
 				dcdInfo.setProductID(null);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
 
 				dcdInfo.setEntryClass(IdpConstants.DCD_ENTRY_JOIN); // 가입
 				dcdInfo.setProductID("A000Z00001");
@@ -553,8 +556,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info(
+						"<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, device.getDeviceModelCd(), uacd, svcMngNum);
 
 				/* 기존에 구매했던 DCD 상품 조회 */
 
