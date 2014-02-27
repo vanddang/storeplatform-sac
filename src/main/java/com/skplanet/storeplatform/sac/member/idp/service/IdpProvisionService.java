@@ -2,6 +2,11 @@ package com.skplanet.storeplatform.sac.member.idp.service;
 
 import java.util.HashMap;
 
+/**
+ * IDP에서 전달되는 Provisioning 처리를 위한 인터페이스.
+ * 
+ * Updated on : 2014. 2. 27. Updated by : 반범진, 지티소프트.
+ */
 public interface IdpProvisionService {
 	/**
 	 * 

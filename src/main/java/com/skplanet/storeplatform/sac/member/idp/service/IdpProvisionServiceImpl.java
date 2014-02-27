@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.member.idp.service;
 
 import java.util.ArrayList;
@@ -48,6 +57,11 @@ import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.idp.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
+/**
+ * IDP에서 전달되는 Provisioning 처리를 위한 인터페이스 구현체.
+ * 
+ * Updated on : 2014. 2. 27. Updated by : 반범진, 지티소프트.
+ */
 public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdpServiceImpl.class);
