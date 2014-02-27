@@ -180,7 +180,6 @@ public class RecommandNewMemberProductServiceImpl implements RecommandNewMemberP
 				productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
 				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 				reqMap.put("productBasicInfo", productBasicInfo);
-
 				reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 				MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
 
@@ -197,9 +196,11 @@ public class RecommandNewMemberProductServiceImpl implements RecommandNewMemberP
 			} else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) { // 쇼핑
 
 				// 채널 ID로 상품 조회
-				productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
+				productBasicInfo.setCatalogId(productBaseInfo.getChnlProdId());
 				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 				reqMap.put("productBasicInfo", productBasicInfo);
+				reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+				reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 				// 쇼핑 Meta 정보 조회
 				MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 				if (retMetaInfo != null) {
