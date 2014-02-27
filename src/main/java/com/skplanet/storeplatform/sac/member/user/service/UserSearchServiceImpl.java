@@ -610,10 +610,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		}
 
-		if (searchIdList.size() == 0) {
-			throw new StorePlatformException("SAC_MEM_0002", "UserEmail Search");
-		}
-
 		List<SearchIdSac> sacList = searchIdList;
 
 		return sacList;
