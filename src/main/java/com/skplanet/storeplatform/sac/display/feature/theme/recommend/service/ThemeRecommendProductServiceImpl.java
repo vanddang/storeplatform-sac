@@ -63,6 +63,8 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+	private int totalCount = 0;
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -73,8 +75,8 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 	@Override
 	public ThemeRecommendSacRes searchThemeRecommendProductList(ThemeRecommendSacReq requestVO,
 			SacRequestHeader requestHeader) throws StorePlatformException {
-		// TODO Auto-generated method stub
 
+		// TODO Auto-generated method stub
 		Map<String, Object> mapReq = new HashMap<String, Object>();
 
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
@@ -82,6 +84,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 
 		mapReq.put("tenantHeader", tenantHeader);
 		mapReq.put("deviceHeader", deviceHeader);
+		mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(requestVO.getRecommendId())) {
@@ -136,6 +139,10 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 
 			// Meta 정보 조회
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+
+				if (this.totalCount == 0)
+					this.totalCount = productBasicInfo.getTotalCount();
+
 				String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
 				String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
 				paramMap.put("productBasicInfo", productBasicInfo);
@@ -230,11 +237,14 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		}
 
 		if (this.log.isDebugEnabled()) {
-			this.log.debug("product count : " + productList.size());
+			this.log.debug("product count : {}", productList.size());
+			this.log.debug("total count : {}", this.totalCount);
 			// productList.clear();
 		}
 
+		// data 무존재시 운영자 추천으로 대체
 		if (productList.isEmpty()) {
+			this.totalCount = 0;
 			productInfo = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecommendPkgProdList", mapReq,
 					ThemeRecommend.class);
 			if (productInfo.isEmpty()) {
@@ -246,7 +256,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		ThemeRecommendSacRes responseVO = new ThemeRecommendSacRes();
 
 		CommonResponse commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(productList.size());
+		commonResponse.setTotalCount(this.totalCount);
 		responseVO.setCommonRes(commonResponse);
 
 		responseVO.setLayout(layout);
@@ -287,6 +297,9 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		while (iterator.hasNext()) {
 
 			ThemeRecommend mapper = iterator.next();
+
+			if (this.totalCount <= 0)
+				this.totalCount = mapper.getTotalCount();
 
 			Product product;
 			Identifier identifier;

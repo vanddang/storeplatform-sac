@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.display.feature.theme.recommend.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +58,8 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+	private int totalCount = 0;
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -77,6 +78,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 		mapReq.put("tenantHeader", tenantHeader);
 		mapReq.put("deviceHeader", deviceHeader);
+		mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
 		String userKey = requestVO.getUserKey();
 		String deviceIdType = requestVO.getDeviceIdType();
@@ -126,13 +128,9 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		if (multiCount > 0) {
 			Map<String, Object> mapIsf = null;
 
-			MultiValuesType multis = new MultiValuesType();
-
-			multis = response.getProps().getMultiValues();
-			Iterator<MultiValueType> siterator = multis.getMultiValue().iterator();
-			while (siterator.hasNext()) {
+			MultiValuesType multis = response.getProps().getMultiValues();
+			for (MultiValueType multi : multis.getMultiValue()) {
 				mapIsf = new HashMap<String, Object>();
-				MultiValueType multi = siterator.next();
 
 				this.log.debug("id:{}", multi.getId());
 				this.log.debug("order:{}", multi.getOrder());
@@ -149,9 +147,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		String reason = "";
 		int singleCount = response.getProps().getSingleValues().getCount();
 		if (singleCount > 0) {
-			Iterator<SingleValueType> siterator = response.getProps().getSingleValues().getSingleValue().iterator();
-			while (siterator.hasNext()) {
-				SingleValueType single = siterator.next();
+			for (SingleValueType single : response.getProps().getSingleValues().getSingleValue()) {
 				this.log.debug("name:{}", single.getName());
 				this.log.debug("value:{}", single.getValue());
 				if ("reason".equals(single.getName())) {
@@ -196,14 +192,16 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		List<Product> productList = new ArrayList<Product>();
 
 		// layout 생성
-		Layout layout = new Layout();
+		Layout layout = null;
 		if (StringUtils.isNotEmpty(reason)) {
+			layout = new Layout();
 			layout.setName(reason);
 		}
 
-		Iterator<ThemeRecommend> iterator = resultList.iterator();
-		while (iterator.hasNext()) {
-			ThemeRecommend mapper = iterator.next();
+		for (ThemeRecommend mapper : resultList) {
+
+			if (this.totalCount == 0)
+				this.totalCount = mapper.getTotalCount();
 
 			Product packageProduct;
 			Product subProduct;
@@ -331,10 +329,12 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 		} // end of while
 
-		commonResponse.setTotalCount(productList.size());
+		if (layout != null)
+			response.setLayout(layout);
+
+		commonResponse.setTotalCount(this.totalCount);
 		response.setCommonRes(commonResponse);
 		response.setProductList(productList);
-		response.setLayout(layout);
 
 		return response;
 	}
