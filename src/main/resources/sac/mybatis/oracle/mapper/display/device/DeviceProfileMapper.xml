@@ -65,7 +65,7 @@
 		      ,DEVICE_TYPE_CD                                                                      /*대표_기기_여부 */
 		  FROM TB_CM_DEVICE
 		 WHERE USE_YN = 'Y'
-		  <if test="deviceModelNo != null">
+		  <if test="req.deviceModelNo != null">
 		   AND DEVICE_MODEL_CD = #{req.deviceModelNo}
 		  </if>
  	</select>
