@@ -113,6 +113,8 @@ public class IdpServiceImpl implements IdpService {
 		String userStatusCode = ""; // 가입자 상태 코드 10:정상 11:가인증
 		String telecomCode = ""; // 통신사 코드
 		String emailRecvYn = ""; // 이메일 수신 여부
+		String prevMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
+		String currentMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
 
 		tenantID = map.get("tenantID").toString();
 		systemID = map.get("systemID").toString();
@@ -126,6 +128,9 @@ public class IdpServiceImpl implements IdpService {
 		imMemTypeCd = map.get("im_mem_type_cd").toString();
 		userType = map.get("user_type").toString();
 		userStatusCode = map.get("user_status_code").toString();
+
+		if (map.get("user_key") != null)
+			currentMbrNoForgameCenter = map.get("user_key").toString(); // 게임센터 연동을 위한 변수mbrNo 셋팅
 
 		if (map.get("TELECOM") != null) { // 통신사유형
 			String telecomType = map.get("TELECOM").toString();
@@ -207,9 +212,10 @@ public class IdpServiceImpl implements IdpService {
 			userMbr.setSystemID(systemID); // 테넌트의 시스템 ID
 
 			userMbr.setUserKey(""); // 사용자 Key
+
 			if (map.get("user_key") != null)
-				userMbr.setImMbrNo(map.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key IDP 통합서비스 키
-																	// USERMBR_NO
+				userMbr.setImMbrNo(map.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key IDP 통합서비스 키USERMBR_NO
+
 			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // * 사용자 구분 코드 ONEID회원으로 셋팅
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
@@ -403,6 +409,8 @@ public class IdpServiceImpl implements IdpService {
 						searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 					}
 
+					prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터 연동을 위한 이전 mbrNo셋팅
+
 					updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
 					LOGGER.debug("전환가입 정보 입력 완료");
 
@@ -439,6 +447,7 @@ public class IdpServiceImpl implements IdpService {
 
 						searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 					}
+					prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터 연동을 위한 이전 mbrNo셋팅
 
 					updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
 					LOGGER.debug("변경가입,변경전환 정보 입력 완료");
@@ -501,6 +510,7 @@ public class IdpServiceImpl implements IdpService {
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 			gameCenterSacReq.setUserKey(userKey);
+			gameCenterSacReq.setPreUserKey(userKey);
 			gameCenterSacReq.setSystemId(systemID);
 			gameCenterSacReq.setTenantId(tenantID);
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
@@ -2159,14 +2169,6 @@ public class IdpServiceImpl implements IdpService {
 		return imResult;
 	}
 
-	/*
-	 * 
-	 * <pre> 이용동의 변경사이트 목록 배포 - CMD : rXUpdateAgreeUserIDP . </pre>
-	 * 
-	 * @param map Request 받은 Parameter Map
-	 * 
-	 * @return HashMap
-	 */
 	@Override
 	public ImResult executeRXUpdateAgreeUserIDP(HashMap<String, String> map) {
 		LOGGER.debug("executeRXUpdateAgreeUserIDP ------- Start");
@@ -2188,6 +2190,8 @@ public class IdpServiceImpl implements IdpService {
 		String userStatusCode = ""; // 가입자 상태 코드 10:정상 11:가인증
 		String telecomCode = ""; // 통신사 코드
 		String emailRecvYn = ""; // 이메일 수신 여부
+		String prevMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
+		String currentMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
 
 		tenantID = map.get("tenantID").toString();
 		systemID = map.get("systemID").toString();
@@ -2209,6 +2213,9 @@ public class IdpServiceImpl implements IdpService {
 
 		if (map.get("user_status_code") != null)
 			userStatusCode = map.get("user_status_code").toString();
+
+		if (map.get("user_key") != null)
+			currentMbrNoForgameCenter = map.get("user_key").toString(); // 게임센터 연동을 위한 변수mbrNo 셋팅
 
 		if (map.get("TELECOM") != null) { // 통신사유형
 			String telecomType = map.get("TELECOM").toString();
@@ -2528,8 +2535,7 @@ public class IdpServiceImpl implements IdpService {
 						}
 						LOGGER.debug("JOIN ONEID DATA INSERT COMPLETE");
 
-						try { // 신규가입인 경우만 게임센터 연동
-							/* 게임센터 연동 */
+						try { /* 게임센터 연동 */
 
 							GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 							gameCenterSacReq.setUserKey(userKey);
@@ -2572,10 +2578,18 @@ public class IdpServiceImpl implements IdpService {
 
 								searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 							}
+							currentMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
 
 							updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 									searchUserResponse));
 							LOGGER.debug("전환가입 정보 입력 완료");
+
+							GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+							gameCenterSacReq.setUserKey(userKey);
+							gameCenterSacReq.setSystemId(systemID);
+							gameCenterSacReq.setTenantId(tenantID);
+							gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
+							this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
 						} catch (StorePlatformException spe) {
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
@@ -2611,11 +2625,11 @@ public class IdpServiceImpl implements IdpService {
 								searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 							}
 
+							currentMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
+
 							updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 									searchUserResponse));
 							LOGGER.debug("변경가입,변경전환 정보 입력 완료");
-
-							// TO DO... 구매에서 사용되는 회원ID 변경할수 있는 API 호출 대기중 ...
 
 							// 공통_기타 회원ID 변경 시작
 							ChangeDisplayUserSacReq changeDisplayUserSacReqByUserID = new ChangeDisplayUserSacReq();
@@ -2678,4 +2692,5 @@ public class IdpServiceImpl implements IdpService {
 		LOGGER.debug("rXUpdateAgreeUserIDP ------- End");
 		return imResult;
 	}
+
 }
