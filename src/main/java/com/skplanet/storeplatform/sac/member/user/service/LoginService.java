@@ -22,7 +22,7 @@ public interface LoginService {
 	 *            AuthorizeByMdnReq
 	 * @return AuthorizeByMdnRes
 	 */
-	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
+	public AuthorizeByMdnRes executeAuthorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
 
 	/**
 	 * ID 기반 회원 인증 (One ID, IDP 회원).
@@ -33,5 +33,5 @@ public interface LoginService {
 	 *            AuthorizeByIdReq
 	 * @return AuthorizeByIdRes
 	 */
-	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req);
+	public AuthorizeByIdRes executeAuthorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req);
 }
