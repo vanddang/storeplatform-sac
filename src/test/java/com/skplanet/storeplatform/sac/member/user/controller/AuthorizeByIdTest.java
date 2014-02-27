@@ -1057,7 +1057,7 @@ public class AuthorizeByIdTest {
 			ObjectMapper objMapper = new ObjectMapper();
 			LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 
-			AuthorizeByIdRes res = this.loginService.authorizeById(header, req);
+			AuthorizeByIdRes res = this.loginService.executeAuthorizeById(header, req);
 			LOGGER.info("res : {} " + res.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

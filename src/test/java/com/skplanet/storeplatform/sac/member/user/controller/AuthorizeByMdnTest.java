@@ -712,7 +712,7 @@ public class AuthorizeByMdnTest {
 			ObjectMapper objMapper = new ObjectMapper();
 			LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 
-			AuthorizeByMdnRes res = this.loginService.authorizeByMdn(header, req);
+			AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdn(header, req);
 			LOGGER.info("res : {} " + res.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
