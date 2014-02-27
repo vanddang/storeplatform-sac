@@ -481,10 +481,10 @@ public class LoginServiceImpl implements LoginService {
 			try {
 
 				/* 인증요청 */
-				com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq AuthForIdEcReq = new com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq();
-				AuthForIdEcReq.setUserId(userId);
-				AuthForIdEcReq.setUserPasswd(userPw);
-				com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcRes authForIdEcRes = this.idpSCI.authForId(AuthForIdEcReq);
+				com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq authForIdEcReq = new com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq();
+				authForIdEcReq.setUserId(userId);
+				authForIdEcReq.setUserPasswd(userPw);
+				com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcRes authForIdEcRes = this.idpSCI.authForId(authForIdEcReq);
 
 				/* 잠금해지 요청인 경우 */
 				if (StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
