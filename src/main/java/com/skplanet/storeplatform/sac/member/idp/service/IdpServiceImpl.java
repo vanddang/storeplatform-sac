@@ -1242,9 +1242,9 @@ public class IdpServiceImpl implements IdpService {
 
 				// 법정대리인 관계 코드
 				if (map.get("parent_type").toString().equals("0")) {// 부
-					mbrLglAgent.setParentRealNameMethod("F");
+					mbrLglAgent.setParentType("F");
 				} else if (map.get("parent_type").toString().equals("1")) {// 모
-					mbrLglAgent.setParentRealNameMethod("M");
+					mbrLglAgent.setParentType("M");
 				}
 
 				// 법정 대리인 실명인증 수단코드
