@@ -113,7 +113,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 		List<Identifier> identifierList = null;
 		Product product = new Product();
-		Source source = null;
 		Music music = null;
 
 		if (downloadMusicSacReq.getDummy() == null) {
@@ -174,6 +173,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			String prchsState = null; // 구매상태
 			String prchsProdId = null; // 구매 상품ID
 			String puchsPrice = null; // 구매 상품금액
+			String drmYn = null; // 구매상품 Drm여부
 
 			if (historyRes != null && historyRes.getTotalCnt() > 0) {
 				List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -187,6 +187,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 					prchsProdId = historyRes.getHistoryList().get(i).getProdId();
 					puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
+					drmYn = historyRes.getHistoryList().get(i).getDrmYn();
 
 					// 구매상태 확인
 					downloadMusicSacReq.setPrchsDt(prchsDt);
@@ -220,6 +221,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					metaInfo.setPurchaseState(prchsState);
 					metaInfo.setPurchaseDwldExprDt(dwldExprDt);
 					metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
+					metaInfo.setDrmYn(drmYn);
 
 					// 구매 정보
 					purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));

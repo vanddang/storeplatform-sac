@@ -187,6 +187,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				String prchsState = null; // 구매상태
 				String prchsProdId = null; // 구매 상품ID
 				String puchsPrice = null; // 구매 상품금액
+				String drmYn = null; // 구매상품 Drm여부
 
 				if (historyRes != null && historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -200,6 +201,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 						prchsProdId = historyRes.getHistoryList().get(i).getProdId();
 						puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
+						drmYn = historyRes.getHistoryList().get(i).getDrmYn();
 
 						// 구매상태 확인
 						downloadVodSacReq.setPrchsDt(prchsDt);
@@ -268,6 +270,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								metaInfo.setDeviceKey(deviceKey);
 								metaInfo.setDeviceType(deviceIdType);
 								metaInfo.setDeviceSubKey(deviceId);
+
+								// drmYn 구매내역에서 조회한 DrmYn
+								if (StringUtils.isNotEmpty(drmYn)) {
+									metaInfo.setStoreDrmYn(drmYn);
+									metaInfo.setPlayDrmYn(drmYn);
+								}
 
 								// 소장, 대여 구분(Store : 소장, Play : 대여)
 								if (prchsProdId.equals(metaInfo.getStoreProdId())) {
