@@ -1299,7 +1299,6 @@ public class IdpServiceImpl implements IdpService {
 
 		String imIntSvcNo = map.get("im_int_svc_no").toString(); // 통합 서비스 번호
 
-		String resultValue = "";
 		String userID = "";
 		String isEmailAuth = ""; // 이메일 인증여부 Y인경우에 ONEID정보의 회원가입상태코드를
 		SearchUserResponse searchUserResponse = null;
@@ -1338,12 +1337,10 @@ public class IdpServiceImpl implements IdpService {
 		} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
 			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
-			return imResult;
 		}
 
 		try {
-			if (searchUserResponse.getUserMbr() != null) { // 통합서비스 번호로 조회한 회원정보가 있을경우만 로직처리
-
+			if (searchUserResponse != null) { // 통합서비스 번호로 조회한 회원정보가 있을경우만 로직처리
 				// 조회되어진 사용자의 상태값이 정상이 아닌경우에 사용자 상태변경 정상 상태로 TB_US_USERMBR 데이터를 수정함
 				if (!MemberConstants.MAIN_STATUS_NORMAL.equals(searchUserResponse.getUserMbr().getUserMainStatus())
 						|| !MemberConstants.SUB_STATUS_NORMAL
@@ -1367,30 +1364,29 @@ public class IdpServiceImpl implements IdpService {
 					UpdateStatusUserResponse updateStatusUserResponse = this.userSCI
 							.updateStatus(updateStatusUserRequest);
 
-					resultValue = updateStatusUserResponse.getCommonResponse().getResultCode();
-
 				}
-
-				LOGGER.debug("ONEID DATA MERGE START");
-				// ONEID에 데이터 입력
-				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-				updateMbrOneIDRequest.setCommonRequest(commonRequest);
-				MbrOneID mbrOneID = new MbrOneID();
-				mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
-				mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
-				mbrOneID.setUserKey(searchUserResponse.getUserMbr().getUserKey()); // 신규가입때 생성된 내부사용자키를 셋팅
-				mbrOneID.setUserID(searchUserResponse.getUserMbr().getUserID()); // userID
-				if (isEmailAuth.equals(MemberConstants.USE_Y))
-					mbrOneID.setEntryStatusCode("10");// 정상
-				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-
-				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-				// this.deviceSCI.setMainDevice(setMainDeviceRequest); check중
-				LOGGER.debug("ONEID DATA MERGE COMPLETE");
-
 			}
+		} catch (StorePlatformException spe) { // 회원정보가 없더라도 성공처리함 OCB,TMAP등에서 RXACTIVATEUSERIDP가 내려오므로
+			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
+			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
+		}
 
+		try {
+			LOGGER.debug("ONEID DATA MERGE START");
+			// ONEID에 데이터 입력
+			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+			updateMbrOneIDRequest.setCommonRequest(commonRequest);
+			MbrOneID mbrOneID = new MbrOneID();
+			mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
+			mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
+			if (isEmailAuth.equals(MemberConstants.USE_Y))
+				mbrOneID.setEntryStatusCode("10");// 정상
+			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+			// this.deviceSCI.setMainDevice(setMainDeviceRequest); check중
+			LOGGER.debug("ONEID DATA MERGE COMPLETE");
 		} catch (StorePlatformException spe) {
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
