@@ -42,6 +42,8 @@ public class HistoryListSacReq extends PurchaseHeaderSacReq {
 	@Max(100)
 	private int count; // 데이터갯수
 
+	private String internalYn;
+
 	/**
 	 * @return the prchsReqPathCd
 	 */
@@ -280,6 +282,21 @@ public class HistoryListSacReq extends PurchaseHeaderSacReq {
 	 */
 	public void setGiftRecvConfYn(String giftRecvConfYn) {
 		this.giftRecvConfYn = giftRecvConfYn;
+	}
+
+	/**
+	 * @return the internalYn
+	 */
+	public String getInternalYn() {
+		return this.internalYn;
+	}
+
+	/**
+	 * @param internalYn
+	 *            the internalYn to set
+	 */
+	public void setInternalYn(String internalYn) {
+		this.internalYn = internalYn;
 	}
 
 }
