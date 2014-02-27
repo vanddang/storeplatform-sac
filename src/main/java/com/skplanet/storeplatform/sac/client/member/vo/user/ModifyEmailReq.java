@@ -26,12 +26,6 @@ public class ModifyEmailReq extends CommonInfo {
 	private String userAuthKey = "";
 
 	/**
-	 * 기존 이메일.
-	 */
-	@NotEmpty
-	private String oldEmail = "";
-
-	/**
 	 * 신규 이메일.
 	 */
 	@NotEmpty
@@ -70,21 +64,6 @@ public class ModifyEmailReq extends CommonInfo {
 	 */
 	public void setUserAuthKey(String userAuthKey) {
 		this.userAuthKey = userAuthKey;
-	}
-
-	/**
-	 * @return String : oldEmail
-	 */
-	public String getOldEmail() {
-		return this.oldEmail;
-	}
-
-	/**
-	 * @param oldEmail
-	 *            String : the oldEmail to set
-	 */
-	public void setOldEmail(String oldEmail) {
-		this.oldEmail = oldEmail;
 	}
 
 	/**
