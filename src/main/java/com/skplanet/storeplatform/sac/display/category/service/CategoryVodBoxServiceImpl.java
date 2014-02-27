@@ -42,6 +42,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vide
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VodExplain;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.category.vo.CategoryVodBox;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
@@ -149,15 +150,15 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				identifierList.add(identifier);
 				product.setIdentifierList(identifierList);
 
-				/*
-				 * SupportList
-				 */
-				supportList = new ArrayList<Support>();
-				support = new Support();
-				support.setType(DisplayConstants.DP_VOD_BTV_SUPPORT_NM);
-				support.setText(categoryVodBox.getBtvYn());
-				supportList.add(support);
-				product.setSupportList(supportList);
+				// /*
+				// * SupportList 삭제 예정
+				// */
+				// supportList = new ArrayList<Support>();
+				// support = new Support();
+				// support.setType(DisplayConstants.DP_VOD_BTV_SUPPORT_NM);
+				// support.setText(categoryVodBox.getBtvYn());
+				// supportList.add(support);
+				// product.setSupportList(supportList);
 
 				/*
 				 * TITLE
@@ -201,7 +202,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				contributor.setArtist(categoryVodBox.getArtist1Nm());
 				date = new Date();
 				date.setType(DisplayConstants.DP_DATE_BROADCAST);
-				date.setText(categoryVodBox.getIssueDay());
+				date.setText(DateUtils.parseDate(categoryVodBox.getIssueDay()));
 				contributor.setDate(date);
 				product.setContributor(contributor);
 
@@ -210,7 +211,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				 */
 				date = new Date();
 				date.setType(DisplayConstants.DP_DATE_REG);
-				date.setText(categoryVodBox.getRegDt());
+				date.setText(DateUtils.parseDate(categoryVodBox.getRegDt()));
 				product.setDate(date);
 
 				/*
@@ -303,7 +304,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					videoInfo.setPixel(categoryVodBox.getNmRsltnNm());
 					videoInfo.setPictureSize(categoryVodBox.getNmDpPgRatioNm());
 					videoInfo.setVersion(categoryVodBox.getNmProdVer());
-					videoInfo.setBtvcid(categoryVodBox.getNmBtvCid());
+					// videoInfo.setBtvcid(categoryVodBox.getNmBtvCid()); // 삭제 예정
 					videoInfo.setSize(categoryVodBox.getNmFileSize());
 					videoInfoList.add(videoInfo);
 				}
@@ -315,7 +316,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					videoInfo.setPixel(categoryVodBox.getSdRsltnNm());
 					videoInfo.setPictureSize(categoryVodBox.getSdDpPgRatioNm());
 					videoInfo.setVersion(categoryVodBox.getSdProdVer());
-					videoInfo.setBtvcid(categoryVodBox.getSdBtvCid());
+					// videoInfo.setBtvcid(categoryVodBox.getSdBtvCid()); // 삭제 예정
 					videoInfo.setSize(categoryVodBox.getSdFileSize());
 					videoInfoList.add(videoInfo);
 				}
@@ -327,7 +328,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					videoInfo.setPixel(categoryVodBox.getHdRsltnNm());
 					videoInfo.setPictureSize(categoryVodBox.getHdDpPgRatioNm());
 					videoInfo.setVersion(categoryVodBox.getHdProdVer());
-					videoInfo.setBtvcid(categoryVodBox.getHdBtvCid());
+					// videoInfo.setBtvcid(categoryVodBox.getHdBtvCid()); // 삭제 예정
 					videoInfo.setSize(categoryVodBox.getHdFileSize());
 					videoInfoList.add(videoInfo);
 				}

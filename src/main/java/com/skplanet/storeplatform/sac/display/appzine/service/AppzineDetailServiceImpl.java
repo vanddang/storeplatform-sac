@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Appzine;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.appzine.vo.AppzineDetail;
 
 /**
@@ -79,11 +80,11 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 			dateList = new ArrayList<Date>();
 			date = new Date();
 			date.setType("date/issue");
-			date.setText(appzineDetail.getIssuday());
+			date.setText(DateUtils.parseDate(appzineDetail.getIssuday()));
 			dateList.add(date);
 			date = new Date();
 			date.setType("date/reg");
-			date.setText(appzineDetail.getRegDt());
+			date.setText(DateUtils.parseDate(appzineDetail.getRegDt()));
 			dateList.add(date);
 			appzine.setDateList(dateList);
 
