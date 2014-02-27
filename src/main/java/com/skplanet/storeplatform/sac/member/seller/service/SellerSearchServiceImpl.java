@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,9 +123,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		checkDuplicationSellerRequest.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		KeySearch keySearch = new KeySearch();
-		if ("id".equals(req.getKeyType())) {
+		if (StringUtils.equalsIgnoreCase("id", req.getKeyType())) {
 			keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_ID);
-		} else if ("email".equals(req.getKeyType())) {
+		} else if (StringUtils.equalsIgnoreCase("email", req.getKeyType())) {
 			keySearch.setKeyType(MemberConstants.KEY_TYPE_EMAIL);
 		}
 		keySearch.setKeyString(req.getKeyString());
@@ -136,11 +137,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		/** 1-3. SC회원(ID/Email중복) Call */
 		CheckDuplicationSellerResponse checkDuplicationSellerResponse = this.sellerSCI
 				.checkDuplicationSeller(checkDuplicationSellerRequest);
-
-		// Debug
-		LOGGER.info("checkDuplicationSellerResponse CODE : {}, MESSAGE : {}", checkDuplicationSellerResponse
-				.getCommonResponse().getResultCode(), checkDuplicationSellerResponse.getCommonResponse()
-				.getResultMessage());
 
 		/** 1-4. [RESPONSE] 생성 및 주입 */
 		DuplicateByIdEmailRes response = new DuplicateByIdEmailRes();
