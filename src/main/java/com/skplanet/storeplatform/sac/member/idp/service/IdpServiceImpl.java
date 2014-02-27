@@ -1112,6 +1112,7 @@ public class IdpServiceImpl implements IdpService {
 				} else {// 실명인증 정보 초기화 요청 시
 					// CI 필수값만 세팅
 					mbrAuth.setCi(" ");
+					mbrAuth.setIsDomestic(" ");
 					mbrAuth.setIsRealName("N");
 				}
 
