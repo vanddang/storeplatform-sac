@@ -241,8 +241,7 @@
      /* CouponMapper.xml, updateTbDpProdDescInfo,TB_DP_PROD_DESC 테이블에 UPDATE, 김형식/SK플래닛 , 2013-01-08 */
         update TB_DP_PROD_DESC
         set
-             LANG_CD       = NVL(#{langCd},LANG_CD)                /*  */
-            ,PROD_NM       = NVL(#{prodNm},PROD_NM)                /*  */
+             PROD_NM       = NVL(#{prodNm},PROD_NM)                /*  */
             ,PROD_BASE_DESC= NVL(#{prodBaseDesc},PROD_BASE_DESC)    /*  */
             ,PROD_DTL_DESC = NVL(#{prodDtlDesc},PROD_DTL_DESC)     /*  */
             ,PROD_INTR_DSCR= NVL(#{prodIntrDscr},PROD_INTR_DSCR)    /*  */
@@ -251,6 +250,7 @@
             ,UPD_DT        = sysdate                               /*  */
         where 1=1
        AND PROD_ID = #{prodId}
+       AND LANG_CD = #{langCd}               
     </update>        
     
     <!--TB_DP_PROD_CATALOG_MAPG 테이블에 INSERT-->    
@@ -473,6 +473,7 @@
             TB_DP_TENANT_PROD
         SET PROD_STATUS_CD = #{dpStatusCode}
         WHERE 1=1
+          AND TENANT_ID ='S01'
         <if test='upType == "0"'>
           AND PROD_ID =#{prodId}
         </if>
@@ -511,6 +512,7 @@
 				  AND A.PROD_ID =C.PROD_ID
 				  AND C.PROD_STATUS_CD = 'PD000403'
 				  AND C.EXPO_YN ='Y'
+				  AND C.TENANT_ID ='S01'
         )
         WHERE PROD_ID = #{prodId}
     </update>    
@@ -529,7 +531,8 @@
 				    AND A.BASE_YN ='Y'
 				    AND A.USE_YN ='Y'
 				    AND B.EXPO_YN ='Y' 
-				    AND B.PROD_STATUS_CD = 'PD000403'      
+				    AND B.PROD_STATUS_CD = 'PD000403' 
+				    AND B.TENANT_ID ='S01'     
 				    AND A.CATALOG_ID = (
 				         SELECT 
 				             CATALOG_ID 
@@ -566,6 +569,7 @@
                 AND T1.EPSD_PROD_ID = T3.PROD_ID
                 AND T3.EXPO_YN ='Y'                
                 AND T1.CHNL_PROD_ID = #{prodId}
+                AND T3.TENANT_ID ='S01'
                 GROUP BY T1.CHNL_PROD_ID, T1.OPT1_NM
         ) B
         ON (A.CHNL_PROD_ID = B.CHNL_PROD_ID AND A.OPT1_NM = B.OPT1_NM AND EXPO_ORD = 1)
@@ -621,6 +625,7 @@
                PROD_STATUS_CD 
         FROM   TB_DP_TENANT_PROD 
         WHERE 1=1
+        AND TENANT_ID ='S01'
         <if test='upType == "0"'>
           AND PROD_ID =#{newCouponId}
         </if>
