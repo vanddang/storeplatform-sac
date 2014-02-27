@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.member.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.idp.service.IdpProvisionService;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 
@@ -58,7 +58,7 @@ public class EcgJoinedTStoreTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	private IdpService idpService;
+	private IdpProvisionService idpService;
 
 	/**
 	 * 
@@ -76,6 +76,8 @@ public class EcgJoinedTStoreTest {
 	 */
 	@Test
 	public void ecgJoinedTStore() {
+
+		//cmd=ecgJoinedTStore&svc_mng_num=7211418980&mdn=01071117908&min=1071117908
 
 		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
@@ -111,6 +113,8 @@ public class EcgJoinedTStoreTest {
 	 */
 	@Test
 	public void ecgJoinedTStore02() {
+
+		//cmd=ecgJoinedTStore&svc_mng_num=9050006514&mdn=01071117908&min=1071117908
 
 		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
@@ -154,7 +158,7 @@ public class EcgJoinedTStoreTest {
 			map.put("mdn", "01071117908");
 			map.put("min", "1071117908");
 			map.put("svc_mng_num", "7211418980");
-			this.idpService.ecgJoinedTStore(map);
+			this.idpService.executeEcgJoinedTStore(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();

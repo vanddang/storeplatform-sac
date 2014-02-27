@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.member.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.idp.service.IdpProvisionService;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 
@@ -58,7 +58,7 @@ public class ChangeMobileIdTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	private IdpService idpService;
+	private IdpProvisionService idpService;
 
 	/**
 	 * 
@@ -93,11 +93,11 @@ public class ChangeMobileIdTest {
 				map.put("systemID", "W");
 				map.put("tenantID", "S01");
 
-				map.put("mdn", "01010007001");
-				map.put("svc_mng_num", "9050006513");
+				map.put("mdn", "01049545098");
+				map.put("svc_mng_num", "70355167651");
 				map.put("model_id", "SSMF");
-				map.put("be_mdn", "01010007001");
-				map.put("min", "1010007001");
+				map.put("be_mdn", "01049545098");
+				map.put("min", "1049545098");
 
 				req.setReqParam(map);
 
@@ -121,19 +121,19 @@ public class ChangeMobileIdTest {
 	 */
 	@Test
 	public void changeMobileIdTestService() {
-
+		//cmd=changeMobileID&svc_mng_num=aaaa&mdn=01049545098&be_mdn=01049545098&model_id=LGFL&min=1049545098
 		try {
 			HashMap map = new HashMap();
 			map.put("systemID", "W");
 			map.put("tenantID", "S01");
 
-			map.put("mdn", "01010007001");
-			map.put("svc_mng_num", "9050006513");
+			map.put("mdn", "01049545098");
+			map.put("svc_mng_num", "aaaa");
 			map.put("model_id", "SSMF");
-			map.put("be_mdn", "01010007001");
-			map.put("min", "1010007001");
+			map.put("be_mdn", "01049545098");
+			map.put("min", "1049545098");
 
-			this.idpService.changeMobileID(map);
+			this.idpService.executeChangeMobileID(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.member.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.idp.service.IdpProvisionService;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 
@@ -58,7 +58,7 @@ public class SecedeMobileNumberTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	private IdpService idpService;
+	private IdpProvisionService idpService;
 
 	/**
 	 * 
@@ -129,7 +129,7 @@ public class SecedeMobileNumberTest {
 			map.put("svc_mng_num", "9050006513");
 			map.put("min", "1010007002");
 
-			this.idpService.secedeMobileNumber(map);
+			this.idpService.executeSecedeMobileNumber(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.member.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.idp.service.IdpProvisionService;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 
@@ -58,7 +58,7 @@ public class JoinCompleteTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	private IdpService idpService;
+	private IdpProvisionService idpService;
 
 	/**
 	 * 
@@ -115,7 +115,7 @@ public class JoinCompleteTest {
 			map.put("systemID", "W");
 			map.put("tenantID", "S01");
 			map.put("user_key", "IF1526967420140128135555");
-			this.idpService.joinComplete(map);
+			this.idpService.executeJoinComplete(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();

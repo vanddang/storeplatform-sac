@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.member.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.idp.service.IdpProvisionService;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 
@@ -58,7 +58,7 @@ public class AdjustWiredProfileTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	private IdpService idpService;
+	private IdpProvisionService idpService;
 
 	/**
 	 * 
@@ -196,7 +196,7 @@ public class AdjustWiredProfileTest {
 			map.put("user_name", "테스터");
 			map.put("user_social_number", "8312101");
 
-			this.idpService.adjustWiredProfile(map);
+			this.idpService.executeAdjustWiredProfile(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();

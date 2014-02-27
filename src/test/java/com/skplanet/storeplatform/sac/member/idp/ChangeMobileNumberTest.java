@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.member.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.idp.service.IdpProvisionService;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 
@@ -58,7 +58,7 @@ public class ChangeMobileNumberTest {
 	private MockMvc mockMvc;
 
 	@Autowired
-	private IdpService idpService;
+	private IdpProvisionService idpService;
 
 	/**
 	 * 
@@ -93,11 +93,52 @@ public class ChangeMobileNumberTest {
 				map.put("systemID", "W");
 				map.put("tenantID", "S01");
 
-				map.put("mdn", "01010007002");
+				map.put("mdn", "01010007001");
 				map.put("svc_mng_num", "9050006514");
 				map.put("model_id", "SSNT");
-				map.put("be_mdn", "01010007001");
-				map.put("min", "1010007002");
+				map.put("be_mdn", "01010007002");
+
+				req.setReqParam(map);
+
+				LOGGER.info("request param : {}", req.toString());
+				return req;
+			}
+		}).success(ProvisioningRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				ProvisioningRes res = (ProvisioningRes) result;
+				// res.get
+				// assertThat(res.getSellerKey(), notNullValue());
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회선 변경 정보 Provisioning svc_mng_num이 존재하지 않은경우.
+	 * 성공 Case
+	 * </pre>
+	 */
+	@Test
+	public void changeMobileNumber02() {
+
+		//cmd=changeMobileNumber&mdn=0101231234&model_id=SSND&be_mdn=01028102082&svc_mng_num=12341234
+
+		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				ProvisioningReq req = new ProvisioningReq();
+				req.setCmd("changeMobileNumber");
+				HashMap map = new HashMap();
+				map.put("systemID", "W");
+				map.put("tenantID", "S01");
+
+				map.put("mdn", "0101231234");
+				map.put("svc_mng_num", "12341234");
+				map.put("model_id", "SSNT");
+				map.put("be_mdn", "01028102082");
 
 				req.setReqParam(map);
 
@@ -127,13 +168,12 @@ public class ChangeMobileNumberTest {
 			map.put("systemID", "W");
 			map.put("tenantID", "S01");
 
-			map.put("mdn", "01010007001");
-			map.put("svc_mng_num", "9050006514");
+			map.put("mdn", "01099991007");
+			map.put("svc_mng_num", "1422819401");
 			map.put("model_id", "SSNT");
-			map.put("be_mdn", "01010007002");
-			map.put("min", "1010007001");
+			map.put("be_mdn", "01037448304");
 
-			this.idpService.changeMobileNumber(map);
+			this.idpService.executeChangeMobileNumber(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();
