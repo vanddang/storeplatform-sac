@@ -35,7 +35,7 @@
 			AND DPTENANT.TENANT_ID = #{tenantId}
     </select>     
 
-    <insert id="Display_Product.insertNewFreeData" parameterType="ProductVo">
+    <update id="Display_Product.insertNewFreeData" parameterType="ProductVo">
 		INSERT INTO TB_DP_LIST_PROD (
 			SELECT 
 				TP.TENANT_ID
@@ -43,18 +43,18 @@
 				, MCP.MENU_ID
 				, P.PROD_ID
 				, TO_DATE( TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'), 'YYYYMMDDHH24MISS') AS STD_DT
-                , NULL AS EXPO_ORD_ALWAYS_YN --
+                , NULL AS EXPO_ORD_ALWAYS_YN
 				, (SELECT MAX(EXPO_ORD)+1 FROM TB_DP_LIST_PROD WHERE LIST_ID = 'ADM000000001')AS EXPO_ORD
-                , NULL AS EXPO_ORD_SUB --
+                , NULL AS EXPO_ORD_SUB
 				, 'Y' AS EXPO_YN
 				, NULL AS ETC_CLSF_CD
-				, NULL AS ETC_CD -- 변경
+				, NULL AS ETC_CD
 				, NULL AS PRCHS_QTY
 				, NULL AS PRCHS_AMT
 				, NULL AS DWLD_QTY
 				, TO_DATE( TO_CHAR(P.REG_DT,'YYYYMMDD'),'YYYYMMDD') AS EXPO_START_DT
 				, TO_DATE( '99991231','YYYYMMDD') AS EXPO_END_DT
-                , NULL AS IMG_PATH --
+                , NULL AS IMG_PATH
 				, P.REG_ID
 				, TO_DATE( TO_CHAR(P.REG_DT,'YYYYMMDD'),'YYYYMMDD') AS REG_DT
 				, P.UPD_ID
@@ -67,7 +67,7 @@
 				AND P.PROD_ID = #{prodId}
 				AND TP.TENANT_ID = #{tenantId}
 		)
-    </insert> 
+    </update> 
     
     <!-- 판매상태 변경 이력 등록 -->
 	<insert id="Display_Product.insertSaleStatHis" parameterType="ProductVo">
