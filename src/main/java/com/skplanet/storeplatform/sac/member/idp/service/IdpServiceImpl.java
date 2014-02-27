@@ -1072,7 +1072,7 @@ public class IdpServiceImpl implements IdpService {
 
 				// 실명인증 대상 본인/법정대리인 여부
 				// 본인
-				updateRealNameRequest.setIsOwn("OWN");
+				updateRealNameRequest.setIsOwn(memberConstant.AUTH_TYPE_OWN);
 				updateRealNameRequest.setCommonRequest(commonRequest);
 				if (authType.equals("C")) {
 					updateRealNameRequest.setIsRealName("N");
@@ -1223,7 +1223,7 @@ public class IdpServiceImpl implements IdpService {
 
 				// 실명인증 대상 본인/법정대리인 여부
 				// 법정대리인
-				updateRealNameRequest.setIsOwn("PARENT");
+				updateRealNameRequest.setIsOwn(memberConstant.AUTH_TYPE_PARENT);
 				updateRealNameRequest.setCommonRequest(commonRequest);
 				// updateRealNameRequest.setIsRealName(map.get("is_parent_approve").toString());
 				updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
