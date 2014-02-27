@@ -476,26 +476,29 @@ public class UserSearchServiceImpl implements UserSearchService {
 		UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
 
 		String checkId = "";
-		if (!req.getUserEmail().equals("")) {
-			/* UserId와 Email이 일치하는지 체크 */
-			if (info.getUserEmail().equals(req.getUserEmail())) {
-				checkId = "Y";
-			} else {
-				checkId = "N";
-			}
-		} else if (!req.getUserPhone().equals("")) {
-			/* UserId와 Phone이 일치하는지 체크 */
-			ListDeviceReq scReq = new ListDeviceReq();
-			scReq.setUserKey(info.getUserKey());
-			scReq.setDeviceId(req.getUserPhone());
-			scReq.setIsMainDevice("N");
+		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
 
-			ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
+			if (!req.getUserEmail().equals("")) {
+				/* UserId와 Email이 일치하는지 체크 */
+				if (info.getUserEmail().equals(req.getUserEmail())) {
+					checkId = "Y";
+				} else {
+					checkId = "N";
+				}
+			} else if (!req.getUserPhone().equals("")) {
+				/* UserId와 Phone이 일치하는지 체크 */
+				ListDeviceReq scReq = new ListDeviceReq();
+				scReq.setUserKey(info.getUserKey());
+				scReq.setDeviceId(req.getUserPhone());
+				scReq.setIsMainDevice("N");
 
-			if (listDeviceRes.getUserKey() != null) {
-				checkId = "Y";
-			} else {
-				checkId = "N";
+				ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
+
+				if (listDeviceRes.getUserKey() != null) {
+					checkId = "Y";
+				} else {
+					checkId = "N";
+				}
 			}
 		}
 
