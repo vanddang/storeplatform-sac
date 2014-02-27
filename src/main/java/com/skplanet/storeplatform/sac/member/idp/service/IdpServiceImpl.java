@@ -511,6 +511,8 @@ public class IdpServiceImpl implements IdpService {
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 			gameCenterSacReq.setUserKey(userKey);
 			gameCenterSacReq.setPreUserKey(userKey);
+			gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
+			gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
 			gameCenterSacReq.setSystemId(systemID);
 			gameCenterSacReq.setTenantId(tenantID);
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
@@ -1416,6 +1418,12 @@ public class IdpServiceImpl implements IdpService {
 		String imIntSvcNo = map.get("im_int_svc_no").toString(); // 통합 서비스 번호
 		String userId = map.get("user_id").toString(); // 회원 ID
 		String userKey = "";
+		String prevMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
+		String currentMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
+
+		if (map.get("user_key") != null)
+			currentMbrNoForgameCenter = map.get("user_key").toString(); // 게임센터 연동을 위한 변수mbrNo 셋팅
+
 		imResult.setCmd("RXDeleteUserIdIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userId);
@@ -1444,6 +1452,7 @@ public class IdpServiceImpl implements IdpService {
 
 		try {
 			searchUserResponse = this.userSCI.searchUser(searchUserRequest);
+			prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo();
 			userKey = searchUserResponse.getUserKey();
 		} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
@@ -1478,6 +1487,9 @@ public class IdpServiceImpl implements IdpService {
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 			gameCenterSacReq.setUserKey(userKey);
+			gameCenterSacReq.setPreUserKey(userKey);
+			gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
+			gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
 			gameCenterSacReq.setSystemId(map.get("systemID").toString());
 			gameCenterSacReq.setTenantId(map.get("tenantID").toString());
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
@@ -2539,6 +2551,9 @@ public class IdpServiceImpl implements IdpService {
 
 							GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 							gameCenterSacReq.setUserKey(userKey);
+							gameCenterSacReq.setPreUserKey(userKey);
+							gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
+							gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
 							gameCenterSacReq.setSystemId(systemID);
 							gameCenterSacReq.setTenantId(tenantID);
 							gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
@@ -2578,7 +2593,7 @@ public class IdpServiceImpl implements IdpService {
 
 								searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 							}
-							currentMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
+							prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
 
 							updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 									searchUserResponse));
@@ -2586,6 +2601,9 @@ public class IdpServiceImpl implements IdpService {
 
 							GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 							gameCenterSacReq.setUserKey(userKey);
+							gameCenterSacReq.setPreUserKey(userKey);
+							gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
+							gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
 							gameCenterSacReq.setSystemId(systemID);
 							gameCenterSacReq.setTenantId(tenantID);
 							gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
@@ -2625,7 +2643,7 @@ public class IdpServiceImpl implements IdpService {
 								searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 							}
 
-							currentMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
+							prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
 
 							updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 									searchUserResponse));
