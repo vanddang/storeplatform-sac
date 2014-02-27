@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.CheckDupIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SimpleJoinEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SimpleJoinEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AgreeUserEcReq;
@@ -51,7 +52,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
@@ -126,17 +126,28 @@ public class UserJoinServiceImpl implements UserJoinService {
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 				/**
-				 * SAC 회원 탈퇴 요청 ==> 무선회원 해지 (cmd = secedeForWap) 후에 DB 탈퇴처리 - 단말
-				 * 삭제및 게임센터 이관까지...
+				 * IDP에 이미 가입되어 있는 회원일 경우 SC 회원 DB 조회해서 정보 존재 하면 Error를 반환 (데이터는
+				 * 삭제 하지 않음 - 이유 : IDP 및 회원 DB에도 정상 임) - 에러 : IDP 가가입 에러
 				 */
-				LOGGER.info("## 무선회원 탈퇴처리 연동 Start =================");
-				WithdrawReq withdrawReq = new WithdrawReq();
-				withdrawReq.setDeviceId(req.getDeviceId());
-				this.userWithdrawService.executeWithdraw(sacHeader, withdrawReq);
+				try {
 
-				/**
-				 * 가가입 에러 발생.
-				 */
+					this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
+
+				} catch (StorePlatformException ex) {
+					if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+							|| StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+
+						/**
+						 * SC회원에 정보가 없는경우 IDP 모바일회원 탈퇴 요청
+						 */
+						SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+						ecReq.setUserMdn(req.getDeviceId());
+
+						this.idpSCI.secedeForWap(ecReq);
+
+					}
+				}
+
 				throw new StorePlatformException("SAC_MEM_1101", spe);
 
 			} else {
