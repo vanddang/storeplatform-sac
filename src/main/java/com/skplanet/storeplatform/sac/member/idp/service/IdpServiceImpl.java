@@ -1339,26 +1339,25 @@ public class IdpServiceImpl implements IdpService {
 
 					resultValue = updateStatusUserResponse.getCommonResponse().getResultCode();
 
-					if (resultValue.equals(MemberConstants.RESULT_SUCCES)) {
-						LOGGER.debug("ONEID DATA MERGE START");
-						// ONEID에 데이터 입력
-						UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-						updateMbrOneIDRequest.setCommonRequest(commonRequest);
-						MbrOneID mbrOneID = new MbrOneID();
-						mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
-						mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
-						mbrOneID.setUserKey(searchUserResponse.getUserMbr().getUserKey()); // 신규가입때 생성된 내부사용자키를 셋팅
-						mbrOneID.setUserID(searchUserResponse.getUserMbr().getUserID()); // userID
-						if (isEmailAuth.equals(MemberConstants.USE_Y))
-							mbrOneID.setEntryStatusCode("10");// 정상
-						updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-
-						this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-						// this.deviceSCI.setMainDevice(setMainDeviceRequest); check중
-						LOGGER.debug("ONEID DATA MERGE COMPLETE");
-					}
 				}
+
+				LOGGER.debug("ONEID DATA MERGE START");
+				// ONEID에 데이터 입력
+				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+				updateMbrOneIDRequest.setCommonRequest(commonRequest);
+				MbrOneID mbrOneID = new MbrOneID();
+				mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
+				mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
+				mbrOneID.setUserKey(searchUserResponse.getUserMbr().getUserKey()); // 신규가입때 생성된 내부사용자키를 셋팅
+				mbrOneID.setUserID(searchUserResponse.getUserMbr().getUserID()); // userID
+				if (isEmailAuth.equals(MemberConstants.USE_Y))
+					mbrOneID.setEntryStatusCode("10");// 정상
+				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+				// this.deviceSCI.setMainDevice(setMainDeviceRequest); check중
+				LOGGER.debug("ONEID DATA MERGE COMPLETE");
 
 			}
 
