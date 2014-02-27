@@ -87,7 +87,6 @@ public class ModifyEmailTest {
 						reqJson.setUserKey("US201402181518403440002941");
 						// reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 						reqJson.setUserAuthKey("4c77e935ee2f4eae8dcf2d22b199d504"); // Fixed userAuthKey
-						reqJson.setOldEmail("oldEmail@naver.com"); // 기존 이메일
 						reqJson.setNewEmail("newEmail@naver.com"); // 신규 이메일
 
 						TestConvertMapperUtils.convertObjectToJson(reqJson);
