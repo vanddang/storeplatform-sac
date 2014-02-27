@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.music.controller.binder;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
@@ -23,7 +24,6 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
     @Override
     public void mapMusic(Product product, MusicDetail musicDetail, List<SubContent> contentList) {
         Music music = new Music();
-        music.setIdentifier(new Identifier("downloadId", musicDetail.getOutsdContentsId()));
 
         // Music Source List
         music.setSourceList(new ArrayList<Source>());
@@ -51,10 +51,13 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
 
     @Override
     public void mapThumbnail(Product product, MusicDetail musicDetail) {
-        Source source = new Source();
-        source.setUrl(musicDetail.getThmPath());
-        source.setMediaType(DisplayCommonUtil.getMimeType(musicDetail.getThmPath()));
-        product.setSourceList(new ArrayList<Source>(Arrays.asList(source)));
+        product.setSourceList(new ArrayList<Source>());
+        if(!StringUtils.isEmpty(musicDetail.getThmPath())) {
+            Source source = new Source();
+            source.setUrl(musicDetail.getThmPath());
+            source.setMediaType(DisplayCommonUtil.getMimeType(musicDetail.getThmPath()));
+            product.getSourceList().add(source);
+        }
     }
 
     @Override
@@ -81,6 +84,8 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         product.setIdentifierList(new ArrayList<Identifier>());
         product.getIdentifierList().add(new Identifier("channel", musicDetail.getChnlId()));
         product.getIdentifierList().add(new Identifier("episode", musicDetail.getEpsdId()));
+        product.getIdentifierList().add(new Identifier("song", musicDetail.getOutsdContentsId()));
+
         Title title = new Title();
         title.setText(musicDetail.getProdNm());
         product.setTitle(title);
@@ -96,12 +101,12 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         rights.setGrade(musicDetail.getProdGrd());
         product.setRights(rights);
 
-        // TODO 구매 메소드 호출하여 판매상태 반영
-        product.setSalesStatus("PD000403");
+        if(!DisplayConstants.DP_SALE_STAT_ING.equals(musicDetail.getProdStatusCd()))
+            product.setSalesStatus("restricted");
 
         // Contributor
         Contributor contributor = new Contributor();
-        contributor.setIdentifier(new Identifier("contributorId", musicDetail.getArtist1Id()));
+        contributor.setIdentifier(new Identifier("artist", musicDetail.getArtist1Id()));
         contributor.setName(musicDetail.getArtist1Nm());
 
         contributor.setAlbum(musicDetail.getArtist3Nm());

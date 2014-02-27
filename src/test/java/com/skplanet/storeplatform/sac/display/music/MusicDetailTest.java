@@ -9,14 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.music;
 
-import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.skplanet.storeplatform.sac.display.MvcTestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -25,10 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 /**
  * <p>
@@ -42,9 +37,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class MusicDetailTest {
 
+    private static final String URL = "/display/music/detail/v1";
+    private static final String CHNL_ID_OK = "H000460202";
+    private static final String CHNL_ID_INVAL = "H000460";
+
     @Autowired
     private WebApplicationContext wac;
-
     private MockMvc mvc;
 
     @Before
@@ -55,20 +53,64 @@ public class MusicDetailTest {
     @Test
     public void musicDetailTest() throws Exception {
         MusicDetailReq req = new MusicDetailReq();
-        req.setChannelId("H900023836");
+        req.setChannelId(CHNL_ID_OK);
 
-        ObjectMapper om = new ObjectMapper();
-        String body = om.writeValueAsString(req);
-
-        this.mvc.perform(
-                post("/display/music/detail/v1")
-                        .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body)
-        )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(header().string("x-sac-result-code", "SUCC"))
-        ;
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true);
     }
+
+    @Test
+    public void validatorTest1() throws Exception{
+        MusicDetailReq req = new MusicDetailReq();
+
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+    }
+
+    @Test
+    public void validatorTest2() throws Exception {
+        MusicDetailReq req = new MusicDetailReq();
+        req.setChannelId("H000460202");
+
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true);
+    }
+
+    @Test
+    public void validatorTest3() throws Exception {
+        MusicDetailReq req = new MusicDetailReq();
+        req.setChannelId("H000460202");
+        req.setUserKey("AA");
+
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+    }
+
+    @Test
+    public void validatorTest4() throws Exception {
+        MusicDetailReq req = new MusicDetailReq();
+        req.setChannelId("H000460202");
+        req.setDeviceKey("BB");
+
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+    }
+
+    @Test
+    public void purchase1() throws Exception {
+        MusicDetailReq req = new MusicDetailReq();
+        req.setChannelId("H000460202");
+//        req.setDeviceKey("BB");
+//        req.setUserKey("");
+
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true)
+                .andExpect(jsonPath("/product/salesStatus").doesNotExist());
+    }
+
+    @Test
+    public void purchase2() throws Exception {
+        MusicDetailReq req = new MusicDetailReq();
+        req.setChannelId("H000460202");
+        req.setDeviceKey("01046129429");
+        req.setUserKey("IF1023541315020111207133720");
+
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true)
+                .andExpect(jsonPath("/product/salesStatus").doesNotExist());
+    }
+
 }

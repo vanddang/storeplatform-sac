@@ -51,4 +51,14 @@ public interface DisplayCommonService {
 	 */
 	public String getDeviceIdType(String deviceId);
 
+    /**
+     * 특정 상품의 구매 내역 유무를 확인한다.
+     * @param tenantId 테넌트ID
+     * @param userKey 사용자키
+     * @param deviceKey 디바이스키
+     * @param episodeId 에피소드ID
+     * @return 구매 내역이 있는 경우 true
+     */
+    public boolean checkPurchase(String tenantId, String userKey, String deviceKey, String episodeId);
+
 }

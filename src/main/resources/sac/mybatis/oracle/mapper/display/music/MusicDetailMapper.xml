@@ -4,8 +4,7 @@
 
     <!-- Music Main -->
     <select id="getMusicDetail" parameterType="com.skplanet.storeplatform.sac.display.music.vo.MusicDetailParam" resultType="com.skplanet.storeplatform.sac.display.music.vo.MusicDetail">
-        /* MusicDetailMapper.xml, getMusicDetail, SAC : 정희원 , 2014-01-24 */
-        SELECT
+        SELECT /* MusicDetailMapper.xml, getMusicDetail, SAC : 정희원 , 2014-01-24 */
             CPD.PROD_ID AS CHNL_ID,
             EPD.PROD_ID AS EPSD_ID,
             TPRC.PROD_AMT,
@@ -29,7 +28,8 @@
             MM.AGENCY_NM,
             MM.CHNL_COMP_NM,
             MM.OUTSD_CONTENTS_ID,
-            PI.FILE_PATH || PI.FILE_NM AS THM_PATH
+            PI.FILE_PATH || PI.FILE_NM AS THM_PATH,
+            TP.PROD_STATUS_CD
         FROM TB_DP_PROD CPD
             INNER JOIN TB_DP_PROD_RSHP RS
                 ON RS.PROD_ID = CPD.PROD_ID
@@ -44,10 +44,11 @@
             INNER JOIN TB_DP_PROD_DESC PDESC
                 ON PDESC.PROD_ID = EPD.PROD_ID
             LEFT OUTER JOIN TB_DP_PROD_IMG PI
-
-                ON PI.PROD_ID = CPD.PROD_ID AND PI.EXPO_ORD = 1 AND PI.LANG_CD = PDESC.LANG_CD
+                ON PI.PROD_ID = CPD.PROD_ID AND PI.EXPO_ORD = 1 AND PI.LANG_CD = PDESC.LANG_CD AND PI.IMG_CD = 'DP000162' -- 곡 이미지
             INNER JOIN TB_DP_TENANT_PROD TP
                 ON TP.PROD_ID = EPD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD CTP
+                ON CTP.PROD_ID = CPD.PROD_ID
             INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
                 ON TPRC.PROD_ID = EPD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
             LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
@@ -63,10 +64,10 @@
               AND TP.TENANT_ID = #{tenantId}
               AND PDESC.LANG_CD = #{langCd}
               AND CPD.PROD_ID = #{channelId}
-              AND PI.IMG_CD = 'DP000162' -- 곡 이미지
               AND RS.PROD_RSHP_CD = 'DP010802'
-              AND TP.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404')
               AND TP.EXPO_YN = 'Y'
+              AND TP.PROD_STATUS_CD IN ( 'PD000403', 'PD000404', 'PD000409' )
+              AND CTP.PROD_STATUS_CD IN ( 'PD000402', 'PD000403', 'PD000404' )
     </select>
 
     <select id="getSubContentList" parameterType="String" resultType="com.skplanet.storeplatform.sac.display.music.vo.SubContent">

@@ -7,7 +7,7 @@ package com.skplanet.storeplatform.sac.display.app.vo;
 public class AppDetail {
     private String prodId;
     private String subContentsId;
-    private String wapProdNm;
+    private String prodNm;
     private Integer prodAmt;
     private Double avgEvluScore;
     private Integer dwldCnt;
@@ -20,10 +20,19 @@ public class AppDetail {
     private String vmVer;
     private String sellerMbrNo;
     private String prodGbn;
-    private String prodGrd;
+    private String prodGrdCd;
     private String expoSellerEmail;
     private String expoSellerNm;
     private String expoSellerTelno;
+    private String prodStatusCd;
+
+    public String getProdStatusCd() {
+        return prodStatusCd;
+    }
+
+    public void setProdStatusCd(String prodStatusCd) {
+        this.prodStatusCd = prodStatusCd;
+    }
 
     public Integer getFileSize() {
         return fileSize;
@@ -73,12 +82,12 @@ public class AppDetail {
         this.subContentsId = subContentsId;
     }
 
-    public String getWapProdNm() {
-        return wapProdNm;
+    public String getProdNm() {
+        return prodNm;
     }
 
-    public void setWapProdNm(String wapProdNm) {
-        this.wapProdNm = wapProdNm;
+    public void setProdNm(String prodNm) {
+        this.prodNm = prodNm;
     }
 
     public Integer getProdAmt() {
@@ -169,11 +178,11 @@ public class AppDetail {
         this.prodGbn = prodGbn;
     }
 
-    public String getProdGrd() {
-        return prodGrd;
+    public String getProdGrdCd() {
+        return prodGrdCd;
     }
 
-    public void setProdGrd(String prodGrd) {
-        this.prodGrd = prodGrd;
+    public void setProdGrdCd(String prodGrdCd) {
+        this.prodGrdCd = prodGrdCd;
     }
 }

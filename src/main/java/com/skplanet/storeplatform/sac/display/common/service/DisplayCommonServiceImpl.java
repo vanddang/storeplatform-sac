@@ -1,9 +1,14 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -25,6 +30,9 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+    @Autowired
+    private ExistenceSCI existenceSCI;
 
 	@Override
 	public String getBatchStandardDateString(String tenantId, String listId) {
@@ -70,4 +78,20 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 		return deviceType;
 	}
+
+    @Override
+    public boolean checkPurchase(String tenantId, String userKey, String deviceKey, String episodeId) {
+        ExistenceScReq existenceScReq = new ExistenceScReq();
+        existenceScReq.setTenantId(tenantId);
+        existenceScReq.setUserKey(userKey);
+        existenceScReq.setDeviceKey(deviceKey);
+        ExistenceItemSc itemSc = new ExistenceItemSc();
+        itemSc.setProdId(episodeId);
+        List<ExistenceItemSc> itemScList = new ArrayList<ExistenceItemSc>();
+        itemScList.add(itemSc);
+        existenceScReq.setProductList(itemScList);
+
+        List<ExistenceScRes> resList = existenceSCI.searchExistenceList(existenceScReq);
+        return resList != null && resList.size() > 0;
+    }
 }

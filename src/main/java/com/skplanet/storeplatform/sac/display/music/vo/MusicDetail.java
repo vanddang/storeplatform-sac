@@ -1,10 +1,14 @@
 package com.skplanet.storeplatform.sac.display.music.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * MusicDetail
  * Updated on : 2014. 01. 24 Updated by : 정희원, SK 플래닛.
  */
-public class MusicDetail {
+public class MusicDetail extends CommonInfo {
+
+    private static final long serialVersionUID = -1L;
 
     private String chnlId;
     private String epsdId;
@@ -30,6 +34,15 @@ public class MusicDetail {
     private String chnlCompNm;
     private String outsdContentsId;
     private String thmPath;
+    private String prodStatusCd;
+
+    public String getProdStatusCd() {
+        return prodStatusCd;
+    }
+
+    public void setProdStatusCd(String prodStatusCd) {
+        this.prodStatusCd = prodStatusCd;
+    }
 
     public String getThmPath() {
         return thmPath;

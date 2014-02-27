@@ -12,9 +12,11 @@ package com.skplanet.storeplatform.sac.display.app;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
+import com.skplanet.storeplatform.sac.display.MvcTestBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,9 +44,10 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class AppDetailTest {
 
+    private static final String URL = "/display/app/detail/v1";
+
     @Autowired
     private WebApplicationContext wac;
-
     private MockMvc mvc;
 
     @Before
@@ -55,19 +58,53 @@ public class AppDetailTest {
     @Test
     public void appDetailTest() throws Exception {
         AppDetailReq req = new AppDetailReq();
-        req.setChannelId("0000044585");
-        ObjectMapper om = new ObjectMapper();
-        String body = om.writeValueAsString(req);
+        req.setChannelId("0000065131"); // 0000065131 - 구매 이력이 존재하는 앱 상품
 
-        this.mvc.perform(
-                post("/display/app/detail/v1")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body)
-        )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true);
     }
+
+    @Test
+    public void appDetailTestWithPurchase() throws Exception {
+        AppDetailReq req = new AppDetailReq();
+        req.setChannelId("0000065131"); // 0000065131 - 구매 이력이 존재하는 앱 상품
+
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true);
+    }
+
+    @Test
+    public void validatorTest1() throws Exception {
+        AppDetailReq req = new AppDetailReq();
+        req.setUserKey("AA");
+
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+    }
+
+    @Test
+    public void validatorTest2() throws Exception {
+        AppDetailReq req = new AppDetailReq();
+        req.setDeviceKey("BB");
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+    }
+
+    @Test
+    public void appDetailTestWithPurchase2() throws Exception {
+        AppDetailReq req = new AppDetailReq();
+        req.setChannelId("0000065131"); // 0000065131 - 구매 이력이 존재하는 앱 상품
+        req.setUserKey("IF1023000075420110321134705");
+        req.setDeviceKey("01045916961");    // 개발계에는 deviceKey가 MDN으로 정의되어 있음.
+
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true);
+    }
+
+    @Test
+    public void appDetailTestWithPurchase3() throws Exception {
+        AppDetailReq req = new AppDetailReq();
+        req.setChannelId("0000065131"); // 0000065131 - 구매 이력이 존재하는 앱 상품
+        req.setUserKey("IF1023000075420110321134705");
+        req.setDeviceKey("");
+
+        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+    }
+
+
 }

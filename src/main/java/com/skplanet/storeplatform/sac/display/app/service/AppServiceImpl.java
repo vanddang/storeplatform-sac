@@ -9,40 +9,24 @@
  */
 package com.skplanet.storeplatform.sac.display.app.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.display.app.vo.*;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.display.app.vo.*;
-import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
-import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.History;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+import java.util.*;
 
 /**
  * 앱 상품 상세조회
@@ -75,24 +59,35 @@ public class AppServiceImpl implements AppService {
 	@Override
 	public AppDetailRes getAppDetail(AppDetailParam request) {
 
-		// TODO Provisioning - 단말기, 운영체제 버전
 		AppDetail appDetail = this.commonDAO.queryForObject("AppDetail.getAppDetail", request, AppDetail.class);
 		if (appDetail == null)
 			return null;
+
 		AppDetailRes res = new AppDetailRes();
+
+        if (!appDetail.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
+            // 04, 09, 10의 경우 구매이력이 없으면 상품 없음을 표시한다.
+            if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(appDetail.getProdStatusCd()) ||
+                    DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(appDetail.getProdStatusCd()) ||
+                    DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(appDetail.getProdStatusCd())) {
+                if (!StringUtils.isEmpty(request.getUserKey()) && !StringUtils.isEmpty(request.getDeviceKey()) &&
+                        !commonService.checkPurchase(request.getTenantId(), request.getUserKey(), request.getDeviceKey(), request.getChannelId())) {
+                    return null;
+                }
+                else
+                    res.getProduct().setSalesStatus("restricted");
+            }
+        }
 
         // Product Basic info
         Product product = new Product();
         product.setIdentifier(new Identifier("episode", request.getChannelId()));
         product.setPacketFee(appDetail.getProdGbn());
 
-		product.setTitle(new Title(appDetail.getWapProdNm()));
+		product.setTitle(new Title(appDetail.getProdNm()));
 		Price price = new Price();
 		price.setFixedPrice(appDetail.getProdAmt());
 		product.setPrice(price);
-
-        // TODO 구매 메소드 호출하여 판매상태 반영
-        product.setSalesStatus("PD000403");
 
         // Menu
         List<MenuItem> menuList = commonService.getMenuItemList(request.getChannelId(), request.getLangCd());
@@ -131,7 +126,7 @@ public class AppServiceImpl implements AppService {
 		product.setAccrual(accrual);
 
 		Rights rights = new Rights();
-		rights.setGrade(appDetail.getProdGrd());
+		rights.setGrade(appDetail.getProdGrdCd());
 		product.setRights(rights);
 
 		// App

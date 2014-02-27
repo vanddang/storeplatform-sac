@@ -7,7 +7,7 @@
         SELECT
             PD.PROD_ID,
             SC.SUB_CONTENTS_ID,
-            APP.WAP_PROD_NM,
+            PDESC.PROD_NM,
             TPRC.PROD_AMT,
             nvl(TS.AVG_EVLU_SCORE, 0.0) as AVG_EVLU_SCORE,
             nvl(TS.DWLD_CNT, 0) as DWLD_CNT,
@@ -19,25 +19,24 @@
             SC.VM_VER,
             SC.FILE_SIZE,
             DECODE( NVL( APP.PROD_CLSF_CD, 'PD000601' )
-            , 'PD000601', 'PAID'
-            , 'PD000602', 'LIBRARY'
-            , 'PD000603', 'VM'
-            , 'PD000604', 'FREE'
-            , 'PD000605', 'PAID-RSS'
-            , 'PD000606', 'FREE-RSS' )  AS PROD_GBN,
-            DECODE( PD.PROD_GRD_CD
-            , 'PD004401', 0
-            , 'PD004402', 1
-            , 'PD004403', 2
-            , 'PD004404', 4 ) AS PROD_GRD,
+            , 'PD000601', 'paid'
+            , 'PD000602', 'library'
+            , 'PD000603', 'vm'
+            , 'PD000604', 'free'
+            , 'PD000605', 'paid-rss'
+            , 'PD000606', 'free-rss' )  AS PROD_GBN,
+            PD.PROD_GRD_CD,
             PD.SELLER_MBR_NO,
             PD.EXPO_SELLER_EMAIL,
             PD.EXPO_SELLER_NM,
-            PD.EXPO_SELLER_TELNO
+            PD.EXPO_SELLER_TELNO,
+            TP.PROD_STATUS_CD
         FROM
                 TB_DP_PROD PD
                 INNER JOIN TB_DP_APP_PROD APP
                     ON PD.PROD_ID = APP.PROD_ID
+                INNER JOIN TB_DP_PROD_DESC PDESC
+                    ON PDESC.PROD_ID = PD.PROD_ID
                 INNER JOIN TB_DP_SPRT_DEVICE SD
                     ON SD.PROD_ID = PD.PROD_ID
                 INNER JOIN TB_CM_DEVICE DEV
@@ -52,6 +51,7 @@
                     ON TPRC.PROD_ID = PD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
         WHERE 1 = 1
               AND PD.PROD_ID = #{channelId}
+              AND PDESC.LANG_CD = #{langCd}
               AND TP.TENANT_ID = #{tenantId}
               AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = #{standardModel})
               AND DEV.USE_YN = 'Y'

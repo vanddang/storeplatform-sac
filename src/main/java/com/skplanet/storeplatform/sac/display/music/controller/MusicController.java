@@ -10,6 +10,11 @@
 package com.skplanet.storeplatform.sac.display.music.controller;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -24,11 +29,10 @@ import com.skplanet.storeplatform.sac.display.music.vo.SubContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,6 +49,11 @@ public class MusicController {
 
     @Autowired
     private MusicDetailBinder musicDetailBinder;
+
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.setValidator(new MusicDetailReqValidator());
+    }
 
     @RequestMapping(value = "/music/detail/v1", method = RequestMethod.POST)
     @ResponseBody

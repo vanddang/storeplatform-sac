@@ -11,18 +11,17 @@ package com.skplanet.storeplatform.sac.display.app.controller;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
-import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.app.service.AppService;
+import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * AppController
@@ -32,8 +31,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/display")
 public class AppController {
 
+    private static final Logger logger = LoggerFactory.getLogger(AppController.class);
+
     @Autowired
     private AppService appService;
+
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.setValidator(new AppDetailReqValidator());
+    }
 
     @RequestMapping(value = "/app/detail/v1", method = RequestMethod.POST)
     @ResponseBody
