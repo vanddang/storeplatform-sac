@@ -25,10 +25,25 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class SubSelectOption extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	private String id; // 에피소드 ID
 	private String subId; // 두번째 콤보에 들어갈 옵션 ID
 	private Title subTitle; // 두번째 콤보에 들어갈 제목
 	private Price subPrice; // 두번째 콤보에 들어갈 가격
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return this.id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return String

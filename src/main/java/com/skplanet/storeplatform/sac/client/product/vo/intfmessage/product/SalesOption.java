@@ -30,11 +30,11 @@ public class SalesOption extends CommonInfo implements Serializable {
 	private String type;
 	private String satus; // 상품 상태 (soldout : 매진상품)
 	private String btob; // B2B 상품 여부(Y/N)
-	private String maxMonthlySale; // 월간 최대 판매가능 수량
-	private String maxDailySale; // 일간 최대 판매가능 수량
-	private String maxMonthlyBuy; // 1인 월간 최대 구매가능 수량
-	private String maxDailyBuy; // 1인 일간 최대 구매가능 수량
-	private String maxOnceBuy; // 1회 최대 구매가능 수량
+	private Integer maxMonthlySale; // 월간 최대 판매가능 수량
+	private Integer maxDailySale; // 일간 최대 판매가능 수량
+	private Integer maxMonthlyBuy; // 1인 월간 최대 구매가능 수량
+	private Integer maxDailyBuy; // 1인 일간 최대 구매가능 수량
+	private Integer maxOnceBuy; // 1회 최대 구매가능 수량
 	private String placeUsage; // 사용장소
 	private String restrictUsage; // 사용제한
 	private String principleUsage; // 유의사항
@@ -86,77 +86,77 @@ public class SalesOption extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return String
+	 * @return the maxMonthlySale
 	 */
-	public String getMaxMonthlySale() {
+	public Integer getMaxMonthlySale() {
 		return this.maxMonthlySale;
 	}
 
 	/**
 	 * @param maxMonthlySale
-	 *            maxMonthlySale
+	 *            the maxMonthlySale to set
 	 */
-	public void setMaxMonthlySale(String maxMonthlySale) {
+	public void setMaxMonthlySale(Integer maxMonthlySale) {
 		this.maxMonthlySale = maxMonthlySale;
 	}
 
 	/**
-	 * @return String
+	 * @return the maxDailySale
 	 */
-	public String getMaxDailySale() {
+	public Integer getMaxDailySale() {
 		return this.maxDailySale;
 	}
 
 	/**
 	 * @param maxDailySale
-	 *            maxDailySale
+	 *            the maxDailySale to set
 	 */
-	public void setMaxDailySale(String maxDailySale) {
+	public void setMaxDailySale(Integer maxDailySale) {
 		this.maxDailySale = maxDailySale;
 	}
 
 	/**
-	 * @return String
+	 * @return the maxMonthlyBuy
 	 */
-	public String getMaxMonthlyBuy() {
+	public Integer getMaxMonthlyBuy() {
 		return this.maxMonthlyBuy;
 	}
 
 	/**
 	 * @param maxMonthlyBuy
-	 *            maxMonthlyBuy
+	 *            the maxMonthlyBuy to set
 	 */
-	public void setMaxMonthlyBuy(String maxMonthlyBuy) {
+	public void setMaxMonthlyBuy(Integer maxMonthlyBuy) {
 		this.maxMonthlyBuy = maxMonthlyBuy;
 	}
 
 	/**
-	 * @return String
+	 * @return the maxDailyBuy
 	 */
-	public String getMaxDailyBuy() {
+	public Integer getMaxDailyBuy() {
 		return this.maxDailyBuy;
 	}
 
 	/**
 	 * @param maxDailyBuy
-	 *            maxDailyBuy
+	 *            the maxDailyBuy to set
 	 */
-	public void setMaxDailyBuy(String maxDailyBuy) {
+	public void setMaxDailyBuy(Integer maxDailyBuy) {
 		this.maxDailyBuy = maxDailyBuy;
 	}
 
 	/**
-	 * @return String
+	 * @return the maxOnceBuy
 	 */
-	public String getMaxOnceBuy() {
+	public Integer getMaxOnceBuy() {
 		return this.maxOnceBuy;
 	}
 
 	/**
 	 * @param maxOnceBuy
-	 *            maxOnceBuy
+	 *            the maxOnceBuy to set
 	 */
-	public void setMaxOnceBuy(String maxOnceBuy) {
+	public void setMaxOnceBuy(Integer maxOnceBuy) {
 		this.maxOnceBuy = maxOnceBuy;
 	}
 

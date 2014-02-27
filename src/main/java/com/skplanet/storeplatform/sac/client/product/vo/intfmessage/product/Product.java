@@ -246,6 +246,11 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private String itemCode;
 
+	/**
+	 * 특가상품 여부
+	 */
+	private String specialProdYn;
+
 	public String getSalesStatus() {
 		return this.salesStatus;
 	}
@@ -992,6 +997,21 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setItemCode(String itemCode) {
 		this.itemCode = itemCode;
+	}
+
+	/**
+	 * @return the specialProdYn
+	 */
+	public String getSpecialProdYn() {
+		return this.specialProdYn;
+	}
+
+	/**
+	 * @param specialProdYn
+	 *            the specialProdYn to set
+	 */
+	public void setSpecialProdYn(String specialProdYn) {
+		this.specialProdYn = specialProdYn;
 	}
 
 }

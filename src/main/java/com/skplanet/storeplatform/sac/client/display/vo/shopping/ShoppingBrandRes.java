@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
@@ -23,12 +24,13 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
-public class ShoppingRes extends CommonInfo {
+public class ShoppingBrandRes extends CommonInfo {
 	/**
 	 * 
 	 */
 	private CommonResponse commonResponse;
 	private static final long serialVersionUID = 1L;
+	private Layout layOut;
 	private List<Product> productList;
 
 	/**
@@ -44,6 +46,21 @@ public class ShoppingRes extends CommonInfo {
 	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
+	}
+
+	/**
+	 * @return the layOut
+	 */
+	public Layout getLayOut() {
+		return this.layOut;
+	}
+
+	/**
+	 * @param layOut
+	 *            the layOut to set
+	 */
+	public void setLayOut(Layout layOut) {
+		this.layOut = layOut;
 	}
 
 	/**
