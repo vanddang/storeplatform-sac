@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.purchase.history.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -27,9 +26,6 @@ import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScRes;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistorySc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ProductCountSc;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ProductInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
@@ -216,29 +212,29 @@ public class HistoryListServiceImpl implements HistoryListService {
 		/*************************************************
 		 * 상품정보 Mapping Start
 		 **************************************************/
-		ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
-		ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
-
-		productInfoSacReq.setDeviceModelNo(request.getModel());
-		productInfoSacReq.setList(prodIdList);
-
-		if (prodIdList.size() > 0) {
-			productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
-
-			if (productInfoSacRes != null) {
-				HashMap<String, Object> prodMap = new HashMap<String, Object>();
-				for (HistorySac obj : sacHistoryList) {
-					for (ProductInfo info : productInfoSacRes.getProductList()) {
-						if (obj.getProdId().equals(info.getProdId())) {
-							prodMap = new HashMap<String, Object>();
-							prodMap.put("productList", info);
-							obj.setProductInfo(prodMap);
-							break;
-						}
-					}
-				}
-			}
-		}
+		// ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
+		// ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
+		//
+		// productInfoSacReq.setDeviceModelNo(request.getModel());
+		// productInfoSacReq.setList(prodIdList);
+		//
+		// if (prodIdList.size() > 0) {
+		// productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
+		//
+		// if (productInfoSacRes != null) {
+		// HashMap<String, Object> prodMap = new HashMap<String, Object>();
+		// for (HistorySac obj : sacHistoryList) {
+		// for (ProductInfo info : productInfoSacRes.getProductList()) {
+		// if (obj.getProdId().equals(info.getProdId())) {
+		// prodMap = new HashMap<String, Object>();
+		// prodMap.put("productList", info);
+		// obj.setProductInfo(prodMap);
+		// break;
+		// }
+		// }
+		// }
+		// }
+		// }
 
 		/*************************************************
 		 * 상품정보 Mapping End
