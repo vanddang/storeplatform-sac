@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.member.idp.service.IdpProvisionService;
 import com.skplanet.storeplatform.sac.member.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
@@ -28,7 +30,10 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 public class IdpController {
 
 	@Autowired
-	private IdpService service;
+	private IdpService idpService;
+
+	@Autowired
+	private IdpProvisionService idpProvisionService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdpController.class);
 
@@ -52,12 +57,14 @@ public class IdpController {
 					provisioningReq.getReqParam());
 			String cmd = provisioningReq.getCmd();
 			boolean isIm = (cmd.indexOf("RX") == 0);
-			Method method = this.service.getClass().getMethod(isIm ? "rX" + cmd.substring(2) : cmd, HashMap.class);
-			// TODO : Reflection에 대한 성능 이슈 있으니 사용할지 한번더 고려 해보기 - 임재호 2014.1.8
 			if (isIm) {
-				provisioningRes.setImResult((ImResult) method.invoke(this.service, provisioningReq.getReqParam()));
+				Method method = this.idpService.getClass().getMethod("execute" + cmd, HashMap.class);
+				provisioningRes.setImResult((ImResult) method.invoke(this.idpService, provisioningReq.getReqParam()));
 			} else {
-				provisioningRes.setResult((String) method.invoke(this.service, provisioningReq.getReqParam()));
+				Method method = this.idpProvisionService.getClass().getMethod(
+						"execute" + StringUtils.upperCase(cmd.substring(0, 1)) + cmd.substring(2), HashMap.class);
+				provisioningRes.setResult((String) method.invoke(this.idpProvisionService,
+						provisioningReq.getReqParam()));
 			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
