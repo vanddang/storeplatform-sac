@@ -2244,24 +2244,10 @@ public class IdpServiceImpl implements IdpService {
 						UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 						updateUserRequest.setCommonRequest(commonRequest);
 
-						// 통합서비스 관리번호 동일 & mbr_no가 다를 경우만 DB에 있는 데이터를 Request있는 데이터로 update시킴
+						// 통합서비스 관리번호 동일 & mbr_no가 다를 경우만 DB에 있는 데이터를 Request있는 데이터로 db내용을 update시킴
 						if (!searchUserResponse.getUserMbr().getImMbrNo().equals(map.get("user_key").toString())) {
-							if (searchUserResponse.getMbrAuth() != null)
-								updateUserRequest.setMbrAuth(searchUserResponse.getMbrAuth());
-
-							if (searchUserResponse.getMbrClauseAgreeList() != null)
-								updateUserRequest.setMbrClauseAgree(searchUserResponse.getMbrClauseAgreeList());
-
-							if (searchUserResponse.getMbrAuth() != null)
-								updateUserRequest.setMbrAuth(searchUserResponse.getMbrAuth());
-
-							if (searchUserResponse.getMbrLglAgent() != null)
-								updateUserRequest.setMbrLglAgent(searchUserResponse.getMbrLglAgent());
-
-							if (searchUserResponse.getUserMbr() != null)
-								updateUserRequest.setUserMbr(searchUserResponse.getUserMbr());
-
-							UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
+							UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(
+									map, searchUserResponse));
 
 							userKey = updateUserResponse.getUserKey();
 
