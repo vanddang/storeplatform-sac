@@ -12,14 +12,12 @@ package com.skplanet.storeplatform.sac.display.menu.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq;
@@ -130,16 +128,14 @@ public class CategoryServiceImpl implements CategoryService {
 		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
 		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
 
-		// 필수 파라미터 체크
-		this.log.debug("필수 파라미터 체크");
-		if (StringUtils.isEmpty(requestVO.getTopMenuId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", requestVO.getTopMenuId());
-		}
+		// // 필수 파라미터 체크
+		// this.log.debug("필수 파라미터 체크");
+		// if (StringUtils.isEmpty(requestVO.getTopMenuId())) {
+		// throw new StorePlatformException("SAC_DSP_0002", "topMenuId", requestVO.getTopMenuId());
+		// }
 
 		MenuListSacRes menuListSacRes = new MenuListSacRes();
 		CommonResponse commonResponse = new CommonResponse();
-		// List<Menu> menuList = new ArrayList<Menu>();
-		// Menu menu1depth;
 		List<MenuDetail> menuDetail2DepthList = new ArrayList<MenuDetail>();
 		List<Menu> resultList = null;
 

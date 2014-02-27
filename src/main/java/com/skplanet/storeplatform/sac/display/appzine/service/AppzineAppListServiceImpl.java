@@ -12,12 +12,10 @@ package com.skplanet.storeplatform.sac.display.appzine.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineAppListSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineAppListSacRes;
@@ -58,14 +56,12 @@ public class AppzineAppListServiceImpl implements AppzineAppListService {
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
-
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getAppType())) {
-			throw new StorePlatformException("SAC_DSP_0002", "appType", requestVO.getAppType());
-		} else if (StringUtils.isEmpty(requestVO.getAppznNo())) {
-			throw new StorePlatformException("SAC_DSP_0002", "appznNo", requestVO.getAppznNo());
-		}
-
+		/*
+		 * // 필수 파라미터 체크 if (StringUtils.isEmpty(requestVO.getAppType())) { throw new
+		 * StorePlatformException("SAC_DSP_0002", "appType", requestVO.getAppType()); } else if
+		 * (StringUtils.isEmpty(requestVO.getAppznNo())) { throw new StorePlatformException("SAC_DSP_0002", "appznNo",
+		 * requestVO.getAppznNo()); }
+		 */
 		CommonResponse commonResponse = new CommonResponse();
 		AppzineAppListSacRes appzineAppListSacRes = new AppzineAppListSacRes();
 		Appzine appzine = null;

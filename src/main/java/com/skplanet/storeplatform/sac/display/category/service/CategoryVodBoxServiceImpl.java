@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacRes;
@@ -88,16 +87,16 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		requestVO.setChapter(requestVO.getChapter() != null ? requestVO.getChapter() : 0);
 		requestVO.setRegDate(requestVO.getRegDate() != null ? requestVO.getRegDate() : "20000101000000");
 
-		// 필수 파라미터 체크
-		this.log.debug("필수 파라미터 체크");
-		if (StringUtils.isEmpty(requestVO.getChannelId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "channelId", requestVO.getChannelId());
-		} else if (StringUtils.isEmpty(requestVO.getFilteredBy())) {
-			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", requestVO.getFilteredBy());
-		} else if (!requestVO.getFilteredBy().equals("duration") && !requestVO.getFilteredBy().equals("chapter")
-				&& !requestVO.getFilteredBy().equals("regDate")) {
-			throw new StorePlatformException("SAC_DSP_0003", "filteredBy", requestVO.getFilteredBy());
-		}
+		// // 필수 파라미터 체크
+		// this.log.debug("필수 파라미터 체크");
+		// if (StringUtils.isEmpty(requestVO.getChannelId())) {
+		// throw new StorePlatformException("SAC_DSP_0002", "channelId", requestVO.getChannelId());
+		// } else if (StringUtils.isEmpty(requestVO.getFilteredBy())) {
+		// throw new StorePlatformException("SAC_DSP_0002", "filteredBy", requestVO.getFilteredBy());
+		// } else if (!requestVO.getFilteredBy().equals("duration") && !requestVO.getFilteredBy().equals("chapter")
+		// && !requestVO.getFilteredBy().equals("regDate")) {
+		// throw new StorePlatformException("SAC_DSP_0003", "filteredBy", requestVO.getFilteredBy());
+		// }
 
 		CategoryVodBoxSacRes categoryVodBoxSacRes = new CategoryVodBoxSacRes();
 		CommonResponse commonResponse = new CommonResponse();

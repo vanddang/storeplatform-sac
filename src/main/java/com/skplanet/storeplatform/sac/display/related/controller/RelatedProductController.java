@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -60,7 +61,8 @@ public class RelatedProductController {
 	 */
 	@RequestMapping(value = "/similar/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SimilarProductSacRes searchSimilarProductList(SimilarProductSacReq requestVO, SacRequestHeader requestHeader) {
+	public SimilarProductSacRes searchSimilarProductList(@Validated SimilarProductSacReq requestVO,
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("RelatedProductController.searchSimilarProductList start !!");
 
@@ -81,8 +83,8 @@ public class RelatedProductController {
 	 */
 	@RequestMapping(value = "/boughtTogether/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BoughtTogetherProductSacRes searchBoughtTogetherProductList(BoughtTogetherProductSacReq requestVO,
-			SacRequestHeader requestHeader) {
+	public BoughtTogetherProductSacRes searchBoughtTogetherProductList(
+			@Validated BoughtTogetherProductSacReq requestVO, SacRequestHeader requestHeader) {
 
 		this.logger.debug("RelatedProductController.searchBoughtTogetherProductList start !!");
 
@@ -103,7 +105,8 @@ public class RelatedProductController {
 	 */
 	@RequestMapping(value = "/seller/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader) {
+	public SellerProductSacRes searchSellerProductList(@Validated SellerProductSacReq requestVO,
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("RelatedProductController.searchSellerProductList start !!");
 
@@ -124,7 +127,8 @@ public class RelatedProductController {
 	 */
 	@RequestMapping(value = "/author/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public AuthorProductSacRes searchAuthorProductList(AuthorProductSacReq requestVO, SacRequestHeader requestHeader) {
+	public AuthorProductSacRes searchAuthorProductList(@Validated AuthorProductSacReq requestVO,
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("RelatedProductController.searchAuthorProductList start !!");
 

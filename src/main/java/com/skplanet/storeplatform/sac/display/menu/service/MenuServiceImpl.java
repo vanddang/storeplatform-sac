@@ -12,12 +12,10 @@ package com.skplanet.storeplatform.sac.display.menu.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListSacRes;
@@ -126,10 +124,10 @@ public class MenuServiceImpl implements MenuService {
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getMenuId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "menuId", requestVO.getMenuId());
-		}
+		// // 필수 파라미터 체크
+		// if (StringUtils.isEmpty(requestVO.getMenuId())) {
+		// throw new StorePlatformException("SAC_DSP_0002", "menuId", requestVO.getMenuId());
+		// }
 
 		MenuDetailSacRes menuDetailSacRes = new MenuDetailSacRes();
 		CommonResponse commonResponse = new CommonResponse();

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,7 +53,8 @@ public class AppzineController {
 	 */
 	@RequestMapping(value = "/vol/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public AppzineVolListSacRes searchAappzineVolList(AppzineVolListSacReq requestVO, SacRequestHeader requestHeader) {
+	public AppzineVolListSacRes searchAappzineVolList(@Validated AppzineVolListSacReq requestVO,
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("AppzineVolListService.searchAappzineVolList start !!");
 
@@ -72,7 +74,8 @@ public class AppzineController {
 	 */
 	@RequestMapping(value = "/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public AppzineDetailSacRes searchAappzineDetail(AppzineDetailSacReq requestVO, SacRequestHeader requestHeader) {
+	public AppzineDetailSacRes searchAappzineDetail(@Validated AppzineDetailSacReq requestVO,
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("AppzineDetailService.searchAappzineDetail start !!");
 
@@ -92,7 +95,8 @@ public class AppzineController {
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public AppzineAppListSacRes searchAappzineAppList(AppzineAppListSacReq requestVO, SacRequestHeader requestHeader) {
+	public AppzineAppListSacRes searchAappzineAppList(@Validated AppzineAppListSacReq requestVO,
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("AppzineAppistService.searchAappzineAppList start !!");
 

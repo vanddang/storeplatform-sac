@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq.SearchMenuDetail;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq.SearchMenuList;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq.SearchSubMenuList;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq.SearchTopMenuList;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.menu.service.CategoryService;
 import com.skplanet.storeplatform.sac.display.menu.service.MenuService;
@@ -45,7 +50,8 @@ public class MenuController {
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuListSacRes searchMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader) {
+	public MenuListSacRes searchMenuList(@Validated(SearchMenuList.class) MenuSacReq requestVO,
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("MenuController.searchMenuList start !!");
 
@@ -65,7 +71,8 @@ public class MenuController {
 	 */
 	@RequestMapping(value = "/specific/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuDetailSacRes searchMenuDetail(MenuSacReq requestVO, SacRequestHeader requestHeader) {
+	public MenuDetailSacRes searchMenuDetail(@Validated(SearchMenuDetail.class) MenuSacReq requestVO,
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("MenuController.searchMenuDetail start !!");
 
@@ -85,7 +92,8 @@ public class MenuController {
 	 */
 	@RequestMapping(value = "/category/top/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuListSacRes searchTopMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader) {
+	public MenuListSacRes searchTopMenuList(@Validated(SearchTopMenuList.class) MenuSacReq requestVO,
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("MenuController.searchTopMenuList start !!");
 
@@ -105,7 +113,8 @@ public class MenuController {
 	 */
 	@RequestMapping(value = "/category/sub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuListSacRes searchDetailMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader) {
+	public MenuListSacRes searchSubMenuList(@Validated(SearchSubMenuList.class) MenuSacReq requestVO,
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("MenuController.searchSubCategoryList start !!");
 

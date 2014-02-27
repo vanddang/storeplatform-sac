@@ -180,7 +180,8 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/vodBox/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryVodBoxSacRes searchVodBoxList(CategoryVodBoxSacReq requestVO, SacRequestHeader requestHeader) {
+	public CategoryVodBoxSacRes searchVodBoxList(@Validated CategoryVodBoxSacReq requestVO,
+			SacRequestHeader requestHeader) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodBoxList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
