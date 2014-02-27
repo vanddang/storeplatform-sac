@@ -121,16 +121,16 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			} catch (Exception e) {
 
-				this.logger.info("CSWOO8101_9999 : {}", e);
+				this.logger.info("SAC_PUR_9999 : {}", e);
 
 				purchaseCanDetailSacResult = new PurchaseCancelDetailSacResult();
 				purchaseCanDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-				purchaseCanDetailSacResult.setResultCd("CSWOO8101_9999");
-				purchaseCanDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage("CSWOO8101_9999"));
+				purchaseCanDetailSacResult.setResultCd("SAC_PUR_9999");
+				purchaseCanDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage("SAC_PUR_9999"));
 
 			}
 
-			if (StringUtils.equals("CSWOO8101_0000", purchaseCanDetailSacResult.getResultCd())) {
+			if (StringUtils.equals("SAC_PUR_0000", purchaseCanDetailSacResult.getResultCd())) {
 				successCnt++;
 			} else {
 				failCnt++;
@@ -177,7 +177,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		for (PrchsDtl prchsDtl : purchaseCancelDetailSacParam.getPrchsDtlList()) {
 
 			if (!StringUtils.equals(PurchaseConstants.PRCHS_STATUS_COMPT, prchsDtl.getStatusCd())) {
-				throw new StorePlatformException("CSWOO8101_4001");
+				throw new StorePlatformException("SAC_PUR_8101");
 			}
 
 			if (purchaseCancelSacParam.getPrchsCancelByType() == PurchaseConstants.PRCHS_CANCEL_BY_USER) {
@@ -185,12 +185,12 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, prchsDtl.getPrchsCaseCd())) {
 					// 선물이면 보낸사람 정보 확인.
 					if (!StringUtils.equals(purchaseCancelSacParam.getUserKey(), prchsDtl.getSendInsdUsermbrNo())) {
-						throw new StorePlatformException("CSWOO8101_4002");
+						throw new StorePlatformException("SAC_PUR_8102");
 					}
 				} else {
 					// 구매이면 이용자 정보 확인.
 					if (!StringUtils.equals(purchaseCancelSacParam.getUserKey(), prchsDtl.getUseInsdUsermbrNo())) {
-						throw new StorePlatformException("CSWOO8101_4002");
+						throw new StorePlatformException("SAC_PUR_8102");
 					}
 				}
 			}
@@ -322,8 +322,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		 */
 
 		purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-		purchaseCancelDetailSacResult.setResultCd("CSWOO8101_0000");
-		purchaseCancelDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage("CSWOO8101_0000"));
+		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
+		purchaseCancelDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage("SAC_PUR_0000"));
 
 		this.logger.debug("구매 취소 성공!");
 
@@ -337,7 +337,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		// 구매인지 선물인지 구분하여 조회.
 		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsDtl.getPrchsCaseCd())) {
 			// 정액권 선물일 경우 취소 불가!! 최상훈차장님 결정!! 2014.02.13
-			throw new StorePlatformException("CSWOO8101_4003");
+			throw new StorePlatformException("SAC_PUR_8113");
 		}
 
 		historyCountSacInReq.setTenantId(prchsDtl.getUseTenantId());
@@ -352,7 +352,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		if (historyCountSacInRes.getTotalCnt() > 0) {
 			// 정액권 상품으로 이용한 상품이 존재!
-			throw new StorePlatformException("CSWOO8101_4004");
+			throw new StorePlatformException("SAC_PUR_8111");
 		}
 
 		// 정액권 자동구매 해지예약 호출.
@@ -370,7 +370,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				.updateReservation(autoPaymentCancelScReq);
 
 		if (!StringUtils.equals("Y", autoPaymentCancelScRes.getResultYn())) {
-			throw new StorePlatformException("CSWOO8101_4005");
+			throw new StorePlatformException("SAC_PUR_8112");
 		}
 
 	}
@@ -389,17 +389,13 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		// prchsId 단위로 처리.
 		couponUseStatusSacInReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 
-		CouponUseStatusSacInRes couponUseStatusSacInRes;
-		try {
-			couponUseStatusSacInRes = this.shoppingInternalSCI.getCouponUseStatus(couponUseStatusSacInReq);
-			for (CouponUseStatusDetailSacInRes couponUseStatusDetailSacInRes : couponUseStatusSacInRes
-					.getCpnUseStatusList()) {
-				if (!StringUtils.equals("0", couponUseStatusDetailSacInRes.getCpnUseStatusCd())) {
-					throw new StorePlatformException("CSWOO8101_4006");
-				}
+		CouponUseStatusSacInRes couponUseStatusSacInRes = this.shoppingInternalSCI
+				.getCouponUseStatus(couponUseStatusSacInReq);
+		for (CouponUseStatusDetailSacInRes couponUseStatusDetailSacInRes : couponUseStatusSacInRes
+				.getCpnUseStatusList()) {
+			if (!StringUtils.equals("0", couponUseStatusDetailSacInRes.getCpnUseStatusCd())) {
+				throw new StorePlatformException("SAC_PUR_8121");
 			}
-		} catch (Exception e1) {
-			throw new StorePlatformException("CSWOO8101_4007", e1);
 		}
 
 		// 쇼핑쿠폰 취소 요청.
@@ -409,7 +405,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		try {
 			this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);
 		} catch (Exception e) {
-			throw new StorePlatformException("CSWOO8101_4008", e);
+			throw new StorePlatformException("SAC_PUR_8122", e);
 		}
 
 	}
