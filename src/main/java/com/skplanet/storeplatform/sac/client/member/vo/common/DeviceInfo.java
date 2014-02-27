@@ -127,6 +127,10 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	private String tenantId;
 
+	private String authenticationDate;
+
+	private String isAuthenticated;
+
 	/**
 	 * 휴대기기 통합 관리 번호.
 	 */
@@ -495,5 +499,21 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	public void setIsNativeIdAuth(String isNativeIdAuth) {
 		this.isNativeIdAuth = isNativeIdAuth;
+	}
+
+	public String getAuthenticationDate() {
+		return this.authenticationDate;
+	}
+
+	public void setAuthenticationDate(String authenticationDate) {
+		this.authenticationDate = authenticationDate;
+	}
+
+	public String getIsAuthenticated() {
+		return this.isAuthenticated;
+	}
+
+	public void setIsAuthenticated(String isAuthenticated) {
+		this.isAuthenticated = isAuthenticated;
 	}
 }
