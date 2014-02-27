@@ -21,7 +21,7 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return One ID Rx 처리 결과
 	 */
-	public ImResult rXCreateUserIDP(HashMap<String, String> map);
+	public ImResult excuteRXCreateUserIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -114,7 +114,7 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return
 	 */
-	public ImResult rXActivateUserIdIDP(HashMap<String, String> map);
+	public ImResult excuteRXActivateUserIdIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -126,7 +126,7 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return
 	 */
-	public ImResult rXDeleteUserIdIDP(HashMap<String, String> map);
+	public ImResult excuteRXDeleteUserIdIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -177,7 +177,7 @@ public interface IdpService {
 	 * @param map
 	 * @return
 	 */
-	public ImResult rXUpdateDisagreeUserIDP(HashMap<String, String> map);
+	public ImResult excuteRXUpdateDisagreeUserIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -228,7 +228,7 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return
 	 */
-	public ImResult rXUpdateUserInfoIDP(HashMap<String, String> map);
+	public ImResult excuteRXUpdateUserInfoIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -240,7 +240,7 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return
 	 */
-	public ImResult rXChangeUserIdIDP(HashMap<String, String> map);
+	public ImResult excuteRXChangeUserIdIDP(HashMap<String, String> map);
 
 	/**
 	 * 이용동의 변경사이트 목록 배포.
@@ -253,5 +253,5 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return
 	 */
-	public ImResult rXUpdateAgreeUserIDP(HashMap<String, String> map);
+	public ImResult excuteRXUpdateAgreeUserIDP(HashMap<String, String> map);
 }
