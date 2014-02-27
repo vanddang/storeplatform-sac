@@ -127,14 +127,20 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	private String tenantId;
 
-	private String authenticationDate;
-
-	private String isAuthenticated;
-
 	/**
 	 * 휴대기기 통합 관리 번호.
 	 */
 	private String svcMangNum;
+
+	/**
+	 * 휴대기기 인증여부
+	 */
+	private String isAuthenticated;
+
+	/**
+	 * 휴대기기 인증일자
+	 */
+	private String authenticationDate;
 
 	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회.
@@ -501,19 +507,34 @@ public class DeviceInfo extends CommonInfo {
 		this.isNativeIdAuth = isNativeIdAuth;
 	}
 
-	public String getAuthenticationDate() {
-		return this.authenticationDate;
-	}
-
-	public void setAuthenticationDate(String authenticationDate) {
-		this.authenticationDate = authenticationDate;
-	}
-
+	/**
+	 * @return isAuthenticated
+	 */
 	public String getIsAuthenticated() {
 		return this.isAuthenticated;
 	}
 
+	/**
+	 * @param isAuthenticated
+	 *            String
+	 */
 	public void setIsAuthenticated(String isAuthenticated) {
 		this.isAuthenticated = isAuthenticated;
 	}
+
+	/**
+	 * @return authenticationDate
+	 */
+	public String getAuthenticationDate() {
+		return this.authenticationDate;
+	}
+
+	/**
+	 * @param authenticationDate
+	 *            String
+	 */
+	public void setAuthenticationDate(String authenticationDate) {
+		this.authenticationDate = authenticationDate;
+	}
+
 }
