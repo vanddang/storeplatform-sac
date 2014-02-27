@@ -60,9 +60,12 @@
                                     AND A.PROD_ID = I.PROD_ID
                                     AND I.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
                                     AND F.TOP_MENU_ID  !=  'DP02'       /* DP02 : 폰꾸미기 */
-                                  <if test='topMenuId != null and topMenuId != "" '>  
+                                  <if test='topMenuId != null and topMenuId != "" '>
                                     AND F.TOP_MENU_ID = #{topMenuId}
-                                  </if>  
+                                  </if>
+                                  <if test='menuId != null and menuId != "" '>
+                                    AND F.MENU_ID = #{menuId}
+                                  </if>
                                     AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
                                     AND K.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
                                     AND K.USE_YN = 'Y'
@@ -132,6 +135,9 @@
                                        AND J.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널 */
                                        AND (L.DEVICE_MODEL_CD = #{deviceModelCd} OR L.DEVICE_MODEL_CD = 'android_standard2') /* header param : 단말모델코드 */
                                        AND B.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
+                                   <if test='menuId != null and menuId != "" '>
+                                       AND B.MENU_ID = #{menuId}
+                                   </if>
                                    <if test='topMenuId == "DP17" || topMenuId == "DP18"'>
                                        AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN FROM TB_CM_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelCd}) = 'N' AND NVL(D.DRM_YN, 'N') = 'Y'
                                                  THEN 'NOT SUPPORT'
