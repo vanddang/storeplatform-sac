@@ -62,7 +62,7 @@ public class IdpController {
 				provisioningRes.setImResult((ImResult) method.invoke(this.idpService, provisioningReq.getReqParam()));
 			} else {
 				Method method = this.idpProvisionService.getClass().getMethod(
-						"execute" + StringUtils.upperCase(cmd.substring(0, 1)) + cmd.substring(2), HashMap.class);
+						"execute" + StringUtils.upperCase(cmd.substring(0, 1)) + cmd.substring(1), HashMap.class);
 				provisioningRes.setResult((String) method.invoke(this.idpProvisionService,
 						provisioningReq.getReqParam()));
 			}
