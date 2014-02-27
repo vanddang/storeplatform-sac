@@ -749,6 +749,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			res.setKey(updatePolicyResponse.getLimitTargetList().get(0).getLimitPolicyKey());
 			res.setPolicyCode(updatePolicyResponse.getLimitTargetList().get(0).getLimitPolicyCode());
 			res.setValue(updatePolicyResponse.getLimitTargetList().get(0).getPolicyApplyValue());
+			res.setIsUsed(updatePolicyResponse.getLimitTargetList().get(0).getIsUsed());
+			res.setLimitAmount(updatePolicyResponse.getLimitTargetList().get(0).getLimitAmount());
+			res.setPermissionType(updatePolicyResponse.getLimitTargetList().get(0).getPermissionType());
+			res.setPreLimitAmount(updatePolicyResponse.getLimitTargetList().get(0).getPreLimitAmount());
 		}
 
 		LOGGER.debug("==>>[SAC] CreateIndividualPolicyRes.toString() : {}", res.toString());
