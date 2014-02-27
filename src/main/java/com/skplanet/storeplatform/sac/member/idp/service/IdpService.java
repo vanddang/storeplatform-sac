@@ -34,7 +34,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
-	public ImResult rXInvalidUserTelNoIDP(HashMap map);
+	public ImResult excuteRXInvalidUserTelNoIDP(HashMap map);
 
 	/**
 	 * 
@@ -47,7 +47,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
-	public ImResult rXSetLoginConditionIDP(HashMap map);
+	public ImResult excuteRXSetLoginConditionIDP(HashMap map);
 
 	/**
 	 * 
@@ -60,7 +60,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
-	public ImResult rXCreateUserIdIDP(HashMap map);
+	public ImResult excuteRXCreateUserIdIDP(HashMap map);
 
 	/**
 	 * 
@@ -74,7 +74,7 @@ public interface IdpService {
 	 * @return ImResult
 	 */
 
-	public ImResult rXSetSuspendUserIdIDP(HashMap map);
+	public ImResult excuteRXSetSuspendUserIdIDP(HashMap map);
 
 	/**
 	 * 
@@ -88,7 +88,7 @@ public interface IdpService {
 	 * @return ImResult
 	 */
 
-	public ImResult rXUpdateUserNameIDP(HashMap map);
+	public ImResult excuteRXUpdateUserNameIDP(HashMap map);
 
 	/**
 	 * 
@@ -102,7 +102,7 @@ public interface IdpService {
 	 * @return ImResult
 	 */
 
-	public ImResult rXUpdateGuardianInfoIDP(HashMap map);
+	public ImResult excuteRXUpdateGuardianInfoIDP(HashMap map);
 
 	/**
 	 * 
@@ -139,7 +139,7 @@ public interface IdpService {
 	 * 
 	 * @return HashMap
 	 */
-	public ImResult rXPreCheckDeleteUserIDP(HashMap map);
+	public ImResult excuteRXPreCheckDeleteUserIDP(HashMap map);
 
 	/**
 	 * 
@@ -152,7 +152,7 @@ public interface IdpService {
 	 * 
 	 * @return HashMap
 	 */
-	public ImResult rXPreCheckDisagreeUserIDP(HashMap map);
+	public ImResult excuteRXPreCheckDisagreeUserIDP(HashMap map);
 
 	/**
 	 * 
@@ -166,7 +166,7 @@ public interface IdpService {
 	 * @return HashMap
 	 */
 
-	public ImResult rXSetOCBDisagreeIDP(HashMap map);
+	public ImResult excuteRXSetOCBDisagreeIDP(HashMap map);
 
 	/**
 	 * 
@@ -190,7 +190,7 @@ public interface IdpService {
 	 * 
 	 * @return HashMap
 	 */
-	public ImResult rXTerminateRetryIDP(HashMap map);
+	public ImResult excuteRXTerminateRetryIDP(HashMap map);
 
 	/**
 	 * 
@@ -203,7 +203,7 @@ public interface IdpService {
 	 * 
 	 * @return HashMap
 	 */
-	public ImResult rXUpdateUserPwdIDP(HashMap map);
+	public ImResult excuteRXUpdateUserPwdIDP(HashMap map);
 
 	/**
 	 * 
@@ -216,7 +216,7 @@ public interface IdpService {
 	 * 
 	 * @return HashMap
 	 */
-	public ImResult rXChangePWDIDP(HashMap map);
+	public ImResult excuteRXChangePWDIDP(HashMap map);
 
 	/**
 	 * 
