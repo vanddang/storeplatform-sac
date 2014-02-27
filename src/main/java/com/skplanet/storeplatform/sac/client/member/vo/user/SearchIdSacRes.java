@@ -16,6 +16,34 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SearchIdSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	private String code;
+	private String message;
+	private String hostName;
+
+	public String getCode() {
+		return this.code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getMessage() {
+		return this.message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getHostName() {
+		return this.hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
 	private List<SearchIdSac> searchIdList;
 
 	public List<SearchIdSac> getSearchIdList() {

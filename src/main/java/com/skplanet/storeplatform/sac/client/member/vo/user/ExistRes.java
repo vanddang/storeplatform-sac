@@ -17,7 +17,10 @@ public class ExistRes extends CommonInfo {
 
 	/* 사용자 Key, Value : IW102158844420091030165015 */
 	private String userKey;
-	/* 사용자 구분 코드, Value : US011501(기기사용자) US011502(IDP사용자) US011503(OneId사용자) null(Tstore 회원 아님) */
+	/*
+	 * 사용자 구분 코드, Value : US011501(기기사용자) US011502(IDP사용자) US011503(OneId사용자)
+	 * null(Tstore 회원 아님)
+	 */
 	private String userType;
 	/* 회원 아이디, Value : 모바일 회원이거나 Tstore, 회원이 아닐경우 null */
 	private String userId;
@@ -31,6 +34,11 @@ public class ExistRes extends CommonInfo {
 	private String userMainStatus;
 	/* 회원 서브 상태 코드 */
 	private String userSubStatus;
+
+	/* Exception */
+	private String code;
+	private String message;
+	private String hostName;
 
 	public String getUserKey() {
 		return this.userKey;
@@ -98,6 +106,30 @@ public class ExistRes extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getCode() {
+		return this.code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getMessage() {
+		return this.message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getHostName() {
+		return this.hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
 	}
 
 }
