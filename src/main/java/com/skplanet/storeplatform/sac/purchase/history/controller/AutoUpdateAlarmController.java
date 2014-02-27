@@ -3,19 +3,23 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.purchase.client.history.vo.AutoUpdateAlarmSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoUpdateAlarmScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoUpdateAlarmScRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoUpdateAlarmSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoUpdateAlarmSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoUpdateAlarmSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -49,11 +53,9 @@ public class AutoUpdateAlarmController {
 	@RequestMapping(value = "/history/alarm/update/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AutoUpdateAlarmSacRes updateAlarm(@RequestBody @Validated AutoUpdateAlarmSacReq autoUpdateAlarmSacReq,
-			BindingResult bindingResult, SacRequestHeader requestHeader) {
+			SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
-		// 필수값 체크
-		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
 		return this.resConvert(this.autoUpdateAlarmSacService.updateAlarm(this
 				.reqConvert(autoUpdateAlarmSacReq, header)));
@@ -76,10 +78,17 @@ public class AutoUpdateAlarmController {
 		req.setTenantId(header.getTenantId());
 		req.setSystemId(header.getSystemId());
 		req.setUserKey(autoUpdateAlarmSacReq.getUserKey());
-		req.setDeviceKey(autoUpdateAlarmSacReq.getDeviceKey());
-		req.setPrchsId(autoUpdateAlarmSacReq.getPrchsId());
-		req.setProdId(autoUpdateAlarmSacReq.getProdId());
-		req.setAlarmYn(autoUpdateAlarmSacReq.getAlarmYn());
+
+		List<AutoUpdateAlarmSc> list = new ArrayList<AutoUpdateAlarmSc>();
+
+		for (AutoUpdateAlarmSac autoUpdateAlarmSac : autoUpdateAlarmSacReq.getProductList()) {
+			AutoUpdateAlarmSc autoUpdateAlarmSc = new AutoUpdateAlarmSc();
+			autoUpdateAlarmSc.setProdId(autoUpdateAlarmSac.getProdId());
+			autoUpdateAlarmSc.setAlarmYn(autoUpdateAlarmSac.getAlarmYn());
+
+			list.add(autoUpdateAlarmSc);
+		}
+		req.setProductList(list);
 		return req;
 	}
 
@@ -93,7 +102,6 @@ public class AutoUpdateAlarmController {
 	private AutoUpdateAlarmSacRes resConvert(AutoUpdateAlarmScRes autoUpdateAlarmScRes) {
 		this.logger.debug("@@@@@@ AutoPaymentCancelSac resConvert @@@@@@@");
 		AutoUpdateAlarmSacRes res = new AutoUpdateAlarmSacRes();
-		res.setPrchsId(autoUpdateAlarmScRes.getPrchsId());
 		res.setResultYn(autoUpdateAlarmScRes.getResultYn());
 
 		return res;
