@@ -23,9 +23,11 @@ public class AppDetailReq extends CommonInfo {
 
     private static final long serialVersionUID = -1L;
 
-    @NotNull @NotBlank(message = "")
+    @NotNull @NotBlank
     private String channelId;
+
     private String deviceKey;
+
     private String userKey;
 
     public String getChannelId() {
