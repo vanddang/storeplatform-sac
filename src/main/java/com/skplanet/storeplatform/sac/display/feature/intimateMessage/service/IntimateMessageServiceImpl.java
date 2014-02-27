@@ -84,6 +84,9 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 			messageReq.setCount(20);
 		}
 
+		// 페이징 계산
+		messageReq.setCount(messageReq.getOffset() + messageReq.getCount() - 1);
+
 		// 헤더정보 세팅
 		messageReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 

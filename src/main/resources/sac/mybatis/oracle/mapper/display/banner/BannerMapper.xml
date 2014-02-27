@@ -5,6 +5,7 @@
     <select id="searchBannerList" parameterType="BannerSacReq" resultType="BannerDefault">
 		SELECT  /* BannerMapper.xml, searchBannerList, tae hee Lee, 2014-02-21 */
 		        JA.TOTAL_COUNT
+		      , JA.BNR_MENU_ID
 		      , JA.BNR_SEQ
 		      , JA.IMG_SIZE_CD
 		      , JA.BNR_INFO_TYPE_CD
@@ -38,21 +39,21 @@
 		                      ,  BNR_NM)
 		             ELSE BNR_NM END AS BNR_NM
 		  FROM (SELECT  IA.TOTAL_COUNT
+		              , IA.BNR_MENU_ID
 		              , IA.BNR_SEQ
 		              , IA.IMG_SIZE_CD
 		              , IA.BNR_INFO_TYPE_CD
 		              , IA.BNR_INFO
-		              , IA.BNR_MENU_ID
 		              , IA.BNR_NM
 		              , IA.EXPO_ORD
 		              , IA.EXPO_STATUS_CD
 		              , IA.IMG_PATH
 		              , IA.REG_DT
 		          FROM (SELECT  COUNT(A.BNR_SEQ) OVER() AS TOTAL_COUNT
+		                      , A.BNR_MENU_ID
 		                      , A.BNR_SEQ
 		                      , A.BNR_INFO_TYPE_CD
 		                      , A.BNR_INFO
-		                      , A.BNR_MENU_ID
 		                      , A.REG_DT
 		                      , B.BNR_NM
 		                      , B.EXPO_ORD
@@ -89,12 +90,12 @@
 		                   AND  B.EXPO_STATUS_CD IN ('DP010201', 'DP010202')
 		                   AND  C.IMG_SIZE_CD = #{imgSizeCd}
                     <choose>
-                        <when test='bnrExpoMenuId != "DP010999"'><!-- Mobile Web 정사각형 배너가 아닌경우 -->
+                        <when test='bnrMenuId != "DP010999"'><!-- Mobile Web 정사각형 배너가 아닌경우 -->
                            AND  A.BNR_MENU_ID = #{bnrMenuId}
                         </when>
-                        <otherwise>
+                        <otherwise><!-- Mobile Web 정사각형 배너 샵클HOME, 게임, Fun, 생활/위치, 어학/교육 -->
                            AND  C.MOBILE_WEB_EXPO_YN = 'Y'
-                           AND  A.BNR_MENU_ID IN ('DP010916', 'DP010917', 'DP010918', 'DP010919')
+                           AND  A.BNR_MENU_ID IN ('DP010915', 'DP010916', 'DP010917', 'DP010918', 'DP010919')
                         </otherwise>
                     </choose>
                     <if test='bnrExpoMenuId != null and bnrExpoMenuId != ""'>
@@ -115,7 +116,14 @@
                         </otherwise>
                     </choose>
 		               ) IA
+    <choose>
+        <when test='bnrMenuId != "DP010999"'><!-- Mobile Web 정사각형 배너가 아닌경우 -->
 		        ORDER BY IA.EXPO_ORD, IA.EXPO_STATUS_CD
+        </when>
+        <otherwise>
+		        ORDER BY IA.BNR_MENU_ID, IA.EXPO_ORD, IA.EXPO_STATUS_CD
+        </otherwise>
+    </choose>
 		       ) JA
     </select>
     
