@@ -771,7 +771,7 @@ public class IdpServiceImpl implements IdpService {
 				userVo.setCommonRequest(commonRequest);
 
 				// 회원 정보 수정 API call
-				UpdateUserResponse updateUserResponse = this.userSCI.updateUser(userVo);
+				this.userSCI.updateUser(userVo);
 
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
@@ -907,7 +907,7 @@ public class IdpServiceImpl implements IdpService {
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
 		try {
-			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
+			this.userSCI.searchUser(searchUserRequest);
 		} catch (StorePlatformException spe) {
 
 			// 회원 존재 여부 확인
