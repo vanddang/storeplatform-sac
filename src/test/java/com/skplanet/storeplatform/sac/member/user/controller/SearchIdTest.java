@@ -123,7 +123,7 @@ public class SearchIdTest {
 	 * 
 	 */
 	@Test
-	public void C_TESET_오류_파라미터미입력() {
+	public void C_TEST_오류_파라미터미입력() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/user/searchId/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 				@Override
@@ -156,7 +156,7 @@ public class SearchIdTest {
 	 * 
 	 */
 	@Test
-	public void D_TEST_오류_모바일회원() {
+	public void D_TEST_오류_이메일_모바일회원() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/user/searchId/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 				@Override
@@ -189,7 +189,7 @@ public class SearchIdTest {
 	 * 
 	 */
 	@Test
-	public void E_TEST_오류_모바일회원() {
+	public void E_TEST_오류_디바이스아이디_모바일회원() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/user/searchId/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 				@Override
