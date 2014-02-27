@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
@@ -74,12 +75,10 @@ public class MiscellaneousController {
 	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, @Validated @RequestBody GetUaCodeReq request) {
 
 		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
-		if ((request.getDeviceModelNo() == null || "".equals(request.getDeviceModelNo()))
-				&& request.getMsisdn() == null) {
+		if (StringUtils.isBlank(request.getDeviceModelNo()) && StringUtils.isBlank(request.getMsisdn())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceModel 또는 msisdn");
 		}
-
-		if (request.getMsisdn() != null) {
+		if (StringUtils.isNotBlank(request.getMsisdn())) {
 			if (!ValidationCheckUtils.isMdn(request.getMsisdn()))
 				throw new StorePlatformException("SAC_MEM_3004");
 		}
@@ -281,10 +280,10 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetModelCodeRes getModelCode(@RequestBody @Validated GetModelCodeReq request) {
 		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
-		if ((request.getUaCd() == null || "".equals(request.getUaCd())) && request.getMsisdn() == null) {
+		if (StringUtils.isBlank(request.getUaCd()) && StringUtils.isBlank(request.getMsisdn())) {
 			throw new StorePlatformException("SAC_MEM_0001", "uaCd 또는 msisdn");
 		}
-		if (request.getMsisdn() != null) {
+		if (StringUtils.isNotBlank(request.getMsisdn())) {
 			if (!ValidationCheckUtils.isMdn(request.getMsisdn()))
 				throw new StorePlatformException("SAC_MEM_3004");
 		}
