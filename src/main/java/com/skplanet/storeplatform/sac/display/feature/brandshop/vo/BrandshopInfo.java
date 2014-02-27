@@ -24,6 +24,7 @@ public class BrandshopInfo {
 	private String expoOrd;
 	private String mbrNo;
 	private String menuNm;
+	private String topMenuId;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -95,6 +96,14 @@ public class BrandshopInfo {
 
 	public void setMenuNm(String menuNm) {
 		this.menuNm = menuNm;
+	}
+
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 }

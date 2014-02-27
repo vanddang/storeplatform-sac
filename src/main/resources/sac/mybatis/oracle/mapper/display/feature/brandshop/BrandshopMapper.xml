@@ -12,7 +12,6 @@
           , LOG_IMG_POS
           , BNR_IMG_SIZE
           , EXPO_ORD
-          , MBR_NO
         FROM
 		( 		
             SELECT
@@ -20,14 +19,15 @@
                 , ROW_NUMBER() OVER(ORDER BY A.CATEGORY_NO, A.EXPO_ORD) RNUM
 			    , A.BRAND_ID
 			    , A.BRAND_SHOP_NM
-			    , A.CATEGORY_NO
-			    , (SELECT CD_NM FROM TB_CM_CD A1
-		              WHERE A1.CD_ID = A.CATEGORY_NO 
-		              AND ROWNUM = 1) MENU_NM		     
+			    , A.CATEGORY_NO 
+		        , (SELECT MENU_NM
+		             FROM TB_DP_MENU_CATEGORY_DESC
+		            WHERE MENU_ID = A.CATEGORY_NO 
+		              AND LANG_CD = 'ko'
+		              AND ROWNUM = 1) AS MENU_NM	     
 			    , A.LOG_IMG_POS
 			    , A.BNR_IMG_SIZE
 			    , A.EXPO_ORD
-			    , A.MBR_NO
 		    FROM
 			(
 				SELECT DISTINCT  BS.BRAND_SHOP_NO AS BRAND_ID
@@ -36,7 +36,6 @@
 				    , CONCAT( BS.BNR_IMG_PATH, BS.BNR_IMG_NM ) AS LOG_IMG_POS
 				    , BS.BNR_IMG_SIZE
 				    , BS.EXPO_ORD
-				    , BSS.MBR_NO
 	            FROM TB_DP_BRAND_SHOP BS
 	                , TB_DP_BRAND_SHOP_SELLER BSS
 	                , TB_DP_BRAND_SHOP_DVC BSD  
@@ -50,14 +49,17 @@
 	                , TB_DP_PROD_DESC H
 	            WHERE 1=1
 	            AND BS.TENANT_ID = #{tenantId}    
+                AND BSS.TENANT_ID = #{tenantId}
+                AND BSD.TENANT_ID = #{tenantId}
 	            AND BS.BRAND_SHOP_NO = BSS.BRAND_SHOP_NO
-	            AND BS.TENANT_ID = BSS.TENANT_ID
 	            AND BS.BRAND_SHOP_NO = BSD.BRAND_SHOP_NO
-	            AND BS.TENANT_ID = BSD.TENANT_ID
 	            AND BS.EXPO_YN = 'Y'
 	            AND BS.DEL_YN = 'N'  
 	            AND BSS.MBR_NO = D.SELLER_MBR_NO
-	            AND A.PART_PROD_ID = D.PROD_ID
+	            AND A.PART_PROD_ID = D.PROD_ID	            
+                <if test='topMenuId != null'>
+                AND #{topMenuId} = ( select ADD_FIELD_01 FROM TB_CM_CD where cd_id = BS.CATEGORY_NO )        
+                </if>
 	            AND A.PROD_RSHP_CD = 'DP010802'
 	            AND A.PROD_ID = B.PROD_ID
 	            AND B.USE_YN = 'Y'
