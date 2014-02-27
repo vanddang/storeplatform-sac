@@ -162,6 +162,7 @@
             <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
               , NVL(LA.PROD_AMT, 0) AS PROD_AMT -- 에피소드 가격
             </if>
+              , PROD_NET_AMT
               , NVL(LB.PATICPERS_CNT, 0) AS PATICPERS_CNT
               , NVL(LB.PRCHS_CNT, 0) AS PRCHS_CNT
                <![CDATA[             
@@ -211,6 +212,7 @@
                            , F.PROD_DTL_DESC
                            , H.CHNL_PERIOD_AMT
                            , H.CHNL_UNLMT_AMT
+                           , H.PROD_NET_AMT
                            , L.CHAPTER
                            , L.SAMPL_URL
                            , L.SC_SAMPL_URL
@@ -432,6 +434,7 @@
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( TB.EPSD_CNT + TB.STRM_EPSD_CNT ) ELSE 1 END ) AS BOOK_COUNT
              , ( CASE WHEN TB.EPSD_CNT > 0 THEN 'store' END ) AS SUPPORT_STORE
              , ( CASE WHEN TB.STRM_EPSD_CNT > 0 THEN 'play' END ) AS SUPPORT_PLAY
+             , TB.COMPT_YN
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS                          
            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
              , CASE WHEN (TB.CHNL_PERIOD_AMT >= 0  AND STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
@@ -443,6 +446,7 @@
              , NVL(TB.PROD_NET_AMT, 0) AS PROD_NET_AMT
              , NVL(TB.PATICPERS_CNT, 0) AS PATICPERS_CNT
              , NVL(TB.PRCHS_CNT, 0) AS DWLD_CNT
+             , NVL(TB.PRCHS_CNT, 0) AS PRCHS_CNT
               <![CDATA[
              , NVL((CASE WHEN (TB.AVG_EVLU_SCORE > 0 AND TB.AVG_EVLU_SCORE < 1) THEN 1
                          WHEN TB.AVG_EVLU_SCORE > 5 THEN 5
