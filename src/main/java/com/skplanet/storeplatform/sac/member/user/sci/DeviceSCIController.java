@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.user.sci;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,8 +83,7 @@ public class DeviceSCIController implements DeviceSCI {
 		// 공통 파라미터 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		if ((request.getDeviceId() == null || "".equals(request.getDeviceId()))
-				&& (request.getDeviceKey() == null || "".equals(request.getDeviceKey()))) {
+		if (StringUtils.isBlank(request.getDeviceId()) && StringUtils.isBlank(request.getDeviceKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId 또는 deviceKey");
 		}
 

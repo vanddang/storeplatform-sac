@@ -80,11 +80,6 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 				resMap.put(userKeyList.get(i), userInfoSac);
 			}
-			// userKey에해당하는 회원정보 없을 경우, Map에 안내려줌.
-			// else {
-			// // userKey에해당하는 회원정보 없을 경우, userKey에 null 맵핑해서 전달.
-			// resMap.put(userKeyList.get(i), new UserInfoSac());
-			// }
 		}
 
 		SearchUserSacRes searchUserSacRes = new SearchUserSacRes();
