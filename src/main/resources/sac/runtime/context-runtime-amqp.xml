@@ -31,12 +31,7 @@
     
     <bean id="inboundQueueNames" class="com.skplanet.storeplatform.framework.core.util.StringUtils" factory-method="convertArrayListToString">
         <constructor-arg>
-            <list>
-                <value>cmsapp.sac.request.sync.content.test99999</value>
-                <value>cmsapp.sac.request.sync.content.test0001</value>
-                <value>cmsapp.sac.response.sync.content.test0001</value>
-                <value>tenant1.sac.request.sync.content.test0001</value>
-                <value>tenant1.sac.response.sync.content.test0001</value>
+            <list>                
                 <value>local.icms-app-refactoring-deploy.sac.deploy.async</value>
                 <value>local.icms-app-admin.sac.device-mapping.async</value>
             </list>
@@ -45,6 +40,14 @@
             <value>,</value>
         </constructor-arg>
     </bean>
+    
+    <!-- 
+    <value>cmsapp.sac.request.sync.content.test99999</value>
+    <value>cmsapp.sac.request.sync.content.test0001</value>
+    <value>cmsapp.sac.response.sync.content.test0001</value>
+    <value>tenant1.sac.request.sync.content.test0001</value>
+    <value>tenant1.sac.response.sync.content.test0001</value> 
+    -->
     
     <rabbit:queue id="local.icms-app-refactoring-deploy.sac.deploy.async" name="local.icms-app-refactoring-deploy.sac.deploy.async" >
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
