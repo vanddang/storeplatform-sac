@@ -61,7 +61,10 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		HistoryListSacReq sacReq = new HistoryListSacReq();
 		HistoryListSacRes sacRes = new HistoryListSacRes();
 
+		// Request Header Info
 		sacReq.setTenantId(request.getTenantId());
+
+		// Request Parameter Info
 		sacReq.setUserKey(request.getUserKey());
 		sacReq.setDeviceKey(request.getDeviceKey());
 		sacReq.setStartDt(request.getStartDt());
@@ -90,8 +93,15 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		sacReq.setOffset(request.getOffset());
 		sacReq.setCount(request.getCount());
 
+		// SAC내부호출여부
+		sacReq.setInternalYn("Y");
+
+		// SAC Service Call
 		sacRes = this.service.searchHistoryList(sacReq);
 
+		/********************************************
+		 * Response Mapping Start
+		 ********************************************/
 		HistoryListSacInRes response = new HistoryListSacInRes();
 		List<HistorySacIn> historySacInList = new ArrayList<HistorySacIn>();
 		HistorySacIn historySacIn = new HistorySacIn();
@@ -161,6 +171,9 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 
 		response.setHistoryList(historySacInList);
 		response.setTotalCnt(sacRes.getTotalCnt());
+		/********************************************
+		 * Response Mapping End
+		 ********************************************/
 
 		return response;
 
@@ -180,7 +193,10 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		HistoryCountSacReq sacReq = new HistoryCountSacReq();
 		HistoryCountSacRes sacRes = new HistoryCountSacRes();
 
+		// Request Header Info
 		sacReq.setTenantId(request.getTenantId());
+
+		// Request Parameter Info
 		sacReq.setUserKey(request.getUserKey());
 		sacReq.setDeviceKey(request.getDeviceKey());
 		sacReq.setStartDt(request.getStartDt());
@@ -207,8 +223,12 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		sacReq.setHidingYn(request.getHidingYn());
 		sacReq.setGiftRecvConfYn(request.getGiftRecvConfYn());
 
+		// SAC Service Call
 		sacRes = this.service.searchHistoryCount(sacReq);
 
+		/********************************************
+		 * Response Mapping Start
+		 ********************************************/
 		ProductCountSacIn productCountSacIn = new ProductCountSacIn();
 		List<ProductCountSacIn> sacInProdList = new ArrayList<ProductCountSacIn>();
 		HistoryCountSacInRes response = new HistoryCountSacInRes();
@@ -225,6 +245,9 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 
 		response.setTotalCnt(sacRes.getTotalCnt());
 		response.setCntList(sacInProdList);
+		/********************************************
+		 * Response Mapping End
+		 ********************************************/
 
 		return response;
 	}
