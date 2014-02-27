@@ -43,6 +43,16 @@ public class GameCenterSacReq extends CommonInfo {
 	private String preUserKey;
 
 	/**
+	 * IDP 관리키
+	 */
+	private String preMbrNo;
+
+	/**
+	 * 이전 IDP 관리키
+	 */
+	private String mbrNo;
+
+	/**
 	 * 기기_ID.
 	 */
 	private String deviceId;
@@ -161,6 +171,36 @@ public class GameCenterSacReq extends CommonInfo {
 	 */
 	public void setWorkCd(String workCd) {
 		this.workCd = workCd;
+	}
+
+	/**
+	 * @return preMbrNo
+	 */
+	public String getPreMbrNo() {
+		return this.preMbrNo;
+	}
+
+	/**
+	 * @param preMbrNo
+	 *            String
+	 */
+	public void setPreMbrNo(String preMbrNo) {
+		this.preMbrNo = preMbrNo;
+	}
+
+	/**
+	 * @return mbrNo
+	 */
+	public String getMbrNo() {
+		return this.mbrNo;
+	}
+
+	/**
+	 * @param mbrNo
+	 *            String
+	 */
+	public void setMbrNo(String mbrNo) {
+		this.mbrNo = mbrNo;
 	}
 
 }
