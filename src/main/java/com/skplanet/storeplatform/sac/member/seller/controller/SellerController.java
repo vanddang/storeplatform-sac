@@ -20,6 +20,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
@@ -291,6 +293,23 @@ public class SellerController {
 	@ResponseBody
 	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, @RequestBody @Validated RemoveFlurrySacReq req) {
 		return this.sellerService.removeFlurry(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.32. Flurry 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateFlurrySacReq
+	 * @return CreateFlurrySacRes
+	 */
+	@RequestMapping(value = "/createFlurry/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateFlurrySacRes createFlurry(SacRequestHeader header, @RequestBody @Validated CreateFlurrySacReq req) {
+		return this.sellerService.createFlurrySacRes(header, req);
 	}
 
 }

@@ -37,6 +37,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerUpgrade;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateFlurryRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateFlurryResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerResponse;
@@ -56,6 +57,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
@@ -1169,6 +1172,53 @@ public class SellerServiceImpl implements SellerService {
 		// 4. Response
 		RemoveFlurrySacRes res = new RemoveFlurrySacRes();
 		res.setSellerKey(removeFlurryResponse.getSellerKey());
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.32. Flurry 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateFlurrySacRes
+	 * @return CreateFlurrySacRes
+	 */
+	@Override
+	public CreateFlurrySacRes createFlurrySacRes(SacRequestHeader header, CreateFlurrySacReq req) {
+		// 1. CommonRequest Setting
+		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [START] ############");
+		// SC공통 헤더
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+
+		// 2. SessionKey Check
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+
+		// 3. Flurry 등록/수정
+		UpdateFlurryRequest updateFlurryRequest = new UpdateFlurryRequest();
+		updateFlurryRequest.setSellerKey(req.getSellerKey());
+		updateFlurryRequest.setCommonRequest(commonRequest);
+
+		if (req.getFlurryAuthList() != null) {
+			List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
+			FlurryAuth flurryAuth = null;
+			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
+				flurryAuth = new FlurryAuth();
+				flurryAuth.setSellerKey(req.getSellerKey());
+				flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
+				flurryAuth.setAccessCode(req.getFlurryAuthList().get(i).getAccessCode());
+				flurryAuthList.add(flurryAuth);
+			}
+			updateFlurryRequest.setFlurryAuthList(flurryAuthList);
+		}
+
+		UpdateFlurryResponse updateFlurryResponse = this.sellerSCI.updateFlurry(updateFlurryRequest);
+
+		CreateFlurrySacRes res = new CreateFlurrySacRes();
+		res.setSellerKey(updateFlurryResponse.getSellerKey());
+		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [END] ############");
 		return res;
 	}
 }

@@ -9,6 +9,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
@@ -188,4 +190,17 @@ public interface SellerService {
 	 * @return RemoveFlurrySacRes
 	 */
 	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, RemoveFlurrySacReq req);
+
+	/**
+	 * <pre>
+	 * 2.2.32. Flurry 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateFlurrySacRes
+	 * @return CreateFlurrySacRes
+	 */
+	public CreateFlurrySacRes createFlurrySacRes(SacRequestHeader header, CreateFlurrySacReq req);
 }
