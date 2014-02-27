@@ -219,8 +219,6 @@ public class UserSearchController {
 
 		if (userId.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userId");
-		} else if ("".equals(userEmail) && "".equals(userPhone)) {
-			throw new StorePlatformException("SAC_MEM_0001", "userEmail or userPhone");
 		}
 
 		req.setUserId(userId);

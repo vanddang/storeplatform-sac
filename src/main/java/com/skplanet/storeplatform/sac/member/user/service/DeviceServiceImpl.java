@@ -1381,7 +1381,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		if (!req.getUserKey().equals("")) {
+		else if (!req.getUserKey().equals("")) {
 			this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 			// 대표단말 조회
@@ -1393,7 +1393,7 @@ public class DeviceServiceImpl implements DeviceService {
 			ListDeviceReq listDeviceReq = new ListDeviceReq();
 			listDeviceReq.setUserKey(req.getUserKey());
 			listDeviceReq.setDeviceId(detailRepresentationDeviceRes.getDeviceInfo().getDeviceId());
-			listDeviceReq.setIsMainDevice("N");
+			listDeviceReq.setIsMainDevice("Y");
 
 			LOGGER.info("============================================ listDeviceReq {}", listDeviceReq.toString());
 
