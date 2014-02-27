@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.menu;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -16,14 +18,52 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 02. 12. Updated by : 유시혁.
  */
+
 public class MenuSacReq extends CommonInfo {
+	/**
+	 * 
+	 * 테넌트 메뉴 조회.
+	 * 
+	 * Updated on : 2014. 2. 27. Updated by : 유시혁.
+	 */
+	public interface SearchMenuList {
+	}
+
+	/**
+	 * 
+	 * 테넌트 메뉴 상세 조회.
+	 * 
+	 * Updated on : 2014. 2. 27. Updated by : 유시혁.
+	 */
+	public interface SearchMenuDetail {
+	}
+
+	/**
+	 * 
+	 * 대분류 전시 카테고리 조회.
+	 * 
+	 * Updated on : 2014. 2. 27. Updated by : 유시혁.
+	 */
+	public interface SearchTopMenuList {
+	}
+
+	/**
+	 * 
+	 * 세부분류 전시 카테고리 조회.
+	 * 
+	 * Updated on : 2014. 2. 27. Updated by : 유시혁.
+	 */
+	public interface SearchSubMenuList {
+	}
 
 	private static final long serialVersionUID = 11123123129L;
 
 	private String tenantId; // 테넌트ID
 
+	@NotBlank(groups = SearchMenuDetail.class)
 	private String menuId; // 메뉴ID
 
+	@NotBlank(groups = SearchSubMenuList.class)
 	private String topMenuId; // 탑 메뉴ID
 
 	private String systemId; // 시스템ID

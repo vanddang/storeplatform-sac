@@ -11,6 +11,10 @@ package com.skplanet.storeplatform.sac.client.display.vo.category;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -21,7 +25,10 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123143L;
+	@NotBlank
+	@Pattern(regexp = "^duration$|^chapter$|^regDate$")
 	private String filteredBy; // 차트 구분 코드
+	@NotBlank
 	private String channelId; // 채널 ID
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출 ROW 수

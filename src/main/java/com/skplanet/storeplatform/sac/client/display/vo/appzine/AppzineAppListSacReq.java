@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.appzine;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -34,8 +38,10 @@ public class AppzineAppListSacReq extends CommonInfo {
 
 	private Integer count; // 페이지당 노출될 ROW 개수
 
+	@NotBlank
 	private String appznNo; // 앱진 번호
-
+	@NotBlank
+	@Pattern(regexp = "^001$|^002$|^003$")
 	private String appType; // 앱 TYPE(인기:001, 신규:002, 테마:003)
 
 	/**

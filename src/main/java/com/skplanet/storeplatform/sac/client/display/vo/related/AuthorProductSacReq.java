@@ -11,6 +11,10 @@ package com.skplanet.storeplatform.sac.client.display.vo.related;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -21,8 +25,12 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class AuthorProductSacReq extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123143L;
+	@NotBlank
 	private String authorName; // 작가 명
+	@NotBlank
+	@Pattern(regexp = "^author$|^painter$|^translator$")
 	private String filteredBy; // 필터링 조건
+	@NotBlank
 	private String exceptId; // 제외 상품 아이디
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출 ROW 수

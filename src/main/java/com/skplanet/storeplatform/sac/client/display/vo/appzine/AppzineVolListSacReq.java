@@ -22,8 +22,6 @@ public class AppzineVolListSacReq extends CommonInfo {
 
 	private String tenantId; // 테넌트ID
 
-	private String menuId; // 메뉴ID
-
 	private String systemId; // 시스템ID
 
 	private String deviceModelCd; // device model code
@@ -57,31 +55,6 @@ public class AppzineVolListSacReq extends CommonInfo {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 메뉴ID.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getMenuId() {
-		return this.menuId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 메뉴ID.
-	 * </pre>
-	 * 
-	 * @param menuId
-	 *            String
-	 */
-	public void setMenuId(String menuId) {
-		this.menuId = menuId;
 	}
 
 	/**
