@@ -2598,6 +2598,7 @@ public class IdpServiceImpl implements IdpService {
 							updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 									searchUserResponse));
 							LOGGER.debug("전환가입 정보 입력 완료");
+							userKey = updateUserResponse.getUserKey();
 
 							GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 							gameCenterSacReq.setUserKey(userKey);
