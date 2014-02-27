@@ -52,11 +52,7 @@
 		    , A.SAMPL_URL
 		    , A.SC_SAMPL_URL
 		    , A.EPSD_PLAY_TM
-		    , DECODE(A.PROD_GRD_CD
-		    , 'PD004401', 0
-		    , 'PD004402', 1
-		    , 'PD004403', 2
-		    , 'PD004404', 4 ) AS PROD_GRD_CD
+		    , A.PROD_GRD_CD
 		    , A.HDV_YN
 		    , A.ARTIST1_NM
 		    , A.ARTIST2_NM
