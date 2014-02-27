@@ -127,6 +127,9 @@
         
         <!--  feature 테마 추천 상품 조회 -->
         <typeAlias alias="ThemeRecommend"  type="com.skplanet.storeplatform.sac.display.feature.theme.recommend.vo.ThemeRecommend" />
+
+        <!--  appguide 상품 조회 -->
+        <typeAlias alias="Appguide"  type="com.skplanet.storeplatform.sac.display.appguide.vo.Appguide" />
         
         <!-- feature app 카테고리 상품 조회 -->
         <typeAlias alias="FeatureCategoryAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq" />
