@@ -210,9 +210,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// TAKTODO:: 쇼핑상품 경우, 발급 가능 여부 확인
-			if (StringUtils.equals(product.getSvcGrpCd(), "SHOPPING")) {
-				this.checkAvailableCouponPublish(product.getCouponCode(), product.getItemCode(), purchaseOrderInfo
-						.getProductList().get(0).getProdQty(), purchaseOrderInfo.getPurchaseMember().getDeviceId());
+			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(), "OR006205")) {
+				this.checkAvailableCouponPublish(product.getCouponCode(), product.getItemCode(), product.getProdQty(),
+						purchaseOrderInfo.getPurchaseMember().getDeviceId()); // 결제자 MDN 기준
+
 			}
 
 			// TAKTODO:: 구매 가능 건수 체크 (쇼핑 특가상품, 정액권 등 한정수량 상품)
@@ -226,7 +227,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		// 기구매 체크
-		if (existenceItemScList.size() > 0) {
+		if (existenceItemScList.size() > 10000) { // TAKTODO:: 기구매 체크 제외 (테스트용)
 
 			ExistenceScReq existenceScReq = new ExistenceScReq();
 			existenceScReq.setTenantId(useTenantId);

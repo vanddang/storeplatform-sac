@@ -9,9 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseSc;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
 
 /**
  * 
@@ -46,31 +47,24 @@ public interface PurchaseOrderService {
 	/**
 	 * 
 	 * <pre>
-	 * 유료구매 - 구매예약 정보 조회.
+	 * 구매인증.
 	 * </pre>
 	 * 
-	 * @param tenantId
-	 *            테넌트 ID
-	 * @param prchsId
-	 *            구매 ID
-	 * @param useUserKey
-	 *            내부 회원 NO
-	 * @return 구매상세 정보
+	 * @param verifyOrderInfo
+	 *            구매인증 요청 정보
 	 */
-	public CreatePurchaseSc searchReservedPurchaseDetail(String tenantId, String prchsId, String useUserKey);
+	public VerifyOrderSacRes verifyPurchaseOrder(VerifyOrderInfo verifyOrderInfo);
 
 	/**
 	 * 
 	 * <pre>
-	 * 유료구매 - 구매확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장.
+	 * 유료구매 - 구매 후처리(쇼핑발급, 구매건수 증가, 인터파크, 씨네21) & 구매확정(구매상세내역 상태변경, 구매내역 저장, 결제내역 저장).
 	 * </pre>
 	 * 
-	 * @param createPurchaseSc
-	 *            구매상세 정보
 	 * @param notifyPaymentReq
 	 *            결제결과 정보
 	 */
-	public void updateConfirmPurchase(CreatePurchaseSc createPurchaseSc, NotifyPaymentSacReq notifyPaymentReq);
+	public void updateConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq);
 
 	/**
 	 * 
@@ -82,4 +76,5 @@ public interface PurchaseOrderService {
 	 *            구매요청 정보
 	 */
 	public void setPaymentPageInfo(PurchaseOrderInfo purchaseOrderInfo);
+
 }
