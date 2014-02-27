@@ -20,7 +20,7 @@ public interface UserWithdrawService {
 	 * @return
 	 * @throws Exception
 	 */
-	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req);
+	public WithdrawRes executeWithdraw(SacRequestHeader requestHeader, WithdrawReq req);
 
 	/**
 	 * 회원존재여부 체크

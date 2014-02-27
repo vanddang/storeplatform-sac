@@ -56,7 +56,7 @@ public class UserWithdrawController {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId or userAuthKey && userId");
 		}
 
-		WithdrawRes res = this.svc.withdraw(sacHeader, req);
+		WithdrawRes res = this.svc.executeWithdraw(sacHeader, req);
 		logger.info("####### Final UserWithdraw Response : {}", res.toString());
 
 		return res;

@@ -126,12 +126,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 				/**
-				 * SAC 회원 탈퇴 요청 ==> 무선회원 해지 (cmd = secedeForWap) 후에 DB 탈퇴처리 - 단말 삭제및 게임센터 이관까지...
+				 * SAC 회원 탈퇴 요청 ==> 무선회원 해지 (cmd = secedeForWap) 후에 DB 탈퇴처리 - 단말
+				 * 삭제및 게임센터 이관까지...
 				 */
 				LOGGER.info("## 무선회원 탈퇴처리 연동 Start =================");
 				WithdrawReq withdrawReq = new WithdrawReq();
 				withdrawReq.setDeviceId(req.getDeviceId());
-				this.userWithdrawService.withdraw(sacHeader, withdrawReq);
+				this.userWithdrawService.executeWithdraw(sacHeader, withdrawReq);
 
 				/**
 				 * 가가입 에러 발생.
@@ -238,7 +239,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
+		 * findCommonProfileForServerIDP)
 		 */
 		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
@@ -344,7 +346,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
+		 * findCommonProfileForServerIDP)
 		 */
 		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호

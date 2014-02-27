@@ -90,7 +90,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 * @return
 	 */
 	@Override
-	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) {
+	public WithdrawRes executeWithdraw(SacRequestHeader requestHeader, WithdrawReq req) {
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
