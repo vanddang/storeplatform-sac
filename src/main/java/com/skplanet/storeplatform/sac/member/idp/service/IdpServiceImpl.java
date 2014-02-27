@@ -1246,10 +1246,12 @@ public class IdpServiceImpl implements IdpService {
 
 		String resultValue = "";
 		String userID = "";
+		String isEmailAuth = ""; // 이메일 인증여부 Y인경우에 ONEID정보의 회원가입상태코드를
 		SearchUserResponse searchUserResponse = null;
 
 		imIntSvcNo = map.get("im_int_svc_no").toString();
 		userID = map.get("user_id").toString();
+		isEmailAuth = map.get("is_email_auth").toString();
 
 		ImResult imResult = new ImResult();
 		imResult.setCmd("excuteRXActivateUserIdIDP");
@@ -1320,6 +1322,8 @@ public class IdpServiceImpl implements IdpService {
 						mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
 						mbrOneID.setUserKey(searchUserResponse.getUserMbr().getUserKey()); // 신규가입때 생성된 내부사용자키를 셋팅
 						mbrOneID.setUserID(searchUserResponse.getUserMbr().getUserID()); // userID
+						if (isEmailAuth.equals(MemberConstants.USE_Y))
+							mbrOneID.setEntryStatusCode("10");// 정상
 						updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
 						this.userSCI.createAgreeSite(updateMbrOneIDRequest);
@@ -1328,12 +1332,6 @@ public class IdpServiceImpl implements IdpService {
 						LOGGER.debug("ONEID DATA MERGE COMPLETE");
 					}
 				}
-
-				// TO DO ... 이하 API 호출구현되면 로직 처리
-				// 이메일 인증시 모바일 인증여부 Y 업데이트
-				// 가입 아이디에 신규 단말 추가시 캐쉬 지급 처리 핸드폰 디바이스 관련
-				// 기존 모바일회원과 웹아이디회원 실명인증 정보처리
-				// DEVICE관련 & 구매내역이관 모바일 회원 탈퇴처리
 
 			}
 
