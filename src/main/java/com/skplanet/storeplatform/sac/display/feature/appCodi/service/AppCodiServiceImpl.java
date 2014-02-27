@@ -73,6 +73,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 	private static final Map<String, String> mapReasonCode = new HashMap<String, String>();
 
+	private int totalCount = 0;
+
 	@Autowired
 	private IsfEcInvoker invoker;
 
@@ -89,7 +91,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuReq
 	 * requestVO)
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public AppCodiListSacRes searchAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException {
@@ -167,14 +169,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 		int multiCount = (response.getProps().getMultiValues() != null) ? response.getProps().getMultiValues()
 				.getCount() : 0;
 		if (multiCount > 0) {
-			MultiValuesType multis = new MultiValuesType();
-			MultiValueType multi = new MultiValueType();
-
-			multis = response.getProps().getMultiValues();
-			Iterator<MultiValueType> siterator = multis.getMultiValue().iterator();
-			while (siterator.hasNext()) {
-				multi = siterator.next();
-
+			MultiValuesType multis = response.getProps().getMultiValues();
+			for (MultiValueType multi : multis.getMultiValue()) {
 				sPid = multi.getId(); // pid
 				sReasonCode = multi.getReasonCode(); // 추천 사유 코드
 				sRelId = multi.getRelId(); // 연관 상품 id
@@ -198,18 +194,20 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 			// 앱코디 상품 리스트 조회
 			mapReq.put("pidList", listProdParam);
+			mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
+
 			// 상품 기본 정보 List 조회
 			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Isf.AppCodi.getAppCodiProdList",
 					mapReq, ProductBasicInfo.class);
-
-			Product product = null;
-			MetaInfo metaInfo = null;
 
 			if (this.log.isDebugEnabled()) {
 				this.log.debug("##### parameter cnt : {}", listProdParam.size());
 				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
 			}
 			if (productBasicInfoList != null) {
+
+				Product product = null;
+				MetaInfo metaInfo = null;
 
 				Map<String, Object> paramMap = new HashMap<String, Object>();
 				paramMap.put("tenantHeader", tenantHeader);
@@ -218,6 +216,11 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 				// Meta 정보 조회
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+
+					if (this.totalCount == 0) {
+						this.totalCount = productBasicInfo.getTotalCount();
+					}
+
 					String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
 					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
 					paramMap.put("productBasicInfo", productBasicInfo);
@@ -315,7 +318,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 			}
 
 			if (this.log.isDebugEnabled()) {
-				this.log.debug("product count : " + productList.size());
+				this.log.debug("product count : {}", productList.size());
+				this.log.debug("total count : {}", this.totalCount);
 				// productList.clear();
 			}
 
@@ -327,13 +331,13 @@ public class AppCodiServiceImpl implements AppCodiService {
 				if (!listRelProdParam.isEmpty()) {
 					Map<String, Object> mapRel = new HashMap<String, Object>();
 					mapRel.put("tenantHeader", tenantHeader);
+					mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 					mapRel.put("pidList", listRelProdParam);
 
 					listRelProd = this.commonDAO.queryForList("Isf.AppCodi.getRelProdList", mapRel, HashMap.class);
 				}
 
 				// 추천사유코드 Mapping
-				Map<String, Object> mapRelProdTemp = null;
 				boolean isRel = false;
 				String reasonMessage = "";
 
@@ -345,13 +349,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 					listAppCodiReason.add(null);
 				}
 
-				Iterator<Product> iterator = productList.iterator();
-				while (iterator.hasNext()) {
-					product = iterator.next();
-					Identifier id = new Identifier();
-					Iterator<Identifier> idIterator = product.getIdentifierList().iterator();
-					while (idIterator.hasNext()) {
-						id = idIterator.next();
+				for (Product product : productList) {
+					for (Identifier id : product.getIdentifierList()) {
 						sPid = id.getText();
 						if (StringUtil.isNotEmpty(sPid))
 							break;
@@ -380,10 +379,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 						// 대상상품 대분류 카테고리명
 						// 대상상품은 연관상품과 별개로 처리함
 						String top_cat_nm_pid = "";
-						Iterator<Menu> mnIterator = product.getMenuList().iterator();
-						Menu menu = new Menu();
-						while (mnIterator.hasNext()) {
-							menu = mnIterator.next();
+						for (Menu menu : product.getMenuList()) {
 							if (!StringUtils.isEmpty(menu.getType())
 									&& DisplayConstants.DP_MENU_TOPCLASS_TYPE.equals(menu.getType())) {
 								top_cat_nm_pid = menu.getName();
@@ -394,9 +390,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 						// 연관상품 정보가 있을 경우에 치환처리함
 						if (!listRelProd.isEmpty()) {
-							Iterator<HashMap> riterator = listRelProd.iterator();
-							while (iterator.hasNext()) {
-								mapRelProdTemp = riterator.next();
+							for (Map<String, Object> mapRelProdTemp : listRelProd) {
 								if (StringUtil.isNotEmpty(sRelId)
 										&& sRelId.equals(ObjectUtils.toString(mapRelProdTemp.get("PROD_ID")))) {
 									// 연관상품명
@@ -477,7 +471,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 					listRes.addAll(listAppCodiReason);
 				}
 
-				commonResponse.setTotalCount(listRes.size());
+				commonResponse.setTotalCount(this.totalCount);
 				responseVO.setCommonRes(commonResponse);
 				responseVO.setProductList(listRes);
 			}
@@ -487,6 +481,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 		// ISF 연동 실패나 Data 가 없는 경우( 운영자 추천으로 대체 )
 		if (!isExists) {
+			this.totalCount = 0;
+
 			this.log.info("ISF 연동 실패나 Data 가 없는 경우 - 운영자 추천으로 대체");
 
 			mapReq = new HashMap<String, Object>();
@@ -500,6 +496,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 			mapReq.put("tenantHeader", requestHeader.getTenantHeader());
 			mapReq.put("deviceHeader", requestHeader.getDeviceHeader());
+			mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
 			mapReq.put("listId", "ADM000000012"); // 운영자 추천
 
@@ -519,7 +516,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 			productList = this.makeResultList(appCodiResultList);
 
-			commonResponse.setTotalCount(productList.size());
+			commonResponse.setTotalCount(this.totalCount);
 			responseVO.setCommonRes(commonResponse);
 			responseVO.setProductList(productList);
 		}
@@ -531,10 +528,10 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 		List<Product> listVO = new ArrayList<Product>();
 
-		Iterator<AppCodiRes> iterator = resultList.iterator();
-		while (iterator.hasNext()) {
+		for (AppCodiRes mapper : resultList) {
 
-			AppCodiRes mapper = iterator.next();
+			if (this.totalCount == 0)
+				this.totalCount = mapper.getTotalCount();
 
 			Product product;
 			Identifier identifier;
