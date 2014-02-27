@@ -1,27 +1,25 @@
 package com.skplanet.storeplatform.sac.display.banner.service;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-
-import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerReq;
-import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerRes;
+import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
+/**
+ * Banner Service 인터페이스(CoreStoreBusiness)
+ * 
+ * Updated on : 2014. 2. 21. Updated by : 이태희
+ */
 public interface BannerService {
-
 	/**
 	 * <pre>
-	 * 배너 리스트 조회
+	 * 배너 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param BannerReq
+	 * @param header
+	 *            header
+	 * @param bannerReq
 	 *            bannerReq
-	 * @param SacRequestHeader
-	 *            requestHeader
-	 * @return BannerRes
+	 * @return BannerSacRes
 	 */
-	public BannerRes searchBannerList(BannerReq bannerReq, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+	public BannerSacRes searchBannerList(SacRequestHeader header, BannerSacReq bannerReq);
 }

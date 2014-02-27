@@ -1,366 +1,453 @@
 package com.skplanet.storeplatform.sac.display.banner.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerReq;
-import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerRes;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.BannerExplain;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.banner.vo.Banner;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.banner.vo.BannerDefault;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
-//import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner;
-
+/**
+ * Banner Service 인터페이스(CoreStoreBusiness) 구현체
+ * 
+ * Updated on : 2014. 02. 21. Updated by : 이태희.
+ */
 @Service
 public class BannerServceImpl implements BannerService {
-
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	private static final List<Object> listEntry = new ArrayList<Object>();
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
-	// 배너 규격 정의
-	static {
-		Map<String, String> mapEntry;
+	@Autowired
+	CommonMetaInfoGenerator commonMetaInfoGenerator;
 
-		mapEntry = new HashMap<String, String>();
-		mapEntry.put("BNR_TYPE", DisplayConstants.DP_BANNER_PRODUCT_CD);
-		mapEntry.put("TYPE", "product");
-		mapEntry.put("DESC_NAME", "id");
-		listEntry.add(mapEntry);
+	@Autowired
+	MetaInfoService metaInfoService;
 
-		mapEntry = new HashMap<String, String>();
-		mapEntry.put("BNR_TYPE", DisplayConstants.DP_BANNER_URL_NEW_CD);
-		mapEntry.put("TYPE", "externalUrl");
-		mapEntry.put("DESC_NAME", "url");
-		mapEntry.put("EXTERNAL", "external");
-		listEntry.add(mapEntry);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.banner.service.BannerService#searchBannerList(com.skplanet.storeplatform
+	 * .sac.common.header.vo.SacRequestHeader, com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq)
+	 */
+	@Override
+	public BannerSacRes searchBannerList(SacRequestHeader header, BannerSacReq bannerReq) {
+		BannerSacRes bannerRes = new BannerSacRes();
+		String bnrMenuId = bannerReq.getBnrMenuId();
+		String mobileWebExpoYn = bannerReq.getMobileWebExpoYn();
+		String bnrExpoMenuId = bannerReq.getBnrExpoMenuId();
+		String imgSizeCd = bannerReq.getImgSizeCd();
 
-		mapEntry = new HashMap<String, String>();
-		mapEntry.put("BNR_TYPE", DisplayConstants.DP_BANNER_CATEGORY_CD);
-		mapEntry.put("TYPE", "category");
-		listEntry.add(mapEntry);
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("[searchBannerList] bnrMenuId : {}", bnrMenuId);
+		this.logger.debug("[searchBannerList] mobileWebExpoYn : {}", mobileWebExpoYn);
+		this.logger.debug("[searchBannerList] bnrExpoMeneId : {}", bnrExpoMenuId);
+		this.logger.debug("[searchBannerList] imgSizeCd : {}", imgSizeCd);
+		this.logger.debug("----------------------------------------------------------------");
 
-		mapEntry = new HashMap<String, String>();
-		mapEntry.put("BNR_TYPE", DisplayConstants.DP_BANNER_ADMIN_RECOMM_CD);
-		mapEntry.put("TYPE", "themeZone");
-		mapEntry.put("BASE", "/category/themeZone");
-		mapEntry.put("DESC_NAME", "id");
-		listEntry.add(mapEntry);
+		// 이미지 사이즈 유효값 확인
+		String imgSizeList[] = imgSizeCd.split("\\+");
+		if (imgSizeList == null || imgSizeList.length == 0) {
+			// 실행에 필요한 파라미터가 유효하지 않습니다.
+			throw new StorePlatformException("SAC_DSP_0003", "imgSizeCd", imgSizeCd);
+		}
 
-		mapEntry = new HashMap<String, String>();
-		mapEntry.put("BNR_TYPE", DisplayConstants.DP_BANNER_BRANDSHOP_LIST_CD);
-		mapEntry.put("TYPE", "brandShopCategory");
-		mapEntry.put("BASE", "/category/brandShop");
-		listEntry.add(mapEntry);
+		// 헤더정보 세팅
+		bannerReq.setTenantId(header.getTenantHeader().getTenantId());
+		bannerReq.setLangCd(header.getTenantHeader().getLangCd());
+		bannerReq.setDeviceModelCd(header.getDeviceHeader().getModel());
+		bannerReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
-		mapEntry = new HashMap<String, String>();
-		mapEntry.put("BNR_TYPE", DisplayConstants.DP_BANNER_SPECIFIC_BRANDSHOP_CD);
-		mapEntry.put("TYPE", "brandShop");
-		mapEntry.put("BASE", "http://www.tstore.co.kr/miscellaneous/category/brandShop");
-		mapEntry.put("DESC_NAME", "id");
-		listEntry.add(mapEntry);
+		String reqImgCd = null; // 요청 이미지
+		Integer reqImgCnt = null; // 요청 이미지 개수
 
-		mapEntry = new HashMap<String, String>();
-		mapEntry.put("BNR_TYPE", DisplayConstants.DP_BANNER_INTERNAL_URL_CD);
-		mapEntry.put("TYPE", "url");
-		mapEntry.put("DESC_NAME", "url");
-		listEntry.add(mapEntry);
+		String bnrType = null; // 배너타입
+		String prodId = null; // 상품ID
+		String topMenuId = null; // 탑메뉴ID
+		String stdDt = null; // 배치완료 기준일시
+		String recommendId = null; // 추천ID
+		String brandShopNo = null; // 브랜드샵 번호
+		Integer provCnt = 0; // 프로비저닝 건수
+		Integer passCnt = 0; // 결과리스트에 담긴 배너 개수
 
-		mapEntry = new HashMap<String, String>();
-		mapEntry.put("BNR_TYPE", DisplayConstants.DP_BANNER_SITUATIONAL_RECOMM_CD);
-		mapEntry.put("TYPE", "themeRecomm");
-		mapEntry.put("BASE", "/category/themeRecomm");
-		mapEntry.put("DESC_NAME", "id");
-		listEntry.add(mapEntry);
+		BannerDefault bannerDefault = null; // 배너VO
+		List<BannerDefault> bannerList = null; // 배너리스트
+		List<BannerDefault> recommendProdList = null; // 운영자추천 상품 리스트
+		List<BannerDefault> brandShopProdList = null; // 브랜드샵 상품 리스트
+		List<BannerDefault> resultList = new ArrayList<BannerDefault>(); // 결과 리스트
+
+		ProductBasicInfo productInfo = null; // 메타정보 조회용 상품 파라미터
+		Map<String, Object> paramMap = null; // 메타정보 조회용 파라미터
+		MetaInfo metaInfo = null; // 메타정보 VO
+
+		for (int i = 0; i < imgSizeList.length; i++) {
+			reqImgCd = imgSizeList[i].split("\\/")[0]; // 요청 이미지 코드
+			reqImgCnt = Integer.parseInt(imgSizeList[i].split("\\/")[1]); // 요청 이미지 건수
+
+			// 배너리스트 조회
+			bannerReq.setImgSizeCd(reqImgCd);
+			bannerList = this.commonDAO.queryForList("Banner.searchBannerList", bannerReq, BannerDefault.class);
+
+			for (int k = 0; k < bannerList.size(); k++) {
+				bannerDefault = bannerList.get(k);
+				bnrType = bannerDefault.getBnrInfoTypeCd();
+
+				// 배너타입 : 상품 지정 입력
+				if (DisplayConstants.DP_BANNER_PRODUCT_CD.equals(bnrType)) {
+					prodId = bannerDefault.getBnrInfo();
+					topMenuId = bannerDefault.getTopMenuId();
+
+					// 테스트 데이터 정합성이 맞지 않아 패스
+					if (StringUtils.isEmpty(topMenuId)) {
+						continue;
+					}
+
+					bannerReq.setProdId(prodId);
+					bannerReq.setTopMenuId(topMenuId);
+
+					// 상품 프로비저닝
+					provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing", bannerReq);
+
+					if (provCnt > 0) {
+						productInfo = new ProductBasicInfo();
+						paramMap = new HashMap<String, Object>();
+
+						// 메타정보 조회를 위한 파라미터 세팅
+						productInfo.setProdId(prodId);
+						productInfo.setPartProdId(prodId);
+						productInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+						paramMap.put("tenantHeader", header.getTenantHeader());
+						paramMap.put("deviceHeader", header.getDeviceHeader());
+						paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+						paramMap.put("productBasicInfo", productInfo);
+
+						// APP
+						if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
+							paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+							metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+						}
+						// 이북 및 코믹
+						else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
+							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+							metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
+						}
+						// 영화 및 방송
+						else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+							paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+							metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+						}
+						// Tstore 쇼핑
+						else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) {
+							paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+							metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
+						}
+
+						if (metaInfo != null) {
+							bannerDefault.setTopMenuId(metaInfo.getTopMenuId());
+							bannerDefault.setTopMenuNm(metaInfo.getTopMenuNm());
+							bannerDefault.setMenuId(metaInfo.getMenuId());
+							bannerDefault.setMenuNm(metaInfo.getMenuNm());
+							bannerDefault.setMetaClsfCd(metaInfo.getMetaClsfCd());
+							bannerDefault.setSampleUrl(metaInfo.getScSamplUrl());
+							bannerDefault.setSampleUrlHq(metaInfo.getSamplUrl());
+							bannerDefault.setProdCaseCd(metaInfo.getProdCaseCd());
+
+							++passCnt;
+							resultList.add(bannerDefault);
+						}
+					}
+				}
+				// 배너타입 : 운영자 임의 추천
+				else if (DisplayConstants.DP_BANNER_ADMIN_RECOMM_CD.equals(bnrType)) {
+					recommendId = bannerDefault.getBnrInfo();
+
+					// 배치완료 기준일시 조회
+					stdDt = this.displayCommonService.getBatchStandardDateString(bannerReq.getTenantId(), recommendId);
+
+					// 기준일시 체크
+					if (StringUtils.isNotEmpty(stdDt)) {
+						bannerReq.setStdDt(stdDt);
+						bannerReq.setRecommendId(recommendId);
+
+						// 운영자 추천 상품 리스트 조회
+						recommendProdList = this.commonDAO.queryForList("Banner.searchRecommendProdList", bannerReq,
+								BannerDefault.class);
+
+						if (recommendProdList != null && !recommendProdList.isEmpty()) {
+							BannerSacReq tempReq = new BannerSacReq();
+							tempReq.setTenantId(header.getTenantHeader().getTenantId());
+							tempReq.setDeviceModelCd(header.getDeviceHeader().getModel());
+							tempReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+
+							for (int m = 0; m < recommendProdList.size(); m++) {
+								tempReq.setProdId(recommendProdList.get(m).getPartProdId());
+								tempReq.setTopMenuId(recommendProdList.get(m).getTopMenuId());
+
+								// 상품 프로비저닝
+								provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing",
+										tempReq);
+
+								if (provCnt > 0) {
+									++passCnt;
+									resultList.add(bannerDefault);
+									break;
+								}
+							}
+						}
+					}
+				}
+				// 배너타입 : 특정 브랜드샵
+				else if (DisplayConstants.DP_BANNER_SPECIFIC_BRANDSHOP_CD.equals(bnrType)) {
+					brandShopNo = bannerDefault.getBnrInfo();
+					bannerReq.setBrandShopNo(brandShopNo);
+
+					brandShopProdList = this.commonDAO.queryForList("Banner.searchBrandShopProdList", bannerReq,
+							BannerDefault.class);
+
+					if (brandShopProdList != null && !brandShopProdList.isEmpty()) {
+						BannerSacReq tempReq = new BannerSacReq();
+						tempReq.setTenantId(header.getTenantHeader().getTenantId());
+						tempReq.setDeviceModelCd(header.getDeviceHeader().getModel());
+						tempReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+
+						for (int n = 0; n < brandShopProdList.size(); n++) {
+							// 헤더정보 세팅
+							tempReq.setProdId(brandShopProdList.get(n).getPartProdId());
+							tempReq.setTopMenuId(brandShopProdList.get(n).getTopMenuId());
+
+							// 상품 프로비저닝
+							provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing", tempReq);
+
+							if (provCnt > 0) {
+								++passCnt;
+								resultList.add(bannerDefault);
+								break;
+							}
+						}
+					}
+				} else {
+					++passCnt;
+					resultList.add(bannerDefault);
+				}
+
+				// 요청건수 확인
+				if (reqImgCnt == passCnt) {
+					break;
+				}
+			}
+		}
+
+		// Response 생성
+		bannerRes = this.generateJSONData(resultList);
+		return bannerRes;
 	}
 
-	@Override
-	public BannerRes searchBannerList(BannerReq bannerReq, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
-		BannerRes bannerRes = new BannerRes();
+	/**
+	 * <pre>
+	 * 배너 Response 생성.
+	 * </pre>
+	 * 
+	 * @param list
+	 *            list
+	 * @return BannerSacResㄴ
+	 */
+	private BannerSacRes generateJSONData(List<BannerDefault> list) {
+		String bnrType = null;
+		String bnrInfo = null;
+		String topMenuId = null;
+
+		Banner banner = null;
+		Preview preview = null;
+		Url url = null;
+		SalesOption salesOption = null;
+		Menu menu = null;
+
+		List<Identifier> identifierList = null;
+		List<Menu> menuList = null;
+		List<Banner> bannerList = new ArrayList<Banner>();
+
+		BannerDefault bannerDf = null;
+		MetaInfo metaInfo = new MetaInfo();
+		BannerSacRes bannerRes = new BannerSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		// 헤더 값 설정
-		bannerReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		bannerReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-		bannerReq.setLangCd(requestHeader.getTenantHeader().getLangCd());
-		bannerReq.setRsltnSize(requestHeader.getDeviceHeader().getDpi());
-		bannerReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		if (list != null && !list.isEmpty()) {
+			for (int i = 0; i < list.size(); i++) {
+				bannerDf = list.get(i);
+				bnrType = bannerDf.getBnrInfoTypeCd();
+				bnrInfo = bannerDf.getBnrInfo();
+				topMenuId = bannerDf.getTopMenuId();
 
-		// Test 값 설정
-		// 헤더
-		bannerReq.setTenantId("S01");
-		bannerReq.setSystemId("test01");
-		// bannerReq.setDeviceModelCd("SHV-E210S");
-		// bannerReq.setRsltnSize("PI000101");
-		// 파라미터
-		// bannerReq.setBnrGrpId("MBI000000004");
-		// bannerReq.setBnrTopCd("DP000504");
-		// bannerReq.setProdClsf("ALL");
-		// bannerReq.setResvExpoYn("N");
-		// bannerReq.setImgCaseCd("A");
-		// bannerReq.setOffset(1);
-		// bannerReq.setCount(20);
-
-		// 필수 파라미터 체크
-		if (bannerReq.getBnrGrpId() == null || bannerReq.getBnrTopCd() == null) {
-			bannerRes.setCommonResponse(commonResponse);
-			return bannerRes;
-		}
-
-		// 파라미터 기본 값 설정
-		bannerReq.setProdClsf(bannerReq.getProdClsf() == null ? "ALL" : bannerReq.getProdClsf().toUpperCase());
-		bannerReq.setResvExpoYn(bannerReq.getResvExpoYn() == null ? "N" : bannerReq.getResvExpoYn().toUpperCase());
-		bannerReq.setOffset(bannerReq.getOffset() <= 0 ? 1 : bannerReq.getOffset());
-		bannerReq.setCount(bannerReq.getCount() <= 0 ? 20 : bannerReq.getCount());
-
-		// 객체 선언
-		List<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner> bannerList = new ArrayList<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner>();
-		com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner banner;
-		List<Identifier> identifierList;
-		Identifier identifier;
-		Title title;
-		Title titleName;
-		List<Menu> menuList;
-		Menu menu;
-		List<Source> sourceList;
-		Source source;
-		Music music;
-		Preview preview;
-		BannerExplain bannerExplain;
-
-		// 배너 리스트 조회
-		this.log.debug("배너 리스트 조회");
-		List<Banner> resultList = this.commonDAO.queryForList("Banner.searchBannerList", bannerReq, Banner.class);
-
-		Banner resultInfo = null;
-		Banner product = null;
-
-		if (!resultList.isEmpty()) {
-			this.log.debug("배너 리스트 - 총 건수 : " + resultList.get(0).getTotalCount());
-			commonResponse.setTotalCount(resultList.get(0).getTotalCount());
-
-			// 배너 값 설정
-			Iterator<Banner> resultIterator = resultList.iterator();
-			while (resultIterator.hasNext()) {
-
-				banner = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner();
-				resultInfo = resultIterator.next();
-
-				// 상품모바일배너의 경우 상품 메타 조회 및 설정
-				if (resultInfo.getBnrTypeCd().equals(DisplayConstants.DP_BANNER_PRODUCT_CD)) {
-					bannerReq.setProdId(resultInfo.getProdId());
-					resultInfo.setBnrInfo(resultInfo.getProdId());// 상품 메타 정보가 없을 경우 대비
-
-					// 상품 메타 정보 조회
-					this.log.debug("상품 메타 조회");
-					product = this.commonDAO.queryForObject("Banner.searchProductInfo", bannerReq, Banner.class);
-					if (product != null) {
-						// 상품 메타 값 설정
-						resultInfo.setTopMenuId(product.getTopMenuId());
-						resultInfo.setMenuId(product.getMenuId());
-						resultInfo.setTopMenuNm(product.getTopMenuNm());
-						resultInfo.setMenuNm(product.getMenuNm());
-						resultInfo.setMetaClsfCd(product.getMetaClsfCd());
-						resultInfo.setScSamplUrl(product.getScSamplUrl());
-						resultInfo.setSamplUrl(product.getSamplUrl());
-						resultInfo.setProdCase(product.getProdCase());
-						resultInfo.setOutsdContentsId(product.getOutsdContentsId());
-						resultInfo.setFileSize(product.getFileSize());
-						resultInfo.setFileSizeH(product.getFileSizeH());
-						resultInfo.setBnrInfo(product.getProdId());
-					} else {
-						this.log.debug("상품 메타 - 데이터 없음");
-					}
-				}
-
-				// 배너 규격 매핑
-				Iterator<Object> entryIterator = listEntry.iterator();
-				while (entryIterator.hasNext()) {
-					@SuppressWarnings("unchecked")
-					Map<String, String> entry = (Map<String, String>) entryIterator.next();
-					if (entry.get("BNR_TYPE").equals(resultInfo.getBnrTypeCd())) {
-						resultInfo.setType(entry.get("TYPE"));
-						resultInfo.setDescName(entry.get("DESC_NAME"));
-						resultInfo.setExternal(entry.get("EXTERNAL"));
-						resultInfo.setBase(entry.get("BASE"));
-					}
-				}
-
-				// 샵클 BEST 앱/컨텐츠 일 경우 배너 명 설정
-				if (bannerReq.getBnrGrpId().equals(DisplayConstants.DP_BANNER_MOBILE_CLIENT_CD)) {
-					resultInfo.setBnrNm(resultInfo.getBnrTitle());
-				}
-
-				this.log.debug("Respons 값 설정 - 배너 타입 : " + resultInfo.getBnrTypeCd());
-
-				// sizeType 설정
-				banner.setSizeType(resultInfo.getImgCaseCd());
-
-				// type 설정
-				banner.setType(resultInfo.getType());
-
-				// base 설정
-				banner.setBase(resultInfo.getBase());
-				if (resultInfo.getBase() != null) {
-					banner.setBase(resultInfo.getBase());
-				}
-
-				// Identifier 설정
+				banner = new Banner();
 				identifierList = new ArrayList<Identifier>();
-				identifier = new Identifier();
-				identifier.setType("banner");
-				identifier.setText(resultInfo.getBnrSeq());
-				identifierList.add(identifier);
 
-				// Title 설정
-				title = new Title();
-				title.setText(resultInfo.getBnrNm());
+				// 배너ID 정보
+				identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
+						DisplayConstants.DP_BANNER_IDENTIFIER_CD, bannerDf.getBnrSeq()));
 
-				// TitleName, ThemeInfo 설정(테마일 경우에만 해당)
-				// 테마 수정 필요(DB 설계가 안됨)
-				titleName = new Title();
-				if (bannerReq.getBnrTopCd().equals(DisplayConstants.DP_COMIC_THEME_BANNER_CD)
-						|| bannerReq.getBnrTopCd().equals(DisplayConstants.DP_EBOOK_THEME_BANNER_CD)) {
-					titleName.setText(resultInfo.getBnrNm());
-					banner.setTitleName(titleName);
-					banner.setThemeInfo(resultInfo.getBnrInfo());
-				}
+				// 배너 이미지사이즈 코드 정보
+				banner.setImgSizeCd(bannerDf.getImgSizeCd());
 
-				// menu 설정
-				menuList = new ArrayList<Menu>();
-				menu = new Menu();
-				menu.setId(resultInfo.getMenuId());
-				menu.setName(resultInfo.getMenuNm());
-				if (menu.getId() != null || menu.getName() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
-					menuList.add(menu);
-				}
+				// 배너제목 정보
+				metaInfo.setProdNm(bannerDf.getBnrNm());
+				banner.setTitle(this.commonMetaInfoGenerator.generateTitle(metaInfo));
 
-				// bannerExplain 설정
-				bannerExplain = new BannerExplain();
-				if (resultInfo.getDescName() != null && resultInfo.getDescName().equals("id")) {
-					bannerExplain.setId(resultInfo.getBnrInfo());
-					banner.setBannerExplain(bannerExplain);
-				} else if (resultInfo.getDescName() != null && resultInfo.getDescName().equals("url")) {
-					bannerExplain.setUrl(resultInfo.getBnrInfo());
-					banner.setBannerExplain(bannerExplain);
-				}
+				// 이미지 정보
+				metaInfo.setImagePath(bannerDf.getImgPath());
+				banner.setSourceList(this.commonMetaInfoGenerator.generateBannerSourceList(metaInfo));
 
-				// Source 설정
-				sourceList = new ArrayList<Source>();
-				if (resultInfo.getImgPath() != null) {
-					source = new Source();
-					source.setUrl(resultInfo.getImgPath() + "" + resultInfo.getImgNm());
-					source.setMediaType(DisplayCommonUtil.getMimeType(resultInfo.getImgNm()));
-					sourceList.add(source);
-					banner.setSourceList(sourceList);
-				}
+				// 배너타입 : 상품 지정 입력
+				if (DisplayConstants.DP_BANNER_PRODUCT_CD.equals(bnrType)) {
+					// 배너유형 정보
+					banner.setType(DisplayConstants.DP_BANNER_TYPE_PRODUCT);
 
-				// 상품모바일배너 전용(BnrTypeCd : DP010303)
-				if (resultInfo.getBnrTypeCd().equals(DisplayConstants.DP_BANNER_PRODUCT_CD)) {
+					// 상품ID 정보
+					identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
+							DisplayConstants.DP_BANNER_TYPE_PRODUCT, bnrInfo));
 
-					// Top menu 설정
-					menu = new Menu();
-					menu.setId(resultInfo.getTopMenuId());
-					menu.setName(resultInfo.getTopMenuNm());
-					menu.setType("topClass");
-					if (menu.getId() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
-						menuList.add(menu);
-					}
+					// 메뉴 정보
+					metaInfo.setMenuId(bannerDf.getMenuId());
+					metaInfo.setMenuNm(bannerDf.getMenuNm());
+					metaInfo.setTopMenuId(bannerDf.getTopMenuId());
+					metaInfo.setTopMenuNm(bannerDf.getTopMenuNm());
+					metaInfo.setMetaClsfCd(bannerDf.getMetaClsfCd());
+					banner.setMenuList(this.commonMetaInfoGenerator.generateMenuList(metaInfo));
 
-					// MetaclsfCd 설정
-					menu = new Menu();
-					menu.setId(resultInfo.getMetaClsfCd());
-					menu.setType("metaClass");
-					if (menu.getId() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
-						menuList.add(menu);
-					}
-
-					// music 상품일 경우 미리듣기 정보
-					if (resultInfo.getTopMenuId() != null
-							&& resultInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
-						music = new Music();
-						identifier = new Identifier();
-						identifier.setType("song");
-						identifier.setText(resultInfo.getOutsdContentsId());
-						music.setIdentifier(identifier);
-						this.log.debug("5");
-
-						sourceList = new ArrayList<Source>();
-						source = new Source();
-						source.setType("audio/mp3-128");
-						source.setSize(resultInfo.getFileSize());
-						sourceList.add(source);
-						source = new Source();
-						source.setType("audio/mp3-192");
-						source.setSize(resultInfo.getFileSizeH());
-						sourceList.add(source);
-						music.setSourceList(sourceList);
-						banner.setMusic(music);
-					}
-					// VOD 상품일 경우 미리보기 정보
-					if (resultInfo.getTopMenuId() != null
-							&& (resultInfo.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID) || resultInfo
-									.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID))) {
+					// 영화 및 방송
+					if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+							|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
 						preview = new Preview();
 
-						sourceList = new ArrayList<Source>();
-						source = new Source();
-						source.setType("video/x-freeview-lq");
-						source.setUrl(resultInfo.getScSamplUrl());
-						if (resultInfo.getScSamplUrl() != null) {
-							sourceList.add(source);
-						}
-						source = new Source();
-						source.setType("video/x-freeview-hq");
-						source.setUrl(resultInfo.getSamplUrl());
-						if (resultInfo.getSamplUrl() != null) {
-							sourceList.add(source);
-						}
-						preview.setSourceList(sourceList);
-						if (sourceList.size() > 0) {
-							banner.setPreview(preview);
-						}
+						// 미리보기 정보
+						metaInfo.setScSamplUrl(bannerDf.getSampleUrl());
+						metaInfo.setSamplUrl(bannerDf.getSampleUrlHq());
+						preview.setSourceList(this.commonMetaInfoGenerator.generateBannerSourceList(metaInfo));
+						banner.setPreview(preview);
+					}
+					// Tstore 쇼핑
+					else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) {
+						salesOption = new SalesOption();
+						salesOption.setType(bannerDf.getProdCaseCd());
+						banner.setSalesOption(salesOption);
 					}
 				}
+				// 배너타입 : URL 직접 입력 (외부 URL)
+				else if (DisplayConstants.DP_BANNER_URL_NEW_CD.equals(bnrType)) {
+					// 배너유형 정보
+					banner.setType(DisplayConstants.DP_BANNER_TYPE_EXTERNAL_URL);
 
-				banner.setTitle(title);
-				if (menuList.size() > 0) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
+					// URL 정보
+					url = new Url();
+					url.setText(bnrInfo);
+					banner.setUrl(url);
+				}
+				// 배너타입 : 카테고리 모바일 배너
+				else if (DisplayConstants.DP_BANNER_CATEGORY_CD.equals(bnrType)) {
+					// 배너유형 정보
+					banner.setType(DisplayConstants.DP_BANNER_TYPE_CATEGORY);
+
+					// 메뉴 정보
+					menu = new Menu();
+					menuList = new ArrayList<Menu>();
+					menu.setId(bnrInfo);
+					menuList.add(menu);
 					banner.setMenuList(menuList);
 				}
-				banner.setIdentifier(identifierList);
+				// 배너타입 : 운영자 임의 추천
+				else if (DisplayConstants.DP_BANNER_ADMIN_RECOMM_CD.equals(bnrType)) {
+					// 배너유형 정보
+					banner.setType(DisplayConstants.DP_BANNER_TYPE_THEME_ZONE);
+
+					// 추천ID 정보
+					identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
+							DisplayConstants.DP_BANNER_TYPE_THEME_ZONE, bnrInfo));
+				}
+				// 배너타입 : 브랜드샵 리스트
+				else if (DisplayConstants.DP_BANNER_BRANDSHOP_LIST_CD.equals(bnrType)) {
+					// 배너유형 정보
+					banner.setType(DisplayConstants.DP_BANNER_TYPE_BRAND_SHOP_CATEGORY);
+
+					// 메뉴 정보
+					menu = new Menu();
+					menuList = new ArrayList<Menu>();
+					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+					menu.setId(bnrInfo);
+					menuList.add(menu);
+					banner.setMenuList(menuList);
+				}
+				// 배너타입 : 특정 브랜드샵
+				else if (DisplayConstants.DP_BANNER_SPECIFIC_BRANDSHOP_CD.equals(bnrType)) {
+					// 배너유형 정보
+					banner.setType(DisplayConstants.DP_BANNER_TYPE_BRAND_SHOP);
+
+					// 브랜드샵ID 정보
+					identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
+							DisplayConstants.DP_BANNER_TYPE_BRAND_SHOP, bnrInfo));
+				}
+				// 배너타입 : 내부 URL
+				else if (DisplayConstants.DP_BANNER_INTERNAL_URL_CD.equals(bnrType)) {
+					// 배너유형 정보
+					banner.setType(DisplayConstants.DP_BANNER_TYPE_URL);
+
+					// URL 정보
+					url = new Url();
+					url.setText(bnrInfo);
+					banner.setUrl(url);
+				}
+				// 배너타입 : 상황별 추천
+				else if (DisplayConstants.DP_BANNER_SITUATIONAL_RECOMM_CD.equals(bnrType)) {
+					// 배너유형 정보
+					banner.setType(DisplayConstants.DP_BANNER_TYPE_THEME_RECOMM);
+
+					// 추천ID 정보
+					identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
+							DisplayConstants.DP_BANNER_TYPE_THEME_RECOMM, bnrInfo));
+				}
+
+				banner.setIdentifierList(identifierList);
 				bannerList.add(banner);
 			}
-			bannerRes.setBannerList(bannerList);
-		} else {
-			commonResponse.setTotalCount(0);
+			commonResponse.setTotalCount(list.size());
 		}
+
+		bannerRes.setBannerList(bannerList);
 		bannerRes.setCommonResponse(commonResponse);
 		return bannerRes;
 	}
