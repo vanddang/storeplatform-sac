@@ -105,7 +105,11 @@ public class Date extends CommonInfo implements Serializable {
 	 *            일시
 	 */
 	public void setText(java.util.Date dt) {
-		this.text = DATE_FORMAT_ISO8601BASIC.format(dt);
+		if (dt != null) {
+			this.text = DATE_FORMAT_ISO8601BASIC.format(dt);
+		} else {
+			this.text = null;
+		}
 	}
 
 	/**
