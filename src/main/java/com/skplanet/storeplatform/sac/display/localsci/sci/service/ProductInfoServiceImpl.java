@@ -126,21 +126,21 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					paramMap.put("stdDt", "20110806");
 
 					this.log.debug("##### Search for Music specific product");
-					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getMusicMetaInfo", paramMap,
-							ProductInfo.class);
-					if (product != null) {
-						productList.add(product);
-					}
+					// ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getMusicMetaInfo", paramMap,
+					// ProductInfo.class);
+					// if (product != null) {
+					// productList.add(product);
+					// }
 				} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
 					paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 					paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
 					this.log.debug("##### Search for Shopping specific product");
-					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getShoppingMetaInfo", paramMap,
-							ProductInfo.class);
-					if (product != null) {
-						productList.add(product);
-					}
+					// ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getShoppingMetaInfo", paramMap,
+					// ProductInfo.class);
+					// if (product != null) {
+					// productList.add(product);
+					// }
 				}
 			}
 		}
