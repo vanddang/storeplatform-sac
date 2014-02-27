@@ -24,108 +24,39 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 /**
  * Interface Message Banner Value Object.
  * 
- * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
+ * Updated on : 2014. 02. 21. Updated by : 이태희.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Banner extends CommonInfo implements Serializable {
-	/*
-	 * Banner를 클릭했을때 이동하는 base URL (Web URL or WebView을 연동할 경우는 정의되지 않는다.) > http://<<BASE>>/product : 상품타입 >
-	 * http://<<BASE>>/product/category/themeZone : 추천리스트 > http://<<BASE>>/product/category/brandShop 브랜드샵 >
-	 * http://<<BASE>>/miscellaneous/category/brandShop : 특정브랜드샵
-	 */
-	private String base;
-	/*
-	 * 베너 크기 유형 > A > B > C > D
-	 */
-	private String sizeType;
-	/*
-	 * 베너 등록 방식 > product : 상품 > externalUrl : 외부 URL > category : 카테고리 연결 > themeZone : 운영자 임의 추천 리스트 연결 >
-	 * brandShopCategory : 브랜드샵 목록 연결 > brandShop : 특정 브랜드샵 연결 > url : 내부 URL > themeRecommend : 상황 별 추천
-	 */
+	private static final long serialVersionUID = 1L;
+
+	private List<Identifier> identifierList;
 	private String type;
-
-	private List<Identifier> identifier;
-	// required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 4; //베너�ID
-	/*
-	 * 베너 명(type에 따라서 달라짐) > product : 상품명 > category : 카테고리 명 > themeZone : 운영자 임의추천 명 > brandShopCategory : 카테고리 명 >
-	 * brandShop : 브랜드 샵 명 > themeRecommend : 상황 별 추천 명
-	 * 
-	 * > text
-	 */
+	private String imgSizeCd;
 	private Title title;
-
-	/*
-	 * 카테고리 > all: 전체(main) > game: 게임 > fun: fun > living: 생활/위치 > languageEducation: 어학/교육 > movie: 영화 > broadcast:
-	 * TV방송 > music: 음악 > cartoon: 만화 > ebook: 이북 > shoppingCoupon: 쇼핑/쿠폰 > shoppingStore: T store shopping (기존
-	 * shoppingCoupon과 구분을 위해 새로 정의된 category) > meta_cls_cd 를 표현하기 위해 정의된다
-	 */
-	private String category;
-
-	private BannerExplain bannerExplain; // bannerExplain Message
-
-	/*
-	 * type > browser : Browser을 통해서 연동하는 경우에 사용 > webView : WebView를 이용할 경우에 사용
-	 */
+	private List<Menu> menuList;
+	private List<Source> sourceList;
+	private Preview preview;
+	private SalesOption salesOption;
 	private Url url;
 
-	private List<Source> sourceList;
-
-	private Music music; // music 상품일 경우 미리듣기 정보
-
-	/*
-	 * 미리 보기 정보를 정의한다. source의 type="video/x-freeview-lq" (미리보기 저화질) source의 type="video/x-freeview-hq" (미리보기 고화질)
-	 */
-	private Preview preview; // VOD 상품일 경우 미리보기 정보
-
-	private List<Menu> menuList;
-
-	/*
-	 * 타이블 분류 > name > text >이북/코믹테마에서 사용
-	 */
-	private Title titleName;
-
-	/*
-	 * 테마 정보 > 이북/코믹테마에서 사용
-	 */
-	private String themeInfo;
-
-	/*
-	 * 배너 ID > 이북/코믹테마에서 사용
-	 */
-	private String bannerId;
-
 	/**
-	 * @return String
+	 * @return the identifierList
 	 */
-	public String getBase() {
-		return this.base;
+	public List<Identifier> getIdentifierList() {
+		return this.identifierList;
 	}
 
 	/**
-	 * @param base
-	 *            base
+	 * @param identifierList
+	 *            the identifierList to set
 	 */
-	public void setBase(String base) {
-		this.base = base;
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
 	}
 
 	/**
-	 * @return String
-	 */
-	public String getSizeType() {
-		return this.sizeType;
-	}
-
-	/**
-	 * @param sizeType
-	 *            sizeType
-	 */
-	public void setSizeType(String sizeType) {
-		this.sizeType = sizeType;
-	}
-
-	/**
-	 * @return String
+	 * @return the type
 	 */
 	public String getType() {
 		return this.type;
@@ -133,29 +64,29 @@ public class Banner extends CommonInfo implements Serializable {
 
 	/**
 	 * @param type
-	 *            type
+	 *            the type to set
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
-	 * @return List<Identifier>
+	 * @return the imgSizeCd
 	 */
-	public List<Identifier> getIdentifier() {
-		return this.identifier;
+	public String getImgSizeCd() {
+		return this.imgSizeCd;
 	}
 
 	/**
-	 * @param identifier
-	 *            identifier
+	 * @param imgSizeCd
+	 *            the imgSizeCd to set
 	 */
-	public void setIdentifier(List<Identifier> identifier) {
-		this.identifier = identifier;
+	public void setImgSizeCd(String imgSizeCd) {
+		this.imgSizeCd = imgSizeCd;
 	}
 
 	/**
-	 * @return Title
+	 * @return the title
 	 */
 	public Title getTitle() {
 		return this.title;
@@ -163,104 +94,14 @@ public class Banner extends CommonInfo implements Serializable {
 
 	/**
 	 * @param title
-	 *            title
+	 *            the title to set
 	 */
 	public void setTitle(Title title) {
 		this.title = title;
 	}
 
 	/**
-	 * @return String
-	 */
-	public String getCategory() {
-		return this.category;
-	}
-
-	/**
-	 * @param category
-	 *            category
-	 */
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	/**
-	 * @return BannerExplain
-	 */
-	public BannerExplain getBannerExplain() {
-		return this.bannerExplain;
-	}
-
-	/**
-	 * @param bannerExplain
-	 *            bannerExplain
-	 */
-	public void setBannerExplain(BannerExplain bannerExplain) {
-		this.bannerExplain = bannerExplain;
-	}
-
-	/**
-	 * @return Url
-	 */
-	public Url getUrl() {
-		return this.url;
-	}
-
-	/**
-	 * @param url
-	 *            url
-	 */
-	public void setUrl(Url url) {
-		this.url = url;
-	}
-
-	/**
-	 * @return List<Source>
-	 */
-	public List<Source> getSourceList() {
-		return this.sourceList;
-	}
-
-	/**
-	 * @param sourceList
-	 *            sourceList
-	 */
-	public void setSourceList(List<Source> sourceList) {
-		this.sourceList = sourceList;
-	}
-
-	/**
-	 * @return Music
-	 */
-	public Music getMusic() {
-		return this.music;
-	}
-
-	/**
-	 * @param music
-	 *            music
-	 */
-	public void setMusic(Music music) {
-		this.music = music;
-	}
-
-	/**
-	 * @return Preview
-	 */
-	public Preview getPreview() {
-		return this.preview;
-	}
-
-	/**
-	 * @param preview
-	 *            preview
-	 */
-	public void setPreview(Preview preview) {
-		this.preview = preview;
-	}
-
-	/**
-	 * @return List<Menu>
+	 * @return the menuList
 	 */
 	public List<Menu> getMenuList() {
 		return this.menuList;
@@ -268,55 +109,69 @@ public class Banner extends CommonInfo implements Serializable {
 
 	/**
 	 * @param menuList
-	 *            menuList
+	 *            the menuList to set
 	 */
 	public void setMenuList(List<Menu> menuList) {
 		this.menuList = menuList;
 	}
 
 	/**
-	 * @return Title
+	 * @return the sourceList
 	 */
-	public Title getTitleName() {
-		return this.titleName;
+	public List<Source> getSourceList() {
+		return this.sourceList;
 	}
 
 	/**
-	 * @param titleName
-	 *            titleName
+	 * @param sourceList
+	 *            the sourceList to set
 	 */
-	public void setTitleName(Title titleName) {
-		this.titleName = titleName;
+	public void setSourceList(List<Source> sourceList) {
+		this.sourceList = sourceList;
 	}
 
 	/**
-	 * @return String
+	 * @return the preview
 	 */
-	public String getThemeInfo() {
-		return this.themeInfo;
+	public Preview getPreview() {
+		return this.preview;
 	}
 
 	/**
-	 * @param themeInfo
-	 *            themeInfo
+	 * @param preview
+	 *            the preview to set
 	 */
-	public void setThemeInfo(String themeInfo) {
-		this.themeInfo = themeInfo;
+	public void setPreview(Preview preview) {
+		this.preview = preview;
 	}
 
 	/**
-	 * @return String
+	 * @return the salesOption
 	 */
-	public String getBannerId() {
-		return this.bannerId;
+	public SalesOption getSalesOption() {
+		return this.salesOption;
 	}
 
 	/**
-	 * @param bannerId
-	 *            bannerId
+	 * @param salesOption
+	 *            the salesOption to set
 	 */
-	public void setBannerId(String bannerId) {
-		this.bannerId = bannerId;
+	public void setSalesOption(SalesOption salesOption) {
+		this.salesOption = salesOption;
 	}
 
+	/**
+	 * @return the url
+	 */
+	public Url getUrl() {
+		return this.url;
+	}
+
+	/**
+	 * @param url
+	 *            the url to set
+	 */
+	public void setUrl(Url url) {
+		this.url = url;
+	}
 }
