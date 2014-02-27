@@ -45,7 +45,7 @@ public class AppguideSacReq extends CommonInfo {
 
 	private int offset = 1; // 시작점 ROW
 
-	private int count = 20; // 페이지당 노출 ROW 수
+	private int count = 100; // 페이지당 노출 ROW 수
 
 	/**
 	 * @return the b2bProd
