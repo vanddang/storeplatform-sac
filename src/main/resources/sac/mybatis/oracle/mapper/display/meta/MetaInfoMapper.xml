@@ -42,6 +42,7 @@
                     AND ROWNUM = 1) AS TOP_MENU_NM
               , TB.PROD_DTL_DESC
               , TB.MENU_DESC
+              , TB.PROD_STATUS_CD
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
                       , A.MENU_ID
@@ -70,6 +71,7 @@
                       , L.PRCHS_CNT
                       , L.AVG_EVLU_SCORE
                       , F.PROD_DTL_DESC
+                      , G.PROD_STATUS_CD
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -178,6 +180,7 @@
                     AND ROWNUM = 1) AS TOP_MENU_NM
               , LA.FILE_SIZE
               , LA.PROD_DTL_DESC
+              , LA.PROD_STATUS_CD
           FROM (          
                 SELECT JA.*
                 FROM (SELECT G.TENANT_ID
@@ -220,6 +223,7 @@
                            , M.FILE_NM
                            , M.FILE_SIZE
                            , O.PROD_AMT
+                           , G.PROD_STATUS_CD
                         FROM TB_DP_MENU_CATEGORY           A
                            , TB_DP_MENU_CATEGORY_PROD_MAPG B
                            , TB_DP_MENU_CATEGORY_DESC      C
@@ -317,6 +321,7 @@
             , PI.FILE_NM
             , PI.FILE_SIZE
             , P.CONTENTS_TYPE_CD
+            , TP.PROD_STATUS_CD
          FROM UV_TB_DP_MULTIMDA_PROD MP
             , TB_DP_MUSIC_CHART MCI
             , TB_DP_PROD P
@@ -453,6 +458,7 @@
                          ELSE ROUND(TB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
              ]]>
              , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
+             , TB.PROD_STATUS_CD
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
@@ -495,6 +501,7 @@
                       , N.AVG_EVLU_SCORE              
                       , O.PROD_AMT
                       , O.PROD_NET_AMT 
+                      , G.PROD_STATUS_CD
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -601,6 +608,7 @@
              , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
              , CASE WHEN (SYSDATE - TB.UPD_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS ICON_YN     /* 아이콘 */
              , TB.UPD_DT
+             , TB.PROD_STATUS_CD
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID ORDER BY J.UPD_DT DESC ) AS RN
                       , A.UP_MENU_ID
@@ -639,6 +647,7 @@
                       , N.PRCHS_CNT
                       , N.AVG_EVLU_SCORE              
                       , O.PROD_AMT
+                      , G.PROD_STATUS_CD
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C

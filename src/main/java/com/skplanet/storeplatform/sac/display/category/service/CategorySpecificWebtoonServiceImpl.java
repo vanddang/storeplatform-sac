@@ -108,7 +108,6 @@ public class CategorySpecificWebtoonServiceImpl implements CategorySpecificWebto
 				Map<String, Object> paramMap = new HashMap<String, Object>();
 				paramMap.put("tenantHeader", header.getTenantHeader());
 				paramMap.put("deviceHeader", header.getDeviceHeader());
-				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 				paramMap.put("lang", "ko");
 
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {

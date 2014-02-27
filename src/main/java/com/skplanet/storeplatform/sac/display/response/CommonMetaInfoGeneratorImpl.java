@@ -305,6 +305,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		Rights rights = new Rights();
 		rights.setAllow(metaInfo.getDwldAreaLimtYn());
 		rights.setGrade(metaInfo.getProdGrdCd());
+		rights.setProdStatus(metaInfo.getProdStatusCd());
 
 		// 소장 정보
 		if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {

@@ -105,7 +105,6 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
 				Map<String, Object> paramMap = new HashMap<String, Object>();
 				paramMap.put("tenantHeader", header.getTenantHeader());
 				paramMap.put("deviceHeader", header.getDeviceHeader());
-				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 				paramMap.put("lang", "ko");
 
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -128,10 +127,6 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
 						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 						metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
 
-						// paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						// this.log.debug("##### Search for app specific product");
-						// metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo", paramMap,
-						// MetaInfo.class);
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
 							productList.add(product);
