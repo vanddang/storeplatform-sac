@@ -192,10 +192,6 @@
         <!-- for download Comic 정보 조회 -->
         <typeAlias alias="DownloadComicSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq" /> 
         
-        <!-- 배너 정보 조회 -->
-        <typeAlias alias="BannerReq"  type="com.skplanet.storeplatform.sac.client.display.vo.banner.BannerReq" />
-        <typeAlias alias="Banner"  type="com.skplanet.storeplatform.sac.display.banner.vo.Banner" />
-            
         <!-- 이북 상품상세 정보 조회 -->
         <typeAlias alias="EpubChannelReq"  type="com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq" />
         <typeAlias alias="EpubSeriesReq"  type="com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq" />
@@ -235,6 +231,10 @@
         <!-- Vod 보관함 정보 조회 -->
         <typeAlias alias="CategoryVodBoxSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq" />
         <typeAlias alias="CategoryVodBox"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryVodBox" />
+        
+        <!-- 배너 리스트 조회 -->
+        <typeAlias alias="BannerSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq" />
+        <typeAlias alias="BannerDefault"  type="com.skplanet.storeplatform.sac.display.banner.vo.BannerDefault" />
         
         <!-- ACL -->
         <typeAlias alias="Interface" type="com.skplanet.storeplatform.sac.runtime.acl.vo.Interface" />
