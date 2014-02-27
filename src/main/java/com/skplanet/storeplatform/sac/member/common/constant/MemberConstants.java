@@ -151,6 +151,7 @@ public final class MemberConstants {
 	/** 실명인증 수단 코드. */
 	public static final String REAL_NAME_AUTH_MOBILE = "US011101"; // 휴대폰인증
 	public static final String REAL_NAME_AUTH_IPIN = "US011102"; // IPIN인증
+	public static final String REAL_NAME_AUTH_EMAIL = "US011103"; // 이메일인증
 
 	/** 통합회원. */
 	public static final String SSO_SST_CD_TSTORE = "41100";
