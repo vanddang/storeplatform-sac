@@ -225,9 +225,20 @@ public class MetaInfo {
 	private String prchsCancelDrbkReason; // 구매_취소_환불_사유
 
 	private String opt1Nm; // 옵션 기준점
+	private String opt2Nm; // 옵션 기준점
 	private String optPdNm; // 옵션 값
 	private String subYn; // 옵션 하위 여부
 	private String srcContentId; // 쿠폰코드,아이템코드
+	private String couponId; // 쿠폰코드
+	private String itemId; // 아이템코드
+	private String sprcPrice; // 특가 가격
+	private String sprcApplyStartDt; // 특가상품 판매 시작일시
+	private String sprcApplyEndDt; // 특가상품 판매 종료일시
+	private String mmProdMaxSaleQty; // 특가상품 월별 구매건수
+	private String dlyProdMaxSaleQty; // 특가상품 일별 구매건수
+	private String permanMmMaxPrchsQty; // 특가상품 월별이용자 구매건수
+	private String permanDayMaxPrchsQty; // 특가상품 일별이용자 구매건수
+	private String cpnId; // 특가상품 쿠폰ID
 
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
@@ -3514,6 +3525,171 @@ public class MetaInfo {
 	 */
 	public void setProdStatusCd(String prodStatusCd) {
 		this.prodStatusCd = prodStatusCd;
+	}
+
+	/**
+	 * @return the opt2Nm
+	 */
+	public String getOpt2Nm() {
+		return this.opt2Nm;
+	}
+
+	/**
+	 * @param opt2Nm
+	 *            the opt2Nm to set
+	 */
+	public void setOpt2Nm(String opt2Nm) {
+		this.opt2Nm = opt2Nm;
+	}
+
+	/**
+	 * @return the couponId
+	 */
+	public String getCouponId() {
+		return this.couponId;
+	}
+
+	/**
+	 * @param couponId
+	 *            the couponId to set
+	 */
+	public void setCouponId(String couponId) {
+		this.couponId = couponId;
+	}
+
+	/**
+	 * @return the itemId
+	 */
+	public String getItemId() {
+		return this.itemId;
+	}
+
+	/**
+	 * @param itemId
+	 *            the itemId to set
+	 */
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
+	}
+
+	/**
+	 * @return the sprcPrice
+	 */
+	public String getSprcPrice() {
+		return this.sprcPrice;
+	}
+
+	/**
+	 * @param sprcPrice
+	 *            the sprcPrice to set
+	 */
+	public void setSprcPrice(String sprcPrice) {
+		this.sprcPrice = sprcPrice;
+	}
+
+	/**
+	 * @return the sprcApplyStartDt
+	 */
+	public String getSprcApplyStartDt() {
+		return this.sprcApplyStartDt;
+	}
+
+	/**
+	 * @param sprcApplyStartDt
+	 *            the sprcApplyStartDt to set
+	 */
+	public void setSprcApplyStartDt(String sprcApplyStartDt) {
+		this.sprcApplyStartDt = sprcApplyStartDt;
+	}
+
+	/**
+	 * @return the sprcApplyEndDt
+	 */
+	public String getSprcApplyEndDt() {
+		return this.sprcApplyEndDt;
+	}
+
+	/**
+	 * @param sprcApplyEndDt
+	 *            the sprcApplyEndDt to set
+	 */
+	public void setSprcApplyEndDt(String sprcApplyEndDt) {
+		this.sprcApplyEndDt = sprcApplyEndDt;
+	}
+
+	/**
+	 * @return the mmProdMaxSaleQty
+	 */
+	public String getMmProdMaxSaleQty() {
+		return this.mmProdMaxSaleQty;
+	}
+
+	/**
+	 * @param mmProdMaxSaleQty
+	 *            the mmProdMaxSaleQty to set
+	 */
+	public void setMmProdMaxSaleQty(String mmProdMaxSaleQty) {
+		this.mmProdMaxSaleQty = mmProdMaxSaleQty;
+	}
+
+	/**
+	 * @return the dlyProdMaxSaleQty
+	 */
+	public String getDlyProdMaxSaleQty() {
+		return this.dlyProdMaxSaleQty;
+	}
+
+	/**
+	 * @param dlyProdMaxSaleQty
+	 *            the dlyProdMaxSaleQty to set
+	 */
+	public void setDlyProdMaxSaleQty(String dlyProdMaxSaleQty) {
+		this.dlyProdMaxSaleQty = dlyProdMaxSaleQty;
+	}
+
+	/**
+	 * @return the permanMmMaxPrchsQty
+	 */
+	public String getPermanMmMaxPrchsQty() {
+		return this.permanMmMaxPrchsQty;
+	}
+
+	/**
+	 * @param permanMmMaxPrchsQty
+	 *            the permanMmMaxPrchsQty to set
+	 */
+	public void setPermanMmMaxPrchsQty(String permanMmMaxPrchsQty) {
+		this.permanMmMaxPrchsQty = permanMmMaxPrchsQty;
+	}
+
+	/**
+	 * @return the permanDayMaxPrchsQty
+	 */
+	public String getPermanDayMaxPrchsQty() {
+		return this.permanDayMaxPrchsQty;
+	}
+
+	/**
+	 * @param permanDayMaxPrchsQty
+	 *            the permanDayMaxPrchsQty to set
+	 */
+	public void setPermanDayMaxPrchsQty(String permanDayMaxPrchsQty) {
+		this.permanDayMaxPrchsQty = permanDayMaxPrchsQty;
+	}
+
+	/**
+	 * @return the cpnId
+	 */
+	public String getCpnId() {
+		return this.cpnId;
+	}
+
+	/**
+	 * @param cpnId
+	 *            the cpnId to set
+	 */
+	public void setCpnId(String cpnId) {
+		this.cpnId = cpnId;
 	}
 
 }

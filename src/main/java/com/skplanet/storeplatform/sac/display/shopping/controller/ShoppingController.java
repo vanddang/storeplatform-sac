@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
@@ -189,7 +190,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/brandshop/productList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingBrandRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getBrandshopProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -231,7 +232,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/theme/productList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingBrandRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getThemeProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");

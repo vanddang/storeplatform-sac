@@ -1462,7 +1462,7 @@
 		                               ( KK.DLY_PRCHS_CNT >= KK.DLY_MAX_CNT ) ) THEN 'Y'
 		                    ELSE  'N' END )
 		               , 'N' )AS soldOut 
-		       ,DECODE(KK.SPECIAL_SALE_YN,'Y','specialSale','') AS specialSale
+		       ,KK.SPECIAL_SALE_YN AS specialSale
 		       ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
            FROM (
                   SELECT 
@@ -1475,7 +1475,7 @@
                         ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
                         ,J.PROD_GRD_CD
                         ,J.USE_PERIOD_UNIT_CD
-                        ,J.USE_PERIOD||FN_COMM_CD_NM(J.USE_PERIOD_UNIT_CD,#{req.langCd}) as USE_PERIOD
+                        ,CONCAT(J.USE_PERIOD,FN_COMM_CD_NM(J.USE_PERIOD_UNIT_CD,#{req.langCd})) as USE_PERIOD
                         ,DECODE(I.PROD_CASE_CD
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
@@ -1692,5 +1692,129 @@
                          ) 
            AND BASE_YN ='Y'
            AND USE_YN ='Y'
-    </select>             
+    </select>
+    
+   <!-- 구매내역에서 필요한 값 조회-->
+    <select id="getShoppingPurchase" parameterType="Map" resultType="MetaInfo">
+     /* ShoppingMapper.xml.getShoppingPurchase,구매내역에서 필요한 값 조회, 김형식/SK플래닛 , 2014-02-04 */
+          SELECT  
+                KK.*
+           FROM (
+                  SELECT 
+                         D.MENU_ID
+                        ,F.MENU_NM
+                        ,J.TOP_MENU_ID 
+                        ,(SELECT MENU_NM
+                            FROM TB_DP_MENU_CATEGORY_DESC
+                           WHERE MENU_ID = J.TOP_MENU_ID
+                             AND LANG_CD = #{req.langCd}
+                             AND ROWNUM = 1
+                         ) AS TOP_MENU_NM
+                        ,J.META_CLSF_CD    
+                        ,CASE WHEN N.PROD_ID IS NOT NULL THEN M.PROD_NM ELSE C.CATALOG_NM  END  PROD_NM
+                        ,A.BRAND_ID
+                        ,A.BRAND_NM    
+                        ,B.CATALOG_ID                                              
+                        ,H.PROD_ID                         
+                        ,H.PART_PROD_ID 
+                        ,J.SELLER_MBR_NO 
+                        ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
+                        ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
+                        ,J.PROD_GRD_CD
+                        ,J.USE_PERIOD_UNIT_CD
+                        ,CONCAT(J.USE_PERIOD,FN_COMM_CD_NM(J.USE_PERIOD_UNIT_CD,#{req.langCd})) as USE_PERIOD
+                        ,DECODE(I.PROD_CASE_CD
+                              , 'DP006301', 'giftcard'
+                              , 'DP006302', 'exchange'
+                              , 'DP006303', 'delivery' ) PROD_CASE_CD
+                        ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
+                        ,(SELECT SRC_CONTENT_ID 
+                            FROM TB_DP_SHPG_PROD 
+                           WHERE prod_id=H.PROD_ID 
+                         ) AS COUPON_CODE
+                        ,I.SRC_CONTENT_ID AS ITEM_CODE
+                        ,K.PROD_STATUS_CD
+                        ,NVL(N.SPRC_PRICE,0) SPRC_PRICE
+                        ,N.SPRC_APPLY_START_DT
+                        ,N.SPRC_APPLY_END_DT
+                        ,NVL(N.MM_PROD_MAX_SALE_QTY,0) AS MM_PROD_MAX_SALE_QTY
+                        ,NVL(N.DLY_PROD_MAX_SALE_QTY,0) AS DLY_PROD_MAX_SALE_QTY    
+                        ,NVL(N.PERMAN_MM_MAX_PRCHS_QTY,0) AS PERMAN_MM_MAX_PRCHS_QTY
+                        ,NVL(N.PERMAN_DAY_MAX_PRCHS_QTY,0) AS PERMAN_DAY_MAX_PRCHS_QTY
+                        ,N.CPN_ID  
+                        ,O.OPT1_NM
+                        ,O.OPT2_NM
+                        ,J.REG_DT  
+                        ,CONCAT(CONCAT(J.SVC_GRP_CD, '||' ),J.TOP_MENU_ID) as tenantProdGrpCd
+                        ,J.DRM_YN
+                  FROM 
+                          TB_DP_SHPG_BRAND A
+                         ,TB_DP_SHPG_CATALOG B
+                         ,TB_DP_SHPG_CATALOG_DESC C
+                         ,TB_DP_MENU_SHPG_MAPG D
+                         ,TB_DP_MENU_CATEGORY E
+                         ,TB_DP_MENU_CATEGORY_DESC F 
+                         ,TB_DP_PROD_CATALOG_MAPG G 
+                         ,TB_DP_PROD_RSHP H
+                         ,TB_DP_SHPG_PROD I
+                         ,TB_DP_PROD J
+                         ,TB_DP_TENANT_PROD K
+                         ,TB_DP_TENANT_PROD_PRICE L
+                         ,TB_DP_PROD_DESC M
+                         ,(SELECT 
+                                 B1.PROD_ID
+                               , B1.SPRC_DC_RATE
+                               , B1.SPRC_PRICE
+                               , B1.SPRC_APPLY_START_DT
+                               , B1.SPRC_APPLY_END_DT
+                               , B1.MM_PROD_MAX_SALE_QTY
+                               , B1.DLY_PROD_MAX_SALE_QTY   
+                               , B1.PERMAN_MM_MAX_PRCHS_QTY
+                               , B1.PERMAN_DAY_MAX_PRCHS_QTY
+                               , B1.ONCE_MAX_PRCHS_POSB_CNT                                     
+                           FROM  TB_DP_PROD_RSHP A1
+                                ,TB_DP_SPRC_PROD B1
+                           WHERE 1=1
+                             AND A1.PART_PROD_ID = B1.PROD_ID
+                             <if test="req.specialProdId != null ">
+                             AND B1.PROD_ID  = #{req.specialProdId}
+                             </if>                             
+                             AND B1.EXPO_YN ='Y'
+                             AND B1.CPN_ID IS NOT NULL
+                             AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
+                          )N
+                          ,TB_DP_PROD_OPT O
+                WHERE 1=1
+                AND A.BRAND_ID = B.BRAND_ID
+                AND B.CATALOG_ID = C.CATALOG_ID
+                AND C.CATALOG_ID = D.CATALOG_ID     
+                AND D.MENU_ID = E.MENU_ID
+                AND D.MENU_ID = F.MENU_ID
+                AND B.CATALOG_ID = G.CATALOG_ID
+                AND G.PROD_ID = H.PROD_ID
+                AND H.PART_PROD_ID = I.PROD_ID
+                AND I.PROD_ID = J.PROD_ID
+                AND I.PROD_ID = K.PROD_ID
+                AND I.PROD_ID = L.PROD_ID
+                AND I.PROD_ID = M.PROD_ID
+                AND K.TENANT_ID = L.TENANT_ID
+                AND I.PROD_ID = N.PROD_ID(+)
+                AND I.PROD_ID = O.EPSD_PROD_ID(+)
+                AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
+                AND NVL(B.CHNL_CNT, 0) > 0          
+                AND C.LANG_CD= #{req.langCd}          /* ko : 한국어 */
+                AND F.LANG_CD= #{req.langCd}          /* ko : 한국어 */
+                AND M.LANG_CD =#{req.langCd}          /* ko : 한국어 */
+                AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+                AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+                AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+                AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+                AND K.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */
+                AND I.PROD_ID = #{req.productId}
+           ) KK
+    </select>                      
 </mapper>

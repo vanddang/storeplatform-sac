@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.display.shopping.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
@@ -31,9 +31,6 @@ import com.skplanet.storeplatform.sac.client.internal.display.shopping.sci.Shopp
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
@@ -817,9 +814,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingBrandRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
-		ShoppingRes res = new ShoppingRes();
+		ShoppingBrandRes res = new ShoppingBrandRes();
 		List<MetaInfo> resultList = null;
 		MetaInfo shopping = null;
 		CommonResponse commonResponse = new CommonResponse();
@@ -1032,9 +1029,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingBrandRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
-		ShoppingRes res = new ShoppingRes();
+		ShoppingBrandRes res = new ShoppingBrandRes();
 		List<MetaInfo> resultList = null;
 
 		CommonResponse commonResponse = new CommonResponse();
@@ -1529,11 +1526,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setItemCode(episodeShopping.getSrcContentId());
 
 							// 특가 상품일 경우
-							episodeMenu = new Menu();
-							episodeMenuList = new ArrayList<Menu>();
-							episodeMenu.setType(episodeShopping.getSpecialSale());
-							episodeMenuList.add(episodeMenu);
-							episodeProduct.setMenuList(episodeMenuList);
+							episodeProduct.setSpecialProdYn(episodeShopping.getSpecialSale());
 
 							// 채널 상품 정보 (상품ID)
 							episodeIdentifierList = new ArrayList<Identifier>();
@@ -1649,11 +1642,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 								episodeSaleOption.setSatus(DisplayConstants.DP_CONTINUE);
 							}
 
-							episodeSaleOption.setMaxMonthlySale(episodeShopping.getMthMaxCnt()); // 월_최대_판매_수량
-							episodeSaleOption.setMaxDailySale(episodeShopping.getDlyMaxCnt()); // 일_최대_판매_수량
-							episodeSaleOption.setMaxMonthlyBuy(episodeShopping.getMthUsrMaxCnt()); // 월_회원_최대_구매_수량
-							episodeSaleOption.setMaxDailyBuy(episodeShopping.getDlyUsrMaxCnt()); // 일_회원_최대_구매_수량
-							episodeSaleOption.setMaxOnceBuy(episodeShopping.getEachMaxCnt()); // 1차_최대_구매_수량
+							episodeSaleOption.setMaxMonthlySale(Integer.parseInt(episodeShopping.getMthMaxCnt())); // 월_최대_판매_수량
+							episodeSaleOption.setMaxDailySale(Integer.parseInt(episodeShopping.getDlyMaxCnt())); // 일_최대_판매_수량
+							episodeSaleOption.setMaxMonthlyBuy(Integer.parseInt(episodeShopping.getMthUsrMaxCnt())); // 월_회원_최대_구매_수량
+							episodeSaleOption.setMaxDailyBuy(Integer.parseInt(episodeShopping.getDlyUsrMaxCnt())); // 일_회원_최대_구매_수량
+							episodeSaleOption.setMaxOnceBuy(Integer.parseInt(episodeShopping.getEachMaxCnt())); // 1차_최대_구매_수량
 							episodeSaleOption.setPlaceUsage(episodeShopping.getUsePlac()); // 사용_장소
 							episodeSaleOption.setRestrictUsage(episodeShopping.getUseLimtDesc()); // 사용_제한_설명
 							episodeSaleOption.setPrincipleUsage(episodeShopping.getNoticeMatt()); // 공지_사항
@@ -1673,7 +1666,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 										if (optionShopping.getSubYn().equals("Y")) { // 옵션 1 인 경우
 											selectOption = new SelectOption();
 											// 옵션1 상품 ID
-											selectOption.setId(optionShopping.getPartProdId());
 											if (optionShopping.getExpoOrd().equals("1")) {
 												selectOption.setIndex(String.valueOf(indexOption));
 												indexOption++;
@@ -1681,6 +1673,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 											// 옵션1 상품 정보 (상품명)
 											Title option1Title = this.commonGenerator.generateTitle(optionShopping);
+											selectOption.setId(optionShopping.getPartProdId());
 											selectOption.setTitle(option1Title);
 											// 옵션1 상품 가격정보
 											Price option1Price = this.shoppingGenerator.generatePrice(optionShopping);
@@ -1688,6 +1681,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 										}
 										if (optionShopping.getSubYn().equals("N")) { // 옵션 2 인 경우
 											subSelectOption = new SubSelectOption();
+											subSelectOption.setId(optionShopping.getPartProdId());
 											// 옵션2 상품 ID
 											subSelectOption.setSubId(optionShopping.getProdNm());
 
@@ -1723,43 +1717,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setSelectOptionList(selectOptionList);
 
 							// 판매자정보 셋팅
+							distributor = new Distributor();
+							distributor.setSellerKey(episodeShopping.getSellerMbrNo());
 
-							DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-							DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
-							List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
-							SellerMbrSac sellerMbrSac = new SellerMbrSac();
 							this.log.debug("#########################################################");
 							this.log.debug("sellerMbrNo	:	" + episodeShopping.getSellerMbrNo());
 							this.log.debug("#########################################################");
-							sellerMbrSac.setSellerKey(episodeShopping.getSellerMbrNo());
-							sellerMbrSacList.add(sellerMbrSac);
-							detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
 
-							try {
-								detailInformationSacRes = this.sellerSearchSCI
-										.detailInformation(detailInformationSacReq);
-								Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
-								List<SellerMbrSac> sellerMbrs = new ArrayList<SellerMbrSac>();
-								sellerMbrSac = new SellerMbrSac();
-								distributor = new Distributor();
-								while (it.hasNext()) {
-									String key = it.next();
-									sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
-									distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
-									distributor.setIdentifier(sellerMbrs.get(0).getSellerId());
-									distributor.setName(sellerMbrs.get(0).getSellerName());
-									distributor.setCompany(sellerMbrs.get(0).getSellerCompany());
-									distributor.setTel(sellerMbrs.get(0).getRepPhone());
-									distributor.setEmail(sellerMbrs.get(0).getSellerEmail());
-									distributor.setAddress(sellerMbrs.get(0).getSellerAddress()
-											+ sellerMbrs.get(0).getSellerDetailAddress());
-									distributor.setRegNo(sellerMbrs.get(0).getSellerBizNumber());
-								}
-								episodeProduct.setDistributor(distributor);
+							episodeProduct.setDistributor(distributor);
 
-							} catch (Exception e) {
-								throw new StorePlatformException("SAC_DSP_1002", "멤버 정보 조회 ", e);
-							}
 							subProductList.add(episodeProduct);
 						}
 
@@ -1963,5 +1929,32 @@ public class ShoppingServiceImpl implements ShoppingService {
 		responseVO.setCommonResponse(commonResponse);
 		// }
 		return responseVO;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService#getShoppingforPurchase(com.skplanet.
+	 * storeplatform.sac.client.display.vo.shopping.ShoppingReq)
+	 */
+	@Override
+	public MetaInfo getShoppingforPurchase(ShoppingReq req) {
+		req.setLangCd("ko");
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(req.getTenantId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
+		}
+		if (StringUtils.isEmpty(req.getProductId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
+		}
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		reqMap.put("req", req);
+
+		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
+		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		MetaInfo shoppingforPurchase = this.commonDAO.queryForObject("Shopping.getShoppingPurchase", reqMap,
+				MetaInfo.class);
+
+		return shoppingforPurchase;
 	}
 }

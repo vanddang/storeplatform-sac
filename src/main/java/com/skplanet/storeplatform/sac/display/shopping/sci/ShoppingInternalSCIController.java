@@ -85,11 +85,6 @@ public class ShoppingInternalSCIController implements ShoppingInternalSCI {
 	 */
 	private SalesOptionSac setSaleOption(SalesOption reqVo) {
 		SalesOptionSac resVo = new SalesOptionSac();
-		resVo.setMaxDailyBuy(reqVo.getMaxDailyBuy());
-		resVo.setMaxDailySale(reqVo.getMaxDailySale());
-		resVo.setMaxMonthlyBuy(reqVo.getMaxMonthlyBuy());
-		resVo.setMaxMonthlySale(reqVo.getMaxMonthlySale());
-		resVo.setMaxOnceBuy(reqVo.getMaxOnceBuy());
 
 		return resVo;
 	}

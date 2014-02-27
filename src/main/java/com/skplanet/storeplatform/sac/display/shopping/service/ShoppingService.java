@@ -1,9 +1,11 @@
 package com.skplanet.storeplatform.sac.display.shopping.service;
 
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
  * <pre>
@@ -100,7 +102,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingBrandRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * 쇼핑테마 리스트상품 리스트.
@@ -122,7 +124,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingBrandRes getThemeProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * 특정 카탈로그에 대한 다른 상품 리스트.
@@ -156,4 +158,13 @@ public interface ShoppingService {
 	 * @return ShoppingRes
 	 */
 	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req);
+
+	/**
+	 * 구매내역 필요한 정보.
+	 * 
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	public MetaInfo getShoppingforPurchase(ShoppingReq req);
 }
