@@ -31,13 +31,13 @@ public class MusicDetailReqValidator implements Validator {
     public void validate(Object target, Errors errors) {
         MusicDetailReq vo = (MusicDetailReq)target;
         if(StringUtils.isEmpty(vo.getChannelId()))
-            errors.rejectValue("channelId", "NotEmpty", "channelId가 지정되지 않았습니다.");
+            errors.rejectValue("channelId", "NotEmpty", new Object[]{"channelId"}, "channelId가 지정되지 않았습니다.");
 
         if (StringUtils.isEmpty(vo.getDeviceKey()) ^ StringUtils.isEmpty(vo.getUserKey())) {
             if(StringUtils.isEmpty(vo.getDeviceKey()))
-                errors.rejectValue("userKey", "NotEmpty", "deviceKey, userKey가 함께 지정되어야 합니다.");
+                errors.rejectValue("userKey", "NotEmpty", new Object[]{"userKey"}, "deviceKey, userKey가 함께 지정되어야 합니다.");
             if(StringUtils.isEmpty(vo.getUserKey()))
-                errors.rejectValue("deviceKey", "NotEmpty", "deviceKey, userKey가 함께 지정되어야 합니다.");
+                errors.rejectValue("deviceKey", "NotEmpty", new Object[]{"deviceKey"}, "deviceKey, userKey가 함께 지정되어야 합니다.");
         }
     }
 }

@@ -16,6 +16,9 @@ import com.skplanet.storeplatform.sac.common.header.vo.NetworkHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 
 	@Override
@@ -73,13 +76,27 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 	 * @return
 	 */
 	private DeviceHeader extractDevice(NativeWebRequest webRequest) {
-		DeviceHeader device = new DeviceHeader();
-		device.setDpi("320");
-		device.setModel("SHW-M110S");
-		device.setResolution("480*720");
-		device.setOs("Android/4.0.4");
-		device.setPkg("store.skplanet.com/0.1");
-		device.setSvc("SAC_Client/4.3");
+        DeviceHeader device = new DeviceHeader();
+        device.setDpi("320");
+        device.setModel("SHW-M110S");
+        device.setResolution("480*720");
+        device.setOs("Android/4.0.4");
+        device.setPkg("store.skplanet.com/0.1");
+        device.setSvc("SAC_Client/4.3");
+
+        String header = webRequest.getHeader("x-sac-device-info");
+        Pattern p = Pattern.compile("(\\w+)=\"([0-9a-zA-Z/\\.\\-\\*]+)\"");
+        for (String kv : header.split(",")) {
+            Matcher matcher = p.matcher(kv.trim());
+            if (matcher.find()) {
+                String key = matcher.group(1);
+                String value = matcher.group(2);
+
+                if(key.equals("model"))
+                    device.setModel(value);
+            }
+        }
+
 		return device;
 	}
 

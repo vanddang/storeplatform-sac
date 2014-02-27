@@ -9,20 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.app;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.display.MvcTestBuilder;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,6 +22,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Map;
 
 
 /**
@@ -60,7 +54,7 @@ public class AppDetailTest {
         AppDetailReq req = new AppDetailReq();
         req.setChannelId("0000065131"); // 0000065131 - 구매 이력이 존재하는 앱 상품
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true);
+        MvcTestBuilder.buildPost(mvc, URL, req, true);
     }
 
     @Test
@@ -68,7 +62,7 @@ public class AppDetailTest {
         AppDetailReq req = new AppDetailReq();
         req.setChannelId("0000065131"); // 0000065131 - 구매 이력이 존재하는 앱 상품
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true);
+        MvcTestBuilder.buildPost(mvc, URL, req, true);
     }
 
     @Test
@@ -76,14 +70,14 @@ public class AppDetailTest {
         AppDetailReq req = new AppDetailReq();
         req.setUserKey("AA");
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+        MvcTestBuilder.buildPost(mvc, URL, req, false);
     }
 
     @Test
     public void validatorTest2() throws Exception {
         AppDetailReq req = new AppDetailReq();
         req.setDeviceKey("BB");
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+        MvcTestBuilder.buildPost(mvc, URL, req, false);
     }
 
     @Test
@@ -93,7 +87,7 @@ public class AppDetailTest {
         req.setUserKey("IF1023000075420110321134705");
         req.setDeviceKey("01045916961");    // 개발계에는 deviceKey가 MDN으로 정의되어 있음.
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true);
+        MvcTestBuilder.buildPost(mvc, URL, req, true);
     }
 
     @Test
@@ -103,7 +97,16 @@ public class AppDetailTest {
         req.setUserKey("IF1023000075420110321134705");
         req.setDeviceKey("");
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+        MvcTestBuilder.buildPost(mvc, URL, req, false);
+    }
+
+    @Test
+    public void saleStatus04() throws Exception {
+        AppDetailReq req = new AppDetailReq();
+        req.setChannelId("0000297941");
+        Map<String, String> headerMap = MvcTestBuilder.getDefaultHeader();
+        headerMap.put("model", "SHW-M340S");
+        MvcTestBuilder.build(mvc, true, headerMap, URL, req, true);
     }
 
 

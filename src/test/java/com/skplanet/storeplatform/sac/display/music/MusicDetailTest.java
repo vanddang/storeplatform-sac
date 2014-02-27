@@ -55,14 +55,14 @@ public class MusicDetailTest {
         MusicDetailReq req = new MusicDetailReq();
         req.setChannelId(CHNL_ID_OK);
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true);
+        MvcTestBuilder.buildPost(mvc, URL, req, true);
     }
 
     @Test
     public void validatorTest1() throws Exception{
         MusicDetailReq req = new MusicDetailReq();
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+        MvcTestBuilder.buildPost(mvc, URL, req, false);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class MusicDetailTest {
         MusicDetailReq req = new MusicDetailReq();
         req.setChannelId("H000460202");
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true);
+        MvcTestBuilder.buildPost(mvc, URL, req, true);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class MusicDetailTest {
         req.setChannelId("H000460202");
         req.setUserKey("AA");
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+        MvcTestBuilder.buildPost(mvc, URL, req, false);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class MusicDetailTest {
         req.setChannelId("H000460202");
         req.setDeviceKey("BB");
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, false);
+        MvcTestBuilder.buildPost(mvc, URL, req, false);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class MusicDetailTest {
 //        req.setDeviceKey("BB");
 //        req.setUserKey("");
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true)
+        MvcTestBuilder.buildPost(mvc, URL, req, true)
                 .andExpect(jsonPath("/product/salesStatus").doesNotExist());
     }
 
@@ -109,7 +109,7 @@ public class MusicDetailTest {
         req.setDeviceKey("01046129429");
         req.setUserKey("IF1023541315020111207133720");
 
-        MvcTestBuilder.createMvcTestPost(mvc, URL, req, true)
+        MvcTestBuilder.buildPost(mvc, URL, req, true)
                 .andExpect(jsonPath("/product/salesStatus").doesNotExist());
     }
 

@@ -16,6 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -30,37 +33,39 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class MvcTestBuilder {
 
-    public static ResultActions createMvcTestGet(MockMvc mvc, String url, boolean expectResultSuccess) throws Exception
-    {
-        return createMvcTest(mvc, false, null, url, null, expectResultSuccess);
+    private static final Map<String, String> DEFAULT_DEVICE_HEADER_MAP;
+
+    static {
+        DEFAULT_DEVICE_HEADER_MAP = new HashMap<String, String>();
+        DEFAULT_DEVICE_HEADER_MAP.put("model", "SHV-E110S");
+        DEFAULT_DEVICE_HEADER_MAP.put("dpi", "320");
+        DEFAULT_DEVICE_HEADER_MAP.put("resolution", "480*720");
+        DEFAULT_DEVICE_HEADER_MAP.put("osVersion", "Android/4.0.4");
+        DEFAULT_DEVICE_HEADER_MAP.put("pkgVersion", "sac.store.skplanet.com/37");
     }
 
-    public static ResultActions createMvcTestPost(MockMvc mvc, String url, Object reqObj, boolean expectResultSuccess) throws Exception
-    {
-        String postBody;
-        try
-        {
-            postBody = new ObjectMapper().writeValueAsString(reqObj);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-
-        return createMvcTest(mvc, true, null, url, postBody, expectResultSuccess);
+    public static Map<String, String> getDefaultHeader() {
+        return new HashMap<String, String>(DEFAULT_DEVICE_HEADER_MAP);
     }
 
-    public static ResultActions createMvcTest(MockMvc mvc, boolean isPost, String deviceInfoHeader, String url, String postBody, boolean expectResultSuccess) throws Exception {
+    public static ResultActions buildGet(MockMvc mvc, String url, boolean expectResultSuccess) throws Exception {
+
+        return build(mvc, false, DEFAULT_DEVICE_HEADER_MAP, url, null, expectResultSuccess);
+    }
+
+    public static ResultActions buildPost(MockMvc mvc, String url, Object reqObj, boolean expectResultSuccess) throws Exception
+    {
+        return build(mvc, true, DEFAULT_DEVICE_HEADER_MAP, url, reqObj, expectResultSuccess);
+    }
+
+    public static ResultActions build(MockMvc mvc, boolean isPost, String deviceInfoHeader, String url, String postBody, boolean expectResultSuccess) throws Exception {
         MockHttpServletRequestBuilder request;
         if(isPost)
             request = post(url);
         else
             request = get(url);
 
-        if(deviceInfoHeader == null)
-            request.header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37");
-        else
-            request.header("x-sac-device-info", deviceInfoHeader);
+        request.header("x-sac-device-info", deviceInfoHeader);
 
         request.contentType(MediaType.APPLICATION_JSON);
 
@@ -73,5 +78,26 @@ public class MvcTestBuilder {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("x-sac-result-code", expectResultSuccess ? "SUCC" : "FAIL"));
+    }
+
+    public static ResultActions build(MockMvc mvc, boolean isPost, Map<String, String> deviceInfoMap, String url, Object reqObj, boolean expectResultSuccess) throws Exception {
+        String postBody;
+        try
+        {
+            postBody = new ObjectMapper().writeValueAsString(reqObj);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> kv : deviceInfoMap.entrySet()) {
+            if(sb.length() > 0)
+                sb.append(",");
+            sb.append(kv.getKey()).append("=\"").append(kv.getValue()).append("\"");
+        }
+
+        return build(mvc, isPost, sb.toString(), url, postBody, expectResultSuccess);
     }
 }

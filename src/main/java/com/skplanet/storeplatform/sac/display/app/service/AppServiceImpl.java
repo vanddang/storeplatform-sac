@@ -64,6 +64,8 @@ public class AppServiceImpl implements AppService {
 			return null;
 
 		AppDetailRes res = new AppDetailRes();
+        Product product = new Product();
+        res.setProduct(product);
 
         if (!appDetail.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
             // 04, 09, 10의 경우 구매이력이 없으면 상품 없음을 표시한다.
@@ -77,10 +79,11 @@ public class AppServiceImpl implements AppService {
                 else
                     res.getProduct().setSalesStatus("restricted");
             }
+            else
+                res.getProduct().setSalesStatus("restricted");
         }
 
         // Product Basic info
-        Product product = new Product();
         product.setIdentifier(new Identifier("episode", request.getChannelId()));
         product.setPacketFee(appDetail.getProdGbn());
 
