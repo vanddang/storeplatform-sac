@@ -2475,7 +2475,7 @@ public class IdpServiceImpl implements IdpService {
 
 							// TAC005 US010611 3자정보제공동의
 							mca = new MbrClauseAgree();
-							mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID);
+							mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS);
 							mca.setIsExtraAgreement("Y");
 							mbrClauseAgreeList.add(mca);
 
