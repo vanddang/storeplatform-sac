@@ -107,7 +107,7 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
 			req.setProdStatusCd(DisplayConstants.DP_SALE_STAT_ING);
-			req.setStandardModelCd(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 			// 시작점 ROW Default 세팅
 			if (req.getOffset() == 0) {
@@ -125,11 +125,11 @@ public class FreepassServiceImpl implements FreepassService {
 			if ("All".equals(req.getKind())) {
 				req.setKind("");
 			}
-			
+
 			// '+'로 연결 된 상품등급코드를 배열로 전달
 			if (StringUtils.isNotEmpty(req.getTopMenuId())) {
 				try {
-					//String[] arrTopMenuId = URLDecoder.decode(req.getTopMenuId(), "UTF-8").split("//+");
+					// String[] arrTopMenuId = URLDecoder.decode(req.getTopMenuId(), "UTF-8").split("//+");
 					String[] arrTopMenuId = StringUtils.split(req.getTopMenuId(), "+");
 					req.setArrTopMenuId(arrTopMenuId);
 				} catch (Exception e) {
@@ -201,7 +201,7 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
 			req.setProdStatusCd(DisplayConstants.DP_SALE_STAT_ING);
-			req.setStandardModelCd(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 			// 시작점 ROW Default 세팅
 			if (req.getOffset() == 0) {
@@ -337,7 +337,7 @@ public class FreepassServiceImpl implements FreepassService {
 		List<ProductBasicInfo> couponBasicInfoList = null;
 		ProductBasicInfo productBasicInfo = null;
 		MetaInfo retMetaInfo = null;
-		log.debug("1111");
+		this.log.debug("1111");
 		if (StringUtil.nvl(req.getDummy(), "").equals("")) {
 
 			// 정액제 상품 목록 조회
@@ -347,9 +347,9 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
 			req.setProdStatusCd(DisplayConstants.DP_SALE_STAT_ING);
-			req.setStandardModelCd(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 			req.setKind("OR004302");
-			
+
 			// 시작점 ROW Default 세팅
 			if (req.getOffset() == 0) {
 				req.setOffset(1);
@@ -364,7 +364,7 @@ public class FreepassServiceImpl implements FreepassService {
 
 			if (couponBasicInfoList == null)
 				throw new StorePlatformException("SAC_DSP_0009");
-			
+
 			// 정액제 상품 메타 조회
 			if (couponBasicInfoList != null && couponBasicInfoList.size() > 0) {
 				reqMapC.put("tenantHeader", header.getTenantHeader());
@@ -375,12 +375,12 @@ public class FreepassServiceImpl implements FreepassService {
 				reqMapP.put("tenantHeader", header.getTenantHeader());
 				reqMapP.put("deviceHeader", header.getDeviceHeader());
 				reqMapP.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-				
+
 				for (ProductBasicInfo couponBasicInfo : couponBasicInfoList) {
 					reqMapC.put("productBasicInfo", couponBasicInfo);
 					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMapC);
 					coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
-					
+
 					productBasicInfo = new ProductBasicInfo();
 					productBasicInfo.setProdId(couponBasicInfo.getPartProdId());
 					productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
@@ -388,7 +388,7 @@ public class FreepassServiceImpl implements FreepassService {
 					reqMapP.put("productBasicInfo", productBasicInfo);
 
 					commonResponse.setTotalCount(couponBasicInfo.getTotalCount());
-					//상품메타 정보 조회
+					// 상품메타 정보 조회
 					if ("DP13".equals(couponBasicInfo.getTopMenuId())) {
 						reqMapP.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMapP);
@@ -418,10 +418,10 @@ public class FreepassServiceImpl implements FreepassService {
 			reqMapP.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 			reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 			String[] prodIdList = { "H000043398", "H000043398", "H000043398" };
-			
+
 			List<Coupon> couponList = this.getDummyCoupon();
 			coupon = couponList.get(0);
-			
+
 			productBasicInfo = new ProductBasicInfo();
 			for (int i = 0; i < prodIdList.length; i++) {
 				productBasicInfo.setProdId(prodIdList[i]);
@@ -433,7 +433,7 @@ public class FreepassServiceImpl implements FreepassService {
 				product.setCoupon(coupon);
 				productList.add(product);
 			}
-			
+
 			commonResponse.setTotalCount(couponList.size());
 
 		}
@@ -475,9 +475,9 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
 			req.setProdStatusCd(DisplayConstants.DP_SALE_STAT_ING);
-			req.setStandardModelCd(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 			req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -495,19 +495,19 @@ public class FreepassServiceImpl implements FreepassService {
 			if (req.getCount() == 0) {
 				req.setCount(20);
 			}
-			
+
 			// '+'로 연결 된 상품등급코드를 배열로 전달
 			if (StringUtils.isNotEmpty(req.getKind())) {
 				try {
-					
-					//String[] arrKind = URLDecoder.decode(req.getKind(), "UTF-8").split("//+");
+
+					// String[] arrKind = URLDecoder.decode(req.getKind(), "UTF-8").split("//+");
 					String[] arrKind = StringUtils.split(req.getKind(), "+");
 					req.setArrKind(arrKind);
 				} catch (Exception e) {
 					throw new StorePlatformException("SAC_DSP_0003", "kind", req.getKind());
 				}
 			}
-			
+
 			if (StringUtils.equalsIgnoreCase(req.getKind(), "All")) {
 				req.setKind("");
 			}
