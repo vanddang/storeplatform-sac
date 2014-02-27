@@ -475,6 +475,34 @@ public class UserSearchServiceImpl implements UserSearchService {
 		/* 회원 정보 조회 */
 		UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
 
+		String checkId = "";
+		if (!req.getUserEmail().equals("")) {
+			/* UserId와 Email이 일치하는지 체크 */
+			if (info.getUserEmail().equals(req.getUserEmail())) {
+				checkId = "Y";
+			} else {
+				checkId = "N";
+			}
+		} else if (!req.getUserPhone().equals("")) {
+			/* UserId와 Phone이 일치하는지 체크 */
+			ListDeviceReq scReq = new ListDeviceReq();
+			scReq.setUserKey(info.getUserKey());
+			scReq.setDeviceId(req.getUserPhone());
+			scReq.setIsMainDevice("N");
+
+			ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
+
+			if (listDeviceRes.getUserKey() != null) {
+				checkId = "Y";
+			} else {
+				checkId = "N";
+			}
+		}
+
+		if (checkId.equals("N")) {
+			throw new StorePlatformException("SAC_MEM_0002", "Email or Phone");
+		}
+
 		SearchPasswordSacRes res = new SearchPasswordSacRes();
 		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
 			if (info.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
@@ -1034,10 +1062,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 			if (schUserRes.getMbrMangItemPtcrList() != null) {
 				for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-					logger.debug("============================================ UserExtraInfo CODE : {}",
-							ptcr.getExtraProfile());
-					logger.debug("============================================ UserExtraInfo VALUE : {}",
-							ptcr.getExtraProfileValue());
+					logger.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
+					logger.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
 
 					UserExtraInfo extra = new UserExtraInfo();
 					extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -1051,8 +1077,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		}
 
-		logger.debug("============================================ UserSearch Req : {}", searchUserRequest
-				.getKeySearchList().toString());
+		logger.debug("============================================ UserSearch Req : {}", searchUserRequest.getKeySearchList().toString());
 		logger.debug("============================================ UserSearch Res : {}", userInfo.toString());
 
 		return userInfo;
@@ -1375,8 +1400,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @param response
 	 * @return DetailByDeviceIdSacRes
 	 */
-	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req,
-			DetailByDeviceIdSacRes response) {
+	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req, DetailByDeviceIdSacRes response) {
 
 		/**
 		 * 검색조건 정보 setting.
@@ -1446,8 +1470,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
 		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
-		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo())
-				.getGiftSprtYn());
+		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo()).getGiftSprtYn());
 
 		return response;
 
@@ -1491,7 +1514,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#searchUserByUserKey(com.skplanet.storeplatform
+	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByUserKey(com.skplanet.storeplatform
 	 * .sac.client.member.vo.user.SearchUserReq)
 	 */
 	@Override
@@ -1510,8 +1534,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC UserSCI.searchMbrUser() 호출.");
 		SearchMbrUserResponse searchMbrUserResponse = this.userSCI.searchMbrUser(searchMbrUserRequest);
 
-		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse
-				.getCommonResponse().getResultCode());
+		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse.getCommonResponse().getResultCode());
 
 		Map<String, UserMbrStatus> userInfoMap = searchMbrUserResponse.getUserMbrStatusMap();
 
