@@ -73,6 +73,8 @@ public class AppguideServiceImpl implements AppguideService {
 
 	private static final Map<String, String> mapReasonCode = new HashMap<String, String>();
 
+	private int totalCount = 0;
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -89,6 +91,7 @@ public class AppguideServiceImpl implements AppguideService {
 	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuReq
 	 * requestVO)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public AppguideSacRes searchIsfRecommendList(AppguideSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException {
@@ -103,6 +106,7 @@ public class AppguideServiceImpl implements AppguideService {
 		Map<String, Object> mapReq = new HashMap<String, Object>();
 		mapReq.put("tenantHeader", tenantHeader);
 		mapReq.put("deviceHeader", deviceHeader);
+		mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
 		String userKey = requestVO.getUserKey();
 		String deviceIdType = requestVO.getDeviceIdType();
@@ -217,6 +221,10 @@ public class AppguideServiceImpl implements AppguideService {
 
 				// Meta 정보 조회
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+
+					if (this.totalCount == 0)
+						this.totalCount = productBasicInfo.getTotalCount();
+
 					String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
 					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
 					paramMap.put("productBasicInfo", productBasicInfo);
@@ -316,7 +324,8 @@ public class AppguideServiceImpl implements AppguideService {
 			}
 
 			if (this.log.isDebugEnabled()) {
-				this.log.debug("product count : " + productList.size());
+				this.log.debug("product count : {}", productList.size());
+				this.log.debug("total count : {}", this.totalCount);
 				// productList.clear();
 			}
 
@@ -324,11 +333,11 @@ public class AppguideServiceImpl implements AppguideService {
 				isExists = false;
 			} else {
 				// 연관상품 정보 조회
-				@SuppressWarnings("rawtypes")
 				List<HashMap> listRelProd = null;
 				if (!listRelProdParam.isEmpty()) {
 					Map<String, Object> mapRel = new HashMap<String, Object>();
 					mapRel.put("tenantHeader", tenantHeader);
+					mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 					mapRel.put("pidList", listRelProdParam);
 
 					listRelProd = this.commonDAO.queryForList("Isf.Appguide.getRelProdList", mapRel, HashMap.class);
@@ -463,7 +472,7 @@ public class AppguideServiceImpl implements AppguideService {
 					listRes.addAll(listAppCodiReason);
 				}
 
-				commonResponse.setTotalCount(listRes.size());
+				commonResponse.setTotalCount(this.totalCount);
 				responseVO.setCommonRes(commonResponse);
 				responseVO.setProductList(listRes);
 			}
@@ -473,6 +482,8 @@ public class AppguideServiceImpl implements AppguideService {
 
 		// ISF 연동 실패나 Data 가 없는 경우( 운영자 추천으로 대체 )
 		if (!isExists) {
+			this.totalCount = 0;
+
 			this.log.info("ISF 연동 실패나 Data 가 없는 경우 - 운영자 추천으로 대체");
 
 			mapReq = new HashMap<String, Object>();
@@ -481,6 +492,7 @@ public class AppguideServiceImpl implements AppguideService {
 
 			mapReq.put("tenantHeader", requestHeader.getTenantHeader());
 			mapReq.put("deviceHeader", requestHeader.getDeviceHeader());
+			mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
 			mapReq.put("listId", "ADM000000012"); // 운영자 추천
 
@@ -500,7 +512,7 @@ public class AppguideServiceImpl implements AppguideService {
 
 			productList = this.makeResultList(appguideResultList);
 
-			commonResponse.setTotalCount(productList.size());
+			commonResponse.setTotalCount(this.totalCount);
 			responseVO.setCommonRes(commonResponse);
 			responseVO.setProductList(productList);
 		}
@@ -513,6 +525,9 @@ public class AppguideServiceImpl implements AppguideService {
 		List<Product> listVO = new ArrayList<Product>();
 
 		for (Appguide mapper : resultList) {
+
+			if (this.totalCount == 0)
+				this.totalCount = mapper.getTotalCount();
 
 			Product product;
 			Identifier identifier;
@@ -992,7 +1007,7 @@ public class AppguideServiceImpl implements AppguideService {
 		request.setMbn(requestVO.getUserKey());
 		request.setMdn(requestVO.getDeviceId());
 		request.setChCode("M");
-		// request.setType("appguide");
+		request.setType("appguide");
 
 		if (this.log.isDebugEnabled()) {
 			this.log.debug(request.toString());
