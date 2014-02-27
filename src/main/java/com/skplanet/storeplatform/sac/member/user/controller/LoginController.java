@@ -49,7 +49,7 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
-		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
+		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdn(requestHeader, req);
 
 		return res;
 	}
@@ -67,7 +67,7 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) {
 
-		AuthorizeByIdRes res = this.loginService.authorizeById(requestHeader, req);
+		AuthorizeByIdRes res = this.loginService.executeAuthorizeById(requestHeader, req);
 
 		return res;
 	}

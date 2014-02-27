@@ -95,7 +95,7 @@ public class LoginServiceImpl implements LoginService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq)
 	 */
 	@Override
-	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
+	public AuthorizeByMdnRes executeAuthorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
 
 		LOGGER.info("############################ LoginServiceImpl authorizeByMdn start ############################");
 
@@ -238,7 +238,7 @@ public class LoginServiceImpl implements LoginService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq)
 	 */
 	@Override
-	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) {
+	public AuthorizeByIdRes executeAuthorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) {
 
 		LOGGER.info("############################ LoginServiceImpl authorizeById start ############################");
 
