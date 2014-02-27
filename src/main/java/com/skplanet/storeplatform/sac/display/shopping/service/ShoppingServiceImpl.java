@@ -131,7 +131,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setLangCd(tenantHeader.getLangCd());
 			req.setOsVersion(osVersion);
 			req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -230,7 +230,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setLangCd(tenantHeader.getLangCd());
 			req.setOsVersion(osVersion);
 			req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -317,7 +317,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setLangCd(tenantHeader.getLangCd());
 			req.setOsVersion(osVersion);
 			req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -425,7 +425,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		List<MetaInfo> resultList = null;
 		MetaInfo shopping = null;
@@ -602,7 +602,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setBannerImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_BANNER_IMAGE_CD);
 		req.setPromotionImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD);
-		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		List<MetaInfo> resultList = null;
 		MetaInfo shopping = null;
@@ -832,7 +832,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -1047,7 +1047,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -1154,7 +1154,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setLangCd(tenantHeader.getLangCd());
 			req.setOsVersion(osVersion);
 			req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -1268,7 +1268,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setLangCd(tenantHeader.getLangCd());
 			req.setOsVersion(osVersion);
 			req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -1380,7 +1380,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANDROID_STANDARD2_NM);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 		req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
