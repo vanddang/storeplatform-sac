@@ -271,36 +271,14 @@ public class LoginServiceImpl implements LoginService {
 					AuthForIdEcReq authForIdEcReq = new AuthForIdEcReq();
 					authForIdEcReq.setKey(userId);
 					authForIdEcReq.setUserPasswd(userPw);
-					this.imIdpSCI.authForId(authForIdEcReq);
+					AuthForIdEcRes authForIdEcRes = this.imIdpSCI.authForId(authForIdEcReq);
 
-					throw new StorePlatformException("SAC_MEM_1200"); // 원아이디 이용동의 간편가입 대상 정보가 상이합니다.(SC회원 DB 미동의회원, IDP 동의회원)
+					if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_OK)) {
 
-					//FDS 로그 남김???
+						throw new StorePlatformException("SAC_MEM_1200"); // 원아이디 이용동의 간편가입 대상 정보가 상이합니다.(SC회원 DB 미동의회원, IDP 동의회원)
+						//FDS 로그 남김???
 
-				} catch (StorePlatformException ex) {
-
-					if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER)) { // 서비스 간편가입 대상
-
-						/* 로그인 결과 */
-						res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
-						res.setLoginStatusCode(chkDupRes.getMbrOneID().getLoginStatusCode());
-						res.setStopStatusCode(chkDupRes.getMbrOneID().getStopStatusCode());
-						res.setIsLoginSuccess("Y");
-						return res;
-
-					} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-							+ ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) { // 서비스 간편가입 대상이나 패스워드 틀림
-
-						/* 로그인 결과 */
-						res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
-						res.setLoginStatusCode(chkDupRes.getMbrOneID().getLoginStatusCode());
-						res.setStopStatusCode(chkDupRes.getMbrOneID().getStopStatusCode());
-						res.setIsLoginSuccess("N");
-						return res;
-
-					} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-							+ ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입 상태인 경우
+					} else if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입 상태인 경우 EC에서 성공으로 처리하여 joinSstList를 Response로 받는다.
 
 						Map<String, String> mapSiteCd = new HashMap<String, String>();
 						mapSiteCd.put("10100", "네이트");
@@ -334,7 +312,7 @@ public class LoginServiceImpl implements LoginService {
 						mapSiteCd.put("90400", "mOTP");
 
 						// 가가입 상태 - 가입신청 사이트 정보
-						String joinSst = chkDupRes.getMbrOneID().getIntgSiteCode();
+						String joinSst = authForIdEcRes.getJoinSstList();
 						String joinSstCd = null;
 						String joinSstNm = null;
 
@@ -345,6 +323,7 @@ public class LoginServiceImpl implements LoginService {
 								break;
 							}
 						}
+						LOGGER.info(":::: {} 가가입 상태 사이트 정보 : {}, {}, {}", chkDupRes.getMbrOneID().getUserID(), joinSst, joinSstCd, joinSstNm);
 
 						if (StringUtils.isEmpty(joinSstCd)) {
 							joinSstCd = "90000"; // One ID
@@ -354,6 +333,30 @@ public class LoginServiceImpl implements LoginService {
 						/* 로그인 결과 */
 						res.setJoinSiteCd(joinSstCd);
 						res.setJoinSiteNm(joinSstNm);
+						res.setIsLoginSuccess("N");
+						return res;
+
+					}
+
+				} catch (StorePlatformException ex) {
+
+					if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER)) { // 서비스 간편가입 대상
+
+						/* 로그인 결과 */
+						res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
+						res.setLoginStatusCode(chkDupRes.getMbrOneID().getLoginStatusCode());
+						res.setStopStatusCode(chkDupRes.getMbrOneID().getStopStatusCode());
+						res.setIsLoginSuccess("Y");
+						return res;
+
+					} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+							+ ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) { // 서비스 간편가입 대상이나 패스워드 틀림
+
+						/* 로그인 결과 */
+						res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
+						res.setLoginStatusCode(chkDupRes.getMbrOneID().getLoginStatusCode());
+						res.setStopStatusCode(chkDupRes.getMbrOneID().getStopStatusCode());
 						res.setIsLoginSuccess("N");
 						return res;
 
