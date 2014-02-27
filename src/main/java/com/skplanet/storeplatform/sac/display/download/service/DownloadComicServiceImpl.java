@@ -205,6 +205,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			String prchsState = null; // 구매상태
 			String prchsProdId = null; // 구매 상품ID
 			String prchsPrice = null; // 구매금액
+			String drmYn = null; // DRM 지원여부
 
 			if (historyRes.getTotalCnt() > 0) {
 				List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -218,6 +219,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 					prchsProdId = historyRes.getHistoryList().get(i).getProdId();
 					prchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
+					drmYn = historyRes.getHistoryList().get(i).getDrmYn();
 
 					// 구매상태 확인
 					comicReq.setPrchsDt(prchsDt);
@@ -285,6 +287,11 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 							metaInfo.setDeviceType(deviceIdType);
 							metaInfo.setDeviceSubKey(deviceId);
 							metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
+
+							// 구매시점 DRM 여부값으로 세팅
+							if (StringUtils.isNotEmpty(drmYn)) {
+								metaInfo.setDrmYn(drmYn);
+							}
 
 							// 암호화 정보 (JSON)
 							EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);

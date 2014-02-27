@@ -218,6 +218,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			String prchsState = null; // 구매상태
 			String prchsProdId = null; // 구매 상품ID
 			String prchsPrice = null; // 구매금액
+			String drmYn = null; // DRM 지원여부
 
 			if (historyRes != null && historyRes.getTotalCnt() > 0) {
 				List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -231,6 +232,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 					prchsProdId = historyRes.getHistoryList().get(i).getProdId();
 					prchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
+					drmYn = historyRes.getHistoryList().get(i).getDrmYn();
 
 					// 구매상태 확인
 					ebookReq.setPrchsDt(prchsDt);
@@ -297,6 +299,12 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							metaInfo.setDeviceKey(deviceKey);
 							metaInfo.setDeviceType(deviceIdType);
 							metaInfo.setDeviceSubKey(deviceId);
+
+							// 구매시점 DRM 여부값으로 세팅
+							if (StringUtils.isNotEmpty(drmYn)) {
+								metaInfo.setStoreDrmYn(drmYn);
+								metaInfo.setPlayDrmYn(drmYn);
+							}
 
 							// 소장, 대여 구분(Store : 소장, Play : 대여)
 							if (prchsProdId.equals(metaInfo.getStoreProdId())) {
