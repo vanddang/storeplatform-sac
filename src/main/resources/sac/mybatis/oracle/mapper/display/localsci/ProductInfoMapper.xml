@@ -143,6 +143,10 @@
 		       , D.PROD_GRD_CD
 		       , D.USE_PERIOD_UNIT_CD
 		       , D.META_CLSF_CD
+		       ,  (CASE
+                  WHEN D.META_CLSF_CD IN ('CT14', 'CT15','CT16') THEN '회'
+                  ELSE ''
+                  END ) AS CHAPTER_UNIT
 		       , D.CONTENTS_TYPE_CD
 		       , D.EXPO_SELLER_EMAIL
 		       , D.EXPO_SELLER_NM

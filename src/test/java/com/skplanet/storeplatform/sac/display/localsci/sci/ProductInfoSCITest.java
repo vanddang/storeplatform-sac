@@ -59,7 +59,7 @@ public class ProductInfoSCITest {
 		list.add("0000044857");
 		list.add("0000048923");
 		req.setList(list);
-		req.setDeviceModelNo("SHW-M100S");
+		// req.setDeviceModelNo("SHW-M100S");
 
 		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
 		List<ProductInfo> productList = res.getProductList();
@@ -88,7 +88,7 @@ public class ProductInfoSCITest {
 		list.add("H000043978");
 		list.add("H000043950");
 		req.setList(list);
-		req.setDeviceModelNo("SHW-M100S");
+		// req.setDeviceModelNo("SHW-M100S");
 
 		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
 		List<ProductInfo> productList = res.getProductList();

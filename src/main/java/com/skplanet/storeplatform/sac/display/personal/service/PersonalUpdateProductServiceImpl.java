@@ -269,7 +269,6 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
 							historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 							historyListSacReq.setEndDt(endDate);
-							// TODO osm1021 offset 제거 필요
 							historyListSacReq.setOffset(1);
 							historyListSacReq.setCount(1000);
 							historyListSacReq.setProductList(productListSacInList);
@@ -377,6 +376,8 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 										this.log.debug("##### It's free app and fake update target");
 										this.log.debug("##### Set purchase id to {}", fupdateId);
 										mapPkg.put("PRCHS_ID", fupdateId);
+									} else {
+										this.log.debug("##### It's free app hence add update list");
 									}
 								}
 								this.log.debug("###########################################");
