@@ -11,9 +11,11 @@
 		             , ROWNUM AS RNUM
 		          FROM 
 		               (
-		                 SELECT A.PROD_ID
-		                      , B.TOP_MENU_ID
-		                      , B.PROD_ID AS CHNL_PROD_ID
+                         SELECT A.PROD_ID
+                              , B.TOP_MENU_ID
+                              , B.PROD_ID AS CHNL_PROD_ID
+                              , A.EXPO_ORD
+                              , A.REG_DT
 		                   FROM TB_DP_LIST_PROD         A
 		                      , TB_DP_PROD              B
 		                      , TB_DP_PROD_RSHP         C
@@ -81,14 +83,18 @@
                                     END ) = 1                                      
 
 		                 UNION ALL
-		                 SELECT PROD_ID
-		                      , TOP_MENU_ID
-		                      , '' AS CHNL_PROD_ID
-		                   FROM
-		                       (
-		                         SELECT PROD_ID
-		                              , TOP_MENU_ID
-		                              , EXPO_ORD
+                         SELECT PROD_ID
+                              , TOP_MENU_ID
+                              , CATALOG_ID AS CHNL_PROD_ID
+                              , EXPO_ORD
+                              , REG_DT
+                           FROM
+                               (
+                                 SELECT PROD_ID
+                                      , CATALOG_ID
+                                      , TOP_MENU_ID
+                                      , EXPO_ORD
+                                      , REG_DT
 		                           FROM 
 		                                (
 		                                 SELECT  B.CATALOG_ID 
@@ -184,10 +190,10 @@
 		                                              )                      
 		                                ) 
 		                           WHERE NO =1
-		                           ORDER BY EXPO_ORD ASC, CATALOG_NM ASC     
 		                       )                 
 		               ) JA           
 		       ) KA
-		  WHERE KA.RNUM BETWEEN #{offset} AND #{count}        
+		  WHERE KA.RNUM BETWEEN #{offset} AND #{count}
+          ORDER BY EXPO_ORD ASC, REG_DT DESC		          
     </select>
 </mapper>
