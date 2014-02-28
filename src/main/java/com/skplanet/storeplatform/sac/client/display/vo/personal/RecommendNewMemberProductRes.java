@@ -9,7 +9,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 /**
  * 신규 가입 회원 추천 상품 조회 Response Value Object.
  * 
- * Updated on : 2014. 2.24. Updated by : 이석희, 아이에스 플러스.
+ * Updated on : 2014. 2.24. Updated by : 이석희, 아이에스플러스.
  */
 public class RecommendNewMemberProductRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
