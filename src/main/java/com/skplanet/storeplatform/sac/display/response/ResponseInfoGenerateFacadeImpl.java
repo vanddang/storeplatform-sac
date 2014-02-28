@@ -705,6 +705,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		coupon.setPrice(price);
 		coupon.setAutopay(autoPay);
 		coupon.setDate(date);
+		coupon.setSaleStatus(metaInfo.getProdStatusCd());
 
 		return coupon;
 	}
