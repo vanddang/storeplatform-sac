@@ -9,8 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -19,7 +17,6 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -38,7 +35,7 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  */
 @Service
 public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberProductService {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -101,7 +98,6 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 		}
 		Iterator<MetaInfo> iterator = productIdList.iterator();
 		// List<Source> preveiwSourceList = new ArrayList<Source>();
-		Source source = new Source();
 		String topMenuId = "";
 		String prodId = "";
 		while (iterator.hasNext()) {
