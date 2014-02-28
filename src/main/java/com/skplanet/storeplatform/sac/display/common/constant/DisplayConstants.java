@@ -380,6 +380,8 @@ public class DisplayConstants {
 
 	public static final String DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION = "popular";
 
+	public static final String DP_SHOPPING_CLOSINGTIME_DEFAULT_ORDERED_OPTION = "closingTime";
+
 	public static final String DP_USE_PERIOD_UNIT_CD_NONE = "PD00310"; // 사용기간 단위 코드 (무제한)
 
 	public static final String DP_FORDOWNLOAD_ENCRYPT_DIGEST = "HexString"; // for download 암호화 digest
