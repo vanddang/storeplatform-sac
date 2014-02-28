@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,27 +78,6 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		String topMenuId = requestVO.getTopMenuId();
 		String listId = requestVO.getListId();
 
-		// topMenuId 필수 파라미터 체크
-		if (StringUtils.isEmpty(topMenuId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", topMenuId);
-		}
-
-		// listId 필수 파라미터 체크
-		if (StringUtils.isEmpty(listId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
-		}
-
-		// 메뉴ID 유효값 체크 DP13 : 이북, DP14 : 만화
-		if (!"DP13".equals(topMenuId) && !"DP14".equals(topMenuId)) {
-			throw new StorePlatformException("SAC_DSP_0003", "topMenuId", topMenuId);
-		}
-
-		// 리스트ID 유효값 체크
-		if (!"ADM000000013".equals(listId) && !"TGR000000001".equals(listId) && !"RNK000000002".equals(listId)
-				&& !"RNK000000006".equals(listId)) {
-			throw new StorePlatformException("SAC_DSP_0003", "listId", listId);
-		}
-
 		// TGR000000001 만화만 조회되어야 함 topMenuId DP13(이북) 넘어온 경우 체크
 		if ("TGR000000001".equals(listId) && "DP13".equals(topMenuId)) {
 			throw new StorePlatformException("SAC_DSP_0003", "listId", listId, "topMenuId", topMenuId);
@@ -110,13 +88,13 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			throw new StorePlatformException("SAC_DSP_0003", "listId", listId, "topMenuId", topMenuId);
 		}
 
-		if (!StringUtils.isEmpty(requestVO.getFilteredBy())) {
-			try {
-				requestVO.setFilteredBy(URLEncoder.encode(requestVO.getFilteredBy(), "UTF-8"));
-			} catch (Exception ex) {
-				throw new StorePlatformException("SAC_DSP_9999", ex);
-			}
-		}
+		// if (!StringUtils.isEmpty(requestVO.getFilteredBy())) {
+		// try {
+		// requestVO.setFilteredBy(URLEncoder.encode(requestVO.getFilteredBy(), "UTF-8"));
+		// } catch (Exception ex) {
+		// throw new StorePlatformException("SAC_DSP_9999", ex);
+		// }
+		// }
 
 		// 시작점 ROW Default 세팅
 		if (requestVO.getOffset() == null) {

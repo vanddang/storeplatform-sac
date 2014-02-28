@@ -85,11 +85,6 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
 
-		// listId 필수 파라미터 체크
-		if (StringUtils.isEmpty(req.getListId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
-		}
-
 		// 시작점 ROW Default 세팅
 		if (req.getOffset() == null) {
 			req.setOffset(1);

@@ -73,16 +73,6 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
 		}
 
-		// listId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getListId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", requestVO.getListId());
-		}
-
-		// topMenuId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTopMenuId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", requestVO.getTopMenuId());
-		}
-
 		// 시작점 ROW Default 세팅
 		if (requestVO.getOffset() == null) {
 			requestVO.setOffset(1);

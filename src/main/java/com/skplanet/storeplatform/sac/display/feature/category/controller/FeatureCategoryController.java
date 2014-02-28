@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -58,7 +59,7 @@ public class FeatureCategoryController {
 	 */
 	@RequestMapping(value = "/vod/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FeatureCategoryVodSacRes searchVodList(FeatureCategoryVodSacReq req, SacRequestHeader header) {
+	public FeatureCategoryVodSacRes searchVodList(@Validated FeatureCategoryVodSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
@@ -81,7 +82,7 @@ public class FeatureCategoryController {
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FeatureCategoryAppSacRes searchAppList(FeatureCategoryAppSacReq requestVO, SacRequestHeader header) {
+	public FeatureCategoryAppSacRes searchAppList(@Validated FeatureCategoryAppSacReq requestVO, SacRequestHeader header) {
 
 		FeatureCategoryAppSacRes responseVO;
 		responseVO = this.categoryAppService.searchMenuAppList(requestVO, header);
@@ -101,7 +102,8 @@ public class FeatureCategoryController {
 	 */
 	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FeatureCategoryEpubSacRes searchEpubList(FeatureCategoryEpubSacReq requestVO, SacRequestHeader header) {
+	public FeatureCategoryEpubSacRes searchEpubList(@Validated FeatureCategoryEpubSacReq requestVO,
+			SacRequestHeader header) {
 
 		FeatureCategoryEpubSacRes responseVO;
 		responseVO = this.categoryEpubService.searchEpubList(requestVO, header);

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,7 +54,7 @@ public class RecommendController {
 	 */
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public RecommendWebtoonSacRes searchWebtoonList(SacRequestHeader header, RecommendWebtoonSacReq req) {
+	public RecommendWebtoonSacRes searchWebtoonList(SacRequestHeader header, @Validated RecommendWebtoonSacReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAdminWebtoonList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -74,7 +75,7 @@ public class RecommendController {
 	 */
 	@RequestMapping(value = "/admin/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public RecommendAdminSacRes searchAdminList(RecommendAdminSacReq requestVO, SacRequestHeader header) {
+	public RecommendAdminSacRes searchAdminList(@Validated RecommendAdminSacReq requestVO, SacRequestHeader header) {
 
 		RecommendAdminSacRes responseVO;
 		responseVO = this.recommendAdminService.searchAdminList(requestVO, header);
@@ -94,7 +95,7 @@ public class RecommendController {
 	 */
 	@RequestMapping(value = "/today/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public RecommendTodaySacRes searchTodayList(RecommendTodaySacReq requestVO, SacRequestHeader header) {
+	public RecommendTodaySacRes searchTodayList(@Validated RecommendTodaySacReq requestVO, SacRequestHeader header) {
 
 		RecommendTodaySacRes responseVO;
 		responseVO = this.recommendTodayService.searchTodayList(requestVO, header);

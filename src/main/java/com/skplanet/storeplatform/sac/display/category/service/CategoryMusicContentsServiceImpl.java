@@ -95,14 +95,14 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		CommonResponse commonResponse = new CommonResponse();
 
 		// filteredBy 필수 파라미터 체크
-		if (StringUtils.isEmpty(filteredBy)) {
-			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
-		}
+		// if (StringUtils.isEmpty(filteredBy)) {
+		// throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
+		// }
 
 		// tenantId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
-		}
+		// if (StringUtils.isEmpty(requestVO.getTenantId())) {
+		// throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
+		// }
 
 		if (null == menuId || "".equals(menuId)) {
 			requestVO.setMenuId(DisplayConstants.DP_MUSIC_TOP_MENU_ID);
@@ -183,5 +183,4 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 
 		return responseVO;
 	}
-
 }

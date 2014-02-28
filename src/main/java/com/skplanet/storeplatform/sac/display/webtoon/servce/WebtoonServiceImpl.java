@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.webtoon.WebtoonDetailSacReq;
@@ -60,13 +59,6 @@ public class WebtoonServiceImpl implements WebtoonService {
 
 		WebtoonDetailSacRes res = new WebtoonDetailSacRes();
 		CommonResponse commonResponse = new CommonResponse();
-
-		String prodId = req.getProdId();
-
-		// prodId 필수 파라미터 체크
-		if (StringUtils.isEmpty(prodId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "prodId", prodId);
-		}
 
 		// 헤더값 세팅
 		req.setDeviceModelCd(header.getDeviceHeader().getModel());

@@ -77,26 +77,6 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		String listId = req.getListId();
 		String filteredBy = req.getFilteredBy();
 
-		// topMenuId 필수 파라미터 체크
-		if (StringUtils.isEmpty(topMenuId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", topMenuId);
-		}
-
-		// listId 필수 파라미터 체크
-		if (StringUtils.isEmpty(listId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
-		}
-
-		// 메뉴ID 유효값 체크
-		if (!"DP17".equals(topMenuId) && !"DP18".equals(topMenuId)) {
-			throw new StorePlatformException("SAC_DSP_0003", "topMenuId", topMenuId);
-		}
-
-		// 리스트ID 유효값 체크
-		if (!"TGR000000002".equals(listId) && !"ADM000000008".equals(listId)) {
-			throw new StorePlatformException("SAC_DSP_0003", "listId", listId);
-		}
-
 		// 영화 추천/1000원관, 방송 카테고리별 추천 filteredBy 필수
 		// TGR000000002 신규 방송 최신 up의 경우도 filteredBy 필수이나 없는 경우 신규상품 조회
 		if ("ADM000000008".equals(listId) && StringUtils.isEmpty(filteredBy)) {

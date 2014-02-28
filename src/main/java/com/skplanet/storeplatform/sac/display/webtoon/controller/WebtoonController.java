@@ -5,6 +5,7 @@ package com.skplanet.storeplatform.sac.display.webtoon.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,7 +40,7 @@ public class WebtoonController {
 	 */
 	@RequestMapping(value = "/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public WebtoonDetailSacRes searchWebtoonDetail(WebtoonDetailSacReq req, SacRequestHeader header) {
+	public WebtoonDetailSacRes searchWebtoonDetail(@Validated WebtoonDetailSacReq req, SacRequestHeader header) {
 
 		WebtoonDetailSacRes responseVO;
 		responseVO = this.webtoonService.searchWebtoonDetail(req, header);
