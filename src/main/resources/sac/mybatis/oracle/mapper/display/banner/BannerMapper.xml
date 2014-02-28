@@ -32,7 +32,7 @@
 		                      , 'DP010310' /* 내부URL 배너 */
 		                      ,  BNR_NM)
 		             WHEN BNR_MENU_ID = 'DP010926' THEN
-		                  /* Mobile Web 직사각형 배너 */
+		                  /* 모바일웹 직사각형 배너 */
 		                  DECODE(BNR_INFO_TYPE_CD
 		                      , 'DP010303' /* 상품 배너 */
 		                      , (SELECT PROD_NM FROM TB_DP_PROD_DESC WHERE LANG_CD = 'ko' AND PROD_ID = JA.BNR_INFO)
@@ -63,7 +63,8 @@
 		                  FROM  TB_DP_BNR      A
 		                      , TB_DP_BNR_EXPO B
 		                      , TB_DP_BNR_IMG  C
-                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908"'><!-- 모바일웹 직사각형, 상/하단 배너 프로비저닝 제외 -->
+                    <!-- [모바일웹 직사각형], [모바일웹 상/하단], [T플레이], [유료앱이무료] 배너 프로비저닝 제외 -->
+                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010909"'>
 		                      , TB_DP_BNR_DVC  D
 		                      , TB_CM_DEVICE   E
                     </if>
@@ -73,7 +74,8 @@
 		                   AND  A.TENANT_ID = C.TENANT_ID
 		                   AND  A.BNR_MENU_ID = C.BNR_MENU_ID
 		                   AND  A.BNR_SEQ = C.BNR_SEQ
-                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908"'><!-- 모바일웹 직사각형, 상/하단 배너 프로비저닝 제외 -->
+                    <!-- [모바일웹 직사각형], [모바일웹 상/하단], [T플레이], [유료앱이무료] 배너 프로비저닝 제외 -->
+                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010909"'>
 		                   AND  A.TENANT_ID = D.TENANT_ID
 		                   AND  A.BNR_MENU_ID = D.BNR_MENU_ID
 		                   AND  A.BNR_SEQ = D.BNR_SEQ
@@ -90,7 +92,7 @@
 		                   AND  B.EXPO_STATUS_CD IN ('DP010201', 'DP010202')
 		                   AND  C.IMG_SIZE_CD = #{imgSizeCd}
                     <choose>
-                        <when test='bnrMenuId != "DP010999"'><!-- Mobile Web 정사각형 배너가 아닌경우 -->
+                        <when test='bnrMenuId != "DP010999"'><!-- 모바일웹 정사각형 배너가 아닌경우 -->
                            AND  A.BNR_MENU_ID = #{bnrMenuId}
                         </when>
                         <otherwise>
@@ -108,7 +110,7 @@
                         <when test='(bnrMenuId == "DP010920" or bnrMenuId == "DP010921") and bnrExpoMenuId == "DP011101"'><!-- 이북, 코믹 테마 배너 -->
 		                   AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_END_DT)
                         </when>
-                        <when test='bnrMenuId == "DP010926" or bnrMenuId == "DP010907" or bnrMenuId == "DP010908"'><!-- Mobile Web 직사각형, 상/하단 배너 -->
+                        <when test='bnrMenuId == "DP010926" or bnrMenuId == "DP010907" or bnrMenuId == "DP010908" or bnrMenuId == "DP010909"'><!-- [모바일웹 직사각형], [모바일웹 상/하단], [T플레이] 배너 -->
 		                   AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_END_DT)
                         </when>
                         <otherwise>
@@ -122,7 +124,7 @@
     
     <!-- 운영자 임의추천 상품 리스트 조회 -->
     <select id="searchRecommendProdList" parameterType="BannerSacReq" resultType="BannerDefault">
-		SELECT  /* BannerMapper.xml, searchBannerList, tae hee Lee, 2014-02-21 */
+		SELECT  /* BannerMapper.xml, searchRecommendProdList, tae hee Lee, 2014-02-21 */
 		        IA.PART_PROD_ID
 		      , IB.TOP_MENU_ID
 		  FROM (SELECT  B.PART_PROD_ID
@@ -186,7 +188,8 @@
     
     <!-- 특정 브랜드샵 상품 리스트 조회 -->
     <select id="searchBrandShopProdList" parameterType="BannerSacReq" resultType="BannerDefault">
-		SELECT  D.PROD_ID AS PART_PROD_ID
+		SELECT  /* BannerMapper.xml, searchBrandShopProdList, tae hee Lee, 2014-02-21 */
+		      , D.PROD_ID AS PART_PROD_ID
 		      , D.TOP_MENU_ID
 		  FROM  TB_DP_BRAND_SHOP        A
 		      , TB_DP_BRAND_SHOP_DVC    B
@@ -217,7 +220,8 @@
     
     <!-- 상품 프로비저닝 (에피소드 상품) -->
     <select id="getBannerProvisioing" parameterType="BannerSacReq" resultType="java.lang.Integer">
-		SELECT  COUNT(A.PROD_ID) AS PROD_CNT
+		SELECT  /* BannerMapper.xml, getBannerProvisioing, tae hee Lee, 2014-02-21 */
+		        COUNT(A.PROD_ID) AS PROD_CNT
 		  FROM  TB_DP_PROD        A
 		      , TB_DP_TENANT_PROD B
 		      , TB_DP_SPRT_DEVICE C
