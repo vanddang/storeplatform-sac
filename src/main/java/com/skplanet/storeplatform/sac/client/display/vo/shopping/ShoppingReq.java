@@ -40,7 +40,7 @@ public class ShoppingReq extends CommonInfo {
 	private String planId; // 기획전ID
 	private String brandId; // 브랜드샵 ID
 	private String themeId; // 테마 ID
-	private String exceptProdId; // 제외할 메뉴ID – 지정하면 응답에서 해당 메뉴 제외
+	private String exceptId; // 제외할 메뉴ID – 지정하면 응답에서 해당 메뉴 제외
 	private String productId; // 상품 ID (카탈로그)
 	private String partProdId; // 상품 ID( 에피소드)
 	private String specialProdId; // 특가상품 ID
@@ -327,18 +327,18 @@ public class ShoppingReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the exceptProdId
+	 * @return the exceptId
 	 */
-	public String getExceptProdId() {
-		return this.exceptProdId;
+	public String getExceptId() {
+		return this.exceptId;
 	}
 
 	/**
-	 * @param exceptProdId
-	 *            the exceptProdId to set
+	 * @param exceptId
+	 *            the exceptId to set
 	 */
-	public void setExceptProdId(String exceptProdId) {
-		this.exceptProdId = exceptProdId;
+	public void setExceptId(String exceptId) {
+		this.exceptId = exceptId;
 	}
 
 	/**
