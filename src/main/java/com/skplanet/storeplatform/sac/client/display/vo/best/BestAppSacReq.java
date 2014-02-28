@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.best;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -24,6 +26,7 @@ public class BestAppSacReq extends CommonInfo {
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
 	private String stdDt; // 배치완료 기준일시
+	@NotBlank
 	private String listId; // 리스트 Id
 	private String drm; // drm 여부
 	private String prodGradeCd; // 상품등급코드

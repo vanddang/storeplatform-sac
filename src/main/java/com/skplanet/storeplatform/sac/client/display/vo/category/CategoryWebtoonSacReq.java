@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.category;
 
+import javax.validation.constraints.Pattern;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -23,8 +25,10 @@ public class CategoryWebtoonSacReq extends CommonInfo {
 	private String systemId; // 시스템ID
 	private String imageCd; // 이미지코드
 	private String topMenuId; // TOP 메뉴 아이디
+	@Pattern(regexp = "|^DP26[0-9]*")
 	private String menuId; // 메뉴아이디
 	private String listId; // 리스트아이디
+	@Pattern(regexp = "|DP010101|DP010102|DP010103|DP010104|DP010105|DP010106|DP010107")
 	private String weekDayCd; // 요일별 구분 코드
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드

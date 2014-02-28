@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.category;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -23,10 +27,15 @@ public class CategoryEbookComicSacReq extends CommonInfo {
 
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
 
+	@NotBlank
+	@Pattern(regexp = "DP13|DP14")
 	private String topMenuId; // 탑메뉴ID
 
+	@NotBlank
 	private String menuId; // 메뉴ID
 
+	@NotBlank
+	@Pattern(regexp = "recent|recent\\+complete")
 	private String filteredBy; // 조회유형
 
 	private Integer offset; // 시작점 ROW

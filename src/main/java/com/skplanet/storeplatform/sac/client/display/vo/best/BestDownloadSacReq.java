@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.best;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -23,9 +27,11 @@ public class BestDownloadSacReq extends CommonInfo {
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
 	private String stdDt; // 배치완료 기준일시
+	@NotBlank
 	private String listId; // 리스트 Id
 	private String topMenuId; // 메뉴 Id
 	private String menuId; // 메뉴 Id
+	@Pattern(regexp = "|ebook\\+normal|ebook\\+genre")
 	private String filteredBy; // 카테고리 유형
 	private String b2bprod; // B2B 상품구분
 	private String hdv; // HDV 지원구분

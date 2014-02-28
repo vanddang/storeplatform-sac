@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.category;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -19,6 +23,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CategoryAppSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank
+	@Pattern(regexp = "A|Y|N")
 	private String prodCharge; // 상품 유무료 구분
 
 	private String prodGradeCd; // 상품등급코드
@@ -27,6 +33,8 @@ public class CategoryAppSacReq extends CommonInfo {
 
 	private String menuId; // 메뉴ID
 
+	@NotBlank
+	@Pattern(regexp = "download")
 	private String orderedBy; // 상품정렬순서
 
 	private Integer offset; // 시작점 ROW
