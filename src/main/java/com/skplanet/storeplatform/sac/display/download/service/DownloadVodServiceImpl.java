@@ -95,8 +95,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		// DcdSupportProductRes dcdRes = this.searchDcdSupportProductSCI.searchDcdSupportProduct();
 		// this.log.debug("#####################################################################################");
-		// this.log.debug("DcdSprtCd	:	" + dcdRes.getDcdSprtCd());
-		// this.log.debug("ProductId	:	" + dcdRes.getProductId());
+		// for (int i = 0; i < dcdRes.getProductList().size(); i++) {
+		// this.log.debug("call prodId	:	" + dcdRes.getProductList().get(i).getProdId());
+		// this.log.debug("call DscSprtCd	:	" + dcdRes.getProductList().get(i).getDcdSprtCd());
+		// }
 		// this.log.debug("#####################################################################################");
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
@@ -227,17 +229,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								prchsState = "gift";
 							}
 						}
-
-						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("[getDownloadVodkInfo] prchsId : {}", prchsId);
-						this.log.debug("[getDownloadVodkInfo] prchsDt : {}", prchsDt);
-						this.log.debug("[getDownloadVodkInfo] useExprDt : {}", useExprDt);
-						this.log.debug("[getDownloadVodkInfo] dwldExprDt : {}", dwldExprDt);
-						this.log.debug("[getDownloadVodkInfo] prchsCaseCd : {}", prchsCaseCd);
-						this.log.debug("[getDownloadVodkInfo] prchsState : {}", prchsState);
-						this.log.debug("[getDownloadVodkInfo] prchsProdId : {}", prchsProdId);
-						this.log.debug("----------------------------------------------------------------");
-
 						metaInfo.setPurchaseId(prchsId);
 						metaInfo.setPurchaseProdId(prchsProdId);
 						metaInfo.setPurchaseDt(prchsDt);

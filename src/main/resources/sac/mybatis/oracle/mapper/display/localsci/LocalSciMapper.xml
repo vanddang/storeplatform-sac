@@ -110,4 +110,16 @@
           </where>        
     </update>
     
+    <select id="getDcdSupportProduct" resultType="Map">
+         SELECT /* LocalSciMapper.xml, getDcdSupportProduct, SAC : 이석희 , 2014-02-17 */ 
+                B.PART_PROD_ID AS PROD_ID
+              , C.DCD_SPRT_CD
+           FROM TB_DP_PROD                A
+               ,TB_DP_PROD_RSHP           B
+               ,UV_TB_DP_MULTIMDA_PROD    C
+          WHERE A.PROD_ID = B.PART_PROD_ID
+            AND B.PART_PROD_ID = C.PROD_ID
+            AND C.DCD_SPRT_CD IS NOT NULL           
+    </select>
+    
 </mapper>
