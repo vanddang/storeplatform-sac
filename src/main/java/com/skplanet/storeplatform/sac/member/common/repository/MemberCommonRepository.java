@@ -38,7 +38,8 @@ public interface MemberCommonRepository {
 	 * 약관 목록 상세 조회.
 	 * </pre>
 	 * 
-	 * @return List<ClauseDTO>
+	 * @param clauseItemCd
+	 * @return List<Clause>
 	 */
 	public List<Clause> searchDetailClauseList(String clauseItemCd);
 
