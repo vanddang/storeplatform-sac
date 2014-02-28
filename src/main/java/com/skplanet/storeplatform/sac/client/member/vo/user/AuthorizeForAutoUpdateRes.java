@@ -31,6 +31,26 @@ public class AuthorizeForAutoUpdateRes extends CommonInfo implements Serializabl
 	private String deviceKey;
 
 	/**
+	 * 로그인 성공여부(Y/N).
+	 */
+	private String isLoginSuccess;
+
+	/**
+	 * @return isLoginSuccess
+	 */
+	public String getIsLoginSuccess() {
+		return this.isLoginSuccess;
+	}
+
+	/**
+	 * @param isLoginSuccess
+	 *            String
+	 */
+	public void setIsLoginSuccess(String isLoginSuccess) {
+		this.isLoginSuccess = isLoginSuccess;
+	}
+
+	/**
 	 * @return userKey
 	 */
 	public String getUserKey() {
