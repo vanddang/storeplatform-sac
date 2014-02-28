@@ -66,10 +66,10 @@
                                            AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
                                          </if>
                                          <if test="menuId == null or menuId == ''">
-		                                   AND A.MENU_ID LIKE 'DP26%'                /* 메뉴ID */
+                                           AND A.MENU_ID LIKE 'DP26%'                /* 메뉴ID */
 		                                 </if>
                                          <if test="weekDayCd != null and weekDayCd != ''">
-					                       AND K.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd} AND LANG_CD = #{langCd} )|| '%' /* DP010101 ~DP010107  :월~토*/
+                                           AND K.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd} AND LANG_CD = #{langCd} )|| '%' /* DP010101 ~DP010107  :월~토*/
 					                     </if> 
                                ) IA
                                  WHERE IA.RN = 1
