@@ -149,6 +149,7 @@
                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+                AND K.TENANT_ID = #{productBasicInfo.tenantId}        /* INPUT 테넌트ID */
                 AND I.PROD_ID = #{productBasicInfo.prodId}        /* 상품ID */
            ) KK
     </select>    
