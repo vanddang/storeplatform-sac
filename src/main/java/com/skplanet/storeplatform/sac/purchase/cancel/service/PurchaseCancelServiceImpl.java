@@ -33,7 +33,10 @@ import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
 import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdatePurchaseCountSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UpdatePurchaseCountSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
@@ -92,6 +95,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	@Autowired
 	private UpdatePurchaseCountSCI updatePurchaseCountSCI;
+
+	@Autowired
+	private PaymentInfoSCI paymentInfoSCI;
 
 	@Override
 	public PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam) {
@@ -207,10 +213,22 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			prchsProdDtl.setDeviceId(searchDeviceIdSacRes.getDeviceId());
 
-			// TODO : 전시쪽 정보 가져와서 쇼핑쿠폰 일 경우 태운다. prchsDtl.getProdId();
+			// 전시 쪽 정보 가져와서 appId 셋팅.
+			// 현재는 상품 정보가 어떻게 더 쓰일지 몰라 앞에 있지만 나중에 RO삭제 시 조회하도록 뒤로 옮겨야 할 듯..
 			if (StringUtils.contains(PurchaseConstants.APP_TENANT_PROD_GRP_CD, prchsDtl.getTenantProdGrpCd())) {
 				// 전시쪽 정보 가져와서 appId 셋팅.
-				prchsProdDtl.setAppId("");
+				PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
+				paymentInfoSacReq.setTenantId(prchsDtl.getUseTenantId());
+				List<String> prodIdList = new ArrayList<String>();
+				prodIdList.add(prchsDtl.getProdId());
+				paymentInfoSacReq.setProdIdList(prodIdList);
+				paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
+				PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq);
+				if (paymentInfoSacRes != null && paymentInfoSacRes.getPaymentInfoList() != null
+						&& paymentInfoSacRes.getPaymentInfoList().size() == 1) {
+					prchsProdDtl.setAppId(paymentInfoSacRes.getPaymentInfoList().get(0).getAid());
+				}
+
 			}
 
 			prchsProdDtlList.add(prchsProdDtl);
