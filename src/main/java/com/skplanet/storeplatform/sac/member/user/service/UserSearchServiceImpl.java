@@ -68,6 +68,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
@@ -231,7 +232,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 			if ("Y".equals(req.getSearchExtent().getDeviceInfoYn())) {
 				try {
 					ListDeviceRes listDeviceRes = this.listDevice(req, sacHeader);
-					res.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
+
+					if (listDeviceRes.getDeviceInfoList() != null) {
+						res.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
+					} else {
+						logger.info("=========== DeviceInfoList No Data ===========");
+						List<DeviceInfo> getDeviceInfoList = new ArrayList<DeviceInfo>();
+						res.setDeviceInfoList(getDeviceInfoList);
+					}
+
 				} catch (StorePlatformException ex) {
 					/* 결과가 없는 경우만 제외하고 throw */
 					if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
