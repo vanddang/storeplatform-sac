@@ -5,119 +5,119 @@
 	<!-- 사용후기 기등록 여부 조회  -->
 	<select id="getRegProdNoti" parameterType="ProdNoti" resultType="ProdNoti">
       SELECT  /* FeedbackMapper.getRegProdNoti, 사용후기 기등록 여부 조회, 김현일/SK플래닛, 2014-02-04 */ 
-              noti_seq
-            , noti_dscr
+              noti_seq   /* 후기 SEQ */
+            , noti_dscr  /* 후기 내용 */
         FROM
              (
-              SELECT  a.noti_seq
-                    , a.noti_dscr
-                FROM  tb_dp_prod_noti a
+              SELECT  a.noti_seq  /* 후기 SEQ */
+                    , a.noti_dscr /* 후기 내용 */
+                FROM  tb_dp_prod_noti a /* 상품 후기 */
                WHERE  1 = 1
-                 AND  a.mbr_no = #{mbrNo}
-                 AND  a.tenant_id = #{tenantId}
+                 AND  a.mbr_no = #{mbrNo}        /* 회원 번호 */
+                 AND  a.tenant_id = #{tenantId}  /* 테넌트 ID */
                  <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-                 AND  a.prod_id = #{chnlId}
-                 AND  a.catalog_id = #{prodId}
+                 AND  a.prod_id = #{chnlId}      /* 상품 ID */
+                 AND  a.catalog_id = #{prodId}   /* 카탈로그 ID */
                  </if>
                  <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
-                 AND  a.prod_id = #{prodId}
+                 AND  a.prod_id = #{prodId}      /* 상품 ID */
                  </if>
-                 AND  a.noti_type_cd = 'DP000401'
-                 AND  a.del_yn = 'N'
-                 AND  a.bad_noti_yn IN ( 'N', 'R' )
-                 AND  a.spam_yn = 'N'
+                 AND  a.noti_type_cd = 'DP000401'    /* 후기 타입 코드 */
+                 AND  a.del_yn = 'N'                 /* 삭제 여부 */
+                 AND  a.bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
+                 AND  a.spam_yn = 'N'                /* 스펨 여부 */
                  AND EXISTS (
                              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
                              SELECT  'X'
-                               FROM  tb_dp_shpg_catalog sa
-                              WHERE  sa.catalog_id = #{prodId}
-                                AND  sa.chnl_cnt > 0
+                               FROM  tb_dp_shpg_catalog sa     /* 쇼핑 카탈로그 */
+                              WHERE  sa.catalog_id = #{prodId} /* 카탈로그 ID */
+                                AND  sa.chnl_cnt > 0           /* 채널 수 */
                              </if>
                              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
                              SELECT  'X'
-                               FROM  tb_dp_prod sa
-                              WHERE  sa.prod_id = a.prod_id
+                               FROM  tb_dp_prod sa             /* 상품 */
+                              WHERE  sa.prod_id = a.prod_id    /* 상품 ID */
                              </if>
                              )
-                ORDER BY reg_dt DESC
+                ORDER BY reg_dt DESC  /* 등록일시 최신순 정렬 */
               )
-       WHERE  ROWNUM <![CDATA[<=]]> 1
+       WHERE  ROWNUM <![CDATA[<=]]> 1 /* 조회건수중 1개 */
 	</select>
 	
 	<!-- 사용후기 등록  -->
 	<insert id="insertProdNoti" parameterType="ProdNoti">
       <selectKey keyProperty="notiSeq" resultType="string" order="BEFORE">
-      SELECT  sq_dp_prod_noti.NEXTVAL
+      SELECT  sq_dp_prod_noti.NEXTVAL  /* 사용후기 시퀀스 */ 
         FROM  DUAL
       </selectKey>
       INSERT  /* FeedbackMapper.insertProdNoti, 사용후기 등록, 김현일/SK플래닛, 2014-02-04 */ 
-        INTO  tb_dp_prod_noti 
-      ( tenant_id
-      , noti_seq
-      , noti_type_cd
-      , mbr_no
+        INTO  tb_dp_prod_noti  /* 상품 후기 */
+      ( tenant_id              /* 테넌트 ID */
+      , noti_seq               /* 후기 SEQ */
+      , noti_type_cd           /* 후기 타입 코드 */
+      , mbr_no                 /* 회원 번호 */
       <!-- Shopping -->
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-      , prod_id
-      , catalog_id
+      , prod_id                /* 상품 ID */
+      , catalog_id             /* 카탈로그 ID */
       </if>
       <!-- Shopping 외 -->
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
-      , prod_id
+      , prod_id                /* 상품 ID  */
       </if>
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
-      , title
+      , title                  /* 제목 */
       </if>
-      , noti_dscr
-      , noti_score
-      , spam_yn            
-      , bad_noti_yn          
-      , del_yn            
-      , reg_id            
-      , reg_dt            
-      , mbr_telno            
+      , noti_dscr              /* 후기 내용 */
+      , noti_score             /* 후기 점수(추천수) */
+      , spam_yn                /* 스펨 여부 */
+      , bad_noti_yn            /* 불량 후기 여부 */
+      , del_yn                 /* 삭제 여부 */            
+      , reg_id                 /* 등록 ID */
+      , reg_dt                 /* 등록 일시 */
+      , mbr_telno              /* 회원 전화번호 */ 
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
-      , fb_post_yn
+      , fb_post_yn             /* 페이스북 POST 여부 */
       </if>
-      , reg_loc
-      , device_model_cd
+      , reg_loc                /* 등록 위치 */
+      , device_model_cd        /* 단말 모델 코드 */
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
-      , pkg_ver
+      , pkg_ver                /* 패키지 버전 */
       </if>
       )
       VALUES
       ( 
-        #{tenantId}
-      , #{notiSeq}
-      , 'DP000401'
-      , #{mbrNo}
+        #{tenantId}            /* 테넌트 ID */
+      , #{notiSeq}             /* 후기 SEQ */
+      , 'DP000401'             /* 후기 타입 코드 */
+      , #{mbrNo}               /* 회원 번호 */
       <!-- Shopping -->
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-      , #{chnlId}
-      , #{prodId}
+      , #{chnlId}              /* 상품 ID */
+      , #{prodId}              /* 카탈로그 ID */
       </if>
       <!-- Shopping 외 -->
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
-      , #{prodId}
+      , #{prodId}              /* 상품 ID  */
       </if>
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
-      , #{title}
+      , #{title}               /* 제목 */
       </if>
-      , #{notiDscr}
-      , 0
-      , 'N'
-      , 'N'
-      , 'N'
-      , #{regId}
-      , SYSDATE
-      , #{mbrTelno}
+      , #{notiDscr}            /* 후기 내용 */
+      , 0                      /* 후기 점수(추천수) */
+      , 'N'                    /* 스펨 여부 */
+      , 'N'                    /* 불량 후기 여부 */
+      , 'N'                    /* 삭제 여부 */ 
+      , #{regId}               /* 등록 ID */
+      , SYSDATE                /* 등록 일시 */
+      , #{mbrTelno}            /* 회원 전화번호 */ 
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
-      , #{fbPostYn}
+      , #{fbPostYn}            /* 페이스북 POST 여부 */
       </if>
-      , 'US004201'
-      , #{deviceModelCd}
+      , 'US004201'             /* 등록 위치 */
+      , #{deviceModelCd}       /* 단말 모델 코드 */
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
-      , #{pkgVer}
+      , #{pkgVer}              /* 패키지 버전 */
       </if>
       )
 	</insert>
@@ -125,183 +125,183 @@
     <!-- 사용후기 수정 -->
     <update id="updateProdNoti"  parameterType="ProdNoti">
       UPDATE  /* FeedbackMapper.updateProdNoti, 사용후기 수정, 김현일/SK플래닛 , 2014-02-04 */
-              tb_dp_prod_noti
-         SET  noti_dscr = #{notiDscr}
+              tb_dp_prod_noti                     /* 상품 후기 */
+         SET  noti_dscr = #{notiDscr}             /* 후기 내용 */
             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
-            , title = #{title}
+            , title = #{title}                    /* 제목 */
             </if>
-            , upd_dt = SYSDATE
-            , noti_score = 0
-            , seller_resp_opin = NULL
-            , seller_resp_reg_dt = NULL
-            , reg_loc = 'US004201'
-            , device_model_cd = #{deviceModelCd}
+            , upd_dt = SYSDATE                    /* 수정 일시 */
+            , noti_score = 0                      /* 후기 점수 */
+            , seller_resp_opin = NULL             /* 판매자 응답 의견 */
+            , seller_resp_reg_dt = NULL           /* 판매자 응답 등록 일시 */           
+            , reg_loc = 'US004201'                /* 등록 위치 */
+            , device_model_cd = #{deviceModelCd}  /* 단말 모델 코드 */
             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
-            , pkg_ver = #{pkgVer}
+            , pkg_ver = #{pkgVer}                 /* 패키지 버전 */
             </if>
-       WHERE  tenant_id = #{tenantId}
-         AND  noti_seq = #{notiSeq}
-         AND  mbr_no = #{mbrNo}
+       WHERE  tenant_id = #{tenantId}             /* 테넌트 ID */
+         AND  noti_seq = #{notiSeq}               /* 후기 SEQ */
+         AND  mbr_no = #{mbrNo}                   /* 회원 번호 */
     </update>
 	
 	<!-- 사용후기 삭제 -->
 	<update id="deleteProdNoti" parameterType="ProdNoti">
       UPDATE  /* FeedbackMapper.deleteProdNoti, 사용후기 삭제, 김현일/SK플래닛, 2014-02-04 */
-              tb_dp_prod_noti
-         SET  del_dt = SYSDATE
-            , del_yn = 'Y'
-       WHERE  tenant_id = #{tenantId}
-         AND  noti_seq = #{notiSeq}
-         AND  mbr_no = #{mbrNo}
+              tb_dp_prod_noti         /* 상품 후기 */
+         SET  del_dt = SYSDATE        /* 삭제 일시 */
+            , del_yn = 'Y'            /* 삭제 여부 */
+       WHERE  tenant_id = #{tenantId} /* 테넌트 ID */
+         AND  noti_seq = #{notiSeq}   /* 후기 SEQ */
+         AND  mbr_no = #{mbrNo}       /* 회원 번호 */
 	</update>
 	 
 	<!-- 사용후기 추천이력 삭제 -->  
 	<delete id="deleteProdNotiGood" parameterType="ProdNotiGood">
       DELETE  /* FeedbackMapper.deleteProdNotiGood, 사용후기 추천이력 삭제, 김현일/SK플래닛, 2014-02-04 */
-        FROM  tb_dp_prod_notigood
-       WHERE  tenant_id = #{tenantId}
-         AND  noti_seq = #{notiSeq}
+        FROM  tb_dp_prod_notigood     /* 상품 후기 선호 */
+       WHERE  tenant_id = #{tenantId} /* 테넌트 ID */
+         AND  noti_seq = #{notiSeq}   /* 후기 SEQ */
          <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(mbrNo)">
-         AND  mbr_no = #{mbrNo}
+         AND  mbr_no = #{mbrNo}       /* 회원 번호 */
          </if>
 	</delete>
 	
 	<!-- 기 평가 평점 조회 -->
 	<select id="getRegMbrAvg" parameterType="MbrAvg" resultType="MbrAvg">
       SELECT  /* FeedbackMapper.getRegMbrAvg, 기 평가 평점 조회, 김현일/SK플래닛 , 2014-02-04 */
-              avg_score
-        FROM  tb_dp_mbr_avg
-       WHERE  tenant_id = #{tenantId} 
-         AND  mbr_no = #{mbrNo}
-         AND  prod_id = #{prodId}
+              avg_score               /* 평균 점수 */
+        FROM  tb_dp_mbr_avg           /* 상품 평점 */
+       WHERE  tenant_id = #{tenantId} /* 테넌트 ID */
+         AND  mbr_no = #{mbrNo}       /* 회원 번호 */
+         AND  prod_id = #{prodId}     /* 상품 ID */
 	</select>
 	
 	<!-- 회원별 평가 저장 -->
 	<insert id="mergeMbrAvg" parameterType="MbrAvg" useGeneratedKeys="false">
       MERGE  /* FeedbackMapper.mergeMbrAvg, 회원별 평가 저장, 김현일/SK플래닛 , 2014-02-04 */ 
-       INTO  tb_dp_mbr_avg
+       INTO  tb_dp_mbr_avg                 /* 상품 평점 */
       USING  DUAL
          ON  ( 
-                   tenant_id = #{tenantId} 
-              AND  prod_id = #{prodId} 
-              AND  mbr_no = #{mbrNo} 
+                   tenant_id = #{tenantId} /* 테넌트 ID */
+              AND  prod_id = #{prodId}     /* 상품 ID */
+              AND  mbr_no = #{mbrNo}       /* 회원 번호 */
              )
        WHEN  NOT MATCHED 
        THEN
              INSERT 
              ( 
-               tenant_id
-             , mbr_no
-             , prod_id
-             , avg_score
-             , reg_id
-             , reg_dt 
+               tenant_id                   /* 테넌트 ID */
+             , mbr_no                      /* 회원 번호 */
+             , prod_id                     /* 상품 ID */
+             , avg_score                   /* 평균 점수 */
+             , reg_id                      /* 등록 ID */
+             , reg_dt                      /* 등록 일시 */
              )
              VALUES 
              ( 
-               #{tenantId}
-             , #{mbrNo}
-             , #{prodId}
-             , #{avgScore}
-             , #{regId}
-             , SYSDATE 
+               #{tenantId}                 /* 테넌트 ID */
+             , #{mbrNo}                    /* 회원 번호 */
+             , #{prodId}                   /* 상품 ID */
+             , #{avgScore}                 /* 평균 점수 */
+             , #{regId}                    /* 등록 ID */
+             , SYSDATE                     /* 등록 일시 */
              )
        WHEN  MATCHED 
        THEN
              UPDATE
-                SET  avg_score = #{avgScore}
-                   , reg_dt = SYSDATE
+                SET  avg_score = #{avgScore} /* 평균 점수 */
+                   , reg_dt = SYSDATE        /* 등록 일시(수정) */
 	</insert>
 
     <!-- 회원평가정보 삭제 -->
     <delete id="deleteMbrAvg" parameterType="MbrAvg">
       DELETE  /* FeedbackMapper.deleteMbrAvg, 회원평가정보 삭제, 김현일/SK플래닛, 2014-02-04 */ 
-        FROM  tb_dp_mbr_avg
-       WHERE  tenant_id = #{tenantId}
-         AND  prod_id = #{prodId}
-         AND  mbr_no = #{mbrNo}
+        FROM  tb_dp_mbr_avg           /* 상품 평점 */
+       WHERE  tenant_id = #{tenantId} /* 테넌트 ID */
+         AND  prod_id = #{prodId}     /* 상품 ID */
+         AND  mbr_no = #{mbrNo}       /* 회원 번호 */
     </delete>
 	
 	
 	<!-- 평점저장(기평가평점 수정) -->
 	<update id="updateTenantProdStats" parameterType="TenantProdStats">
       UPDATE  /* FeedbackMapper.updateTenantProdStats, 평점저장(기평가평점 수정), 김현일/SK플래닛, 2014-02-04 */
-              tb_dp_tenant_prod_stats
-         SET  tot_evlu_score = NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore}
-            , upd_id = #{updId}
-            , upd_dt = SYSDATE
+              tb_dp_tenant_prod_stats  /* 테넌트 상품 통계 */
+         SET  tot_evlu_score = NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore}  /* 총 평가 점수 */
+            , upd_id = #{updId}  /* 수정 ID */
+            , upd_dt = SYSDATE   /* 수정 일시 */
             <if test="action == 'create'">
-            , avg_evlu_score = ( ( NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore} ) / NVL(paticpers_cnt, 0) )
+            , avg_evlu_score = ( ( NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore} ) / NVL(paticpers_cnt, 0) )  /* 평균 평가 점수 */
             </if>
             <if test="action == 'remove'">
-            , paticpers_cnt = paticpers_cnt - 1
-            , avg_evlu_score = ( ( NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore} ) / (NVL(paticpers_cnt, 0) - 1) )
+            , paticpers_cnt = paticpers_cnt - 1  /* 참여자 수 */
+            , avg_evlu_score = ( ( NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore} ) / (NVL(paticpers_cnt, 0) - 1) )  /* 평균 평가 점수 */
             </if>
-       WHERE  tenant_id = #{tenantId}
-         AND  prod_id = #{prodId}
+       WHERE  tenant_id = #{tenantId}  /* 테넌트 ID */
+         AND  prod_id = #{prodId}      /* 상품 ID */
     </update>
 	
 	<!-- 평점저장 -->
 	<insert id="mergeTenantProdStats" parameterType="TenantProdStats" useGeneratedKeys="false">
       MERGE  /* FeedbackMapper.mergeTenantProdStats, 평점저장, 김현일/SK플래닛, 2014-02-04 */
-       INTO  tb_dp_tenant_prod_stats
+       INTO  tb_dp_tenant_prod_stats       /* 테넌트 상품 통계 */
       USING  DUAL
          ON  ( 
-                   tenant_id = #{tenantId} 
-              AND  prod_id = #{prodId}
+                   tenant_id = #{tenantId} /* 테넌트 ID */
+              AND  prod_id = #{prodId}     /* 상품 ID */
              )
        WHEN  NOT MATCHED 
        THEN
              INSERT 
              ( 
-               tenant_id
-             , prod_id
-             , avg_evlu_score
-             , tot_evlu_score
-             , paticpers_cnt
-             , reg_id
-             , reg_dt 
+               tenant_id                   /* 테넌트 ID */
+             , prod_id                     /* 상품 ID */
+             , avg_evlu_score              /* 평균 평가 점수 */
+             , tot_evlu_score              /* 총 평가 점수 */
+             , paticpers_cnt               /* 참여자 수 */
+             , reg_id                      /* 등록 ID */
+             , reg_dt                      /* 등록 일시 */
              )
              VALUES 
              ( 
-               #{tenantId}
-             , #{prodId}
-             , #{avgEvluScore}
-             , #{avgEvluScore}
-             , 1
-             , #{regId}
-             , SYSDATE )
+               #{tenantId}                 /* 테넌트 ID */
+             , #{prodId}                   /* 상품 ID */
+             , #{avgEvluScore}             /* 평균 평가 점수 */
+             , #{avgEvluScore}             /* 총 평가 점수  */
+             , 1                           /* 참여자 수 */
+             , #{regId}                    /* 등록 ID */
+             , SYSDATE )                   /* 등록 일시 */
        WHEN  MATCHED 
        THEN
              UPDATE
-                SET  avg_evlu_score = ((NVL(tot_evlu_score, 0) + #{avgEvluScore}) / (NVL(paticpers_cnt, 0) + 1))
-                   , tot_evlu_score = NVL(tot_evlu_score, 0) + #{avgEvluScore}
-                   , paticpers_cnt = NVL(paticpers_cnt, 0) + 1
-                   , upd_id = #{updId}
-                   , upd_dt = SYSDATE
+                SET  avg_evlu_score = ((NVL(tot_evlu_score, 0) + #{avgEvluScore}) / (NVL(paticpers_cnt, 0) + 1)) /* 평균 평가 점수 */
+                   , tot_evlu_score = NVL(tot_evlu_score, 0) + #{avgEvluScore}                                   /* 총 평가 점수  */
+                   , paticpers_cnt = NVL(paticpers_cnt, 0) + 1   /* 참여자 수 */                               
+                   , upd_id = #{updId}                           /* 수정 ID */
+                   , upd_dt = SYSDATE                            /* 수정 일시 */
 	</insert>
 	
 	<!-- 평점 조회 -->
     <select id="getTenantProdStats" parameterType="TenantProdStats" resultType="TenantProdStats">
       SELECT  /* FeedbackMapper.xml.getTenantProdStats, 평점조회, 김현일/SK플래닛, 2014-02-04 */
-              avg_evlu_score
-            , paticpers_cnt
-        FROM  tb_dp_tenant_prod_stats
-       WHERE  tenant_id = #{tenantId} 
-         AND  prod_id = #{prodId}
+              avg_evlu_score           /* 평균 평가 점수 */
+            , paticpers_cnt            /* 참여자 수 */
+        FROM  tb_dp_tenant_prod_stats  /* 테넌트 상품 통계 */
+       WHERE  tenant_id = #{tenantId}  /* 테넌트 ID */
+         AND  prod_id = #{prodId}      /* 상품 ID */
     </select>
     
     <!-- 평점 삭제 -->
     <update id="deleteTenantProdStats" parameterType="TenantProdStats">
       UPDATE  /* FeedbackMapper.deleteTenantProdStats, 평점삭제, 김현일/SK플래닛, 2014-02-04 */
-              tb_dp_tenant_prod_stats
-         SET  tot_evlu_score = 0
-            , upd_id = #{updId}
-            , upd_dt = SYSDATE
-            , paticpers_cnt = 0
-            , avg_evlu_score = 0
-       WHERE  tenant_id = #{tenantId}
-         AND  prod_id = #{prodId}
+              tb_dp_tenant_prod_stats  /* 평균 평가 점수 */
+         SET  tot_evlu_score = 0       /* 총 평가 점수 */
+            , upd_id = #{updId}        /* 수정 ID */
+            , upd_dt = SYSDATE         /* 수정 일시 */
+            , paticpers_cnt = 0        /* 참여자 수 */
+            , avg_evlu_score = 0       /* 평균 평가 점수 */
+       WHERE  tenant_id = #{tenantId}  /* 테넌트 ID */
+         AND  prod_id = #{prodId}      /* 상품 ID */
     </update>
 	
 	 <!-- (탈퇴회원 사용후기) 기 등록 여부 -->
@@ -334,20 +334,20 @@
 	<!-- 사용후기 추천 등록 -->
 	<insert id="insertProdNotiGood" parameterType="ProdNotiGood">
       INSERT  /* FeedbackMapper.insertProdNotiGood, 사용후기 추천 등록, 김현일/SK플래닛, 2014-02-04 */
-        INTO  tb_dp_prod_notigood 
+        INTO  tb_dp_prod_notigood  /* 상품 후기 선호 */
       ( 
-        tenant_id
-      , noti_seq
-      , mbr_no
-      , reg_id
-      , reg_dt 
+        tenant_id                  /* 테넌트 ID */
+      , noti_seq                   /* 후기 SEQ */
+      , mbr_no                     /* 회원 번호 */
+      , reg_id                     /* 등록 ID */
+      , reg_dt                     /* 등록 일시 */
       )
       VALUES 
-      ( #{tenantId}
-      , #{notiSeq}
-      , #{mbrNo}
-      , #{regId}
-      , SYSDATE 
+      ( #{tenantId}                /* 테넌트 ID */
+      , #{notiSeq}                 /* 후기 SEQ */
+      , #{mbrNo}                   /* 회원 번호 */
+      , #{regId}                   /* 등록 ID */
+      , SYSDATE                    /* 등록 일시 */
       )
 	</insert>
 	
@@ -370,100 +370,100 @@
     <select id="getProdNotiGoodCount" parameterType="ProdNoti" resultType="int">
       SELECT  /* FeedbackMapper.getProdNotiGoodCount, 일반회원 사용후기 기추천 여부, 김현일/SK플래닛, 2014-02-04 */
               COUNT(*)
-        FROM  tb_dp_prod_noti a
-            , tb_dp_prod_notigood b
-       WHERE  a.tenant_id = b.tenant_id
-         AND  a.noti_seq = b.noti_seq
-         AND  a.noti_type_cd = 'DP000401'
-         AND  a.del_yn = 'N'
-         AND  a.bad_noti_yn IN ( 'N', 'R' )
-         AND  a.spam_yn = 'N'
-         AND  a.prod_id = #{prodId}
-         AND  b.noti_seq = #{notiSeq}
-         AND  b.mbr_no = #{mbrNo}
-         AND  b.tenant_id = #{tenantId}
+        FROM  tb_dp_prod_noti a              /* 상품 후기 */
+            , tb_dp_prod_notigood b          /* 상품 후기 선호 */
+       WHERE  a.tenant_id = b.tenant_id      /* 테넌트 ID */
+         AND  a.noti_seq = b.noti_seq        /* 후기 SEQ */
+         AND  a.noti_type_cd = 'DP000401'    /* 후기 타입 코드 */
+         AND  a.del_yn = 'N'                 /* 삭제 여부 */
+         AND  a.bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
+         AND  a.spam_yn = 'N'                /* 스펨 여부 */
+         AND  a.prod_id = #{prodId}          /* 상품 ID */
+         AND  b.noti_seq = #{notiSeq}        /* 후기 SEQ */
+         AND  b.mbr_no = #{mbrNo}            /* 회원 번호 */
+         AND  b.tenant_id = #{tenantId}      /* 테넌트 ID */
     </select>
     
     <!-- (일반회원 후기) 추천 수 증감처리 -->
     <update id="updateProdNotiGood" parameterType="ProdNotiGood">
       UPDATE  /* FeedbackMapper.updateProdNotiGood, 일반회원 후기 추천수 증감처리, 김현일/SK플래닛, 2014-02-04 */
-              tb_dp_prod_noti
+              tb_dp_prod_noti                      /* 상품 후기 */
          <if test="action == 'create'">
-         SET  noti_score = NVL(noti_score, 0) + 1
+         SET  noti_score = NVL(noti_score, 0) + 1  /* 후기 점수(추천) */
          </if>
          <if test="action == 'remove'">
-         SET  noti_score = NVL(noti_score, 0) - 1
+         SET  noti_score = NVL(noti_score, 0) - 1  /* 후기 점수(추천) */
          </if>
-            , upd_dt = SYSDATE
-       WHERE  tenant_id = #{tenantId} 
-         AND  noti_seq = #{notiSeq}  
+            , upd_dt = SYSDATE                     /* 수정 일시 */
+       WHERE  tenant_id = #{tenantId}              /* 테넌트 ID */
+         AND  noti_seq = #{notiSeq}                /* 후기 SEQ */
     </update>
     
     <!-- 사용후기 전체 갯수 조회 -->
     <select id="getProdNotiCount" parameterType="ProdNoti" resultType="int">
       SELECT  /* FeedbackMapper.getProdNotiCount, 사용후기 전체 갯수 조회, 김현일/SK플래닛, 2014-02-04 */
-              COUNT(*) AS total_count
-        FROM  tb_dp_prod_noti
-       WHERE  tenant_id = #{tenantId}
-         AND  del_yn = 'N'
-         AND  bad_noti_yn IN ( 'N', 'R' )
-         AND  spam_yn = 'N'
-         AND  noti_type_cd = 'DP000401'
+              COUNT(*) AS total_count      /* 상품 후기 갯수 */
+        FROM  tb_dp_prod_noti              /* 상품 후기 */
+       WHERE  tenant_id = #{tenantId}      /* 테넌트 ID */
+         AND  del_yn = 'N'                 /* 삭제 여부 */
+         AND  bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
+         AND  spam_yn = 'N'                /* 스펨 여부 */
+         AND  noti_type_cd = 'DP000401'    /* 후기 타입 코드 */
          <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
-         AND  noti_seq = #{notiSeq}
+         AND  noti_seq = #{notiSeq}        /* 후기 SEQ */
          </if>
          <!-- Shopping -->
          <if test="prodType == 'shopping'">
-         AND  catalog_id = #{prodId}
+         AND  catalog_id = #{prodId}       /* 카탈로그 ID */
          <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-         AND  prod_id = #{chnlId}
+         AND  prod_id = #{chnlId}          /* 상품 ID */
          </if>
          </if>
          <!-- Shopping 외 -->
          <if test="prodType != 'shopping'">
-         AND  prod_id = #{prodId}
+         AND  prod_id = #{prodId}          /* 상품 ID */
          </if>             
     </select>
     
     <!-- 사용후기 전체 목록 조회 -->
      <select id="getProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
       SELECT  /* FeedbackMapper.getProdNotiList, 사용후기 전체 목록 조회, 김현일/SK플래닛, 2014-02-04 */
-              a.noti_seq
-            , a.mbr_no
-            , a.seller_mbr_no
-            , a.title
-            , a.noti_dscr
-            , NVL( a.noti_score, 0 ) AS noti_score
-            , a.mbr_telno
-            , a.reg_id
-            , TO_CHAR(a.reg_dt,'YYYYMMDDHH24MISS') AS reg_dt
-            , a.seller_resp_title
-            , a.seller_resp_opin
-            , NVL2( a.seller_resp_opin, TO_CHAR( a.seller_resp_reg_dt, 'YYYYMMDDHH24MISS' ), NULL ) AS seller_resp_reg_dt
-            , a.cid
-            , DECODE( a.mbr_no, #{mbrNo}, 'Y', 'N' ) AS self_yn
-            , DECODE( a.mbr_no, a.seller_mbr_no, 'Y','N' ) AS sale_yn
-            , DECODE( a.mbr_no, a.seller_mbr_no, 'seller', #{mbrNo}, 'mine', '' ) AS whose
+              a.noti_seq       /* 후기 SEQ */
+            , a.mbr_no         /* 회원 번호 */
+            , a.seller_mbr_no  /* 판매자 회원 번호 */
+            , a.title          /* 제목 */
+            , a.noti_dscr      /* 후기 내용 */
+            , NVL( a.noti_score, 0 ) AS noti_score /* 후기 점수(추천) */
+            , a.mbr_telno      /* 회원 전화번호 */
+            , a.reg_id         /* 등록 ID */
+            , TO_CHAR(a.reg_dt,'YYYYMMDDHH24MISS') AS reg_dt  /* 등록 일시 */
+            , a.seller_resp_title  /* 판매자 응답 제목 */
+            , a.seller_resp_opin   /* 판매자 응답 내용 */
+            , NVL2( a.seller_resp_opin, TO_CHAR( a.seller_resp_reg_dt, 'YYYYMMDDHH24MISS' ), NULL ) AS seller_resp_reg_dt  /* 판매자 응답 일시 */
+            , a.cid                /* CID */
+            , DECODE( a.mbr_no, #{mbrNo}, 'Y', 'N' ) AS self_yn        /* 본인 여부 */
+            , DECODE( a.mbr_no, a.seller_mbr_no, 'Y','N' ) AS sale_yn  /* 판매자 여부 */
+            , DECODE( a.mbr_no, a.seller_mbr_no, 'seller', #{mbrNo}, 'mine', '' ) AS whose  /* 판매자 본인 식별 */
             , ( CASE WHEN ( 
-                           SELECT  COUNT(*)
-                             FROM  tb_dp_prod_notigood l
-                            WHERE  l.tenant_id = a.tenant_id
-                              AND  l.mbr_no = #{mbrNo}
-                              AND  l.noti_seq = a.noti_seq 
-                           ) > 0 THEN 'Y'
+                           SELECT  COUNT(*)                   /* 상품 후기 선호 갯수 */
+                             FROM  tb_dp_prod_notigood l      /* 상품 후기 선호 */
+                            WHERE  l.tenant_id = a.tenant_id  /* 테넌트 ID */
+                              AND  l.mbr_no = #{mbrNo}        /* 회원 번호 */
+                              AND  l.noti_seq = a.noti_seq    /* 후기 SEQ */
+                           ) > 0 THEN 'Y'                     /* 선호 갯수가 0보다 큰것 */
                      ELSE 'N'
-               END ) AS noti_yn
+               END ) AS noti_yn  /* 본인 추천여부 ID */
             , ( 
-              SELECT  avg_score 
-                FROM  tb_dp_mbr_avg 
-               WHERE  tenant_id = a.tenant_id 
-                 AND  prod_id = a.prod_id 
-                 AND  mbr_no = a.mbr_no 
-              ) AS avg_score
-            , a.fb_post_yn
-            , a.prod_id
-            , a.expo_seller_nm
-            , a.svc_grp_cd
+              SELECT  avg_score                /* 평균 점수 */
+                FROM  tb_dp_mbr_avg            /* 상품 평점 */
+               WHERE  tenant_id = a.tenant_id  /* 테넌트 ID */
+                 AND  prod_id = a.prod_id      /* 상품 ID */
+                 AND  mbr_no = a.mbr_no        /* 회원 번호 */
+              ) AS avg_score                   /* 평균 점수 */
+            , a.fb_post_yn                     /* 페이스북 POST 여부 */
+            , a.prod_id                        /* 상품 ID */
+            , a.expo_seller_nm                 /* 노출 판매자 명 */
+            , a.svc_grp_cd                     /* 서비스 그룹 코드 */
        FROM (
              SELECT  ia.*
                FROM  (
@@ -493,46 +493,46 @@
                                             </if>
                                         </if>
                                      </if>
-                                     ia.tenant_id
-                                   , ia.noti_seq
-                                   , ia.title
-                                   , ia.noti_dscr
-                                   , ia.reg_dt
-                                   , ia.mbr_no
-                                   , ia.reg_id
-                                   , ia.mbr_telno
-                                   , ia.noti_score
-                                   , ia.seller_resp_title
-                                   , ia.seller_resp_opin
-                                   , ia.seller_resp_reg_dt
-                                   , ia.prod_id
-                                   , ia.fb_post_yn
-                                   , ib.seller_mbr_no as seller_mbr_no
-                                   , ib.cid
-                                   , ib.svc_grp_cd
-                                   , ib.expo_seller_nm
-                               FROM  tb_dp_prod_noti ia
-                                   , tb_dp_prod ib
-                              WHERE  ia.tenant_id = #{tenantId}
-                                AND  ib.prod_id = ia.prod_id
+                                     ia.tenant_id           /* 테넌트 ID */                
+                                   , ia.noti_seq            /* 후기 SEQ */
+                                   , ia.title               /* 제목 */
+                                   , ia.noti_dscr           /* 후기 내용 */
+                                   , ia.reg_dt              /* 등록 일시 */
+                                   , ia.mbr_no              /* 회원 번호 */
+                                   , ia.reg_id              /* 등록 ID */
+                                   , ia.mbr_telno           /* 회원 전화번호 */
+                                   , ia.noti_score          /* 후기 점수(추천) */
+                                   , ia.seller_resp_title   /* 판매자 응답 제목 */
+                                   , ia.seller_resp_opin    /* 판매자 응답 의견 */
+                                   , ia.seller_resp_reg_dt  /* 판매자 응답 일시 */
+                                   , ia.prod_id             /* 상품 ID */
+                                   , ia.fb_post_yn          /* 페이스북 POST 여부 */
+                                   , ib.seller_mbr_no       /* 판매자 회원 번호 */
+                                   , ib.cid                 /* CID */
+                                   , ib.svc_grp_cd          /* 서비스 그룹 코드 */
+                                   , ib.expo_seller_nm      /* 노출 판매자 명 */
+                               FROM  tb_dp_prod_noti ia  /* 상품 후기 */    
+                                   , tb_dp_prod ib       /* 상품 */
+                              WHERE  ia.tenant_id = #{tenantId}  /* 테넌트 ID */
+                                AND  ib.prod_id = ia.prod_id     /* 상품 ID */
                                 <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
-                                AND  ia.noti_seq = #{notiSeq}
+                                AND  ia.noti_seq = #{notiSeq}    /* 후기 SEQ */
                                 </if>
                                 <!-- Shopping -->
                                 <if test="prodType == 'shopping'">
-                                AND  ia.catalog_id = #{prodId}
+                                AND  ia.catalog_id = #{prodId}   /* 카탈로그 ID */
                                 <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-                                AND  ia.prod_id = #{chnlId} 
+                                AND  ia.prod_id = #{chnlId}      /* 상품 ID */
                                 </if>
                                 </if>
                                 <!-- Shopping 외 -->
                                 <if test="prodType != 'shopping'">
-                                AND  ia.prod_id = #{prodId}
+                                AND  ia.prod_id = #{prodId}      /* 상품 ID */
                                 </if>
-                                AND  ia.noti_type_cd = 'DP000401'
-                                AND  ia.del_yn = 'N'
-                                AND  ia.bad_noti_yn IN ( 'N', 'R' )
-                                AND  ia.spam_yn = 'N'
+                                AND  ia.noti_type_cd = 'DP000401'  /* 후기 타입 코드 */
+                                AND  ia.del_yn = 'N'               /* 삭제 여부 */
+                                AND  ia.bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
+                                AND  ia.spam_yn = 'N'                /* 스펨 여부 */
                                 <!-- 추천순 -->    
                               <if test="orderedBy == 'recommend'">
                               ORDER 
@@ -554,101 +554,103 @@
     <!-- 자기가작성한 사용후기.  -->
     <select id="getMyProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
       SELECT  /* FeedbackMapper.getProdNotiList, 자기가작성한 사용후기, 김현일/SK플래닛, 2014-02-04 */
-              a.noti_seq
-            , a.mbr_no
-            , a.seller_mbr_no
-            , NVL2( a.title, a.title, NVL2( a.noti_dscr, NULL, default_msg ) ) AS title
-            , NVL2( a.noti_dscr, a.noti_dscr, default_msg ) AS noti_dscr
-            , NVL( a.noti_score, 0 ) AS noti_score
-            , a.mbr_telno
-            , a.reg_id
-            , TO_CHAR(a.reg_dt,'YYYYMMDDHH24MISS') AS reg_dt
-            , a.seller_resp_title
-            , a.seller_resp_opin
-            , NVL2( a.seller_resp_opin, TO_CHAR(a.seller_resp_reg_dt,'YYYYMMDDHH24MISS'), NULL ) AS seller_resp_reg_dt
-            , a.cid
-            , 'mine' AS WHOSE
+              a.noti_seq       /* 후기 SEQ */
+            , a.mbr_no         /* 회원 번호 */
+            , a.seller_mbr_no  /* 판매자 회원 번호 */
+            , NVL2( a.title, a.title, NVL2( a.noti_dscr, NULL, default_msg ) ) AS title  /* 제목 */
+            , NVL2( a.noti_dscr, a.noti_dscr, default_msg ) AS noti_dscr  /* 후기 내용 */
+            , NVL( a.noti_score, 0 ) AS noti_score  /* 후기 점수(추천) */
+            , a.mbr_telno  /* 회원 전화번호 */
+            , a.reg_id     /* 등록 ID */
+            , TO_CHAR(a.reg_dt,'YYYYMMDDHH24MISS') AS reg_dt  /* 등록일시 */
+            , a.seller_resp_title  /* 판매자 응답 제목 */
+            , a.seller_resp_opin   /* 판매자 응답 의견 */
+            , NVL2( a.seller_resp_opin, TO_CHAR(a.seller_resp_reg_dt,'YYYYMMDDHH24MISS'), NULL ) AS seller_resp_reg_dt  /* 판매자 응답 일시 */
+            , a.cid  /* CID */
+            , 'mine' AS WHOSE /* 본인 노출 */
             , ( CASE WHEN ( 
-                           SELECT  COUNT(*)
-                             FROM  tb_dp_prod_notigood l
-                            WHERE  l.tenant_id = a.tenant_id
-                              AND  l.mbr_no = #{mbrNo}
-                              AND  l.noti_seq = a.noti_seq 
-                          ) > 0 THEN 'Y'
+                           SELECT  COUNT(*)                   /* 상품 후기 선호 갯수 */
+                             FROM  tb_dp_prod_notigood l      /* 상품 후기 선호 */
+                            WHERE  l.tenant_id = a.tenant_id  /* 테넌트 ID */
+                              AND  l.mbr_no = #{mbrNo}        /* 회원 번호 */
+                              AND  l.noti_seq = a.noti_seq    /* 후기 SEQ */
+                          ) > 0 THEN 'Y'                      /* 후기 선호 갯수가 0보다 큰것 */
                      ELSE 'N'
-              END ) AS noti_yn
-            , a.avg_score
-            , a.fb_post_yn
-            , a.prod_id
-            , a.expo_seller_nm
-            , a.svc_grp_cd
+              END ) AS noti_yn  /* 본인 추천 여부 */
+            , a.avg_score       /* 평균 점수 */
+            , a.fb_post_yn      /* 페이스북 POST 여부 */
+            , a.prod_id         /* 상품 ID */
+            , a.expo_seller_nm  /* 노출 판매자 명 */
+            , a.svc_grp_cd      /* 서비스 그룹 코드 */
        FROM  
             (  
              SELECT  ia.*
                    , DECODE
                     ( ia.avg_score
-                    , 1, #{defaultMsg1}
-                    , 2, #{defaultMsg2}
-                    , 3, #{defaultMsg3}
-                    , 4, #{defaultMsg4}
-                    , 5, #{defaultMsg5}
+                    , 1, #{defaultMsg1}  /* 평균 점수가 1이면 1번 메시지(메시지는 소스상 상수로 선언) */
+                    , 2, #{defaultMsg2}  /* 평균 점수가 2이면 2번 메시지(메시지는 소스상 상수로 선언) */
+                    , 3, #{defaultMsg3}  /* 평균 점수가 3이면 3번 메시지(메시지는 소스상 상수로 선언) */
+                    , 4, #{defaultMsg4}  /* 평균 점수가 4이면 4번 메시지(메시지는 소스상 상수로 선언) */
+                    , 5, #{defaultMsg5}  /* 평균 점수가 5이면 5번 메시지(메시지는 소스상 상수로 선언) */
                     , NULL 
-                    ) AS default_msg
+                    ) AS default_msg     /* 기본 메시지 */
                FROM
                     (
                      SELECT  ia.*
                            , ROWNUM AS rnum
                        FROM
                             (
-                             SELECT  MAX( tenant_id ) AS tenant_id
-                                   , MAX( noti_seq ) AS noti_seq
-                                   , MAX( title ) AS title
-                                   , MAX( noti_dscr ) AS noti_dscr
-                                   , MAX( reg_dt ) AS reg_dt
-                                   , MAX( mbr_no ) AS mbr_no
-                                   , MAX( reg_id ) AS reg_id
-                                   , MAX( mbr_telno ) AS mbr_telno
-                                   , MAX( noti_score ) AS noti_score
-                                   , MAX( seller_resp_title ) AS seller_resp_title
-                                   , MAX( seller_resp_opin ) AS seller_resp_opin
-                                   , MAX( seller_resp_reg_dt ) AS seller_resp_reg_dt
-                                   , MAX( fb_post_yn ) AS fb_post_yn
-                                   , MAX( prod_id ) AS prod_id
-                                   , MAX( seller_mbr_no ) AS seller_mbr_no
-                                   , MAX( cid ) AS cid
-                                   , MAX( svc_grp_cd ) AS svc_grp_cd
-                                   , MAX( avg_score ) AS avg_score
-                                   , MAX( expo_seller_nm ) AS expo_seller_nm
+                             <!-- MAX 하는 이유? 상품 후기는 없는 평점만 있는 경우, 평점에 있는 데이터만 노출시키기 위해서 -->
+                             SELECT  MAX( tenant_id ) AS tenant_id                    /* 테넌트 ID */
+                                   , MAX( noti_seq ) AS noti_seq                      /* 후기 SEQ */
+                                   , MAX( title ) AS title                            /* 제목 */
+                                   , MAX( noti_dscr ) AS noti_dscr                    /* 후기 내용 */
+                                   , MAX( reg_dt ) AS reg_dt                          /* 등록 일시 */
+                                   , MAX( mbr_no ) AS mbr_no                          /* 회원 번호 */
+                                   , MAX( reg_id ) AS reg_id                          /* 등록 ID */
+                                   , MAX( mbr_telno ) AS mbr_telno                    /* 회원 전화번호 */
+                                   , MAX( noti_score ) AS noti_score                  /* 후기 점수(추천) */
+                                   , MAX( seller_resp_title ) AS seller_resp_title    /* 판매자 응답 제목 */
+                                   , MAX( seller_resp_opin ) AS seller_resp_opin      /* 판매자 응답 의견 */
+                                   , MAX( seller_resp_reg_dt ) AS seller_resp_reg_dt  /* 판매자 응답 일시 */
+                                   , MAX( fb_post_yn ) AS fb_post_yn                  /* 페이스북 POST 여부 */
+                                   , MAX( prod_id ) AS prod_id                        /* 상품 ID */
+                                   , MAX( seller_mbr_no ) AS seller_mbr_no            /* 판매자 회원 번호 */
+                                   , MAX( cid ) AS cid                                /* CID */
+                                   , MAX( svc_grp_cd ) AS svc_grp_cd                  /* 서비스 그룹 코드 */
+                                   , MAX( avg_score ) AS avg_score                    /* 평균 점수 */
+                                   , MAX( expo_seller_nm ) AS expo_seller_nm          /* 노출 판매자 명 */
                               FROM
                                   (
                                    SELECT  *
                                      FROM
                                           (
-                                           SELECT  ia.tenant_id
-                                                 , ia.noti_seq
-                                                 , ia.title
-                                                 , ia.noti_dscr
-                                                 , ia.reg_dt
-                                                 , ia.mbr_no
-                                                 , ia.reg_id
-                                                 , ia.mbr_telno
-                                                 , ia.noti_score
-                                                 , ia.seller_resp_title
-                                                 , ia.seller_resp_opin
-                                                 , ia.seller_resp_reg_dt
-                                                 , ia.fb_post_yn
-                                                 , ia.prod_id
-                                                 , ib.seller_mbr_no as seller_mbr_no
-                                                 , ib.cid
-                                                 , ib.svc_grp_cd
-                                                 , ib.expo_seller_nm
-                                                 , NULL avg_score
-                                                 , ROW_NUMBER() OVER (PARTITION BY ia.prod_id ORDER BY ia.reg_dt DESC) AS ranking 
-                                             FROM  tb_dp_prod_noti ia
-                                                 , tb_dp_prod ib
-                                            WHERE  ia.tenant_id = #{tenantId}
-                                              AND  ib.prod_id = ia.prod_id
-                                              AND  ia.mbr_no = #{mbrNo}
+                                           SELECT  ia.tenant_id           /* 테넌트 ID */ 
+                                                 , ia.noti_seq            /* 후기 SEQ */
+                                                 , ia.title               /* 제목 */
+                                                 , ia.noti_dscr           /* 후기 내용 */
+                                                 , ia.reg_dt              /* 등록 일시 */
+                                                 , ia.mbr_no              /* 회원 번호 */
+                                                 , ia.reg_id              /* 등록 ID */
+                                                 , ia.mbr_telno           /* 회원 전화번호 */
+                                                 , ia.noti_score          /* 후기 점수(추천) */
+                                                 , ia.seller_resp_title   /* 판매자 응답 제목 */
+                                                 , ia.seller_resp_opin    /* 판매자 응답 의견 */
+                                                 , ia.seller_resp_reg_dt  /* 판매자 응답 일시 */
+                                                 , ia.fb_post_yn          /* 페이스북 POST 여부 */
+                                                 , ia.prod_id             /* 상품 ID */
+                                                 , ib.seller_mbr_no       /* 판매자 회원 번호 */
+                                                 , ib.cid                 /* CID */
+                                                 , ib.svc_grp_cd          /* 서비스 그룹 코드 */
+                                                 , ib.expo_seller_nm      /* 노출 판매자 명 */
+                                                 , NULL avg_score         /* 평균 점수 */
+                                                 <!-- Analytic Functions 여러건중 최신후기 한 건만을 가져오기 위해서 해당 함수 사용 -->
+                                                 , ROW_NUMBER() OVER (PARTITION BY ia.prod_id ORDER BY ia.reg_dt DESC) AS ranking  /* 여러건수중 최신후기 한건*/
+                                             FROM  tb_dp_prod_noti ia          /* 상품 후기 */
+                                                 , tb_dp_prod ib               /* 상품 */
+                                            WHERE  ia.tenant_id = #{tenantId}  /* 테넌트 ID */
+                                              AND  ib.prod_id = ia.prod_id     /* 상품 ID */
+                                              AND  ia.mbr_no = #{mbrNo}        /* 회원 번호 */
                                               <!-- Shopping -->
                                               <if test="prodType == 'shopping'">
                                               <if test="prodIds != null">
@@ -670,10 +672,10 @@
                                               </foreach>
                                               </if>
                                               </if>
-                                              AND  ia.noti_type_cd = 'DP000401'
-                                              AND  ia.del_yn = 'N'
-                                              AND  ia.bad_noti_yn IN ( 'N', 'R' )
-                                              AND  ia.spam_yn = 'N'
+                                              AND  ia.noti_type_cd = 'DP000401'   /* 후기 타입 코드 */
+                                              AND  ia.del_yn = 'N'                /* 삭제 여부 */
+                                              AND  ia.bad_noti_yn IN ( 'N', 'R' ) /* 불량 후기 여부 */
+                                              AND  ia.spam_yn = 'N'               /* 스펨 여부 */
                                            )
                                     WHERE  ranking = 1
                                    <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
@@ -683,25 +685,25 @@
                                          , NULL AS noti_seq
                                          , NULL AS title
                                          , NULL AS noti_dscr
-                                         , ic.reg_dt AS reg_dt
-                                         , ic.mbr_no AS mbr_no
+                                         , ic.reg_dt AS reg_dt         /* 등록 일시 */ 
+                                         , ic.mbr_no AS mbr_no         /* 회원 번호 */ 
                                          , NULL AS reg_id
                                          , NULL AS mbr_telno
                                          , NULL AS noti_score
-                                         , NULL AS seller_resp_title
-                                         , NULL AS seller_resp_opin
-                                         , NULL AS seller_resp_reg_dt
+                                         , NULL AS seller_resp_title 
+                                         , NULL AS seller_resp_opin 
+                                         , NULL AS seller_resp_reg_dt 
                                          , NULL AS fb_post_yn
-                                         , ic.prod_id
+                                         , ic.prod_id                  /* 상품 ID */ 
                                          , NULL AS seller_mbr_no
                                          , NULL AS cid
                                          , NULL AS svc_grp_cd
                                          , NULL AS expo_seller_nm
-                                         , ic.avg_score
+                                         , ic.avg_score                /* 평균 점수 */ 
                                          , NULL AS ranking
-                                     FROM  tb_dp_mbr_avg ic
-                                    WHERE  ic.tenant_id = #{tenantId} 
-                                      AND  ic.mbr_no = #{mbrNo} 
+                                     FROM  tb_dp_mbr_avg ic            /* 상품 평점 */ 
+                                    WHERE  ic.tenant_id = #{tenantId}  /* 테넌트 ID */ 
+                                      AND  ic.mbr_no = #{mbrNo}        /* 회원 번호 */ 
                                       <if test="prodType != 'shopping'">
                                       <if test="prodIds != null">
                                       AND  ic.prod_id IN
@@ -726,20 +728,20 @@
     <!-- 자기가 작성한 사용후기 갯수 -->
     <select id="getMyProdNotiCount" parameterType="ProdNoti" resultType="int">
       SELECT  /* FeedbackMapper.getMyProdNotiCount, 자기가 작성한 사용후기 갯수, 김현일/SK플래닛, 2014-02-04 */
-              COUNT(*) AS total_count
+              COUNT(*) AS total_count    /* 후기 갯수 */ 
         FROM (
               SELECT  prod_id AS prod_id
                 FROM 
                      (
                       SELECT  *
                         FROM  (
-                               SELECT  la.prod_id
-                                     , ROW_NUMBER() OVER (PARTITION BY la.prod_id ORDER BY la.reg_dt DESC) AS ranking 
-                                 FROM  tb_dp_prod_noti la
-                                     , tb_dp_prod lb
-                                WHERE  la.tenant_id = #{tenantId}
-                                  AND  lb.prod_id = la.prod_id
-                                  AND  la.mbr_no = #{mbrNo}
+                               SELECT  la.prod_id  /* 상품 ID */ 
+                                     , ROW_NUMBER() OVER (PARTITION BY la.prod_id ORDER BY la.reg_dt DESC) AS ranking  /* 여러건수중 최신후기 한건*/ 
+                                 FROM  tb_dp_prod_noti la          /* 상품 후기 */
+                                     , tb_dp_prod lb               /* 상품 */
+                                WHERE  la.tenant_id = #{tenantId}  /* 테넌트 ID */
+                                  AND  lb.prod_id = la.prod_id     /* 상품 ID */
+                                  AND  la.mbr_no = #{mbrNo}        /* 회원 번호 */
                                   <!-- Shopping -->
                                   <if test="prodType == 'shopping'">
                                   <if test="prodIds != null">
@@ -761,20 +763,20 @@
                                   </foreach>
                                   </if>
                                   </if> 
-                                  AND  la.noti_type_cd = 'DP000401'
-                                  AND  la.del_yn = 'N'
-                                  AND  la.bad_noti_yn IN ( 'N', 'R' )
-                                  AND  la.spam_yn = 'N'
+                                  AND  la.noti_type_cd = 'DP000401'    /* 후기 타입 코드 */
+                                  AND  la.del_yn = 'N'                 /* 삭제 여부 */
+                                  AND  la.bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
+                                  AND  la.spam_yn = 'N'                /* 스펨 여부 */
                                ) 
                        WHERE  ranking = 1
                          <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
                          <if test="prodType != 'shopping'">
                        UNION  ALL
-                      SELECT  lc.prod_id
-                            , NULL AS ranking
-                        FROM  tb_dp_mbr_avg lc
-                       WHERE  lc.tenant_id = #{tenantId} 
-                         AND  lc.mbr_no = #{mbrNo} 
+                      SELECT  lc.prod_id                  /* 상품 ID */
+                            , NULL AS ranking              
+                        FROM  tb_dp_mbr_avg lc            /* 상품 평점 */
+                       WHERE  lc.tenant_id = #{tenantId}  /* 테넌트 ID */   
+                         AND  lc.mbr_no = #{mbrNo}        /* 회원 번호 */
                          <if test="prodType != 'shopping'">
                          <if test="prodIds != null">
                          AND  lc.prod_id IN
@@ -793,12 +795,12 @@
     <!-- 판매자 댓글 -->
     <update id="updateSellerResp" parameterType="ProdNoti">
       UPDATE  /* FeedbackMapper.updateSellerResp, 판매자 댓글, 남궁석호/SK플래닛, 2014-02-10 */
-              tb_dp_prod_noti
-         SET  seller_resp_opin = #{sellerRespOpin}
-            , seller_resp_title = #{sellerRespTitle}
-            , seller_resp_reg_dt = SYSDATE
-       WHERE  tenant_id = #{tenantId}
-         AND  noti_seq = #{notiSeq}
+              tb_dp_prod_noti                         /* 상품 후기 */
+         SET  seller_resp_opin = #{sellerRespOpin}    /* 판매자 응답 의견 */
+            , seller_resp_title = #{sellerRespTitle}  /* 판매자 응답 제목 */
+            , seller_resp_reg_dt = SYSDATE            /* 판매자 응답 일시 */
+       WHERE  tenant_id = #{tenantId}                 /* 테넌트 ID */
+         AND  noti_seq = #{notiSeq}                   /* 후기 SEQ */
     </update>
 
     <!-- 탈퇴 회원 사용후기 판매자 댓글 -->
@@ -818,28 +820,28 @@
              (
               SELECT  RTRIM ( XMLAGG ( XMLELEMENT (A, CONCAT (avg_score_pct, ',')).EXTRACT ('//text()')), ',')
                 FROM ( 
-                      SELECT  avg_score
-                            , NVL (avg_count, 0) AS paticpers_cnt
-                            , NVL (ROUND ( (avg_count / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) * 100, 1), 0) AS avg_score_pct
+                      SELECT  avg_score  /* 평균 점수 */  
+                            , NVL (avg_count, 0) AS paticpers_cnt  /* 참여자 수 */
+                            , NVL (ROUND ( (avg_count / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) * 100, 1), 0) AS avg_score_pct  /* 평균 평점 퍼센트 */
                         FROM  (
-                               SELECT  ib.avg_score
-                                     , avg_count
+                               SELECT  ib.avg_score                                    /* 평균 점수 */
+                                     , avg_count                                       /* 평균 점수 갯수 */
                                      , (
-                                        SELECT  paticpers_cnt
-                                          FROM  tb_dp_tenant_prod_stats
-                                         WHERE  tenant_id = #{tenantId}
-                                           AND  prod_id = #{prodId}) AS paticpers_cnt
+                                        SELECT  paticpers_cnt                          /* 참여자 수 */
+                                          FROM  tb_dp_tenant_prod_stats                /* 테넌트 상품 통계 */
+                                         WHERE  tenant_id = #{tenantId}                /* 테넌트 ID */
+                                           AND  prod_id = #{prodId}) AS paticpers_cnt  /*  참여자 수 */
                                           FROM  (
-                                                 SELECT  avg_score
-                                                       , COUNT (avg_score) AS avg_count
-                                                   FROM  tb_dp_mbr_avg
-                                                  WHERE  tenant_id = #{tenantId}
-                                                    AND  prod_id = #{prodId}
+                                                 SELECT  avg_score                       /* 평균 점수 */
+                                                       , COUNT (avg_score) AS avg_count  /* 평균 점수 갯수 */
+                                                   FROM  tb_dp_mbr_avg                   /* 상품 평점 */
+                                                  WHERE  tenant_id = #{tenantId}         /* 테넌트 ID */
+                                                    AND  prod_id = #{prodId}             /* 상품 ID */
                                                   GROUP
                                                      BY  avg_score
                                                 ) ia
                                               , (
-                                                SELECT  avg_score
+                                                SELECT  avg_score /* 평균 점수 Dummy(조인조건) */
                                                   FROM (
                                                         SELECT  '1' AS avg_score FROM DUAL
                                                          UNION  ALL
@@ -857,46 +859,46 @@
                                        ORDER
                                           BY avg_score DESC
                                )
-             ) AS avg_evlu_score_pcts
-            , NVL (tot_evlu_score, 0) AS tot_evlu_score
-            , NVL (prchs_cnt, 0) AS dwld_cnt
+             ) AS avg_evlu_score_pcts                    /* 평균 평점 페센트 배열 (사용후기 조회시 사용됨) */
+            , NVL (tot_evlu_score, 0) AS tot_evlu_score  /* 총 평가 점수 */ 
+            , NVL (prchs_cnt, 0) AS dwld_cnt             /* 다운로드 수 */
             , NVL ((CASE WHEN (avg_evlu_score <![CDATA[>]]> 0 AND avg_evlu_score <![CDATA[<]]> 1) THEN 1
                          WHEN avg_evlu_score <![CDATA[>]]> 5                                      THEN 5
                          ELSE ROUND (avg_evlu_score, 1)
-              END), 0) AS avg_evlu_score
-            , NVL (paticpers_cnt, 0) AS paticpers_cnt
-            , TRIM ( NVL ( TO_CHAR ( (tot_evlu_score / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) / 5.0 * 100, '99900.00'), '0')) AS avg_evlu_score_pct
-        FROM  tb_dp_tenant_prod_stats
-       WHERE  tenant_id = #{tenantId}
-         AND  prod_id = #{prodId}            
+              END), 0) AS avg_evlu_score                 /* 평균 평점 */
+            , NVL (paticpers_cnt, 0) AS paticpers_cnt    /* 참여자 수 */
+            , TRIM ( NVL ( TO_CHAR ( (tot_evlu_score / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) / 5.0 * 100, '99900.00'), '0')) AS avg_evlu_score_pct  /* 평균 평점 페센트 */
+        FROM  tb_dp_tenant_prod_stats  /* 테넌트 상품 통계 */
+       WHERE  tenant_id = #{tenantId}  /* 테넌트 ID */
+         AND  prod_id = #{prodId}      /* 상품 ID */      
     </select>
     
     <!-- 참여수 조회 -->
     <select id="getScoreList" parameterType="MbrAvgScore" resultType="MbrAvgScore">
       SELECT  /* FeedbackMapper.getScoreList, 참여수 조회, 남궁석호/SK플래닛, 2014-02-13 */
-              avg_score
-            , NVL (avg_count, 0) AS paticpers_cnt
-            , NVL (ROUND ( (avg_count / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) * 100, 1), 0) AS avg_score_pct
+              avg_score  /* 평균 평점 */
+            , NVL (avg_count, 0) AS paticpers_cnt  /* 참여자 수 */
+            , NVL (ROUND ( (avg_count / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) * 100, 1), 0) AS avg_score_pct  /* 평균 평점 퍼센트 */
         FROM (
-              SELECT  ib.avg_score
-                    , avg_count
+              SELECT  ib.avg_score  /* 평균 평점 */
+                    , avg_count     /* 평균 평점 갯수 */
                     , (
-                       SELECT  paticpers_cnt
-                         FROM  tb_dp_tenant_prod_stats
-                        WHERE  tenant_id = #{tenantId}
-                          AND  prod_id = #{prodId}
-                      ) AS paticpers_cnt
+                       SELECT  paticpers_cnt            /* 참여자 수*/
+                         FROM  tb_dp_tenant_prod_stats  /* 테넌트 상품 통계 */
+                        WHERE  tenant_id = #{tenantId}  /* 테넌트 ID */
+                          AND  prod_id = #{prodId}      /* 상품 ID */
+                      ) AS paticpers_cnt                /* 참여자 수 */
                 FROM  (
-                       SELECT  avg_score
-                             , COUNT (avg_score) AS avg_count
-                         FROM  tb_dp_mbr_avg
-                        WHERE  tenant_id = #{tenantId}
-                          AND  prod_id = #{prodId}
+                       SELECT  avg_score                       /* 평균 평점 */
+                             , COUNT (avg_score) AS avg_count  /* 평균 평점 갯수 */
+                         FROM  tb_dp_mbr_avg                   /* 상품 평점 */
+                        WHERE  tenant_id = #{tenantId}         /* 태넌트 ID */
+                          AND  prod_id = #{prodId}             /* 상품 ID */
                         GROUP 
                            BY  avg_score
                       ) ia
                     , (
-                       SELECT  avg_score
+                       SELECT  avg_score  /* 평균 점수 Dummy(조인조건) */
                          FROM  (
                                 SELECT  '1' AS avg_score FROM DUAL
                                  UNION  ALL
