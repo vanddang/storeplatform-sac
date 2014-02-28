@@ -4,6 +4,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -34,4 +36,16 @@ public interface LoginService {
 	 * @return AuthorizeByIdRes
 	 */
 	public AuthorizeByIdRes executeAuthorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req);
+
+	/**
+	 * 자동업데이트 로그인.
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForAutoUpdateReq
+	 * @return AuthorizeByIdRes
+	 */
+	public AuthorizeForAutoUpdateRes executeAuthorizeForAutoUpdate(SacRequestHeader requestHeader, AuthorizeForAutoUpdateReq req);
+
 }

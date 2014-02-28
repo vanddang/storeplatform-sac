@@ -47,6 +47,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -709,8 +711,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 		loginReq.setIpAddress(ipAddress);
 
-		LoginUserResponse loginRes = this.userSCI.updateLoginUser(loginReq);
-		return loginRes;
+		return this.userSCI.updateLoginUser(loginReq);
 	}
 
 	/**
@@ -797,6 +798,39 @@ public class LoginServiceImpl implements LoginService {
 		this.deviceService.updateLoginDeviceInfo(requestHeader, deviceInfo);
 
 		LOGGER.info("########## volatileMember process end #########");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
+	 * executeAuthorizeForAutoUpdate
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet
+	 * .storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq)
+	 */
+	@Override
+	public AuthorizeForAutoUpdateRes executeAuthorizeForAutoUpdate(SacRequestHeader requestHeader, AuthorizeForAutoUpdateReq req) {
+
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setDeviceId(req.getDeviceId());
+
+		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+
+		AuthorizeForAutoUpdateRes res = new AuthorizeForAutoUpdateRes();
+
+		if (deviceInfo != null) {
+
+			res.setUserKey(deviceInfo.getUserKey());
+			res.setDeviceKey(deviceInfo.getDeviceKey());
+			res.setIsLoginSuccess("Y");
+
+		} else {
+			res.setIsLoginSuccess("N");
+		}
+
+		return res;
+
 	}
 
 }

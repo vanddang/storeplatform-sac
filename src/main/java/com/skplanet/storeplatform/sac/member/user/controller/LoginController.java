@@ -22,6 +22,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
@@ -49,9 +51,8 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
-		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdn(requestHeader, req);
+		return this.loginService.executeAuthorizeByMdn(requestHeader, req);
 
-		return res;
 	}
 
 	/**
@@ -67,9 +68,24 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) {
 
-		AuthorizeByIdRes res = this.loginService.executeAuthorizeById(requestHeader, req);
+		return this.loginService.executeAuthorizeById(requestHeader, req);
 
-		return res;
 	}
 
+	/**
+	 * 자동업데이트 인증.
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeByIdReq
+	 * @return AuthorizeByIdRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeForAutoUpdate/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeForAutoUpdateRes authorizeForAutoUpdate(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeForAutoUpdateReq req) {
+
+		return this.loginService.executeAuthorizeForAutoUpdate(requestHeader, req);
+
+	}
 }
