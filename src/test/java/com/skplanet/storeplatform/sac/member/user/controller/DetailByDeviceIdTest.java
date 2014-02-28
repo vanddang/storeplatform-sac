@@ -79,6 +79,7 @@ public class DetailByDeviceIdTest {
 		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/detailByDeviceId/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
+				.addHeaders("x-sac-device-info", "model=\"SHW-M110S\",dpi=\"320\",resolution=\"480*720\",os=\"Android/4.0.4\",pkg=\"com.skt.skaf.A000Z00040/37\",svc=\"SHOPCLIENT/4.3\"")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
