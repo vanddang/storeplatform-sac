@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="RecommandNewMemberProduct">
+<mapper namespace="RecommendNewMemberProduct">
     <!--쿠폰ID,아이템ID 생성 조회-->
-    <select id="searchRecommandNewMemberProductList" parameterType="RecommandNewMemberProductReq" resultType="MetaInfo">
+    <select id="searchRecommendNewMemberProductList" parameterType="RecommendNewMemberProductReq" resultType="MetaInfo">
 		SELECT KA.*
 		  FROM
 		       (

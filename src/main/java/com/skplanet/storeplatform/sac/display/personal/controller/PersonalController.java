@@ -23,13 +23,13 @@ import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpd
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductRes;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommandNewMemberProductReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommandNewMemberProductRes;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductReq;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpdateService;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateAlarmService;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService;
-import com.skplanet.storeplatform.sac.display.personal.service.RecommandNewMemberProductService;
+import com.skplanet.storeplatform.sac.display.personal.service.RecommendNewMemberProductService;
 
 /**
  * 개인화 관련 Controller
@@ -51,7 +51,7 @@ public class PersonalController {
 	private PersonalUpdateAlarmService personalUpdateAlarmService;
 
 	@Autowired
-	private RecommandNewMemberProductService recommandNewMemberProductService;
+	private RecommendNewMemberProductService recommendNewMemberProductService;
 
 	/**
 	 * <pre>
@@ -100,11 +100,11 @@ public class PersonalController {
 	 *            header
 	 * @return DeviceProductProvisioningRes
 	 */
-	@RequestMapping(value = "/recommandNewMember/product/List/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/recommendNewMember/product/List/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public RecommandNewMemberProductRes recommandNewMemberProductList(SacRequestHeader header,
-			RecommandNewMemberProductReq req) {
-		return this.recommandNewMemberProductService.recommandNewMemberProductList(header, req);
+	public RecommendNewMemberProductRes recommendNewMemberProductList(SacRequestHeader header,
+			RecommendNewMemberProductReq req) {
+		return this.recommendNewMemberProductService.recommendNewMemberProductList(header, req);
 	}
 
 }

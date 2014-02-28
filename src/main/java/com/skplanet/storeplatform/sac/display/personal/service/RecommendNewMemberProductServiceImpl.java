@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommandNewMemberProductReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommandNewMemberProductRes;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductReq;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -37,7 +37,7 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  * Updated on : 2014. 2. 24. Updated by : 이석희, 아이에스 플러스.
  */
 @Service
-public class RecommandNewMemberProductServiceImpl implements RecommandNewMemberProductService {
+public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberProductService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -61,11 +61,11 @@ public class RecommandNewMemberProductServiceImpl implements RecommandNewMemberP
 	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
 	 */
 	@Override
-	public RecommandNewMemberProductRes recommandNewMemberProductList(SacRequestHeader header,
-			RecommandNewMemberProductReq req) {
+	public RecommendNewMemberProductRes recommendNewMemberProductList(SacRequestHeader header,
+			RecommendNewMemberProductReq req) {
 
 		CommonResponse commonResponse = new CommonResponse();
-		RecommandNewMemberProductRes res = new RecommandNewMemberProductRes();
+		RecommendNewMemberProductRes res = new RecommendNewMemberProductRes();
 		List<Product> productList = new ArrayList<Product>();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
@@ -93,7 +93,7 @@ public class RecommandNewMemberProductServiceImpl implements RecommandNewMemberP
 		req.setStdDt(stdDt);
 
 		List<MetaInfo> productIdList = new ArrayList<MetaInfo>();
-		productIdList = this.commonDAO.queryForList("RecommandNewMemberProduct.searchRecommandNewMemberProductList",
+		productIdList = this.commonDAO.queryForList("RecommendNewMemberProduct.searchRecommendNewMemberProductList",
 				req, MetaInfo.class);
 
 		if (productIdList != null) {

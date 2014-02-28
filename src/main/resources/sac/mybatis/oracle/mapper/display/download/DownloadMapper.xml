@@ -61,7 +61,7 @@
 	                  , NVL(KA.GAME_CENTR_ID, ' ') AS GAME_CENTR_ID                                                                                                
 	                  , NVL2( KB.FILE_SIZE, KB.FILE_SIZE, ( SELECT MAX(FILE_SIZE) FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = KA.PROD_ID ) ) AS APK_FILE_SIZE
 	                  , KB.SUB_CONTENTS_ID
-	                  , (PLAT_CLSF_CD_NM || KB.VM_VER) AS SUPPORTED_OS
+	                  , (PLAT_CLSF_CD_NM ||' '|| KB.VM_VER) AS SUPPORTED_OS
 	                  , KB.FILE_PATH AS FILE_PATH
 	                  , KC.FILE_PATH AS IMAGE_PATH
 	                  , KC.FILE_SIZE AS IMAGE_SIZE

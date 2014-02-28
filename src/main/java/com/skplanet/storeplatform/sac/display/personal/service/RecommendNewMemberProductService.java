@@ -3,8 +3,8 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommandNewMemberProductReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommandNewMemberProductRes;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductReq;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -12,7 +12,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  * 
  * Updated on : 2014. 2. 24. Updated by : 이석희, 아이에스 플러스.
  */
-public interface RecommandNewMemberProductService {
+public interface RecommendNewMemberProductService {
 	/**
 	 * <pre>
 	 * 자동 Update 목록 조회.
@@ -24,7 +24,7 @@ public interface RecommandNewMemberProductService {
 	 *            header
 	 * @return PersonalAutoUpgradeRes
 	 */
-	public RecommandNewMemberProductRes recommandNewMemberProductList(SacRequestHeader header,
-			RecommandNewMemberProductReq req);
+	public RecommendNewMemberProductRes recommendNewMemberProductList(SacRequestHeader header,
+			RecommendNewMemberProductReq req);
 
 }
