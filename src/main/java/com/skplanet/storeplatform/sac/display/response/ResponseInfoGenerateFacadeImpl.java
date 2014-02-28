@@ -150,6 +150,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setMusic(music);
 		// Music 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -191,6 +193,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
 		// Movie 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -234,6 +238,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
 		// Broadcast 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -277,6 +283,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
 		// Ebook 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -320,6 +328,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
 		// Comic 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -448,6 +458,10 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(rights);
 		product.setMenuList(menuList);
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
+
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
+
 		return product;
 	}
 
@@ -472,6 +486,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setMusic(this.musicGenerator.generateMusic(metaInfo));
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -660,7 +676,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Date date = this.freepassGenerator.generateDate(metaInfo);
 		// Menu 생성
 		coupon.setMenuList(this.freepassGenerator.generateMenuList(metaInfo));
-
 
 		coupon.setKind(metaInfo.getCmpxProdClsfCd());
 		coupon.setCouponExplain(metaInfo.getProdIntrDscr());
