@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -79,6 +80,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 	private DownloadAES128Helper downloadAES128Helper;
 	@Autowired
 	private DeviceSCI deviceSCI;
+	@Autowired
+	private UapsSCI uapsSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -265,9 +268,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
 						metaInfo.setDrmYn(drmYn);
 
-						// 구매 정보
-						purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
-
 						/************************************************************************************************
 						 * 구매 정보에 따른 암호화 시작
 						 ************************************************************************************************/
@@ -300,6 +300,26 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								metaInfo.setDeviceType(deviceIdType);
 								metaInfo.setDeviceSubKey(deviceId);
 
+								// if (deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
+								// UapsEcReq uapsEcReq = new UapsEcReq();
+								// UserEcRes uapsEcRes = new UserEcRes();
+								// uapsEcReq.setDeviceId(deviceId);
+								// uapsEcReq.setType("mdn");
+								//
+								// uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
+								//
+								// this.log.debug("########################################################");
+								// this.log.debug("serviceCd length	:	" + uapsEcRes.getServiceCD().length);
+								// for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
+								// this.log.debug("Service Cd value :  " + uapsEcRes.getServiceCD()[i]);
+								// if ("NA00002125".equals(uapsEcRes.getServiceCD()[i])) {
+								// this.log.debug("Ting 요금제 가입한 휴대폰 입니다");
+								// }
+								// }
+								// this.log.debug("########################################################");
+								//
+								// }
+
 								// 암호화 정보 (JSON)
 								EncryptionContents contents = this.encryptionGenerator
 										.generateEncryptionContents(metaInfo);
@@ -315,7 +335,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								// 암호화 정보 (AES-128)
 								Encryption encryption = new Encryption();
 								encryption.setProductId(prchsProdId);
-								encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+								byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
+								encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
 								encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
 								encryption.setToken(encryptString);
 								encryptionList.add(encryption);
@@ -335,7 +356,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							}
 						}
 					}
+
 					// 구매 정보
+					purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
 					product.setPurchaseList(purchaseList);
 
 					// 암호화 정보

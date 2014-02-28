@@ -79,6 +79,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	@Autowired
 	private DeviceSCI deviceSCI;
 
+	// @Autowired
+	// private SearchDcdSupportProductSCI searchDcdSupportProductSCI;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -89,6 +92,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	public DownloadVodSacRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodSacReq downloadVodSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+
+		// DcdSupportProductRes dcdRes = this.searchDcdSupportProductSCI.searchDcdSupportProduct();
+		// this.log.debug("#####################################################################################");
+		// this.log.debug("DcdSprtCd	:	" + dcdRes.getDcdSprtCd());
+		// this.log.debug("ProductId	:	" + dcdRes.getProductId());
+		// this.log.debug("#####################################################################################");
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
@@ -301,7 +310,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								// 암호화 정보 (AES-128)
 								Encryption encryption = new Encryption();
 								encryption.setProductId(prchsProdId);
-								encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+								byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
+								encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
 								encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
 								encryption.setToken(encryptString);
 								encryptionList.add(encryption);
