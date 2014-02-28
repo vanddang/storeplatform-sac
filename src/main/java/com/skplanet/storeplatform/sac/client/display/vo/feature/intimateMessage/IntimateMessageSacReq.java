@@ -22,8 +22,10 @@ public class IntimateMessageSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	@NotBlank
+	private String msgType; // 메세지 타입
+
 	private String userKey; // 사용자고유키
-	@NotBlank
+
 	private String deviceKey; // 디바이스키
 
 	private Integer offset; // 시작점 ROW
@@ -33,6 +35,21 @@ public class IntimateMessageSacReq extends CommonInfo {
 	private String tenantId; // 테넌트ID
 
 	private String deviceChangeFlag; // 기기변경 구분
+
+	/**
+	 * @return the msgType
+	 */
+	public String getMsgType() {
+		return this.msgType;
+	}
+
+	/**
+	 * @param msgType
+	 *            the msgType to set
+	 */
+	public void setMsgType(String msgType) {
+		this.msgType = msgType;
+	}
 
 	/**
 	 * @return the userKey
