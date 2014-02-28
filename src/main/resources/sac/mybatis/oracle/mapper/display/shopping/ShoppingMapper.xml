@@ -1695,7 +1695,7 @@
     </select>
     
    <!-- 구매내역에서 필요한 값 조회-->
-    <select id="getShoppingPurchase" parameterType="Map" resultType="MetaInfo">
+    <select id="getShoppingPurchase" parameterType="Map" resultType="ProductInfo">
      /* ShoppingMapper.xml.getShoppingPurchase,구매내역에서 필요한 값 조회, 김형식/SK플래닛 , 2014-02-04 */
           SELECT  
                 KK.*

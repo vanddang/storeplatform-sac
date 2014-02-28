@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRe
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.sci.ShoppingInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInRes;
@@ -1938,7 +1939,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * storeplatform.sac.client.display.vo.shopping.ShoppingReq)
 	 */
 	@Override
-	public MetaInfo getShoppingforPurchase(ShoppingReq req) {
+	public ProductInfo getShoppingforPurchase(ShoppingReq req) {
 		req.setLangCd("ko");
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(req.getTenantId())) {
@@ -1952,8 +1953,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		MetaInfo shoppingforPurchase = this.commonDAO.queryForObject("Shopping.getShoppingPurchase", reqMap,
-				MetaInfo.class);
+		ProductInfo shoppingforPurchase = this.commonDAO.queryForObject("Shopping.getShoppingPurchase", reqMap,
+				ProductInfo.class);
 
 		return shoppingforPurchase;
 	}
