@@ -113,7 +113,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryAppSacRes searchAppList(CategoryAppSacReq req, SacRequestHeader header) {
+	public CategoryAppSacRes searchAppList(@Validated CategoryAppSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAppList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
@@ -136,7 +136,8 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryEbookComicSacRes searchEbookComicList(CategoryEbookComicSacReq req, SacRequestHeader header) {
+	public CategoryEbookComicSacRes searchEbookComicList(@Validated CategoryEbookComicSacReq req,
+			SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchEbookComicList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
@@ -159,7 +160,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryWebtoonSacRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonSacReq req) {
+	public CategoryWebtoonSacRes searchWebtoonList(SacRequestHeader header, @Validated CategoryWebtoonSacReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchWebtoonList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");

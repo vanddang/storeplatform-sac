@@ -97,17 +97,6 @@ public class BestContentsServiceImpl implements BestContentsService {
 		List<Source> sourceList = null;
 		List<Support> supportList = null;
 
-		String listId = bestContentsReq.getListId();
-		String filteredBy = bestContentsReq.getFilteredBy();
-
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(listId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
-		}
-		if (StringUtils.isEmpty(filteredBy)) {
-			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
-		}
-
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(bestContentsReq.getProdGradeCd())) {
 			String[] arrayProdGradeCd = bestContentsReq.getProdGradeCd().split("\\+");
@@ -124,10 +113,6 @@ public class BestContentsServiceImpl implements BestContentsService {
 					}
 				}
 			}
-		}
-		if (!"movie+broadcast".equals(filteredBy) && !"movie".equals(filteredBy) && !"broadcast".equals(filteredBy)
-				&& !"ebook+comic".equals(filteredBy) && !"ebook".equals(filteredBy) && !"comic".equals(filteredBy)) {
-			throw new StorePlatformException("SAC_DSP_0003", "filteredBy", filteredBy);
 		}
 
 		int offset = 1; // default

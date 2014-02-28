@@ -106,17 +106,6 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 		String menuId = req.getMenuId();
 		String filteredBy = req.getFilteredBy();
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(topMenuId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", topMenuId);
-		}
-		if (StringUtils.isEmpty(menuId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "menuId", menuId);
-		}
-		if (StringUtils.isEmpty(filteredBy)) {
-			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
-		}
-
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
@@ -133,12 +122,6 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 					}
 				}
 			}
-		}
-		if (!"DP13".equals(topMenuId) && (!"DP14".equals(topMenuId))) {
-			throw new StorePlatformException("SAC_DSP_0003", "topMenuId", topMenuId);
-		}
-		if (!"recent".equals(filteredBy) && (!"recent+complete".equals(filteredBy))) {
-			throw new StorePlatformException("SAC_DSP_0003", "filteredBy", filteredBy);
 		}
 
 		int offset = 1; // default

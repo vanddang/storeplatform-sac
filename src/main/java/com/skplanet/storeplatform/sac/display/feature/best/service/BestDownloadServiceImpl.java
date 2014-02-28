@@ -105,11 +105,6 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 		String listId = bestDownloadReq.getListId();
 		String filteredBy = bestDownloadReq.getFilteredBy();
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(listId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
-		}
-
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(bestDownloadReq.getProdGradeCd())) {
 			String[] arrayProdGradeCd = bestDownloadReq.getProdGradeCd().split("\\+");
@@ -125,11 +120,6 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 								arrayProdGradeCd[i]);
 					}
 				}
-			}
-		}
-		if (StringUtils.isNotEmpty(filteredBy)) {
-			if (!"ebook+normal".equals(filteredBy) && !"ebook+genre".equals(filteredBy)) {
-				throw new StorePlatformException("SAC_DSP_0003", "filteredBy", filteredBy);
 			}
 		}
 

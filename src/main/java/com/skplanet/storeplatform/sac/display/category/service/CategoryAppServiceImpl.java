@@ -89,25 +89,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
 
-		String prodCharge = req.getProdCharge();
-		String menuId = req.getMenuId();
-		String orderedBy = req.getOrderedBy();
-
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(prodCharge)) {
-			throw new StorePlatformException("SAC_DSP_0002", "prodCharge", prodCharge);
-		}
-		if (StringUtils.isEmpty(menuId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "menuId", menuId);
-		}
-		if (StringUtils.isEmpty(orderedBy)) {
-			throw new StorePlatformException("SAC_DSP_0002", "orderedBy", orderedBy);
-		}
-
 		// 파라미터 유효값 체크
-		if (!"A".equals(prodCharge) && (!"Y".equals(prodCharge) && !"N".equals(prodCharge))) {
-			throw new StorePlatformException("SAC_DSP_0003", "prodCharge", prodCharge);
-		}
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
 			for (int i = 0; i < arrayProdGradeCd.length; i++) {
@@ -123,9 +105,6 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 					}
 				}
 			}
-		}
-		if (!"download".equals(orderedBy)) {
-			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", orderedBy);
 		}
 
 		int offset = 1; // default

@@ -96,15 +96,6 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 			throw new StorePlatformException("SAC_DSP_0002", "weekDayCd, menuId", "");
 		}
 
-		// 파라미터 유효값 체크
-		if (StringUtils.isNotEmpty(weekDayCd)) {
-			if (!"DP010101".equals(weekDayCd) && (!"DP010102".equals(weekDayCd)) && (!"DP010103".equals(weekDayCd))
-					&& (!"DP010104".equals(weekDayCd)) && (!"DP010105".equals(weekDayCd))
-					&& (!"DP010106".equals(weekDayCd)) && (!"DP010107".equals(weekDayCd))) {
-				throw new StorePlatformException("SAC_DSP_0003", "weekDayCd", weekDayCd);
-			}
-		}
-
 		int offset = 1; // default
 		int count = 20; // default
 

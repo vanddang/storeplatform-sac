@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,7 +54,7 @@ public class BestController {
 	 */
 	@RequestMapping(value = "/display/feature/best/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BestAppSacRes bestAppList(SacRequestHeader requestheader, BestAppSacReq bestAppReq) {
+	public BestAppSacRes bestAppList(SacRequestHeader requestheader, @Validated BestAppSacReq bestAppReq) {
 		return this.bestAppService.searchBestAppList(requestheader, bestAppReq);
 	}
 
@@ -71,7 +72,8 @@ public class BestController {
 	 */
 	@RequestMapping(value = "/display/feature/best/content/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BestContentsSacRes bestContentsList(SacRequestHeader requestheader, BestContentsSacReq bestContentsReq) {
+	public BestContentsSacRes bestContentsList(SacRequestHeader requestheader,
+			@Validated BestContentsSacReq bestContentsReq) {
 		return this.bestContentsService.searchBestContentsList(requestheader, bestContentsReq);
 	}
 
@@ -89,7 +91,8 @@ public class BestController {
 	 */
 	@RequestMapping(value = "/display/feature/best/download/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BestDownloadSacRes bestDownloadList(SacRequestHeader requestheader, BestDownloadSacReq bestDownloadReq) {
+	public BestDownloadSacRes bestDownloadList(SacRequestHeader requestheader,
+			@Validated BestDownloadSacReq bestDownloadReq) {
 		return this.bestDownloadService.searchBestDownloadList(requestheader, bestDownloadReq);
 	}
 

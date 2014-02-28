@@ -105,13 +105,6 @@ public class BestAppServiceImpl implements BestAppService {
 		List<Source> sourceList = null;
 		List<Identifier> identifierList = null;
 
-		String listId = bestAppReq.getListId();
-
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(listId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
-		}
-
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(bestAppReq.getProdGradeCd())) {
 			String[] arrayProdGradeCd = bestAppReq.getProdGradeCd().split("\\+");
