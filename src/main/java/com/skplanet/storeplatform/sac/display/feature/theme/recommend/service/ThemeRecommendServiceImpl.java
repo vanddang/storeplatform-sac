@@ -200,8 +200,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 		for (ThemeRecommend mapper : resultList) {
 
-			if (this.totalCount == 0)
-				this.totalCount = mapper.getTotalCount();
+			this.totalCount = mapper.getTotalCount();
 
 			Product packageProduct;
 			Product subProduct;
