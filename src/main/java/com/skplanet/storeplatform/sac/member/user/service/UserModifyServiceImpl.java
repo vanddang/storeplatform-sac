@@ -730,7 +730,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 *            공통 헤더
 	 * @param req
 	 *            Request Value Object
-	 * @param profileInfo
+	 * @param idpResult
 	 *            (통합IDP 회원 정보 조회 응답 결과)
 	 * @return String 결과 타입
 	 */

@@ -165,6 +165,17 @@ public class UserOcbServiceImpl implements UserOcbService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * OCB 정보 조회.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param userKey
+	 *            사용자 Key
+	 * @return OCB 정보
+	 */
 	private SearchMemberPointResponse searchMemberPointList(SacRequestHeader sacHeader, String userKey) {
 
 		SearchMemberPointRequest searchMemberPointRequest = new SearchMemberPointRequest();

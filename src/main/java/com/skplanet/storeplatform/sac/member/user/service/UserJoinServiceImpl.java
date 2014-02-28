@@ -126,8 +126,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 				/**
-				 * IDP에 이미 가입되어 있는 회원일 경우 SC 회원 DB 조회해서 정보 존재 하면 Error를 반환 (데이터는
-				 * 삭제 하지 않음 - 이유 : IDP 및 회원 DB에도 정상 임) - 에러 : IDP 가가입 에러
+				 * IDP에 이미 가입되어 있는 회원일 경우 SC 회원 DB 조회해서 정보 존재 하면 Error를 반환 (데이터는 삭제 하지 않음 - 이유 : IDP 및 회원 DB에도 정상 임) -
+				 * 에러 : IDP 가가입 에러
 				 */
 				try {
 
@@ -250,8 +250,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
-		 * findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
 		 */
 		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
@@ -357,8 +356,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
-		 * findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
 		 */
 		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
@@ -719,6 +717,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            사용자 등록키
 	 * @param majorDeviceInfo
 	 *            단말 주요 정보
+	 * @return Device Key
 	 */
 	private String createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey, MajorDeviceInfo majorDeviceInfo) {
 
