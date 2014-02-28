@@ -89,11 +89,9 @@ public interface CommonMetaInfoGenerator {
 	 *            type
 	 * @param url
 	 *            url
-	 * @param size
-	 *            size
 	 * @return Source
 	 */
-	public Source generateSource(String type, String url, Integer size);
+	public Source generateSource(String type, String url);
 
 	/**
 	 * <pre>
@@ -102,11 +100,9 @@ public interface CommonMetaInfoGenerator {
 	 * 
 	 * @param path
 	 *            path
-	 * @param size
-	 *            size
 	 * @return Source
 	 */
-	public Source generateSource(String path, Integer size);
+	public Source generateSource(String path);
 
 	/**
 	 * <pre>
@@ -154,11 +150,9 @@ public interface CommonMetaInfoGenerator {
 	 *            type
 	 * @param url
 	 *            url
-	 * @param size
-	 *            size
 	 * @return List<Source>
 	 */
-	public List<Source> generateSourceList(String mediaType, String type, String url, Integer size);
+	public List<Source> generateSourceList(String mediaType, String type, String url);
 
 	/**
 	 * <pre>

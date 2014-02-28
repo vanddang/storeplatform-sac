@@ -146,15 +146,21 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 		if (StringUtils.isNotEmpty(metaInfo.getImagePath())) {
-			source = this.generateSource(metaInfo.getImagePath(), metaInfo.getImageSize());
+			source = this.generateSource(metaInfo.getImagePath());
 		} else {
-			source = this.generateSource(metaInfo.getFilePath(), metaInfo.getFileSize());
+			source = this.generateSource(metaInfo.getFilePath());
 		}
 		return source;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSource(java.lang.String,
+	 * java.lang.String)
+	 */
 	@Override
-	public Source generateSource(String type, String url, Integer size) {
+	public Source generateSource(String type, String url) {
 		Source source = new Source();
 
 		if (StringUtils.isNotEmpty(url)) {
@@ -164,10 +170,6 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		if (StringUtils.isNotEmpty(type)) {
 			source.setType(type);
-		}
-
-		if (StringUtils.isNotEmpty(size.toString())) {
-			source.setSize(size);
 		}
 
 		return source;
@@ -180,7 +182,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 * java.lang.Integer)
 	 */
 	@Override
-	public Source generateSource(String path, Integer size) {
+	public Source generateSource(String path) {
 		Source source = null;
 
 		if (StringUtils.isNotEmpty(path)) {
@@ -188,7 +190,6 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 			source.setMediaType(DisplayCommonUtil.getMimeType(path));
 			source.setUrl(path);
-			// source.setSize(size);
 		}
 		return source;
 	}
@@ -257,7 +258,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		Source source = new Source();
 		List<Source> sourceList = new ArrayList<Source>();
 
-		source = this.generateSource(metaInfo.getImagePath(), metaInfo.getImageSize());
+		source = this.generateSource(metaInfo.getImagePath());
 		sourceList.add(source);
 
 		// DLM 이미지
@@ -280,13 +281,12 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 * .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
-	public List<Source> generateSourceList(String mediaType, String type, String url, Integer size) {
+	public List<Source> generateSourceList(String mediaType, String type, String url) {
 		List<Source> sourceList = new ArrayList<Source>();
 		Source source = new Source();
 		source.setMediaType(mediaType);
 		source.setType(type);
 		source.setUrl(url);
-		source.setSize(size);
 		sourceList.add(source);
 		return sourceList;
 	}
@@ -551,9 +551,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 */
 	@Override
 	public Source generatePreviewSourceList(MetaInfo metaInfo) {
-		Source source = this.generateSource(DisplayConstants.DP_SOURCE_TYPE_PREVIEW, metaInfo.getPreviewImagePath(),
-				metaInfo.getPreviewImageSize());
+		Source source = this.generateSource(DisplayConstants.DP_SOURCE_TYPE_PREVIEW, metaInfo.getPreviewImagePath());
 		return source;
 	}
-
 }
