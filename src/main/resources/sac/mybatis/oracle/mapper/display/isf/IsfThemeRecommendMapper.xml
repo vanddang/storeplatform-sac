@@ -465,12 +465,12 @@
     <!-- 테마추천 상품 리스트 -->
     <select id="getBasicRecommendPkgProdList" parameterType="Map" resultType="ProductBasicInfo">
     SELECT /* IsfThemeRecommendMapper.xml, getBasicRecommendPkgProdList, Yun JuYoung, 2014-02-25 */
-           S.*
+                 COUNT(S.PROD_ID) OVER() AS TOTAL_COUNT
+               , S.*
       FROM
           (
           SELECT 
-                 COUNT(P.PROD_ID) OVER() AS TOTAL_COUNT
-               , P.PROD_ID
+                 P.PROD_ID
                , P.SVC_GRP_CD
                , P.SVC_TYPE_CD
                , P.CONTENTS_TYPE_CD
