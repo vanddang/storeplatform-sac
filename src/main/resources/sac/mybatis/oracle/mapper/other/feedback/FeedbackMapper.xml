@@ -3,6 +3,8 @@
 <mapper namespace="Feedback">
 
 	<!-- 사용후기 기등록 여부 조회  -->
+	<!-- 힌트 없이도 IDX_DP_PROD_NOTI_04 DESCENDING 으로 수행됨. PROD_ID, CATALOG_ID -->
+	<!-- 힌트 없이도 IDX_DP_PROD_NOTI_03 DESCENDING 으로 수행됨. PROD_ID -->
 	<select id="getRegProdNoti" parameterType="ProdNoti" resultType="ProdNoti">
       SELECT  /* FeedbackMapper.getRegProdNoti, 사용후기 기등록 여부 조회, 김현일/SK플래닛, 2014-02-04 */ 
               noti_seq
@@ -400,6 +402,10 @@
     </update>
     
     <!-- 사용후기 전체 갯수 조회 -->
+    <!-- 조건이 PK 이므로 튜닝할 필요 없음. NOTI_SEQ -->
+    <!-- 해당 쿼리의 Convered Index 인 IDX_DP_PROD_NOTI_02 만 으로 수행됨. CATALOG_ID -->
+    <!-- CATALOG_ID, PROD_ID 를 모두 포함하는 카운트용 테이블 없음. 필요시 인덱스 수정 필요. CATALOG_ID, PROD_ID -->
+    <!-- 해당 쿼리의 Convered Index 인 IDX_DP_PROD_NOTI_01 만 으로 수행됨. PROD_ID -->
     <select id="getProdNotiCount" parameterType="ProdNoti" resultType="int">
       SELECT  /* FeedbackMapper.getProdNotiCount, 사용후기 전체 갯수 조회, 김현일/SK플래닛, 2014-02-04 */
               COUNT(*) AS total_count
@@ -426,6 +432,8 @@
     </select>
     
     <!-- 사용후기 전체 목록 조회 -->
+    <!-- 조건이 PK 이므로 튜닝할 필요 없음. 결과가 0건 아니면 1건인데 페이징처리를 하는 이유는? 적절한 케이스인지 확인 요망. NOTI_SEQ, NOTI_SCORE, REG_DT -->
+    <!-- 조건이 PK 이므로 튜닝할 필요 없음. 결과가 0건 아니면 1건인데 페이징처리를 하는 이유는? 적절한 케이스인지 확인 요망. NOTI_SEQ, REG_DT -->
     <select id="getProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
       SELECT  /* FeedbackMapper.getProdNotiList, 사용후기 전체 목록 조회, 김현일/SK플래닛, 2014-02-04 */
               a.noti_seq
@@ -470,7 +478,30 @@
                       SELECT  ia.*
                             , ROWNUM AS rnum
                         FROM (
-                              SELECT ia.tenant_id
+                              SELECT 
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(notiSeq)">
+                                        <if test="prodType == 'shopping'">
+                                            <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                                                <if test="orderedBy == 'recommend'">
+                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_05) */
+                                                </if>
+                                                <if test="orderedBy == 'recent'">
+                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_01) */
+                                                </if>
+                                            </if>
+                                            <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
+                                                <if test="orderedBy == 'recommend'">
+                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_06) */
+                                                </if>
+                                            </if>
+                                        </if>
+                                        <if test="prodType != 'shopping'">
+                                            <if test="orderedBy == 'recommend'">
+                                            /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_05) */
+                                            </if>
+                                        </if>
+                                     </if>
+                                     ia.tenant_id
                                    , ia.noti_seq
                                    , ia.title
                                    , ia.noti_dscr
@@ -559,8 +590,8 @@
             , a.prod_id
             , a.expo_seller_nm
             , a.svc_grp_cd
-       FROM
-            (
+       FROM  
+            (  
              SELECT  ia.*
                    , DECODE
                     ( ia.avg_score
@@ -598,55 +629,61 @@
                                    , MAX( expo_seller_nm ) AS expo_seller_nm
                               FROM
                                   (
-                                   SELECT  ia.tenant_id
-                                         , ia.noti_seq
-                                         , ia.title
-                                         , ia.noti_dscr
-                                         , ia.reg_dt
-                                         , ia.mbr_no
-                                         , ia.reg_id
-                                         , ia.mbr_telno
-                                         , ia.noti_score
-                                         , ia.seller_resp_title
-                                         , ia.seller_resp_opin
-                                         , ia.seller_resp_reg_dt
-                                         , ia.fb_post_yn
-                                         , ia.prod_id
-                                         , ib.seller_mbr_no as seller_mbr_no
-                                         , ib.cid
-                                         , ib.svc_grp_cd
-                                         , ib.expo_seller_nm
-                                         , NULL avg_score
-                                     FROM  tb_dp_prod_noti ia
-                                         , tb_dp_prod ib
-                                    WHERE  ia.tenant_id = #{tenantId}
-                                      AND  ib.prod_id = ia.prod_id
-                                      AND  ia.mbr_no = #{mbrNo}
-                                      <!-- Shopping -->
-                                      <if test="prodType == 'shopping'">
-                                      <if test="prodIds != null">
-                                      AND  ia.catalog_id IN
-                                      <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-                                      #{prodId}
-                                      </foreach>
-                                      </if>
-                                      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-                                      AND  ia.prod_id = #{chnlId}
-                                      </if>
-                                      </if>
-                                      <!-- Shopping 외 -->
-                                      <if test="prodType != 'shopping'">
-                                      <if test="prodIds != null">
-                                      AND  ia.prod_id IN
-                                      <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-                                      #{prodId}
-                                      </foreach>
-                                      </if>
-                                      </if>
-                                      AND  ia.noti_type_cd = 'DP000401'
-                                      AND  ia.del_yn = 'N'
-                                      AND  ia.bad_noti_yn IN ( 'N', 'R' )
-                                      AND  ia.spam_yn = 'N'
+                                   SELECT  *
+                                     FROM
+                                          (
+                                           SELECT  ia.tenant_id
+                                                 , ia.noti_seq
+                                                 , ia.title
+                                                 , ia.noti_dscr
+                                                 , ia.reg_dt
+                                                 , ia.mbr_no
+                                                 , ia.reg_id
+                                                 , ia.mbr_telno
+                                                 , ia.noti_score
+                                                 , ia.seller_resp_title
+                                                 , ia.seller_resp_opin
+                                                 , ia.seller_resp_reg_dt
+                                                 , ia.fb_post_yn
+                                                 , ia.prod_id
+                                                 , ib.seller_mbr_no as seller_mbr_no
+                                                 , ib.cid
+                                                 , ib.svc_grp_cd
+                                                 , ib.expo_seller_nm
+                                                 , NULL avg_score
+                                                 , ROW_NUMBER() OVER (PARTITION BY ia.prod_id ORDER BY ia.reg_dt DESC) AS ranking 
+                                             FROM  tb_dp_prod_noti ia
+                                                 , tb_dp_prod ib
+                                            WHERE  ia.tenant_id = #{tenantId}
+                                              AND  ib.prod_id = ia.prod_id
+                                              AND  ia.mbr_no = #{mbrNo}
+                                              <!-- Shopping -->
+                                              <if test="prodType == 'shopping'">
+                                              <if test="prodIds != null">
+                                              AND  ia.catalog_id IN
+                                              <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                                              #{prodId}
+                                              </foreach>
+                                              </if>
+                                              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                                              AND  ia.prod_id = #{chnlId}
+                                              </if>
+                                              </if>
+                                              <!-- Shopping 외 -->
+                                              <if test="prodType != 'shopping'">
+                                              <if test="prodIds != null">
+                                              AND  ia.prod_id IN
+                                              <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                                              #{prodId}
+                                              </foreach>
+                                              </if>
+                                              </if>
+                                              AND  ia.noti_type_cd = 'DP000401'
+                                              AND  ia.del_yn = 'N'
+                                              AND  ia.bad_noti_yn IN ( 'N', 'R' )
+                                              AND  ia.spam_yn = 'N'
+                                           )
+                                    WHERE  ranking = 1
                                    <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
                                    <if test="prodType != 'shopping'">
                                     UNION  ALL
@@ -669,6 +706,7 @@
                                          , NULL AS svc_grp_cd
                                          , NULL AS expo_seller_nm
                                          , ic.avg_score
+                                         , NULL AS ranking
                                      FROM  tb_dp_mbr_avg ic
                                     WHERE  ic.tenant_id = #{tenantId} 
                                       AND  ic.mbr_no = #{mbrNo} 
@@ -698,57 +736,63 @@
       SELECT  /* FeedbackMapper.getMyProdNotiCount, 자기가 작성한 사용후기 갯수, 김현일/SK플래닛, 2014-02-04 */
               COUNT(*) AS total_count
         FROM (
-              SELECT MAX(prod_id) AS prod_id
-                FROM
-                    (
-                     SELECT  la.prod_id
-                       FROM  tb_dp_prod_noti la
-                           , tb_dp_prod lb
-                      WHERE  la.tenant_id = #{tenantId}
-                        AND  lb.prod_id = lb.prod_id
-                        AND  la.mbr_no = #{mbrNo}
-                        <!-- Shopping -->
-                        <if test="prodType == 'shopping'">
-                        <if test="prodIds != null">
-                        AND  la.catalog_id IN
-                        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-                        #{prodId}
-                        </foreach>
-                        </if>
-                        <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-                        AND  la.prod_id = #{chnlId}
-                        </if>
-                        </if>
-                        <!-- Shopping 외 -->
-                        <if test="prodType != 'shopping'">
-                        <if test="prodIds != null">
-                        AND  la.prod_id IN
-                        <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-                        #{prodId}
-                        </foreach>
-                        </if>
-                        </if> 
-                        AND  la.noti_type_cd = 'DP000401'
-                        AND  la.del_yn = 'N'
-                        AND  la.bad_noti_yn IN ( 'N', 'R' )
-                        AND  la.spam_yn = 'N'
-                        <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
-                        <if test="prodType != 'shopping'">
-                     UNION  ALL
-                    SELECT  lc.prod_id
-                      FROM  tb_dp_mbr_avg lc
-                     WHERE  lc.tenant_id = #{tenantId} 
-                       AND  lc.mbr_no = #{mbrNo} 
-                       <if test="prodType != 'shopping'">
-                       <if test="prodIds != null">
-                       AND  lc.prod_id IN
-                       <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
-                       #{prodId}
-                       </foreach>
-                       </if>
-                       </if>
-                       </if>
-                    )
+              SELECT  prod_id AS prod_id
+                FROM 
+                     (
+                      SELECT  *
+                        FROM  (
+                               SELECT  la.prod_id
+                                     , ROW_NUMBER() OVER (PARTITION BY la.prod_id ORDER BY la.reg_dt DESC) AS ranking 
+                                 FROM  tb_dp_prod_noti la
+                                     , tb_dp_prod lb
+                                WHERE  la.tenant_id = #{tenantId}
+                                  AND  lb.prod_id = la.prod_id
+                                  AND  la.mbr_no = #{mbrNo}
+                                  <!-- Shopping -->
+                                  <if test="prodType == 'shopping'">
+                                  <if test="prodIds != null">
+                                  AND  la.catalog_id IN
+                                  <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                                  #{prodId}
+                                  </foreach>
+                                  </if>
+                                  <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                                  AND  la.prod_id = #{chnlId}
+                                  </if>
+                                  </if>
+                                  <!-- Shopping 외 -->
+                                  <if test="prodType != 'shopping'">
+                                  <if test="prodIds != null">
+                                  AND  la.prod_id IN
+                                  <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                                  #{prodId}
+                                  </foreach>
+                                  </if>
+                                  </if> 
+                                  AND  la.noti_type_cd = 'DP000401'
+                                  AND  la.del_yn = 'N'
+                                  AND  la.bad_noti_yn IN ( 'N', 'R' )
+                                  AND  la.spam_yn = 'N'
+                               ) 
+                       WHERE  ranking = 1
+                         <!-- Shopping 외 ( 쇼핑은 평점관리 안함 )-->
+                         <if test="prodType != 'shopping'">
+                       UNION  ALL
+                      SELECT  lc.prod_id
+                            , NULL AS ranking
+                        FROM  tb_dp_mbr_avg lc
+                       WHERE  lc.tenant_id = #{tenantId} 
+                         AND  lc.mbr_no = #{mbrNo} 
+                         <if test="prodType != 'shopping'">
+                         <if test="prodIds != null">
+                         AND  lc.prod_id IN
+                         <foreach collection="prodIds" item="prodId" open="(" close=")" separator=",">
+                         #{prodId}
+                         </foreach>
+                         </if>
+                         </if>
+                         </if>
+                     )
                GROUP 
                   BY  prod_id
              ) 
