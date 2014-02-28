@@ -63,7 +63,7 @@
 		                  FROM  TB_DP_BNR      A
 		                      , TB_DP_BNR_EXPO B
 		                      , TB_DP_BNR_IMG  C
-                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908"'><!-- Mobile Web 직사각형 배너가 아닌 경우 -->
+                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908"'><!-- 모바일웹 직사각형, 상/하단 배너 프로비저닝 제외 -->
 		                      , TB_DP_BNR_DVC  D
 		                      , TB_CM_DEVICE   E
                     </if>
@@ -73,7 +73,7 @@
 		                   AND  A.TENANT_ID = C.TENANT_ID
 		                   AND  A.BNR_MENU_ID = C.BNR_MENU_ID
 		                   AND  A.BNR_SEQ = C.BNR_SEQ
-                    <if test='bnrMenuId != "DP010926"'><!-- Mobile Web 직사각형 배너가 아닌 경우 -->
+                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908"'><!-- 모바일웹 직사각형, 상/하단 배너 프로비저닝 제외 -->
 		                   AND  A.TENANT_ID = D.TENANT_ID
 		                   AND  A.BNR_MENU_ID = D.BNR_MENU_ID
 		                   AND  A.BNR_SEQ = D.BNR_SEQ
@@ -108,7 +108,7 @@
                         <when test='(bnrMenuId == "DP010920" or bnrMenuId == "DP010921") and bnrExpoMenuId == "DP011101"'><!-- 이북, 코믹 테마 배너 -->
 		                   AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_END_DT)
                         </when>
-                        <when test='bnrMenuId == "DP010926"'><!-- Mobile Web 직사각형 배너 -->
+                        <when test='bnrMenuId == "DP010926" or bnrMenuId == "DP010907" or bnrMenuId == "DP010908"'><!-- Mobile Web 직사각형, 상/하단 배너 -->
 		                   AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_END_DT)
                         </when>
                         <otherwise>
