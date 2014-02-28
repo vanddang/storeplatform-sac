@@ -118,7 +118,6 @@ public class HistoryProdClsiServiceImpl implements HistoryProdClsiService {
 			historySac.setCancelReqPathCd(obj.getCancelReqPathCd());
 			historySac.setCancelDt(obj.getCancelDt());
 			historySac.setPrchsCaseCd(obj.getPrchsCaseCd());
-			historySac.setRePrchsPmtYn(obj.getRePrchsPmtYn());
 			historySac.setDwldStartDt(obj.getDwldStartDt());
 			historySac.setDwldExprDt(obj.getDwldExprDt());
 			historySac.setCpnPublishCd(obj.getCpnPublishCd());
