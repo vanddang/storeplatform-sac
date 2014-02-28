@@ -446,8 +446,8 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					title.setText((String) updateTargetApp.get("PROD_NM"));
 					product.setTitle(title);
 
-					Source source = this.commonGenerator.generateSource(
-							ObjectUtils.toString(updateTargetApp.get("IMAGE_PATH")), null);
+					Source source = this.commonGenerator.generateSource(ObjectUtils.toString(updateTargetApp
+							.get("IMAGE_PATH")));
 					sourceList.add(source);
 					product.setSourceList(sourceList);
 
