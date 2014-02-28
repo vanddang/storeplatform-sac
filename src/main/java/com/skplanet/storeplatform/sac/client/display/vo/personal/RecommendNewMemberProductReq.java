@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 2.24. Updated by : 이석희, 아이에스 플러스.
  */
-public class RecommandNewMemberProductReq extends CommonInfo {
+public class RecommendNewMemberProductReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // tenantId
