@@ -3,7 +3,6 @@ package com.skplanet.storeplatform.sac.display.localsci.sci.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
@@ -37,7 +36,7 @@ public class PaymentInfoSCIController implements PaymentInfoSCI {
 	 * @return PaymentInfoSacRes 상품 메타 정보 리스트
 	 */
 	@Override
-	public PaymentInfoSacRes searchPaymentInfo(@Validated PaymentInfoSacReq req) {
+	public PaymentInfoSacRes searchPaymentInfo(PaymentInfoSacReq req) {
 		return this.paymentInfoService.searchPaymentInfo(req);
 	}
 
