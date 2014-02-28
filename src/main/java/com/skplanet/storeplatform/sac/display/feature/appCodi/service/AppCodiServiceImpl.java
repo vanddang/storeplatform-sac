@@ -52,6 +52,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.feature.appCodi.vo.AppCodiRes;
@@ -673,7 +674,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 					contributor.setArtist(mapper.getVodArtistNm()); // 출연자
 					contributor.setCompany(mapper.getVodChnlCompNm());
 					Date date = new Date();
-					date.setText(mapper.getVodSaleDt());
+					date.setText(DateUtils.parseDate(mapper.getVodSaleDt()));
 					contributor.setDate(date);
 					product.setContributor(contributor);
 
@@ -684,7 +685,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 					contributor.setPainter(mapper.getBookArtistNm2()); //
 					contributor.setPublisher(mapper.getBookChnlCompNm()); // 출판사
 					Date date = new Date();
-					date.setText(mapper.getBookSaleDt()); // 출판년도
+					date.setText(DateUtils.parseDate(mapper.getBookSaleDt())); // 출판년도
 					contributor.setDate(date);
 					product.setContributor(contributor);
 
