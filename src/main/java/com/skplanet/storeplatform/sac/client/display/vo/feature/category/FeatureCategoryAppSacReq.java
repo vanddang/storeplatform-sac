@@ -1,5 +1,9 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -11,6 +15,8 @@ public class FeatureCategoryAppSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank
+	@Pattern(regexp = "^ADM000000001|^RNK000000022|^ADM000000005")
 	private String listId; // 리스트ID
 	private String prodCharge; // 유무료 구분
 	private String prodGradeCd; // 상품 등급

@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.music;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -20,6 +24,8 @@ public class MusicContentsSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123145L;
 
+	@NotBlank
+	@Pattern(regexp = "^top|^recent|^genre")
 	private String filteredBy; // 차트 구분 코드
 
 	private String imageCd; // 이미지 사이즈 코드

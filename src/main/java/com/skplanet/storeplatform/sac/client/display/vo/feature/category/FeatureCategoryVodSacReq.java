@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -21,10 +25,14 @@ public class FeatureCategoryVodSacReq extends CommonInfo {
 
 	private String prodGradeCd; // 상품등급코드
 
+	@NotBlank
+	@Pattern(regexp = "^DP17|^DP18")
 	private String topMenuId; // 탑메뉴ID
 
 	private String menuId; // 메뉴ID
 
+	@NotBlank
+	@Pattern(regexp = "^ADM000000008|^TGR000000002")
 	private String listId; // 리스트ID
 
 	private String filteredBy; // 조회유형

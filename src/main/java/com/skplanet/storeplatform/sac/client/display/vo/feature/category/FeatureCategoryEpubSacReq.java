@@ -1,5 +1,9 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -11,9 +15,13 @@ public class FeatureCategoryEpubSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank
+	@Pattern(regexp = "^ADM000000013|^TGR000000001|^RNK000000002|RNK000000006")
 	private String listId; // 리스트ID
 	private String prodCharge; // 유무료 구분
 	private String prodGradeCd; // 상품 등급
+	@NotBlank
+	@Pattern(regexp = "^DP13|^DP14")
 	private String topMenuId; // 메뉴ID
 	private Integer offset; // offset
 	private Integer count; // count

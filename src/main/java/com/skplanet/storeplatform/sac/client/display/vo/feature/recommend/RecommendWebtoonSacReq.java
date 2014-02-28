@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -24,6 +28,8 @@ public class RecommendWebtoonSacReq extends CommonInfo {
 	private String imageCd; // 이미지코드
 	private String upMenuId; // 상위 메뉴아이디
 	private String menuId; // 메뉴아이디
+	@NotBlank
+	@Pattern(regexp = "^ADM000000016")
 	private String listId; // 리스트아이디
 	private String weekDayCd; // 요일별 구분 코드
 	private String langCd; // 언어코드

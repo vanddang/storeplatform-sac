@@ -1,5 +1,9 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * TODAY 상품 조회 Request Value Object.
  * 
@@ -8,9 +12,13 @@ package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 public class RecommendTodaySacReq {
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank
+	@Pattern(regexp = "^ADM000000007")
 	private String listId; // 리스트ID
 	private String prodCharge; // 유무료 구분
 	private String prodGradeCd; // 상품 등급
+	@NotBlank
+	@Pattern(regexp = "^DP13|^DP14|^DP16")
 	private String topMenuId; // 메뉴ID
 	private Integer offset; // offset
 	private Integer count; // count

@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.webtoon;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * 웹툰 상품 상세 조회 Request Value Object.
  * 
@@ -7,6 +9,7 @@ package com.skplanet.storeplatform.sac.client.display.vo.webtoon;
  */
 public class WebtoonDetailSacReq {
 
+	@NotBlank
 	private String prodId; // 상품ID
 	private String deviceModelCd; // 단말 모델 코드
 	private String tenantId; // 테넌트ID
