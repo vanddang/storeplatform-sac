@@ -398,6 +398,12 @@ public class DisplayConstants {
 
 	public static final String DP_DEVICE_ID_TYPE_UUID = "uuid"; // device type uuid
 
+	public static final String DP_DEVICE_SERVICE_TYPE_TING = "NA00002125"; // 팅 요금제(한도요금 상품)
+
+	public static final String DP_PACKETFEE_TYPE_PAID = "paid"; // 유료 과금
+
+	public static final String DP_PACKETFEE_TYPE_HALFPAID = "halfPaid"; // 50% 할인 과금
+
 	/*
 	 * 배너 타입 코드
 	 */
