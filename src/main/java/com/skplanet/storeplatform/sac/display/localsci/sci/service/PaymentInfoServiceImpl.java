@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -49,12 +50,23 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 		PaymentInfoSacRes res = new PaymentInfoSacRes();
 		List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>();
 		List<String> prodIdList = req.getProdIdList();
+		String tenantId = req.getTenantId();
+		String langCd = req.getLangCd();
 
 		this.log.debug("##### prodIdList size : {}", prodIdList.size());
 
+		// 파라미터 존재 여부 체크
 		if (prodIdList.size() == 0) {
 			throw new StorePlatformException("SAC_DSP_0002", "prodIdList", prodIdList.toString());
 		}
+		if (StringUtils.isEmpty(tenantId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "tenantId", tenantId);
+		}
+		if (StringUtils.isEmpty(langCd)) {
+			throw new StorePlatformException("SAC_DSP_0002", "langCd", langCd);
+		}
+
+		// 파라미터 유효 값 체크
 		if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
 			throw new StorePlatformException("SAC_DSP_0004", "prodIdList",
 					DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
