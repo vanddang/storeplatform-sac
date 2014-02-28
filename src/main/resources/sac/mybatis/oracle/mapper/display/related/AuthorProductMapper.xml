@@ -77,7 +77,7 @@
                 AND K.PROD_ID = #{exceptId} /* 상품 ID(탑메뉴ID를 얻기 위한) : H001541415*/
                 AND F.TENANT_ID = #{tenantId}
                 AND A.LANG_CD = #{langCd}
-                AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{mmDeviceModelCd})
             ) A
             WHERE RNUM = 1
         ) A

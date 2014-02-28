@@ -49,6 +49,7 @@ public class CategoryVodBox {
 	private String sdBtvCid;
 	private String hdBtvCid;
 	private Integer prodAmt;
+	private Integer prodNetAmt;
 	private String drmYn;
 	private String prodStatusCd;
 	private String btvYn;
@@ -918,6 +919,31 @@ public class CategoryVodBox {
 	 */
 	public void setProdAmt(Integer prodAmt) {
 		this.prodAmt = prodAmt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품_정찰_금액.
+	 * </pre>
+	 * 
+	 * @return Integer
+	 */
+	public Integer getProdNetAmt() {
+		return this.prodNetAmt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품_정찰_금액.
+	 * </pre>
+	 * 
+	 * @param prodNetAmt
+	 *            Integer
+	 */
+	public void setProdNetAmt(Integer prodNetAmt) {
+		this.prodNetAmt = prodNetAmt;
 	}
 
 	/**

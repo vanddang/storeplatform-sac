@@ -102,7 +102,7 @@
                         ELSE 0 END
                 AND A.PROD_ID = #{productId} /* 상품ID */
                 AND F.TENANT_ID = #{tenantId}
-                AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{mmDeviceModelCd})
                 <if test="arrayExceptId != null"> /* 제외 상품ID */
                     AND A.RECOM_PROD_ID NOT IN 
                     <foreach collection="arrayExceptId" item="exceptId" separator="," open="(" close=")">

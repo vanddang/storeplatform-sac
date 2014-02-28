@@ -35,12 +35,10 @@
 		    , A.HD_DP_PG_RATIO_CD
 		    , FN_COMM_CD_NM(A.HD_DP_PG_RATIO_CD, A.LANG_CD) AS HD_DP_PG_RATIO_NM
 		    /* 삭제 예정
-		    , A.NM_BTV_CID
-		    , A.SD_BTV_CID
-		    , A.HD_BTV_CID
-            , A.BTV_YN
+		    , A.NM_BTV_CID , A.SD_BTV_CID , A.HD_BTV_CID , A.BTV_YN
 		    */
 		    , A.PROD_AMT
+		    , A.PROD_NET_AMT
 		    , A.DRM_YN
 		    , A.PROD_STATUS_CD
 		    , A.PROD_NM
@@ -75,6 +73,7 @@
                 , D.LANG_CD
 		        , E.MENU_ID
 		        , C.PROD_AMT
+		        , C.PROD_NET_AMT
 		        , D.PROD_NM
 		        , D.PROD_BASE_DESC
 		        , F.META_CLSF_CD
@@ -89,8 +88,6 @@
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.RSLTN_CD)) OVER(PARTITION BY A.CID) NM_RSLTN_CD
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.DP_PG_RATIO_CD)) OVER(PARTITION BY A.CID) NM_DP_PG_RATIO_CD
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.PROD_VER)) OVER(PARTITION BY A.CID) NM_PROD_VER
-		        
-		        
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.FILE_SIZE)) OVER(PARTITION BY A.CID) SD_FILE_SIZE
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.RSLTN_CD)) OVER(PARTITION BY A.CID) SD_RSLTN_CD
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.DP_PG_RATIO_CD)) OVER(PARTITION BY A.CID) SD_DP_PG_RATIO_CD
@@ -100,9 +97,7 @@
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.DP_PG_RATIO_CD)) OVER(PARTITION BY A.CID) HD_DP_PG_RATIO_CD
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.PROD_VER)) OVER(PARTITION BY A.CID) HD_PROD_VER
 		        /* 삭제 예정
-                , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) SD_BTV_CID
-                , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) NM_BTV_CID
-                , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) HD_BTV_CID
+                , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) SD_BTV_CID , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) NM_BTV_CID , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) HD_BTV_CID
                 */
 		        , F.REG_DT CHNL_REG_DT
 		    FROM (
@@ -117,8 +112,7 @@
 		        , B.PROD_STATUS_CD
 		        , E.DOLBY_SPRT_YN
 		        /* 삭제 예정
-		        , G.BTV_YN
-                , F.BTV_CID
+		        , G.BTV_YN, F.BTV_CID
                 */
 		        , G.CHAPTER
 		        , G.ISSUE_DAY
@@ -162,9 +156,9 @@
 		        AND B.TENANT_ID = #{tenantId} /* 테넌트 ID */
 		        AND B.PROD_STATUS_CD = 'PD000403' /* 상품 상태 코드 */
 		        AND C.PROD_RSHP_CD = 'DP010802' /* 상품 관계 코드 */
+                AND E.USE_YN = 'Y' /* 사용 여부 */
 		        AND F.SALE_YN = 'Y' /* 판매 여부 */
-		        AND D.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말 모델 코드 */
-		        AND E.USE_YN = 'Y' /* 사용 여부 */
+		        AND (D.DEVICE_MODEL_CD = #{deviceModelCd} OR D.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말 모델 코드 */
                 AND C.PROD_ID = #{channelId} /* 채널 ID(테스트 : H000047216) */
 		    
                 <if test="filteredBy == 'duration'">
@@ -197,6 +191,7 @@
 		    AND A.CHNL_PROD_ID = F.PROD_ID
 		    AND A.CHNL_PROD_ID = G.PROD_ID
 		    AND A.CHNL_PROD_ID = H.PROD_ID
+		    AND SYSDATE BETWEEN C.APPLY_START_DT AND C.APPLY_END_DT
 		    AND D.LANG_CD = H.LANG_CD
 		    AND D.LANG_CD = #{langCd} /* 언어 코드 */
 		    ) A

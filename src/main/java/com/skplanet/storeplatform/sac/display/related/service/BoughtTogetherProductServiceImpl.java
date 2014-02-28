@@ -75,6 +75,7 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setLangCd(requestHeader.getTenantHeader().getLangCd());
 		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		requestVO.setMmDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		// 요청 값 세팅
 		this.log.debug("요청 값 세팅");

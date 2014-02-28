@@ -5,7 +5,34 @@
     <select id="selectMenuList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT 
 		    COUNT(1) OVER() AS TOTAL_COUNT
-		    , A.*
+		    , A.TENANT_ID 
+            , A.MENU_ID 
+            , A.SYSTEM_ID 
+            , A.MENU_NM 
+            , A.MENU_ENG_NM 
+            , A.MENU_DESC 
+            , A.MENU_DEPTH 
+            , A.INFR_MENU_YN 
+            , A.UP_MENU_ID 
+            , A.EXPO_ORD 
+            , A.TARGET_URL 
+            , A.SEARCH_FILE_PATH 
+            , A.SEARCH_FILE_NM 
+            , A.BODY_FILE_PATH 
+            , A.BODY_FILE_NM 
+            , A.BODY_FILE_SIZE
+            , A.MAIN_ON_FILE_PATH 
+            , A.MAIN_ON_FILE_NM 
+            , A.MAIN_OFF_FILE_PATH 
+            , A.MAIN_OFF_FILE_NM 
+            , A.RANK_FILE_PATH 
+            , A.RANK_FILE_NM 
+            , A.USE_YN 
+            , A.MENU_ID_TYPE
+            , A.REG_ID 
+            , A.REG_DT 
+            , A.UPD_ID 
+            , A.UPD_DT 
 		FROM (
 		    SELECT 
 		          A.TENANT_ID 
@@ -125,39 +152,6 @@
         AND A.USE_YN = 'Y'
         AND B.USE_YN = 'Y'
 		ORDER BY A.EXPO_ORD
-    </select>
-
-    <!-- 세부 카테고리정보 조회 - (카테고리별 별도의 쿼리문 존재함) - 추가 수정 필요 -->
-    <select id="getDetailCategoryList" parameterType="MenuSacReq" resultType="Menu">
-        SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT,
-               MENU_ID,
-               MENU_NM,
-               MENU_DESC,
-               BODY_FILE_SIZE,
-               MENU_DEPTH,
-               EXPO_ORD
-        FROM
-            (
-            SELECT TENANT_MENU_ID AS MENU_ID,
-                   MENU_NM,
-                   MENU_DESC,
-                   BODY_FILE_SIZE,
-                   MENU_DEPTH,
-                   EXPO_ORD
-              FROM TB_DP_TENANT_MENU
-             WHERE TENANT_ID = #{tenantId}
-               AND TENANT_MENU_ID = #{menuId}
-               AND SYSTEM_ID = #{systemId}
-             START WITH TENANT_MENU_ID = #{menuId}
-             CONNECT BY PRIOR TENANT_MENU_ID = UP_MENU_ID
-            )
-        GROUP BY MENU_ID,
-                 MENU_NM,
-                 MENU_DESC,
-                 BODY_FILE_SIZE,
-                 MENU_DEPTH,
-                 EXPO_ORD
-        ORDER BY MENU_ID, MENU_DEPTH, EXPO_ORD
     </select>
 	    
 </mapper>

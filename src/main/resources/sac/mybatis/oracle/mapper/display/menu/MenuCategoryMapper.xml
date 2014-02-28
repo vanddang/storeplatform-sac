@@ -6,7 +6,35 @@
     <select id="selectAppSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT 
 		    COUNT(1) OVER() AS TOTAL_COUNT
-		    , A.*
+		    , A.MENU_PROD_CNT
+            , A.TENANT_ID 
+            , A.MENU_ID 
+            , A.SYSTEM_ID 
+            , A.MENU_NM 
+            , A.MENU_ENG_NM 
+            , A.MENU_DESC 
+            , A.MENU_DEPTH 
+            , A.INFR_MENU_YN 
+            , A.UP_MENU_ID 
+            , A.EXPO_ORD 
+            , A.TARGET_URL 
+            , A.SEARCH_FILE_PATH 
+            , A.SEARCH_FILE_NM 
+            , A.BODY_FILE_PATH 
+            , A.BODY_FILE_NM 
+            , A.BODY_FILE_SIZE
+            , A.MAIN_ON_FILE_PATH 
+            , A.MAIN_ON_FILE_NM 
+            , A.MAIN_OFF_FILE_PATH 
+            , A.MAIN_OFF_FILE_NM 
+            , A.RANK_FILE_PATH 
+            , A.RANK_FILE_NM 
+            , A.USE_YN 
+            , A.MENU_ID_TYPE
+            , A.REG_ID 
+            , A.REG_DT 
+            , A.UPD_ID 
+            , A.UPD_DT  
 		FROM (
 		    SELECT 
 		         NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
@@ -83,7 +111,35 @@
     <select id="selectMusicSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT 
 		    COUNT(1) OVER() AS TOTAL_COUNT
-		    , A.*
+            , A.MENU_PROD_CNT
+            , A.TENANT_ID 
+            , A.MENU_ID 
+            , A.SYSTEM_ID 
+            , A.MENU_NM 
+            , A.MENU_ENG_NM 
+            , A.MENU_DESC 
+            , A.MENU_DEPTH 
+            , A.INFR_MENU_YN 
+            , A.UP_MENU_ID 
+            , A.EXPO_ORD 
+            , A.TARGET_URL 
+            , A.SEARCH_FILE_PATH 
+            , A.SEARCH_FILE_NM 
+            , A.BODY_FILE_PATH 
+            , A.BODY_FILE_NM 
+            , A.BODY_FILE_SIZE
+            , A.MAIN_ON_FILE_PATH 
+            , A.MAIN_ON_FILE_NM 
+            , A.MAIN_OFF_FILE_PATH 
+            , A.MAIN_OFF_FILE_NM 
+            , A.RANK_FILE_PATH 
+            , A.RANK_FILE_NM 
+            , A.USE_YN 
+            , A.MENU_ID_TYPE
+            , A.REG_ID 
+            , A.REG_DT 
+            , A.UPD_ID 
+            , A.UPD_DT  
 		FROM (
 		    SELECT 
 		         NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
@@ -169,7 +225,35 @@
     <select id="selectMultiSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT 
 		    COUNT(1) OVER() AS TOTAL_COUNT
-		    , A.*
+            , A.MENU_PROD_CNT
+            , A.TENANT_ID 
+            , A.MENU_ID 
+            , A.SYSTEM_ID 
+            , A.MENU_NM 
+            , A.MENU_ENG_NM 
+            , A.MENU_DESC 
+            , A.MENU_DEPTH 
+            , A.INFR_MENU_YN 
+            , A.UP_MENU_ID 
+            , A.EXPO_ORD 
+            , A.TARGET_URL 
+            , A.SEARCH_FILE_PATH 
+            , A.SEARCH_FILE_NM 
+            , A.BODY_FILE_PATH 
+            , A.BODY_FILE_NM 
+            , A.BODY_FILE_SIZE
+            , A.MAIN_ON_FILE_PATH 
+            , A.MAIN_ON_FILE_NM 
+            , A.MAIN_OFF_FILE_PATH 
+            , A.MAIN_OFF_FILE_NM 
+            , A.RANK_FILE_PATH 
+            , A.RANK_FILE_NM 
+            , A.USE_YN 
+            , A.MENU_ID_TYPE
+            , A.REG_ID 
+            , A.REG_DT 
+            , A.UPD_ID 
+            , A.UPD_DT  
 		FROM (
 		    SELECT 
 		         NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
@@ -271,7 +355,35 @@
     <select id="selectShoppingSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT 
 		    COUNT(1) OVER() AS TOTAL_COUNT
-		    , A.*
+            , A.MENU_PROD_CNT
+            , A.TENANT_ID 
+            , A.MENU_ID 
+            , A.SYSTEM_ID 
+            , A.MENU_NM 
+            , A.MENU_ENG_NM 
+            , A.MENU_DESC 
+            , A.MENU_DEPTH 
+            , A.INFR_MENU_YN 
+            , A.UP_MENU_ID 
+            , A.EXPO_ORD 
+            , A.TARGET_URL 
+            , A.SEARCH_FILE_PATH 
+            , A.SEARCH_FILE_NM 
+            , A.BODY_FILE_PATH 
+            , A.BODY_FILE_NM 
+            , A.BODY_FILE_SIZE
+            , A.MAIN_ON_FILE_PATH 
+            , A.MAIN_ON_FILE_NM 
+            , A.MAIN_OFF_FILE_PATH 
+            , A.MAIN_OFF_FILE_NM 
+            , A.RANK_FILE_PATH 
+            , A.RANK_FILE_NM 
+            , A.USE_YN 
+            , A.MENU_ID_TYPE
+            , A.REG_ID 
+            , A.REG_DT 
+            , A.UPD_ID 
+            , A.UPD_DT  
 		FROM (
 		    SELECT 
 		         NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
