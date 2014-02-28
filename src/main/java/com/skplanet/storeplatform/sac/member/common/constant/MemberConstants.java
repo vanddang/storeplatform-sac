@@ -215,6 +215,12 @@ public final class MemberConstants {
 	public static final String GAMECENTER_WORK_CD_IMUSER_CHANGE = "US003207"; // 통합회원전환
 
 	/**
+	 * 가입자 상태 코드
+	 */
+	public static final String JOIN_STATUS_CODE_NORMAL = "10"; // 정상
+	public static final String JOIN_STATUS_CODE_HALF_AUTH = "11"; // 가인증
+
+	/**
 	 * 판매자 회원 상수들.
 	 * 
 	 * Updated on : 2014. 1. 9. Updated by : 김경복, 부르칸.
