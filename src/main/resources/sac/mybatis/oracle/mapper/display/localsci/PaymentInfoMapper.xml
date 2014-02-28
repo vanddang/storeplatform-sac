@@ -45,5 +45,134 @@
 		AND    A.PROD_ID = #{prodId}
     </select>
     
+    <select id="getShoppingMetaInfo" parameterType="Map" resultType="PaymentInfo">
+          /* PaymentInfoMapper.xml, getShoppingMetaInfo, 김형식, 2014-02-27 */
+           SELECT  
+                KK.*
+           FROM (
+                  SELECT 
+                         B.CATALOG_ID 
+                        ,H.PROD_ID                         
+                        ,H.PART_PROD_ID  
+                        ,CASE WHEN N.PROD_ID IS NOT NULL THEN M.PROD_NM ELSE C.CATALOG_NM  END PROD_NM     
+                        ,'thumbnail' AS fileType   
+                        ,PI.FILE_PATH || PI.FILE_NM AS FILE_PATH                 
+                        ,J.TOP_MENU_ID 
+                        ,(SELECT MENU_NM
+                            FROM TB_DP_MENU_CATEGORY_DESC
+                           WHERE MENU_ID = J.TOP_MENU_ID
+                             AND LANG_CD = #{lang}
+                             AND ROWNUM = 1
+                         ) AS TOP_MENU_NM
+                        ,D.MENU_ID
+                        ,F.MENU_NM                         
+                        ,J.META_CLSF_CD    
+                        ,A.BRAND_ID
+                        ,A.BRAND_NM                            
+                        ,J.SELLER_MBR_NO 
+                        ,'' AS expoSellerNm
+                        ,'' AS expoSellerTelNo
+                        ,'' AS expoSellerEmail
+                        ,'' AS prodClsfCd     
+                        ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID  = H.PART_PROD_ID) AS PHONE_SPRT_YN
+                        ,J.PROD_GRD_CD
+                        ,J.USE_PERIOD_UNIT_CD
+                        ,J.USE_PERIOD
+                        ,CASE WHEN N.PROD_ID IS NOT NULL THEN 'special:Tstore' ELSE 'shoppingStore' END couponType
+                        ,DECODE(I.PROD_CASE_CD
+                              , 'DP006301', 'giftcard'
+                              , 'DP006302', 'exchange'
+                              , 'DP006303', 'delivery' ) as PROD_CASE_CD  
+                        ,NVL(L.PROD_AMT, 0) AS PROD_AMT  
+                        ,(SELECT SRC_CONTENT_ID 
+                            FROM TB_DP_SHPG_PROD 
+                           WHERE prod_id=H.PROD_ID 
+                         ) AS COUPON_CODE
+                        ,I.SRC_CONTENT_ID AS ITEM_CODE                                                                                                                    
+                        ,K.PROD_STATUS_CD
+                        ,NVL(N.SPRC_PRICE,0) specialSaleAmt
+                        ,N.SPRC_APPLY_START_DT AS specialSaleStartDt
+                        ,N.SPRC_APPLY_END_DT AS specialSaleEndDt
+                        ,N.CPN_ID AS specialSaleCouponId                        
+                        ,NVL(N.MM_PROD_MAX_SALE_QTY,0) AS specialSaleMonthLimit
+                        ,NVL(N.DLY_PROD_MAX_SALE_QTY,0) AS specialSaleDayLimit    
+                        ,NVL(N.PERMAN_MM_MAX_PRCHS_QTY,0) AS specialSaleMonthLimitPerson
+                        ,NVL(N.PERMAN_DAY_MAX_PRCHS_QTY,0) AS specialSaleDayLimitPerson
+                        ,O.OPT1_NM
+                        ,O.OPT2_NM
+                        ,J.DRM_YN 
+                        ,J.REG_DT                                                  
+                  FROM 
+                          TB_DP_SHPG_BRAND A
+                         ,TB_DP_SHPG_CATALOG B
+                         ,TB_DP_SHPG_CATALOG_DESC C
+                         ,TB_DP_MENU_SHPG_MAPG D
+                         ,TB_DP_MENU_CATEGORY E
+                         ,TB_DP_MENU_CATEGORY_DESC F 
+                         ,TB_DP_PROD_CATALOG_MAPG G 
+                         ,TB_DP_PROD_RSHP H
+                         ,TB_DP_SHPG_PROD I
+                         ,TB_DP_PROD J
+                         ,TB_DP_TENANT_PROD K
+                         ,TB_DP_TENANT_PROD_PRICE L
+                         ,TB_DP_PROD_DESC M
+                         ,(SELECT 
+                                 B1.PROD_ID
+                               , B1.CPN_ID
+                               , B1.SPRC_DC_RATE
+                               , B1.SPRC_PRICE
+                               , B1.SPRC_APPLY_START_DT
+                               , B1.SPRC_APPLY_END_DT
+                               , B1.MM_PROD_MAX_SALE_QTY
+                               , B1.DLY_PROD_MAX_SALE_QTY   
+                               , B1.PERMAN_MM_MAX_PRCHS_QTY
+                               , B1.PERMAN_DAY_MAX_PRCHS_QTY
+                               , B1.ONCE_MAX_PRCHS_POSB_CNT                                    
+                           FROM  TB_DP_PROD_RSHP A1
+                                ,TB_DP_SPRC_PROD B1
+                           WHERE 1=1
+                             AND A1.PART_PROD_ID = B1.PROD_ID
+                             <if test="#{productBasicInfo.prodId} != null ">
+                             AND B1.PROD_ID  = #{#{productBasicInfo.prodId}}
+                             </if>                             
+                             AND B1.EXPO_YN ='Y'
+                             AND B1.CPN_ID IS NOT NULL
+                             AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
+                          )N                         
+                         ,TB_DP_PROD_IMG PI
+                WHERE 1=1
+                AND A.BRAND_ID = B.BRAND_ID
+                AND B.CATALOG_ID = C.CATALOG_ID
+                AND C.CATALOG_ID = D.CATALOG_ID     
+                AND D.MENU_ID = E.MENU_ID
+                AND D.MENU_ID = F.MENU_ID
+                AND B.CATALOG_ID = G.CATALOG_ID
+                AND G.PROD_ID = H.PROD_ID
+                AND H.PART_PROD_ID = I.PROD_ID
+                AND I.PROD_ID = J.PROD_ID
+                AND I.PROD_ID = K.PROD_ID
+                AND I.PROD_ID = L.PROD_ID
+                AND I.PROD_ID = M.PROD_ID
+                AND K.TENANT_ID = L.TENANT_ID
+                AND C.CATALOG_ID = PI.PROD_ID
+                AND PI.IMG_CD = #{imageCd}
+                AND PI.EXPO_ORD ='1'           
+                AND I.PROD_ID = N.PROD_ID(+)    
+                AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
+                AND NVL(B.CHNL_CNT, 0) > 0          
+                AND C.LANG_CD= #{lang}          /* ko : 한국어 */
+                AND F.LANG_CD= #{lang}          /* ko : 한국어 */
+                AND M.LANG_CD =#{lang}          /* ko : 한국어 */
+                AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+                AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+                AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+                AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+                AND I.PROD_ID = #{productBasicInfo.prodId}        /* 상품ID */
+           ) KK
+    </select>    
     
 </mapper>
