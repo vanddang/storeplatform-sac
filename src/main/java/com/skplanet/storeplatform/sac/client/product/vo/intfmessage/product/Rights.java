@@ -37,7 +37,6 @@ public class Rights extends CommonInfo implements Serializable {
 	private String durationUsagePeriodView; // 전시를 목적으로 추가 이용 기간을 표기할 경우 사용한다.
 	private String subscription; // 정기구독정보
 	private List<Date> dateList; // 사용가능 시작/만료 일자 LIST
-	private String prodStatus; // 판매상태구분정보
 
 	/**
 	 * @return String
@@ -202,14 +201,6 @@ public class Rights extends CommonInfo implements Serializable {
 	 */
 	public void setDateList(List<Date> dateList) {
 		this.dateList = dateList;
-	}
-
-	public String getProdStatus() {
-		return this.prodStatus;
-	}
-
-	public void setProdStatus(String prodStatus) {
-		this.prodStatus = prodStatus;
 	}
 
 }
