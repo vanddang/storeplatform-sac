@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -206,7 +205,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 
 				} catch (Exception ex) {
-					throw new StorePlatformException("SAC_DSP_1001", ex);
+					throw new StorePlatformException("SAC_DSP_2001", ex);
 				}
 
 				String prchsId = null; // 구매ID
@@ -300,24 +299,31 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								metaInfo.setDeviceType(deviceIdType);
 								metaInfo.setDeviceSubKey(deviceId);
 
-								// if (deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
+								// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
+								// if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
+								// && deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
 								// UapsEcReq uapsEcReq = new UapsEcReq();
 								// UserEcRes uapsEcRes = new UserEcRes();
 								// uapsEcReq.setDeviceId(deviceId);
 								// uapsEcReq.setType("mdn");
 								//
+								// try {
 								// uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
 								//
-								// this.log.debug("########################################################");
-								// this.log.debug("serviceCd length	:	" + uapsEcRes.getServiceCD().length);
+								// this.log.debug("#########################################################");
+								// this.log.debug("serviceCd	:	" + uapsEcRes.getServiceCD()[i]);
+								// this.log.debug("#########################################################");
 								// for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-								// this.log.debug("Service Cd value :  " + uapsEcRes.getServiceCD()[i]);
-								// if ("NA00002125".equals(uapsEcRes.getServiceCD()[i])) {
-								// this.log.debug("Ting 요금제 가입한 휴대폰 입니다");
+								// if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING.equals(uapsEcRes
+								// .getServiceCD()[i])) {
+								// metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
 								// }
 								// }
-								// this.log.debug("########################################################");
-								//
+								// } catch (Exception e) {
+								// this.log.debug("#########################################################");
+								// this.log.debug("Fee Type Is Not Ting");
+								// this.log.debug("#########################################################");
+								// }
 								// }
 
 								// 암호화 정보 (JSON)
@@ -342,17 +348,17 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								encryptionList.add(encryption);
 
 								// JSON 복호화
-								byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-								byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-
-								try {
-									String decData = new String(decrypt, "UTF-8");
-									this.log.debug("----------------------------------------------------------------");
-									this.log.debug("[getDownloadVodInfo] decData : {}", decData);
-									this.log.debug("----------------------------------------------------------------");
-								} catch (UnsupportedEncodingException e) {
-									e.printStackTrace();
-								}
+								// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+								// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+								//
+								// try {
+								// String decData = new String(decrypt, "UTF-8");
+								// this.log.debug("----------------------------------------------------------------");
+								// this.log.debug("[getDownloadVodInfo] decData : {}", decData);
+								// this.log.debug("----------------------------------------------------------------");
+								// } catch (UnsupportedEncodingException e) {
+								// e.printStackTrace();
+								// }
 							}
 						}
 					}
