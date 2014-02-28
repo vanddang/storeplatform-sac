@@ -326,6 +326,7 @@
             , PI.FILE_SIZE
             , P.CONTENTS_TYPE_CD
             , TP.PROD_STATUS_CD
+            , MCI.REG_DT
          FROM UV_TB_DP_MULTIMDA_PROD MP
             , TB_DP_MUSIC_CHART MCI
             , TB_DP_PROD P

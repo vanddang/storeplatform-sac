@@ -139,6 +139,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Contributor contributor = this.musicGenerator.generateContributor(metaInfo);
 		// Music 생성
 		Music music = this.musicGenerator.generateMusic(metaInfo);
+		// Date 생성
+		Date date = this.commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, metaInfo.getRegDt());
 
 		product.setTitle(title);
 		product.setPrice(price);
@@ -148,6 +150,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(rights);
 		product.setContributor(contributor);
 		product.setMusic(music);
+		product.setDate(date);
 		// Music 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 		// 판매상태 설정
