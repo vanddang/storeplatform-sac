@@ -122,8 +122,12 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				purchaseCanDetailSacResult = new PurchaseCancelDetailSacResult();
 				purchaseCanDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 				purchaseCanDetailSacResult.setResultCd(e.getErrorInfo().getCode());
-				purchaseCanDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage(e.getErrorInfo()
-						.getCode()));
+				if (StringUtils.isBlank(e.getErrorInfo().getMessage())) {
+					purchaseCanDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage(e.getErrorInfo()
+							.getCode()));
+				} else {
+					purchaseCanDetailSacResult.setResultMsg(e.getErrorInfo().getMessage());
+				}
 
 			} catch (Exception e) {
 
