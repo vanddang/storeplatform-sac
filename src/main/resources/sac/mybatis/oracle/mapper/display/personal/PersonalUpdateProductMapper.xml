@@ -2,7 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="PersonalUpdateProduct">
     
-    <select id="searchRecentFromPkgNm" parameterType="Map" resultType="Map">
+     <select id="searchRecentFromPkgNm" parameterType="Map" resultType="Map">
+        SELECT 
+              LA.* 
+          FROM                                            
+              ( SELECT  /* PersonalUpdateProductMapper.xml, searchUpdateProductList, SAC : 오승민 , 2014-02-28 */
+                           CONTENTS.PROD_ID
+                         , CONTENTS.APK_PKG_NM
+                         , CONTENTS.APK_VER
+                         , CONTENTS.SUB_CONTENTS_ID
+                         ,ROW_NUMBER() OVER (PARTITION BY CONTENTS.APK_PKG_NM ORDER BY CONTENTS.APK_VER DESC) AS RNUM 
+                     FROM  TB_DP_SUB_CONTENTS            CONTENTS
+                          ,TB_DP_SPRT_DEVICE             DEVICE
+                     WHERE CONTENTS.APK_PKG_NM IN 
+                         <foreach collection="PKG_LIST" item="item" index="index" open="(" separator="," close=")"> 
+                        #{item}
+                        </foreach>
+                        AND CONTENTS.PROD_ID = DEVICE.PROD_ID
+                        AND CONTENTS.SUB_CONTENTS_ID = DEVICE.SUB_CONTENTS_ID
+                        AND DEVICE.DEVICE_MODEL_CD = #{deviceHeader.model}
+                )LA
+                WHERE RNUM = 1                                
+    </select>
+    
+    
+    
+    <select id="getAppInfo" parameterType="Map" resultType="Map">
         SELECT 
         LB.* 
        ,( CASE WHEN ( LB.FAKE_CNT > 0 AND NVL( LB.PROD_AMT, 0 ) = 0 ) THEN 'Y' ELSE 'N' END ) AS FAKE_YN
@@ -62,10 +87,9 @@
                AND   SD.DEVICE_MODEL_CD = #{deviceHeader.model}
                AND   SD.PROD_ID = SC.PROD_ID
                AND   SD.SUB_CONTENTS_ID = SC.SUB_CONTENTS_ID
-               AND   SC.APK_PKG_NM IN
-               <foreach collection="PKG_LIST" item="item" index="index" open="(" separator="," close=")"> 
-                        #{item}
-               </foreach>
+               AND   P.PROD_ID = #{prodId}
+               AND   P.SVC_GRP_CD = #{svcGrpCd}   
+               AND   SD.SUB_CONTENTS_ID = #{subContentsId}
                AND   P.PROD_ID = TP.PROD_ID
                AND   TP.TENANT_ID = #{tenantHeader.tenantId}
                AND   TP.PROD_ID = TPP.PROD_ID

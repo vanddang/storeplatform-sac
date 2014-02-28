@@ -50,6 +50,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
@@ -81,6 +83,9 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 	@Autowired
 	SearchUserSCI searchUserSCI;
+
+	@Autowired
+	MetaInfoService metaInfoService;
 
 	/*
 	 * (non-Javadoc)
@@ -128,15 +133,33 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		}
 		mapReq.put("PKG_LIST", listPkgNm);
 		mapReq.put("deviceHeader", deviceHeader);
-		mapReq.put("tenantHeader", tenantHeader);
-		mapReq.put("contentsTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-		mapReq.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-		mapReq.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		// List<Object> listPkg = queryForList("updateAlarm.getRecentFromPkgNm", mapReq);
-		// TODO osm1021 ALARM_OFF_DT도 여기서 가져와야 됨.
-		List<Map> listPkg = this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", mapReq,
+		List<Map> updateTargetList = this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", mapReq,
 				Map.class);
 		mapReq.remove("PKG_LIST");
+
+		List<Map<String, Object>> listPkg = new ArrayList<Map<String, Object>>();
+
+		for (Map<String, Object> updateTargetMap : updateTargetList) {
+			ProductBasicInfo productBasicInfo = new ProductBasicInfo();
+			productBasicInfo.setSvcGrpCd(DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
+			productBasicInfo.setProdId((String) updateTargetMap.get("PROD_ID"));
+
+			updateTargetMap.put("deviceHeader", deviceHeader);
+			updateTargetMap.put("tenantHeader", tenantHeader);
+			updateTargetMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+			updateTargetMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+			updateTargetMap.put("prodId", updateTargetMap.get("PROD_ID"));
+			updateTargetMap.put("subContentsId", updateTargetMap.get("SUB_CONTENTS_ID"));
+			updateTargetMap.put("contentsTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+			updateTargetMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
+
+			Map<String, Object> appInfoMap = this.commonDAO.queryForObject("PersonalUpdateProduct.getAppInfo",
+					updateTargetMap, Map.class);
+			if (appInfoMap != null) {
+				listPkg.add(appInfoMap);
+			}
+		}
 
 		this.log.debug("##### update target list  : {}", listPkg);
 		this.log.debug("##### update target cnt   : {}", listPkg.size());
@@ -201,7 +224,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 								listProd.add(mapPkg);
 								listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
 							} else {
-								this.log.debug("##### is fake update target? : {}", sPkgNm);
+								this.log.debug("##### {} is not update target ", sPkgNm);
 							}
 						}
 						break;
@@ -275,6 +298,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							historyListSacReq.setProductList(productListSacInList);
 
 							// 구매내역 조회 실행
+							// TODO osm1021 ALARM_OFF_DT도 여기서 가져와야 됨.
 							HistoryListSacInRes historyListSacRes = this.historyInternalSCI
 									.searchHistoryList(historyListSacReq);
 							if (historyListSacRes != null) {
