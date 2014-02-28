@@ -78,7 +78,8 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
 					if (paymentInfo != null) {
 						// 상품분류코드는 SVC_GRP_CD||TOP_MENU_ID 로 제공
-						paymentInfo.setTenantProdGrpCd(paymentProdType.getSvcGrpCd() + paymentProdType.getTopMenuId());
+						paymentInfo.setTenantProdGrpCd(paymentProdType.getSvcGrpCd() + "||"
+								+ paymentProdType.getTopMenuId());
 						paymentInfoList.add(paymentInfo);
 					}
 				}
