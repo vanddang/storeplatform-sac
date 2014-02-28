@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
  * 
  * Updated on : 2014. 1. 8. Updated by : 임재호, 인크로스.
  */
-@RequestMapping(value = "/member/idp")
+@RequestMapping(value = "/ecinbound/member/idp")
 @Controller
 public class IdpController {
 
