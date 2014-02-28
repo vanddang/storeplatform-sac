@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +34,8 @@ import com.skplanet.storeplatform.external.client.uaps.vo.OpmdEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UafmapEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
@@ -175,7 +174,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		LOGGER.debug("[MiscellaneousService.getUaCode] Request {}", req);
 
 		/* 파라미터로 MSISDN만 넘어온 경우 */
-		if (msisdn != null && (deviceModelNo == null || deviceModelNo.equals(""))) {
+		if (StringUtils.isNotBlank(msisdn) && StringUtils.isBlank(deviceModelNo)) {
 
 			SearchUserRequest searchUserRequest = new SearchUserRequest();
 			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
@@ -209,14 +208,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			SearchDeviceResponse searchDeviceResult = this.deviceSCI.searchDevice(searchDeviceRequest);
 
 			/* deviceModelNo 조회 결과 확인 */
-			if (searchDeviceResult != null && searchDeviceResult.getUserMbrDevice() != null) {
+			if (searchDeviceResult != null
+					&& StringUtils.isNotBlank(searchDeviceResult.getUserMbrDevice().getDeviceModelNo())) {
 				LOGGER.debug("[MiscellaneousService.getUaCode] : {}", searchDeviceResult.getUserMbrDevice()
 						.getUserMbrDeviceDetail());
 
 				// DB 접속(TB_CM_DEVICE) - UaCode 조회
 				String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", searchDeviceResult
 						.getUserMbrDevice().getDeviceModelNo(), String.class);
-				if (uaCode != null) {
+				if (StringUtils.isNotBlank(uaCode)) {
 					response.setUaCd(uaCode);
 					LOGGER.info("## UA Code : {}", uaCode);
 				} else {
@@ -226,15 +226,16 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				throw new StorePlatformException("SAC_MEM_3402", "msisdn", msisdn);
 			}
 
-		} else if (deviceModelNo != null && !deviceModelNo.equals("")) { // deviceModelNo 가 파라미터로 들어온 경우
+		} else if (StringUtils.isNotBlank(deviceModelNo)) { // deviceModelNo 가 파라미터로 들어온 경우
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회
 			String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", deviceModelNo, String.class);
-			if (uaCode != null) {
+			if (StringUtils.isNotBlank(uaCode)) {
 				response.setUaCd(uaCode);
 			} else {
 				throw new StorePlatformException("SAC_MEM_3401", "deviceModelNo", deviceModelNo);
 			}
 		}
+
 		return response;
 	}
 
@@ -298,7 +299,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		smsReq.setRecvMdn(request.getRecvMdn());
 		smsReq.setTeleSvcId(request.getTeleSvcId()); // test 값 : 0 (단문 SM)
 		smsReq.setMsg(messageText);
-		if (request.getCarrier() != null) { // 통신사정보 Optional
+		if (StringUtils.isBlank(request.getCarrier())) { // 통신사정보 Optional
 			smsReq.setCarrier(request.getCarrier());
 		}
 
@@ -334,17 +335,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			throw new StorePlatformException("SAC_MEM_3003");
 		}
 
-		if (resultInfo.getAuthComptYn().equals("Y")) {
+		if ("Y".equals(resultInfo.getAuthComptYn())) {
 			throw new StorePlatformException("SAC_MEM_3001");
 		}
 
-		if (Double.parseDouble(resultInfo.getCurrDt()) < 0) {
+		if (StringUtils.isNotBlank(resultInfo.getCurrDt()) && Double.parseDouble(resultInfo.getCurrDt()) < 0) {
 			throw new StorePlatformException("SAC_MEM_3002");
 		}
 
 		String authSeq = resultInfo.getAuthSeq();
-		this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
-
+		if (StringUtils.isNotBlank(authSeq)) {
+			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
+		}
 		res.setUserPhone(userPhone);
 		return res;
 	}
@@ -362,7 +364,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		LOGGER.info("## IDP Service 호출.");
 		WaterMarkAuthImageEcRes waterMarkAuthImageEcRes = this.idpSCI.warterMarkImageUrl();
 
-		if (waterMarkAuthImageEcRes != null && waterMarkImageUrl != null) {
+		if (waterMarkAuthImageEcRes != null && StringUtils.isNotBlank(waterMarkAuthImageEcRes.getImageUrl())) {
 			waterMarkImageUrl = waterMarkAuthImageEcRes.getImageUrl();
 			waterMarkImageSign = waterMarkAuthImageEcRes.getImageSign();
 			signData = waterMarkAuthImageEcRes.getSignData();
@@ -380,7 +382,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			req.setUrlPath(urlPath);
 			ImageRes imageRes = this.imageSCI.convert(req);
 
-			if (imageRes != null && imageRes.getImgData() != null) {
+			if (imageRes != null && StringUtils.isNotBlank(imageRes.getImgData())) {
 				waterMarkImageString = imageRes.getImgData();
 				LOGGER.info("## Captcha 문자 발급 성공.");
 				LOGGER.debug("## >> WaterMark ImageString : {}", waterMarkImageString);
@@ -448,8 +450,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			LOGGER.info("## TB에 저장할 값들 serviceAuthInfo : {}", serviceAuthInfo);
 			this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
 		} else {
-			authCode = authYnInfo.getAuthValue();
 			// 미인증 상태의 인증코드 존재.
+			authCode = authYnInfo.getAuthValue();
+
 			LOGGER.info("이미 발급된 회원 입니다. 기존 발급된 인증코드 전달. authCode : {}", authCode);
 			// 인증 시간이 만료된 코드도 있으므로, 인증코드 생성시간 업데이트.
 			this.commonDao.update("Miscellaneous.updateServiceAuthTime", authYnInfo.getAuthSeq());
@@ -481,12 +484,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 2. 인증코드 정보가 존재할 경우, 인증 처리 */
 		if (serviceAuthInfo != null) {
 
-			if (serviceAuthInfo.getAuthComptYn().equals("Y")) { // 기존 인증된 코드일 경우
+			if ("Y".equals(serviceAuthInfo.getAuthComptYn())) { // 기존 인증된 코드일 경우
 				throw new StorePlatformException("SAC_MEM_3001");
 			}
 
 			/** timeToLive 값이 존재 할 경우 인증코드 유효기간 검사 */
-			if (timeToLive != null && (Double.parseDouble(serviceAuthInfo.getCurrDt()) < 0)) {
+			if (StringUtils.isNotBlank(timeToLive) && StringUtils.isNotBlank(serviceAuthInfo.getCurrDt())
+					&& (Double.parseDouble(serviceAuthInfo.getCurrDt()) < 0)) {
 				throw new StorePlatformException("SAC_MEM_3002");
 			}
 
@@ -502,43 +506,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		return response;
 	}
-
-	// /**
-	// * <pre>
-	// * msisdn으로 userKey 조회하기 - (기타 기능 내 공통 기능 함수로 생성).
-	// * </pre>
-	// *
-	// * @param commonReq
-	// * CommonRequest
-	// * @param msisdn
-	// * String
-	// * @return String
-	// */
-	// public String searchUserKey(CommonRequest commonReq, String msisdn) {
-	// String userKey = "";
-	//
-	// SearchUserRequest searchUserRequest = new SearchUserRequest();
-	// /** 1. 임시 공통헤더 생성 주입 */
-	// searchUserRequest.setCommonRequest(commonReq);
-	//
-	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-	// KeySearch keySearch = new KeySearch();
-	// keySearch.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-	// keySearch.setKeyString(msisdn);
-	// keySearchList.add(keySearch);
-	// searchUserRequest.setKeySearchList(keySearchList);
-	//
-	// /** 2. deviceId(msisdn)로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
-	// SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
-	//
-	// if (searchUserResponse == null || searchUserResponse.getUserMbr() == null) {
-	// throw new StorePlatformException("SAC_MEM_0003", "deviceId", msisdn);
-	// } else {
-	// userKey = searchUserResponse.getUserMbr().getUserKey();
-	// LOGGER.debug("## [SAC] Response userKey:" + userKey);
-	// }
-	// return userKey;
-	// }
 
 	@Override
 	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) {
@@ -587,19 +554,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String errorKey = "uaCd";
 		String errorValue = uaCd;
 
-		if (msisdn != null && ("".equals(uaCd) || uaCd == null)) {
-			errorKey = "msisdn";
-			errorValue = msisdn;
-			UapsEcReq uapsReq = new UapsEcReq();
-			uapsReq.setDeviceId(request.getMsisdn());
-			uapsReq.setType("mdn");
-			LOGGER.info("## mdn으로 UA코드 조회 - UAPS 연동. request {}", uapsReq);
-			UafmapEcRes uapsRes = this.uapsSCI.getDeviceInfo(uapsReq);
-			if (uapsRes != null && uapsRes.getDeviceModel() != null)
-				uaCd = uapsRes.getDeviceModel();
-			else
-				throw new StorePlatformException("SAC_MEM_3401", errorKey, errorValue);
-		}
+		errorKey = "msisdn";
+		errorValue = msisdn;
+		UapsEcReq uapsReq = new UapsEcReq();
+		uapsReq.setDeviceId(request.getMsisdn());
+		uapsReq.setType("mdn");
+		LOGGER.info("## mdn으로 UA코드 조회 - UAPS 연동. request {}", uapsReq);
+		UafmapEcRes uapsRes = this.uapsSCI.getDeviceInfo(uapsReq);
+		if (uapsRes != null && StringUtils.isNotBlank(uapsRes.getDeviceModel()))
+			uaCd = uapsRes.getDeviceModel();
+		else
+			throw new StorePlatformException("SAC_MEM_3401", errorKey, errorValue);
 
 		LOGGER.info("## UA 코드로 deviceModelNo 조회 - TB_CM_DEVICE. uaCd : {}", uaCd);
 		Device device = this.commonComponent.getPhoneInfoByUacd(uaCd);
@@ -623,16 +588,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		LOGGER.info("[Miscellaneous.authorizeAccount] Inicis Request : {}", inicisAuthAccountEcReq);
 		InicisAuthAccountEcRes inicisAuthAccountEcRes = this.inicisSCI.authAccount(inicisAuthAccountEcReq);
+		LOGGER.info("결제 계좌정보 인증 성공. ResultCode : {}", inicisAuthAccountEcRes.getResultCode());
 
-		// 2. EC (Inicis 연동) 결제계좌 인증 결과 로그.
-		if ("EC_INICIS_1000".equals(inicisAuthAccountEcRes.getResultCode())) {
-			LOGGER.info("결제 계좌정보 인증 성공. ResultCode : {}", inicisAuthAccountEcRes.getResultCode());
-		} else {
-			ErrorInfo errorInfo = new ErrorInfo();
-			errorInfo.setCode(inicisAuthAccountEcRes.getResultCode());
-			errorInfo.setMessage(inicisAuthAccountEcRes.getResultMsg());
-			throw new StorePlatformException(errorInfo);
-		}
+		// // 2. EC (Inicis 연동) 결제계좌 인증 결과 로그.
+		// if (!"EC_INICIS_1000".equals(inicisAuthAccountEcRes.getResultCode())) {
+		// throw new StorePlatformException(inicisAuthAccountEcRes.getResultCode(),
+		// inicisAuthAccountEcRes.getResultMsg());
+		// }
 		return new AuthorizeAccountRes();
 
 	}
