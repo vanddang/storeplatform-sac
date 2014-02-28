@@ -815,19 +815,46 @@ public class LoginServiceImpl implements LoginService {
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 		listDeviceReq.setDeviceId(req.getDeviceId());
 
+		/* 휴대기기 정보 조회 */
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
 
 		AuthorizeForAutoUpdateRes res = new AuthorizeForAutoUpdateRes();
 
+		String isLoginSuccess = null;
+
 		if (deviceInfo != null) {
 
+			isLoginSuccess = "Y";
 			res.setUserKey(deviceInfo.getUserKey());
 			res.setDeviceKey(deviceInfo.getDeviceKey());
-			res.setIsLoginSuccess("Y");
+
+			/* 로그인 히스토리 저장 */
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
+			LoginUserRequest loginReq = new LoginUserRequest();
+			loginReq.setCommonRequest(commonRequest);
+			loginReq.setUserID(req.getDeviceId());
+			loginReq.setUserPW("");
+			loginReq.setIsSuccess(isLoginSuccess);
+			loginReq.setIsOneID("Y");
+			loginReq.setIsMobile("Y");
+			//loginReq.setIsAutoUpdate("Y"); // TODO. 추가예정
+
+			String svcVersion = requestHeader.getDeviceHeader().getSvc();
+			if (svcVersion != null) {
+				loginReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
+			}
+			loginReq.setIpAddress(req.getDeviceId());
+			this.userSCI.updateLoginUser(loginReq);
 
 		} else {
-			res.setIsLoginSuccess("N");
+
+			isLoginSuccess = "N";
 		}
+
+		res.setIsLoginSuccess(isLoginSuccess);
 
 		return res;
 
