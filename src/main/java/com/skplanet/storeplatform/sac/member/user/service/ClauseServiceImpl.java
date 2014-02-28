@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacReq;
@@ -76,6 +77,10 @@ public class ClauseServiceImpl implements ClauseService {
 		List<Clause> clauseList = this.commService.getDetailClauseList(clauseItemCd);
 
 		LOGGER.info("ListClauseSacRes : ", clauseList.toString());
+
+		if (clauseList.size() == 0) {
+			throw new StorePlatformException("SAC_MEM_0002", req.getClauseItemCd());
+		}
 
 		List<ClauseSacRes> detailClauseList = new ArrayList<ClauseSacRes>();
 		for (Clause clause : clauseList) {
