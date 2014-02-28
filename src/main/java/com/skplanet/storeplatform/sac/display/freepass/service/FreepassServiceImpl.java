@@ -32,8 +32,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesR
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -230,10 +230,10 @@ public class FreepassServiceImpl implements FreepassService {
 
 			// 구매 여부 조회
 			if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
-				HistoryCountSacInRes historyCountSacRes = this.getPrchsInfo(req, retMetaInfo);
+				HistoryListSacInRes historyListSacRes = this.getPrchsInfo(req, retMetaInfo);
 
 				// 구매가 있을 경우 : 판매중지,판매중,팬매종료는 노출함
-				if (historyCountSacRes.getTotalCnt() <= 0) {
+				if (historyListSacRes == null || historyListSacRes.getTotalCnt() <= 0) {
 					if (DisplayConstants.DP_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
 							|| DisplayConstants.DP_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())) {
 						throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(),
@@ -635,35 +635,35 @@ public class FreepassServiceImpl implements FreepassService {
 	 * @return HistoryCountSacInRes
 	 * 
 	 */
-	public HistoryCountSacInRes getPrchsInfo(FreepassDetailReq req, MetaInfo metaInfo) {
+	public HistoryListSacInRes getPrchsInfo(FreepassDetailReq req, MetaInfo metaInfo) {
 
 		// 구매내역 조회를 위한 생성자
 		ProductListSacIn productListSacIn = new ProductListSacIn();
 		List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
-		HistoryCountSacInReq historyCountSacReq = new HistoryCountSacInReq();
-		HistoryCountSacInRes historyCountSacRes;
+		HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
+		HistoryListSacInRes historyListSacRes;
 
 		try {
 			// 정액제 상품ID
 			productListSacIn.setProdId(metaInfo.getProdId());
 			productList.add(productListSacIn);
 
-			historyCountSacReq.setTenantId(req.getTenantId());
-			historyCountSacReq.setUserKey(req.getUserKey());
-			historyCountSacReq.setDeviceKey(req.getDeviceKey());
-			historyCountSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-			historyCountSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-			historyCountSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-			historyCountSacReq.setEndDt(metaInfo.getSysDate());
-			historyCountSacReq.setProductList(productList);
+			historyListSacReq.setTenantId(req.getTenantId());
+			historyListSacReq.setUserKey(req.getUserKey());
+			historyListSacReq.setDeviceKey(req.getDeviceKey());
+			historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+			historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+			historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+			historyListSacReq.setEndDt(metaInfo.getSysDate());
+			historyListSacReq.setProductList(productList);
 
 			// 구매내역 조회 실행
-			historyCountSacRes = this.historyInternalSCI.searchHistoryCount(historyCountSacReq);
-
+			//historyCountSacRes = this.historyInternalSCI.searchHistoryCount(historyCountSacReq);
+			historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
 		} catch (Exception ex) {
 			throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 		}
-		return historyCountSacRes;
+		return historyListSacRes;
 	}
 
 }
