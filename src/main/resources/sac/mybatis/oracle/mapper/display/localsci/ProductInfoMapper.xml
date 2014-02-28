@@ -63,8 +63,6 @@
               , TB.DRM_YN
               , TB.CONTENTS_TYPE_CD
               , TB.VER_MAJOR || '.' || TB.VER_MINOR AS PROD_VER
-              , TB.PKG_NM
-              , TB.PKG_VER_CD
               , TB.FILE_PATH
               , TB.USE_PERIOD
               , TB.USE_PERIOD_UNIT_CD
@@ -74,6 +72,12 @@
                     AND LANG_CD = #{lang}
                     AND ROWNUM = 1) AS TOP_MENU_NM
               , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = TB.PROD_ID) AS PHONE_SPRT_YN
+              , (SELECT CONTENTS.APK_PKG_NM || ',' || CONTENTS.APK_VER FROM 
+                        TB_DP_SPRT_DEVICE DEVICE,TB_DP_SUB_CONTENTS CONTENTS
+                   WHERE TB.PROD_ID = DEVICE.PROD_ID
+                     AND DEVICE.PROD_ID = CONTENTS.PROD_ID
+                     AND DEVICE.SUB_CONTENTS_ID = CONTENTS.SUB_CONTENTS_ID
+                     AND DEVICE.DEVICE_MODEL_CD = #{deviceModelNo} ) AS APK_INFO
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
                       , A.MENU_ID
@@ -94,8 +98,6 @@
                       , E.VER_MAJOR
                       , E.VER_MINOR
                       , E.PART_PARENT_CLSF_CD
-                      , E.PKG_NM
-                      , E.PKG_VER_CD
                       , E.PROD_CLSF_CD
                       , F.PROD_NM
                       , F.PROD_BASE_DESC
