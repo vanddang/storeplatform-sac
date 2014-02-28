@@ -115,6 +115,10 @@
         <!-- TODAY 상품 조회 -->
         <typeAlias alias="RecommendTodaySacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacReq" />
         
+        <!-- 하루에하나 상품 조회 -->
+        <typeAlias alias="RecommendOnedaySacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendOnedaySacReq" />
+        <typeAlias alias="RecommendOneday"  type="com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendOneday" />
+        
          <!-- 특정 단말 조회 -->
         <typeAlias alias="DeviceProfileRequest"  type="com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq" />
         <typeAlias alias="DeviceProfile"  type="com.skplanet.storeplatform.sac.display.device.vo.DeviceProfile" />
