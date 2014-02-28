@@ -163,5 +163,66 @@
 		 WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 		 ORDER BY RNUM
     </select>
-    
+     
+    <!-- 하루에 하나 상품 조회 -->
+    <select id="selectRecommendOnedayList" parameterType="RecommendOnedaySacReq" resultType="RecommendOneday">
+        SELECT /* FeatureRecommendMapper.xml, selectRecommendOnedayList, SAC : 이승훈 , 2014-02-28 */
+			    ONE.TENANT_ID
+			 , ONE.EXPO_DT
+             , ONE.EXPO_START_DT
+             , ONE.EXPO_END_DT
+             , TDMC.MENU_ID
+			 , PROD.PROD_ID
+			 , TBPR.PART_PROD_ID
+			 , TDMC.TOP_MENU_ID
+			 , PROD.META_CLSF_CD
+             , PROD.SVC_GRP_CD
+			 , PROD.CONTENTS_TYPE_CD
+			FROM TB_DP_ONEDAY_ONE_APP ONE
+			    , TB_DP_PROD PROD
+			    , TB_DP_MENU_CATEGORY_PROD_MAPG TDMM
+			    , TB_DP_MENU_CATEGORY TDMC
+			    , TB_DP_PROD_RSHP TBPR
+			    , TB_DP_PROD_DESC TDPD
+			    , TB_DP_TENANT_PROD TDTP
+			    , TB_DP_PROD_IMG TDPI
+			WHERE ONE.PROD_ID = PROD.PROD_ID
+				AND ONE.PROD_ID = TDPD.PROD_ID
+				AND ONE.PROD_ID = TDTP.PROD_ID
+				AND ONE.PROD_ID = TDPI.PROD_ID
+				AND ONE.PROD_ID = TBPR.PART_PROD_ID
+				AND PROD.PROD_ID = TDMM.PROD_ID
+				AND TDMM.USE_YN = 'Y'
+				AND TDMM.MENU_ID = TDMC.MENU_ID
+				AND TDMC.USE_YN = 'Y'
+				AND ONE.TENANT_ID = 'S01'
+				AND TDTP.TENANT_ID = 'S01'
+				AND ONE.USE_YN = 'Y'
+				AND TDTP.EXPO_YN = 'Y'
+				AND TDPI.IMG_CD = 'DP000102'
+                <if test="menuId != null">
+                AND TDMM.MENU_ID = #{menuId}
+                </if>
+                <if test="arrayProdGradeCd != null">
+                   AND PROD.PROD_GRD_CD IN
+                     <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                       #{prodGradeCd}
+                     </foreach>
+                 </if>
+                <if test='searchType == "T"'>
+                AND SYSDATE BETWEEN ONE.EXPO_START_DT AND ONE.EXPO_END_DT
+                AND ROWNUM = 1
+                </if>
+                <if test='searchType == "A"'>
+                    <if test="period != null">
+                        <if test="periodStart != null">
+                            AND ONE.EXPO_START_DT <![CDATA[ >= ]]> TO_DATE(#{periodStart} , 'YYYYMMDDHH24MISS')
+                        </if>
+                        <if test="periodEnd != null">
+                            AND ONE.EXPO_END_DT <![CDATA[ <= ]]> TO_DATE(#{periodEnd} , 'YYYYMMDDHH24MISS')
+                        </if>
+                    </if>
+                </if>
+			ORDER BY ONE.EXPO_DT
+    </select>
 </mapper>
