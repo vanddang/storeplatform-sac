@@ -42,7 +42,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String cancelReqPathCd;
 	private String cancelDt;
 	private String prchsCaseCd;
-	private String rePrchsPmtYn;
 	private String dwldStartDt;
 	private String dwldExprDt;
 	private String cpnPublishCd;
@@ -476,21 +475,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setPrchsCaseCd(String prchsCaseCd) {
 		this.prchsCaseCd = prchsCaseCd;
-	}
-
-	/**
-	 * @return the rePrchsPmtYn
-	 */
-	public String getRePrchsPmtYn() {
-		return this.rePrchsPmtYn;
-	}
-
-	/**
-	 * @param rePrchsPmtYn
-	 *            the rePrchsPmtYn to set
-	 */
-	public void setRePrchsPmtYn(String rePrchsPmtYn) {
-		this.rePrchsPmtYn = rePrchsPmtYn;
 	}
 
 	/**
