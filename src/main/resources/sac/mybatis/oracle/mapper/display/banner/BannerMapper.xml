@@ -63,7 +63,7 @@
 		                  FROM  TB_DP_BNR      A
 		                      , TB_DP_BNR_EXPO B
 		                      , TB_DP_BNR_IMG  C
-                    <if test='bnrMenuId != "DP010926"'><!-- Mobile Web 직사각형 배너가 아닌 경우 -->
+                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908"'><!-- Mobile Web 직사각형 배너가 아닌 경우 -->
 		                      , TB_DP_BNR_DVC  D
 		                      , TB_CM_DEVICE   E
                     </if>
@@ -93,9 +93,9 @@
                         <when test='bnrMenuId != "DP010999"'><!-- Mobile Web 정사각형 배너가 아닌경우 -->
                            AND  A.BNR_MENU_ID = #{bnrMenuId}
                         </when>
-                        <otherwise><!-- Mobile Web 정사각형 배너 샵클HOME, 게임, Fun, 생활/위치, 어학/교육 -->
+                        <otherwise>
                            AND  C.MOBILE_WEB_EXPO_YN = 'Y'
-                           AND  A.BNR_MENU_ID IN ('DP010915', 'DP010916', 'DP010917', 'DP010918', 'DP010919')
+                           AND  A.BNR_MENU_ID IN ('DP010915', 'DP010916', 'DP010917', 'DP010918', 'DP010919')<!-- 샵클HOME, 게임, Fun, 생활/위치, 어학/교육 -->
                         </otherwise>
                     </choose>
                     <if test='bnrExpoMenuId != null and bnrExpoMenuId != ""'>
@@ -116,14 +116,7 @@
                         </otherwise>
                     </choose>
 		               ) IA
-    <choose>
-        <when test='bnrMenuId != "DP010999"'><!-- Mobile Web 정사각형 배너가 아닌경우 -->
-		        ORDER BY IA.EXPO_ORD, IA.EXPO_STATUS_CD
-        </when>
-        <otherwise>
 		        ORDER BY IA.BNR_MENU_ID, IA.EXPO_ORD, IA.EXPO_STATUS_CD
-        </otherwise>
-    </choose>
 		       ) JA
     </select>
     

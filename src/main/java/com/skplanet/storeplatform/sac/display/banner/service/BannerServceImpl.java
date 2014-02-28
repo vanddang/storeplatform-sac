@@ -41,6 +41,13 @@ import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 public class BannerServceImpl implements BannerService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	private final int BANNER_MAX_COUNT = 20; // 요청 가능한 배너 최대 개수
+	private final int HOME_BANNER_COUNT = 2; // Home 배너 12개 (Mobile Web 정사각형 배너)
+	private final int GAME_BANNER_COUNT = 2; // 게임 배너 2개 (Mobile Web 정사각형 배너)
+	private final int FUN_BANNER_COUNT = 2; // Fun 배너 2개 (Mobile Web 정사각형 배너)
+	private final int LIFE_BANNER_COUNT = 2; // 생활/위치 배너 2개 (Mobile Web 정사각형 배너)
+	private final int EDU_BANNER_COUNT = 2; // 어학/교육 배너 2개 (Mobile Web 정사각형 배너)
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -64,23 +71,23 @@ public class BannerServceImpl implements BannerService {
 	@Override
 	public BannerSacRes searchBannerList(SacRequestHeader header, BannerSacReq bannerReq) {
 		BannerSacRes bannerRes = new BannerSacRes();
-		String bnrMenuId = bannerReq.getBnrMenuId();
-		String mobileWebExpoYn = bannerReq.getMobileWebExpoYn();
-		String bnrExpoMenuId = bannerReq.getBnrExpoMenuId();
-		String imgSizeCd = bannerReq.getImgSizeCd();
+		String reqBnrMenuId = bannerReq.getBnrMenuId();
+		String reqMobileWebExpoYn = bannerReq.getMobileWebExpoYn();
+		String reqBnrExpoMenuId = bannerReq.getBnrExpoMenuId();
+		String reqImgSizeCd = bannerReq.getImgSizeCd();
 
 		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("[searchBannerList] bnrMenuId : {}", bnrMenuId);
-		this.logger.debug("[searchBannerList] mobileWebExpoYn : {}", mobileWebExpoYn);
-		this.logger.debug("[searchBannerList] bnrExpoMeneId : {}", bnrExpoMenuId);
-		this.logger.debug("[searchBannerList] imgSizeCd : {}", imgSizeCd);
+		this.logger.debug("[searchBannerList] reqBnrMenuId : {}", reqBnrMenuId);
+		this.logger.debug("[searchBannerList] reqMobileWebExpoYn : {}", reqMobileWebExpoYn);
+		this.logger.debug("[searchBannerList] reqBnrExpoMenuId : {}", reqBnrExpoMenuId);
+		this.logger.debug("[searchBannerList] reqImgSizeCd : {}", reqImgSizeCd);
 		this.logger.debug("----------------------------------------------------------------");
 
 		// 이미지 사이즈 유효값 확인
-		String imgSizeList[] = imgSizeCd.split("\\+");
+		String imgSizeList[] = reqImgSizeCd.split("\\+");
 		if (imgSizeList == null || imgSizeList.length == 0) {
 			// 실행에 필요한 파라미터가 유효하지 않습니다.
-			throw new StorePlatformException("SAC_DSP_0003", "imgSizeCd", imgSizeCd);
+			throw new StorePlatformException("SAC_DSP_0003", "imgSizeCd", reqImgSizeCd);
 		}
 
 		// 헤더정보 세팅
@@ -92,14 +99,22 @@ public class BannerServceImpl implements BannerService {
 		String reqImgCd = null; // 요청 이미지
 		Integer reqImgCnt = null; // 요청 이미지 개수
 
+		String bnrMenuId = null;
 		String bnrType = null; // 배너타입
 		String prodId = null; // 상품ID
 		String topMenuId = null; // 탑메뉴ID
 		String stdDt = null; // 배치완료 기준일시
 		String recommendId = null; // 추천ID
 		String brandShopNo = null; // 브랜드샵 번호
-		Integer provCnt = 0; // 프로비저닝 건수
-		Integer passCnt = 0; // 결과리스트에 담긴 배너 개수
+
+		int provCnt = 0; // 프로비저닝 건수
+		int passCnt = 0; // 결과리스트에 담긴 배너 개수
+
+		boolean homeBannerFullFlag = false;
+		boolean gameBannerFullFlag = false;
+		boolean funBannerFullFlag = false;
+		boolean lifeBannerFullFlag = false;
+		boolean eduBannerFullFlag = false;
 
 		BannerDefault bannerDefault = null; // 배너VO
 		List<BannerDefault> bannerList = null; // 배너리스트
@@ -112,6 +127,7 @@ public class BannerServceImpl implements BannerService {
 		MetaInfo metaInfo = null; // 메타정보 VO
 
 		for (int i = 0; i < imgSizeList.length; i++) {
+			passCnt = 0;
 			reqImgCd = imgSizeList[i].split("\\/")[0]; // 요청 이미지 코드
 			reqImgCnt = Integer.parseInt(imgSizeList[i].split("\\/")[1]); // 요청 이미지 건수
 
@@ -121,7 +137,63 @@ public class BannerServceImpl implements BannerService {
 
 			for (int k = 0; k < bannerList.size(); k++) {
 				bannerDefault = bannerList.get(k);
+				bnrMenuId = bannerDefault.getBnrMenuId();
 				bnrType = bannerDefault.getBnrInfoTypeCd();
+
+				// Mobile Web 정사각형 배너
+				if ("DP010999".equals(reqBnrMenuId)) {
+					if ("DP010915".equals(bnrMenuId)) {
+						if (homeBannerFullFlag) {
+							continue;
+						}
+						if (passCnt == this.HOME_BANNER_COUNT) {
+							passCnt = 0;
+							homeBannerFullFlag = true;
+							continue;
+						}
+					} else if ("DP010916".equals(bnrMenuId)) {
+						if (gameBannerFullFlag) {
+							continue;
+						}
+						if (passCnt == this.GAME_BANNER_COUNT) {
+							passCnt = 0;
+							gameBannerFullFlag = true;
+							continue;
+						}
+					} else if ("DP010917".equals(bnrMenuId)) {
+						if (funBannerFullFlag) {
+							continue;
+						}
+						if (passCnt == this.FUN_BANNER_COUNT) {
+							passCnt = 0;
+							funBannerFullFlag = true;
+							continue;
+						}
+					} else if ("DP010918".equals(bnrMenuId)) {
+						if (lifeBannerFullFlag) {
+							continue;
+						}
+						if (passCnt == this.LIFE_BANNER_COUNT) {
+							passCnt = 0;
+							lifeBannerFullFlag = true;
+							continue;
+						}
+					} else if ("DP010919".equals(bnrMenuId)) {
+						if (eduBannerFullFlag) {
+							continue;
+						}
+						if (passCnt == this.EDU_BANNER_COUNT) {
+							passCnt = 0;
+							eduBannerFullFlag = true;
+							continue;
+						}
+					}
+				} else {
+					// 요청건수 확인
+					if (reqImgCnt == passCnt) {
+						break;
+					}
+				}
 
 				// 배너타입 : 상품 지정 입력
 				if (DisplayConstants.DP_BANNER_PRODUCT_CD.equals(bnrType)) {
@@ -266,16 +338,11 @@ public class BannerServceImpl implements BannerService {
 					++passCnt;
 					resultList.add(bannerDefault);
 				}
-
-				// 요청건수 확인
-				if (reqImgCnt == passCnt) {
-					break;
-				}
 			}
 		}
 
 		// Response 생성
-		bannerRes = this.generateJSONData(resultList);
+		bannerRes = this.generateResponse(resultList);
 		return bannerRes;
 	}
 
@@ -288,7 +355,7 @@ public class BannerServceImpl implements BannerService {
 	 *            list
 	 * @return BannerSacResㄴ
 	 */
-	private BannerSacRes generateJSONData(List<BannerDefault> list) {
+	private BannerSacRes generateResponse(List<BannerDefault> list) {
 		String bnrType = null;
 		String bnrInfo = null;
 		String topMenuId = null;

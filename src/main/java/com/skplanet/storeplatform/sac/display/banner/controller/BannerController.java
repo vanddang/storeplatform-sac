@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,9 +38,9 @@ public class BannerController {
 	 *            bannerReq
 	 * @return BannerSacRes
 	 */
-	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BannerSacRes searchBannerList(SacRequestHeader header, @RequestBody @Validated BannerSacReq bannerReq) {
+	public BannerSacRes searchBannerList(SacRequestHeader header, @Validated BannerSacReq bannerReq) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchBannerList started.");
 		this.logger.debug("bannerReq : {}", bannerReq.toString());

@@ -16,6 +16,7 @@ package com.skplanet.storeplatform.sac.display.banner.vo;
  */
 public class BannerDefault {
 	private Integer totalCount;
+	private String bnrMenuId;
 	private String bnrSeq;
 	private String imgSizeCd;
 	private String bnrInfoTypeCd;
@@ -46,6 +47,21 @@ public class BannerDefault {
 	 */
 	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
+	}
+
+	/**
+	 * @return the bnrMenuId
+	 */
+	public String getBnrMenuId() {
+		return this.bnrMenuId;
+	}
+
+	/**
+	 * @param bnrMenuId
+	 *            the bnrMenuId to set
+	 */
+	public void setBnrMenuId(String bnrMenuId) {
+		this.bnrMenuId = bnrMenuId;
 	}
 
 	/**

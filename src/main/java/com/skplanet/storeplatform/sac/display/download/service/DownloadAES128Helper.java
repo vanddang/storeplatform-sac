@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Random;
 
@@ -136,6 +137,26 @@ public class DownloadAES128Helper {
 			sb.append(Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1));
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * <pre>
+	 * getDigest.
+	 * </pre>
+	 * 
+	 * @param b
+	 *            b
+	 * @return byte[]
+	 */
+	public byte[] getDigest(byte[] b) {
+		MessageDigest md = null;
+
+		try {
+			md = MessageDigest.getInstance("SHA-1");
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_DSP_0001", "getDigest ", e);
+		}
+		return md.digest(b);
 	}
 
 	/**
