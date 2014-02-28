@@ -65,7 +65,8 @@
                              AND ROWNUM = 1
                          ) AS TOP_MENU_NM
                         ,D.MENU_ID
-                        ,F.MENU_NM                         
+                        ,F.MENU_NM     
+                        ,J.SVC_GRP_CD                    
                         ,J.META_CLSF_CD    
                         ,A.BRAND_ID
                         ,A.BRAND_NM                            
