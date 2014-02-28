@@ -136,11 +136,11 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
 					this.log.debug("##### Search for Shopping specific product");
-					// ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getShoppingMetaInfo", paramMap,
-					// ProductInfo.class);
-					// if (product != null) {
-					// productList.add(product);
-					// }
+					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getShoppingMetaInfo", paramMap,
+							ProductInfo.class);
+					if (product != null) {
+						productList.add(product);
+					}
 				}
 			}
 		}
