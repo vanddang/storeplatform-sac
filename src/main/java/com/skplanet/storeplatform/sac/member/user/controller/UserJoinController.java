@@ -213,12 +213,11 @@ public class UserJoinController {
 	 * ID 회원 간편 가입 (IDP 회원) QA 테스트 페이지용.
 	 * </pre>
 	 * 
-	 * @param userId
-	 * @param userPw
-	 * @param userEmail
-	 * @param model
 	 * @param sacHeader
-	 *            void
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/member/user/createBySimple/qa", method = RequestMethod.GET)
 	@ResponseBody
