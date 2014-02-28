@@ -435,14 +435,20 @@ public class FeedbackServiceImpl implements FeedbackService {
 		tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		tenantProdStats.setProdId(listFeedbackSacReq.getProdId());
 		TenantProdStats getProdEvalInfo = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
-		if (getProdEvalInfo == null) {
-			throw new StorePlatformException("SAC_OTH_9001");
-		}
+
 		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
-		listFeedbackRes.setAvgEvluScorePcts(getProdEvalInfo.getAvgEvluScorePcts());
-		listFeedbackRes.setAvgEvluScore(getProdEvalInfo.getAvgEvluScore());
-		listFeedbackRes.setDwldCnt(getProdEvalInfo.getDwldCnt());
-		listFeedbackRes.setPaticpersCnt(getProdEvalInfo.getPaticpersCnt());
+		if (getProdEvalInfo == null) {
+			listFeedbackRes.setAvgEvluScorePcts("0");
+			listFeedbackRes.setAvgEvluScore("0");
+			listFeedbackRes.setDwldCnt("0");
+			listFeedbackRes.setPaticpersCnt("0");
+		} else {
+			listFeedbackRes.setAvgEvluScorePcts(ObjectUtils.defaultIfNull(getProdEvalInfo.getAvgEvluScorePcts(), "0"));
+			listFeedbackRes.setAvgEvluScore(ObjectUtils.defaultIfNull(getProdEvalInfo.getAvgEvluScore(), "0"));
+			listFeedbackRes.setDwldCnt(ObjectUtils.defaultIfNull(getProdEvalInfo.getDwldCnt(), "0"));
+			listFeedbackRes.setPaticpersCnt(ObjectUtils.defaultIfNull(getProdEvalInfo.getPaticpersCnt(), "0"));
+		}
+
 		// 페이징 처리.
 		int offset = listFeedbackSacReq.getOffset() == 0 ? 1 : listFeedbackSacReq.getOffset();
 		int count = listFeedbackSacReq.getCount() == 0 ? 10 : (offset + listFeedbackSacReq.getCount()) - 1;
