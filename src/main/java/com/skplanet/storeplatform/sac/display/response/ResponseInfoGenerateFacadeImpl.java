@@ -107,6 +107,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSourceList(sourceList);
 		product.setRights(rights);
 		product.setMenuList(menuList);
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 
 		return product;
 	}
@@ -380,6 +382,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setBook(book);
 		product.setDate(date);
 		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -420,6 +424,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(rights);
 		product.setContributor(contributor);
 		product.setSalesOption(salesOption);
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -519,6 +525,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -545,6 +553,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -571,6 +581,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductExplain(productExplain);
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 
 		return product;
 	}
@@ -599,6 +611,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
 		product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo));
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -626,6 +640,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
 		product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo));
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
@@ -651,6 +667,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(this.shoppingGenerator.generateContributor(metaInfo));
 		product.setSalesOption(this.shoppingGenerator.generateSalesOption(metaInfo));
 		// product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
+		// 판매상태 설정
+		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
 	}
 
