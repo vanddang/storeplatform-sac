@@ -60,7 +60,7 @@ public class SearchOneIdTest {
 	 * </pre>
 	 */
 	@Test
-	public void a_searchOneIdInfo() {
+	public void A_TEST_정상_OneId정보조회_데이터있음() {
 		new TestCaseTemplate(this.mockMvc).url("/member/user/searchOneIdInfo/v1?userKey=IF1523972220130926133834").httpMethod(HttpMethod.GET)
 				.success(MbrOneidSacRes.class, new SuccessCallback() {
 					@Override
@@ -79,7 +79,7 @@ public class SearchOneIdTest {
 	 * </pre>
 	 */
 	@Test
-	public void b_searchOneIdInfo() {
+	public void B_TEST_정상_OneId정보조회_데이터없음() {
 		new TestCaseTemplate(this.mockMvc).url("/member/user/searchOneIdInfo/v1?userKey=US201401271645589690000973").httpMethod(HttpMethod.GET)
 				.success(MbrOneidSacRes.class, new SuccessCallback() {
 					@Override
@@ -98,7 +98,7 @@ public class SearchOneIdTest {
 	 * </pre>
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void c_searchOneIdInfo() {
+	public void C_TEST_오류_SAC_OneId정보조회_통합회원아님() {
 		new TestCaseTemplate(this.mockMvc).url("/member/user/searchOneIdInfo/v1?userKey=US201402070435490820001979").httpMethod(HttpMethod.GET)
 				.success(MbrOneidSacRes.class, new SuccessCallback() {
 					@Override
@@ -113,18 +113,37 @@ public class SearchOneIdTest {
 
 	/**
 	 * <pre>
-	 * OneId 정보조회 userKey is Null
+	 * OneId 정보조회 파라미터 없음
 	 * </pre>
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void searchOneIdInfoError() {
+	public void D_TEST_오류_SAC_OneId정보조회_파라미터없음() {
 		new TestCaseTemplate(this.mockMvc).url("/member/user/searchOneIdInfo/v1?userKey=").httpMethod(HttpMethod.GET)
 				.success(MbrOneidSacRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						MbrOneidSacRes res = (MbrOneidSacRes) result;
 						assertThat(res.getIsRealName(), notNullValue());
-						logger.info("ListClauseSacRes : {}", res.toString());
+						logger.info("MbrOneidSacRes : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * OneId 정보조회 회원키 없음
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void E_TEST_오류_SC_OneId정보조회_회원키없음() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/searchOneIdInfo/v1?userKey=123456").httpMethod(HttpMethod.GET)
+				.success(MbrOneidSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						MbrOneidSacRes res = (MbrOneidSacRes) result;
+						assertThat(res.getIsRealName(), notNullValue());
+						logger.info("MbrOneidSacRes : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
