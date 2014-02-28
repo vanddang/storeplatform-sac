@@ -1005,7 +1005,7 @@ public class AppguideServiceImpl implements AppguideService {
 		request.setMbn(requestVO.getUserKey());
 		request.setMdn(requestVO.getDeviceId());
 		request.setChCode("M");
-		request.setType("appguide");
+		// request.setType("appguide");
 
 		if (this.log.isDebugEnabled()) {
 			this.log.debug(request.toString());
