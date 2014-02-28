@@ -101,6 +101,11 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * > Code : 대분류 카테고리시 topClass.
 	 */
 	private List<Menu> menuList;
+	
+	/**
+	 * > Code : 판매상태.
+	 */
+	private String saleStatus;
 
 	/**
 	 * @return Identifier
@@ -312,14 +317,6 @@ public class Coupon extends CommonInfo implements Serializable {
 		this.episodeCouponList = episodeCouponList;
 	}
 
-	public List<Identifier> getIdentifierList() {
-		return this.identifierList;
-	}
-
-	public void setIdentifierList(List<Identifier> identifierList) {
-		this.identifierList = identifierList;
-	}
-
 	/**
 	 * @return the menuList
 	 */
@@ -332,6 +329,34 @@ public class Coupon extends CommonInfo implements Serializable {
 	 */
 	public void setMenuList(List<Menu> menuList) {
 		this.menuList = menuList;
+	}
+
+	/**
+	 * @return the saleStatus
+	 */
+	public String getSaleStatus() {
+		return saleStatus;
+	}
+
+	/**
+	 * @param saleStatus the saleStatus to set
+	 */
+	public void setSaleStatus(String saleStatus) {
+		this.saleStatus = saleStatus;
+	}
+
+	/**
+	 * @return the identifierList
+	 */
+	public List<Identifier> getIdentifierList() {
+		return identifierList;
+	}
+
+	/**
+	 * @param identifierList the identifierList to set
+	 */
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
 	}
 
 }
