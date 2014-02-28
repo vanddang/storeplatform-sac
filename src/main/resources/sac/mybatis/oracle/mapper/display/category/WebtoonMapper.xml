@@ -82,84 +82,84 @@
     <!-- 운영자 웹툰 상품 리스트 조회-->
     <select id="getAdminWebtoonList" parameterType="RecommendWebtoonSacReq" resultType="ProductBasicInfo">
         SELECT /* WebtoonMapper.xml, getAdminWebtoonList, SAC : 조준일 , 2014-02-10 */
-	           B.TENANT_ID
-	         , B.MENU_ID
-	         , B.PROD_ID
-	         , B.PART_PROD_ID
-	         , B.TOP_MENU_ID
-	         , B.CONTENTS_TYPE_CD
-	         , B.TOTAL_COUNT
-		  FROM (SELECT A.*
-		             , COUNT(*) OVER () AS TOTAL_COUNT
-		             , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
-		          FROM (SELECT A.TENANT_ID
-		                     , D.MENU_ID
-		                     , C.PROD_ID
-		                     , C.PART_PROD_ID
-		                     , E.TOP_MENU_ID
-		                     , A.EXPO_ORD_ALWAYS_YN
-		                     , A.EXPO_ORD
-		                     , A.EXPO_ORD_SUB
-		                     , F.CONTENTS_TYPE_CD
-		                     , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS NO
-		                  FROM (SELECT LP.*
-		                          FROM TB_DP_LIST LT
-		                             , TB_DP_LIST_PROD LP
-		                         WHERE LT.TENANT_ID = LP.TENANT_ID
-		                           AND LT.LIST_ID = LP.LIST_ID
-		                           AND LT.EXPO_YN = 'Y'
-		                           AND LP.EXPO_YN = 'Y'
-		                           AND LT.TENANT_ID = #{tenantId}
-		                           AND LT.LIST_ID = #{listId}
-		                           AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
-		                           AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
-		                           <if test="menuId != null and menuId != ''">
+               B.TENANT_ID
+             , B.MENU_ID
+             , B.PROD_ID
+             , B.PART_PROD_ID
+             , B.TOP_MENU_ID
+             , B.CONTENTS_TYPE_CD
+             , B.TOTAL_COUNT
+          FROM (SELECT A.*
+                     , COUNT(*) OVER () AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
+                  FROM (SELECT A.TENANT_ID
+                             , D.MENU_ID
+                             , C.PROD_ID
+                             , C.PART_PROD_ID
+                             , E.TOP_MENU_ID
+                             , A.EXPO_ORD_ALWAYS_YN
+                             , A.EXPO_ORD
+                             , A.EXPO_ORD_SUB
+                             , F.CONTENTS_TYPE_CD
+                             , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS NO
+                          FROM (SELECT LP.*
+                                  FROM TB_DP_LIST LT
+                                     , TB_DP_LIST_PROD LP
+                                 WHERE LT.TENANT_ID = LP.TENANT_ID
+                                   AND LT.LIST_ID = LP.LIST_ID
+                                   AND LT.EXPO_YN = 'Y'
+                                   AND LP.EXPO_YN = 'Y'
+                                   AND LT.TENANT_ID = #{tenantId}
+                                   AND LT.LIST_ID = #{listId}
+                                   <if test="menuId != null and menuId != ''">
                                    AND LP.MENU_ID = #{menuId}
                                    </if>
                                    <if test="menuId == null or menuId == ''">
                                    AND LP.MENU_ID LIKE 'DP26%'
                                    </if>
-		                       ) A  /* 채널 */
-		                     , UV_TB_DP_MULTIMDA_PROD B  /* 채널 */
-		                     , TB_DP_PROD_RSHP C
-		                     , TB_DP_MENU_CATEGORY_PROD_MAPG D
-		                     , TB_DP_MENU_CATEGORY E
-		                     , TB_DP_PROD F
-		                     , TB_DP_TENANT_PROD G
-		                     , (SELECT SD.PROD_ID
-		                          FROM TB_DP_SPRT_DEVICE SD
-		                             , TB_CM_DEVICE CD
-		                         WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
-		                           AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = 'android_standard2')
-		                           AND CD.USE_YN = 'Y'
-		                       ) H
-		                     , UV_TB_DP_MULTIMDA_PROD I  /* 에피소드 */
-		                 WHERE A.PROD_ID = B.PROD_ID
-		                   AND NVL(B.EPSD_CNT, 0) > 0
-		                   AND B.PROD_ID = C.PROD_ID
-		                   AND C.PROD_RSHP_CD ='DP010802'
-		                   AND C.PART_PROD_ID = D.PROD_ID
-		                   AND D.USE_YN = 'Y'
-		                   AND D.MENU_ID = E.MENU_ID
-		                   AND E.USE_YN = 'Y'
-		                   AND E.TOP_MENU_ID = 'DP26'
-		                   AND D.PROD_ID = F.PROD_ID
-		                   AND F.SVC_GRP_CD = 'DP000203'
-		                   AND F.CONTENTS_TYPE_CD = 'PD002502'
-		                   AND F.PROD_ID = G.PROD_ID
-		                   AND G.TENANT_ID = #{tenantId}
-		                   AND G.PROD_STATUS_CD = 'PD000403'
-		                   AND G.EXPO_YN = 'Y'
-		                   AND G.PROD_ID = H.PROD_ID
-		                   AND C.PART_PROD_ID = I.PROD_ID
-		                   <if test="weekDayCd != null and weekDayCd != ''">
+                                   AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                                   AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+                               ) A  /* 채널 */
+                             , UV_TB_DP_MULTIMDA_PROD B  /* 채널 */
+                             , TB_DP_PROD_RSHP C
+                             , TB_DP_MENU_CATEGORY_PROD_MAPG D
+                             , TB_DP_MENU_CATEGORY E
+                             , TB_DP_PROD F
+                             , TB_DP_TENANT_PROD G
+                             , (SELECT SD.PROD_ID
+                                  FROM TB_DP_SPRT_DEVICE SD
+                                     , TB_CM_DEVICE CD
+                                 WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
+                                   AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = 'android_standard2')
+                                   AND CD.USE_YN = 'Y'
+                               ) H
+                             , UV_TB_DP_MULTIMDA_PROD I  /* 에피소드 */
+                         WHERE A.PROD_ID = B.PROD_ID
+                           AND NVL(B.EPSD_CNT, 0) > 0
+                           AND B.PROD_ID = C.PROD_ID
+                           AND C.PART_PROD_ID = D.PROD_ID
+                           AND C.PROD_RSHP_CD ='DP010802'
+                           AND D.USE_YN = 'Y'
+                           AND D.MENU_ID = E.MENU_ID
+                           AND E.USE_YN = 'Y'
+                           AND E.TOP_MENU_ID = 'DP26'
+                           AND D.PROD_ID = F.PROD_ID
+                           AND F.SVC_GRP_CD = 'DP000203'
+                           AND F.CONTENTS_TYPE_CD = 'PD002502'
+                           AND F.PROD_ID = G.PROD_ID
+                           AND G.TENANT_ID = #{tenantId}
+                           AND G.PROD_STATUS_CD = 'PD000403'
+                           AND G.EXPO_YN = 'Y'
+                           AND G.PROD_ID = H.PROD_ID
+                           AND C.PART_PROD_ID = I.PROD_ID
+                           <if test="weekDayCd != null and weekDayCd != ''">
                            AND I.SERIALLY_WKDY LIKE CONCAT('%', CONCAT((SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd}), '%'))  /* DP010101 ~DP010107  :월~토*/
                            </if>
-		               ) A
-		         WHERE NO = 1
-		       ) B
-		 WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
-		 ORDER BY RNUM
+                       ) A
+                 WHERE NO = 1
+               ) B
+         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+         ORDER BY RNUM
     </select>        
     
     <!-- 운영자 웹툰 상품 리스트 조회-->
