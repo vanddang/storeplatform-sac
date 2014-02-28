@@ -64,7 +64,7 @@
 		                      , TB_DP_BNR_EXPO B
 		                      , TB_DP_BNR_IMG  C
                     <!-- [모바일웹 직사각형], [모바일웹 상/하단], [T플레이], [유료앱이무료] 배너 프로비저닝 제외 -->
-                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010909"'>
+                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010906"'>
 		                      , TB_DP_BNR_DVC  D
 		                      , TB_CM_DEVICE   E
                     </if>
@@ -75,7 +75,7 @@
 		                   AND  A.BNR_MENU_ID = C.BNR_MENU_ID
 		                   AND  A.BNR_SEQ = C.BNR_SEQ
                     <!-- [모바일웹 직사각형], [모바일웹 상/하단], [T플레이], [유료앱이무료] 배너 프로비저닝 제외 -->
-                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010909"'>
+                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010906"'>
 		                   AND  A.TENANT_ID = D.TENANT_ID
 		                   AND  A.BNR_MENU_ID = D.BNR_MENU_ID
 		                   AND  A.BNR_SEQ = D.BNR_SEQ
@@ -89,6 +89,7 @@
                     </if>
 		                   AND  A.TENANT_ID = #{tenantId}
 		                   AND  B.EXPO_YN = 'Y'
+		                   AND  B.USE_YN = 'Y'
 		                   AND  B.EXPO_STATUS_CD IN ('DP010201', 'DP010202')
 		                   AND  C.IMG_SIZE_CD = #{imgSizeCd}
                     <choose>
@@ -97,7 +98,7 @@
                         </when>
                         <otherwise>
                            AND  C.MOBILE_WEB_EXPO_YN = 'Y'
-                           AND  A.BNR_MENU_ID IN ('DP010915', 'DP010916', 'DP010917', 'DP010918', 'DP010919')<!-- 샵클HOME, 게임, Fun, 생활/위치, 어학/교육 -->
+                           AND  A.BNR_MENU_ID IN ('DP010915', 'DP010916', 'DP010917', 'DP010918', 'DP010919')<!-- HOME, 게임, Fun, 생활/위치, 어학/교육 -->
                         </otherwise>
                     </choose>
                     <if test='bnrExpoMenuId != null and bnrExpoMenuId != ""'>
@@ -189,7 +190,7 @@
     <!-- 특정 브랜드샵 상품 리스트 조회 -->
     <select id="searchBrandShopProdList" parameterType="BannerSacReq" resultType="BannerDefault">
 		SELECT  /* BannerMapper.xml, searchBrandShopProdList, tae hee Lee, 2014-02-21 */
-		      , D.PROD_ID AS PART_PROD_ID
+		        D.PROD_ID AS PART_PROD_ID
 		      , D.TOP_MENU_ID
 		  FROM  TB_DP_BRAND_SHOP        A
 		      , TB_DP_BRAND_SHOP_DVC    B

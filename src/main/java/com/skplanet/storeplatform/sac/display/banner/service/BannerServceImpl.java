@@ -83,9 +83,27 @@ public class BannerServceImpl implements BannerService {
 		this.logger.debug("[searchBannerList] reqImgSizeCd : {}", reqImgSizeCd);
 		this.logger.debug("----------------------------------------------------------------");
 
-		// 이미지 사이즈 유효값 확인
-		String imgSizeList[] = reqImgSizeCd.split("\\+");
-		if (imgSizeList == null || imgSizeList.length == 0) {
+		String imgSizeList[] = null;
+
+		try {
+			// 이미지 사이즈 코드 유효값 확인
+			imgSizeList = reqImgSizeCd.split("\\+");
+
+			if (imgSizeList == null || imgSizeList.length == 0) {
+				// 실행에 필요한 파라미터가 유효하지 않습니다.
+				throw new StorePlatformException("SAC_DSP_0003", "imgSizeCd", reqImgSizeCd);
+			} else {
+				int imgCount = 0;
+
+				for (int v = 0; v < imgSizeList.length; v++) {
+					imgCount += Integer.parseInt(imgSizeList[v].split("\\/")[1]);
+				}
+				if (imgCount > this.BANNER_MAX_COUNT) {
+					// imgSizeCd 파라미터의 최대 허용 개수는 XX 개 입니다.
+					throw new StorePlatformException("SAC_DSP_0004", "imgSizeCd", this.BANNER_MAX_COUNT);
+				}
+			}
+		} catch (Exception e) {
 			// 실행에 필요한 파라미터가 유효하지 않습니다.
 			throw new StorePlatformException("SAC_DSP_0003", "imgSizeCd", reqImgSizeCd);
 		}
@@ -99,7 +117,7 @@ public class BannerServceImpl implements BannerService {
 		String reqImgCd = null; // 요청 이미지
 		Integer reqImgCnt = null; // 요청 이미지 개수
 
-		String bnrMenuId = null;
+		String bnrMenuId = null; // 배너메뉴ID
 		String bnrType = null; // 배너타입
 		String prodId = null; // 상품ID
 		String topMenuId = null; // 탑메뉴ID
@@ -110,11 +128,11 @@ public class BannerServceImpl implements BannerService {
 		int provCnt = 0; // 프로비저닝 건수
 		int passCnt = 0; // 결과리스트에 담긴 배너 개수
 
-		boolean homeBannerFullFlag = false;
-		boolean gameBannerFullFlag = false;
-		boolean funBannerFullFlag = false;
-		boolean lifeBannerFullFlag = false;
-		boolean eduBannerFullFlag = false;
+		boolean homeBannerFullFlag = false; // 모바일웹 Home 배너 최대 개수 여부 변수
+		boolean gameBannerFullFlag = false; // 모바일웹 게임 배너 최대 개수 여부 변수
+		boolean funBannerFullFlag = false; // 모바일웹 Fun 배너 최대 개수 여부 변수
+		boolean lifeBannerFullFlag = false; // 모바일웹 생활/위치 배너 최대 개수 여부 변수
+		boolean eduBannerFullFlag = false; // 모바일웹 어학/교육 배너 최대 개수 여부 변수
 
 		BannerDefault bannerDefault = null; // 배너VO
 		List<BannerDefault> bannerList = null; // 배너리스트
