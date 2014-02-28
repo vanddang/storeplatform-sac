@@ -26,6 +26,11 @@ public class DisplayConstants {
 	 * Tstore 쇼핑.
 	 */
 	public static final String DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD = "DP000206";
+
+	/**
+	 * 정액권.
+	 */
+	public static final String DP_TSTORE_FREEPASS_PROD_SVC_GRP_CD = "DP000207";
 	/**
 	 * 소셜쇼핑.
 	 */
