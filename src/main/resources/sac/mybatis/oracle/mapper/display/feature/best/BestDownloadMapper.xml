@@ -133,7 +133,7 @@
                                        AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                                        AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                                        AND J.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널 */
-                                       AND (L.DEVICE_MODEL_CD = #{deviceModelCd} OR L.DEVICE_MODEL_CD = 'android_standard2') /* header param : 단말모델코드 */
+                                       AND (L.DEVICE_MODEL_CD = #{deviceModelCd} OR L.DEVICE_MODEL_CD = 'ANY-PHONE-4MM') /* header param : 단말모델코드 */
                                        AND B.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
                                    <if test='menuId != null and menuId != "" '>
                                        AND B.MENU_ID = #{menuId}

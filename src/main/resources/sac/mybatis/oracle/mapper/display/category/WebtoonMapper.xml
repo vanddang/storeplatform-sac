@@ -60,7 +60,7 @@
                                            AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
                                            AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                                            AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */
-                                           AND (L.DEVICE_MODEL_CD = #{deviceModelCd} OR L.DEVICE_MODEL_CD = 'android_standard2') /* header param : 단말모델코드 */
+                                           AND (L.DEVICE_MODEL_CD = #{deviceModelCd} OR L.DEVICE_MODEL_CD = 'ANY-PHONE-4MM') /* header param : 단말모델코드 */
                                            AND A.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
                                          <if test="menuId != null">
                                            AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
