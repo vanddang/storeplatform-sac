@@ -457,12 +457,12 @@
                         ,'' AS expoSellerTelNo
                         ,'' AS expoSellerEmail
                         ,'' AS prodClsfCd     
-                        ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND H.PART_PROD_ID  = TB.PROD_ID) AS PHONE_SPRT_YN
+                        ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID  = H.PART_PROD_ID) AS PHONE_SPRT_YN
                         ,J.PROD_GRD_CD
                         ,J.USE_PERIOD_UNIT_CD
                         ,J.USE_PERIOD
                         ,CASE WHEN N.PROD_ID IS NOT NULL THEN 'special:Tstore' ELSE 'shoppingStore' END couponType
-                        ,C.CPN_ID AS couponId
+                        ,N.CPN_ID AS couponId
                         ,DECODE(I.PROD_CASE_CD
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
