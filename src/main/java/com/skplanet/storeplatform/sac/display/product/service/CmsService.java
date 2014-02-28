@@ -11,6 +11,6 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 
 public interface CmsService {
 	
-	public void process(NotificationRefactoringSac message) throws StorePlatformException;
+	public void executeProcess(NotificationRefactoringSac message) throws StorePlatformException;
 	
 }

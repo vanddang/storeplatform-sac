@@ -8,7 +8,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.icms.deploy.DPProductVO;
 import com.skplanet.icms.refactoring.deploy.DPTenantProductVO;
@@ -17,7 +16,6 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
 
 @Service
-@Transactional
 public class ProductServiceImpl implements ProductService {
 	
 	private static Log log = LogFactory.getLog(ProductServiceImpl.class);
@@ -39,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
 	};
 
 	@Override
-	public void registNewFreeData(ProductVo vo) throws StorePlatformException {
+	public void insertNewFreeData(ProductVo vo) throws StorePlatformException {
 		long newFreeCnt = selectNewFreeDataCnt(vo);
 		log.info("newFreeCnt = " + newFreeCnt);
 		if (0 == newFreeCnt) {
@@ -82,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public void registWhiteList(String prodId) throws StorePlatformException {
+	public void insertWhiteList(String prodId) throws StorePlatformException {
 		this.commonDAO.insert("Display_Product.insertWhiteList", prodId);
 	};
 

@@ -20,6 +20,6 @@ public interface DisplayProductBuilder {
 	 * 
 	 * @param notification
 	 */
-	void build(NotificationRefactoringSac notification,List<Map<String, Object>> tempList) throws StorePlatformException;
+	void insertProdInfo(NotificationRefactoringSac notification,List<Map<String, Object>> tempList) throws StorePlatformException;
 
 }

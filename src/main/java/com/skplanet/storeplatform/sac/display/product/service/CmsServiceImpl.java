@@ -55,7 +55,7 @@ public class CmsServiceImpl implements CmsService {
 	private CommonDAO commonDAO;
 
 	@Override
-	public void process(NotificationRefactoringSac message) throws StorePlatformException {
+	public void executeProcess(NotificationRefactoringSac message) throws StorePlatformException {
 
 		this.log.info("CMS MQ APP Process Start");
 
@@ -96,12 +96,12 @@ public class CmsServiceImpl implements CmsService {
 					/*
 					 * 이전에 배포된 전시 상품 데이터 삭제
 					 */
-					this.initializer.clear(message);
+					this.initializer.deleteProdInfo(message);
 
 					/*
 					 * 데이터 재구성
 					 */
-					this.builder.build(message, tempList);
+					this.builder.insertProdInfo(message, tempList);
 
 					// 결과 설정
 					cv.setResultCd(IFConstants.CMS_RST_CODE_SUCCESS);

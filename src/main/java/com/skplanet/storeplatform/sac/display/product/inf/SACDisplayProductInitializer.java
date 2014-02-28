@@ -77,7 +77,7 @@ public class SACDisplayProductInitializer implements DisplayProductInitializer {
 	 * (non-Javadoc)
 	 * @see com.skplanet.icms.deploy.job.initializer.DisplayProductInitializer#clear(java.lang.String)
 	 */
-	public void clear(NotificationRefactoringSac notification) {
+	public void deleteProdInfo(NotificationRefactoringSac notification) {
 		
 		String pid= notification.getDpProductTotal().getDpProduct().getProdId();
 		List<DPProductTotalVO> inAppList =notification.getDpProductTotalList();

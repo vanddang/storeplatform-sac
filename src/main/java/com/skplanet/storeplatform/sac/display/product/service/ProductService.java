@@ -13,7 +13,7 @@ public interface ProductService {
 	
 	public long selectNewFreeDataCnt(ProductVo vo) throws StorePlatformException;
 	
-	public void registNewFreeData(ProductVo vo) throws StorePlatformException;
+	public void insertNewFreeData(ProductVo vo) throws StorePlatformException;
 	
 	public ProductVo selectMemberInfo(ProductVo vo) throws StorePlatformException;
 	
@@ -25,7 +25,7 @@ public interface ProductService {
 	
 	public void removeAdminRecommand(ProductVo vo) throws StorePlatformException;
 	
-	public void registWhiteList(String prodId) throws StorePlatformException;
+	public void insertWhiteList(String prodId) throws StorePlatformException;
 	
 	public void registTotalSalesHis(ProductVo vo) throws StorePlatformException;
 }

@@ -96,7 +96,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 	private ProductService prodService;
 
 	@Override
-	public void build(NotificationRefactoringSac notification, List<Map<String, Object>> tempList) throws StorePlatformException {
+	public void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList) throws StorePlatformException {
 
 		DPProductVO dpProd = notification.getDpProductTotal().getDpProduct();
 		String prodId = dpProd.getProdId(); // 상품_아이디
@@ -434,7 +434,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 										// 신규 상품 등록
 										// 트리거 확인 후 작업
 										log.info("CMS New Free Data Insert");
-										this.prodService.registNewFreeData(pv);
+										this.prodService.insertNewFreeData(pv);
 										
 										// 판매중인 상품의 카테고리 대분류가 변경될시 운영자추천상품 - SUB 상품 삭제
 										log.info("CMS 운영자 추천 상품 삭제 여부 Check | " + oldProdStatCd);
@@ -455,7 +455,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 			
 			// 바이너리 수정이 있을 경우 화이트 리스트 배포
 			log.info("CMS White List Regist");
-			this.prodService.registWhiteList(prodId);
+			this.prodService.insertWhiteList(prodId);
 			
 			//TODO 정산율 배포 : 정산율 프로시져 만들어 지고 나서 확인 후 작업 
 //			String result = this.prodService.registProdSettl(pv);
