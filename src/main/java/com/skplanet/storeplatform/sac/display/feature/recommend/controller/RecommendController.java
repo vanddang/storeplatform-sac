@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendOnedaySacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendOnedaySacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminService;
+import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendOnedayService;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendTodayService;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendWebtoonService;
 
@@ -40,6 +43,8 @@ public class RecommendController {
 	private RecommendAdminService recommendAdminService;
 	@Autowired
 	private RecommendTodayService recommendTodayService;
+	@Autowired
+	private RecommendOnedayService recommendOnedayService;
 
 	/**
 	 * <pre>
@@ -99,6 +104,26 @@ public class RecommendController {
 
 		RecommendTodaySacRes responseVO;
 		responseVO = this.recommendTodayService.searchTodayList(requestVO, header);
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 하루에 하나 상품 조회 – GET.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
+	 * @return RecommendTodaySacRes 조회 결과
+	 */
+	@RequestMapping(value = "/oneday/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public RecommendOnedaySacRes searchOnedayList(RecommendOnedaySacReq requestVO, SacRequestHeader header) {
+
+		RecommendOnedaySacRes responseVO;
+		responseVO = this.recommendOnedayService.searchOnedayList(requestVO, header);
 		return responseVO;
 	}
 }
