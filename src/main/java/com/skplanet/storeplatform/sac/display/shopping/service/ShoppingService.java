@@ -4,7 +4,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRe
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -164,7 +165,7 @@ public interface ShoppingService {
 	 * 
 	 * @param req
 	 *            req
-	 * @return ShoppingRes
+	 * @return PaymentInfoSacReq
 	 */
-	public ProductInfo getShoppingforPurchase(ShoppingReq req);
+	public PaymentInfo getShoppingforPayment(PaymentInfoSacReq req);
 }

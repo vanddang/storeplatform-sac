@@ -27,7 +27,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRe
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.sci.ShoppingInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInRes;
@@ -1983,23 +1984,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * storeplatform.sac.client.display.vo.shopping.ShoppingReq)
 	 */
 	@Override
-	public ProductInfo getShoppingforPurchase(ShoppingReq req) {
-		req.setLangCd("ko");
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(req.getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-		}
-		if (StringUtils.isEmpty(req.getProductId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
-		}
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("req", req);
+	public PaymentInfo getShoppingforPayment(PaymentInfoSacReq req) {
+		List<String> prodIdList = req.getProdIdList();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("lang", "ko");
+		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		paramMap.put("deviceModelNo", "");
+		PaymentInfo paymentInfo = null;
+		for (int i = 0; i < prodIdList.size(); i++) {
+			paramMap.put("productBasicInfo", prodIdList.get(i));
+			paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getShoppingMetaInfo", paramMap, PaymentInfo.class);
 
-		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
-		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		ProductInfo shoppingforPurchase = this.commonDAO.queryForObject("Shopping.getShoppingPurchase", reqMap,
-				ProductInfo.class);
+		}
 
-		return shoppingforPurchase;
+		return paymentInfo;
 	}
 }
