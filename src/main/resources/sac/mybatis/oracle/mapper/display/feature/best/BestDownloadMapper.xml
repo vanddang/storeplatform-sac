@@ -35,7 +35,7 @@
                                           WHERE A.TENANT_ID = #{tenantId} /* header param : tenantId */ 
                                             AND A.LIST_ID = #{listId} /* param : listId */
                                             AND A.EXPO_YN = 'Y' /* 전시여부 */ 
-                                            AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
+                                            AND A.STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
                                        ) A
                                        ,TB_DP_PROD B
                                        ,TB_DP_MENU_CATEGORY_PROD_MAPG E
@@ -111,7 +111,7 @@
                                              WHERE A.TENANT_ID = #{tenantId} /* header param : tenantId */
                                                AND A.LIST_ID = #{listId}     /* param : listId */
                                                AND A.EXPO_YN = 'Y'           /* 전시여부 */  
-                                               AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
+                                               AND A.STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
                                            )                        A
                                          , TB_DP_MENU_CATEGORY      B
                                          , TB_DP_PROD               D /* 에피소드 상품 */
