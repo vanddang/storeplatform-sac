@@ -171,6 +171,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 			listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList", mapReq,
 					ThemeRecommend.class);
+
 		} else if (StringUtils.equalsIgnoreCase(requestVO.getFilteredBy(), "long")) {
 
 			mapReq.put("START_ROW", requestVO.getOffset());
@@ -178,6 +179,10 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 			listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgList", mapReq,
 					ThemeRecommend.class);
+		}
+
+		if (listThemeRecommend.isEmpty()) {
+			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
 		return this.makeThemeRecommendResult(listThemeRecommend, reason, requestVO.getFilteredBy());
@@ -192,9 +197,8 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		List<Product> productList = new ArrayList<Product>();
 
 		// layout 생성
-		Layout layout = null;
+		Layout layout = new Layout();
 		if (StringUtils.isNotEmpty(reason)) {
-			layout = new Layout();
 			layout.setName(reason);
 		}
 
