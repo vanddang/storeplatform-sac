@@ -128,7 +128,8 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
 						metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
 
 						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
+							// product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
+							product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
 							productList.add(product);
 						}
 					}

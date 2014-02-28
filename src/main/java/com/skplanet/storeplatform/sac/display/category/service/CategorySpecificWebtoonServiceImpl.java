@@ -134,7 +134,7 @@ public class CategorySpecificWebtoonServiceImpl implements CategorySpecificWebto
 							// paramMap, MetaInfo.class);
 							metaInfo = this.metaInfoService.getWebtoonMetaInfo(paramMap);
 							if (metaInfo != null) {
-								product = this.responseInfoGenerateFacade.generateSpecificWebtoonProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateWebtoonProduct(metaInfo);
 								productList.add(product);
 							}
 						}
