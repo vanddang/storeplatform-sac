@@ -3,7 +3,9 @@
 <mapper namespace="PaymentInfo">
     <!-- 상품 군 조회 -->
     <select id="searchProdType" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
-		SELECT /* PaymentInfoMapper.xml, searchProdType, H.J.H, 2014-02-27 */
+    SELECT * /* PaymentInfoMapper.xml, searchProdType, H.J.H, 2014-02-27 */ 
+    FROM (
+		SELECT 
                A.TOP_MENU_ID
               ,C.SVC_GRP_CD
 		FROM   TB_DP_MENU_CATEGORY           A
@@ -12,6 +14,21 @@
 		WHERE  A.MENU_ID = B.MENU_ID
 		AND    B.PROD_ID = C.PROD_ID
 		AND    C.PROD_ID = #{prodId}
+		UNION 
+        SELECT
+               A.TOP_MENU_ID
+              ,D.SVC_GRP_CD
+        FROM   TB_DP_MENU_CATEGORY    A
+              ,TB_DP_MENU_SHPG_MAPG   B
+              ,TB_DP_PROD_CATALOG_MAPG C
+              ,TB_DP_PROD              D
+              ,TB_DP_PROD_RSHP         E
+        WHERE  A.MENU_ID = B.MENU_ID
+        AND    B.CATALOG_ID = C.CATALOG_ID
+        AND    C.PROD_ID = D.PROD_ID
+        AND    D.PROD_ID = E.PART_PROD_ID
+        AND    E.PART_PROD_ID = #{prodId}
+    )WHERE ROWNUM =1		
     </select>
     
     <select id="searchPaymentInfo" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
@@ -111,8 +128,8 @@
                                 ,TB_DP_SPRC_PROD B1
                            WHERE 1=1
                              AND A1.PART_PROD_ID = B1.PROD_ID
-                             <if test="#{productBasicInfo.prodId} != null ">
-                             AND B1.PROD_ID  = #{#{productBasicInfo.prodId}}
+                             <if test="prodId != null ">
+                             AND B1.PROD_ID  = #{prodId}
                              </if>                             
                              AND B1.EXPO_YN ='Y'
                              AND B1.CPN_ID IS NOT NULL
@@ -150,8 +167,8 @@
                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
-                AND K.TENANT_ID = #{productBasicInfo.tenantId}        /* INPUT 테넌트ID */
-                AND I.PROD_ID = #{productBasicInfo.prodId}        /* 상품ID */
+                AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
+                AND I.PROD_ID = #{prodId}        /* 상품ID */
            ) KK
     </select>    
     

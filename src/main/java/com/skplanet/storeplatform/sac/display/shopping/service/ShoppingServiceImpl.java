@@ -1989,13 +1989,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>();
 		List<String> prodIdList = req.getProdIdList();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("lang", "ko");
+		paramMap.put("lang", req.getLangCd());
+		paramMap.put("tenantId", req.getTenantId());
 		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		paramMap.put("deviceModelNo", "");
 		PaymentInfo paymentInfo = null;
 		for (int i = 0; i < prodIdList.size(); i++) {
-			paramMap.put("productBasicInfo", prodIdList.get(i));
+			paramMap.put("prodId", prodIdList.get(i));
 			paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getShoppingMetaInfo", paramMap, PaymentInfo.class);
 			paymentInfoList.add(paymentInfo);
 		}
