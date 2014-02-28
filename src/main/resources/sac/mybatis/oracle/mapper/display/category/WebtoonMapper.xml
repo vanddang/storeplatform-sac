@@ -62,11 +62,14 @@
                                            AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */
                                            AND (L.DEVICE_MODEL_CD = #{deviceModelCd} OR L.DEVICE_MODEL_CD = 'ANY-PHONE-4MM') /* header param : 단말모델코드 */
                                            AND A.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
-                                         <if test="menuId != null">
+                                         <if test="menuId != null and menuId != ''">
                                            AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
                                          </if>
-                                         <if test="weekDayCd != null">
-					                       AND K.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd} AND LANG_CD = #{langCd} )|| '%'     /* DP010101 ~DP010107  :월~토*/
+                                         <if test="menuId == null or menuId == ''">
+		                                   AND A.MENU_ID LIKE 'DP26%'                /* 메뉴ID */
+		                                 </if>
+                                         <if test="weekDayCd != null and weekDayCd != ''">
+					                       AND K.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd} AND LANG_CD = #{langCd} )|| '%' /* DP010101 ~DP010107  :월~토*/
 					                     </if> 
                                ) IA
                                  WHERE IA.RN = 1
