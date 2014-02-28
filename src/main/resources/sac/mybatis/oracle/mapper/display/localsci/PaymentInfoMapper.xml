@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PaymentInfo">
+    <!-- 상품 군 조회 -->
+    <select id="searchProdType" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
+		SELECT /* PaymentInfoMapper.xml, searchProdType, H.J.H, 2014-02-27 */
+               A.TOP_MENU_ID
+              ,C.SVC_GRP_CD
+		FROM   TB_DP_MENU_CATEGORY           A
+		      ,TB_DP_MENU_CATEGORY_PROD_MAPG B
+		      ,TB_DP_PROD                    C
+		WHERE  A.MENU_ID = B.MENU_ID
+		AND    B.PROD_ID = C.PROD_ID
+		AND    C.PROD_ID = #{prodId}
+    </select>
+    
+    <select id="searchPaymentInfo" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
+        SELECT /* PaymentInfoMapper.xml, searchPaymentInfo, H.J.H, 2014-02-27 */
+		       A.PROD_ID
+		      ,B.PROD_NM
+		      ,D.PROD_AMT
+		      ,C.PROD_STATUS_CD
+		      ,A.PROD_GRD_CD
+		      ,'Y' AS PROD_SPRT_YN
+		      ,A.DRM_YN
+		      ,A.USE_PERIOD_UNIT_CD
+		      ,A.USE_PERIOD
+		      ,(SELECT AID FROM TB_DP_APP_PROD WHERE PROD_ID = A.PROD_ID) AS AID
+		      ,A.MALL_CD
+		      ,(SELECT OUTSD_CONTENTS_ID FROM UV_TB_DP_MULTIMDA_PROD WHERE PROD_ID = A.PROD_ID) AS OUTSD_CONTENTS_ID
+		      ,A.SELLER_MBR_NO
+		      ,A.EXPO_SELLER_NM AS SELLER_NM
+		      ,A.EXPO_SELLER_EMAIL AS SELLER_EMAIL
+		      ,A.EXPO_SELLER_TELNO AS SELLER_TELNO
+		FROM   TB_DP_PROD              A
+		      ,TB_DP_PROD_DESC         B
+		      ,TB_DP_TENANT_PROD       C
+		      ,TB_DP_TENANT_PROD_PRICE D
+		WHERE  A.PROD_ID = B.PROD_ID
+		AND    B.LANG_CD = #{langCd}
+		AND    A.PROD_ID = C.PROD_ID
+		AND    C.TENANT_ID = #{tenantId}
+		AND    C.PROD_ID = D.PROD_ID
+		AND    C.TENANT_ID = D.TENANT_ID
+		AND    A.PROD_ID = #{prodId}
+    </select>
+    
+    
+</mapper>
