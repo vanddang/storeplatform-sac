@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -76,9 +75,7 @@ public class UserLockServiceImpl implements UserLockService {
 			SetLoginStatusEcReq setLoginStatusEcReq = new SetLoginStatusEcReq();
 			setLoginStatusEcReq.setKey(req.getUserId());
 			setLoginStatusEcReq.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE);
-			LOGGER.info("### IDP Request : {}", setLoginStatusEcReq);
-			SetLoginStatusEcRes setLoginStatusEcRes = this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
-			LOGGER.info("### IDP Response : {}", setLoginStatusEcRes);
+			this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
 
 			/**
 			 * 회원 계정 잠금
