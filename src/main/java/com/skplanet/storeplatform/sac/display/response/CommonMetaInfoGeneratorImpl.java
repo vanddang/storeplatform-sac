@@ -188,7 +188,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 			source.setMediaType(DisplayCommonUtil.getMimeType(path));
 			source.setUrl(path);
-			source.setSize(size);
+			// source.setSize(size);
 		}
 		return source;
 	}
