@@ -70,9 +70,9 @@
                         ,A.BRAND_ID
                         ,A.BRAND_NM                            
                         ,J.SELLER_MBR_NO 
-                        ,'' AS expoSellerNm
-                        ,'' AS expoSellerTelNo
-                        ,'' AS expoSellerEmail
+                        ,'' AS sellerNm
+                        ,'' AS sellerTelno
+                        ,'' AS sellerEmail
                         ,'' AS prodClsfCd     
                         ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID  = H.PART_PROD_ID) AS PHONE_SPRT_YN
                         ,J.PROD_GRD_CD
