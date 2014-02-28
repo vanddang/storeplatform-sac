@@ -59,6 +59,12 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		data.setUserKey(metaInfo.getUserKey());
 		data.setPurchasePrice(metaInfo.getPurchasePrice());
 
+		// Delta 파일 관련 추가 -- 현재 관련 로직 미구현으로 공백처리
+		if (StringUtils.isNotEmpty(metaInfo.getAid())) {
+			data.setType("delta");
+			data.setDeltaPath("");
+		}
+
 		date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getPurchaseDt());
 		data.setPurchaseDate(date.getText());
 
@@ -99,7 +105,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 			usagePolicy.setExpirationDate("");
 		}
 		usagePolicy.setBpCode(this.isEmpty(metaInfo.getBpJoinFileType()));
-		usagePolicy.setCertKey(this.isEmpty(metaInfo.getBpJoinFileNo()));
+		usagePolicy.setBpBookNo(this.isEmpty(metaInfo.getBpJoinFileNo()));
 		data.setUsagePolicy(usagePolicy);
 
 		// 기기 정보
