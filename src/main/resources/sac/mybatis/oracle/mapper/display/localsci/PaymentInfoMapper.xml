@@ -14,7 +14,7 @@
 		WHERE  A.MENU_ID = B.MENU_ID
 		AND    B.PROD_ID = C.PROD_ID
 		AND    C.PROD_ID = #{prodId}
-		UNION 
+		UNION ALL
         SELECT
                A.TOP_MENU_ID
               ,D.SVC_GRP_CD
