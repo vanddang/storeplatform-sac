@@ -217,9 +217,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 				// Meta 정보 조회
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 
-					if (this.totalCount == 0) {
-						this.totalCount = productBasicInfo.getTotalCount();
-					}
+					this.totalCount = productBasicInfo.getTotalCount();
 
 					String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
 					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
@@ -530,8 +528,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 		for (AppCodiRes mapper : resultList) {
 
-			if (this.totalCount == 0)
-				this.totalCount = mapper.getTotalCount();
+			this.totalCount = mapper.getTotalCount();
 
 			Product product;
 			Identifier identifier;
