@@ -275,7 +275,7 @@
 				               <if test='req.orderedBy == "recent"'>                 
 				               ,'1' EXPO_ORD
 				               </if>
-				               <if test='req.orderedBy == "download"'>                 
+				               <if test='req.orderedBy == "popular"'>                 
 				               ,M.EXPO_ORD
 				               </if>                                                                                                                                                   
                           FROM 
@@ -291,7 +291,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 <if test='req.orderedBy == "download"'>
+                                 <if test='req.orderedBy == "popular"'>
                                 ,(
                                     SELECT  TDLP.TENANT_ID
                                           , TDLP.LIST_ID
@@ -340,7 +340,7 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID 
-                        <if test='req.orderedBy == "download"'>
+                        <if test='req.orderedBy == "popular"'>
                         AND K.TENANT_ID = M.TENANT_ID 
                         AND B.CATALOG_ID = M.PROD_ID                             
                         </if>                   
@@ -383,7 +383,7 @@
                <if test='req.orderedBy == "recent"'>                 
                ORDER BY REG_DT DESC, CATALOG_NM ASC
                </if>
-               <if test='req.orderedBy == "download"'>                 
+               <if test='req.orderedBy == "popular"'>                 
                ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
                </if>                   
                )
@@ -431,7 +431,7 @@
                      , 'DP006302', 'exchange'
                      , 'DP006303', 'delivery' ) AS prodCaseCd
                    ,CONCAT(FILE_PATH,FILE_NM) AS FILE_PATH
-                   ,'specialSale' AS specialSale
+                   ,'Y' AS specialSale
    	               ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
 		                             ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY ) ) THEN 'Y' ELSE 'N'
 		               END ) AS soldOut     
@@ -829,6 +829,12 @@
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
                                ,I.REG_DT   
+                               <if test='req.orderedBy == "recent"'>                 
+                               ,'1' EXPO_ORD
+                               </if>
+                               <if test='req.orderedBy == "popular"'>                 
+                               ,M.EXPO_ORD
+                               </if>                                    
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -842,6 +848,29 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
+                                 <if test='req.orderedBy == "popular"'>
+                                ,(
+                                    SELECT  TDLP.TENANT_ID
+                                          , TDLP.LIST_ID
+                                          , TDLP.MENU_ID
+                                          , TDLP.PROD_ID
+                                          , TDLP.EXPO_ORD
+                                          , TDLP.PRCHS_QTY  
+                                          , TDLP.DWLD_QTY                                      
+                                      FROM  
+                                            TB_DP_LIST_PROD TDLP
+                                           ,TB_DP_LIST TDL
+                                     WHERE 1=1
+                                       AND  TDLP.TENANT_ID = TDL.TENANT_ID
+                                       AND  TDLP.LIST_ID   = TDL.LIST_ID
+                                       AND  TDLP.TENANT_ID = #{tenantHeader.tenantId}   /* 테넌트ID */
+                                       AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000006 쇼핑 인기 */
+                                       AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+                                       AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
+                                       AND  TO_CHAR(TDLP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                       AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
+                                  ) M                                  
+                                 </if>                                 
                                  ,(SELECT 
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
@@ -867,6 +896,10 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID 
+                        <if test='req.orderedBy == "popular"'>
+                        AND K.TENANT_ID = M.TENANT_ID 
+                        AND B.CATALOG_ID = M.PROD_ID                             
+                        </if>                        
                         AND I.PROD_ID = N.PROD_ID(+)  
                         AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                         AND NVL(B.CHNL_CNT, 0) > 0          
@@ -904,7 +937,12 @@
                             )                        
                    ) 
                  WHERE NO =1
-                 ORDER BY REG_DT DESC, CATALOG_NM ASC
+               <if test='req.orderedBy == "recent"'>                 
+               ORDER BY REG_DT DESC, CATALOG_NM ASC
+               </if>
+               <if test='req.orderedBy == "popular"'>                 
+               ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
+               </if>                     
                ) 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>     
@@ -1081,7 +1119,7 @@
                                <if test='req.orderedBy == "recent"'>                 
                                ,'1' EXPO_ORD
                                </if>
-                               <if test='req.orderedBy == "download"'>                 
+                               <if test='req.orderedBy == "popular"'>                 
                                ,M.EXPO_ORD
                                </if>                                                                                                                                                   
                           FROM 
@@ -1097,7 +1135,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 <if test='req.orderedBy == "download"'>
+                                 <if test='req.orderedBy == "popular"'>
                                 ,(
                                     SELECT  TDLP.TENANT_ID
                                           , TDLP.LIST_ID
@@ -1140,14 +1178,14 @@
                         AND D.MENU_ID = F.MENU_ID
                         AND D.MENU_ID = #{req.menuId}           /*INPUT 메뉴ID*/
                         AND B.CATALOG_ID = G.CATALOG_ID
-                        AND C.CATALOG_ID <![CDATA[<>]]> #{req.exceptProdId} 
+                        AND C.CATALOG_ID <![CDATA[<>]]> #{req.exceptId} 
                         AND G.PROD_ID = H.PROD_ID
                         AND H.PART_PROD_ID = I.PROD_ID
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID
-                        <if test='req.orderedBy == "download"'>
+                        <if test='req.orderedBy == "popular"'>
                         AND K.TENANT_ID = M.TENANT_ID 
                         AND B.CATALOG_ID = M.PROD_ID                             
                         </if>                   
@@ -1190,7 +1228,7 @@
                <if test='req.orderedBy == "recent"'>                 
                ORDER BY REG_DT DESC, CATALOG_NM ASC
                </if>
-               <if test='req.orderedBy == "download"'>                 
+               <if test='req.orderedBy == "popular"'>                 
                ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
                </if>                   
                )
@@ -1228,7 +1266,7 @@
                                <if test='req.orderedBy == "recent"'>                 
                                ,'1' EXPO_ORD
                                </if>
-                               <if test='req.orderedBy == "download"'>                 
+                               <if test='req.orderedBy == "popular"'>                 
                                ,M.EXPO_ORD
                                </if>                                                                                                                                                   
                           FROM 
@@ -1245,7 +1283,7 @@
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
 
-                                 <if test='req.orderedBy == "download"'>
+                                 <if test='req.orderedBy == "popular"'>
                                 ,(
                                     SELECT  TDLP.TENANT_ID
                                           , TDLP.LIST_ID
@@ -1288,14 +1326,14 @@
                         AND D.MENU_ID = F.MENU_ID
                         AND A.BRAND_ID = #{req.brandId}           /*INPUT 브랜드ID*/
                         AND B.CATALOG_ID = G.CATALOG_ID
-                        AND C.CATALOG_ID <![CDATA[<>]]> #{req.exceptProdId}  /*INPUT 제외상품ID*/
+                        AND C.CATALOG_ID <![CDATA[<>]]> #{req.exceptId}  /*INPUT 제외상품ID*/
                         AND G.PROD_ID = H.PROD_ID
                         AND H.PART_PROD_ID = I.PROD_ID
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID
-                        <if test='req.orderedBy == "download"'>
+                        <if test='req.orderedBy == "popular"'>
                         AND K.TENANT_ID = M.TENANT_ID 
                         AND B.CATALOG_ID = M.PROD_ID                             
                         </if>                   
@@ -1338,7 +1376,7 @@
                <if test='req.orderedBy == "recent"'>                 
                ORDER BY REG_DT DESC, CATALOG_NM ASC
                </if>
-               <if test='req.orderedBy == "download"'>                 
+               <if test='req.orderedBy == "popular"'>                 
                ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
                </if>                   
                )

@@ -332,6 +332,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (!this.commonProdGradeCd(req)) {
 				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
+
+			if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+					&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
+				throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+			}
+
 			if (StringUtils.isEmpty(req.getOrderedBy())) {
 				req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
 			}
@@ -339,7 +345,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			this.commonOffsetCount(req);
 
 			String stdDt = "";
-			if (req.getOrderedBy().equals("download")) {
+			if (req.getOrderedBy().equals("popular")) {
 				// 필수 파라미터 체크
 				if (StringUtils.isEmpty(req.getListId())) {
 					throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
@@ -478,6 +484,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setRights(rights);
 				product.setContributor(contributor);
 				product.setSalesOption(salesOption);
+				product.setSpecialProdYn(shopping.getSpecialSale()); // 특가 상품 일 경우
 				totalCount = shopping.getTotalCount();
 				productList.add(i, product);
 			}
@@ -523,6 +530,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
+		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_CLOSINGTIME_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+		}
+
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
 			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
 		}
@@ -839,8 +851,30 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getBrandId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "blandId", req.getBrandId());
 		}
+
+		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+		}
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
 			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
+		}
+
+		String stdDt = "";
+		if (req.getOrderedBy().equals("popular")) {
+			// 필수 파라미터 체크
+			if (StringUtils.isEmpty(req.getListId())) {
+				throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
+			}
+
+			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
+					req.getListId());
+
+			// 기준일시 체크
+			if (StringUtils.isEmpty(stdDt)) {
+				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+			}
+			req.setStdDt(stdDt);
 		}
 
 		if (StringUtils.isEmpty(req.getProdCharge())) {
@@ -884,6 +918,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
 		reqMap.put("req", req);
+		reqMap.put("stdDt", stdDt);
 		reqMap.put("tenantHeader", tenantHeader);
 		reqMap.put("deviceHeader", deviceHeader);
 		reqMap.put("lang", tenantHeader.getLangCd());
@@ -1158,8 +1193,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 				throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 			}
-			if (StringUtils.isEmpty(req.getExceptProdId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "exceptProdId", req.getExceptProdId());
+			if (StringUtils.isEmpty(req.getExceptId())) {
+				throw new StorePlatformException("SAC_DSP_0002", "exceptId", req.getExceptId());
 			}
 			if (StringUtils.isEmpty(req.getMenuId())) {
 				throw new StorePlatformException("SAC_DSP_0002", "menuId", req.getMenuId());
@@ -1172,14 +1207,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (!this.commonProdGradeCd(req)) {
 				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
+			if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+					&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
+				throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+			}
 			if (StringUtils.isEmpty(req.getOrderedBy())) {
-				req.setOrderedBy(DisplayConstants.DP_SHOPPING_DOWNLOAD_DEFAULT_ORDERED_OPTION);
+				req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
 			}
 			// offset, Count default setting
 			this.commonOffsetCount(req);
 
 			String stdDt = "";
-			if (req.getOrderedBy().equals("download")) {
+			if (req.getOrderedBy().equals("popular")) {
 				// 필수 파라미터 체크
 				if (StringUtils.isEmpty(req.getListId())) {
 					throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
@@ -1272,8 +1311,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 				throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 			}
-			if (StringUtils.isEmpty(req.getExceptProdId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "exceptProdId", req.getExceptProdId());
+			if (StringUtils.isEmpty(req.getExceptId())) {
+				throw new StorePlatformException("SAC_DSP_0002", "exceptId", req.getExceptId());
 			}
 			if (StringUtils.isEmpty(req.getBrandId())) {
 				throw new StorePlatformException("SAC_DSP_0002", "brandId", req.getBrandId());
@@ -1286,14 +1325,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (!this.commonProdGradeCd(req)) {
 				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
+
+			if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+					&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
+				throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+			}
+
 			if (StringUtils.isEmpty(req.getOrderedBy())) {
-				req.setOrderedBy(DisplayConstants.DP_SHOPPING_DOWNLOAD_DEFAULT_ORDERED_OPTION);
+				req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
 			}
 			// offset, Count default setting
 			this.commonOffsetCount(req);
 
 			String stdDt = "";
-			if (req.getOrderedBy().equals("download")) {
+			if (req.getOrderedBy().equals("popular")) {
 				// 필수 파라미터 체크
 				if (StringUtils.isEmpty(req.getListId())) {
 					throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
@@ -1444,8 +1489,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// / 에피소드용
 				Product episodeProduct = null;
 				List<Identifier> episodeIdentifierList = null;
-				Menu episodeMenu = null;
-				List<Menu> episodeMenuList = null;
+
 				Rights episodeRights = null;
 				Date episodeDate = null;
 				Distributor distributor = null;

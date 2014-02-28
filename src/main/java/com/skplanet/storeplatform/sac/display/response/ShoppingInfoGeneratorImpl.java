@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
@@ -133,11 +134,13 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 		List<Source> sourceList = new ArrayList<Source>();
 
 		Source source = new Source();
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getBannerFilePath()));
 		source.setType(DisplayConstants.DP_SOURCE_TYPE_BANNER);
 		source.setUrl(metaInfo.getBannerFilePath());
 		sourceList.add(source);
 
 		source = new Source();
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getFilePath()));
 		source.setType(DisplayConstants.DP_SOURCE_TYPE_PROMOTION);
 		source.setUrl(metaInfo.getFilePath());
 		sourceList.add(source);
