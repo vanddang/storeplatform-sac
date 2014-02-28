@@ -69,15 +69,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 					paymentProdType.getSvcGrpCd());
 
 			if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(paymentProdType.getSvcGrpCd())) { // 쇼핑 상품
-
-				PaymentInfo paymentInfo = this.shoppingService.getShoppingforPayment(req);
-
-				if (paymentInfo != null) {
-					// 상품분류코드는 SVC_GRP_CD||TOP_MENU_ID 로 제공
-					paymentInfo.setTenantProdGrpCd(paymentProdType.getSvcGrpCd() + paymentProdType.getTopMenuId());
-					paymentInfoList.add(paymentInfo);
-				}
-
+				paymentInfoList = this.shoppingService.getShoppingforPayment(req);
 			} else {
 				for (int i = 0; i < prodIdList.size(); i++) {
 					req.setProdId(prodIdList.get(i)); // prodIdList 에 있는 상품ID 1개씩 setting
