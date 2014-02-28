@@ -569,7 +569,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		LOGGER.info("## UA 코드로 deviceModelNo 조회 - TB_CM_DEVICE. uaCd : {}", uaCd);
 		Device device = this.commonComponent.getPhoneInfoByUacd(uaCd);
 
-		if (device != null && device.getDeviceModelCd() != null) {
+		if (device != null && StringUtils.isNotBlank(device.getDeviceModelCd())) {
 			response.setDeviceModelNo(device.getDeviceModelCd());
 		} else {
 			throw new StorePlatformException("SAC_MEM_3402", errorKey, errorValue);
