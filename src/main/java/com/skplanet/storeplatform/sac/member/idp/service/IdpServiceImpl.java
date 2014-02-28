@@ -127,7 +127,7 @@ public class IdpServiceImpl implements IdpService {
 		isRnameAuth = map.get("is_rname_auth").toString();
 		imMemTypeCd = map.get("im_mem_type_cd").toString();
 		userType = map.get("user_type").toString();
-		userStatusCode = map.get("user_status_code").toString();
+		userStatusCode = map.get("user_status_code").toString(); // 10:정상 11:가인증 ONEID 테이블의 회원가입상태코드
 
 		if (map.get("user_key") != null)
 			currentMbrNoForgameCenter = map.get("user_key").toString(); // 게임센터 연동을 위한 변수mbrNo 셋팅
@@ -217,8 +217,13 @@ public class IdpServiceImpl implements IdpService {
 				userMbr.setImMbrNo(map.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key IDP 통합서비스 키USERMBR_NO
 
 			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // * 사용자 구분 코드 ONEID회원으로 셋팅
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상
-			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
+			if (userStatusCode.equals(MemberConstants.JOIN_STATUS_CODE_NORMAL)) { // 10: 정상
+				userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상
+				userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
+			} else { // 11: 가인증
+				userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
+				userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING); // 가입승인대기
+			}
 			userMbr.setImSvcNo(imIntSvcNo); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호
 			userMbr.setIsImChanged(map.get("is_im_changed").toString()); // 전환가입코드 * * - 전환가입 : Y, 신규가입 : N, 변경가입 : C,
 																		 // 변경전환 : H
@@ -632,6 +637,17 @@ public class IdpServiceImpl implements IdpService {
 			getUserMbr.setImMbrNo(hashMap.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key . IDP 통합서비스
 																	   // 키 USERMBR_NO
 		getUserMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // 사용자 구분 코드
+
+		if (hashMap.get("user_status_code") != null) {
+			if (hashMap.get("user_status_code").toString().equals(MemberConstants.JOIN_STATUS_CODE_NORMAL)) { // 10: 정상
+				getUserMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상
+				getUserMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
+			} else { // 11: 가인증
+				getUserMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
+				getUserMbr.setUserSubStatus(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING); // 가입승인대기
+			}
+		}
+
 		getUserMbr.setUserMainStatus(searchUserResponse.getUserMbr().getUserMainStatus()); // 사용자 메인 상태 코드
 		getUserMbr.setUserSubStatus(searchUserResponse.getUserMbr().getUserSubStatus()); // 사용자 서브 상태 코드
 
@@ -1349,8 +1365,10 @@ public class IdpServiceImpl implements IdpService {
 
 					updateStatusUserRequest.setCommonRequest(commonRequest);
 
-					updateStatusUserRequest.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
-					updateStatusUserRequest.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+					if (isEmailAuth.equals(MemberConstants.USE_Y)) { // 이메일 인증이 Y인경우에 정상, 정상 상태로 함. check!!!!
+						updateStatusUserRequest.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
+						updateStatusUserRequest.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+					}
 
 					KeySearch updateKeySearch = new KeySearch();
 					updateKeySearch.setKeyType("INSD_USERMBR_NO");
@@ -1361,8 +1379,7 @@ public class IdpServiceImpl implements IdpService {
 
 					updateStatusUserRequest.setKeySearchList(updateKeySearchList);
 
-					UpdateStatusUserResponse updateStatusUserResponse = this.userSCI
-							.updateStatus(updateStatusUserRequest);
+					this.userSCI.updateStatus(updateStatusUserRequest);
 
 				}
 			}
@@ -1380,7 +1397,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
 			mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
 			if (isEmailAuth.equals(MemberConstants.USE_Y))
-				mbrOneID.setEntryStatusCode("10");// 정상
+				mbrOneID.setEntryStatusCode(MemberConstants.JOIN_STATUS_CODE_NORMAL);// 정상
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
 			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
@@ -2177,6 +2194,14 @@ public class IdpServiceImpl implements IdpService {
 		return imResult;
 	}
 
+	/*
+	 * 
+	 * <pre> 이용동의 변경사이트 목록 배포 - CMD : rXUpdateAgreeUserIDP . </pre>
+	 * 
+	 * @param map Request 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
 	@Override
 	public ImResult executeRXUpdateAgreeUserIDP(HashMap<String, String> map) {
 		LOGGER.debug("executeRXUpdateAgreeUserIDP ------- Start");
@@ -2220,7 +2245,7 @@ public class IdpServiceImpl implements IdpService {
 			userType = map.get("user_type").toString();
 
 		if (map.get("user_status_code") != null)
-			userStatusCode = map.get("user_status_code").toString();
+			userStatusCode = map.get("user_status_code").toString(); // 10:정상 11:가인증 ONEID 테이블의 회원가입상태코드
 
 		if (map.get("user_key") != null)
 			currentMbrNoForgameCenter = map.get("user_key").toString(); // 게임센터 연동을 위한 변수mbrNo 셋팅
@@ -2379,6 +2404,15 @@ public class IdpServiceImpl implements IdpService {
 																				// 키
 																				// USERMBR_NO
 						userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // * 사용자 구분 코드 ONEID회원으로 셋팅
+
+						if (userStatusCode.equals(MemberConstants.JOIN_STATUS_CODE_NORMAL)) { // 10: 정상
+							userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상
+							userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
+						} else if (userStatusCode.equals(MemberConstants.JOIN_STATUS_CODE_HALF_AUTH)) { // 11: 가인증
+							userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
+							userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING); // 가입승인대기
+						}
+
 						userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상
 						userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
 						userMbr.setImSvcNo(imIntSvcNo); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호
