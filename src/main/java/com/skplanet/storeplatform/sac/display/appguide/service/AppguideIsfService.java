@@ -10,7 +10,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  * 
  * Updated on : 2014. 02. 26. Updated by : 윤주영, SK 플래닛.
  */
-public interface AppguideService {
+public interface AppguideIsfService {
 
 	/**
 	 * <pre>
@@ -38,4 +38,5 @@ public interface AppguideService {
 	 * @return AppguideSacRes
 	 */
 	public AppguideSacRes searchDummyIsfRecommendList(AppguideSacReq requestVO, SacRequestHeader requestHeader);
+
 }

@@ -14,7 +14,8 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.appguide.service.AppguideService;
+import com.skplanet.storeplatform.sac.display.appguide.service.AppguideIsfService;
+import com.skplanet.storeplatform.sac.display.appguide.service.AppguideVersionService;
 
 /**
  * 
@@ -28,7 +29,10 @@ public class AppguideController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private AppguideService appguideService;
+	private AppguideIsfService appguideIsfService;
+
+	@Autowired
+	private AppguideVersionService appguideVersionService;
 
 	/**
 	 * <pre>
@@ -49,8 +53,29 @@ public class AppguideController {
 		this.logger.debug(this.getClass().getName() + ".searchIsfRecommendList start !!");
 		this.logger.debug("request {}", requestVO);
 		if (StringUtils.equals("dummy", requestVO.getFilteredBy()))
-			return this.appguideService.searchDummyIsfRecommendList(requestVO, requestHeader);
+			return this.appguideIsfService.searchDummyIsfRecommendList(requestVO, requestHeader);
 		else
-			return this.appguideService.searchIsfRecommendList(requestVO, requestHeader);
+			return this.appguideIsfService.searchIsfRecommendList(requestVO, requestHeader);
+	}
+
+	/**
+	 * <pre>
+	 * 버전정보 조회.
+	 * </pre>
+	 * 
+	 * @param AppguideSacReq
+	 *            requestVO
+	 * @param SacRequestHeader
+	 *            requestHeader
+	 * @return AppguideSacRes
+	 */
+	@RequestMapping(value = "/version/get/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AppguideSacRes searchVersion(@RequestBody AppguideSacReq requestVO, SacRequestHeader requestHeader)
+			throws StorePlatformException {
+
+		this.logger.debug(this.getClass().getName() + ".searchVersion start !!");
+		this.logger.debug("request {}", requestVO);
+		return this.appguideVersionService.searchVersion(requestVO, requestHeader);
 	}
 }

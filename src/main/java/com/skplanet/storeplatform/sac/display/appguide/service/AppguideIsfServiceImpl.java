@@ -68,7 +68,7 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  * Updated on : 2014. 02. 26. Updated by : 윤주영, SK 플래닛.
  */
 @Service
-public class AppguideServiceImpl implements AppguideService {
+public class AppguideIsfServiceImpl implements AppguideIsfService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
