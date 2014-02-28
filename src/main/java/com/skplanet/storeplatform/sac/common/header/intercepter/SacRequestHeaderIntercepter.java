@@ -84,18 +84,18 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
         device.setPkg("store.skplanet.com/0.1");
         device.setSvc("SAC_Client/4.3");
 
-        String header = webRequest.getHeader("x-sac-device-info");
-        Pattern p = Pattern.compile("(\\w+)=\"([0-9a-zA-Z/\\.\\-\\*]+)\"");
-        for (String kv : header.split(",")) {
-            Matcher matcher = p.matcher(kv.trim());
-            if (matcher.find()) {
-                String key = matcher.group(1);
-                String value = matcher.group(2);
-
-                if(key.equals("model"))
-                    device.setModel(value);
-            }
-        }
+//        String header = webRequest.getHeader("x-sac-device-info");
+//        Pattern p = Pattern.compile("(\\w+)=\"([0-9a-zA-Z/\\.\\-\\*]+)\"");
+//        for (String kv : header.split(",")) {
+//            Matcher matcher = p.matcher(kv.trim());
+//            if (matcher.find()) {
+//                String key = matcher.group(1);
+//                String value = matcher.group(2);
+//
+//                if(key.equals("model"))
+//                    device.setModel(value);
+//            }
+//        }
 
 		return device;
 	}
