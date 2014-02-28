@@ -117,7 +117,6 @@
 	                     END ) = 1
 			) A
 		)
-        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
         ORDER BY RNUM
     </select>
 </mapper>
