@@ -71,8 +71,8 @@ public class UserJoinController {
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
-		if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
-			throw new StorePlatformException("SAC_MEM_0001", "model");
+		if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
+			throw new StorePlatformException("SAC_MEM_0002", "model");
 		}
 
 		/**
@@ -124,8 +124,8 @@ public class UserJoinController {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
 			} else if (StringUtils.equals(req.getDeviceTelecom(), "")) {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
-			} else if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
-				throw new StorePlatformException("SAC_MEM_0001", "model");
+			} else if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
+				throw new StorePlatformException("SAC_MEM_0002", "model");
 			}
 
 			LOGGER.info("## 단말정보 존재  ==========================================");
@@ -185,8 +185,8 @@ public class UserJoinController {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
 			} else if (StringUtils.equals(req.getDeviceTelecom(), "")) {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
-			} else if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
-				throw new StorePlatformException("SAC_MEM_0001", "model");
+			} else if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
+				throw new StorePlatformException("SAC_MEM_0002", "model");
 			}
 
 			LOGGER.info("## 단말정보 존재  ==========================================");
