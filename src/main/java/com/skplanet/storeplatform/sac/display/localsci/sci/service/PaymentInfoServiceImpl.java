@@ -1,7 +1,9 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +67,22 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 					paymentProdType.getSvcGrpCd());
 
 			if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(paymentProdType.getSvcGrpCd())) { // 쇼핑 상품
+				Map<String, Object> paramMap = new HashMap<String, Object>();
+				paramMap.put("lang", "ko");
+				paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+				paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+				paramMap.put("deviceModelNo", "");
+				for (int i = 0; i < prodIdList.size(); i++) {
+					paramMap.put("productBasicInfo", prodIdList.get(i));
+					PaymentInfo paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getShoppingMetaInfo",
+							paramMap, PaymentInfo.class);
 
+					if (paymentInfo != null) {
+						// 상품분류코드는 SVC_GRP_CD||TOP_MENU_ID 로 제공
+						paymentInfo.setTenantProdGrpCd(paymentProdType.getSvcGrpCd() + paymentProdType.getTopMenuId());
+						paymentInfoList.add(paymentInfo);
+					}
+				}
 			} else {
 				for (int i = 0; i < prodIdList.size(); i++) {
 					req.setProdId(prodIdList.get(i)); // prodIdList 에 있는 상품ID 1개씩 setting
