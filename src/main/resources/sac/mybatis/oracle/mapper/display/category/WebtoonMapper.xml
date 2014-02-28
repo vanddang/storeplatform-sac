@@ -111,7 +111,7 @@
 		                           AND LP.EXPO_YN = 'Y'
 		                           AND LT.TENANT_ID = #{tenantId}
 		                           AND LT.LIST_ID = #{listId}
-		                           AND TO_CHAR(LP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+		                           AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
 		                           AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
 		                           <if test="menuId != null and menuId != ''">
                                    AND LP.MENU_ID = #{menuId}
