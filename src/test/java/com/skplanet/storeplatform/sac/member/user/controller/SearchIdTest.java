@@ -123,7 +123,7 @@ public class SearchIdTest {
 	 * 
 	 */
 	@Test
-	public void C_TEST_SAC_오류_파라미터미입력() {
+	public void C_TEST_오류_SAC_파라미터미입력() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/user/searchId/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 				@Override
