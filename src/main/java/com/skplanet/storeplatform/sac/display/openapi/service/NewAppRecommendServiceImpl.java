@@ -142,13 +142,13 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 
 				List<Source> sourceList = new ArrayList<Source>();
 				sourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL,
-						metaInfo.getImagePath(), metaInfo.getImageSize()));
+						metaInfo.getImagePath()));
 				/*
 				 * 신규 앱 출시 (신규 앱 출시 1일이내 조회시 정보 노출)
 				 */
 				if (!DisplayConstants.DP_OPENAPI_RELEASETYPE_WEEK.equals(releaseType)) {
 					sourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_PREVIEW,
-							metaInfo.getPreviewImagePath(), metaInfo.getPreviewImageSize()));
+							metaInfo.getPreviewImagePath()));
 					product.setProductDetailExplain(metaInfo.getProdDtlDesc()); // 상품 상세 설명
 
 				}

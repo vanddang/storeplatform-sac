@@ -185,7 +185,7 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 					 */
 					product.setSourceList(this.commonGenerator.generateSourceList(
 							DisplayCommonUtil.getMimeType(metaInfo.getImagePath()),
-							DisplayConstants.DP_SOURCE_TYPE_ORIGINAL, metaInfo.getImagePath(), metaInfo.getImageSize()));
+							DisplayConstants.DP_SOURCE_TYPE_ORIGINAL, metaInfo.getImagePath()));
 
 					product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품가격
 					product.setAccrual(this.commonGenerator.generateAccrual(metaInfo)); // 참여자 정보

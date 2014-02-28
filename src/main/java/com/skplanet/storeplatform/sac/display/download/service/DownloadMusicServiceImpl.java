@@ -316,10 +316,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 			// 뮤직의 이미지 정보
 			List<Source> musicSourceList = new ArrayList<Source>();
-			musicSourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128,
-					null, metaInfo.getFileSize()));
-			musicSourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192,
-					null, metaInfo.getFileSizeH()));
+			musicSourceList.add(this.commonGenerator
+					.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128, null));
+			musicSourceList.add(this.commonGenerator
+					.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192, null));
 			music.setSourceList(musicSourceList);
 			product.setMusic(music);
 
