@@ -3,10 +3,10 @@
 <mapper namespace="PaymentInfo">
     <!-- 상품 군 조회 -->
     <select id="searchProdType" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
-    SELECT * /* PaymentInfoMapper.xml, searchProdType, H.J.H, 2014-02-27 */ 
+    SELECT /* PaymentInfoMapper.xml, searchProdType, H.J.H, 2014-02-27 */ 
+           IA.* 
     FROM (
-		SELECT 
-               A.TOP_MENU_ID
+		SELECT A.TOP_MENU_ID
               ,C.SVC_GRP_CD
 		FROM   TB_DP_MENU_CATEGORY           A
 		      ,TB_DP_MENU_CATEGORY_PROD_MAPG B
@@ -15,20 +15,20 @@
 		AND    B.PROD_ID = C.PROD_ID
 		AND    C.PROD_ID = #{prodId}
 		UNION ALL
-        SELECT
-               A.TOP_MENU_ID
+        SELECT A.TOP_MENU_ID
               ,D.SVC_GRP_CD
-        FROM   TB_DP_MENU_CATEGORY    A
-              ,TB_DP_MENU_SHPG_MAPG   B
+        FROM   TB_DP_MENU_CATEGORY     A
+              ,TB_DP_MENU_SHPG_MAPG    B
               ,TB_DP_PROD_CATALOG_MAPG C
               ,TB_DP_PROD              D
               ,TB_DP_PROD_RSHP         E
-        WHERE  A.MENU_ID = B.MENU_ID
-        AND    B.CATALOG_ID = C.CATALOG_ID
-        AND    C.PROD_ID = D.PROD_ID
-        AND    D.PROD_ID = E.PART_PROD_ID
+        WHERE  A.MENU_ID      = B.MENU_ID
+        AND    B.CATALOG_ID   = C.CATALOG_ID
+        AND    C.PROD_ID      = D.PROD_ID
+        AND    D.PROD_ID      = E.PART_PROD_ID
         AND    E.PART_PROD_ID = #{prodId}
-    )WHERE ROWNUM =1		
+    ) IA
+    WHERE ROWNUM = 1
     </select>
     
     <select id="searchPaymentInfo" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
