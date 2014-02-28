@@ -52,11 +52,11 @@
 		                                    AND  X.TENANT_ID = #{tenantId}
 		                                    AND  Y.BATCH_ID = 'MBR0000001'
 		                                    AND  X.MBR_NO = #{userKey}
-		                                
+                               <if test='deviceChangeFlag == "Y"'>
 		                                 UNION ALL
 		                                 SELECT 'CH' AS USE_DA, '4' AS MSG_TYPE_CD
 		                                   FROM DUAL
-		                                
+                               </if>
 		                                ) B
 		                         WHERE  A.USE_DA = B.USE_DA
 		                           AND  A.MSG_TYPE_CD = '1'
