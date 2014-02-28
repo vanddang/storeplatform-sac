@@ -141,7 +141,6 @@
 		       , C.MENU_NM
 		       , C.MENU_DESC
 		       , D.PROD_GRD_CD
-		       , D.USE_PERIOD_UNIT_CD
 		       , D.META_CLSF_CD
 		       ,  (CASE
                   WHEN D.META_CLSF_CD IN ('CT14', 'CT15','CT16') THEN '회'
@@ -346,25 +345,35 @@
              , C.MENU_NM
              , C.MENU_DESC
              , D.PROD_GRD_CD
-             , D.USE_PERIOD_UNIT_CD
              , D.META_CLSF_CD
              , D.CONTENTS_TYPE_CD
+             , D.SELLER_MBR_NO
              , D.EXPO_SELLER_EMAIL
              , D.EXPO_SELLER_NM
              , D.EXPO_SELLER_TELNO
              , D.DRM_YN
+             , D.USE_PERIOD
+             , D.USE_PERIOD_UNIT_CD
              , E.COMPT_YN
              , E.VOD_TITL_NM
              , E.STRM_EPSD_CNT
              , E.ISSUE_DAY
-             , E.CHNL_COMP_NM
+             , E.CHNL_COMP_NM as PUBLISHER
              , E.AGENCY_NM
              , E.EPSD_CNT
              , E.CHAPTER
+             , E.BOOK_PAGE_CNT
+             , (CASE WHEN E.BOOK_CLSF_CD = 'DP004301' THEN '권'
+                    WHEN E.BOOK_CLSF_CD = 'DP004302' THEN '회'
+                    WHEN E.BOOK_CLSF_CD = 'DP004303' THEN '호'
+                    ELSE ''
+               END) AS CHAPTER_UNIT
+             , E.POSS_LEND_CLSF_CD
+             , 'paid' as PROD_CLSF_CD
              , F.PROD_NM
-             , F.ARTIST1_NM
-             , F.ARTIST2_NM
-             , F.ARTIST3_NM
+             , F.ARTIST1_NM as AUTHOR
+             , F.ARTIST2_NM as PAINTER
+             , F.ARTIST3_NM as TRANSLATOR
              , F.PROD_BASE_DESC
              , F.PROD_DTL_DESC
   --           , H.CHNL_PERIOD_AMT
@@ -378,15 +387,9 @@
   --           , N.AVG_EVLU_SCORE       
              , D.CID       
              , E.OUTSD_CONTENTS_ID
-             , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
+             , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) OR E.BOOK_CLSF_CD = 'DP004302' THEN 'serial' END ) AS BOOK_TYPE
 		     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( E.EPSD_CNT + E.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
-		       <![CDATA[
-		     , ( CASE WHEN E.EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_STORE
-		      ]]>
-		       <![CDATA[
-		     , ( CASE WHEN E.STRM_EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_PLAY
-		      ]]>
-             , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( E.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
+		     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( E.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
              , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = I.PART_PROD_ID) AS PHONE_SPRT_YN                          
    FROM  TB_DP_MENU_CATEGORY           A
              , TB_DP_MENU_CATEGORY_PROD_MAPG B
