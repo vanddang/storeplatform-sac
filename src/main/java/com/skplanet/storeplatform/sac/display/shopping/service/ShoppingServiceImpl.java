@@ -1977,14 +1977,16 @@ public class ShoppingServiceImpl implements ShoppingService {
 		return responseVO;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 쇼핑 구매 연동.
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService#getShoppingforPurchase(com.skplanet.
-	 * storeplatform.sac.client.display.vo.shopping.ShoppingReq)
+	 * @param req
+	 *            req
+	 * @return PaymentInfo
 	 */
 	@Override
-	public PaymentInfo getShoppingforPayment(PaymentInfoSacReq req) {
+	public List<PaymentInfo> getShoppingforPayment(PaymentInfoSacReq req) {
+		List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>();
 		List<String> prodIdList = req.getProdIdList();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("lang", "ko");
@@ -1995,9 +1997,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		for (int i = 0; i < prodIdList.size(); i++) {
 			paramMap.put("productBasicInfo", prodIdList.get(i));
 			paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getShoppingMetaInfo", paramMap, PaymentInfo.class);
-
+			paymentInfoList.add(paymentInfo);
 		}
 
-		return paymentInfo;
+		return paymentInfoList;
 	}
 }

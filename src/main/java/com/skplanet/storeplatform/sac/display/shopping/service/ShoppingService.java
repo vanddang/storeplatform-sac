@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.shopping.service;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
@@ -167,5 +169,5 @@ public interface ShoppingService {
 	 *            req
 	 * @return PaymentInfoSacReq
 	 */
-	public PaymentInfo getShoppingforPayment(PaymentInfoSacReq req);
+	public List<PaymentInfo> getShoppingforPayment(PaymentInfoSacReq req);
 }
