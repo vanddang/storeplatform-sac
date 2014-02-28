@@ -38,8 +38,6 @@ public class EncryptionData extends CommonInfo implements Serializable {
 	private EncryptionUsagePolicy usagePolicy;
 	private String userKey;
 	private EncryptionDeviceKey deviceKey;
-	private String type;
-	private String deltaPath;
 
 	/**
 	 * @return the title
@@ -234,36 +232,6 @@ public class EncryptionData extends CommonInfo implements Serializable {
 	 */
 	public void setDeviceKey(EncryptionDeviceKey deviceKey) {
 		this.deviceKey = deviceKey;
-	}
-
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return this.type;
-	}
-
-	/**
-	 * @param type
-	 *            the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	/**
-	 * @return the deltaPath
-	 */
-	public String getDeltaPath() {
-		return this.deltaPath;
-	}
-
-	/**
-	 * @param deltaPath
-	 *            the deltaPath to set
-	 */
-	public void setDeltaPath(String deltaPath) {
-		this.deltaPath = deltaPath;
 	}
 
 }

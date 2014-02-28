@@ -26,6 +26,8 @@ public class EncryptionSubContents extends CommonInfo implements Serializable {
 
 	private String scid; // 서브컨텐츠ID
 	private String path; // 물리파일경로
+	private String type;
+	private String deltaPath;
 
 	/**
 	 * @return the scid
@@ -55,5 +57,35 @@ public class EncryptionSubContents extends CommonInfo implements Serializable {
 	 */
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return this.type;
+	}
+
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
+	 * @return the deltaPath
+	 */
+	public String getDeltaPath() {
+		return this.deltaPath;
+	}
+
+	/**
+	 * @param deltaPath
+	 *            the deltaPath to set
+	 */
+	public void setDeltaPath(String deltaPath) {
+		this.deltaPath = deltaPath;
 	}
 }
