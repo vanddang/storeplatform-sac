@@ -63,7 +63,7 @@
 		                  FROM  TB_DP_BNR      A
 		                      , TB_DP_BNR_EXPO B
 		                      , TB_DP_BNR_IMG  C
-                    <!-- [모바일웹 직사각형], [모바일웹 상/하단], [T플레이], [유료앱이무료] 배너 프로비저닝 제외 -->
+                    <!-- 모바일웹 직사각형, 모바일웹 상/하단, T플레이, 유료앱이무료 배너 프로비저닝 제외 -->
                     <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010906"'>
 		                      , TB_DP_BNR_DVC  D
 		                      , TB_CM_DEVICE   E
@@ -74,7 +74,7 @@
 		                   AND  A.TENANT_ID = C.TENANT_ID
 		                   AND  A.BNR_MENU_ID = C.BNR_MENU_ID
 		                   AND  A.BNR_SEQ = C.BNR_SEQ
-                    <!-- [모바일웹 직사각형], [모바일웹 상/하단], [T플레이], [유료앱이무료] 배너 프로비저닝 제외 -->
+                    <!-- 모바일웹 직사각형, 모바일웹 상/하단, T플레이, 유료앱이무료 배너 프로비저닝 제외 -->
                     <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010906"'>
 		                   AND  A.TENANT_ID = D.TENANT_ID
 		                   AND  A.BNR_MENU_ID = D.BNR_MENU_ID
@@ -105,13 +105,13 @@
 		                   AND  B.BNR_EXPO_MENU_ID = #{bnrExpoMenuId}
                     </if>
                     <choose>
-                        <when test='bnrMenuId == "DP010910" or bnrMenuId == "DP010911"'><!-- BEST 앱, BEST 컨텐츠 -->
+                        <when test='bnrMenuId == "DP010910" or bnrMenuId == "DP010911" or bnrMenuId == "DP010912"'><!-- BEST 앱, BEST 컨텐츠, 앱가이드 -->
 		                   AND  SYSDATE BETWEEN NVL(B.EXPO_START_DT, SYSDATE) AND NVL(B.EXPO_END_DT, SYSDATE)
                         </when>
                         <when test='(bnrMenuId == "DP010920" or bnrMenuId == "DP010921") and bnrExpoMenuId == "DP011101"'><!-- 이북, 코믹 테마 배너 -->
 		                   AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_END_DT)
                         </when>
-                        <when test='bnrMenuId == "DP010926" or bnrMenuId == "DP010907" or bnrMenuId == "DP010908" or bnrMenuId == "DP010909"'><!-- [모바일웹 직사각형], [모바일웹 상/하단], [T플레이] 배너 -->
+                        <when test='bnrMenuId == "DP010926" or bnrMenuId == "DP010907" or bnrMenuId == "DP010908" or bnrMenuId == "DP010909"'><!-- 모바일웹 직사각형, 모바일웹 상/하단, T플레이 배너 -->
 		                   AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_END_DT)
                         </when>
                         <otherwise>

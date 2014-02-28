@@ -17,7 +17,9 @@
 		              , JA.BI_IMG_PATH
 		              , JA.GNB_IMG_PATH
 		              , TO_CHAR(JA.REG_DT, 'YYYYMMDDHH24MISS') REG_DT
-		          FROM (SELECT  IA.MSG_ID
+		          FROM (
+		          <if test='msgType == "all"'>
+		                SELECT  IA.MSG_ID
 		                      , IA.MSG_TYPE_CD
 		                      , IA.MAIN_MSG
 		                      , IA.INFR_MSG
@@ -65,6 +67,7 @@
 		                         ORDER BY MSG_ID DESC
 		                       ) IA
 		                UNION ALL
+		          </if>
 		                SELECT  MAX(IB.MSG_ID) AS MSG_ID
 		                      , MAX(IB.MSG_TYPE_CD) AS MSG_TYPE_CD
 		                      , MAX(IB.MAIN_MSG) AS MAIN_MSG
@@ -97,6 +100,7 @@
 		                           AND  SYSDATE BETWEEN USE_START_DT AND USE_END_DT
 		                       ) IB
 		                 GROUP BY MSG_ID
+                  <if test='msgType == "all"'>
 		                UNION ALL
 		                SELECT  IC.MSG_ID
 		                      , IC.MSG_TYPE_CD
@@ -124,6 +128,7 @@
 		                         ORDER BY RN
 		                       ) IC
 		                 WHERE ROWNUM = 1
+                  </if>
 		               ) JA
 		       ) KA
 		 WHERE RNUM BETWEEN #{offset} AND #{count}

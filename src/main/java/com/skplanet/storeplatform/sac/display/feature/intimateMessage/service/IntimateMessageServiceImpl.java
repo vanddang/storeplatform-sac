@@ -68,12 +68,14 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		this.logger.debug("[searchIntimateMessageList] deviceId : {}", deviceKey);
 		this.logger.debug("----------------------------------------------------------------");
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(userKey)) {
-			throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-		}
-		if (StringUtils.isEmpty(deviceKey)) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
+		if ("all".equals(messageReq.getMsgType())) {
+			// 필수 파라미터 체크
+			if (StringUtils.isEmpty(userKey)) {
+				throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
+			}
+			if (StringUtils.isEmpty(deviceKey)) {
+				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
+			}
 		}
 		// offset Default 값 세팅
 		if (messageReq.getOffset() == null) {
@@ -90,127 +92,127 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		// 헤더정보 세팅
 		messageReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 
-		// 기기변경 이력 조회를 위한 생성자
-		ChangedDeviceHistorySacReq deviceReq = null;
-		ChangedDeviceHistorySacRes deviceRes = null;
+		if ("all".equals(messageReq.getMsgType())) {
+			// 기기변경 이력 조회를 위한 생성자
+			ChangedDeviceHistorySacReq deviceReq = null;
+			ChangedDeviceHistorySacRes deviceRes = null;
 
-		try {
-			deviceReq = new ChangedDeviceHistorySacReq();
-			deviceReq.setUserKey(userKey);
-			deviceReq.setDeviceKey(deviceKey);
+			try {
+				deviceReq = new ChangedDeviceHistorySacReq();
+				deviceReq.setUserKey(userKey);
+				deviceReq.setDeviceKey(deviceKey);
 
-			// 기기변경 이력 조회
-			deviceRes = this.deviceSCI.searchChangedDeviceHistory(deviceReq);
-		} catch (Exception ex) {
-			// 기기변경 이력 조회 연동 중 오류가 발생하였습니다.
-			throw new StorePlatformException("SAC_DSP_1003", ex);
+				// 기기변경 이력 조회
+				deviceRes = this.deviceSCI.searchChangedDeviceHistory(deviceReq);
+
+				// 기기변경 여부 세팅
+				messageReq.setDeviceChangeFlag(deviceRes.getIsChanged());
+			} catch (Exception ex) {
+				// 기기변경 이력 조회 연동 중 오류가 발생하였습니다.
+				throw new StorePlatformException("SAC_DSP_1003", ex);
+			}
 		}
 
-		if (deviceRes != null) {
-			// 기기변경 여부 세팅
-			messageReq.setDeviceChangeFlag(deviceRes.getIsChanged());
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("[searchIntimateMessageList] deviceChangeFlag : {}", messageReq.getDeviceChangeFlag());
+		this.logger.debug("----------------------------------------------------------------");
 
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("[searchIntimateMessageList] deviceChangeFlag : {}", messageReq.getDeviceChangeFlag());
-			this.logger.debug("----------------------------------------------------------------");
+		// Intimate Message 조회
+		List<IntimateMessageDefault> resultList = this.commonDAO.queryForList(
+				"IntimateMessage.selectIntimateMessageList", messageReq, IntimateMessageDefault.class);
 
-			// Intimate Message 조회
-			List<IntimateMessageDefault> resultList = this.commonDAO.queryForList(
-					"IntimateMessage.selectIntimateMessageList", messageReq, IntimateMessageDefault.class);
+		if (resultList != null && !resultList.isEmpty()) {
+			IntimateMessageDefault messageDefault = new IntimateMessageDefault();
 
-			if (resultList != null && !resultList.isEmpty()) {
-				IntimateMessageDefault messageDefault = new IntimateMessageDefault();
+			IntimateMessage intimateMessage = null;
+			Identifier identifier = null;
+			Title title = null;
+			Title subTitle = null;
+			Url url = null;
+			Date date = null;
+			Source source = null;
 
-				IntimateMessage intimateMessage = null;
-				Identifier identifier = null;
-				Title title = null;
-				Title subTitle = null;
-				Url url = null;
-				Date date = null;
-				Source source = null;
+			List<Identifier> identifierList = null;
+			List<Source> sourceList = null;
+			List<IntimateMessage> intimateMessageList = new ArrayList<IntimateMessage>();
 
-				List<Identifier> identifierList = null;
-				List<Source> sourceList = null;
-				List<IntimateMessage> intimateMessageList = new ArrayList<IntimateMessage>();
+			for (int i = 0; i < resultList.size(); i++) {
+				messageDefault = resultList.get(i);
+				intimateMessage = new IntimateMessage();
 
-				for (int i = 0; i < resultList.size(); i++) {
-					messageDefault = resultList.get(i);
-					intimateMessage = new IntimateMessage();
+				// ID 정보
+				identifier = new Identifier();
+				identifierList = new ArrayList<Identifier>();
+				identifier.setType(messageDefault.getMsgTypeCd());
+				identifier.setText(messageDefault.getMsgId());
+				identifierList.add(identifier);
+				intimateMessage.setIdentifierList(identifierList);
 
-					// ID 정보
-					identifier = new Identifier();
-					identifierList = new ArrayList<Identifier>();
-					identifier.setType(messageDefault.getMsgTypeCd());
-					identifier.setText(messageDefault.getMsgId());
-					identifierList.add(identifier);
-					intimateMessage.setIdentifierList(identifierList);
+				// 메인 제목
+				title = new Title();
+				title.setText(messageDefault.getMainMsg());
+				title.setColor(messageDefault.getMainColor());
+				intimateMessage.setTitle(title);
 
-					// 메인 제목
-					title = new Title();
-					title.setText(messageDefault.getMainMsg());
-					title.setColor(messageDefault.getMainColor());
-					intimateMessage.setTitle(title);
+				// 하위 제목
+				subTitle = new Title();
+				subTitle.setText(messageDefault.getInfrMsg());
+				subTitle.setColor(messageDefault.getInfrColor());
+				intimateMessage.setSubTitle(subTitle);
 
-					// 하위 제목
-					subTitle = new Title();
-					subTitle.setText(messageDefault.getInfrMsg());
-					subTitle.setColor(messageDefault.getInfrColor());
-					intimateMessage.setSubTitle(subTitle);
+				// 오퍼링 타입
+				if ("url".equals(messageDefault.getOfrTypeCd())) {
+					url = new Url();
+					date = new Date();
 
-					// 오퍼링 타입
-					if ("url".equals(messageDefault.getOfrTypeCd())) {
-						url = new Url();
-						date = new Date();
-
-						date.setType(DisplayConstants.DP_DATE_REG);
-						date.setText(messageDefault.getRegDt());
-						url.setDate(date);
-						url.setText(messageDefault.getOfrDesc());
-						intimateMessage.setUrl(url);
-					} else if ("themeRecomm".equals(messageDefault.getOfrTypeCd())) {
-						intimateMessage.setThemeRecommId(messageDefault.getOfrDesc());
-					} else if ("appCodi".equals(messageDefault.getOfrTypeCd())) {
-						intimateMessage.setAppCodi(messageDefault.getOfrDesc());
-					} else if ("purchaseHistory".equals(messageDefault.getOfrTypeCd())) {
-						intimateMessage.setPurchaseHistory("purchaseHistory");
-					}
-
-					// 배경 이미지
-					if (StringUtils.isNotEmpty(messageDefault.getGnbImgPath())) {
-						source = new Source();
-						sourceList = new ArrayList<Source>();
-						source.setMediaType(DisplayCommonUtil.getMimeType(messageDefault.getGnbImgPath()));
-						source.setType(DisplayConstants.DP_SOURCE_TYPE_GNB_BG);
-						source.setUrl(messageDefault.getGnbImgPath());
-						sourceList.add(source);
-					}
-
-					// 아이콘 이미지
-					if (StringUtils.isNotEmpty(messageDefault.getBiImgPath())) {
-						if (sourceList == null) {
-							sourceList = new ArrayList<Source>();
-						}
-						source = new Source();
-						source.setMediaType(DisplayCommonUtil.getMimeType(messageDefault.getBiImgPath()));
-						source.setType(DisplayConstants.DP_SOURCE_TYPE_GNB_ICON);
-						source.setUrl(messageDefault.getBiImgPath());
-						sourceList.add(source);
-					}
-
-					if (sourceList != null) {
-						intimateMessage.setSourceList(sourceList);
-						sourceList = null;
-					}
-
-					intimateMessageList.add(intimateMessage);
+					date.setType(DisplayConstants.DP_DATE_REG);
+					date.setText(messageDefault.getRegDt());
+					url.setDate(date);
+					url.setText(messageDefault.getOfrDesc());
+					intimateMessage.setUrl(url);
+				} else if ("themeRecomm".equals(messageDefault.getOfrTypeCd())) {
+					intimateMessage.setThemeRecommId(messageDefault.getOfrDesc());
+				} else if ("appCodi".equals(messageDefault.getOfrTypeCd())) {
+					intimateMessage.setAppCodi(messageDefault.getOfrDesc());
+				} else if ("purchaseHistory".equals(messageDefault.getOfrTypeCd())) {
+					intimateMessage.setPurchaseHistory("purchaseHistory");
 				}
 
-				commonResponse.setTotalCount(messageDefault.getTotalCount());
-				intimateMessageRes.setCommonResponse(commonResponse);
-				intimateMessageRes.setIntimateMessageList(intimateMessageList);
-			} else {
-				intimateMessageRes.setCommonResponse(commonResponse);
+				// 배경 이미지
+				if (StringUtils.isNotEmpty(messageDefault.getGnbImgPath())) {
+					source = new Source();
+					sourceList = new ArrayList<Source>();
+					source.setMediaType(DisplayCommonUtil.getMimeType(messageDefault.getGnbImgPath()));
+					source.setType(DisplayConstants.DP_SOURCE_TYPE_GNB_BG);
+					source.setUrl(messageDefault.getGnbImgPath());
+					sourceList.add(source);
+				}
+
+				// 아이콘 이미지
+				if (StringUtils.isNotEmpty(messageDefault.getBiImgPath())) {
+					if (sourceList == null) {
+						sourceList = new ArrayList<Source>();
+					}
+					source = new Source();
+					source.setMediaType(DisplayCommonUtil.getMimeType(messageDefault.getBiImgPath()));
+					source.setType(DisplayConstants.DP_SOURCE_TYPE_GNB_ICON);
+					source.setUrl(messageDefault.getBiImgPath());
+					sourceList.add(source);
+				}
+
+				if (sourceList != null) {
+					intimateMessage.setSourceList(sourceList);
+					sourceList = null;
+				}
+
+				intimateMessageList.add(intimateMessage);
 			}
+
+			commonResponse.setTotalCount(messageDefault.getTotalCount());
+			intimateMessageRes.setCommonResponse(commonResponse);
+			intimateMessageRes.setIntimateMessageList(intimateMessageList);
+		} else {
+			intimateMessageRes.setCommonResponse(commonResponse);
 		}
 
 		return intimateMessageRes;
