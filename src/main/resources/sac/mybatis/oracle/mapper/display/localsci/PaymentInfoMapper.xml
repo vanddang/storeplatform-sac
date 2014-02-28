@@ -80,6 +80,7 @@
                         ,NVL(N.DLY_PROD_MAX_SALE_QTY,0) AS specialSaleDayLimit    
                         ,NVL(N.PERMAN_MM_MAX_PRCHS_QTY,0) AS specialSaleMonthLimitPerson
                         ,NVL(N.PERMAN_DAY_MAX_PRCHS_QTY,0) AS specialSaleDayLimitPerson
+                        ,CONCAT(CONCAT(J.SVC_GRP_CD, '||' ),J.TOP_MENU_ID) as tenantProdGrpCd
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
