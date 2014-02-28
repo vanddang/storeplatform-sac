@@ -34,6 +34,7 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
 	private String testYn; // 테스트 여부
+	private String mmDeviceModelCd; // 가상 프로비저닝 모델명 (멀티미디어).
 
 	/**
 	 * 
@@ -285,4 +286,28 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 		this.testYn = testYn;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 가상 프로비저닝 모델명 (멀티미디어).
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getMmDeviceModelCd() {
+		return this.mmDeviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 가상 프로비저닝 모델명 (멀티미디어).
+	 * </pre>
+	 * 
+	 * @param mmDeviceModelCd
+	 *            String
+	 */
+	public void setMmDeviceModelCd(String mmDeviceModelCd) {
+		this.mmDeviceModelCd = mmDeviceModelCd;
+	}
 }
