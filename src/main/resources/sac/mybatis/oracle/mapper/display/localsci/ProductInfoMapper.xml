@@ -159,7 +159,7 @@
 		       , E.VOD_TITL_NM
 		       , E.STRM_EPSD_CNT
 		       , E.EPSD_CNT
-		       , E.ISSUE_DAY
+		       , TO_CHAR(E.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"')
 		       , E.CHNL_COMP_NM
 		       , E.AGENCY_NM
 		       , E.HDV_YN
@@ -359,7 +359,7 @@
              , E.COMPT_YN
              , E.VOD_TITL_NM
              , E.STRM_EPSD_CNT
-             , E.ISSUE_DAY
+             , TO_CHAR(E.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"')
              , E.CHNL_COMP_NM as PUBLISHER
              , E.AGENCY_NM
              , E.EPSD_CNT

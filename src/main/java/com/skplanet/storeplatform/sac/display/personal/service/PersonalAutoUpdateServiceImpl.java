@@ -134,11 +134,32 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 		mapReq.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 		mapReq.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-		List<Map> listPkg = this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", mapReq,
+		List<Map> updateTargetList = this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", mapReq,
 				Map.class);
 		mapReq.remove("PKG_LIST");
-		this.log.debug("##### auto update target list  : {}", listPkg);
-		this.log.debug("##### auto update target cnt   : {}", listPkg.size());
+
+		this.log.debug("##### auto update target list  : {}", updateTargetList);
+		this.log.debug("##### auto update target cnt   : {}", updateTargetList.size());
+
+		List<Map<String, Object>> listPkg = new ArrayList<Map<String, Object>>();
+
+		for (Map<String, Object> updateTargetMap : updateTargetList) {
+			updateTargetMap.put("deviceHeader", deviceHeader);
+			updateTargetMap.put("tenantHeader", tenantHeader);
+			updateTargetMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+			updateTargetMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+			updateTargetMap.put("prodId", updateTargetMap.get("PROD_ID"));
+			updateTargetMap.put("subContentsId", updateTargetMap.get("SUB_CONTENTS_ID"));
+			updateTargetMap.put("contentsTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+			updateTargetMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
+
+			Map<String, Object> appInfoMap = this.commonDAO.queryForObject("PersonalUpdateProduct.getAppInfo",
+					updateTargetMap, Map.class);
+			if (appInfoMap != null) {
+				listPkg.add(appInfoMap);
+			}
+		}
+
 		if (listPkg.isEmpty()) {
 			throw new StorePlatformException("SAC_DSP_0006");
 		} else {

@@ -51,7 +51,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
-import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
@@ -141,10 +140,6 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		List<Map<String, Object>> listPkg = new ArrayList<Map<String, Object>>();
 
 		for (Map<String, Object> updateTargetMap : updateTargetList) {
-			ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-			productBasicInfo.setSvcGrpCd(DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
-			productBasicInfo.setProdId((String) updateTargetMap.get("PROD_ID"));
-
 			updateTargetMap.put("deviceHeader", deviceHeader);
 			updateTargetMap.put("tenantHeader", tenantHeader);
 			updateTargetMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
