@@ -17,6 +17,7 @@ public class FreepassSeriesReq  extends CommonInfo {
 	private String bannerImageCd; // 배너이미지
 	private String thumbnailImageCd; // 썸네일이미지
 	private String prodStatusCd; // 상품상태
+	private String chnlStatusCd; // 채널상품상태
 	private String standardModelCd; // 상품상태
 	private String prodRshpCd;
 	private String kind;
@@ -231,6 +232,20 @@ public class FreepassSeriesReq  extends CommonInfo {
 	 */
 	public void setKind(String kind) {
 		this.kind = kind;
+	}
+
+	/**
+	 * @return the chnlStatusCd
+	 */
+	public String getChnlStatusCd() {
+		return chnlStatusCd;
+	}
+
+	/**
+	 * @param chnlStatusCd the chnlStatusCd to set
+	 */
+	public void setChnlStatusCd(String chnlStatusCd) {
+		this.chnlStatusCd = chnlStatusCd;
 	}
 	
 	
