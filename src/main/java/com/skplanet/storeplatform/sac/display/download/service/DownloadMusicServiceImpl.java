@@ -9,9 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -19,15 +22,25 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
+import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -48,7 +61,7 @@ import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 @Service
 public class DownloadMusicServiceImpl implements DownloadMusicService {
 
-	// private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -80,11 +93,11 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
-		// MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
-		// MetaInfo.class);
-		//
-		// String reqExpireDate = downloadSystemDate.getExpiredDate();
-		// String sysDate = downloadSystemDate.getSysDate();
+		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
+				MetaInfo.class);
+
+		String reqExpireDate = downloadSystemDate.getExpiredDate();
+		String sysDate = downloadSystemDate.getSysDate();
 
 		downloadMusicSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadMusicSacReq.setDeviceModelCd(deviceHeader.getModel());
@@ -120,173 +133,170 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.getDownloadMusicInfo",
 					downloadMusicSacReq);
 
-			// // 구매내역 조회를 위한 생성자
-			// ProductListSacIn productListSacIn = null;
-			// List<ProductListSacIn> productList = null;
-			// HistoryListSacInReq historyReq = null;
-			// HistoryListSacInRes historyRes = null;
-			//
-			// try {
-			// productListSacIn = new ProductListSacIn();
-			// productList = new ArrayList<ProductListSacIn>();
-			//
-			// productListSacIn.setProdId(metaInfo.getProdId());
-			// productList.add(productListSacIn);
-			//
-			// historyReq = new HistoryListSacInReq();
-			// historyReq.setTenantId(downloadMusicSacReq.getTenantId());
-			// historyReq.setUserKey(downloadMusicSacReq.getUserKey());
-			// historyReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
-			// historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-			// historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-			// historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-			// historyReq.setEndDt(sysDate);
-			// historyReq.setOffset(1);
-			// historyReq.setCount(1000);
-			// historyReq.setProductList(productList);
-			//
-			// // 구매내역 조회 실행
-			// historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
-			//
-			// } catch (Exception ex) {
-			// throw new StorePlatformException("SAC_DSP_2001", ex);
-			// }
-			//
-			// String prchsId = null; // 구매ID
-			// String prchsDt = null; // 구매일시
-			// String useExprDt = null; // 이용 만료일시
-			// String dwldExprDt = null; // 다운로드 만료일시
-			// String prchsCaseCd = null; // 선물 여부
-			// String prchsState = null; // 구매상태
-			// String prchsProdId = null; // 구매 상품ID
-			// String puchsPrice = null; // 구매 상품금액
-			// String drmYn = null; // 구매상품 Drm여부
-			//
-			// if (historyRes != null && historyRes.getTotalCnt() > 0) {
-			// List<Purchase> purchaseList = new ArrayList<Purchase>();
-			// List<Encryption> encryptionList = new ArrayList<Encryption>();
-			//
-			// for (int i = 0; i < historyRes.getTotalCnt(); i++) {
-			// prchsId = historyRes.getHistoryList().get(i).getPrchsId();
-			// prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
-			// useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
-			// dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
-			// prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
-			// prchsProdId = historyRes.getHistoryList().get(i).getProdId();
-			// puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
-			// drmYn = historyRes.getHistoryList().get(i).getDrmYn();
-			//
-			// // 구매상태 확인
-			// downloadMusicSacReq.setPrchsDt(prchsDt);
-			// downloadMusicSacReq.setDwldExprDt(dwldExprDt);
-			// prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
-			// downloadMusicSacReq);
-			//
-			// // 구매상태 만료여부 확인
-			// if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
-			// // 구매 및 선물 여부 확인
-			// if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
-			// prchsState = "payment";
-			// } else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
-			// prchsState = "gift";
-			// }
-			// }
-			//
-			// this.log.debug("----------------------------------------------------------------");
-			// this.log.debug("[getDownloadMusickInfo] prchsId : {}", prchsId);
-			// this.log.debug("[getDownloadMusickInfo] prchsDt : {}", prchsDt);
-			// this.log.debug("[getDownloadMusickInfo] useExprDt : {}", useExprDt);
-			// this.log.debug("[getDownloadMusickInfo] dwldExprDt : {}", dwldExprDt);
-			// this.log.debug("[getDownloadMusickInfo] prchsCaseCd : {}", prchsCaseCd);
-			// this.log.debug("[getDownloadMusickInfo] prchsState : {}", prchsState);
-			// this.log.debug("[getDownloadMusickInfo] prchsProdId : {}", prchsProdId);
-			// this.log.debug("----------------------------------------------------------------");
-			//
-			// metaInfo.setPurchaseId(prchsId);
-			// metaInfo.setPurchaseProdId(prchsProdId);
-			// metaInfo.setPurchaseDt(prchsDt);
-			// metaInfo.setPurchaseState(prchsState);
-			// metaInfo.setPurchaseDwldExprDt(dwldExprDt);
-			// metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
-			// metaInfo.setDrmYn(drmYn);
-			//
-			// // 구매 정보
-			// purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
-			//
-			// /************************************************************************************************
-			// * 구매 정보에 따른 암호화 시작
-			// ************************************************************************************************/
-			// // 구매상태 만료 여부 확인
-			// if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
-			// String deviceId = null; // Device Id
-			// String deviceIdType = null; // Device Id 유형
-			// SearchDeviceIdSacReq deviceReq = null;
-			// SearchDeviceIdSacRes deviceRes = null;
-			//
-			// try {
-			// deviceReq = new SearchDeviceIdSacReq();
-			// deviceReq.setUserKey(downloadMusicSacReq.getUserKey());
-			// deviceReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
-			//
-			// // 기기정보 조회
-			// deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-			// } catch (Exception ex) {
-			// throw new StorePlatformException("SAC_DSP_1001", ex);
-			// }
-			//
-			// if (deviceRes != null) {
-			// deviceId = deviceRes.getDeviceId();
-			// deviceIdType = this.commonService.getDeviceIdType(deviceId);
-			//
-			// metaInfo.setExpiredDate(reqExpireDate);
-			// metaInfo.setUseExprDt(useExprDt);
-			// metaInfo.setUserKey(userKey);
-			// metaInfo.setDeviceKey(deviceKey);
-			// metaInfo.setDeviceType(deviceIdType);
-			// metaInfo.setDeviceSubKey(deviceId);
-			//
-			// // 암호화 정보 (JSON)
-			// EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
-			//
-			// // JSON 파싱
-			// MarshallingHelper marshaller = new JacksonMarshallingHelper();
-			// byte[] jsonData = marshaller.marshal(contents);
-			//
-			// // JSON 암호화
-			// byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-			// String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
-			//
-			// // 암호화 정보 (AES-128)
-			// Encryption encryption = new Encryption();
-			// encryption.setProductId(prchsProdId);
-			// encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-			// encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
-			// encryption.setToken(encryptString);
-			// encryptionList.add(encryption);
-			//
-			// // JSON 복호화
-			// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-			// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-			//
-			// try {
-			// String decData = new String(decrypt, "UTF-8");
-			// this.log.debug("----------------------------------------------------------------");
-			// this.log.debug("[getDownloadVodInfo] decData : {}", decData);
-			// this.log.debug("----------------------------------------------------------------");
-			// } catch (UnsupportedEncodingException e) {
-			// e.printStackTrace();
-			// }
-			// }
-			// }
-			// }
-			// // 구매 정보
-			// product.setPurchaseList(purchaseList);
-			//
-			// // 암호화 정보
-			// if (!encryptionList.isEmpty()) {
-			// product.setDl(encryptionList);
-			// }
-			// }
+			// 구매내역 조회를 위한 생성자
+			ProductListSacIn productListSacIn = null;
+			List<ProductListSacIn> productList = null;
+			HistoryListSacInReq historyReq = null;
+			HistoryListSacInRes historyRes = null;
+
+			try {
+				productListSacIn = new ProductListSacIn();
+				productList = new ArrayList<ProductListSacIn>();
+
+				productListSacIn.setProdId(metaInfo.getProdId());
+				productList.add(productListSacIn);
+
+				historyReq = new HistoryListSacInReq();
+				historyReq.setTenantId(downloadMusicSacReq.getTenantId());
+				historyReq.setUserKey(downloadMusicSacReq.getUserKey());
+				historyReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
+				historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+				historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+				historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+				historyReq.setEndDt(sysDate);
+				historyReq.setOffset(1);
+				historyReq.setCount(1000);
+				historyReq.setProductList(productList);
+
+				// 구매내역 조회 실행
+				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
+
+			} catch (Exception ex) {
+				throw new StorePlatformException("SAC_DSP_2001", ex);
+			}
+
+			String prchsId = null; // 구매ID
+			String prchsDt = null; // 구매일시
+			String useExprDt = null; // 이용 만료일시
+			String dwldExprDt = null; // 다운로드 만료일시
+			String prchsCaseCd = null; // 선물 여부
+			String prchsState = null; // 구매상태
+			String prchsProdId = null; // 구매 상품ID
+			String puchsPrice = null; // 구매 상품금액
+
+			if (historyRes != null && historyRes.getTotalCnt() > 0) {
+				List<Purchase> purchaseList = new ArrayList<Purchase>();
+				List<Encryption> encryptionList = new ArrayList<Encryption>();
+
+				for (int i = 0; i < historyRes.getTotalCnt(); i++) {
+					prchsId = historyRes.getHistoryList().get(i).getPrchsId();
+					prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
+					useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
+					dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
+					prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
+					prchsProdId = historyRes.getHistoryList().get(i).getProdId();
+					puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
+
+					// 구매상태 확인
+					downloadMusicSacReq.setPrchsDt(prchsDt);
+					downloadMusicSacReq.setDwldExprDt(dwldExprDt);
+					prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
+							downloadMusicSacReq);
+
+					// 구매상태 만료여부 확인
+					if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+						// 구매 및 선물 여부 확인
+						if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
+							prchsState = "payment";
+						} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
+							prchsState = "gift";
+						}
+					}
+
+					this.log.debug("----------------------------------------------------------------");
+					this.log.debug("[getDownloadMusickInfo] prchsId : {}", prchsId);
+					this.log.debug("[getDownloadMusickInfo] prchsDt : {}", prchsDt);
+					this.log.debug("[getDownloadMusickInfo] useExprDt : {}", useExprDt);
+					this.log.debug("[getDownloadMusickInfo] dwldExprDt : {}", dwldExprDt);
+					this.log.debug("[getDownloadMusickInfo] prchsCaseCd : {}", prchsCaseCd);
+					this.log.debug("[getDownloadMusickInfo] prchsState : {}", prchsState);
+					this.log.debug("[getDownloadMusickInfo] prchsProdId : {}", prchsProdId);
+					this.log.debug("----------------------------------------------------------------");
+
+					metaInfo.setPurchaseId(prchsId);
+					metaInfo.setPurchaseProdId(prchsProdId);
+					metaInfo.setPurchaseDt(prchsDt);
+					metaInfo.setPurchaseState(prchsState);
+					metaInfo.setPurchaseDwldExprDt(dwldExprDt);
+					metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
+
+					// 구매 정보
+					purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
+
+					/************************************************************************************************
+					 * 구매 정보에 따른 암호화 시작
+					 ************************************************************************************************/
+					// 구매상태 만료 여부 확인
+					if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+						String deviceId = null; // Device Id
+						String deviceIdType = null; // Device Id 유형
+						SearchDeviceIdSacReq deviceReq = null;
+						SearchDeviceIdSacRes deviceRes = null;
+
+						try {
+							deviceReq = new SearchDeviceIdSacReq();
+							deviceReq.setUserKey(downloadMusicSacReq.getUserKey());
+							deviceReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
+
+							// 기기정보 조회
+							deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
+						} catch (Exception ex) {
+							throw new StorePlatformException("SAC_DSP_1001", ex);
+						}
+
+						if (deviceRes != null) {
+							deviceId = deviceRes.getDeviceId();
+							deviceIdType = this.commonService.getDeviceIdType(deviceId);
+
+							metaInfo.setExpiredDate(reqExpireDate);
+							metaInfo.setUseExprDt(useExprDt);
+							metaInfo.setUserKey(userKey);
+							metaInfo.setDeviceKey(deviceKey);
+							metaInfo.setDeviceType(deviceIdType);
+							metaInfo.setDeviceSubKey(deviceId);
+
+							// 암호화 정보 (JSON)
+							EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+
+							// JSON 파싱
+							MarshallingHelper marshaller = new JacksonMarshallingHelper();
+							byte[] jsonData = marshaller.marshal(contents);
+
+							// JSON 암호화
+							byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+							String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+							// 암호화 정보 (AES-128)
+							Encryption encryption = new Encryption();
+							encryption.setProductId(prchsProdId);
+							encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+							encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
+							encryption.setToken(encryptString);
+							encryptionList.add(encryption);
+
+							// JSON 복호화
+							byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+							byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+
+							try {
+								String decData = new String(decrypt, "UTF-8");
+								this.log.debug("----------------------------------------------------------------");
+								this.log.debug("[getDownloadVodInfo] decData : {}", decData);
+								this.log.debug("----------------------------------------------------------------");
+							} catch (UnsupportedEncodingException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				// 구매 정보
+				product.setPurchaseList(purchaseList);
+
+				// 암호화 정보
+//				if (!encryptionList.isEmpty()) {
+//					 product.setDl(encryptionList);
+//				}
+			}
 
 			identifierList = new ArrayList<Identifier>();
 
