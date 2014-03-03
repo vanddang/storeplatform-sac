@@ -3,8 +3,8 @@
 <mapper namespace="AuthKey">
 
     <resultMap id="AuthKeyResultMap" type="AuthKey" autoMapping="true">
-        <id property="AUTH_KEY_TYPE" column="AUTH_KEY_TYPE_CD"/>
-        <id property="STATUS" column="STATUS_CD"/>
+        <id property="authKeyType" column="AUTH_KEY_TYPE_CD"/>
+        <id property="status" column="STATUS_CD"/>
     </resultMap>
 
     <!-- AuthKey 정보 조회  -->

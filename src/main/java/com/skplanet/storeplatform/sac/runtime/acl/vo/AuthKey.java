@@ -42,8 +42,8 @@ public class AuthKey extends CommonInfo {
      * {@link com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyStatus}
      */
     private AuthKeyStatus status;
-    private String statusCd;
 
+    private String statusCd;
     /**
      * Auth 유형 (MAC/IP)
      * {@link com.skplanet.storeplatform.sac.runtime.acl.vo.AuthType}
@@ -169,4 +169,6 @@ public class AuthKey extends CommonInfo {
     public void setAuthTypeNm(String authTypeNm) {
         this.authTypeNm = authTypeNm;
     }
+
+
 }

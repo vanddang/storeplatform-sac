@@ -38,7 +38,6 @@
         <typeAlias alias="Tenant"      			type="com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant" />
         <typeAlias alias="AuthKey"      		type="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey" />
         <typeAlias alias="System"      			type="com.skplanet.storeplatform.sac.runtime.acl.vo.System" />
-        <typeAlias alias="AclInfo"     			type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclInfo" />
 
         <!-- ################################################# -->
         <!-- 기타                                            -->
@@ -305,5 +304,11 @@
     <typeHandlers>
         <typeHandler javaType="com.skplanet.storeplatform.sac.runtime.acl.vo.InterfaceStatus" 
                 handler="com.skplanet.storeplatform.sac.runtime.acl.vo.InterfaceStatusTypeHandler" /> 
+        <typeHandler javaType="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyStatus"
+                handler="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyStatusTypeHandler" />
+        <typeHandler javaType="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyType"
+                handler="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyTypeTypeHandler" />
+        <typeHandler javaType="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthType"
+                handler="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthTypeTypeHandler" />
     </typeHandlers>
 </configuration>
