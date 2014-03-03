@@ -22,7 +22,6 @@ public class ModifyEmailSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 인증 키. */
-	@NotBlank
 	private String sessionKey;
 	/** 판매자 key. */
 	@NotBlank

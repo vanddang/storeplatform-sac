@@ -33,9 +33,9 @@ public class CreateReq extends CommonInfo {
 	private String sellerPW;
 	/** 이동통신사. */
 	private String sellerTelecom;
-	/** 전화번호 국가코드. */
+	/** 무선 전화번호 국가코드. */
 	private String sellerPhoneCountry;
-	/** 전화번호. */
+	/** 무선 전화번호. */
 	private String sellerPhone;
 	/** SMS 수신 여부. */
 	private String isRecvSMS;
@@ -47,6 +47,10 @@ public class CreateReq extends CommonInfo {
 	private String isRecvEmail;
 	/** 판매자 이름. */
 	private String sellerName;
+	/** 유선 국가번호. */
+	private String cordedTelephoneCountry;
+	/** 유선 전화번호. */
+	private String cordedTelephone;
 	/** 노출 이름. */
 	private String sellerNickName;
 	/** 판매자 성별. */
@@ -76,7 +80,6 @@ public class CreateReq extends CommonInfo {
 	@NotBlank
 	@Pattern(regexp = "^Y|^N")
 	private String isDomestic;
-
 	/** 실명인증 일시. */
 	@Size(max = 14)
 	private String realNameDate;
@@ -103,6 +106,12 @@ public class CreateReq extends CommonInfo {
 	private String chargerPhone;
 	/** 법인등록번호. */
 	private String sellerBizCorpNumber;
+	/** 대표전화 국가번호. */
+	private String repPhoneArea;
+	/** 대표전화번호. */
+	private String repPhone;
+	/** 대표 Email. */
+	private String repEmail;
 
 	/** 보안질문 정보들. */
 	private List<PwReminder> pwReminderList;
@@ -255,6 +264,36 @@ public class CreateReq extends CommonInfo {
 	 */
 	public void setSellerName(String sellerName) {
 		this.sellerName = sellerName;
+	}
+
+	/**
+	 * @return the cordedTelephoneCountry
+	 */
+	public String getCordedTelephoneCountry() {
+		return this.cordedTelephoneCountry;
+	}
+
+	/**
+	 * @param cordedTelephoneCountry
+	 *            the cordedTelephoneCountry to set
+	 */
+	public void setCordedTelephoneCountry(String cordedTelephoneCountry) {
+		this.cordedTelephoneCountry = cordedTelephoneCountry;
+	}
+
+	/**
+	 * @return the cordedTelephone
+	 */
+	public String getCordedTelephone() {
+		return this.cordedTelephone;
+	}
+
+	/**
+	 * @param cordedTelephone
+	 *            the cordedTelephone to set
+	 */
+	public void setCordedTelephone(String cordedTelephone) {
+		this.cordedTelephone = cordedTelephone;
 	}
 
 	/**
@@ -615,6 +654,51 @@ public class CreateReq extends CommonInfo {
 	 */
 	public void setSellerBizCorpNumber(String sellerBizCorpNumber) {
 		this.sellerBizCorpNumber = sellerBizCorpNumber;
+	}
+
+	/**
+	 * @return the repPhoneArea
+	 */
+	public String getRepPhoneArea() {
+		return this.repPhoneArea;
+	}
+
+	/**
+	 * @param repPhoneArea
+	 *            the repPhoneArea to set
+	 */
+	public void setRepPhoneArea(String repPhoneArea) {
+		this.repPhoneArea = repPhoneArea;
+	}
+
+	/**
+	 * @return the repPhone
+	 */
+	public String getRepPhone() {
+		return this.repPhone;
+	}
+
+	/**
+	 * @param repPhone
+	 *            the repPhone to set
+	 */
+	public void setRepPhone(String repPhone) {
+		this.repPhone = repPhone;
+	}
+
+	/**
+	 * @return the repEmail
+	 */
+	public String getRepEmail() {
+		return this.repEmail;
+	}
+
+	/**
+	 * @param repEmail
+	 *            the repEmail to set
+	 */
+	public void setRepEmail(String repEmail) {
+		this.repEmail = repEmail;
 	}
 
 	/**

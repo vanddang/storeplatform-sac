@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
-import java.util.List;
-
 import javax.validation.constraints.Pattern;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -9,7 +7,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.FlurryAuth;
 
 /**
  * 2.2.10. 판매자회원 기본정보 수정 [REQUEST]
@@ -78,7 +75,16 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String charger;
 	/** 담당자 무선 전화번호. */
 	private String chargerphone;
-	private List<FlurryAuth> flurryAuthList;
+	/** 유선 국가번호. */
+	private String cordedTelephoneCountry;
+	/** 유선 전화번호. */
+	private String cordedTelephone;
+	/** 대표전화 국가번호. */
+	private String repPhoneArea;
+	/** 대표전화번호. */
+	private String repPhone;
+	/** 대표 Email. */
+	private String repEmail;
 
 	/**
 	 * @return the sellerKey
@@ -456,18 +462,78 @@ public class ModifyInformationSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the flurryAuthList
+	 * @return the cordedTelephoneCountry
 	 */
-	public List<FlurryAuth> getFlurryAuthList() {
-		return this.flurryAuthList;
+	public String getCordedTelephoneCountry() {
+		return this.cordedTelephoneCountry;
 	}
 
 	/**
-	 * @param flurryAuthList
-	 *            the flurryAuthList to set
+	 * @param cordedTelephoneCountry
+	 *            the cordedTelephoneCountry to set
 	 */
-	public void setFlurryAuthList(List<FlurryAuth> flurryAuthList) {
-		this.flurryAuthList = flurryAuthList;
+	public void setCordedTelephoneCountry(String cordedTelephoneCountry) {
+		this.cordedTelephoneCountry = cordedTelephoneCountry;
+	}
+
+	/**
+	 * @return the cordedTelephone
+	 */
+	public String getCordedTelephone() {
+		return this.cordedTelephone;
+	}
+
+	/**
+	 * @param cordedTelephone
+	 *            the cordedTelephone to set
+	 */
+	public void setCordedTelephone(String cordedTelephone) {
+		this.cordedTelephone = cordedTelephone;
+	}
+
+	/**
+	 * @return the repPhoneArea
+	 */
+	public String getRepPhoneArea() {
+		return this.repPhoneArea;
+	}
+
+	/**
+	 * @param repPhoneArea
+	 *            the repPhoneArea to set
+	 */
+	public void setRepPhoneArea(String repPhoneArea) {
+		this.repPhoneArea = repPhoneArea;
+	}
+
+	/**
+	 * @return the repPhone
+	 */
+	public String getRepPhone() {
+		return this.repPhone;
+	}
+
+	/**
+	 * @param repPhone
+	 *            the repPhone to set
+	 */
+	public void setRepPhone(String repPhone) {
+		this.repPhone = repPhone;
+	}
+
+	/**
+	 * @return the repEmail
+	 */
+	public String getRepEmail() {
+		return this.repEmail;
+	}
+
+	/**
+	 * @param repEmail
+	 *            the repEmail to set
+	 */
+	public void setRepEmail(String repEmail) {
+		this.repEmail = repEmail;
 	}
 
 }

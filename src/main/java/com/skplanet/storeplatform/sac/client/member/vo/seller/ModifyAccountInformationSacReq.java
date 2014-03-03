@@ -34,21 +34,6 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	/** 법인등록번호. */
 	private String sellerBizCorpNumber;
 
-	/** 대표전화 국가번호. */
-	private String repPhoneArea;
-
-	/** 대표전화번호. */
-	private String repPhone;
-
-	/** 대표팩스 국가번호. */
-	private String repFaxArea;
-
-	/** 대표팩스번호. */
-	private String repFax;
-
-	/** 대표 Email. */
-	private String repEmail;
-
 	/** 우편번호. */
 	private String sellerBizZip;
 
@@ -131,6 +116,12 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	/** TPIN 코드. */
 	private String tpinCode;
 
+	/** CEO명. */
+	private String ceoName; // CEO_NM
+
+	/** CEO 생년월일. ex(YYYYMMDD) */
+	private String ceoBirthDay; // CEO_BIRTH
+
 	/** 서류 관련 리스트. */
 	private List<ExtraDocument> extraDocumentList;
 
@@ -207,81 +198,6 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	 */
 	public void setSellerBizCorpNumber(String sellerBizCorpNumber) {
 		this.sellerBizCorpNumber = sellerBizCorpNumber;
-	}
-
-	/**
-	 * @return the repPhoneArea
-	 */
-	public String getRepPhoneArea() {
-		return this.repPhoneArea;
-	}
-
-	/**
-	 * @param repPhoneArea
-	 *            the repPhoneArea to set
-	 */
-	public void setRepPhoneArea(String repPhoneArea) {
-		this.repPhoneArea = repPhoneArea;
-	}
-
-	/**
-	 * @return the repPhone
-	 */
-	public String getRepPhone() {
-		return this.repPhone;
-	}
-
-	/**
-	 * @param repPhone
-	 *            the repPhone to set
-	 */
-	public void setRepPhone(String repPhone) {
-		this.repPhone = repPhone;
-	}
-
-	/**
-	 * @return the repFaxArea
-	 */
-	public String getRepFaxArea() {
-		return this.repFaxArea;
-	}
-
-	/**
-	 * @param repFaxArea
-	 *            the repFaxArea to set
-	 */
-	public void setRepFaxArea(String repFaxArea) {
-		this.repFaxArea = repFaxArea;
-	}
-
-	/**
-	 * @return the repFax
-	 */
-	public String getRepFax() {
-		return this.repFax;
-	}
-
-	/**
-	 * @param repFax
-	 *            the repFax to set
-	 */
-	public void setRepFax(String repFax) {
-		this.repFax = repFax;
-	}
-
-	/**
-	 * @return the repEmail
-	 */
-	public String getRepEmail() {
-		return this.repEmail;
-	}
-
-	/**
-	 * @param repEmail
-	 *            the repEmail to set
-	 */
-	public void setRepEmail(String repEmail) {
-		this.repEmail = repEmail;
 	}
 
 	/**
@@ -702,6 +618,36 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	 */
 	public void setExtraDocumentList(List<ExtraDocument> extraDocumentList) {
 		this.extraDocumentList = extraDocumentList;
+	}
+
+	/**
+	 * @return the ceoName
+	 */
+	public String getCeoName() {
+		return this.ceoName;
+	}
+
+	/**
+	 * @param ceoName
+	 *            the ceoName to set
+	 */
+	public void setCeoName(String ceoName) {
+		this.ceoName = ceoName;
+	}
+
+	/**
+	 * @return the ceoBirthDay
+	 */
+	public String getCeoBirthDay() {
+		return this.ceoBirthDay;
+	}
+
+	/**
+	 * @param ceoBirthDay
+	 *            the ceoBirthDay to set
+	 */
+	public void setCeoBirthDay(String ceoBirthDay) {
+		this.ceoBirthDay = ceoBirthDay;
 	}
 
 	/**

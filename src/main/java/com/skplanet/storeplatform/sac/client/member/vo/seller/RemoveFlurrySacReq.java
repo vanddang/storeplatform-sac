@@ -77,22 +77,21 @@ public class RemoveFlurrySacReq extends CommonInfo {
 
 		/** Access 코드. */
 		@NotBlank
-		private String accessCode;
+		private String authToken;
 
 		/**
-		 * @return the accessCode
+		 * @return the authToken
 		 */
-		public String getAccessCode() {
-			return this.accessCode;
+		public String getAuthToken() {
+			return this.authToken;
 		}
 
 		/**
-		 * @param accessCode
-		 *            the accessCode to set
+		 * @param authToken
+		 *            the authToken to set
 		 */
-		public void setAccessCode(String accessCode) {
-			this.accessCode = accessCode;
+		public void setAuthToken(String authToken) {
+			this.authToken = authToken;
 		}
-
 	}
 }
