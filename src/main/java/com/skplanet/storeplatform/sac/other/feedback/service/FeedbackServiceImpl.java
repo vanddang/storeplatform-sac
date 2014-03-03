@@ -818,11 +818,18 @@ public class FeedbackServiceImpl implements FeedbackService {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 사용후기 데이터 가공.
 	 * </pre>
 	 * 
 	 * @param prodNoti
-	 * @return
+	 *            prodNoti
+	 * @param prodType
+	 *            prodType
+	 * @param detailInformationSacRes
+	 *            detailInformationSacRes
+	 * @param searchUserSacRes
+	 *            searchUserSacRes
+	 * @return Feedback
 	 */
 	private Feedback setFeedback(ProdNoti prodNoti, String prodType, DetailInformationSacRes detailInformationSacRes,
 			SearchUserSacRes searchUserSacRes) {

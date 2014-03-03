@@ -47,8 +47,8 @@ public interface FeedbackRepository {
 	 * 일반 회원정보 조회.
 	 * </pre>
 	 * 
-	 * @param userKey
-	 *            userKey
+	 * @param searchUserSacReq
+	 *            searchUserSacReq
 	 * @return SearchUserSacRes
 	 */
 	public SearchUserSacRes searchUserByUserKey(SearchUserSacReq searchUserSacReq);
