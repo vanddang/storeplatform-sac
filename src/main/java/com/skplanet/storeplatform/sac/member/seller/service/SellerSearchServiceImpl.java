@@ -552,8 +552,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerAccount.setRepPhoneArea(schRes.getSellerMbr().getRepPhoneArea()); // ("대표전화번호 국가코드");
 																					// REP_TEL_NATION_NO
 			sellerAccount.setRepPhone(schRes.getSellerMbr().getRepPhone()); // ("대표전화번호"); REP_TEL_NO
-			sellerAccount.setRepFaxArea(schRes.getSellerMbr().getRepFaxArea()); // ("대표팩스번호 국가코드"); FAX_NATION_NO
-			sellerAccount.setRepFax(schRes.getSellerMbr().getRepFax()); // ("대표팩스번호"); FAX_NO
 			sellerAccount.setRepEmail(schRes.getSellerMbr().getRepEmail()); // ("대표 이메일"); REP_EMAIL
 			sellerAccount.setVendorCode(schRes.getSellerMbr().getVendorCode()); // ("벤더 코드"); VENDOR_CD
 			sellerAccount.setIsBizRegistered(schRes.getSellerMbr().getIsBizRegistered()); // ("통신판매업 신고여부");
@@ -956,8 +954,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setParentSellerKey(sellerMbr.getParentSellerKey());
 			sellerMbrRes.setRegDate(sellerMbr.getRegDate());
 			sellerMbrRes.setRepEmail(sellerMbr.getRepEmail());
-			sellerMbrRes.setRepFax(sellerMbr.getRepFax());
-			sellerMbrRes.setRepFaxArea(sellerMbr.getRepFaxArea());
 			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
 			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
 			sellerMbrRes.setRightProfile(sellerMbr.getRightProfileList());
