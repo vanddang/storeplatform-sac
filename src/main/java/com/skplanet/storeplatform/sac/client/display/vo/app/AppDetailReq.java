@@ -30,6 +30,12 @@ public class AppDetailReq extends CommonInfo {
 
     private String userKey;
 
+    public AppDetailReq() {}
+
+    public AppDetailReq(String channelId) {
+        this.channelId = channelId;
+    }
+
     public String getChannelId() {
         return channelId;
     }
