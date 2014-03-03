@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.display;
+package com.skplanet.storeplatform.sac.common;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -40,8 +41,8 @@ public class MvcTestBuilder {
         DEFAULT_DEVICE_HEADER_MAP.put("model", "SHV-E110S");
         DEFAULT_DEVICE_HEADER_MAP.put("dpi", "320");
         DEFAULT_DEVICE_HEADER_MAP.put("resolution", "480*720");
-        DEFAULT_DEVICE_HEADER_MAP.put("osVersion", "Android/4.0.4");
-        DEFAULT_DEVICE_HEADER_MAP.put("pkgVersion", "sac.store.skplanet.com/37");
+        DEFAULT_DEVICE_HEADER_MAP.put("os", "Android/4.0.4");
+        DEFAULT_DEVICE_HEADER_MAP.put("pkg", "sac.store.skplanet.com/37");
     }
 
     public static Map<String, String> getDefaultHeader() {
@@ -80,6 +81,20 @@ public class MvcTestBuilder {
                 .andExpect(header().string("x-sac-result-code", expectResultSuccess ? "SUCC" : "FAIL"));
     }
 
+    public static ResultActions build(MockMvc mvc, boolean isPost, String deviceHeader, String url, Object reqObj, boolean expectResultSuccess) throws Exception {
+        String postBody;
+        try
+        {
+            postBody = new ObjectMapper().writeValueAsString(reqObj);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        return build(mvc, isPost, deviceHeader, url, postBody, expectResultSuccess);
+    }
+
     public static ResultActions build(MockMvc mvc, boolean isPost, Map<String, String> deviceInfoMap, String url, Object reqObj, boolean expectResultSuccess) throws Exception {
         String postBody;
         try
@@ -99,5 +114,43 @@ public class MvcTestBuilder {
         }
 
         return build(mvc, isPost, sb.toString(), url, postBody, expectResultSuccess);
+    }
+
+    public static ResultActions build2(MockMvc mvc, boolean isPost, Map<String, String> headerMap, String url, Object reqObj, Boolean expectResultSuccess) throws Exception {
+        String postBody;
+        try
+        {
+            postBody = new ObjectMapper().writeValueAsString(reqObj);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        MockHttpServletRequestBuilder request;
+        if(isPost)
+            request = post(url);
+        else
+            request = get(url);
+
+        for(Map.Entry<String, String> header : headerMap.entrySet()) {
+            request.header(header.getKey(), header.getValue());
+        }
+
+        request.contentType(MediaType.APPLICATION_JSON);
+
+        if(isPost && !StringUtils.isEmpty(postBody))
+        {
+            request.content(postBody);
+        }
+
+        ResultActions actions = mvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        if(expectResultSuccess != null)
+            actions.andExpect(header().string("x-sac-result-code", expectResultSuccess ? "SUCC" : "FAIL"));
+
+        return actions;
     }
 }

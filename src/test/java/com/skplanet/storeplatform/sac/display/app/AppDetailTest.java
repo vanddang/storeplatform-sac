@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.display.app;
 
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
-import com.skplanet.storeplatform.sac.display.MvcTestBuilder;
+import com.skplanet.storeplatform.sac.common.MvcTestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

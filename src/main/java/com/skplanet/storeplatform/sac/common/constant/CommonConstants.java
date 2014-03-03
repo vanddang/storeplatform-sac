@@ -54,6 +54,16 @@ public class CommonConstants {
 	 */
 	public static final String HEADER_GUID = "x-sac-guid";
 
+    /**
+     * 요청 커스텀 헤더 상수 - 단말기 정보
+     */
+    public static final String HEADER_DEVICE = "x-sac-device-info";
+
+    /**
+     * 요청 커스텀 헤더 상수 - 네트워크 정보
+     */
+    public static final String HEADER_NETWORK = "x-sac-network-info";
+
 	/**
 	 * 요청 스탠다드 헤더 상수 - Accept
 	 */
