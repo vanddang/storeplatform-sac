@@ -140,13 +140,13 @@ public class RemoveFlurryTest {
 					public Object requestBody() {
 						List<FlurryAuth> flurryAuths = new ArrayList<RemoveFlurrySacReq.FlurryAuth>();
 						FlurryAuth flurryAuth1 = new FlurryAuth();
-						flurryAuth1.setAccessCode("A1");
+						flurryAuth1.setAuthToken("A1");
 						flurryAuths.add(flurryAuth1);
 						FlurryAuth flurryAuth2 = new FlurryAuth();
-						flurryAuth2.setAccessCode("A2");
+						flurryAuth2.setAuthToken("A2");
 						flurryAuths.add(flurryAuth2);
 						FlurryAuth flurryAuth3 = new FlurryAuth();
-						flurryAuth3.setAccessCode("A3");
+						flurryAuth3.setAuthToken("A3");
 						flurryAuths.add(flurryAuth3);
 						req.setFlurryAuthList(flurryAuths);
 						// Debug

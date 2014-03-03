@@ -151,7 +151,9 @@ public class ModifyInformationTest {
 						req.setSellerCompany("Supernatural");
 						req.setIsRecvSMS("Y");
 						req.setIsRecvEmail("Y");
-
+						req.setRepEmail("");
+						req.setRepPhone("");
+						req.setRepPhoneArea("");
 						// Debug
 						LOGGER.debug("[REQUEST (SAC)-회원기본정보 수정] : \n{}",
 								TestConvertMapperUtils.convertObjectToJson(req));

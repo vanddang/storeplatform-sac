@@ -219,6 +219,10 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerPhoneCountry(req.getSellerPhoneCountry());
 		// 무선 전화번호
 		sellerMbr.setSellerPhone(req.getSellerPhone());
+		// 유선 전화번호
+		sellerMbr.setCordedTelephoneCountry(req.getCordedTelephoneCountry());
+		// 유선 전화번호
+		sellerMbr.setCordedTelephone(req.getCordedTelephone());
 		// SMS 수신여부
 		sellerMbr.setIsRecvSMS(req.getIsRecvSMS());
 		// 판매자 이메일
@@ -263,11 +267,13 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setCustomerPhoneCountry(req.getCustomerPhoneCountry());
 		// 담당자 유선 전화번호
 		sellerMbr.setCustomerPhone(req.getCustomerPhone());
+		sellerMbr.setRepEmail(req.getRepEmail());
+		sellerMbr.setRepPhone(req.getRepPhone());
+		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
 		// 법인등록번호
 		sellerMbr.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
 		sellerMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE);
 		sellerMbr.setStopStatusCode(MemberConstants.USER_STOP_STATUS_NOMAL);
-
 		// 담당자 명
 		sellerMbr.setCharger(req.getCharger());
 		// 담당자 무선 전화 번호
@@ -479,6 +485,11 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setCustomerEmail(req.getCustomerEmail());
 		sellerMbr.setCharger(req.getCharger());
 		sellerMbr.setChargerPhone(req.getChargerphone());
+		sellerMbr.setCordedTelephone(req.getCordedTelephone());
+		sellerMbr.setCordedTelephoneCountry(req.getCordedTelephoneCountry());
+		sellerMbr.setRepEmail(req.getRepEmail());
+		sellerMbr.setRepPhone(req.getRepPhone());
+		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
 
 		updateSellerRequest.setSellerMbr(sellerMbr);
 
@@ -487,27 +498,6 @@ public class SellerServiceImpl implements SellerService {
 
 		/** 2-5. SC회원 - 기본정보변경 Call. */
 		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
-
-		/** Flurry 정보 수정. */
-		if (req.getFlurryAuthList() != null) {
-			UpdateFlurryRequest updateFlurryRequest = new UpdateFlurryRequest();
-			updateFlurryRequest.setCommonRequest(commonRequest);
-			updateFlurryRequest.setSellerKey(req.getSellerKey());
-			List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
-			FlurryAuth flurryAuth = null;
-			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
-				flurryAuth = new FlurryAuth();
-				flurryAuth.setAccessCode(req.getFlurryAuthList().get(i).getAccessCode());
-				flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
-				flurryAuth.setSellerKey(req.getSellerKey());
-				flurryAuthList.add(flurryAuth);
-			}
-			updateFlurryRequest.setFlurryAuthList(flurryAuthList);
-			this.sellerSCI.updateFlurry(updateFlurryRequest);
-		}
-
-		// Debug
-		LOGGER.debug("[SC-UpdateSellerResponse] : \n{}", updateSellerResponse.toString());
 
 		/** 2-6. Tenant [RESPONSE] 생성 및 주입 */
 		ModifyInformationSacRes res = new ModifyInformationSacRes();
@@ -569,11 +559,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerBizType(req.getSellerBizType()); // INDT_NM 업종명 종목 종목
 		sellerMbr.setSellerBizCategory(req.getSellerBizCategory()); // COND_NM 업태명 업태 업태
 		sellerMbr.setSellerBizCorpNumber(req.getSellerBizCorpNumber()); // ("법인등록번호"); CORP_REG_NO
-		sellerMbr.setRepPhoneArea(req.getRepPhoneArea()); // ("대표전화번호 국가코드"); REP_TEL_NATION_NO
-		sellerMbr.setRepPhone(req.getRepPhone()); // ("대표전화번호"); REP_TEL_NO
-		sellerMbr.setRepFaxArea(req.getRepFaxArea()); // ("대표팩스번호 국가코드"); FAX_NATION_NO
-		sellerMbr.setRepFax(req.getRepFax()); // ("대표팩스번호"); FAX_NO
-		sellerMbr.setRepEmail(req.getRepEmail()); // ("대표 이메일"); REP_EMAIL
 		sellerMbr.setSellerBizAddress(req.getSellerBizAddress());
 		sellerMbr.setSellerBizZip(req.getSellerBizZip());
 		sellerMbr.setSellerBizDetailAddress(req.getSellerBizDetailAddress());
@@ -588,6 +573,9 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setMarketStatus(req.getMarketStatus()); // ("입점상태코드"); LNCHG_MBR_STATUS_CD
 		sellerMbr.setIsAccountReal(req.getIsAccountReal()); // ("   계좌인증여부"); // ACCT_AUTH_YN 계좌 인증여부 컬럼
 		sellerMbr.setIsOfficialAuth(req.getIsOfficialAuth()); // 공인인증여부
+		sellerMbr.setCeoName(req.getCeoName());
+		sellerMbr.setCeoBirthDay(req.getCeoBirthDay());
+
 		updateAccountSellerRequest.setSellerMbr(sellerMbr);
 
 		// 정산정보
@@ -652,8 +640,10 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public ModifyEmailSacRes modifyEmail(SacRequestHeader header, ModifyEmailSacReq req) {
 		LOGGER.debug("############ SellerServiceImpl.modifyEmail() [START] ############");
+
 		// SC 공통 헤더 생성
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+
 		// SessionKey 유효성 체크
 		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
 
@@ -1160,7 +1150,7 @@ public class SellerServiceImpl implements SellerService {
 			FlurryAuth flurryAuth = null;
 			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
 				flurryAuth = new FlurryAuth();
-				flurryAuth.setAccessCode(req.getFlurryAuthList().get(i).getAccessCode());
+				flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
 				flurryAuth.setSellerKey(req.getSellerKey());
 				flurrtAuthList.add(flurryAuth);
 			}

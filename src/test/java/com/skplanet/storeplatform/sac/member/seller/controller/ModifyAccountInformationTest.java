@@ -162,11 +162,6 @@ public class ModifyAccountInformationTest {
 						req.setIsDeductible("N");
 						req.setMarketCode("US001202");
 						req.setMarketStatus("MM000201");
-						req.setRepEmail("");
-						req.setRepFax("");
-						req.setRepFaxArea("");
-						req.setRepPhone("");
-						req.setRepPhoneArea("");
 						req.setSellerBizAddress("");
 						req.setSellerBizCategory("업태");
 						req.setSellerBizCorpNumber("xxxx");
