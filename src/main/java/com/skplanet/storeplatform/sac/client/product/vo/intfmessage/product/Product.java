@@ -251,6 +251,11 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private String specialProdYn;
 
+	/**
+	 * 테마 타입
+	 */
+	private String themeType;
+
 	public String getSalesStatus() {
 		return this.salesStatus;
 	}
@@ -1012,6 +1017,21 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setSpecialProdYn(String specialProdYn) {
 		this.specialProdYn = specialProdYn;
+	}
+
+	/**
+	 * @return the themeType
+	 */
+	public String getThemeType() {
+		return this.themeType;
+	}
+
+	/**
+	 * @param themeType
+	 *            the themeType to set
+	 */
+	public void setThemeType(String themeType) {
+		this.themeType = themeType;
 	}
 
 }
