@@ -46,8 +46,7 @@
               , TB.UP_MENU_ID
               , TB.MENU_ID
               , TB.MENU_NM
-              , TB.PROD_ID
-              , TB.PROD_ID as PART_PROD_ID
+              , TB.PART_PROD_ID
               , TB.AID
               , TB.PROD_NM
               , TB.PROD_BASE_DESC 
@@ -78,10 +77,15 @@
                      AND DEVICE.PROD_ID = CONTENTS.PROD_ID
                      AND DEVICE.SUB_CONTENTS_ID = CONTENTS.SUB_CONTENTS_ID
                      AND DEVICE.DEVICE_MODEL_CD = #{deviceModelNo} ) AS APK_INFO
+              , TB.PROD_ID
+              , TB.PARENT_PROD_NM
+              , TB.PART_PARENT_CLSF_CD
+              , TB.PROD_CASE
+              , TB.PROD_KIND
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
                       , A.MENU_ID
-                      , B.PROD_ID
+                      , B.PROD_ID AS PART_PROD_ID
                       , C.MENU_NM
                       , C.MENU_DESC
                       , D.PROD_CHRG_YN
@@ -99,9 +103,13 @@
                       , E.VER_MINOR
                       , E.PART_PARENT_CLSF_CD
                       , E.PROD_CLSF_CD
+                      , E.PROD_CASE
+                      , E.PROD_KIND
                       , F.PROD_NM
                       , F.PROD_BASE_DESC
                       , K.FILE_PATH
+                      , RSHP.PROD_ID
+                      , DESC2.PROD_NM AS PARENT_PROD_NM
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -109,6 +117,8 @@
                       , TB_DP_APP_PROD                E
                       , TB_DP_PROD_DESC               F
                       , TB_DP_PROD_IMG                K
+                      , TB_DP_PROD_DESC               DESC2
+                      , TB_DP_PROD_RSHP               RSHP
                  WHERE  A.MENU_ID = B.MENU_ID
                    AND  A.MENU_ID = C.MENU_ID
                    AND  B.PROD_ID = D.PROD_ID
@@ -130,6 +140,8 @@
                    AND  A.MENU_ID = #{productBasicInfo.menuId}           /* 메뉴ID */
                    </if>
                    AND  B.PROD_ID = #{productBasicInfo.prodId}        /* 상품ID */
+                   AND  D.PROD_ID = RSHP.PART_PROD_ID
+                   AND  RSHP.PROD_ID = DESC2.PROD_ID
                    
        ) TB
     </select>
