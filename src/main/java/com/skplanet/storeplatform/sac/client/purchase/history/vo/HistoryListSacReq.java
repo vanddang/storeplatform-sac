@@ -39,7 +39,7 @@ public class HistoryListSacReq extends PurchaseHeaderSacReq {
 	@Min(1)
 	private int offset; // 오프셋
 	@Min(1)
-	@Max(100)
+	@Max(50)
 	private int count; // 데이터갯수
 
 	private String internalYn;
