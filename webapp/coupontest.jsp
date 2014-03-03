@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cms><rCode>&lt;![CDATA[4091]]&gt;</rCode><rMsg>&lt;![CDATA[bad]]&gt;</rMsg><txId>&lt;![CDATA[AAAA]]&gt;</txId><rData><couponCode>&lt;![CDATA[1111]]&gt;</couponCode></rData></cms>
