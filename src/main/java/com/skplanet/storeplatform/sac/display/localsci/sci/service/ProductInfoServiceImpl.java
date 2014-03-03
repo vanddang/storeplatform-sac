@@ -112,25 +112,17 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 							}
 							productList.add(product);
 						}
+					} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
+						// productBasicInfo.setMenuId("DP004901");
+						paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+
+						this.log.debug("##### Search for Music specific product");
+						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getMusicMetaInfo", paramMap,
+								ProductInfo.class);
+						if (product != null) {
+							productList.add(product);
+						}
 					}
-				} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-					// 배치완료 기준일시 조회
-					// TODO 기준 ListID가 없기 때문에 일단 멜론 Top 100으로 고정
-					// String stdDt = this.displayCommonService.getBatchStandardDateString(tenantId,
-					// "MELON_DP004901");
-					// paramMap.put("stdDt", stdDt);
-					productBasicInfo.setMenuId("DP004901");
-					paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-
-					// TODO osm1021 dummy data 꼭 삭제할것
-					paramMap.put("stdDt", "20110806");
-
-					this.log.debug("##### Search for Music specific product");
-					// ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getMusicMetaInfo", paramMap,
-					// ProductInfo.class);
-					// if (product != null) {
-					// productList.add(product);
-					// }
 				} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
 					paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 					paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);

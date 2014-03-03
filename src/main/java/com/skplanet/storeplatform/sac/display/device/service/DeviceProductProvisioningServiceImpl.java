@@ -63,7 +63,7 @@ public class DeviceProductProvisioningServiceImpl implements DeviceProductProvis
 
 		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("virtualDeviceModelNo", DisplayConstants.DP_ANDROID_STANDARD2_NM);
+		paramMap.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
 		paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 		paramMap.put("list", prodIdList);
 		paramMap.put("req", req);

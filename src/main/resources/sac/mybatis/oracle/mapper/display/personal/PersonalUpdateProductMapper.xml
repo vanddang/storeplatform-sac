@@ -14,6 +14,7 @@
                          ,ROW_NUMBER() OVER (PARTITION BY CONTENTS.APK_PKG_NM ORDER BY CONTENTS.APK_VER DESC) AS RNUM 
                      FROM  TB_DP_SUB_CONTENTS            CONTENTS
                           ,TB_DP_SPRT_DEVICE             DEVICE
+                          ,TB_CM_DEVICE                  CMDEVICE
                      WHERE CONTENTS.APK_PKG_NM IN 
                          <foreach collection="PKG_LIST" item="item" index="index" open="(" separator="," close=")"> 
                         #{item}
@@ -21,6 +22,8 @@
                         AND CONTENTS.PROD_ID = DEVICE.PROD_ID
                         AND CONTENTS.SUB_CONTENTS_ID = DEVICE.SUB_CONTENTS_ID
                         AND DEVICE.DEVICE_MODEL_CD = #{deviceHeader.model}
+                        AND DEVICE.DEVICE_MODEL_CD = CMDEVICE.DEVICE_MODEL_CD
+                        AND CMDEVICE.USE_YN = 'Y'
                 )LA
                 WHERE RNUM = 1                                
     </select>

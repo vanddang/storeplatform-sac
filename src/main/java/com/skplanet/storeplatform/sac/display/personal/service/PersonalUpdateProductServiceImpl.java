@@ -345,8 +345,10 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 									this.log.debug("##### Server app version : {}", iPkgVerCd);
 									this.log.debug("##### User app version : {}", iReqPkgVerCd);
 
-									// 알림설정 미해제인 경우 구매ID Setting
-									if (StringUtils.isEmpty((String) mapPkg.get("ALARM_OFF_DT"))) {
+									String alarmYn = prchInfo.getAlarmYn();
+									this.log.debug("##### Alarm Yn : {}", alarmYn);
+									// 알람 설정이 Y인 app들만 업데이트 목록에 추가
+									if ("Y".equals(alarmYn)) {
 										// 구매내역 존재 시 업데이트 목록 가공
 										// ① 서버 Version > 단말 Version 인 경우
 										// ② 서버 Version = 단말 Version 인 경우
