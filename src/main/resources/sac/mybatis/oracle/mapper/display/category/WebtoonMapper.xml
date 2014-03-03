@@ -239,13 +239,15 @@
              ]]>
              , J.PATICPERS_CNT
              , A.SELLER_MBR_NO
+             , E.MENU_DESC
+             , A.META_CLSF_CD
              , COUNT(*) OVER() AS TOTAL_COUNT
           FROM TB_DP_PROD A
              , TB_DP_PROD_DESC B
              , TB_DP_MENU_CATEGORY_PROD_MAPG C
              , TB_DP_MENU_CATEGORY D
-             , TB_DP_MENU_CATEGORY_DESC E
-             , TB_DP_MENU_CATEGORY_DESC F
+             , TB_DP_MENU_CATEGORY_DESC E  /* MENU_ID */
+             , TB_DP_MENU_CATEGORY_DESC F  /* TOP_MENU_ID */
              , UV_TB_DP_MULTIMDA_PROD G
              , TB_DP_PROD_RSHP H
              , TB_DP_SUB_CONTENTS I

@@ -32,6 +32,8 @@ public class WebtoonDetail extends CommonInfo {
 	private String prodBaseDesc; // 상품설명
 	private String prodDtlDesc; // 상품상세설명
 	private String sellerMbrNo; // 회원번호
+	private String menuDesc; // 메뉴상세
+	private String metaClsfCd; // 메타정보
 	private int totalCount;
 
 	/**
@@ -503,6 +505,52 @@ public class WebtoonDetail extends CommonInfo {
 	 */
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
+	}
+
+	/**
+	 * <pre>
+	 * 메뉴상세.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getMenuDesc() {
+		return this.menuDesc;
+	}
+
+	/**
+	 * <pre>
+	 * 메뉴상세.
+	 * </pre>
+	 * 
+	 * @param menuDesc
+	 *            menuDesc
+	 */
+	public void setMenuDesc(String menuDesc) {
+		this.menuDesc = menuDesc;
+	}
+
+	/**
+	 * <pre>
+	 * 메타정보.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getMetaClsfCd() {
+		return this.metaClsfCd;
+	}
+
+	/**
+	 * <pre>
+	 * 메타정보.
+	 * </pre>
+	 * 
+	 * @param metaClsfCd
+	 *            metaClsfCd
+	 */
+	public void setMetaClsfCd(String metaClsfCd) {
+		this.metaClsfCd = metaClsfCd;
 	}
 
 }

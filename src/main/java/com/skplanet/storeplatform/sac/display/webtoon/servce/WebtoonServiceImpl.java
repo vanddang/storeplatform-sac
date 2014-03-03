@@ -144,13 +144,18 @@ public class WebtoonServiceImpl implements WebtoonService {
 			// 메뉴 정보
 			menu = new Menu();
 			menuList = new ArrayList<Menu>();
-			menu.setId(webtoonDetail.getTopMenuId());
-			menu.setName(webtoonDetail.getTopMenuNm());
-			menu.setType("topClass");
-			menuList.add(menu);
-			menu = new Menu();
 			menu.setId(webtoonDetail.getMenuId());
 			menu.setName(webtoonDetail.getMenuNm());
+			menu.setDesc(webtoonDetail.getMenuDesc());
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setId(webtoonDetail.getTopMenuId());
+			menu.setName(webtoonDetail.getTopMenuNm());
+			menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
+			menu.setId(webtoonDetail.getMetaClsfCd());
 			menuList.add(menu);
 			product.setMenuList(menuList);
 
@@ -161,7 +166,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 			source.setUrl(webtoonDetail.getMainFilePath());
 			sourceList.add(source);
 			source = new Source();
-			source.setType("thumbNail");
+			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 			source.setUrl(webtoonDetail.getFilePath());
 			product.setSourceList(sourceList);
 
