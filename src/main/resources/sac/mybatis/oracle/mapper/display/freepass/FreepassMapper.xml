@@ -326,7 +326,7 @@
                           )
                       )
                 <if test='prodStatusCd != null and prodStatusCd != ""'>
-            AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
+            AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD013202  : 판매중 */
             </if>
             AND TP.EXPO_YN = 'Y'
             <if test='kind != null and kind != ""'>
