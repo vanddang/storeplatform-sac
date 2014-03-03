@@ -45,6 +45,7 @@
               , TB.PROD_DTL_DESC
               , TB.MENU_DESC
               , TB.PROD_STATUS_CD
+              , TB.PROD_CHRG_YN AS PROD_CHRG
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
                       , A.MENU_ID
