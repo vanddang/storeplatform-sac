@@ -541,10 +541,12 @@
 		    FROM (
 		        SELECT  
 		              PD.PROD_GRD_CD
+		            , PD.PROD_ID
 		            , 'freepass' as couponType
 		            , PD.USE_PERIOD_UNIT_CD
 		            , PD.USE_PERIOD
 		            , CM.AUTO_APPR_YN
+		            , DC.LANG_CD
 		        FROM 
 		              TB_DP_PROD PD
 		            , TB_DP_CMPX_PROD CM
