@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,7 +55,7 @@ public class FreepassController {
 	 */
 	@RequestMapping(value = "/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FreepassListRes searchFreepassList(FreepassListReq req, SacRequestHeader header) {
+	public FreepassListRes searchFreepassList(@Validated FreepassListReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchFreepassList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
@@ -76,7 +77,7 @@ public class FreepassController {
 	 */
 	@RequestMapping(value = "/detail/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public FreepassDetailRes searchFreepassDetail(@RequestBody FreepassDetailReq req, SacRequestHeader header) {
+	public FreepassDetailRes searchFreepassDetail(@Validated @RequestBody FreepassDetailReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchFreepassDetail Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
@@ -120,7 +121,7 @@ public class FreepassController {
 	 */
 	@RequestMapping(value = "/specific/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FreepassListRes searchFreepassListByChannel(FreepassSpecificReq req, SacRequestHeader header) {
+	public FreepassListRes searchFreepassListByChannel(@Validated FreepassSpecificReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchFreepassListByChannel Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
