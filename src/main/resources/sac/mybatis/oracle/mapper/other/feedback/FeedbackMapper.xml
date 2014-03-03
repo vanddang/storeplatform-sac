@@ -22,7 +22,7 @@
                  <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
                  AND  a.prod_id = #{prodId}      /* 상품 ID */
                  </if>
-                 AND  a.noti_type_cd = 'DP000401'    /* 후기 타입 코드 */
+                 AND  a.noti_type_cd = 'DP000401'    /* 후기 타입 코드 DP000401(댓글)*/
                  AND  a.del_yn = 'N'                 /* 삭제 여부 */
                  AND  a.bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
                  AND  a.spam_yn = 'N'                /* 스펨 여부 */
@@ -89,7 +89,7 @@
       ( 
         #{tenantId}            /* 테넌트 ID */
       , #{notiSeq}             /* 후기 SEQ */
-      , 'DP000401'             /* 후기 타입 코드 */
+      , 'DP000401'             /* 후기 타입 코드 DP000401(댓글)*/
       , #{mbrNo}               /* 회원 번호 */
       <!-- Shopping -->
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
@@ -114,7 +114,7 @@
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
       , #{fbPostYn}            /* 페이스북 POST 여부 */
       </if>
-      , 'US004201'             /* 등록 위치 */
+      , 'US004201'             /* 등록 위치 US004201(한국) */
       , #{deviceModelCd}       /* 단말 모델 코드 */
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
       , #{pkgVer}              /* 패키지 버전 */
@@ -134,7 +134,7 @@
             , noti_score = 0                      /* 후기 점수 */
             , seller_resp_opin = NULL             /* 판매자 응답 의견 */
             , seller_resp_reg_dt = NULL           /* 판매자 응답 등록 일시 */           
-            , reg_loc = 'US004201'                /* 등록 위치 */
+            , reg_loc = 'US004201'                /* 등록 위치 US004201(한국) */
             , device_model_cd = #{deviceModelCd}  /* 단말 모델 코드 */
             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
             , pkg_ver = #{pkgVer}                 /* 패키지 버전 */
@@ -408,7 +408,7 @@
          AND  del_yn = 'N'                 /* 삭제 여부 */
          AND  bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
          AND  spam_yn = 'N'                /* 스펨 여부 */
-         AND  noti_type_cd = 'DP000401'    /* 후기 타입 코드 */
+         AND  noti_type_cd = 'DP000401'    /* 후기 타입 코드 DP000401(댓글) */
          <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
          AND  noti_seq = #{notiSeq}        /* 후기 SEQ */
          </if>
@@ -529,7 +529,7 @@
                                 <if test="prodType != 'shopping'">
                                 AND  ia.prod_id = #{prodId}      /* 상품 ID */
                                 </if>
-                                AND  ia.noti_type_cd = 'DP000401'  /* 후기 타입 코드 */
+                                AND  ia.noti_type_cd = 'DP000401'  /* 후기 타입 코드 DP000401(댓글) */
                                 AND  ia.del_yn = 'N'               /* 삭제 여부 */
                                 AND  ia.bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
                                 AND  ia.spam_yn = 'N'                /* 스펨 여부 */
@@ -672,7 +672,7 @@
                                               </foreach>
                                               </if>
                                               </if>
-                                              AND  ia.noti_type_cd = 'DP000401'   /* 후기 타입 코드 */
+                                              AND  ia.noti_type_cd = 'DP000401'   /* 후기 타입 코드 DP000401(댓글) */
                                               AND  ia.del_yn = 'N'                /* 삭제 여부 */
                                               AND  ia.bad_noti_yn IN ( 'N', 'R' ) /* 불량 후기 여부 */
                                               AND  ia.spam_yn = 'N'               /* 스펨 여부 */
@@ -763,7 +763,7 @@
                                   </foreach>
                                   </if>
                                   </if> 
-                                  AND  la.noti_type_cd = 'DP000401'    /* 후기 타입 코드 */
+                                  AND  la.noti_type_cd = 'DP000401'    /* 후기 타입 코드 DP000401(댓글) */
                                   AND  la.del_yn = 'N'                 /* 삭제 여부 */
                                   AND  la.bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
                                   AND  la.spam_yn = 'N'                /* 스펨 여부 */
