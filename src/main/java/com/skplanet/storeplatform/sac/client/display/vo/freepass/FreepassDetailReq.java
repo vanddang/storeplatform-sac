@@ -1,5 +1,9 @@
 package com.skplanet.storeplatform.sac.client.display.vo.freepass;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * 
  * FreepassDetailReq Value Object
@@ -14,6 +18,7 @@ public class FreepassDetailReq {
 
 	private String topMenuId; // 최상위메뉴ID
 	private String kind; // 자유이용권 종류
+	@NotNull @NotBlank
 	private String productId; // 상품ID
 	private String menuId; // 메뉴ID
 	private String channelId; // 채널상품ID

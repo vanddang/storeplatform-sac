@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.freepass;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -21,6 +25,7 @@ public class FreepassListReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String topMenuId; // 최상위메뉴ID
+	@NotNull @NotBlank
 	private String kind; // 자유이용권 종류
 	private String productId; // 상품ID
 	private String menuId; // 메뉴ID
