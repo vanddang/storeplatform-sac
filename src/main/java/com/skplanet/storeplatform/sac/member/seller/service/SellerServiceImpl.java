@@ -73,6 +73,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
@@ -1207,6 +1209,68 @@ public class SellerServiceImpl implements SellerService {
 		CreateFlurrySacRes res = new CreateFlurrySacRes();
 		res.setSellerKey(updateFlurryResponse.getSellerKey());
 		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [END] ############");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.33. 가가입 이메일 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ModifyWaitEmailSacReq
+	 * @return ModifyWaitEmailSacRes
+	 */
+	@Override
+	public ModifyWaitEmailSacRes modifyWaitEmailSacReq(SacRequestHeader header, ModifyWaitEmailSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.modifyEmail() [START] ############");
+
+		// SC 공통 헤더 생성
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+
+		// 회원 정보 조회
+		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
+				MemberConstants.KEY_TYPE_SELLERMBR_ID, req.getSellerId());
+
+		// 메인, 서브 상태
+		if (!StringUtils.equals(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING, searchSellerResponse.getSellerMbr()
+				.getSellerSubStatus())) {
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
+		}
+		/** 1. Email 중복체크 [REQUEST] 생성 및 주입 */
+		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
+
+		/** 1-2. SC 헤더 셋팅 */
+		checkDuplicationSellerRequest.setCommonRequest(commonRequest);
+
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_EMAIL);
+		keySearch.setKeyString(req.getNewEmailAddress());
+		List<KeySearch> keySearchs = new ArrayList<KeySearch>();
+		keySearchs.add(keySearch);
+		checkDuplicationSellerRequest.setKeySearchList(keySearchs);
+
+		/** 1-3. SC회원(Email 중복) Call */
+		if (StringUtils.equals(MemberConstants.USE_Y,
+				this.sellerSCI.checkDuplicationSeller(checkDuplicationSellerRequest).getIsRegistered())) {
+			throw new StorePlatformException("SAC_MEM_2012", req.getNewEmailAddress());
+		}
+
+		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
+
+		SellerMbr sellerMbr = new SellerMbr();
+		sellerMbr.setSellerKey(searchSellerResponse.getSellerMbr().getSellerKey());
+		sellerMbr.setSellerEmail(req.getNewEmailAddress());
+		updateSellerRequest.setSellerMbr(sellerMbr);
+		updateSellerRequest.setCommonRequest(commonRequest);
+		/** 2-5. SC회원 - 기본정보변경 Call. */
+		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
+
+		ModifyWaitEmailSacRes res = new ModifyWaitEmailSacRes();
+		res.setSellerKey(updateSellerResponse.getSellerKey());
 		return res;
 	}
 }

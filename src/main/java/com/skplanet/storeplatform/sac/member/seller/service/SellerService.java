@@ -25,6 +25,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
@@ -203,4 +205,17 @@ public interface SellerService {
 	 * @return CreateFlurrySacRes
 	 */
 	public CreateFlurrySacRes createFlurrySacRes(SacRequestHeader header, CreateFlurrySacReq req);
+
+	/**
+	 * <pre>
+	 * 2.2.33. 가가입 이메일 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ModifyWaitEmailSacReq
+	 * @return ModifyWaitEmailSacRes
+	 */
+	public ModifyWaitEmailSacRes modifyWaitEmailSacReq(SacRequestHeader header, ModifyWaitEmailSacReq req);
 }
