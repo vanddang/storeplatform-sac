@@ -183,6 +183,15 @@ public class DisplayConstants {
 	public static final String DP_SALE_STAT_DELETED = "PD000408"; // 판매삭제
 	public static final String DP_SALE_STAT_RESTRIC_DN = "PD000409"; // 판매불가
 	public static final String DP_SALE_STAT_DROP_REQ_DN = "PD000410"; // 해지요청(다운허용)
+	
+	/**
+	 * 정액제 상품 판매상태.
+	 */
+	public static final String DP_PASS_SALE_STAT_WAIT = "PD013101";	//판매대기
+	public static final String DP_PASS_SALE_STAT_ING = "PD013102";	//판매중
+	public static final String DP_PASS_SALE_STAT_STOP = "PD013103";	//판매중지
+	public static final String DP_PASS_SALE_STAT_RESTRIC = "PD013104";	//판매금지
+	public static final String DP_PASS_SALE_STAT_FINISH = "PD013105";	//판매종료
 
 	// //////////////////////////////////////Source Code //////////////////////////////////////////
 	public static final String DP_THUMNAIL_SOURCE = "thumbnail";

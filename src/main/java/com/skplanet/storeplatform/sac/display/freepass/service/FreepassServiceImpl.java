@@ -106,7 +106,7 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setDeviceModelCd(header.getDeviceHeader().getModel());
 			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			req.setProdStatusCd(DisplayConstants.DP_SALE_STAT_ING);
+			req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
 			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 			// 시작점 ROW Default 세팅
@@ -200,7 +200,7 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setDeviceModelCd(header.getDeviceHeader().getModel());
 			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			req.setProdStatusCd(DisplayConstants.DP_SALE_STAT_ING);
+			req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
 			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 			// 시작점 ROW Default 세팅
@@ -221,9 +221,9 @@ public class FreepassServiceImpl implements FreepassService {
 				throw new StorePlatformException("SAC_DSP_0005", req.getProductId(), req.getProductId());
 
 			// 상품 상태 조회 - 판매중,판매중지,판매종료가 아니면 노출 안함
-			if (!DisplayConstants.DP_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
-					&& !DisplayConstants.DP_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())
-					&& !DisplayConstants.DP_SALE_STAT_ING.equals(retMetaInfo.getProdStatusCd())) {
+			if (!DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
+					&& !DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())
+					&& !DisplayConstants.DP_PASS_SALE_STAT_ING.equals(retMetaInfo.getProdStatusCd())) {
 				throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(),
 						retMetaInfo.getProdStatusCd());
 			}
@@ -234,8 +234,8 @@ public class FreepassServiceImpl implements FreepassService {
 
 				// 구매가 있을 경우 : 판매중지,판매중,팬매종료는 노출함
 				if (historyListSacRes == null || historyListSacRes.getTotalCnt() <= 0) {
-					if (DisplayConstants.DP_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
-							|| DisplayConstants.DP_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())) {
+					if (DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
+							|| DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())) {
 						throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(),
 								retMetaInfo.getProdStatusCd());
 					}
@@ -346,7 +346,7 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setDeviceModelCd(header.getDeviceHeader().getModel());
 			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			req.setProdStatusCd(DisplayConstants.DP_SALE_STAT_ING);
+			req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
 			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 			req.setKind("OR004302");
 
@@ -474,7 +474,7 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setDeviceModelCd(header.getDeviceHeader().getModel());
 			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			req.setProdStatusCd(DisplayConstants.DP_SALE_STAT_ING);
+			req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
 			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 			req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
