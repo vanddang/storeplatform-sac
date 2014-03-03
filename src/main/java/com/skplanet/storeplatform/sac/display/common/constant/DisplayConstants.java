@@ -342,6 +342,10 @@ public class DisplayConstants {
 	// 정액제 썸네일이미지
 	public static final String DP_FREEPASS_THUMBNAIL_IMAGE_CD = "DP000199";
 
+	// //////////////////////////////////// VOD META CODE //////////////////////////////////////////
+
+	public static final String DP_SERIAL_VOD_META_CLASS_CD = "CT14";
+
 	// //////////////////////////////////// VOD 화질 유형 //////////////////////////////////////////
 	public static final String DP_VOD_QUALITY_NORMAL = "normal";
 

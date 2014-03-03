@@ -140,7 +140,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			}
 
 			// ID유형 유효값 체크
-			if (!"channel".equals(idType) && !"episode".equals(idType)) {
+			if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)
+					&& !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
 				throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
 			}
 
@@ -151,6 +152,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			product = new Product();
 
 			if (metaInfo != null) {
+
+				if (DisplayConstants.DP_SERIAL_VOD_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+					throw new StorePlatformException("SAC_DSP_0013");
+				}
 
 				// 구매내역 조회를 위한 생성자
 				ProductListSacIn productListSacIn = null;

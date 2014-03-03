@@ -152,8 +152,8 @@
 	      ,(SELECT FILE_PATH FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = XA.ESPD_PROD_ID AND SUB_CONTENTS_ID = XA.HD_SUB_CONTS_ID  ) AS HD_FILE_PATH
 	  FROM
 	      (     
-		    SELECT 
-		           MENU_ID
+		    SELECT RNUM
+		         , MENU_ID
 		         , MENU_NM
 		         , CID
 		         , CHNL_PROD_ID AS PROD_ID
@@ -216,7 +216,8 @@
 		         , TA.FILE_PATH
 		    FROM
 		         (
-		           SELECT  CID
+		           SELECT  ROWNUM AS RNUM
+		                 , CID
 		                 , MENU_ID
 		                 , MENU_NM
 		                 , CHNL_PROD_ID
@@ -464,7 +465,8 @@
 		          AND  TB.EXPO_ORD = '1'
 		          AND  TB.LANG_CD = #{langCd}
 		          AND  TB.IMG_CD = #{imageCd}
-	      ) XA                         
+	      ) XA                       
+     WHERE  XA.RNUM = 1	        
     </select>
     
     <!-- for download 현재일시 및 요청만료일시 조회 -->
