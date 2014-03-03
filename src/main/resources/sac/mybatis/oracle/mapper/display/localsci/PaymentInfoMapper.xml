@@ -172,4 +172,98 @@
            ) KK
     </select>    
     
+  <select id="getAvailableFixrateProdIdList" parameterType="Map" resultType="String">
+          /* PaymentInfoMapper.xml, getAvailableFixrateProdIdList, 김형식, 2014-02-27 */
+            SELECT  
+                IV.*
+            FROM (
+                SELECT  
+                      PD.PROD_ID
+                 FROM 
+                      TB_DP_PROD PD
+                    , TB_DP_CMPX_PROD CM
+                    , TB_DP_PROD_DESC DC
+                    , TB_DP_TENANT_PROD TP
+                    , TB_DP_TENANT_PROD_PRICE PR
+                    ,(SELECT   A.PROD_ID 
+                             , B.PART_PROD_ID
+                        FROM TB_DP_FIXRATE_PROD_MAPG A
+                             ,TB_DP_PROD_RSHP B
+                       WHERE A.PART_PROD_ID = B.PROD_ID
+                         AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
+                         AND B.PART_PROD_ID= #{prodId}
+                     )PM                    
+                WHERE  PD.PROD_ID = CM.PROD_ID
+                AND PD.PROD_ID = DC.PROD_ID
+                AND PD.PROD_ID = TP.PROD_ID
+                AND PD.PROD_ID = PR.PROD_ID
+                AND PD.PROD_ID = PM.PROD_ID
+                AND DC.LANG_CD = #{lang}
+                AND TP.TENANT_ID = #{tenantId} 
+                AND TP.TENANT_ID = PR.TENANT_ID
+                AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+            ) IV 
+    </select>       
+    
+    <select id="getFreePassMetaInfo" parameterType="Map" resultType="PaymentInfo">
+          /* PaymentInfoMapper.xml, getFreePassMetaInfo, 김형식, 2014-02-27 */
+		    SELECT  
+		        IV.*
+		    FROM (
+		        SELECT  
+		              PD.PROD_ID
+		            , DC.PROD_NM
+		            , PR.PROD_AMT
+		            , TP.PROD_STATUS_CD
+		            , PD.PROD_GRD_CD
+		            , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID  = PM.PART_PROD_ID) AS PHONE_SPRT_YN
+		            , PD.DRM_YN
+                    , PD.USE_PERIOD_UNIT_CD
+                    , PD.USE_PERIOD
+                    , '' as aid	
+                    , CONCAT(CONCAT(PD.SVC_GRP_CD, '||' ),PD.TOP_MENU_ID) as tenantProdGrpCd
+                    , PD.MALL_CD
+                    ,'' AS outsdContentsId
+                    ,'' AS sellerMbrNo 
+                    ,'' AS sellerNm
+                    ,'' AS sellerEmail
+                    ,'' AS sellerTelno       
+                    , CM.AUTO_APPR_YN AS autoPrchsYN             	            
+                    , PD.USE_PERIOD_UNIT_CD AS autoPrchsPeriodUnitCd
+                    , PD.USE_PERIOD	AS autoPrchsPeriodValue	
+                    , '' AS autoPrchsLastDt           
+		        FROM 
+		              TB_DP_PROD PD
+		            , TB_DP_CMPX_PROD CM
+		            , TB_DP_PROD_DESC DC
+		            , TB_DP_TENANT_PROD TP
+		            , TB_DP_TENANT_PROD_PRICE PR
+		            ,(SELECT   A.PROD_ID 
+		                     , B.PART_PROD_ID
+		                FROM TB_DP_FIXRATE_PROD_MAPG A
+		                     ,TB_DP_PROD_RSHP B
+		               WHERE A.PART_PROD_ID = B.PROD_ID
+		                 AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
+		                 AND B.PART_PROD_ID= #{prodId}
+		             )PM 		            
+		        WHERE  PD.PROD_ID = CM.PROD_ID
+		        AND PD.PROD_ID = DC.PROD_ID
+		        AND PD.PROD_ID = TP.PROD_ID
+		        AND PD.PROD_ID = PR.PROD_ID
+		        AND PD.PROD_ID = PM.PROD_ID
+		        AND DC.LANG_CD = #{lang}
+		        AND TP.TENANT_ID = #{tenantId} 
+		        AND TP.TENANT_ID = PR.TENANT_ID
+		        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+		    ) IV 
+    </select>     
+    
+    <select id="getExclusiveFixrateProdIdList" parameterType="Map" resultType="String">
+          /* PaymentInfoMapper.xml, getExclusiveFixrateProdIdList, 김형식, 2014-02-27 */
+			SELECT 
+			       DUP_PRCHS_LIMT_PROD_ID 
+			  FROM TB_DP_DUP_PRCHS_LIMT
+			 WHERE PROD_ID =#{productId} 
+    </select>            
+    
 </mapper>

@@ -43,7 +43,7 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	// @Test
 	public void searchAppPaymentInfo() {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();
@@ -85,6 +85,40 @@ public class PaymentInfoSCITest {
 			List<String> prodIdList = new ArrayList<String>();
 			prodIdList.add("S900000579");
 			prodIdList.add("S900000579");
+			req.setProdIdList(prodIdList);
+			req.setTenantId("S01");
+			req.setLangCd("ko");
+
+			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
+			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
+			for (int i = 0; i < paymentInfoList.size(); i++) {
+				PaymentInfo paymentInfo = paymentInfoList.get(i);
+				this.log.debug("##### searchPaymentInfo prodId[{}] : {}", i, paymentInfo.getProdId());
+				this.log.debug("##### searchPaymentInfo prodNm[{}] : {}", i, paymentInfo.getProdNm());
+				this.log.debug("##### searchPaymentInfo prodAmt[{}] : {}", i, paymentInfo.getProdAmt());
+				this.log.debug("##### searchPaymentInfo tenantProdGrpCd[{}] : {}", i, paymentInfo.getTenantProdGrpCd());
+				this.log.debug("##### searchPaymentInfo prodSprtYn[{}] : {}", i, paymentInfo.getProdSprtYn());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * 결제 시 필요한 정액권 상품 메타 정보 조회.
+	 * </pre>
+	 * 
+	 */
+	@Test
+	public void searchFreePassPaymentInfo() {
+		try {
+			PaymentInfoSacReq req = new PaymentInfoSacReq();
+			List<String> prodIdList = new ArrayList<String>();
+			prodIdList.add("H900065860");
+			prodIdList.add("H900065860");
 			req.setProdIdList(prodIdList);
 			req.setTenantId("S01");
 			req.setLangCd("ko");

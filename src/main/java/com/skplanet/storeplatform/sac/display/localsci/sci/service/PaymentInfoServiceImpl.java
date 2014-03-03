@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Paymen
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
 import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 
 /**
@@ -35,6 +36,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
 	@Autowired
 	ShoppingService shoppingService;
+
+	@Autowired
+	FreepassService freepassService;
 
 	/**
 	 * <pre>
@@ -82,6 +86,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
 			if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(paymentProdType.getSvcGrpCd())) { // 쇼핑 상품
 				paymentInfoList = this.shoppingService.getShoppingforPayment(req);
+			} else if (DisplayConstants.DP_TSTORE_FREEPASS_PROD_SVC_GRP_CD.equals(paymentProdType.getSvcGrpCd())) { // 정액권
+																													// 상품
+				paymentInfoList = this.freepassService.getFreePassforPayment(req);
 			} else {
 				for (int i = 0; i < prodIdList.size(); i++) {
 					req.setProdId(prodIdList.get(i)); // prodIdList 에 있는 상품ID 1개씩 setting
@@ -92,6 +99,10 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 						// 상품분류코드는 SVC_GRP_CD||TOP_MENU_ID 로 제공
 						paymentInfo.setTenantProdGrpCd(paymentProdType.getSvcGrpCd() + "||"
 								+ paymentProdType.getTopMenuId());
+
+						// 이용가능한 정액권목록 제공
+						paymentInfo.setAvailableFixrateProdIdList(this.freepassService
+								.getAvailableFixrateProdIdList(req));
 						paymentInfoList.add(paymentInfo);
 					}
 				}

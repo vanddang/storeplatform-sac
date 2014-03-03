@@ -31,6 +31,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
@@ -658,12 +660,70 @@ public class FreepassServiceImpl implements FreepassService {
 			historyListSacReq.setProductList(productList);
 
 			// 구매내역 조회 실행
-			//historyCountSacRes = this.historyInternalSCI.searchHistoryCount(historyCountSacReq);
+			// historyCountSacRes = this.historyInternalSCI.searchHistoryCount(historyCountSacReq);
 			historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
 		} catch (Exception ex) {
 			throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 		}
 		return historyListSacRes;
+	}
+
+	/**
+	 * 이용가능한 정액권목록 구매 연동.
+	 * 
+	 * @param req
+	 *            req
+	 * @return PaymentInfo
+	 */
+	@Override
+	public List<String> getAvailableFixrateProdIdList(PaymentInfoSacReq req) {
+		List<String> availableFixrateProdIdList = new ArrayList<String>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("lang", req.getLangCd());
+		paramMap.put("tenantId", req.getTenantId());
+		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		paramMap.put("prodId", req.getProdId());
+		paramMap.put("deviceModelNo", "");
+		availableFixrateProdIdList = this.commonDAO.queryForList("PaymentInfo.getAvailableFixrateProdIdList", paramMap,
+				String.class);
+
+		return availableFixrateProdIdList;
+	}
+
+	/**
+	 * 정액권 구매 연동.
+	 * 
+	 * @param req
+	 *            req
+	 * @return PaymentInfo
+	 */
+	@Override
+	public List<PaymentInfo> getFreePassforPayment(PaymentInfoSacReq req) {
+		List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>();
+		List<String> prodIdList = req.getProdIdList();
+		List<String> exclusiveFixrateProdIdList = new ArrayList<String>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("lang", req.getLangCd());
+		paramMap.put("tenantId", req.getTenantId());
+		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		paramMap.put("deviceModelNo", "");
+		PaymentInfo paymentInfo = null;
+		for (int i = 0; i < prodIdList.size(); i++) {
+			paramMap.put("prodId", prodIdList.get(i));
+			paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getFreePassMetaInfo", paramMap, PaymentInfo.class);
+			if (paymentInfo != null) {
+				paramMap.put("productId", paymentInfo.getProdId());
+				exclusiveFixrateProdIdList = this.commonDAO.queryForList("PaymentInfo.getExclusiveFixrateProdIdList",
+						paramMap, String.class);
+
+				paymentInfo.setExclusiveFixrateProdIdList(exclusiveFixrateProdIdList);
+			}
+			paymentInfoList.add(paymentInfo);
+		}
+
+		return paymentInfoList;
 	}
 
 }
