@@ -109,24 +109,14 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 
 			String periodStart = "";
 			String periodEnd = "";
-			System.out.println("===========================================");
-			System.out.println(findStirng);
-			System.out.println(requestVO.getPeriod().length());
-			System.out.println("===========================================");
 			if (requestVO.getPeriod().length() < 25) {
 				if (findStirng == 0) {
-					System.out.println("================1111===========================");
-					System.out.println(periodList.get(0));
-					System.out.println("================1111===========================");
 					periodEnd = periodList.get(0);
 					periodEnd = periodEnd.replace("T", "");
 					periodEnd = periodEnd.substring(0, 14);
 					requestVO.setPeriodEnd(periodEnd);
 
 				} else {
-					System.out.println("================2222===========================");
-					System.out.println(periodList.get(0));
-					System.out.println("================2222===========================");
 					periodStart = periodList.get(0);
 					periodStart = periodStart.replace("T", "");
 					periodStart = periodStart.substring(0, 14);
@@ -134,7 +124,6 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 
 				}
 			} else {
-				System.out.println("================3333===========================");
 				periodStart = periodList.get(0);
 				periodEnd = periodList.get(1);
 
@@ -147,10 +136,6 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 				requestVO.setPeriodEnd(periodEnd);
 
 			}
-			System.out.println("===========================================");
-			System.out.println(periodStart);
-			System.out.println(periodEnd);
-			System.out.println("===========================================");
 		}
 		List<RecommendOneday> recommendOnedayList;
 
