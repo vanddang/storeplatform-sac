@@ -119,4 +119,159 @@
 		)
         ORDER BY RNUM
     </select>
+    
+    <!-- 브렌드샵 테마 상품 조회 -->
+    <select id="selectBrandshopList" parameterType="BrandshopSacReq" resultType="ProductBasicInfo">
+        SELECT  /* BrandshopMapper.XML, selectBrandshop, seung hun Lee, 2014-02-28 */    
+            TOTAL_COUNT
+            , PROD_ID
+            , TOP_MENU_ID
+            , MENU_ID
+            , PART_PROD_ID
+            , UPD_DT
+            , META_CLSF_CD
+            , SVC_GRP_CD
+            , CONTENTS_TYPE_CD
+            , PROD_NM
+            FROM
+            (
+               SELECT
+	            B.TOTAL_COUNT          
+                , ROWNUM AS RNUM
+			    , B.PROD_ID
+			    , B.TOP_MENU_ID
+			    , B.MENU_ID
+			    , B.PART_PROD_ID
+			    , B.UPD_DT
+                , B.REG_DT
+			    , B.META_CLSF_CD
+                , B.SVC_GRP_CD
+			    , B.CONTENTS_TYPE_CD
+			    , B.PROD_NM
+                , B.PRCHS_CNT
+			    FROM
+			    ( 
+			        SELECT
+			          COUNT(*) OVER () AS TOTAL_COUNT		
+			                , A.PROD_ID
+			                , A.TOP_MENU_ID
+			                , A.MENU_ID
+			                , A.PART_PROD_ID
+			                , A.UPD_DT
+                            , A.REG_DT
+			                , A.META_CLSF_CD
+                            , A.SVC_GRP_CD
+			                , A.CONTENTS_TYPE_CD
+			                , A.PROD_NM
+                            , A.PRCHS_CNT
+			            FROM
+			             (
+			            SELECT DISTINCT  D.PROD_ID AS PROD_ID
+			                 , C.TOP_MENU_ID
+			                 , C.MENU_ID
+			                 , A.PART_PROD_ID                                     
+			                 , D.UPD_DT                                
+	                         , D.REG_DT
+			                 , D.META_CLSF_CD
+                             , D.SVC_GRP_CD
+			                 , D.CONTENTS_TYPE_CD
+			                 , H.PROD_NM
+			                 , I.PRCHS_CNT
+			                 , ROW_NUMBER( ) OVER ( PARTITION BY D.PROD_ID
+			                                           ORDER BY D.REG_DT DESC) AS RN
+			            FROM TB_DP_BRAND_SHOP BS
+			                , TB_DP_BRAND_SHOP_SELLER BSS
+			                , TB_DP_BRAND_SHOP_DVC BSD  
+			                , TB_DP_PROD_RSHP A
+			                , TB_DP_MENU_CATEGORY_PROD_MAPG B
+			                , TB_DP_MENU_CATEGORY C
+			                , TB_DP_PROD D  
+			                , TB_DP_TENANT_PROD E
+			                , TB_CM_DEVICE F
+			                , TB_DP_SPRT_DEVICE G
+			                , TB_DP_PROD_DESC H
+			                , TB_DP_TENANT_PROD_STATS I
+			            WHERE 1=1
+			            AND BS.TENANT_ID = #{tenantId}
+	                    AND BSS.TENANT_ID = #{tenantId}
+	                    AND BSD.TENANT_ID = #{tenantId}
+                        AND I.TENANT_ID = #{tenantId}
+			            AND BS.BRAND_SHOP_NO = #{brandshopId}          
+			            AND BS.BRAND_SHOP_NO = BSS.BRAND_SHOP_NO
+			            AND BS.BRAND_SHOP_NO = BSD.BRAND_SHOP_NO
+			            AND BS.EXPO_YN = 'Y'
+			            AND BS.DEL_YN = 'N'  
+			            AND BSS.MBR_NO = D.SELLER_MBR_NO
+			            AND A.PART_PROD_ID = D.PROD_ID
+			            AND A.PROD_RSHP_CD = 'DP010802'
+			            AND A.PROD_ID = B.PROD_ID
+			            AND B.USE_YN = 'Y'
+			            AND B.MENU_ID = C.MENU_ID
+			            AND C.USE_YN = 'Y'
+			            AND D.PROD_ID = E.PROD_ID
+			            AND D.PROD_ID = H.PROD_ID
+                        AND D.PROD_ID = I.PROD_ID
+			            AND BS.TENANT_ID = E.TENANT_ID
+			            AND BSD.DVC_TYPE_CD = F.DEVICE_MODEL_CD
+			            AND F.DEVICE_MODEL_CD = #{deviceModelCd}
+			            AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+			            AND F.USE_YN = 'Y'
+			            AND A.PART_PROD_ID = G.PROD_ID
+			            AND DECODE( D.TOP_MENU_ID
+			                        , 'DP13'
+			                        , DECODE( F.EBOOK_SPRT_YN
+			                                , 'Y'
+			                                , DECODE( D.META_CLSF_CD
+			                                        , 'CT24'
+			                                        , DECODE( F.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+			                                        , 'CT26'
+			                                        , DECODE( F.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+			                                        , 1 )
+			                                , 0 )
+			                        , 'DP14'
+			                        , DECODE( F.COMIC_SPRT_YN , 'Y', 1 , 0 )
+			                        , 'DP16'
+			                        , DECODE( D.META_CLSF_CD
+			                                , 'CT25'
+			                                , DECODE( F.MUSIC_SPRT_YN, 'Y', 1, 0)
+			                                , 1 )
+			                        , 1 ) = 1
+			              AND ( CASE WHEN D.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+			                         THEN ( SELECT 1
+			                                  FROM TB_DP_SUB_CONTENTS SC
+			                                 WHERE SC.PROD_ID = A.PART_PROD_ID
+			                                   AND SC.SALE_YN = 'Y'
+			                                   AND DECODE( F.HDV_SPRT_YN
+			                                             , 'PD005201'
+			                                             , DECODE ( SC.DP_PG_QULT_CD
+			                                                      , 'PD009701', 1
+			                                                      , 'PD009702', 1
+			                                                      , 0)
+			                                             , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+			                                   AND ROWNUM    <![CDATA[ <= ]]>   1  )
+			                         ELSE 1
+			                     END ) = 1
+			              AND ( CASE WHEN D.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+			                         THEN DECODE( F.VIDEO_DRM_SPRT_YN
+			                                    , 'N'
+			                                    , DECODE( NVL( D.DRM_YN, 'N' ), 'N', 1, 0 )
+			                                    , 'Y'
+			                                    , 1 )
+			                         ELSE 1
+			                     END ) = 1
+			            ) A
+			        WHERE A.RN = 1
+			        ) B
+        <!-- 최신순 -->
+        <if test='orderedBy == "DP000701"'>
+            ORDER BY B.REG_DT DESC
+        </if>
+        <!-- 인기순 -->
+        <if test='orderedBy == "DP000709"'>
+            ORDER BY B.PRCHS_CNT DESC
+                   , B.REG_DT DESC
+        </if>
+        ) C
+        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+    </select>
 </mapper>

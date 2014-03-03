@@ -36,6 +36,10 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.feature.brandshop.vo.BrandshopInfo;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * 
@@ -48,6 +52,12 @@ public class BrandshopServiceImpl implements BrandshopService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
+	@Autowired
+	private MetaInfoService metaInfoService;
 
 	/*
 	 * (non-Javadoc)
@@ -202,73 +212,102 @@ public class BrandshopServiceImpl implements BrandshopService {
 			count = offset + count - 1;
 			req.setCount(count);
 
+			if (req.getOrderedBy() != null) {
+				req.setOrderedBy("DP000701");
+			}
+
 			CommonResponse commonResponse = new CommonResponse();
 			List<Product> productList = new ArrayList<Product>();
 			// 브렌드샵 테마 조회
-			List<BrandshopInfo> brandshopList = this.commonDAO.queryForList("Brandshop.selectBrandshopList", req,
-					BrandshopInfo.class);
+			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Brandshop.selectBrandshopList",
+					req, ProductBasicInfo.class);
 
-			if (!brandshopList.isEmpty()) {
+			// Meta DB 조회 파라미터 생성
+			Map<String, Object> reqMap = new HashMap<String, Object>();
+
+			reqMap.put("req", req);
+			reqMap.put("tenantHeader", tenantHeader);
+			reqMap.put("deviceHeader", deviceHeader);
+			reqMap.put("lang", tenantHeader.getLangCd());
+
+			if (!productBasicInfoList.isEmpty()) {
 
 				Product product = null;
 
-				// Identifier 설정
-				Identifier identifier = null;
-				List<Identifier> identifierList = null;
-				Menu menu = null;
-				List<Menu> menuList = null;
-				Title title = null;
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 
-				List<Source> sourceList = null;
-				Source source = null;
+					String topMenuId = productBasicInfo.getTopMenuId();
+					String svcGrpCd = productBasicInfo.getSvcGrpCd();
 
-				BrandshopInfo brandshopInfo = null;
-				Map<String, Object> reqMap = new HashMap<String, Object>();
-				reqMap.put("tenantHeader", tenantHeader);
-				reqMap.put("deviceHeader", deviceHeader);
-				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-
-				for (int i = 0; i < brandshopList.size(); i++) {
-					brandshopInfo = brandshopList.get(i);
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("req", req);
+					reqMap.put("tenantHeader", tenantHeader);
+					reqMap.put("deviceHeader", deviceHeader);
+					reqMap.put("lang", tenantHeader.getLangCd());
 
 					product = new Product(); // 결과물
 
-					// identifier 정보
-					identifier = new Identifier();
-					identifierList = new ArrayList<Identifier>();
+					MetaInfo retMetaInfo = null;
 
-					identifier.setType("brand");
-					identifier.setText(brandshopInfo.getBrandId());
-					identifierList.add(identifier);
-					product.setIdentifierList(identifierList);
+					// APP 상품의 경우
+					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+						reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+						retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+						if (retMetaInfo != null) {
+							product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+							productList.add(product);
+						}
 
-					// 메뉴 정보
-					menu = new Menu(); // 메뉴
-					menuList = new ArrayList<Menu>(); // 메뉴 리스트
-					menu.setId(brandshopInfo.getCategoryNo());
-					menu.setName(brandshopInfo.getMenuNm());
-					menu.setType("topClass");
-					menuList.add(menu);
-					product.setMenuList(menuList);
+					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
+						// 영화/방송 상품의 경우
+						reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+							retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
 
-					// title 정보
-					title = new Title();
-					title.setText(brandshopInfo.getBrandShopNm());
-					product.setTitle(title);
+							if (retMetaInfo != null) {
+								product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+								productList.add(product);
+							}
+						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
+																							  // 경우
+							retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+							if (retMetaInfo != null) {
+								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+									product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+									productList.add(product);
+								} else {
+									product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+									productList.add(product);
+								}
+							}
 
-					// source 정보
-					source = new Source();
-					sourceList = new ArrayList<Source>();
-					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(brandshopInfo.getLogImgPos());
-					sourceList.add(source);
-					product.setSourceList(sourceList);
+						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
+							retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+							if (retMetaInfo != null) {
+								// product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+								productList.add(product);
+							}
 
-					// 데이터 매핑
-					productList.add(i, product);
+						} else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // WEBTOON 상품의 경우
+							retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+							if (retMetaInfo != null) {
+								product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
+								productList.add(product);
+							}
 
+						}
+					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
+						retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+						if (retMetaInfo != null) {
+							product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+							productList.add(product);
+						}
+					}
 				}
-				commonResponse.setTotalCount(brandshopList.get(0).getTotalCount());
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
 				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			} else {
