@@ -38,9 +38,9 @@ import java.util.List;
  * Updated on : 2014-01-09 Updated by : 임근대, SK플래닛.
  */
 @Service
-public class EpubServceImpl implements EpubService {
+public class EpubServiceImpl implements EpubService {
 
-	private static final Logger logger = LoggerFactory.getLogger(EpubServceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EpubServiceImpl.class);
 
 	@Autowired
 	@Qualifier("sac")
