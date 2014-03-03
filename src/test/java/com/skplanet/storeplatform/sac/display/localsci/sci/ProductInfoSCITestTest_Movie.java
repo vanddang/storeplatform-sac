@@ -39,7 +39,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Produc
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @Transactional
-public class ProductInfoSCITestTest_Ebook {
+public class ProductInfoSCITestTest_Movie {
 
 	@Autowired
 	private ProductInfoSCI productInfoSCI;
@@ -55,14 +55,10 @@ public class ProductInfoSCITestTest_Ebook {
 	 * @throws JsonGenerationException
 	 */
 	@Test
-	public void testSearchEbookProductList() throws JsonGenerationException, JsonMappingException, IOException {
+	public void testSearchMovieProductList() throws JsonGenerationException, JsonMappingException, IOException {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
-		list.add("H900005941");
-		list.add("H900006037");
-		list.add("H900006041");
-		list.add("H900008864");
-		list.add("H900006019");
+		list.add("H000044277");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
 
@@ -70,12 +66,12 @@ public class ProductInfoSCITestTest_Ebook {
 		List<ProductInfo> productList = res.getProductList();
 		this.log.debug("##### productInfo cnt : ", productList.size());
 		for (ProductInfo productInfo : productList) {
-			this.log.debug("##### Ebook productInfo VO : {}",
+			this.log.debug("##### BroadCast productInfo VO : {}",
 					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
 		}
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(productList);
-		this.log.debug("##### Ebook productInfo  JSON : {}", json);
+		this.log.debug("##### BroadCast productInfo  JSON : {}", json);
 	}
 
 }
