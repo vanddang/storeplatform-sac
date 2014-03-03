@@ -2,9 +2,17 @@ package com.skplanet.storeplatform.sac.display.shopping.service;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandAnotherReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingCategoryAnotherReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeatureReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSubReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
@@ -28,7 +36,7 @@ public interface ShoppingService {
 	 * @return ShoppingRes
 	 */
 
-	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingFeatureReq req);
 
 	/**
 	 * 쇼핑 신규 상품 조회.
@@ -50,7 +58,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingSubReq req);
 
 	/**
 	 * 특가 상품 리스트 조회.
@@ -83,7 +91,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingPlanReq req);
 
 	/**
 	 * 브랜드샵 - 메인 리스트 조회.
@@ -105,7 +113,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingBrandRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingBrandRes getBrandshopProductList(SacRequestHeader header, ShoppingBrandReq req);
 
 	/**
 	 * 쇼핑테마 리스트상품 리스트.
@@ -127,7 +135,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingBrandRes getThemeProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingBrandRes getThemeProductList(SacRequestHeader header, ShoppingThemeReq req);
 
 	/**
 	 * 특정 카탈로그에 대한 다른 상품 리스트.
@@ -138,7 +146,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingCategoryAnotherReq req);
 
 	/**
 	 * 특정 브랜드에 대한 다른 상품 리스트.
@@ -149,7 +157,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingBrandAnotherReq req);
 
 	/**
 	 * 쇼핑상세.
@@ -160,7 +168,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req);
+	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingDetailReq req);
 
 	/**
 	 * 구매내역 필요한 정보.

@@ -124,7 +124,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                      
                    ) 
@@ -234,7 +234,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                        
                    ) 
@@ -375,7 +375,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
                               AND PROD_ID =I.PROD_ID
                             )                           
                    ) 
@@ -710,7 +710,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                      
                    ) 
@@ -932,7 +932,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID =I.PROD_ID
                             )                        
                    ) 
@@ -1078,7 +1078,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                      
                    ) 
@@ -1220,7 +1220,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
                               AND PROD_ID = I.PROD_ID
                             )                           
                    ) 
@@ -1368,7 +1368,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
                               AND PROD_ID = I.PROD_ID
                             )                           
                    ) 
@@ -1407,7 +1407,7 @@
                         ,(SELECT MENU_NM
                             FROM TB_DP_MENU_CATEGORY_DESC
                            WHERE MENU_ID = J.TOP_MENU_ID
-                             AND LANG_CD = #{req.langCd}
+                             AND LANG_CD = #{lang}
                              AND ROWNUM = 1
                          ) AS TOP_MENU_NM                                   
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY L.PROD_AMT ASC) as NO
@@ -1441,7 +1441,7 @@
                          ,(SELECT  PROD_ID
                                   ,PRCHS_CNT
                              FROM TB_DP_TENANT_PROD_STATS 
-                            WHERE TENANT_ID = #{req.tenantId}    /* INPUT 테넌트ID */
+                            WHERE TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
                            ) M
                 WHERE 1=1
                 AND A.BRAND_ID = B.BRAND_ID
@@ -1462,8 +1462,8 @@
                 AND I.PROD_ID = M.PROD_ID(+)                           
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                 AND NVL(B.CHNL_CNT, 0) > 0          
-                AND C.LANG_CD= #{req.langCd}          /* ko : 한국어 */
-                AND F.LANG_CD= #{req.langCd}          /* ko : 한국어 */
+                AND C.LANG_CD= #{lang}          /* ko : 한국어 */
+                AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
                 AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
@@ -1472,7 +1472,7 @@
                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
-                AND K.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */
+                AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                 AND B.CATALOG_ID = #{req.productId}
                 <if test="req.specialProdId != null">
                 AND I.PROD_ID = #{req.specialProdId}
@@ -1484,7 +1484,7 @@
                     WHERE 1=1
                       AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                       AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                      AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
+                      AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
                       AND PROD_ID = I.PROD_ID
                     )                                     
            ) 
@@ -1513,7 +1513,7 @@
                         ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
                         ,J.PROD_GRD_CD
                         ,J.USE_PERIOD_UNIT_CD
-                        ,CONCAT(J.USE_PERIOD,FN_COMM_CD_NM(J.USE_PERIOD_UNIT_CD,#{req.langCd})) as USE_PERIOD
+                        ,CONCAT(J.USE_PERIOD,FN_COMM_CD_NM(J.USE_PERIOD_UNIT_CD,#{lang})) as USE_PERIOD
                         ,DECODE(I.PROD_CASE_CD
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
@@ -1543,7 +1543,7 @@
                          
                              AND PD.NOTI_TYPE_CD = 'DP000401'
                              AND PD.DEL_YN = 'N'                            
-                             AND PD.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */
+                             AND PD.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                          )AS ALLOW
                          </if>
                         ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
@@ -1611,8 +1611,8 @@
                 AND I.PROD_ID = N.PROD_ID(+)
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                 AND NVL(B.CHNL_CNT, 0) > 0          
-                AND C.LANG_CD= #{req.langCd}          /* ko : 한국어 */
-                AND F.LANG_CD= #{req.langCd}          /* ko : 한국어 */
+                AND C.LANG_CD= #{lang}          /* ko : 한국어 */
+                AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
                 AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
@@ -1621,7 +1621,7 @@
                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
-                AND K.TENANT_ID = #{req.tenantId}        /* INPUT 테넌트ID */
+                AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                 AND B.CATALOG_ID = #{req.productId}
                 <if test="req.specialProdId != null">
                 AND I.PROD_ID = #{req.specialProdId}
@@ -1633,7 +1633,7 @@
                     WHERE 1=1
                       AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                       AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                      AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
+                      AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
                       AND PROD_ID = I.PROD_ID
                     )                   
                      
@@ -1684,8 +1684,8 @@
 		  AND A.CHNL_PROD_ID =#{chnlProdId}
 		  AND NVL(B.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
           AND E.EXPO_YN ='Y'                                /* Y : 기본(기본여부) */
-          AND E.TENANT_ID  =#{req.tenantId}        /* INPUT 테넌트ID */
-          AND D.TENANT_ID  =#{req.tenantId}        /* INPUT 테넌트ID */	  
+          AND E.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+          AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */	  
           AND DECODE( A.EXPO_ORD, 1, NVL( A.EXPO_YN, 'N' )
                                    ,( SELECT TPO2.EXPO_YN
                                         FROM TB_DP_PROD_OPT TPO2
@@ -1711,7 +1711,7 @@
           FROM TB_DP_PROD_IMG
          WHERE PROD_ID = #{req.productId} 
            AND IMG_CD =#{cutDetailImageCd}
-           AND LANG_CD= #{req.langCd}          /* ko : 한국어 */
+           AND LANG_CD= #{lang}          /* ko : 한국어 */
          ORDER BY EXPO_ORD            
     </select>       
     

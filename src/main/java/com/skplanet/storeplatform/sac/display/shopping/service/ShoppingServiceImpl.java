@@ -23,9 +23,17 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandAnotherReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingCategoryAnotherReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeatureReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSubReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
@@ -105,94 +113,110 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingFeatureReq req) {
 
 		// 공통 응답 변수 선언
-		if (req.getDummy() == null) {
-			ShoppingRes res = new ShoppingRes();
-			CommonResponse commonResponse = new CommonResponse();
-			TenantHeader tenantHeader = header.getTenantHeader();
-			DeviceHeader deviceHeader = header.getDeviceHeader();
-			String[] temp = deviceHeader.getOs().trim().split("/");
-			String osVersion = temp[1];
-			req.setTenantId(tenantHeader.getTenantId());
-			req.setDeviceModelCd(deviceHeader.getModel());
-			req.setLangCd(tenantHeader.getLangCd());
-			req.setOsVersion(osVersion);
-			req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
+		ShoppingRes res = new ShoppingRes();
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-			}
-			if (StringUtils.isEmpty(req.getListId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
-			}
+		if (StringUtils.isEmpty(req.getListId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
+		}
 
-			if (StringUtils.isEmpty(req.getProdCharge())) {
-				req.setProdCharge(null);
-			}
+		// 파라미터 유효값 체크
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			for (int i = 0; i < arrayProdGradeCd.length; i++) {
+				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
+						this.log.debug("----------------------------------------------------------------");
 
-			// 상품등급코드 유효값 체크
-			if (!this.commonProdGradeCd(req)) {
-				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
-			}
-			// offset, Count default setting
-			this.commonOffsetCount(req);
-			// 배치완료 기준일시 조회
-			String stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
-					req.getListId());
-
-			// 기준일시 체크
-			if (StringUtils.isEmpty(stdDt)) {
-				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
-			}
-
-			// DB 조회 파라미터 생성
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("req", req);
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("stdDt", stdDt);
-			reqMap.put("lang", tenantHeader.getLangCd());
-
-			reqMap.put("imageCd", req.getImageCd());
-			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
-			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-
-			// ID list 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getFeatureProductList",
-					reqMap, ProductBasicInfo.class);
-			List<Product> productList = new ArrayList<Product>();
-			if (productBasicInfoList != null) {
-				if (productBasicInfoList.size() > 0) {
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						// 쇼핑 Meta 정보 조회
-						MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
-						if (retMetaInfo != null) {
-							// 쇼핑 Response Generate
-							Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
-							productList.add(product);
-						}
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+								arrayProdGradeCd[i]);
 					}
-					commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				} else {
-					// 조회 결과 없음
-					commonResponse.setTotalCount(0);
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
 				}
 			}
-			return res;
-		} else {
-			return this.commonDummy(req);
 		}
+
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
+		}
+		req.setOffset(offset); // set offset
+
+		if (req.getCount() != null) {
+			count = req.getCount();
+		}
+		count = offset + count - 1;
+		req.setCount(count); // set count
+
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			req.setArrayProdGradeCd(arrayProdGradeCd);
+		}
+		// 배치완료 기준일시 조회
+		String stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
+				req.getListId());
+
+		// 기준일시 체크
+		if (StringUtils.isEmpty(stdDt)) {
+			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+		}
+
+		// DB 조회 파라미터 생성
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		reqMap.put("req", req);
+		reqMap.put("tenantHeader", tenantHeader);
+		reqMap.put("deviceHeader", deviceHeader);
+		reqMap.put("stdDt", stdDt);
+		reqMap.put("lang", tenantHeader.getLangCd());
+
+		reqMap.put("imageCd", req.getImageCd());
+		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
+		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+
+		// ID list 조회
+		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getFeatureProductList",
+				reqMap, ProductBasicInfo.class);
+		List<Product> productList = new ArrayList<Product>();
+		if (productBasicInfoList != null) {
+			if (productBasicInfoList.size() > 0) {
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					// 쇼핑 Meta 정보 조회
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					if (retMetaInfo != null) {
+						// 쇼핑 Response Generate
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+						productList.add(product);
+					}
+				}
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			}
+		}
+		return res;
 	}
 
 	/**
@@ -212,12 +236,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 			CommonResponse commonResponse = new CommonResponse();
 			TenantHeader tenantHeader = header.getTenantHeader();
 			DeviceHeader deviceHeader = header.getDeviceHeader();
-			String[] temp = deviceHeader.getOs().trim().split("/");
-			String osVersion = temp[1];
 			req.setTenantId(tenantHeader.getTenantId());
 			req.setDeviceModelCd(deviceHeader.getModel());
 			req.setLangCd(tenantHeader.getLangCd());
-			req.setOsVersion(osVersion);
 			req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
@@ -292,110 +313,128 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req) {
-		if (req.getDummy() == null) {
-			// 공통 응답 변수 선언
-			ShoppingRes res = new ShoppingRes();
-			CommonResponse commonResponse = new CommonResponse();
-			TenantHeader tenantHeader = header.getTenantHeader();
-			DeviceHeader deviceHeader = header.getDeviceHeader();
-			String[] temp = deviceHeader.getOs().trim().split("/");
-			String osVersion = temp[1];
-			req.setTenantId(tenantHeader.getTenantId());
-			req.setDeviceModelCd(deviceHeader.getModel());
-			req.setLangCd(tenantHeader.getLangCd());
-			req.setOsVersion(osVersion);
-			req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
+	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingSubReq req) {
+		// 공통 응답 변수 선언
+		ShoppingRes res = new ShoppingRes();
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
 
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-			}
-			if (StringUtils.isEmpty(req.getMenuId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "menuId", req.getMenuId());
-			}
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
-			if (StringUtils.isEmpty(req.getProdCharge())) {
-				req.setProdCharge(null);
-			}
-			// 상품등급코드 유효값 체크
-			if (!this.commonProdGradeCd(req)) {
-				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
-			}
-
-			if (StringUtils.isEmpty(req.getOrderedBy())) {
-				req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
-			}
-
-			if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
-					&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
-				throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
-			}
-			// offset, Count default setting
-			this.commonOffsetCount(req);
-
-			String stdDt = "";
-			if (req.getOrderedBy().equals("popular")) {
-				// 필수 파라미터 체크
-				if (StringUtils.isEmpty(req.getListId())) {
-					throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
-				}
-
-				stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
-						req.getListId());
-
-				// 기준일시 체크
-				if (StringUtils.isEmpty(stdDt)) {
-					throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
-				}
-				req.setStdDt(stdDt);
-			}
-
-			// DB 조회 파라미터 생성
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("req", req);
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("stdDt", stdDt);
-			reqMap.put("lang", tenantHeader.getLangCd());
-
-			reqMap.put("imageCd", req.getImageCd());
-			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
-			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-
-			// ID list 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getSubProductList",
-					reqMap, ProductBasicInfo.class);
-			List<Product> productList = new ArrayList<Product>();
-			if (productBasicInfoList != null) {
-				if (productBasicInfoList.size() > 0) {
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						// 쇼핑 Meta 정보 조회
-						MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
-						if (retMetaInfo != null) {
-							// 쇼핑 Response Generate
-							Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
-							productList.add(product);
-						}
-					}
-					commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				} else {
-					// 조회 결과 없음
-					commonResponse.setTotalCount(0);
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				}
-			}
-			return res;
-		} else {
-			return this.commonDummy(req);
+		if (StringUtils.isEmpty(req.getMenuId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "menuId", req.getMenuId());
 		}
+
+		// 파라미터 유효값 체크
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			for (int i = 0; i < arrayProdGradeCd.length; i++) {
+				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
+						this.log.debug("----------------------------------------------------------------");
+
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+								arrayProdGradeCd[i]);
+					}
+				}
+			}
+		}
+
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
+		}
+		req.setOffset(offset); // set offset
+
+		if (req.getCount() != null) {
+			count = req.getCount();
+		}
+		count = offset + count - 1;
+		req.setCount(count); // set count
+
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			req.setArrayProdGradeCd(arrayProdGradeCd);
+		}
+
+		if (StringUtils.isEmpty(req.getOrderedBy())) {
+			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
+		}
+
+		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+		}
+
+		String stdDt = "";
+		if (req.getOrderedBy().equals("popular")) {
+			// 필수 파라미터 체크
+			if (StringUtils.isEmpty(req.getListId())) {
+				throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
+			}
+
+			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
+					req.getListId());
+
+			// 기준일시 체크
+			if (StringUtils.isEmpty(stdDt)) {
+				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+			}
+			req.setStdDt(stdDt);
+		}
+
+		// DB 조회 파라미터 생성
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		reqMap.put("req", req);
+		reqMap.put("tenantHeader", tenantHeader);
+		reqMap.put("deviceHeader", deviceHeader);
+		reqMap.put("stdDt", stdDt);
+		reqMap.put("lang", tenantHeader.getLangCd());
+
+		reqMap.put("imageCd", req.getImageCd());
+		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
+		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+
+		// ID list 조회
+		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getSubProductList", reqMap,
+				ProductBasicInfo.class);
+		List<Product> productList = new ArrayList<Product>();
+		if (productBasicInfoList != null) {
+			if (productBasicInfoList.size() > 0) {
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					// 쇼핑 Meta 정보 조회
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					if (retMetaInfo != null) {
+						// 쇼핑 Response Generate
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+						productList.add(product);
+					}
+				}
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			}
+		}
+		return res;
 	}
 
 	/**
@@ -413,12 +452,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOs().trim().split("/");
-		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
 		req.setLangCd(tenantHeader.getLangCd());
-		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
@@ -509,12 +545,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOs().trim().split("/");
-		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
 		req.setLangCd(tenantHeader.getLangCd());
-		req.setOsVersion(osVersion);
 		req.setBannerImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_BANNER_IMAGE_CD);
 		req.setPromotionImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD);
 		// 필수 파라미터 체크
@@ -588,18 +621,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingPlanReq req) {
 		// 공통 응답 변수 선언
 		ShoppingThemeRes res = new ShoppingThemeRes();
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOs().trim().split("/");
-		String osVersion = temp[1];
-		req.setTenantId(tenantHeader.getTenantId());
-		req.setDeviceModelCd(deviceHeader.getModel());
-		req.setLangCd(tenantHeader.getLangCd());
-		req.setOsVersion(osVersion);
+
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setBannerImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_BANNER_IMAGE_CD);
 		req.setPromotionImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD);
@@ -607,24 +635,50 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		List<MetaInfo> resultList = null;
 		MetaInfo shopping = null;
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-		}
+
 		if (StringUtils.isEmpty(req.getPlanId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "planId", req.getPlanId());
 		}
+		// 파라미터 유효값 체크
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			for (int i = 0; i < arrayProdGradeCd.length; i++) {
+				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
+						this.log.debug("----------------------------------------------------------------");
 
-		if (StringUtils.isEmpty(req.getProdCharge())) {
-			req.setProdCharge(null);
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+								arrayProdGradeCd[i]);
+					}
+				}
+			}
 		}
-		// 상품등급코드 유효값 체크
-		if (!this.commonProdGradeCd(req)) {
-			throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
-		}
-		// offset, Count default setting
-		this.commonOffsetCount(req);
 
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
+		}
+		req.setOffset(offset); // set offset
+
+		if (req.getCount() != null) {
+			count = req.getCount();
+		}
+		count = offset + count - 1;
+		req.setCount(count); // set count
+
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			req.setArrayProdGradeCd(arrayProdGradeCd);
+		}
 		// 프로모션 리스트 가져오기
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, MetaInfo.class);
 
@@ -728,12 +782,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOs().trim().split("/");
-		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
 		req.setLangCd(tenantHeader.getLangCd());
-		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD);
 
 		// 필수 파라미터 체크
@@ -818,7 +869,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingBrandRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingBrandRes getBrandshopProductList(SacRequestHeader header, ShoppingBrandReq req) {
 		// 공통 응답 변수 선언
 		ShoppingBrandRes res = new ShoppingBrandRes();
 		List<MetaInfo> resultList = null;
@@ -826,19 +877,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOs().trim().split("/");
-		String osVersion = temp[1];
-		req.setTenantId(tenantHeader.getTenantId());
-		req.setDeviceModelCd(deviceHeader.getModel());
 		req.setLangCd(tenantHeader.getLangCd());
-		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-		}
 		if (StringUtils.isEmpty(req.getBrandId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "blandId", req.getBrandId());
 		}
@@ -867,16 +909,46 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setStdDt(stdDt);
 		}
 
-		if (StringUtils.isEmpty(req.getProdCharge())) {
-			req.setProdCharge(null);
-		}
-		// 상품등급코드 유효값 체크
-		if (!this.commonProdGradeCd(req)) {
-			throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
+		// 파라미터 유효값 체크
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			for (int i = 0; i < arrayProdGradeCd.length; i++) {
+				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
+						this.log.debug("----------------------------------------------------------------");
+
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+								arrayProdGradeCd[i]);
+					}
+				}
+			}
 		}
 
-		// offset, Count default setting
-		this.commonOffsetCount(req);
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
+		}
+		req.setOffset(offset); // set offset
+
+		if (req.getCount() != null) {
+			count = req.getCount();
+		}
+		count = offset + count - 1;
+		req.setCount(count); // set count
+
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			req.setArrayProdGradeCd(arrayProdGradeCd);
+		}
 
 		// 브랜드샵 정보 가져오기
 		resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
@@ -966,12 +1038,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOs().trim().split("/");
-		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
 		req.setLangCd(tenantHeader.getLangCd());
-		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_THEME_REPRESENT_IMAGE_CD);
 
 		// 필수 파라미터 체크
@@ -1035,7 +1104,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingBrandRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingBrandRes getThemeProductList(SacRequestHeader header, ShoppingThemeReq req) {
 		// 공통 응답 변수 선언
 		ShoppingBrandRes res = new ShoppingBrandRes();
 		List<MetaInfo> resultList = null;
@@ -1043,32 +1112,54 @@ public class ShoppingServiceImpl implements ShoppingService {
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOs().trim().split("/");
-		String osVersion = temp[1];
 		req.setTenantId(tenantHeader.getTenantId());
-		req.setDeviceModelCd(deviceHeader.getModel());
-		req.setLangCd(tenantHeader.getLangCd());
-		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-		}
 		if (StringUtils.isEmpty(req.getThemeId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "themeId", req.getThemeId());
 		}
 
-		if (StringUtils.isEmpty(req.getProdCharge())) {
-			req.setProdCharge(null);
+		// 파라미터 유효값 체크
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			for (int i = 0; i < arrayProdGradeCd.length; i++) {
+				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
+						this.log.debug("----------------------------------------------------------------");
+
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+								arrayProdGradeCd[i]);
+					}
+				}
+			}
 		}
-		// 상품등급코드 유효값 체크
-		if (!this.commonProdGradeCd(req)) {
-			throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
+
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
 		}
-		// offset, Count default setting
-		this.commonOffsetCount(req);
+		req.setOffset(offset); // set offset
+
+		if (req.getCount() != null) {
+			count = req.getCount();
+		}
+		count = offset + count - 1;
+		req.setCount(count); // set count
+
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			req.setArrayProdGradeCd(arrayProdGradeCd);
+		}
 
 		// 테마 정보 가져오기
 		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, MetaInfo.class);
@@ -1142,113 +1233,131 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingReq req) {
-		if (req.getDummy() == null) {
+	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingCategoryAnotherReq req) {
 
-			// 공통 응답 변수 선언
-			ShoppingRes res = new ShoppingRes();
-			CommonResponse commonResponse = new CommonResponse();
-			TenantHeader tenantHeader = header.getTenantHeader();
-			DeviceHeader deviceHeader = header.getDeviceHeader();
-			String[] temp = deviceHeader.getOs().trim().split("/");
-			String osVersion = temp[1];
-			req.setTenantId(tenantHeader.getTenantId());
-			req.setDeviceModelCd(deviceHeader.getModel());
-			req.setLangCd(tenantHeader.getLangCd());
-			req.setOsVersion(osVersion);
-			req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
+		// 공통 응답 변수 선언
+		ShoppingRes res = new ShoppingRes();
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
 
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-			}
-			if (StringUtils.isEmpty(req.getExceptId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "exceptId", req.getExceptId());
-			}
-			if (StringUtils.isEmpty(req.getMenuId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "menuId", req.getMenuId());
-			}
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
-			if (StringUtils.isEmpty(req.getProdCharge())) {
-				req.setProdCharge(null);
-			}
-			// 상품등급코드 유효값 체크
-			if (!this.commonProdGradeCd(req)) {
-				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
-			}
-
-			if (StringUtils.isEmpty(req.getOrderedBy())) {
-				req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
-			}
-			if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
-					&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
-				throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
-			}
-			// offset, Count default setting
-			this.commonOffsetCount(req);
-
-			String stdDt = "";
-			if (req.getOrderedBy().equals("popular")) {
-				// 필수 파라미터 체크
-				if (StringUtils.isEmpty(req.getListId())) {
-					throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
-				}
-
-				stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
-						req.getListId());
-
-				// 기준일시 체크
-				if (StringUtils.isEmpty(stdDt)) {
-					throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
-				}
-				req.setStdDt(stdDt);
-			}
-
-			// DB 조회 파라미터 생성
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("req", req);
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("stdDt", stdDt);
-			reqMap.put("lang", tenantHeader.getLangCd());
-
-			reqMap.put("imageCd", req.getImageCd());
-			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
-			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-
-			// ID list 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"Shopping.getCatagoryAnotherProductList", reqMap, ProductBasicInfo.class);
-			List<Product> productList = new ArrayList<Product>();
-			if (productBasicInfoList != null) {
-				if (productBasicInfoList.size() > 0) {
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						// 쇼핑 Meta 정보 조회
-						MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
-						if (retMetaInfo != null) {
-							// 쇼핑 Response Generate
-							Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
-							productList.add(product);
-						}
-					}
-					commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				} else {
-					// 조회 결과 없음
-					commonResponse.setTotalCount(0);
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				}
-			}
-			return res;
-		} else {
-			return this.commonDummy(req);
+		if (StringUtils.isEmpty(req.getExceptId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "exceptId", req.getExceptId());
 		}
+		if (StringUtils.isEmpty(req.getMenuId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "menuId", req.getMenuId());
+		}
+
+		// 파라미터 유효값 체크
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			for (int i = 0; i < arrayProdGradeCd.length; i++) {
+				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
+						this.log.debug("----------------------------------------------------------------");
+
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+								arrayProdGradeCd[i]);
+					}
+				}
+			}
+		}
+
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
+		}
+		req.setOffset(offset); // set offset
+
+		if (req.getCount() != null) {
+			count = req.getCount();
+		}
+		count = offset + count - 1;
+		req.setCount(count); // set count
+
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			req.setArrayProdGradeCd(arrayProdGradeCd);
+		}
+		if (StringUtils.isEmpty(req.getOrderedBy())) {
+			req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
+		}
+		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+		}
+
+		String stdDt = "";
+		if (req.getOrderedBy().equals("popular")) {
+			// 필수 파라미터 체크
+			if (StringUtils.isEmpty(req.getListId())) {
+				throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
+			}
+
+			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
+					req.getListId());
+
+			// 기준일시 체크
+			if (StringUtils.isEmpty(stdDt)) {
+				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+			}
+			req.setStdDt(stdDt);
+		}
+
+		// DB 조회 파라미터 생성
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		reqMap.put("req", req);
+		reqMap.put("tenantHeader", tenantHeader);
+		reqMap.put("deviceHeader", deviceHeader);
+		reqMap.put("stdDt", stdDt);
+		reqMap.put("lang", tenantHeader.getLangCd());
+
+		reqMap.put("imageCd", req.getImageCd());
+		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
+		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+
+		// ID list 조회
+		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+				"Shopping.getCatagoryAnotherProductList", reqMap, ProductBasicInfo.class);
+		List<Product> productList = new ArrayList<Product>();
+		if (productBasicInfoList != null) {
+			if (productBasicInfoList.size() > 0) {
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					// 쇼핑 Meta 정보 조회
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					if (retMetaInfo != null) {
+						// 쇼핑 Response Generate
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+						productList.add(product);
+					}
+				}
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			}
+		}
+		return res;
+
 	}
 
 	/**
@@ -1261,115 +1370,127 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingReq req) {
-		if (req.getDummy() == null) {
+	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingBrandAnotherReq req) {
 
-			// 공통 응답 변수 선언
-			ShoppingRes res = new ShoppingRes();
-			CommonResponse commonResponse = new CommonResponse();
-			TenantHeader tenantHeader = header.getTenantHeader();
-			DeviceHeader deviceHeader = header.getDeviceHeader();
-			String[] temp = deviceHeader.getOs().trim().split("/");
-			String osVersion = temp[1];
-			req.setTenantId(tenantHeader.getTenantId());
-			req.setDeviceModelCd(deviceHeader.getModel());
-			req.setLangCd(tenantHeader.getLangCd());
-			req.setOsVersion(osVersion);
-			req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
+		// 공통 응답 변수 선언
+		ShoppingRes res = new ShoppingRes();
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
 
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-			}
-			if (StringUtils.isEmpty(req.getExceptId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "exceptId", req.getExceptId());
-			}
-			if (StringUtils.isEmpty(req.getBrandId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "brandId", req.getBrandId());
-			}
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
-			if (StringUtils.isEmpty(req.getProdCharge())) {
-				req.setProdCharge(null);
-			}
-			// 상품등급코드 유효값 체크
-			if (!this.commonProdGradeCd(req)) {
-				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
-			}
-
-			if (StringUtils.isEmpty(req.getOrderedBy())) {
-				req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
-			}
-
-			if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
-					&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
-				throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
-			}
-
-			// offset, Count default setting
-			this.commonOffsetCount(req);
-
-			String stdDt = "";
-			if (req.getOrderedBy().equals("popular")) {
-				// 필수 파라미터 체크
-				if (StringUtils.isEmpty(req.getListId())) {
-					throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
-				}
-
-				stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
-						req.getListId());
-
-				// 기준일시 체크
-				if (StringUtils.isEmpty(stdDt)) {
-					throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
-				}
-				req.setStdDt(stdDt);
-			}
-
-			// DB 조회 파라미터 생성
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("req", req);
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("stdDt", stdDt);
-			reqMap.put("lang", tenantHeader.getLangCd());
-
-			reqMap.put("imageCd", req.getImageCd());
-			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
-			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-
-			// ID list 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"Shopping.getBrandAnotherProductList", reqMap, ProductBasicInfo.class);
-			List<Product> productList = new ArrayList<Product>();
-			if (productBasicInfoList != null) {
-				if (productBasicInfoList.size() > 0) {
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						// 쇼핑 Meta 정보 조회
-						MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
-						if (retMetaInfo != null) {
-							// 쇼핑 Response Generate
-							Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
-							productList.add(product);
-						}
-					}
-					commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				} else {
-					// 조회 결과 없음
-					commonResponse.setTotalCount(0);
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				}
-			}
-			return res;
-		} else {
-			return this.commonDummy(req);
+		if (StringUtils.isEmpty(req.getExceptId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "exceptId", req.getExceptId());
 		}
+		if (StringUtils.isEmpty(req.getBrandId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "brandId", req.getBrandId());
+		}
+
+		// 파라미터 유효값 체크
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			for (int i = 0; i < arrayProdGradeCd.length; i++) {
+				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
+						this.log.debug("----------------------------------------------------------------");
+
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+								arrayProdGradeCd[i]);
+					}
+				}
+			}
+		}
+
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
+		}
+		req.setOffset(offset); // set offset
+
+		if (req.getCount() != null) {
+			count = req.getCount();
+		}
+		count = offset + count - 1;
+		req.setCount(count); // set count
+
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
+
+		if (StringUtils.isEmpty(req.getOrderedBy())) {
+			req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
+		}
+
+		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+		}
+
+		String stdDt = "";
+		if (req.getOrderedBy().equals("popular")) {
+			// 필수 파라미터 체크
+			if (StringUtils.isEmpty(req.getListId())) {
+				throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
+			}
+
+			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
+					req.getListId());
+
+			// 기준일시 체크
+			if (StringUtils.isEmpty(stdDt)) {
+				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+			}
+			req.setStdDt(stdDt);
+		}
+
+		// DB 조회 파라미터 생성
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		reqMap.put("req", req);
+		reqMap.put("tenantHeader", tenantHeader);
+		reqMap.put("deviceHeader", deviceHeader);
+		reqMap.put("stdDt", stdDt);
+		reqMap.put("lang", tenantHeader.getLangCd());
+
+		reqMap.put("imageCd", req.getImageCd());
+		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
+		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+
+		// ID list 조회
+		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+				"Shopping.getBrandAnotherProductList", reqMap, ProductBasicInfo.class);
+		List<Product> productList = new ArrayList<Product>();
+		if (productBasicInfoList != null) {
+			if (productBasicInfoList.size() > 0) {
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					// 쇼핑 Meta 정보 조회
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					if (retMetaInfo != null) {
+						// 쇼핑 Response Generate
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+						productList.add(product);
+					}
+				}
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			}
+		}
+		return res;
+
 	}
 
 	/**
@@ -1382,25 +1503,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingDetailReq req) {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
-		String[] temp = deviceHeader.getOs().trim().split("/");
-		String osVersion = temp[1];
-		req.setTenantId(tenantHeader.getTenantId());
-		req.setDeviceModelCd(deviceHeader.getModel());
-		req.setLangCd(tenantHeader.getLangCd());
-		req.setOsVersion(osVersion);
+
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 		req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-		}
+
 		if (!"catalog".equals(req.getType()) && !"episode".equals(req.getType())) {
 			throw new StorePlatformException("SAC_DSP_0003", "type", req.getType());
 		}
@@ -1573,7 +1687,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 								productEpisodeList.add(productListSacIn);
 
 								HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
-								historyListSacReq.setTenantId(req.getTenantId());
+								historyListSacReq.setTenantId(tenantHeader.getTenantId());
 								historyListSacReq.setUserKey(req.getUserKey());
 								historyListSacReq.setDeviceKey(req.getDeviceKey());
 								historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);

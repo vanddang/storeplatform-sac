@@ -4,14 +4,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandAnotherReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingCategoryAnotherReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeatureReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSubReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
@@ -43,7 +52,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/featureProductList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingRes getFeatureProductList(SacRequestHeader header, @Validated ShoppingFeatureReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchFeatureProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -85,7 +94,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/category/subProductList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingRes getSubProductList(SacRequestHeader header, @Validated ShoppingSubReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getSubProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -148,7 +157,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/specialSales/productList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, @Validated ShoppingPlanReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getSpecialSalesProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -190,7 +199,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/brandshop/productList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingBrandRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingBrandRes getBrandshopProductList(SacRequestHeader header, @Validated ShoppingBrandReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getBrandshopProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -232,7 +241,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/theme/productList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingBrandRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingBrandRes getThemeProductList(SacRequestHeader header, @Validated ShoppingThemeReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getThemeProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -253,7 +262,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/category/anotherProductList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, @Validated ShoppingCategoryAnotherReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getCatagoryAnotherProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -274,7 +283,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/brandshop/anotherProductList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, @Validated ShoppingBrandAnotherReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getCatagoryAnotherProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -296,7 +305,7 @@ public class ShoppingController {
 
 	@RequestMapping(value = "/shoppingDetail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ShoppingRes getShoppingDetail(SacRequestHeader header, @RequestBody ShoppingReq req) {
+	public ShoppingRes getShoppingDetail(SacRequestHeader header, @RequestBody @Validated ShoppingDetailReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getShoppingDetail Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
