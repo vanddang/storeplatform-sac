@@ -117,14 +117,32 @@ public class MemberCommonComponent {
 	 * SKT 이용정지회원 여부 조회.
 	 * </pre>
 	 * 
-	 * @param msisdn
-	 * @return String
+	 * @param deviceId
+	 *            기기 ID
+	 * @param deviceIdType
+	 *            기기 ID 타입
+	 * @return SKT 이용 정지 여부
 	 */
-	public String getIsSktPause(String msisdn) {
+	public String getIsSktPause(String deviceId, String deviceIdType) {
 
-		GetOpmdReq req = new GetOpmdReq();
-		req.setMsisdn(msisdn);
-		return this.miscellaneousService.getOpmd(req).getPauseYN();
+		UapsEcReq uapsReq = new UapsEcReq();
+		uapsReq.setDeviceId(deviceId);
+
+		try {
+
+			UserEcRes userRes = this.getMappingInfo(deviceId, "mdn");
+			LOGGER.info("## >> UAPS Info : {}", userRes);
+			return userRes.getPauseYN();
+
+		} catch (StorePlatformException spe) {
+
+			LOGGER.info("## >> SKT 이용정지 여부 조회 실패로 이용정지여부 Skip....... ");
+			LOGGER.info("## Error Code : {}", spe.getErrorInfo().getCode());
+			LOGGER.info("## Error Msg  : {}", spe.getErrorInfo().getMessage());
+			return "";
+
+		}
+
 	}
 
 	/**

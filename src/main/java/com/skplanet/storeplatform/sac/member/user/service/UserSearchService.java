@@ -156,7 +156,7 @@ public interface UserSearchService {
 
 	/**
 	 * <pre>
-	 * 실명 인증 정보 등록.
+	 * DeviceId를 이용하여 회원 정보 조회.
 	 * </pre>
 	 * 
 	 * @param sacHeader

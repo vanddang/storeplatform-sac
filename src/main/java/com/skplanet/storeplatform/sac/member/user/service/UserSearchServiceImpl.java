@@ -1280,10 +1280,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 		this.setDeviceInfo(sacHeader, req, response);
 
 		/**
-		 * SKT 이용정지회원 여부 setting.
+		 * SKT 이용정지회원 여부 setting. (기기 타입이 msisdn 일 경우만 연동 한다.)
 		 */
-		if (StringUtils.equals(response.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-			response.setIsSktPause(this.mcc.getIsSktPause(req.getDeviceId()));
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+			response.setIsSktPause(this.mcc.getIsSktPause(req.getDeviceId(), req.getDeviceIdType()));
 		}
 
 		return response;
@@ -1352,7 +1352,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 * SC 공통 정보 setting.
 		 */
 		policyRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
-		logger.info("## policyRequest : {}", policyRequest.toString());
+		logger.info("## policyRequest : {}", policyRequest);
 
 		List<IndividualPolicyInfo> policyInfos = null;
 
@@ -1521,10 +1521,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
-	 * searchUserByUserKey(com.skplanet.storeplatform
-	 * .sac.client.member.vo.user.SearchUserReq)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByUserKey(com.skplanet.storeplatform .sac.client.member.vo.user.SearchUserReq)
 	 */
 	@Override
 	public Map<String, UserInfoByUserKey> searchUserByUserKey(SacRequestHeader sacHeader, SearchUserReq request) {
