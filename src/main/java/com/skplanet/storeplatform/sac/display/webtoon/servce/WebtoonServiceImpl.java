@@ -168,6 +168,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 			source = new Source();
 			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 			source.setUrl(webtoonDetail.getFilePath());
+			sourceList.add(source);
 			product.setSourceList(sourceList);
 
 			// 페이지 수
