@@ -48,6 +48,8 @@ public class BannerSacReq extends CommonInfo {
 
 	private String brandShopNo; // 브랜드샵 번호
 
+	private String themeId; // 테마추천ID
+
 	/**
 	 * @return the bnrMenuId
 	 */
@@ -241,5 +243,20 @@ public class BannerSacReq extends CommonInfo {
 	 */
 	public void setBrandShopNo(String brandShopNo) {
 		this.brandShopNo = brandShopNo;
+	}
+
+	/**
+	 * @return the themeId
+	 */
+	public String getThemeId() {
+		return this.themeId;
+	}
+
+	/**
+	 * @param themeId
+	 *            the themeId to set
+	 */
+	public void setThemeId(String themeId) {
+		this.themeId = themeId;
 	}
 }
