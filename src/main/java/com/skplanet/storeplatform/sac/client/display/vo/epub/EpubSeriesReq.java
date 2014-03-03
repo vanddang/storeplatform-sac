@@ -10,12 +10,16 @@
 package com.skplanet.storeplatform.sac.client.display.vo.epub;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 이북/코믹 시리즈 조회 Request Value Object.
  * <p/>
  * Updated on : 2014. 01. 07. Updated by : 임근대, SK 플래닛.
  */
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class EpubSeriesReq extends CommonInfo {
 
     private static final long serialVersionUID = 1030336138926751912L;
@@ -23,6 +27,7 @@ public class EpubSeriesReq extends CommonInfo {
     /**
      * 체널 ID
      */
+    @NotNull @NotBlank
     private String channelId;
     /**
      * 도서 구분 코드 (DP004301 : 단행본, DP004302 : 연재, DP004303 : 잡지

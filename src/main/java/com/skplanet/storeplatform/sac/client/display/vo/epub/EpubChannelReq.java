@@ -10,16 +10,20 @@
 package com.skplanet.storeplatform.sac.client.display.vo.epub;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 이북/코믹 채널 상세 조회 Request Value Object.
  * <p/>
  * Updated on : 2014. 01. 07. Updated by : 임근대, SK 플래닛.
  */
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class EpubChannelReq extends CommonInfo {
 
     private static final long serialVersionUID = 1L;
-
+    @NotNull @NotBlank
     private String channelId; // 체널 ID
     private String userKey;
     private String deviceKey;
