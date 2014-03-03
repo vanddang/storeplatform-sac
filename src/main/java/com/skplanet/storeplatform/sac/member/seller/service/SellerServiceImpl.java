@@ -838,7 +838,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setIsAccountReal(req.getIsAccountReal());
 		sellerUpgrade.setIsBizTaxable(req.getIsBizTaxable());
 		sellerUpgrade.setRepPhone(req.getRepPhone());
-		sellerUpgrade.setRepFax(req.getRepFax());
 		sellerUpgrade.setIsBizRegistered(req.getIsBizRegistered());
 		sellerUpgrade.setBizRegNumber(req.getBizRegNumber());
 		sellerUpgrade.setBizUnregReason(req.getBizUnregReason());
@@ -853,7 +852,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setTpinCode(req.getTpinCode());
 		sellerUpgrade.setVendorCode(req.getVendorCode());
 		sellerUpgrade.setRepPhoneArea(req.getRepPhoneArea());
-		sellerUpgrade.setRepFaxArea(req.getRepFaxArea());
 		sellerUpgrade.setBizGrade(req.getBizGrade());
 		sellerUpgrade.setIsDeductible(req.getIsDeductible());
 		sellerUpgrade.setMarketCode(req.getMarketCode());

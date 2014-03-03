@@ -156,7 +156,6 @@ public class ConversionClassTest {
 						req.setIsAccountReal("Y"); // ACCT_AUTH_YN 계좌인증여부
 						req.setIsBizTaxable("N"); // EASY_TXNPERS_YN 간이과세여부
 						req.setRepPhone("0262575958"); // REP_TEL_NO 대표전화번호
-						req.setRepFax("0262575958"); // FAX_NO 팩스번호
 						req.setIsBizRegistered("Y"); // CMNT_SALBIZ_DECL_YN 통신판매업 신고여부
 						req.setBizRegNumber("11223344"); // CMNT_SALBIZ_DECL_NO 통신판매업 신고번호
 						req.setBizUnregReason("554411"); // CMNT_SALBIZ_UNDECL_REASON_CD 통신판매업 미신고사유
@@ -171,7 +170,6 @@ public class ConversionClassTest {
 						req.setTpinCode("XXXX"); // FR_TIN_NO 외국 tpin 번호
 						req.setVendorCode("XXXX"); // VENDOR_CD 벤더코드
 						req.setRepPhoneArea("XXXX"); // REP_TEL_NATION_NO 대표전화 국가 번호
-						req.setRepFaxArea("XXXX"); // FAX_TEL_NATION_NO member 테이블네 넣을때는 FAX_NATION_NO 넣으면 될듯
 						req.setBizGrade("XXXX"); // DELIB_GRD_CD 심의등급코드 TB_US_SELLERMBR 에만 있음 테이블에 추가됨
 						req.setIsDeductible("Y"); // AUTO_DED_POSB_TARGET_YN 자동차감가능대상여부 TB_US_SELLERMBR 에만
 						req.setMarketCode("XXXX"); // LNCHG_MALL_CD 입점 상점코드 ##### 전환 쪽에서 사용
