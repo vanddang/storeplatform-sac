@@ -85,7 +85,7 @@ public interface FreepassService {
 	 * 
 	 * @param req
 	 *            req
-	 * @return PaymentInfoSacReq
+	 * @return List<String>
 	 */
 	public List<String> getAvailableFixrateProdIdList(PaymentInfoSacReq req);
 
@@ -94,7 +94,7 @@ public interface FreepassService {
 	 * 
 	 * @param req
 	 *            req
-	 * @return PaymentInfoSacReq
+	 * @return List<PaymentInfo>
 	 */
 	public List<PaymentInfo> getFreePassforPayment(PaymentInfoSacReq req);
 }

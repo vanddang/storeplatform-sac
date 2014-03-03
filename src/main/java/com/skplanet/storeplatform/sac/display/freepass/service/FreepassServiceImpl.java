@@ -673,7 +673,7 @@ public class FreepassServiceImpl implements FreepassService {
 	 * 
 	 * @param req
 	 *            req
-	 * @return PaymentInfo
+	 * @return List<String>
 	 */
 	@Override
 	public List<String> getAvailableFixrateProdIdList(PaymentInfoSacReq req) {
@@ -696,7 +696,7 @@ public class FreepassServiceImpl implements FreepassService {
 	 * 
 	 * @param req
 	 *            req
-	 * @return PaymentInfo
+	 * @return List<PaymentInfo>
 	 */
 	@Override
 	public List<PaymentInfo> getFreePassforPayment(PaymentInfoSacReq req) {
