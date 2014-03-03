@@ -29,8 +29,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.shopping.sci.ShoppingInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
@@ -90,12 +88,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 	@Autowired
 	HistoryInternalSCI historyInternalSCI;
-
-	@Autowired
-	private SellerSearchSCI sellerSearchSCI;
-
-	@Autowired
-	private ShoppingInternalSCI shoppingInternalSCI;
 
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
