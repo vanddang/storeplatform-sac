@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FreePassInfo">
+   <select id="searchFreePassDrmInfo" parameterType="FreePassInfoSacReq" resultType="FreePassInfo">
+   /* FreePassInfoMapper.xml, searchFreePassDrmInfo, 김형식, 2014-03-03 */
+    SELECT  
+        IV.*
+    FROM (
+        SELECT  
+              PD.PROD_ID
+            , PM.PART_PROD_ID AS episodeProdId
+            , PD.DRM_YN
+            , PD.USE_PERIOD_UNIT_CD
+            , PD.USE_PERIOD            
+            , CM.CMPX_PROD_CLSF_CD
+            , PD.TOP_MENU_ID      
+            , TP.PROD_STATUS_CD      
+        FROM 
+              TB_DP_PROD PD
+            , TB_DP_CMPX_PROD CM
+            , TB_DP_PROD_DESC DC
+            , TB_DP_TENANT_PROD TP
+            , TB_DP_TENANT_PROD_PRICE PR
+            ,(SELECT A.PROD_ID , B.PART_PROD_ID
+                FROM TB_DP_FIXRATE_PROD_MAPG A
+                     ,TB_DP_PROD_RSHP B
+               WHERE A.PART_PROD_ID = B.PROD_ID
+                 AND B.PROD_RSHP_CD ='DP010802'
+                 AND B.PART_PROD_ID=#{episodeProdId}
+             )PM             
+        WHERE PD.PROD_ID = #{prodId}
+        AND PD.PROD_ID = CM.PROD_ID
+        AND PD.PROD_ID = DC.PROD_ID
+        AND PD.PROD_ID = TP.PROD_ID
+        AND PD.PROD_ID = PR.PROD_ID
+        AND PD.PROD_ID = PM.PROD_ID
+        AND DC.LANG_CD = #{langCd} 
+        AND TP.TENANT_ID = #{tenantId}
+        AND TP.TENANT_ID = PR.TENANT_ID
+        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+    ) IV 
+    </select>    
+    
+</mapper>

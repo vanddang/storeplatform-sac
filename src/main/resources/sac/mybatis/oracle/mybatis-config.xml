@@ -291,6 +291,11 @@
         <!-- 결제 시 필요한 상품 메타 정보 조회(LocalSCI)-->
         <typeAlias alias="PaymentInfoSacReq"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq" />
         <typeAlias alias="PaymentInfo"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo" />
+ 
+        <!-- 정액제 상품 DRM 메타 정보 조회(LocalSCI)-->
+        <typeAlias alias="FreePassInfoSacReq"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq" />
+        <typeAlias alias="FreePassInfo"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo" />
+
         
         <!-- 특정 작가별 상품 조회 -->
         <typeAlias alias="AuthorProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.AuthorProductSacReq" />
