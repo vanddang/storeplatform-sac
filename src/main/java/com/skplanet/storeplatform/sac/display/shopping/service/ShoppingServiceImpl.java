@@ -30,8 +30,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRe
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.shopping.sci.ShoppingInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.display.shopping.vo.ShoppingSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
@@ -988,26 +986,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-		}
-
-		// 판매자정보 셋팅
-		ShoppingSacInReq shoppingReq = new ShoppingSacInReq();
-		ShoppingSacInRes shoppingRes = new ShoppingSacInRes();
-		try {
-			shoppingReq.setTenantId(req.getTenantId());
-			shoppingReq.setChannelId("CL00000683");
-			shoppingReq.setDeviceModelCd(req.getDeviceModelCd());
-			shoppingReq.setEpisodeId("S900000764");
-			shoppingReq.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			shoppingReq.setLangCd(req.getLangCd());
-
-			shoppingRes = this.shoppingInternalSCI.searchShoppingList(shoppingReq);
-			if (shoppingRes != null) {
-				this.log.info("sdfsdf");
-
-			}
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0001", "쇼핑 판매 건수 정보 조회 ", e);
 		}
 
 		// offset, Count default setting
