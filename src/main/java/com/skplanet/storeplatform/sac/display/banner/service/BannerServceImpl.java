@@ -42,11 +42,14 @@ public class BannerServceImpl implements BannerService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final int BANNER_MAX_COUNT = 20; // 요청 가능한 배너 최대 개수
-	private final int HOME_BANNER_COUNT = 12; // Home 배너 12개 (Mobile Web 정사각형 배너)
-	private final int GAME_BANNER_COUNT = 2; // 게임 배너 2개 (Mobile Web 정사각형 배너)
-	private final int FUN_BANNER_COUNT = 2; // Fun 배너 2개 (Mobile Web 정사각형 배너)
-	private final int LIFE_BANNER_COUNT = 2; // 생활/위치 배너 2개 (Mobile Web 정사각형 배너)
-	private final int EDU_BANNER_COUNT = 2; // 어학/교육 배너 2개 (Mobile Web 정사각형 배너)
+	private final int HOME_BANNER_COUNT = 12; // Home 배너 12개 (모바일웹 정사각형 배너)
+	private final int GAME_BANNER_COUNT = 2; // 게임 배너 2개 (모바일웹 정사각형 배너)
+	private final int FUN_BANNER_COUNT = 2; // Fun 배너 2개 (모바일웹 정사각형 배너)
+	private final int LIFE_BANNER_COUNT = 2; // 생활/위치 배너 2개 (모바일웹 정사각형 배너)
+	private final int EDU_BANNER_COUNT = 2; // 어학/교육 배너 2개 (모바일웹 정사각형 배너)
+
+	private final int APPGUIDE_BANNER_COUNT = 2; // 앱가이드 배너 2개 (앱가이드 배너)
+	private final int BESTAPP_BANNER_COUNT = 4; // BEST 앱 배너 2개 (앱가이드 배너)
 
 	@Autowired
 	@Qualifier("sac")
@@ -83,6 +86,7 @@ public class BannerServceImpl implements BannerService {
 		this.logger.debug("[searchBannerList] reqImgSizeCd : {}", reqImgSizeCd);
 		this.logger.debug("----------------------------------------------------------------");
 
+		int imgCount = 0;
 		String imgSizeList[] = null;
 
 		try {
@@ -93,14 +97,8 @@ public class BannerServceImpl implements BannerService {
 				// 실행에 필요한 파라미터가 유효하지 않습니다.
 				throw new StorePlatformException("SAC_DSP_0003", "imgSizeCd", reqImgSizeCd);
 			} else {
-				int imgCount = 0;
-
 				for (int v = 0; v < imgSizeList.length; v++) {
 					imgCount += Integer.parseInt(imgSizeList[v].split("\\/")[1]);
-				}
-				if (imgCount > this.BANNER_MAX_COUNT) {
-					// imgSizeCd 파라미터의 최대 허용 개수는 XX 개 입니다.
-					throw new StorePlatformException("SAC_DSP_0004", "imgSizeCd", this.BANNER_MAX_COUNT);
 				}
 			}
 		} catch (Exception e) {
@@ -108,11 +106,21 @@ public class BannerServceImpl implements BannerService {
 			throw new StorePlatformException("SAC_DSP_0003", "imgSizeCd", reqImgSizeCd);
 		}
 
+		if (imgCount > this.BANNER_MAX_COUNT) {
+			// imgSizeCd 파라미터의 최대 허용 개수는 XX 개 입니다.
+			throw new StorePlatformException("SAC_DSP_0004", "imgSizeCd", this.BANNER_MAX_COUNT);
+		}
+
 		// 헤더정보 세팅
 		bannerReq.setTenantId(header.getTenantHeader().getTenantId());
 		bannerReq.setLangCd(header.getTenantHeader().getLangCd());
 		bannerReq.setDeviceModelCd(header.getDeviceHeader().getModel());
 		bannerReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+
+		// ※모바일웹 직사각형, 모바일웹 상/하단, T플레이, 유료앱이무료 배너는 프로비저닝을 제외한다.
+		// ※모바일웹 정사각형 배너는 Home 12개, 게임 2개, Fun 2개, 생활/위치 2개, 어학/교육 2개 총 20를 요청한다.
+		// ※앱가이드 배너는 앱가이드 배너2개, 베스트앱 4개 총 6개를 요청한다.
+		// ※앱가이드 배너는 배너유형이 상품모바일 배너일 경우 상품ID가 채널단위로 들어간다.
 
 		String reqImgCd = null; // 요청 이미지
 		Integer reqImgCnt = null; // 요청 이미지 개수
@@ -124,25 +132,28 @@ public class BannerServceImpl implements BannerService {
 		String stdDt = null; // 배치완료 기준일시
 		String recommendId = null; // 추천ID
 		String brandShopNo = null; // 브랜드샵 번호
+		String themeId = null; // 테마추천ID
 
 		int provCnt = 0; // 프로비저닝 건수
 		int passCnt = 0; // 결과리스트에 담긴 배너 개수
 
-		boolean homeBannerFullFlag = false; // 모바일웹 Home 배너 최대 개수 여부 변수
-		boolean gameBannerFullFlag = false; // 모바일웹 게임 배너 최대 개수 여부 변수
-		boolean funBannerFullFlag = false; // 모바일웹 Fun 배너 최대 개수 여부 변수
-		boolean lifeBannerFullFlag = false; // 모바일웹 생활/위치 배너 최대 개수 여부 변수
-		boolean eduBannerFullFlag = false; // 모바일웹 어학/교육 배너 최대 개수 여부 변수
+		boolean homeBannerFullFlag = false; // 모바일웹 Home 배너 최대 개수 여부
+		boolean gameBannerFullFlag = false; // 모바일웹 게임 배너 최대 개수 여부
+		boolean funBannerFullFlag = false; // 모바일웹 Fun 배너 최대 개수 여부
+		boolean lifeBannerFullFlag = false; // 모바일웹 생활/위치 배너 최대 개수 여부
+		boolean eduBannerFullFlag = false; // 모바일웹 어학/교육 배너 최대 개수 여부
 
+		boolean appGuideBannerFlag = false; // 앱가이드 배너 최대 개수 여부
+		boolean bestAppBannerFlag = false; // BEST 앱 배너 최대 개수 여부
+
+		MetaInfo metaInfo = null; // 메타정보 VO
 		BannerDefault bannerDefault = null; // 배너VO
 		List<BannerDefault> bannerList = null; // 배너리스트
 		List<BannerDefault> recommendProdList = null; // 운영자추천 상품 리스트
 		List<BannerDefault> brandShopProdList = null; // 브랜드샵 상품 리스트
+		List<BannerDefault> themeProdList = null; // 앱가이드 테마추천 상품 리스트
+		List<BannerDefault> prodList = null; // 앱가이드 상품 리스트
 		List<BannerDefault> resultList = new ArrayList<BannerDefault>(); // 결과 리스트
-
-		ProductBasicInfo productInfo = null; // 메타정보 조회용 상품 파라미터
-		Map<String, Object> paramMap = null; // 메타정보 조회용 파라미터
-		MetaInfo metaInfo = null; // 메타정보 VO
 
 		for (int i = 0; i < imgSizeList.length; i++) {
 			passCnt = 0;
@@ -153,14 +164,14 @@ public class BannerServceImpl implements BannerService {
 			bannerReq.setImgSizeCd(reqImgCd);
 			bannerList = this.commonDAO.queryForList("Banner.searchBannerList", bannerReq, BannerDefault.class);
 
-			for (int k = 0; k < bannerList.size(); k++) {
-				bannerDefault = bannerList.get(k);
+			for (int j = 0; j < bannerList.size(); j++) {
+				bannerDefault = bannerList.get(j);
 				bnrMenuId = bannerDefault.getBnrMenuId();
 				bnrType = bannerDefault.getBnrInfoTypeCd();
 
-				// Mobile Web 정사각형 배너
+				// 모바일웹 정사각형 배너
 				if ("DP010999".equals(reqBnrMenuId)) {
-					if ("DP010915".equals(bnrMenuId)) {
+					if ("DP010915".equals(bnrMenuId)) { // Home 12개
 						if (homeBannerFullFlag) {
 							continue;
 						}
@@ -169,7 +180,7 @@ public class BannerServceImpl implements BannerService {
 							homeBannerFullFlag = true;
 							continue;
 						}
-					} else if ("DP010916".equals(bnrMenuId)) {
+					} else if ("DP010916".equals(bnrMenuId)) { // 게임 2개
 						if (gameBannerFullFlag) {
 							continue;
 						}
@@ -178,7 +189,7 @@ public class BannerServceImpl implements BannerService {
 							gameBannerFullFlag = true;
 							continue;
 						}
-					} else if ("DP010917".equals(bnrMenuId)) {
+					} else if ("DP010917".equals(bnrMenuId)) { // Fun 2개
 						if (funBannerFullFlag) {
 							continue;
 						}
@@ -187,7 +198,7 @@ public class BannerServceImpl implements BannerService {
 							funBannerFullFlag = true;
 							continue;
 						}
-					} else if ("DP010918".equals(bnrMenuId)) {
+					} else if ("DP010918".equals(bnrMenuId)) { // 생활/위치 2개
 						if (lifeBannerFullFlag) {
 							continue;
 						}
@@ -196,13 +207,35 @@ public class BannerServceImpl implements BannerService {
 							lifeBannerFullFlag = true;
 							continue;
 						}
-					} else if ("DP010919".equals(bnrMenuId)) {
+					} else if ("DP010919".equals(bnrMenuId)) { // 어학/교육 2개
 						if (eduBannerFullFlag) {
 							continue;
 						}
 						if (passCnt == this.EDU_BANNER_COUNT) {
 							passCnt = 0;
 							eduBannerFullFlag = true;
+							continue;
+						}
+					}
+				}
+				// 앱가이드
+				else if ("DP010912".equals(reqBnrMenuId)) {
+					if ("DP010912".equals(bnrMenuId)) { // 앱가이드 2개
+						if (appGuideBannerFlag) {
+							continue;
+						}
+						if (passCnt == this.APPGUIDE_BANNER_COUNT) {
+							passCnt = 0;
+							appGuideBannerFlag = true;
+							continue;
+						}
+					} else if ("DP010910".equals(bnrMenuId)) { // BEST 앱 4개
+						if (bestAppBannerFlag) {
+							continue;
+						}
+						if (passCnt == this.BESTAPP_BANNER_COUNT) {
+							passCnt = 0;
+							bestAppBannerFlag = true;
 							continue;
 						}
 					}
@@ -218,69 +251,68 @@ public class BannerServceImpl implements BannerService {
 					prodId = bannerDefault.getBnrInfo();
 					topMenuId = bannerDefault.getTopMenuId();
 
-					// 테스트 데이터 정합성이 맞지 않아 패스
-					if (StringUtils.isEmpty(topMenuId)) {
-						continue;
-					}
+					// 앱가이드
+					if ("DP010912".equals(bnrMenuId)) {
+						bannerReq.setProdId(prodId);
 
-					bannerReq.setProdId(prodId);
-					bannerReq.setTopMenuId(topMenuId);
+						// 상품 리스트 조회 (앱가이드의 경우 배너정보에 채널 상품ID가 입력)
+						prodList = this.commonDAO.queryForList("Banner.searchAppGuideProdList", bannerReq,
+								BannerDefault.class);
 
-					// 상품 프로비저닝
-					provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing", bannerReq);
+						if (prodList != null && !prodList.isEmpty()) {
+							for (int k = 0; k < prodList.size(); k++) {
+								bannerReq.setProdId(prodList.get(k).getPartProdId());
+								bannerReq.setTopMenuId(prodList.get(k).getTopMenuId());
 
-					if (provCnt > 0) {
-						productInfo = new ProductBasicInfo();
-						paramMap = new HashMap<String, Object>();
+								// 상품 프로비저닝
+								provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing",
+										bannerReq);
 
-						// 메타정보 조회를 위한 파라미터 세팅
-						productInfo.setProdId(prodId);
-						productInfo.setPartProdId(prodId);
-						productInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-						paramMap.put("tenantHeader", header.getTenantHeader());
-						paramMap.put("deviceHeader", header.getDeviceHeader());
-						paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-						paramMap.put("productBasicInfo", productInfo);
+								if (provCnt > 0) {
+									// 메타정보 조회
+									metaInfo = this.getMetaInfo(header, bannerReq);
 
-						// APP
-						if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
-							paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-							metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+									if (metaInfo != null) {
+										bannerDefault.setTopMenuId(metaInfo.getTopMenuId());
+										bannerDefault.setTopMenuNm(metaInfo.getTopMenuNm());
+										bannerDefault.setMenuId(metaInfo.getMenuId());
+										bannerDefault.setMenuNm(metaInfo.getMenuNm());
+										bannerDefault.setMetaClsfCd(metaInfo.getMetaClsfCd());
+										bannerDefault.setSampleUrl(metaInfo.getScSamplUrl());
+										bannerDefault.setSampleUrlHq(metaInfo.getSamplUrl());
+										bannerDefault.setProdCaseCd(metaInfo.getProdCaseCd());
+
+										++passCnt;
+										resultList.add(bannerDefault);
+										break;
+									}
+								}
+							}
 						}
-						// 이북 및 코믹
-						else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
-							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-							metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
-						}
-						// 영화 및 방송
-						else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-							paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-							metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
-						}
-						// Tstore 쇼핑
-						else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) {
-							paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-							metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
-						}
+					} else {
+						bannerReq.setProdId(prodId);
+						bannerReq.setTopMenuId(topMenuId);
 
-						if (metaInfo != null) {
-							bannerDefault.setTopMenuId(metaInfo.getTopMenuId());
-							bannerDefault.setTopMenuNm(metaInfo.getTopMenuNm());
-							bannerDefault.setMenuId(metaInfo.getMenuId());
-							bannerDefault.setMenuNm(metaInfo.getMenuNm());
-							bannerDefault.setMetaClsfCd(metaInfo.getMetaClsfCd());
-							bannerDefault.setSampleUrl(metaInfo.getScSamplUrl());
-							bannerDefault.setSampleUrlHq(metaInfo.getSamplUrl());
-							bannerDefault.setProdCaseCd(metaInfo.getProdCaseCd());
+						// 상품 프로비저닝
+						provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing", bannerReq);
 
-							++passCnt;
-							resultList.add(bannerDefault);
+						if (provCnt > 0) {
+							// 메타정보 조회
+							metaInfo = this.getMetaInfo(header, bannerReq);
+
+							if (metaInfo != null) {
+								bannerDefault.setTopMenuId(metaInfo.getTopMenuId());
+								bannerDefault.setTopMenuNm(metaInfo.getTopMenuNm());
+								bannerDefault.setMenuId(metaInfo.getMenuId());
+								bannerDefault.setMenuNm(metaInfo.getMenuNm());
+								bannerDefault.setMetaClsfCd(metaInfo.getMetaClsfCd());
+								bannerDefault.setSampleUrl(metaInfo.getScSamplUrl());
+								bannerDefault.setSampleUrlHq(metaInfo.getSamplUrl());
+								bannerDefault.setProdCaseCd(metaInfo.getProdCaseCd());
+
+								++passCnt;
+								resultList.add(bannerDefault);
+							}
 						}
 					}
 				}
@@ -301,18 +333,13 @@ public class BannerServceImpl implements BannerService {
 								BannerDefault.class);
 
 						if (recommendProdList != null && !recommendProdList.isEmpty()) {
-							BannerSacReq tempReq = new BannerSacReq();
-							tempReq.setTenantId(header.getTenantHeader().getTenantId());
-							tempReq.setDeviceModelCd(header.getDeviceHeader().getModel());
-							tempReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-
-							for (int m = 0; m < recommendProdList.size(); m++) {
-								tempReq.setProdId(recommendProdList.get(m).getPartProdId());
-								tempReq.setTopMenuId(recommendProdList.get(m).getTopMenuId());
+							for (int k = 0; k < recommendProdList.size(); k++) {
+								bannerReq.setProdId(recommendProdList.get(k).getPartProdId());
+								bannerReq.setTopMenuId(recommendProdList.get(k).getTopMenuId());
 
 								// 상품 프로비저닝
 								provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing",
-										tempReq);
+										bannerReq);
 
 								if (provCnt > 0) {
 									++passCnt;
@@ -328,27 +355,56 @@ public class BannerServceImpl implements BannerService {
 					brandShopNo = bannerDefault.getBnrInfo();
 					bannerReq.setBrandShopNo(brandShopNo);
 
+					// 브랜드샵 상품 리스트 조회
 					brandShopProdList = this.commonDAO.queryForList("Banner.searchBrandShopProdList", bannerReq,
 							BannerDefault.class);
 
 					if (brandShopProdList != null && !brandShopProdList.isEmpty()) {
-						BannerSacReq tempReq = new BannerSacReq();
-						tempReq.setTenantId(header.getTenantHeader().getTenantId());
-						tempReq.setDeviceModelCd(header.getDeviceHeader().getModel());
-						tempReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-
-						for (int n = 0; n < brandShopProdList.size(); n++) {
-							// 헤더정보 세팅
-							tempReq.setProdId(brandShopProdList.get(n).getPartProdId());
-							tempReq.setTopMenuId(brandShopProdList.get(n).getTopMenuId());
+						for (int k = 0; k < brandShopProdList.size(); k++) {
+							bannerReq.setProdId(brandShopProdList.get(k).getPartProdId());
+							bannerReq.setTopMenuId(brandShopProdList.get(k).getTopMenuId());
 
 							// 상품 프로비저닝
-							provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing", tempReq);
+							provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing", bannerReq);
 
 							if (provCnt > 0) {
 								++passCnt;
 								resultList.add(bannerDefault);
 								break;
+							}
+						}
+					}
+				}
+				// 배너타입 : 테마추천 리스트 연결 (앱가이드)
+				else if (DisplayConstants.DP_BANNER_THEME_RECOMM_CD.equals(bnrType)) {
+					themeId = bannerDefault.getBnrInfo();
+
+					// 배치완료 기준일시 조회
+					stdDt = this.displayCommonService.getBatchStandardDateString(bannerReq.getTenantId(), themeId);
+
+					// 기준일시 체크
+					if (StringUtils.isNotEmpty(stdDt)) {
+						bannerReq.setStdDt(stdDt);
+						bannerReq.setThemeId(themeId);
+
+						// 테마추천 상품 리스트 조회
+						themeProdList = this.commonDAO.queryForList("Banner.searchThemeRecommProdList", bannerReq,
+								BannerDefault.class);
+
+						if (themeProdList != null && !themeProdList.isEmpty()) {
+							for (int k = 0; k < themeProdList.size(); k++) {
+								bannerReq.setProdId(themeProdList.get(k).getPartProdId());
+								bannerReq.setTopMenuId(themeProdList.get(k).getTopMenuId());
+
+								// 상품 프로비저닝
+								provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing",
+										bannerReq);
+
+								if (provCnt > 0) {
+									++passCnt;
+									resultList.add(bannerDefault);
+									break;
+								}
 							}
 						}
 					}
@@ -362,6 +418,64 @@ public class BannerServceImpl implements BannerService {
 		// Response 생성
 		bannerRes = this.generateResponse(resultList);
 		return bannerRes;
+	}
+
+	/**
+	 * <pre>
+	 * 상품 메타정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param bannerReq
+	 *            bannerReq
+	 * @return MetaInfo
+	 */
+	private MetaInfo getMetaInfo(SacRequestHeader header, BannerSacReq bannerReq) {
+		String prodId = bannerReq.getProdId();
+		String topMenuId = bannerReq.getTopMenuId();
+
+		MetaInfo metaInfo = null; // 메타정보 VO
+		ProductBasicInfo productInfo = new ProductBasicInfo(); // 메타정보 조회용 상품 파라미터
+		Map<String, Object> paramMap = new HashMap<String, Object>(); // 메타정보 조회용 파라미터
+
+		// 메타정보 조회를 위한 파라미터 세팅
+		productInfo.setProdId(prodId);
+		productInfo.setPartProdId(prodId);
+		productInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		paramMap.put("tenantHeader", header.getTenantHeader());
+		paramMap.put("deviceHeader", header.getDeviceHeader());
+		paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		paramMap.put("productBasicInfo", productInfo);
+
+		// APP
+		if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
+			paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+			metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+		}
+		// 이북 및 코믹
+		else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
+			paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+			metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
+		}
+		// 영화 및 방송
+		else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+			paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+			metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+		}
+		// Tstore 쇼핑
+		else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) {
+			paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+			metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
+		}
+
+		return metaInfo;
 	}
 
 	/**
@@ -524,6 +638,15 @@ public class BannerServceImpl implements BannerService {
 					// 추천ID 정보
 					identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
 							DisplayConstants.DP_BANNER_TYPE_THEME_RECOMM, bnrInfo));
+				}
+				// 배너타입 : 테마추천 리스트 연결
+				else if (DisplayConstants.DP_BANNER_THEME_RECOMM_CD.equals(bnrType)) {
+					// 배너유형 정보
+					banner.setType(DisplayConstants.DP_BANNER_TYPE_APP_GUIDE);
+
+					// 테마추천ID 정보
+					identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
+							DisplayConstants.DP_BANNER_TYPE_APP_GUIDE, bnrInfo));
 				}
 
 				banner.setIdentifierList(identifierList);

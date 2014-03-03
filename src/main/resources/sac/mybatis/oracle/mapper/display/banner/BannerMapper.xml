@@ -32,10 +32,20 @@
 		                      , 'DP010310' /* 내부URL 배너 */
 		                      ,  BNR_NM)
 		             WHEN BNR_MENU_ID = 'DP010926' THEN
-		                  /* 모바일웹 직사각형 배너 */
+		                  /* 모바일웹 직사각형 */
 		                  DECODE(BNR_INFO_TYPE_CD
 		                      , 'DP010303' /* 상품 배너 */
 		                      , (SELECT PROD_NM FROM TB_DP_PROD_DESC WHERE LANG_CD = 'ko' AND PROD_ID = JA.BNR_INFO)
+		                      ,  BNR_NM)
+		             WHEN BNR_MENU_ID = 'DP010912' THEN
+		                  /* 앱가이드 */
+		                  DECODE(BNR_INFO_TYPE_CD
+		                      , 'DP010301' /* 외부URL 배너 */
+		                      , (SELECT LIST_NM FROM TB_DP_LIST WHERE TENANT_ID = 'S01' AND LIST_ID = JA.BNR_INFO)
+		                      , 'DP010303' /* 상품 배너 */
+		                      , (SELECT PROD_NM FROM TB_DP_PROD_DESC WHERE LANG_CD = 'ko' AND PROD_ID = JA.BNR_INFO)
+		                      , 'DP010312' /* 테마추천 배너 */
+		                      , (SELECT LIST_NM FROM TB_DP_LIST WHERE TENANT_ID = 'S01' AND LIST_ID = JA.BNR_INFO)
 		                      ,  BNR_NM)
 		             ELSE BNR_NM END AS BNR_NM
 		  FROM (SELECT  IA.TOTAL_COUNT
@@ -49,6 +59,10 @@
 		              , IA.EXPO_STATUS_CD
 		              , IA.IMG_PATH
 		              , IA.REG_DT
+                    <if test='bnrMenuId == "DP010912"'><!-- 앱가이드 -->
+                      , IA.APPGUIDE_ORDER
+                      , IA.APPGUIDE_ORDER_SUB
+                    </if>
 		          FROM (SELECT  COUNT(A.BNR_SEQ) OVER() AS TOTAL_COUNT
 		                      , A.BNR_MENU_ID
 		                      , A.BNR_SEQ
@@ -60,6 +74,10 @@
 		                      , B.EXPO_STATUS_CD
 		                      , C.IMG_SIZE_CD
 		                      , C.IMG_PATH
+                        <if test='bnrMenuId == "DP010912"'><!-- 앱가이드 -->
+                              , DECODE(A.BNR_INFO_TYPE_CD , 'DP010312' , 1, 'DP010301', 2, 3) AS APPGUIDE_ORDER
+                              , DECODE(A.BNR_INFO_TYPE_CD , 'DP010303' , (SELECT REG_DT FROM TB_DP_PROD WHERE PROD_ID = A.BNR_INFO)) AS APPGUIDE_ORDER_SUB
+                        </if>
 		                  FROM  TB_DP_BNR      A
 		                      , TB_DP_BNR_EXPO B
 		                      , TB_DP_BNR_IMG  C
@@ -93,12 +111,15 @@
 		                   AND  B.EXPO_STATUS_CD IN ('DP010201', 'DP010202')
 		                   AND  C.IMG_SIZE_CD = #{imgSizeCd}
                     <choose>
-                        <when test='bnrMenuId != "DP010999"'><!-- 모바일웹 정사각형 배너가 아닌경우 -->
-                           AND  A.BNR_MENU_ID = #{bnrMenuId}
-                        </when>
-                        <otherwise>
+                        <when test='bnrMenuId == "DP010999"'><!-- 모바일웹 정사각형-->
                            AND  C.MOBILE_WEB_EXPO_YN = 'Y'
                            AND  A.BNR_MENU_ID IN ('DP010915', 'DP010916', 'DP010917', 'DP010918', 'DP010919')<!-- HOME, 게임, Fun, 생활/위치, 어학/교육 -->
+                        </when>
+                        <when test='bnrMenuId == "DP010912"'><!-- 앱가이드 배너 -->
+                           AND  A.BNR_MENU_ID IN ('DP010912', 'DP010910')<!-- 앱가이드, BEST 앱 -->
+                        </when>
+                        <otherwise>
+                           AND  A.BNR_MENU_ID = #{bnrMenuId}
                         </otherwise>
                     </choose>
                     <if test='bnrExpoMenuId != null and bnrExpoMenuId != ""'>
@@ -119,7 +140,12 @@
                         </otherwise>
                     </choose>
 		               ) IA
+            <if test='bnrMenuId != "DP010912"'><!-- 앱가이드가 아닌 경우 -->
 		        ORDER BY IA.BNR_MENU_ID, IA.EXPO_ORD, IA.EXPO_STATUS_CD
+            </if>
+            <if test='bnrMenuId == "DP010912"'><!-- 앱가이드 -->
+		        ORDER BY IA.BNR_MENU_ID DESC, IA.APPGUIDE_ORDER, IA.APPGUIDE_ORDER_SUB DESC, IA.EXPO_ORD
+            </if>
 		       ) JA
     </select>
     
@@ -142,12 +168,12 @@
 		                    AND  SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
 		                )                   A /* 운영자 임의 추천 */
 		                , TB_DP_PROD_RSHP   B /* 채널-에피소드 매핑 */
-		                , TB_DP_PROD        C /* 에피소드 상품 */
-		                , TB_DP_TENANT_PROD D /* 에피소드 상품 */
+		                , TB_DP_PROD        C /* 채널 상품 */
+		                , TB_DP_TENANT_PROD D /* 채널 상품 */
 		         WHERE  A.PROD_ID = B.PROD_ID
-		           AND  B.PART_PROD_ID = C.PROD_ID
+		           AND  A.PROD_ID = C.PROD_ID
 		           AND  A.TENANT_ID = D.TENANT_ID
-		           AND  B.PART_PROD_ID = D.PROD_ID
+		           AND  A.PROD_ID = D.PROD_ID
 		           AND  B.PROD_RSHP_CD = 'DP010802'
 		           AND  D.EXPO_YN = 'Y'
 		           AND  D.PROD_STATUS_CD = 'PD000403'
@@ -168,14 +194,14 @@
 		                , TB_DP_SHPG_CATALOG      B /* 쇼핑 카탈로그 */
 		                , TB_DP_PROD_CATALOG_MAPG C /* 카탈로그-상품 매핑 */
 		                , TB_DP_PROD_RSHP         D /* 채널-에피소드 매핑 */
-		                , TB_DP_PROD              E /* 에피소드 상품 */
-		                , TB_DP_TENANT_PROD       F /* 에피소드 상품 */
+		                , TB_DP_PROD              E /* 채널 상품 */
+		                , TB_DP_TENANT_PROD       F /* 채널 상품 */
 		         WHERE  A.PROD_ID = B.CATALOG_ID
 		           AND  B.CATALOG_ID = C.CATALOG_ID
 		           AND  C.PROD_ID = D.PROD_ID
-		           AND  D.PART_PROD_ID = E.PROD_ID
+		           AND  C.PROD_ID = E.PROD_ID
 		           AND  A.TENANT_ID = F.TENANT_ID
-		           AND  D.PART_PROD_ID = F.PROD_ID
+		           AND  C.PROD_ID = F.PROD_ID
 		           AND  NVL(B.CHNL_CNT, 0) > 0
 		           AND  C.BASE_YN = 'Y'
 		           AND  C.USE_YN = 'Y'
@@ -196,27 +222,69 @@
 		      , TB_DP_BRAND_SHOP_DVC    B
 		      , TB_DP_BRAND_SHOP_SELLER C
 		      , TB_DP_PROD              D
-		      , TB_DP_TENANT_PROD       E       
-		      , TB_DP_SPRT_DEVICE       F
-		      , TB_CM_DEVICE            G
 		 WHERE  A.TENANT_ID = B.TENANT_ID
 		   AND  A.BRAND_SHOP_NO = B.BRAND_SHOP_NO
 		   AND  A.TENANT_ID = C.TENANT_ID
 		   AND  A.BRAND_SHOP_NO = C.BRAND_SHOP_NO
 		   AND  C.MBR_NO = D.SELLER_MBR_NO
-		   AND  D.PROD_ID = E.PROD_ID
-		   AND  A.TENANT_ID = E.TENANT_ID
-		   AND  D.PROD_ID = F.PROD_ID
-		   AND  B.DVC_TYPE_CD = F.DEVICE_MODEL_CD
-		   AND  F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
+		   AND  B.DVC_TYPE_CD = #{deviceModelCd}
 		   AND  A.EXPO_YN = 'Y'
 		   AND  A.DEL_YN = 'N'
 		   AND  A.TENANT_ID = #{tenantId}
 		   AND  A.BRAND_SHOP_NO = #{brandShopNo}
-		   AND  E.PROD_STATUS_CD = 'PD000403'
-		   AND  E.EXPO_YN = 'Y'
-		   AND  F.DEVICE_MODEL_CD = #{deviceModelCd}
-		   AND  G.USE_YN = 'Y'
+    </select>
+    
+    <!-- 테마추천 상품 리스트 조회 (앱가이드) -->
+    <select id="searchThemeRecommProdList" parameterType="BannerSacReq" resultType="BannerDefault">
+		SELECT  /* BannerMapper.xml, searchThemeRecommProdList, tae hee Lee, 2014-03-03 */
+		      , A.LIST_NM
+		      , B.PART_PROD_ID
+		      , E.TOP_MENU_ID
+		  FROM  (SELECT  A.TENANT_ID
+		               , A.LIST_NM
+		               , B.PROD_ID
+		           FROM  TB_DP_LIST          A
+		               , TB_DP_LIST_PROD     B
+		          WHERE  A.TENANT_ID = B.TENANT_ID
+		            AND  A.LIST_ID = B.LIST_ID
+		            AND  A.TENANT_ID = #{tenantId}
+		            AND  A.EXPO_YN = 'Y'
+		            AND  A.LIST_ID = #{themeId}
+		            AND  B.EXPO_YN = 'Y'
+		            AND  TO_CHAR(B.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+		            AND  SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+		        )                   A /* 앱가이드 테마 */
+		        , TB_DP_PROD_RSHP   B /* 채널-에피소드 매핑 */
+		        , TB_DP_PROD        C /* 채널 상품 */
+		        , TB_DP_TENANT_PROD D /* 채널 상품 */
+		        , TB_DP_PROD        E /* 에피소드 상품 */
+		 WHERE  A.PROD_ID = B.PROD_ID
+		   AND  A.PROD_ID = C.PROD_ID
+		   AND  A.TENANT_ID = D.TENANT_ID
+		   AND  A.PROD_ID = D.PROD_ID
+		   AND  B.PART_PROD_ID = E.PROD_ID
+		   AND  B.PROD_RSHP_CD = 'DP010802'
+		   AND  D.EXPO_YN = 'Y'
+		   AND  D.PROD_STATUS_CD = 'PD000403'
+    </select>
+    
+    <!-- 테마추천 상품 리스트 조회 (앱가이드) -->
+    <select id="searchAppGuideProdList" parameterType="BannerSacReq" resultType="BannerDefault">
+		SELECT  /* BannerMapper.xml, searchAppGuideProdList, tae hee Lee, 2014-03-03 */
+		        A.PART_PROD_ID
+		      , D.TOP_MENU_ID
+		  FROM  TB_DP_PROD_RSHP   A /* 채널-에피소드 매핑 */
+		      , TB_DP_PROD        B /* 채널 상품 */
+		      , TB_DP_TENANT_PROD C /* 채널 상품 */
+		      , TB_DP_PROD        D /* 에피소드 상품 */
+		 WHERE  A.PROD_ID = B.PROD_ID
+		   AND  A.PROD_ID = C.PROD_ID
+		   AND  A.PART_PROD_ID = D.PROD_ID
+		   AND  A.PROD_ID = #{prodId}
+		   AND  A.PROD_RSHP_CD = 'DP010802'
+		   AND  C.TENANT_ID = #{tenantId}
+		   AND  C.EXPO_YN = 'Y'
+		   AND  C.PROD_STATUS_CD = 'PD000403'
     </select>
     
     <!-- 상품 프로비저닝 (에피소드 상품) -->
