@@ -43,7 +43,7 @@ public class EpubControllerTest {
 	@Test
 	public void searchEpubChannel_ebook() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("channelId", "H000044572");
+		param.put("channelId", "H900061300");
 		param.put("deviceKey", "DE201402201711283140002222");
 		param.put("userKey", "US201402201711282940003170");
 		String json = this.convertMapToJson(param);
@@ -52,7 +52,8 @@ public class EpubControllerTest {
 				post("/display/epub/channel/detail/v1")
 						.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 						// TODO: Header 추가
-						.header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37\"")
+                        .header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+                        .header("x-sac-device-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(json))
 				.andDo(print())
@@ -60,52 +61,72 @@ public class EpubControllerTest {
 				.andExpect(content().contentType("application/json;charset=UTF-8"));
 	}
 
-        @Test
-        public void searchEpubSeries_ebook() throws Exception {
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("channelId", "H900013694");
-            param.put("bookTypeCd", "DP004301");
-            param.put("deviceKey", "DE201402201711283140002222");
-            param.put("userKey", "US201402201711282940003170");
-            param.put("orderedBy", "recent");
-            param.put("offset", "1");
-            param.put("count", "10");
-            String json = this.convertMapToJson(param);
+    @Test
+    public void searchEpubSeries_ebook() throws Exception {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("channelId", "H900013694");
+        param.put("bookTypeCd", "DP004301");
+        param.put("deviceKey", "DE201402201711283140002222");
+        param.put("userKey", "US201402201711282940003170");
+        param.put("orderedBy", "recent");
+        param.put("offset", "1");
+        param.put("count", "10");
+        String json = this.convertMapToJson(param);
 
-            this.mvc.perform(
-                    post("/display/epub/series/list/v1")
-                            .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                            // TODO: Header 추가
-                            .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37\"")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(json))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType("application/json;charset=UTF-8"));
-        }
+        this.mvc.perform(
+                post("/display/epub/series/list/v1")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+                        .header("x-sac-device-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"));
+    }
 
-        @Test
-        public void searchEpubSeries() throws Exception {
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("channelId", "H000044572");
-            param.put("deviceKey", "DE201402201711283140002222");
-            param.put("userKey", "US201402201711282940003170");
-            param.put("orderedBy", "recent");
-            param.put("offset", "1");
-            param.put("count", "10");
-            String json = this.convertMapToJson(param);
+    @Test
+    public void searchEpubChannel_comic() throws Exception {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("channelId", "H900058721");
+        param.put("deviceKey", "DE201402201711283140002222");
+        param.put("userKey", "US201402201711282940003170");
+        String json = this.convertMapToJson(param);
 
-            this.mvc.perform(
-                    post("/display/epub/series/list/v1")
-                            .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                            // TODO: Header 추가
-                            .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37\"")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(json))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType("application/json;charset=UTF-8"));
-        }
+        this.mvc.perform(
+                post("/display/epub/channel/detail/v1")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+                        .header("x-sac-device-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"));
+    }
+
+    @Test
+    public void searchEpubSeries() throws Exception {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("channelId", "H000044572");
+        param.put("deviceKey", "DE201402201711283140002222");
+        param.put("userKey", "US201402201711282940003170");
+        param.put("orderedBy", "recent");
+        param.put("offset", "1");
+        param.put("count", "10");
+        String json = this.convertMapToJson(param);
+
+        this.mvc.perform(
+                post("/display/epub/series/list/v1")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        // TODO: Header 추가
+                        .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37\"")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"));
+    }
 
 	private String convertMapToJson(Map<String, Object> param)
 			throws IOException {

@@ -1,23 +1,22 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 전시 공통 서비스
@@ -93,5 +92,23 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
         List<ExistenceScRes> resList = existenceSCI.searchExistenceList(existenceScReq);
         return resList != null && resList.size() > 0;
+    }
+
+    @Override
+    public List<ExistenceScRes> checkPurchaseList(String tenantId, String userKey, String deviceKey, List<String> episodeIdList) {
+        ExistenceScReq existenceScReq = new ExistenceScReq();
+        existenceScReq.setTenantId(tenantId);
+        existenceScReq.setUserKey(userKey);
+        existenceScReq.setDeviceKey(deviceKey);
+
+        List<ExistenceItemSc> itemScList = new ArrayList<ExistenceItemSc>();
+        for(String episodeId : episodeIdList) {
+            ExistenceItemSc itemSc = new ExistenceItemSc();
+            itemSc.setProdId(episodeId);
+            itemScList.add(itemSc);
+        }
+        existenceScReq.setProductList(itemScList);
+
+        return existenceSCI.searchExistenceList(existenceScReq);
     }
 }

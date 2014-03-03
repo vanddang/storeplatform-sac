@@ -38,21 +38,6 @@
 		        , P.BOOK_CNT
 		        , P.BOOK_FREE_CNT
 		        , P.SERIAL_FREE_CNT
-		         /*
-		         , ( CASE WHEN ( ( P.BOOK_CNT > 0 AND P.SERIAL_CNT = 0 ) AND P.BOOK_FREE_CNT > 0 ) THEN
-		                       '전체 '||P.BOOK_CNT||'권 중 무료 '||P.BOOK_FREE_CNT||'권'
-		                  WHEN ( ( P.SERIAL_CNT > 0 AND P.BOOK_CNT = 0 ) AND P.SERIAL_FREE_CNT > 0 ) THEN
-		                       '전체 '||P.SERIAL_CNT||'회 중 무료 '||P.SERIAL_FREE_CNT||'회'
-		                  WHEN ( P.SERIAL_CNT > 0 AND BOOK_CNT > 0 ) THEN
-		                       ( CASE WHEN P.SERIAL_FREE_CNT > 0 OR P.BOOK_FREE_CNT > 0 THEN
-		                              ( CASE WHEN P.SERIAL_FREE_CNT > 0 THEN '연재물 '|| P.SERIAL_FREE_CNT || '회' END )||
-		                              ( CASE WHEN P.BOOK_FREE_CNT > 0 THEN
-		                                          CONCAT( ( CASE WHEN P.SERIAL_FREE_CNT > 0 THEN ', ' END )
-		                                                , '단행본 '|| P.BOOK_FREE_CNT || '권' )
-		                                END ) || ' 무료'
-		                          END )
-		              END )  AS FREE_ITEM
-					*/
 		
 		      FROM
 		         (
@@ -78,18 +63,17 @@
 						INNER JOIN TB_DP_TENANT_PROD G			ON D.PROD_ID = G.PROD_ID
 						INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
 						INNER JOIN TB_DP_SPRT_DEVICE K			ON D.PROD_ID = K.PROD_ID
-						INNER JOIN TB_CM_DEVICE L				ON K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD
 					WHERE 1=1
 					AND G.TENANT_ID = #{tenantId}				/* tenant ID */
 					AND D.PROD_ID = #{channelId} 				/* channel ID */
 					AND C.LANG_CD = #{langCd}					/* 언어 */
-					AND L.DEVICE_MODEL_CD = #{deviceModel} 		/* 단말모델코드 */
+					AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = 'ANY-PHONE-4MM') 		/* 단말모델코드 */
 					AND A.BASE_YN = 'Y' AND A.BASE_YN = 'Y'
 					AND B.USE_YN = 'Y'                        	/* Y : 사용 (사용여부) */
 					AND D.SVC_GRP_CD = 'DP000203'             	/* DP000203 : 멀티미디어 */
 					AND D.CONTENTS_TYPE_CD = 'PD002501'       	/* PD002501 : 채널타입 */
 					AND D.SVC_TYPE_CD = 'DP001116'				/* 서비스 타입 : 이북/코믹 */
-					AND D.TOP_MENU_ID IN ('DP13')				/* 이북 */
+					AND D.TOP_MENU_ID IN ('DP13', 'DP014')				/* 이북,코믹 */
 					AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
 					AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */ 
 					AND K.PROD_ID IS NOT NULL                 	/* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
@@ -100,6 +84,8 @@
 		    GROUP BY TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
 				
 			) P
+			INNER JOIN TB_DP_PROD_RSHP RSHP ON P.CHNL_PROD_ID = RSHP.PROD_ID
+            INNER JOIN TB_DP_PROD P2 		ON P2.PROD_ID = RSHP.PART_PROD_ID
 			INNER JOIN TB_DP_PROD P2 		ON P2.PROD_ID = P.CHNL_PROD_ID
 			INNER JOIN UV_TB_DP_MULTIMDA_PROD MP  ON P2.PROD_ID = MP.PROD_ID
 			INNER JOIN TB_DP_TENANT_PROD TP	ON P2.PROD_ID = TP.PROD_ID AND P.TENANT_ID = TP.TENANT_ID
@@ -221,7 +207,6 @@
 		                                  INNER JOIN TB_DP_TENANT_PROD G			ON D.PROD_ID = G.PROD_ID
 		                                  INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
 		                                  INNER JOIN TB_DP_SPRT_DEVICE K			ON D.PROD_ID = K.PROD_ID
-		                                  INNER JOIN TB_CM_DEVICE L				ON K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD
 		                                  INNER JOIN TB_DP_PROD_RSHP I			ON D.PROD_ID = I.PROD_ID
 		                                  INNER JOIN TB_DP_PROD J				ON I.PART_PROD_ID = J.PROD_ID
 		                                  INNER JOIN TB_DP_SUB_CONTENTS M		ON I.PART_PROD_ID = M.PROD_ID
@@ -233,19 +218,19 @@
 										AND G.TENANT_ID = #{tenantId}				/* tenant ID */
 										AND D.PROD_ID = #{channelId} 				/* channel ID */
 										AND C.LANG_CD = #{langCd}					/* 언어 */
-										AND L.DEVICE_MODEL_CD = #{deviceModel} 		/* 단말모델코드 */
-										AND B.USE_YN = 'Y'                        	/* Y : 사용 (사용여부) */
+                                        AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = 'ANY-PHONE-4MM')
+                                        AND B.USE_YN = 'Y'                        	/* Y : 사용 (사용여부) */
 										AND D.SVC_GRP_CD = 'DP000203'             	/* DP000201 : 멀티미디어 */
 										AND D.CONTENTS_TYPE_CD = 'PD002501'       	/* PD002501 : 채널타입 */
 										AND D.SVC_TYPE_CD = 'DP001116'				/* 서비스 타입 : 이북/코믹 */
-										AND D.TOP_MENU_ID IN ('DP13')				/* 이북 */
+										AND D.TOP_MENU_ID IN ('DP13', 'DP014')				/* 이북 */
 										AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
 										AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */ 
 										AND K.PROD_ID IS NOT NULL                 	/* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
 										AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
 										AND J.SVC_GRP_CD = 'DP000203'       		/* 서비스그룹코드 : 멀티미디어 */  
-										AND J.CONTENTS_TYPE_CD = 'PD002502'       /* 컨텐츠 타입코드 : (PD002502:에피소드타입) */ 
-										AND J.TOP_MENU_ID IN ('DP13')				/* 이북 */
+										AND J.CONTENTS_TYPE_CD = 'PD002502'       /* 컨텐츠 타입코드 : (PD002502:에피소드타입) */
+                                        AND J.TOP_MENU_ID IN ('DP13', 'DP014')				/* 이북, 코믹 */
 										AND M.SALE_YN ='Y'
 										AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
 										AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
