@@ -489,8 +489,8 @@
                                 ,TB_DP_SPRC_PROD B1
                            WHERE 1=1
                              AND A1.PART_PROD_ID = B1.PROD_ID
-                             <if test="#{productBasicInfo.partProdId} != null ">
-                             AND B1.PROD_ID  = #{#{productBasicInfo.partProdId}}
+                             <if test="productBasicInfo.partProdId != null ">
+                             AND B1.PROD_ID  = #{productBasicInfo.partProdId}
                              </if>                             
                              AND B1.EXPO_YN ='Y'
                              AND B1.CPN_ID IS NOT NULL
