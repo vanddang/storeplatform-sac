@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -40,6 +41,7 @@ public class ListFeedbackSacReq extends CommonInfo {
 	 * 정렬.
 	 */
 	@NotBlank
+	@Pattern(regexp = "^recommend|^recent")
 	private String orderedBy;
 
 	/**
@@ -49,6 +51,7 @@ public class ListFeedbackSacReq extends CommonInfo {
 	/**
 	 * 상품 타입.
 	 */
+	@Pattern(regexp = "^$|^shopping")
 	private String prodType;
 	/**
 	 * 페이징 시작위치.

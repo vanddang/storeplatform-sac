@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -59,6 +61,7 @@ public class CreateFeedbackSacReq extends CommonInfo {
 	/**
 	 * 페이스북 전송 여부.
 	 */
+	@Pattern(regexp = "^$|^Y|^N")
 	private String fbPostYn;
 	/**
 	 * 패키지 버전 코드.
