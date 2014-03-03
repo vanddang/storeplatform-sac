@@ -187,11 +187,11 @@ public class DisplayConstants {
 	/**
 	 * 정액제 상품 판매상태.
 	 */
-	public static final String DP_PASS_SALE_STAT_WAIT = "PD013101";	//판매대기
-	public static final String DP_PASS_SALE_STAT_ING = "PD013102";	//판매중
-	public static final String DP_PASS_SALE_STAT_STOP = "PD013103";	//판매중지
-	public static final String DP_PASS_SALE_STAT_RESTRIC = "PD013104";	//판매금지
-	public static final String DP_PASS_SALE_STAT_FINISH = "PD013105";	//판매종료
+	public static final String DP_PASS_SALE_STAT_WAIT = "PD013201";	//판매대기
+	public static final String DP_PASS_SALE_STAT_ING = "PD013202";	//판매중
+	public static final String DP_PASS_SALE_STAT_STOP = "PD013203";	//판매중지
+	public static final String DP_PASS_SALE_STAT_RESTRIC = "PD013204";	//판매금지
+	public static final String DP_PASS_SALE_STAT_FINISH = "PD013205";	//판매종료
 
 	// //////////////////////////////////////Source Code //////////////////////////////////////////
 	public static final String DP_THUMNAIL_SOURCE = "thumbnail";
