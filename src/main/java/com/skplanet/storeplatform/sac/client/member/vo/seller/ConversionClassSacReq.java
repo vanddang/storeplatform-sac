@@ -62,10 +62,6 @@ public class ConversionClassSacReq extends CommonInfo {
 	private String repPhoneArea;
 	/** 대표전화번호. */
 	private String repPhone;
-	/** 대표팩스 국가번호. */
-	private String repFaxArea;
-	/** 대표팩스번호. */
-	private String repFax;
 	/** 우편번호. */
 	private String sellerBizZip;
 	/** 주소. */
@@ -433,36 +429,6 @@ public class ConversionClassSacReq extends CommonInfo {
 	 */
 	public void setRepPhone(String repPhone) {
 		this.repPhone = repPhone;
-	}
-
-	/**
-	 * @return the repFaxArea
-	 */
-	public String getRepFaxArea() {
-		return this.repFaxArea;
-	}
-
-	/**
-	 * @param repFaxArea
-	 *            the repFaxArea to set
-	 */
-	public void setRepFaxArea(String repFaxArea) {
-		this.repFaxArea = repFaxArea;
-	}
-
-	/**
-	 * @return the repFax
-	 */
-	public String getRepFax() {
-		return this.repFax;
-	}
-
-	/**
-	 * @param repFax
-	 *            the repFax to set
-	 */
-	public void setRepFax(String repFax) {
-		this.repFax = repFax;
 	}
 
 	/**
