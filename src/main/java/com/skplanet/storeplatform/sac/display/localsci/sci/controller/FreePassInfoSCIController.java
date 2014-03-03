@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
@@ -31,7 +32,7 @@ public class FreePassInfoSCIController implements FreePassInfoSCI {
 	 * @return FreepassDrmInfo 정액제 상품 DRM 정보
 	 */
 	@Override
-	public FreePassInfo searchFreePassDrmInfo(FreePassInfoSacReq req) {
+	public FreePassInfo searchFreePassDrmInfo(@Validated FreePassInfoSacReq req) {
 		return this.freePassInfoService.searchFreePassDrmInfo(req);
 	}
 
