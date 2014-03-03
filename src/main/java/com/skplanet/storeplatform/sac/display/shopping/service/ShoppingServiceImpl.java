@@ -332,13 +332,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
 
+			if (StringUtils.isEmpty(req.getOrderedBy())) {
+				req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
+			}
+
 			if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 					&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
 				throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
-			}
-
-			if (StringUtils.isEmpty(req.getOrderedBy())) {
-				req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
 			}
 			// offset, Count default setting
 			this.commonOffsetCount(req);
@@ -529,13 +529,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
-		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
-				&& !DisplayConstants.DP_SHOPPING_CLOSINGTIME_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
-			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
-		}
 
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
 			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
+		}
+		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_CLOSINGTIME_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
@@ -851,14 +851,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 			throw new StorePlatformException("SAC_DSP_0002", "blandId", req.getBrandId());
 		}
 
+		if (StringUtils.isEmpty(req.getOrderedBy())) {
+			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
+		}
 		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
 			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
 		}
-		if (StringUtils.isEmpty(req.getOrderedBy())) {
-			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
-		}
-
 		String stdDt = "";
 		if (req.getOrderedBy().equals("popular")) {
 			// 필수 파라미터 체크
@@ -1186,12 +1185,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (!this.commonProdGradeCd(req)) {
 				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
+
+			if (StringUtils.isEmpty(req.getOrderedBy())) {
+				req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
+			}
 			if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 					&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
 				throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
-			}
-			if (StringUtils.isEmpty(req.getOrderedBy())) {
-				req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
 			}
 			// offset, Count default setting
 			this.commonOffsetCount(req);
@@ -1305,14 +1305,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 				throw new StorePlatformException("SAC_DSP_0003", "prodGradeCd", req.getProdGradeCd());
 			}
 
+			if (StringUtils.isEmpty(req.getOrderedBy())) {
+				req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
+			}
+
 			if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 					&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
 				throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
 			}
 
-			if (StringUtils.isEmpty(req.getOrderedBy())) {
-				req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
-			}
 			// offset, Count default setting
 			this.commonOffsetCount(req);
 
