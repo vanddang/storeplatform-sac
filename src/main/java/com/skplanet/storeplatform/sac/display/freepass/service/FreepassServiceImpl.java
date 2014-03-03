@@ -349,6 +349,7 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
 			req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
+			req.setChnlStatusCd(DisplayConstants.DP_SALE_STAT_ING);
 			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 			req.setKind("OR004302");
 

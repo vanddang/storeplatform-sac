@@ -50,7 +50,7 @@
 					AND TP.TENANT_ID = PR.TENANT_ID
 					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 			    	AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
-			    		AND ( SP.DEVICE_MODEL_CD = 'android_standard2' OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
+			    		AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
 			    		AND EXISTS (
 			          	SELECT 'X' 
 			              FROM TB_CM_DEVICE DV
@@ -158,7 +158,7 @@
 		AND TP.TENANT_ID = PR.TENANT_ID
 		AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 		AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
-			AND ( SP.DEVICE_MODEL_CD = 'android_standard2' OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
+			AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
 		AND EXISTS (
 			SELECT 'X' 
 			FROM TB_CM_DEVICE DV
@@ -225,7 +225,7 @@
     		    	FROM TB_DP_SPRT_DEVICE SP, TB_DP_PROD_RSHP RS, TB_CM_DEVICE DV, 
     		    		TB_DP_PROD EP, TB_DP_SUB_CONTENTS SC, TB_DP_TENANT_PROD ET
     		        WHERE RS.PROD_ID=PD.PROD_ID AND RS.PART_PROD_ID = SP.PROD_ID
-    		        AND ( SP.DEVICE_MODEL_CD = 'android_standard2' OR SP.DEVICE_MODEL_CD = #{deviceModelCd} )
+    		        AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} )
     		        AND DV.DEVICE_MODEL_CD = #{deviceModelCd}
     		        AND DV.DEVICE_MODEL_CD = SP.DEVICE_MODEL_CD
     		        AND RS.PART_PROD_ID = EP.PROD_ID
@@ -400,7 +400,7 @@
           AND TM.BASE_YN = 'Y'
 					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 			    	AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
-			    		AND ( SP.DEVICE_MODEL_CD = 'android_standard2' OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
+			    		AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
 			    		AND EXISTS (
 			          	SELECT 'X' 
 			              FROM TB_CM_DEVICE DV
@@ -423,7 +423,9 @@
 			          )
 			    <if test='prodStatusCd != null and prodStatusCd != ""'>
       		AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
-          AND CT.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
+          </if>
+          <if test='chnlStatusCd != null and chnlStatusCd != ""'>
+          AND CT.PROD_STATUS_CD = #{chnlStatusCd}    /* PD000403 : 판매중 */
           </if>
 			    AND TP.EXPO_YN = 'Y'
           AND CT.EXPO_YN = 'Y'
