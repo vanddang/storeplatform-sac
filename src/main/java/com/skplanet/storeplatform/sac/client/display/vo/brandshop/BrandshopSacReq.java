@@ -32,7 +32,8 @@ public class BrandshopSacReq extends CommonInfo {
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
 	private String topMenuId; // TOP 메뉴 아이디
-	private String bnrMenuId; // 배너 메뉴 아이디
+	private String brandshopId; // 브랜드샵 메뉴 아이디
+	private String orderedBy; // orderedBy
 
 	// TODO osm1021 dummy data가 필요없어지면 삭제할것
 	private String dummy;
@@ -93,14 +94,6 @@ public class BrandshopSacReq extends CommonInfo {
 		this.topMenuId = topMenuId;
 	}
 
-	public String getBnrMenuId() {
-		return this.bnrMenuId;
-	}
-
-	public void setBnrMenuId(String bnrMenuId) {
-		this.bnrMenuId = bnrMenuId;
-	}
-
 	public String getDummy() {
 		return this.dummy;
 	}
@@ -123,6 +116,22 @@ public class BrandshopSacReq extends CommonInfo {
 
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	public String getBrandshopId() {
+		return this.brandshopId;
+	}
+
+	public void setBrandshopId(String brandshopId) {
+		this.brandshopId = brandshopId;
+	}
+
+	public String getOrderedBy() {
+		return this.orderedBy;
+	}
+
+	public void setOrderedBy(String orderedBy) {
+		this.orderedBy = orderedBy;
 	}
 
 }
