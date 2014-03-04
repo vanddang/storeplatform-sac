@@ -543,7 +543,9 @@
 	                  WHEN PD.META_CLSF_CD IN ('CT14', 'CT15','CT16') THEN '회'
 	                  ELSE ''
 	                  END ) AS CHAPTER_UNIT	 
+	                , MP.CHAPTER 
 	                , PD.PROD_GRD_CD
+	                , MP.POSS_LEND_CLSF_CD
 		            , PD.USE_PERIOD_UNIT_CD
 		            , PD.USE_PERIOD
 		            , PD.DRM_YN    
@@ -553,7 +555,8 @@
 		        FROM 
 		              TB_DP_MENU_CATEGORY MC
 		            , TB_DP_MENU_CATEGORY_PROD_MAPG MCPM
-		            , TB_DP_MENU_CATEGORY_DESC      MCD		        
+		            , TB_DP_MENU_CATEGORY_DESC      MCD		
+		            , UV_TB_DP_MULTIMDA_PROD        MP        
 		            , TB_DP_PROD PD
 		            , TB_DP_CMPX_PROD CM
 		            , TB_DP_PROD_DESC DC
@@ -574,6 +577,7 @@
 		        AND PD.PROD_ID = PR.PROD_ID
 		        AND PD.PROD_ID = PM.PROD_ID
 		        AND PM.PART_PROD_ID = MCPM.PROD_ID 
+		        AND PM.PART_PROD_ID = MP.PROD_ID
 		        AND MC.USE_YN ='Y'
 		        AND MCPM.BASE_YN='Y'
 		        AND MCPM.USE_YN='Y'
