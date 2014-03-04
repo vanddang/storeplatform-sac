@@ -148,10 +148,12 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 			reqMap.put("tenantHeader", tenantHeader);
 			reqMap.put("deviceHeader", deviceHeader);
 			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-
-			// 테마 조회
-			List<ThemeThemeZoneInfo> ThemeThemeZoneInfoMeta = this.commonDAO.queryForList(
-					"ThemeThemeZone.selectThemeThemeZone", req, ThemeThemeZoneInfo.class);
+			List<ThemeThemeZoneInfo> themeThemeZoneInfoMeta = null;
+			if (!req.getThemeZoneId().equals("TAR")) {
+				// 테마 조회
+				themeThemeZoneInfoMeta = this.commonDAO.queryForList("ThemeThemeZone.selectThemeThemeZone", req,
+						ThemeThemeZoneInfo.class);
+			}
 
 			// 테마상품 조회
 			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
@@ -171,9 +173,9 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				Layout layout = new Layout();
 
 				// layout 설정
-				if (!ThemeThemeZoneInfoMeta.isEmpty()) {
+				if (!themeThemeZoneInfoMeta.isEmpty()) {
 					ThemeThemeZoneInfo themeThemeZoneInfo = null;
-					themeThemeZoneInfo = ThemeThemeZoneInfoMeta.get(0);
+					themeThemeZoneInfo = themeThemeZoneInfoMeta.get(0);
 					layout = new Layout();
 
 					title = new Title();
@@ -187,7 +189,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 					layout.setMenu(menu);
 
 				}
-
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 					String topMenuId = productBasicInfo.getTopMenuId();
 					String svcGrpCd = productBasicInfo.getSvcGrpCd();
@@ -285,7 +286,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				}
 				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
 				res.setProductList(productList);
-				if (!ThemeThemeZoneInfoMeta.isEmpty()) {
+				if (!themeThemeZoneInfoMeta.isEmpty()) {
 					res.setLayOut(layout);
 				}
 				res.setCommonResponse(commonResponse);
