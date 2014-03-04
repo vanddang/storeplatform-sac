@@ -64,7 +64,8 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
@@ -134,7 +135,10 @@ public class DeviceServiceImpl implements DeviceService {
 	private ChangeDisplayUserSCI changeDisplayUserSCI;
 
 	@Autowired
-	private HistoryInternalSCI historyInternalSCI;
+	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
+
+	//	@Autowired
+	//	private PurchaseUserInfoInternalSacSCI historyInternalSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -446,24 +450,40 @@ public class DeviceServiceImpl implements DeviceService {
 		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
 
+		LOGGER.info(createDeviceReq.toString());
+		LOGGER.info(createDeviceReq.getUserMbrDevice().toString());
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		/* 2. 기등록된 회원이 존재하는지 확인 */
 		String previousUserKey = createDeviceRes.getPreviousUserKey();
 		String previousDeviceKey = createDeviceRes.getPreviousDeviceKey();
+		String deviceKey = createDeviceRes.getDeviceKey();
+
 		if (previousUserKey != null && previousDeviceKey != null) {
 
+			LOGGER.info(":::: [PreviousDeviceKey] {}", previousDeviceKey);
+			LOGGER.info(":::: [nowDeviceKey] {}", deviceKey);
 			LOGGER.info(":::: [PreviousUserKey] {}", previousUserKey);
 			LOGGER.info(":::: [NowUserKey] {}", userKey);
 
-			/* 3. 기타파트, 구매파트 userKey 변경 */
+			/* 3. 기타파트 userKey 변경 */
 			ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
 			changeDisplayUserSacReq.setNewUseKey(userKey);
 			changeDisplayUserSacReq.setOldUserKey(previousUserKey);
 			changeDisplayUserSacReq.setTenantId(tenantId);
 			this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
 
-			/* 4. 약관 이관 처리 */
+			/* 4. 구매파트 userKey, deviceKey 변경 */
+			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
+			userInfoSacInReq.setSystemId(systemId);
+			userInfoSacInReq.setTenantId(tenantId);
+			userInfoSacInReq.setDeviceKey(previousDeviceKey);
+			userInfoSacInReq.setNewDeviceKey(deviceKey);
+			userInfoSacInReq.setUserKey(previousUserKey);
+			userInfoSacInReq.setNewUserKey(userKey);
+			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
+
+			/* 5. 약관 이관 처리 */
 			SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
 			schAgreeListReq.setCommonRequest(commonRequest);
 			schAgreeListReq.setUserKey(previousUserKey);
@@ -490,6 +510,7 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 
+			/* 6. 실명인증 비교 후 초기화 */
 			SearchRealNameRequest schRealNameReq = new SearchRealNameRequest();
 			schRealNameReq.setCommonRequest(commonRequest);
 			schRealNameReq.setUserKey(previousUserKey);
@@ -497,8 +518,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 			schRealNameReq.setUserKey(userKey);
 			SearchRealNameResponse schRealNameRes = this.userSCI.searchRealName(schRealNameReq);
-
-			/* 5. 실명인증 비교 후 초기화 */
 			if (preSchRealNameRes.getMbrAuth() != null && schRealNameRes.getMbrAuth() != null) {
 
 				if (!StringUtil.equals(preSchRealNameRes.getMbrAuth().getName(), schRealNameRes.getMbrAuth().getName())
@@ -515,9 +534,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 			}
 
+			/* 7. 통합회원에 휴대기기 등록시 무선회원 해지 */
 			SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
-
-			/* 6. 통합회원에 휴대기기 등록시 무선회원 해지 */
 			if (schUserRes.getUserMbr().getImSvcNo() != null) {
 
 				try {
@@ -539,7 +557,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			}
 
-			/* 7. 사용자 제한 정책 userKey 변경 처리 */
+			/* 8. 사용자 제한 정책 userKey 변경 처리 */
 			//			UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
 			//			updPolicyKeyReq.setCommonRequest(commonRequest);
 			//			updPolicyKeyReq.setOldLimitPolicyKey(previousUserKey);
@@ -549,7 +567,7 @@ public class DeviceServiceImpl implements DeviceService {
 			//			LOGGER.info("::: 사용자 제한 정책 previousUserKey -> userKey 변경 카운트 : {}", updPolicyKeyRes.getUpdateCount());
 		}
 
-		/* 6. 게임센터 연동 */
+		/* 9. 게임센터 연동 */
 		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 		gameCenterSacReq.setUserKey(userKey);
 		gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
@@ -566,7 +584,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
 
-		return createDeviceRes.getDeviceKey();
+		return deviceKey;
 
 	}
 

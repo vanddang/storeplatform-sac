@@ -704,7 +704,7 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setIsSuccess(isSuccess);
 		loginReq.setIsOneID("Y");
 		loginReq.setIsMobile(isMobile);
-
+		loginReq.setIsAutoLogin("N");
 		String svcVersion = requestHeader.getDeviceHeader().getSvc();
 		if (svcVersion != null) {
 			loginReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
@@ -840,7 +840,7 @@ public class LoginServiceImpl implements LoginService {
 			loginReq.setIsSuccess(isLoginSuccess);
 			loginReq.setIsOneID("Y");
 			loginReq.setIsMobile("Y");
-			//loginReq.setIsAutoUpdate("Y"); // TODO. 추가예정
+			loginReq.setIsAutoLogin("Y");
 
 			String svcVersion = requestHeader.getDeviceHeader().getSvc();
 			if (svcVersion != null) {
