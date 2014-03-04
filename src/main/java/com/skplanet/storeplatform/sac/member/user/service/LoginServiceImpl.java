@@ -169,7 +169,7 @@ public class LoginServiceImpl implements LoginService {
 			this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 			/* 로그인 성공이력 저장 */
-			LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
+			LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, null, "Y", "Y", deviceId);
 
 			/* 로그인 결과 */
 			res.setUserKey(userKey);
@@ -195,7 +195,7 @@ public class LoginServiceImpl implements LoginService {
 				this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 				/* 로그인 성공이력 저장 */
-				LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
+				LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, null, "Y", "Y", deviceId);
 
 				/* 로그인 결과 */
 				res.setUserKey(userKey);
@@ -838,7 +838,7 @@ public class LoginServiceImpl implements LoginService {
 			LoginUserRequest loginReq = new LoginUserRequest();
 			loginReq.setCommonRequest(commonRequest);
 			loginReq.setUserID(deviceId);
-			loginReq.setUserPW("");
+			loginReq.setUserPW(null);
 			loginReq.setIsSuccess(isLoginSuccess);
 			loginReq.setIsOneID("Y");
 			loginReq.setIsMobile("Y");
