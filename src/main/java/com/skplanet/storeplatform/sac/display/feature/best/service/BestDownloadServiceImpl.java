@@ -102,9 +102,6 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
 
-		String listId = bestDownloadReq.getListId();
-		String filteredBy = bestDownloadReq.getFilteredBy();
-
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(bestDownloadReq.getProdGradeCd())) {
 			String[] arrayProdGradeCd = bestDownloadReq.getProdGradeCd().split("\\+");
