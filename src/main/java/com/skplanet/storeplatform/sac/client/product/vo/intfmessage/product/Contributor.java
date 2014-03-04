@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -91,13 +92,22 @@ public class Contributor extends CommonInfo implements Serializable {
 	 * 데뷔 곡.
 	 */
 	private String debutMusicNm;
-	/*
-	 * 이미지url
-	 */private Source source;
+
+	/**
+	 * 이미지url.
+	 */
+	private Source source;
 	/**
 	 * 앨범 출시 일 등 날짜를 기입할 경우 사용한다.
 	 */
 	private Date date;
+
+	private List<Identifier> identifierList;
+
+	/**
+	 * resource 정보.
+	 */
+	private List<Source> sourceList;
 
 	/**
 	 * @return Identifier
@@ -352,6 +362,56 @@ public class Contributor extends CommonInfo implements Serializable {
 	 */
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * identifierList.
+	 * </pre>
+	 * 
+	 * @return List<Identifier>
+	 */
+	public List<Identifier> getIdentifierList() {
+		return this.identifierList;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * identifierList.
+	 * </pre>
+	 * 
+	 * @param identifierList
+	 *            List<Identifier>
+	 */
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * resource 정보.
+	 * </pre>
+	 * 
+	 * @return List<Source>
+	 */
+	public List<Source> getSourceList() {
+		return this.sourceList;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * resource 정보.
+	 * </pre>
+	 * 
+	 * @param sourceList
+	 *            List<Source>
+	 */
+	public void setSourceList(List<Source> sourceList) {
+		this.sourceList = sourceList;
 	}
 
 }
