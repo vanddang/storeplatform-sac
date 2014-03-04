@@ -19,6 +19,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInfor
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyFlurrySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacReq;
@@ -204,7 +206,7 @@ public interface SellerService {
 	 *            CreateFlurrySacRes
 	 * @return CreateFlurrySacRes
 	 */
-	public CreateFlurrySacRes createFlurrySacRes(SacRequestHeader header, CreateFlurrySacReq req);
+	public CreateFlurrySacRes createFlurry(SacRequestHeader header, CreateFlurrySacReq req);
 
 	/**
 	 * <pre>
@@ -217,5 +219,18 @@ public interface SellerService {
 	 *            ModifyWaitEmailSacReq
 	 * @return ModifyWaitEmailSacRes
 	 */
-	public ModifyWaitEmailSacRes modifyWaitEmailSacReq(SacRequestHeader header, ModifyWaitEmailSacReq req);
+	public ModifyWaitEmailSacRes modifyWaitEmail(SacRequestHeader header, ModifyWaitEmailSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.2.34. Flurry 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ModifyFlurrySacReq
+	 * @return ModifyFlurrySacRes
+	 */
+	public ModifyFlurrySacRes ModifyFlurry(SacRequestHeader header, ModifyFlurrySacReq req);
 }

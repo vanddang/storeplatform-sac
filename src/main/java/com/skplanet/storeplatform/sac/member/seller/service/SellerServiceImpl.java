@@ -67,6 +67,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInfor
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyFlurrySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacReq;
@@ -1177,7 +1179,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return CreateFlurrySacRes
 	 */
 	@Override
-	public CreateFlurrySacRes createFlurrySacRes(SacRequestHeader header, CreateFlurrySacReq req) {
+	public CreateFlurrySacRes createFlurry(SacRequestHeader header, CreateFlurrySacReq req) {
 		// 1. CommonRequest Setting
 		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [START] ############");
 		// SC공통 헤더
@@ -1224,8 +1226,8 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyWaitEmailSacRes
 	 */
 	@Override
-	public ModifyWaitEmailSacRes modifyWaitEmailSacReq(SacRequestHeader header, ModifyWaitEmailSacReq req) {
-		LOGGER.debug("############ SellerServiceImpl.modifyEmail() [START] ############");
+	public ModifyWaitEmailSacRes modifyWaitEmail(SacRequestHeader header, ModifyWaitEmailSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.modifyWaitEmail() [START] ############");
 
 		// SC 공통 헤더 생성
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
@@ -1273,4 +1275,47 @@ public class SellerServiceImpl implements SellerService {
 		res.setSellerKey(updateSellerResponse.getSellerKey());
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ModifyFlurrySacReq
+	 * @return ModifyFlurrySacRes
+	 */
+	@Override
+	public ModifyFlurrySacRes ModifyFlurry(SacRequestHeader header, ModifyFlurrySacReq req) {
+		// 1. CommonRequest Setting
+		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [START] ############");
+		// SC공통 헤더
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+
+		// 3. Flurry 등록/수정
+		UpdateFlurryRequest updateFlurryRequest = new UpdateFlurryRequest();
+		// updateFlurryRequest.setSellerKey(req.getSellerKey());
+		updateFlurryRequest.setCommonRequest(commonRequest);
+
+		if (req.getFlurryAuthList() != null) {
+			List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
+			FlurryAuth flurryAuth = null;
+			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
+				flurryAuth = new FlurryAuth();
+				// flurryAuth.setSellerKey(req.getSellerKey());
+				flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
+				flurryAuth.setAccessCode(req.getFlurryAuthList().get(i).getAccessCode());
+				flurryAuthList.add(flurryAuth);
+			}
+			updateFlurryRequest.setFlurryAuthList(flurryAuthList);
+		}
+
+		UpdateFlurryResponse updateFlurryResponse = this.sellerSCI.updateFlurry(updateFlurryRequest);
+		ModifyFlurrySacRes res = new ModifyFlurrySacRes();
+		res.setSellerKey(updateFlurryResponse.getSellerKey());
+		return res;
+	}
+
 }
