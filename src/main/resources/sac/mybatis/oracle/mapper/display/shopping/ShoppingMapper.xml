@@ -956,20 +956,17 @@
                     ,COUNT(1) OVER() AS TOTALCOUNT
                     ,ROWNUM AS RNUM         
              FROM(       
-                SELECT THEME_ID as prodId
-                     , THEME_NM as prodNm
-                     , LINK_URL as linkUrl
-                     ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
-                        WHERE PROD_ID = THEME_ID AND IMG_CD =#{imageCd}
-                      )FILE_PATH                     
-                  FROM TB_DP_THEME_INFO
-                 WHERE EXPO_YN = 'Y'
-                   AND THEME_STATUS_CD = 'DP006501'
+                SELECT LIST_ID as prodId
+                     , LIST_NM as prodNm
+                     , IMG_PATH AS FILE_PATH                     
+                  FROM TB_DP_LIST
+                 WHERE LIST_GRP_CD='TSP'
+                   AND EXPO_YN = 'Y'
                    AND TENANT_ID =#{tenantId}       /* INPUT 테넌트ID */
                   <if test="themeId != null">
-                   AND THEME_ID = #{themeId}
+                   AND LIST_ID = #{themeId}
                   </if>                           
-                 ORDER BY THEME_ID DESC    
+                 ORDER BY EXPO_ORD     
             )KK
         )WHERE RNUM BETWEEN #{offset} AND #{count}               
     </select>     
@@ -1017,7 +1014,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 ,TB_DP_THEME_CATALOG M
+                                 ,TB_DP_LIST_PROD M
                                  ,(SELECT 
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
@@ -1043,10 +1040,10 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID 
-                        AND B.CATALOG_ID = M.CATALOG_ID
+                        AND B.CATALOG_ID = M.MENU_ID
                         AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
                         AND M.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
-                        AND M.THEME_ID = #{req.themeId}  
+                        AND M.LIST_ID = #{req.themeId}  
                         AND I.PROD_ID = N.PROD_ID(+)     
                         AND H.PROD_RSHP_CD =#{prodRshpCd}     /*채널-에피소드 상품 관계*/
                         AND NVL(B.CHNL_CNT, 0) > 0                  
