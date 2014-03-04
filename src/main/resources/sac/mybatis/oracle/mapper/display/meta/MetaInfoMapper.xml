@@ -169,7 +169,8 @@
             <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
               , NVL(LA.PROD_AMT, 0) AS PROD_AMT -- 에피소드 가격
             </if>
-              , PROD_NET_AMT
+              , LA.PROD_NET_AMT
+              , LA.PROD_CHRG_YN AS PROD_CHRG
               , NVL(LB.PATICPERS_CNT, 0) AS PATICPERS_CNT
               , NVL(LB.PRCHS_CNT, 0) AS PRCHS_CNT
                <![CDATA[             
@@ -220,7 +221,7 @@
                            , F.PROD_DTL_DESC
                            , H.CHNL_PERIOD_AMT
                            , H.CHNL_UNLMT_AMT
-                           , H.PROD_NET_AMT
+                           , J.PROD_CHRG_YN
                            , L.CHAPTER
                            , L.SAMPL_URL
                            , L.SC_SAMPL_URL
@@ -228,6 +229,7 @@
                            , M.FILE_NM
                            , M.FILE_SIZE
                            , O.PROD_AMT
+                           , O.PROD_NET_AMT
                            , G.PROD_STATUS_CD
                         FROM TB_DP_MENU_CATEGORY           A
                            , TB_DP_MENU_CATEGORY_PROD_MAPG B
@@ -463,6 +465,7 @@
                          WHEN TB.AVG_EVLU_SCORE > 5 THEN 5
                          ELSE ROUND(TB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
              ]]>
+             , TB.PROD_CHRG_YN AS PROD_CHRG
              , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
              , TB.PROD_STATUS_CD
           FROM (
@@ -498,6 +501,7 @@
                       , H.CHNL_PERIOD_AMT
                       , H.CHNL_UNLMT_AMT
                       , J.DRM_YN
+                      , J.PROD_CHRG_YN
                       , L.CHAPTER
                       , L.BOOK_CLSF_CD
                       , M.FILE_PATH
@@ -643,7 +647,6 @@
                       , F.PROD_DTL_DESC
                       , H.CHNL_PERIOD_AMT
                       , H.CHNL_UNLMT_AMT
-                      , H.PROD_NET_AMT 
                       , J.DRM_YN
                       , J.UPD_DT
                       , L.CHAPTER
@@ -653,6 +656,7 @@
                       , N.PRCHS_CNT
                       , N.AVG_EVLU_SCORE              
                       , O.PROD_AMT
+                      , O.PROD_NET_AMT 
                       , G.PROD_STATUS_CD
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
