@@ -20,12 +20,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * 특정 작가별 상품 조회 Value Object.
+ * 특정 아티스트별 상품 조회 Value Object.
  * 
- * Updated on : 2014. 02. 24 Updated by : 유시혁.
+ * Updated on : 2014. 03. 03 Updated by : 유시혁.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class AuthorProductSacRes extends CommonInfo implements Serializable {
+public class ArtistProductSacRes extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123142L;
 
@@ -63,31 +63,6 @@ public class AuthorProductSacRes extends CommonInfo implements Serializable {
 	/**
 	 * 
 	 * <pre>
-	 * Contributor.
-	 * </pre>
-	 * 
-	 * @return Contributor
-	 */
-	public Contributor getContributor() {
-		return this.contributor;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Contributor.
-	 * </pre>
-	 * 
-	 * @param contributor
-	 *            Contributor
-	 */
-	public void setContributor(Contributor contributor) {
-		this.contributor = contributor;
-	}
-
-	/**
-	 * 
-	 * <pre>
 	 * 상품 리스트.
 	 * </pre>
 	 * 
@@ -108,6 +83,31 @@ public class AuthorProductSacRes extends CommonInfo implements Serializable {
 	 */
 	public void setProductList(List<Product> productList) {
 		this.productList = productList;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * contributor.
+	 * </pre>
+	 * 
+	 * @return Contributor
+	 */
+	public Contributor getContributor() {
+		return this.contributor;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * contributor.
+	 * </pre>
+	 * 
+	 * @param contributor
+	 *            Contributor
+	 */
+	public void setContributor(Contributor contributor) {
+		this.contributor = contributor;
 	}
 
 }

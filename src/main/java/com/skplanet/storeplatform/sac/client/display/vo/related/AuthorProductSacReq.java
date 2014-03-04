@@ -28,7 +28,7 @@ public class AuthorProductSacReq extends CommonInfo implements Serializable {
 	@NotBlank
 	private String authorName; // 작가 명
 	@NotBlank
-	@Pattern(regexp = "^author$|^painter$|^translator$")
+	@Pattern(regexp = "author|painter|translator")
 	private String filteredBy; // 필터링 조건
 	@NotBlank
 	private String exceptId; // 제외 상품 아이디
@@ -39,6 +39,7 @@ public class AuthorProductSacReq extends CommonInfo implements Serializable {
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
 	private String mmDeviceModelCd; // 가상 프로비저닝 모델명 (멀티미디어).
+	private String topMenuId; // 탑메뉴ID
 
 	/**
 	 * 
@@ -288,5 +289,30 @@ public class AuthorProductSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setMmDeviceModelCd(String mmDeviceModelCd) {
 		this.mmDeviceModelCd = mmDeviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 탑메뉴ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 탑메뉴ID.
+	 * </pre>
+	 * 
+	 * @param topMenuId
+	 *            String
+	 */
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 }

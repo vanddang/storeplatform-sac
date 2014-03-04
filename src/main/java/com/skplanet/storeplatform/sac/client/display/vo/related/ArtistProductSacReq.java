@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.display.vo.category;
+package com.skplanet.storeplatform.sac.client.display.vo.related;
 
 import java.io.Serializable;
 
@@ -18,77 +18,74 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * Vod 보관함 조회 Input Value Object.
+ * 특정 아티스트별 상품 조회 Input Value Object.
  * 
- * Updated on : 2014. 02. 12. Updated by : 유시혁.
+ * Updated on : 2014. 03. 03. Updated by : 유시혁.
  */
-public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
+public class ArtistProductSacReq extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123143L;
 	@NotBlank
-	@Pattern(regexp = "duration|chapter|regDate")
-	private String filteredBy; // 차트 구분 코드
-	@NotBlank
-	private String channelId; // 채널 ID
+	private String artistId; // 아티스트ID
+	@Pattern(regexp = "|issuedDate|popular")
+	private String orderedBy; // 상품 정렬 순서
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출 ROW 수
-	private Integer duration; // 기간
-	private Integer chapter; // 회차
-	private String regDate; // 등록일
 	private String tenantId; // 테넌트 ID
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
 	private String mmDeviceModelCd; // 가상 프로비저닝 모델명 (멀티미디어).
+	private String imageCd; // 이미지 코드
 
 	/**
 	 * 
 	 * <pre>
-	 * 차트 구분 코드.
+	 * 아티스트ID.
 	 * </pre>
 	 * 
 	 * @return String
 	 */
-	public String getFilteredBy() {
-		return this.filteredBy;
+	public String getArtistId() {
+		return this.artistId;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * 차트 구분 코드.
+	 * 아티스트ID.
 	 * </pre>
 	 * 
-	 * @param filteredBy
+	 * @param artistId
 	 *            String
 	 */
-	public void setFilteredBy(String filteredBy) {
-		this.filteredBy = filteredBy;
+	public void setArtistId(String artistId) {
+		this.artistId = artistId;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * 채널 ID.
+	 * 상품 정렬 순서.
 	 * </pre>
 	 * 
 	 * @return String
 	 */
-	public String getChannelId() {
-		return this.channelId;
+	public String getOrderedBy() {
+		return this.orderedBy;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * 채널 ID.
+	 * 상품 정렬 순서.
 	 * </pre>
 	 * 
-	 * @param channelId
+	 * @param orderedBy
 	 *            String
 	 */
-	public void setChannelId(String channelId) {
-		this.channelId = channelId;
+	public void setOrderedBy(String orderedBy) {
+		this.orderedBy = orderedBy;
 	}
 
 	/**
@@ -144,81 +141,6 @@ public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 	/**
 	 * 
 	 * <pre>
-	 * 기간.
-	 * </pre>
-	 * 
-	 * @return Integer
-	 */
-	public Integer getDuration() {
-		return this.duration;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 기간.
-	 * </pre>
-	 * 
-	 * @param duration
-	 *            Integer
-	 */
-	public void setDuration(Integer duration) {
-		this.duration = duration;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 회차.
-	 * </pre>
-	 * 
-	 * @return Integer
-	 */
-	public Integer getChapter() {
-		return this.chapter;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 회차.
-	 * </pre>
-	 * 
-	 * @param chapter
-	 *            Integer
-	 */
-	public void setChapter(Integer chapter) {
-		this.chapter = chapter;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 등록일.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getRegDate() {
-		return this.regDate;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 등록일.
-	 * </pre>
-	 * 
-	 * @param regDate
-	 *            String
-	 */
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
-	}
-
-	/**
-	 * 
-	 * <pre>
 	 * 테넌트 ID.
 	 * </pre>
 	 * 
@@ -244,31 +166,6 @@ public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 	/**
 	 * 
 	 * <pre>
-	 * 단말모델코드.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getDeviceModelCd() {
-		return this.deviceModelCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 단말모델코드.
-	 * </pre>
-	 * 
-	 * @param deviceModelCd
-	 *            String
-	 */
-	public void setDeviceModelCd(String deviceModelCd) {
-		this.deviceModelCd = deviceModelCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
 	 * 시스템Id.
 	 * </pre>
 	 * 
@@ -289,6 +186,31 @@ public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 단말모델코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 단말모델코드.
+	 * </pre>
+	 * 
+	 * @param deviceModelCd
+	 *            String
+	 */
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
 	}
 
 	/**
@@ -341,4 +263,28 @@ public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 		this.mmDeviceModelCd = mmDeviceModelCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 이미지 코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getImageCd() {
+		return this.imageCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이미지 코드.
+	 * </pre>
+	 * 
+	 * @param imageCd
+	 *            String
+	 */
+	public void setImageCd(String imageCd) {
+		this.imageCd = imageCd;
+	}
 }
