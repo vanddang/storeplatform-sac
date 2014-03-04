@@ -80,7 +80,7 @@ public class VodServiceImpl implements VodService {
 			productImage.setProdId(req.getChannelId());
 			productImage.setLangCd(req.getLangCd());
 			List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", productImage, ProductImage.class);
-			this.mapProduct(product, vodDetail, screenshotList);
+			this.mapProduct(req, product, vodDetail, screenshotList);
 
 			// --------------------------------------------------------
 			// 2. subProjectList
@@ -92,7 +92,11 @@ public class VodServiceImpl implements VodService {
                 //기구매 체크
                 List<String> episodeIdList = new ArrayList<String>();
                 for(VodDetail subProduct : subProductList) {
-                    episodeIdList.add(subProduct.getProdId());
+                    if(StringUtils.isNotEmpty(subProduct.getPlayProdId())) {
+                        episodeIdList.add(subProduct.getPlayProdId());
+                    } else if(StringUtils.isNotEmpty(subProduct.getStoreProdId())) {
+                        episodeIdList.add(subProduct.getStoreProdId());
+                    }
                 }
                 existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
 
@@ -115,11 +119,12 @@ public class VodServiceImpl implements VodService {
 
 	/**
 	 * Product Mapping
-	 * @param product Product
-	 * @param mapperVO  Product 에 Mapping 할 데이터
-	 * @param screenshotList Screenshot 목록
-	 */
-	private void mapProduct(Product product, VodDetail mapperVO, List<ProductImage> screenshotList) {
+     * @param req
+     * @param product Product
+     * @param mapperVO  Product 에 Mapping 할 데이터
+     * @param screenshotList Screenshot 목록
+     */
+	private void mapProduct(VodDetailReq req, Product product, VodDetail mapperVO, List<ProductImage> screenshotList) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
@@ -128,9 +133,7 @@ public class VodServiceImpl implements VodService {
 		List<Source> sourceList = this.getSourceList(mapperVO, screenshotList);
 		product.setSourceList(sourceList);
 
-		//-------------------------------------------
 		// 상품 설명
-		//-------------------------------------------
 		product.setProductExplain(mapperVO.getProdBaseDesc());
 		product.setProductDetailExplain(mapperVO.getProdDtlDesc());
 		product.setProductIntroduction(mapperVO.getProdIntrDscr());
@@ -160,7 +163,7 @@ public class VodServiceImpl implements VodService {
 
 
 		// rights
-		Rights rights = this.getRights(mapperVO);
+		Rights rights = this.getRights(mapperVO, req, null);
 		product.setRights(rights);
 
 		//Accrual
@@ -181,7 +184,7 @@ public class VodServiceImpl implements VodService {
 
 
 
-	private Rights getRights(VodDetail mapperVO) {
+	private Rights getRights(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
 		List<Source> sourceList;
 		Date date;
 		Rights rights = new Rights();
@@ -213,7 +216,7 @@ public class VodServiceImpl implements VodService {
 			source.setType(DisplayConstants.DP_PREVIEW_HQ);
 			source.setUrl(mapperVO.getSamplUrl());
 			sourceList.add(source);
-		}
+        }
 		preview.setSourceList(sourceList);
 		rights.setPreview(preview);
 
@@ -247,6 +250,12 @@ public class VodServiceImpl implements VodService {
 			if (mapperVO.getStrmNetworkCd() != null) {
 				play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 			}
+
+            if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId())) {
+                String salesStatus = getSalesStatus(mapperVO, req);
+                if(salesStatus != null)  play.setSalesStatus(salesStatus);
+            }
+
 			rights.setPlay(play);
 		}
 
@@ -274,15 +283,46 @@ public class VodServiceImpl implements VodService {
 			if (mapperVO.getDwldNetworkCd() != null) {
 				store.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 			}
+
+            if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId())) {
+                String salesStatus = getSalesStatus(mapperVO, req);
+                if(salesStatus != null)  store.setSalesStatus(salesStatus);
+            }
+
 			rights.setStore(store);
 
 		}
 		return rights;
 	}
 
+    /**
+     * 판매 상태 조회
+     * @param mapperVO
+     * @param req
+     * @return
+     */
+    private String getSalesStatus(VodDetail mapperVO, VodDetailReq req) {
+        String salesStatus = null;
+        //기구매 체크
+        if (!mapperVO.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
+            // 04, 09, 10의 경우 구매이력이 없으면 상품 없음을 표시한다.
+            if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getProdStatusCd()) ||
+                    DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getProdStatusCd()) ||
+                    DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(mapperVO.getProdStatusCd())) {
+                if (!com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(req.getUserKey()) && !com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(req.getDeviceKey()) &&
+                        !commonService.checkPurchase(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), req.getChannelId())) {
+                }
+                else
+                    salesStatus = "restricted";
+            }
+            else
+                salesStatus = "restricted";
+        }
+        return salesStatus;
+    }
 
 
-	private Distributor getDistributor(VodDetail mapperVO) {
+    private Distributor getDistributor(VodDetail mapperVO) {
 		Distributor distributor = new Distributor();
         distributor.setSellerKey(mapperVO.getSellerMbrNo());
         distributor.setName(mapperVO.getExpoSellerNm());
@@ -479,7 +519,7 @@ public class VodServiceImpl implements VodService {
 		        subProduct.setDistributor(distributor);
 
                 // rights
-                Rights rights = this.getRights(mapperVO);
+                Rights rights = this.getRights(mapperVO, req, existenceMap);
                 subProduct.setRights(rights);
 
 				// VOD
@@ -488,24 +528,6 @@ public class VodServiceImpl implements VodService {
                 //Accrual
 				Accrual accrual = this.getAccrual(mapperVO);
 				subProduct.setAccrual(accrual);
-
-                //기구매 체크
-                if(existenceMap.containsKey(mapperVO.getProdId())) {
-                    if (!mapperVO.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
-                        // 04, 09, 10의 경우 구매이력이 없으면 상품 없음을 표시한다.
-                        if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getProdStatusCd()) ||
-                                DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getProdStatusCd()) ||
-                                DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(mapperVO.getProdStatusCd())) {
-                            if (!com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(req.getUserKey()) && !com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(req.getDeviceKey()) &&
-                                    !commonService.checkPurchase(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), req.getChannelId())) {
-                            }
-                            else
-                                subProduct.setSalesStatus("restricted");
-                        }
-                        else
-                            subProduct.setSalesStatus("restricted");
-                    }
-                }
 
 				subProjectList.add(subProduct);
 			}

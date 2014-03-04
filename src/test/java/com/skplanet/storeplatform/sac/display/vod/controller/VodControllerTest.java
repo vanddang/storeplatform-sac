@@ -93,11 +93,20 @@ public class VodControllerTest {
 	@Test
 	public void searchVodDetail_recent() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
+        /*
 		param.put("channelId", "H000044250");
 		param.put("orderedBy", "recent");
 		param.put("offset", 1);
 		param.put("count", 20);
-		String json = this.convertMapToJson(param);
+		*/
+        param.put("channelId", "H900540759");
+        param.put("deviceKey", "DE201402201711283140002222");
+        param.put("userKey", "US201402201711282940003170");
+        param.put("orderedBy", "recent");
+        param.put("offset", 1);
+        param.put("count", 20);
+
+        String json = this.convertMapToJson(param);
 
 		this.mvc.perform(post("/display/vod/detail/v1")
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
