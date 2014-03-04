@@ -414,8 +414,7 @@
                 KK.*
            FROM (
                   SELECT 
-                         B.CATALOG_ID 
-                        ,H.PROD_ID                         
+                         H.PROD_ID                   
                         ,H.PART_PROD_ID  
                         ,CASE WHEN N.PROD_ID IS NOT NULL THEN M.PROD_NM ELSE C.CATALOG_NM  END PROD_NM     
                         ,'thumbnail' AS fileType   
@@ -429,25 +428,27 @@
                          ) AS TOP_MENU_NM
                         ,D.MENU_ID
                         ,F.MENU_NM                         
-                        ,J.META_CLSF_CD    
-                        ,A.BRAND_ID
-                        ,A.BRAND_NM                            
+                        ,J.META_CLSF_CD
+                        ,J.REG_DT   
                         ,J.SELLER_MBR_NO 
                         ,'' AS expoSellerNm
                         ,'' AS expoSellerTelNo
                         ,'' AS expoSellerEmail
-                        ,'' AS prodClsfCd     
-                        ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID  = H.PART_PROD_ID) AS PHONE_SPRT_YN
+                        ,'' AS prodClsfCd 
                         ,J.PROD_GRD_CD
                         ,J.USE_PERIOD_UNIT_CD
                         ,J.USE_PERIOD
+                        ,J.DRM_YN
+                        ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID  = H.PART_PROD_ID) AS PHONE_SPRT_YN                                                 
+                        ,B.CATALOG_ID
+                        ,A.BRAND_ID
+                        ,A.BRAND_NM    
                         ,CASE WHEN N.PROD_ID IS NOT NULL THEN 'special:Tstore' ELSE 'shoppingStore' END couponType
                         ,N.CPN_ID AS couponId
                         ,DECODE(I.PROD_CASE_CD
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
                               , 'DP006303', 'delivery' ) as PROD_CASE_CD                                                                                              
-
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -517,18 +518,43 @@
 		        IV.*
 		        ,'freepass' as couponType
 		        ,'thumbnail' AS fileType 
-		        , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
+		        , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS FILE_PATH
 		    FROM (
 		        SELECT  
-		              PD.PROD_GRD_CD
-		            , PD.PROD_ID
-		            , 'freepass' as couponType
+		              PD.PROD_ID
+		            , PM.PART_PROD_ID 
+		            , DC.PROD_NM
+                    , PD.TOP_MENU_ID 
+                    , (SELECT MENU_NM
+                        FROM TB_DP_MENU_CATEGORY_DESC
+                       WHERE MENU_ID = PD.TOP_MENU_ID
+                         AND LANG_CD = #{lang}
+                         AND ROWNUM = 1
+                      ) AS TOP_MENU_NM
+                    , MCD.MENU_ID
+                    , MCD.MENU_NM   	
+                    , PD.META_CLSF_CD	
+                    , PD.REG_DT       
+                    , PD.SELLER_MBR_NO 
+	                , PD.EXPO_SELLER_EMAIL
+	                , PD.EXPO_SELLER_NM
+	                , PD.EXPO_SELLER_TELNO   
+	                , (CASE
+	                  WHEN PD.META_CLSF_CD IN ('CT14', 'CT15','CT16') THEN '회'
+	                  ELSE ''
+	                  END ) AS CHAPTER_UNIT	 
+	                , PD.PROD_GRD_CD
 		            , PD.USE_PERIOD_UNIT_CD
 		            , PD.USE_PERIOD
+		            , PD.DRM_YN    
+		            , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID  = PM.PART_PROD_ID) AS PHONE_SPRT_YN        
 		            , CM.AUTO_APPR_YN
 		            , DC.LANG_CD
 		        FROM 
-		              TB_DP_PROD PD
+		              TB_DP_MENU_CATEGORY MC
+		            , TB_DP_MENU_CATEGORY_PROD_MAPG MCPM
+		            , TB_DP_MENU_CATEGORY_DESC      MCD		        
+		            , TB_DP_PROD PD
 		            , TB_DP_CMPX_PROD CM
 		            , TB_DP_PROD_DESC DC
 		            , TB_DP_TENANT_PROD TP
@@ -540,11 +566,18 @@
 		                 AND B.PROD_RSHP_CD ='DP010802'
 		                 AND B.PART_PROD_ID=#{productBasicInfo.partProdId}
 		             )PM    
-		        WHERE PD.PROD_ID = CM.PROD_ID
+		      WHERE MC.MENU_ID = MCPM.MENU_ID
+		        AND MC.MENU_ID = MCD.MENU_ID
+		        AND PD.PROD_ID = CM.PROD_ID
 		        AND PD.PROD_ID = DC.PROD_ID
 		        AND PD.PROD_ID = TP.PROD_ID
 		        AND PD.PROD_ID = PR.PROD_ID
 		        AND PD.PROD_ID = PM.PROD_ID
+		        AND PM.PART_PROD_ID = MCPM.PROD_ID 
+		        AND MC.USE_YN ='Y'
+		        AND MCPM.BASE_YN='Y'
+		        AND MCPM.USE_YN='Y'
+		        AND MCD.LANG_CD = DC.LANG_CD 		        
 		        AND DC.LANG_CD = #{lang}
 		        AND TP.TENANT_ID = PR.TENANT_ID
 		        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
