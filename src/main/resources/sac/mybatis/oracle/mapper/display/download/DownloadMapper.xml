@@ -654,6 +654,7 @@
 		   AND KB.EXPO_ORD(+) = 1
 		   AND KB.IMG_CD(+) = #{imageCd}
 		   AND KB.LANG_CD(+) = #{langCd}
+		   AND ROWNUM = 1
     </select>
     
     <!-- for download 대여 상품 구매상태 조회 -->
