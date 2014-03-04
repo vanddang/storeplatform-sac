@@ -57,4 +57,10 @@ public final class IdpConstants {
 	public static final String DCD_ENTRY_CHANGE_NUMBER = "4105"; // 번호변경
 	public static final String DCD_ENTRY_CHANGE_MODEL = "4109"; // 기기변경
 
+	/**
+	 * 상품 DCD 연동 지원여부 코드
+	 * */
+	public static final String DCD_SUPPORT_NO = "PD005200"; // DCD 미지원
+	public static final String DCD_SUPPORT_YES = "PD005201"; // DCD 지원
+
 }
