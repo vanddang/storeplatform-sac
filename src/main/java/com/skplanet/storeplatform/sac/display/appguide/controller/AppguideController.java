@@ -5,15 +5,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideApprankingSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideApprankingSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.appguide.service.AppguideApprankingService;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideIsfService;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideVersionService;
 
@@ -33,6 +37,9 @@ public class AppguideController {
 
 	@Autowired
 	private AppguideVersionService appguideVersionService;
+
+	@Autowired
+	private AppguideApprankingService appguideApprankingService;
 
 	/**
 	 * <pre>
@@ -78,4 +85,28 @@ public class AppguideController {
 		this.logger.debug("request {}", requestVO);
 		return this.appguideVersionService.searchVersion(requestVO, requestHeader);
 	}
+
+	/**
+	 * <pre>
+	 * 앱랭킹  상품 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
+	 * @return AppguideApprankingRes
+	 */
+	@RequestMapping(value = "/appranking/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public AppguideApprankingSacRes searchVodList(@Validated AppguideApprankingSacReq req, SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchApprankingList Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("Input Parameters {}", header.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.appguideApprankingService.searchApprankingList(req, header);
+	}
+
 }
