@@ -101,6 +101,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 		downloadMusicSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadMusicSacReq.setDeviceModelCd(deviceHeader.getModel());
+		downloadMusicSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		downloadMusicSacReq.setLangCd(tanantHeader.getLangCd());
 		downloadMusicSacReq.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
@@ -293,9 +294,9 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				product.setPurchaseList(purchaseList);
 
 				// 암호화 정보
-//				if (!encryptionList.isEmpty()) {
-//					 product.setDl(encryptionList);
-//				}
+				// if (!encryptionList.isEmpty()) {
+				// product.setDl(encryptionList);
+				// }
 			}
 
 			identifierList = new ArrayList<Identifier>();
