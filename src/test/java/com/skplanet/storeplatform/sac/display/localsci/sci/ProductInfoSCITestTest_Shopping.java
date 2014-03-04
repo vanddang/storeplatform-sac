@@ -51,11 +51,15 @@ public class ProductInfoSCITestTest_Shopping {
 	 * @throws JsonMappingException
 	 * @throws JsonGenerationException
 	 */
-	@Test
+	// @Test
 	public void testSearchFreePassProductList() throws JsonGenerationException, JsonMappingException, IOException {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
-		list.add("H900565545");
+
+		list.add("H900065860");
+		list.add("H000043061");
+		list.add("H000043062");
+		list.add("H000043063");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
 
@@ -79,11 +83,11 @@ public class ProductInfoSCITestTest_Shopping {
 	 * @throws JsonMappingException
 	 * @throws JsonGenerationException
 	 */
-	// @Test
+	@Test
 	public void testSearchShoppingProductList() throws JsonGenerationException, JsonMappingException, IOException {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
-		list.add("H900065860");
+		list.add("S900000988");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
 
