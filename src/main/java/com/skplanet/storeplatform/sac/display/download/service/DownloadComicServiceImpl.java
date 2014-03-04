@@ -103,21 +103,11 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		this.logger.debug("[getDownloadComicInfo] userKey : {}", userKey);
 		this.logger.debug("----------------------------------------------------------------");
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(productId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
-		}
-		if (StringUtils.isEmpty(deviceKey)) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
-		}
-		if (StringUtils.isEmpty(userKey)) {
-			throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-		}
-
 		// 헤더정보 세팅
 		comicReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		comicReq.setLangCd(requestHeader.getTenantHeader().getLangCd());
 		comicReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		comicReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		comicReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
 		// comic 상품 정보 조회(for download)

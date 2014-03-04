@@ -112,19 +112,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		this.logger.debug("[getDownloadEbookInfo] userKey : {}", userKey);
 		this.logger.debug("----------------------------------------------------------------");
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(idType)) {
-			throw new StorePlatformException("SAC_DSP_0002", "idType", idType);
-		}
-		if (StringUtils.isEmpty(productId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
-		}
-		if (StringUtils.isEmpty(deviceKey)) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
-		}
-		if (StringUtils.isEmpty(userKey)) {
-			throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-		}
 		// ID유형 유효값 체크
 		if (!"channel".equals(idType) && !"episode".equals(idType)) {
 			throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
@@ -134,6 +121,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		ebookReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		ebookReq.setLangCd(requestHeader.getTenantHeader().getLangCd());
 		ebookReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		ebookReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		ebookReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
 		// ebook 상품 정보 조회(for download)
