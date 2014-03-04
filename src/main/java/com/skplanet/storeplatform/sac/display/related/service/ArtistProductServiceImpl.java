@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +21,24 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
- * Seller Product Service 인터페이스(CoreStoreBusiness)
+ * ArtistProductService 인터페이스(CoreStoreBusiness)
  * 
- * Updated on : 2014. 02. 18. Updated by : 유시혁.
+ * Updated on : 2014. 03. 03. Updated by : 유시혁.
  */
 @Service
-public class SellerProductServiceImpl implements SellerProductService {
+public class ArtistProductServiceImpl implements ArtistProductService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -51,75 +50,76 @@ public class SellerProductServiceImpl implements SellerProductService {
 	private MetaInfoService metaInfoService;
 
 	@Autowired
+	private MusicInfoGenerator musicGenerator;
+
+	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	/**
 	 * 
 	 * <pre>
-	 * 특정 판매자별 상품 조회.
+	 * 특정 아티스트별 상품(곡) 조회.
 	 * </pre>
 	 * 
 	 * @param requestVO
-	 *            SellerProductSacReq
+	 *            ArtistProductSacReq
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @return SellerProductSacRes
+	 * @return ArtistProductSacRes
 	 */
 	@Override
-	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader) {
+	public ArtistProductSacRes searchArtistProductList(ArtistProductSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// 헤더 값 세팅
 		this.log.debug("헤더 값 세팅");
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setLangCd(requestHeader.getTenantHeader().getLangCd());
 		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		requestVO.setMmDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		// 요청 값 세팅
 		this.log.debug("요청 값 세팅");
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
-		if (!StringUtils.isEmpty(requestVO.getExceptId())) {
-			requestVO.setArrayExceptId(requestVO.getExceptId().split("\\+"));
-		}
+		requestVO.setOrderedBy(requestVO.getOrderedBy() != null ? requestVO.getOrderedBy() : "issuedDate");
+		requestVO.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
-		SellerProductSacRes sellerProductSacRes = new SellerProductSacRes();
+		ArtistProductSacRes artistProductSacRes = new ArtistProductSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Map<String, Object> reqMap = new HashMap<String, Object>();
-		MetaInfo retMetaInfo = null;
+		// MetaInfo retMetaInfo = null;
 		Product product = null;
 
-		// 특정 판매자별 상품 조회
-		this.log.debug("특정 판매자별 상품 조회");
-		List<ProductBasicInfo> sellerProductList = this.commonDAO.queryForList("SellerProduct.selectSellerProductList",
-				requestVO, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
+		// 특정 아티스트 정보 조회
+		this.log.debug("특정 아티스트 정보 조회");
+		MetaInfo artistMetaInfo = this.commonDAO.queryForObject("ArtistProduct.selectArtistInfo", requestVO,
+				MetaInfo.class);
 
-		if (!sellerProductList.isEmpty()) {
-			reqMap.put("tenantHeader", requestHeader.getTenantHeader());
-			reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		if (artistMetaInfo != null) {
+			artistProductSacRes.setContributor(this.musicGenerator.generateArtistDetailContributor(artistMetaInfo));
 
-			for (ProductBasicInfo productBasicInfo : sellerProductList) {
+			// 특정 작가별 상품 조회
+			this.log.debug("특정 아티스트별 상품(곡) 조회");
+			List<MetaInfo> artistProductList = this.commonDAO.queryForList("ArtistProduct.selectArtistProductList",
+					requestVO, MetaInfo.class);
+			List<Product> productList = new ArrayList<Product>();
 
-				reqMap.put("productBasicInfo", productBasicInfo);
-
-				reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-				retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
-				if (retMetaInfo != null) {
-					product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+			if (!artistProductList.isEmpty()) {
+				for (MetaInfo retMetaInfo : artistProductList) {
+					product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
 					productList.add(product);
 				}
-
+				commonResponse.setTotalCount(artistProductList.get(0).getTotalCount());
+				artistProductSacRes.setProductList(productList);
+			} else {
+				commonResponse.setTotalCount(0);
 			}
-			commonResponse.setTotalCount(sellerProductList.get(0).getTotalCount());
-			sellerProductSacRes.setProductList(productList);
 		} else {
 			commonResponse.setTotalCount(0);
 		}
-		this.log.debug("특정 판매자별 상품 조회 결과 : " + commonResponse.getTotalCount() + "건");
-		sellerProductSacRes.setCommonResponse(commonResponse);
-
-		return sellerProductSacRes;
+		this.log.debug("특정 아티스트별 상품(곡) 결과 : " + commonResponse.getTotalCount() + "건");
+		artistProductSacRes.setCommonResponse(commonResponse);
+		return artistProductSacRes;
 	}
 
 }

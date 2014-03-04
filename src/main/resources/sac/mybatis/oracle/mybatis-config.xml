@@ -302,6 +302,8 @@
         <!-- 특정 작가별 상품 조회 -->
         <typeAlias alias="AuthorProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.AuthorProductSacReq" />
 
+        <!-- 특정 아티스트별 상품(곡) 조회 -->
+        <typeAlias alias="ArtistProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacReq" />
     </typeAliases>
     
     <typeHandlers>

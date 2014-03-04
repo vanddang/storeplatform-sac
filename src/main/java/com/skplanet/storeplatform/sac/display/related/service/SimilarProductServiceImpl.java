@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacRes;
@@ -82,12 +81,6 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
 		if (!StringUtils.isEmpty(requestVO.getExceptId())) {
 			requestVO.setArrayExceptId(requestVO.getExceptId().split("\\+"));
-		}
-
-		// 필수 파라미터 체크
-		this.log.debug("필수 파라미터 체크");
-		if (StringUtils.isEmpty(requestVO.getProductId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "productId", requestVO.getProductId());
 		}
 
 		SimilarProductSacRes similarProductSacRes = new SimilarProductSacRes();

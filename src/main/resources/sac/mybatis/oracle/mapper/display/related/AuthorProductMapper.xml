@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="AuthorProduct">
+
+    <!-- 특정 작가 정보 조회 -->
+    <select id="selectAuthorInfo" parameterType="AuthorProductSacReq" resultType="MetaInfo">
+		SELECT /* AuthorProductMapper.xml, selectAuthorInfo, SAC : 유시혁 , 2014-03-04 */
+		    A.ARTIST1_NM
+		    , A.ARTIST2_NM
+		    , A.ARTIST3_NM
+		    , C.CHNL_COMP_NM
+		    , B.TOP_MENU_ID
+		FROM TB_DP_PROD_DESC A, TB_DP_PROD B, UV_TB_DP_MULTIMDA_PROD C
+		WHERE A.PROD_ID = B.PROD_ID
+		AND B.PROD_ID = C.PROD_ID
+		AND A.LANG_CD = #{langCd}
+		AND B.PROD_ID = #{exceptId}
+    </select>
+    
     <!-- 특정 작가별 상품 조회 -->
     <select id="selectAuthorProductList" parameterType="AuthorProductSacReq" resultType="ProductBasicInfo">
         SELECT /* AuthorProductMapper.xml, selectAuthorProductList, SAC : 유시혁 , 2014-02-26 */
@@ -34,7 +50,6 @@
                     , TB_CM_DEVICE H
                     , TB_DP_PROD I /* 채널 */
                     , TB_DP_TENANT_PROD J /* 채널 */
-                    , TB_DP_PROD K
                 WHERE A.PROD_ID = B.PROD_ID
                 AND B.PROD_ID = C.PROD_ID
                 AND C.MENU_ID = D.MENU_ID
@@ -45,7 +60,6 @@
                 AND A.PROD_ID = I.PROD_ID
                 AND A.PROD_ID = J.PROD_ID
                 AND F.TENANT_ID = J.TENANT_ID
-                AND D.TOP_MENU_ID = K.TOP_MENU_ID
                 AND C.USE_YN = 'Y'
                 AND D.USE_YN = 'Y'
                 AND H.USE_YN = 'Y'
@@ -74,7 +88,7 @@
                 </if>
                 
                 AND A.PROD_ID != #{exceptId} /* 제외 상품 ID : H001541415 */
-                AND K.PROD_ID = #{exceptId} /* 상품 ID(탑메뉴ID를 얻기 위한) : H001541415*/
+                AND D.TOP_MENU_ID = #{topMenuId}
                 AND F.TENANT_ID = #{tenantId}
                 AND A.LANG_CD = #{langCd}
                 AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{mmDeviceModelCd})

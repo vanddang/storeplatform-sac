@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ArtistProduct">
+
+    <!-- 특정 아티스트별 상품 조회 조회 -->
+    <select id="selectArtistInfo" parameterType="ArtistProductSacReq" resultType="MetaInfo">
+		SELECT 
+		    A.ARTIST_ID
+		    , A.ARTIST_NM
+		    , A.IMG_FILE_PATH AS FILE_PATH
+		    , A.NATY AS COUNTRY
+		    , A.DEBUT_DAY
+		    , A.DEBUT_MUSIC_NM
+		FROM TB_DP_ARTIST A
+		WHERE A.ARTIST_ID = #{artistId}
+    </select>
+
+    <!-- 특정 아티스트별 상품 조회 조회 -->
+    <select id="selectArtistProductList" parameterType="ArtistProductSacReq" resultType="MetaInfo">
+		SELECT 
+		    A.TOTAL_COUNT
+		    , A.RNK
+		    , A.PART_PROD_ID
+		    , A.PROD_ID
+		    , A.TOP_MENU_ID
+		    , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC A1 WHERE A1.MENU_ID = A.TOP_MENU_ID AND A1.LANG_CD = A.LANG_CD) TOP_MENU_NM
+		    , A.MENU_ID
+		    , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC A1 WHERE A1.MENU_ID = A.MENU_ID AND A1.LANG_CD = A.LANG_CD) MENU_NM
+		    , A.PROD_NM
+		    , A.PROD_BASE_DESC
+		    , A.PROD_AMT
+		    , A.PROD_NET_AMT
+		    , A.PROD_GRD_CD
+		    , A.META_CLSF_CD
+		    , A.ARTIST1_ID AS ARTIST_ID
+		    , A.ARTIST1_NM
+		    , A.ARTIST2_NM
+		    , A.ARTIST3_NM
+		    , A.CHNL_COMP_NM
+		    , A.AGENCY_NM
+		    , A.ISSUE_DAY
+		    , 'Y' AS MP3_SPRT_YN
+		    , A.BELL_SPRT_YN
+		    , A.COLORRING_SPRT_YN
+		    , A.CONTENTS_TYPE_CD
+		    , CONCAT(A.FILE_PATH,A.FILE_NM) FILE_PATH
+/*		    , A.FILE_NM */
+		FROM (
+		    SELECT 
+		        COUNT(1) OVER() TOTAL_COUNT
+                <if test="orderedBy == 'issuedDate'">
+                , ROW_NUMBER() OVER(ORDER BY I.ISSUE_DAY DESC, D.PROD_NM) RNK
+                </if>
+                <if test="orderedBy == 'popular'">
+                , ROW_NUMBER() OVER(ORDER BY NVL(H.PRCHS_CNT, 0) DESC, I.ISSUE_DAY DESC, D.PROD_NM) RNK
+                </if>
+		        , A.PROD_ID AS PART_PROD_ID
+		        , J.PROD_ID
+		        , C.TOP_MENU_ID
+		        , C.MENU_ID
+		        , D.PROD_NM
+		        , D.PROD_BASE_DESC
+		        , K.PROD_AMT
+		        , K.PROD_NET_AMT
+		        , A.PROD_GRD_CD
+		        , A.META_CLSF_CD
+		        , D.ARTIST1_ID
+		        , D.ARTIST1_NM
+		        , D.ARTIST2_NM
+		        , D.ARTIST3_NM
+		        , I.CHNL_COMP_NM
+		        , I.AGENCY_NM
+		        , I.ISSUE_DAY
+		        , I.BELL_SPRT_YN
+		        , I.COLORRING_SPRT_YN
+		        , A.CONTENTS_TYPE_CD
+		        , D.LANG_CD
+		        , L.FILE_PATH
+		        , L.FILE_NM
+		    FROM 
+		        TB_DP_PROD A /* 에피소드 */
+		        , TB_DP_MENU_CATEGORY_PROD_MAPG B
+		        , TB_DP_MENU_CATEGORY C
+		        , TB_DP_PROD_DESC D
+		        , TB_DP_TENANT_PROD E
+		        , TB_DP_SPRT_DEVICE F
+		        , TB_CM_DEVICE G
+		        , TB_DP_TENANT_PROD_STATS H
+		        , UV_TB_DP_MULTIMDA_PROD I
+		        , TB_DP_PROD_RSHP J
+		        , TB_DP_TENANT_PROD_PRICE K
+		        , TB_DP_PROD_IMG L
+		    WHERE A.PROD_ID = B.PROD_ID
+		    AND B.MENU_ID = C.MENU_ID
+		    AND A.PROD_ID = D.PROD_ID
+		    AND A.PROD_ID = E.PROD_ID
+		    AND A.PROD_ID = F.PROD_ID
+		    AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
+		    AND E.PROD_ID = H.PROD_ID(+)
+		    AND E.TENANT_ID = H.TENANT_ID(+)
+		    AND A.PROD_ID = I.PROD_ID
+		    AND A.PROD_ID = J.PART_PROD_ID
+		    AND A.PROD_ID = K.PROD_ID
+		    AND E.TENANT_ID = K.TENANT_ID
+		    AND J.PROD_ID = L.PROD_ID
+		    AND D.LANG_CD = L.LANG_CD
+		
+		    AND A.CONTENTS_TYPE_CD = 'PD002502'
+		    AND A.META_CLSF_CD = 'CT25'
+		    AND B.USE_YN = 'Y'
+		    AND C.USE_YN = 'Y'
+		    AND C.TOP_MENU_ID = 'DP16'
+		    AND E.PROD_STATUS_CD = 'PD000403'
+		    AND E.EXPO_YN = 'Y'
+		    AND G.MUSIC_SPRT_YN = 'Y'
+		    AND J.PROD_RSHP_CD = 'DP010802'
+		    AND SYSDATE BETWEEN APPLY_START_DT AND APPLY_END_DT
+		
+            AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{mmDeviceModelCd})
+            AND D.ARTIST1_ID = #{artistId}
+            AND E.TENANT_ID = #{tenantId}
+            AND D.LANG_CD = #{langCd}
+		    AND L.IMG_CD = #{imageCd}
+		) A
+		WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
+		ORDER BY A.RNK
+    
+    <!-- 
+		SELECT 
+		    A.TOTAL_COUNT
+		    , A.RNK
+		    , A.TOP_MENU_ID
+		    , A.MENU_ID
+		    , A.PROD_ID
+		    , A.CONTENTS_TYPE_CD
+		FROM (
+		    SELECT 
+		        COUNT(1) OVER() TOTAL_COUNT
+		        <if test="orderedBy == 'issuedDate'">
+		        , ROW_NUMBER() OVER(ORDER BY I.ISSUE_DAY DESC, D.PROD_NM) RNK
+		        </if>
+                <if test="orderedBy == 'popular'">
+		        , ROW_NUMBER() OVER(ORDER BY NVL(H.PRCHS_CNT, 0) DESC, I.ISSUE_DAY DESC, D.PROD_NM) RNK
+		        </if>
+		        , C.TOP_MENU_ID
+		        , C.MENU_ID
+		        , A.PROD_ID
+		        , A.CONTENTS_TYPE_CD
+		    FROM 
+		        TB_DP_PROD A /* 에피소드 */
+		        , TB_DP_MENU_CATEGORY_PROD_MAPG B
+		        , TB_DP_MENU_CATEGORY C
+		        , TB_DP_PROD_DESC D
+		        , TB_DP_TENANT_PROD E
+		        , TB_DP_SPRT_DEVICE F
+		        , TB_CM_DEVICE G
+		        , TB_DP_TENANT_PROD_STATS H
+		        , UV_TB_DP_MULTIMDA_PROD I
+		    WHERE A.PROD_ID = B.PROD_ID
+		    AND B.MENU_ID = C.MENU_ID
+		    AND A.PROD_ID = D.PROD_ID
+		    AND A.PROD_ID = E.PROD_ID
+		    AND A.PROD_ID = F.PROD_ID
+		    AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
+		    AND E.PROD_ID = H.PROD_ID(+)
+		    AND E.TENANT_ID = H.TENANT_ID(+)
+		    AND A.PROD_ID = I.PROD_ID
+		
+		    AND A.CONTENTS_TYPE_CD = 'PD002502'
+		    AND A.META_CLSF_CD = 'CT25'
+		    AND B.USE_YN = 'Y'
+		    AND C.USE_YN = 'Y'
+		    AND C.TOP_MENU_ID = 'DP16'
+		    AND E.PROD_STATUS_CD = 'PD000403'
+		    AND E.EXPO_YN = 'Y'
+		    AND G.MUSIC_SPRT_YN = 'Y'
+		
+		    AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{mmDeviceModelCd})
+		    AND D.ARTIST1_ID = #{artistId}
+		    AND E.TENANT_ID = #{tenantId}
+		    AND D.LANG_CD = #{langCd}
+		) A
+		WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
+		ORDER BY A.RNK
+		 -->
+    </select>
+            
+</mapper>
