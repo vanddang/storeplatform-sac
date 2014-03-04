@@ -145,9 +145,6 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 		identifier.setText(metaInfo.getPartProdId());
 		identifierList.add(identifier);
-		identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-		identifier.setText(metaInfo.getProdId());
-		identifierList.add(identifier);
 		return identifierList;
 	}
 
