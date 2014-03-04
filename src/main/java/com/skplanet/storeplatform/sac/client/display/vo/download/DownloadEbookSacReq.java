@@ -42,6 +42,8 @@ public class DownloadEbookSacReq extends CommonInfo {
 
 	private String imageCd; // 이미지코드
 
+	private String anyDeviceModelCd; // 가상 프로비저닝 단말모델코드
+
 	/**
 	 * @return the idType
 	 */
@@ -190,5 +192,20 @@ public class DownloadEbookSacReq extends CommonInfo {
 	 */
 	public void setImageCd(String imageCd) {
 		this.imageCd = imageCd;
+	}
+
+	/**
+	 * @return the anyDeviceModelCd
+	 */
+	public String getAnyDeviceModelCd() {
+		return this.anyDeviceModelCd;
+	}
+
+	/**
+	 * @param anyDeviceModelCd
+	 *            the anyDeviceModelCd to set
+	 */
+	public void setAnyDeviceModelCd(String anyDeviceModelCd) {
+		this.anyDeviceModelCd = anyDeviceModelCd;
 	}
 }
