@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
-import java.util.List;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -13,63 +13,40 @@ public class ModifyFlurrySacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<FlurryAuth> flurryAuthList;
+	/** 토큰. */
+	@NotBlank
+	public String authToken;
+	/** Access 코드. */
+	@NotBlank
+	public String accessCode;
 
 	/**
-	 * @return the flurryAuthList
+	 * @return the authToken
 	 */
-	public List<FlurryAuth> getFlurryAuthList() {
-		return this.flurryAuthList;
+	public String getAuthToken() {
+		return this.authToken;
 	}
 
 	/**
-	 * @param flurryAuthList
-	 *            the flurryAuthList to set
+	 * @param authToken
+	 *            the authToken to set
 	 */
-	public void setFlurryAuthList(List<FlurryAuth> flurryAuthList) {
-		this.flurryAuthList = flurryAuthList;
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken;
 	}
 
 	/**
-	 * Flurry 정보.
-	 * 
-	 * Updated on : 2014. 3. 4. Updated by : Rejoice, Burkhan
+	 * @return the accessCode
 	 */
-	public class FlurryAuth {
+	public String getAccessCode() {
+		return this.accessCode;
+	}
 
-		/** 토큰. */
-		public String authToken;
-		/** Access 코드. */
-		public String accessCode;
-
-		/**
-		 * @return the authToken
-		 */
-		public String getAuthToken() {
-			return this.authToken;
-		}
-
-		/**
-		 * @param authToken
-		 *            the authToken to set
-		 */
-		public void setAuthToken(String authToken) {
-			this.authToken = authToken;
-		}
-
-		/**
-		 * @return the accessCode
-		 */
-		public String getAccessCode() {
-			return this.accessCode;
-		}
-
-		/**
-		 * @param accessCode
-		 *            the accessCode to set
-		 */
-		public void setAccessCode(String accessCode) {
-			this.accessCode = accessCode;
-		}
+	/**
+	 * @param accessCode
+	 *            the accessCode to set
+	 */
+	public void setAccessCode(String accessCode) {
+		this.accessCode = accessCode;
 	}
 }
