@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.ChangedDeviceLog;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDCDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.DCDInfo;
 import com.skplanet.storeplatform.member.client.user.sci.vo.NonMbrSegment;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
@@ -51,6 +52,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrSegment;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchDcdSupportProductSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -82,6 +84,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 	@Autowired
 	private SearchDcdSupportProductSCI searchDcdSupportProductSCI;
+
+	@Autowired
+	private ExistenceInternalSacSCI existenceInternalSacSCI;
 
 	/*
 	 * 
@@ -116,192 +121,179 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		try {
 
-			/* 휴대기기 정보조회 - 서비스 관리 번호 */
-			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-			searchDeviceRequest.setCommonRequest(commonRequest);
+			if (StringUtil.equals(mdn, beMdn)) { // 변경mdn과 이전mdn이 동일한 경우 타통신사에서 SKT로 번호이동 한걸로 간주한다. 
 
-			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-			KeySearch key = new KeySearch();
-			key.setKeyType(MemberConstants.KEY_TYPE_SVC_MANG_NO);
-			key.setKeyString(svcMngNum);
-			keySearchList.add(key);
+				LOGGER.info("::: 변경mdn과 이전mdn이 동일한 경우 타통신사에서 SKT로 번호이동 한걸로 간주 mdn : {}, beMdn : {}, svcMngNum : {}", mdn, beMdn, svcMngNum);
 
-			searchDeviceRequest.setKeySearchList(keySearchList);
-			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
-			beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
-			userKey = schDeviceRes.getUserMbrDevice().getUserKey();
-			deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
+				/* deviceId로 휴대기기 조회 */
+				SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+				searchDeviceRequest.setCommonRequest(commonRequest);
 
-			/* 단말 정보 조회 */
-			Device device = this.mcc.getPhoneInfoByUacd(uacd);
+				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+				KeySearch key = new KeySearch();
+				key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+				key.setKeyString(mdn);
+				keySearchList.add(key);
 
-			if (device == null) {
+				searchDeviceRequest.setKeySearchList(keySearchList);
 
-				uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
-				modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+				LOGGER.info("::: searchDeviceRequest : {}", searchDeviceRequest.getCommonRequest().toString());
+				LOGGER.info("::: searchDeviceRequest : {}", searchDeviceRequest.getKeySearchList().toString());
+				SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
-			} else {
+				beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
+				userKey = schDeviceRes.getUserMbrDevice().getUserKey();
+				deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
-				modelCd = device.getDeviceModelCd();
-				if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
+				/* 단말 정보 조회 */
+				Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
-					/* 테스트 단말여부 확인 */
-					String isTestModel = "N";
-					List<String> limitPolicyCodeList = new ArrayList<String>();
-					limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_TESTER);
-					SearchPolicyRequest policyRequest = new SearchPolicyRequest();
-					policyRequest.setCommonRequest(commonRequest);
-					policyRequest.setLimitPolicyKey(mdn);
-					policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
-					SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
-					for (LimitTarget limitTarget : policyResponse.getLimitTargetList()) {
-						if (limitTarget.getPolicyApplyValue().equals(mdn)) {
-							isTestModel = "Y";
-							break;
-						}
-					}
-
-					if (!StringUtil.equals(isTestModel, "Y")) { // 일반 사용자인 경우 - 미지원 휴대폰으로
-						uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
-					}
-
+				if (device == null) {
+					uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
+					modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+				} else {
+					modelCd = device.getDeviceModelCd();
 				}
+
+				/* 휴대기기 정보 업데이트 */
+				CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+				UserMbrDevice userMbrDevice = new UserMbrDevice();
+				userMbrDevice.setUserKey(userKey);
+				userMbrDevice.setDeviceID(mdn);
+				userMbrDevice.setDeviceKey(deviceKey);
+				userMbrDevice.setDeviceModelNo(modelCd);
+				userMbrDevice.setSvcMangNum(svcMngNum);
+				userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 번호변경
+
+				List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+				UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+				userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+				userMbrDeviceDetail.setExtraProfileValue(uacd);
+				userMbrDeviceDetail.setTenantID(tenantId);
+				userMbrDeviceDetail.setUserKey(userKey);
+				userMbrDeviceDetail.setDeviceKey(deviceKey);
+				userMbrDeviceDetailList.add(userMbrDeviceDetail);
+				userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
+
+				createDeviceReq.setCommonRequest(commonRequest);
+				createDeviceReq.setUserKey(userKey);
+				createDeviceReq.setIsNew("N");
+				createDeviceReq.setUserMbrDevice(userMbrDevice);
+
+				this.deviceSCI.createDevice(createDeviceReq);
+
+			} else { // SKT MDN이 번호변경된 경우
+
+				LOGGER.info("::: SKT MDN이 번호변경된 경우 mdn : {}, beMdn : {}, svcMngNum : {}", mdn, beMdn, svcMngNum);
+
+				/* 휴대기기 정보조회 - 서비스 관리 번호 */
+				SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+				searchDeviceRequest.setCommonRequest(commonRequest);
+
+				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+				KeySearch key = new KeySearch();
+				key.setKeyType(MemberConstants.KEY_TYPE_SVC_MANG_NO);
+				key.setKeyString(svcMngNum);
+				keySearchList.add(key);
+
+				searchDeviceRequest.setKeySearchList(keySearchList);
+				SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+				beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
+				userKey = schDeviceRes.getUserMbrDevice().getUserKey();
+				deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
+
+				/* 단말 정보 조회 */
+				Device device = this.mcc.getPhoneInfoByUacd(uacd);
+
+				if (device == null) {
+
+					uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
+					modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+
+				} else {
+
+					modelCd = device.getDeviceModelCd();
+					if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
+
+						/* 테스트 단말여부 확인 */
+						String isTestModel = "N";
+						List<String> limitPolicyCodeList = new ArrayList<String>();
+						limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_TESTER);
+						SearchPolicyRequest policyRequest = new SearchPolicyRequest();
+						policyRequest.setCommonRequest(commonRequest);
+						policyRequest.setLimitPolicyKey(mdn);
+						policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
+						SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+						for (LimitTarget limitTarget : policyResponse.getLimitTargetList()) {
+							if (limitTarget.getPolicyApplyValue().equals(mdn)) {
+								isTestModel = "Y";
+								break;
+							}
+						}
+
+						if (!StringUtil.equals(isTestModel, "Y")) { // 일반 사용자인 경우 - 미지원 휴대폰으로
+							uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+						}
+
+					}
+				}
+
+				/* 휴대기기 수정 요청 */
+				CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+
+				UserMbrDevice userMbrDevice = new UserMbrDevice();
+				userMbrDevice.setUserKey(userKey);
+				userMbrDevice.setDeviceID(mdn);
+				userMbrDevice.setDeviceKey(deviceKey);
+				userMbrDevice.setDeviceModelNo(modelCd);
+				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 : 번호변경
+
+				List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+				UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+				userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+				userMbrDeviceDetail.setExtraProfileValue(uacd);
+				userMbrDeviceDetail.setTenantID(tenantId);
+				userMbrDeviceDetail.setUserKey(userKey);
+				userMbrDeviceDetail.setDeviceKey(deviceKey);
+				userMbrDeviceDetailList.add(userMbrDeviceDetail);
+				userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
+
+				createDeviceReq.setCommonRequest(commonRequest);
+				createDeviceReq.setUserKey(userKey);
+				createDeviceReq.setIsNew("N");
+				createDeviceReq.setUserMbrDevice(userMbrDevice);
+
+				this.deviceSCI.createDevice(createDeviceReq);
+
+				/* 게임센터 연동 */
+				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+				gameCenterSacReq.setUserKey(userKey);
+				gameCenterSacReq.setDeviceId(mdn);
+				gameCenterSacReq.setPreDeviceId(beMdn);
+				gameCenterSacReq.setSystemId(systemId);
+				gameCenterSacReq.setTenantId(tenantId);
+				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
+				this.deviceService.insertGameCenterIF(gameCenterSacReq);
+
+				/* 사용자제한정책 mdn 변경(as-is 구매한도/선물수신한도 변경용) */
+				UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
+				updPolicyKeyReq.setCommonRequest(commonRequest);
+				updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
+				updPolicyKeyReq.setNewLimitPolicyKey(mdn);
+				UpdatePolicyKeyResponse updPolicyKeyRes = this.userSCI.updatePolicyKey(updPolicyKeyReq);
+
+				LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 : {}", updPolicyKeyRes.getUpdateCount());
+
 			}
-
-			/* 휴대기기 수정 요청 */
-			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
-
-			UserMbrDevice userMbrDevice = new UserMbrDevice();
-			userMbrDevice.setUserKey(userKey);
-			userMbrDevice.setDeviceID(mdn);
-			userMbrDevice.setDeviceKey(deviceKey);
-			userMbrDevice.setDeviceModelNo(modelCd);
-			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 : 번호변경
-
-			List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
-			UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
-			userMbrDeviceDetail.setExtraProfileValue(uacd);
-			userMbrDeviceDetail.setTenantID(tenantId);
-			userMbrDeviceDetail.setUserKey(userKey);
-			userMbrDeviceDetail.setDeviceKey(deviceKey);
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
-			userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
-
-			createDeviceReq.setCommonRequest(commonRequest);
-			createDeviceReq.setUserKey(userKey);
-			createDeviceReq.setIsNew("N");
-			createDeviceReq.setUserMbrDevice(userMbrDevice);
-
-			this.deviceSCI.createDevice(createDeviceReq);
-
-			/* 게임센터 연동 */
-			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(userKey);
-			gameCenterSacReq.setDeviceId(mdn);
-			gameCenterSacReq.setPreDeviceId(beMdn);
-			gameCenterSacReq.setSystemId(systemId);
-			gameCenterSacReq.setTenantId(tenantId);
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
-			this.deviceService.insertGameCenterIF(gameCenterSacReq);
-
-			/* 사용자제한정책 mdn 변경(as-is 구매한도/선물수신한도 변경용) */
-			UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
-			updPolicyKeyReq.setCommonRequest(commonRequest);
-			updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
-			updPolicyKeyReq.setNewLimitPolicyKey(mdn);
-			UpdatePolicyKeyResponse updPolicyKeyRes = this.userSCI.updatePolicyKey(updPolicyKeyReq);
-
-			LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 : {}", updPolicyKeyRes.getUpdateCount());
 
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 
 		} catch (StorePlatformException ex) {
 
-			LOGGER.info("::: Exception : {}", ex.getErrorInfo().getCode());
-			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-
-				/* skt 서비스 관리번호로 조회결과 없는경우 device_id로 조회하여 정보 업데이트 */
-				LOGGER.info("<changeMobileNumber> NOT EXIST MEMBER. SVC_MGMT_NUM[ {} ]", svcMngNum);
-
-				try {
-
-					/* 이전 deviceId로 휴대기기 조회 */
-					SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-					searchDeviceRequest.setCommonRequest(commonRequest);
-
-					List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-					KeySearch key = new KeySearch();
-					key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-					key.setKeyString(beMdn);
-					keySearchList.add(key);
-
-					searchDeviceRequest.setKeySearchList(keySearchList);
-
-					LOGGER.info("::: searchDeviceRequest : {}", searchDeviceRequest.getCommonRequest().toString());
-					LOGGER.info("::: searchDeviceRequest : {}", searchDeviceRequest.getKeySearchList().toString());
-					SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
-
-					beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
-					userKey = schDeviceRes.getUserMbrDevice().getUserKey();
-					deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
-
-					/* 단말 정보 조회 */
-					Device device = this.mcc.getPhoneInfoByUacd(uacd);
-
-					if (device == null) {
-						uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
-						modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
-					} else {
-						modelCd = device.getDeviceModelCd();
-					}
-
-					/* 휴대기기 정보 업데이트 */
-					CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
-					UserMbrDevice userMbrDevice = new UserMbrDevice();
-					userMbrDevice.setUserKey(userKey);
-					userMbrDevice.setDeviceID(mdn);
-					userMbrDevice.setDeviceKey(deviceKey);
-					userMbrDevice.setDeviceModelNo(modelCd);
-					userMbrDevice.setSvcMangNum(svcMngNum);
-					userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-					userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 번호변경
-
-					List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
-					UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-					userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
-					userMbrDeviceDetail.setExtraProfileValue(uacd);
-					userMbrDeviceDetail.setTenantID(tenantId);
-					userMbrDeviceDetail.setUserKey(userKey);
-					userMbrDeviceDetail.setDeviceKey(deviceKey);
-					userMbrDeviceDetailList.add(userMbrDeviceDetail);
-					userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
-
-					createDeviceReq.setCommonRequest(commonRequest);
-					createDeviceReq.setUserKey(userKey);
-					createDeviceReq.setIsNew("N");
-					createDeviceReq.setUserMbrDevice(userMbrDevice);
-
-					this.deviceSCI.createDevice(createDeviceReq);
-
-					result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
-
-				} catch (StorePlatformException e) {
-					if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-						result = IdpConstants.IDP_RESPONSE_NO_DATA;
-					} else {
-						result = IdpConstants.IDP_RESPONSE_FAIL_CODE;
-					}
-				}
-
-			} else {
-
-				result = IdpConstants.IDP_RESPONSE_FAIL_CODE;
-			}
+			result = IdpConstants.IDP_RESPONSE_FAIL_CODE;
 
 		} finally {
-
-			LOGGER.info("::: result : {}", result);
 
 			/* IDP로그 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
@@ -510,7 +502,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			createDeviceReq.setIsNew("N");
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
 
-			this.deviceSCI.createDevice(createDeviceReq);
+			CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
@@ -529,7 +521,15 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						device.getDeviceModelCd(), uacd, svcMngNum);
 
 				/* 기존에 구매했던 DCD 상품 조회 */
-				//searchDcdSupportProductSCI.searchDcdSupportProduct();
+				//				DcdSupportProductRes dcdSupportProductRes = this.searchDcdSupportProductSCI.searchDcdSupportProduct();
+				//				ExistenceReq existenceReq = new ExistenceReq();
+				//				existenceReq.setUserKey(userKey);
+				//				existenceReq.setDeviceKey(createDeviceRes.getDeviceKey());
+				//				
+				//				List<ExistenceItem> existenceItemList = new ArrayList<ExistenceItem>();
+
+				//existenceReq.setExistenceItem(existenceItem);
+				//existenceInternalSacSCI.searchExistenceList(existenceReq);
 
 				/* 기존번호 상품별로 DCD 단말해지 */
 
