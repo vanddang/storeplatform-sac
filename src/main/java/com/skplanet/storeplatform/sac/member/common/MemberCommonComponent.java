@@ -503,9 +503,7 @@ public class MemberCommonComponent {
 	 * 
 	 * @param deviceTelecom
 	 *            이동통신사
-	 * @return String
-	 * @throws Exception
-	 *             Exception
+	 * @return 이동통신사 변환
 	 */
 	public String convertDeviceTelecom(String deviceTelecom) {
 		if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
@@ -534,9 +532,7 @@ public class MemberCommonComponent {
 	 * 
 	 * @param deviceTelecom
 	 *            이동통신사
-	 * @return String
-	 * @throws Exception
-	 *             Exception
+	 * @return String 이동통신사 변환
 	 */
 	public String convertDeviceTelecomCode(String deviceTelecom) {
 		if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_SKT)) {
