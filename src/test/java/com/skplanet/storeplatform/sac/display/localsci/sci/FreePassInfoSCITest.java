@@ -44,8 +44,8 @@ public class FreePassInfoSCITest {
 		try {
 			FreePassInfoSacReq req = new FreePassInfoSacReq();
 
-			req.setProdId("H900067755");
-			req.setEpisodeProdId("H900565545");
+			req.setProdId("FR00000103");
+			req.setEpisodeProdId("H000043061");
 			req.setTenantId("S01");
 			req.setLangCd("ko");
 
