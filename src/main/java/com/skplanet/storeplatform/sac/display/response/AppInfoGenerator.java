@@ -115,6 +115,17 @@ public interface AppInfoGenerator {
 
 	/**
 	 * <pre>
+	 * App 특정 상품 전용 Identifier 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Identifier>
+	 */
+	public List<Identifier> generateSpecificIdentifierList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
 	 * App 상품 전용 Identifier List 생성.
 	 * </pre>
 	 * 

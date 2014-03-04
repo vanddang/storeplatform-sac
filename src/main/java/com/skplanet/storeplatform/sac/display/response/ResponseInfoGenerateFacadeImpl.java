@@ -441,7 +441,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	@Override
 	public Product generateSpecificAppProduct(MetaInfo metaInfo) {
 		Product product = new Product();
-		List<Identifier> identifierList = this.appGenerator.generateIdentifierList(metaInfo);
+		List<Identifier> identifierList = this.appGenerator.generateSpecificIdentifierList(metaInfo);
 		// App용 SupportList 설정
 		List<Support> supportList = this.appGenerator.generateSupportList(metaInfo);
 		// Title 설정

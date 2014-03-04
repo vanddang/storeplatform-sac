@@ -151,6 +151,27 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateSpecificIdentifierList(com.skplanet.
+	 * storeplatform .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Identifier> generateSpecificIdentifierList(MetaInfo metaInfo) {
+		Identifier identifier = new Identifier();
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+		identifier.setText(metaInfo.getPartProdId());
+		identifierList.add(identifier);
+		identifier = new Identifier();
+		identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+		identifier.setText(metaInfo.getProdId());
+		identifierList.add(identifier);
+		return identifierList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateIdentifierList(java.lang.String,
 	 * java.lang.String)
 	 */
