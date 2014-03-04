@@ -284,16 +284,16 @@
 		             , UV_TB_DP_MULTIMDA_PROD D
 		         WHERE A.PART_PROD_ID = #{prodId}
 		           AND A.PROD_ID = B.PROD_ID
-		           AND B.PROD_ID = C.PROD_ID
+		           AND B.PART_PROD_ID = C.PROD_ID
 		           AND C.TENANT_ID = 'S01'
 		           AND C.PROD_STATUS_CD = 'PD000403'
 		           AND C.PROD_ID = D.PROD_ID
 		           <if test='orderedBy == "pre"'>
-		           AND D.CHAPTER <![CDATA[ < ]]> #{chapter}
+		           AND TO_NUMBER(REGEXP_REPLACE(D.CHAPTER, '[^[:digit:]]')) <![CDATA[ < ]]> #{chapter}
 		         ORDER BY D.CHAPTER DESC
 		           </if>
 		           <if test='orderedBy == "next"'>
-		           AND D.CHAPTER <![CDATA[> ]]> #{chapter}
+		           AND TO_NUMBER(REGEXP_REPLACE(D.CHAPTER, '[^[:digit:]]')) <![CDATA[> ]]> #{chapter}
 		         ORDER BY D.CHAPTER ASC
 		           </if>
 		       )
