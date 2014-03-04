@@ -183,15 +183,15 @@ public class DisplayConstants {
 	public static final String DP_SALE_STAT_DELETED = "PD000408"; // 판매삭제
 	public static final String DP_SALE_STAT_RESTRIC_DN = "PD000409"; // 판매불가
 	public static final String DP_SALE_STAT_DROP_REQ_DN = "PD000410"; // 해지요청(다운허용)
-	
+
 	/**
 	 * 정액제 상품 판매상태.
 	 */
-	public static final String DP_PASS_SALE_STAT_WAIT = "PD013201";	//판매대기
-	public static final String DP_PASS_SALE_STAT_ING = "PD013202";	//판매중
-	public static final String DP_PASS_SALE_STAT_STOP = "PD013203";	//판매중지
-	public static final String DP_PASS_SALE_STAT_RESTRIC = "PD013204";	//판매금지
-	public static final String DP_PASS_SALE_STAT_FINISH = "PD013205";	//판매종료
+	public static final String DP_PASS_SALE_STAT_WAIT = "PD013201"; // 판매대기
+	public static final String DP_PASS_SALE_STAT_ING = "PD013202"; // 판매중
+	public static final String DP_PASS_SALE_STAT_STOP = "PD013203"; // 판매중지
+	public static final String DP_PASS_SALE_STAT_RESTRIC = "PD013204"; // 판매금지
+	public static final String DP_PASS_SALE_STAT_FINISH = "PD013205"; // 판매종료
 
 	// //////////////////////////////////////Source Code //////////////////////////////////////////
 	public static final String DP_THUMNAIL_SOURCE = "thumbnail";
@@ -550,4 +550,21 @@ public class DisplayConstants {
 	/** 사용자구분코드. */
 	public static final String MEMBER_MAIN_STATUS_NORMAL = "US010201"; // 정상
 	public static final String MEMBER_MAIN_STATUS_PAUSE = "US010204"; // 계정잠금/7일이용정지/30일이용정지/영구이용정지
+
+	/**
+	 * 일반 컬러링 메타 클래스 코드
+	 */
+	public static final String DP_MUSIC_NORMAL_COLORRING_META_CLASS_CD = "CT30";
+	/**
+	 * 롱 컬러링 메타 클래스 코드
+	 */
+	public static final String DP_MUSIC_LONG_COLORRING_META_CLASS_CD = "CT31";
+	/**
+	 * 일반 라이브벨 메타 클래스 코드
+	 */
+	public static final String DP_MUSIC_NORMAL_BELL_META_CLASS_CD = "CT32";
+	/**
+	 * 고음질 라이브벨 메타 클래스 코드
+	 */
+	public static final String DP_MUSIC_HIGH_QUALITY_BELL_META_CLASS_CD = "CT33";
 }
