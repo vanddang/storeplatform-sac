@@ -43,7 +43,7 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	// @Test
+	@Test
 	public void searchAppPaymentInfo() {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();
@@ -59,11 +59,7 @@ public class PaymentInfoSCITest {
 			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
 			for (int i = 0; i < paymentInfoList.size(); i++) {
 				PaymentInfo paymentInfo = paymentInfoList.get(i);
-				this.log.debug("##### searchPaymentInfo prodId[{}] : {}", i, paymentInfo.getProdId());
-				this.log.debug("##### searchPaymentInfo prodNm[{}] : {}", i, paymentInfo.getProdNm());
-				this.log.debug("##### searchPaymentInfo prodAmt[{}] : {}", i, paymentInfo.getProdAmt());
-				this.log.debug("##### searchPaymentInfo tenantProdGrpCd[{}] : {}", i, paymentInfo.getTenantProdGrpCd());
-				this.log.debug("##### searchPaymentInfo prodSprtYn[{}] : {}", i, paymentInfo.getProdSprtYn());
+				this.log.debug("##### searchPaymentInfo paymentInfo[{}] : {}", i, paymentInfo.toString());
 			}
 
 		} catch (Exception e) {
@@ -93,11 +89,7 @@ public class PaymentInfoSCITest {
 			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
 			for (int i = 0; i < paymentInfoList.size(); i++) {
 				PaymentInfo paymentInfo = paymentInfoList.get(i);
-				this.log.debug("##### searchPaymentInfo prodId[{}] : {}", i, paymentInfo.getProdId());
-				this.log.debug("##### searchPaymentInfo prodNm[{}] : {}", i, paymentInfo.getProdNm());
-				this.log.debug("##### searchPaymentInfo prodAmt[{}] : {}", i, paymentInfo.getProdAmt());
-				this.log.debug("##### searchPaymentInfo tenantProdGrpCd[{}] : {}", i, paymentInfo.getTenantProdGrpCd());
-				this.log.debug("##### searchPaymentInfo prodSprtYn[{}] : {}", i, paymentInfo.getProdSprtYn());
+				this.log.debug("##### searchPaymentInfo paymentInfo[{}] : {}", i, paymentInfo.toString());
 			}
 
 		} catch (Exception e) {
@@ -112,7 +104,7 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	// @Test
 	public void searchFreePassPaymentInfo() {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();
@@ -128,11 +120,7 @@ public class PaymentInfoSCITest {
 			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
 			for (int i = 0; i < paymentInfoList.size(); i++) {
 				PaymentInfo paymentInfo = paymentInfoList.get(i);
-				this.log.debug("##### searchPaymentInfo prodId[{}] : {}", i, paymentInfo.getProdId());
-				this.log.debug("##### searchPaymentInfo prodNm[{}] : {}", i, paymentInfo.getProdNm());
-				this.log.debug("##### searchPaymentInfo prodAmt[{}] : {}", i, paymentInfo.getProdAmt());
-				this.log.debug("##### searchPaymentInfo tenantProdGrpCd[{}] : {}", i, paymentInfo.getTenantProdGrpCd());
-				this.log.debug("##### searchPaymentInfo prodSprtYn[{}] : {}", i, paymentInfo.getProdSprtYn());
+				this.log.debug("##### searchPaymentInfo paymentInfo[{}] : {}", i, paymentInfo.toString());
 			}
 
 		} catch (Exception e) {
