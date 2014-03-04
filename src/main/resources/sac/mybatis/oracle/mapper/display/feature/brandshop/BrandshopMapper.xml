@@ -212,7 +212,8 @@
 			            AND D.PROD_ID = H.PROD_ID
                         AND D.PROD_ID = I.PROD_ID
 			            AND BS.TENANT_ID = E.TENANT_ID
-			            AND BSD.DVC_TYPE_CD = F.DEVICE_MODEL_CD
+                        AND E.PROD_STATUS_CD = 'PD000403'
+			            AND BSD.DVC_TYPE_CD = #{deviceModelCd}
 			            AND F.DEVICE_MODEL_CD = #{deviceModelCd}
 			            AND G.DEVICE_MODEL_CD = #{deviceModelCd}
 			            AND F.USE_YN = 'Y'
