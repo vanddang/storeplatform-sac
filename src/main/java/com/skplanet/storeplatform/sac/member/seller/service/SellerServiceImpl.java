@@ -1266,6 +1266,8 @@ public class SellerServiceImpl implements SellerService {
 		SellerMbr sellerMbr = new SellerMbr();
 		sellerMbr.setSellerKey(searchSellerResponse.getSellerMbr().getSellerKey());
 		sellerMbr.setSellerEmail(req.getNewEmailAddress());
+		// 가가입 회원 이메일 변경시 담당자 이메일도 동일하게 변경
+		sellerMbr.setCustomerEmail(req.getNewEmailAddress());
 		updateSellerRequest.setSellerMbr(sellerMbr);
 		updateSellerRequest.setCommonRequest(commonRequest);
 		/** 2-5. SC회원 - 기본정보변경 Call. */
