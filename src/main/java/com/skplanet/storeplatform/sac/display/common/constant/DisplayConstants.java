@@ -567,4 +567,12 @@ public class DisplayConstants {
 	 * 고음질 라이브벨 메타 클래스 코드
 	 */
 	public static final String DP_MUSIC_HIGH_QUALITY_BELL_META_CLASS_CD = "CT33";
+
+	public static final String DP_MUSIC_COLORING_TYPE = "colorRing";
+
+	public static final String DP_MUSIC_BELL_TYPE = "bell";
+
+	public static final String DP_MUSIC_NORMAL_QUALITY = "normal";
+
+	public static final String DP_MUSIC_HIGH_QUALITY = "long";
 }

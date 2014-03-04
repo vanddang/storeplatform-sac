@@ -279,7 +279,8 @@
             , PI.FILE_NM
             , PI.FILE_SIZE
             , P.CID
-            ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = CP.PART_PROD_ID) AS PHONE_SPRT_YN   
+            ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = CP.PART_PROD_ID) AS PHONE_SPRT_YN
+            ,CHARTPROD.MUSIC_ID AS SONG_ID
             FROM 
                   TB_DP_MENU_CATEGORY_PROD_MAPG CPM
                 , TB_DP_MENU_CATEGORY C
@@ -289,6 +290,7 @@
                 , TB_DP_PROD_DESC PD
                 , TB_DP_PROD_RSHP CP
                 , TB_DP_PROD_IMG PI
+                , TB_DP_CHART_PROD_MAPG CHARTPROD
         WHERE  C.MENU_ID = CPM.MENU_ID
           AND CD.MENU_ID = C.MENU_ID
           AND CPM.PROD_ID = CP.PART_PROD_ID
@@ -296,6 +298,7 @@
           AND P.PROD_ID = CP.PART_PROD_ID
           AND P.PROD_ID = PD.PROD_ID
           AND PI.PROD_ID = CP.PROD_ID
+          AND P.PROD_ID  = CHARTPROD.PROD_ID
        -----------------------------------------------------------------------------
        -- 차트 정보 조건절 END
        ----------------------------------------------------------------------------- 
@@ -547,5 +550,5 @@
 		        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 		     ) IV  LEFT OUTER JOIN TB_DP_PROD_IMG TIG
 		       ON TIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = TIG.PROD_ID AND TIG.IMG_CD = #{imageCd}
-    </select>    
+    </select>
 </mapper>
