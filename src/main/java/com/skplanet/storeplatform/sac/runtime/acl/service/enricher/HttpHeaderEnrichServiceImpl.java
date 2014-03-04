@@ -9,10 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service.enricher;
 
-import java.util.Map;
-
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
+
+import java.util.Map;
 
 /**
 *
@@ -35,6 +35,8 @@ public class HttpHeaderEnrichServiceImpl implements HttpHeaderEnrichService {
 		String systemId = (String) headerMap.get(CommonConstants.HEADER_SYSTEM_ID);
 		String interfaceId = (String) headerMap.get(CommonConstants.HEADER_INTERFACE_ID);
 		String guid = (String) headerMap.get(CommonConstants.HEADER_GUID);
+		String remoteHost = (String) headerMap.get(CommonConstants.HEADER_REMOTE_HOST);
+		String remotePort = (String) headerMap.get(CommonConstants.HEADER_REMOTE_PORT);
 
 		HttpHeaders httpHeader = new HttpHeaders();
 
@@ -48,6 +50,8 @@ public class HttpHeaderEnrichServiceImpl implements HttpHeaderEnrichService {
 		httpHeader.setSystemId(systemId);
 		httpHeader.setInterfaceId(interfaceId);
 		httpHeader.setGuid(guid);
+		httpHeader.setRemoteHost(remoteHost);
+		httpHeader.setRemotePort(remotePort);
 
 		return httpHeader;
 	}

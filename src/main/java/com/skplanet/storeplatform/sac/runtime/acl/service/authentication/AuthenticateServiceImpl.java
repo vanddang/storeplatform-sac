@@ -226,7 +226,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
     @Override
     public void authIp(System system, HttpHeaders headers) {
         //IP 인증
-        String ip = ""; //TODO:headers.get ??
+        String ip = headers.getRemoteHost(); //TODO:IP 정보 확인
 		system.setIp(ip);
         System dbSystem = this.dataAccessService.selectSystemByIp(system);
         if(StringUtils.isEmpty(dbSystem.getIp())) {
