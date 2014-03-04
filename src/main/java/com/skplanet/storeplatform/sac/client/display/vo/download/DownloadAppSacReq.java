@@ -24,6 +24,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	private String tenantId; // tenantId
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
+	private String anyDeviceModelCd; // 가상 프로비저닝 단말모델코드
 	private String langCd; // 언어코드
 	private String osVersion; // os 버전
 	private String lcdSize; // lcd 크기
@@ -115,6 +116,21 @@ public class DownloadAppSacReq extends CommonInfo {
 	 */
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
+	}
+
+	/**
+	 * @return the anyDeviceModelCd
+	 */
+	public String getAnyDeviceModelCd() {
+		return this.anyDeviceModelCd;
+	}
+
+	/**
+	 * @param anyDeviceModelCd
+	 *            the anyDeviceModelCd to set
+	 */
+	public void setAnyDeviceModelCd(String anyDeviceModelCd) {
+		this.anyDeviceModelCd = anyDeviceModelCd;
 	}
 
 	/**
