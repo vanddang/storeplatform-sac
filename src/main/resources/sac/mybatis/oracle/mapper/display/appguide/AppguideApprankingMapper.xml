@@ -6,28 +6,28 @@
            B.TENANT_ID
            , B.MENU_ID
            , B.PROD_ID
+           , B.PART_PROD_ID
+           , B.CATALOG_ID
            , B.META_CLSF_CD
            , B.SVC_GRP_CD
-           , B.PART_PROD_ID
            , B.TOP_MENU_ID
            , B.CONTENTS_TYPE_CD
            , B.TOTAL_COUNT
         FROM (SELECT A.*
                    , COUNT(*) OVER () AS TOTAL_COUNT
-                   , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB, A.PROD_NM) AS RNUM
+                   , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
                FROM (SELECT A.TENANT_ID
                           , D.MENU_ID
                           , A.PROD_ID
+                          , B.PART_PROD_ID
+                          , '' AS CATALOG_ID
                           , D.TOP_MENU_ID
                           , E.META_CLSF_CD
                           , E.SVC_GRP_CD
-                          , B.PART_PROD_ID
                           , E.CONTENTS_TYPE_CD
                           , A.EXPO_ORD_ALWAYS_YN
                           , A.EXPO_ORD
                           , A.EXPO_ORD_SUB
-                          , E.REG_DT
-                          , H.PROD_NM
                           , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY E.REG_DT DESC) AS RN
                        FROM (SELECT LP.*
                                FROM TB_DP_LIST_PROD LP  /* 채널 */
@@ -51,6 +51,9 @@
                           , TB_CM_DEVICE I
                       WHERE A.PROD_ID = B.PROD_ID
                         AND B.PROD_RSHP_CD = 'DP010802'
+                       <if test='menuId != null'>
+                        AND A.MENU_ID = #{menuId}
+                       </if>
                         AND A.MENU_ID = C.MENU_ID
                         AND B.PART_PROD_ID = C.PROD_ID
                         AND C.USE_YN = 'Y'
@@ -117,6 +120,75 @@
 	                                  <if test='b2bProd != "A"'>
 	                                  AND SP.B2B_PROD_YN = #{b2bProd}
 	                                  </if>
+                                      AND SP.B2B_PROD_YN = 'Y'
+                                      AND ROWNUM <![CDATA[ <= ]]> 1  )
+                            ELSE 1
+                        END ) = 1
+                        UNION ALL
+                        SELECT A.TENANT_ID
+                             , ESM.MENU_ID
+                             , C.PROD_ID
+                             , C.PART_PROD_ID
+                             , D.CATALOG_ID
+                             , F.TOP_MENU_ID
+                             , F.META_CLSF_CD
+                             , F.SVC_GRP_CD
+                             , F.CONTENTS_TYPE_CD
+                             , B.EXPO_ORD_ALWAYS_YN
+                             , B.EXPO_ORD
+                             , B.EXPO_ORD_SUB
+                             , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS RN
+                          FROM  (SELECT LP.*
+                               FROM TB_DP_LIST_PROD LP  /* 채널 */
+                                  , TB_DP_LIST LT
+                              WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
+                                AND LP.LIST_ID = #{listId}       
+                                AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+                                AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                                --AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
+                                AND LP.TENANT_ID = LT.TENANT_ID
+                                AND LP.LIST_ID = LT.LIST_ID
+                                AND LT.EXPO_YN = 'Y'
+                            ) A
+                             , TB_DP_PROD_RSHP C
+                             , TB_DP_SHPG_CATALOG      D /* 쇼핑 카탈로그 */
+                             , TB_DP_PROD_CATALOG_MAPG E /* 카탈로그-상품 매핑 */
+                             , TB_DP_MENU_SHPG_MAPG ESM
+                             , TB_DP_PROD F  
+                             , TB_DP_TENANT_PROD G
+                       WHERE 1=1
+                       AND A.PROD_ID = D.CATALOG_ID  
+                       AND G.TENANT_ID = #{tenantId}
+                       AND C.PROD_RSHP_CD = 'DP010802'
+                       AND D.CATALOG_ID = E.CATALOG_ID
+                       AND C.PROD_ID = E.PROD_ID
+                       AND D.CATALOG_ID = ESM.CATALOG_ID   
+                       <if test='menuId != null'>
+                        AND ESM.MENU_ID = #{menuId}
+                       </if>
+                       AND E.BASE_YN = 'Y'
+                       AND E.USE_YN = 'Y'
+                       AND C.PROD_ID = F.PROD_ID
+                       AND F.PROD_ID = G.PROD_ID   
+                       AND G.EXPO_YN = 'Y'
+                       AND EXISTS (
+                              SELECT 1 
+                              FROM  TB_DP_SPRT_DEVICE DV  
+                                   ,TB_CM_DEVICE CM
+                              WHERE 1=1
+                                AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
+                                AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
+                                AND DV.DEVICE_MODEL_CD = #{deviceModelCd}
+                                AND DV.PROD_ID = F.PROD_ID
+                              ) 
+                      AND ( CASE WHEN F.TOP_MENU_ID IN ( 'DP28' )
+                            THEN ( SELECT 1
+                                     FROM TB_DP_SHPG_PROD SP
+                                    WHERE SP.PROD_ID = F.PROD_ID
+                                      AND SP.SALE_YN = 'Y'
+                                      <if test='b2bProd != "A"'>
+                                      AND SP.B2B_PROD_YN = #{b2bProd}
+                                      </if>
                                       AND SP.B2B_PROD_YN = 'Y'
                                       AND ROWNUM <![CDATA[ <= ]]> 1  )
                             ELSE 1
