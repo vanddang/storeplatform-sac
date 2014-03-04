@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="RecommendNewMemberProduct">
-    <!--쿠폰ID,아이템ID 생성 조회-->
+    <!-- 신규 가입 회원 추천 상품 조회 -->
     <select id="searchRecommendNewMemberProductList" parameterType="RecommendNewMemberProductReq" resultType="MetaInfo">
-		SELECT KA.*
+		SELECT /* searchRecommendNewMemberProductList.xml, getDownloadMusicInfo, SAC : 이석희 , 2014-02-25 */
+		       KA.*
 		  FROM
 		       (
 		        SELECT JA.*
@@ -31,7 +32,7 @@
                             AND D.PROD_ID = C.PART_PROD_ID
                             AND D.PROD_ID = E.PROD_ID
                             -- 단말 프로비저닝 --
-                            AND (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = 'android_standard2')                                       
+                            AND (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
                             AND F.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
                             -- 상품 프로비저닝 시작
                             -- 이북 코믹 일때
@@ -184,7 +185,7 @@
 		                                               WHERE 1=1
 		                                                 AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
 		                                                 AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-								                         AND (DV.DEVICE_MODEL_CD = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2')                                       
+								                         AND (DV.DEVICE_MODEL_CD = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
 								                         AND CM.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */ 
 		                                                 AND PROD_ID = I.PROD_ID
 		                                              )                      

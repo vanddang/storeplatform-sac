@@ -70,6 +70,7 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		int offset = 1; // default
 		int count = 10; // default
