@@ -329,7 +329,7 @@ public class SellerController {
 	@ResponseBody
 	public ModifyWaitEmailSacRes modifyWaitEmail(SacRequestHeader header,
 			@RequestBody @Validated ModifyWaitEmailSacReq req) {
-		return null;
+		return this.sellerService.modifyWaitEmailSacReq(header, req);
 	}
 
 }
