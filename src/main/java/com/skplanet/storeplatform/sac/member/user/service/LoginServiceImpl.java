@@ -812,11 +812,13 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeForAutoUpdateRes executeAuthorizeForAutoUpdate(SacRequestHeader requestHeader, AuthorizeForAutoUpdateReq req) {
 
-		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setDeviceId(req.getDeviceId());
+		String deviceId = req.getDeviceId();
+
+		/* 모번호 조회 */
+		deviceId = this.commService.getOpmdMdnInfo(deviceId);
 
 		/* 휴대기기 정보 조회 */
-		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, null);
 
 		AuthorizeForAutoUpdateRes res = new AuthorizeForAutoUpdateRes();
 
@@ -835,7 +837,7 @@ public class LoginServiceImpl implements LoginService {
 
 			LoginUserRequest loginReq = new LoginUserRequest();
 			loginReq.setCommonRequest(commonRequest);
-			loginReq.setUserID(req.getDeviceId());
+			loginReq.setUserID(deviceId);
 			loginReq.setUserPW("");
 			loginReq.setIsSuccess(isLoginSuccess);
 			loginReq.setIsOneID("Y");
@@ -846,7 +848,7 @@ public class LoginServiceImpl implements LoginService {
 			if (svcVersion != null) {
 				loginReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
 			}
-			loginReq.setIpAddress(req.getDeviceId());
+			loginReq.setIpAddress(deviceId);
 			this.userSCI.updateLoginUser(loginReq);
 
 		} else {
