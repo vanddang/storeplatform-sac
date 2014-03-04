@@ -549,21 +549,24 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String errorKey = "uaCd";
 		String errorValue = uaCd;
 
-		errorKey = "msisdn";
-		errorValue = msisdn;
-		UapsEcReq uapsReq = new UapsEcReq();
-		uapsReq.setDeviceId(request.getMsisdn());
-		uapsReq.setType("mdn");
+		if (StringUtils.isNotBlank(msisdn) && StringUtils.isBlank(uaCd)) {
+			errorKey = "msisdn";
+			errorValue = msisdn;
+			UapsEcReq uapsReq = new UapsEcReq();
+			uapsReq.setDeviceId(request.getMsisdn());
+			uapsReq.setType("mdn");
 
-		UafmapEcRes uapsRes = this.uapsSCI.getDeviceInfo(uapsReq);
+			UafmapEcRes uapsRes = this.uapsSCI.getDeviceInfo(uapsReq);
 
-		if (uapsRes != null && StringUtils.isNotBlank(uapsRes.getDeviceModel())) {
-			LOGGER.info("[MiscellaneousService.getModelCode] UAPS Connection Response {}", uapsRes);
-			uaCd = uapsRes.getDeviceModel();
-		} else {
-			throw new StorePlatformException("SAC_MEM_3401", errorKey, errorValue);
+			if (uapsRes != null && StringUtils.isNotBlank(uapsRes.getDeviceModel())) {
+				LOGGER.info("[MiscellaneousService.getModelCode] UAPS Connection Response {}", uapsRes);
+				uaCd = uapsRes.getDeviceModel();
+			} else {
+				throw new StorePlatformException("SAC_MEM_3401", errorKey, errorValue);
+			}
 		}
 
+		// uaCd로 PhoneInfo 테이블 조회.
 		Device device = this.commonComponent.getPhoneInfoByUacd(uaCd);
 
 		if (device != null && StringUtils.isNotBlank(device.getDeviceModelCd())) {
