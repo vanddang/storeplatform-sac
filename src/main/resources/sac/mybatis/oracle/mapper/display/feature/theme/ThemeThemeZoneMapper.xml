@@ -35,6 +35,7 @@
              , B.MENU_ID
              , B.PROD_ID
              , B.PART_PROD_ID
+             , B.CATALOG_ID
              , B.TOP_MENU_ID
              , B.META_CLSF_CD
              , B.SVC_GRP_CD
@@ -47,6 +48,7 @@
                              , E.MENU_ID
                              , C.PROD_ID
                              , C.PART_PROD_ID
+                             , '' AS CATALOG_ID
                              , E.TOP_MENU_ID
                              , F.META_CLSF_CD
                              , F.SVC_GRP_CD
@@ -160,6 +162,7 @@
 					             , ESM.MENU_ID
 					             , C.PROD_ID
 					             , C.PART_PROD_ID
+					             , D.CATALOG_ID
 					             , F.TOP_MENU_ID
 					             , F.META_CLSF_CD
 					             , F.SVC_GRP_CD
@@ -173,7 +176,7 @@
 					             , TB_DP_PROD_RSHP C
 					             , TB_DP_SHPG_CATALOG      D /* 쇼핑 카탈로그 */
 					             , TB_DP_PROD_CATALOG_MAPG E /* 카탈로그-상품 매핑 */
-					             ,TB_DP_MENU_SHPG_MAPG ESM
+					             , TB_DP_MENU_SHPG_MAPG ESM
 					             , TB_DP_PROD F  
 					             , TB_DP_TENANT_PROD G
 					       WHERE 1=1
@@ -193,16 +196,16 @@
 					       AND B.EXPO_YN = 'Y'
 					       AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
 					       AND C.PROD_RSHP_CD = 'DP010802'
-					       AND B.PROD_ID = D.CATALOG_ID
+					       AND B.PROD_ID = D.CATALOG_ID  
+                           AND D.CATALOG_ID = E.CATALOG_ID
 					       AND C.PROD_ID = E.PROD_ID
-					       AND D.CATALOG_ID = ESM.CATALOG_ID     
-					       AND D.CATALOG_ID = E.CATALOG_ID
+					       AND D.CATALOG_ID = ESM.CATALOG_ID   
 					       AND E.BASE_YN = 'Y'
 					       AND E.USE_YN = 'Y'
-					       AND C.PART_PROD_ID = F.PROD_ID
+					       AND C.PROD_ID = F.PROD_ID
 					       AND F.PROD_ID = G.PROD_ID   
 	                       <if test='prodCharge != "A"'>
-	                         AND  F.PROD_CHRG_YN = #{prodCharge}       /* 상품유료여부 */
+	                       AND  F.PROD_CHRG_YN = #{prodCharge}       /* 상품유료여부 */
 	                       </if>
 	                       <if test="arrayProdGradeCd != null">
 	                          AND F.PROD_GRD_CD IN
@@ -221,6 +224,18 @@
 					                AND DV.DEVICE_MODEL_CD = #{deviceModelCd}
 					                AND DV.PROD_ID = F.PROD_ID
 					              ) 
+                          AND ( CASE WHEN F.TOP_MENU_ID IN ( 'DP28' )
+                                THEN ( SELECT 1
+                                         FROM TB_DP_SHPG_PROD SP
+                                        WHERE SP.PROD_ID = F.PROD_ID
+                                          AND SP.SALE_YN = 'Y'
+                                          <if test='b2bProd != "A"'>
+                                          AND SP.B2B_PROD_YN = #{b2bProd}
+                                          </if>
+                                          AND SP.B2B_PROD_YN = 'Y'
+                                          AND ROWNUM <![CDATA[ <= ]]> 1  )
+                                ELSE 1
+                            END ) = 1
                       ) A
                  WHERE RN = 1
               ) B

@@ -197,6 +197,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 					reqMap.put("tenantHeader", tenantHeader);
 					reqMap.put("deviceHeader", deviceHeader);
 					reqMap.put("lang", tenantHeader.getLangCd());
+					reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 
 					product = new Product(); // 결과물
 
