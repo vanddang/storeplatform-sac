@@ -223,7 +223,7 @@ public interface SellerService {
 
 	/**
 	 * <pre>
-	 * 2.2.34. Flurry 수정.
+	 * 2.2.34. Flurry 단건 수정.
 	 * </pre>
 	 * 
 	 * @param header

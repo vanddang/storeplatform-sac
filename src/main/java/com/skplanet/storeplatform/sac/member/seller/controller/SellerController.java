@@ -336,7 +336,7 @@ public class SellerController {
 
 	/**
 	 * <pre>
-	 * 2.2.34. Flurry 수정.
+	 * 2.2.34. Flurry 단건 수정.
 	 * </pre>
 	 * 
 	 * @param header
@@ -345,7 +345,7 @@ public class SellerController {
 	 *            ModifyFlurrySacReq
 	 * @return ModifyFlurrySacRes
 	 */
-//	@RequestMapping(value = "/modifyFlurry/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/modifyFlurry/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyFlurrySacRes modifyFlurry(SacRequestHeader header, @RequestBody @Validated ModifyFlurrySacReq req) {
 		return this.sellerService.ModifyFlurry(header, req);

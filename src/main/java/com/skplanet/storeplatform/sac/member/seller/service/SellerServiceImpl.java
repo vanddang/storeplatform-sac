@@ -1278,7 +1278,7 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * 2.2.34. Flurry 단건 수정.
 	 * </pre>
 	 * 
 	 * @param header
@@ -1294,23 +1294,17 @@ public class SellerServiceImpl implements SellerService {
 		// SC공통 헤더
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 
-		// 3. Flurry 등록/수정
+		// 3. Flurry 수정
 		UpdateFlurryRequest updateFlurryRequest = new UpdateFlurryRequest();
-		// updateFlurryRequest.setSellerKey(req.getSellerKey());
 		updateFlurryRequest.setCommonRequest(commonRequest);
 
-		if (req.getFlurryAuthList() != null) {
-			List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
-			FlurryAuth flurryAuth = null;
-			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
-				flurryAuth = new FlurryAuth();
-				// flurryAuth.setSellerKey(req.getSellerKey());
-				flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
-				flurryAuth.setAccessCode(req.getFlurryAuthList().get(i).getAccessCode());
-				flurryAuthList.add(flurryAuth);
-			}
-			updateFlurryRequest.setFlurryAuthList(flurryAuthList);
-		}
+		List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
+		FlurryAuth flurryAuth = new FlurryAuth();
+		flurryAuth.setAuthToken(req.getAuthToken());
+		flurryAuth.setAccessCode(req.getAccessCode());
+		flurryAuthList.add(flurryAuth);
+
+		updateFlurryRequest.setFlurryAuthList(flurryAuthList);
 
 		UpdateFlurryResponse updateFlurryResponse = this.sellerSCI.updateFlurry(updateFlurryRequest);
 		ModifyFlurrySacRes res = new ModifyFlurrySacRes();
