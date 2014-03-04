@@ -50,6 +50,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrSegment;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchDcdSupportProductSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -78,6 +79,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 	@Autowired
 	private DeviceService deviceService;
+
+	@Autowired
+	private SearchDcdSupportProductSCI searchDcdSupportProductSCI;
 
 	/*
 	 * 
@@ -201,14 +205,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
-			/* 구매한도/선물수신한도 mdn 변경 */
+			/* 사용자제한정책 mdn 변경(as-is 구매한도/선물수신한도 변경용) */
 			UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
 			updPolicyKeyReq.setCommonRequest(commonRequest);
 			updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
 			updPolicyKeyReq.setNewLimitPolicyKey(mdn);
 			UpdatePolicyKeyResponse updPolicyKeyRes = this.userSCI.updatePolicyKey(updPolicyKeyReq);
 
-			LOGGER.info("::: 구매/선물수신한도 변경 카운트 : {}", updPolicyKeyRes.getUpdateCount());
+			LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 : {}", updPolicyKeyRes.getUpdateCount());
 
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 
@@ -261,8 +265,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					userMbrDevice.setDeviceModelNo(modelCd);
 					userMbrDevice.setSvcMangNum(svcMngNum);
 					userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-					userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 :
-																										// 번호변경
+					userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 번호변경
 
 					List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 					UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
@@ -526,6 +529,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						device.getDeviceModelCd(), uacd, svcMngNum);
 
 				/* 기존에 구매했던 DCD 상품 조회 */
+				//searchDcdSupportProductSCI.searchDcdSupportProduct();
 
 				/* 기존번호 상품별로 DCD 단말해지 */
 
