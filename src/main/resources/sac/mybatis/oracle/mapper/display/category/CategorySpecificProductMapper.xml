@@ -430,7 +430,7 @@
           <if test='chartClsfCd != null and chartClsfCd != ""'>
           AND MCI.CHART_CLSF_CD = #{chartClsfCd} -- 멜론 TOP 100
           </if>
-           AND MCI.RANK_START_DAY = #{stdDt}
+          -- AND MCI.RANK_START_DAY = #{stdDt}
        -----------------------------------------------------------------------------
        -- 차트 정보 조건절 END
        ----------------------------------------------------------------------------- 
