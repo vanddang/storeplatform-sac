@@ -12,6 +12,7 @@ public class RecommendNewMemberProductReq extends CommonInfo {
 
 	private String tenantId; // tenantId
 	private String deviceModelCd; // 단말모델코드
+	private String anyDeviceModelCd; // 가상 프로비저닝 단말모델코드
 	private String langCd; // 언어코드
 	private String stdDt; // 배치완료 기준일시
 	private String listId; // 리스트 Id
@@ -46,6 +47,21 @@ public class RecommendNewMemberProductReq extends CommonInfo {
 	 */
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
+	}
+
+	/**
+	 * @return the anyDeviceModelCd
+	 */
+	public String getAnyDeviceModelCd() {
+		return this.anyDeviceModelCd;
+	}
+
+	/**
+	 * @param anyDeviceModelCd
+	 *            the anyDeviceModelCd to set
+	 */
+	public void setAnyDeviceModelCd(String anyDeviceModelCd) {
+		this.anyDeviceModelCd = anyDeviceModelCd;
 	}
 
 	/**
