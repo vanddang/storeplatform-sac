@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.theme;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -21,7 +23,10 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 	private Integer offset = 1; // offset
 	private Integer count = 20; // count
 	private String tenantId; // 테넌트ID
-	private String listId; // 리스트ID
+
+	@NotBlank
+	private String themeZoneId; // 테마존 ID
+
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
 	private String topMenuId; // TOP 메뉴 아이디
@@ -50,12 +55,12 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 		this.count = count;
 	}
 
-	public String getListId() {
-		return this.listId;
+	public String getThemeZoneId() {
+		return this.themeZoneId;
 	}
 
-	public void setListId(String listId) {
-		this.listId = listId;
+	public void setThemeZoneId(String themeZoneId) {
+		this.themeZoneId = themeZoneId;
 	}
 
 	public String getLangCd() {
