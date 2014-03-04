@@ -30,6 +30,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 
 	private String tenantId; // 테넌트 ID
 	private String systemId; // 시스템 ID
+	private String langCd; // 언어 코드
 	private String userKey; // 내부 회원 번호
 	private String deviceKey; // 내부 디바이스 ID
 	private String prchsReqPathCd; // 구매 요청 경로 코드
@@ -57,9 +58,17 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private double realTotAmt; // 최종 결제 총 금액
 	private boolean freeChargeReq; // 비과금 요청 여부
 
+	private PurchaseUserDevice purchaseUser; // 구매(선물발신) 회원정보
+	private PurchaseUserDevice receiveUser; // 선물수신 회원정보
+
+	private List<PurchaseProduct> purchaseProductList = new ArrayList<PurchaseProduct>(); // 구매할 상품 정보 리스트
+
 	private String resultType; // 결과 타입: payment-결제Page 요청진행, free-무료구매 완료
 	private String paymentPageUrl; // 결제Page_URL
-	private String paymentPageParam; // 결제Page_요청_파라미터
+	private String version; // [결제Page 요청 파라미터] 버전
+	private String token; // [결제Page 요청 파라미터] 토큰
+	private String eData; // [결제Page 요청 파라미터] 암호화 데이터
+	private PaymentPageParam paymentPageParam; // 결제Page_요청_파라미터
 
 	private DummyMember purchaseMember; // 구매(선물발신) 회원정보
 	private DummyMember recvMember; // 선물수신 회원정보
@@ -108,6 +117,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
+	}
+
+	/**
+	 * @return the langCd
+	 */
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	/**
+	 * @param langCd
+	 *            the langCd to set
+	 */
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
 	}
 
 	/**
@@ -486,9 +510,54 @@ public class PurchaseOrderInfo extends CommonInfo {
 	}
 
 	/**
+	 * @return the version
+	 */
+	public String getVersion() {
+		return this.version;
+	}
+
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	/**
+	 * @return the token
+	 */
+	public String getToken() {
+		return this.token;
+	}
+
+	/**
+	 * @param token
+	 *            the token to set
+	 */
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	/**
+	 * @return the eData
+	 */
+	public String geteData() {
+		return this.eData;
+	}
+
+	/**
+	 * @param eData
+	 *            the eData to set
+	 */
+	public void seteData(String eData) {
+		this.eData = eData;
+	}
+
+	/**
 	 * @return the paymentPageParam
 	 */
-	public String getPaymentPageParam() {
+	public PaymentPageParam getPaymentPageParam() {
 		return this.paymentPageParam;
 	}
 
@@ -496,7 +565,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 * @param paymentPageParam
 	 *            the paymentPageParam to set
 	 */
-	public void setPaymentPageParam(String paymentPageParam) {
+	public void setPaymentPageParam(PaymentPageParam paymentPageParam) {
 		this.paymentPageParam = paymentPageParam;
 	}
 
@@ -580,6 +649,51 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setFreeChargeReq(boolean freeChargeReq) {
 		this.freeChargeReq = freeChargeReq;
+	}
+
+	/**
+	 * @return the purchaseUser
+	 */
+	public PurchaseUserDevice getPurchaseUser() {
+		return this.purchaseUser;
+	}
+
+	/**
+	 * @param purchaseUser
+	 *            the purchaseUser to set
+	 */
+	public void setPurchaseUser(PurchaseUserDevice purchaseUser) {
+		this.purchaseUser = purchaseUser;
+	}
+
+	/**
+	 * @return the receiveUser
+	 */
+	public PurchaseUserDevice getReceiveUser() {
+		return this.receiveUser;
+	}
+
+	/**
+	 * @param receiveUser
+	 *            the receiveUser to set
+	 */
+	public void setReceiveUser(PurchaseUserDevice receiveUser) {
+		this.receiveUser = receiveUser;
+	}
+
+	/**
+	 * @return the purchaseProductList
+	 */
+	public List<PurchaseProduct> getPurchaseProductList() {
+		return this.purchaseProductList;
+	}
+
+	/**
+	 * @param purchaseProductList
+	 *            the purchaseProductList to set
+	 */
+	public void setPurchaseProductList(List<PurchaseProduct> purchaseProductList) {
+		this.purchaseProductList = purchaseProductList;
 	}
 
 }

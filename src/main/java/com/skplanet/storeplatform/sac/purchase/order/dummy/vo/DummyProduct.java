@@ -51,6 +51,9 @@ public class DummyProduct extends CommonInfo {
 	private String resvCol04;
 	private String resvCol05;
 
+	// 비과금 구매요청 시 사용
+	private String useExprDt;
+
 	/**
 	 * @return the prodId
 	 */
@@ -456,6 +459,21 @@ public class DummyProduct extends CommonInfo {
 	 */
 	public void setFlatType(String flatType) {
 		this.flatType = flatType;
+	}
+
+	/**
+	 * @return the useExprDt
+	 */
+	public String getUseExprDt() {
+		return this.useExprDt;
+	}
+
+	/**
+	 * @param useExprDt
+	 *            the useExprDt to set
+	 */
+	public void setUseExprDt(String useExprDt) {
+		this.useExprDt = useExprDt;
 	}
 
 }

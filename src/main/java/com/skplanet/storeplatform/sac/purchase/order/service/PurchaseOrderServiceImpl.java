@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -37,6 +36,7 @@ import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchS
 import com.skplanet.storeplatform.purchase.client.order.vo.ConfirmPurchaseScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.ConfirmPurchaseScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreateAutoPurchaseScReq;
+import com.skplanet.storeplatform.purchase.client.order.vo.CreateAutoPurchaseScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreatePaymentScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreatePaymentScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseSc;
@@ -47,13 +47,17 @@ import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchas
 import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdatePurchaseCountSCI;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.service.InterworkingSacService;
 import com.skplanet.storeplatform.sac.purchase.order.Seed128Util;
+import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyMember;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
+import com.skplanet.storeplatform.sac.purchase.order.vo.CreatePaymentSacInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
 
 /**
@@ -83,22 +87,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	@Autowired
 	private InterworkingSacService interworkingSacService;
 
-	/*
-	 * <pre> 새로운 구매ID 생성. </pre>
-	 * 
-	 * @param tempPrchsReqPathCd (임시파라미터) 구매요청경로코드
-	 * 
-	 * @param tempProdId (임시파라미터) 상품ID
-	 * 
-	 * @return 새로 생성된 구매ID
-	 */
-	private String makePrchsId(String tempPrchsReqPathCd, String tempProdId) {
-		// TAKTODO:: 구매ID 생성
-		String formattedNow = DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "ddmmss");
-		return "TAK" + formattedNow + tempPrchsReqPathCd.substring(8) + (int) (Math.random() * 1000)
-				+ tempProdId.substring(7) + (int) (Math.random() * 1000);
-	}
-
 	/**
 	 * 
 	 * <pre>
@@ -110,41 +98,36 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void createFreePurchase(PurchaseOrderInfo purchaseOrderInfo) {
+		// 구매 내역 저장
 		this.createPurchaseByType(purchaseOrderInfo, CREATE_PURCHASE_TYPE_COMPLETED);
 
-		// TAKTODO:: 비과금 요청 처리, 일단 여기에 소스 때려박음
-		List<Payment> paymentList = new ArrayList<Payment>();
-		Payment payment = null;
-		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
-			payment = new Payment();
-			payment.setTenantId(purchaseOrderInfo.getTenantId());
-			payment.setPrchsId(purchaseOrderInfo.getPrchsId());
-			payment.setPaymentDtlId(1);
-			payment.setInsdUsermbrNo(purchaseOrderInfo.getPurchaseMember().getUserKey());
-			payment.setInsdDeviceId(purchaseOrderInfo.getPurchaseMember().getDeviceKey());
-			payment.setPrchsDt(purchaseOrderInfo.getPrchsDt());
-			payment.setTotAmt(0.0);
+		// 결제 내역 저장
+		CreatePaymentSacInfo createPaymentSacInfo = new CreatePaymentSacInfo();
+		createPaymentSacInfo.setTenantId(purchaseOrderInfo.getTenantId());
+		createPaymentSacInfo.setSystemId(purchaseOrderInfo.getSystemId());
+		createPaymentSacInfo.setPayUserKey(purchaseOrderInfo.getUserKey());
+		createPaymentSacInfo.setPayDeviceKey(purchaseOrderInfo.getDeviceKey());
+		createPaymentSacInfo.setPrchsId(purchaseOrderInfo.getPrchsId());
+		createPaymentSacInfo.setPrchsDt(purchaseOrderInfo.getPrchsDt());
+		createPaymentSacInfo.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+		createPaymentSacInfo.setTotAmt(purchaseOrderInfo.getRealTotAmt());
 
-			payment.setPaymentMtdCd("OR000697");
-			payment.setPaymentAmt(product.getProdAmt());
-			payment.setPaymentDt(purchaseOrderInfo.getPrchsDt());
-			payment.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+		List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>();
+		PaymentInfo paymentInfo = new PaymentInfo();
+		paymentInfo.setTid(purchaseOrderInfo.getPrchsId());
+		paymentInfo.setPaymentMtdCd("OR000697");
+		paymentInfo.setPaymentAmt(0.0);
+		paymentInfo.setPaymentDt(purchaseOrderInfo.getPrchsDt());
+		// paymentInfo.setApplNum(null);
+		// paymentInfo.setMoid(null);
+		// paymentInfo.setBillKey(null);
+		paymentInfoList.add(paymentInfo);
 
-			payment.setTid(purchaseOrderInfo.getPrchsId());
+		createPaymentSacInfo.setPaymentInfoList(paymentInfoList);
 
-			payment.setRegId(purchaseOrderInfo.getSystemId());
-			payment.setUpdId(purchaseOrderInfo.getSystemId());
-
-			paymentList.add(payment);
-		}
-
-		// 결제 내역 생성 요청
-		CreatePaymentScReq reqPayment = new CreatePaymentScReq();
-		reqPayment.setPaymentList(paymentList);
-
-		CreatePaymentScRes res = this.purchaseOrderSCI.createPayment(reqPayment);
-		if (res.getCount() < 1 || res.getCount() != paymentList.size()) {
-			throw new StorePlatformException("SAC_PUR_0001", "결제내역 저장 처리 중 에러 발생");
+		int createCnt = this.createPayment(createPaymentSacInfo);
+		if (createCnt != createPaymentSacInfo.getPaymentInfoList().size()) {
+			throw new StorePlatformException("SAC_PUR_7203");
 		}
 	}
 
@@ -161,11 +144,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	public void createReservedPurchase(PurchaseOrderInfo purchaseOrderInfo) {
 		this.createPurchaseByType(purchaseOrderInfo, CREATE_PURCHASE_TYPE_RESERVED);
 	}
-
-	private static final String USER_STATUS_ABNORMAL = "0";
-	private static final String USER_STATUS_NORMAL = "1";
-	private static final String PRODUCT_STATUS_ABNORMAL = "0";
-	private static final String PRODUCT_STATUS_NORMAL = "1";
 
 	/**
 	 * 
@@ -189,46 +167,43 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				.searchReservedPurchaseList(reqSearch);
 		List<CreatePurchaseSc> createPurchaseScList = searchPurchaseListRes.getCreatePurchaseScList();
 		if (createPurchaseScList.size() < 1) {
-			throw new StorePlatformException("SAC_PUR_0001", "조회된 구매건이 없습니다.");// TAKTODO:: PP측으로 응답 정리
+			throw new StorePlatformException("SAC_PUR_7101");// TAKTODO:: PP측으로 응답 정리
 		}
 		CreatePurchaseSc createPurchaseSc = createPurchaseScList.get(0);
 
 		// ------------------------------------------------------------------------------------------------
 		// 구매인증 응답 데이터 처리
-		// TAKTODO:: 아래 항목들 모두 처리 필요
 
-		String tempDeviceId;
-		if (StringUtils.equals(createPurchaseSc.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			tempDeviceId = createPurchaseSc.getSendInsdDeviceId();
-		} else {
-			tempDeviceId = createPurchaseSc.getUseInsdDeviceId();
-		}
+		// 예약 저장해둔 데이터 추출
+		Map<String, String> reservedData = this.parseReservedData(createPurchaseSc.getResvCol05());
+
 		VerifyOrderSacRes res = new VerifyOrderSacRes();
-		res.setMdn(tempDeviceId); // [회원Part] MDN 조회
-		res.setFlgMbrStatus(USER_STATUS_NORMAL); // [회원Part] 회원 (상태) 조회
-		res.setFlgProductStatus(PRODUCT_STATUS_NORMAL); // [전시Part] 상품 조회
+		res.setMdn(reservedData.get("deviceId")); // 결제 MDN
+		res.setFlgMbrStatus("1"); // [fix] 회원상태: 1-정상
+		res.setFlgProductStatus("1"); // [fix] 상품상태: 1-정상
+		res.setBonusCashPoint(reservedData.get("bonusCashPoint")); // 보너스 캐쉬 지급 Point
+		res.setBonusCashUsableDayCnt(reservedData.get("bonusCashUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
+		res.setAfterAutoPayDt(reservedData.get("afterAutoPayDt")); // 다음 자동 결제일
+		res.setDwldAvailableDayCnt(reservedData.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
+		res.setUsePeriodCnt(reservedData.get("usePeriodCnt")); // 이용기간(일)
+		res.setLoanPid(reservedData.get("loanPid")); // 대여하기 상품 ID
+		res.setLoanAmt(reservedData.get("loanAmt")); // 대여하기 상품 금액
+		res.setOwnPid(reservedData.get("ownPid")); // 소장하기 상품 ID
+		res.setOwnAmt(reservedData.get("ownAmt")); // 소장하기 상품 금액
+		res.setNmSeller(reservedData.get("sellerNm")); // 판매자명
+		res.setEmailSeller(reservedData.get("sellerEmail")); // 판매자 이메일 주소
+		res.setNoTelSeller(reservedData.get("sellerTelno")); // 판매자 전화번호
+		res.setNmDelivery(reservedData.get("receiveNames")); // 선물수신자 성명
+		res.setNoMdnDelivery(reservedData.get("receiveMdns")); // 선물수신자 MDN
+		/* TAKTODO:: 조회/처리 필요 항목 */
 		res.setFlgTeleBillingAgree("Y"); // [회원Part] 통신과금 동의여부 조회
 		res.setFlgOcbUseAgree("Y"); // [회원Part] OCB 이용약관 동의여부 조회
-		res.setCdResetPaymethod(""); // 결제수단 별 가능 거래금액/비율 조정 정보
 		res.setCdMaxAmtRate(""); // 결제수단 별 가능 거래금액/비율 조정 정보
 		res.setCdOcbSaveInfo(""); // OCB 적립코드
 		res.setNoOcbCard(""); // [회원Part] OCB 카드번호
 		res.setNoCouponList(""); // [Tenant] 쿠폰 List
 		res.setTypeTestMdn("T03"); // 법인 및 일반 시험폰 처리 타입 (T01, T02, T03)
-		res.setBonusCashPoint("0"); // [전시Part] 보너스 캐쉬 지급 Point
-		res.setBonusCashUsableDayCnt("0"); // [전시Part] 보너스 캐쉬 유효기간(일)
-		res.setAfterAutoPayDt(""); // [전시Part] 다음 자동 결제일
-		res.setDwldAvailableDayCnt("0"); // [전시Part] 다운로드 가능기간(일)
-		res.setUsePeriodCnt("0"); // [전시Part] 이용기간(일)
-		res.setLoanPid(""); // [전시Part] 대여하기 상품 ID
-		res.setLoanAmt("0"); // [전시Part] 대여하기 상품 금액
-		res.setOwnPid(""); // [전시Part] 소장하기 상품 ID
-		res.setOwnAmt("0"); // [전시Part] 소장하기 상품 금액
-		res.setNmSeller("SKP Store"); // [전시Part] 판매자명
-		res.setEmailSeller("testhong@test.com"); // [전시Part] 판매자 이메일 주소
-		res.setNoTelSeller("090-1212-3434"); // [전시Part] 판매자 전화번호
-		res.setNmDelivery(""); // 선물수신자 성명
-		res.setNoMdnDelivery(""); // 선물수신자 MDN
+		/* END - 조회/처리 필요 항목 */
 
 		return res;
 	}
@@ -239,47 +214,61 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 유료구매 - 구매확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장.
 	 * </pre>
 	 * 
-	 * @param createPurchaseSc
-	 *            구매상세 정보
 	 * @param notifyPaymentReq
 	 *            결제결과 정보
 	 */
 	@Override
-	public void updateConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq) {
+	public void executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq) {
 		this.logger.debug("PRCHS,ORDER,CONFIRM,START");
 
 		// ------------------------------------------------------------------------------
 		// 구매 예약 건 조회
 
-		Map<String, String> spareParamMap = this.parsePaySpareParameter(notifyPaymentReq.getMctSpareParam()); // 가맹점용
-																											  // 파라미터
-
 		SearchReservedPurchaseListScReq reqSearch = new SearchReservedPurchaseListScReq();
-		reqSearch.setTenantId(spareParamMap.get("tenantId"));
-		reqSearch.setPrchsId(notifyPaymentReq.getOrderId());
+		reqSearch.setTenantId("S01");
+		reqSearch.setPrchsId(notifyPaymentReq.getPrchsId());
 
 		SearchReservedPurchaseListScRes res = this.purchaseOrderSearchSCI.searchReservedPurchaseList(reqSearch);
 		List<CreatePurchaseSc> createPurchaseScList = res.getCreatePurchaseScList();
 		if (createPurchaseScList.size() < 1) {
-			throw new StorePlatformException("SAC_PUR_0001", "조회된 구매건이 없습니다.");// TAKTODO:: PP측으로 응답 정리
+			throw new StorePlatformException("SAC_PUR_7101"); // TAKTODO:: PP측으로 응답 정리
 		}
+
+		CreatePurchaseSc createPurchaseSc = createPurchaseScList.get(0);
+
+		// ------------------------------------------------------------------------------
+		// 금액 체크
+
+		double checkAmt = 0.0;
+		for (PaymentInfo paymentInfo : notifyPaymentReq.getPaymentInfoList()) {
+			checkAmt += paymentInfo.getPaymentAmt();
+		}
+		if (checkAmt != createPurchaseSc.getTotAmt().doubleValue()
+				|| createPurchaseSc.getTotAmt().doubleValue() != notifyPaymentReq.getTotAmt()) {
+			throw new StorePlatformException("SAC_PUR_5106");
+		}
+
+		// ------------------------------------------------------------------------------
+		// 구매예약 시, 추가 저장해 두었던 데이터 추출
+
+		Map<String, String> reservedData = this.parseReservedData(createPurchaseSc.getResvCol05());
 
 		// 공통 작업용 세팅
-		for (CreatePurchaseSc createPurchaseSc : createPurchaseScList) {
-			createPurchaseSc.setSystemId(spareParamMap.get("systemId"));
-			createPurchaseSc.setCurrencyCd(spareParamMap.get("currencyCd"));
-			createPurchaseSc.setNetworkTypeCd(spareParamMap.get("networkTypeCd"));
+		for (CreatePurchaseSc createPurchaseInfo : createPurchaseScList) {
+			createPurchaseInfo.setSystemId(reservedData.get("systemId"));
+			createPurchaseInfo.setCurrencyCd(reservedData.get("currencyCd"));
+			createPurchaseInfo.setNetworkTypeCd(reservedData.get("networkTypeCd"));
 
-			createPurchaseSc.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT); // 구매확정
-			if (StringUtils.equals(createPurchaseSc.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-				createPurchaseSc.setInsdUsermbrNo(createPurchaseSc.getSendInsdUsermbrNo());
-				createPurchaseSc.setInsdDeviceId(createPurchaseSc.getSendInsdDeviceId());
+			createPurchaseInfo.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT); // 구매확정
+			if (StringUtils.equals(createPurchaseInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+				createPurchaseInfo.setInsdUsermbrNo(createPurchaseInfo.getSendInsdUsermbrNo());
+				createPurchaseInfo.setInsdDeviceId(createPurchaseInfo.getSendInsdDeviceId());
 			} else {
-				createPurchaseSc.setInsdUsermbrNo(createPurchaseSc.getUseInsdUsermbrNo());
-				createPurchaseSc.setInsdDeviceId(createPurchaseSc.getUseInsdDeviceId());
+				createPurchaseInfo.setInsdUsermbrNo(createPurchaseInfo.getUseInsdUsermbrNo());
+				createPurchaseInfo.setInsdDeviceId(createPurchaseInfo.getUseInsdDeviceId());
 			}
 		}
-		CreatePurchaseSc createPurchaseSc = createPurchaseScList.get(0);
+		createPurchaseSc = createPurchaseScList.get(0);
 
 		// -------------------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
@@ -290,10 +279,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (createPurchaseSc.getTenantProdGrpCd().startsWith("OR006205")) {
 			CouponPublishEcReq couponPublishEcReq = new CouponPublishEcReq();
 			couponPublishEcReq.setPrchsId(createPurchaseSc.getPrchsId());
-			couponPublishEcReq.setUseMdn("");
-			couponPublishEcReq.setBuyMdn("");
-			couponPublishEcReq.setCouponCode("");
-			couponPublishEcReq.setItemCode("");
+			couponPublishEcReq.setUseMdn(reservedData.get("useDeviceId"));
+			couponPublishEcReq.setBuyMdn(reservedData.get("deviceId"));
+			couponPublishEcReq.setCouponCode(reservedData.get("couponCode"));
+			couponPublishEcReq.setItemCode(reservedData.get("itemCode"));
 			couponPublishEcReq.setItemCount(createPurchaseSc.getProdQty());
 			CouponPublishEcRes couponPublishEcRes = this.shoppingSCI.createCouponPublish(couponPublishEcReq);
 
@@ -319,28 +308,50 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -------------------------------------------------------------------------------------------
 		// 구매확정
 
-		// 구매이력 확정 처리
-		ConfirmPurchaseScReq reqConfirm = new ConfirmPurchaseScReq();
-		reqConfirm.setTenantId(createPurchaseSc.getTenantId());
-		reqConfirm.setSystemId(createPurchaseSc.getSystemId());
-		reqConfirm.setUseUserKey(createPurchaseSc.getUseInsdUsermbrNo());
-		reqConfirm.setPrchsId(createPurchaseSc.getPrchsId());
-		reqConfirm.setCurrencyCd(createPurchaseSc.getCurrencyCd());
-		reqConfirm.setNetworkTypeCd(createPurchaseSc.getNetworkTypeCd());
-		reqConfirm.setShoppingCouponList(shoppingCouponList); // 쇼핑발급 목록
+		createPurchaseSc.setResvCol05(null); // 예약저장해둔 데이터 제거
 
-		ConfirmPurchaseScRes resConfirm = this.purchaseOrderSCI.confirmPurchase(reqConfirm);
+		// 구매이력 확정 처리
+		ConfirmPurchaseScReq confirmPurchaseScReq = new ConfirmPurchaseScReq();
+		confirmPurchaseScReq.setTenantId(createPurchaseSc.getTenantId());
+		confirmPurchaseScReq.setSystemId(createPurchaseSc.getSystemId());
+		confirmPurchaseScReq.setUseUserKey(createPurchaseSc.getUseInsdUsermbrNo());
+		confirmPurchaseScReq.setPrchsId(createPurchaseSc.getPrchsId());
+		confirmPurchaseScReq.setCurrencyCd(createPurchaseSc.getCurrencyCd());
+		confirmPurchaseScReq.setNetworkTypeCd(createPurchaseSc.getNetworkTypeCd());
+		confirmPurchaseScReq.setShoppingCouponList(shoppingCouponList); // 쇼핑발급 목록
+		ConfirmPurchaseScRes resConfirm = this.purchaseOrderSCI.executeConfirmPurchase(confirmPurchaseScReq);
 		this.logger.debug("PRCHS,ORDER,CONFIRM,END,{}", resConfirm.getCount());
 		if (resConfirm.getCount() < 1) {
-			throw new StorePlatformException("SAC_PUR_0001", "구매확정 처리 중 에러 발생");
+			throw new StorePlatformException("SAC_PUR_7202");
 		}
 
 		// 결제 내역 저장
-		this.createPayment(createPurchaseSc, notifyPaymentReq);
+		CreatePaymentSacInfo createPaymentSacInfo = new CreatePaymentSacInfo();
+		createPaymentSacInfo.setTenantId(createPurchaseSc.getTenantId());
+		createPaymentSacInfo.setSystemId(createPurchaseSc.getSystemId());
+		createPaymentSacInfo.setPayUserKey(createPurchaseSc.getInsdUsermbrNo());
+		createPaymentSacInfo.setPayDeviceKey(createPurchaseSc.getInsdDeviceId());
+		createPaymentSacInfo.setPrchsId(createPurchaseSc.getPrchsId());
+		createPaymentSacInfo.setPrchsDt(createPurchaseSc.getPrchsDt());
+		createPaymentSacInfo.setStatusCd(createPurchaseSc.getStatusCd());
+		createPaymentSacInfo.setPaymentInfoList(notifyPaymentReq.getPaymentInfoList());
+		int createCnt = this.createPayment(createPaymentSacInfo);
+		if (createCnt != createPaymentSacInfo.getPaymentInfoList().size()) {
+			throw new StorePlatformException("SAC_PUR_7203");
+		}
 
 		// 자동구매 신규이력 저장
-		if (StringUtils.isNotBlank(notifyPaymentReq.getGwBillkey())) {
-			this.createAutoPurchase(createPurchaseSc);
+		boolean bAuto = false;
+		for (PaymentInfo paymentInfo : notifyPaymentReq.getPaymentInfoList()) {
+			if (StringUtils.isNotBlank(paymentInfo.getBillKey())) {
+				bAuto = true;
+			}
+		}
+		if (bAuto) {
+			createCnt = this.createAutoPurchase(createPurchaseSc);
+			if (createCnt != 1) {
+				throw new StorePlatformException("SAC_PUR_7204");
+			}
 		}
 
 		// -------------------------------------------------------------------------------------------
@@ -398,34 +409,103 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	public void setPaymentPageInfo(PurchaseOrderInfo purchaseOrderInfo) {
 		this.logger.debug("PRCHS,ORDER,SET_PAYPAGE,START,{}", purchaseOrderInfo);
 
+		// eData(암호화 데이터)
+		DummyProduct product = purchaseOrderInfo.getProductList().get(0);
+
+		PaymentPageParam paymentPageParam = new PaymentPageParam();
+		paymentPageParam.setMid(purchaseOrderInfo.getMid());
+		paymentPageParam.setAuthKey(purchaseOrderInfo.getAuthKey());
+		paymentPageParam.setOrderId(purchaseOrderInfo.getPrchsId());
+		paymentPageParam.setMctTrDate(purchaseOrderInfo.getPrchsDt());
+		paymentPageParam.setAmtPurchase(String.valueOf(purchaseOrderInfo.getRealTotAmt()));
+		paymentPageParam.setPid(product.getProdId());
+		paymentPageParam.setpName(product.getProdNm());
+		paymentPageParam.setpDescription(product.getProdId()); // TAKTODO
+		paymentPageParam.setpType(product.getProdId()); // TAKTODO
+		paymentPageParam.setAid(product.getAid());
+		paymentPageParam.setReturnFormat(PaymentPageParam.PP_RETURN_FORMAT_JSON);
+		paymentPageParam.setReturnPath(purchaseOrderInfo.getReturnUrl());
+		paymentPageParam.setResultPath(DUMMY_SAC_PUR_PAYMENT_NOTIFY_URL);
+		paymentPageParam.setMdn(purchaseOrderInfo.getPurchaseMember().getDeviceId());
+		paymentPageParam.setNmDevice(purchaseOrderInfo.getDeviceModelCd());
+		paymentPageParam.setImei(purchaseOrderInfo.getImei());
+		paymentPageParam.setUacd(purchaseOrderInfo.getUacd());
+		paymentPageParam.setTypeNetwork(purchaseOrderInfo.getNetworkTypeCd().substring(
+				purchaseOrderInfo.getNetworkTypeCd().length() - 1));
+		paymentPageParam.setCarrier(purchaseOrderInfo.getPurchaseMember().getTelecom());
+		paymentPageParam.setNoSim(purchaseOrderInfo.getSimNo());
+		paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
+
+		// 암호화
+		String eData = paymentPageParam.makeEncDataFormat();
+		try {
+			eData = Seed128Util.encrypt(eData, "qnqnsdbfyghk0001");
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7201");
+		}
+		paymentPageParam.seteData(eData);
+
+		// Token
+		String token = paymentPageParam.makeTokenFormat();
+		try {
+			// token = Base64.encodeBase64String(MessageDigest.getInstance("MD5").digest(token.getBytes()));
+			token = new String(MessageDigest.getInstance("MD5").digest(token.getBytes()));
+		} catch (NoSuchAlgorithmException e) {
+			throw new StorePlatformException("SAC_PUR_7201");
+		}
+		paymentPageParam.setToken(token);
+
+		// 버전
+		paymentPageParam.setVersion("1.0");
+
+		// 결제Page 요청 URL
 		purchaseOrderInfo.setPaymentPageUrl(DUMMY_PP_PAYMENT_PAGE_URL);
-		purchaseOrderInfo.setPaymentPageParam(this.makeEncryptedPaymentParameter(purchaseOrderInfo));
+
+		purchaseOrderInfo.setPaymentPageParam(paymentPageParam);
 
 		this.logger.debug("PRCHS,ORDER,SET_PAYPAGE,END,{}", purchaseOrderInfo);
 	}
 
 	/*
-	 * <pre> 결제Page 측으로부터 전달받은 가맹점용 파라미터 분리. </pre>
+	 * <pre> 새로운 구매ID 생성. </pre>
 	 * 
-	 * @param mctSpareParam 최초 결제Page로 넘겼던 파라미터
+	 * @return 새로 생성된 구매ID
+	 */
+	private String makePrchsId() {
+		// TAKTODO:: 서버ID(2), 인스턴스ID(2) 적용 방안 확인
+		String prchsIdSeq = this.purchaseOrderSearchSCI.searchNextPurchaseIdSequence();
+		StringBuffer sbPrchsId = new StringBuffer(20);
+		// sbPrchsId.append("01").append("01").append(DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(),
+		// "yyMMddHHmmss")).append(prchsIdSeq);
+		sbPrchsId.append("TAK").append("1")
+				.append(DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyMMddHHmmss"))
+				.append(prchsIdSeq);
+		return sbPrchsId.toString();
+	}
+
+	/*
+	 * <pre> 구매예약시 예약컬럼에 저장해뒀던 추가 데이터들. </pre>
+	 * 
+	 * @param reservedData 구매예약시 저장해뒀던 추가 데이터들
 	 * 
 	 * @return 분리된 파라미터 Map
 	 */
-	private Map<String, String> parsePaySpareParameter(String mctSpareParam) {
-		Map<String, String> spareParamMap = new HashMap<String, String>();
-		String[] arSpareParam = null;
+	private Map<String, String> parseReservedData(String reservedData) {
+		Map<String, String> reservedDataMap = new HashMap<String, String>();
+		String[] arReservedData = null;
 		String[] arParamKeyValue = null;
 
-		if (StringUtils.isNotEmpty(mctSpareParam)) {
-			arSpareParam = mctSpareParam.split("&");
+		if (StringUtils.isNotEmpty(reservedData)) {
+			arReservedData = reservedData.split("&");
 
-			for (String param : arSpareParam) {
-				arParamKeyValue = param.split(":");
-				spareParamMap.put(arParamKeyValue[0], arParamKeyValue[1]);
+			for (String param : arReservedData) {
+				this.logger.debug("[" + param + "]");
+				arParamKeyValue = param.split("=", 2);
+				reservedDataMap.put(arParamKeyValue[0], arParamKeyValue[1]);
 			}
 		}
 
-		return spareParamMap;
+		return reservedDataMap;
 	}
 
 	/*
@@ -436,6 +516,28 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 구매생성을 위한 데이터 목록
 	 */
 	private List<CreatePurchaseSc> makeCreatePurchaseScListForRequest(PurchaseOrderInfo purchaseOrderInfo) {
+		// 구매예약 시 저장할 데이터 (공통)
+		// tenantId, systemId, networkTypeCd, currencyCd
+		// deviceId(결제자), useUserKey, useDeviceKey, useDeviceModelCd, useTelecom,
+		PurchaseUserDevice useUser = null;
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			useUser = purchaseOrderInfo.getReceiveUser();
+		} else {
+			useUser = purchaseOrderInfo.getPurchaseUser();
+		}
+		StringBuffer sbReserveData = new StringBuffer(1024);
+		sbReserveData.append("tenantId=").append(useUser.getTenantId()).append("&systemId=")
+				.append(purchaseOrderInfo.getSystemId()).append("&deviceId=")
+				.append(purchaseOrderInfo.getPurchaseUser().getDeviceId()).append("&useDeviceId=")
+				.append(useUser.getDeviceId()).append("&useUserKey=").append(useUser.getUserKey())
+				.append("&useDeviceKey=").append(useUser.getDeviceKey()).append("&useDeviceModelCd=")
+				.append(useUser.getDeviceModelCd()).append("&useTelecom=").append(useUser.getTelecom())
+				.append("&networkTypeCd=").append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
+				.append(purchaseOrderInfo.getCurrencyCd());
+		// receiveNames; // 선물수신자 성명
+		// receiveMdns; // 선물수신자 MDN
+
+		int commonReserveDataLen = sbReserveData.length();
 
 		// 구매생성 요청 데이터 세팅
 		List<CreatePurchaseSc> createPurchaseList = new ArrayList<CreatePurchaseSc>();
@@ -486,9 +588,136 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchase.setResvCol02(product.getResvCol02());
 				createPurchase.setResvCol03(product.getResvCol03());
 				createPurchase.setResvCol04(product.getResvCol04());
-				createPurchase.setResvCol05(product.getResvCol05());
 				createPurchase.setUsePeriodUnitCd(product.getUsePeriodUnitCd());
 				createPurchase.setUsePeriod(product.getUsePeriod());
+
+				// 구매예약 시 저장할 데이터 (상품별)
+				sbReserveData.setLength(commonReserveDataLen);
+				sbReserveData.append("&aid=").append(product.getAid()).append("&couponCode=")
+						.append(product.getCouponCode()).append("&itemCode=").append(product.getItemCode())
+						.append("&bonusCashPoint=").append("").append("&bonusCashUsableDayCnt=").append("")
+						.append("&afterAutoPayDt=").append("").append("&dwldAvailableDayCnt=").append("")
+						.append("&usePeriodCnt=").append("").append("&loanPid=").append("").append("&loanAmt=")
+						.append("").append("&ownPid=").append("").append("&ownAmt=").append("").append("&sellerNm=")
+						.append("").append("&sellerEmail=").append("").append("&sellerTelno=").append("")
+						.append("&sellerMbrNo=").append("").append("&mallCd=").append("").append("&outsdContentsId=")
+						.append("");
+				createPurchase.setResvCol05(sbReserveData.toString());
+
+				createPurchaseList.add(createPurchase);
+			}
+		}
+
+		return createPurchaseList;
+	}
+
+	/*
+	 * <pre> [DUMMY] 구매생성을 위한 데이터 목록 생성. </pre>
+	 * 
+	 * @param purchaseOrderInfo 구매요청 VO
+	 * 
+	 * @return 구매생성을 위한 데이터 목록
+	 */
+	private List<CreatePurchaseSc> makeCreatePurchaseScListForRequestDummy(PurchaseOrderInfo purchaseOrderInfo) {
+		// 구매예약 시 저장할 데이터 (공통)
+		// tenantId, systemId, networkTypeCd, currencyCd
+		// deviceId(결제자), useUserKey, useDeviceKey, useDeviceModelCd, useTelecom,
+		DummyMember useUser = null;
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			useUser = purchaseOrderInfo.getRecvMember();
+		} else {
+			useUser = purchaseOrderInfo.getPurchaseMember();
+		}
+		StringBuffer sbReserveData = new StringBuffer(1024);
+		sbReserveData.append("tenantId=").append(useUser.getTenantId()).append("&systemId=")
+				.append(purchaseOrderInfo.getSystemId()).append("&deviceId=")
+				.append(purchaseOrderInfo.getPurchaseMember().getDeviceId()).append("&useDeviceId=")
+				.append(useUser.getDeviceId()).append("&useUserKey=").append(useUser.getUserKey())
+				.append("&useDeviceKey=").append(useUser.getDeviceKey()).append("&useDeviceModelCd=")
+				.append(useUser.getDeviceModelCd()).append("&useTelecom=").append(useUser.getTelecom())
+				.append("&networkTypeCd=").append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
+				.append(purchaseOrderInfo.getCurrencyCd());
+		// receiveNames; // 선물수신자 성명
+		// receiveMdns; // 선물수신자 MDN
+
+		int commonReserveDataLen = sbReserveData.length();
+
+		// 구매생성 요청 데이터 세팅
+		List<CreatePurchaseSc> createPurchaseList = new ArrayList<CreatePurchaseSc>();
+		CreatePurchaseSc createPurchase = null;
+
+		int prchsDtlCnt = 1, i = 0;
+		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
+			for (i = 0; i < product.getProdQty(); i++) {
+				createPurchase = new CreatePurchaseSc();
+
+				createPurchase.setPrchsDtlId(prchsDtlCnt++);
+
+				createPurchase.setTenantId(purchaseOrderInfo.getTenantId());
+				createPurchase.setPrchsId(purchaseOrderInfo.getPrchsId());
+				createPurchase.setPrchsDt(purchaseOrderInfo.getPrchsDt());
+				if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+					createPurchase.setUseTenantId(purchaseOrderInfo.getRecvTenantId());
+					createPurchase.setUseInsdUsermbrNo(purchaseOrderInfo.getRecvUserKey());
+					createPurchase.setUseInsdDeviceId(purchaseOrderInfo.getRecvDeviceKey());
+					createPurchase.setSendInsdUsermbrNo(purchaseOrderInfo.getUserKey());
+					createPurchase.setSendInsdDeviceId(purchaseOrderInfo.getDeviceKey());
+				} else {
+					createPurchase.setUseTenantId(purchaseOrderInfo.getTenantId());
+					createPurchase.setUseInsdUsermbrNo(purchaseOrderInfo.getUserKey());
+					createPurchase.setUseInsdDeviceId(purchaseOrderInfo.getDeviceKey());
+				}
+				createPurchase.setTotAmt(purchaseOrderInfo.getRealTotAmt());
+				createPurchase.setPrchsReqPathCd(purchaseOrderInfo.getPrchsReqPathCd());
+				createPurchase.setClientIp(purchaseOrderInfo.getClientIp());
+				createPurchase.setHidingYn(PurchaseConstants.USE_N);
+				createPurchase.setRegId(purchaseOrderInfo.getSystemId());
+				createPurchase.setUpdId(purchaseOrderInfo.getSystemId());
+				createPurchase.setPrchsCaseCd(purchaseOrderInfo.getPrchsCaseCd());
+				createPurchase.setTenantProdGrpCd(purchaseOrderInfo.getTenantProdGrpCd());
+				createPurchase.setCurrencyCd(purchaseOrderInfo.getCurrencyCd()); // PRCHS
+				createPurchase.setNetworkTypeCd(purchaseOrderInfo.getNetworkTypeCd()); // PRCHS
+
+				if (product.isbFlat()) { // TAKTODO:: 권한상품 판단
+					createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_FIX);
+				} else {
+					createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+				}
+				createPurchase.setProdId(product.getProdId());
+				createPurchase.setProdAmt(product.getProdAmt());
+				createPurchase.setProdQty(product.getProdQty());
+				createPurchase.setRePrchsPmtYn(product.getbDupleProd() ? "Y" : "N");
+				createPurchase.setResvCol01(product.getResvCol01());
+				createPurchase.setResvCol02(product.getResvCol02());
+				createPurchase.setResvCol03(product.getResvCol03());
+				createPurchase.setResvCol04(product.getResvCol04());
+				createPurchase.setUsePeriodUnitCd(product.getUsePeriodUnitCd());
+				createPurchase.setUsePeriod(product.getUsePeriod());
+				// 비과금 구매요청 시, 이용종료일시 세팅
+				if (purchaseOrderInfo.isFreeChargeReq() && StringUtils.isNotBlank(product.getUseExprDt())) {
+					if (product.getUseExprDt().length() == 14) {
+						createPurchase.setUseExprDt(product.getUseExprDt());
+						createPurchase.setDwldExprDt(product.getUseExprDt());
+					} else if (product.getUseExprDt().length() == 8) {
+						createPurchase.setUseExprDt(product.getUseExprDt() + "235959");
+						createPurchase.setDwldExprDt(product.getUseExprDt() + "235959");
+					}
+				}
+
+				// 구매예약 시 저장할 데이터 (상품별)
+				if (purchaseOrderInfo.getRealTotAmt() > 0.0) {
+					sbReserveData.setLength(commonReserveDataLen);
+					sbReserveData.append("&aid=").append(product.getAid()).append("&couponCode=")
+							.append(product.getCouponCode()).append("&itemCode=").append(product.getItemCode())
+							.append("&bonusCashPoint=").append("").append("&bonusCashUsableDayCnt=").append("")
+							.append("&afterAutoPayDt=").append("").append("&dwldAvailableDayCnt=").append("")
+							.append("&usePeriodCnt=").append("").append("&loanPid=").append("").append("&loanAmt=")
+							.append("").append("&ownPid=").append("").append("&ownAmt=").append("")
+							.append("&sellerNm=").append("").append("&sellerEmail=").append("").append("&sellerTelno=")
+							.append("").append("&sellerMbrNo=").append("").append("&mallCd=").append("")
+							.append("&outsdContentsId=").append("");
+					createPurchase.setResvCol05(sbReserveData.toString());
+				}
 
 				createPurchaseList.add(createPurchase);
 			}
@@ -509,9 +738,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 구매ID 생성
 		if (StringUtils.isBlank(purchaseOrderInfo.getPrchsId())) {
-			String prchsId = this.makePrchsId(purchaseOrderInfo.getPrchsReqPathCd(), purchaseOrderInfo.getProductList()
-					.get(0).getProdId());
-			purchaseOrderInfo.setPrchsId(prchsId);
+			purchaseOrderInfo.setPrchsId(this.makePrchsId());
 		}
 
 		// 구매시간 세팅
@@ -519,7 +746,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				.setPrchsDt(DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyyyMMddHHmmss"));
 
 		// 구매생성 요청 데이터 생성
-		List<CreatePurchaseSc> createPurchaseList = this.makeCreatePurchaseScListForRequest(purchaseOrderInfo);
+		List<CreatePurchaseSc> createPurchaseList = this.makeCreatePurchaseScListForRequestDummy(purchaseOrderInfo);
 
 		// 구매생성 요청 (default: 는 진입 가능성 zero)
 		CreatePurchaseScRes res = null;
@@ -534,7 +761,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		this.logger.debug("PRCHS,ORDER,CREATE,END,{},{}", type, res.getCount());
 		if (res.getCount() < 1 || res.getCount() != createPurchaseList.size()) {
-			throw new StorePlatformException("SAC_PUR_0001", "구매요청 처리 중 에러 발생");
+			throw new StorePlatformException("SAC_PUR_7201");
 		}
 	}
 
@@ -542,33 +769,27 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * <pre> 결제 내역 생성. </pre>
 	 * 
-	 * @param createPurchaseSc 구매정보
+	 * @param createPaymentSacInfo 결제이력 생성 정보
 	 * 
-	 * @param notifyParam 결제정보
+	 * @return 생성된 결제정보 건수
 	 */
-	private void createPayment(CreatePurchaseSc createPurchaseSc, NotifyPaymentSacReq notifyParam) {
-		this.logger.debug("PRCHS,ORDER,NOTIPAY,START,{}", notifyParam);
+	private int createPayment(CreatePaymentSacInfo createPaymentSacInfo) {
+		this.logger.debug("PRCHS,ORDER,CREATE_PAY,START,{}", createPaymentSacInfo);
 
-		String tenantId = createPurchaseSc.getTenantId();
-		String systemId = createPurchaseSc.getSystemId();
-		String prchsId = createPurchaseSc.getPrchsId();
-		String payUserKey = createPurchaseSc.getInsdUsermbrNo();
-		String payDeviceKey = createPurchaseSc.getInsdDeviceId();
-		String prchsDt = createPurchaseSc.getPrchsDt();
-		Double totAmt = createPurchaseSc.getTotAmt();
-
-		String tid = notifyParam.getTid();
+		String tenantId = createPaymentSacInfo.getTenantId();
+		String systemId = createPaymentSacInfo.getSystemId();
+		String prchsId = createPaymentSacInfo.getPrchsId();
+		String payUserKey = createPaymentSacInfo.getPayUserKey();
+		String payDeviceKey = createPaymentSacInfo.getPayDeviceKey();
+		String prchsDt = createPaymentSacInfo.getPrchsDt();
+		String statusCd = createPaymentSacInfo.getStatusCd();
+		Double totAmt = createPaymentSacInfo.getTotAmt();
 
 		List<Payment> paymentList = new ArrayList<Payment>();
 		Payment payment = null;
-
-		String[] arPaymethod = notifyParam.getPaymethodInfo().split(";"); // 수단코드:결제금액;...
-		String[] arPayInfo = null;
-
 		int dtlIdCnt = 1;
-		for (String pay : arPaymethod) {
-			arPayInfo = pay.split(":");
 
+		for (PaymentInfo paymentInfo : createPaymentSacInfo.getPaymentInfoList()) {
 			payment = new Payment();
 			payment.setTenantId(tenantId);
 			payment.setPrchsId(prchsId);
@@ -578,12 +799,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			payment.setPrchsDt(prchsDt);
 			payment.setTotAmt(totAmt);
 
-			payment.setPaymentMtdCd("OR0006" + arPayInfo[0]);
-			payment.setPaymentAmt(Double.valueOf(arPayInfo[1]));
-			payment.setPaymentDt(prchsDt);
-			payment.setPaymentStatusCd(createPurchaseSc.getStatusCd());
+			payment.setPaymentMtdCd(paymentInfo.getPaymentMtdCd());
+			payment.setPaymentAmt(paymentInfo.getPaymentAmt());
+			payment.setPaymentDt(paymentInfo.getPaymentDt());
+			payment.setPaymentStatusCd(statusCd);
 
-			payment.setTid(tid);
+			payment.setTid(paymentInfo.getTid());
 
 			payment.setRegId(systemId);
 			payment.setUpdId(systemId);
@@ -596,10 +817,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		reqPayment.setPaymentList(paymentList);
 
 		CreatePaymentScRes res = this.purchaseOrderSCI.createPayment(reqPayment);
-		this.logger.debug("PRCHS,ORDER,NOTIPAY,END,{}", notifyParam);
-		if (res.getCount() < 1 || res.getCount() != paymentList.size()) {
-			throw new StorePlatformException("SAC_PUR_0001", "결제내역 저장 처리 중 에러 발생");
-		}
+		this.logger.debug("PRCHS,ORDER,CREATE_PAY,END,{},{}", createPaymentSacInfo.getPrchsId(), res.getCount());
+		return res.getCount();
 	}
 
 	/*
@@ -607,8 +826,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * <pre> 자동구매 생성. </pre>
 	 * 
 	 * @param createPurchaseSc 구매생성 정보
+	 * 
+	 * @return 생성된 건수
 	 */
-	private void createAutoPurchase(CreatePurchaseSc createPurchaseSc) {
+	private int createAutoPurchase(CreatePurchaseSc createPurchaseSc) {
+		this.logger.debug("PRCHS,ORDER,CREATE_AUTO,START,{}", createPurchaseSc.getPrchsId());
 		List<AutoPrchs> autoPrchsList = new ArrayList<AutoPrchs>();
 
 		AutoPrchs autoPrchs = new AutoPrchs();
@@ -638,81 +860,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		CreateAutoPurchaseScReq autoReq = new CreateAutoPurchaseScReq();
 		autoReq.setAutoPrchsList(autoPrchsList);
 
-		this.purchaseOrderSCI.createNewAutoPurchase(autoReq);
-	}
-
-	/*
-	 * <pre> 결제Page 요청시 전달할 (암호화된) 파라미터 생성. </pre>
-	 * 
-	 * @param purchaseOrderInfo 구매요청 정보 VO
-	 * 
-	 * @return 결제Page로 전달할 파라미터의 암호화된 문자열
-	 */
-	private String makeEncryptedPaymentParameter(PurchaseOrderInfo purchaseOrderInfo) {
-
-		DummyProduct product = purchaseOrderInfo.getProductList().get(0);
-
-		PaymentPageParam param = new PaymentPageParam();
-		param.setMid(purchaseOrderInfo.getMid());
-		param.setAuthKey(purchaseOrderInfo.getAuthKey());
-		param.setOrderId(purchaseOrderInfo.getPrchsId());
-		param.setMctTrDate(purchaseOrderInfo.getPrchsDt());
-		param.setAmtPurchase(String.valueOf(purchaseOrderInfo.getRealTotAmt()));
-		param.setPid(product.getProdId());
-		param.setpName(product.getProdNm());
-		param.setpDescription(product.getProdId()); // TAKTODO
-		param.setpType(product.getProdId()); // TAKTODO
-		param.setAid(product.getAid());
-		param.setReturnFormat(PaymentPageParam.PP_RETURN_FORMAT_JSON);
-		param.setReturnPath(purchaseOrderInfo.getReturnUrl());
-		param.setResultPath(DUMMY_SAC_PUR_PAYMENT_NOTIFY_URL);
-		param.setMdn(purchaseOrderInfo.getPurchaseMember().getDeviceId());
-		param.setNmDevice(purchaseOrderInfo.getDeviceModelCd());
-		param.setImei(purchaseOrderInfo.getImei());
-		param.setUacd(purchaseOrderInfo.getUacd());
-		param.setTypeNetwork(purchaseOrderInfo.getNetworkTypeCd().substring(
-				purchaseOrderInfo.getNetworkTypeCd().length() - 1));
-		param.setCarrier(purchaseOrderInfo.getPurchaseMember().getTelecom());
-		param.setNoSim(purchaseOrderInfo.getSimNo());
-		param.setFlgSim(purchaseOrderInfo.getSimYn());
-
-		// 가맹점 필요 파라미터
-		String useUserKey = null;
-		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			useUserKey = purchaseOrderInfo.getRecvUserKey();
-		} else {
-			useUserKey = purchaseOrderInfo.getUserKey();
-		}
-		StringBuffer sbSpare = new StringBuffer(1024);
-		sbSpare.append("tenantId:").append(purchaseOrderInfo.getTenantId()).append("&systemId:")
-				.append(purchaseOrderInfo.getSystemId()).append("&useUserKey:").append(useUserKey)
-				.append("&networkTypeCd:").append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd:")
-				.append(purchaseOrderInfo.getCurrencyCd());
-
-		param.setMctSpareParam(sbSpare.toString());
-
-		// 암호화
-		String eData = param.makeEncDataFormat();
-		// eData = CryptUtils.encrypt(CryptUtils.AES128_CTR, "5", eData);
-		// eData = Base64.encodeBase64String(eData.getBytes());
-		try {
-			eData = Seed128Util.getSeedEncrypt(eData, "qnqnsdbfyghk0001");
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_0001", "구매요청 처리 중 에러 발생");
-		}
-		param.seteData(eData);
-
-		// Token
-		String token = param.makeTokenFormat();
-		try {
-			token = Base64.encodeBase64String(MessageDigest.getInstance("MD5").digest(token.getBytes()));
-		} catch (NoSuchAlgorithmException e) {
-			throw new StorePlatformException("SAC_PUR_0001", "구매요청 처리 중 에러 발생");
-		}
-		param.setToken(token);
-
-		this.logger.debug("TAKTEST,{},{}", eData, token);
-
-		return eData;
+		CreateAutoPurchaseScRes autoRes = this.purchaseOrderSCI.createNewAutoPurchase(autoReq);
+		this.logger.debug("PRCHS,ORDER,CREATE_AUTO,END,{}", createPurchaseSc.getPrchsId(), autoRes.getCount());
+		return autoRes.getCount();
 	}
 }

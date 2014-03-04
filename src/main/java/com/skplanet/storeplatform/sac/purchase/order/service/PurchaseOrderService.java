@@ -64,7 +64,7 @@ public interface PurchaseOrderService {
 	 * @param notifyPaymentReq
 	 *            결제결과 정보
 	 */
-	public void updateConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq);
+	public void executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq);
 
 	/**
 	 * 

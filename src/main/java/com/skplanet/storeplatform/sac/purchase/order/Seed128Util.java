@@ -16,47 +16,35 @@ public class Seed128Util {
 	 * seed로 암호화된 문자열을 복호화
 	 * 
 	 * @param encVal
-	 *            - 암호화 대상 string
-	 * 
+	 *            암호화 대상 string
 	 * @param seedKey
-	 *            - encrypt할때 사용한 key
-	 * 
-	 * @return
-	 * 
+	 *            encrypt할때 사용한 key
+	 * @return 복호화된 문자열
 	 * @throws Exception
 	 */
-
-	public static String getSeedDecrypt(String encVal, String key) throws Exception {
-		int[] seedKey = Seed128Util.getSeedRoundKey(key);
+	public static String decrypt(String encVal, String key) throws Exception {
+		int[] seedKey = Seed128Util.getRoundKey(key);
 
 		// 암호화문 byte 배열 리스트로 변환
-
 		List<byte[]> encByteList = getByteList(encVal, true);
 
 		// 복호화된 byte 배열 저장할 리스트 선언
-
 		List<byte[]> decByteList = new ArrayList<byte[]>();
 
 		// IV를 저장하라 변수 선언
-
 		byte[] byteIV = new byte[16];// DEFAULT_IV.getBytes();
 
 		for (int i = 0; i < encByteList.size(); i++) {
-
 			byte[] encByte = encByteList.get(i);
-
 			byte[] tempDecByte = new byte[16];
 
 			Seed128Util.SeedDecrypt(encByte, seedKey, tempDecByte);
 
 			// CBC 운영모드
-
 			exclusiveOR(tempDecByte, byteIV);
-
 			byteIV = encByte;
 
 			decByteList.add(tempDecByte);
-
 		}
 
 		return getByteListStr(decByteList, false);
@@ -78,8 +66,8 @@ public class Seed128Util {
 	 * @throws Exception
 	 */
 
-	public static String getSeedEncrypt(String strVal, String key) throws Exception {
-		int[] seedKey = Seed128Util.getSeedRoundKey(key);
+	public static String encrypt(String strVal, String key) throws Exception {
+		int[] seedKey = Seed128Util.getRoundKey(key);
 
 		// 원문을 byte[] list로 변환
 		List<byte[]> byteList = getByteList(strVal, false);
@@ -95,22 +83,11 @@ public class Seed128Util {
 			exclusiveOR(byteVal, byteIV);
 			Seed128Util.SeedEncrypt(byteVal, seedKey, tempEncVal);
 			byteIV = tempEncVal;
-			// for(int j=0; j<tempEncVal.length; j++){
-
-			// System.out.println("" + (j+(i*16)) + " : " + tempEncVal[j]);
-
-			// }
 
 			encByteList.add(tempEncVal);
-
 		}
 
-		// System.out.println("암호화된 바이트 종료");
-
-		// list에 담긴 enc문을 str형태로 변환하여 반환
-
 		return getByteListStr(encByteList, true);
-
 	}
 
 	/**
@@ -125,7 +102,7 @@ public class Seed128Util {
 	 * @throws Exception
 	 */
 
-	public static int[] getSeedRoundKey(String keyStr) throws Exception {
+	private static int[] getRoundKey(String keyStr) throws Exception {
 		int[] roundKey = new int[32];
 		Seed128Util.SeedRoundKey(roundKey, keyStr.getBytes());
 		return roundKey;

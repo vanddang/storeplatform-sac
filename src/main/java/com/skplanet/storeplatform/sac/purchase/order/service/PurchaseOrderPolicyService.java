@@ -30,4 +30,19 @@ public interface PurchaseOrderPolicyService {
 	 */
 	public void checkTenantPolicy(PurchaseOrderInfo purchaseOrderInfo);
 
+	/**
+	 * 
+	 * <pre>
+	 * 해당 테넌트상품분류코드 가 디바이스 기반 구매정책 인지 체크.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트 ID
+	 * 
+	 * @param tenantProdGrpCd
+	 *            테넌트상품분류코드
+	 * 
+	 * @return 디바이스 기반 구매정책 여부: true-디바이스 기반, false-ID 기반
+	 */
+	public boolean isDeviceBasedPurchaseHistory(String tenantId, String tenantProdGrpCd);
 }

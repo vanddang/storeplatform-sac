@@ -52,6 +52,26 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	/**
 	 * 
 	 * <pre>
+	 * 해당 테넌트상품분류코드 가 디바이스 기반 구매정책 인지 체크.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트 ID
+	 * 
+	 * @param tenantProdGrpCd
+	 *            테넌트상품분류코드
+	 * 
+	 * @return 디바이스 기반 구매정책 여부: true-디바이스 기반, false-ID 기반
+	 */
+	@Override
+	public boolean isDeviceBasedPurchaseHistory(String tenantId, String tenantProdGrpCd) {
+		return (this.policyService.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd,
+				PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, false).size() > 0);
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 테넌트 정책 체크.
 	 * </pre>
 	 * 
@@ -209,15 +229,16 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		} catch (StorePlatformException e) {
 			// 2014.02.12. 기준 : EC UAPS 에서 비정상 예외 시 9999 리턴, 그 외에는 조회결과 없음(9997) 또는 명의상태에 따른 코드.
 			if (StringUtils.equals(e.getErrorInfo().getCode(), "EC_UAPS_9999")) {
-				throw new StorePlatformException("SAC_PUR_0001", e);
+				throw new StorePlatformException("SAC_PUR_9999", e);
 			}
+			// else는 skip처리가 정상
 		}
 
 		// 법인폰 구매제한 처리
 		if (bCorp) {
 			this.logger
 					.debug("PRCHS,ORDER,SAC,POLICY,APPLY_LIMIT,{},{})", policy.getPolicyId(), policy.getApplyValue());
-			throw new StorePlatformException("SAC_PUR_0001", "법인폰으로 구매할 수 없는 상품입니다.");
+			throw new StorePlatformException("SAC_PUR_6108");
 		}
 
 	}
@@ -247,8 +268,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			} catch (StorePlatformException e) {
 				// 2014.02.12. 기준 : EC UAPS 에서 비정상 예외 시 9999 리턴, 그 외에는 조회결과 없음(9997) 또는 명의상태에 따른 코드.
 				if (StringUtils.equals(e.getErrorInfo().getCode(), "EC_UAPS_9999")) {
-					throw new StorePlatformException("SAC_PUR_0001", e);
+					throw new StorePlatformException("SAC_PUR_9999", e);
 				}
+				// else는 skip처리가 정상
 			}
 
 			// 시험폰
