@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
@@ -32,6 +33,43 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 public class EbookComicGeneratorImpl implements EbookComicGenerator {
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateIdentifier(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public Identifier generateIdentifier(String type, String text) {
+		Identifier identifier = new Identifier();
+		identifier.setType(type);
+		identifier.setText(text);
+
+		return identifier;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateIdentifier(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Identifier generateIdentifier(MetaInfo metaInfo) {
+		String contentsTypeCd = metaInfo.getContentsTypeCd();
+		Identifier identifier = null;
+		if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(contentsTypeCd)) {
+			identifier = this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
+		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)
+				&& DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+			identifier = this.generateIdentifier(DisplayConstants.DP_CATALOG_IDENTIFIER_CD, metaInfo.getCatalogId());
+		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)) {
+			identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
+		}
+		return identifier;
+	}
 
 	@Override
 	public Contributor generateEbookContributor(MetaInfo metaInfo) {
@@ -153,5 +191,60 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 			supportList.add(support);
 		}
 		return supportList;
+	}
+
+	@Override
+	public List<Identifier> generateSpecificIdentifierList(MetaInfo metaInfo) {
+		String contentsTypeCd = metaInfo.getContentsTypeCd();
+		Identifier identifier = null;
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+
+		if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Episode ID 기준검색일 경우
+			identifier = this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId());
+			identifierList.add(identifier);
+
+			if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+				if (metaInfo.getCatalogId() != null) {
+					identifier = this.generateIdentifier(DisplayConstants.DP_CATALOG_IDENTIFIER_CD,
+							metaInfo.getCatalogId());
+					identifierList.add(identifier);
+				}
+			} else {
+				if (metaInfo.getProdId() != null) {
+					identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+							metaInfo.getProdId());
+					identifierList.add(identifier);
+				}
+			}
+
+			// music 의 경우 songId
+			if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+				identifier = this.generateIdentifier(DisplayConstants.DP_SONG_IDENTIFIER_CD,
+						metaInfo.getOutsdContentsId());
+				identifierList.add(identifier);
+			}
+
+		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd) // Catalog ID 기준 검색일 경우
+				&& DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+			identifier = this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId());
+			identifierList.add(identifier);
+			identifier = this.generateIdentifier(DisplayConstants.DP_CATALOG_IDENTIFIER_CD, metaInfo.getCatalogId());
+			identifierList.add(identifier);
+		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Channel ID 기준 검색일 경우
+			identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
+			identifierList.add(identifier);
+		}
+		// Cid 설정
+		if (StringUtils.isNotEmpty(metaInfo.getCid())) {
+			identifier = this.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, metaInfo.getCid());
+			identifierList.add(identifier);
+		}
+		// OutsdContentsId 설정
+		if (StringUtils.isNotEmpty(metaInfo.getOutsdContentsId())) {
+			identifier = this.generateIdentifier(DisplayConstants.DP_OUTSDCONTENTS_IDENTIFIER_CD,
+					metaInfo.getOutsdContentsId());
+			identifierList.add(identifier);
+		}
+		return identifierList;
 	}
 }

@@ -465,7 +465,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Rights 설정
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
 		// App용 MenuList 설정
-		List<Menu> menuList = this.appGenerator.generateMenuList(metaInfo);
+		List<Menu> menuList = this.appGenerator.generateSpecificMenuList(metaInfo);
 
 		product.setIdentifierList(identifierList);
 		product.setSupportList(supportList);
@@ -522,7 +522,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Product product = new Product();
 
 		// Identifier 설정
-		String contentsTypeCd = metaInfo.getContentsTypeCd();
 		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
 		product.setIdentifierList(identifierList);
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
@@ -579,8 +578,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	public Product generateSpecificEbookProduct(MetaInfo metaInfo) {
 		Product product = new Product();
 		String productExplain = metaInfo.getProdBaseDesc();
-		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
-		product.setIdentifierList(identifierList);
+		product.setIdentifierList(this.ebookComicGenerator.generateSpecificIdentifierList(metaInfo));
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
 		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));

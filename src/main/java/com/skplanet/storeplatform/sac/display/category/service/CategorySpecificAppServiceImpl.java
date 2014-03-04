@@ -125,7 +125,10 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
 					// APP 상품의 경우
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+						// metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+
+						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo", paramMap,
+								MetaInfo.class);
 
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);

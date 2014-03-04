@@ -39,6 +39,17 @@ public interface AppInfoGenerator {
 
 	/**
 	 * <pre>
+	 * 특정 상품 App 전용 Menu List 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Menu>
+	 */
+	public List<Menu> generateSpecificMenuList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
 	 * App 상품 전용 Menu List 생성.
 	 * </pre>
 	 * 

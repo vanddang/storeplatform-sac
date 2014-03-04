@@ -132,19 +132,16 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
 							this.log.debug("##### Search for Vod specific product");
-							// metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo",
-							// paramMap, MetaInfo.class);
+							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo",
+									paramMap, MetaInfo.class);
 
-							metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+							// metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
 							if (metaInfo != null) {
 								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-									// product =
-									// this.responseInfoGenerateFacade.generateSpecificMovieProduct(retMetaInfo);
-									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateSpecificMovieProduct(metaInfo);
 								} else {
-									product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
-									// product = this.responseInfoGenerateFacade
-									// .generateSpecificBroadcastProduct(retMetaInfo);
+									product = this.responseInfoGenerateFacade
+											.generateSpecificBroadcastProduct(metaInfo);
 								}
 								productList.add(product);
 							}

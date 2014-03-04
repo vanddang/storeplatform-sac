@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.response;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
@@ -54,6 +55,41 @@ public interface EbookComicGenerator {
 	 * @return Book
 	 */
 	public Book generateBook(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 특정 상품 Ebook 전용 IdentifierList 객체 생성.
+	 * </pre>
+	 * 
+	 * @param type
+	 *            type
+	 * @param text
+	 *            text
+	 * @return Identifier
+	 */
+	public Identifier generateIdentifier(String type, String text);
+
+	/**
+	 * <pre>
+	 * 특정 상품 Ebook 전용 IdentifierList 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Identifier
+	 */
+	public Identifier generateIdentifier(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 특정 상품 Ebook 전용 IdentifierList 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Book
+	 */
+	public List<Identifier> generateSpecificIdentifierList(MetaInfo metaInfo);
 
 	/**
 	 * <pre>

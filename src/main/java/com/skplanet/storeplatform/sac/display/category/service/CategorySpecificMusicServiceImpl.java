@@ -117,15 +117,11 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 						productBasicInfo.setMenuId("DP004901");
 						paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
-						// TODO dummy data 꼭 삭제할것
-						paramMap.put("stdDt", "20110806");
-						metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
-						// metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo",
-						// paramMap,
-						// MetaInfo.class);
+						// metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
+						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", paramMap,
+								MetaInfo.class);
 						if (metaInfo != null) {
-							// product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
-							product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
+							product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
 							productList.add(product);
 						}
 					}

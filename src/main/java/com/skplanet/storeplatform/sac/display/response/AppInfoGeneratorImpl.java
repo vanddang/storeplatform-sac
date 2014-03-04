@@ -15,6 +15,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -111,6 +112,39 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateSpecificMenuList(com.skplanet.storeplatform
+	 * . sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Menu> generateSpecificMenuList(MetaInfo metaInfo) {
+		Menu menu = new Menu();
+		List<Menu> menuList = new ArrayList<Menu>();
+
+		menu.setId(metaInfo.getMenuId());
+		menu.setName(metaInfo.getMenuNm());
+		menu.setDesc(metaInfo.getMenuDesc());
+		menuList.add(menu);
+
+		menu = new Menu();
+		menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+		menu.setId(metaInfo.getTopMenuId());
+		menu.setName(metaInfo.getTopMenuNm());
+		menuList.add(menu);
+
+		// 메타 클래스 정보
+		if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd())) {
+			menu = new Menu();
+			menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
+			menu.setId(metaInfo.getMetaClsfCd());
+			menuList.add(menu);
+		}
+		return menuList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateMenuList(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -166,6 +200,13 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 		identifier.setText(metaInfo.getProdId());
 		identifierList.add(identifier);
+		// Cid 설정
+		if (StringUtils.isNotEmpty(metaInfo.getCid())) {
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_CONTENT_IDENTIFIER_CD);
+			identifier.setText(metaInfo.getProdId());
+			identifierList.add(identifier);
+		}
 		return identifierList;
 	}
 

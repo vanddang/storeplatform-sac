@@ -132,17 +132,16 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 																							  // 경우
 
 							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-							// this.log.debug("##### Search for EbookComic specific product");
-							// metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
-							// paramMap, MetaInfo.class);
-							metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
+							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
+									paramMap, MetaInfo.class);
+							// metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
 							if (metaInfo != null) {
 								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
 									// product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
-									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
 								} else {
 									// product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
-									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
 								}
 								productList.add(product);
 							}
