@@ -134,6 +134,9 @@
         <!--  appguide 상품 조회 -->
         <typeAlias alias="Appguide"  type="com.skplanet.storeplatform.sac.display.appguide.vo.Appguide" />
         
+        <!--  앱랭킹 상품 조회 -->
+        <typeAlias alias="AppguideApprankingSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideApprankingSacReq" />
+        
         <!-- feature app 카테고리 상품 조회 -->
         <typeAlias alias="FeatureCategoryAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq" />
         <typeAlias alias="FeatureCategoryApp"  type="com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryApp" />
