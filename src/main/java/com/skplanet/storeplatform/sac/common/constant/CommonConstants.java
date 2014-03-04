@@ -89,4 +89,14 @@ public class CommonConstants {
      */
     public static final String INTERFACE_STAT_CANNOT = "CM010602";
 
+    /**
+     * 요청 헤더 상수 - Remote Host
+     */
+    public static final String HEADER_REMOTE_HOST = "RemoteHost";
+
+    /**
+     * 요청 헤더 상수 - Remote PORT
+     */
+    public static final String HEADER_REMOTE_PORT = "RemotePort";
+
 }

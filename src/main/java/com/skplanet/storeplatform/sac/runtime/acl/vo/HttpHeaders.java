@@ -36,6 +36,9 @@ public class HttpHeaders extends CommonInfo {
 
 	private String guid;
 
+	private String remoteHost;
+	private String remotePort;
+
 	public String getAccept() {
 		return this.accept;
 	}
@@ -116,6 +119,11 @@ public class HttpHeaders extends CommonInfo {
 		this.guid = guid;
 	}
 
+    public String getRemoteHost() { return remoteHost; }
 
+    public void setRemoteHost(String remoteHost) { this.remoteHost = remoteHost; }
 
+    public String getRemotePort() { return remotePort; }
+
+    public void setRemotePort(String remotePort) { this.remotePort = remotePort; }
 }
