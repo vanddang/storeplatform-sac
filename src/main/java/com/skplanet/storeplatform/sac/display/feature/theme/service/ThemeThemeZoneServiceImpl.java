@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
 import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
+import com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.VodGenerator;
 
 /**
@@ -69,6 +70,9 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 	@Autowired
 	private EbookComicGenerator ebookComicGenerator;
+
+	@Autowired
+	private ShoppingInfoGenerator shoppingInfoGenerator;
 
 	/*
 	 * (non-Javadoc)
@@ -106,16 +110,16 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 			req.setCount(count);
 
 			String prodCharge = req.getProdCharge();
-			String listId = req.getListId();
-
-			// 필수 파라미터 체크 listId
-			if (StringUtils.isEmpty(listId)) {
-				throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
-			}
+			String b2bProd = req.getB2bProd();
 
 			// 상품의 유료/무료 구분 기본 설정
 			if (StringUtils.isEmpty(prodCharge)) {
 				req.setProdCharge("A");
+			}
+
+			// B2B 상품 구분 구분 기본 설정
+			if (StringUtils.isEmpty(b2bProd)) {
+				req.setB2bProd("A");
 			}
 
 			if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
@@ -163,8 +167,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				List<Menu> menuList = null;
 				Title title = null;
 
-				List<Source> sourceList = null;
-				Source source = null;
 				Rights rights = null;
 				Layout layout = new Layout();
 
@@ -209,8 +211,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 					identifierList.add(identifier);
 					product.setIdentifierList(identifierList);
 					MetaInfo retMetaInfo = null;
-					System.out.println(svcGrpCd);
-					System.out.println("22222");
 					// APP 상품의 경우
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 						reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
@@ -231,14 +231,12 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
 																							  // 경우
 							retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-							System.out.println("333333");
 							// Ebook용 Contributor 설정
 							if (retMetaInfo != null) {
 								Contributor contributor = this.ebookComicGenerator
 										.generateEbookContributor(retMetaInfo);
 								product.setContributor(contributor);
 							}
-							System.out.println("444");
 						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 							retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
 							// Music용 Contributor 설정
@@ -256,7 +254,11 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 							}
 						}
 					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
-						retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);// shopping용 Contributor 설정
+						if (retMetaInfo != null) {
+							Contributor contributor = this.shoppingInfoGenerator.generateContributor(retMetaInfo);
+							product.setContributor(contributor);
+						}
 					}
 					if (retMetaInfo != null) {
 						// title 정보

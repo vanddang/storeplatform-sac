@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -130,7 +131,7 @@ public class ThemeController {
 	 */
 	@RequestMapping(value = "/display/feature/theme/themeZone/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ThemeThemeZoneSacRes searchThemeThemeZoneList(ThemeThemeZoneSacReq req, SacRequestHeader header) {
+	public ThemeThemeZoneSacRes searchThemeThemeZoneList(@Validated ThemeThemeZoneSacReq req, SacRequestHeader header) {
 		return this.themeThemeZoneService.searchThemeThemeZoneList(req, header);
 
 	}
