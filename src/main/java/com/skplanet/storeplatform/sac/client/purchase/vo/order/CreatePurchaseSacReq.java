@@ -62,7 +62,6 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String networkTypeCd; // 네트워크 타입 코드
 	@NotBlank
 	private String prchsCaseCd; // 구매 유형 코드
-	@NotBlank(groups = { GroupCreatePurchase.class })
 	private String tenantProdGrpCd; // 테넌트 상품 분류 코드
 	@Null(groups = { GroupCreateFreePurchase.class })
 	private String imei; // 단말 식별 번호
