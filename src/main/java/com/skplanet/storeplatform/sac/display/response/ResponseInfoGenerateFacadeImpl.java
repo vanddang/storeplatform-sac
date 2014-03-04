@@ -202,6 +202,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
+		// 상품 유/무료 구분
+		product.setProdChrgYn(metaInfo.getProdChrg());
 		return product;
 	}
 
@@ -247,6 +249,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
+		// 상품 유/무료 구분
+		product.setProdChrgYn(metaInfo.getProdChrg());
 		return product;
 	}
 
@@ -292,6 +296,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
+		// 상품 유/무료 구분
+		product.setProdChrgYn(metaInfo.getProdChrg());
 		return product;
 	}
 
@@ -337,6 +343,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
+		// 상품 유/무료 구분
+		product.setProdChrgYn(metaInfo.getProdChrg());
 		return product;
 	}
 
