@@ -90,23 +90,28 @@ public class ExistTest {
 	 */
 	@Test
 	public void B_TEST_정상_사용자아이디() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ExistReq req = new ExistReq();
-				req.setUserId("shop_3292");
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ExistRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ExistRes res = (ExistRes) result;
+		new TestCaseTemplate(this.mockMvc)
+				.url("/member/user/exist/v1")
+				.addHeaders("Accept", "application/json")
+				.addHeaders("x-sac-device-info",
+						"model=\"SHW-M110S\",dpi=\"320\",resolution=\"480*720\",os=\"Android/4.0.4\",pkg=\"com.skt.skaf.A000Z00040/37\",svc=\"SHOPCLIENT/4.3\"")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ExistReq req = new ExistReq();
+						req.setUserId("shop_3292");
+						logger.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ExistRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ExistRes res = (ExistRes) result;
 
-				assertThat(res.getUserKey(), notNullValue());
-				logger.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						assertThat(res.getUserKey(), notNullValue());
+						logger.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 
 	/**
