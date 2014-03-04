@@ -11,7 +11,9 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -25,23 +27,35 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
  */
 public class CreatePurchaseSacReq extends CommonInfo {
+	public interface GroupCreatePurchase {
+	}
+
+	public interface GroupCreateFreePurchase {
+	}
+
 	private static final long serialVersionUID = 201401031L;
 
 	@NotBlank
 	private String userKey; // 내부 회원 번호
 	@NotBlank
 	private String deviceKey; // 내부 디바이스 ID
+	@Null(groups = { GroupCreateFreePurchase.class })
 	private String recvUserKey; // (선물 경우 필수) 수신자 내부 회원 번호
+	@Null(groups = { GroupCreateFreePurchase.class })
 	private String recvDeviceKey; // (선물 경우 필수) 수신자 내부 디바이스 ID
 	@NotBlank
 	private String prchsReqPathCd; // 구매 요청 경로 코드
+	@Null(groups = { GroupCreateFreePurchase.class })
 	private String mid; // 가맹점 ID
+	@Null(groups = { GroupCreateFreePurchase.class })
 	private String authKey; // 가맹점 인증키
+	@Null(groups = { GroupCreateFreePurchase.class })
 	private String returnUrl; // 결과처리 URL
 	@NotBlank
 	private String currencyCd; // 통화 코드
 	@NotNull
-	private double totAmt; // 총 결제 금액
+	@Null(groups = { GroupCreateFreePurchase.class })
+	private Double totAmt; // 총 결제 금액
 	@NotBlank
 	private String clientIp; // 클라이언트 IP
 	@NotBlank
@@ -49,12 +63,17 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	@NotBlank
 	private String prchsCaseCd; // 구매 유형 코드
 	private String tenantProdGrpCd; // 테넌트 상품 분류 코드
+	@Null(groups = { GroupCreateFreePurchase.class })
 	private String imei; // 단말 식별 번호
+	@Null(groups = { GroupCreateFreePurchase.class })
 	private String uacd; // 단말 모델 식별 번호
+	@Null(groups = { GroupCreateFreePurchase.class })
 	private String simNo; // SIM Serial Number
+	@Null(groups = { GroupCreateFreePurchase.class })
 	private String simYn; // SIM 조회 가능 여부
 
 	@NotEmpty
+	@Valid
 	private List<CreatePurchaseSacReqProduct> productList; // 구매할 상품 리스트
 
 	/**

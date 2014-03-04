@@ -23,7 +23,9 @@ public class CreatePurchaseSacRes extends CommonInfo {
 	private String resultType; // 결과 타입: payment-결제Page 요청 진행, free-무료구매 완료
 	private String prchsId; // 구매ID
 	private String paymentPageUrl; // 결제Page URL
-	private String paymentPageParam; // 결제Page 요청 파라미터
+	private String paymentPageVersion;
+	private String paymentPageToken;
+	private String paymentPageEData;
 
 	/**
 	 * @return the resultType
@@ -71,18 +73,48 @@ public class CreatePurchaseSacRes extends CommonInfo {
 	}
 
 	/**
-	 * @return the paymentPageParam
+	 * @return the paymentPageVersion
 	 */
-	public String getPaymentPageParam() {
-		return this.paymentPageParam;
+	public String getPaymentPageVersion() {
+		return this.paymentPageVersion;
 	}
 
 	/**
-	 * @param paymentPageParam
-	 *            the paymentPageParam to set
+	 * @param paymentPageVersion
+	 *            the paymentPageVersion to set
 	 */
-	public void setPaymentPageParam(String paymentPageParam) {
-		this.paymentPageParam = paymentPageParam;
+	public void setPaymentPageVersion(String paymentPageVersion) {
+		this.paymentPageVersion = paymentPageVersion;
+	}
+
+	/**
+	 * @return the paymentPageToken
+	 */
+	public String getPaymentPageToken() {
+		return this.paymentPageToken;
+	}
+
+	/**
+	 * @param paymentPageToken
+	 *            the paymentPageToken to set
+	 */
+	public void setPaymentPageToken(String paymentPageToken) {
+		this.paymentPageToken = paymentPageToken;
+	}
+
+	/**
+	 * @return the paymentPageEData
+	 */
+	public String getPaymentPageEData() {
+		return this.paymentPageEData;
+	}
+
+	/**
+	 * @param paymentPageEData
+	 *            the paymentPageEData to set
+	 */
+	public void setPaymentPageEData(String paymentPageEData) {
+		this.paymentPageEData = paymentPageEData;
 	}
 
 }

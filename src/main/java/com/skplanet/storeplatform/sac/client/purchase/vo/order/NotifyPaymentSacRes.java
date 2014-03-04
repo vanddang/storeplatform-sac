@@ -11,11 +11,17 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+/**
+ * 
+ * 결제 결과 Noti 응답 VO
+ * 
+ * Updated on : 2014. 2. 28. Updated by : 이승택, nTels.
+ */
 public class NotifyPaymentSacRes extends CommonInfo {
-	private static final long serialVersionUID = 201401231L;
+	private static final long serialVersionUID = 201402281L;
 
-	private String code; // 결제알림 처리 결과
-	private String msg; // 결제알림 처리 메세지
+	private String prchsId; // 구매 ID
+	private int count; // 처리된 결제수단 갯수
 
 	/**
 	 */
@@ -23,45 +29,44 @@ public class NotifyPaymentSacRes extends CommonInfo {
 	}
 
 	/**
-	 * 
-	 * @param code
-	 *            code
-	 * @param msg
-	 *            msg
+	 * @param prchsId
+	 *            구매 ID
+	 * @param count
+	 *            처리된 결제수단 갯수
 	 */
-	public NotifyPaymentSacRes(String code, String msg) {
-		this.code = code;
-		this.msg = msg;
+	public NotifyPaymentSacRes(String prchsId, int count) {
+		this.prchsId = prchsId;
+		this.count = count;
 	}
 
 	/**
-	 * @return the code
+	 * @return the prchsId
 	 */
-	public String getCode() {
-		return this.code;
+	public String getPrchsId() {
+		return this.prchsId;
 	}
 
 	/**
-	 * @param code
-	 *            the code to set
+	 * @param prchsId
+	 *            the prchsId to set
 	 */
-	public void setCode(String code) {
-		this.code = code;
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
 	}
 
 	/**
-	 * @return the msg
+	 * @return the count
 	 */
-	public String getMsg() {
-		return this.msg;
+	public int getCount() {
+		return this.count;
 	}
 
 	/**
-	 * @param msg
-	 *            the msg to set
+	 * @param count
+	 *            the count to set
 	 */
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }

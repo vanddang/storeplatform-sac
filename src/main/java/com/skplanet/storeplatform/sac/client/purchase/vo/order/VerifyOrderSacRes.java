@@ -25,7 +25,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String flgProductStatus; // 상품상태 (0-구매불가상품, 1-구매가능상품)
 	private String flgTeleBillingAgree; // 통신과금 동의여부 (Y/N)
 	private String flgOcbUseAgree; // OCB 이용약관 동의여부 (Y/N)
-	private String cdResetPaymethod; // 결제가능수단 재구성 코드
 	private String cdMaxAmtRate; // 결제수단 별 가능 거래금액/비율 조정 정보
 	private String CdOcbSaveInfo; // OCB 적립코드
 	private String noOcbCard; // OCB 카드번호
@@ -119,21 +118,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setFlgOcbUseAgree(String flgOcbUseAgree) {
 		this.flgOcbUseAgree = flgOcbUseAgree;
-	}
-
-	/**
-	 * @return the cdResetPaymethod
-	 */
-	public String getCdResetPaymethod() {
-		return this.cdResetPaymethod;
-	}
-
-	/**
-	 * @param cdResetPaymethod
-	 *            the cdResetPaymethod to set
-	 */
-	public void setCdResetPaymethod(String cdResetPaymethod) {
-		this.cdResetPaymethod = cdResetPaymethod;
 	}
 
 	/**

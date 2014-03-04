@@ -9,154 +9,98 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+/**
+ * 
+ * 결제 결과 Noti VO
+ * 
+ * Updated on : 2014. 2. 28. Updated by : 이승택, nTels.
+ */
 public class NotifyPaymentSacReq extends CommonInfo {
-	private static final long serialVersionUID = 201401231L;
+	private static final long serialVersionUID = 201402281L;
 
-	private String code; // 결제요청 결과코드
-	private String msg; // 결제요청 결과메세지
-	private String tid; // Pay Planet 거래번호
-	private String orderId; // 가맹점 주문번호: 구매ID
-	private String amtPurchase; // 최종결제금액 (실패시 0)
-	private String mctSpareParam; // 가맹점 임의 파라미터
-	private String gwBillkey; // GW사에서 발급한 월자동결제 처리용 빌키
-	private String noCoupon; // 결제에 사용된 쿠폰번호
-	private String paymethodInfo; // 결제수단 별 결제금액 수단코드:결제금액;수단코드:결제금액;...
+	private String resultCd; // 결제처리결과 코드
+	private String resultMsg; // 결제처리결과 메시지
+	private String prchsId; // 구매 ID
+	private double totAmt; // 결제 총 금액
+	private List<PaymentInfo> paymentInfoList; // 결제수단정보 리스트
 
 	/**
-	 * @return the code
+	 * @return the resultCd
 	 */
-	public String getCode() {
-		return this.code;
+	public String getResultCd() {
+		return this.resultCd;
 	}
 
 	/**
-	 * @param code
-	 *            the code to set
+	 * @param resultCd
+	 *            the resultCd to set
 	 */
-	public void setCode(String code) {
-		this.code = code;
+	public void setResultCd(String resultCd) {
+		this.resultCd = resultCd;
 	}
 
 	/**
-	 * @return the msg
+	 * @return the resultMsg
 	 */
-	public String getMsg() {
-		return this.msg;
+	public String getResultMsg() {
+		return this.resultMsg;
 	}
 
 	/**
-	 * @param msg
-	 *            the msg to set
+	 * @param resultMsg
+	 *            the resultMsg to set
 	 */
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public void setResultMsg(String resultMsg) {
+		this.resultMsg = resultMsg;
 	}
 
 	/**
-	 * @return the tid
+	 * @return the prchsId
 	 */
-	public String getTid() {
-		return this.tid;
+	public String getPrchsId() {
+		return this.prchsId;
 	}
 
 	/**
-	 * @param tid
-	 *            the tid to set
+	 * @param prchsId
+	 *            the prchsId to set
 	 */
-	public void setTid(String tid) {
-		this.tid = tid;
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
 	}
 
 	/**
-	 * @return the orderId
+	 * @return the totAmt
 	 */
-	public String getOrderId() {
-		return this.orderId;
+	public double getTotAmt() {
+		return this.totAmt;
 	}
 
 	/**
-	 * @param orderId
-	 *            the orderId to set
+	 * @param totAmt
+	 *            the totAmt to set
 	 */
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setTotAmt(double totAmt) {
+		this.totAmt = totAmt;
 	}
 
 	/**
-	 * @return the amtPurchase
+	 * @return the paymentInfoList
 	 */
-	public String getAmtPurchase() {
-		return this.amtPurchase;
+	public List<PaymentInfo> getPaymentInfoList() {
+		return this.paymentInfoList;
 	}
 
 	/**
-	 * @param amtPurchase
-	 *            the amtPurchase to set
+	 * @param paymentInfoList
+	 *            the paymentInfoList to set
 	 */
-	public void setAmtPurchase(String amtPurchase) {
-		this.amtPurchase = amtPurchase;
-	}
-
-	/**
-	 * @return the mctSpareParam
-	 */
-	public String getMctSpareParam() {
-		return this.mctSpareParam;
-	}
-
-	/**
-	 * @param mctSpareParam
-	 *            the mctSpareParam to set
-	 */
-	public void setMctSpareParam(String mctSpareParam) {
-		this.mctSpareParam = mctSpareParam;
-	}
-
-	/**
-	 * @return the gwBillkey
-	 */
-	public String getGwBillkey() {
-		return this.gwBillkey;
-	}
-
-	/**
-	 * @param gwBillkey
-	 *            the gwBillkey to set
-	 */
-	public void setGwBillkey(String gwBillkey) {
-		this.gwBillkey = gwBillkey;
-	}
-
-	/**
-	 * @return the noCoupon
-	 */
-	public String getNoCoupon() {
-		return this.noCoupon;
-	}
-
-	/**
-	 * @param noCoupon
-	 *            the noCoupon to set
-	 */
-	public void setNoCoupon(String noCoupon) {
-		this.noCoupon = noCoupon;
-	}
-
-	/**
-	 * @return the paymethodInfo
-	 */
-	public String getPaymethodInfo() {
-		return this.paymethodInfo;
-	}
-
-	/**
-	 * @param paymethodInfo
-	 *            the paymethodInfo to set
-	 */
-	public void setPaymethodInfo(String paymethodInfo) {
-		this.paymethodInfo = paymethodInfo;
+	public void setPaymentInfoList(List<PaymentInfo> paymentInfoList) {
+		this.paymentInfoList = paymentInfoList;
 	}
 
 }
