@@ -26,8 +26,6 @@ import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
 import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchDcdSupportProductSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdatePurchaseCountSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
@@ -80,10 +78,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	private DownloadAES128Helper downloadAES128Helper;
 	@Autowired
 	private DeviceSCI deviceSCI;
-	@Autowired
-	UpdatePurchaseCountSCI updatePurchaseCountSCI;
-	@Autowired
-	private SearchDcdSupportProductSCI searchDcdSupportProductSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -95,31 +89,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	public DownloadVodSacRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodSacReq downloadVodSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
-
-		// UpdatePurchaseCountSacReq productInfo = null;
-		// List<UpdatePurchaseCountSacReq> productTest = new ArrayList<UpdatePurchaseCountSacReq>();
-		// // for (int i = 1; i <= 100; i++) {
-		// productInfo = new UpdatePurchaseCountSacReq();
-		// productInfo.setTenantId("S01");
-		// productInfo.setProductId("TESTPROD");
-		// productInfo.setPurchaseCount(100);
-		// productTest.add(productInfo);
-		// productInfo = new UpdatePurchaseCountSacReq();
-		// productInfo.setTenantId("S01");
-		// productInfo.setProductId("S000000439");
-		// productInfo.setPurchaseCount(3);
-		// productTest.add(productInfo);
-		// this.updatePurchaseCountSCI.updatePurchaseCount(productTest);
-		//
-		// // }
-		//
-		// DcdSupportProductRes dcdRes = this.searchDcdSupportProductSCI.searchDcdSupportProduct();
-		// this.log.debug("#####################################################################################");
-		// for (int i = 0; i < dcdRes.getProductList().size(); i++) {
-		// this.log.debug("call prodId	:	" + dcdRes.getProductList().get(i).getProdId());
-		// this.log.debug("call DscSprtCd	:	" + dcdRes.getProductList().get(i).getDcdSprtCd());
-		// }
-		// this.log.debug("#####################################################################################");
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
