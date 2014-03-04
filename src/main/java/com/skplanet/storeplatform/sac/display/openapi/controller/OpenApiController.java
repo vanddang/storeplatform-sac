@@ -27,11 +27,14 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacR
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
 import com.skplanet.storeplatform.sac.display.openapi.service.DownloadBestService;
 import com.skplanet.storeplatform.sac.display.openapi.service.NewAppRecommendService;
+import com.skplanet.storeplatform.sac.display.openapi.service.NoProvisionService;
 
 /**
  * Open API 관련 Controller
@@ -54,6 +57,9 @@ public class OpenApiController {
 
 	@Autowired
 	private NewAppRecommendService newAppRecommendService;
+
+	@Autowired
+	private NoProvisionService noProvisionService;
 
 	/**
 	 * <pre>
@@ -127,4 +133,21 @@ public class OpenApiController {
 		return this.newAppRecommendService.searchNewAppRecommendList(requestheader, newAppRecommendSacReq);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상품 검색 요청(BY 상품명) - No Provisioning
+	 * </pre>
+	 * 
+	 * @param noProvisionSacReq
+	 *            noProvisionSacReq
+	 * @param requestheader
+	 *            requestheader
+	 * @return NoProvisionSacRes
+	 */
+	@RequestMapping(value = "/noProvision/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public NoProvisionSacRes noProvision(@Validated NoProvisionSacReq noProvisionSacReq, SacRequestHeader requestheader) {
+		return this.noProvisionService.searchProductByNameNoProvisioningList(noProvisionSacReq, requestheader);
+	}
 }

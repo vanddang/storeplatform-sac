@@ -340,4 +340,97 @@
                )
 		         <!-- WHERE KA.RNUM <![CDATA[ <= 4 ]]> -->
     </select>      
+    
+    <select id="searchProductByNameNoProvisioningList" parameterType="NoProvisionSacReq" resultType="MetaInfo">
+             SELECT  
+                 TOTAL_COUNT                AS TOTAL_COUNT
+                ,PP.PROD_ID                 AS PROD_ID
+                ,PP.PROD_NM                 AS PROD_NM
+                ,PP.PROD_BASE_DESC          AS PROD_BASE_DESC
+                ,PP.TOP_MENU_ID             AS TOP_MENU_ID
+                ,(SELECT MENU_NM 
+                   FROM TB_DP_MENU_CATEGORY_DESC
+                  WHERE MENU_ID = PP.TOP_MENU_ID
+                    AND LANG_CD = #{langCd}
+                    AND ROWNUM = 1) AS TOP_MENU_NM  
+                ,(SELECT MENU_NM 
+                   FROM TB_DP_MENU_CATEGORY_DESC
+                  WHERE MENU_ID = PP.MENU_ID
+                    AND LANG_CD = #{langCd}
+                    AND ROWNUM = 1) AS MENU_NM                    
+                ,NVL(PP.PROD_AMT, 0)        AS PROD_AMT
+                ,NVL(PP.AVG_EVLU_SCORE, 0)  AS AVG_EVLU_SCORE
+                ,NVL(PP.PATICPERS_CNT, 0)   AS PATICPERS_CNT
+                ,NVL(PP.PRCHS_CNT, 0)       AS PRCHS_CNT
+                ,PP.PROD_GRD_CD             AS PROD_GRD_CD
+                ,(SELECT DECODE(INSTR(PI.FILE_PATH, '.', 1, 1), 0, PI.FILE_PATH || PI.FILE_NM, PI.FILE_PATH)
+                    FROM TB_DP_PROD_IMG PI
+                   WHERE PP.PROD_ID = PI.PROD_ID
+                     AND PI.IMG_CD = 'DP000125'
+                     AND PI.LANG_CD = #{langCd}
+                     AND ROWNUM = 1) AS IMAGE_PATH
+           FROM (
+                 SELECT  COUNT(*) OVER() AS TOTAL_COUNT
+                        ,ROW_NUMBER() OVER(ORDER BY DECODE(#{orderedBy}, 'popular', Z.AVG_EVLU_SCORE, Z.REG_DT) DESC) AS RONUM
+                        ,Z.*
+                   FROM
+                      (
+                      SELECT  
+                              ROW_NUMBER( ) OVER( PARTITION BY PR.PROD_ID ORDER BY P.REG_DT DESC ) AS RNUM
+                             ,P.PROD_ID
+                             ,PD.PROD_NM
+                             ,PD.PROD_BASE_DESC
+                             ,P.TOP_MENU_ID                    
+                             ,MCP.MENU_ID       
+                             ,TPP.PROD_AMT
+                             ,P.PROD_GRD_CD
+                             ,TO_CHAR(P.REG_DT, 'YYYYMMDD') AS REG_DT 
+                             ,NVL(TV.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE
+                             ,NVL(TV.PATICPERS_CNT, 0) AS PATICPERS_CNT
+                             ,NVL(TV.PRCHS_CNT, 0) AS PRCHS_CNT                             
+                        FROM TB_DP_PROD P
+                           , TB_DP_APP_PROD APD
+                           , TB_DP_PROD_DESC PD
+                           , TB_DP_PROD_RSHP PR
+                           , TB_DP_MENU_CATEGORY_PROD_MAPG MCPM
+                           , TB_DP_MENU_CATEGORY MCP                           
+                           , TB_DP_TENANT_PROD TP
+                           , TB_DP_TENANT_PROD_PRICE TPP
+                           , TB_DP_TENANT_PROD_STATS TV
+                       WHERE P.PROD_ID = PR.PROD_ID
+                         AND P.PROD_ID = APD.PROD_ID                         
+                         AND P.PROD_ID = MCPM.PROD_ID                         
+                         AND MCPM.MENU_ID = MCP.MENU_ID
+                         AND P.PROD_ID = PR.PART_PROD_ID
+                         AND P.PROD_ID = PD.PROD_ID                         
+                         AND P.PROD_ID = TP.PROD_ID
+                         AND P.PROD_ID = TPP.PROD_ID
+                         AND TP.TENANT_ID = TPP.TENANT_ID
+                         AND TP.TENANT_ID = TV.TENANT_ID                         
+                         AND P.PROD_ID = TV.PROD_ID(+)
+                         AND PR.PROD_RSHP_CD = 'DP010802'
+                         AND TP.PROD_STATUS_CD = 'PD000403'
+                         AND P.SVC_GRP_CD = 'DP000201'
+                         AND PD.LANG_CD = #{langCd}
+                         AND P.TOP_MENU_ID != 'DP02'
+                       <if test="arrayTopMenuId != null">
+                         AND P.TOP_MENU_ID IN
+                          <foreach collection="arrayTopMenuId" item="topMenuId" separator="," open="(" close=")">
+                             #{topMenuId}
+                          </foreach>
+                          <!-- 'DP01','DP03','DP04','DP08' -->
+                       </if>        
+                         AND TP.EXPO_YN = 'Y'
+                         AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
+                         AND MCPM.USE_YN = 'Y'                         
+                         AND UPPER( PD.PROD_NM ) like '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'                         
+                         AND TP.TENANT_ID = #{tenantId}
+                       ) Z
+                  WHERE RNUM = 1
+                  ) PP
+              WHERE RONUM BETWEEN #{offset} AND #{count}
+              <![CDATA[
+                AND   ROWNUM <= #{count}
+              ]]> 
+    </select>
 </mapper>
