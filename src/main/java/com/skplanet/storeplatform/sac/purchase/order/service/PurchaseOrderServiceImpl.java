@@ -237,7 +237,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		CreatePurchaseSc createPurchaseSc = createPurchaseScList.get(0);
 
 		// ------------------------------------------------------------------------------
-		// 금액 체크
+		// 결제 금액 체크
 
 		double checkAmt = 0.0;
 		for (PaymentInfo paymentInfo : notifyPaymentReq.getPaymentInfoList()) {

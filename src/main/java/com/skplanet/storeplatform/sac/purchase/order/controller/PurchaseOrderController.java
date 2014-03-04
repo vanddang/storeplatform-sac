@@ -124,10 +124,13 @@ public class PurchaseOrderController {
 		res.setResultType(purchaseOrderInfo.getResultType());
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
 		if (StringUtils.equals(purchaseOrderInfo.getResultType(), "payment")) {
+			StringBuffer sbParam = new StringBuffer(purchaseOrderInfo.getPaymentPageParam().geteData().length()
+					+ purchaseOrderInfo.getPaymentPageParam().getToken().length() + 25);
+			sbParam.append("version=").append(purchaseOrderInfo.getPaymentPageParam().getVersion()).append("&token=")
+					.append(purchaseOrderInfo.getPaymentPageParam().getToken()).append("&eData=")
+					.append(purchaseOrderInfo.getPaymentPageParam().geteData());
+			res.setPaymentPageParam(sbParam.toString());
 			res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
-			res.setPaymentPageVersion(purchaseOrderInfo.getPaymentPageParam().getVersion());
-			res.setPaymentPageToken(purchaseOrderInfo.getPaymentPageParam().getToken());
-			res.setPaymentPageEData(purchaseOrderInfo.getPaymentPageParam().geteData());
 		}
 
 		this.logger.debug("PRCHS,INFO,CREATE,RES,{}", res);
