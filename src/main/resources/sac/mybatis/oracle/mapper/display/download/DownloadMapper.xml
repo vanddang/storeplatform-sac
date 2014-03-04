@@ -439,7 +439,7 @@
 		                                       AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 에피소드타입 */  
 		                                       AND J.TOP_MENU_ID IN ('DP17', 'DP18')
 		                                       --AND K.PROD_ID IS NOT NULL                
-		                                       AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = 'android_standard2')                                       
+		                                       AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
 		                                       AND DECODE( L.SD_VIDEO_SPRT_YN , 'Y' , DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( L.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1   
 		                                       AND (CASE WHEN L.VIDEO_DRM_SPRT_YN = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
 		                                                 ELSE 'SUPPORT' END) = 'SUPPORT' /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */                                                                                                                                     
@@ -873,7 +873,7 @@
 		           AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드타입 */  
 		           AND J.TOP_MENU_ID = 'DP16'
 --		           AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
-                   AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = 'android_standard2')                                       
+                   AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
 		           AND L.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */   
 		           AND L.MUSIC_SPRT_YN ='Y'
 		           AND L.USE_YN ='Y'
