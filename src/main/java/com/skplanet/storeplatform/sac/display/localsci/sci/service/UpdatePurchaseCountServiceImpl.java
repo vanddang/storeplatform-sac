@@ -43,7 +43,7 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 	@Override
 	public void updatePurchaseCount(List<UpdatePurchaseCountSacReq> reqList) {
 		Map<String, String> map = null;
-
+		int cnt = 0;
 		for (int i = 0; i < reqList.size(); i++) {
 			map = new HashMap<String, String>();
 			if (i > 99) {
@@ -54,11 +54,12 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 			map.put("productId", reqList.get(i).getProductId());
 			map.put("purchaseCount", reqList.get(i).getPurchaseCount().toString());
 
+			// List<Map> productList = this.commonDAO.queryForList("LocalSci.getTenantStatsProduct", map, Map.class);
+
 			if (this.commonDAO.update("LocalSci.updatePurchaseCount", map) <= 0) {
-				throw new StorePlatformException("SAC_DSP_0006");
+				this.commonDAO.update("LocalSci.insertPurchaseProd", map);
 			}
 
 		}
-		//
 	}
 }

@@ -12,14 +12,35 @@
 		                    WHERE AID=#{aid}
 		                  )                             
     </select>
+        
+    <!-- 상품 구매건수 업데이트 상품이 없을시 Insert-->
+    <insert id="insertPurchaseProd" parameterType="HashMap">
+        INSERT INTO TB_DP_TENANT_PROD_STATS(
+             TENANT_ID
+           , PROD_ID
+           , PRCHS_CNT
+           , REG_DT
+           , UPD_DT
+        )VALUES(
+            #{tenantId}
+           ,#{productId}
+           ,#{purchaseCount,jdbcType=NUMERIC}
+           , SYSDATE
+           , SYSDATE
+        )
+    </insert>
     
     <!-- 상품 구매건수 업데이트 -->
     <update id="updatePurchaseCount" parameterType="HashMap">
         /* LocalSciMapper.xml, updatePurchaseCount, SAC : 이석희 , 2014-02-14 */ 
-			UPDATE TB_DP_TENANT_PROD_STATS
-			   SET PRCHS_CNT =#{purchaseCount}
-			 WHERE TENANT_ID = #{tenantId} 
-			   AND PROD_ID= #{productId}
+		UPDATE TB_DP_TENANT_PROD_STATS
+		   SET PRCHS_CNT =  ( SELECT PRCHS_CNT + #{purchaseCount,jdbcType=NUMERIC} 
+                                  FROM TB_DP_TENANT_PROD_STATS
+                                 WHERE TENANT_ID =#{tenantId}
+                                   AND PROD_ID = #{productId}
+                              )			   
+		 WHERE TENANT_ID = #{tenantId} 
+		   AND PROD_ID= #{productId}
     </update>
     
     <!-- 평점 테이블 회원 ID, KEY 변경 -->

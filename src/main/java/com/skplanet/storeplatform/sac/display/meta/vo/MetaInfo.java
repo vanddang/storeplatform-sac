@@ -70,6 +70,7 @@ public class MetaInfo {
 	private String userKey;
 	private String company;
 	private String cid;
+	private Integer curCount;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -1160,6 +1161,21 @@ public class MetaInfo {
 	 */
 	public void setCid(String cid) {
 		this.cid = cid;
+	}
+
+	/**
+	 * @return the curCount
+	 */
+	public Integer getCurCount() {
+		return this.curCount;
+	}
+
+	/**
+	 * @param curCount
+	 *            the curCount to set
+	 */
+	public void setCurCount(Integer curCount) {
+		this.curCount = curCount;
 	}
 
 	/**
