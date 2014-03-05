@@ -11,7 +11,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 2. 28. Updated by : 반범진. 지티소프트.
  */
-public class AuthorizeForAutoUpdateReq extends CommonInfo implements Serializable {
+public class AuthorizeSimpleByMdnReq extends CommonInfo implements Serializable {
 
 	/**
 	 * 

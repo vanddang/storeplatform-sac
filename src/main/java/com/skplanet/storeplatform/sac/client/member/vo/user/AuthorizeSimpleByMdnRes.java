@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 2. 28. Updated by : 반범진. 지티소프트.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class AuthorizeForAutoUpdateRes extends CommonInfo implements Serializable {
+public class AuthorizeSimpleByMdnRes extends CommonInfo implements Serializable {
 
 	/**
 	 * 
