@@ -827,6 +827,7 @@ public class LoginServiceImpl implements LoginService {
 		if (deviceInfo != null) {
 
 			isLoginSuccess = "Y";
+			res.setUserAuthKey(this.tempUserAuthKey);
 			res.setUserKey(deviceInfo.getUserKey());
 			res.setDeviceKey(deviceInfo.getDeviceKey());
 

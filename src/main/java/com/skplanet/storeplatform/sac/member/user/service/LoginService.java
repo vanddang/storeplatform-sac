@@ -38,7 +38,7 @@ public interface LoginService {
 	public AuthorizeByIdRes executeAuthorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req);
 
 	/**
-	 * 자동업데이트 로그인.
+	 * 심플 인증(간편인증).
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader

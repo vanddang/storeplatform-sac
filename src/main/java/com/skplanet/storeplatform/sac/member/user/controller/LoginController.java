@@ -73,7 +73,7 @@ public class LoginController {
 	}
 
 	/**
-	 * 자동업데이트 인증.
+	 * 심플 인증(간편인증).
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
