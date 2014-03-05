@@ -22,8 +22,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
@@ -81,11 +83,30 @@ public class LoginController {
 	 *            AuthorizeByIdReq
 	 * @return AuthorizeByIdRes
 	 */
-	@RequestMapping(value = "/member/user/authorizeForAutoUpdate/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/authorizeSimpleByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeForAutoUpdateRes authorizeForAutoUpdate(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeForAutoUpdateReq req) {
+	public AuthorizeSimpleByMdnRes authorizeForAutoUpdate(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSimpleByMdnReq req) {
 
-		return this.loginService.executeAuthorizeForAutoUpdate(requestHeader, req);
+		return this.loginService.executeAuthorizeSimpleByMdn(requestHeader, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * Save&Sync 인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeSaveAndSyncByMacReq
+	 * @return AuthorizeSaveAndSyncByMacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeSaveAndSyncByMac/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
+
+		return this.loginService.executeAuthorizeSaveAndSyncByMac(requestHeader, req);
 
 	}
 }

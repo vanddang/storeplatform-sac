@@ -47,8 +47,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -810,7 +812,7 @@ public class LoginServiceImpl implements LoginService {
 	 * .storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq)
 	 */
 	@Override
-	public AuthorizeForAutoUpdateRes executeAuthorizeForAutoUpdate(SacRequestHeader requestHeader, AuthorizeForAutoUpdateReq req) {
+	public AuthorizeSimpleByMdnRes executeAuthorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req) {
 
 		String deviceId = req.getDeviceId();
 
@@ -820,7 +822,7 @@ public class LoginServiceImpl implements LoginService {
 		/* 휴대기기 정보 조회 */
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, null);
 
-		AuthorizeForAutoUpdateRes res = new AuthorizeForAutoUpdateRes();
+		AuthorizeSimpleByMdnRes res = new AuthorizeSimpleByMdnRes();
 
 		String isLoginSuccess = null;
 
@@ -861,6 +863,37 @@ public class LoginServiceImpl implements LoginService {
 
 		return res;
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
+	 * executeAuthorizeSaveAndSyncByMac
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet
+	 * .storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq)
+	 */
+	@Override
+	public AuthorizeSaveAndSyncByMacRes executeAuthorizeSaveAndSyncByMac(SacRequestHeader requestHeader, AuthorizeSaveAndSyncByMacReq req) {
+
+		AuthorizeSaveAndSyncByMacRes res = new AuthorizeSaveAndSyncByMacRes();
+
+		/* mac 정보 조회 */
+		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null);
+
+		if (deviceInfo != null) {
+
+			res.setDeviceKey(deviceInfo.getDeviceKey());
+			res.setUserKey(deviceInfo.getUserKey());
+			res.setUserAuthKey(this.tempUserAuthKey);
+			res.setIsLoginSuccess("Y");
+
+		} else {
+
+		}
+
+		return res;
 	}
 
 }

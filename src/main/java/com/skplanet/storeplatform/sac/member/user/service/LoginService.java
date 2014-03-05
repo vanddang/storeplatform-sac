@@ -4,8 +4,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -46,6 +48,19 @@ public interface LoginService {
 	 *            AuthorizeForAutoUpdateReq
 	 * @return AuthorizeByIdRes
 	 */
-	public AuthorizeForAutoUpdateRes executeAuthorizeForAutoUpdate(SacRequestHeader requestHeader, AuthorizeForAutoUpdateReq req);
+	public AuthorizeSimpleByMdnRes executeAuthorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req);
+
+	/**
+	 * <pre>
+	 * Save&Sync 인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeSaveAndSyncByMacReq
+	 * @return AuthorizeSaveAndSyncByMacRes
+	 */
+	public AuthorizeSaveAndSyncByMacRes executeAuthorizeSaveAndSyncByMac(SacRequestHeader requestHeader, AuthorizeSaveAndSyncByMacReq req);
 
 }

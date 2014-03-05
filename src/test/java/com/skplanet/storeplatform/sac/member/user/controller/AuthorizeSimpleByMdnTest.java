@@ -32,8 +32,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -49,9 +49,9 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class AuthorizeForAutoUpdateTest {
+public class AuthorizeSimpleByMdnTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizeForAutoUpdateTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizeSimpleByMdnTest.class);
 
 	@Autowired
 	private LoginService loginService;
@@ -92,7 +92,7 @@ public class AuthorizeForAutoUpdateTest {
 						@Override
 						public Object requestBody() {
 
-							AuthorizeForAutoUpdateReq req = new AuthorizeForAutoUpdateReq();
+							AuthorizeSimpleByMdnReq req = new AuthorizeSimpleByMdnReq();
 							req.setDeviceId("01066786220");
 
 							try {
@@ -104,10 +104,10 @@ public class AuthorizeForAutoUpdateTest {
 
 							return req;
 						}
-					}).success(AuthorizeForAutoUpdateRes.class, new SuccessCallback() {
+					}).success(AuthorizeSimpleByMdnRes.class, new SuccessCallback() {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							AuthorizeForAutoUpdateRes res = (AuthorizeForAutoUpdateRes) result;
+							AuthorizeSimpleByMdnRes res = (AuthorizeSimpleByMdnRes) result;
 							LOGGER.info("response param : {}", res.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -138,7 +138,7 @@ public class AuthorizeForAutoUpdateTest {
 						@Override
 						public Object requestBody() {
 
-							AuthorizeForAutoUpdateReq req = new AuthorizeForAutoUpdateReq();
+							AuthorizeSimpleByMdnReq req = new AuthorizeSimpleByMdnReq();
 							req.setDeviceId("01066786220111");
 
 							try {
@@ -150,10 +150,10 @@ public class AuthorizeForAutoUpdateTest {
 
 							return req;
 						}
-					}).success(AuthorizeForAutoUpdateRes.class, new SuccessCallback() {
+					}).success(AuthorizeSimpleByMdnRes.class, new SuccessCallback() {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							AuthorizeForAutoUpdateRes res = (AuthorizeForAutoUpdateRes) result;
+							AuthorizeSimpleByMdnRes res = (AuthorizeSimpleByMdnRes) result;
 							LOGGER.info("response param : {}", res.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -184,14 +184,14 @@ public class AuthorizeForAutoUpdateTest {
 		header.setDeviceHeader(deviceHeader);
 		header.setTenantHeader(tenantHeader);
 
-		AuthorizeForAutoUpdateReq req = new AuthorizeForAutoUpdateReq();
+		AuthorizeSimpleByMdnReq req = new AuthorizeSimpleByMdnReq();
 		req.setDeviceId("01066786220");
 
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
 			LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 
-			AuthorizeForAutoUpdateRes res = this.loginService.executeAuthorizeForAutoUpdate(header, req);
+			AuthorizeSimpleByMdnRes res = this.loginService.executeAuthorizeSimpleByMdn(header, req);
 			LOGGER.info("res : {} " + res.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
