@@ -252,9 +252,19 @@ public class Product extends CommonInfo implements Serializable {
 	private String specialProdYn;
 
 	/**
+	 * 부분 유료화 앱 여부
+	 */
+	private String partChrgmonyAppYn;
+
+	/**
 	 * 테마 타입
 	 */
 	private String themeType;
+
+	/**
+	 * 무료 아이템 금액.
+	 */
+	private Integer freeItemAmt;
 
 	public String getSalesStatus() {
 		return this.salesStatus;
@@ -1032,6 +1042,36 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setThemeType(String themeType) {
 		this.themeType = themeType;
+	}
+
+	/**
+	 * @return the partChrgmonyAppYn
+	 */
+	public String getPartChrgmonyAppYn() {
+		return this.partChrgmonyAppYn;
+	}
+
+	/**
+	 * @param partChrgmonyAppYn
+	 *            the partChrgmonyAppYn to set
+	 */
+	public void setPartChrgmonyAppYn(String partChrgmonyAppYn) {
+		this.partChrgmonyAppYn = partChrgmonyAppYn;
+	}
+
+	/**
+	 * @return the freeItemAmt
+	 */
+	public Integer getFreeItemAmt() {
+		return this.freeItemAmt;
+	}
+
+	/**
+	 * @param freeItemAmt
+	 *            the freeItemAmt to set
+	 */
+	public void setFreeItemAmt(Integer freeItemAmt) {
+		this.freeItemAmt = freeItemAmt;
 	}
 
 }
