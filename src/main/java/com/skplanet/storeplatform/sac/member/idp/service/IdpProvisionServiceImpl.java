@@ -205,6 +205,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 				searchDeviceRequest.setKeySearchList(keySearchList);
 				SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
 				beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
 				userKey = schDeviceRes.getUserMbrDevice().getUserKey();
 				deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
