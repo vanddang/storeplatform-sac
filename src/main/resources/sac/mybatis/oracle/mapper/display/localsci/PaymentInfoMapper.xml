@@ -224,10 +224,10 @@
                     , CONCAT(CONCAT(PD.SVC_GRP_CD, '||' ),PD.TOP_MENU_ID) as tenantProdGrpCd
                     , PD.MALL_CD
                     ,'' AS outsdContentsId
-                    ,'' AS sellerMbrNo 
-                    ,'' AS sellerNm
-                    ,'' AS sellerEmail
-                    ,'' AS sellerTelno       
+                    , PD.SELLER_MBR_NO 
+                    , PD.EXPO_SELLER_EMAIL AS sellerEmail
+                    , PD.EXPO_SELLER_NM  AS sellerNm
+                    , PD.EXPO_SELLER_TELNO  AS sellerTelno                     
                     , CM.AUTO_APPR_YN AS autoPrchsYN             	            
                     , PD.USE_PERIOD_UNIT_CD AS autoPrchsPeriodUnitCd
                     , PD.USE_PERIOD	AS autoPrchsPeriodValue	
