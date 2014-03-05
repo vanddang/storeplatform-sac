@@ -4,8 +4,10 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentation
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DetailRepresentationDeviceTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DetailRepresentationDeviceTest.class);
@@ -61,18 +64,18 @@ public class DetailRepresentationDeviceTest {
 
 	/**
 	 * <pre>
-	 * 대표단말 정보조회 userKey
+	 * 대표단말 정보조회
 	 * </pre>
 	 */
 	@Test
-	public void detailRepresentationDevice() throws Exception {
+	public void A_TEST_정상_대표단말조회() throws Exception {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
-						req.setUserKey("IF1023002708420090928145937");
+						req.setUserKey("US201401271926064310001061");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
@@ -91,7 +94,7 @@ public class DetailRepresentationDeviceTest {
 	 * userKey is Null
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void detailRepresentationDeviceUserKeyNull() throws Exception {
+	public void B_TEST_오류_파라미터없음() throws Exception {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
@@ -116,15 +119,15 @@ public class DetailRepresentationDeviceTest {
 	/**
 	 * userKey is inValid
 	 */
-	@Test(expected = RuntimeException.class)
-	public void detailRepresentationUserKeyInvalid() throws Exception {
+	@Test(expected = StorePlatformException.class)
+	public void C_TEST_오류_휴대기기정보없음() throws Exception {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
-						req.setUserKey("IF102300270842009092814593711");
+						req.setUserKey("US201403030937290290000006");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
