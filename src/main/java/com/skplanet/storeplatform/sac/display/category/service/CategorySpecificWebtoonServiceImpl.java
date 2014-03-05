@@ -129,8 +129,8 @@ public class CategorySpecificWebtoonServiceImpl implements CategorySpecificWebto
 					if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 						if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // Webtoon 상품의 경우
 
-							// paramMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
+							paramMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
+							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getWebtoonMetaInfo",
 									paramMap, MetaInfo.class);
 							metaInfo = this.metaInfoService.getWebtoonMetaInfo(paramMap);
 							if (metaInfo != null) {
