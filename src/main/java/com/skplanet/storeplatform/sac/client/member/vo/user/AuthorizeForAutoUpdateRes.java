@@ -21,6 +21,11 @@ public class AuthorizeForAutoUpdateRes extends CommonInfo implements Serializabl
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 인증키
+	 */
+	private String userAuthKey;
+
+	/**
 	 * 내부 사용자키.
 	 */
 	private String userKey;
@@ -78,6 +83,21 @@ public class AuthorizeForAutoUpdateRes extends CommonInfo implements Serializabl
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return userAuthKey
+	 */
+	public String getUserAuthKey() {
+		return this.userAuthKey;
+	}
+
+	/**
+	 * @param userAuthKey
+	 *            String
+	 */
+	public void setUserAuthKey(String userAuthKey) {
+		this.userAuthKey = userAuthKey;
 	}
 
 }
