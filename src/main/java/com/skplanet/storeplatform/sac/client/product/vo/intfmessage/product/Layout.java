@@ -15,6 +15,7 @@ import java.util.List;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
@@ -33,6 +34,31 @@ public class Layout extends CommonInfo implements Serializable {
 	private Title title; // 베너제목
 	private Source source; // 베너 resource 정보
 	private Menu menu; // 메뉴 정보
+
+	/* 웹툰 회차별 정보에 채널 정보노출 필요로 추가 */
+	/**
+	 * 상품 ID.
+	 */
+	private Identifier identifier;
+
+	private List<Identifier> identifierList;
+	/**
+	 * 상품설명.
+	 */
+	private String productExplain;
+	/**
+	 * Accrual.
+	 */
+	private Accrual accrual;
+	/**
+	 * 제작자 정보.
+	 */
+	private Contributor contributor;
+
+	/**
+	 * resource 정보.
+	 */
+	private List<Source> sourceList;
 
 	/**
 	 * @return String
@@ -107,6 +133,54 @@ public class Layout extends CommonInfo implements Serializable {
 	 */
 	public void setMenu(Menu menu) {
 		this.menu = menu;
+	}
+
+	public Identifier getIdentifier() {
+		return this.identifier;
+	}
+
+	public void setIdentifier(Identifier identifier) {
+		this.identifier = identifier;
+	}
+
+	public List<Identifier> getIdentifierList() {
+		return this.identifierList;
+	}
+
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
+	}
+
+	public String getProductExplain() {
+		return this.productExplain;
+	}
+
+	public void setProductExplain(String productExplain) {
+		this.productExplain = productExplain;
+	}
+
+	public Accrual getAccrual() {
+		return this.accrual;
+	}
+
+	public void setAccrual(Accrual accrual) {
+		this.accrual = accrual;
+	}
+
+	public Contributor getContributor() {
+		return this.contributor;
+	}
+
+	public void setContributor(Contributor contributor) {
+		this.contributor = contributor;
+	}
+
+	public List<Source> getSourceList() {
+		return this.sourceList;
+	}
+
+	public void setSourceList(List<Source> sourceList) {
+		this.sourceList = sourceList;
 	}
 
 }
