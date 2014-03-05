@@ -20,6 +20,10 @@ import com.skplanet.storeplatform.sac.api.vo.ErrorData;
  * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
 public class CouponException extends RuntimeException {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ErrorData errorData;
 	private String errValue;
 
