@@ -17,14 +17,14 @@ public class DetailSubsellerRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자정보 Value Object. */
-	private SellerMbr sellerMbr;
+	private SellerMbr subSellerMbr;
 
-	public SellerMbr getSellerMbr() {
-		return this.sellerMbr;
+	public SellerMbr getSubSellerMbr() {
+		return this.subSellerMbr;
 	}
 
-	public void setSellerMbr(SellerMbr sellerMbr) {
-		this.sellerMbr = sellerMbr;
+	public void setSubSellerMbr(SellerMbr subSellerMbr) {
+		this.subSellerMbr = subSellerMbr;
 	}
 
 }
