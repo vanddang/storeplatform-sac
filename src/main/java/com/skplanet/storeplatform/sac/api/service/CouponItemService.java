@@ -6,6 +6,7 @@ import java.util.List;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
+import com.skplanet.storeplatform.sac.api.vo.SpRegistProd;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
@@ -190,6 +191,16 @@ public interface CouponItemService {
 	 *            tagList
 	 */
 	public void insertTblTagInfo(ArrayList<DpCatalogTagInfo> tagList);
+
+	/**
+	 * <pre>
+	 * 정산율 프로시저 콜 한다.
+	 * </pre>
+	 * 
+	 * @param spRegistProdList
+	 *            spRegistProdList
+	 */
+	public void insertCallSpRegistProd(List<SpRegistProd> spRegistProdList);
 
 	/**
 	 * <pre>

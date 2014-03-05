@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
 import com.skplanet.storeplatform.sac.api.util.CSVReader;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
+import com.skplanet.storeplatform.sac.api.vo.SpRegistProd;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
@@ -905,6 +906,60 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	} // End setTbDpTenantProdPrice
 
 	/**
+	 * setCallSpRegistProd value 셋팅.
+	 * 
+	 * @param couponInfo
+	 *            couponInfo
+	 * @param itemInfoList
+	 *            itemInfoList
+	 * @param spRegistProdList
+	 *            spRegistProdList
+	 * @param cudType
+	 *            cudType
+	 * @return boolean
+	 */
+	private boolean setCallSpRegistProd(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
+			List<SpRegistProd> spRegistProdList, String cudType) {
+		SpRegistProd spRegistProd = new SpRegistProd();
+		try {
+
+			// ////////////////// Coupon 정보 S////////////////////////////
+			spRegistProd.setProdId(couponInfo.getProdId());
+			spRegistProd.setSettlRt(couponInfo.getAccountingRate());
+			spRegistProd.setSaleMbrNo(this.mbrNo);
+			spRegistProd.setSaleStdDt(couponInfo.getIssueSDate());
+			spRegistProd.setSaleEndDt(couponInfo.getIssueEDate());
+			spRegistProd.setRegId(couponInfo.getBpId());
+			spRegistProd.setCudType(cudType);
+			spRegistProdList.add(spRegistProd);
+			// ////////////////// Coupon 정보 E////////////////////////////
+
+			// ////////////////// Item 정보 S////////////////////////////
+			for (int i = 0; i < itemInfoList.size(); i++) {
+				DpItemInfo itemInfo = itemInfoList.get(i);
+				spRegistProd = new SpRegistProd();
+				spRegistProd.setProdId(itemInfo.getProdId());
+				spRegistProd.setSettlRt(couponInfo.getAccountingRate());
+				spRegistProd.setSaleMbrNo(this.mbrNo);
+				spRegistProd.setSaleStdDt(couponInfo.getIssueSDate());
+				spRegistProd.setSaleEndDt(couponInfo.getIssueEDate());
+				spRegistProd.setRegId(couponInfo.getBpId());
+				spRegistProd.setCudType(itemInfo.getCudType());
+				spRegistProdList.add(spRegistProd);
+			}
+
+			// 저장
+			this.couponItemService.insertCallSpRegistProd(spRegistProdList);
+
+		} catch (CouponException e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "정산율 배포 실패!!", null);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "정산율 배포 실패!!", null);
+		}
+		return true;
+	} // End setTbDpProdDesc
+
+	/**
 	 * 해당 업체가 존재 하는지 체크 한다.
 	 * 
 	 * @param couponInfo
@@ -985,14 +1040,14 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @return boolean
 	 */
 	private boolean validateCouponItemCount(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, String cudType) {
-		if ("C".equals(cudType)) {
+		if (StringUtils.equalsIgnoreCase("C", cudType)) {
 			if (this.couponItemService.getCouponCountCudType(couponInfo.getCouponCode()) > 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_COUPONID,
 						"해당 Coupon_Id로 등록한 coupon가 있습니다.", couponInfo.getCouponCode());
 			}
 		}
 		for (int i = 0; i < itemInfoList.size(); i++) {
-			if ("C".equals(itemInfoList.get(i).getCudType())) {
+			if (StringUtils.equalsIgnoreCase("C", itemInfoList.get(i).getCudType())) {
 				if (this.couponItemService.getItemCountCudType(itemInfoList.get(i).getItemCode()) > 0) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_ITEMID,
 							"해당 Item_Id로 등록한 item이 있습니다.", itemInfoList.get(i).getItemCode());

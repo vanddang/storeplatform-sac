@@ -51,7 +51,7 @@ public class ProductInfoSCITestTest_Shopping {
 	 * @throws JsonMappingException
 	 * @throws JsonGenerationException
 	 */
-	// @Test
+	@Test
 	public void testSearchFreePassProductList() throws JsonGenerationException, JsonMappingException, IOException {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
@@ -83,7 +83,7 @@ public class ProductInfoSCITestTest_Shopping {
 	 * @throws JsonMappingException
 	 * @throws JsonGenerationException
 	 */
-	@Test
+	// @Test
 	public void testSearchShoppingProductList() throws JsonGenerationException, JsonMappingException, IOException {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();

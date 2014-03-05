@@ -464,7 +464,22 @@
             ,#{updId}
             ,sysdate
         )
-    </insert>    
+    </insert>
+
+	<parameterMap id="procMap" type="hashmap">
+	    <parameter property="prodId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+	    <parameter property="settlRt" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+        <parameter property="saleMbrNo" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+        <parameter property="saleStdDt" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+        <parameter property="saleEndDt" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+        <parameter property="regId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+	    <parameter property="rtn" mode="OUT" jdbcType="VARCHAR" javaType="String" />
+	</parameterMap>   
+    
+   <select id="selectSpRegistProd" statementType="CALLABLE" parameterMap="procMap">
+      /* CouponMapper.xml, selectSpRegistProd,SP_REGIST_PROD 프로시저 호출, 김형식/SK플래닛  , 2013-01-08 */
+        {CALL SP_REGIST_PROD(?,?,?,?,?,?,?)}
+   </select>        
     
     <!-- 전시단 쿠폰상품 상태변경 -->
     <update id="updateDPCouponStatus" parameterType="HashMap">

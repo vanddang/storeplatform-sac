@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
+import com.skplanet.storeplatform.sac.api.vo.SpRegistProd;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
@@ -406,6 +407,46 @@ public class CouponItemServiceImpl implements CouponItemService {
 				}
 				this.commonDAO.insert("BrandCatalog.createTbDpProdTag", vo);
 			}
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * SP_REGIST_PROD 프로시저 호출한다.
+	 * </pre>
+	 * 
+	 * @param tagList
+	 *            tagList
+	 */
+
+	@Override
+	public void insertCallSpRegistProd(List<SpRegistProd> spRegistProdList) {
+		try {
+			HashMap<String, String> param = new HashMap<String, String>();
+
+			for (SpRegistProd vo : spRegistProdList) {
+				param.put("prodId", vo.getProdId());
+				param.put("settlRt", vo.getSettlRt());
+				param.put("saleMbrNo", vo.getSaleMbrNo());
+				param.put("saleStdDt", vo.getSaleStdDt());
+				param.put("saleEndDt", vo.getSaleEndDt());
+				param.put("regId", vo.getRegId());
+				param.put("rtn", "");
+
+				this.commonDAO.queryForObject("Coupon.selectSpRegistProd", param);
+				String result = param.get("rtn");
+				this.log.info("정산율 배포 결과 : " + result);
+
+				if (!("S".equals(result) || "BP".equals(result))) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "정산율 배포 실패!!", null);
+				}
+			}
+
+		} catch (CouponException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
