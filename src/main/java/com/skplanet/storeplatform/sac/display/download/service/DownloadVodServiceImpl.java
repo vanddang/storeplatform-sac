@@ -154,6 +154,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				List<ProductListSacIn> productList = null;
 				HistoryListSacInReq historyReq = null;
 				HistoryListSacInRes historyRes = null;
+				boolean purchaseFlag = true;
 
 				try {
 					productListSacIn = new ProductListSacIn();
@@ -184,7 +185,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 
 				} catch (Exception ex) {
-					throw new StorePlatformException("SAC_DSP_2001", ex);
+					purchaseFlag = false;
+					this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+					// throw new StorePlatformException("SAC_DSP_2001", ex);
 				}
 
 				String prchsId = null; // 구매ID
@@ -197,7 +200,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				String puchsPrice = null; // 구매 상품금액
 				String drmYn = null; // 구매상품 Drm여부
 
-				if (historyRes != null && historyRes.getTotalCnt() > 0) {
+				if (purchaseFlag && historyRes != null) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 					List<Encryption> encryptionList = new ArrayList<Encryption>();
 
@@ -245,6 +248,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							String deviceIdType = null; // Device Id 유형
 							SearchDeviceIdSacReq deviceReq = null;
 							SearchDeviceIdSacRes deviceRes = null;
+							boolean memberFlag = true;
 
 							try {
 								deviceReq = new SearchDeviceIdSacReq();
@@ -254,10 +258,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								// 기기정보 조회
 								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 							} catch (Exception ex) {
-								throw new StorePlatformException("SAC_DSP_1001", ex);
+								memberFlag = false;
+								this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+								// throw new StorePlatformException("SAC_DSP_1001", ex);
 							}
 
-							if (deviceRes != null) {
+							if (memberFlag && deviceRes != null) {
 								deviceId = deviceRes.getDeviceId();
 								deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
