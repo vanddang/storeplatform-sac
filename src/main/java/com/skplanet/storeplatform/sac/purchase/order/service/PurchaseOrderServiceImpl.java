@@ -298,7 +298,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					shoppingCouponPublishInfo.setAvailEndDt(availEndDt);
 					shoppingCouponPublishInfo.setPublishCode(couponInfo.getPublishCode());
 					shoppingCouponPublishInfo.setShippingUrl(couponInfo.getShippingUrl());
-					shoppingCouponPublishInfo.setAddInfo(couponInfo.getAddInfo());
+					shoppingCouponPublishInfo.setAddInfo(couponInfo.getExtraData());
 
 					shoppingCouponList.add(shoppingCouponPublishInfo);
 				}
