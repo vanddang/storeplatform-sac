@@ -427,6 +427,10 @@ public class DisplayConstants {
 
 	public static final String DP_PACKETFEE_TYPE_HALFPAID = "half"; // 50% 할인 과금
 
+	public static final String DP_OPENAPI_PRODUCT_SEARCHTYPE_PRODNM = "prodNm"; // openapi 상품 검색 유형 (by 상품명)
+
+	public static final String DP_OPENAPI_PRODUCT_SEARCHTYPE_SELLERNM = "sellerNm"; // openapi 상품 검색 유형 (by 판매자명)
+
 	/*
 	 * 배너 타입 코드
 	 */
