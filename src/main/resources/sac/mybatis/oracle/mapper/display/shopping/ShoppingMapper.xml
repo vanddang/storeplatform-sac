@@ -1510,7 +1510,7 @@
                         ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
                         ,J.PROD_GRD_CD
                         ,J.USE_PERIOD_UNIT_CD
-                        ,CONCAT(J.USE_PERIOD,FN_COMM_CD_NM(J.USE_PERIOD_UNIT_CD,#{lang})) as USE_PERIOD
+                        ,CONCAT(J.USE_PERIOD,(SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = J.USE_PERIOD_UNIT_CD AND LANG_CD =#{lang})) as USE_PERIOD
                         ,DECODE(I.PROD_CASE_CD
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
