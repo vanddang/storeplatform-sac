@@ -251,7 +251,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		response.setExtraRightList(eList);// 판매자 멀티미디어정보
 		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
 		response.setSellerKey(schRes.getSellerKey());// 판매자Key
-		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));// 판매자 정보
+		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr(), schRes.getMbrAuth()));// 판매자 정보
 		response.setTabAuthList(tList);
 		response.setFlurryAuthList(fList);
 
@@ -878,7 +878,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		response.setExtraRightList(eList);// 판매자 멀티미디어정보
 		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
 		response.setSellerKey(schRes3.getSellerKey());// 판매자Key
-		response.setSellerMbr(this.sellerMbr(schRes3.getSellerMbr()));// 판매자 정보
+		response.setSellerMbr(this.sellerMbr(schRes3.getSellerMbr(), schRes3.getMbrAuth()));// 판매자 정보
 
 		return response;
 
@@ -922,7 +922,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * 
 	 * @return
 	 */
-	private SellerMbr sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr) {
+	private SellerMbr sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr,
+			com.skplanet.storeplatform.member.client.common.vo.MbrAuth mbrAuth) {
 		// 판매자 정보
 		SellerMbr sellerMbrRes = new SellerMbr();
 		if (sellerMbr != null) {
@@ -931,8 +932,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setBizKindCd(sellerMbr.getBizKindCd());
 			sellerMbrRes.setBizRegNumber(sellerMbr.getBizRegNumber());
 			sellerMbrRes.setBizUnregReason(sellerMbr.getBizUnregReason());
-			sellerMbrRes.setCeoBirthDay(sellerMbr.getCeoBirthDay());
 			sellerMbrRes.setCeoName(sellerMbr.getCeoName());
+			sellerMbrRes.setCeoBirthDay(sellerMbr.getCeoBirthDay());
 			sellerMbrRes.setCharger(sellerMbr.getCharger());
 			sellerMbrRes.setCordedTelephone(sellerMbr.getCordedTelephone());
 			sellerMbrRes.setCordedTelephoneCountry(sellerMbr.getCordedTelephoneCountry());
@@ -958,7 +959,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
 			sellerMbrRes.setRightProfile(sellerMbr.getRightProfileList());
 			sellerMbrRes.setSellerAddress(sellerMbr.getSellerAddress());
-			sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
 			sellerMbrRes.setSellerBizCategory(sellerMbr.getSellerBizCategory());
 			sellerMbrRes.setSellerBizCorpNumber(sellerMbr.getSellerBizCorpNumber());
 			sellerMbrRes.setSellerBizNumber(sellerMbr.getSellerBizNumber());
@@ -974,17 +974,36 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setSellerKey(sellerMbr.getSellerKey());
 			sellerMbrRes.setSellerLanguage(sellerMbr.getSellerLanguage());
 			sellerMbrRes.setSellerMainStatus(sellerMbr.getSellerMainStatus());
-			sellerMbrRes.setSellerName(sellerMbr.getSellerName());
 			sellerMbrRes.setSellerNickName(sellerMbr.getSellerNickName());
 			sellerMbrRes.setSellerPhone(sellerMbr.getSellerPhone());
 			sellerMbrRes.setSellerPhoneCountry(sellerMbr.getSellerPhoneCountry());
-			sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
 			sellerMbrRes.setSellerSSNumber(sellerMbr.getSellerSSNumber());
 			sellerMbrRes.setSellerState(sellerMbr.getSellerState());
 			sellerMbrRes.setSellerSubStatus(sellerMbr.getSellerSubStatus());
 			sellerMbrRes.setSellerTelecom(sellerMbr.getSellerTelecom());
 			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
 			sellerMbrRes.setVendorCode(sellerMbr.getVendorCode());
+
+			if (mbrAuth == null) {
+				sellerMbrRes.setSellerName(sellerMbr.getSellerName());
+				sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
+				sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
+			} else {
+				if (mbrAuth.getIsRealName() == null) {
+					sellerMbrRes.setSellerName(sellerMbr.getSellerName());
+					sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
+					sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
+				} else if (mbrAuth.getIsRealName().equals("N")) {
+					sellerMbrRes.setSellerName(sellerMbr.getSellerName());
+					sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
+					sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
+				} else if (mbrAuth.getIsRealName().equals("Y")) {
+					sellerMbrRes.setSellerName(mbrAuth.getName());
+					sellerMbrRes.setSellerSex(mbrAuth.getSex());
+					sellerMbrRes.setSellerBirthDay(mbrAuth.getBirthDay());
+				}
+
+			}
 		}
 		return sellerMbrRes;
 	}
