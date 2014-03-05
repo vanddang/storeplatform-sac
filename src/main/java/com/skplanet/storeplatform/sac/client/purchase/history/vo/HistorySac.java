@@ -46,12 +46,14 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String dwldExprDt;
 	private String cpnPublishCd;
 	private String cpnDlvUrl;
-	private String etcSeq;
 	private String useFixrateProdId;
 	private String prchsProdType;
 	private String drmYn;
 	private String alarmYn;
 	private String permitDeviceYn;
+	private String cpnAddinfo; // 쇼핑쿠폰_추가정보
+	private String cpnBizProdSeq; // 쇼핑쿠폰_biz상품_순번
+	private String cpnBizOrderNo; // 쇼핑쿠폰_biz상품_주문번호
 
 	// 자동결제정보
 	private String paymentStartDt; // 결제시작일시
@@ -538,21 +540,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the etcSeq
-	 */
-	public String getEtcSeq() {
-		return this.etcSeq;
-	}
-
-	/**
-	 * @param etcSeq
-	 *            the etcSeq to set
-	 */
-	public void setEtcSeq(String etcSeq) {
-		this.etcSeq = etcSeq;
-	}
-
-	/**
 	 * @return the useFixrateProdId
 	 */
 	public String getUseFixrateProdId() {
@@ -835,6 +822,51 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setProductInfo(HashMap<String, Object> productInfo) {
 		this.productInfo = productInfo;
+	}
+
+	/**
+	 * @return the cpnAddinfo
+	 */
+	public String getCpnAddinfo() {
+		return this.cpnAddinfo;
+	}
+
+	/**
+	 * @param cpnAddinfo
+	 *            the cpnAddinfo to set
+	 */
+	public void setCpnAddinfo(String cpnAddinfo) {
+		this.cpnAddinfo = cpnAddinfo;
+	}
+
+	/**
+	 * @return the cpnBizProdSeq
+	 */
+	public String getCpnBizProdSeq() {
+		return this.cpnBizProdSeq;
+	}
+
+	/**
+	 * @param cpnBizProdSeq
+	 *            the cpnBizProdSeq to set
+	 */
+	public void setCpnBizProdSeq(String cpnBizProdSeq) {
+		this.cpnBizProdSeq = cpnBizProdSeq;
+	}
+
+	/**
+	 * @return the cpnBizOrderNo
+	 */
+	public String getCpnBizOrderNo() {
+		return this.cpnBizOrderNo;
+	}
+
+	/**
+	 * @param cpnBizOrderNo
+	 *            the cpnBizOrderNo to set
+	 */
+	public void setCpnBizOrderNo(String cpnBizOrderNo) {
+		this.cpnBizOrderNo = cpnBizOrderNo;
 	}
 
 }
