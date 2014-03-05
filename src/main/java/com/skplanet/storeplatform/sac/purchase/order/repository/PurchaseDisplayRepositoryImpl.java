@@ -16,10 +16,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
+import com.skplanet.storeplatform.sac.purchase.order.vo.FixrateProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 
 /**
@@ -33,6 +37,8 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 
 	@Autowired
 	private PaymentInfoSCI purchaseProductSCI;
+	@Autowired
+	private FreePassInfoSCI freepassInfoSCI;
 
 	/**
 	 * 
@@ -117,5 +123,41 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 		}
 
 		return purchaseProductMap;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 정액제 상품 DRM 정보 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param langCd
+	 *            언어코드
+	 * @param fixrateProdId
+	 *            정액제 상품 ID
+	 * @param episodeProdId
+	 *            해당 정액제 상품을 이용하여 구매할 상품 ID
+	 * @return 상품ID에 매핑되는 상품정보를 담은 Map
+	 */
+	@Override
+	public FixrateProduct searchFreePassDrmInfo(String tenantId, String langCd, String fixrateProdId,
+			String episodeProdId) {
+		FreePassInfoSacReq req = new FreePassInfoSacReq();
+		req.setTenantId(tenantId);
+		req.setLangCd(langCd);
+		req.setProdId(fixrateProdId);
+		req.setEpisodeProdId(episodeProdId);
+
+		FreePassInfo res = this.freepassInfoSCI.searchFreePassDrmInfo(req);
+		// TAKTODO:: 혹시 모르니 판매상태 체크 하는지 확인 - 판매대기, 판매중, 판매중지, 판매금지, 판매종료
+		FixrateProduct fixrateProduct = new FixrateProduct();
+		fixrateProduct.setFixrateProdId(res.getProdId());
+		fixrateProduct.setDrmYn(res.getDrmYn());
+		fixrateProduct.setUsePeriodUnitCd(res.getUsePeriodUnitCd());
+		fixrateProduct.setUsePeriod(res.getUsePeriod());
+		fixrateProduct.setCmpxProdClsfCd(res.getCmpxProdClsfCd());
+		return fixrateProduct;
 	}
 }

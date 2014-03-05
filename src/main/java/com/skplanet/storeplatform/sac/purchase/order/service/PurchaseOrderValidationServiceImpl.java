@@ -24,6 +24,9 @@ import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
+import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
+import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScReq;
+import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartServiceImpl;
@@ -34,6 +37,7 @@ import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyMember;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
+import com.skplanet.storeplatform.sac.purchase.order.vo.FixrateProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
@@ -52,13 +56,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
+	private ExistenceSCI existenceSCI;
+	@Autowired
+	private PurchaseOrderSearchSCI purchaseOrderSearchSCI;
+	@Autowired
 	private PurchaseOrderPolicyService purchaseOrderPolicyService;
 	@Autowired
 	private PurchaseMemberRepository purchaseMemberRepository;
 	@Autowired
 	private PurchaseDisplayRepository purchaseDisplayRepository;
-	@Autowired
-	private ExistenceSCI existenceSCI;
 	@Autowired
 	private ShoppingService shoppingService;
 
@@ -73,8 +79,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		this.freeChargeReqCdList.add("OR000408"); // 정식판전환
 		this.freeChargeReqCdList.add("OR000421"); // B2B Gateway(정산)
 		this.freeChargeReqCdList.add("OR000422"); // B2B Gateway(비정산)
-		this.freeChargeReqCdList.add("OR000413"); // T혜택 이벤트
 		this.freeChargeReqCdList.add("OR000420"); // T freemium(DRM)
+		this.freeChargeReqCdList.add("OR000413"); // T혜택 이벤트
 	}
 
 	/**
@@ -249,15 +255,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					throw new StorePlatformException("SAC_PUR_5103");
 				}
 			}
-			productInfo.setProdAmt(reqProduct.getProdAmt());
-
-			// 상품 가격 체크: 비과금 요청 경우, 상품가격 비교 생략
-			if (purchaseOrderInfo.isFreeChargeReq()) {
-				productInfo.setUseExprDt(reqProduct.getUseExprDt());
-			} else {
-				if (reqProduct.getProdAmt() != productInfo.getProdAmt()) {
-					throw new StorePlatformException("SAC_PUR_5105");
-				}
+			productInfo.setProdAmt(reqProduct.getProdAmt()); // DUMMY용 코드
+			// 상품 가격 체크
+			if (reqProduct.getProdAmt() != productInfo.getProdAmt()) {
+				throw new StorePlatformException("SAC_PUR_5105");
 			}
 
 			productInfo.setProdQty(reqProduct.getProdQty());
@@ -269,10 +270,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			productInfo.setResvCol04(reqProduct.getResvCol04());
 			productInfo.setResvCol05(reqProduct.getResvCol05());
 
+			// 비과금 구매요청 경우, 이용종료일시 세팅
+			if (purchaseOrderInfo.isFreeChargeReq()) {
+				productInfo.setUseExprDt(reqProduct.getUseExprDt());
+			}
+
 			productInfoList.add(productInfo);
 		}
 
-		// 결제 총 금액 & 상품 가격 총합 체크 : // 비과금 요청 경우, 상품가격 비교 생략
+		// 결제 총 금액 & 상품 가격 총합 체크 : // 비과금 요청 경우, 결제금액 체크 생략
 		if (purchaseOrderInfo.isFreeChargeReq()) {
 			purchaseOrderInfo.setRealTotAmt(0.0);
 		} else {
@@ -339,16 +345,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					throw new StorePlatformException("SAC_PUR_5103");
 				}
 			}
-			// 상품 가격 체크: 비과금 요청 경우, 상품가격 비교 생략
-			if (purchaseOrderInfo.isFreeChargeReq()) {
-				purchaseProduct.setUseExprDt(reqProduct.getUseExprDt());
-			} else {
-				if (reqProduct.getProdAmt() != purchaseProduct.getProdAmt()) {
-					throw new StorePlatformException("SAC_PUR_5105");
-				}
+			// 상품 가격 체크
+			if (reqProduct.getProdAmt() != purchaseProduct.getProdAmt()) {
+				throw new StorePlatformException("SAC_PUR_5105");
 			}
 
-			purchaseProduct.setProdAmt((int) reqProduct.getProdAmt());
 			purchaseProduct.setProdQty(reqProduct.getProdQty());
 			totAmt += (purchaseProduct.getProdAmt() * reqProduct.getProdQty());
 
@@ -358,10 +359,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			purchaseProduct.setResvCol04(reqProduct.getResvCol04());
 			purchaseProduct.setResvCol05(reqProduct.getResvCol05());
 
+			// 비과금 구매요청 경우, 이용종료일시 세팅
+			if (purchaseOrderInfo.isFreeChargeReq()) {
+				purchaseProduct.setUseExprDt(reqProduct.getUseExprDt());
+			}
+
 			purchaseProductList.add(purchaseProduct);
 		}
 
-		// 결제 총 금액 & 상품 가격 총합 체크 : // 비과금 요청 경우, 상품가격 비교 생략
+		// 결제 총 금액 & 상품 가격 총합 체크 : // 비과금 요청 경우, 결제금액 체크 생략
 		if (purchaseOrderInfo.isFreeChargeReq()) {
 			purchaseOrderInfo.setRealTotAmt(0.0);
 		} else {
@@ -413,8 +419,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			}
 
-			// TAKTODO:: 구매 가능 건수 체크 (쇼핑 특가상품, 정액권 등 한정수량 상품)
-
 			// (동일상품 중복구매 불가 상품) 기구매 체크 대상 ADD
 			if (product.getbDupleProd() == false) {
 				existenceItemSc = new ExistenceItemSc();
@@ -460,11 +464,17 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	public void validatePurchase(PurchaseOrderInfo purchaseOrderInfo) {
 		PurchaseUserDevice useUser = null;
 
+		// 이용자(구매자 + 선물수신자) 조회
 		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			useUser = purchaseOrderInfo.getReceiveUser();
 		} else {
 			useUser = purchaseOrderInfo.getPurchaseUser();
 		}
+
+		// 디바이스(mdn) 기반 상품 여부 조회
+		boolean bDeviceBased = false;
+		bDeviceBased = this.purchaseOrderPolicyService.isDeviceBasedPurchaseHistory(useUser.getTenantId(),
+				purchaseOrderInfo.getTenantProdGrpCd());
 
 		List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
 		ExistenceItemSc existenceItemSc = null;
@@ -475,21 +485,101 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				throw new StorePlatformException("SAC_PUR_5110");
 			}
 
-			// TAKTODO:: 쇼핑 특가상품 가능 여부 체크 (건수 체크)
+			// (정액권) 배타 상품 체크
+			if (product.getExclusiveFixrateProdIdList().size() > 0) {
+				// TAKTODO:: 기구매체크 일단 때려박음, 공통처리로 빼야 함
+				List<ExistenceItemSc> exclusiveExistenceItemScList = new ArrayList<ExistenceItemSc>();
+				for (String exclusiveProdId : product.getExclusiveFixrateProdIdList()) {
+					existenceItemSc = new ExistenceItemSc();
+					existenceItemSc.setProdId(exclusiveProdId);
+					exclusiveExistenceItemScList.add(existenceItemSc);
+				}
+				ExistenceScReq existenceScReq = new ExistenceScReq();
+				existenceScReq.setTenantId(useUser.getTenantId());
+				existenceScReq.setUserKey(useUser.getUserKey());
+				if (bDeviceBased) {
+					existenceScReq.setDeviceKey(useUser.getDeviceKey()); // 디바이스(mdn) 기반
+				}
+				existenceScReq.setProductList(exclusiveExistenceItemScList);
 
-			if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
-				product.getSpecialSaleCouponId();
-				product.getSpecialSaleDayLimit();
-				product.getSpecialSaleDayLimitPerson();
-				product.getSpecialSaleMonthLimit();
-				product.getSpecialSaleMonthLimitPerson();
-				product.getSpecialSaleStartDt();
-				product.getSpecialSaleEndDt();
-				product.getSpecialSaleAmt();
+				List<ExistenceScRes> checkPurchaseResultList = this.existenceSCI.searchExistenceList(existenceScReq);
+				for (ExistenceScRes checkRes : checkPurchaseResultList) {
+					if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
+						throw new StorePlatformException("SAC_PUR_6109");
+					}
+				}
 			}
 
-			// TAKTODO:: 쇼핑상품 경우, 발급 가능 여부 확인
+			// 이용 가능한 정액권 기구매 확인 처리
+			if (product.getAvailableFixrateProdIdList().size() > 0) {
+				// TAKTODO:: 기구매체크 일단 때려박음, 공통처리로 빼야 함
+				List<ExistenceItemSc> fixrateExistenceItemScList = new ArrayList<ExistenceItemSc>();
+				for (String fixrateProdId : product.getAvailableFixrateProdIdList()) {
+					existenceItemSc = new ExistenceItemSc();
+					existenceItemSc.setProdId(fixrateProdId);
+					fixrateExistenceItemScList.add(existenceItemSc);
+				}
+				ExistenceScReq existenceScReq = new ExistenceScReq();
+				existenceScReq.setTenantId(useUser.getTenantId());
+				existenceScReq.setUserKey(useUser.getUserKey());
+				if (bDeviceBased) {
+					existenceScReq.setDeviceKey(useUser.getDeviceKey()); // 디바이스(mdn) 기반
+				}
+				existenceScReq.setProductList(fixrateExistenceItemScList);
+
+				List<ExistenceScRes> checkPurchaseResultList = this.existenceSCI.searchExistenceList(existenceScReq);
+				for (ExistenceScRes checkRes : checkPurchaseResultList) {
+					if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
+						// TAKTODO:: 정액권 DRM 정보 조회
+						FixrateProduct fixrateProduct = this.purchaseDisplayRepository.searchFreePassDrmInfo(
+								useUser.getTenantId(), purchaseOrderInfo.getLangCd(), checkRes.getProdId(),
+								product.getProdId());
+						product.setUsePeriodUnitCd(fixrateProduct.getUsePeriodUnitCd());
+						product.setUsePeriod(Integer.parseInt(fixrateProduct.getUsePeriod()));
+						product.setDrmYn(fixrateProduct.getDrmYn());
+						fixrateProduct.getFixrateProdId(); // TAKTODO:: 사용할 정액권 세팅 및 처리
+					}
+				}
+			}
+
+			// 쇼핑 상품 추가 체크
 			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(), "OR006205")) {
+				// TAKTODO:: 특가상품 구매 건수 체크
+				if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
+					// product.getSpecialSaleCouponId();
+					// product.getSpecialSaleDayLimit();
+					// product.getSpecialSaleDayLimitPerson();
+					// product.getSpecialSaleMonthLimit();
+					// product.getSpecialSaleMonthLimitPerson();
+					// product.getSpecialSaleStartDt();
+					// product.getSpecialSaleEndDt();
+					// product.getSpecialSaleAmt();
+
+					SearchShoppingSpecialCountScReq specialReq = new SearchShoppingSpecialCountScReq();
+					specialReq.setTenantId(purchaseOrderInfo.getTenantId());
+					specialReq.setUserKey(purchaseOrderInfo.getPurchaseUser().getUserKey());
+					specialReq.setDeviceKey(purchaseOrderInfo.getPurchaseUser().getDeviceKey());
+					specialReq.setSpecialCouponId(product.getSpecialSaleCouponId());
+					specialReq.setSpecialAmt(product.getSpecialSaleAmt());
+
+					SearchShoppingSpecialCountScRes specialRes = this.purchaseOrderSearchSCI
+							.SearchShoppingSpecialCount(specialReq);
+					if (specialRes.getDayCount() + product.getProdQty() > product.getSpecialSaleDayLimit()) {
+						throw new StorePlatformException("SAC_PUR_6104");
+					}
+					if (specialRes.getDayUserCount() + product.getProdQty() > product.getSpecialSaleDayLimitPerson()) {
+						throw new StorePlatformException("SAC_PUR_6106");
+					}
+					if (specialRes.getMonthCount() + product.getProdQty() > product.getSpecialSaleMonthLimit()) {
+						throw new StorePlatformException("SAC_PUR_6105");
+					}
+					if (specialRes.getMonthUserCount() + product.getProdQty() > product
+							.getSpecialSaleMonthLimitPerson()) {
+						throw new StorePlatformException("SAC_PUR_6107");
+					}
+				}
+
+				// TAKTODO:: 발급 가능 여부 확인
 				this.checkAvailableCouponPublish(product.getCouponCode(), product.getItemCode(), product.getProdQty(),
 						purchaseOrderInfo.getPurchaseUser().getDeviceId()); // 결제자 MDN 기준
 
@@ -502,17 +592,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		// 기구매 체크
-		if (existenceItemScList.size() > 10000) { // TAKTODO:: 기구매 체크 제외 (테스트용)
+		if (existenceItemScList.size() > 0) {
 
 			ExistenceScReq existenceScReq = new ExistenceScReq();
 			existenceScReq.setTenantId(useUser.getTenantId());
-			existenceScReq.setUserKey(useUser.getUserKey()); // 디바이스(mdn) 기반
-			existenceScReq.setProductList(existenceItemScList);
-
-			if (this.purchaseOrderPolicyService.isDeviceBasedPurchaseHistory(useUser.getTenantId(),
-					purchaseOrderInfo.getTenantProdGrpCd())) {
+			existenceScReq.setUserKey(useUser.getUserKey());
+			if (bDeviceBased) {
 				existenceScReq.setDeviceKey(useUser.getDeviceKey()); // 디바이스(mdn) 기반
 			}
+			existenceScReq.setProductList(existenceItemScList);
 
 			List<ExistenceScRes> checkPurchaseResultList = this.existenceSCI.searchExistenceList(existenceScReq);
 			for (ExistenceScRes checkRes : checkPurchaseResultList) {

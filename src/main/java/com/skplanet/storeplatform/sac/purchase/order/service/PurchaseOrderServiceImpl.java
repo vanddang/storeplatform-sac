@@ -57,6 +57,7 @@ import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CreatePaymentSacInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
 
@@ -272,7 +273,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// -------------------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
-		// TAKTODO:: 보유자MDN/구매자MDN 조회, COUPONCODE/ITEMCODE 조회, 응답 처리
 
 		List<ShoppingCouponPublishInfo> shoppingCouponList = null;
 
@@ -298,7 +298,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					shoppingCouponPublishInfo.setAvailEndDt(availEndDt);
 					shoppingCouponPublishInfo.setPublishCode(couponInfo.getPublishCode());
 					shoppingCouponPublishInfo.setShippingUrl(couponInfo.getShippingUrl());
-					shoppingCouponPublishInfo.setExtraData(couponInfo.getExtraData());
+					shoppingCouponPublishInfo.setAddInfo(couponInfo.getAddInfo());
 
 					shoppingCouponList.add(shoppingCouponPublishInfo);
 				}
@@ -544,7 +544,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		CreatePurchaseSc createPurchase = null;
 
 		int prchsDtlCnt = 1, i = 0;
-		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
+		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
 			for (i = 0; i < product.getProdQty(); i++) {
 				createPurchase = new CreatePurchaseSc();
 
@@ -567,7 +567,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchase.setTotAmt(purchaseOrderInfo.getRealTotAmt());
 				createPurchase.setPrchsReqPathCd(purchaseOrderInfo.getPrchsReqPathCd());
 				createPurchase.setClientIp(purchaseOrderInfo.getClientIp());
-				createPurchase.setHidingYn(PurchaseConstants.USE_N);
+				createPurchase.setUseHidingYn(PurchaseConstants.USE_N);
+				createPurchase.setSendHidingYn(PurchaseConstants.USE_N); // NotNull 로 되어 있어서 일단 세팅 ;;
 				createPurchase.setRegId(purchaseOrderInfo.getSystemId());
 				createPurchase.setUpdId(purchaseOrderInfo.getSystemId());
 				createPurchase.setPrchsCaseCd(purchaseOrderInfo.getPrchsCaseCd());
@@ -575,21 +576,33 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchase.setCurrencyCd(purchaseOrderInfo.getCurrencyCd()); // PRCHS
 				createPurchase.setNetworkTypeCd(purchaseOrderInfo.getNetworkTypeCd()); // PRCHS
 
-				if (product.isbFlat()) { // TAKTODO:: 권한상품 판단
-					createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_FIX);
-				} else {
-					createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
-				}
+				// if (product.isbFlat()) { // TAKTODO:: 권한상품 판단
+				// createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_FIX);
+				// } else {
+				// createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+				// }
+				createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+				// TAKTODO 상위
 				createPurchase.setProdId(product.getProdId());
 				createPurchase.setProdAmt(product.getProdAmt());
 				createPurchase.setProdQty(product.getProdQty());
-				createPurchase.setRePrchsPmtYn(product.getbDupleProd() ? "Y" : "N");
 				createPurchase.setResvCol01(product.getResvCol01());
 				createPurchase.setResvCol02(product.getResvCol02());
 				createPurchase.setResvCol03(product.getResvCol03());
 				createPurchase.setResvCol04(product.getResvCol04());
 				createPurchase.setUsePeriodUnitCd(product.getUsePeriodUnitCd());
 				createPurchase.setUsePeriod(product.getUsePeriod());
+				// 비과금 구매요청 시, 이용종료일시 세팅
+				if (purchaseOrderInfo.isFreeChargeReq() && StringUtils.isNotBlank(product.getUseExprDt())) {
+					createPurchase
+							.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
+									.getUseExprDt() + "235959");
+					createPurchase.setDwldExprDt(createPurchase.getUseExprDt());
+				}
+				createPurchase.setUseFixrateProdId(product.getUseFixrateProdId());
+				createPurchase.setDrmYn(product.getDrmYn());
+				createPurchase.setAlarmYn("Y");
+				createPurchase.setCurrencyCd(purchaseOrderInfo.getCurrencyCd());
 
 				// 구매예약 시 저장할 데이터 (상품별)
 				sbReserveData.setLength(commonReserveDataLen);
@@ -670,7 +683,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchase.setTotAmt(purchaseOrderInfo.getRealTotAmt());
 				createPurchase.setPrchsReqPathCd(purchaseOrderInfo.getPrchsReqPathCd());
 				createPurchase.setClientIp(purchaseOrderInfo.getClientIp());
-				createPurchase.setHidingYn(PurchaseConstants.USE_N);
+				createPurchase.setUseHidingYn(PurchaseConstants.USE_N);
+				createPurchase.setSendHidingYn(PurchaseConstants.USE_N);
 				createPurchase.setRegId(purchaseOrderInfo.getSystemId());
 				createPurchase.setUpdId(purchaseOrderInfo.getSystemId());
 				createPurchase.setPrchsCaseCd(purchaseOrderInfo.getPrchsCaseCd());
@@ -686,7 +700,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchase.setProdId(product.getProdId());
 				createPurchase.setProdAmt(product.getProdAmt());
 				createPurchase.setProdQty(product.getProdQty());
-				createPurchase.setRePrchsPmtYn(product.getbDupleProd() ? "Y" : "N");
 				createPurchase.setResvCol01(product.getResvCol01());
 				createPurchase.setResvCol02(product.getResvCol02());
 				createPurchase.setResvCol03(product.getResvCol03());
@@ -695,14 +708,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchase.setUsePeriod(product.getUsePeriod());
 				// 비과금 구매요청 시, 이용종료일시 세팅
 				if (purchaseOrderInfo.isFreeChargeReq() && StringUtils.isNotBlank(product.getUseExprDt())) {
-					if (product.getUseExprDt().length() == 14) {
-						createPurchase.setUseExprDt(product.getUseExprDt());
-						createPurchase.setDwldExprDt(product.getUseExprDt());
-					} else if (product.getUseExprDt().length() == 8) {
-						createPurchase.setUseExprDt(product.getUseExprDt() + "235959");
-						createPurchase.setDwldExprDt(product.getUseExprDt() + "235959");
-					}
+					createPurchase
+							.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
+									.getUseExprDt() + "235959");
+					createPurchase.setDwldExprDt(createPurchase.getUseExprDt());
 				}
+				createPurchase.setUseFixrateProdId(null);
+				if (StringUtils.equals(product.getUsePeriodUnitCd(), "PD00310")) {
+					createPurchase.setDrmYn("N");
+				} else {
+					createPurchase.setDrmYn("Y");
+				}
+				createPurchase.setAlarmYn("Y");
+				createPurchase.setCurrencyCd(purchaseOrderInfo.getCurrencyCd());
 
 				// 구매예약 시 저장할 데이터 (상품별)
 				if (purchaseOrderInfo.getRealTotAmt() > 0.0) {
@@ -802,7 +820,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			payment.setPaymentMtdCd(paymentInfo.getPaymentMtdCd());
 			payment.setPaymentAmt(paymentInfo.getPaymentAmt());
 			payment.setPaymentDt(paymentInfo.getPaymentDt());
-			payment.setPaymentStatusCd(statusCd);
+			payment.setStatusCd(statusCd);
 
 			payment.setTid(paymentInfo.getTid());
 

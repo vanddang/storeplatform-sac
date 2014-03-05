@@ -18,6 +18,8 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Paymen
  * Updated on : 2014. 2. 28. Updated by : 이승택, nTels.
  */
 public class PurchaseProduct extends PaymentInfo {
+	private static final long serialVersionUID = 201403041L;
+
 	private String bonusCashPoint; // 보너스 캐쉬 지급 Point
 	private String bonusCashUsableDayCnt; // 보너스 캐쉬 유효기간(일)
 	private String afterAutoPayDt; // 다음 자동 결제일
@@ -35,6 +37,7 @@ public class PurchaseProduct extends PaymentInfo {
 	private String resvCol04;
 	private String resvCol05;
 	private String useExprDt; // [비과금 구매요청 시 사용]
+	private String useFixrateProdId; // 이용한 정액제 상품ID
 
 	/**
 	 * @return the bonusCashPoint
@@ -274,6 +277,21 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setUseExprDt(String useExprDt) {
 		this.useExprDt = useExprDt;
+	}
+
+	/**
+	 * @return the useFixrateProdId
+	 */
+	public String getUseFixrateProdId() {
+		return this.useFixrateProdId;
+	}
+
+	/**
+	 * @param useFixrateProdId
+	 *            the useFixrateProdId to set
+	 */
+	public void setUseFixrateProdId(String useFixrateProdId) {
+		this.useFixrateProdId = useFixrateProdId;
 	}
 
 }
