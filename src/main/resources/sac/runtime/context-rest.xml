@@ -55,8 +55,6 @@
          <!-- set "SacRequestHeader" of response header   -->
         <mvc:interceptor>
             <mvc:mapping path="/**" />
-            <!-- EC-inbound URL 정의가 필요 -->
-            <mvc:exclude-mapping path="/ecinbound/**"/>
             <bean class="com.skplanet.storeplatform.sac.common.header.intercepter.SacRequestHeaderIntercepter"/>
         </mvc:interceptor> 
         <!-- set "x-sac-result-code" of response header   -->
