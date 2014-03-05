@@ -99,7 +99,6 @@ public class ModifyDeviceTest {
 					@Override
 					public Object requestBody() {
 						ModifyDeviceReq req = new ModifyDeviceReq();
-						req.setUserAuthKey("263c4ed6240966f9d28b33650161c843fb37bed9");
 						req.setUserKey("US201402170712090930002827");
 
 						DeviceInfo deviceInfo = new DeviceInfo();
@@ -175,7 +174,6 @@ public class ModifyDeviceTest {
 					@Override
 					public Object requestBody() {
 						ModifyDeviceReq req = new ModifyDeviceReq();
-						req.setUserAuthKey("263c4ed6240966f9d28b33650161c843fb37bed9");
 						req.setUserKey("US201402170712090930002827");
 
 						DeviceInfo deviceInfo = new DeviceInfo();
@@ -251,7 +249,6 @@ public class ModifyDeviceTest {
 					@Override
 					public Object requestBody() {
 						ModifyDeviceReq req = new ModifyDeviceReq();
-						req.setUserAuthKey("263c4ed6240966f9d28b33650161c843fb37bed9");
 						req.setUserKey("US201401280706367180001249");
 
 						DeviceInfo deviceInfo = new DeviceInfo();
@@ -329,7 +326,6 @@ public class ModifyDeviceTest {
 		requestHeader.setTenantHeader(tenantHeader);
 
 		ModifyDeviceReq req = new ModifyDeviceReq();
-		req.setUserAuthKey("263c4ed6240966f9d28b33650161c843fb37bed9");
 		req.setUserKey("US201402170712090930002827");
 
 		DeviceInfo deviceInfo = new DeviceInfo();

@@ -249,11 +249,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 휴대기기 정보 수정 */
 		deviceKey = this.updateDeviceInfo(requestHeader, deviceInfo);
 
-		/* userAuthKey가 넘오온 경우만 IDP 업데이트 처리 */
-		if (req.getUserAuthKey() != null && !StringUtil.equals(req.getUserAuthKey(), "")) {
-			this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
-		}
-
 		ModifyDeviceRes res = new ModifyDeviceRes();
 		res.setDeviceKey(deviceKey);
 		res.setUserKey(req.getUserKey());
