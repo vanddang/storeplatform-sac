@@ -245,6 +245,61 @@ public class SellerMbr extends CommonInfo {
 	private String sellerBizZip;
 	private String sellerBizDetailAddress;
 
+	private String subSellerKey;
+	private String subSellerId;
+	private String subSellerEmail;
+	private String subSellerPhone;
+	private String subSellerPhoneCountry;
+	private String subRightProfile;
+
+	public String getSubSellerKey() {
+		return this.subSellerKey;
+	}
+
+	public void setSubSellerKey(String subSellerKey) {
+		this.subSellerKey = subSellerKey;
+	}
+
+	public String getSubSellerId() {
+		return this.subSellerId;
+	}
+
+	public void setSubSellerId(String subSellerId) {
+		this.subSellerId = subSellerId;
+	}
+
+	public String getSubSellerEmail() {
+		return this.subSellerEmail;
+	}
+
+	public void setSubSellerEmail(String subSellerEmail) {
+		this.subSellerEmail = subSellerEmail;
+	}
+
+	public String getSubSellerPhone() {
+		return this.subSellerPhone;
+	}
+
+	public void setSubSellerPhone(String subSellerPhone) {
+		this.subSellerPhone = subSellerPhone;
+	}
+
+	public String getSubSellerPhoneCountry() {
+		return this.subSellerPhoneCountry;
+	}
+
+	public void setSubSellerPhoneCountry(String subSellerPhoneCountry) {
+		this.subSellerPhoneCountry = subSellerPhoneCountry;
+	}
+
+	public String getSubRightProfile() {
+		return this.subRightProfile;
+	}
+
+	public void setSubRightProfile(String subRightProfile) {
+		this.subRightProfile = subRightProfile;
+	}
+
 	public String getSellerBizAddress() {
 		return this.sellerBizAddress;
 	}
