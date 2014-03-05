@@ -96,6 +96,10 @@ public class DisplayConstants {
 
 	// //////////////////////////////////// TOP MENU ID //////////////////////////////////////////
 	/**
+	 * 앱 전체
+	 */
+	public static final String DP_APPALL_TOP_MENU_ID = "DPAPP";
+	/**
 	 * 게임.
 	 */
 	public static final String DP_GAME_TOP_MENU_ID = "DP01";
@@ -420,7 +424,7 @@ public class DisplayConstants {
 
 	public static final String DP_PACKETFEE_TYPE_PAID = "paid"; // 유료 과금
 
-	public static final String DP_PACKETFEE_TYPE_HALFPAID = "halfPaid"; // 50% 할인 과금
+	public static final String DP_PACKETFEE_TYPE_HALFPAID = "half"; // 50% 할인 과금
 
 	/*
 	 * 배너 타입 코드
