@@ -93,6 +93,7 @@ public class DisplayConstants {
 	public static final String DP_PROMOTION_IDENTIFIER_CD = "promotion";
 	public static final String DP_BANNER_IDENTIFIER_CD = "banner";
 	public static final String DP_OUTSDCONTENTS_IDENTIFIER_CD = "outsdContents ";
+	public static final String DP_OUTSDCONTENTS_ONE_CD = "oneday";
 	public static final String DP_ORDEREDBY_TYPE_RECENT = "recent";
 	public static final String DP_ORDEREDBY_TYPE_POPULAR = "popular";
 	public static final String DP_ORDEREDBY_TYPE_RECOMMEND = "recommend";
