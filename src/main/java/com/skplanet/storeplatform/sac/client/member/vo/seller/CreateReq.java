@@ -84,7 +84,6 @@ public class CreateReq extends CommonInfo {
 	@Size(max = 14)
 	private String realNameDate;
 	/** CI. */
-	@NotBlank
 	private String sellerCI;
 	/** DI. */
 	private String sellerDI;
