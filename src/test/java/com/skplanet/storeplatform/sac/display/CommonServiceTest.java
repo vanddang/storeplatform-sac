@@ -42,4 +42,10 @@ public class CommonServiceTest {
         String dt = commonService.getBatchStandardDateString("1", "3");
         logger.info("{}", dt);
     }
+
+    @Test
+    public void menuListTest() {
+        commonService.getMenuItemList("", "");
+    }
+
 }

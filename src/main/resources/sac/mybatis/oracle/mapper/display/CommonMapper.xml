@@ -27,7 +27,7 @@
                 TB_DP_MENU_CATEGORY MC inner join TB_DP_MENU_CATEGORY_DESC MD
                     on MC.MENU_ID = MD.MENU_ID and MD.LANG_CD = #{langCd} and MC.USE_YN = 'Y'
         start with
-            MC.MENU_ID in (select MP.MENU_ID from TB_DP_MENU_CATEGORY_PROD_MAPG MP where MP.PROD_ID=#{prodId})
+            MC.MENU_ID in (select MP.MENU_ID from TB_DP_MENU_CATEGORY_PROD_MAPG MP where MP.PROD_ID=#{prodId} AND MP.USE_YN = 'Y')
         connect by prior MC.up_menu_id = MC.MENU_ID
     </select>
     
