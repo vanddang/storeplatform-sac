@@ -49,7 +49,7 @@ public class HistoryListControllerTest {
 		request.setEndDt("99991231235959");
 		request.setPrchsProdHaveYn("Y");
 		request.setOffset(1);
-		request.setCount(10);
+		request.setCount(50);
 
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(request);

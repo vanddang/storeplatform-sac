@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.purchase.client.history.sci.HistoryProdClsiSCI
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryProdClsiSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryProdClsiScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryProdClsiScRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ProductInfoSCI;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryProdClsiSac;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryProdClsiSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryProdClsiSacRes;
@@ -37,6 +38,9 @@ public class HistoryProdClsiServiceImpl implements HistoryProdClsiService {
 
 	@Autowired
 	private HistoryProdClsiSCI historyProdClsiSCI;
+
+	@Autowired
+	private ProductInfoSCI productInfoSCI;
 
 	/**
 	 * 상품별 구매내역 조회 기능을 제공한다.
@@ -122,7 +126,6 @@ public class HistoryProdClsiServiceImpl implements HistoryProdClsiService {
 			historySac.setDwldExprDt(obj.getDwldExprDt());
 			historySac.setCpnPublishCd(obj.getCpnPublishCd());
 			historySac.setCpnDlvUrl(obj.getCpnDlvUrl());
-			historySac.setEtcSeq(obj.getEtcSeq());
 			historySac.setUseFixrateProdId(obj.getUseFixrateProdId());
 			historySac.setPrchsProdType(obj.getPrchsProdType());
 			historySac.setResvCol01(obj.getResvCol01());

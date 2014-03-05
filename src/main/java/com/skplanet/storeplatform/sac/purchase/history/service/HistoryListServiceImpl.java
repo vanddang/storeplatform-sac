@@ -161,6 +161,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setRecvTenantId(obj.getRecvTenantId());
 			historySac.setRecvUserKey(obj.getRecvUserKey());
 			historySac.setRecvDeviceKey(obj.getRecvDeviceKey());
+
 			historySac.setRecvDt(obj.getRecvDt());
 			historySac.setRecvConfPathCd(obj.getRecvConfPathCd());
 			historySac.setTenantProdGrpCd(obj.getTenantProdGrpCd());
@@ -179,13 +180,14 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setDwldExprDt(obj.getDwldExprDt());
 			historySac.setCpnPublishCd(obj.getCpnPublishCd());
 			historySac.setCpnDlvUrl(obj.getCpnDlvUrl());
-			historySac.setEtcSeq(obj.getEtcSeq());
 			historySac.setUseFixrateProdId(obj.getUseFixrateProdId());
-
 			historySac.setPrchsProdType(obj.getPrchsProdType());
 			historySac.setDrmYn(obj.getDrmYn());
 			historySac.setAlarmYn(obj.getAlarmYn());
 			historySac.setPermitDeviceYn(obj.getPermitDeviceYn());
+			historySac.setCpnAddinfo(obj.getCpnAddinfo()); // 쇼핑쿠폰_추가정보
+			historySac.setCpnBizProdSeq(obj.getCpnBizProdSeq()); // 쇼핑쿠폰_biz상품_순번
+			historySac.setCpnBizOrderNo(obj.getCpnBizOrderNo()); // 쇼핑쿠폰_biz상품_주문번호
 
 			historySac.setResvCol01(obj.getResvCol01());
 			historySac.setResvCol02(obj.getResvCol02());
