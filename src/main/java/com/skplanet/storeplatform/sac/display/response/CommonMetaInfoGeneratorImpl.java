@@ -428,6 +428,12 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 					metaInfo.getOutsdContentsId());
 			identifierList.add(identifier);
 		}
+		// oneSeq 설정
+		if (StringUtils.isNotEmpty(metaInfo.getOneSeq())) {
+			this.log.debug("##### Cid Identifier setting");
+			identifier = this.generateIdentifier(DisplayConstants.DP_OUTSDCONTENTS_ONE_CD, metaInfo.getOneSeq());
+			identifierList.add(identifier);
+		}
 		return identifierList;
 	}
 

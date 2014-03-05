@@ -248,6 +248,14 @@ public class MetaInfo {
 	private String prodIntrDscr; // 정액제 상품 설명
 	private String prodStatusCd; // 정액제 상품 상태
 
+	// ////////////////////////// 하루에 하나 변수 ////////////////////////////
+	private String expoDt;
+	private String expoStartDt;
+	private String expoEndDt;
+	private String oneSeq;
+	private String partChrgmonyAppYn;
+	private Integer freeItemAmt;
+
 	/**
 	 * @return the topMenuId
 	 */
@@ -3546,6 +3554,96 @@ public class MetaInfo {
 	 */
 	public void setOpt2Nm(String opt2Nm) {
 		this.opt2Nm = opt2Nm;
+	}
+
+	/**
+	 * @return the expoDt
+	 */
+	public String getExpoDt() {
+		return this.expoDt;
+	}
+
+	/**
+	 * @param expoDt
+	 *            the expoDt to set
+	 */
+	public void setExpoDt(String expoDt) {
+		this.expoDt = expoDt;
+	}
+
+	/**
+	 * @return the expoStartDt
+	 */
+	public String getExpoStartDt() {
+		return this.expoStartDt;
+	}
+
+	/**
+	 * @param expoStartDt
+	 *            the expoStartDt to set
+	 */
+	public void setExpoStartDt(String expoStartDt) {
+		this.expoStartDt = expoStartDt;
+	}
+
+	/**
+	 * @return the expoEndDt
+	 */
+	public String getExpoEndDt() {
+		return this.expoEndDt;
+	}
+
+	/**
+	 * @param expoEndDt
+	 *            the expoEndDt to set
+	 */
+	public void setExpoEndDt(String expoEndDt) {
+		this.expoEndDt = expoEndDt;
+	}
+
+	/**
+	 * @return the oneSeq
+	 */
+	public String getOneSeq() {
+		return this.oneSeq;
+	}
+
+	/**
+	 * @param oneSeq
+	 *            the oneSeq to set
+	 */
+	public void setOneSeq(String oneSeq) {
+		this.oneSeq = oneSeq;
+	}
+
+	/**
+	 * @return the partChrgmonyAppYn
+	 */
+	public String getPartChrgmonyAppYn() {
+		return this.partChrgmonyAppYn;
+	}
+
+	/**
+	 * @param partChrgmonyAppYn
+	 *            the partChrgmonyAppYn to set
+	 */
+	public void setPartChrgmonyAppYn(String partChrgmonyAppYn) {
+		this.partChrgmonyAppYn = partChrgmonyAppYn;
+	}
+
+	/**
+	 * @return the freeItemAmt
+	 */
+	public Integer getFreeItemAmt() {
+		return this.freeItemAmt;
+	}
+
+	/**
+	 * @param freeItemAmt
+	 *            the freeItemAmt to set
+	 */
+	public void setFreeItemAmt(Integer freeItemAmt) {
+		this.freeItemAmt = freeItemAmt;
 	}
 
 }

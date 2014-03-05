@@ -179,6 +179,14 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 		identifier.setText(metaInfo.getPartProdId());
 		identifierList.add(identifier);
+
+		// oneSeq 설정
+		if (StringUtils.isNotEmpty(metaInfo.getOneSeq())) {
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_OUTSDCONTENTS_ONE_CD);
+			identifier.setText(metaInfo.getOneSeq());
+			identifierList.add(identifier);
+		}
 		return identifierList;
 	}
 
