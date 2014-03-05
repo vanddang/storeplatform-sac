@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +111,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		downloadAppSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
+		downloadAppSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		downloadAppSacReq.setLangCd(tanantHeader.getLangCd());
 		downloadAppSacReq.setOsVersion(osVersion); // OS Version
 		downloadAppSacReq.setLcdSize(deviceHeader.getResolution()); // LCD SIZE
@@ -181,6 +183,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				List<ProductListSacIn> productList = null;
 				HistoryListSacInReq historyReq = null;
 				HistoryListSacInRes historyRes = null;
+				boolean purchaseFlag = true;
 
 				try {
 					productListSacIn = new ProductListSacIn();
@@ -205,7 +208,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 
 				} catch (Exception ex) {
-					throw new StorePlatformException("SAC_DSP_2001", ex);
+					purchaseFlag = false;
+					this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+					// throw new StorePlatformException("SAC_DSP_2001", ex);
 				}
 
 				String prchsId = null; // 구매ID
@@ -218,7 +223,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				String puchsPrice = null; // 구매 상품금액
 				String drmYn = null; // 구매상품 Drm여부
 
-				if (historyRes != null && historyRes.getTotalCnt() > 0) {
+				if (purchaseFlag && historyRes != null) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 					List<Encryption> encryptionList = new ArrayList<Encryption>();
 
@@ -248,17 +253,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							}
 						}
 
-						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("[getDownloadAppInfo] prchsId : {}", prchsId);
-						this.log.debug("[getDownloadAppInfo] prchsDt : {}", prchsDt);
-						this.log.debug("[getDownloadAppInfo] useExprDt : {}", useExprDt);
-						this.log.debug("[getDownloadAppInfo] dwldExprDt : {}", dwldExprDt);
-						this.log.debug("[getDownloadAppInfo] prchsCaseCd : {}", prchsCaseCd);
-						this.log.debug("[getDownloadAppInfo] prchsState : {}", prchsState);
-						this.log.debug("[getDownloadAppInfo] prchsProdId : {}", prchsProdId);
-						this.log.debug("[getDownloadAppInfo] puchsPrice : {}", puchsPrice);
-						this.log.debug("----------------------------------------------------------------");
-
 						metaInfo.setPurchaseId(prchsId);
 						metaInfo.setPurchaseProdId(prchsProdId);
 						metaInfo.setPurchaseDt(prchsDt);
@@ -276,6 +270,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							String deviceIdType = null; // Device Id 유형
 							SearchDeviceIdSacReq deviceReq = null;
 							SearchDeviceIdSacRes deviceRes = null;
+							boolean memberFlag = true;
 
 							try {
 								deviceReq = new SearchDeviceIdSacReq();
@@ -285,10 +280,12 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								// 기기정보 조회
 								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 							} catch (Exception ex) {
-								throw new StorePlatformException("SAC_DSP_2001", ex);
+								memberFlag = false;
+								this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+								// throw new StorePlatformException("SAC_DSP_1001", ex);
 							}
 
-							if (deviceRes != null) {
+							if (memberFlag && deviceRes != null) {
 								deviceId = deviceRes.getDeviceId();
 								deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
@@ -348,17 +345,17 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								encryptionList.add(encryption);
 
 								// JSON 복호화
-								// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-								// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-								//
-								// try {
-								// String decData = new String(decrypt, "UTF-8");
-								// this.log.debug("----------------------------------------------------------------");
-								// this.log.debug("[getDownloadVodInfo] decData : {}", decData);
-								// this.log.debug("----------------------------------------------------------------");
-								// } catch (UnsupportedEncodingException e) {
-								// e.printStackTrace();
-								// }
+								byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+								byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+
+								try {
+									String decData = new String(decrypt, "UTF-8");
+									this.log.debug("----------------------------------------------------------------");
+									this.log.debug("[getDownloadVodInfo] decData : {}", decData);
+									this.log.debug("----------------------------------------------------------------");
+								} catch (UnsupportedEncodingException e) {
+									e.printStackTrace();
+								}
 							}
 						}
 					}
