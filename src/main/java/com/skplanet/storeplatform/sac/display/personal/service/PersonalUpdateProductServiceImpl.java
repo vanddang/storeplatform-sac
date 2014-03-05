@@ -201,7 +201,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 						if (sFakeYn.equals("Y")) {
 							// Fake Update 대상일 경우( 단말 Version <= 서버 Version )
 							if (iPkgVerCd >= iReqPkgVerCd) {
-								this.log.debug("##### is fake update target? : {}", sPkgNm);
+								this.log.debug("##### package nm: {}", sPkgNm);
 								// Version 이 동일할 경우 +1
 								if (iPkgVerCd == iReqPkgVerCd) {
 									this.log.debug("##### fake update target & same version !!!!!!!!!");
@@ -388,17 +388,17 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 								// 유료상품은 구매내역이 없으면 업데이트 목록에서 제외
 								if (!sProdAmt.equals("0")) {
-									this.log.debug("##### Remove paid app from update list");
+									this.log.debug("##### {} is paid app. Hence Remove from update list", sPackageNm);
 									mapPkg.clear();
 								} else {
 									// Fake Update 대상일 경우 FUPDATE+상품ID 로 구매ID 생성
 									if (sFakeYn.equals("Y")) {
 										String fupdateId = "FUPDATE" + sPid;
-										this.log.debug("##### It's free app and fake update target");
+										this.log.debug("##### {} is free app and fake update target", sPackageNm);
 										this.log.debug("##### Set purchase id to {}", fupdateId);
 										mapPkg.put("PRCHS_ID", fupdateId);
 									} else {
-										this.log.debug("##### It's free app hence add update list");
+										this.log.debug("##### {} is free app hence add update list", sPackageNm);
 									}
 								}
 								this.log.debug("###########################################");

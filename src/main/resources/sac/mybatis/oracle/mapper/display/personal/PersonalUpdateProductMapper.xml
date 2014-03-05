@@ -68,7 +68,6 @@
                  ,PI.FILE_PATH as IMAGE_PATH
                  ,PI.FILE_SIZE as IMAGE_SIZE
                  ,TPP.PROD_AMT
-                 ,ROW_NUMBER() OVER (PARTITION BY SC.APK_PKG_NM ORDER BY APK_VER DESC) AS RNUM 
               FROM   TB_DP_PROD P
                     ,TB_DP_PROD_DESC PD
                     ,TB_DP_APP_PROD AP
@@ -80,6 +79,7 @@
                     ,TB_DP_MENU_CATEGORY_PROD_MAPG MCPM
                     ,TB_DP_MENU_CATEGORY_DESC      MCD
                     ,TB_DP_PROD_IMG                PI
+                    ,TB_CM_DEVICE                  DEVICE
              WHERE   MC.MENU_ID = MCPM.MENU_ID
                AND   MC.MENU_ID = MCD.MENU_ID
                AND   MCPM.PROD_ID = P.PROD_ID   
@@ -90,6 +90,8 @@
                AND   SD.DEVICE_MODEL_CD = #{deviceHeader.model}
                AND   SD.PROD_ID = SC.PROD_ID
                AND   SD.SUB_CONTENTS_ID = SC.SUB_CONTENTS_ID
+               AND   SD.DEVICE_MODEL_CD = DEVICE.DEVICE_MODEL_CD
+               AND   DEVICE.USE_YN = 'Y'
                AND   P.PROD_ID = #{prodId}
                AND   P.SVC_GRP_CD = #{svcGrpCd}   
                AND   SD.SUB_CONTENTS_ID = #{subContentsId}
@@ -109,7 +111,6 @@
                AND   PD.LANG_CD = #{tenantHeader.langCd}                /* ko : 한국어 */
                AND   SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
         ) LA
-        WHERE RNUM = 1
     )LB
     </select>
      
