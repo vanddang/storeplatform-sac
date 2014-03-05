@@ -79,11 +79,11 @@ public class DetailSubsellerTest {
 
 						// 필수
 						createSubsellerReq.setSellerKey("IF1023501184720130823173955");
-						createSubsellerReq.setSubSellerID("011ZXCssss");
+						createSubsellerReq.setSubSellerID("011ZXCsssss");
 						// createSubsellerReq.setIsNew("Y");
 
 						createSubsellerReq.setSubSellerMemo("test2");
-						createSubsellerReq.setSubSellerEmail("omc97asefd@hanmail.net");
+						createSubsellerReq.setSubSellerEmail("omc97asesfd@hanmail.net");
 
 						// 새로 추가됨
 						// createSubsellerReq.setSubSellerKey("SS201402061427346800000640");
@@ -119,7 +119,7 @@ public class DetailSubsellerTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailSubsellerRes res = (DetailSubsellerRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
+						assertThat(res.getSubSellerMbr(), notNullValue());
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);

@@ -692,7 +692,7 @@ public class DummySellerController {
 		sellerInfo.setSellerKey("IF1023599819420120111013407");
 		sellerInfo.setSellerMainStatus("US010704");
 		sellerInfo.setSellerSubStatus("US010301");
-		responseVO.setSellerMbr(sellerInfo);
+		responseVO.setSubSellerMbr(sellerInfo);
 
 		return responseVO;
 	}

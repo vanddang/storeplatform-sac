@@ -175,7 +175,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 			throw new StorePlatformException("SAC_MEM_2201");
 
 		DetailSubsellerRes response = new DetailSubsellerRes();
-		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
+		response.setSubSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
 
 		return response;
 	}
@@ -218,10 +218,10 @@ public class SellerSubServiceImpl implements SellerSubService {
 		// 판매자 정보
 		SellerMbr sellerMbrRes = new SellerMbr();
 		if (sellerMbr != null) {
-			sellerMbrRes.setSellerId(sellerMbr.getSellerID());
-			sellerMbrRes.setRegDate(sellerMbr.getRegDate());
-			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
-			sellerMbrRes.setRightProfile(sellerMbr.getRightProfileList());
+			sellerMbrRes.setSubSellerId(sellerMbr.getSellerID());
+			sellerMbrRes.setSubRegDate(sellerMbr.getRegDate());
+			sellerMbrRes.setSubSellerEmail(sellerMbr.getSellerEmail());
+			sellerMbrRes.setSubRightProfile(sellerMbr.getRightProfileList());
 		}
 		return sellerMbrRes;
 	}
