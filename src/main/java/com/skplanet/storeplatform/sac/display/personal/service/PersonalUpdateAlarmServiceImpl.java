@@ -17,9 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateAlarmReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateAlarmRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -127,34 +124,34 @@ public class PersonalUpdateAlarmServiceImpl implements PersonalUpdateAlarmServic
 
 		if (!listPid.isEmpty()) {
 			// 기구매 체크
-			ExistenceScReq existenceScReq = new ExistenceScReq();
-			List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
-			for (String prodId : listPid) {
-				ExistenceItemSc existenceItemSc = new ExistenceItemSc();
-				existenceItemSc.setProdId(prodId);
-				existenceItemScList.add(existenceItemSc);
-			}
-			existenceScReq.setTenantId(tenantHeader.getTenantId());
-			existenceScReq.setUserKey(req.getUserKey());
-			existenceScReq.setDeviceKey(req.getDeviceKey());
-			// existenceScReq.setExistenceItemSc(existenceItemScList);
-			existenceScReq.setProductList(existenceItemScList);
-			List<ExistenceScRes> listPrchs = this.existenceSacService.searchExistenceList(existenceScReq, false);
-
-			if (!listPrchs.isEmpty()) {
-				mapReq.put("PRCHS_LIST", listPrchs);
-				// int iUpdateCnt = this.commonDAO.update("", mapReq);
-				int iUpdateCnt = 10;
-				if (sAction.equals("upgradeAlarmOn")) {
-					this.log.info("## Alarm on success cnt : {}", iUpdateCnt);
-					this.log.info("## Alarm on success prod: {}", listPrchs);
-				} else {
-					this.log.info("## Alarm off success cnt : {}", iUpdateCnt);
-					this.log.info("## Alarm off success prod: {}", listPrchs);
-				}
-			} else {
-				this.log.info("## No Alarm data");
-			}
+			// ExistenceScReq existenceScReq = new ExistenceScReq();
+			// List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
+			// for (String prodId : listPid) {
+			// ExistenceItemSc existenceItemSc = new ExistenceItemSc();
+			// existenceItemSc.setProdId(prodId);
+			// existenceItemScList.add(existenceItemSc);
+			// }
+			// existenceScReq.setTenantId(tenantHeader.getTenantId());
+			// existenceScReq.setUserKey(req.getUserKey());
+			// existenceScReq.setDeviceKey(req.getDeviceKey());
+			// // existenceScReq.setExistenceItemSc(existenceItemScList);
+			// existenceScReq.setProductList(existenceItemScList);
+			// List<ExistenceScRes> listPrchs = this.existenceSacService.searchExistenceList(existenceScReq, false);
+			//
+			// if (!listPrchs.isEmpty()) {
+			// mapReq.put("PRCHS_LIST", listPrchs);
+			// // int iUpdateCnt = this.commonDAO.update("", mapReq);
+			// int iUpdateCnt = 10;
+			// if (sAction.equals("upgradeAlarmOn")) {
+			// this.log.info("## Alarm on success cnt : {}", iUpdateCnt);
+			// this.log.info("## Alarm on success prod: {}", listPrchs);
+			// } else {
+			// this.log.info("## Alarm off success cnt : {}", iUpdateCnt);
+			// this.log.info("## Alarm off success prod: {}", listPrchs);
+			// }
+			// } else {
+			// this.log.info("## No Alarm data");
+			// }
 
 		} else {
 			this.log.info("## No Alarm data");
