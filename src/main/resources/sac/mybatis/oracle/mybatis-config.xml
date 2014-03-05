@@ -224,8 +224,13 @@
         <!-- OpenApi Download Best 상품 조회 -->
         <typeAlias alias="DownloadBestSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq" />
         <!-- OpenApi 신규 앱 추천 리스트 조회(출시 1주일 이내) -->
-        <typeAlias alias="NewAppRecommendSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq" />        
-        
+        <typeAlias alias="NewAppRecommendSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq" />
+        <!-- OpenApi Best Download App -->
+        <typeAlias alias="BestDownloadAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq" />                
+        <!-- 상품 검색 요청(BY 상품명) -->
+        <typeAlias alias="SearchAppNameSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacReq" />        
+        <!-- 상품 검색 요청(BY 상품명) : no provisioning -->
+        <typeAlias alias="NoProvisionSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacReq" />
         <!-- 정액제 상품 조회 -->
         <typeAlias alias="FreepassListSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq" />
         <typeAlias alias="FreepassDetailSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq" />
@@ -305,8 +310,6 @@
         <!-- 특정 아티스트별 상품(곡) 조회 -->
         <typeAlias alias="ArtistProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacReq" />
         
-        <!-- 상품 검색 요청(BY 상품명) -->
-        <typeAlias alias="NoProvisionSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacReq" />
     </typeAliases>
     
     <typeHandlers>

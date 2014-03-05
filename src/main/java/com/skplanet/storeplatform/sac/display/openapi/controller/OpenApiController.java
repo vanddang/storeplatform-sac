@@ -23,18 +23,27 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProv
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchSellerNameSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchSellerNameSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
+import com.skplanet.storeplatform.sac.display.openapi.service.BestDownloadAppService;
 import com.skplanet.storeplatform.sac.display.openapi.service.DownloadBestService;
 import com.skplanet.storeplatform.sac.display.openapi.service.NewAppRecommendService;
 import com.skplanet.storeplatform.sac.display.openapi.service.NoProvisionService;
+import com.skplanet.storeplatform.sac.display.openapi.service.SearchAppNameService;
+import com.skplanet.storeplatform.sac.display.openapi.service.SearchSellerNameService;
 
 /**
  * Open API 관련 Controller
@@ -60,6 +69,15 @@ public class OpenApiController {
 
 	@Autowired
 	private NoProvisionService noProvisionService;
+
+	@Autowired
+	private BestDownloadAppService bestDownloadAppService;
+
+	@Autowired
+	private SearchAppNameService searchAppNameService;
+
+	@Autowired
+	private SearchSellerNameService searchSellerNameService;
 
 	/**
 	 * <pre>
@@ -136,6 +154,63 @@ public class OpenApiController {
 	/**
 	 * 
 	 * <pre>
+	 * 유/무료 다운로드 BEST.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param bestDownloadAppSacReq
+	 *            bestDownloadAppSacReq
+	 * @return BestDownloadAppSacRes
+	 */
+	@RequestMapping(value = "/bestDownloadApp/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public BestDownloadAppSacRes bestDownloadApp(SacRequestHeader requestheader,
+			@Validated BestDownloadAppSacReq bestDownloadAppSacReq) {
+		return this.bestDownloadAppService.searchBestDownloadAppList(requestheader, bestDownloadAppSacReq);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 검색 요청 (상품명).
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param SearchAppNameSacReq
+	 *            searchAppNameSacReq
+	 * @return SearchAppNameSacRes
+	 */
+	@RequestMapping(value = "/searchAppName/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public SearchAppNameSacRes searchAppNameApp(SacRequestHeader requestheader,
+			@Validated SearchAppNameSacReq searchAppNameSacReq) {
+		return this.searchAppNameService.searchAppNameList(requestheader, searchAppNameSacReq);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 검색 요청 (판매자명).
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param SearchAppNameSacReq
+	 *            searchAppNameSacReq
+	 * @return SearchAppNameSacRes
+	 */
+	@RequestMapping(value = "/searchSellerName/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public SearchSellerNameSacRes searchSellerNameApp(SacRequestHeader requestheader,
+			@Validated SearchSellerNameSacReq searchSellerNameSacReq) {
+		return this.searchSellerNameService.searchSellerNameList(requestheader, searchSellerNameSacReq);
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 상품 검색 요청(BY 상품명) - No Provisioning
 	 * </pre>
 	 * 
@@ -150,4 +225,5 @@ public class OpenApiController {
 	public NoProvisionSacRes noProvision(@Validated NoProvisionSacReq noProvisionSacReq, SacRequestHeader requestheader) {
 		return this.noProvisionService.searchProductByNameNoProvisioningList(noProvisionSacReq, requestheader);
 	}
+
 }

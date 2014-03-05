@@ -341,6 +341,830 @@
 		         <!-- WHERE KA.RNUM <![CDATA[ <= 4 ]]> -->
     </select>      
     
+    
+    <select id="searchBestDownloadAppListByOrder" parameterType="BestDownloadAppSacReq" resultType="MetaInfo">
+        SELECT /*  OpenApi.xml, searchBestDownloadAppListByOrder, 이석희, 2014-03-03 */
+               COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
+             , TOTAL_CNT                        AS TOTAL_COUNT                    /*총상품갯수*/
+--           , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
+             , KA.PROD_ID                       AS PROD_ID                      
+             , KA.EPSD_PROD_ID                  AS EPSD_PROD_ID
+             , KA.AID                           AS AID
+             , KA.PROD_NM                       AS PROD_NM
+             , KA.PROD_BASE_DESC                AS PROD_BASE_DESC
+             , KA.TOP_MENU_ID                   AS TOP_MENU_ID
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.TOP_MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS TOP_MENU_NM
+             , KA.MENU_ID                       AS MENU_ID
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS MENU_NM              
+             , DECODE(KA.TOP_MENU_ID, 'DP17','DP09'
+                                    , 'DP18','DP09'
+                                    , KA.TOP_MENU_ID)    AS TOP_MENU_ID
+             , NVL(KA.PROD_AMT, 0 )             AS PROD_AMT
+             , NVL(KA.AVG_EVLU_SCORE, 0)        AS AVG_EVLU_SCORE
+             , NVL(KA.PRCHS_CNT, 0)             AS PRCHS_CNT
+             , KA.PROD_GRD_CD
+             , KB.APK_PKG_NM                    AS APK_PKG_NM
+             , (SELECT DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH)
+                  FROM TB_DP_PROD_IMG KC
+                 WHERE KA.PROD_ID = KC.PROD_ID
+                   AND KC.IMG_CD = DECODE(KA.TOP_MENU_ID , 'DP09', 'DP000127'
+                                                         , 'DP13', 'DP000147'
+                                                         , 'DP14', 'DP000147'
+                                                         , 'DP15', 'DP000102'
+                                                         , 'DP16', 'DP000115'
+                                                         , 'DP000125')
+                   AND KC.LANG_CD = #{langCd}
+                   AND ROWNUM = 1)        AS IMAGE_PATH
+          FROM
+               (
+                SELECT *
+                  FROM
+                       (
+                        SELECT  COUNT(*) OVER() AS TOTAL_CNT       
+                               ,ROW_NUMBER() OVER( ORDER BY DECODE(#{orderedBy},'recent', JA.REG_DT, JA.AVG_EVLU_SCORE ) DESC ) AS RONUM -- 평점순이냐 아니냐에 따라 분기처리
+                               ,JA.*
+                          FROM
+                               (
+                                SELECT ROW_NUMBER( ) OVER( PARTITION BY C.PROD_ID ORDER BY B.REG_DT DESC ) AS RNUM
+                                     , B.PROD_ID
+                                     , B.PROD_CHRG_YN
+                                     , B.TOP_MENU_ID  
+                                     , B.PROD_GRD_CD
+                                     , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
+                                     , C.PART_PROD_ID AS EPSD_PROD_ID
+                                     , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = C.PART_PROD_ID) AS AID
+                                     , D.PROD_NM
+                                     , D.PROD_BASE_DESC
+                                     , F.MENU_ID
+                                     , I.CHNL_UNLMT_AMT
+                                     , I.CHNL_PERIOD_AMT
+                                     , I.PROD_AMT
+                                     , J.SUB_CONTENTS_ID
+                                     , L.PATICPERS_CNT AS PATICPERS_CNT
+                                     , L.PRCHS_CNT AS PRCHS_CNT
+                                     , L.AVG_EVLU_SCORE AS AVG_EVLU_SCORE
+                                  FROM  TB_DP_PROD                    B
+                                      , TB_DP_PROD_RSHP               C
+                                      , TB_DP_PROD_DESC               D
+                                      , TB_DP_MENU_CATEGORY_PROD_MAPG F
+                                      , TB_DP_MENU_CATEGORY           G
+                                      , TB_DP_TENANT_PROD             H
+                                      , TB_DP_TENANT_PROD_PRICE       I       
+                                      , TB_DP_SPRT_DEVICE             J
+                                      , TB_CM_DEVICE                  K
+                                      , TB_DP_TENANT_PROD_STATS       L
+                                 WHERE 1=1
+                                   AND B.PROD_ID = C.PROD_ID
+                                   AND B.PROD_ID = D.PROD_ID 
+                                   AND B.PROD_ID = F.PROD_ID
+                                   AND B.PROD_ID = H.PROD_ID   
+                                   AND B.PROD_ID = I.PROD_ID   
+                                   AND C.PART_PROD_ID = J.PROD_ID   
+                                   AND B.PROD_ID = L.PROD_ID(+)
+                                   AND F.MENU_ID = G.MENU_ID      
+                                   AND H.TENANT_ID = I.TENANT_ID
+                                   AND H.TENANT_ID = L.TENANT_ID
+                                   AND B.SVC_GRP_CD       = 'DP000201'
+                                   <if test ="topMenuId == 'DPAPP'">
+                                     AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
+                                   </if>
+                                   <if test ="topMenuId != 'DPAPP'">
+                                         AND B.TOP_MENU_ID  = #{topMenuId}
+                                   </if>
+                                   AND C.PROD_RSHP_CD     = 'DP010802'
+                                   AND F.USE_YN = 'Y'
+                                   AND G.USE_YN = 'Y'
+                                   AND H.TENANT_ID ='S01'
+                                   AND H.PROD_STATUS_CD   = 'PD000403'
+                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                                   AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
+                                   AND K.REP_DEVICE_YN ='Y'
+                                   AND K.USE_YN ='Y'
+                                   <if test="searchType != null">
+                                    <if test='searchType == "prodNm"'>
+                                      AND UPPER( D.PROD_NM ) like '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
+                                    </if>
+                                    <if test='searchType == "sellerNm"'>
+                                      AND UPPER( DECODE(B.TOP_MENU_ID ,'DP13', B.REG_ID
+                                                                      ,'DP14', B.REG_ID
+                                                                      ,'DP17', B.REG_ID
+                                                                      ,'DP18', B.REG_ID
+                                                                      ,'DP09', B.REG_ID, B.EXPO_SELLER_NM)) LIKE '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
+                                    </if>
+                                   </if>                                       
+                               ) JA
+                          WHERE RNUM = 1
+                       ) 
+                 WHERE RONUM BETWEEN #{offset} AND #{count}  
+                   AND ROWNUM <![CDATA[ <= ]]> #{count}
+               )                              KA        
+           LEFT OUTER JOIN TB_DP_SUB_CONTENTS KB
+                        ON KA.PROD_ID  = KB.PROD_ID
+                       AND KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
+    </select>
+    
+    <select id="searchBestDownloadAppListByListId" parameterType="BestDownloadAppSacReq" resultType="MetaInfo">
+    <!-- 유료 -->
+     <if test='listId == "RNK000000006"'>
+        SELECT /*  OpenApi.xml, searchBestDownloadAppListByListId, RNK000000006, 이석희, 2014-03-03 */
+               COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
+             , TOTAL_CNT                        AS TOTAL_COUNT                    /*총상품갯수*/
+--           , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
+             , KA.PROD_ID                       AS PROD_ID                      
+             , KA.EPSD_PROD_ID                  AS PART_PROD_ID
+             , KA.AID                           AS AID
+             , KA.PROD_NM                       AS PROD_NM
+             , KA.PROD_BASE_DESC                AS PROD_BASE_DESC
+             , KA.TOP_MENU_ID
+             , NVL(KA.PROD_AMT, 0 )             AS PROD_AMT
+             , NVL(KA.AVG_EVLU_SCORE, 0)        AS AVG_EVLU_SCORE
+             , NVL(KA.PRCHS_CNT, 0)             AS PRCHS_CNT
+             , KA.PROD_GRD_CD
+             , KB.APK_PKG_NM                    AS APK_PKG_NM
+             , (SELECT DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH)
+                  FROM TB_DP_PROD_IMG KC
+                 WHERE KA.PROD_ID = KC.PROD_ID
+                   AND KC.IMG_CD = 'DP000125'
+                   AND KC.LANG_CD = #{langCd}
+                   AND ROWNUM = 1)        AS IMAGE_PATH
+          FROM
+               (
+                SELECT *
+                  FROM
+                       (
+                        SELECT  COUNT(*) OVER() AS TOTAL_CNT       
+                              , ROWNUM AS RNUM
+                              , JA.*
+                          FROM
+                               (
+                                SELECT B.PROD_ID
+                                     , B.PROD_CHRG_YN
+                                     , B.TOP_MENU_ID  
+                                     , B.PROD_GRD_CD
+                                     , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
+                                     , C.PART_PROD_ID AS EPSD_PROD_ID
+                                     , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = B.PROD_ID) AS AID
+                                     , D.PROD_NM
+                                     , D.PROD_BASE_DESC
+                                     , F.MENU_ID
+                                     , I.CHNL_UNLMT_AMT
+                                     , I.CHNL_PERIOD_AMT
+                                     , I.PROD_AMT
+                                     , J.SUB_CONTENTS_ID
+                                     , L.PATICPERS_CNT AS PATICPERS_CNT
+                                     , A.PRCHS_QTY AS PRCHS_CNT
+                                     , L.AVG_EVLU_SCORE AS AVG_EVLU_SCORE
+                                  FROM 
+                                       (
+                                        SELECT TENANT_ID
+                                             , PROD_ID
+                                             , MENU_ID
+                                             , REG_DT
+                                             , EXPO_ORD
+                                             , PRCHS_QTY
+                                          FROM TB_DP_LIST_PROD          
+                                         WHERE 1=1
+                                           AND TENANT_ID = #{tenantId}
+                                           AND LIST_ID = #{listId}
+                                           AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                           AND EXPO_YN ='Y'
+                                       )                              A           
+                                      , TB_DP_PROD                    B
+                                      , TB_DP_PROD_RSHP               C
+                                      , TB_DP_PROD_DESC               D
+                                      , TB_DP_MENU_CATEGORY_PROD_MAPG F
+                                      , TB_DP_MENU_CATEGORY           G
+                                      , TB_DP_TENANT_PROD             H
+                                      , TB_DP_TENANT_PROD_PRICE       I       
+                                      , TB_DP_SPRT_DEVICE             J
+                                      , TB_CM_DEVICE                  K
+                                      , TB_DP_TENANT_PROD_STATS       L
+                                 WHERE 1=1
+                                   AND A.PROD_ID = B.PROD_ID
+                                   AND B.PROD_ID = C.PART_PROD_ID
+                                   AND B.PROD_ID = D.PROD_ID 
+                                   AND B.PROD_ID = F.PROD_ID
+                                   AND B.PROD_ID = H.PROD_ID   
+                                   AND B.PROD_ID = I.PROD_ID   
+                                   AND B.PROD_ID = J.PROD_ID    
+                                   AND B.PROD_ID = L.PROD_ID(+)
+                                   AND A.MENU_ID = F.MENU_ID
+                                   AND F.MENU_ID = G.MENU_ID      
+                                   AND A.TENANT_ID = H.TENANT_ID
+                                   AND A.TENANT_ID = I.TENANT_ID
+                                   AND A.TENANT_ID = L.TENANT_ID
+                                   AND B.PROD_CHRG_YN     = 'Y'
+                                   AND B.SVC_GRP_CD       = 'DP000201'    -- 다운로드 BEST 일반앱일때만 조건 추가
+                                   AND B.TOP_MENU_ID     != 'DP02'
+                                   <if test ="topMenuId == 'DPAPP'">
+                                     AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
+                                   </if>
+                                   <if test ="topMenuId != 'DPAPP'">
+                                         AND B.TOP_MENU_ID  = #{topMenuId}
+                                   </if>
+                                   AND C.PROD_RSHP_CD     = 'DP010802'
+                                   AND F.USE_YN = 'Y'
+                                   AND G.USE_YN = 'Y'
+                                   AND H.PROD_STATUS_CD   = 'PD000403'
+                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                                   AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
+                                   AND K.REP_DEVICE_YN ='Y'
+                                   AND K.USE_YN ='Y'
+                                 ORDER BY A.EXPO_ORD
+                                        , B.REG_DT
+                                        , D.PROD_NM
+                               ) JA
+                       ) 
+                 WHERE ROWNUM BETWEEN #{offset} AND #{count}  
+               )                              KA        
+           LEFT OUTER JOIN TB_DP_SUB_CONTENTS KB
+                        ON KA.PROD_ID  = KB.PROD_ID
+                       AND KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
+    </if>
+    <!-- 무료 -->
+    <if test='listId == "RNK000000003"'>
+        SELECT /*  OpenApi.xml, searchBestDownloadAppListByListId, RNK000000003, 이석희, 2014-03-03 */
+               COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
+             , TOTAL_CNT                        AS TOTAL_COUNT                    /*총상품갯수*/
+--           , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
+             , KA.PROD_ID                       AS PROD_ID                      
+             , KA.EPSD_PROD_ID                  AS PART_PROD_ID
+             , KA.AID                           AS AID
+             , KA.PROD_NM                       AS PROD_NM
+             , KA.PROD_BASE_DESC                AS PROD_BASE_DESC
+             , KA.TOP_MENU_ID
+             , NVL(KA.PROD_AMT, 0 )             AS PROD_AMT
+             , NVL(KA.AVG_EVLU_SCORE, 0)        AS AVG_EVLU_SCORE
+             , NVL(KA.PRCHS_CNT, 0)             AS PRCHS_CNT
+             , KA.PROD_GRD_CD
+             , KB.APK_PKG_NM                    AS APK_PKG_NM
+             , (SELECT DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH)
+                  FROM TB_DP_PROD_IMG KC
+                 WHERE KA.PROD_ID = KC.PROD_ID
+                   AND KC.IMG_CD = 'DP000125'
+                   AND KC.LANG_CD = #{langCd}
+                   AND ROWNUM = 1)        AS IMAGE_PATH
+          FROM
+               (
+                SELECT *
+                  FROM
+                       (
+                        SELECT  COUNT(*) OVER() AS TOTAL_CNT       
+                              , ROWNUM AS RNUM
+                              , JA.*
+                          FROM
+                               (
+                                SELECT B.PROD_ID
+                                     , B.PROD_CHRG_YN
+                                     , B.TOP_MENU_ID  
+                                     , B.PROD_GRD_CD
+                                     , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
+                                     , C.PART_PROD_ID AS EPSD_PROD_ID
+                                     , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = B.PROD_ID) AS AID
+                                     , D.PROD_NM
+                                     , D.PROD_BASE_DESC
+                                     , F.MENU_ID
+                                     , I.CHNL_UNLMT_AMT
+                                     , I.CHNL_PERIOD_AMT
+                                     , I.PROD_AMT
+                                     , J.SUB_CONTENTS_ID
+                                     , L.PATICPERS_CNT AS PATICPERS_CNT
+                                     , A.PRCHS_QTY AS PRCHS_CNT
+                                     , L.AVG_EVLU_SCORE AS AVG_EVLU_SCORE
+                                  FROM 
+                                       (
+                                        SELECT TENANT_ID
+                                             , PROD_ID
+                                             , MENU_ID
+                                             , REG_DT
+                                             , EXPO_ORD
+                                             , PRCHS_QTY
+                                          FROM TB_DP_LIST_PROD          
+                                         WHERE 1=1
+                                           AND TENANT_ID = #{tenantId}
+                                           AND LIST_ID = #{listId}
+                                           AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                           AND EXPO_YN ='Y'
+                                       )                              A           
+                                      , TB_DP_PROD                    B
+                                      , TB_DP_PROD_RSHP               C
+                                      , TB_DP_PROD_DESC               D
+                                      , TB_DP_MENU_CATEGORY_PROD_MAPG F
+                                      , TB_DP_MENU_CATEGORY           G
+                                      , TB_DP_TENANT_PROD             H
+                                      , TB_DP_TENANT_PROD_PRICE       I       
+                                      , TB_DP_SPRT_DEVICE             J
+                                      , TB_CM_DEVICE                  K
+                                      , TB_DP_TENANT_PROD_STATS       L
+                                 WHERE 1=1
+                                   AND A.PROD_ID = B.PROD_ID
+                                   AND B.PROD_ID = C.PART_PROD_ID
+                                   AND B.PROD_ID = D.PROD_ID 
+                                   AND B.PROD_ID = F.PROD_ID
+                                   AND B.PROD_ID = H.PROD_ID   
+                                   AND B.PROD_ID = I.PROD_ID   
+                                   AND B.PROD_ID = J.PROD_ID   
+                                   AND B.PROD_ID = L.PROD_ID(+)
+                                   AND A.MENU_ID = F.MENU_ID
+                                   AND F.MENU_ID = G.MENU_ID      
+                                   AND A.TENANT_ID = H.TENANT_ID
+                                   AND A.TENANT_ID = I.TENANT_ID
+                                   AND A.TENANT_ID = L.TENANT_ID
+                                   AND B.PROD_CHRG_YN     = 'N'
+                                   AND B.SVC_GRP_CD       = 'DP000201'    -- 다운로드 BEST 일반앱일때만 조건 추가
+                                   AND B.TOP_MENU_ID     != 'DP02'
+                                   <if test ="topMenuId == 'DPAPP'">
+                                     AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
+                                   </if>
+                                   <if test ="topMenuId != 'DPAPP'">
+                                         AND B.TOP_MENU_ID  = #{topMenuId}
+                                   </if>
+                                   AND C.PROD_RSHP_CD     = 'DP010802'
+                                   AND F.USE_YN = 'Y'
+                                   AND G.USE_YN = 'Y'
+                                   AND H.PROD_STATUS_CD   = 'PD000403'
+                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                                   AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
+                                   AND K.REP_DEVICE_YN ='Y'
+                                   AND K.USE_YN ='Y'
+                                 ORDER BY A.EXPO_ORD
+                                        , B.REG_DT
+                                        , D.PROD_NM
+                               ) JA
+                       ) 
+                 WHERE ROWNUM BETWEEN #{offset} AND #{count}  
+               )                              KA        
+           LEFT OUTER JOIN TB_DP_SUB_CONTENTS KB
+                        ON KA.PROD_ID  = KB.PROD_ID
+                       AND KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
+    </if>
+    <!-- 신규 -->
+    <if test='listId == "ADM000000001"'>
+        SELECT /*  OpenApi.xml, searchBestDownloadAppListByListId, ADM000000001, 이석희, 2014-03-03 */
+               COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
+             , TOTAL_CNT                        AS TOTAL_COUNT                    /*총상품갯수*/
+--           , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
+             , KA.PROD_ID                       AS PROD_ID                      
+             , KA.EPSD_PROD_ID                  AS PART_PROD_ID
+             , KA.AID                           AS AID
+             , KA.PROD_NM                       AS PROD_NM
+             , KA.PROD_BASE_DESC                AS PROD_BASE_DESC
+             , KA.TOP_MENU_ID
+             , NVL(KA.PROD_AMT, 0 )             AS PROD_AMT
+             , NVL(KA.AVG_EVLU_SCORE, 0)        AS AVG_EVLU_SCORE
+             , NVL(KA.PRCHS_CNT, 0)             AS PRCHS_CNT
+             , KA.PROD_GRD_CD
+             , KB.APK_PKG_NM                    AS APK_PKG_NM
+             , (SELECT DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH)
+                  FROM TB_DP_PROD_IMG KC
+                 WHERE KA.PROD_ID = KC.PROD_ID
+                   AND KC.IMG_CD = 'DP000125'
+                   AND KC.LANG_CD = #{langCd}
+                   AND ROWNUM = 1)        AS IMAGE_PATH
+          FROM
+               (
+                SELECT *
+                  FROM
+                       (
+                        SELECT  COUNT(*) OVER() AS TOTAL_CNT       
+                              , ROWNUM AS RNUM
+                              , JA.*
+                          FROM
+                               (
+                                SELECT B.PROD_ID
+                                     , B.PROD_CHRG_YN
+                                     , B.TOP_MENU_ID  
+                                     , B.PROD_GRD_CD
+                                     , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
+                                     , C.PART_PROD_ID AS EPSD_PROD_ID
+                                     , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = B.PROD_ID) AS AID
+                                     , D.PROD_NM
+                                     , D.PROD_BASE_DESC
+                                     , F.MENU_ID
+                                     , I.CHNL_UNLMT_AMT
+                                     , I.CHNL_PERIOD_AMT
+                                     , I.PROD_AMT
+                                     , J.SUB_CONTENTS_ID
+                                     , L.PATICPERS_CNT AS PATICPERS_CNT
+                                     , L.PRCHS_CNT AS PRCHS_CNT
+                                     , L.AVG_EVLU_SCORE AS AVG_EVLU_SCORE
+                                  FROM 
+                                       (
+                                        SELECT TENANT_ID
+                                             , PROD_ID
+                                             , MENU_ID
+                                             , REG_DT
+                                             , EXPO_ORD
+                                          FROM TB_DP_LIST_PROD          
+                                         WHERE 1=1
+                                           AND TENANT_ID = #{tenantId}
+                                           AND LIST_ID = #{listId}
+                                           AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                           AND EXPO_YN ='Y'
+                                       )                              A           
+                                      , TB_DP_PROD                    B
+                                      , TB_DP_PROD_RSHP               C
+                                      , TB_DP_PROD_DESC               D
+                                      , TB_DP_MENU_CATEGORY_PROD_MAPG F
+                                      , TB_DP_MENU_CATEGORY           G
+                                      , TB_DP_TENANT_PROD             H
+                                      , TB_DP_TENANT_PROD_PRICE       I       
+                                      , TB_DP_SPRT_DEVICE             J
+                                      , TB_CM_DEVICE                  K
+                                      , TB_DP_TENANT_PROD_STATS       L
+                                 WHERE 1=1
+                                   AND A.PROD_ID = B.PROD_ID
+                                   AND B.PROD_ID = C.PART_PROD_ID
+                                   AND B.PROD_ID = D.PROD_ID 
+                                   AND B.PROD_ID = F.PROD_ID
+                                   AND B.PROD_ID = H.PROD_ID   
+                                   AND B.PROD_ID = I.PROD_ID   
+                                   AND C.PART_PROD_ID = J.PROD_ID   
+                                   AND B.PROD_ID = L.PROD_ID(+)
+                                   AND A.MENU_ID = F.MENU_ID
+                                   AND F.MENU_ID = G.MENU_ID      
+                                   AND A.TENANT_ID = H.TENANT_ID
+                                   AND A.TENANT_ID = I.TENANT_ID
+                                   AND A.TENANT_ID = L.TENANT_ID
+                                   AND B.SVC_GRP_CD       = 'DP000201'    -- 다운로드 BEST 일반앱일때만 조건 추가
+                                   AND B.TOP_MENU_ID     != 'DP02'
+                                   <if test ="topMenuId == 'DPAPP'">
+                                     AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
+                                   </if>
+                                   <if test ="topMenuId != 'DPAPP'">
+                                         AND B.TOP_MENU_ID  = #{topMenuId}
+                                   </if>
+                                   AND C.PROD_RSHP_CD     = 'DP010802'
+                                   AND F.USE_YN = 'Y'
+                                   AND G.USE_YN = 'Y'
+                                   AND H.PROD_STATUS_CD   = 'PD000403'
+                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                                   AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
+                                   AND K.REP_DEVICE_YN ='Y'
+                                   AND K.USE_YN ='Y'
+                                 ORDER BY A.EXPO_ORD
+                                        , B.REG_DT
+                                        , D.PROD_NM
+                               ) JA
+                       ) 
+                 WHERE ROWNUM BETWEEN #{offset} AND #{count}  
+               )                              KA        
+           LEFT OUTER JOIN TB_DP_SUB_CONTENTS KB
+                        ON KA.PROD_ID  = KB.PROD_ID
+                       AND KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
+    </if>
+    <!-- 추천 -->
+    <if test='listId == "ADM000000013"'>
+        SELECT /*  OpenApi.xml, searchBestDownloadAppListByListId, ADM000000013, 이석희, 2014-03-03 */
+               COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
+             , TOTAL_CNT                        AS TOTAL_COUNT                    /*총상품갯수*/
+--           , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
+             , KA.PROD_ID                       AS PROD_ID                      
+             , KA.EPSD_PROD_ID                  AS PART_PROD_ID
+             , KA.AID                           AS AID
+             , KA.PROD_NM                       AS PROD_NM
+             , KA.PROD_BASE_DESC                AS PROD_BASE_DESC
+             , KA.TOP_MENU_ID
+             , NVL(KA.PROD_AMT, 0 )             AS PROD_AMT
+             , NVL(KA.AVG_EVLU_SCORE, 0)        AS AVG_EVLU_SCORE
+             , NVL(KA.PRCHS_CNT, 0)             AS PRCHS_CNT
+             , KA.PROD_GRD_CD
+             , KB.APK_PKG_NM                    AS APK_PKG_NM
+             , (SELECT DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH)
+                  FROM TB_DP_PROD_IMG KC
+                 WHERE KA.PROD_ID = KC.PROD_ID
+                   AND KC.IMG_CD = 'DP000125'
+                   AND KC.LANG_CD = #{langCd}
+                   AND ROWNUM = 1)        AS IMAGE_PATH
+          FROM
+               (
+                SELECT *
+                  FROM
+                       (
+                        SELECT  COUNT(*) OVER() AS TOTAL_CNT       
+                              , ROWNUM AS RNUM
+                              , JA.*
+                          FROM
+                               (
+                                SELECT B.PROD_ID
+                                     , B.PROD_CHRG_YN
+                                     , B.TOP_MENU_ID  
+                                     , B.PROD_GRD_CD
+                                     , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
+                                     , C.PART_PROD_ID AS EPSD_PROD_ID
+                                     , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = B.PROD_ID) AS AID
+                                     , D.PROD_NM
+                                     , D.PROD_BASE_DESC
+                                     , F.MENU_ID
+                                     , I.CHNL_UNLMT_AMT
+                                     , I.CHNL_PERIOD_AMT
+                                     , I.PROD_AMT
+                                     , J.SUB_CONTENTS_ID
+                                     , L.PATICPERS_CNT AS PATICPERS_CNT
+                                     , L.PRCHS_CNT AS PRCHS_CNT
+                                     , L.AVG_EVLU_SCORE AS AVG_EVLU_SCORE
+                                  FROM 
+                                       (
+                                        SELECT TENANT_ID
+                                             , PROD_ID
+                                             , MENU_ID
+                                             , REG_DT
+                                             , EXPO_ORD
+                                             , STD_DT
+                                          FROM TB_DP_LIST_PROD          
+                                         WHERE 1=1
+                                           AND TENANT_ID = #{tenantId}
+                                           AND LIST_ID = #{listId}
+                                           AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                           AND EXPO_YN ='Y'
+                                       )                              A           
+                                      , TB_DP_PROD                    B
+                                      , TB_DP_PROD_RSHP               C
+                                      , TB_DP_PROD_DESC               D
+                                      , TB_DP_MENU_CATEGORY_PROD_MAPG F
+                                      , TB_DP_MENU_CATEGORY           G
+                                      , TB_DP_TENANT_PROD             H
+                                      , TB_DP_TENANT_PROD_PRICE       I       
+                                      , TB_DP_SPRT_DEVICE             J
+                                      , TB_CM_DEVICE                  K
+                                      , TB_DP_TENANT_PROD_STATS       L
+                                 WHERE 1=1
+                                   AND A.PROD_ID = B.PROD_ID
+                                   AND B.PROD_ID = C.PART_PROD_ID
+                                   AND B.PROD_ID = D.PROD_ID 
+                                   AND B.PROD_ID = F.PROD_ID
+                                   AND B.PROD_ID = H.PROD_ID   
+                                   AND B.PROD_ID = I.PROD_ID   
+                                   AND B.PROD_ID = J.PROD_ID   
+                                   AND B.PROD_ID = L.PROD_ID(+)
+                                   AND A.MENU_ID = F.MENU_ID
+                                   AND F.MENU_ID = G.MENU_ID      
+                                   AND A.TENANT_ID = H.TENANT_ID
+                                   AND A.TENANT_ID = I.TENANT_ID
+                                   AND A.TENANT_ID = L.TENANT_ID
+                                   AND B.SVC_GRP_CD       = 'DP000201'    -- 다운로드 BEST 일반앱일때만 조건 추가
+                                   AND B.TOP_MENU_ID     != 'DP02'
+                                   <if test ="topMenuId == 'DPAPP'">
+                                     AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
+                                   </if>
+                                   <if test ="topMenuId != 'DPAPP'">
+                                         AND B.TOP_MENU_ID  = #{topMenuId}
+                                   </if>
+                                   AND C.PROD_RSHP_CD     = 'DP010802'
+                                   AND F.USE_YN = 'Y'
+                                   AND G.USE_YN = 'Y'
+                                   AND H.PROD_STATUS_CD   = 'PD000403'
+                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                                   AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
+                                   AND K.REP_DEVICE_YN ='Y'
+                                   AND K.USE_YN ='Y'
+                                 ORDER BY A.EXPO_ORD
+                                        , B.REG_DT
+                                        , D.PROD_NM
+                               ) JA
+                       ) 
+                 WHERE ROWNUM BETWEEN #{offset} AND #{count}  
+               )                              KA        
+           LEFT OUTER JOIN TB_DP_SUB_CONTENTS KB
+                        ON KA.PROD_ID  = KB.PROD_ID
+                       AND KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
+    </if>                    
+    </select>
+    
+    <select id="searchProductList" parameterType="SearchAppNameSacReq" resultType="MetaInfo">
+        SELECT COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
+             , TOTAL_COUNT                      
+        --     , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
+             , KA.PROD_ID                       AS PROD_ID
+             , KA.META_CLSF_CD                  AS META_CLSF_CD                      
+             , KA.EPSD_PROD_ID                  AS EPSD_PROD_ID
+             , KA.PROD_NM                       AS PROD_NM
+             , KA.PROD_BASE_DESC                AS PROD_BASE_DESC
+             , DECODE(KA.TOP_MENU_ID, 'DP17','DP09'
+                                    , 'DP18','DP09'
+                                    , KA.TOP_MENU_ID)    AS TOP_MENU_ID
+             , KA.TOP_MENU_ID AS ORG_TOP_MENU_ID
+             , KA.PROD_GRD_CD
+             , KA.MENU_ID
+             , KA.DRM_YN
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.TOP_MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS TOP_MENU_NM
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS MENU_NM                          
+             , NVL((CASE
+                        WHEN KA.PROD_CHRG_YN = 'N' THEN 0
+                        <if test="channelId == null">
+                        WHEN ( KA.TOP_MENU_ID = 'DP09' OR KA.TOP_MENU_ID = 'DP17' OR KA.TOP_MENU_ID = 'DP18' ) THEN (
+                              CASE WHEN KA.CHNL_PERIOD_AMT <![CDATA[>=]]> 0 THEN KA.CHNL_PERIOD_AMT
+                                   ELSE KA.CHNL_UNLMT_AMT
+                               END )
+                        WHEN KA.TOP_MENU_ID = 'DP13' THEN KA.CHNL_UNLMT_AMT
+                        WHEN KA.TOP_MENU_ID = 'DP14' THEN ( SELECT MAX( KA.PROD_AMT )
+                                                              FROM  TB_DP_PROD                    A
+                                                                  , TB_DP_PROD_RSHP               B
+                                                                  , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                                                                  , TB_DP_TENANT_PROD             D
+                                                                  , TB_DP_TENANT_PROD_PRICE       E
+                                                             WHERE A.PROD_ID  = B.PART_PROD_ID
+                                                               AND KA.PROD_ID = B.PROD_ID
+                                                               AND A.PROD_ID  = D.PROD_ID
+                                                               AND A.PROD_ID  = E.PROD_ID 
+                                                               AND D.TENANT_ID ='S01'
+                                                               AND D.TENANT_ID = E.TENANT_ID
+                                                               AND D.PROD_STATUS_CD = 'PD000403'
+                                                               AND C.USE_YN = 'Y' 
+                                                           )
+                       </if>
+                       ELSE KA.PROD_AMT
+                     END ),0) AS PROD_AMT
+             , KA.AVG_EVLU_SCORE  AS AVG_EVLU_SCORE
+             , KA.PRCHS_CNT
+             , (SELECT DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH)
+                  FROM TB_DP_PROD_IMG KC
+                 WHERE KA.PROD_ID = KC.PROD_ID
+                   AND KC.IMG_CD = DECODE(KA.TOP_MENU_ID , 'DP09', 'DP000127'
+                                                         , 'DP14', 'DP000127'
+                                                         , 'DP18', 'DP000127'
+                                                         , 'DP000147')
+                   AND KC.LANG_CD = #{langCd}
+                   AND ROWNUM = 1)        AS IMAGE_PATH       
+          FROM
+              (
+                SELECT  COUNT(*) OVER() AS TOTAL_COUNT
+                      , ROW_NUMBER() OVER( ORDER BY DECODE(#{orderedBy},'recent', JA.REG_DT, JA.AVG_EVLU_SCORE ) DESC ) AS RNUM
+                      , JA.PROD_ID
+                      , JA.META_CLSF_CD
+                      , JA.PROD_NM
+                      , JA.PROD_BASE_DESC
+                      , JA.PROD_CHRG_YN
+                      , JA.TOP_MENU_ID
+                      , JA.MENU_ID
+                      , JA.DRM_YN
+                      , JA.CHNL_UNLMT_AMT
+                      , JA.CHNL_PERIOD_AMT
+                      , JA.PROD_AMT
+                      , JA.PROD_GRD_CD
+                      , NVL(JA.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE
+                      , NVL(JA.PRCHS_CNT, 0) AS PRCHS_CNT
+                      , JA.CHNL_PROD_ID
+                      , JA.EPSD_PROD_ID
+                  FROM
+                      (
+                        <if test="channelId == null">
+                        SELECT  ROW_NUMBER( ) OVER( PARTITION BY E.PROD_ID ORDER BY L.REG_DT DESC ) AS RNUM
+                              , A.PROD_ID AS PROD_ID
+                              , A.META_CLSF_CD AS META_CLSF_CD
+                              , B.PROD_NM AS PROD_NM
+                              , B.PROD_BASE_DESC AS PROD_BASE_DESC
+                              , A.PROD_CHRG_YN AS PROD_CHRG_YN
+                              , A.TOP_MENU_ID AS TOP_MENU_ID
+                              , A.DRM_YN
+                              , F.MENU_ID AS MENU_ID
+                              , D.CHNL_UNLMT_AMT AS CHNL_UNLMT_AMT
+                              , D.CHNL_PERIOD_AMT AS CHNL_PERIOD_AMT
+                              , D.PROD_AMT AS PROD_AMT
+                              , A.PROD_GRD_CD AS PROD_GRD_CD
+                              , TO_CHAR(A.REG_DT, 'YYYYMMDD') AS REG_DT
+                              , (SELECT AVG_EVLU_SCORE FROM TB_DP_TENANT_PROD_STATS WHERE TENANT_ID = #{tenantId} AND PROD_ID = A.PROD_ID ) AS AVG_EVLU_SCORE
+                              , (SELECT PRCHS_CNT FROM TB_DP_TENANT_PROD_STATS WHERE TENANT_ID = #{tenantId} AND PROD_ID = A.PROD_ID ) AS PRCHS_CNT
+                              , E.PROD_ID AS CHNL_PROD_ID
+                              , E.PART_PROD_ID AS EPSD_PROD_ID
+                              , L.SUB_CONTENTS_ID
+                        </if>
+                        <if test="channelId != null">
+                        SELECT  ROW_NUMBER( ) OVER( PARTITION BY E.PROD_ID, E.PART_PROD_ID ORDER BY L.REG_DT DESC ) AS RNUM
+                              , H.PROD_ID AS PROD_ID
+                              , H.META_CLSF_CD AS META_CLSF_CD
+                              , I.PROD_NM AS PROD_NM
+                              , I.PROD_BASE_DESC AS PROD_BASE_DESC
+                              , H.PROD_CHRG_YN AS PROD_CHRG_YN
+                              , H.TOP_MENU_ID AS TOP_MENU_ID
+                              , H.DRM_YN
+                              , F.MENU_ID AS MENU_ID
+                              , K.CHNL_UNLMT_AMT AS CHNL_UNLMT_AMT
+                              , K.CHNL_PERIOD_AMT AS CHNL_PERIOD_AMT
+                              , K.PROD_AMT AS PROD_AMT
+                              , H.PROD_GRD_CD AS PROD_GRD_CD
+                              , TO_CHAR(H.REG_DT, 'YYYYMMDD') AS REG_DT
+                              , (SELECT AVG_EVLU_SCORE FROM TB_DP_TENANT_PROD_STATS WHERE TENANT_ID = #{tenantId} AND PROD_ID = A.PROD_ID ) AS AVG_EVLU_SCORE
+                              , (SELECT PRCHS_CNT FROM TB_DP_TENANT_PROD_STATS WHERE TENANT_ID = #{tenantId} AND PROD_ID = A.PROD_ID ) AS PRCHS_CNT
+                              , E.PROD_ID AS CHNL_PROD_ID
+                              , E.PART_PROD_ID AS EPSD_PROD_ID
+                              , L.SUB_CONTENTS_ID
+                        </if>      
+                          FROM  TB_DP_PROD                     A 
+                              , TB_DP_PROD_DESC                B      
+                              , TB_DP_TENANT_PROD              C
+                              , TB_DP_TENANT_PROD_PRICE        D
+                              , TB_DP_PROD_RSHP                E
+                              , TB_DP_MENU_CATEGORY_PROD_MAPG  F
+                              , TB_DP_MENU_CATEGORY            G
+                              , TB_DP_PROD                     H 
+                              , TB_DP_PROD_DESC                I      
+                              , TB_DP_TENANT_PROD              J
+                              , TB_DP_TENANT_PROD_PRICE        K
+                              , TB_DP_SUB_CONTENTS             L      
+                              , TB_DP_SPRT_DEVICE              M
+                              , TB_CM_DEVICE                   N
+                         WHERE A.PROD_ID = B.PROD_ID
+                           AND A.PROD_ID = C.PROD_ID
+                           AND A.PROD_ID = D.PROD_ID   
+                           AND C.TENANT_ID = #{tenantId}
+                           AND C.TENANT_ID = D.TENANT_ID
+                           AND A.PROD_ID = E.PROD_ID
+                           AND E.PROD_RSHP_CD     = 'DP010802'
+                           AND A.PROD_ID = F.PROD_ID
+                           AND F.MENU_ID = G.MENU_ID
+                           AND E.PART_PROD_ID = H.PROD_ID
+                           AND H.PROD_ID = I.PROD_ID
+                           AND H.PROD_ID = J.PROD_ID
+                           AND H.PROD_ID = K.PROD_ID
+                           AND J.TENANT_ID = #{tenantId}
+                           AND J.TENANT_ID = K.TENANT_ID
+                           AND H.PROD_ID = L.PROD_ID
+                           AND H.PROD_ID = M.PROD_ID
+                           AND (M.DEVICE_MODEL_CD = #{deviceModelCd} OR M.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                           AND N.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */      
+                           <if test='topMenuId == "DP09"'>
+                           AND A.TOP_MENU_ID IN ('DP09' ,'DP17' ,'DP18')
+                           </if>
+                           <if test='topMenuId != "DP09"'>
+                           AND A.TOP_MENU_ID =#{topMenuId}
+                           </if>
+                           AND A.SVC_GRP_CD = 'DP000203' --멀티미디어
+                           AND A.CONTENTS_TYPE_CD = 'PD002501' --채널
+                           AND C.PROD_STATUS_CD   = 'PD000403' --판매중
+                           AND B.LANG_CD =#{langCd}   
+                           AND F.USE_YN = 'Y'
+                           AND G.USE_YN = 'Y'
+                           AND H.SVC_GRP_CD = 'DP000203' --멀티미디어
+                           AND H.CONTENTS_TYPE_CD = 'PD002502' --에피소드
+                           AND J.PROD_STATUS_CD   = 'PD000403' --판매중   
+                           <if test='topMenuId == "DP09"'>
+                           AND H.TOP_MENU_ID IN ('DP09' ,'DP17' ,'DP18')
+                           </if>
+                           <if test='topMenuId != "DP09"'>
+                           AND H.TOP_MENU_ID =#{topMenuId}
+                           </if>   
+                           AND I.LANG_CD = #{langCd}
+                           AND L.SALE_YN ='Y'
+                           AND N.REP_DEVICE_YN ='Y'
+                           AND N.USE_YN ='Y'
+                           <if test="searchType != null">
+                            <if test='searchType == "prodNm"'>
+                                <if test="channelId != null">
+                                AND UPPER( I.PROD_NM ) like '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
+                                </if>
+                                <if test="channelId == null">
+                                AND UPPER( B.PROD_NM ) like '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
+                                </if>
+                            </if>
+                            <if test='searchType == "sellerNm"'>
+                                <if test="channelId != null">
+                                AND UPPER( H.REG_ID ) like '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
+                                </if>
+                                <if test="channelId == null">
+                                AND UPPER( A.REG_ID ) like '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
+                                </if>
+                            </if>    
+                           </if>
+                           <if test='topMenuId == "DP09"'>
+                            AND DECODE( N.SD_VIDEO_SPRT_YN
+                                      , 'Y'
+                                      , DECODE ( L.DP_PG_QULT_CD
+                                              , 'PD009701', 1
+                                              , 'PD009702', 1
+                                              , DECODE( N.HDV_SPRT_YN , 'Y', 1 , 0 ) )
+                                      , DECODE( L.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+                            AND DECODE( N.VIDEO_DRM_SPRT_YN
+                                      , 'N'
+                                      , DECODE( NVL( H.DRM_YN, 'N' ), 'N', 1, 0 )
+                                      , 'Y'
+                                      , 1 )  = 1
+                           </if>
+                             <if test="channelId != null">
+                            AND A.PROD_ID = #{channelId}
+                             </if>      
+                      ) JA
+                 WHERE RNUM = 1
+              ) KA
+         WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select>        
+    
     <select id="searchProductByNameNoProvisioningList" parameterType="NoProvisionSacReq" resultType="MetaInfo">
              SELECT  
                  TOTAL_COUNT                AS TOTAL_COUNT
