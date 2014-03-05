@@ -113,7 +113,7 @@ public class DetailSubsellerTest {
 	public void after() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/detailSubseller/v1?sellerKey="
+				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/detailSubseller/v1?subSellerKey="
 						+ createSubsellerRes.getSubSellerKey()).httpMethod(HttpMethod.GET)
 				.success(DetailSubsellerRes.class, new SuccessCallback() {
 					@Override
