@@ -422,27 +422,12 @@
           AND TPP.TENANT_ID = TP.TENANT_ID
           AND PD.PROD_ID = P.PROD_ID
           AND PI.PROD_ID = CP.PROD_ID
-       -----------------------------------------------------------------------------
-       -- 차트 정보 조건절 START
-       -- ( 멜론 TOP 100 : CHART_CLSF_CD = DP004901, BATCH_ID = MELON_DP004901 )
-       -- ( 최신    음악 : CHART_CLSF_CD = DP004904, BATCH_ID = MELON_DP004904 )
-       ----------------------------------------------------------------------------- 
-          <if test='chartClsfCd != null and chartClsfCd != ""'>
-          AND MCI.CHART_CLSF_CD = #{chartClsfCd} -- 멜론 TOP 100
-          </if>
-          -- AND MCI.RANK_START_DAY = #{stdDt}
-       -----------------------------------------------------------------------------
-       -- 차트 정보 조건절 END
-       ----------------------------------------------------------------------------- 
           <if test='prodStatusCd != null'>
           AND TP.PROD_STATUS_CD = #{prodStatusCd}   -- 판매중
           </if>
           AND TP.EXPO_YN = 'Y'                 -- 노출 여부
           AND P2.CONTENTS_TYPE_CD = 'PD002501' -- 채널
           AND P.CONTENTS_TYPE_CD = 'PD002502'  -- 에피소드
-          <if test='productBasicInfo.metaClsfCd != null'>
-          AND P.META_CLSF_CD = #{productBasicInfo.metaClsfCd}          -- 통합 뮤직
-          </if>
           AND CPM.USE_YN = 'Y'
           AND C.USE_YN = 'Y'
        -----------------------------------------------------------------------------
