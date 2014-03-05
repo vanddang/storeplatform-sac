@@ -3,7 +3,6 @@ package com.skplanet.storeplatform.sac.member.seller.controller;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
@@ -66,55 +64,15 @@ public class DetailSubsellerTest {
 
 	/**
 	 * <pre>
-	 * 판매자 서브계정 등록.
+	 * 판매자 서브계정 상세조회.
 	 * </pre>
 	 */
 	@Test
 	public void createSubseller() {
 
-		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/createSubseller/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-
-						// 필수
-						createSubsellerReq.setSellerKey("IF1023501184720130823173955");
-						createSubsellerReq.setSubSellerID("011ZXCsssss");
-						// createSubsellerReq.setIsNew("Y");
-
-						createSubsellerReq.setSubSellerMemo("test2");
-						createSubsellerReq.setSubSellerEmail("omc97asesfd@hanmail.net");
-
-						// 새로 추가됨
-						// createSubsellerReq.setSubSellerKey("SS201402061427346800000640");
-						createSubsellerReq.setMemberPW("1234567999");
-						// createSubsellerReq.setOldPW("1234567999");
-
-						LOGGER.debug("request param : {}", createSubsellerReq.toString());
-						return createSubsellerReq;
-					}
-				}).success(CreateSubsellerRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						createSubsellerRes = (CreateSubsellerRes) result;
-						// assertThat(res.getSubSellerKey(), notNullValue());
-						LOGGER.debug("response param : {}", createSubsellerRes.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 서브계정 상세 조회.
-	 * </pre>
-	 */
-	@After
-	public void after() {
-
 		new TestCaseTemplate(this.mockMvc)
-				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/detailSubseller/v1?subSellerKey="
-						+ createSubsellerRes.getSubSellerKey()).httpMethod(HttpMethod.GET)
+				.url(TestMemberConstant.PREFIX_SELLER_PATH
+						+ "/detailSubseller/v1?subSellerKey=SS201403051700324850001447").httpMethod(HttpMethod.GET)
 				.success(DetailSubsellerRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
