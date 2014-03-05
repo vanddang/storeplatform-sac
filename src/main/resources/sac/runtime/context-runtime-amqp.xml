@@ -90,4 +90,31 @@
         <property name="routingKey" value="local.sac.icms-app-admin.device-mapping-result.async" />
     </bean>
 
+
+    <!-- Member - Add Device Rabbit Template -->
+    <bean id="memberAddDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="sac.tenant.member.add-device.async" />
+    </bean>
+    <!-- Member - Modify Device Rabbit Template -->
+    <bean id="memberModDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="sac.tenant.member.mod-device.async" />
+    </bean>
+    <!-- Member - Delete Device Rabbit Template -->
+    <bean id="memberDelDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="sac.tenant.member.mod-device.async" />
+    </bean>
+    <!-- Member - Retire Rabbit Template -->
+    <bean id="memberRetireAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="sac.tenant.member.retire.async" />
+    </bean>
+
+
 </beans> 
