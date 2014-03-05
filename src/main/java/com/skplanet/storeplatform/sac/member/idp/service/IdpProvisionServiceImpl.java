@@ -310,7 +310,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				changeDeviceLog.setPreData(beMdn);
 
 				/* DCD 연동정보 저장 */
-				this.insertDceInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn, IdpConstants.DCD_ENTRY_CHANGE_NUMBER);
+				this.insertDcdInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn, IdpConstants.DCD_ENTRY_CHANGE_NUMBER);
 
 			} else if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_NO_DATA)) {
 				changeDeviceLog.setPreData("FAIL");
@@ -368,7 +368,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @throws StorePlatformException
 	 *             Exception
 	 */
-	public void insertDceInfo(CommonRequest commonRequest, String userKey, String deviceKey, String svcMngNum, String mdn, String entryClass)
+	public void insertDcdInfo(CommonRequest commonRequest, String userKey, String deviceKey, String svcMngNum, String mdn, String entryClass)
 			throws StorePlatformException {
 
 		DCDInfo dcdInfo = new DCDInfo();
@@ -614,28 +614,28 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
 						device.getDeviceModelCd(), uacd, svcMngNum);
 
-				this.insertDceInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
 
 				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
 						device.getDeviceModelCd(), uacd, svcMngNum);
 
-				this.insertDceInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn, IdpConstants.DCD_ENTRY_CHANGE_MODEL);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_CHANGE_MODEL);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
 
 				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
 						device.getDeviceModelCd(), uacd, svcMngNum);
 
-				this.insertDceInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn, IdpConstants.DCD_ENTRY_JOIN);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_JOIN);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
 
 				LOGGER.info("<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
 						device.getDeviceModelCd(), uacd, svcMngNum);
 
-				this.insertDceInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
 
 			}
 
