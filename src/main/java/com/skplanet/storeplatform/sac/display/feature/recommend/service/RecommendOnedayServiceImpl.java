@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendOnedaySacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendOnedaySacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -102,39 +103,42 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 		if (StringUtils.isEmpty(requestVO.getSearchType())) {
 			requestVO.setSearchType("A");
 		}
-		// 검색시간 설정
-		List<String> periodList = Arrays.asList(StringUtils.split(requestVO.getPeriod(), "/"));
-		if (periodList.size() > 0) {
-			int findStirng = requestVO.getPeriod().indexOf("/");
+		System.out.println("3333333333333331111111111");
+		if (StringUtils.isNotEmpty(requestVO.getPeriod())) {
+			// 검색시간 설정
+			List<String> periodList = Arrays.asList(StringUtils.split(requestVO.getPeriod(), "/"));
+			if (periodList.size() > 0) {
+				int findStirng = requestVO.getPeriod().indexOf("/");
 
-			String periodStart = "";
-			String periodEnd = "";
-			if (requestVO.getPeriod().length() < 25) {
-				if (findStirng == 0) {
-					periodEnd = periodList.get(0);
-					periodEnd = periodEnd.replace("T", "");
-					periodEnd = periodEnd.substring(0, 14);
-					requestVO.setPeriodEnd(periodEnd);
+				String periodStart = "";
+				String periodEnd = "";
+				if (requestVO.getPeriod().length() < 25) {
+					if (findStirng == 0) {
+						periodEnd = periodList.get(0);
+						periodEnd = periodEnd.replace("T", "");
+						periodEnd = periodEnd.substring(0, 14);
+						requestVO.setPeriodEnd(periodEnd);
 
+					} else {
+						periodStart = periodList.get(0);
+						periodStart = periodStart.replace("T", "");
+						periodStart = periodStart.substring(0, 14);
+						requestVO.setPeriodStart(periodStart);
+
+					}
 				} else {
 					periodStart = periodList.get(0);
+					periodEnd = periodList.get(1);
+
 					periodStart = periodStart.replace("T", "");
 					periodStart = periodStart.substring(0, 14);
 					requestVO.setPeriodStart(periodStart);
 
+					periodEnd = periodEnd.replace("T", "");
+					periodEnd = periodEnd.substring(0, 14);
+					requestVO.setPeriodEnd(periodEnd);
+
 				}
-			} else {
-				periodStart = periodList.get(0);
-				periodEnd = periodList.get(1);
-
-				periodStart = periodStart.replace("T", "");
-				periodStart = periodStart.substring(0, 14);
-				requestVO.setPeriodStart(periodStart);
-
-				periodEnd = periodEnd.replace("T", "");
-				periodEnd = periodEnd.substring(0, 14);
-				requestVO.setPeriodEnd(periodEnd);
-
 			}
 		}
 		List<RecommendOneday> recommendOnedayList;
@@ -143,6 +147,7 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 				RecommendOneday.class);
 
 		List<Product> productList = new ArrayList<Product>();
+		List<Date> dateList = null;
 
 		// Meta DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -157,6 +162,7 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 		if (!recommendOnedayList.isEmpty()) {
 
 			Product product = null;
+			Date date = null;
 
 			for (RecommendOneday recommendOneday : recommendOnedayList) {
 				String topMenuId = recommendOneday.getTopMenuId();
@@ -177,7 +183,25 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 					if (retMetaInfo != null) {
-						product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+						retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
+						product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+						// 하루에 하나 정보
+						product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
+						product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+						dateList = new ArrayList<Date>();
+						date = new Date();
+						date.setType("date/expo");
+						date.setText(recommendOneday.getExpoDt());
+						dateList.add(date);
+						date = new Date();
+						date.setType("date/expoStart");
+						date.setText(recommendOneday.getExpoStartDt());
+						dateList.add(date);
+						date = new Date();
+						date.setType("date/expoEnd");
+						date.setText(recommendOneday.getExpoEndDt());
+						dateList.add(date);
+						product.setDateList(dateList);
 						productList.add(product);
 					}
 
@@ -189,7 +213,25 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 						retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
 
 						if (retMetaInfo != null) {
+							retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 							product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+							// 하루에 하나 정보
+							product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
+							product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+							dateList = new ArrayList<Date>();
+							date = new Date();
+							date.setType("date/expo");
+							date.setText(recommendOneday.getExpoDt());
+							dateList.add(date);
+							date = new Date();
+							date.setType("date/expoStart");
+							date.setText(recommendOneday.getExpoStartDt());
+							dateList.add(date);
+							date = new Date();
+							date.setType("date/expoEnd");
+							date.setText(recommendOneday.getExpoEndDt());
+							dateList.add(date);
+							product.setDateList(dateList);
 							productList.add(product);
 						}
 					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
@@ -198,10 +240,46 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
 						if (retMetaInfo != null) {
 							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+								retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 								product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+								// 하루에 하나 정보
+								product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
+								product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+								dateList = new ArrayList<Date>();
+								date = new Date();
+								date.setType("date/expo");
+								date.setText(recommendOneday.getExpoDt());
+								dateList.add(date);
+								date = new Date();
+								date.setType("date/expoStart");
+								date.setText(recommendOneday.getExpoStartDt());
+								dateList.add(date);
+								date = new Date();
+								date.setType("date/expoEnd");
+								date.setText(recommendOneday.getExpoEndDt());
+								dateList.add(date);
+								product.setDateList(dateList);
 								productList.add(product);
 							} else {
+								retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 								product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+								// 하루에 하나 정보
+								product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
+								product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+								dateList = new ArrayList<Date>();
+								date = new Date();
+								date.setType("date/expo");
+								date.setText(recommendOneday.getExpoDt());
+								dateList.add(date);
+								date = new Date();
+								date.setType("date/expoStart");
+								date.setText(recommendOneday.getExpoStartDt());
+								dateList.add(date);
+								date = new Date();
+								date.setType("date/expoEnd");
+								date.setText(recommendOneday.getExpoEndDt());
+								dateList.add(date);
+								product.setDateList(dateList);
 								productList.add(product);
 							}
 						}
@@ -209,15 +287,50 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 					} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 						retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
 						if (retMetaInfo != null) {
-							// product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
+							retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 							product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+							// 하루에 하나 정보
+							product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
+							product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+							dateList = new ArrayList<Date>();
+							date = new Date();
+							date.setType("date/expo");
+							date.setText(recommendOneday.getExpoDt());
+							dateList.add(date);
+							date = new Date();
+							date.setType("date/expoStart");
+							date.setText(recommendOneday.getExpoStartDt());
+							dateList.add(date);
+							date = new Date();
+							date.setType("date/expoEnd");
+							date.setText(recommendOneday.getExpoEndDt());
+							dateList.add(date);
+							product.setDateList(dateList);
 							productList.add(product);
 						}
 
 					} else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // WEBTOON 상품의 경우
 						retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
 						if (retMetaInfo != null) {
+							retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 							product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
+							// 하루에 하나 정보
+							product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
+							product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+							dateList = new ArrayList<Date>();
+							date = new Date();
+							date.setType("date/expo");
+							date.setText(recommendOneday.getExpoDt());
+							dateList.add(date);
+							date = new Date();
+							date.setType("date/expoStart");
+							date.setText(recommendOneday.getExpoStartDt());
+							dateList.add(date);
+							date = new Date();
+							date.setType("date/expoEnd");
+							date.setText(recommendOneday.getExpoEndDt());
+							dateList.add(date);
+							product.setDateList(dateList);
 							productList.add(product);
 						}
 
@@ -225,7 +338,25 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 				} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
 					retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
+						retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 						product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+						// 하루에 하나 정보
+						product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
+						product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+						dateList = new ArrayList<Date>();
+						date = new Date();
+						date.setType("date/expo");
+						date.setText(recommendOneday.getExpoDt());
+						dateList.add(date);
+						date = new Date();
+						date.setType("date/expoStart");
+						date.setText(recommendOneday.getExpoStartDt());
+						dateList.add(date);
+						date = new Date();
+						date.setType("date/expoEnd");
+						date.setText(recommendOneday.getExpoEndDt());
+						dateList.add(date);
+						product.setDateList(dateList);
 						productList.add(product);
 					}
 				}
