@@ -19,19 +19,19 @@ public class AuthorizeAccountReq extends CommonInfo {
 	/**
 	 * 예금주명.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String bankAcctName;
 
 	/**
 	 * 은행 코드.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String bankCode;
 
 	/**
 	 * 계좌 번호.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String bankAccount;
 
 	/**

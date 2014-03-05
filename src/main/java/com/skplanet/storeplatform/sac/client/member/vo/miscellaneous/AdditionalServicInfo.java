@@ -19,13 +19,13 @@ public class AdditionalServicInfo extends CommonInfo {
 	/**
 	 * 휴대폰 번호.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String msisdn;
 
 	/**
 	 * 부가서비스 코드.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String svcCode;
 
 	/**

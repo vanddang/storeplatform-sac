@@ -19,25 +19,25 @@ public class ConfirmPhoneAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 인증코드 수신 휴대폰 번호.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String userPhone;
 
 	/**
 	 * 인증코드.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String phoneAuthCode;
 
 	/**
 	 * 인증코드 Signature.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String phoneSign;
 
 	/**
 	 * 인증 코드 유효시간 (분).
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String timeToLive;
 
 	/**

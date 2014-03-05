@@ -19,7 +19,7 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 수신자 휴대폰 번호.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String recvMdn;
 
 	/**
@@ -30,13 +30,13 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 요청측ID.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String srcId;
 
 	/**
 	 * 텔레서비스ID.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String teleSvcId;
 
 	/**

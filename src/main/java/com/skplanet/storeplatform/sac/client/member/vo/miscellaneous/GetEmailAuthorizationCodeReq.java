@@ -20,14 +20,14 @@ public class GetEmailAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 사용자 고유 Key.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String userKey;
 
 	/**
 	 * 인증 코드를 발송할 회원 이메일 주소.
 	 */
 	@Email
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String userEmail;
 
 	/**

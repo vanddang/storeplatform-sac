@@ -19,7 +19,7 @@ public class GetOpmdReq extends CommonInfo {
 	/**
 	 * 자회선 번호.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String msisdn;
 
 	/**
