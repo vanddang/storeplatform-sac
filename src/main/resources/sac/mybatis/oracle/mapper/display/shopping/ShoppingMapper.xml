@@ -591,7 +591,7 @@
                          WHERE PROD_ID = PLAN_ID AND IMG_CD =#{promotionImgCd}
                        )FILE_PATH					   
                  FROM TB_DP_PLAN_INFO_MANG
-                WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN PLAN_START_DT AND PLAN_END_DT
+                WHERE SYSDATE BETWEEN PLAN_START_DT AND PLAN_END_DT
                   AND PLAN_STATUS_CD = 'DP006501'
                   AND DP_YN = 'Y'
                 <if test="planId != null">
