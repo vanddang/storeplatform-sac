@@ -168,9 +168,12 @@
     <select id="selectRecommendOnedayList" parameterType="RecommendOnedaySacReq" resultType="RecommendOneday">
         SELECT /* FeatureRecommendMapper.xml, selectRecommendOnedayList, SAC : 이승훈 , 2014-02-28 */
 			    ONE.TENANT_ID
+             , ONE.SEQ AS ONE_SEQ
 			 , ONE.EXPO_DT
              , ONE.EXPO_START_DT
              , ONE.EXPO_END_DT
+             , ONE.PART_CHRGMONY_APP_YN
+             , NVL(ONE.FREE_ITEM_AMT, 0) AS FREE_ITEM_AMT                         
              , TDMC.MENU_ID
 			 , PROD.PROD_ID
 			 , TBPR.PART_PROD_ID
@@ -195,8 +198,8 @@
 				AND TDMM.USE_YN = 'Y'
 				AND TDMM.MENU_ID = TDMC.MENU_ID
 				AND TDMC.USE_YN = 'Y'
-				AND ONE.TENANT_ID = 'S01'
-				AND TDTP.TENANT_ID = 'S01'
+				AND ONE.TENANT_ID = #{tenantId}
+				AND TDTP.TENANT_ID = #{tenantId}
 				AND ONE.USE_YN = 'Y'
 				AND TDTP.EXPO_YN = 'Y'
 				AND TDPI.IMG_CD = 'DP000102'
