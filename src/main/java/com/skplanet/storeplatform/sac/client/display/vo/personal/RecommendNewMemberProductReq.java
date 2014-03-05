@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.personal;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -15,6 +17,7 @@ public class RecommendNewMemberProductReq extends CommonInfo {
 	private String anyDeviceModelCd; // 가상 프로비저닝 단말모델코드
 	private String langCd; // 언어코드
 	private String stdDt; // 배치완료 기준일시
+	@NotBlank
 	private String listId; // 리스트 Id
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출 ROW 수
