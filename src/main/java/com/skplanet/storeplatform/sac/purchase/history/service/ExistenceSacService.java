@@ -25,9 +25,11 @@ public interface ExistenceSacService {
 	 * 기구매 체크 SAC Service.
 	 * 
 	 * @param existenceScReq
-	 *            요청정보
+	 *            요청
+	 * @param inputValue
+	 *            내외부 사용구분 내부 true 요청정보
 	 * @return List<ExistenceScRes>
 	 */
-	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceScReq);
+	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceScReq, boolean inputValue);
 
 }

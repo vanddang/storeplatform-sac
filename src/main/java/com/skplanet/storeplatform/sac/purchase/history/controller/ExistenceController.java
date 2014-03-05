@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,10 +32,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReq
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
-
-//import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReq;
 
 /**
  * 구매 SAC 컨트롤러
@@ -52,8 +48,6 @@ public class ExistenceController {
 
 	@Autowired
 	private ExistenceSacService existenceSacService;
-	@Autowired
-	private PurchaseCommonUtils purchaseCommonUtils;
 
 	/**
 	 * 기구매 체크 SAC.
@@ -69,16 +63,14 @@ public class ExistenceController {
 	@RequestMapping(value = "/history/existence/search/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ExistenceListSacRes searchExistenceList(@RequestBody @Validated ExistenceSacReq existenceSacReq,
-			BindingResult bindingResult, SacRequestHeader requestHeader) {
+			SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 
-		// 필수값 체크
-		// this.purchaseCommonUtils.getBindingValid(bindingResult);
 		ExistenceListSacRes existenceListSacRes = new ExistenceListSacRes();
 
-		existenceListSacRes.setExistenceList(this.resConvert(this.existenceSacService.searchExistenceList(this
-				.reqConvert(existenceSacReq, header))));
+		existenceListSacRes.setExistenceList(this.resConvert(this.existenceSacService.searchExistenceList(
+				this.reqConvert(existenceSacReq, header), false)));
 		return existenceListSacRes;
 	}
 
@@ -103,6 +95,7 @@ public class ExistenceController {
 		req.setUserKey(existenceSacReq.getUserKey());
 		req.setDeviceKey(existenceSacReq.getDeviceKey());
 		req.setPrchsId(existenceSacReq.getPrchsId());
+
 		// 상품리스트가 없을시 제외
 		if (existenceSacReq.getProductList() != null) {
 			for (ExistenceItemSac existenceItemSac : existenceSacReq.getProductList()) {

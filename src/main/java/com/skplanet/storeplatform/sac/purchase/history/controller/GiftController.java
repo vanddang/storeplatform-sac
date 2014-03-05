@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +29,6 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacR
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.GiftSacService;
 
 /**
@@ -46,16 +44,12 @@ public class GiftController {
 
 	@Autowired
 	private GiftSacService giftService;
-	@Autowired
-	private PurchaseCommonUtils purchaseCommonUtils;
 
 	/**
 	 * 선물수신 처리.
 	 * 
 	 * @param giftConfirmSacReq
 	 *            요청정보
-	 * @param bindingResult
-	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
 	 * @return GiftConfirmSacRes
@@ -63,12 +57,11 @@ public class GiftController {
 	@RequestMapping(value = "/history/gift/update/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GiftConfirmSacRes modifyGiftConfirm(@RequestBody @Validated GiftConfirmSacReq giftConfirmSacReq,
-			BindingResult bindingResult, SacRequestHeader requestHeader) {
+			SacRequestHeader requestHeader) {
 
 		// 헤더 정보
 		TenantHeader header = requestHeader.getTenantHeader();
-		// 필수값 체크
-		this.purchaseCommonUtils.getBindingValid(bindingResult);
+
 		// reqConvert처리 -> SC선물수신처리 -> resConvert 처리후 리턴
 		return this.resConfirmConvert(this.giftService.updateGiftConfirm(this.reqConfirmConvert(giftConfirmSacReq,
 				header)));
@@ -122,8 +115,6 @@ public class GiftController {
 	 * 
 	 * @param giftReceiveSacReq
 	 *            요청정보
-	 * @param bindingResult
-	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
 	 * @return GiftReceiveSacRes
@@ -131,10 +122,8 @@ public class GiftController {
 	@RequestMapping(value = "/history/gift/search/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GiftReceiveSacRes searchGiftReceive(@RequestBody @Validated GiftReceiveSacReq giftReceiveSacReq,
-			BindingResult bindingResult, SacRequestHeader requestHeader) {
+			SacRequestHeader requestHeader) {
 		TenantHeader header = requestHeader.getTenantHeader();
-		// 필수값 체크
-		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
 		return this.resReceiveConvert(this.giftService.searchGiftReceive(this.reqReceiveConvert(giftReceiveSacReq,
 				header)));

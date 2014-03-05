@@ -139,7 +139,7 @@ public class PersonalUpdateAlarmServiceImpl implements PersonalUpdateAlarmServic
 			existenceScReq.setDeviceKey(req.getDeviceKey());
 			// existenceScReq.setExistenceItemSc(existenceItemScList);
 			existenceScReq.setProductList(existenceItemScList);
-			List<ExistenceScRes> listPrchs = this.existenceSacService.searchExistenceList(existenceScReq);
+			List<ExistenceScRes> listPrchs = this.existenceSacService.searchExistenceList(existenceScReq, false);
 
 			if (!listPrchs.isEmpty()) {
 				mapReq.put("PRCHS_LIST", listPrchs);

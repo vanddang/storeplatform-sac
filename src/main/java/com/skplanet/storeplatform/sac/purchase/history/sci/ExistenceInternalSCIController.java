@@ -15,7 +15,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -34,7 +33,6 @@ import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacServi
  * 
  * Updated on : 2014-01-14 Updated by : 조용진, 엔텔스.
  */
-@Controller
 @LocalSCI
 public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 
@@ -65,7 +63,7 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
 
 		ExistenceScReq req = this.reqConvert(existenceReq);
-		res = this.resConvert(this.existenceSacService.searchExistenceList(req));
+		res = this.resConvert(this.existenceSacService.searchExistenceList(req, false));
 
 		ExistenceListRes existenceListRes = new ExistenceListRes();
 		existenceListRes.setExistenceListRes(res);
@@ -82,9 +80,9 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 	 */
 	private ExistenceScReq reqConvert(ExistenceReq existenceReq) {
 
-		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-		this.logger.debug("@@@@@@ Start reqConvert @@@@@@");
-		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		this.logger.debug("@@@@@@ Start Internal reqConvert @@@@@@");
+		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		ExistenceScReq req = new ExistenceScReq();
 		List<ExistenceItemSc> existenceItemListSc = new ArrayList<ExistenceItemSc>();
 
@@ -117,16 +115,15 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 	 */
 	private List<ExistenceRes> resConvert(List<ExistenceScRes> existenceListScRes) {
 
-		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-		this.logger.debug("@@@@@@ Start resConvert @@@@@@");
-		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		this.logger.debug("@@@@@@ Start Internal resConvert @@@@@@");
+		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
-		int size = existenceListScRes.size();
-		for (int i = 0; i < size; i++) {
+		for (ExistenceScRes existenceScRes : existenceListScRes) {
 			ExistenceRes existenceRes = new ExistenceRes();
-			existenceRes.setPrchsId(existenceListScRes.get(i).getPrchsId());
-			existenceRes.setProdId(existenceListScRes.get(i).getProdId());
+			existenceRes.setPrchsId(existenceScRes.getPrchsId());
+			existenceRes.setProdId(existenceScRes.getProdId());
 
 			res.add(existenceRes);
 		}

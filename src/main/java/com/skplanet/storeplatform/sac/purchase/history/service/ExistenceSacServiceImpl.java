@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
+import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
@@ -34,28 +36,114 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	@Autowired
 	private ExistenceSCI existenceSCI;
 
+	@Autowired
+	private PurchaseTenantPolicyService purchaseTenantPolicyService;
+
 	/**
 	 * 기구매 체크 SAC Service.
 	 * 
-	 * @param existenceReq
-	 *            요청정보
+	 * @param existenceScReq
+	 *            요청
+	 * @param inputValue
+	 *            내외부 사용구분 내부 true 요청정보
 	 * @return List<ExistenceScRes>
 	 */
 	@Override
-	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceReq) {
+	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceScReq, boolean inputValue) {
+
+		// TenantProdGrpCd(Device기반 모든정책 조회 )
+		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
+				.searchPurchaseTenantPolicyList(existenceScReq.getTenantId(), "",
+						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
 
 		// 기구매내역 조회함
-		List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceReq);
+		List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceScReq);
 		// 구매상태가 구매완료건만을 넣기 위한 리스트
 		List<ExistenceScRes> existenceListScRes = new ArrayList<ExistenceScRes>();
-		// 구매완료상태만 add 한다.
+
+		// 내부사용시에는 구매완료와 구매예약상태만 add 한다.
+		// existenceScReq.getPrchsStatus()값으로 구분한다 내부:"Y" api:""
 		for (ExistenceScRes existenceScRes : resultList) {
-			this.logger.debug("existenceScRes.getStatusCd() : {}", existenceScRes.getStatusCd());
-			if (existenceScRes.getStatusCd() != null
-					&& existenceScRes.getStatusCd().equals(PurchaseConstants.PRCHS_STATUS_COMPT)) {
-				existenceListScRes.add(existenceScRes);
+			String flag = "";
+			this.logger.info("existenceScRes.getStatusCd() : {}", existenceScRes.getStatusCd());
+			// 내부구매처리시 기구매 체크는 true
+			if (inputValue) {
+				if (existenceScRes.getStatusCd().equals(PurchaseConstants.PRCHS_STATUS_COMPT)
+						|| existenceScRes.getStatusCd().equals(PurchaseConstants.PRCHS_STATUS_RESERVATION)) {
+					// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
+					if (existenceScRes.getTenantProdGrpCd() != null) {
+						flag = this.cheackMdn(existenceScReq, existenceScRes, purchaseTenantPolicyList, flag);
+						// flag가 ID 이거나 MDN일 경우에만 기구매셋팅
+						if (flag.equals("ID") || flag.equals("MDN")) {
+							existenceListScRes.add(existenceScRes);
+						}
+					} else {
+						// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
+						existenceListScRes.add(existenceScRes);
+					}
+				}
+
+			} else {
+				if (existenceScRes.getStatusCd() != null
+						&& existenceScRes.getStatusCd().equals(PurchaseConstants.PRCHS_STATUS_COMPT)) {
+
+					// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
+					if (existenceScRes.getTenantProdGrpCd() != null) {
+						flag = this.cheackMdn(existenceScReq, existenceScRes, purchaseTenantPolicyList, flag);
+						// flag가 ID 이거나 MDN일 경우에만 기구매셋팅
+						if (flag.equals("ID") || flag.equals("MDN")) {
+							existenceListScRes.add(existenceScRes);
+						}
+					} else {
+						// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
+						existenceListScRes.add(existenceScRes);
+					}
+				}
 			}
 		}
 		return existenceListScRes;
+	}
+
+	/**
+	 * <pre>
+	 * 기구매상품이 ID기반인지 MDN기반 인지 체크한다.
+	 * </pre>
+	 * 
+	 * @param existenceScReq
+	 *            구매요청값
+	 * @param existenceScRes
+	 *            구매응답값
+	 * @param purchaseTenantPolicyList
+	 *            정책리스트
+	 * @param flag
+	 *            정책구분
+	 * @return
+	 */
+	private String cheackMdn(ExistenceScReq existenceScReq, ExistenceScRes existenceScRes,
+			List<PurchaseTenantPolicy> purchaseTenantPolicyList, String flag) {
+
+		// flag의 값은 ID, MDN, NOT_MDN를 가진다
+		// flag : ID => ID기반
+		// flag : MDN => MDN기반
+		// flag : NOT_MDN => 정책과 조회한 tenantProdGrpCd는 같지만 DeviceKey가 다른 경우는기구매체크에서 제외한다.
+		for (PurchaseTenantPolicy purchaseTenantPolicy : purchaseTenantPolicyList) {
+
+			String tenantProdGrpCd = existenceScRes.getTenantProdGrpCd();
+			// 조회한 tenantProdGrpCd의 시작 코드와 정책코드가 같다면 MDN기반
+			if (tenantProdGrpCd.startsWith(purchaseTenantPolicy.getTenantProdGrpCd())) {
+				// 정책이 같을 경우에는 조회한 DeviceKey와 입력받은 DeviceKey를 비교하여 flag 셋팅
+				if (existenceScRes.getUseInsdDeviceId().equals(existenceScReq.getDeviceKey())) {
+					return flag = "MDN";
+				} else {
+					flag = "NOT_MDN";
+				}
+			} else {
+				// 조회한 tenantProdGrpCd의 시작 코드와 정책코드가 다르면 ID기반
+				if (!flag.equals("NOT_MDN")) {
+					flag = "ID";
+				}
+			}
+		}
+		return flag;
 	}
 }

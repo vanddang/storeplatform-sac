@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,6 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCanc
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
 
 /**
@@ -42,16 +40,12 @@ public class AutoPaymentCancelController {
 
 	@Autowired
 	private AutoPaymentCancelSacService autoPaymentCancelSacService;
-	@Autowired
-	private PurchaseCommonUtils purchaseCommonUtils;
 
 	/**
 	 * 자동결재해지예약/예약취소/해지 SAC.
 	 * 
 	 * @param autoPaymentCancelSacReq
 	 *            요청정보
-	 * @param bindingResult
-	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
 	 * @return AutoPaymentCancelSacRes 응답값
@@ -59,11 +53,9 @@ public class AutoPaymentCancelController {
 	@RequestMapping(value = "/history/reservation/update/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	AutoPaymentCancelSacRes updateReservation(@RequestBody @Validated AutoPaymentCancelSacReq autoPaymentCancelSacReq,
-			BindingResult bindingResult, SacRequestHeader requestHeader) {
+			SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
-		// 필수값 체크
-		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
 		return this.resConvert(this.autoPaymentCancelSacService.updateReservation(this.reqConvert(
 				autoPaymentCancelSacReq, header)));

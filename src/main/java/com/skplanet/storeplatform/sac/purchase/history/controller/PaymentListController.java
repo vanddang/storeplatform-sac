@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,8 +56,6 @@ public class PaymentListController {
 	 * 
 	 * @param paymentSacReq
 	 *            요청정보
-	 * @param bindingResult
-	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
 	 * @return PaymentListSacRes 응답정보
@@ -66,9 +63,7 @@ public class PaymentListController {
 	@RequestMapping(value = "/history/payment/search/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, List<PaymentListSacRes>> searchPaymentList(@RequestBody @Validated PaymentSacReq paymentSacReq,
-			BindingResult bindingResult, SacRequestHeader requestHeader) {
-		// 필수값 체크
-		this.purchaseCommonUtils.getBindingValid(bindingResult);
+			SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 

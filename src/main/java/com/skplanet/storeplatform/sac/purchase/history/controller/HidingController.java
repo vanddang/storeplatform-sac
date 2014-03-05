@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,8 +55,6 @@ public class HidingController {
 	 * 
 	 * @param hidingSacReq
 	 *            요청정보
-	 * @param bindingResult
-	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
 	 * @return HidingListSacRes 응답정보
@@ -65,11 +62,9 @@ public class HidingController {
 	@RequestMapping(value = "/history/hiding/update/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public HidingListSacRes updateHiding(@RequestBody @Validated HidingSacReq hidingSacReq,
-			BindingResult bindingResult, SacRequestHeader requestHeader) {
+			SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
-		// 필수값 체크
-		this.purchaseCommonUtils.getBindingValid(bindingResult);
 
 		HidingListSacRes response = new HidingListSacRes();
 		response.setResponseList(this.resConvert(this.hidingSacService.updateHiding(this.reqConvert(hidingSacReq,
