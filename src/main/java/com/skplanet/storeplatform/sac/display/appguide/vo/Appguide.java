@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.display.appguide.vo;
 public class Appguide {
 
 	private int totalCount;
+	private int curCount;
 
 	private String topMenuId;
 	private String topMenuNm;
@@ -48,6 +49,27 @@ public class Appguide {
 	private String avgScore;
 	private String partCnt;
 	private String dwldCnt;
+
+	// 테마추천 메인
+	private String themeId;
+	private String themeNm;
+	private String themeType;
+	private String themeImg;
+
+	/**
+	 * @return the curCount
+	 */
+	public int getCurCount() {
+		return this.curCount;
+	}
+
+	/**
+	 * @param curCount
+	 *            the curCount to set
+	 */
+	public void setCurCount(int curCount) {
+		this.curCount = curCount;
+	}
 
 	/**
 	 * @return the totalCount
@@ -722,6 +744,66 @@ public class Appguide {
 	 */
 	public void setDwldCnt(String dwldCnt) {
 		this.dwldCnt = dwldCnt;
+	}
+
+	/**
+	 * @return the themeId
+	 */
+	public String getThemeId() {
+		return this.themeId;
+	}
+
+	/**
+	 * @param themeId
+	 *            the themeId to set
+	 */
+	public void setThemeId(String themeId) {
+		this.themeId = themeId;
+	}
+
+	/**
+	 * @return the themeNm
+	 */
+	public String getThemeNm() {
+		return this.themeNm;
+	}
+
+	/**
+	 * @param themeNm
+	 *            the themeNm to set
+	 */
+	public void setThemeNm(String themeNm) {
+		this.themeNm = themeNm;
+	}
+
+	/**
+	 * @return the themeType
+	 */
+	public String getThemeType() {
+		return this.themeType;
+	}
+
+	/**
+	 * @param themeType
+	 *            the themeType to set
+	 */
+	public void setThemeType(String themeType) {
+		this.themeType = themeType;
+	}
+
+	/**
+	 * @return the themeImg
+	 */
+	public String getThemeImg() {
+		return this.themeImg;
+	}
+
+	/**
+	 * @param themeImg
+	 *            the themeImg to set
+	 */
+	public void setThemeImg(String themeImg) {
+		this.themeImg = themeImg;
 	}
 
 }

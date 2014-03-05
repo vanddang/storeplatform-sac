@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideApprankingService;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideIsfService;
+import com.skplanet.storeplatform.sac.display.appguide.service.AppguideThemeMainService;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideVersionService;
 
 /**
@@ -37,6 +38,9 @@ public class AppguideController {
 
 	@Autowired
 	private AppguideVersionService appguideVersionService;
+
+	@Autowired
+	private AppguideThemeMainService appguideThemeMainService;
 
 	@Autowired
 	private AppguideApprankingService appguideApprankingService;
@@ -109,4 +113,24 @@ public class AppguideController {
 		return this.appguideApprankingService.searchApprankingList(req, header);
 	}
 
+	/**
+	 * <pre>
+	 * 테마 추천 메인 조회.
+	 * </pre>
+	 * 
+	 * @param AppguideSacReq
+	 *            requestVO
+	 * @param SacRequestHeader
+	 *            requestHeader
+	 * @return AppguideSacRes
+	 */
+	@RequestMapping(value = "/recommend/themeMain/list/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AppguideSacRes searchThemeRecommendMain(@RequestBody AppguideSacReq requestVO, SacRequestHeader requestHeader)
+			throws StorePlatformException {
+
+		this.logger.debug(this.getClass().getName() + ".searchThemeRecommendMain start !!");
+		this.logger.debug("request {}", requestVO);
+		return this.appguideThemeMainService.searchThemeRecommendMain(requestVO, requestHeader);
+	}
 }
