@@ -86,6 +86,7 @@ public class DisplayConstants {
 	public static final String DP_BRAND_IDENTIFIER_CD = "brand";
 	public static final String DP_THEME_IDENTIFIER_CD = "theme";
 	public static final String DP_SONG_IDENTIFIER_CD = "song";
+	public static final String DP_OUTSDCONTENTS_ONE_CD = "oneday";
 	public static final String DP_PURCHASE_IDENTIFIER_CD = "purchase";
 	public static final String DP_DOWNLOAD_IDENTIFIER_CD = "download";
 	public static final String DP_GAMECENTER_IDENTIFIER_CD = "gamecenter";
