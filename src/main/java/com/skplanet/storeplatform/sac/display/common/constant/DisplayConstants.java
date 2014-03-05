@@ -93,10 +93,6 @@ public class DisplayConstants {
 	public static final String DP_PROMOTION_IDENTIFIER_CD = "promotion";
 	public static final String DP_BANNER_IDENTIFIER_CD = "banner";
 	public static final String DP_OUTSDCONTENTS_IDENTIFIER_CD = "outsdContents ";
-	public static final String DP_OUTSDCONTENTS_ONE_CD = "oneday";
-	public static final String DP_ORDEREDBY_TYPE_RECENT = "recent";
-	public static final String DP_ORDEREDBY_TYPE_POPULAR = "popular";
-	public static final String DP_ORDEREDBY_TYPE_RECOMMEND = "recommend";
 
 	// //////////////////////////////////// TOP MENU ID //////////////////////////////////////////
 	/**
@@ -536,8 +532,8 @@ public class DisplayConstants {
 	public static final String PRCHS_PROD_HAVE_NO = "N"; // 상품 미보유
 	public static final String PRCHS_PROD_TYPE_UNIT = "OR020201"; // 단위상품
 	public static final String PRCHS_PROD_TYPE_FREEPASS = "OR020202"; // 권한상품
-	public static final String PRCHS_CASE_PURCHASE_CD = "OR0017S"; // 구매
-	public static final String PRCHS_CASE_GIFT_CD = "OR0017G"; // 선물
+	public static final String PRCHS_CASE_PURCHASE_CD = "OR020301"; // 구매
+	public static final String PRCHS_CASE_GIFT_CD = "OR020302"; // 선물
 	public static final String PRCHS_START_DATE = "19000101000000"; // 구매조회 시작일시
 	public static final String PRCHS_STATE_TYPE_EXPIRED = "expired"; // 구매상태(만료)
 
@@ -554,29 +550,4 @@ public class DisplayConstants {
 	/** 사용자구분코드. */
 	public static final String MEMBER_MAIN_STATUS_NORMAL = "US010201"; // 정상
 	public static final String MEMBER_MAIN_STATUS_PAUSE = "US010204"; // 계정잠금/7일이용정지/30일이용정지/영구이용정지
-
-	/**
-	 * 일반 컬러링 메타 클래스 코드
-	 */
-	public static final String DP_MUSIC_NORMAL_COLORRING_META_CLASS_CD = "CT30";
-	/**
-	 * 롱 컬러링 메타 클래스 코드
-	 */
-	public static final String DP_MUSIC_LONG_COLORRING_META_CLASS_CD = "CT31";
-	/**
-	 * 일반 라이브벨 메타 클래스 코드
-	 */
-	public static final String DP_MUSIC_NORMAL_BELL_META_CLASS_CD = "CT32";
-	/**
-	 * 고음질 라이브벨 메타 클래스 코드
-	 */
-	public static final String DP_MUSIC_HIGH_QUALITY_BELL_META_CLASS_CD = "CT33";
-
-	public static final String DP_MUSIC_COLORING_TYPE = "colorRing";
-
-	public static final String DP_MUSIC_BELL_TYPE = "bell";
-
-	public static final String DP_MUSIC_NORMAL_QUALITY = "normal";
-
-	public static final String DP_MUSIC_HIGH_QUALITY = "long";
 }
