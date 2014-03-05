@@ -90,8 +90,8 @@
                          ) AS COUPON_CODE                        
                         ,I.SRC_CONTENT_ID AS ITEM_CODE 
                         ,NVL(N.SPRC_PRICE,0) specialSaleAmt
-                        ,N.SPRC_APPLY_START_DT AS specialSaleStartDt
-                        ,N.SPRC_APPLY_END_DT AS specialSaleEndDt
+                        ,TO_CHAR(N.SPRC_APPLY_START_DT,'YYYYMMDDHH24MISS') AS specialSaleStartDt
+                        ,TO_CHAR(N.SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS')  AS specialSaleEndDt
                         ,N.CPN_ID AS specialSaleCouponId                        
                         ,NVL(N.MM_PROD_MAX_SALE_QTY,0) AS specialSaleMonthLimit
                         ,NVL(N.DLY_PROD_MAX_SALE_QTY,0) AS specialSaleDayLimit    

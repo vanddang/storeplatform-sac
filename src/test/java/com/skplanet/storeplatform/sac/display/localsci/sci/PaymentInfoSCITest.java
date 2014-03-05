@@ -74,12 +74,12 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	// @Test
+	@Test
 	public void searchShoppingPaymentInfo() {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();
 			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("S900000579");
+			prodIdList.add("S900000735");
 			prodIdList.add("S900000579");
 			req.setProdIdList(prodIdList);
 			req.setTenantId("S01");
