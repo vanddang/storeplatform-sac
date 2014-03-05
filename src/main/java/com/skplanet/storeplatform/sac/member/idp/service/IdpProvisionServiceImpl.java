@@ -987,20 +987,18 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					this.userSCI.updateUser(updateUserRequest);
 				}
 
-				/* 휴대기기 목록 조회 */
-				SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
-				schDeviceListReq.setUserKey(userKey);
-				schDeviceListReq.setIsMainDevice("N");
-				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-				key.setKeyString(userKey);
-				keySearchList.add(key);
-				schDeviceListReq.setKeySearchList(keySearchList);
-				schDeviceListReq.setCommonRequest(commonRequest);
-
 				/* 휴대기기 기기 정보 변경 */
 				if (!StringUtil.equals(userPhone, "")) {
 
 					/* 사용자 휴대기기 목록 조회 */
+					SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
+					schDeviceListReq.setUserKey(userKey);
+					schDeviceListReq.setIsMainDevice("N");
+					key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+					key.setKeyString(userKey);
+					keySearchList.add(key);
+					schDeviceListReq.setKeySearchList(keySearchList);
+					schDeviceListReq.setCommonRequest(commonRequest);
 					SearchDeviceListResponse schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
 
 					if (userPhone.indexOf("|") > -1) { // 처리단말이 여러개
