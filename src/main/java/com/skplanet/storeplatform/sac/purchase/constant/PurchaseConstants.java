@@ -21,6 +21,8 @@ public final class PurchaseConstants {
 	public static final String PRCHS_STATUS_FAIL = "OR000303"; // 구매실패
 	public static final String PRCHS_STATUS_TEST_CANCEL = "OR000304"; // 시험폰구매취소
 	public static final String PRCHS_STATUS_DRBK = "OR000305"; // 환불
+	public static final String PRCHS_STATUS_RESERVATION = "OR000306"; // 구매예약
+	public static final String PRCHS_STATUS_RESERVATION_CANCEL = "OR000307"; // 구매예약
 
 	/** 구매요청경로코드. */
 	public static final String PRCHS_REQ_PATH_WEB = "OR000401"; // WEB
