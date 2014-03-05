@@ -620,6 +620,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			res.setCommonResponse(commonResponse);
 		} else {
 			// 조회 결과 없음
+			res = new ShoppingThemeRes();
 			commonResponse.setTotalCount(0);
 			res.setCommonResponse(commonResponse);
 		}
@@ -875,6 +876,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			res.setCommonResponse(commonResponse);
 		} else {
 			// 조회 결과 없음
+			res = new ShoppingRes();
 			commonResponse.setTotalCount(0);
 			res.setCommonResponse(commonResponse);
 		}
@@ -1116,6 +1118,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			res.setCommonResponse(commonResponse);
 		} else {
 			// 조회 결과 없음
+			res = new ShoppingRes();
 			commonResponse.setTotalCount(0);
 			res.setCommonResponse(commonResponse);
 		}
