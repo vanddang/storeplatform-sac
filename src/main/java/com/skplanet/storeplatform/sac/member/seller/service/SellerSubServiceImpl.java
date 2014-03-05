@@ -168,7 +168,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		SearchSubSellerRequest schReq = new SearchSubSellerRequest();
 
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
-		schReq.setSellerKey(req.getSellerKey());
+		schReq.setSellerKey(req.getSubSellerKey());
 
 		SearchSubSellerResponse schRes = this.sellerSCI.searchSubSeller(schReq);
 		if (schRes.getSellerMbr().getParentSellerKey() == null)
@@ -195,12 +195,12 @@ public class SellerSubServiceImpl implements SellerSubService {
 		if (sellerMbr != null)
 			for (int i = 0; i < sellerMbr.size(); i++) {
 				sellerMbrRes = new SellerMbr();
-				sellerMbrRes.setSellerKey(sellerMbr.get(i).getSellerKey());
-				sellerMbrRes.setSellerId(sellerMbr.get(i).getSellerID());
-				sellerMbrRes.setSellerEmail(sellerMbr.get(i).getSellerEmail());
-				sellerMbrRes.setSellerPhone(sellerMbr.get(i).getSellerPhone());
-				sellerMbrRes.setSellerPhoneCountry(sellerMbr.get(i).getSellerPhoneCountry());
-				sellerMbrRes.setRightProfile(sellerMbr.get(i).getRightProfileList());
+				sellerMbrRes.setSubSellerKey(sellerMbr.get(i).getSellerKey());
+				sellerMbrRes.setSubSellerId(sellerMbr.get(i).getSellerID());
+				sellerMbrRes.setSubSellerEmail(sellerMbr.get(i).getSellerEmail());
+				sellerMbrRes.setSubSellerPhone(sellerMbr.get(i).getSellerPhone());
+				sellerMbrRes.setSubSellerPhoneCountry(sellerMbr.get(i).getSellerPhoneCountry());
+				sellerMbrRes.setSubRightProfile(sellerMbr.get(i).getRightProfileList());
 				sList.add(sellerMbrRes);
 			}
 
