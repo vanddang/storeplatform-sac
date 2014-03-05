@@ -161,8 +161,58 @@
          WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
          ORDER BY RNUM
     </select>        
+        
+    <!-- 웹툰 회차별  채널 상품 조회-->
+    <select id="selectWebtoonSeries" parameterType="RecommendWebtoonSacReq" resultType="ProductBasicInfo">
+        SELECT /* WebtoonMapper.xml, selectWebtoonSeries, SAC : 이승훈 , 2014-02-13 */
+            BB.MENU_ID
+             , BB.PROD_ID
+             , BB.PART_PROD_ID
+             , BB.TOP_MENU_ID
+             , BB.CONTENTS_TYPE_CD
+             , BB.TOTAL_COUNT
+            FROM
+            (
+             SELECT
+                AA.*
+                , COUNT(*) OVER () AS TOTAL_COUNT
+                , ROWNUM AS RNUM
+                FROM
+                (
+                    SELECT 
+                         C.PART_PROD_ID
+                         , C.PROD_ID
+                         , D.TOP_MENU_ID
+                         , D.CONTENTS_TYPE_CD
+                         , A.MENU_ID
+                         , D.UPD_DT
+                         , F.CHAPTER
+                    FROM TB_DP_MENU_CATEGORY      A
+                        , TB_DP_MENU_CATEGORY_PROD_MAPG B
+                        , TB_DP_PROD_RSHP C
+                        , TB_DP_PROD D /* 채널 */
+                        --, TB_DP_TENANT_PROD E
+                        , UV_TB_DP_MULTIMDA_PROD F /* 채널 */
+                    WHERE A.MENU_ID = B.MENU_ID
+                    AND B.PROD_ID = D.PROD_ID
+                    AND A.TOP_MENU_ID = #{menuId}
+                    AND C.PROD_ID = #{channelId}
+                    AND C.PROD_RSHP_CD ='DP010802'
+                    AND C.PART_PROD_ID = D.PROD_ID
+                    AND C.PART_PROD_ID = F.PROD_ID
+                    AND D.CONTENTS_TYPE_CD = 'PD002501'
+                    AND D.SVC_GRP_CD = 'DP000203'
+                    --AND C.PART_PROD_ID = E.PROD_ID
+                    --AND E.EXPO_YN = 'Y'
+                    AND A.MENU_ID = #{menuId}
+                    ORDER BY TO_NUMBER(F.CHAPTER) DESC
+                 ) AA
+            ) BB 
+         WHERE RNUM = 1
+         ORDER BY RNUM
+    </select>    
     
-    <!-- 운영자 웹툰 상품 리스트 조회-->
+    <!-- 웹툰 회차별 리스트 조회-->
     <select id="selectWebtoonSeriesList" parameterType="RecommendWebtoonSacReq" resultType="ProductBasicInfo">
         SELECT /* WebtoonMapper.xml, selectWebtoonSeriesList, SAC : 이승훈 , 2014-02-13 */
             BB.MENU_ID
@@ -190,12 +240,12 @@
 	                FROM TB_DP_MENU_CATEGORY      A
 	                    , TB_DP_MENU_CATEGORY_PROD_MAPG B
 	                    , TB_DP_PROD_RSHP C
-	                    , TB_DP_PROD D
+	                    , TB_DP_PROD D /* 채널 */
 	                    --, TB_DP_TENANT_PROD E
-	                    , UV_TB_DP_MULTIMDA_PROD F
+	                    , UV_TB_DP_MULTIMDA_PROD F /* 채널 */
 	                WHERE A.MENU_ID = B.MENU_ID
 	                AND B.PROD_ID = D.PROD_ID
-	                AND A.TOP_MENU_ID = #{topMenuId}
+	                AND A.TOP_MENU_ID = #{menuId}
 	                AND C.PROD_ID = #{channelId}
 	                AND C.PROD_RSHP_CD ='DP010802'
 	                AND C.PART_PROD_ID = D.PROD_ID
