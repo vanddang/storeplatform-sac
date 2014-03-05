@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
 import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 
 /**
@@ -36,6 +37,9 @@ public class OtherArtistServiceImpl implements OtherArtistService {
 	private CommonDAO commonDAO;
 
 	@Autowired
+	private CommonMetaInfoGeneratorImpl commonGenerator;
+
+	@Autowired
 	private MusicInfoGenerator musicGenerator;
 
 	/*
@@ -48,6 +52,7 @@ public class OtherArtistServiceImpl implements OtherArtistService {
 	@Override
 	public OtherArtistRes searchArtistDetail(OtherArtistReq req, SacRequestHeader header) {
 		CommonResponse commonResponse = new CommonResponse();
+		Contributor contributor = null;
 		OtherArtistRes res = new OtherArtistRes();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("artistId", req.getArtistId());
@@ -56,11 +61,13 @@ public class OtherArtistServiceImpl implements OtherArtistService {
 
 		if (metaInfo == null) {
 			commonResponse.setTotalCount(0);
+			contributor = new Contributor();
+
 		} else {
 			commonResponse.setTotalCount(1);
-			Contributor contributor = this.musicGenerator.generateArtistDetailContributor(metaInfo);
-			res.setContributor(contributor);
+			contributor = this.musicGenerator.generateArtistDetailContributor(metaInfo);
 		}
+		res.setContributor(contributor);
 		res.setCommonResponse(commonResponse);
 
 		return res;

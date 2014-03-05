@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -82,7 +83,7 @@ public class OtherController {
 	 */
 	@RequestMapping(value = "/tagList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public OtherTagRes searchTagList(OtherTagReq req, SacRequestHeader header) {
+	public OtherTagRes searchTagList(@Validated OtherTagReq req, SacRequestHeader header) {
 		return this.otherTagService.searchTagList(req, header);
 	}
 
@@ -99,7 +100,7 @@ public class OtherController {
 	 */
 	@RequestMapping(value = "/artist/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public OtherArtistRes searchArtistDetail(OtherArtistReq req, SacRequestHeader header) {
+	public OtherArtistRes searchArtistDetail(@Validated OtherArtistReq req, SacRequestHeader header) {
 		return this.otherArtistService.searchArtistDetail(req, header);
 	}
 

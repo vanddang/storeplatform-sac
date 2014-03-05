@@ -12,7 +12,7 @@
 			      ,DEBUT_DAY
 			      ,DEBUT_MUSIC_ID
 			      ,DEBUT_MUSIC_NM
-			      ,IMG_FILE_PATH as filePath
+			      ,IMG_FILE_PATH as imagePath
 			      ,NATY as country
 			FROM  TB_DP_ARTIST
            WHERE  ARTIST_ID = #{artistId}

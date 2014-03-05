@@ -39,7 +39,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Produc
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @Transactional
-public class ProductInfoSCITestTest_Music {
+public class ProductInfoSCITestTest_Ring {
 
 	@Autowired
 	private ProductInfoSCI productInfoSCI;
@@ -55,7 +55,7 @@ public class ProductInfoSCITestTest_Music {
 	 * @throws JsonGenerationException
 	 */
 	@Test
-	public void testSearchMusicProductList() throws JsonGenerationException, JsonMappingException, IOException {
+	public void testSearchRingProductList() throws JsonGenerationException, JsonMappingException, IOException {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
 		list.add("H000460197");
@@ -64,18 +64,17 @@ public class ProductInfoSCITestTest_Music {
 
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
-		req.setLang("en");
 
 		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
 		List<ProductInfo> productList = res.getProductList();
 		this.log.debug("##### productInfo cnt : ", productList.size());
 		for (ProductInfo productInfo : productList) {
-			this.log.debug("##### Music productInfo VO : {}",
+			this.log.debug("##### Ring productInfo VO : {}",
 					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
 		}
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(productList);
-		this.log.debug("##### Music productInfo  JSON : {}", json);
+		this.log.debug("##### Ring productInfo  JSON : {}", json);
 	}
 
 }

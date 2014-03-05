@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
@@ -128,16 +129,17 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 	@Override
 	public Contributor generateArtistDetailContributor(MetaInfo metaInfo) {
 		Contributor contributor = new Contributor();
-		List<Identifier> identifierList = new ArrayList<Identifier>();
-		identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_ARTIST_IDENTIFIER_CD,
+		contributor.setIdentifier(this.commonGenerator.generateIdentifier(DisplayConstants.DP_ARTIST_IDENTIFIER_CD,
 				metaInfo.getArtistId()));
-
-		contributor.setIdentifierList(identifierList);
 		contributor.setName(metaInfo.getArtistNm());
+		// TODO osm1021 데뷔일을 Date로 할지 String으로 할지 미정
 		contributor.setDebutYear(metaInfo.getDebutDay());
+		// contributor.setDebutDay(DateUtils.parseDate(metaInfo.getDebutDay()));
 		contributor.setDebutMusicNm(metaInfo.getDebutMusicNm());
 		contributor.setCountry(metaInfo.getCountry());
-		contributor.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
+
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		contributor.setSourceList(sourceList);
 
 		return contributor;
 	}

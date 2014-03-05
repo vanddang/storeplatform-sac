@@ -293,7 +293,6 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							historyListSacReq.setProductList(productListSacInList);
 
 							// 구매내역 조회 실행
-							// TODO osm1021 ALARM_OFF_DT도 여기서 가져와야 됨.
 							HistoryListSacInRes historyListSacRes = this.historyInternalSCI
 									.searchHistoryList(historyListSacReq);
 							if (historyListSacRes != null) {
@@ -507,34 +506,6 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 				commonResponse.setTotalCount(productList.size());
 				res.setCommonResponse(commonResponse);
 				res.setProductList(productList);
-				// TODO osm1021 range는 일단 삭제 한다.
-
-				// range 가 지정된 경우
-				// String sStartRow = ObjectUtils.toString(mapReq.get(Consts.HTTP_PARAM_START_ROW));
-				// String sEndRow = ObjectUtils.toString(mapReq.get(Consts.HTTP_PARAM_END_ROW));
-				// List<Object> listRes = new ArrayList<Object>();
-				// if (StringUtils.isNotEmpty(sEndRow)) {
-				// int iStartRow = NumberUtils.toInt(sStartRow) - 1;
-				// int iEndRow = NumberUtils.toInt(sEndRow);
-				// if (iEndRow > iStartRow) {
-				// int iUpdateListSize = listUpdate.size();
-				// iStartRow = (iStartRow < 0) ? 0 : iStartRow;
-				// iEndRow = (iEndRow > iUpdateListSize) ? iUpdateListSize : iEndRow;
-				//
-				// // range 재설정
-				// mapReq.put(Consts.HTTP_PARAM_START_ROW, Integer.toString(iStartRow + 1));
-				// mapReq.put(Consts.HTTP_PARAM_END_ROW, Integer.toString(iEndRow));
-				//
-				// listRes.addAll(listUpdate.subList(iStartRow, iEndRow));
-				// } else {
-				// listRes.addAll(listUpdate);
-				// }
-				// } else {
-				// listRes.addAll(listUpdate);
-				// }
-
-				// TOTAL_COUNT 예외처리
-
 			} else {
 				throw new StorePlatformException("SAC_DSP_0006");
 			}

@@ -62,7 +62,9 @@ public class PersonalUpdateAlarmServiceImpl implements PersonalUpdateAlarmServic
 	 */
 	@Override
 	public PersonalUpdateAlarmRes updateAlarm(PersonalUpdateAlarmReq req, SacRequestHeader header) {
-
+		// //////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// 현재 사용하지 않음(Tenant에서 구현)
+		// //////////////////////////////////////////////////////////////////////////////////////////////////////////
 		CommonResponse commonResponse = new CommonResponse();
 		PersonalUpdateAlarmRes res = new PersonalUpdateAlarmRes();
 		// List<Product> productList = new ArrayList<Product>();
@@ -124,7 +126,6 @@ public class PersonalUpdateAlarmServiceImpl implements PersonalUpdateAlarmServic
 		}
 
 		if (!listPid.isEmpty()) {
-			// TODO osm1021 추후 LocalSCI 처리로 변환 필요
 			// 기구매 체크
 			ExistenceScReq existenceScReq = new ExistenceScReq();
 			List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
@@ -142,7 +143,6 @@ public class PersonalUpdateAlarmServiceImpl implements PersonalUpdateAlarmServic
 
 			if (!listPrchs.isEmpty()) {
 				mapReq.put("PRCHS_LIST", listPrchs);
-				// TODO osm1021 SQL 작성 필요
 				// int iUpdateCnt = this.commonDAO.update("", mapReq);
 				int iUpdateCnt = 10;
 				if (sAction.equals("upgradeAlarmOn")) {

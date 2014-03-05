@@ -54,7 +54,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
 		if (productBasicInfoList != null) {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("lang", "ko");
+			paramMap.put("lang", req.getLang());
 			paramMap.put("deviceModelNo", req.getDeviceModelNo());
 
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
