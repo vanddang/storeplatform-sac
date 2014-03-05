@@ -251,6 +251,15 @@ public class SellerMbr extends CommonInfo {
 	private String subSellerPhone;
 	private String subSellerPhoneCountry;
 	private String subRightProfile;
+	private String subRegDate;
+
+	public String getSubRegDate() {
+		return this.subRegDate;
+	}
+
+	public void setSubRegDate(String subRegDate) {
+		this.subRegDate = subRegDate;
+	}
 
 	public String getSubSellerKey() {
 		return this.subSellerKey;
