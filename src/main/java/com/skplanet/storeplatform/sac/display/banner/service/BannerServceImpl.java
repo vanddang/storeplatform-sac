@@ -160,6 +160,11 @@ public class BannerServceImpl implements BannerService {
 			reqImgCd = imgSizeList[i].split("\\/")[0]; // 요청 이미지 코드
 			reqImgCnt = Integer.parseInt(imgSizeList[i].split("\\/")[1]); // 요청 이미지 건수
 
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[searchBannerList] reqImgCd : {}", reqImgCd);
+			this.logger.debug("[searchBannerList] reqImgCnt : {}", reqImgCnt);
+			this.logger.debug("----------------------------------------------------------------");
+
 			// 배너리스트 조회
 			bannerReq.setImgSizeCd(reqImgCd);
 			bannerList = this.commonDAO.queryForList("Banner.searchBannerList", bannerReq, BannerDefault.class);
@@ -168,6 +173,10 @@ public class BannerServceImpl implements BannerService {
 				bannerDefault = bannerList.get(j);
 				bnrMenuId = bannerDefault.getBnrMenuId();
 				bnrType = bannerDefault.getBnrInfoTypeCd();
+
+				this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("[searchBannerList] bannerDefault : {}", bannerDefault.toString());
+				this.logger.debug("----------------------------------------------------------------");
 
 				// 모바일웹 정사각형 배너
 				if ("DP010999".equals(reqBnrMenuId)) {
@@ -248,6 +257,10 @@ public class BannerServceImpl implements BannerService {
 
 				// 배너타입 : 상품 지정 입력
 				if (DisplayConstants.DP_BANNER_PRODUCT_CD.equals(bnrType)) {
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[searchBannerList] 배너타입 : 상품모바일배너");
+					this.logger.debug("----------------------------------------------------------------");
+
 					prodId = bannerDefault.getBnrInfo();
 					topMenuId = bannerDefault.getTopMenuId();
 
@@ -318,6 +331,10 @@ public class BannerServceImpl implements BannerService {
 				}
 				// 배너타입 : 운영자 임의 추천
 				else if (DisplayConstants.DP_BANNER_ADMIN_RECOMM_CD.equals(bnrType)) {
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[searchBannerList] 배너타입 : 운영자 임의 추천");
+					this.logger.debug("----------------------------------------------------------------");
+
 					recommendId = bannerDefault.getBnrInfo();
 
 					// 배치완료 기준일시 조회
@@ -352,6 +369,10 @@ public class BannerServceImpl implements BannerService {
 				}
 				// 배너타입 : 특정 브랜드샵
 				else if (DisplayConstants.DP_BANNER_SPECIFIC_BRANDSHOP_CD.equals(bnrType)) {
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[searchBannerList] 배너타입 : 특정 브랜드샵");
+					this.logger.debug("----------------------------------------------------------------");
+
 					brandShopNo = bannerDefault.getBnrInfo();
 					bannerReq.setBrandShopNo(brandShopNo);
 
@@ -377,6 +398,10 @@ public class BannerServceImpl implements BannerService {
 				}
 				// 배너타입 : 테마추천 리스트 연결 (앱가이드)
 				else if (DisplayConstants.DP_BANNER_THEME_RECOMM_CD.equals(bnrType)) {
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[searchBannerList] 배너타입 : 테마추천 리스트 연결");
+					this.logger.debug("----------------------------------------------------------------");
+
 					themeId = bannerDefault.getBnrInfo();
 
 					// 배치완료 기준일시 조회

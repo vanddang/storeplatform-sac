@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,6 +169,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			List<ProductListSacIn> productList = null;
 			HistoryListSacInReq historyReq = null;
 			HistoryListSacInRes historyRes = null;
+			boolean purchasePassFlag = true;
 
 			try {
 				productListSacIn = new ProductListSacIn();
@@ -199,8 +199,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				// 구매내역 조회 실행
 				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 			} catch (Exception ex) {
-				// 구매내역 조회 연동 중 오류가 발생하였습니다.
-				throw new StorePlatformException("SAC_DSP_2001", ex);
+				purchasePassFlag = false;
+				this.logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n{}", ex);
 			}
 
 			String prchsId = null; // 구매ID
@@ -213,7 +213,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			String prchsPrice = null; // 구매금액
 			String drmYn = null; // DRM 지원여부
 
-			if (historyRes != null && historyRes.getTotalCnt() > 0) {
+			if (purchasePassFlag && historyRes != null) {
 				List<Purchase> purchaseList = new ArrayList<Purchase>();
 				List<Encryption> encryptionList = new ArrayList<Encryption>();
 
@@ -269,6 +269,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						String deviceIdType = null; // Device Id 유형
 						SearchDeviceIdSacReq deviceReq = null;
 						SearchDeviceIdSacRes deviceRes = null;
+						boolean memberPassFlag = true;
 
 						try {
 							deviceReq = new SearchDeviceIdSacReq();
@@ -278,11 +279,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							// 기기정보 조회
 							deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 						} catch (Exception ex) {
-							// 단말정보 조회 연동 중 오류가 발생하였습니다.
-							throw new StorePlatformException("SAC_DSP_1001", ex);
+							memberPassFlag = false;
+							this.logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n{}", ex);
 						}
 
-						if (deviceRes != null) {
+						if (memberPassFlag && deviceRes != null) {
 							deviceId = deviceRes.getDeviceId();
 							deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
@@ -334,19 +335,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
 							encryption.setToken(encryptString);
 							encryptionList.add(encryption);
-
-							// JSON 복호화
-							byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-							byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-
-							try {
-								String decData = new String(decrypt, "UTF-8");
-								this.logger.debug("----------------------------------------------------------------");
-								this.logger.debug("[getDownloadEbookInfo] decData : {}", decData);
-								this.logger.debug("----------------------------------------------------------------");
-							} catch (UnsupportedEncodingException e) {
-								e.printStackTrace();
-							}
 						}
 					}
 				}

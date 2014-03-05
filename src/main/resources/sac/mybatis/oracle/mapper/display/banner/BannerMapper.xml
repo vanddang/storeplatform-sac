@@ -56,13 +56,10 @@
 		              , IA.BNR_INFO
 		              , IA.BNR_NM
 		              , IA.EXPO_ORD
+		              , IA.EXPO_ORD_SUB
 		              , IA.EXPO_STATUS_CD
 		              , IA.IMG_PATH
 		              , IA.REG_DT
-                    <if test='bnrMenuId == "DP010912"'><!-- 앱가이드 -->
-                      , IA.APPGUIDE_ORDER
-                      , IA.APPGUIDE_ORDER_SUB
-                    </if>
 		          FROM (SELECT  COUNT(A.BNR_SEQ) OVER() AS TOTAL_COUNT
 		                      , A.BNR_MENU_ID
 		                      , A.BNR_SEQ
@@ -71,13 +68,10 @@
 		                      , A.REG_DT
 		                      , B.BNR_NM
 		                      , B.EXPO_ORD
+		                      , B.EXPO_ORD_SUB
 		                      , B.EXPO_STATUS_CD
 		                      , C.IMG_SIZE_CD
 		                      , C.IMG_PATH
-                        <if test='bnrMenuId == "DP010912"'><!-- 앱가이드 -->
-                              , DECODE(A.BNR_INFO_TYPE_CD , 'DP010312' , 1, 'DP010301', 2, 3) AS APPGUIDE_ORDER
-                              , DECODE(A.BNR_INFO_TYPE_CD , 'DP010303' , (SELECT REG_DT FROM TB_DP_PROD WHERE PROD_ID = A.BNR_INFO)) AS APPGUIDE_ORDER_SUB
-                        </if>
 		                  FROM  TB_DP_BNR      A
 		                      , TB_DP_BNR_EXPO B
 		                      , TB_DP_BNR_IMG  C
@@ -125,27 +119,9 @@
                     <if test='bnrExpoMenuId != null and bnrExpoMenuId != ""'>
 		                   AND  B.BNR_EXPO_MENU_ID = #{bnrExpoMenuId}
                     </if>
-                    <choose>
-                        <when test='bnrMenuId == "DP010910" or bnrMenuId == "DP010911" or bnrMenuId == "DP010912"'><!-- BEST 앱, BEST 컨텐츠, 앱가이드 -->
-		                   AND  SYSDATE BETWEEN NVL(B.EXPO_START_DT, SYSDATE) AND NVL(B.EXPO_END_DT, SYSDATE)
-                        </when>
-                        <when test='(bnrMenuId == "DP010920" or bnrMenuId == "DP010921") and bnrExpoMenuId == "DP011101"'><!-- 이북, 코믹 테마 배너 -->
-		                   AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_END_DT)
-                        </when>
-                        <when test='bnrMenuId == "DP010926" or bnrMenuId == "DP010907" or bnrMenuId == "DP010908" or bnrMenuId == "DP010909"'><!-- 모바일웹 직사각형, 모바일웹 상/하단, T플레이 배너 -->
-		                   AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_END_DT)
-                        </when>
-                        <otherwise>
-		                   AND  SYSDATE BETWEEN B.EXPO_START_DT AND NVL(B.EXPO_END_DT, SYSDATE)
-                        </otherwise>
-                    </choose>
+                           AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, NVL(B.EXPO_END_DT, SYSDATE))
 		               ) IA
-            <if test='bnrMenuId != "DP010912"'><!-- 앱가이드가 아닌 경우 -->
-		        ORDER BY IA.BNR_MENU_ID, IA.EXPO_ORD, IA.EXPO_STATUS_CD
-            </if>
-            <if test='bnrMenuId == "DP010912"'><!-- 앱가이드 -->
-		        ORDER BY IA.BNR_MENU_ID DESC, IA.APPGUIDE_ORDER, IA.APPGUIDE_ORDER_SUB DESC, IA.EXPO_ORD
-            </if>
+		        ORDER BY IA.BNR_MENU_ID DESC, IA.EXPO_ORD, IA.EXPO_ORD_SUB, IA.EXPO_STATUS_CD
 		       ) JA
     </select>
     
