@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
@@ -46,6 +47,8 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
@@ -61,6 +64,9 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 	private CommonDAO commonDAO;
 
 	@Autowired
+	private CommonMetaInfoGenerator commonGenerator;
+
+	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	@Autowired
@@ -68,6 +74,9 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	private EbookComicGenerator ebookComicGenerator;
 
 	/*
 	 * (non-Javadoc)
@@ -122,10 +131,39 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 			// 웹툰 Top Menu ID.
 			req.setTopMenuId(DisplayConstants.DP_WEBTOON_TOP_MENU_ID);
 
+			// 웹툰 회차별 채널 조회
+			List<ProductBasicInfo> productBasicPartInfo = this.commonDAO.queryForList("Webtoon.selectWebtoonSeries",
+					req, ProductBasicInfo.class);
+
 			// 웹툰 회차별 List 조회
 			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 					"Webtoon.selectWebtoonSeriesList", req, ProductBasicInfo.class);
 
+			// layout 설정
+			Layout layout = null;
+
+			if (!productBasicPartInfo.isEmpty()) {
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+
+				ProductBasicInfo productBasicInfo = null;
+				productBasicInfo = productBasicPartInfo.get(0);
+				reqMap.put("productBasicInfo", productBasicInfo);
+				reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
+				MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+				layout = new Layout();
+				if (retMetaInfo != null) {
+					layout.setIdentifier(this.ebookComicGenerator.generateIdentifier(retMetaInfo));
+					layout.setTitle(this.commonGenerator.generateTitle(retMetaInfo));
+					layout.setProductExplain(retMetaInfo.getProdBaseDesc());
+					layout.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo));
+					layout.setSourceList(this.commonGenerator.generateSourceList(retMetaInfo));
+					layout.setContributor(this.ebookComicGenerator.generateComicContributor(retMetaInfo));
+					res.setLayout(layout);
+				}
+			}
 			if (!productBasicInfoList.isEmpty()) {
 				Map<String, Object> reqMap = new HashMap<String, Object>();
 				reqMap.put("tenantHeader", tenantHeader);
