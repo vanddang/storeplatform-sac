@@ -452,7 +452,9 @@ public class DisplayConstants {
 	public static final String DP_BANNER_TYPE_BRAND_SHOP = "brandShop"; // 배너타입 : 특정 브랜드샵
 	public static final String DP_BANNER_TYPE_THEME_RECOMM = "themeRecomm"; // 배너타입 : 상황별 추천
 	public static final String DP_BANNER_TYPE_APP_GUIDE = "appGuide"; // 배너타입 : 앱가이드 테마
-
+	public static final String DP_ORDEREDBY_TYPE_RECENT = "recent";
+	public static final String DP_ORDEREDBY_TYPE_POPULAR = "popular";
+	public static final String DP_ORDEREDBY_TYPE_RECOMMEND = "recommend";
 	/*
 	 * 배너 탑 코드
 	 */
