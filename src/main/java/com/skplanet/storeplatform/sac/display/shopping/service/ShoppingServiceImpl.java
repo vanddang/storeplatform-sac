@@ -621,6 +621,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		} else {
 			// 조회 결과 없음
 			res = new ShoppingThemeRes();
+			List<Promotion> promotionList = new ArrayList<Promotion>();
+			res.setPromotionList(promotionList);
 			commonResponse.setTotalCount(0);
 			res.setCommonResponse(commonResponse);
 		}
@@ -877,6 +879,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		} else {
 			// 조회 결과 없음
 			res = new ShoppingRes();
+			List<Product> productList = new ArrayList<Product>();
+			res.setProductList(productList);
 			commonResponse.setTotalCount(0);
 			res.setCommonResponse(commonResponse);
 		}
@@ -1119,6 +1123,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		} else {
 			// 조회 결과 없음
 			res = new ShoppingRes();
+			List<Product> productList = new ArrayList<Product>();
+			res.setProductList(productList);
 			commonResponse.setTotalCount(0);
 			res.setCommonResponse(commonResponse);
 		}
