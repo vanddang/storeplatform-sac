@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.other;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -13,6 +15,7 @@ public class OtherArtistReq extends CommonInfo {
 	/**
 	 * 아티스트 Id.
 	 */
+	@NotBlank
 	private String artistId;
 
 	/**

@@ -105,6 +105,11 @@ public class Contributor extends CommonInfo implements Serializable {
 	private List<Identifier> identifierList;
 
 	/**
+	 * 데뷔 날짜.
+	 */
+	private java.util.Date debutDay;
+
+	/**
 	 * resource 정보.
 	 */
 	private List<Source> sourceList;
@@ -412,6 +417,21 @@ public class Contributor extends CommonInfo implements Serializable {
 	 */
 	public void setSourceList(List<Source> sourceList) {
 		this.sourceList = sourceList;
+	}
+
+	/**
+	 * @return the debutDay
+	 */
+	public java.util.Date getDebutDay() {
+		return this.debutDay;
+	}
+
+	/**
+	 * @param debutDay
+	 *            the debutDay to set
+	 */
+	public void setDebutDay(java.util.Date debutDay) {
+		this.debutDay = debutDay;
 	}
 
 }
