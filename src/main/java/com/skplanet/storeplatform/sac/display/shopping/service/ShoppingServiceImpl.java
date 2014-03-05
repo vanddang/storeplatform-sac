@@ -126,6 +126,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getListId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
 		}
+		if (StringUtils.isEmpty(req.getProdCharge())) {
+			req.setProdCharge(null);
+		}
 
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
@@ -326,7 +329,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getMenuId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "menuId", req.getMenuId());
 		}
-
+		if (StringUtils.isEmpty(req.getProdCharge())) {
+			req.setProdCharge(null);
+		}
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
@@ -639,6 +644,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getPlanId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "planId", req.getPlanId());
 		}
+		if (StringUtils.isEmpty(req.getProdCharge())) {
+			req.setProdCharge(null);
+		}
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
@@ -884,7 +892,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getBrandId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "blandId", req.getBrandId());
 		}
-
+		if (StringUtils.isEmpty(req.getProdCharge())) {
+			req.setProdCharge(null);
+		}
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
 			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
 		}
@@ -1119,7 +1129,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getThemeId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "themeId", req.getThemeId());
 		}
-
+		if (StringUtils.isEmpty(req.getProdCharge())) {
+			req.setProdCharge(null);
+		}
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
@@ -1250,7 +1262,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getMenuId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "menuId", req.getMenuId());
 		}
-
+		if (StringUtils.isEmpty(req.getProdCharge())) {
+			req.setProdCharge(null);
+		}
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
@@ -1387,7 +1401,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getBrandId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "brandId", req.getBrandId());
 		}
-
+		if (StringUtils.isEmpty(req.getProdCharge())) {
+			req.setProdCharge(null);
+		}
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
