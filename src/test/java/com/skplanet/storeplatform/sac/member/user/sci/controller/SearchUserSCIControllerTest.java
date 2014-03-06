@@ -97,6 +97,7 @@ public class SearchUserSCIControllerTest {
 
 	}
 
+	/** =============== UserKey 이용한 조회 =============== */
 	@Test
 	public void TEST_정상_사용자_결제페이지_노출정보조회_통신과금정보없음() throws Exception {
 		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
@@ -104,6 +105,26 @@ public class SearchUserSCIControllerTest {
 			public Object requestBody() {
 				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
 				searchUserSacReq.setUserKey("IF102158916420090711152643");
+
+				return searchUserSacReq;
+			}
+		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	@Test
+	public void TEST_정상_사용자_결제페이지_노출정보조회_통신과금정보있음() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+				searchUserSacReq.setUserKey("US201402071133550360001951");
 
 				return searchUserSacReq;
 			}
@@ -138,12 +159,12 @@ public class SearchUserSCIControllerTest {
 	}
 
 	@Test
-	public void TEST_정상_사용자_결제페이지_노출정보조회_통합회원이고_OCB이용약관정보있음() throws Exception {
+	public void TEST_정상_사용자_결제페이지_노출정보조회_통합회원아님() throws Exception {
 		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
 			public Object requestBody() {
 				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
-				searchUserSacReq.setUserKey("IF1523972220130926133834");
+				searchUserSacReq.setUserKey("IW1023857942220110414141217");
 
 				return searchUserSacReq;
 			}
