@@ -282,8 +282,8 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setCharger(req.getCharger());
 		// 담당자 무선 전화 번호
 		sellerMbr.setChargerPhone(req.getChargerPhone());
+		sellerMbr.setWebsite(req.getWebsite());
 
-		// sellerMbr.setCustomer
 		createSellerRequest.setSellerMbr(sellerMbr);
 		// Debug
 		LOGGER.debug("==>>[SC] CreateSellerRequest.SellerMbr.toString() : {}", sellerMbr.toString());
@@ -494,7 +494,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setRepEmail(req.getRepEmail());
 		sellerMbr.setRepPhone(req.getRepPhone());
 		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
-
+		sellerMbr.setWebsite(req.getWebsite());
 		updateSellerRequest.setSellerMbr(sellerMbr);
 
 		/** 2-4. 공통 헤더 생성 및 주입. */
