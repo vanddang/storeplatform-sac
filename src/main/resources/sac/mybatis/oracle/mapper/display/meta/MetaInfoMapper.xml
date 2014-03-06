@@ -752,7 +752,7 @@
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
                                ,I.DLV_PROD_YN
-                               ,NVL(M.PRCHS_CNT, 0)  PRCHS_CNT
+                               ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT 
                                ,J.PROD_GRD_CD
 		                       ,NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT  ) AS APPLY_START_DT
 		                       ,NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ) AS APPLY_END_DT      

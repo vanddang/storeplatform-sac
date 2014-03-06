@@ -457,7 +457,7 @@
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
                                ,I.DLV_PROD_YN
-                               ,NVL(M.PRCHS_CNT, 0)  PRCHS_CNT
+                               ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT 
                                ,J.PROD_GRD_CD   
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT    
@@ -1408,7 +1408,7 @@
                              AND ROWNUM = 1
                          ) AS TOP_MENU_NM                                   
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY L.PROD_AMT ASC) as NO
-                        ,NVL(M.PRCHS_CNT, 0) as PRCHS_CNT
+                        ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT 
                         ,DECODE(I.PROD_CASE_CD
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
