@@ -28,6 +28,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncByMacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncByMacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
@@ -238,6 +242,88 @@ public class UserJoinController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		CreateBySimpleRes res = this.svc.createBySimpleId(sacHeader, req);
+
+		LOGGER.info("Response : {}", res.toString());
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * Save&Sync 가입.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	@RequestMapping(value = "/member/user/createSaveAndSync/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateSaveAndSyncRes createSaveAndSync(SacRequestHeader sacHeader, @Validated @RequestBody CreateSaveAndSyncReq req) {
+
+		LOGGER.info("#################################");
+		LOGGER.info("##### 2.1.39. Save&Sync 가입 #####");
+		LOGGER.info("#################################");
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		/**
+		 * Header 정보
+		 */
+		LOGGER.info("Headers : {}", sacHeader.toString());
+
+		if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
+			throw new StorePlatformException("SAC_MEM_0002", "model");
+		}
+
+		/**
+		 * Save&Sync 가입 Biz
+		 */
+		CreateSaveAndSyncRes res = this.svc.createSaveAndSync(sacHeader, req);
+
+		LOGGER.info("Response : {}", res.toString());
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * Save&Sync MAC 가가입.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	@RequestMapping(value = "/member/user/createSaveAndSyncByMac/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateSaveAndSyncByMacRes createSaveAndSyncByMac(SacRequestHeader sacHeader, @Validated @RequestBody CreateSaveAndSyncByMacReq req) {
+
+		LOGGER.info("#######################################");
+		LOGGER.info("##### 2.1.39. Save&Sync MAC 가가입 #####");
+		LOGGER.info("#######################################");
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		/**
+		 * Header 정보
+		 */
+		LOGGER.info("Headers : {}", sacHeader.toString());
+
+		if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
+			throw new StorePlatformException("SAC_MEM_0002", "model");
+		}
+
+		/**
+		 * Save&Sync 가입 Biz
+		 */
+		CreateSaveAndSyncByMacRes res = this.svc.createSaveAndSyncByMac(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.toString());
 

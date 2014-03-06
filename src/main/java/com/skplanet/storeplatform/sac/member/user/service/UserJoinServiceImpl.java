@@ -52,6 +52,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncByMacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncByMacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
@@ -556,6 +560,34 @@ public class UserJoinServiceImpl implements UserJoinService {
 		response.setDeviceKey(deviceKey);
 
 		return response;
+	}
+
+	@Override
+	public CreateSaveAndSyncRes createSaveAndSync(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
+
+		/**
+		 * 결과 세팅
+		 */
+		CreateSaveAndSyncRes response = new CreateSaveAndSyncRes();
+		response.setUserKey("");
+		response.setDeviceKey("");
+
+		return response;
+
+	}
+
+	@Override
+	public CreateSaveAndSyncByMacRes createSaveAndSyncByMac(SacRequestHeader sacHeader, CreateSaveAndSyncByMacReq req) {
+
+		/**
+		 * 결과 세팅
+		 */
+		CreateSaveAndSyncByMacRes response = new CreateSaveAndSyncByMacRes();
+		response.setUserKey("");
+		response.setDeviceKey("");
+
+		return response;
+
 	}
 
 	/**
