@@ -36,6 +36,8 @@ public class IntimateMessageSacReq extends CommonInfo {
 
 	private String deviceChangeFlag; // 기기변경 구분
 
+	private String memberPassFlag; // 기기변경 조회 연동 오류 여부
+
 	/**
 	 * @return the msgType
 	 */
@@ -139,5 +141,20 @@ public class IntimateMessageSacReq extends CommonInfo {
 	 */
 	public void setDeviceChangeFlag(String deviceChangeFlag) {
 		this.deviceChangeFlag = deviceChangeFlag;
+	}
+
+	/**
+	 * @return the memberPassFlag
+	 */
+	public String getMemberPassFlag() {
+		return this.memberPassFlag;
+	}
+
+	/**
+	 * @param memberPassFlag
+	 *            the memberPassFlag to set
+	 */
+	public void setMemberPassFlag(String memberPassFlag) {
+		this.memberPassFlag = memberPassFlag;
 	}
 }
