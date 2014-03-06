@@ -138,6 +138,21 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 				bestDownloadReq.getListId());
 		bestDownloadReq.setStdDt(stdDt);
 
+		// 검색하는 상품 타입(APP, MM)
+		String prodType = "APP"; // default
+
+		// '+'로 연결 된 topMenuId를 배열로 전달
+		if (StringUtils.isNotEmpty(bestDownloadReq.getTopMenuId())) {
+			String[] arrayTopMenuId = bestDownloadReq.getTopMenuId().split("\\+");
+			bestDownloadReq.setArrayTopMenuId(arrayTopMenuId);
+
+			if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(arrayTopMenuId[0])
+					|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(arrayTopMenuId[0])
+					|| DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(arrayTopMenuId[0])
+					|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(arrayTopMenuId[0])) { // 멀티미디어 상품
+				prodType = "MM";
+			}
+		}
 		// '+'로 연결 된 상품등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(bestDownloadReq.getProdGradeCd())) {
 			String[] arrayProdGradeCd = bestDownloadReq.getProdGradeCd().split("\\+");
@@ -148,10 +163,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 		List<ProductBasicInfo> bestList = null;
 
 		if (bestDownloadReq.getDummy() == null) { // dummy 호출이 아닐때
-			if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
-					|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
-					|| DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
-					|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 멀티미디어_상품
+			if (prodType.equals("MM")) { // 멀티미디어_상품
 				bestList = this.commonDAO.queryForList("BestDownload.selectBestDownloadMMList", bestDownloadReq,
 						ProductBasicInfo.class);
 
