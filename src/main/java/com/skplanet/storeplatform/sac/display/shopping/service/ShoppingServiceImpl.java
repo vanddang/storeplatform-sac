@@ -543,7 +543,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingRes
+	 * @return ShoppingThemeRes
 	 */
 	@Override
 	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
@@ -638,7 +638,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingRes
+	 * @return ShoppingThemeRes
 	 */
 	@Override
 	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingPlanReq req) {
