@@ -29,7 +29,8 @@ public class BestDownloadSacReq extends CommonInfo {
 	private String stdDt; // 배치완료 기준일시
 	@NotBlank
 	private String listId; // 리스트 Id
-	private String topMenuId; // 메뉴 Id
+	private String topMenuId; // Top 메뉴 Id
+	private String[] arrayTopMenuId; // Top 메뉴 Id Array
 	private String menuId; // 메뉴 Id
 	@Pattern(regexp = "|ebook\\+normal|ebook\\+genre")
 	private String filteredBy; // 카테고리 유형
@@ -440,6 +441,31 @@ public class BestDownloadSacReq extends CommonInfo {
 	 */
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * TOP 메뉴 ID Array.
+	 * </pre>
+	 * 
+	 * @return the arrayTopMenuId
+	 */
+	public String[] getArrayTopMenuId() {
+		return this.arrayTopMenuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * TOP 메뉴 ID Array.
+	 * </pre>
+	 * 
+	 * @param arrayTopMenuId
+	 *            the arrayTopMenuId to set
+	 */
+	public void setArrayTopMenuId(String[] arrayTopMenuId) {
+		this.arrayTopMenuId = arrayTopMenuId;
 	}
 
 	/**
