@@ -227,6 +227,8 @@
         <typeAlias alias="NewAppRecommendSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq" />
         <!-- OpenApi Best Download App -->
         <typeAlias alias="BestDownloadAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq" />                
+        <!-- OpenApi PKG Name 기반 상품 정보 조회 -->
+        <typeAlias alias="SalesAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacReq" />                
         <!-- 상품 검색 요청(BY 상품명) -->
         <typeAlias alias="SearchAppNameSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacReq" />        
         <!-- 상품 검색 요청(BY 상품명) : no provisioning -->

@@ -1359,4 +1359,38 @@
          AND  PRODDESC.PROD_NM = #{searchValue}
          </if>
     </select>      
+    
+    <select id="searchSalesAppList" parameterType="SalesAppSacReq" resultType="MetaInfo">
+		SELECT *
+		  FROM (SELECT  ROW_NUMBER() OVER(PARTITION BY A.PROD_ID, F.VM_VER ORDER BY C.PROD_STATUS_CD, A.REG_DT) AS RNUM
+		              , A.PROD_ID
+		              , B.AID
+		              , B.VER_MAJOR || '.' || VER_MINOR AS PROD_VER
+		              , C.PROD_STATUS_CD
+		              , F.VM_VER
+		              , F.APK_VER
+		              , F.APK_PKG_NM
+		          FROM  TB_DP_PROD         A
+		              , TB_DP_APP_PROD     B
+		              , TB_DP_TENANT_PROD  C
+		              , TB_DP_SPRT_DEVICE  D
+		              , TB_CM_DEVICE       E
+		              , TB_DP_SUB_CONTENTS F
+		         WHERE  A.PROD_ID = B.PROD_ID
+		           AND  A.PROD_ID = C.PROD_ID
+		           AND  A.PROD_ID = D.PROD_ID
+		           AND  D.DEVICE_MODEL_CD = E.DEVICE_MODEL_CD
+		           AND  D.PROD_ID = F.PROD_ID
+		           AND  D.SUB_CONTENTS_ID = F.SUB_CONTENTS_ID
+		           AND  C.TENANT_ID = #{tenantId}
+		           AND  C.PROD_STATUS_CD = #{salesStatus}
+		           AND  E.REP_DEVICE_YN = 'Y'
+		           AND  E.USE_YN = 'Y'
+		           AND  E.UA_CD = #{uaCode}
+		           AND  F.SALE_YN = 'Y'
+		           AND  F.APK_PKG_NM = #{packName}
+		           AND  F.VM_VER LIKE '%' || #{osVersion} || '%'
+		       ) IA
+		 WHERE RNUM = 1
+    </select>
 </mapper>
