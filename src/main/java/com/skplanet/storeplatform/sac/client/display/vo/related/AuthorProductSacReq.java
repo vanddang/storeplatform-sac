@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.related;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
 import javax.validation.constraints.Pattern;
 
@@ -61,9 +62,11 @@ public class AuthorProductSacReq extends CommonInfo implements Serializable {
 	 * 
 	 * @param authorName
 	 *            String
+	 * @throws UnsupportedEncodingException
+	 *             UnsupportedEncodingException
 	 */
-	public void setAuthorName(String authorName) {
-		this.authorName = authorName;
+	public void setAuthorName(String authorName) throws UnsupportedEncodingException {
+		this.authorName = new String(authorName.getBytes("8859_1"), "UTF-8");
 	}
 
 	/**
