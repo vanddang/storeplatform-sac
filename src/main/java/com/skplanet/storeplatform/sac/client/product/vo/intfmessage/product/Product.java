@@ -266,6 +266,16 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private Integer freeItemAmt;
 
+	/**
+	 * 상품 실재 금액.
+	 */
+	private Integer prodRealreAmt;
+
+	/**
+	 * 상품 제공 금액.
+	 */
+	private Integer prodOffrAmt;
+
 	public String getSalesStatus() {
 		return this.salesStatus;
 	}
@@ -1072,6 +1082,36 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setFreeItemAmt(Integer freeItemAmt) {
 		this.freeItemAmt = freeItemAmt;
+	}
+
+	/**
+	 * @return the prodRealreAmt
+	 */
+	public Integer getProdRealreAmt() {
+		return this.prodRealreAmt;
+	}
+
+	/**
+	 * @param prodRealreAmt
+	 *            the prodRealreAmt to set
+	 */
+	public void setProdRealreAmt(Integer prodRealreAmt) {
+		this.prodRealreAmt = prodRealreAmt;
+	}
+
+	/**
+	 * @return the prodOffrAmt
+	 */
+	public Integer getProdOffrAmt() {
+		return this.prodOffrAmt;
+	}
+
+	/**
+	 * @param prodOffrAmt
+	 *            the prodOffrAmt to set
+	 */
+	public void setProdOffrAmt(Integer prodOffrAmt) {
+		this.prodOffrAmt = prodOffrAmt;
 	}
 
 }
