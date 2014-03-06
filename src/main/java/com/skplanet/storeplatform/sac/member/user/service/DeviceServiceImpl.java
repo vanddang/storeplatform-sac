@@ -880,25 +880,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 				if (!StringUtils.equals(nativeId, userMbrDevice.getNativeID()) && !isOpmd) {
 
-					String icasImei = null;
-
-					LOGGER.info("::::  ICAS 연동 :::: deviceId : {}", deviceId);
-
-					if (!StringUtils.equals(this.commService.getMappingInfo(deviceId, "mdn").getMvnoCD(), "0")) { // MVNO
-
-						GetMvnoEcRes mvnoRes = this.commService.getMvService(deviceId);
-						icasImei = mvnoRes.getImeiNum();
-
-					} else {
-
-						GetCustomerEcRes costomerRes = this.commService.getCustomer(deviceId);
-						icasImei = costomerRes.getImeiNum();
-
-					}
-
-					LOGGER.info("::::  ICAS 연동 :::: icasImei : {}", icasImei);
-
-					if (StringUtils.equals(icasImei, nativeId)) {
+					if (this.isImeiEquality(deviceId, nativeId)) {
 						LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 						userMbrDevice.setNativeID(nativeId);
 					} else {
@@ -1509,5 +1491,39 @@ public class DeviceServiceImpl implements DeviceService {
 		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] SAC Response : {}", changedDeviceHistorySacRes);
 		return changedDeviceHistorySacRes;
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
+	 * isImeiEquality(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean isImeiEquality(String deviceId, String imei) {
+
+		String icasImei = null;
+
+		LOGGER.info("::::  ICAS 연동 :::: deviceId : {}", deviceId);
+
+		if (!StringUtils.equals(this.commService.getMappingInfo(deviceId, "mdn").getMvnoCD(), "0")) { // MVNO
+
+			GetMvnoEcRes mvnoRes = this.commService.getMvService(deviceId);
+			icasImei = mvnoRes.getImeiNum();
+
+		} else {
+
+			GetCustomerEcRes costomerRes = this.commService.getCustomer(deviceId);
+			icasImei = costomerRes.getImeiNum();
+
+		}
+
+		LOGGER.info("::::  ICAS 연동 :::: icasImei : {}", icasImei);
+
+		if (StringUtils.equals(imei, icasImei)) {
+			return true;
+		}
+
+		return false;
 	}
 }

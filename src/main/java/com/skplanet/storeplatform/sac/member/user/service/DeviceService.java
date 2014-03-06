@@ -193,9 +193,22 @@ public interface DeviceService {
 	 *            SacRequestHeader
 	 * @param historyRequest
 	 *            ChangedDeviceHistoryReq
-	 * @return
+	 * @return ChangedDeviceHistoryRes
 	 */
 	public ChangedDeviceHistoryRes searchChangedDeviceHistory(SacRequestHeader sacHeader,
 			@Validated @RequestBody ChangedDeviceHistoryReq historyRequest);
+
+	/**
+	 * <pre>
+	 * ICAS 연동하여 imei 일치여부 판단.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 *            String
+	 * @param imei
+	 *            String
+	 * @return boolean
+	 */
+	public boolean isImeiEquality(String deviceId, String imei);
 
 }

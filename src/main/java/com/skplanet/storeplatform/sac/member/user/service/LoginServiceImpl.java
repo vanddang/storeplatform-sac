@@ -233,6 +233,49 @@ public class LoginServiceImpl implements LoginService {
 
 	}
 
+	/**
+	 * <pre>
+	 * MDN 로그인 정보 확인.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            AuthorizeByMdnReq
+	 * @return
+	 */
+	public String executeMdnLoginCheck(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
+
+		/* mdn 존재유무 확인 */
+		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+
+		if (deviceInfo == null) {
+
+			/* 변동성 대상체크 */
+
+		} else {
+
+			/* SKT인경우 icas연동하여 imei 비교 */
+			if (StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+					&& !this.deviceService.isImeiEquality(req.getDeviceId(), req.getNativeId())) {
+
+				/* 추가인증 수단을 조회하여 내려준다. */
+				throw new StorePlatformException("", "추가인증수단 내려줌");
+
+			}
+
+			/* DB imei 비교 */
+			if (StringUtil.isNotEmpty(deviceInfo.getNativeId()) && StringUtil.equals(deviceInfo.getNativeId(), req.getNativeId())) {
+
+				if (!StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+					throw new StorePlatformException("", "IMEI 값이 상이합니다.");
+				}
+			}
+
+		}
+
+		return "";
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
