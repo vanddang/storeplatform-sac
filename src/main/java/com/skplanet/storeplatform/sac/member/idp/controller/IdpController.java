@@ -67,9 +67,7 @@ public class IdpController {
 						provisioningReq.getReqParam()));
 			}
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			// TODO : SAC 정의 Exception으로 변경 하기 - 임재호 2014.1.8
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e);
 		}
 		LOGGER.info("#### E/C => SAC [Inbound] End ####");
 		return provisioningRes;
