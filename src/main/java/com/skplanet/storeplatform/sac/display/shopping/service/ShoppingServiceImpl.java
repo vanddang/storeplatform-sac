@@ -623,6 +623,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			res = new ShoppingThemeRes();
 			List<Promotion> promotionList = new ArrayList<Promotion>();
 			res.setPromotionList(promotionList);
+			List<Product> productList = new ArrayList<Product>();
+			res.setProductList(productList);
 			commonResponse.setTotalCount(0);
 			res.setCommonResponse(commonResponse);
 		}
