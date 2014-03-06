@@ -121,12 +121,7 @@
 		                   AND A.LIST_ID = #{listId}
 		                   AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
 		                   AND B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
-		                   <if test='topMenuId == "DP16"'>
-		                   AND B.PROD_ID = C.PART_PROD_ID  /* MUSIC 에피소드 */
-		                   </if>
-		                   <if test='topMenuId != "DP16"'>
-		                   AND B.PROD_ID = C.PROD_ID  /* EBOOK/COMIC 채널 */
-		                   </if>
+		                   AND B.PROD_ID = C.PART_PROD_ID  /* 에피소드 */
 		                   AND C.PROD_RSHP_CD = 'DP010802'
 		                   AND B.PROD_ID = D.PROD_ID
 		                   AND D.USE_YN = 'Y'
