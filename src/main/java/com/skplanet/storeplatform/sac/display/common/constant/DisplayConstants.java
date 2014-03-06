@@ -572,19 +572,19 @@ public class DisplayConstants {
 	public static final String MEMBER_MAIN_STATUS_PAUSE = "US010204"; // 계정잠금/7일이용정지/30일이용정지/영구이용정지
 
 	/**
-	 * 일반 컬러링 메타 클래스 코드
+	 * 일반 컬러링 메타 클래스 코드.
 	 */
 	public static final String DP_MUSIC_NORMAL_COLORRING_META_CLASS_CD = "CT30";
 	/**
-	 * 롱 컬러링 메타 클래스 코드
+	 * 롱 컬러링 메타 클래스 코드.
 	 */
 	public static final String DP_MUSIC_LONG_COLORRING_META_CLASS_CD = "CT31";
 	/**
-	 * 일반 라이브벨 메타 클래스 코드
+	 * 일반 라이브벨 메타 클래스 코드.
 	 */
 	public static final String DP_MUSIC_NORMAL_BELL_META_CLASS_CD = "CT32";
 	/**
-	 * 고음질 라이브벨 메타 클래스 코드
+	 * 고음질 라이브벨 메타 클래스 코드.
 	 */
 	public static final String DP_MUSIC_HIGH_QUALITY_BELL_META_CLASS_CD = "CT33";
 
@@ -595,4 +595,14 @@ public class DisplayConstants {
 	public static final String DP_MUSIC_NORMAL_QUALITY = "normal";
 
 	public static final String DP_MUSIC_HIGH_QUALITY = "long";
+
+	/**
+	 * 부분유료화_부모상품.
+	 */
+	public static final String DP_PART_PARENT_CLSF_CD = "PD012301";
+
+	/**
+	 * 부분유료화_자식상품
+	 */
+	public static final String DP_PART_CHILD_CLSF_CD = "PD012302";
 }

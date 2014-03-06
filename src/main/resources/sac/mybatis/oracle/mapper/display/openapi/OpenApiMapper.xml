@@ -1301,4 +1301,62 @@
                 AND   ROWNUM <= #{count}
               ]]> 
     </select>
+    
+    <!-- APP 목록 요청-->
+    <select id="getAppList" parameterType="map" resultType="MetaInfo">
+       SELECT  NVL(APPPROD.AID, '') AS AID
+		       ,PRODDESC.PROD_NM
+		       ,PROD.REG_DT
+		       ,TENANTPROD.PROD_STATUS_CD
+         FROM  TB_DP_PROD PROD 
+		      ,TB_DP_APP_PROD APPPROD
+		      ,TB_DP_PROD_DESC PRODDESC
+		      ,TB_DP_TENANT_PROD TENANTPROD
+		WHERE PROD.PROD_ID = APPPROD.PROD_ID
+		 AND  PROD.PROD_ID = PRODDESC.PROD_ID
+		 AND  PRODDESC.LANG_CD = #{lang}
+		 AND  PROD.PROD_ID = TENANTPROD.PROD_ID
+		 AND  TENANTPROD.TENANT_ID = #{tenantId}
+		  <if test='admin != "Y"'>
+		 AND  PROD.REG_ID = #{regId}
+		 AND  PROD.SELLER_MBR_NO = #{mbrNo}
+		 </if>
+		 AND  (APPPROD.PART_PARENT_CLSF_CD = 'PD012301' OR APPPROD.PART_PARENT_CLSF_CD is null)
+		 <if test='searchType == "AID"'>
+		 AND  APPPROD.AID = #{searchValue}
+		 </if>
+		 <if test='searchType == "APP"'>
+		 AND  PRODDESC.PROD_NM = #{searchValue}
+		 </if>
+    </select>
+    
+    <select id="getAppDetail" parameterType="map" resultType="MetaInfo">
+       
+    </select>
+    
+     <!-- 개발APP 목록 요청-->
+    <select id="getPDAppList" parameterType="map" resultType="MetaInfo">
+       SELECT  
+                NVL(APPPROD.AID, '') AS AID
+               ,PRODDESC.PROD_NM
+               ,PROD.REG_DT
+               ,TENANTPROD.PROD_STATUS_CD
+         FROM  TB_DP_PROD PROD 
+              ,TB_DP_APP_PROD APPPROD
+              ,TB_DP_PROD_DESC PRODDESC
+              ,TB_DP_TENANT_PROD TENANTPROD
+        WHERE PROD.PROD_ID = APPPROD.PROD_ID
+         AND  PROD.PROD_ID = PRODDESC.PROD_ID
+         AND  PRODDESC.LANG_CD = #{lang}
+         AND  PROD.PROD_ID = TENANTPROD.PROD_ID
+         AND  TENANTPROD.TENANT_ID = #{tenantId}
+         AND  PROD.REG_ID = #{regId}
+         AND  (APPPROD.PART_PARENT_CLSF_CD = 'PD012301' OR APPPROD.PART_PARENT_CLSF_CD is null)
+         <if test='searchType == "AID"'>
+         AND  APPPROD.AID = #{searchValue}
+         </if>
+         <if test='searchType == "APP"'>
+         AND  PRODDESC.PROD_NM = #{searchValue}
+         </if>
+    </select>      
 </mapper>

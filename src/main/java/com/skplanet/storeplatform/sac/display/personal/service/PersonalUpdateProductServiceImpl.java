@@ -241,71 +241,58 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 				if (memberType.equals("updatedList")) {
 					this.log.debug("##### Tstore user process start!!!!!!!!!");
 					// 회원일 경우 회원 상태 조회
+					this.log.debug("##### check user status");
+					String userKey = req.getUserKey();
+					this.log.debug("##### userKey :: {} " + userKey);
+					SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+					List<String> userKeyList = new ArrayList<String>();
+					userKeyList.add(userKey);
+					searchUserSacReq.setUserKeyList(userKeyList);
+					SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
+					Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
+					UserInfoSac userInfoSac = userInfo.get(userKey);
+					String userMainStatus = userInfoSac.getUserMainStatus();
+					this.log.debug("##### userMainStatus :: {} " + userMainStatus);
+
 					try {
-						this.log.debug("##### check user status");
-						String userKey = req.getUserKey();
-						this.log.debug("##### userKey :: {} " + userKey);
-						SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-						List<String> userKeyList = new ArrayList<String>();
-						userKeyList.add(userKey);
-						searchUserSacReq.setUserKeyList(userKeyList);
-						SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
-						Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
-						UserInfoSac userInfoSac = userInfo.get(userKey);
-						String userMainStatus = userInfoSac.getUserMainStatus();
-						this.log.debug("##### userMainStatus :: {} " + userMainStatus);
-						// TODO osm1021 예외 처리 및 pass가 안 될때 처리 정리 필요
-						// 정상 일시 정지 회원이 아닐 경우 -> 구매 내역이 없는 것으로 간주하고 Update 대상 무료 앱만 Response한다.
-						if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
-								|| DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
-							isNormalUser = true;
-							this.log.debug("##### This user is normal user!!!!");
+						this.log.debug("##### Purchase check start!!!!!!!!!");
+						List<ProductListSacIn> productListSacInList = new ArrayList<ProductListSacIn>();
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+						String endDate = sdf.format(new java.util.Date());
+
+						this.log.debug("##### endDate :: {}", endDate);
+						for (String prodId : listPid) {
+							ProductListSacIn productListSacIn = new ProductListSacIn();
+							productListSacIn.setProdId(prodId);
+							productListSacInList.add(productListSacIn);
+						}
+
+						HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
+						historyListSacReq.setTenantId(tenantHeader.getTenantId());
+						historyListSacReq.setUserKey(req.getUserKey());
+						historyListSacReq.setDeviceKey(req.getDeviceKey());
+						historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+						historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+						historyListSacReq.setEndDt(endDate);
+						historyListSacReq.setOffset(1);
+						historyListSacReq.setCount(1000);
+						historyListSacReq.setProductList(productListSacInList);
+
+						// 구매내역 조회 실행
+						HistoryListSacInRes historyListSacRes = this.historyInternalSCI
+								.searchHistoryList(historyListSacReq);
+						if (historyListSacRes != null) {
+							listPrchs = historyListSacRes.getHistoryList();
+							this.log.debug("##### Purchase check result size : {}", listPrchs.size());
+							this.log.debug("##### Purchase check result  : {}", listPrchs);
 						} else {
-							this.log.debug("##### This user is unnormal user!!!! Skip the purchase check!!!!!!!");
+							this.log.debug("##### No purchase result!!");
 						}
 					} catch (Exception e) {
-						throw new StorePlatformException("SAC_DSP_1002", e);
+						// Exception 무시
+						this.log.error("Exception has occured using search purchase history!!!!!!!!!!!", e);
 					}
 
-					if (isNormalUser) {
-						try {
-							this.log.debug("##### Purchase check start!!!!!!!!!");
-							List<ProductListSacIn> productListSacInList = new ArrayList<ProductListSacIn>();
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-							String endDate = sdf.format(new java.util.Date());
-
-							this.log.debug("##### endDate :: {}", endDate);
-							for (String prodId : listPid) {
-								ProductListSacIn productListSacIn = new ProductListSacIn();
-								productListSacIn.setProdId(prodId);
-								productListSacInList.add(productListSacIn);
-							}
-
-							HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
-							historyListSacReq.setTenantId(tenantHeader.getTenantId());
-							historyListSacReq.setUserKey(req.getUserKey());
-							historyListSacReq.setDeviceKey(req.getDeviceKey());
-							historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-							historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-							historyListSacReq.setEndDt(endDate);
-							historyListSacReq.setOffset(1);
-							historyListSacReq.setCount(1000);
-							historyListSacReq.setProductList(productListSacInList);
-
-							// 구매내역 조회 실행
-							HistoryListSacInRes historyListSacRes = this.historyInternalSCI
-									.searchHistoryList(historyListSacReq);
-							if (historyListSacRes != null) {
-								listPrchs = historyListSacRes.getHistoryList();
-								this.log.debug("##### Purchase check result size : {}", listPrchs.size());
-								this.log.debug("##### Purchase check result  : {}", listPrchs);
-							} else {
-								this.log.debug("##### No purchase result!!");
-							}
-						} catch (Exception e) {
-							throw new StorePlatformException("SAC_DSP_2001", e);
-						}
-					}
 					// mapReq.remove("PID_LIST");
 
 					String sProdAmt = "";

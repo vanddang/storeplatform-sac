@@ -199,31 +199,27 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 			 **************************************************************/
 			if (!listPid.isEmpty()) {
 
-				try {
-					this.log.debug("##### check user status");
-					String userKey = req.getUserKey();
-					this.log.debug("##### userKey :: {} " + userKey);
-					SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-					List<String> userKeyList = new ArrayList<String>();
-					userKeyList.add(userKey);
-					searchUserSacReq.setUserKeyList(userKeyList);
-					SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
-					Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
-					UserInfoSac userInfoSac = userInfo.get(userKey);
-					String userMainStatus = userInfoSac.getUserMainStatus();
+				this.log.debug("##### check user status");
+				String userKey = req.getUserKey();
+				this.log.debug("##### userKey :: {} " + userKey);
+				SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+				List<String> userKeyList = new ArrayList<String>();
+				userKeyList.add(userKey);
+				searchUserSacReq.setUserKeyList(userKeyList);
+				SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
+				Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
+				UserInfoSac userInfoSac = userInfo.get(userKey);
+				String userMainStatus = userInfoSac.getUserMainStatus();
 
-					this.log.debug("##### userMainStatus :: {} " + userMainStatus);
-					// TODO osm1021 예외 처리 및 pass가 안 될때 처리 정리 필요
-					// 정상 일시 정지 회원이 아닐 경우 -> 업데이트 내역이 없는 것으로 간주한다.
-					if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
-							|| DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
-						this.log.debug("##### This user is normal user!!!!");
-					} else {
-						this.log.debug("##### This user is unnormal user!!!!");
-						throw new StorePlatformException("SAC_DSP_0006");
-					}
-				} catch (Exception e) {
-					throw new StorePlatformException("SAC_DSP_1002", e);
+				this.log.debug("##### userMainStatus :: {} " + userMainStatus);
+				// TODO osm1021 예외 처리 및 pass가 안 될때 처리 정리 필요
+				// 정상 일시 정지 회원이 아닐 경우 -> 업데이트 내역이 없는 것으로 간주한다.
+				if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
+						|| DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
+					this.log.debug("##### This user is normal user!!!!");
+				} else {
+					this.log.debug("##### This user is unnormal user!!!!");
+					throw new StorePlatformException("SAC_DSP_0006");
 				}
 
 				// 기구매 체크
@@ -244,7 +240,8 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 					ExistenceListRes existenceListRes = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
 					listPrchs = existenceListRes.getExistenceListRes();
 				} catch (Exception e) {
-					throw new StorePlatformException("SAC_DSP_2002", e);
+					// Exception 무시
+					this.log.error("Exception has occured using existence purchase!!!!!!!!!!!", e);
 				}
 				if (!listPrchs.isEmpty()) {
 					String sPid = "";
