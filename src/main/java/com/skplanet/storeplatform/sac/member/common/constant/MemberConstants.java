@@ -126,13 +126,15 @@ public final class MemberConstants {
 	public static final String DEVICE_CHANGE_TYPE_USER_SELECT = "US012001"; // 사용자선택
 	public static final String DEVICE_CHANGE_TYPE_MODEL_CHANGE = "US012002"; // 기기변경
 	public static final String DEVICE_CHANGE_TYPE_NUMBER_CHANGE = "US012003"; // 번호변경
-	public static final String DEVICE_CHANGE_TYPE_NUMBER_SECEDE = "US012004"; // 단말해지
-	public static final String DEVICE_CHANGE_TYPE_JOIN_COMPLETE = "US012005"; // 가입승인
-	public static final String DEVICE_CHANGE_TYPE_EMAIL_COMPLETE = "US012006"; // 이메일변경승인
-	public static final String DEVICE_CHANGE_TYPE_EMAIL_JOIN_COMPLETE = "US012007"; // 가입승인만료
-	public static final String DEVICE_CHANGE_TYPE_MODIFY_PROFILE = "US012008"; // 회원정보수정
-	public static final String DEVICE_CHANGE_TYPE_JOIN_ECG = "US012009"; // 부가서비스가입
-	public static final String DEVICE_CHANGE_TYPE_SECEDE_ECG = "US012010"; // 부가서비스해지
+	public static final String DEVICE_CHANGE_TYPE_NAME_CHANGE = "US012004"; // 명의변경
+	public static final String DEVICE_CHANGE_TYPE_NUMBER_SECEDE = "US012005"; // 단말해지
+	public static final String DEVICE_CHANGE_TYPE_JOIN_COMPLETE = "US012006"; // 가입승인
+	public static final String DEVICE_CHANGE_TYPE_EMAIL_COMPLETE = "US012007"; // 이메일변경승인
+	public static final String DEVICE_CHANGE_TYPE_EMAIL_JOIN_COMPLETE = "US012008"; // 가입승인만료
+	public static final String DEVICE_CHANGE_TYPE_MODIFY_PROFILE = "US012009"; // 회원정보수정
+	public static final String DEVICE_CHANGE_TYPE_JOIN_ECG = "US012010"; // 부가서비스가입
+	public static final String DEVICE_CHANGE_TYPE_SECEDE_ECG = "US012011"; // 부가서비스해지
+	public static final String DEVICE_CHANGE_TYPE_NUMBER_MOVE = "US012012"; // 번호이동
 
 	/** 미지원 단말. */
 	public static final String NOT_SUPPORT_HP_CORP = "NSH";

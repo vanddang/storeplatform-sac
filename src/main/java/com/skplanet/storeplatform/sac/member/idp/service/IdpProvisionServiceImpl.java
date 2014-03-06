@@ -170,7 +170,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userMbrDevice.setDeviceModelNo(modelCd);
 				userMbrDevice.setSvcMangNum(svcMngNum);
 				userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 번호변경
+				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_MOVE); // 휴대기기 변경 유형코드 번호이동
 
 				List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 				UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
@@ -255,6 +255,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userMbrDevice.setDeviceKey(deviceKey);
 				userMbrDevice.setDeviceModelNo(modelCd);
 				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 : 번호변경
+				userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 
 				List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 				UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
