@@ -130,6 +130,7 @@
                                   , 1 )
                         ELSE 1
                     END ) = 1
+            AND   ROWNUM BETWEEN #{START_ROW} AND #{END_ROW}                    
     </select>
 
     <select id="getThemeRecommendList" parameterType="java.util.Map" resultType="Appguide">
