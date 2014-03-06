@@ -55,7 +55,7 @@ import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class CreateSaveAndSyncByMacTest {
+public class CreateSaveAndSyncTest {
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -80,10 +80,10 @@ public class CreateSaveAndSyncByMacTest {
 	 * </pre>
 	 */
 	@Test
-	public void TEST_A_MAC가가입_법정대리인() {
+	public void TEST_A_SaveAndSync가입() {
 
 		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
-		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createSaveAndSyncByMac/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createSaveAndSync/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-sac-device-info", "model=\"SHW-M110S\",dpi=\"320\",resolution=\"480*720\",os=\"Android/4.0.4\",pkg=\"com.skt.skaf.A000Z00040/37\",svc=\"SHOPCLIENT/4.3\"")
 				.requestBody(new RequestBodySetter() {
