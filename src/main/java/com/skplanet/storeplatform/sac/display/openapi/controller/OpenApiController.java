@@ -31,6 +31,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendS
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchSellerNameSacReq;
@@ -42,6 +44,7 @@ import com.skplanet.storeplatform.sac.display.openapi.service.BestDownloadAppSer
 import com.skplanet.storeplatform.sac.display.openapi.service.DownloadBestService;
 import com.skplanet.storeplatform.sac.display.openapi.service.NewAppRecommendService;
 import com.skplanet.storeplatform.sac.display.openapi.service.NoProvisionService;
+import com.skplanet.storeplatform.sac.display.openapi.service.SalesAppService;
 import com.skplanet.storeplatform.sac.display.openapi.service.SearchAppNameService;
 import com.skplanet.storeplatform.sac.display.openapi.service.SearchSellerNameService;
 
@@ -78,6 +81,9 @@ public class OpenApiController {
 
 	@Autowired
 	private SearchSellerNameService searchSellerNameService;
+
+	@Autowired
+	private SalesAppService salesAppService;
 
 	/**
 	 * <pre>
@@ -226,4 +232,25 @@ public class OpenApiController {
 		return this.noProvisionService.searchProductByNameNoProvisioningList(noProvisionSacReq, requestheader);
 	}
 
+	/**
+	 * <pre>
+	 * PKG Name 기반 상품 정보 조회.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param salesAppSacReq
+	 *            salesAppSacReq
+	 * @return SalesAppSacRes
+	 */
+	@RequestMapping(value = "/salesApp/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public SalesAppSacRes searchSalesAppList(SacRequestHeader requestheader, @Validated SalesAppSacReq salesAppSacReq) {
+		this.log.debug("----------------------------------------------------------------");
+		this.log.debug("[searchSalesAppList] requestheader\n", requestheader);
+		this.log.debug("[searchSalesAppList] salesAppSacReq\n", salesAppSacReq);
+		this.log.debug("----------------------------------------------------------------");
+
+		return this.salesAppService.searchSalesAppList(requestheader, salesAppSacReq);
+	}
 }
