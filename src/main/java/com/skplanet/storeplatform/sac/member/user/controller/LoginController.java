@@ -102,11 +102,11 @@ public class LoginController {
 	 *            AuthorizeSaveAndSyncByMacReq
 	 * @return AuthorizeSaveAndSyncByMacRes
 	 */
-	@RequestMapping(value = "/member/user/authorizeSaveAndSyncByMac/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/authorizeSaveAndSync/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
+	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSync(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
 
-		return this.loginService.executeAuthorizeSaveAndSyncByMac(requestHeader, req);
+		return this.loginService.executeAuthorizeSaveAndSync(requestHeader, req);
 
 	}
 }

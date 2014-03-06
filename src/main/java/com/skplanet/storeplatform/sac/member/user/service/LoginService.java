@@ -61,6 +61,6 @@ public interface LoginService {
 	 *            AuthorizeSaveAndSyncByMacReq
 	 * @return AuthorizeSaveAndSyncByMacRes
 	 */
-	public AuthorizeSaveAndSyncByMacRes executeAuthorizeSaveAndSyncByMac(SacRequestHeader requestHeader, AuthorizeSaveAndSyncByMacReq req);
+	public AuthorizeSaveAndSyncByMacRes executeAuthorizeSaveAndSync(SacRequestHeader requestHeader, AuthorizeSaveAndSyncByMacReq req);
 
 }
