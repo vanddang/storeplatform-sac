@@ -1719,6 +1719,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setPrice(episodePrice);
 
 							// 에피소드 구매내역 정보
+							boolean purchaseFlag = true;
 							String prchsId = null;
 							String prchsDt = null;
 							String prchsState = null;
@@ -1771,15 +1772,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 									}
 								}
 							} catch (Exception ex) {
-								throw new StorePlatformException("SAC_DSP_2001", "구매내역 조회 ", ex);
+								purchaseFlag = false;
+								this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+								// throw new StorePlatformException("SAC_DSP_2001", "구매내역 조회 ", ex);
 							}
-							if (StringUtils.isNotEmpty(prchsId)) {
-								episodeShopping.setPurchaseId(prchsId);
-								episodeShopping.setPurchaseProdId(episodeShopping.getPartProdId());
-								episodeShopping.setPurchaseDt(prchsDt);
-								episodeShopping.setPurchaseState(prchsState);
-								// 구매 정보
-								product.setPurchase(this.commonGenerator.generatePurchase(episodeShopping));
+							if (purchaseFlag) {
+								if (StringUtils.isNotEmpty(prchsId)) {
+									episodeShopping.setPurchaseId(prchsId);
+									episodeShopping.setPurchaseProdId(episodeShopping.getPartProdId());
+									episodeShopping.setPurchaseDt(prchsDt);
+									episodeShopping.setPurchaseState(prchsState);
+									// 구매 정보
+									product.setPurchase(this.commonGenerator.generatePurchase(episodeShopping));
+								}
 							}
 
 							// 에피소드 날짜 권한 정보
