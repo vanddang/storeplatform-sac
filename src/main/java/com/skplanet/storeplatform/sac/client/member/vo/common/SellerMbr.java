@@ -250,7 +250,7 @@ public class SellerMbr extends CommonInfo {
 	private String subSellerEmail;
 	private String subSellerPhone;
 	private String subSellerPhoneCountry;
-	private String subRightProfile;
+	private String subSellerCateList;
 	private String subRegDate;
 
 	public String getSubRegDate() {
@@ -301,12 +301,12 @@ public class SellerMbr extends CommonInfo {
 		this.subSellerPhoneCountry = subSellerPhoneCountry;
 	}
 
-	public String getSubRightProfile() {
-		return this.subRightProfile;
+	public String getSubSellerCateList() {
+		return this.subSellerCateList;
 	}
 
-	public void setSubRightProfile(String subRightProfile) {
-		this.subRightProfile = subRightProfile;
+	public void setSubSellerCateList(String subSellerCateList) {
+		this.subSellerCateList = subSellerCateList;
 	}
 
 	public String getSellerBizAddress() {
