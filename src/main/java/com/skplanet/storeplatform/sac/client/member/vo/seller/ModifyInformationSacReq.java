@@ -85,6 +85,8 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String repPhone;
 	/** 대표 Email. */
 	private String repEmail;
+	/** 웹사이트. */
+	private String website;
 
 	/**
 	 * @return the sellerKey
@@ -534,6 +536,21 @@ public class ModifyInformationSacReq extends CommonInfo {
 	 */
 	public void setRepEmail(String repEmail) {
 		this.repEmail = repEmail;
+	}
+
+	/**
+	 * @return the website
+	 */
+	public String getWebsite() {
+		return this.website;
+	}
+
+	/**
+	 * @param website
+	 *            the website to set
+	 */
+	public void setWebsite(String website) {
+		this.website = website;
 	}
 
 }
