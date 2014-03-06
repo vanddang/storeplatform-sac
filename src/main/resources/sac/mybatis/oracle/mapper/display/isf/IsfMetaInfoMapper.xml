@@ -3,7 +3,7 @@
 <mapper namespace="Isf.MetaInfo">
     <select id="getMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
        SELECT /* IsfMetaInfoMapper.xml, getMusicMetaInfo, Yun JuYoung, 2014-02-06 */
-            , CP.PROD_ID 
+              CP.PROD_ID 
             , CP.PART_PROD_ID
             , C.MENU_ID
             , CD.MENU_NM
