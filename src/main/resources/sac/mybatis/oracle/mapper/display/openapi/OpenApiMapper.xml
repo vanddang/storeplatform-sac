@@ -483,7 +483,18 @@
              , KA.AID                           AS AID
              , KA.PROD_NM                       AS PROD_NM
              , KA.PROD_BASE_DESC                AS PROD_BASE_DESC
-             , KA.TOP_MENU_ID
+             , KA.TOP_MENU_ID                   AS TOP_MENU_ID
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.TOP_MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS TOP_MENU_NM
+             , KA.MENU_ID                       AS MENU_ID
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS MENU_NM 
              , NVL(KA.PROD_AMT, 0 )             AS PROD_AMT
              , NVL(KA.AVG_EVLU_SCORE, 0)        AS AVG_EVLU_SCORE
              , NVL(KA.PRCHS_CNT, 0)             AS PRCHS_CNT
@@ -600,7 +611,18 @@
              , KA.AID                           AS AID
              , KA.PROD_NM                       AS PROD_NM
              , KA.PROD_BASE_DESC                AS PROD_BASE_DESC
-             , KA.TOP_MENU_ID
+             , KA.TOP_MENU_ID                   AS TOP_MENU_ID
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.TOP_MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS TOP_MENU_NM
+             , KA.MENU_ID                       AS MENU_ID
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS MENU_NM 
              , NVL(KA.PROD_AMT, 0 )             AS PROD_AMT
              , NVL(KA.AVG_EVLU_SCORE, 0)        AS AVG_EVLU_SCORE
              , NVL(KA.PRCHS_CNT, 0)             AS PRCHS_CNT
@@ -717,7 +739,18 @@
              , KA.AID                           AS AID
              , KA.PROD_NM                       AS PROD_NM
              , KA.PROD_BASE_DESC                AS PROD_BASE_DESC
-             , KA.TOP_MENU_ID
+             , KA.TOP_MENU_ID                   AS TOP_MENU_ID
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.TOP_MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS TOP_MENU_NM
+             , KA.MENU_ID                       AS MENU_ID
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS MENU_NM 
              , NVL(KA.PROD_AMT, 0 )             AS PROD_AMT
              , NVL(KA.AVG_EVLU_SCORE, 0)        AS AVG_EVLU_SCORE
              , NVL(KA.PRCHS_CNT, 0)             AS PRCHS_CNT
@@ -832,7 +865,18 @@
              , KA.AID                           AS AID
              , KA.PROD_NM                       AS PROD_NM
              , KA.PROD_BASE_DESC                AS PROD_BASE_DESC
-             , KA.TOP_MENU_ID
+             , KA.TOP_MENU_ID                   AS TOP_MENU_ID
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.TOP_MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS TOP_MENU_NM
+             , KA.MENU_ID                       AS MENU_ID
+             , (SELECT MENU_NM
+                  FROM TB_DP_MENU_CATEGORY_DESC
+                 WHERE MENU_ID = KA.MENU_ID
+                   AND LANG_CD = #{langCd}
+                   AND ROWNUM = 1) AS MENU_NM 
              , NVL(KA.PROD_AMT, 0 )             AS PROD_AMT
              , NVL(KA.AVG_EVLU_SCORE, 0)        AS AVG_EVLU_SCORE
              , NVL(KA.PRCHS_CNT, 0)             AS PRCHS_CNT

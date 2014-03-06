@@ -87,7 +87,6 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 				downloadBestSacReq.getListId());
 		downloadBestSacReq.setStdDt(stdDt);
 
-		int index = 0;
 		int offset = 1; // default
 		int count = 20; // default
 
