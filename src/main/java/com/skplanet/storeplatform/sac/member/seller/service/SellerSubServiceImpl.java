@@ -200,7 +200,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 				sellerMbrRes.setSubSellerEmail(sellerMbr.get(i).getSellerEmail());
 				sellerMbrRes.setSubSellerPhone(sellerMbr.get(i).getSellerPhone());
 				sellerMbrRes.setSubSellerPhoneCountry(sellerMbr.get(i).getSellerPhoneCountry());
-				sellerMbrRes.setSubRightProfile(sellerMbr.get(i).getRightProfileList());
+				sellerMbrRes.setSubSellerCateList(sellerMbr.get(i).getRightProfileList());
 				sList.add(sellerMbrRes);
 			}
 
@@ -221,7 +221,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 			sellerMbrRes.setSubSellerId(sellerMbr.getSellerID());
 			sellerMbrRes.setSubRegDate(sellerMbr.getRegDate());
 			sellerMbrRes.setSubSellerEmail(sellerMbr.getSellerEmail());
-			sellerMbrRes.setSubRightProfile(sellerMbr.getRightProfileList());
+			sellerMbrRes.setSubSellerCateList(sellerMbr.getRightProfileList());
 		}
 		return sellerMbrRes;
 	}
