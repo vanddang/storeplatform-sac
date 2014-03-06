@@ -104,6 +104,7 @@ public class SearchUserSCITest {
 
 		request.setUserKeyList(userKeyList);
 
+		LOGGER.debug("[SearchUserSCI-REQUEST] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		try {
 			SearchUserSacRes result = this.searchUserSCI.searchUserByUserKey(request);
 			LOGGER.debug("[SearchUserSCI-REPONSE] : \n{}",
@@ -129,6 +130,7 @@ public class SearchUserSCITest {
 
 		request.setUserKeyList(userKeyList);
 
+		LOGGER.debug("[SearchUserSCI-REQUEST] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		try {
 			SearchUserSacRes result = this.searchUserSCI.searchUserByUserKey(request);
 			LOGGER.debug("[SearchUserSCI-REPONSE] : \n{}",

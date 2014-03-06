@@ -73,6 +73,8 @@ public class DeviceSCITest {
 		SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
 		request.setUserKey("US201402110557052730002230");
 		request.setDeviceKey("DE201402120409541480001552");
+
+		LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
 		assertThat(result.getDeviceId(), notNullValue());
 
@@ -90,6 +92,8 @@ public class DeviceSCITest {
 		SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
 		request.setUserKey("US201401241840125650000649");
 		request.setDeviceKey("DE201401241840125800000296");
+
+		LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		try {
 			SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
 			assertEquals(result.getDeviceId(), null);
@@ -116,6 +120,8 @@ public class DeviceSCITest {
 		request.setUserKey("IF1023321743220110209212558");
 		request.setDeviceId("01088870008");
 
+		LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+
 		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 		assertEquals(result.getIsChanged(), "Y");
 		assertThat(result.getDeviceKey(), notNullValue());
@@ -137,6 +143,7 @@ public class DeviceSCITest {
 		request.setUserKey("IF1023321743220110209212558");
 		request.setDeviceKey("01088870008");
 
+		LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 		assertEquals(result.getIsChanged(), "Y");
 		assertEquals(result.getDeviceKey(), request.getDeviceKey());
@@ -154,6 +161,7 @@ public class DeviceSCITest {
 		request.setUserKey("US201401211721196430000223");
 		request.setDeviceId("01088870008");
 
+		LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 		assertEquals(result.getIsChanged(), "N");
 		assertThat(result.getDeviceKey(), notNullValue());
@@ -178,6 +186,7 @@ public class DeviceSCITest {
 		request.setUserKey("US201401211718340700000220");
 		request.setDeviceKey("DE201401211718343860000107");
 
+		LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 		assertEquals(result.getIsChanged(), "N");
 		assertEquals(result.getDeviceKey(), request.getDeviceKey());
@@ -195,6 +204,7 @@ public class DeviceSCITest {
 		request.setUserKey("US201401280453225170001216");
 		request.setDeviceKey("DE201401280453226380000643");
 
+		LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		try {
 			ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 			assertEquals(result.getIsChanged(), "N");
@@ -217,6 +227,7 @@ public class DeviceSCITest {
 		request.setUserKey("US201401280453225170001216");
 		request.setDeviceId("01066786240");
 
+		LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		try {
 			ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
 			assertEquals(result.getIsChanged(), "N");
