@@ -409,6 +409,7 @@
                    ,MENU_ID 
                    ,MENU_NM 
                    ,TOP_MENU_ID 
+                   ,META_CLSF_CD
                    ,(SELECT MENU_NM
                         FROM TB_DP_MENU_CATEGORY_DESC
                        WHERE MENU_ID = TOP_MENU_ID
@@ -462,7 +463,8 @@
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT    
                                ,I.PROD_CASE_CD  
-                               ,E.TOP_MENU_ID     
+                               ,E.TOP_MENU_ID
+                               ,J.META_CLSF_CD       
                                ,PI.FILE_PATH
                                ,PI.FILE_NM
 			                   , NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
