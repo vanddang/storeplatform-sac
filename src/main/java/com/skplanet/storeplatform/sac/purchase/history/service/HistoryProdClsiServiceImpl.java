@@ -80,15 +80,10 @@ public class HistoryProdClsiServiceImpl implements HistoryProdClsiService {
 		 * SC Request Setting End
 		 *************************************************/
 
-		// try {
-		// SC Call
+		/**
+		 * SC Call
+		 */
 		scResponse = this.historyProdClsiSCI.searchHistoryProdClsiList(scRequest);
-		// } catch (Exception ex) {
-		// TODO : 추후 메세지 추가후 처리함
-		// throw new StorePlatformException("구매SC 호출중 오류발생", ex);
-		// }
-
-		// SC객체를 SAC객체로 맵핑작업
 
 		/*************************************************
 		 * SC -> SAC Response Setting Start
