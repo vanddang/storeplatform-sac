@@ -15,8 +15,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncByMacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -108,17 +106,4 @@ public interface UserJoinService {
 	 */
 	public CreateSaveAndSyncRes createSaveAndSync(SacRequestHeader sacHeader, CreateSaveAndSyncReq req);
 
-	/**
-	 * <pre>
-	 * Save&Sync MAC 가가입.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            CreateSaveAndSyncByMacReq
-	 * @return CreateSaveAndSyncByMacRes
-	 * 
-	 */
-	public CreateSaveAndSyncByMacRes createSaveAndSyncByMac(SacRequestHeader sacHeader, CreateSaveAndSyncByMacReq req);
 }

@@ -54,8 +54,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncByMacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -571,23 +569,31 @@ public class UserJoinServiceImpl implements UserJoinService {
 	public CreateSaveAndSyncRes createSaveAndSync(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
 
 		/**
-		 * 결과 세팅
+		 * 모번호 조회 (989 일 경우만)
 		 */
-		CreateSaveAndSyncRes response = new CreateSaveAndSyncRes();
-		response.setUserKey("");
-		response.setDeviceKey("");
+		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
-		return response;
+		/**
+		 * 필수 약관 동의여부 체크
+		 */
+		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
+			throw new StorePlatformException("SAC_MEM_1100");
+		}
 
-	}
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MACADDRESS)) {
 
-	@Override
-	public CreateSaveAndSyncByMacRes createSaveAndSyncByMac(SacRequestHeader sacHeader, CreateSaveAndSyncByMacReq req) {
+			LOGGER.info("## >> SAVE & SYNC MAC 가가입 START ===================================");
+
+		} else {
+
+			LOGGER.info("## >> SAVE & SYNC MDN 가입 START ===================================");
+
+		}
 
 		/**
 		 * 결과 세팅
 		 */
-		CreateSaveAndSyncByMacRes response = new CreateSaveAndSyncByMacRes();
+		CreateSaveAndSyncRes response = new CreateSaveAndSyncRes();
 		response.setUserKey("");
 		response.setDeviceKey("");
 
@@ -964,7 +970,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## >> ROOTING YN : {}", rooting);
 			if (StringUtils.equals(rooting, MemberConstants.USE_Y)) {
 				LOGGER.info("## >> ROOTING 단말 입니다.");
-				throw new StorePlatformException("SAC_MEM_1104");
+				throw new StorePlatformException("SAC_MEM_1105");
 			}
 
 		}

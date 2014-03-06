@@ -28,7 +28,7 @@ public final class MemberConstants {
 	public static final String SC_ERROR_NO_USERKEY = "SC_MEM_9995"; // 회원키 없음
 
 	/** SAC회원 결과 코드 */
-	public static final String SAC_ERROR_NO_ONEID = "SAC_MEM_1302"; //OneID 회원이 아님
+	public static final String SAC_ERROR_NO_ONEID = "SAC_MEM_1302"; // OneID 회원이 아님
 
 	/** EC IDP 에러 코드 문자열. */
 	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";
@@ -143,7 +143,7 @@ public final class MemberConstants {
 	/** DeviceIdType 정의. */
 	public static final String DEVICE_ID_TYPE_MSISDN = "msisdn";
 	public static final String DEVICE_ID_TYPE_UUID = "uuid";
-	public static final String DEVICE_ID_TYPE_MACADDRESS = "mac";
+	public static final String DEVICE_ID_TYPE_MACADDRESS = "macaddress";
 
 	/** 실명인증 수단 코드 판단 값. */
 	public static final String REAL_NAME_AUTH_TYPE_MOBILE = "1"; // 휴대폰
