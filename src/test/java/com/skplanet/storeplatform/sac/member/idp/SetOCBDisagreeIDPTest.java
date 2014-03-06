@@ -31,16 +31,16 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
  * 
  * Calss 설명
  * 
- * Updated on : 2014. 1. 17. Updated by : 이정숙, 인크로스
+ * Updated on : 2014. 1. 17. Updated by : Lee, Jung suk, incross.
  */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class InvalidUserTelNoTest {
+public class SetOCBDisagreeIDPTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(InvalidUserTelNoTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SetOCBDisagreeIDPTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -59,32 +59,37 @@ public class InvalidUserTelNoTest {
 	}
 
 	/**
+	 * 
+	 * 
 	 * <pre>
-	 * 휴대폰소유변경정보배포.
-	 * 성공 Case
+	 * OCB해지동의
 	 * </pre>
 	 */
 	@Test
-	public void invalidUserTelNo01() {
+	public void updateUserPwdIDPTest01() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						ProvisioningReq req = new ProvisioningReq();
-						req.setCmd("RXInvalidUserTelNoIDP");
+						req.setCmd("RXSetOCBDisagreeIDP");
 						HashMap resultMap = new HashMap();
-						resultMap.put("systemID", "W");
+
+						/*
+						 * "정상 ** cmd=RXUpdateUserPwdIDP&systemID=S001&tenantID=S01&sp_id=OMP10000&target_sst_cd=41100&
+						 * im_int_svc_no=900000083496&modify_req_date=20131001&modify_req_time=114559 "
+						 */
+						resultMap.put("systemID", "S001");
 						resultMap.put("tenantID", "S01");
 						resultMap.put("sp_id", "90000");
 						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", "999000545996");
-						resultMap.put("user_id", "test0127_01");
-						resultMap.put("user_tn", "01000000000");
-						resultMap.put("is_user_tn_own", "Y");
-						resultMap.put("modify_sst_code", "20100");
-						resultMap.put("modify_req_date", "20130423");
-						resultMap.put("modify_req_time", "112030");
+						resultMap.put("im_int_svc_no", "900000083838");
+						resultMap.put("user_id", "jsl201402260337");
+						resultMap.put("is_ocb_term_req", "N");
+						resultMap.put("ocb_term_date", "ocb_term_date");
+						resultMap.put("modify_req_date", "20131001");
+						resultMap.put("modify_req_time", "114559");
 
 						req.setReqParam(resultMap);
 
@@ -102,37 +107,5 @@ public class InvalidUserTelNoTest {
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
-
-	/**
-	 * <pre>
-	 * 휴대폰소유변경정보배포.
-	 * 실패 Case
-	 * user id 정보가 없을 경우
-	 * </pre>
-	 * 
-	 * @Test public void invalidUserTelNo02() {
-	 * 
-	 *       new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
-	 *       .requestBody(new RequestBodySetter() {
-	 * @Override public Object requestBody() { ProvisioningReq req = new ProvisioningReq();
-	 *           req.setCmd("RXInvalidUserTelNoIDP"); HashMap resultMap = new HashMap();
-	 * 
-	 *           resultMap.put("systemID", "S001"); resultMap.put("tenantID", "S01"); resultMap.put("sp_id", "90000");
-	 *           resultMap.put("target_sst_cd", "10100"); resultMap.put("im_int_svc_no", " 2222222"); //
-	 *           resultMap.put("user_id", "test"); resultMap.put("user_tn", "01011112222");
-	 *           resultMap.put("is_user_tn_own", "Y"); resultMap.put("modify_sst_code", "20100");
-	 *           resultMap.put("modify_req_date", "20130423"); resultMap.put("modify_req_time", "112030");
-	 * 
-	 *           req.setReqParam(resultMap);
-	 * 
-	 *           LOGGER.info("request param : {}", req.toString()); return req; } }).success(ProvisioningRes.class, new
-	 *           SuccessCallback() {
-	 * @Override public void success(Object result, HttpStatus httpStatus, RunMode runMode) { ProvisioningRes res =
-	 *           (ProvisioningRes) result; // res.get // assertThat(res.getSellerKey(), notNullValue());
-	 *           LOGGER.info("response param : {}", res.toString()); } }, HttpStatus.OK,
-	 *           HttpStatus.ACCEPTED).run(RunMode.JSON);
-	 * 
-	 *           }
-	 */
 
 }

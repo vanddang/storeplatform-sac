@@ -80,10 +80,10 @@ public class UpdateGuardianInfoTest {
 						resultMap.put("tenantID", "S01");
 						resultMap.put("sp_id", "OMP10000");
 						resultMap.put("target_sst_cd", "41100");
-						resultMap.put("im_int_svc_no", "900000083496");
+						resultMap.put("im_int_svc_no", "900000083838");
 						resultMap.put("parent_type", "0");
-						resultMap.put("parent_rname_auth_type", "1");
-						resultMap.put("parent_name", "김용석");
+						resultMap.put("parent_rname_auth_type", "3");
+						resultMap.put("parent_name", "임재호");
 						resultMap.put("parent_birthday", "19701111");
 
 						resultMap.put("parent_approve_sst_code", "1111");

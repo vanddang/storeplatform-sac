@@ -76,6 +76,10 @@ public class UpdateUserPwdIDPTest {
 						req.setCmd("RXUpdateUserPwdIDP");
 						HashMap resultMap = new HashMap();
 
+						/*
+						 * "정상 ** cmd=RXUpdateUserPwdIDP&systemID=S001&tenantID=S01&sp_id=OMP10000&target_sst_cd=41100&
+						 * im_int_svc_no=900000083496&modify_req_date=20131001&modify_req_time=114559 "
+						 */
 						resultMap.put("systemID", "S001");
 						resultMap.put("tenantID", "S01");
 						resultMap.put("sp_id", "90000");

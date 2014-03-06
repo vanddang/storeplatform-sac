@@ -81,6 +81,7 @@ public class ChangePWDIDPTest {
 						resultMap.put("sp_id", "90000");
 						resultMap.put("target_sst_cd", "10100");
 						resultMap.put("user_id", "sacagreeuser012405");
+						// resultMap.put("user_id", "123456");
 
 						req.setReqParam(resultMap);
 

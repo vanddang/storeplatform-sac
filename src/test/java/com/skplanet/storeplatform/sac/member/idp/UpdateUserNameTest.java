@@ -82,20 +82,20 @@ public class UpdateUserNameTest {
 						resultMap.put("trx_no", "1111");
 						resultMap.put("target_sst_cd", "10100");
 						resultMap.put("im_int_svc_no", "999900006999");
-						resultMap.put("user_name", "%EA%B9%80%EC%98%81%EC%84%9C");
+						resultMap.put("user_name", "테스트사용자");
 						resultMap.put("user_birthday", "19750212");
 						resultMap.put("user_sex", "M");
 						resultMap.put("is_rname_auth", "N");
 
 						resultMap.put("rname_auth_sst_code", "1111");
-						resultMap.put("rname_auth_type_cd", "R");
-						// resultMap
-						// .put("user_ci",
-						// "sbvfRbP/38g7U4TEZwWG5IexVllTKE2SkM3HXv+M6NEF1RCG5i85xaAVoh9GdWzhcta6D8wSGpLh7Nf0XxF5Pg==");
-						resultMap.put("user_ci", "");
+						resultMap.put("rname_auth_type_cd", "C");
+						resultMap
+								.put("user_ci",
+										"sbvfRbP/38g7U4TEZwWG5IexVllTKE2SkM3HXv+M6NEF1RCG5i85xaAVoh9GdWzhcta6D8wSGpLh7Nf0XxF5Pg==");
+						// resultMap.put("user_ci", "");
 						resultMap.put("user_di", "MC0GCCqGSIb3DQIJAyEAfWou0NPTinxWZBT+zJkd3jFIfVXwnZLzCRkO/KQfGCE=");
 						resultMap.put("rname_auth_date", "20130122162853");
-						resultMap.put("rname_auth_mns_code", "9");
+						resultMap.put("rname_auth_mns_code", "1");
 						resultMap.put("rname_auth_mbr_code", "10");
 						resultMap.put("modify_sst_code", "20100");
 						resultMap.put("modify_req_date", "20130423");
