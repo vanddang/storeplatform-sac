@@ -45,6 +45,7 @@
 		    , A.CONTENTS_TYPE_CD
 		    , CONCAT(A.FILE_PATH,A.FILE_NM) FILE_PATH
 /*		    , A.FILE_NM */
+            , A.REG_DT
 		FROM (
 		    SELECT 
 		        COUNT(1) OVER() TOTAL_COUNT
@@ -77,6 +78,7 @@
 		        , D.LANG_CD
 		        , L.FILE_PATH
 		        , L.FILE_NM
+		        , A.REG_DT
 		    FROM 
 		        TB_DP_PROD A /* 에피소드 */
 		        , TB_DP_MENU_CATEGORY_PROD_MAPG B

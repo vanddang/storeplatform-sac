@@ -185,9 +185,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 
 				preview = new Preview();
 				sourceList = new ArrayList<Source>();
-				sourceList.add(this.commonMetaInfo.generateSource(DisplayConstants.DP_PREVIEW_LQ,
-						categoryVodBox.getSamplUrl())); // 고화질
 				sourceList.add(this.commonMetaInfo.generateSource(DisplayConstants.DP_PREVIEW_HQ,
+						categoryVodBox.getSamplUrl())); // 고화질
+				sourceList.add(this.commonMetaInfo.generateSource(DisplayConstants.DP_PREVIEW_LQ,
 						categoryVodBox.getScSamplUrl())); // 저화질
 				preview.setSourceList(sourceList);
 				rights.setPreview(preview);

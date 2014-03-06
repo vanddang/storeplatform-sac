@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
@@ -52,6 +53,9 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
+	@Autowired
+	private CommonMetaInfoGenerator commonGenerator;
 
 	/**
 	 * 
@@ -134,9 +138,13 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+					retMetaInfo = this.commonDAO.queryForObject("SimilarProduct.selectMusicMetaInfo", reqMap,
+							MetaInfo.class); // 뮤직 메타
+					// retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap); // 뮤직 공통 메타
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+						product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
+						product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
 						productList.add(product);
 					}
 				} else {
