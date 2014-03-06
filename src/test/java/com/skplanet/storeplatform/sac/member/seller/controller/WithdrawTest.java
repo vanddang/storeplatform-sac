@@ -72,7 +72,7 @@ public class WithdrawTest {
 					@Override
 					public Object requestBody() {
 						WithdrawReq req = new WithdrawReq();
-						req.setSellerKey("IF102158942020090723111912");
+						req.setSellerKey("SE201403061128513840001456");
 						req.setSecedeReasonCode("US010401");
 						req.setSecedeReasonMessage("ID 변경");
 						LOGGER.debug("request param : {}", req.toString());
