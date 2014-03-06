@@ -48,6 +48,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
@@ -580,6 +581,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new StorePlatformException("SAC_MEM_1100");
 		}
 
+		/**
+		 * 회원 기가입 여부 체크
+		 */
+		this.checkAlreadyJoin(sacHeader, req.getDeviceId());
+
 		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MACADDRESS)) {
 
 			LOGGER.info("## >> SAVE & SYNC MAC 가가입 START ===================================");
@@ -972,6 +978,39 @@ public class UserJoinServiceImpl implements UserJoinService {
 				LOGGER.info("## >> ROOTING 단말 입니다.");
 				throw new StorePlatformException("SAC_MEM_1105");
 			}
+
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 기가입 여부 체크.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param deviceId
+	 *            기기 ID
+	 */
+	private void checkAlreadyJoin(SacRequestHeader sacHeader, String deviceId) {
+
+		try {
+			UserInfo userInfo = this.mcc.getUserBaseInfo("deviceId", deviceId, sacHeader);
+			/**
+			 * TODO 메인상태와 서브 상태가 정상일 경우만 기가입으로 보는지..??
+			 */
+			LOGGER.info("## 메인 상태 : {}", userInfo.getUserMainStatus());
+			LOGGER.info("## 서브 상태 : {}", userInfo.getUserSubStatus());
+			throw new StorePlatformException("SAC_MEM_1104");
+		} catch (StorePlatformException spe) {
+
+			/**
+			 * 회원 조회시 Error 일 경우 Skip.
+			 */
+			LOGGER.info("## 회원 조회시 Error 일 경우 Skip.......");
+			LOGGER.info("## Error Code : {}", spe.getErrorInfo().getCode());
+			LOGGER.info("## Error Msg  : {}", spe.getErrorInfo().getMessage());
 
 		}
 
