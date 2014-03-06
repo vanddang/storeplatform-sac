@@ -15,6 +15,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSubSellerReq
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSubSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSubSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSubSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerListRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerListResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerRequest;
@@ -145,11 +147,17 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 		SearchSubSellerListResponse schRes = this.sellerSCI.searchSubSellerList(schReq);
 
+		SearchLoginInfoRequest schReq2 = new SearchLoginInfoRequest();
+		schReq2.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		schReq2.setSessionKey(req.getSellerKey());
+		SearchLoginInfoResponse schRes2 = this.sellerSCI.searchLoginInfo(schReq2);
+
 		ListSubsellerRes response = new ListSubsellerRes();
 		response.setSellerID(schRes.getSellerID());
 		response.setSellerKey(schRes.getSellerKey());
 		response.setSubAccountCount(schRes.getSubAccountCount());
 		response.setSubSellerList(this.sellerMbrList(schRes.getSubSellerList()));// 판매자 정보 리스트
+		response.setRegDate(schRes2.getLoginInfo().getRegDate());
 
 		return response;
 	}
