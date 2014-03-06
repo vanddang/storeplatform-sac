@@ -3,8 +3,8 @@
 <mapper namespace="Isf.Appguide">
     <select id="getAppguideProdList" parameterType="java.util.Map" resultType="ProductBasicInfo">
     SELECT /* IsfAppguideMapper.xml, getAppguideProdList, Yun JuYoung, 2014-02-06 */
-                 COUNT(S.PROD_ID) OVER() AS TOTAL_COUNT
-               , S.*
+           COUNT(S.PROD_ID) OVER() AS TOTAL_COUNT
+         , S.*
       FROM
           (
           SELECT
