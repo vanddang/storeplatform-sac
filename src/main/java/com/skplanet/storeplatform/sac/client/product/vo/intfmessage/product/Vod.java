@@ -15,11 +15,12 @@ import java.util.List;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 
 /**
  * Interface Message Vod Value Object.
- *
+ * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -30,7 +31,8 @@ public class Vod extends CommonInfo implements Serializable {
 	private Chapter chapter; // 회차
 	private VideoInfo videoInfo; // 화질별 video 정보
 	private List<VideoInfo> videoInfoList; // 화질별 video 정보 List
-	private VodExplain vodExplain; // vod 정보
+	private VodExplain vodExplain; // vod 정보 (삭제 예정)
+	private Date date; // 날짜 정보
 
 	/**
 	 * Vod().
@@ -40,7 +42,7 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param runningTime
 	 *            runningTime
 	 * @param videoInfo
@@ -53,7 +55,7 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param runningTime
 	 *            runningTime
 	 * @param videoInfoList
@@ -111,11 +113,11 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * 화질별 video 정보 List.
 	 * </pre>
-	 *
+	 * 
 	 * @return VideoInfoList
 	 */
 	public List<VideoInfo> getVideoInfoList() {
@@ -123,11 +125,11 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * 화질별 video 정보 List.
 	 * </pre>
-	 *
+	 * 
 	 * @param videoInfoList
 	 *            videoInfoList
 	 */
@@ -136,11 +138,11 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * vod 정보.
 	 * </pre>
-	 *
+	 * 
 	 * @return VodExplain
 	 */
 	public VodExplain getVodExplain() {
@@ -148,15 +150,40 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * vod 정보.
 	 * </pre>
-	 *
+	 * 
 	 * @param vodExplain
 	 *            vodExplain
 	 */
 	public void setVodExplain(VodExplain vodExplain) {
 		this.vodExplain = vodExplain;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 날짜 정보.
+	 * </pre>
+	 * 
+	 * @return Date
+	 */
+	public Date getDate() {
+		return this.date;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 날짜 정보.
+	 * </pre>
+	 * 
+	 * @param date
+	 *            Date
+	 */
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }
