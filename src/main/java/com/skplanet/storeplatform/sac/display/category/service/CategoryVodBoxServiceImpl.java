@@ -39,7 +39,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Stor
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VodExplain;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategoryVodBox;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -105,7 +104,6 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		Vod vod;
 		VideoInfo videoInfo;
 		List<VideoInfo> videoInfoList;
-		VodExplain vodExplain;
 		Contributor contributor;
 		Play play;
 
@@ -128,15 +126,6 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				identifierList.add(this.commonMetaInfo.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
 						categoryVodBox.getChnlProdId()));
 				product.setIdentifierList(identifierList);
-
-				// /*
-				// * SupportList // 삭제 예정
-				// */
-				// supportList = new ArrayList<Support>();
-				// support = new Support();
-				// supportList.add(this.commonMetaInfo.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM,
-				// categoryVodBox.getBtvYn()));
-				// product.setSupportList(supportList);
 
 				/*
 				 * TITLE
@@ -232,9 +221,11 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				vod.setRunningTime(new Time(null, categoryVodBox.getEpsdPlayTm()));
 				vod.setChapter(new Chapter(categoryVodBox.getChapterUnit(), categoryVodBox.getChapter()));
 
-				vodExplain = new VodExplain();
-				vodExplain.setSaleDateInfo(categoryVodBox.getIssueDay());
-				vod.setVodExplain(vodExplain);
+				vod.setDate(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_RELEASE,
+						categoryVodBox.getIssueDay()));
+				// vodExplain = new VodExplain();
+				// vodExplain.setSaleDateInfo(categoryVodBox.getIssueDay());
+				// vod.setVodExplain(vodExplain);
 
 				videoInfoList = new ArrayList<VideoInfo>();
 
@@ -245,7 +236,6 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					videoInfo.setPixel(categoryVodBox.getNmRsltnNm());
 					videoInfo.setPictureSize(categoryVodBox.getNmDpPgRatioNm());
 					videoInfo.setVersion(categoryVodBox.getNmProdVer());
-					// videoInfo.setBtvcid(categoryVodBox.getNmBtvCid()); // 삭제 예정
 					videoInfo.setSize(categoryVodBox.getNmFileSize());
 					videoInfoList.add(videoInfo);
 				}
@@ -257,7 +247,6 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					videoInfo.setPixel(categoryVodBox.getSdRsltnNm());
 					videoInfo.setPictureSize(categoryVodBox.getSdDpPgRatioNm());
 					videoInfo.setVersion(categoryVodBox.getSdProdVer());
-					// videoInfo.setBtvcid(categoryVodBox.getSdBtvCid()); // 삭제 예정
 					videoInfo.setSize(categoryVodBox.getSdFileSize());
 					videoInfoList.add(videoInfo);
 				}
@@ -269,7 +258,6 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					videoInfo.setPixel(categoryVodBox.getHdRsltnNm());
 					videoInfo.setPictureSize(categoryVodBox.getHdDpPgRatioNm());
 					videoInfo.setVersion(categoryVodBox.getHdProdVer());
-					// videoInfo.setBtvcid(categoryVodBox.getHdBtvCid()); // 삭제 예정
 					videoInfo.setSize(categoryVodBox.getHdFileSize());
 					videoInfoList.add(videoInfo);
 				}
