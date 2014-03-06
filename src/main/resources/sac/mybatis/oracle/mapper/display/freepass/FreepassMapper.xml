@@ -227,7 +227,7 @@
     		        WHERE RS.PROD_ID=PD.PROD_ID AND RS.PART_PROD_ID = SP.PROD_ID
     		        AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} )
     		        AND DV.DEVICE_MODEL_CD = #{deviceModelCd}
-    		        AND DV.DEVICE_MODEL_CD = SP.DEVICE_MODEL_CD
+    		        /*AND DV.DEVICE_MODEL_CD = SP.DEVICE_MODEL_CD*/
     		        AND RS.PART_PROD_ID = EP.PROD_ID
     		        AND EP.PROD_ID = SC.PROD_ID
     		        AND EP.PROD_ID = ET.PROD_ID
