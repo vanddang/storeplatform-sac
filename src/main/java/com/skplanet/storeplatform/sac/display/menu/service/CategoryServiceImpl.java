@@ -198,7 +198,7 @@ public class CategoryServiceImpl implements CategoryService {
 						// 3Depth
 						if (subMenu.getMenuDepth() == 3 && menu.getMenuId().equals(subMenu.getUpMenuId())) {
 							MenuDetail menuDetail3Depth = new MenuDetail();
-							menuDetail3Depth.setMenuProductCount(menu.getMenuProdCnt());
+							menuDetail3Depth.setMenuProductCount(subMenu.getMenuProdCnt());
 							menuDetail3Depth.setBodyFileName(subMenu.getBodyFileNm());
 							menuDetail3Depth.setBodyFilePath(subMenu.getBodyFilePath());
 							menuDetail3Depth.setBodyFileSize(subMenu.getBodyFileSize());
