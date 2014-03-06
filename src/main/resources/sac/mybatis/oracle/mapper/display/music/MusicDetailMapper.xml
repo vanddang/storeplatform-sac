@@ -10,7 +10,7 @@
             TPRC.PROD_AMT,
             PDESC.PROD_NM,
             NVL(TS.AVG_EVLU_SCORE, 0.0) AS AVG_EVLU_SCORE,
-            NVL(TS.DWLD_CNT, 0) AS DWLD_CNT,
+            NVL(TS.PRCHS_CNT, 0) AS DWLD_CNT,
             NVL(TS.PATICPERS_CNT, 0) AS PATICPERS_CNT,
             PDESC.ARTIST1_ID,
             PDESC.ARTIST1_NM,
