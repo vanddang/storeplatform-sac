@@ -20,13 +20,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.mysql.jdbc.StringUtils;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -35,12 +37,12 @@ import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
- * App guide Version Service 인터페이스(CoreStoreBusiness) 구현체
+ * App guide 테마 추천 목록 Service 인터페이스(CoreStoreBusiness) 구현체
  * 
- * Updated on : 2014. 02. 27. Updated by : 윤주영, SK 플래닛.
+ * Updated on : 2014. 03. 06. Updated by : 윤주영, SK 플래닛.
  */
 @Service
-public class AppguideVersionServiceImpl implements AppguideVersionService {
+public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -53,20 +55,19 @@ public class AppguideVersionServiceImpl implements AppguideVersionService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.AppguideVersionServiceImpl#searchVersion(AppguideSacReq
+	 * @see
+	 * com.skplanet.storeplatform.sac.biz.product.service.AppguideVersionServiceImpl#searchThemeRecommendMain(AppguideSacReq
 	 * requestVO, SacRequestHeader requestHeader)
 	 */
 	@Override
-	public AppguideSacRes searchVersion(AppguideSacReq requestVO, SacRequestHeader requestHeader)
+	public AppguideSacRes searchThemeRecommendList(AppguideSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException {
 
 		AppguideSacRes responseVO = new AppguideSacRes();
 
-		List<Product> productList = new ArrayList<Product>();
-
 		CommonResponse commonResponse = new CommonResponse();
 
-		String className = this.getClass().getName();
+		// String className = this.getClass().getName();
 
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
 		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
@@ -76,56 +77,62 @@ public class AppguideVersionServiceImpl implements AppguideVersionService {
 		mapReq.put("deviceHeader", deviceHeader);
 		mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
-		String packageName = requestVO.getPackageName();
-		/*
-		 * String userKey = requestVO.getUserKey(); String deviceIdType = requestVO.getDeviceIdType(); String deviceId =
-		 * requestVO.getDeviceId();
-		 */
-		String osVersion = requestVO.getOsVersion();
-		if (this.log.isDebugEnabled()) {
-			this.log.debug("[{}] packageName : {}", className, packageName);
-			this.log.debug("[{}] osVersion : {}", className, osVersion);
-		}
+		mapReq.put("listGrpCd", "TAP"); // 앱가이드 테마추천
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(packageName)) {
-			throw new StorePlatformException("SAC_DSP_0002", "packageName", packageName);
-		}
-		/*
-		 * if (StringUtils.isEmpty(userKey)) { throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey); }
-		 * if (StringUtils.isEmpty(deviceIdType)) { throw new StorePlatformException("SAC_DSP_0002", "deviceIdType",
-		 * deviceIdType); } if (StringUtils.isEmpty(deviceId)) { throw new StorePlatformException("SAC_DSP_0002",
-		 * "deviceId", deviceId); }
-		 */
-		if (StringUtils.isEmpty(osVersion)) {
-			throw new StorePlatformException("SAC_DSP_0002", "osVersion", osVersion);
-		}
-		mapReq.put("packageName", packageName);
-		mapReq.put("osVersion", osVersion);
+		List<String> imageCodeList = new ArrayList<String>();
+		imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+		imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+		imageCodeList.add(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+		imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+		imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		mapReq.put("imageCdList", imageCodeList);
+		mapReq.put("START_ROW", requestVO.getOffset());
+		mapReq.put("END_ROW", (requestVO.getOffset() + requestVO.getCount() - 1));
 
-		// 기기ID유형 유효값 체크
-		/*
-		 * if (!StringUtils.equalsIgnoreCase(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN, deviceIdType)) { throw new
-		 * StorePlatformException("SAC_DSP_0003", "deviceIdType", deviceIdType); }
-		 */
-		Appguide appguide = this.commonDAO.queryForObject("Appguide.getVersion", mapReq, Appguide.class);
-		if (appguide == null) {
+		List<Appguide> themeList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
+				Appguide.class);
+		if (themeList == null) {
 			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
-		Product product = new Product();
-		App app = new App();
-		app.setPackageName(appguide.getApkPkg());
-		app.setVersionCode(appguide.getApkVerCd());
-		product.setApp(app);
-		productList.add(product);
-
-		this.totalCount = 1;
+		List<Product> productList = this.makeProductList(themeList);
 
 		commonResponse.setTotalCount(this.totalCount);
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(productList);
+
 		return responseVO;
 	}
 
+	private List<Product> makeProductList(List<Appguide> themeList) {
+
+		List<Product> mainListVO = new ArrayList<Product>();
+		for (Appguide main : themeList) {
+			// 테마 정보
+			Product theme = new Product();
+			Identifier themeId = new Identifier();
+			themeId.setText(main.getThemeId());
+			themeId.setType("theme");
+			theme.setIdentifier(themeId);
+
+			Title themeNm = new Title();
+			themeNm.setText(main.getThemeNm());
+			theme.setTitle(themeNm);
+			theme.setThemeType(main.getThemeType());
+
+			if (!StringUtils.isNullOrEmpty(main.getThemeImg())) {
+				List<Source> themeUrlList = new ArrayList<Source>();
+				Source themeUrl = new Source();
+				themeUrl.setUrl(main.getThemeImg());
+				themeUrlList.add(themeUrl);
+				theme.setSourceList(themeUrlList);
+			}
+
+			this.totalCount = main.getTotalCount();
+
+			mainListVO.add(theme);
+		} // end of for
+
+		return mainListVO;
+	}
 }

@@ -19,7 +19,9 @@ import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideApprankingService;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideIsfService;
+import com.skplanet.storeplatform.sac.display.appguide.service.AppguideThemeListService;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideThemeMainService;
+import com.skplanet.storeplatform.sac.display.appguide.service.AppguideThemeProductService;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideVersionService;
 
 /**
@@ -41,6 +43,12 @@ public class AppguideController {
 
 	@Autowired
 	private AppguideThemeMainService appguideThemeMainService;
+
+	@Autowired
+	private AppguideThemeListService appguideThemeListService;
+
+	@Autowired
+	private AppguideThemeProductService appguideThemeProductService;
 
 	@Autowired
 	private AppguideApprankingService appguideApprankingService;
@@ -132,5 +140,47 @@ public class AppguideController {
 		this.logger.debug(this.getClass().getName() + ".searchThemeRecommendMain start !!");
 		this.logger.debug("request {}", requestVO);
 		return this.appguideThemeMainService.searchThemeRecommendMain(requestVO, requestHeader);
+	}
+
+	/**
+	 * <pre>
+	 * 테마 추천 LIST 조회.
+	 * </pre>
+	 * 
+	 * @param AppguideSacReq
+	 *            requestVO
+	 * @param SacRequestHeader
+	 *            requestHeader
+	 * @return AppguideSacRes
+	 */
+	@RequestMapping(value = "/recommend/theme/list/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AppguideSacRes searchThemeRecommendList(@RequestBody AppguideSacReq requestVO, SacRequestHeader requestHeader)
+			throws StorePlatformException {
+
+		this.logger.debug(this.getClass().getName() + ".searchThemeRecommendList start !!");
+		this.logger.debug("request {}", requestVO);
+		return this.appguideThemeListService.searchThemeRecommendList(requestVO, requestHeader);
+	}
+
+	/**
+	 * <pre>
+	 * 테마 추천별 상품 LIST 조회.
+	 * </pre>
+	 * 
+	 * @param AppguideSacReq
+	 *            requestVO
+	 * @param SacRequestHeader
+	 *            requestHeader
+	 * @return AppguideSacRes
+	 */
+	@RequestMapping(value = "/recommend/product/list/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AppguideSacRes searchThemeRecommendProductList(@RequestBody AppguideSacReq requestVO,
+			SacRequestHeader requestHeader) throws StorePlatformException {
+
+		this.logger.debug(this.getClass().getName() + ".searchThemeRecommendProductList start !!");
+		this.logger.debug("request {}", requestVO);
+		return this.appguideThemeProductService.searchThemeRecommendProductList(requestVO, requestHeader);
 	}
 }

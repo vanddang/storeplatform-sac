@@ -473,7 +473,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 				}
 
 				commonResponse.setTotalCount(this.totalCount);
-				responseVO.setCommonRes(commonResponse);
+				responseVO.setCommonResponse(commonResponse);
 				responseVO.setProductList(listRes);
 			}
 		} else {
@@ -513,7 +513,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 			productList = this.makeResultList(appguideResultList);
 
 			commonResponse.setTotalCount(this.totalCount);
-			responseVO.setCommonRes(commonResponse);
+			responseVO.setCommonResponse(commonResponse);
 			responseVO.setProductList(productList);
 		}
 
@@ -888,7 +888,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 		commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(1);
 
-		response.setCommonRes(commonResponse);
+		response.setCommonResponse(commonResponse);
 		response.setProductList(listVO);
 
 		return response;

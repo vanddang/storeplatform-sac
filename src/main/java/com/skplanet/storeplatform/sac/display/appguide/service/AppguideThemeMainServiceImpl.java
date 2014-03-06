@@ -93,7 +93,7 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 		mapReq.put("START_ROW", requestVO.getOffset());
 		mapReq.put("END_ROW", (requestVO.getOffset() + requestVO.getCount() - 1));
 
-		List<Appguide> themeMainList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendMain", mapReq,
+		List<Appguide> themeMainList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
 				Appguide.class);
 		if (themeMainList == null) {
 			throw new StorePlatformException("SAC_DSP_0009");
@@ -114,7 +114,7 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 		List<Product> productList = this.makeProductList(themeMainList, themeProductList);
 
 		commonResponse.setTotalCount(this.totalCount);
-		responseVO.setCommonRes(commonResponse);
+		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(productList);
 		return responseVO;
 	}
