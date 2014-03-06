@@ -41,6 +41,8 @@ public class RecommendOneday extends CommonInfo {
 	private String oneSeq;
 	private String partChrgmonyAppYn;
 	private Integer freeItemAmt;
+	private Integer prodRealreAmt;
+	private Integer prodOffrAmt;
 
 	public Integer getTotalCount() {
 		return this.totalCount;
@@ -192,6 +194,36 @@ public class RecommendOneday extends CommonInfo {
 
 	public void setFreeItemAmt(Integer freeItemAmt) {
 		this.freeItemAmt = freeItemAmt;
+	}
+
+	/**
+	 * @return the prodRealreAmt
+	 */
+	public Integer getProdRealreAmt() {
+		return this.prodRealreAmt;
+	}
+
+	/**
+	 * @param prodRealreAmt
+	 *            the prodRealreAmt to set
+	 */
+	public void setProdRealreAmt(Integer prodRealreAmt) {
+		this.prodRealreAmt = prodRealreAmt;
+	}
+
+	/**
+	 * @return the prodOffrAmt
+	 */
+	public Integer getProdOffrAmt() {
+		return this.prodOffrAmt;
+	}
+
+	/**
+	 * @param prodOffrAmt
+	 *            the prodOffrAmt to set
+	 */
+	public void setProdOffrAmt(Integer prodOffrAmt) {
+		this.prodOffrAmt = prodOffrAmt;
 	}
 
 }

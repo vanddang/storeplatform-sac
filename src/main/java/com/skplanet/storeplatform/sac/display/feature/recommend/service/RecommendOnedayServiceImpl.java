@@ -188,6 +188,8 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 						// 하루에 하나 정보
 						product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
 						product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+						product.setProdRealreAmt(recommendOneday.getProdRealreAmt());
+						product.setProdOffrAmt(recommendOneday.getProdOffrAmt());
 						dateList = new ArrayList<Date>();
 						date = new Date();
 						date.setType("date/expo");
@@ -218,6 +220,8 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 							// 하루에 하나 정보
 							product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
 							product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+							product.setProdRealreAmt(recommendOneday.getProdRealreAmt());
+							product.setProdOffrAmt(recommendOneday.getProdOffrAmt());
 							dateList = new ArrayList<Date>();
 							date = new Date();
 							date.setType("date/expo");
@@ -245,6 +249,8 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 								// 하루에 하나 정보
 								product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
 								product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+								product.setProdRealreAmt(recommendOneday.getProdRealreAmt());
+								product.setProdOffrAmt(recommendOneday.getProdOffrAmt());
 								dateList = new ArrayList<Date>();
 								date = new Date();
 								date.setType("date/expo");
@@ -266,6 +272,8 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 								// 하루에 하나 정보
 								product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
 								product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+								product.setProdRealreAmt(recommendOneday.getProdRealreAmt());
+								product.setProdOffrAmt(recommendOneday.getProdOffrAmt());
 								dateList = new ArrayList<Date>();
 								date = new Date();
 								date.setType("date/expo");
@@ -292,6 +300,8 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 							// 하루에 하나 정보
 							product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
 							product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+							product.setProdRealreAmt(recommendOneday.getProdRealreAmt());
+							product.setProdOffrAmt(recommendOneday.getProdOffrAmt());
 							dateList = new ArrayList<Date>();
 							date = new Date();
 							date.setType("date/expo");
@@ -317,6 +327,8 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 							// 하루에 하나 정보
 							product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
 							product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+							product.setProdRealreAmt(recommendOneday.getProdRealreAmt());
+							product.setProdOffrAmt(recommendOneday.getProdOffrAmt());
 							dateList = new ArrayList<Date>();
 							date = new Date();
 							date.setType("date/expo");
@@ -343,6 +355,8 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 						// 하루에 하나 정보
 						product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
 						product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
+						product.setProdRealreAmt(recommendOneday.getProdRealreAmt());
+						product.setProdOffrAmt(recommendOneday.getProdOffrAmt());
 						dateList = new ArrayList<Date>();
 						date = new Date();
 						date.setType("date/expo");
