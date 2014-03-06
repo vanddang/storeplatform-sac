@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -38,24 +39,15 @@ public class SalesAppServiceImpl implements SalesAppService {
 
 	@Override
 	public SalesAppSacRes searchSalesAppList(SacRequestHeader header, SalesAppSacReq salesAppSacReq) {
+		// 헤더 세팅
+		salesAppSacReq.setTenantId(header.getTenantHeader().getTenantId());
+
 		SalesAppSacRes salesAppSacRes = new SalesAppSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		// OS VERSION 가공
-		String[] headerOsVer = header.getDeviceHeader().getOs().trim().split("/");
-
-		String osVersion = headerOsVer[1];
-		String osVersionOrginal = osVersion;
-		String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
-		if (osVersionTemp.length == 3) {
-			osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
-		}
-
-		salesAppSacReq.setTenantId(header.getTenantHeader().getTenantId());
-		salesAppSacReq.setOsVersion(osVersion);
-
-		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForList("OpenApi.searchSalesAppList", salesAppSacReq);
-		this.logger.debug("{}", metaInfo);
+		List<MetaInfo> resultList = this.commonDAO.queryForList("OpenApi.searchSalesAppList", salesAppSacReq,
+				MetaInfo.class);
+		this.logger.debug("{}", resultList.toString());
 
 		return salesAppSacRes;
 	}
