@@ -586,21 +586,23 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		this.checkAlreadyJoin(sacHeader, req.getDeviceId());
 
-		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MACADDRESS)) {
+		/**
+		 * 변동성 대상 체크
+		 * 
+		 * TODO 변동성 체크 모듈 호출해야함.... TODO 변동성 체크 모듈 호출해야함.... TODO 변동성 체크 모듈 호출해야함....
+		 */
+		boolean targetYn = true;
 
-			LOGGER.info("## >> SAVE & SYNC MAC 가가입 START ===================================");
-
-		} else {
-
-			LOGGER.info("## >> SAVE & SYNC MDN 가입 START ===================================");
-
-		}
+		/**
+		 * 신규 회원 가입
+		 */
+		String userKey = this.createSaveAndSyncNewMember(sacHeader, req);
 
 		/**
 		 * 결과 세팅
 		 */
 		CreateSaveAndSyncRes response = new CreateSaveAndSyncRes();
-		response.setUserKey("");
+		response.setUserKey(userKey);
 		response.setDeviceKey("");
 
 		return response;
@@ -1013,6 +1015,22 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## Error Msg  : {}", spe.getErrorInfo().getMessage());
 
 		}
+
+	}
+
+	private String createSaveAndSyncNewMember(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
+
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MACADDRESS)) {
+
+			LOGGER.info("## >> SAVE & SYNC MAC 가가입 START ===================================");
+
+		} else {
+
+			LOGGER.info("## >> SAVE & SYNC MDN 가입 START ===================================");
+
+		}
+
+		return "userKey";
 
 	}
 
