@@ -101,12 +101,21 @@ public class AppDetailTest {
     }
 
     @Test
-    public void saleStatus04() throws Exception {
+    public void prov01() throws Exception {
         AppDetailReq req = new AppDetailReq();
         req.setChannelId("0000297941");
         Map<String, String> headerMap = MvcTestBuilder.getDefaultHeader();
         headerMap.put("model", "SHW-M340S");
         MvcTestBuilder.build(mvc, true, headerMap, URL, req, true);
+    }
+
+    @Test
+    public void prov02() throws Exception {
+        AppDetailReq req = new AppDetailReq();
+        req.setChannelId("0000297941");
+//        Map<String, String> headerMap = MvcTestBuilder.getDefaultHeader();
+//        headerMap.put("model", "SHW-M340S");
+        MvcTestBuilder.build2(mvc, true, null, URL, req, false);
     }
 
 
