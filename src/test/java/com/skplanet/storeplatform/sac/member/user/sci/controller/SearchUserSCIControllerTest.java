@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -73,26 +75,85 @@ public class SearchUserSCIControllerTest {
 
 	@Test
 	public void testSearchUserByUserKey() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByUserKey").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-						List<String> userKeyList = new ArrayList<String>();
-						userKeyList.add("IW1023284651220101007215215"); // 회원정보에 등록된 deviceId가 한 개.
-						userKeyList.add("IM142100006719244201304082142"); // 회원정보에 등록된 deviceId가 여러개.
-						userKeyList.add("IW1024171529820110627132506"); // 회원정보 없음.
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByUserKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+				List<String> userKeyList = new ArrayList<String>();
+				userKeyList.add("IW1023284651220101007215215"); // 회원정보에 등록된 deviceId가 한 개.
+				userKeyList.add("IM142100006719244201304082142"); // 회원정보에 등록된 deviceId가 여러개.
+				userKeyList.add("IW1024171529820110627132506"); // 회원정보 없음.
 
-						searchUserSacReq.setUserKeyList(userKeyList);
-						return searchUserSacReq;
-					}
-				}).success(SearchUserSacRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						SearchUserSacRes res = (SearchUserSacRes) result;
-						LOGGER.info("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+				searchUserSacReq.setUserKeyList(userKeyList);
+				return searchUserSacReq;
+			}
+		}).success(SearchUserSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserSacRes res = (SearchUserSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	@Test
+	public void TEST_정상_사용자_결제페이지_노출정보조회_통신과금정보없음() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+				searchUserSacReq.setUserKey("IF102158916420090711152643");
+
+				return searchUserSacReq;
+			}
+		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	@Test
+	public void TEST_정상_사용자_결제페이지_노출정보조회_통합회원이고_OCB이용약관정보없음() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+				searchUserSacReq.setUserKey("US201402071133550360001951");
+
+				return searchUserSacReq;
+			}
+		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	@Test
+	public void TEST_정상_사용자_결제페이지_노출정보조회_통합회원이고_OCB이용약관정보있음() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+				searchUserSacReq.setUserKey("IF1523972220130926133834");
+
+				return searchUserSacReq;
+			}
+		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 }

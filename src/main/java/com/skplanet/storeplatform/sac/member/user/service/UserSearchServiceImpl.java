@@ -139,12 +139,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Autowired
 	private ImIdpSCI imIdpSCI;
 
-	@Autowired
-	private MemberCommonComponent memberCommonComponent;
-
-	@Autowired
-	private MemberCommonComponent commService; // 회원 공통 서비스
-
 	/**
 	 * 회원 가입 조회
 	 */
@@ -435,7 +429,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		List<SearchIdSac> sacList = new ArrayList<SearchIdSac>();
 		if (!req.getDeviceId().equals("")) {
 
-			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
+			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
@@ -1521,8 +1515,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
-	 * searchUserByUserKey(com.skplanet.storeplatform .sac.client.member.vo.user.SearchUserReq)
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByUserKey(com.skplanet.storeplatform
+	 * .sac.client.member.vo.user.SearchUserReq)
 	 */
 	@Override
 	public Map<String, UserInfoByUserKey> searchUserByUserKey(SacRequestHeader sacHeader, SearchUserReq request) {

@@ -16,15 +16,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
+import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByUserKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.user.service.UserOcbService;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 
 /**
@@ -40,11 +56,18 @@ public class SearchUserSCIController implements SearchUserSCI {
 	@Autowired
 	private UserSearchService userSearchService;
 
+	@Autowired
+	private UserOcbService userOcbService;
+
+	@Autowired
+	private MemberCommonComponent mcc;
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI#searchUserByUserKey(com.skplanet
+	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI
+	 * #searchUserByUserKey(com.skplanet
 	 * .storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq)
 	 */
 	@Override
@@ -54,15 +77,13 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}",
-				requestHeader, request);
+		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}", requestHeader, request);
 
 		List<String> userKeyList = request.getUserKeyList();
 		SearchUserReq searchUserReq = new SearchUserReq();
 		searchUserReq.setUserKeyList(userKeyList);
 
-		Map<String, UserInfoByUserKey> userInfoMap = this.userSearchService.searchUserByUserKey(requestHeader,
-				searchUserReq);
+		Map<String, UserInfoByUserKey> userInfoMap = this.userSearchService.searchUserByUserKey(requestHeader, searchUserReq);
 
 		Map<String, UserInfoSac> resMap = new HashMap<String, UserInfoSac>();
 		UserInfoSac userInfoSac;
@@ -86,5 +107,97 @@ public class SearchUserSCIController implements SearchUserSCI {
 		searchUserSacRes.setUserInfo(resMap);
 
 		return searchUserSacRes;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI
+	 * #searchUserPayplanet(com.skplanet
+	 * .storeplatform.sac.client.internal.member
+	 * .user.vo.SearchUserPayplanetSacReq)
+	 */
+	@Override
+	@RequestMapping(value = "/searchUserPayplanet", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchUserPayplanetSacRes searchUserPayplanet(@RequestBody @Validated SearchUserPayplanetSacReq request) {
+
+		// 헤더 정보 셋팅
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+		LOGGER.info("[SearchUserSCIController.searchUserPayplanet] RequestHeader : {}, \nRequestParameter : {}", requestHeader, request);
+
+		String deviceKey = StringUtil.nvl(request.getDeviceKey(), "");
+		String userKey = StringUtil.nvl(request.getUserKey(), "");
+
+		// 회원기본정보조회 deviceKey로 userKey세팅
+		UserInfo info = new UserInfo();
+		if (!userKey.equals("")) {
+			info = this.mcc.getUserBaseInfo("userKey", request.getUserKey(), requestHeader);
+		} else if (!deviceKey.equals("")) {
+			info = this.mcc.getUserBaseInfo("deviceKey", request.getDeviceKey(), requestHeader);
+		}
+
+		request.setUserKey(info.getUserKey());
+
+		// Store 약관동의목록 조회 US010609 = POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE
+		ListTermsAgreementSacReq agreementReq = new ListTermsAgreementSacReq();
+		agreementReq.setUserKey(request.getUserKey());
+
+		String skpAgreementYn = "N";
+		try {
+			ListTermsAgreementSacRes agreementRes = this.userSearchService.listTermsAgreement(requestHeader, agreementReq);
+
+			for (Agreement agree : agreementRes.getAgreementList()) {
+				if (agree.getExtraAgreementId().equals(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE)) {
+					skpAgreementYn = "Y";
+				}
+			}
+		} catch (StorePlatformException ex) {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				skpAgreementYn = "N";
+			}
+		}
+
+		// OCB 카드번호
+		GetOcbInformationReq ocbReq = new GetOcbInformationReq();
+		ocbReq.setUserKey(request.getUserKey());
+
+		String ocbCardNumber = "";
+		try {
+			GetOcbInformationRes ocbRes = this.userOcbService.getOcbInformation(requestHeader, ocbReq);
+			for (OcbInfo ocb : ocbRes.getOcbInfoList()) {
+				ocbCardNumber = ocb.getCardNumber();
+			}
+
+		} catch (StorePlatformException ex) {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				ocbCardNumber = "";
+			}
+		}
+
+		// OCB이용약관 동의여부 searchOneId
+		MbrOneidSacReq oneIdReq = new MbrOneidSacReq();
+		oneIdReq.setUserKey(request.getUserKey());
+
+		String ocbAgreementYn = "N";
+		try {
+			MbrOneidSacRes oneIdRes = this.userSearchService.searchUserOneId(requestHeader, oneIdReq);
+			ocbAgreementYn = oneIdRes.getIsMemberPoint();
+		} catch (StorePlatformException ex) {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				ocbAgreementYn = "N";
+			} else if (ex.getErrorInfo().getCode().equals(MemberConstants.SAC_ERROR_NO_ONEID)) {
+				ocbAgreementYn = "N";
+			}
+			LOGGER.info("====== OneId Response : {}", ex.getCode());
+		}
+
+		SearchUserPayplanetSacRes payplanetSacRes = new SearchUserPayplanetSacRes();
+		payplanetSacRes.setSkpAgreementYn(skpAgreementYn);
+		payplanetSacRes.setOcbCardNumber(ocbCardNumber);
+		payplanetSacRes.setOcbAgreementYn(ocbAgreementYn);
+
+		return payplanetSacRes;
 	}
 }
