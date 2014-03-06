@@ -74,6 +74,7 @@
 	           B.TENANT_ID
 		     , B.MENU_ID
 		     , B.PROD_ID
+		     , B.PART_PROD_ID
 		     , B.TOP_MENU_ID
 		     , B.META_CLSF_CD
 		     , 'PD002501' AS CONTENTS_TYPE_CD
@@ -84,6 +85,7 @@
 		          FROM (SELECT A.TENANT_ID
 		                     , E.MENU_ID
 		                     , C.PROD_ID
+		                     , C.PART_PROD_ID
 		                     , E.TOP_MENU_ID
 		                     , F.META_CLSF_CD
 		                     , B.EXPO_ORD_ALWAYS_YN

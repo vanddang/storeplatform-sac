@@ -183,4 +183,14 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 
 		return responseVO;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getMusicMetaInfo(java.util.Map)
+	 */
+	@Override
+	public MetaInfo getMusicMetaInfo(Map<String, Object> paramMap) {
+		return this.commonDAO.queryForObject("MusicMain.getMusicMetaInfo", paramMap, MetaInfo.class);
+	}
 }
