@@ -83,6 +83,17 @@ public interface FreepassInfoGenerator {
 	
 	/**
 	 * <pre>
+	 * 정액제 Date 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List
+	 */
+	public List<Date> generateDateList(MetaInfo metaInfo);
+	
+	/**
+	 * <pre>
 	 * 정액제 Menu 생성.
 	 * </pre>
 	 * 

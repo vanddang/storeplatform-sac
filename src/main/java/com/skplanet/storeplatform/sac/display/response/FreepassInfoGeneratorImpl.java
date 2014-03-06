@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -123,11 +124,51 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 	@Override
 	public Date generateDate(MetaInfo metaInfo) {
 
-		Date date = new Date(DisplayConstants.DP_DATE_USAGE_PERIOD, 
+		Date date = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM, 
 				DateUtils.parseDate(metaInfo.getApplyStartDt()), DateUtils.parseDate(metaInfo.getApplyEndDt()));
 
 		return date;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator#generateDateList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Date> generateDateList(MetaInfo metaInfo) {
+
+		List<Date> dateList = new ArrayList<Date>();
+		Date date = generateDate(metaInfo);
+		dateList.add(date);
+		
+		//구매일로부터 기간 제한
+		if ( StringUtil.nvl(metaInfo.getUsePeriodUnitCd(), "") != "" ) {
+			String usePeriodUnitNm = (metaInfo.getUsePeriodUnitCd()==null)? "" :
+				(metaInfo.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE	))? "unlimit" :
+				(metaInfo.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR	))? "hour" :
+				(metaInfo.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY	))? "day" :
+				(metaInfo.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH	))? "month" :
+				(metaInfo.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR	))? "year" :
+				(metaInfo.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY	))? "limit/day" :
+				(metaInfo.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH	))? "limit/month" :
+				(metaInfo.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR	))? "limit/year" :
+				(metaInfo.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR	))? "calendar" :
+				"";
+		
+			if(usePeriodUnitNm != "") {
+				date = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_UNIT_NM, 
+						usePeriodUnitNm + "/" + metaInfo.getUsePeriod());
+				dateList.add(date);
+			}
+		}
+
+		return dateList;
+	}
+	
+	
 	
 	/*
 	 * (non-Javadoc)
