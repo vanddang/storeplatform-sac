@@ -34,14 +34,20 @@ import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
@@ -87,8 +93,14 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private IdpSCI idpSCI;
 
+	@Autowired
+	private DeviceSCI deviceSCI;
+
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	private String tempUserAuthKey;
+
+	@Autowired
+	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -258,16 +270,53 @@ public class LoginServiceImpl implements LoginService {
 					&& !this.deviceService.isImeiEquality(req.getDeviceId(), req.getNativeId())) {
 
 				/* 추가인증 수단을 조회하여 내려준다. */
-				throw new StorePlatformException("", "추가인증수단 내려줌");
+				throw new StorePlatformException("", "추가인증수단 조회 내려줌");
 
 			}
 
-			/* DB imei 비교 */
-			if (StringUtil.isNotEmpty(deviceInfo.getNativeId()) && StringUtil.equals(deviceInfo.getNativeId(), req.getNativeId())) {
+			/* imei 일 */
+			if (StringUtil.isEmpty(deviceInfo.getNativeId()) || StringUtil.equals(deviceInfo.getNativeId(), req.getNativeId())) {
 
-				if (!StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+				if (StringUtil.isEmpty(deviceInfo.getDeviceTelecom()) || StringUtil.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())) {
+
+					//S/C 최초접속여부확인(테넌트한테 파라메터로 받을 예정)
+					String isFirstJoin = "N";
+
+					if (StringUtil.equals(isFirstJoin, "Y") && !StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+
+						/* gmail 비교하여 gmail계정이 동일하면 동일사용자로 판단 */
+						if (StringUtil.equals(deviceInfo.getDeviceAccount(), req.getDeviceAccount())) {
+							return "";
+						} else {
+							/* 추가인증 수단을 조회하여 내려준다. */
+							throw new StorePlatformException("", "추가인증수단 조회 내려줌");
+						}
+
+					}
+
+				} else {
+
+				}
+				if (StringUtil.equals(req.getDeviceTelecom(), req.getDeviceTelecom())) {
+
+				}
+
+			} else {
+
+				if (StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+
+					/* gmail 비교하여 gmail계정이 동일하면 동일사용자로 판단 */
+					if (StringUtil.equals(deviceInfo.getDeviceAccount(), req.getDeviceAccount())) {
+						return "";
+					} else {
+						/* 추가인증 수단을 조회하여 내려준다. */
+						throw new StorePlatformException("", "추가인증수단 조회 내려줌");
+					}
+
+				} else {
 					throw new StorePlatformException("", "IMEI 값이 상이합니다.");
 				}
+
 			}
 
 		}
@@ -867,11 +916,8 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeSimpleByMdnRes res = new AuthorizeSimpleByMdnRes();
 
-		String isLoginSuccess = null;
-
 		if (deviceInfo != null) {
 
-			isLoginSuccess = "Y";
 			res.setUserAuthKey(this.tempUserAuthKey);
 			res.setUserKey(deviceInfo.getUserKey());
 			res.setDeviceKey(deviceInfo.getDeviceKey());
@@ -885,7 +931,7 @@ public class LoginServiceImpl implements LoginService {
 			loginReq.setCommonRequest(commonRequest);
 			loginReq.setUserID(deviceId);
 			loginReq.setUserPW(null);
-			loginReq.setIsSuccess(isLoginSuccess);
+			loginReq.setIsSuccess("Y");
 			loginReq.setIsOneID("Y");
 			loginReq.setIsMobile("Y");
 			loginReq.setIsAutoLogin("Y");
@@ -899,10 +945,9 @@ public class LoginServiceImpl implements LoginService {
 
 		} else {
 
-			isLoginSuccess = "N";
-		}
+			res.setIsLoginSuccess("N");
 
-		res.setIsLoginSuccess(isLoginSuccess);
+		}
 
 		return res;
 
@@ -923,20 +968,97 @@ public class LoginServiceImpl implements LoginService {
 		AuthorizeSaveAndSyncByMacRes res = new AuthorizeSaveAndSyncByMacRes();
 
 		/* mac 정보 조회 */
-		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null);
+		DeviceInfo macDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null);
 
-		if (deviceInfo != null) {
-
-			res.setDeviceKey(deviceInfo.getDeviceKey());
-			res.setUserKey(deviceInfo.getUserKey());
-			res.setUserAuthKey(this.tempUserAuthKey);
-			res.setIsLoginSuccess("Y");
-
-		} else {
-
+		if (macDeviceInfo == null) {
+			res.setIsLoginSuccess("N");
+			return res;
 		}
 
-		return res;
-	}
+		/* mdn 기가입 여부 확인 */
+		DeviceInfo mdnDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
 
+		if (mdnDeviceInfo == null) { // mdn 미가입인 경우
+
+			/* 변동성 대상체크 모듈 호출 */
+			//변동성 대상 mdn의 userKey, deviceKey를 받아야함
+			boolean flag = true;
+
+			if (flag) { // 변동성 대상인 경우
+
+				/* 구매내역 이관 */
+				UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
+				userInfoSacInReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+				userInfoSacInReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+				userInfoSacInReq.setDeviceKey(macDeviceInfo.getDeviceKey());
+				userInfoSacInReq.setUserKey(macDeviceInfo.getUserKey());
+				userInfoSacInReq.setNewDeviceKey("");
+				userInfoSacInReq.setNewUserKey("");
+				this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
+
+				res.setDeviceKey("");
+				res.setUserKey("");
+				res.setUserAuthKey(this.tempUserAuthKey);
+				res.setIsLoginSuccess("Y");
+				return res;
+
+			} else { // 변동성 대상이 아닌 경우
+
+				CommonRequest commonRequest = new CommonRequest();
+				commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+				commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+
+				/* IDP 모바일전용회원 가입 */
+				JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
+				joinForWapEcReq.setUserMdn(req.getDeviceId());
+				joinForWapEcReq.setMdnCorp(this.commService.convertDeviceTelecom(req.getDeviceTelecom()));
+				JoinForWapEcRes joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
+
+				/* mac -> mdn으로 변경 처리 */
+				CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+				createDeviceReq.setCommonRequest(commonRequest);
+				UserMbrDevice userMbrDevice = new UserMbrDevice();
+				userMbrDevice.setUserKey(macDeviceInfo.getUserKey());
+				userMbrDevice.setDeviceKey(macDeviceInfo.getDeviceKey());
+				userMbrDevice.setDeviceID(joinForWapEcRes.getUserMdn());
+				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
+				CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
+
+				/* mbrNo 변경 */
+				UserMbr userMbr = new UserMbr();
+				userMbr.setImMbrNo(joinForWapEcRes.getUserKey());
+
+				UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+				updateUserRequest.setCommonRequest(commonRequest);
+				updateUserRequest.setUserMbr(userMbr);
+				this.userSCI.updateUser(updateUserRequest);
+
+				res.setDeviceKey(createDeviceRes.getDeviceKey());
+				res.setUserKey(createDeviceRes.getUserKey());
+				res.setUserAuthKey(this.tempUserAuthKey);
+				res.setIsLoginSuccess("Y");
+				return res;
+
+			}
+
+		} else { // mdn 기가입인 경우
+
+			/* 구매내역 이관 */
+			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
+			userInfoSacInReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+			userInfoSacInReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+			userInfoSacInReq.setDeviceKey(macDeviceInfo.getDeviceKey());
+			userInfoSacInReq.setUserKey(macDeviceInfo.getUserKey());
+			userInfoSacInReq.setNewDeviceKey(mdnDeviceInfo.getDeviceKey());
+			userInfoSacInReq.setNewUserKey(mdnDeviceInfo.getUserKey());
+			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
+
+			res.setDeviceKey(mdnDeviceInfo.getDeviceKey());
+			res.setUserKey(mdnDeviceInfo.getUserKey());
+			res.setUserAuthKey(this.tempUserAuthKey);
+			res.setIsLoginSuccess("Y");
+			return res;
+		}
+
+	}
 }
