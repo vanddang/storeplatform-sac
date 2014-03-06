@@ -167,7 +167,7 @@ public class SearchSellerNameServiceImpl implements SearchSellerNameService {
 					Identifier identifier = this.commonGenerator.generateIdentifier(
 							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
 					identifierList.add(identifier);
-					product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo)); // 상품 ID
+					product.setIdentifierList(identifierList); // 상품 ID
 					product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
 					product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지
 					product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품가격
