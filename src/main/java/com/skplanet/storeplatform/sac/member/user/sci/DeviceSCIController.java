@@ -77,8 +77,8 @@ public class DeviceSCIController implements DeviceSCI {
 	 */
 	@Override
 	@RequestMapping(value = "/searchChangedDeviceHistory", method = RequestMethod.POST)
-	public ChangedDeviceHistorySacRes searchChangedDeviceHistory(
-			@RequestBody @Validated ChangedDeviceHistorySacReq request) {
+	public @ResponseBody
+	ChangedDeviceHistorySacRes searchChangedDeviceHistory(@RequestBody @Validated ChangedDeviceHistorySacReq request) {
 
 		// 공통 파라미터 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
