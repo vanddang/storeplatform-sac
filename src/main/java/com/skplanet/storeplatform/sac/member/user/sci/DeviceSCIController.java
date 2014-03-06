@@ -66,6 +66,8 @@ public class DeviceSCIController implements DeviceSCI {
 		} else {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
+
+		LOGGER.info("[DeviceSCIController.searchDeviceId] ResponseParameter : {}", responseVO);
 		return responseVO;
 	}
 
@@ -83,6 +85,9 @@ public class DeviceSCIController implements DeviceSCI {
 		// 공통 파라미터 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
+		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] RequestHeader : {}, \nRequestParameter : {}",
+				requestHeader, request);
+
 		if (StringUtils.isBlank(request.getDeviceId()) && StringUtils.isBlank(request.getDeviceKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId 또는 deviceKey");
 		}
@@ -99,6 +104,7 @@ public class DeviceSCIController implements DeviceSCI {
 		response.setDeviceKey(changedDeviceHistoryRes.getDeviceKey());
 		response.setIsChanged(changedDeviceHistoryRes.getIsChanged());
 
+		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] ResponseParameter : {}", response);
 		return response;
 
 	}
