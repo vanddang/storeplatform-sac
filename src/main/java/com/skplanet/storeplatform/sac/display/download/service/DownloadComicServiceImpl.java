@@ -182,7 +182,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 			} catch (Exception ex) {
 				purchasePassFlag = false;
-				this.logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n{}", ex);
+				this.logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
 			}
 
 			if (purchasePassFlag && historyRes != null) {
@@ -264,7 +264,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 							} catch (Exception ex) {
 								memberPassFlag = false;
-								this.logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n{}", ex);
+								this.logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
 							}
 
 							if (memberPassFlag && deviceRes != null) {

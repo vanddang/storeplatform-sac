@@ -200,7 +200,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 			} catch (Exception ex) {
 				purchasePassFlag = false;
-				this.logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n{}", ex);
+				this.logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
 			}
 
 			String prchsId = null; // 구매ID
@@ -280,7 +280,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 						} catch (Exception ex) {
 							memberPassFlag = false;
-							this.logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n{}", ex);
+							this.logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
 						}
 
 						if (memberPassFlag && deviceRes != null) {

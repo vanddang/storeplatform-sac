@@ -18,7 +18,7 @@
 		              , JA.GNB_IMG_PATH
 		              , TO_CHAR(JA.REG_DT, 'YYYYMMDDHH24MISS') REG_DT
 		          FROM (
-		          <if test='msgType == "all"'>
+		          <if test='msgType == "all" and memberPassFlag == "Y"'>
 		                SELECT  IA.MSG_ID
 		                      , IA.MSG_TYPE_CD
 		                      , IA.MAIN_MSG
@@ -61,7 +61,7 @@
                                </if>
 		                                ) B
 		                         WHERE  A.USE_DA = B.USE_DA
-		                           AND  A.MSG_TYPE_CD = '1'
+		                           AND  A.MSG_TYPE_CD = '1' /* Personal */
 		                           AND  A.USE_YN = 'Y'
 		                           AND  A.TENANT_ID = #{tenantId}
 		                         ORDER BY MSG_ID DESC
@@ -94,13 +94,12 @@
 		                              , TB_DP_MSG_IMG B
 		                         WHERE  A.TENANT_ID = B.TENANT_ID(+)
 		                           AND  A.MSG_ID = B.MSG_ID(+)
-		                           AND  A.MSG_TYPE_CD = '2'
+		                           AND  A.MSG_TYPE_CD = '2' /* Seasonal */
 		                           AND  A.USE_YN = 'Y'
 		                           AND  A.TENANT_ID = #{tenantId}
 		                           AND  SYSDATE BETWEEN USE_START_DT AND USE_END_DT
 		                       ) IB
 		                 GROUP BY MSG_ID
-                  <if test='msgType == "all"'>
 		                UNION ALL
 		                SELECT  IC.MSG_ID
 		                      , IC.MSG_TYPE_CD
@@ -122,13 +121,12 @@
 		                              , OFR_TYPE_CD
 		                              , REG_DT
 		                          FROM  TB_DP_MSG
-		                         WHERE  MSG_TYPE_CD = '3'
+		                         WHERE  MSG_TYPE_CD = '3' /* General */
 		                           AND  USE_YN = 'Y'
 		                           AND  TENANT_ID = #{tenantId}
 		                         ORDER BY RN
 		                       ) IC
 		                 WHERE ROWNUM = 1
-                  </if>
 		               ) JA
 		       ) KA
 		 WHERE RNUM BETWEEN #{offset} AND #{count}

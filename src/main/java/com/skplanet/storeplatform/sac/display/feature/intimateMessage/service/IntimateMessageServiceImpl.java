@@ -93,11 +93,13 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		// 헤더정보 세팅
 		messageReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 
-		if ("all".equals(messageReq.getMsgType())) {
-			// 기기변경 이력 조회를 위한 생성자
-			ChangedDeviceHistorySacReq deviceReq = null;
-			ChangedDeviceHistorySacRes deviceRes = null;
+		String memberPassFlag = "Y";
 
+		// 기기변경 이력 조회를 위한 생성자
+		ChangedDeviceHistorySacReq deviceReq = null;
+		ChangedDeviceHistorySacRes deviceRes = null;
+
+		if ("all".equals(messageReq.getMsgType())) {
 			try {
 				deviceReq = new ChangedDeviceHistorySacReq();
 				deviceReq.setUserKey(userKey);
@@ -105,13 +107,22 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 
 				// 기기변경 이력 조회
 				deviceRes = this.deviceSCI.searchChangedDeviceHistory(deviceReq);
-
-				// 기기변경 여부 세팅
-				messageReq.setDeviceChangeFlag(deviceRes.getIsChanged());
 			} catch (Exception ex) {
-				// 기기변경 이력 조회 연동 중 오류가 발생하였습니다.
-				throw new StorePlatformException("SAC_DSP_1003", ex);
+				memberPassFlag = "N";
+				this.logger.error("기기변경 이력 조회 연동 중 오류가 발생하였습니다.\n", ex);
 			}
+		}
+
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("[searchIntimateMessageList] memberPassFlag : {}", memberPassFlag);
+		this.logger.debug("----------------------------------------------------------------");
+
+		// 기기변경 조회 연동 오류 여부
+		messageReq.setMemberPassFlag(memberPassFlag);
+
+		// 기기변경 이력 조회 확인
+		if (memberPassFlag == "Y" && deviceRes != null) {
+			messageReq.setDeviceChangeFlag(deviceRes.getIsChanged());
 		}
 
 		this.logger.debug("----------------------------------------------------------------");
