@@ -66,6 +66,8 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * 유효기간(시작/만료일자).
 	 */
 	private Date date;
+	private List<Date> dateList;
+	
 	/**
 	 * 쿠폰명/정액권명.
 	 */
@@ -358,5 +360,21 @@ public class Coupon extends CommonInfo implements Serializable {
 	public void setIdentifierList(List<Identifier> identifierList) {
 		this.identifierList = identifierList;
 	}
+
+	/**
+	 * @return the dateList
+	 */
+	public List<Date> getDateList() {
+		return dateList;
+	}
+
+	/**
+	 * @param dateList the dateList to set
+	 */
+	public void setDateList(List<Date> dateList) {
+		this.dateList = dateList;
+	}
+	
+	
 
 }
