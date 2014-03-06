@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -182,9 +183,39 @@ public class BestContentsServiceImpl implements BestContentsService {
 							productList.add(product);
 						} else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
 							Product product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+
+							// VOD 미리보기 추가
+							List<Source> vodSourceList = product.getSourceList();
+							Source source = new Source();
+							source.setMediaType(DisplayCommonUtil.getMimeType(retMetaInfo.getScSamplUrl()));
+							source.setType(DisplayConstants.DP_PREVIEW_LQ);
+							source.setUrl(retMetaInfo.getScSamplUrl());
+							vodSourceList.add(source);
+
+							source = new Source();
+							source.setMediaType(DisplayCommonUtil.getMimeType(retMetaInfo.getSamplUrl()));
+							source.setType(DisplayConstants.DP_PREVIEW_HQ);
+							source.setUrl(retMetaInfo.getSamplUrl());
+							vodSourceList.add(source);
+
 							productList.add(product);
 						} else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
 							Product product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+
+							// VOD 미리보기 추가
+							List<Source> vodSourceList = product.getSourceList();
+							Source source = new Source();
+							source.setMediaType(DisplayCommonUtil.getMimeType(retMetaInfo.getScSamplUrl()));
+							source.setType(DisplayConstants.DP_PREVIEW_LQ);
+							source.setUrl(retMetaInfo.getScSamplUrl());
+							vodSourceList.add(source);
+
+							source = new Source();
+							source.setMediaType(DisplayCommonUtil.getMimeType(retMetaInfo.getSamplUrl()));
+							source.setType(DisplayConstants.DP_PREVIEW_HQ);
+							source.setUrl(retMetaInfo.getSamplUrl());
+							vodSourceList.add(source);
+
 							productList.add(product);
 						}
 					}
