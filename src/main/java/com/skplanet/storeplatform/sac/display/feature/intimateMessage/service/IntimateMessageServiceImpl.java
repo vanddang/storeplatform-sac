@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.IntimateMessage;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.feature.intimateMessage.vo.IntimateMessageDefault;
@@ -166,7 +167,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 					date = new Date();
 
 					date.setType(DisplayConstants.DP_DATE_REG);
-					date.setText(messageDefault.getRegDt());
+					date.setText(DateUtils.parseDate(messageDefault.getRegDt()));
 					url.setDate(date);
 					url.setText(messageDefault.getOfrDesc());
 					intimateMessage.setUrl(url);

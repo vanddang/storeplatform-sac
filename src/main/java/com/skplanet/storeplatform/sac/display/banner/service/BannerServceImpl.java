@@ -528,7 +528,7 @@ public class BannerServceImpl implements BannerService {
 		List<Banner> bannerList = new ArrayList<Banner>();
 
 		BannerDefault bannerDf = null;
-		MetaInfo metaInfo = new MetaInfo();
+		MetaInfo metaInfo = null;
 		BannerSacRes bannerRes = new BannerSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
@@ -550,6 +550,7 @@ public class BannerServceImpl implements BannerService {
 				banner.setImgSizeCd(bannerDf.getImgSizeCd());
 
 				// 배너제목 정보
+				metaInfo = new MetaInfo();
 				metaInfo.setProdNm(bannerDf.getBnrNm());
 				banner.setTitle(this.commonMetaInfoGenerator.generateTitle(metaInfo));
 
