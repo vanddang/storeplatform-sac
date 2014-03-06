@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcRes;
+import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.CheckDupIdEcReq;
@@ -60,6 +62,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 
 /**
@@ -84,9 +87,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Autowired
 	private ImIdpSCI imIdpSCI;
 
-	@Autowired
-	private UserWithdrawService userWithdrawService;
-
 	@Override
 	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
 
@@ -94,6 +94,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 모번호 조회 (989 일 경우만)
 		 */
 		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+
+		/**
+		 * ROOTING 여부 체크, IMEI 비교
+		 */
+		this.checkDeviceInfo(req);
 
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
@@ -899,6 +904,71 @@ public class UserJoinServiceImpl implements UserJoinService {
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_MEM_0004", e);
 		}
+	}
+
+	/**
+	 * <pre>
+	 * 모바일 회원 루팅여부, IMEI ICAS와 비교.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            Request Value Object
+	 */
+	private void checkDeviceInfo(CreateByMdnReq req) {
+
+		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+
+			/**
+			 * 자사(SKT)일 경우. (IMEI 비교)
+			 */
+			if (!StringUtils.equals(req.getNativeId(), "")) {
+
+				LOGGER.info("## >> IMEI ICAS 와 비교.....");
+
+				String icasImei = null;
+				if (!StringUtils.equals(this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getMvnoCD(), "0")) { // MVNO
+
+					GetMvnoEcRes mvnoRes = this.mcc.getMvService(req.getDeviceId());
+					icasImei = mvnoRes.getImeiNum();
+
+				} else {
+
+					GetCustomerEcRes costomerRes = this.mcc.getCustomer(req.getDeviceId());
+					icasImei = costomerRes.getImeiNum();
+
+				}
+
+				LOGGER.info(">> ## ICAS 연동 :::: icasImei : {}", icasImei);
+				if (!StringUtils.equals(icasImei, req.getNativeId())) {
+					throw new StorePlatformException("SAC_MEM_1503");
+				}
+
+			} else {
+
+				LOGGER.info("## >> IMEI 존재 하지 않아 ICAS 와 비교 Skip.....");
+
+			}
+
+		} else {
+
+			/**
+			 * 타사(KTF,LGT)일경우. (ROOTING 단말 체크)
+			 * 
+			 * TODO 현재 로직 정의중이며 완료시 수정.........
+			 * 
+			 * TODO 현재 로직 정의중이며 완료시 수정.........
+			 * 
+			 * TODO 현재 로직 정의중이며 완료시 수정.........
+			 */
+			String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, req.getDeviceExtraInfoList());
+			LOGGER.info("## >> ROOTING YN : {}", rooting);
+			if (StringUtils.equals(rooting, MemberConstants.USE_Y)) {
+				LOGGER.info("## >> ROOTING 단말 입니다.");
+				throw new StorePlatformException("SAC_MEM_1104");
+			}
+
+		}
+
 	}
 
 }
