@@ -35,11 +35,10 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncByMacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncByMacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
@@ -80,7 +79,7 @@ public class CreateSaveAndSyncTest {
 	 * </pre>
 	 */
 	@Test
-	public void TEST_A_SaveAndSync가입() {
+	public void TEST_A_SaveAndSync_MAC가가입() {
 
 		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createSaveAndSync/v1").httpMethod(HttpMethod.POST)
@@ -90,16 +89,16 @@ public class CreateSaveAndSyncTest {
 					@Override
 					public Object requestBody() {
 
-						CreateSaveAndSyncByMacReq reqJson = new CreateSaveAndSyncByMacReq();
+						CreateSaveAndSyncReq reqJson = new CreateSaveAndSyncReq();
 
 						// 단말 정보
-						reqJson.setMacaddress("123456789012"); // 기기 ID 타입
+						reqJson.setDeviceId("01:23:45:67:89:ab"); // 기기 ID
+						reqJson.setDeviceIdType("macaddress"); // 기기 ID 타입 (MDN or MAC 만...)
 						reqJson.setDeviceTelecom("US001202"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("jUnitTest@gmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
 						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
-						reqJson.setOwnBirth("20020328"); // 본인의 생년월일
 
 						// 단말 부가 정보 리스트
 						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
@@ -109,20 +108,6 @@ public class CreateSaveAndSyncTest {
 
 						deviceExtraList.add(deviceExtraInfo);
 						reqJson.setDeviceExtraInfoList(deviceExtraList);
-
-						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
-						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
-						reqJson.setParentRealNameMethod("US011101");
-						reqJson.setParentName("심대진Junit");
-						reqJson.setParentType("F");
-						reqJson.setParentDate(DateUtil.getToday());
-						reqJson.setParentEmail("hkd@aaaa.com");
-						reqJson.setParentBirthDay("19700331");
-						reqJson.setParentTelecom("US001202");
-						reqJson.setParentPhone("01088889999");
-						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
-						reqJson.setParentRealNameDate(DateUtil.getToday());
-						reqJson.setParentRealNameSite("US011203"); // shop client 3.0
 
 						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
@@ -147,10 +132,10 @@ public class CreateSaveAndSyncTest {
 						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
 					}
-				}).success(CreateSaveAndSyncByMacRes.class, new SuccessCallback() {
+				}).success(CreateSaveAndSyncRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateSaveAndSyncByMacRes res = (CreateSaveAndSyncByMacRes) result;
+						CreateSaveAndSyncRes res = (CreateSaveAndSyncRes) result;
 						assertThat(res.getUserKey(), notNullValue());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
