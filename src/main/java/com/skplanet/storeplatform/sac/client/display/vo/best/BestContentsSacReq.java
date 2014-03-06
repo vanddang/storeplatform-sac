@@ -32,7 +32,7 @@ public class BestContentsSacReq extends CommonInfo {
 	@NotBlank
 	private String listId; // 리스트 Id
 	@NotBlank
-	@Pattern(regexp = "movie+broadcast|movie|broadcast|ebook+comic|ebook|comic")
+	@Pattern(regexp = "movie\\+broadcast|movie|broadcast|ebook\\+comic|ebook|comic")
 	private String filteredBy; // 카테고리 유형
 	private String b2bprod; // B2B 상품구분
 	private String hdv; // HDV 지원구분
