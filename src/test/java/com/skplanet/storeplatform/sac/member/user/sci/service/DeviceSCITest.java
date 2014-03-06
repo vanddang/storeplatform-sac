@@ -158,8 +158,8 @@ public class DeviceSCITest {
 	@Test
 	public void testNonChangedDeviceHistoryByDeviceId() {
 		ChangedDeviceHistorySacReq request = new ChangedDeviceHistorySacReq();
-		request.setUserKey("US201401211721196430000223");
-		request.setDeviceId("01088870008");
+		request.setUserKey("US201401281307217050001206");
+		request.setDeviceId("01011117774");
 
 		LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
@@ -169,10 +169,9 @@ public class DeviceSCITest {
 
 	// 기기변경 이력 없는 test 가능한 Data
 	// DeviceKey / DevieID / UserKey
-	// DE201401211718343860000107 / US201401211718340700000220 / 01088870008
-	// DE201401211721199290000108 / US201401211721196430000223 / 01088870008
-	// DE201401211726137090000110 / US201401211726133830000225 / 01088870008
-	// DE201401211728081300000111 / US201401211728078110000226 / 01088870008
+	// DE201401272118334120000552 / 01001231122 / US201401272118331600001099
+	// DE201401281307218960000638 / 01011117774 / US201401281307217050001206
+	// DE201401271052494600000403 / 01001231119 / US201401271052494470000808
 
 	/**
 	 * <pre>
@@ -183,8 +182,8 @@ public class DeviceSCITest {
 	@Test
 	public void testNonChangedDeviceHistoryByDeviceKey() {
 		ChangedDeviceHistorySacReq request = new ChangedDeviceHistorySacReq();
-		request.setUserKey("US201401211718340700000220");
-		request.setDeviceKey("DE201401211718343860000107");
+		request.setUserKey("US201401272118331600001099");
+		request.setDeviceKey("DE201401272118334120000552");
 
 		LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 		ChangedDeviceHistorySacRes result = this.deviceSCI.searchChangedDeviceHistory(request);
