@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -90,7 +91,8 @@ public class SearchSellerNameServiceImpl implements SearchSellerNameService {
 
 		try {
 			// 한글 키워드 처리
-			searchKeyword = new String(searchSellerNameSacReq.getSearchKeyword().getBytes("8859_1"), "UTF-8");
+			// searchKeyword = new String(searchSellerNameSacReq.getSearchKeyword().getBytes("8859_1"), "UTF-8");
+			searchKeyword = URLDecoder.decode(searchSellerNameSacReq.getSearchKeyword(), "utf-8");
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_DSP_0014");
 		}

@@ -9,12 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -46,7 +45,7 @@ import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 @Service
 public class SearchAppNameServiceImpl implements SearchAppNameService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -88,8 +87,10 @@ public class SearchAppNameServiceImpl implements SearchAppNameService {
 		String orderedBy = searchAppNameSacReq.getOrderedBy();
 
 		try {
+
+			// searchKeyword = new String(searchAppNameSacReq.getSearchKeyword().getBytes("8859_1"), "UTF-8");
 			// 한글 키워드 처리
-			searchKeyword = new String(searchAppNameSacReq.getSearchKeyword().getBytes("8859_1"), "UTF-8");
+			searchKeyword = URLDecoder.decode(searchAppNameSacReq.getSearchKeyword(), "utf-8");
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_DSP_0014");
 		}
