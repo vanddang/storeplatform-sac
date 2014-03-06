@@ -30,6 +30,17 @@ public class ListSubsellerRes extends CommonInfo {
 	/** 서브계정 Value Object 목록. */
 	private List<SellerMbr> subSellerList;
 
+	/** 로그인시간. */
+	private String regDate;
+
+	public String getRegDate() {
+		return this.regDate;
+	}
+
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+
 	public String getSellerID() {
 		return this.sellerID;
 	}
