@@ -1,5 +1,14 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
@@ -9,14 +18,6 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 전시 공통 서비스
@@ -30,8 +31,8 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-    @Autowired
-    private ExistenceSCI existenceSCI;
+	@Autowired
+	private ExistenceSCI existenceSCI;
 
 	@Override
 	public String getBatchStandardDateString(String tenantId, String listId) {
@@ -67,7 +68,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		Boolean isNum = deviceId.matches("^[0-9]+$");
 		String deviceType = "";
 
-		if (repDeviceId.length() < 12 && subStrDeviceId.equals("01")) {
+		if (repDeviceId.length() < 12 && (subStrDeviceId.equals("01") || subStrDeviceId.equals("98"))) {
 			deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN;
 		} else if (!isNum && deviceId.length() == 12) {
 			deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_MAC;
@@ -78,37 +79,38 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		return deviceType;
 	}
 
-    @Override
-    public boolean checkPurchase(String tenantId, String userKey, String deviceKey, String episodeId) {
-        ExistenceScReq existenceScReq = new ExistenceScReq();
-        existenceScReq.setTenantId(tenantId);
-        existenceScReq.setUserKey(userKey);
-        existenceScReq.setDeviceKey(deviceKey);
-        ExistenceItemSc itemSc = new ExistenceItemSc();
-        itemSc.setProdId(episodeId);
-        List<ExistenceItemSc> itemScList = new ArrayList<ExistenceItemSc>();
-        itemScList.add(itemSc);
-        existenceScReq.setProductList(itemScList);
+	@Override
+	public boolean checkPurchase(String tenantId, String userKey, String deviceKey, String episodeId) {
+		ExistenceScReq existenceScReq = new ExistenceScReq();
+		existenceScReq.setTenantId(tenantId);
+		existenceScReq.setUserKey(userKey);
+		existenceScReq.setDeviceKey(deviceKey);
+		ExistenceItemSc itemSc = new ExistenceItemSc();
+		itemSc.setProdId(episodeId);
+		List<ExistenceItemSc> itemScList = new ArrayList<ExistenceItemSc>();
+		itemScList.add(itemSc);
+		existenceScReq.setProductList(itemScList);
 
-        List<ExistenceScRes> resList = existenceSCI.searchExistenceList(existenceScReq);
-        return resList != null && resList.size() > 0;
-    }
+		List<ExistenceScRes> resList = this.existenceSCI.searchExistenceList(existenceScReq);
+		return resList != null && resList.size() > 0;
+	}
 
-    @Override
-    public List<ExistenceScRes> checkPurchaseList(String tenantId, String userKey, String deviceKey, List<String> episodeIdList) {
-        ExistenceScReq existenceScReq = new ExistenceScReq();
-        existenceScReq.setTenantId(tenantId);
-        existenceScReq.setUserKey(userKey);
-        existenceScReq.setDeviceKey(deviceKey);
+	@Override
+	public List<ExistenceScRes> checkPurchaseList(String tenantId, String userKey, String deviceKey,
+			List<String> episodeIdList) {
+		ExistenceScReq existenceScReq = new ExistenceScReq();
+		existenceScReq.setTenantId(tenantId);
+		existenceScReq.setUserKey(userKey);
+		existenceScReq.setDeviceKey(deviceKey);
 
-        List<ExistenceItemSc> itemScList = new ArrayList<ExistenceItemSc>();
-        for(String episodeId : episodeIdList) {
-            ExistenceItemSc itemSc = new ExistenceItemSc();
-            itemSc.setProdId(episodeId);
-            itemScList.add(itemSc);
-        }
-        existenceScReq.setProductList(itemScList);
+		List<ExistenceItemSc> itemScList = new ArrayList<ExistenceItemSc>();
+		for (String episodeId : episodeIdList) {
+			ExistenceItemSc itemSc = new ExistenceItemSc();
+			itemSc.setProdId(episodeId);
+			itemScList.add(itemSc);
+		}
+		existenceScReq.setProductList(itemScList);
 
-        return existenceSCI.searchExistenceList(existenceScReq);
-    }
+		return this.existenceSCI.searchExistenceList(existenceScReq);
+	}
 }
