@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDevic
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.MockRequestAttributeInitializer;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 단말 정보 관련 내부메소드 호출 SCI Controller Test.
@@ -87,6 +88,8 @@ public class DeviceSCIControllerTest {
 						SearchDeviceIdSacReq searchDeviceIdSacReq = new SearchDeviceIdSacReq();
 						searchDeviceIdSacReq.setUserKey("US201402110557052730002230");
 						searchDeviceIdSacReq.setDeviceKey("DE201402120409541480001552");
+						LOGGER.debug("[DeviceSCI-REQUEST] : \n{}",
+								TestConvertMapperUtils.convertObjectToJson(searchDeviceIdSacReq));
 						return searchDeviceIdSacReq;
 					}
 				}).success(SearchDeviceIdSacRes.class, new SuccessCallback() {
@@ -115,6 +118,8 @@ public class DeviceSCIControllerTest {
 						ChangedDeviceHistorySacReq changedDeviceHistorySacReq = new ChangedDeviceHistorySacReq();
 						changedDeviceHistorySacReq.setUserKey("IW1023090104420100127095457");
 						changedDeviceHistorySacReq.setDeviceId("01064779017"); // deviceKey = '01064779017'
+						LOGGER.debug("[DeviceSCI-REQUEST] : \n{}",
+								TestConvertMapperUtils.convertObjectToJson(changedDeviceHistorySacReq));
 						return changedDeviceHistorySacReq;
 					}
 				}).success(ChangedDeviceHistorySacRes.class, new SuccessCallback() {
