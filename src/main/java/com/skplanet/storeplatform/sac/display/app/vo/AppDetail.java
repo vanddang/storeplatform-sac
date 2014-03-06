@@ -1,13 +1,18 @@
 package com.skplanet.storeplatform.sac.display.app.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * AppDetail
  * Updated on : 2014. 01. 23 Updated by : 정희원, SK 플래닛.
  */
-public class AppDetail {
+public class AppDetail extends CommonInfo {
+    private static final long serialVersionUID = 1L;
+
     private String prodId;
     private String subContentsId;
     private String prodNm;
+    private Integer fixedAmt;
     private Integer prodAmt;
     private Double avgEvluScore;
     private Integer dwldCnt;
@@ -184,5 +189,13 @@ public class AppDetail {
 
     public void setProdGrdCd(String prodGrdCd) {
         this.prodGrdCd = prodGrdCd;
+    }
+
+    public Integer getFixedAmt() {
+        return fixedAmt;
+    }
+
+    public void setFixedAmt(Integer fixedAmt) {
+        this.fixedAmt = fixedAmt;
     }
 }
