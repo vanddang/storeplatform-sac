@@ -32,9 +32,9 @@
 	
  	<bean id="plandasjConnectionFactory" 
  		class="com.skplanet.spring.data.plandasj.PlandasjConnectionFactory"
- 		p:domainName="${plandasj.domainName}" 
- 		p:serviceCode="${plandasj.serviceCode}" 
- 		p:authCode="${plandasj.authCode}" /> 
+ 		p:domainName="#{propertiesForSac['plandasj.domainName']}" 
+ 		p:serviceCode="#{propertiesForSac['plandasj.serviceCode']}" 
+ 		p:authCode="#{propertiesForSac['plandasj.authCode']}" /> 
 
  	<bean id="plandasjTemplate" 
  		class="com.skplanet.spring.data.plandasj.PlandasjTemplate" 
