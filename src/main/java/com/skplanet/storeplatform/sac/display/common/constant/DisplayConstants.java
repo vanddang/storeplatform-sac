@@ -406,14 +406,14 @@ public class DisplayConstants {
 	public static final String DP_SHOPPING_CLOSINGTIME_DEFAULT_ORDERED_OPTION = "closingTime";
 
 	public static final String DP_USE_PERIOD_UNIT_CD_NONE = "PD00310"; // 사용기간 단위 코드 (무제한)
-	public static final String DP_USE_PERIOD_UNIT_CD_HOUR = "PD00311"; // 사용기간 단위 코드(시간    )
-	public static final String DP_USE_PERIOD_UNIT_CD_DAY = "PD00312"; // 사용기간 단위 코드(일      )
-	public static final String DP_USE_PERIOD_UNIT_CD_MONTH = "PD00313"; // 사용기간 단위 코드(월      )
-	public static final String DP_USE_PERIOD_UNIT_CD_YEAR = "PD00314"; // 사용기간 단위 코드(년      )
-	public static final String DP_USE_PERIOD_UNIT_CD_LIMIT_DAY = "PD00315"; // 사용기간 단위 코드(당일    )
-	public static final String DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH = "PD00316"; // 사용기간 단위 코드(당월    )
-	public static final String DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR = "PD00317"; // 사용기간 단위 코드(당년    )
-	public static final String DP_USE_PERIOD_UNIT_CD_MINUTE = "PD00318"; // 사용기간 단위 코드(분      )
+	public static final String DP_USE_PERIOD_UNIT_CD_HOUR = "PD00311"; // 사용기간 단위 코드(시간 )
+	public static final String DP_USE_PERIOD_UNIT_CD_DAY = "PD00312"; // 사용기간 단위 코드(일 )
+	public static final String DP_USE_PERIOD_UNIT_CD_MONTH = "PD00313"; // 사용기간 단위 코드(월 )
+	public static final String DP_USE_PERIOD_UNIT_CD_YEAR = "PD00314"; // 사용기간 단위 코드(년 )
+	public static final String DP_USE_PERIOD_UNIT_CD_LIMIT_DAY = "PD00315"; // 사용기간 단위 코드(당일 )
+	public static final String DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH = "PD00316"; // 사용기간 단위 코드(당월 )
+	public static final String DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR = "PD00317"; // 사용기간 단위 코드(당년 )
+	public static final String DP_USE_PERIOD_UNIT_CD_MINUTE = "PD00318"; // 사용기간 단위 코드(분 )
 	public static final String DP_USE_PERIOD_UNIT_CD_CALENDAR = "PD00319"; // 사용기간 단위 코드(기간선택)
 
 	public static final String DP_FORDOWNLOAD_ENCRYPT_DIGEST = "HexString"; // for download 암호화 digest
@@ -605,4 +605,9 @@ public class DisplayConstants {
 	 * 부분유료화_자식상품
 	 */
 	public static final String DP_PART_CHILD_CLSF_CD = "PD012302";
+
+	/**
+	 * OPENAPI APP URL
+	 */
+	public static final String DP_OPENAPI_APP_URL = "http://www.tstore.co.kr/userpoc/game/viewProduct.omp?insDpCatNo=";
 }
