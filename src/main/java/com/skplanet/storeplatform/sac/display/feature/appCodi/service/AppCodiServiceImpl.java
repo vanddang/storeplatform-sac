@@ -116,21 +116,6 @@ public class AppCodiServiceImpl implements AppCodiService {
 			this.log.debug("[searchAppCodiList] deviceId : {}", deviceId);
 		}
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(userKey)) {
-			throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-		}
-		if (StringUtils.isEmpty(deviceIdType)) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceIdType", deviceIdType);
-		}
-		if (StringUtils.isEmpty(deviceId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceId", deviceId);
-		}
-		// 기기ID유형 유효값 체크
-		if (!StringUtils.equalsIgnoreCase(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN, deviceIdType)) {
-			throw new StorePlatformException("SAC_DSP_0003", "deviceIdType", deviceIdType);
-		}
-
 		// 상품 아이디
 		String sPid = "";
 		// 추천 사유 코드
