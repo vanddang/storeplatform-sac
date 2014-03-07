@@ -43,16 +43,7 @@ public class EpubControllerTest {
 	@Test
 	public void searchEpubChannel_ebook() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-        /*
-{
-"channelId" : "H000044572",
-"deviceKey" : "DE201402201711283140002222",
-"userKey" : "US201402201711282940003170"
-}
-
-         */
-		//param.put("channelId", "H000044572");
-		param.put("channelId", "H090131229");
+		param.put("channelId", "H900063919");
 		param.put("deviceKey", "DE201402201711283140002222");
 		param.put("userKey", "US201402201711282940003170");
 		String json = this.convertMapToJson(param);
@@ -60,7 +51,6 @@ public class EpubControllerTest {
 		this.mvc.perform(
 				post("/display/epub/channel/detail/v1")
 						.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-						// TODO: Header 추가
                         .header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
                         .header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +63,7 @@ public class EpubControllerTest {
     @Test
     public void searchEpubSeries_ebook() throws Exception {
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("channelId", "H900013694");
+        param.put("channelId", "H900064860");
         param.put("bookTypeCd", "DP004301");
         param.put("deviceKey", "DE201402201711283140002222");
         param.put("userKey", "US201402201711282940003170");

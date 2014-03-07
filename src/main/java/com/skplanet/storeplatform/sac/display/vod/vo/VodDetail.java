@@ -47,7 +47,8 @@ public class VodDetail extends CommonInfo {
 	/** 등록일시 */
 	private Date regDt;
 
-	// private String vodTitlNm;
+    /** VOD 타이틀명 */
+	private String vodTitlNm;
 	/** 상품명 */
 	private String prodNm;
 	/** 상품 기본 설명 */
@@ -284,8 +285,9 @@ public class VodDetail extends CommonInfo {
 		this.prodId = prodId;
 	}
 
-	//public String getVodTitlNm() { return this.vodTitlNm; }
-	//public void setVodTitlNm(String vodTitlNm) { this.vodTitlNm = vodTitlNm;}
+	public String getVodTitlNm() { return this.vodTitlNm; }
+
+	public void setVodTitlNm(String vodTitlNm) { this.vodTitlNm = vodTitlNm;}
 
 	/**
 	 * 상품명

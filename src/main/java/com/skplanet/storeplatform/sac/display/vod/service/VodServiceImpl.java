@@ -67,34 +67,39 @@ public class VodServiceImpl implements VodService {
 
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 
-		// --------------------------------------------------------
 		// 1. Channel 정보 조회
-		// --------------------------------------------------------
-		req.setImgCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-		VodDetail vodDetail = this.commonDAO.queryForObject("VodDetail.selectVodChannel", req, VodDetail.class);
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("imgCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+        param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
+        param.put("deviceModel", req.getDeviceModel());
+        param.put("channelId", req.getChannelId());
+        param.put("langCd", req.getLangCd());
+        param.put("tenantId", req.getTenantId());
+        param.put("orderedBy", StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT));
+        param.put("offset", req.getOffset());
+        param.put("count", req.getCount());
+
+		VodDetail vodDetail = this.commonDAO.queryForObject("VodDetail.selectVodChannel", param, VodDetail.class);
 		logger.debug("vodDetail={}", vodDetail);
 
 		if(vodDetail != null) {
-
 			//Screenshots
 			ProductImage productImage = new ProductImage();
 			productImage.setProdId(req.getChannelId());
 			productImage.setLangCd(req.getLangCd());
-			List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", productImage, ProductImage.class);
+			List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", param, ProductImage.class);
 			this.mapProduct(req, product, vodDetail, screenshotList);
 
-			// --------------------------------------------------------
 			// 2. subProjectList
-			// --------------------------------------------------------
-            List<VodDetail> subProductList = this.commonDAO.queryForList("VodDetail.selectVodSeries", req, VodDetail.class);
+            List<VodDetail> subProductList = this.commonDAO.queryForList("VodDetail.selectVodSeries", param, VodDetail.class);
 
             List<ExistenceScRes> existenceScResList = getExistenceScReses(req, subProductList);
             this.mapSubProductList(req, product, subProductList, existenceScResList);
 
 			res.setProduct(product);
 		} else {
-			//TODO : 데이터 없을 경우..
-		}
+            throw new StorePlatformException("SAC_DSP_0009");
+        }
 		return res;
 	}
 
@@ -138,9 +143,9 @@ public class VodServiceImpl implements VodService {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
-		product.setTitle(new Title(mapperVO.getProdNm()));
+		product.setTitle(mapTitle(mapperVO));
 
-		List<Source> sourceList = this.getSourceList(mapperVO, screenshotList);
+		List<Source> sourceList = this.mapSourceList(mapperVO, screenshotList);
 		product.setSourceList(sourceList);
 
 		// 상품 설명
@@ -150,41 +155,56 @@ public class VodServiceImpl implements VodService {
 
 
 		// SupportList
-		List<Support> supportList = this.getSupportList(mapperVO);
+		List<Support> supportList = this.mapSupportList(mapperVO);
 		product.setSupportList(supportList);
 
 		// MenuList
-		List<Menu> menuList = this.getMenuList(mapperVO);
+		List<Menu> menuList = this.mapMenuList(mapperVO);
 		product.setMenuList(menuList);
 
 
 		// DateList
-		List<Date> dateList = this.getDateList(mapperVO, sdf);
+		List<Date> dateList = this.mapDateList(mapperVO, sdf);
 		product.setDateList(dateList);
 
 		// Contributor
-		Contributor contributor = this.getContributor(mapperVO);
+		Contributor contributor = this.mapContributor(mapperVO);
 		product.setContributor(contributor);
 
 
 		// Distributor (판매자 정보)
-		Distributor distributor = this.getDistributor(mapperVO);
+		Distributor distributor = this.mapDistributor(mapperVO);
 		product.setDistributor(distributor);
 
 
 		// rights
-		Rights rights = this.getRights(mapperVO, req, null);
+		Rights rights = this.mapRights(mapperVO, req, null);
 		product.setRights(rights);
 
 		//Accrual
-		Accrual accrual = this.getAccrual(mapperVO);
+		Accrual accrual = this.mapAccrual(mapperVO);
 		product.setAccrual(accrual);
 
 	}
 
+    /**
+     * Title
+     * @param mapperVO
+     * @return
+     */
+    private Title mapTitle(VodDetail mapperVO) {
+        Title title = new Title();
+        title.setPrefix(mapperVO.getVodTitlNm());
+        title.setName(mapperVO.getProdNm());
+        return title;
+    }
 
-
-	private Accrual getAccrual(VodDetail mapperVO) {
+    /**
+     * Accural
+     * @param mapperVO
+     * @return
+     */
+	private Accrual mapAccrual(VodDetail mapperVO) {
 		Accrual accrual = new Accrual();
 		accrual.setVoterCount(mapperVO.getPaticpersCnt());
 		accrual.setDownloadCount(mapperVO.getPrchsCnt());
@@ -192,9 +212,14 @@ public class VodServiceImpl implements VodService {
 		return accrual;
 	}
 
-
-
-	private Rights getRights(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
+    /**
+     * Rights
+     * @param mapperVO
+     * @param req
+     * @param existenceMap
+     * @return
+     */
+	private Rights mapRights(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
 		List<Source> sourceList;
 		Date date;
 		Rights rights = new Rights();
@@ -305,7 +330,12 @@ public class VodServiceImpl implements VodService {
 		return rights;
 	}
 
-    private Distributor getDistributor(VodDetail mapperVO) {
+    /**
+     * Distributor
+     * @param mapperVO
+     * @return
+     */
+    private Distributor mapDistributor(VodDetail mapperVO) {
 		Distributor distributor = new Distributor();
         distributor.setSellerKey(mapperVO.getSellerMbrNo());
         distributor.setName(mapperVO.getExpoSellerNm());
@@ -314,9 +344,12 @@ public class VodServiceImpl implements VodService {
 		return distributor;
 	}
 
-
-
-	private Contributor getContributor(VodDetail mapperVO) {
+    /**
+     * Contributor
+     * @param mapperVO
+     * @return
+     */
+	private Contributor mapContributor(VodDetail mapperVO) {
 		Contributor contributor = new Contributor();
 		contributor.setDirector(mapperVO.getArtist2Nm()); 	//감독
 		contributor.setArtist(mapperVO.getArtist1Nm()); 	//출연
@@ -331,10 +364,14 @@ public class VodServiceImpl implements VodService {
 		return contributor;
 	}
 
-
-
-	private List<Source> getSourceList(VodDetail mapperVO,
-			List<ProductImage> screenshotList) {
+    /**
+     * SourceList
+     * @param mapperVO
+     * @param screenshotList
+     * @return
+     */
+	private List<Source> mapSourceList(VodDetail mapperVO,
+                                       List<ProductImage> screenshotList) {
 		// 대표 이미지 (thumbnail)
 		List<Source> sourceList = new ArrayList<Source>();
 		if(StringUtils.isNotEmpty(mapperVO.getImgPath())) {
@@ -363,7 +400,7 @@ public class VodServiceImpl implements VodService {
      * @param sdf
      * @return
      */
-	private List<Date> getDateList(VodDetail mapperVO, SimpleDateFormat sdf) {
+	private List<Date> mapDateList(VodDetail mapperVO, SimpleDateFormat sdf) {
 		List<Date> dateList = new ArrayList<Date>();
 		if(mapperVO.getRegDt() != null) {
             Date date = new Date();
@@ -386,7 +423,7 @@ public class VodServiceImpl implements VodService {
      * @param mapperVO
      * @return
      */
-	private List<Menu> getMenuList(VodDetail mapperVO) {
+	private List<Menu> mapMenuList(VodDetail mapperVO) {
 		List<Menu> menuList = new ArrayList<Menu>();
 		Menu menu = new Menu();
 		menu.setId(mapperVO.getTopMenuId());
@@ -418,7 +455,7 @@ public class VodServiceImpl implements VodService {
      * @param mapperVO
      * @return
      */
-	private List<Support> getSupportList(VodDetail mapperVO) {
+	private List<Support> mapSupportList(VodDetail mapperVO) {
 		List<Support> supportList = new ArrayList<Support>();
 		/** HDCP_YN */
 		Support support = new Support();
@@ -484,34 +521,34 @@ public class VodServiceImpl implements VodService {
 				subProduct.setProductIntroduction(mapperVO.getProdIntrDscr());
 
                 //SupportList
-				List<Support> supportList = this.getSupportList(mapperVO);
+				List<Support> supportList = this.mapSupportList(mapperVO);
 				subProduct.setSupportList(supportList);
 
                 //MenuList
-				List<Menu> menuList = this.getMenuList(mapperVO);
+				List<Menu> menuList = this.mapMenuList(mapperVO);
 				subProduct.setMenuList(menuList);
 
                 //DateList
-				List<Date> dateList = this.getDateList(mapperVO, sdf);
+				List<Date> dateList = this.mapDateList(mapperVO, sdf);
 				subProduct.setDateList(dateList);
 
                 //Contributor
-				Contributor contributor = this.getContributor(mapperVO);
+				Contributor contributor = this.mapContributor(mapperVO);
 				subProduct.setContributor(contributor);
 
                 //Distributor
-				Distributor distributor = this.getDistributor(mapperVO);
+				Distributor distributor = this.mapDistributor(mapperVO);
 		        subProduct.setDistributor(distributor);
 
                 // rights
-                Rights rights = this.getRights(mapperVO, req, existenceMap);
+                Rights rights = this.mapRights(mapperVO, req, existenceMap);
                 subProduct.setRights(rights);
 
 				// VOD
-                subProduct.setVod(getVod(mapperVO));
+                subProduct.setVod(mapVod(mapperVO));
 
                 //Accrual
-				Accrual accrual = this.getAccrual(mapperVO);
+				Accrual accrual = this.mapAccrual(mapperVO);
 				subProduct.setAccrual(accrual);
 
 				subProjectList.add(subProduct);
@@ -521,7 +558,12 @@ public class VodServiceImpl implements VodService {
 
 	}
 
-    private Vod getVod(VodDetail mapperVO) {
+    /**
+     * VOD
+     * @param mapperVO
+     * @return
+     */
+    private Vod mapVod(VodDetail mapperVO) {
         Vod vod = new Vod();
         List<VideoInfo> videoInfoList = new ArrayList<VideoInfo>();
         Time runningTime = new Time();
