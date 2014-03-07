@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 
 /**
  * Interface Message Product Value Object.
@@ -275,6 +276,11 @@ public class Product extends CommonInfo implements Serializable {
 	 * 상품 제공 금액.
 	 */
 	private Integer prodOffrAmt;
+
+	/**
+	 * URL 정보
+	 */
+	private List<Url> urlList;
 
 	public String getSalesStatus() {
 		return this.salesStatus;
@@ -1112,6 +1118,21 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setProdOffrAmt(Integer prodOffrAmt) {
 		this.prodOffrAmt = prodOffrAmt;
+	}
+
+	/**
+	 * @return the urlList
+	 */
+	public List<Url> getUrlList() {
+		return this.urlList;
+	}
+
+	/**
+	 * @param urlList
+	 *            the urlList to set
+	 */
+	public void setUrlList(List<Url> urlList) {
+		this.urlList = urlList;
 	}
 
 }
