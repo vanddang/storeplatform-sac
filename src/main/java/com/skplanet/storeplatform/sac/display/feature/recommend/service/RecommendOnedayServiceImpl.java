@@ -103,7 +103,7 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 		if (StringUtils.isEmpty(requestVO.getSearchType())) {
 			requestVO.setSearchType("A");
 		}
-		System.out.println("3333333333333331111111111");
+
 		if (StringUtils.isNotEmpty(requestVO.getPeriod())) {
 			// 검색시간 설정
 			List<String> periodList = Arrays.asList(StringUtils.split(requestVO.getPeriod(), "/"));

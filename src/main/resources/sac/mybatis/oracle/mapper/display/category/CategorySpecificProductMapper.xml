@@ -494,7 +494,7 @@
 		AND A.PROD_ID = C.PROD_ID
 		AND C.TENANT_ID = #{tenantHeader.tenantId}
 		AND C.EXPO_YN = 'Y'
-		AND B.META_CLSF_CD IN ('CT30','CT31','CT32','CT33')
+		/*AND B.META_CLSF_CD IN ('CT30','CT31','CT32','CT33')*/
     </select>
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="MetaInfo">
        SELECT TB.UP_MENU_ID

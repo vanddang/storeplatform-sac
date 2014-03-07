@@ -63,16 +63,6 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 		OtherServiceGroupSacRes appRes = new OtherServiceGroupSacRes();
 		CommonResponse commonRes = new CommonResponse();
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(req.getList())) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("필수 파라미터 부족");
-			this.logger.debug("----------------------------------------------------------------");
-
-			appRes.setCommonResponse(commonRes);
-			return appRes;
-		}
-
 		// prodId 리스트로 변경
 		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 		if (prodIdList.size() > 50) {

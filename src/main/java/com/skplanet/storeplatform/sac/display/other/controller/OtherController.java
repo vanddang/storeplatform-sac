@@ -61,7 +61,8 @@ public class OtherController {
 	 */
 	@RequestMapping(value = "/serviceGroup/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public OtherServiceGroupSacRes searchServiceGroupList(OtherServiceGroupSacReq req, SacRequestHeader header) {
+	public OtherServiceGroupSacRes searchServiceGroupList(@Validated OtherServiceGroupSacReq req,
+			SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchServiceGroupList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
