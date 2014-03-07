@@ -66,7 +66,7 @@
     </bean>
     
     <beans profile="dev,qa,real">
-        <bean id="defaultDataSourceForCmsAppSP" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <bean id="defaultDataSourceForCmsApp" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
             <constructor-arg ref="defaultDataSourceForCmsAppJNDI" />
         </bean>
         <jee:jndi-lookup id="defaultDataSourceForCmsAppJNDI" jndi-name="#{propertiesForSac['jdbc.jndi.lookup']}" /> 
