@@ -28,7 +28,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
@@ -340,7 +339,6 @@ public class BrandshopServiceImpl implements BrandshopService {
 		Accrual accrual = null;
 
 		Product product = null;
-		Layout layOut = null;
 
 		List<Menu> menuList = null;
 		List<Source> sourceList = null;
@@ -361,7 +359,6 @@ public class BrandshopServiceImpl implements BrandshopService {
 		rights = new Rights();
 		accrual = new Accrual();
 
-		layOut = new Layout();
 		// title 설정
 		title.setText("브랜드샵 이름");
 		// source 설정
@@ -375,9 +372,6 @@ public class BrandshopServiceImpl implements BrandshopService {
 		menu.setId("dummyMenuId0");
 		menu.setName("game/simulation");
 		menuList.add(menu);
-		layOut.setTitle(title);
-		layOut.setSource(source);
-		layOut.setMenu(menu);
 
 		// Identifier 설정
 		identifierList = new ArrayList<Identifier>();
@@ -423,7 +417,6 @@ public class BrandshopServiceImpl implements BrandshopService {
 
 		commonResponse.setTotalCount(productList.size());
 		res.setCommonResponse(commonResponse);
-		res.setLayout(layOut);
 		res.setProductList(productList);
 
 		return res;
