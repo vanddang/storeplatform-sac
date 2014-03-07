@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * Onday 상품 조회 Request Value Object.
  * 
@@ -11,6 +13,8 @@ public class RecommendOnedaySacReq {
 	private String prodGradeCd; // 상품 등급 코드
 	private String searchType; // 검색조건
 	private String menuId; // 메뉴ID
+
+	@NotBlank
 	private String period; // 조회 기간
 	private String periodStart; // 조회시작 기간
 	private String periodEnd; // 조회종료 기간
