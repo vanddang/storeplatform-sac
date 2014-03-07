@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideIsfSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -94,7 +94,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public AppguideSacRes searchIsfRecommendList(AppguideSacReq requestVO, SacRequestHeader requestHeader)
+	public AppguideSacRes searchIsfRecommendList(AppguideIsfSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException {
 
 		boolean isExists = true;
@@ -249,7 +249,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 						}
 						metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
 						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
+							product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
 							productList.add(product);
 						}
 
@@ -265,7 +265,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 									MetaInfo.class);
 							if (metaInfo != null) {
 								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.responseInfoGenerateFacade.generateSpecificMovieProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
 								} else {
 									product = this.responseInfoGenerateFacade
 											.generateSpecificBroadcastProduct(metaInfo);
@@ -284,9 +284,9 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 									MetaInfo.class);
 							if (metaInfo != null) {
 								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
 								} else {
-									product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
 								}
 								productList.add(product);
 							}
@@ -302,7 +302,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 							metaInfo = this.commonDAO.queryForObject("Isf.MetaInfo.getMusicMetaInfo", paramMap,
 									MetaInfo.class);
 							if (metaInfo != null) {
-								product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
 								productList.add(product);
 							}
 						}
@@ -316,7 +316,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 						metaInfo = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap,
 								MetaInfo.class);
 						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(metaInfo);
+							product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
 							productList.add(product);
 						}
 					}
@@ -357,9 +357,11 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 
 				for (Product product : productList) {
 					for (Identifier id : product.getIdentifierList()) {
-						sPid = id.getText();
-						if (StringUtil.isNotEmpty(sPid))
-							break;
+						if (id.getType().equalsIgnoreCase(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD)) {
+							sPid = id.getText();
+							if (StringUtil.isNotEmpty(sPid))
+								break;
+						}
 					}
 					sRelId = mapRelProd.get(sPid);
 					sReasonCode = mapReason.get(sPid);
@@ -391,7 +393,6 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 								top_cat_nm_pid = menu.getName();
 							}
 						}
-
 						reasonMessage = StringUtils.replace(reasonMessage, "$4", top_cat_nm_pid);
 
 						// 연관상품 정보가 있을 경우에 치환처리함
@@ -456,7 +457,6 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 					int iEndRow = NumberUtils.toInt(sEndRow);
 					if (iEndRow > iStartRow) {
 						int iAppCodeReasonSize = listAppCodiReason.size();
-
 						iStartRow = (iStartRow < 0) ? 0 : iStartRow;
 						iEndRow = (iEndRow > iAppCodeReasonSize) ? iAppCodeReasonSize : iEndRow;
 
@@ -788,7 +788,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 	 * requestVO)
 	 */
 	@Override
-	public AppguideSacRes searchDummyIsfRecommendList(AppguideSacReq requestVO, SacRequestHeader requestHeader) {
+	public AppguideSacRes searchDummyIsfRecommendList(AppguideIsfSacReq requestVO, SacRequestHeader requestHeader) {
 
 		AppguideSacRes response = new AppguideSacRes();
 		CommonResponse commonResponse = null;
@@ -998,7 +998,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 		mapReasonCode.put("9399", "신규 사용자의 인기 컨텐츠");
 	}
 
-	private IsfEcReq makeRequest(AppguideSacReq requestVO) {
+	private IsfEcReq makeRequest(AppguideIsfSacReq requestVO) {
 
 		IsfEcReq request = new IsfEcReq();
 
@@ -1006,7 +1006,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 		request.setMbn(requestVO.getUserKey());
 		request.setMdn(requestVO.getDeviceId());
 		request.setChCode("M");
-		// request.setType("appguide");
+		request.setType("appguide");
 
 		if (this.log.isDebugEnabled()) {
 			this.log.debug(request.toString());

@@ -1,8 +1,8 @@
 package com.skplanet.storeplatform.sac.display.appguide.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideThemeSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -23,6 +23,6 @@ public interface AppguideThemeListService {
 	 *            requestHeader
 	 * @return AppguideSacRes
 	 */
-	public AppguideSacRes searchThemeRecommendList(AppguideSacReq requestVO, SacRequestHeader requestHeader)
+	public AppguideSacRes searchThemeRecommendList(AppguideThemeSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException;
 }

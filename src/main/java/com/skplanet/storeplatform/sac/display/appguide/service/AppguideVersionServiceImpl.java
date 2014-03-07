@@ -22,9 +22,8 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideVersionSacReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -57,7 +56,7 @@ public class AppguideVersionServiceImpl implements AppguideVersionService {
 	 * requestVO, SacRequestHeader requestHeader)
 	 */
 	@Override
-	public AppguideSacRes searchVersion(AppguideSacReq requestVO, SacRequestHeader requestHeader)
+	public AppguideSacRes searchVersion(AppguideVersionSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException {
 
 		AppguideSacRes responseVO = new AppguideSacRes();
@@ -77,37 +76,15 @@ public class AppguideVersionServiceImpl implements AppguideVersionService {
 		mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
 		String packageName = requestVO.getPackageName();
-		/*
-		 * String userKey = requestVO.getUserKey(); String deviceIdType = requestVO.getDeviceIdType(); String deviceId =
-		 * requestVO.getDeviceId();
-		 */
 		String osVersion = requestVO.getOsVersion();
 		if (this.log.isDebugEnabled()) {
 			this.log.debug("[{}] packageName : {}", className, packageName);
 			this.log.debug("[{}] osVersion : {}", className, osVersion);
 		}
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(packageName)) {
-			throw new StorePlatformException("SAC_DSP_0002", "packageName", packageName);
-		}
-		/*
-		 * if (StringUtils.isEmpty(userKey)) { throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey); }
-		 * if (StringUtils.isEmpty(deviceIdType)) { throw new StorePlatformException("SAC_DSP_0002", "deviceIdType",
-		 * deviceIdType); } if (StringUtils.isEmpty(deviceId)) { throw new StorePlatformException("SAC_DSP_0002",
-		 * "deviceId", deviceId); }
-		 */
-		if (StringUtils.isEmpty(osVersion)) {
-			throw new StorePlatformException("SAC_DSP_0002", "osVersion", osVersion);
-		}
 		mapReq.put("packageName", packageName);
 		mapReq.put("osVersion", osVersion);
 
-		// 기기ID유형 유효값 체크
-		/*
-		 * if (!StringUtils.equalsIgnoreCase(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN, deviceIdType)) { throw new
-		 * StorePlatformException("SAC_DSP_0003", "deviceIdType", deviceIdType); }
-		 */
 		Appguide appguide = this.commonDAO.queryForObject("Appguide.getVersion", mapReq, Appguide.class);
 		if (appguide == null) {
 			throw new StorePlatformException("SAC_DSP_0009");

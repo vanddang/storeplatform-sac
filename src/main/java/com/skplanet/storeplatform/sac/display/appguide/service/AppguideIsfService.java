@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.display.appguide.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideIsfSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -23,7 +23,7 @@ public interface AppguideIsfService {
 	 *            requestHeader
 	 * @return AppguideSacRes
 	 */
-	public AppguideSacRes searchIsfRecommendList(AppguideSacReq requestVO, SacRequestHeader requestHeader)
+	public AppguideSacRes searchIsfRecommendList(AppguideIsfSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException;
 
 	/**
@@ -37,6 +37,6 @@ public interface AppguideIsfService {
 	 *            requestHeader
 	 * @return AppguideSacRes
 	 */
-	public AppguideSacRes searchDummyIsfRecommendList(AppguideSacReq requestVO, SacRequestHeader requestHeader);
+	public AppguideSacRes searchDummyIsfRecommendList(AppguideIsfSacReq requestVO, SacRequestHeader requestHeader);
 
 }

@@ -1,6 +1,5 @@
 package com.skplanet.storeplatform.sac.display.appguide.controller;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideApprankingSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideApprankingSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideIsfSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideThemeProdSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideThemeSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideVersionSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideApprankingService;
 import com.skplanet.storeplatform.sac.display.appguide.service.AppguideIsfService;
@@ -66,15 +68,13 @@ public class AppguideController {
 	 */
 	@RequestMapping(value = "/isf/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AppguideSacRes searchIsfRecommendList(@RequestBody AppguideSacReq requestVO, SacRequestHeader requestHeader)
-			throws StorePlatformException {
+	public AppguideSacRes searchIsfRecommendList(@RequestBody @Validated AppguideIsfSacReq requestVO,
+			SacRequestHeader requestHeader) throws StorePlatformException {
 
 		this.logger.debug(this.getClass().getName() + ".searchIsfRecommendList start !!");
 		this.logger.debug("request {}", requestVO);
-		if (StringUtils.equals("dummy", requestVO.getFilteredBy()))
-			return this.appguideIsfService.searchDummyIsfRecommendList(requestVO, requestHeader);
-		else
-			return this.appguideIsfService.searchIsfRecommendList(requestVO, requestHeader);
+
+		return this.appguideIsfService.searchIsfRecommendList(requestVO, requestHeader);
 	}
 
 	/**
@@ -90,8 +90,8 @@ public class AppguideController {
 	 */
 	@RequestMapping(value = "/version/get/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AppguideSacRes searchVersion(@RequestBody AppguideSacReq requestVO, SacRequestHeader requestHeader)
-			throws StorePlatformException {
+	public AppguideSacRes searchVersion(@RequestBody @Validated AppguideVersionSacReq requestVO,
+			SacRequestHeader requestHeader) throws StorePlatformException {
 
 		this.logger.debug(this.getClass().getName() + ".searchVersion start !!");
 		this.logger.debug("request {}", requestVO);
@@ -134,8 +134,8 @@ public class AppguideController {
 	 */
 	@RequestMapping(value = "/recommend/themeMain/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AppguideSacRes searchThemeRecommendMain(@RequestBody AppguideSacReq requestVO, SacRequestHeader requestHeader)
-			throws StorePlatformException {
+	public AppguideSacRes searchThemeRecommendMain(@RequestBody @Validated AppguideThemeSacReq requestVO,
+			SacRequestHeader requestHeader) throws StorePlatformException {
 
 		this.logger.debug(this.getClass().getName() + ".searchThemeRecommendMain start !!");
 		this.logger.debug("request {}", requestVO);
@@ -155,8 +155,8 @@ public class AppguideController {
 	 */
 	@RequestMapping(value = "/recommend/theme/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AppguideSacRes searchThemeRecommendList(@RequestBody AppguideSacReq requestVO, SacRequestHeader requestHeader)
-			throws StorePlatformException {
+	public AppguideSacRes searchThemeRecommendList(@RequestBody @Validated AppguideThemeSacReq requestVO,
+			SacRequestHeader requestHeader) throws StorePlatformException {
 
 		this.logger.debug(this.getClass().getName() + ".searchThemeRecommendList start !!");
 		this.logger.debug("request {}", requestVO);
@@ -176,7 +176,7 @@ public class AppguideController {
 	 */
 	@RequestMapping(value = "/recommend/product/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AppguideSacRes searchThemeRecommendProductList(@RequestBody AppguideSacReq requestVO,
+	public AppguideSacRes searchThemeRecommendProductList(@RequestBody @Validated AppguideThemeProdSacReq requestVO,
 			SacRequestHeader requestHeader) throws StorePlatformException {
 
 		this.logger.debug(this.getClass().getName() + ".searchThemeRecommendProductList start !!");

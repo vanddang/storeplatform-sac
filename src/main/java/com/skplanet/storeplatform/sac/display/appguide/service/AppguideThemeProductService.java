@@ -1,8 +1,8 @@
 package com.skplanet.storeplatform.sac.display.appguide.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideThemeProdSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -17,12 +17,12 @@ public interface AppguideThemeProductService {
 	 * 테마 추천별 상품 목록 조회.
 	 * </pre>
 	 * 
-	 * @param AppguideSacReq
+	 * @param AppguideThemeProdSacReq
 	 *            requestVO
 	 * @param SacRequestHeader
 	 *            requestHeader
 	 * @return AppguideSacRes
 	 */
-	public AppguideSacRes searchThemeRecommendProductList(AppguideSacReq requestVO, SacRequestHeader requestHeader)
-			throws StorePlatformException;
+	public AppguideSacRes searchThemeRecommendProductList(AppguideThemeProdSacReq requestVO,
+			SacRequestHeader requestHeader) throws StorePlatformException;
 }

@@ -1,8 +1,8 @@
 package com.skplanet.storeplatform.sac.display.appguide.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideVersionSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -17,12 +17,12 @@ public interface AppguideVersionService {
 	 * 버전 정보 조회.
 	 * </pre>
 	 * 
-	 * @param AppguideSacReq
+	 * @param AppguideVersionSacReq
 	 *            requestVO
 	 * @param SacRequestHeader
 	 *            requestHeader
 	 * @return AppguideSacRes
 	 */
-	public AppguideSacRes searchVersion(AppguideSacReq requestVO, SacRequestHeader requestHeader)
+	public AppguideSacRes searchVersion(AppguideVersionSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException;
 }

@@ -23,8 +23,8 @@ import org.springframework.stereotype.Service;
 import com.mysql.jdbc.StringUtils;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideThemeProdSacReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -62,12 +62,12 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.skplanet.storeplatform.sac.biz.product.service.AppguideVersionServiceImpl#searchThemeRecommendMain(AppguideSacReq
-	 * requestVO, SacRequestHeader requestHeader)
+	 * com.skplanet.storeplatform.sac.biz.product.service.AppguideThemeProductServiceImpl#searchThemeRecommendProductList
+	 * (AppguideThemeProdSacReq requestVO, SacRequestHeader requestHeader)
 	 */
 	@Override
-	public AppguideSacRes searchThemeRecommendProductList(AppguideSacReq requestVO, SacRequestHeader requestHeader)
-			throws StorePlatformException {
+	public AppguideSacRes searchThemeRecommendProductList(AppguideThemeProdSacReq requestVO,
+			SacRequestHeader requestHeader) throws StorePlatformException {
 
 		AppguideSacRes responseVO = new AppguideSacRes();
 		List<Product> productList = new ArrayList<Product>();
@@ -76,11 +76,6 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
 		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
-
-		// 테마추천 ID
-		if (StringUtils.isNullOrEmpty(requestVO.getThemeId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "themeId", requestVO.getThemeId());
-		}
 
 		Map<String, Object> mapReq = new HashMap<String, Object>();
 		mapReq.put("tenantHeader", tenantHeader);
