@@ -14,7 +14,7 @@ public interface SalesAppService {
 	/**
 	 * 
 	 * <pre>
-	 * Download Best 상품 조회(OpenApi).
+	 * PKG Name 기반 상품 정보 조회.
 	 * </pre>
 	 * 
 	 * @param header

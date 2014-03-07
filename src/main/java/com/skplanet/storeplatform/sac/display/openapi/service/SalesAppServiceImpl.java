@@ -37,6 +37,13 @@ public class SalesAppServiceImpl implements SalesAppService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.openapi.service.SalesAppService#searchSalesAppList(com.skplanet.storeplatform
+	 * .sac.common.header.vo.SacRequestHeader, com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacReq)
+	 */
 	@Override
 	public SalesAppSacRes searchSalesAppList(SacRequestHeader header, SalesAppSacReq salesAppSacReq) {
 		// 헤더 세팅
