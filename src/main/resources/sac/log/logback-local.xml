@@ -136,6 +136,7 @@
     </logger> 
     <logger name="jdbc.sqltiming" additivity="false">
         <level value="INFO" /> 
+        <appender-ref ref="CONSOLE" />
         <appender-ref ref="SQL_ERROR_LOGGING_ROLLINGFILE" />
         <appender-ref ref="SQL_LOGGING_ROLLINGFILE" />
     </logger>
