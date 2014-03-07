@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.Resource;
+
 import org.junit.runner.RunWith;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,14 +21,14 @@ import org.springframework.util.StopWatch;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class AmqpServiceImplTest {
 
-	// @Resource(name="memberAddDeviceAmqpTemplate")
-	// private AmqpTemplate memberAddDeviceAmqpTemplate;
+	@Resource(name = "memberAddDeviceAmqpTemplate")
+	private AmqpTemplate memberAddDeviceAmqpTemplate;
 
 	class Worker implements Runnable {
 		@Override
 		public void run() {
 			TestMessage message = new TestMessage("param1", "param2", "param3", "param4");
-			// memberAddDeviceAmqpTemplate.convertAndSend(message);
+			AmqpServiceImplTest.this.memberAddDeviceAmqpTemplate.convertAndSend(message);
 			System.out.println("[" + this.toString() + "]convertAndSend");
 			try {
 			Thread.sleep(1000);
@@ -60,9 +63,9 @@ public class AmqpServiceImplTest {
 	public void receive() {
 		Message message = null;
 		int count = 0;
-		// while ((message = this.memberAddDeviceAmqpTemplate.receive("sac.tenant.member.add-device.async")) != null) {
-		// System.out.println((++count)+"message = " + message);
-		// }
+		while ((message = this.memberAddDeviceAmqpTemplate.receive("sac.tenant.member.add-device.async")) != null) {
+		System.out.println((++count) + "message = " + message);
+		}
 	}
 
 	class TestMessage implements Serializable {

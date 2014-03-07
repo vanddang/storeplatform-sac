@@ -3,8 +3,11 @@ package com.skplanet.storeplatform.sac.display.product.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -44,11 +47,11 @@ public class CmsDeviceServiceImpl implements CmsDeviceService {
 	@Qualifier("cmsApp")
 	private CommonDAO commonDAO;
 
-	// @Resource
-	// private AmqpTemplate deviceMappingRabbitTemplate;
+	@Resource
+	private AmqpTemplate deviceMappingRabbitTemplate;
 
 	/**
-	 * @description DEVICE-MAPPING 통합CMS > dev3.0 전문 처리
+	 * @descriion DEVICE-MPING 통합CMS > dev3.0 전문 처리
 	 * @param DeviceMappingQueueVO
 	 * @return CmsVo
 	 * @exception StorePlatformException
