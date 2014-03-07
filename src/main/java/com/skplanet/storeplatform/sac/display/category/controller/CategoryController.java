@@ -48,6 +48,7 @@ import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificA
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificEbookService;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificMusicService;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificSongService;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificVodService;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificWebtoonService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryVodBoxService;
@@ -99,6 +100,9 @@ public class CategoryController {
 
 	@Autowired
 	private CategoryWebtoonSeriesService categoryWebtoonSeriesService;
+
+	@Autowired
+	private CategorySpecificSongService categorySpecificSongService;
 
 	/**
 	 * <pre>
@@ -263,7 +267,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/specific/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategorySpecificSacRes searchSpecificAppList(CategorySpecificSacReq req, SacRequestHeader header) {
+	public CategorySpecificSacRes searchSpecificAppList(@Validated CategorySpecificSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificAppList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -285,7 +289,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/specific/ebook/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategorySpecificSacRes searchSpecificEbookList(CategorySpecificSacReq req, SacRequestHeader header) {
+	public CategorySpecificSacRes searchSpecificEbookList(@Validated CategorySpecificSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificEbookList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -307,7 +311,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/specific/vod/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategorySpecificSacRes searchSpecificVodList(CategorySpecificSacReq req, SacRequestHeader header) {
+	public CategorySpecificSacRes searchSpecificVodList(@Validated CategorySpecificSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificVodList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -329,7 +333,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/specific/music/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategorySpecificSacRes searchSpecificMusicList(CategorySpecificSacReq req, SacRequestHeader header) {
+	public CategorySpecificSacRes searchSpecificMusicList(@Validated CategorySpecificSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificMusicList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -351,7 +355,8 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/specific/webtoon/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategorySpecificSacRes searchSpecificWebtoonList(CategorySpecificSacReq req, SacRequestHeader header) {
+	public CategorySpecificSacRes searchSpecificWebtoonList(@Validated CategorySpecificSacReq req,
+			SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificWebtoonList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -373,12 +378,35 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/webtoon/series/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryWebtoonSeriesSacRes searchWebtoonSeriesList(CategoryWebtoonSeriesSacReq req, SacRequestHeader header) {
+	public CategoryWebtoonSeriesSacRes searchWebtoonSeriesList(@Validated CategoryWebtoonSeriesSacReq req,
+			SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificWebtoonList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.categoryWebtoonSeriesService.getCategoryWebtoonSeriesList(req, header);
+
+	}
+
+	/**
+	 * <pre>
+	 * 특정 상품 Song 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return CategorySpecificSacRes
+	 */
+	@RequestMapping(value = "/specific/song/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public CategorySpecificSacRes searchSpecificSongList(@Validated CategorySpecificSacReq req, SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchSpecificMusicList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.categorySpecificSongService.getSpecificSongList(req, header);
 
 	}
 }
