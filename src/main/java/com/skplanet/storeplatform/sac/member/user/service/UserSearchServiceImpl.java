@@ -1637,8 +1637,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 			logger.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserDeviceInfo Response : {}", resMap);
 
-		} else {
-			throw new StorePlatformException("SAC_MEM_0003", "userKey", "");
 		}
 
 		return resMap;

@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -272,6 +273,31 @@ public class SearchUserSCIControllerTest {
 				deviceKeyList.add("DE201402120409541480001552");
 				deviceKeyList.add("DE201402120522137350001556");
 				deviceKeyList.add("DE201402121456183890001558");
+
+				searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
+				return searchUserDeviceSacReq;
+			}
+		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/** ==================== DevceKey를 이용한 회원정보&디바이스정보 조회 ============ */
+	@Test(expected = StorePlatformException.class)
+	public void B_TEST_오류_DeviceKeyList_검색() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+				List<String> deviceKeyList = new ArrayList<String>();
+				deviceKeyList.add("DE20140212040954148000155211");
+				deviceKeyList.add("DE20140212052213735000155611");
+				deviceKeyList.add("DE20140212145618389000155811");
 
 				searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
 				return searchUserDeviceSacReq;
