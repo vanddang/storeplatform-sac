@@ -142,6 +142,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq.setParentSellerKey(req.getSellerKey());
+		schReq.setLoginSort(req.getLoginSort());
 		SearchSubSellerListResponse schRes = this.sellerSCI.searchSubSellerList(schReq);
 
 		ListSubsellerRes response = new ListSubsellerRes();
