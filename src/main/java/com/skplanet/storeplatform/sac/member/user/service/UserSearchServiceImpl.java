@@ -1383,6 +1383,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 			 */
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 				logger.info("## 조회된 사용자 정책이 없습니다. [{}]", spe.getErrorInfo().getCode());
+				/**
+				 * Data가 없을 경우 Element 는 생성하는걸로...
+				 */
+				policyInfos = new ArrayList<IndividualPolicyInfo>();
+				IndividualPolicyInfo policyInfo = new IndividualPolicyInfo();
+				policyInfo.setPolicyCode("");
+				policyInfos.add(policyInfo);
 			} else {
 				throw spe;
 			}
