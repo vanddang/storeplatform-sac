@@ -40,7 +40,7 @@ public class AutoPaymentCancelSacReq extends CommonInfo implements Serializable 
 	private String prchsId; // 구매ID
 	@NotNull
 	@NotEmpty
-	private String closedCd; // 해지예약코드
+	private String autoPaymentStatusCd; // 해지예약코드
 	@NotNull
 	@NotEmpty
 	private String closedReasonCd; // 해지사유 코드
@@ -124,18 +124,18 @@ public class AutoPaymentCancelSacReq extends CommonInfo implements Serializable 
 	}
 
 	/**
-	 * @return the closedCd
+	 * @return the autoPaymentStatusCd
 	 */
-	public String getClosedCd() {
-		return this.closedCd;
+	public String getAutoPaymentStatusCd() {
+		return this.autoPaymentStatusCd;
 	}
 
 	/**
-	 * @param closedCd
-	 *            the closedCd to set
+	 * @param autoPaymentStatusCd
+	 *            the autoPaymentStatusCd to set
 	 */
-	public void setClosedCd(String closedCd) {
-		this.closedCd = closedCd;
+	public void setAutoPaymentStatusCd(String autoPaymentStatusCd) {
+		this.autoPaymentStatusCd = autoPaymentStatusCd;
 	}
 
 	/**
