@@ -119,7 +119,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String userKey = null;
 		String deviceKey = null;
 		String modelCd = null;
-
+		String changeCaseCode = null;
 		String result = null;
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
@@ -130,6 +130,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			if (StringUtil.equals(mdn, beMdn)) { // 변경mdn과 이전mdn이 동일한 경우 타통신사에서 SKT로 번호이동 한걸로 간주한다. 
 
 				LOGGER.info("::: 변경mdn과 이전mdn이 동일한 경우 타통신사에서 SKT로 번호이동 한걸로 간주 mdn : {}, beMdn : {}, svcMngNum : {}", mdn, beMdn, svcMngNum);
+				changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_MOVE;
 
 				/* deviceId로 휴대기기 조회 */
 				SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
@@ -167,7 +168,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userMbrDevice.setDeviceModelNo(modelCd);
 				userMbrDevice.setSvcMangNum(svcMngNum);
 				userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_MOVE); // 휴대기기 변경 유형코드 번호이동
+				userMbrDevice.setChangeCaseCode(changeCaseCode);
 
 				List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 				UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
@@ -189,6 +190,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			} else { // SKT MDN이 번호변경된 경우
 
 				LOGGER.info("::: SKT MDN이 번호변경된 경우 mdn : {}, beMdn : {}, svcMngNum : {}", mdn, beMdn, svcMngNum);
+				changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE;
 
 				/* 휴대기기 정보조회 - 서비스 관리 번호 */
 				SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
@@ -251,7 +253,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userMbrDevice.setDeviceID(mdn);
 				userMbrDevice.setDeviceKey(deviceKey);
 				userMbrDevice.setDeviceModelNo(modelCd);
-				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE); // 휴대기기 변경 유형코드 : 번호변경
+				userMbrDevice.setChangeCaseCode(changeCaseCode);
 				userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 
 				List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
@@ -302,7 +304,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			/* 휴대기기 변경 히스토리 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
-			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
+			changeDeviceLog.setChangeCaseCode(changeCaseCode);
 			changeDeviceLog.setDeviceID(mdn);
 			changeDeviceLog.setMessageIDP(requestUrl);
 			if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_SUCCESS_CODE)) {
