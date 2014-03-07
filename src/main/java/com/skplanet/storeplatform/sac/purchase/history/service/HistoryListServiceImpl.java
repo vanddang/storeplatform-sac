@@ -81,6 +81,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 		HistorySac historySac = new HistorySac();
 
 		List<String> prodIdList = new ArrayList<String>();
+		List<String> deviceList = new ArrayList<String>();
+
+		List<String> mdnCategoryList = new ArrayList<String>();
 
 		/*************************************************
 		 * SC Request Setting Start
@@ -125,7 +128,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 				.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
 						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
 
-		List<String> mdnCategoryList = new ArrayList<String>();
 		for (PurchaseTenantPolicy obj : purchaseTenantPolicyList) {
 			mdnCategoryList.add(obj.getTenantProdGrpCd());
 		}
@@ -200,7 +202,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setPaymentEndDt(obj.getPaymentEndDt());
 			historySac.setAfterPaymentDt(obj.getAfterPaymentDt());
 			historySac.setPrchsTme(obj.getPrchsTme());
-			historySac.setClosedCd(obj.getClosedCd());
+			historySac.setAutoPaymentStatusCd(obj.getAutoPaymentStatusCd());
 			historySac.setClosedDt(obj.getClosedDt());
 			historySac.setClosedReasonCd(obj.getClosedReasonCd());
 			historySac.setClosedReqPathCd(obj.getClosedReqPathCd());
@@ -209,6 +211,15 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 			// 상품정보 조회를 위한 상품ID 셋팅
 			prodIdList.add(historySac.getProdId());
+
+			/**
+			 * 회원정보를 조회하기위한 DECIDE_ID SETTING 보유상품일 경우 발신자, 미보유상품 일 경우는 수신자 정보조회
+			 */
+			if (PurchaseConstants.USE_N.equals(request.getPrchsProdHaveYn())) {
+				deviceList.add(obj.getRecvDeviceKey());
+			} else {
+				deviceList.add(obj.getSendDeviceKey());
+			}
 		}
 		/*************************************************
 		 * SC -> SAC Response Setting Start
@@ -218,13 +229,17 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 * 상품정보 Mapping Start - SAC내부호출일 경우에는 상품정보를 조회하지 않는다.
 		 **************************************************/
 		if (!PurchaseConstants.USE_Y.equals(request.getInternalYn())) {
-			ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
-			ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
-
-			productInfoSacReq.setDeviceModelNo(request.getModel());
-			productInfoSacReq.setList(prodIdList);
-
 			if (prodIdList.size() > 0) {
+
+				ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
+				ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
+
+				productInfoSacReq.setDeviceModelNo(request.getModel());
+				productInfoSacReq.setLang(request.getLangCd());
+				productInfoSacReq.setList(prodIdList);
+
+				this.LOGGER.debug("### productInfoSacReq : {}" + productInfoSacReq.toString());
+
 				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
 
 				if (productInfoSacRes != null) {
@@ -246,10 +261,19 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 * 상품정보 Mapping End
 		 **************************************************/
 
+		/*************************************************
+		 * MDN Info Mapping Start
+		 **************************************************/
+		if (deviceList.size() > 0) {
+
+		}
+		/*************************************************
+		 * MDN Info Mapping End
+		 **************************************************/
+
 		response.setHistoryList(sacHistoryList);
 		response.setTotalCnt(scResponse.getTotalCnt());
 
-		// logger.debug("list : {}", historyListRes);
 		return response;
 	}
 

@@ -159,7 +159,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 			historySacIn.setPaymentEndDt(obj.getPaymentEndDt());
 			historySacIn.setAfterPaymentDt(obj.getAfterPaymentDt());
 			historySacIn.setPrchsTme(obj.getPrchsTme());
-			historySacIn.setClosedCd(obj.getClosedCd());
+			historySacIn.setAutoPaymentStatusCd(obj.getAutoPaymentStatusCd());
 			historySacIn.setClosedDt(obj.getClosedDt());
 			historySacIn.setClosedReasonCd(obj.getClosedReasonCd());
 			historySacIn.setClosedReqPathCd(obj.getClosedReqPathCd());
