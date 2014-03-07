@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -47,8 +44,8 @@ public class CmsServiceImpl implements CmsService {
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
-	@Resource
-	private AmqpTemplate cmsAmqpTemplate;
+	// @Resource
+	// private AmqpTemplate cmsAmqpTemplate;
 
 	@Autowired
 	@Qualifier("cmsApp")
@@ -69,60 +66,59 @@ public class CmsServiceImpl implements CmsService {
 		// Deploy
 		DPProductVO dpProd = message.getDpProductTotal().getDpProduct();
 		if (null != dpProd) {
-			String prodId = nvlStr(dpProd.getProdId());
-			String mbrNo = nvlStr(dpProd.getSellerMbrNo());
-			this.log.info("CMS Prod Info = " + prodId + " / " + mbrNo);
-			cv.setProdId(prodId);
-			cv.setMbrNo(mbrNo);
-			List<Map<String, Object>> tempList = new ArrayList<Map<String, Object>>();
+		String prodId = nvlStr(dpProd.getProdId());
+		String mbrNo = nvlStr(dpProd.getSellerMbrNo());
+		this.log.info("CMS Prod Info = " + prodId + " / " + mbrNo);
+		cv.setProdId(prodId);
+		cv.setMbrNo(mbrNo);
+		List<Map<String, Object>> tempList = new ArrayList<Map<String, Object>>();
 
-			if (!"".equals(prodId) && !"".equals(mbrNo)) {
+		if (!"".equals(prodId) && !"".equals(mbrNo)) {
 
-				try {
+		try {
 
-					List<DPTenantProductVO> tenantInfo = message.getDpProductTotal().getDpTenantProduct();
-					if (null != tenantInfo) {
-						if (0 < tenantInfo.size()) {
-							for (DPTenantProductVO vo : tenantInfo) {
-								Map<String, Object> oldProd = this.prodService.selectDpProd(vo);
+		List<DPTenantProductVO> tenantInfo = message.getDpProductTotal().getDpTenantProduct();
+		if (null != tenantInfo) {
+		if (0 < tenantInfo.size()) {
+		for (DPTenantProductVO vo : tenantInfo) {
+		Map<String, Object> oldProd = this.prodService.selectDpProd(vo);
 
-								if (null != oldProd) {
-									tempList.add(oldProd);
-								}
-							}
-						}
-					}
+		if (null != oldProd) {
+		tempList.add(oldProd);
+		}
+		}
+		}
+		}
 
-					/*
-					 * 이전에 배포된 전시 상품 데이터 삭제
-					 */
-					this.initializer.deleteProdInfo(message);
+		/*
+		 * 이전에 배포된 전시 상품 데이터 삭제
+		 */
+		this.initializer.deleteProdInfo(message);
 
-					/*
-					 * 데이터 재구성
-					 */
-					this.builder.insertProdInfo(message, tempList);
+		/*
+		 * 데이터 재구성
+		 */
+		this.builder.insertProdInfo(message, tempList);
 
-					// 결과 설정
-					cv.setResultCd(IFConstants.CMS_RST_CODE_SUCCESS);
-					cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
+		// 결과 설정
+		cv.setResultCd(IFConstants.CMS_RST_CODE_SUCCESS);
+		cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
 
-				} catch (StorePlatformException ie) {
-					cv.setResultCd(ie.getErrorInfo().getCode()); // Result Code
-					cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code."
-							+ ie.getErrorInfo().getCode()));
-				}
+		} catch (StorePlatformException ie) {
+		cv.setResultCd(ie.getErrorInfo().getCode()); // Result Code
+		cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + ie.getErrorInfo().getCode()));
+		}
 
-				this.log.info("CMS Result Code = " + cv.getResultCd());
-				this.log.info("CMS Result Message = " + cv.getResultMsg());
-			} else {
-				cv.setResultCd(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR);
-				cv.setResultMsg("DPProductVO 정보의 PROD_ID 또는 MBR_NO 는 Null 또는 공백이 올 수 없습니다.");
-			}
+		this.log.info("CMS Result Code = " + cv.getResultCd());
+		this.log.info("CMS Result Message = " + cv.getResultMsg());
+		} else {
+		cv.setResultCd(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR);
+		cv.setResultMsg("DPProductVO 정보의 PROD_ID 또는 MBR_NO 는 Null 또는 공백이 올 수 없습니다.");
+		}
 
 		} else {
-			cv.setResultCd(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR);
-			cv.setResultMsg("DPProductVO 정보는 Null 이 올 수 없습니다.");
+		cv.setResultCd(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR);
+		cv.setResultMsg("DPProductVO 정보는 Null 이 올 수 없습니다.");
 		}
 
 		// 결과 전송
@@ -134,7 +130,7 @@ public class CmsServiceImpl implements CmsService {
 		this.log.info("CMS Return Code = " + ntr.getDeployResultCd());
 		this.log.info("CMS Return Message = " + ntr.getDeployResultDtlMsg());
 
-		this.cmsAmqpTemplate.convertAndSend(ntr);
+		// this.cmsAmqpTemplate.convertAndSend(ntr);
 
 	}
 
