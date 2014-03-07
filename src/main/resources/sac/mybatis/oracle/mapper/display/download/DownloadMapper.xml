@@ -54,11 +54,11 @@
 	                  , DECODE( KA.PROD_CLSF_CD , 'PD000601', 'paid' , 'PD000602', 'library' , 'PD000603', 'vm' , 'PD000604', 'free' , 'PD000605', 'paid-rss' , 'PD000606', 'free-rss' , 'paid' ) AS PROD_CLSF_CD
 	            --      , KA.PROD_CLSF_CD
 	                  , KA.VER_MAJOR || '.' || KA.VER_MINOR AS PROD_VER
-	                  , NVL2( KA.PKG_NM, KA.PKG_NM, KB.APK_PKG_NM ) AS APK_PKG_NM
+	                  , NVL(KB.APK_PKG_NM, '' ) AS APK_PKG_NM
 	                  , NVL2( KB.APK_VER, KB.APK_VER, KA.PKG_VER_CD ) AS APK_VER   
 	                  , KA.PLAT_CLSF_CD
 	                  , KA.GAME_CENTR_VER_CD
-	                  , NVL(KA.GAME_CENTR_ID, ' ') AS GAME_CENTR_ID                                                                                                
+	                  , NVL(KA.GAME_CENTR_ID, '') AS GAME_CENTR_ID                                                                                                
 	                  , NVL2( KB.FILE_SIZE, KB.FILE_SIZE, ( SELECT MAX(FILE_SIZE) FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = KA.PROD_ID ) ) AS APK_FILE_SIZE
 	                  , KB.SUB_CONTENTS_ID
 	                  , (PLAT_CLSF_CD_NM ||' '|| KB.VM_VER) AS SUPPORTED_OS
