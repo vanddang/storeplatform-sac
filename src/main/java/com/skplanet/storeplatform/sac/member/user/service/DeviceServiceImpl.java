@@ -824,6 +824,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
+		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getDeviceExtraInfoList()); // rooting 여부
 
 		LOGGER.info(":::::::::::::::::: device update field start ::::::::::::::::::");
@@ -926,6 +927,11 @@ public class DeviceServiceImpl implements DeviceService {
 			LOGGER.info("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
 			userMbrDevice.setDeviceNickName(deviceNickName);
 
+		}
+
+		if (svcMangNum != null && !StringUtils.equals(svcMangNum, "") && !StringUtils.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
+			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
+			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
 
 		/* 휴대기기 부가정보 */
