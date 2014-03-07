@@ -27,6 +27,7 @@ public class TbDpShpgProdInfo extends CommonInfo {
 	private String saleYn; // 판매_여부
 	private String contentsOrdrCd; // 컨텐츠_오더_코드(D)
 	private String mgzinSubscripCd; // 매거진_구독_코드
+	private long saleCnt; // 판매_수량
 	private long mmMaxSaleQty; // 월_최대_판매_수량
 	private long dayMaxSaleQty; // 일_최대_판매_수량
 	private long mmMbrMaxPrchsQty; // 월_회원_최대_구매_수량
@@ -150,6 +151,21 @@ public class TbDpShpgProdInfo extends CommonInfo {
 	 */
 	public void setMgzinSubscripCd(String mgzinSubscripCd) {
 		this.mgzinSubscripCd = mgzinSubscripCd;
+	}
+
+	/**
+	 * @return the saleCnt
+	 */
+	public long getSaleCnt() {
+		return this.saleCnt;
+	}
+
+	/**
+	 * @param saleCnt
+	 *            the saleCnt to set
+	 */
+	public void setSaleCnt(long saleCnt) {
+		this.saleCnt = saleCnt;
 	}
 
 	/**
