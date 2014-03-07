@@ -80,8 +80,8 @@ public class AbrogationAuthKeyTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						authorizeReq.setSellerId("biz_7908");
-						authorizeReq.setSellerPW("hzImA3SQ");
+						authorizeReq.setSellerId("asdf");
+						authorizeReq.setSellerPW("1234");
 						authorizeReq.setReleaseLock("N");
 						authorizeReq.setExpireDate("3");
 						authorizeReq.setIpAddress("127.0.0.1");
@@ -113,7 +113,7 @@ public class AbrogationAuthKeyTest {
 					public Object requestBody() {
 						AbrogationAuthKeyReq req = new AbrogationAuthKeyReq();
 
-						req.setSellerKey("IF1023599819420120111013407");
+						req.setSellerKey("SE201403071355064490001517");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
