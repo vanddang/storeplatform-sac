@@ -166,8 +166,10 @@ public class WebtoonServiceImpl implements WebtoonService {
 			source.setUrl(webtoonDetail.getMainFilePath());
 			sourceList.add(source);
 			source = new Source();
+			String filePath = webtoonDetail.getFilePath();
+			filePath = filePath.substring(0, filePath.lastIndexOf("/")); // 이미지 경로
 			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-			source.setUrl(webtoonDetail.getFilePath());
+			source.setUrl(filePath);
 			sourceList.add(source);
 			product.setSourceList(sourceList);
 
