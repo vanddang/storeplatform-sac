@@ -383,7 +383,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		autoPaymentCancelScReq.setUserKey(prchsDtl.getUseInsdUsermbrNo());
 		autoPaymentCancelScReq.setDeviceKey(prchsDtl.getUseInsdDeviceId());
 		autoPaymentCancelScReq.setPrchsId(prchsDtl.getPrchsId());
-		autoPaymentCancelScReq.setClosedCd(PurchaseConstants.AUTO_PRCHS_CLOSE_RESERVE);
+		autoPaymentCancelScReq.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_CLOSE_RESERVE);
 		// TODO : 추후 구매 취소 코드 정의 되면 받아야 함. 일단 고객요청으로 셋팅.
 		autoPaymentCancelScReq.setClosedReasonCd("OR004601");
 		autoPaymentCancelScReq.setClosedReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());

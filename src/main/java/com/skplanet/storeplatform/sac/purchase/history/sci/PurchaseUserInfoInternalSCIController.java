@@ -35,15 +35,13 @@ public class PurchaseUserInfoInternalSCIController implements PurchaseUserInfoIn
 	/**
 	 * reqConvert.
 	 * 
-	 * @param autoPaymentCancelSacReq
+	 * @param userInfoSacInReq
 	 *            요청정보
-	 * @param header
-	 *            테넌트 헤더정보
-	 * @return AutoPaymentCancelScReq
+	 * @return UserInfoScReq
 	 */
 	private UserInfoScReq reqConvert(UserInfoSacInReq userInfoSacInReq) {
 
-		this.logger.debug("@@@@@@ AutoPaymentCancelSac reqConvert @@@@@@@");
+		this.logger.debug("@@@@@@ UserInfoScReq reqConvert @@@@@@@");
 		UserInfoScReq req = new UserInfoScReq();
 
 		req.setTenantId(userInfoSacInReq.getTenantId());
@@ -59,12 +57,12 @@ public class PurchaseUserInfoInternalSCIController implements PurchaseUserInfoIn
 	/**
 	 * resConvert.
 	 * 
-	 * @param autoPaymentCancelScRes
+	 * @param userInfoScRes
 	 *            요청정보
 	 * @return UserInfoSacInRes
 	 */
 	private UserInfoSacInRes resConvert(UserInfoScRes userInfoScRes) {
-		this.logger.debug("@@@@@@ AutoPaymentCancelSac resConvert @@@@@@@");
+		this.logger.debug("@@@@@@ UserInfoSacInRes resConvert @@@@@@@");
 		UserInfoSacInRes res = new UserInfoSacInRes();
 		res.setCount(userInfoScRes.getCount());
 		return res;

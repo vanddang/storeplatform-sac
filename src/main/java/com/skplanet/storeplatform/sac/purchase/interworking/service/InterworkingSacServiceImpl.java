@@ -9,9 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.interworking.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +17,11 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.interpark.sci.InterparkSCI;
 import com.skplanet.storeplatform.external.client.interpark.vo.CreateOrderEcReq;
 import com.skplanet.storeplatform.external.client.interpark.vo.CreateOrderEcRes;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.interworking.sci.InterworkingSCI;
-import com.skplanet.storeplatform.purchase.client.interworking.vo.InterworkingSc;
 import com.skplanet.storeplatform.purchase.client.interworking.vo.InterworkingScReq;
-import com.skplanet.storeplatform.purchase.client.interworking.vo.InterworkingScRes;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.CreateOrderReq;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.CreateOrderRes;
-import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSac;
+import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSacReq;
 
 /**
@@ -55,63 +49,71 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 	@Override
 	public void createInterworking(InterworkingSacReq interworkingSacReq, String temp) {
 
-		/**
-		 * 상품ID로 전시호출후 응답값이 (인터파크,씨네21)일 경우 배치를 위해 생성될 table에 insert후 인터파크일 경우에는 실시간 연동처리를 한다. 전시쪽에서 조회가 어떻게 될지 몰라 현재
-		 * 구현을 위해 test변수 temp을 사용한다.
-		 */
-		// value interpark, cine21
-		// String temp = "interpark";
+		InterworkingScReq req = new InterworkingScReq();
 
-		if (temp.equals("interpark") || temp.equals("cine21")) {
-			this.logger.debug("@@@@@@@@@@@@ Interworking @@@@@@@@@@@@ {}", interworkingSacReq.getPrchsId());
+		req.setTenantId(interworkingSacReq.getTenantId());
+		req.setSystemId(interworkingSacReq.getSystemId());
+		req.setPrchsId(interworkingSacReq.getPrchsId());
+		req.setInsdUsermbrNo(interworkingSacReq.getUserKey());
+		req.setInsdDeviceId(interworkingSacReq.getDeviceKey());
+		req.setPrchsDt(interworkingSacReq.getPrchsDt());
+		req.setPrchsCancelDt(interworkingSacReq.getPrchsCancelDt());
 
-			InterworkingScRes interworkingScRes = new InterworkingScRes();
-			// 구매내역전송을 위한 실시간 누적
+		for (Interworking interworkingSac : interworkingSacReq.getInterworkingList()) {
 
-			interworkingScRes = this.interworkingSCI.createInterworking(this.reqConvert(interworkingSacReq));
+			req.setMallCd(interworkingSac.getMallCd());
+			req.setSellermbrNo(interworkingSac.getSellermbrNo());
+			req.setProdId(interworkingSac.getProdId());
+			req.setProdAmt(interworkingSac.getProdAmt());
+			req.setCompContentsId(interworkingSac.getCompContentsId());
 
-			this.logger.debug("@@@@@@@@@@@@ getResult @@@@@@@@@@@@ {}", interworkingScRes.getResult());
-			if (temp.equals("interpark") && interworkingScRes.getResult() > 0) {
-				try {
-					this.logger.debug("@@@@@@@@@@@@ interpark @@@@@@@@@@@@ ");
-					CreateOrderReq createOrderReq = new CreateOrderReq();
+			/*
+			 * 인터파크는 maillCd로 구분하며, cine21는 sellermbrNo로 구분한다
+			 */
+			int updateCount = 0;
+			if (interworkingSac.getMallCd().equals("interpark")) {
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ");
+				this.logger.debug("@@@@@@@@@@@@ interpark @@@@@@@@@@@@ ");
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ");
+				// 전송테이블에 저장
+				updateCount = this.interworkingSCI.createInterworking(req);
 
-					createOrderReq.setRevOrdNo(interworkingSacReq.getPrchsId());
-					createOrderReq.setOrdDts(interworkingSacReq.getPrchsDt());
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+				this.logger.debug("@@@@@@@@@@@@ interpark updateCount @@@@@@@@@@@@ {}", updateCount);
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+				if (updateCount > 0) {
+					try {
+						CreateOrderReq createOrderReq = new CreateOrderReq();
 
-					for (InterworkingSac interworkingSac : interworkingSacReq.getInterworkingListSac()) {
-						createOrderReq.setPrdNo(interworkingSac.getCompContentsId());
-						createOrderReq.setItemNo(interworkingSac.getProdId());
-						createOrderReq.setPrice(interworkingSac.getProdAmt());
+						createOrderReq.setRevOrdNo(req.getPrchsId());
+						createOrderReq.setOrdDts(req.getPrchsDt());
+						createOrderReq.setPrdNo(req.getCompContentsId());
+						createOrderReq.setItemNo(req.getProdId());
+						createOrderReq.setPrice(req.getProdAmt());
 						createOrderReq.setQty(1);
 						createOrderReq.setFlag("01");
 
 						// interpark 실시간 연동처리
-						// this.createOrder(createOrderReq);
-					}
-
-				} catch (StorePlatformException ex) {
-					if (ex.getErrorInfo().getCode().equals("EC_INTERPARK_9996")) {
-						throw new StorePlatformException("SAC_PUR_3000");
+						// CreateOrderRes res =
+						// this.resConvert(this.interparkSCI.createOrder(this.reqConvert(createOrderReq)));
+					} catch (Exception ex) {
+						// 공통에러코드 필요
+						// throw new StorePlatformException("", ex);
 					}
 				}
+			} else if (interworkingSac.getSellermbrNo().equals("cine21-SellermbrNo1")
+					|| interworkingSac.getSellermbrNo().equals("cine21-SellermbrNo2")) {
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ");
+				this.logger.debug("@@@@@@@@@@@@ cine21 @@@@@@@@@@@@ ");
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ");
+				// 전송테이블에 저장
+				updateCount = this.interworkingSCI.createInterworking(req);
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+				this.logger.debug("@@@@@@@@@@@@ cine21 updateCount @@@@@@@@@@@@ {}", updateCount);
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
 			}
-
 		}
-
-	}
-
-	/**
-	 * interpark 연동.
-	 * 
-	 * @param createOrderReq
-	 *            요청정보
-	 * @return CreateOrderSacRes
-	 */
-	public CreateOrderRes createOrder(CreateOrderReq createOrderReq) {
-		CreateOrderRes res = this.resConvert(this.interparkSCI.createOrder(this.reqConvert(createOrderReq)));
-
-		return res;
 	}
 
 	/**
@@ -149,41 +151,6 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 		res.setResultStatus(createOrderEcRes.getResultStatus());
 
 		return res;
-	}
-
-	/**
-	 * reqConvert.
-	 * 
-	 * @param interworkingSacReq
-	 *            요청정보
-	 * @return InterworkingScReq
-	 */
-	private InterworkingScReq reqConvert(InterworkingSacReq interworkingSacReq) {
-
-		InterworkingScReq req = new InterworkingScReq();
-
-		req.setTenantId(interworkingSacReq.getTenantId());
-		req.setSystemId(interworkingSacReq.getSystemId());
-		req.setInsdUsermbrNo(interworkingSacReq.getUserKey());
-		req.setInsdDeviceId(interworkingSacReq.getDeviceKey());
-		req.setPrchsId(interworkingSacReq.getPrchsId());
-		req.setPrchsDt(interworkingSacReq.getPrchsDt());
-		// req.setPrchsCancelDt(interworkingSacReq.getPrchsDt());
-		req.setFileMakeYn(interworkingSacReq.getFileMakeYn());
-		List<InterworkingSc> list = new ArrayList<InterworkingSc>();
-		for (InterworkingSac interworkingSac : interworkingSacReq.getInterworkingListSac()) {
-			InterworkingSc interworkingSc = new InterworkingSc();
-
-			interworkingSc.setMallCd(interworkingSac.getMallCd());
-			interworkingSc.setProdId(interworkingSac.getProdId());
-			interworkingSc.setSellermbrNo(interworkingSac.getSellermbrNo());
-			interworkingSc.setProdAmt(interworkingSac.getProdAmt());
-			interworkingSc.setCompContentsId(interworkingSac.getCompContentsId());
-			list.add(interworkingSc);
-		}
-		req.setInterworkingListSc(list);
-
-		return req;
 	}
 
 }

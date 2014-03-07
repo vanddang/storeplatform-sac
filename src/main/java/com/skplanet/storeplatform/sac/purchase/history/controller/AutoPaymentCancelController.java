@@ -80,7 +80,7 @@ public class AutoPaymentCancelController {
 		req.setUserKey(autoPaymentCancelSacReq.getUserKey());
 		req.setDeviceKey(autoPaymentCancelSacReq.getDeviceKey());
 		req.setPrchsId(autoPaymentCancelSacReq.getPrchsId());
-		req.setClosedCd(autoPaymentCancelSacReq.getClosedCd());
+		req.setAutoPaymentStatusCd(autoPaymentCancelSacReq.getAutoPaymentStatusCd());
 		req.setClosedReasonCd(autoPaymentCancelSacReq.getClosedReasonCd());
 		req.setClosedReqPathCd(autoPaymentCancelSacReq.getClosedReqPathCd());
 

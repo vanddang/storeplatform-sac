@@ -44,11 +44,16 @@ public class AutoUpdateAlarmController {
 	private PurchaseCommonUtils purchaseCommonUtils;
 
 	/**
-	 * 자동업데이트 거부/거부취소 요청.
 	 * 
-	 * @param autoUpdateAlarmScReq
-	 *            요청정보
-	 * @return AutoUpdateAlarmScRes
+	 * <pre>
+	 * 자동업데이트 거부/거부취소 요청.
+	 * </pre>
+	 * 
+	 * @param autoUpdateAlarmSacReq
+	 *            요청
+	 * @param requestHeader
+	 *            헤더
+	 * @return AutoUpdateAlarmSacRes 응답
 	 */
 	@RequestMapping(value = "/history/alarm/update/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -64,11 +69,11 @@ public class AutoUpdateAlarmController {
 	/**
 	 * reqConvert.
 	 * 
-	 * @param autoPaymentCancelSacReq
+	 * @param autoUpdateAlarmSacReq
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return AutoPaymentCancelScReq
+	 * @return AutoUpdateAlarmScReq
 	 */
 	private AutoUpdateAlarmScReq reqConvert(AutoUpdateAlarmSacReq autoUpdateAlarmSacReq, TenantHeader header) {
 
@@ -95,9 +100,9 @@ public class AutoUpdateAlarmController {
 	/**
 	 * resConvert.
 	 * 
-	 * @param autoPaymentCancelScRes
+	 * @param autoUpdateAlarmScRes
 	 *            요청정보
-	 * @return AutoPaymentCancelSacRes
+	 * @return AutoUpdateAlarmSacRes
 	 */
 	private AutoUpdateAlarmSacRes resConvert(AutoUpdateAlarmScRes autoUpdateAlarmScRes) {
 		this.logger.debug("@@@@@@ AutoPaymentCancelSac resConvert @@@@@@@");

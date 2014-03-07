@@ -28,7 +28,7 @@ public class AutoUpdateAlarmSacServiceImpl implements AutoUpdateAlarmSacService 
 	/**
 	 * 자동업데이트 거부/거부취소 .
 	 * 
-	 * @param AutoUpdateAlarmScReq
+	 * @param autoUpdateAlarmScReq
 	 *            요청.
 	 * @return AutoUpdateAlarmScRes
 	 */

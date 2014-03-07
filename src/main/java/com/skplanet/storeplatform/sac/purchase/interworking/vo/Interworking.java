@@ -12,7 +12,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 2. 26. Updated by : 조용진, NTELS.
  */
-public class InterworkingSac extends CommonInfo implements Serializable {
+public class Interworking extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String mallCd;

@@ -117,7 +117,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	 *            정책리스트
 	 * @param flag
 	 *            정책구분
-	 * @return
+	 * @return String
 	 */
 	private String cheackMdn(ExistenceScReq existenceScReq, ExistenceScRes existenceScRes,
 			List<PurchaseTenantPolicy> purchaseTenantPolicyList, String flag) {

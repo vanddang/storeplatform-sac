@@ -30,7 +30,7 @@ public class InterworkingSacReq extends CommonInfo implements Serializable {
 	private String prchsDt;
 	private String prchsCancelDt;
 	private String fileMakeYn;
-	private List<InterworkingSac> interworkingListSac;
+	private List<Interworking> interworkingList;
 
 	/**
 	 * @return the tenantId
@@ -153,18 +153,18 @@ public class InterworkingSacReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the interworkingListSac
+	 * @return the interworkingList
 	 */
-	public List<InterworkingSac> getInterworkingListSac() {
-		return this.interworkingListSac;
+	public List<Interworking> getInterworkingList() {
+		return this.interworkingList;
 	}
 
 	/**
-	 * @param interworkingListSac
-	 *            the interworkingListSac to set
+	 * @param interworkingList
+	 *            the interworkingList to set
 	 */
-	public void setInterworkingListSac(List<InterworkingSac> interworkingListSac) {
-		this.interworkingListSac = interworkingListSac;
+	public void setInterworkingList(List<Interworking> interworkingList) {
+		this.interworkingList = interworkingList;
 	}
 
 }

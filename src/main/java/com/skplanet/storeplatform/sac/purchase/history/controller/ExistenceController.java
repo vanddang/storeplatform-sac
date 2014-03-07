@@ -54,8 +54,6 @@ public class ExistenceController {
 	 * 
 	 * @param existenceSacReq
 	 *            요청정보
-	 * @param bindingResult
-	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
 	 * @return ExistenceListSacRes 응답정보
