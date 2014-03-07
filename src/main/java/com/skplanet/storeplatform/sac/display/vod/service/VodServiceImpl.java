@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.vod.service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
@@ -87,25 +88,7 @@ public class VodServiceImpl implements VodService {
 			// --------------------------------------------------------
             List<VodDetail> subProductList = this.commonDAO.queryForList("VodDetail.selectVodSeries", req, VodDetail.class);
 
-            List<ExistenceScRes> existenceScResList = null;
-            if(subProductList != null && subProductList.size() > 0) {
-                //기구매 체크
-                List<String> episodeIdList = new ArrayList<String>();
-                for(VodDetail subProduct : subProductList) {
-                    if(StringUtils.isNotEmpty(subProduct.getPlayProdId())) {
-                        episodeIdList.add(subProduct.getPlayProdId());
-                    } else if(StringUtils.isNotEmpty(subProduct.getStoreProdId())) {
-                        episodeIdList.add(subProduct.getStoreProdId());
-                    }
-                }
-                existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
-
-                //FIXME : noPayment
-                if(req.getOrderedBy().equalsIgnoreCase("noPayment")) {
-
-                }
-            }
-
+            List<ExistenceScRes> existenceScResList = getExistenceScReses(req, subProductList);
             this.mapSubProductList(req, product, subProductList, existenceScResList);
 
 			res.setProduct(product);
@@ -115,9 +98,36 @@ public class VodServiceImpl implements VodService {
 		return res;
 	}
 
+    /**
+     * 기구매 체크 (구매서버 연동)
+     * @param req
+     * @param subProductList
+     * @return
+     */
+    private List<ExistenceScRes> getExistenceScReses(VodDetailReq req, List<VodDetail> subProductList) {
+        List<ExistenceScRes> existenceScResList = null;
+        if(subProductList != null && subProductList.size() > 0) {
+            //기구매 체크
+            List<String> episodeIdList = new ArrayList<String>();
+            for(VodDetail subProduct : subProductList) {
+                if(StringUtils.isNotEmpty(subProduct.getPlayProdId())) {
+                    episodeIdList.add(subProduct.getPlayProdId());
+                } else if(StringUtils.isNotEmpty(subProduct.getStoreProdId())) {
+                    episodeIdList.add(subProduct.getStoreProdId());
+                }
+            }
+            try {
+                existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
+            } catch (StorePlatformException e) {
+                //ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로 처리한다.
+                existenceScResList = new ArrayList<ExistenceScRes>();
+            }
+        }
+        return existenceScResList;
+    }
 
 
-	/**
+    /**
 	 * Product Mapping
      * @param req
      * @param product Product
@@ -252,7 +262,7 @@ public class VodServiceImpl implements VodService {
 			}
 
             if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId())) {
-                String salesStatus = getSalesStatus(mapperVO, req);
+                String salesStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
                 if(salesStatus != null)  play.setSalesStatus(salesStatus);
             }
 
@@ -285,7 +295,7 @@ public class VodServiceImpl implements VodService {
 			}
 
             if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId())) {
-                String salesStatus = getSalesStatus(mapperVO, req);
+                String salesStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
                 if(salesStatus != null)  store.setSalesStatus(salesStatus);
             }
 
@@ -294,33 +304,6 @@ public class VodServiceImpl implements VodService {
 		}
 		return rights;
 	}
-
-    /**
-     * 판매 상태 조회
-     * @param mapperVO
-     * @param req
-     * @return
-     */
-    private String getSalesStatus(VodDetail mapperVO, VodDetailReq req) {
-        String salesStatus = null;
-        //기구매 체크
-        if (!mapperVO.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
-            // 04, 09, 10의 경우 구매이력이 없으면 상품 없음을 표시한다.
-            if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getProdStatusCd()) ||
-                    DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getProdStatusCd()) ||
-                    DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(mapperVO.getProdStatusCd())) {
-                if (!com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(req.getUserKey()) && !com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(req.getDeviceKey()) &&
-                        !commonService.checkPurchase(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), req.getChannelId())) {
-                }
-                else
-                    salesStatus = "restricted";
-            }
-            else
-                salesStatus = "restricted";
-        }
-        return salesStatus;
-    }
-
 
     private Distributor getDistributor(VodDetail mapperVO) {
 		Distributor distributor = new Distributor();
@@ -374,8 +357,12 @@ public class VodServiceImpl implements VodService {
 		return sourceList;
 	}
 
-
-
+    /**
+     * DataList
+     * @param mapperVO
+     * @param sdf
+     * @return
+     */
 	private List<Date> getDateList(VodDetail mapperVO, SimpleDateFormat sdf) {
 		List<Date> dateList = new ArrayList<Date>();
 		if(mapperVO.getRegDt() != null) {
@@ -388,22 +375,17 @@ public class VodServiceImpl implements VodService {
         if(StringUtils.isNotEmpty(mapperVO.getIssueDay())) {
             Date date = new Date();
             date.setType(DisplayConstants.DP_DATE_RELEASE);
-            date.setText(sdf.format(mapperVO.getIssueDay()));
+            date.setText(mapperVO.getIssueDay());
             dateList.add(date);
         }
-        /*
-		if(mapperVO.getSvcStartDt() != null) {
-			date = new Date();
-			date.setType(DisplayConstants.DP_DATE_RELEASE);
-			date.setText(sdf.format(mapperVO.getSvcStartDt()));
-			dateList.add(date);
-		}
-		*/
 		return dateList;
 	}
 
-
-
+    /**
+     * Menu List
+     * @param mapperVO
+     * @return
+     */
 	private List<Menu> getMenuList(VodDetail mapperVO) {
 		List<Menu> menuList = new ArrayList<Menu>();
 		Menu menu = new Menu();
@@ -431,8 +413,11 @@ public class VodServiceImpl implements VodService {
 		return menuList;
 	}
 
-
-
+    /**
+     * Support List
+     * @param mapperVO
+     * @return
+     */
 	private List<Support> getSupportList(VodDetail mapperVO) {
 		List<Support> supportList = new ArrayList<Support>();
 		/** HDCP_YN */
@@ -588,5 +573,32 @@ public class VodServiceImpl implements VodService {
         vod.setVideoInfoList(videoInfoList);
         return vod;
     }
+
+    /**
+     * 판매 상태 조회
+     * @param mapperVO
+     * @param userKey
+     * @param deviceKey
+     * @return
+     */
+    private String getSalesStatus(VodDetail mapperVO, String userKey, String deviceKey) {
+        String salesStatus = null;
+        //기구매 체크
+        if (!mapperVO.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
+            // 04, 09, 10의 경우 구매이력이 없으면 상품 없음을 표시한다.
+            if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getProdStatusCd()) ||
+                    DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getProdStatusCd()) ||
+                    DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(mapperVO.getProdStatusCd())) {
+                if (!com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(userKey) && !com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(deviceKey)) {
+                }
+                else
+                    salesStatus = "restricted";
+            }
+            else
+                salesStatus = "restricted";
+        }
+        return salesStatus;
+    }
+
 
 }
