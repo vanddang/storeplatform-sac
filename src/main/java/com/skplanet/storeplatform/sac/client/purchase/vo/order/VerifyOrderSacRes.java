@@ -29,6 +29,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String CdOcbSaveInfo; // OCB 적립코드
 	private String noOcbCard; // OCB 카드번호
 	private String noCouponList; // 쿠폰 List
+	private Double tstoreCashAmt; // T store Cash 잔액
 	private String typeTestMdn; // 법인 및 일반 시험폰 처리 타입 (T01, T02, T03)
 	private String bonusCashPoint; // 보너스 캐쉬 지급 Point
 	private String bonusCashUsableDayCnt; // 보너스 캐쉬 유효기간(일)
@@ -36,9 +37,9 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String dwldAvailableDayCnt; // 다운로드 가능기간(일)
 	private String usePeriodCnt; // 이용기간(일)
 	private String loanPid; // 대여하기 상품 ID
-	private String loanAmt; // 대여하기 상품 금액
+	private Double loanAmt; // 대여하기 상품 금액
 	private String ownPid; // 소장하기 상품 ID
-	private String ownAmt; // 소장하기 상품 금액
+	private Double ownAmt; // 소장하기 상품 금액
 	private String nmSeller; // 판매자명
 	private String emailSeller; // 판매자 이메일 주소
 	private String noTelSeller; // 판매자 전화번호
@@ -181,6 +182,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	}
 
 	/**
+	 * @return the tstoreCashAmt
+	 */
+	public Double getTstoreCashAmt() {
+		return this.tstoreCashAmt;
+	}
+
+	/**
+	 * @param tstoreCashAmt
+	 *            the tstoreCashAmt to set
+	 */
+	public void setTstoreCashAmt(Double tstoreCashAmt) {
+		this.tstoreCashAmt = tstoreCashAmt;
+	}
+
+	/**
 	 * @return the typeTestMdn
 	 */
 	public String getTypeTestMdn() {
@@ -288,7 +304,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	/**
 	 * @return the loanAmt
 	 */
-	public String getLoanAmt() {
+	public Double getLoanAmt() {
 		return this.loanAmt;
 	}
 
@@ -296,7 +312,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 * @param loanAmt
 	 *            the loanAmt to set
 	 */
-	public void setLoanAmt(String loanAmt) {
+	public void setLoanAmt(Double loanAmt) {
 		this.loanAmt = loanAmt;
 	}
 
@@ -318,7 +334,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	/**
 	 * @return the ownAmt
 	 */
-	public String getOwnAmt() {
+	public Double getOwnAmt() {
 		return this.ownAmt;
 	}
 
@@ -326,7 +342,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 * @param ownAmt
 	 *            the ownAmt to set
 	 */
-	public void setOwnAmt(String ownAmt) {
+	public void setOwnAmt(Double ownAmt) {
 		this.ownAmt = ownAmt;
 	}
 

@@ -24,9 +24,10 @@ public class PaymentInfo extends CommonInfo {
 	private String paymentMtdCd; // 결제수단 코드
 	private String paymentDt; // 결제 일시 (승인 일시)
 	private double paymentAmt; // 결제 금액
-	private String moid; // PG사 관리 결제수단 ID
-	private String applNum; // 승인번호
+	private String apprNo; // 승인번호
 	private String billKey; // 빌링키
+	private String cpnId; // 이용한 쿠폰 ID
+	private String moid; // 테넌트 결제수단 관리 정보
 
 	/**
 	 * @return the tid
@@ -89,33 +90,18 @@ public class PaymentInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the moid
+	 * @return the apprNo
 	 */
-	public String getMoid() {
-		return this.moid;
+	public String getApprNo() {
+		return this.apprNo;
 	}
 
 	/**
-	 * @param moid
-	 *            the moid to set
+	 * @param apprNo
+	 *            the apprNo to set
 	 */
-	public void setMoid(String moid) {
-		this.moid = moid;
-	}
-
-	/**
-	 * @return the applNum
-	 */
-	public String getApplNum() {
-		return this.applNum;
-	}
-
-	/**
-	 * @param applNum
-	 *            the applNum to set
-	 */
-	public void setApplNum(String applNum) {
-		this.applNum = applNum;
+	public void setApprNo(String apprNo) {
+		this.apprNo = apprNo;
 	}
 
 	/**
@@ -131,6 +117,36 @@ public class PaymentInfo extends CommonInfo {
 	 */
 	public void setBillKey(String billKey) {
 		this.billKey = billKey;
+	}
+
+	/**
+	 * @return the cpnId
+	 */
+	public String getCpnId() {
+		return this.cpnId;
+	}
+
+	/**
+	 * @param cpnId
+	 *            the cpnId to set
+	 */
+	public void setCpnId(String cpnId) {
+		this.cpnId = cpnId;
+	}
+
+	/**
+	 * @return the moid
+	 */
+	public String getMoid() {
+		return this.moid;
+	}
+
+	/**
+	 * @param moid
+	 *            the moid to set
+	 */
+	public void setMoid(String moid) {
+		this.moid = moid;
 	}
 
 }
