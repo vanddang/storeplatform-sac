@@ -243,9 +243,9 @@ public class SearchUserSCIController implements SearchUserSCI {
 				userDeviceInfoSac = new UserDeviceInfoSac();
 				userDeviceInfoSac.setDeviceId(userInfoMap.get(deviceKeyList.get(i)).getDeviceId());
 				userDeviceInfoSac.setDeviceModelName(userInfoMap.get(deviceKeyList.get(i)).getDeviceModelName());
+				userDeviceInfoSac.setDeviceTelecom(userInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
 				userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
 				userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
-				userDeviceInfoSac.setDeviceTelecom(userInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
 
 				resMap.put(deviceKeyList.get(i), userDeviceInfoSac);
 			}
