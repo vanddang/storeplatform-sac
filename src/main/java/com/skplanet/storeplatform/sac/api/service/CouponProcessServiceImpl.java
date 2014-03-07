@@ -638,7 +638,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dtpp.setProdNetAmt(0); // 상품_정찰_금액
 			dtpp.setDcRate(Long.parseLong(couponInfo.getAccountingRate())); // 할인_율
 			dtpp.setDcAmt(0); // 할인_금액
-			dtpp.setTaxClsf(""); // 세금_구분
+			dtpp.setTaxClsf(couponInfo.getTaxType()); // 세금_구분
 			dtpp.setRegId(couponInfo.getBpId());
 			dtpp.setUpdId(couponInfo.getBpId());
 			dtpp.setCudType(cudType);
@@ -665,7 +665,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				} else {
 					dtpp.setDcAmt(0);
 				}
-				dtpp.setTaxClsf(""); // 세금_구분
+				dtpp.setTaxClsf(couponInfo.getTaxType()); // 세금_구분
 				dtpp.setRegId(couponInfo.getBpId());
 				dtpp.setUpdId(couponInfo.getBpId());
 				dtpp.setCudType(itemInfo.getCudType());
