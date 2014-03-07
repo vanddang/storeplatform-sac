@@ -356,6 +356,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 
 			dsp.setContentsOrdrCd(CouponConstants.UPDATE_TYPE_CD_DESC); // D
+			dsp.setSaleCnt(0);
 			dsp.setMmMaxSaleQty(0);
 			dsp.setDayMaxSaleQty(0);
 			dsp.setMmMbrMaxPrchsQty(0);
@@ -408,6 +409,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				}
 
 				dsp.setContentsOrdrCd(CouponConstants.UPDATE_TYPE_CD_DESC); // D
+				dsp.setSaleCnt(Long.parseLong(itemInfo.getMaxCount()));
 				dsp.setMmMaxSaleQty(Long.parseLong(itemInfo.getMaxCountMonthly()));
 				dsp.setDayMaxSaleQty(Long.parseLong(itemInfo.getMaxCountDaily()));
 				dsp.setMmMbrMaxPrchsQty(Long.parseLong(itemInfo.getMaxCountMonthlyUser()));
