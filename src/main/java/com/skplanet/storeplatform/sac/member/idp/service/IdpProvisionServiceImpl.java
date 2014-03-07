@@ -566,12 +566,12 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					}
 
 					if (StringUtil.equals(isTestModel, "Y")) {
-						LOGGER.info("<idpChangeMobile> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-								device.getDeviceModelCd(), uacd, svcMngNum);
+						LOGGER.info("<idpChangeMobile> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd,
+								svcMngNum);
 					} else {
 						LOGGER.info(
 								"<idpChangeMobile> NOT SUPPORT DEVICE.(기기변경 대상 단말이 존재하지 않음- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
-								mdn, device.getDeviceModelCd(), uacd, svcMngNum);
+								mdn, modelCd, uacd, svcMngNum);
 						uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD; // 일반 사용자인 경우 - 미지원 휴대폰으로
 						v4SprtYn = "N"; // V4 무조건 해지
 					}
