@@ -7,9 +7,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Tag;
 
 /**
- * 태그 목록 조회 Response Value Object.
+ * App 상세 정보 요청 Response Value Object.
  * 
- * Updated on : 2014. 2. 3. Updated by : 오승민, 인크로스.
+ * Updated on : 2014. 3. 6. Updated by : 오승민, 인크로스.
  */
 public class SellerAppDetailRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;

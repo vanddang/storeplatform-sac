@@ -1,46 +1,35 @@
 package com.skplanet.storeplatform.sac.client.display.vo.openapi;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * App 상세 정보 요청 Request Value Object.
+ * 개발 APP 목록 요청(회원 ID 기반) Request Value Object.
  * 
  * Updated on : 2014. 3. 6. Updated by : 오승민, 인크로스.
  */
-public class SellerAppDetailReq extends CommonInfo {
+public class SellerIdAppListReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 관리자 여부.
-	 */
-	private String admin;
-	/**
-	 * 판매자ID.
+	 * 판매자ID
 	 */
 	private String sellerId;
 	/**
-	 * 판매자Key.
+	 * 판매자Key
 	 */
 	private String sellerKey;
 	/**
-	 * AID.
+	 * 검색조건
 	 */
-	private String aid;
-
+	@NotBlank
+	private String searchType;
 	/**
-	 * @return the admin
+	 * 검색할 값
 	 */
-	public String getAdmin() {
-		return this.admin;
-	}
-
-	/**
-	 * @param admin
-	 *            the admin to set
-	 */
-	public void setAdmin(String admin) {
-		this.admin = admin;
-	}
+	@NotBlank
+	private String searchValue;
 
 	/**
 	 * @return the sellerId
@@ -73,18 +62,33 @@ public class SellerAppDetailReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the aid
+	 * @return the searchType
 	 */
-	public String getAid() {
-		return this.aid;
+	public String getSearchType() {
+		return this.searchType;
 	}
 
 	/**
-	 * @param aid
-	 *            the aid to set
+	 * @param searchType
+	 *            the searchType to set
 	 */
-	public void setAid(String aid) {
-		this.aid = aid;
+	public void setSearchType(String searchType) {
+		this.searchType = searchType;
+	}
+
+	/**
+	 * @return the searchValue
+	 */
+	public String getSearchValue() {
+		return this.searchValue;
+	}
+
+	/**
+	 * @param searchValue
+	 *            the searchValue to set
+	 */
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
 	}
 
 }
