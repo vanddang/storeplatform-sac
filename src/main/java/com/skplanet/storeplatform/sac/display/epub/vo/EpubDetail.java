@@ -120,7 +120,7 @@ public class EpubDetail extends CommonInfo {
 	/** 장르코드 */
 	private String genreCd;
 	/** 발매일 */
-	private Date issueDay;
+	private String issueDay;
 
 	// ---------------------------------------------------
 	// Thumbnail
@@ -309,11 +309,11 @@ public class EpubDetail extends CommonInfo {
 		this.artist2Nm = artist2Nm;
 	}
 
-	public Date getIssueDay() {
+	public String getIssueDay() {
 		return this.issueDay;
 	}
 
-	public void setIssueDay(Date issueDay) {
+	public void setIssueDay(String issueDay) {
 		this.issueDay = issueDay;
 	}
 

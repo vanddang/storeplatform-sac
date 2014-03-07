@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.vod.vo;
 
-import java.util.Date;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
+import java.util.Date;
 
 /**
  * VOD 상세조회 Value Object
@@ -85,7 +85,6 @@ public class VodDetail extends CommonInfo {
 	private String chapter;
 	private String chapterUnit;
 
-	private String btvYn;
 	/** HDCP 여부 */
 	private String hdcpYn;
 	/** HDV여부 */
@@ -106,7 +105,7 @@ public class VodDetail extends CommonInfo {
 	/** 장르코드 */
 	private String genreCd;
 	/** 발매일 */
-	private Date issueDay;
+	private String issueDay;
 
 	// ---------------------------------------------------
 	// Thumbnail
@@ -369,11 +368,11 @@ public class VodDetail extends CommonInfo {
 		this.artist2Nm = artist2Nm;
 	}
 
-	public Date getIssueDay() {
+	public String getIssueDay() {
 		return this.issueDay;
 	}
 
-	public void setIssueDay(Date issueDay) {
+	public void setIssueDay(String issueDay) {
 		this.issueDay = issueDay;
 	}
 
@@ -867,14 +866,6 @@ public class VodDetail extends CommonInfo {
 
 	public void setChapterUnit(String chapterUnit) {
 		this.chapterUnit = chapterUnit;
-	}
-
-	public String getBtvYn() {
-		return this.btvYn;
-	}
-
-	public void setBtvYn(String btvYn) {
-		this.btvYn = btvYn;
 	}
 
 	public String getHdcpYn() {

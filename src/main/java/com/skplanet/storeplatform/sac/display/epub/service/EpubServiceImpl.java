@@ -215,10 +215,10 @@ public class EpubServiceImpl implements EpubService {
 			contributor.setPublisher(mapperVO.getChnlCompNm());
 
 			// 출판일
-			if (mapperVO.getIssueDay() != null) {
+			if (StringUtils.isNotEmpty(mapperVO.getIssueDay())) {
 				date = new Date();
 				date.setType(DisplayConstants.DP_DATE_PUBLISH);
-				date.setText(mapperVO.getIssueDay() == null ? "" : sdf.format(mapperVO.getIssueDay()));
+				date.setText(sdf.format(mapperVO.getIssueDay()));
 				contributor.setDate(date);
 			}
 			product.setContributor(contributor);
@@ -228,10 +228,10 @@ public class EpubServiceImpl implements EpubService {
 			contributor.setPainter(mapperVO.getArtist2Nm());
 			contributor.setPublisher(mapperVO.getChnlCompNm());
 
-			if (mapperVO.getIssueDay() != null) {
+			if (StringUtils.isNotEmpty(mapperVO.getIssueDay())) {
 				date = new Date();
 				date.setType(DisplayConstants.DP_DATE_PUBLISH);
-				date.setText(mapperVO.getIssueDay() == null ? "" : sdf.format(mapperVO.getIssueDay()));
+				date.setText(sdf.format(mapperVO.getIssueDay()));
 				contributor.setDate(date);
 			}
 

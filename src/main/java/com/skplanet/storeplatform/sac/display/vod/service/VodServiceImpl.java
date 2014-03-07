@@ -385,7 +385,7 @@ public class VodServiceImpl implements VodService {
 			dateList.add(date);
 		}
 
-        if(mapperVO.getIssueDay() != null) {
+        if(StringUtils.isNotEmpty(mapperVO.getIssueDay())) {
             Date date = new Date();
             date.setType(DisplayConstants.DP_DATE_RELEASE);
             date.setText(sdf.format(mapperVO.getIssueDay()));

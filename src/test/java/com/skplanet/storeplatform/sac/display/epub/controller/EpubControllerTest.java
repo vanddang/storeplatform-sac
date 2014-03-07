@@ -51,7 +51,8 @@ public class EpubControllerTest {
 }
 
          */
-		param.put("channelId", "H000044572");
+		//param.put("channelId", "H000044572");
+		param.put("channelId", "H090131229");
 		param.put("deviceKey", "DE201402201711283140002222");
 		param.put("userKey", "US201402201711282940003170");
 		String json = this.convertMapToJson(param);
@@ -61,7 +62,7 @@ public class EpubControllerTest {
 						.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 						// TODO: Header 추가
                         .header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
-                        .header("x-sac-device-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+                        .header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(json))
 				.andDo(print())
@@ -85,7 +86,7 @@ public class EpubControllerTest {
                 post("/display/epub/series/list/v1")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
-                        .header("x-sac-device-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+                        .header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andDo(print())
@@ -105,7 +106,7 @@ public class EpubControllerTest {
                 post("/display/epub/channel/detail/v1")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
-                        .header("x-sac-device-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+                        .header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andDo(print())
@@ -129,6 +130,7 @@ public class EpubControllerTest {
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         // TODO: Header 추가
                         .header("x-sac-device-info", "model=\"SHV-E110S\", dpi=\"320\", resolution=\"480*720\", osVersion=\"Android/4.0.4\", pkgVersion=\"sac.store.skplanet.com/37\"")
+                        .header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andDo(print())
