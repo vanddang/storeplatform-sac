@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.client.display.vo.shopping;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -25,6 +27,7 @@ public class ShoppingPlanReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	@NotNull
+	@NotBlank
 	private String planId; // 기획전아이디
 	private String imageCd; // 이미지코드
 

@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.client.display.vo.shopping;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -26,9 +28,11 @@ public class ShoppingDetailReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	@NotNull
-	@Pattern(regexp = "^catalog|^episode")
+	@NotBlank
+	@Pattern(regexp = "catalog|^episode")
 	private String type; // type: catalog, episode
 	@NotNull
+	@NotBlank
 	private String productId; // 상품 ID (카탈로그)
 	private String partProdId; // 상품 ID( 에피소드)
 	private String specialProdId; // 특가상품 ID

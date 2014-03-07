@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.client.display.vo.shopping;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -25,8 +27,10 @@ public class ShoppingCategoryAnotherReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	@NotNull
+	@NotBlank
 	private String menuId; // 메뉴아이디
 	@NotNull
+	@NotBlank
 	private String exceptId; // 제외할 메뉴ID – 지정하면 응답에서 해당 메뉴 제외
 	private String listId; // 리스트아이디
 	private String imageCd; // 이미지코드
