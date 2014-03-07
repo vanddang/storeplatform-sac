@@ -19,6 +19,16 @@ public class ListSubsellerReq extends CommonInfo {
 	@NotBlank
 	private String sellerKey;
 
+	private String loginSort;
+
+	public String getLoginSort() {
+		return this.loginSort;
+	}
+
+	public void setLoginSort(String loginSort) {
+		this.loginSort = loginSort;
+	}
+
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
