@@ -60,7 +60,7 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String paymentEndDt; // 결제종료일시
 	private String afterPaymentDt; // 이후결제일시
 	private String prchsTme; // 회차
-	private String closedCd; // 해지코드
+	private String autoPaymentStatusCd; // 자동결제상태코드
 	private String closedDt; // 해지일시
 	private String closedReasonCd; // 해지사유코드
 	private String closedReqPathCd; // 해지요청경로
@@ -705,18 +705,18 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the closedCd
+	 * @return the autoPaymentStatusCd
 	 */
-	public String getClosedCd() {
-		return this.closedCd;
+	public String getAutoPaymentStatusCd() {
+		return this.autoPaymentStatusCd;
 	}
 
 	/**
-	 * @param closedCd
-	 *            the closedCd to set
+	 * @param autoPaymentStatusCd
+	 *            the autoPaymentStatusCd to set
 	 */
-	public void setClosedCd(String closedCd) {
-		this.closedCd = closedCd;
+	public void setAutoPaymentStatusCd(String autoPaymentStatusCd) {
+		this.autoPaymentStatusCd = autoPaymentStatusCd;
 	}
 
 	/**
