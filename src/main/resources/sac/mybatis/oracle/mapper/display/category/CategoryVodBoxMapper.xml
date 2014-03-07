@@ -34,9 +34,6 @@
 		    , FN_COMM_CD_NM(A.SD_DP_PG_RATIO_CD, A.LANG_CD) AS SD_DP_PG_RATIO_NM
 		    , A.HD_DP_PG_RATIO_CD
 		    , FN_COMM_CD_NM(A.HD_DP_PG_RATIO_CD, A.LANG_CD) AS HD_DP_PG_RATIO_NM
-		    /* 삭제 예정
-		    , A.NM_BTV_CID , A.SD_BTV_CID , A.HD_BTV_CID , A.BTV_YN
-		    */
 		    , A.PROD_AMT
 		    , A.PROD_NET_AMT
 		    , A.DRM_YN
@@ -96,9 +93,6 @@
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.RSLTN_CD)) OVER(PARTITION BY A.CID) HD_RSLTN_CD
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.DP_PG_RATIO_CD)) OVER(PARTITION BY A.CID) HD_DP_PG_RATIO_CD
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.PROD_VER)) OVER(PARTITION BY A.CID) HD_PROD_VER
-		        /* 삭제 예정
-                , MAX(DECODE(A.SUB_CONTENTS_ID, A.SD_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) SD_BTV_CID , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) NM_BTV_CID , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.BTV_CID)) OVER(PARTITION BY A.CID) HD_BTV_CID
-                */
 		        , F.REG_DT CHNL_REG_DT
 		    FROM (
 		        SELECT 
@@ -111,9 +105,6 @@
 		        , A.DRM_YN
 		        , B.PROD_STATUS_CD
 		        , E.DOLBY_SPRT_YN
-		        /* 삭제 예정
-		        , G.BTV_YN, F.BTV_CID
-                */
 		        , G.CHAPTER
 		        , G.ISSUE_DAY
 		        , G.SC_SAMPL_URL
@@ -158,6 +149,7 @@
 		        AND C.PROD_RSHP_CD = 'DP010802' /* 상품 관계 코드 */
                 AND E.USE_YN = 'Y' /* 사용 여부 */
 		        AND F.SALE_YN = 'Y' /* 판매 여부 */
+				AND DECODE(NVL(A.DRM_YN, 'N'), 'N', 1, NVL(E.VIDEO_DRM_SPRT_YN, 'N'), 1, 0) = 1
 		        AND (D.DEVICE_MODEL_CD = #{deviceModelCd} OR D.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말 모델 코드 */
                 AND C.PROD_ID = #{channelId} /* 채널 ID(테스트 : H000047216) */
 		    

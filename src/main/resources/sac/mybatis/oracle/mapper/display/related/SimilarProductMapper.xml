@@ -52,6 +52,7 @@
                 AND G.USE_YN = 'Y'
                 AND F.EXPO_YN = 'Y'
                 AND B.SVC_GRP_CD ='DP000201'
+                AND D.TOP_MENU_ID != 'DP02'
                 AND F.PROD_STATUS_CD = 'PD000403'
                 AND A.STD_PROD_ID = #{productId}
                 AND F.TENANT_ID = #{tenantId}

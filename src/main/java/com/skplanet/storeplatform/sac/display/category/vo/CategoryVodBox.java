@@ -45,14 +45,10 @@ public class CategoryVodBox {
 	private String sdDpPgRatioNm;
 	private String hdDpPgRatioCd;
 	private String hdDpPgRatioNm;
-	private String nmBtvCid;
-	private String sdBtvCid;
-	private String hdBtvCid;
 	private Integer prodAmt;
 	private Integer prodNetAmt;
 	private String drmYn;
 	private String prodStatusCd;
-	private String btvYn;
 	private String prodNm;
 	private Integer chapter;
 	private String chapterUnit;
@@ -824,81 +820,6 @@ public class CategoryVodBox {
 	/**
 	 * 
 	 * <pre>
-	 * NM BTV_CID.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getNmBtvCid() {
-		return this.nmBtvCid;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * NM BTV_CID.
-	 * </pre>
-	 * 
-	 * @param nmBtvCid
-	 *            String
-	 */
-	public void setNmBtvCid(String nmBtvCid) {
-		this.nmBtvCid = nmBtvCid;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * SD BTV_CID.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getSdBtvCid() {
-		return this.sdBtvCid;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * SD BTV_CID.
-	 * </pre>
-	 * 
-	 * @param sdBtvCid
-	 *            String
-	 */
-	public void setSdBtvCid(String sdBtvCid) {
-		this.sdBtvCid = sdBtvCid;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * HD BTV_CID.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getHdBtvCid() {
-		return this.hdBtvCid;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * HD BTV_CID.
-	 * </pre>
-	 * 
-	 * @param hdBtvCid
-	 *            String
-	 */
-	public void setHdBtvCid(String hdBtvCid) {
-		this.hdBtvCid = hdBtvCid;
-	}
-
-	/**
-	 * 
-	 * <pre>
 	 * 상품_금액.
 	 * </pre>
 	 * 
@@ -994,29 +915,6 @@ public class CategoryVodBox {
 	 */
 	public void setProdStatusCd(String prodStatusCd) {
 		this.prodStatusCd = prodStatusCd;
-	}
-
-	/**
-	 * <pre>
-	 * BTV_여부.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getBtvYn() {
-		return this.btvYn;
-	}
-
-	/**
-	 * <pre>
-	 * BTV_여부.
-	 * </pre>
-	 * 
-	 * @param btvYn
-	 *            String
-	 */
-	public void setBtvYn(String btvYn) {
-		this.btvYn = btvYn;
 	}
 
 	/**
