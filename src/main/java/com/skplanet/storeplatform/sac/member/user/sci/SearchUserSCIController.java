@@ -65,8 +65,10 @@ public class SearchUserSCIController implements SearchUserSCI {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI
-	 * #searchUserByUserKey(com.skplanet .storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq)
+	 * @see
+	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI
+	 * #searchUserByUserKey(com.skplanet
+	 * .storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq)
 	 */
 	@Override
 	@RequestMapping(value = "/searchUserByUserKey", method = RequestMethod.POST)
@@ -75,15 +77,13 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}",
-				requestHeader, request);
+		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}", requestHeader, request);
 
 		List<String> userKeyList = request.getUserKeyList();
 		SearchUserReq searchUserReq = new SearchUserReq();
 		searchUserReq.setUserKeyList(userKeyList);
 
-		Map<String, UserInfoByUserKey> userInfoMap = this.userSearchService.searchUserByUserKey(requestHeader,
-				searchUserReq);
+		Map<String, UserInfoByUserKey> userInfoMap = this.userSearchService.searchUserByUserKey(requestHeader, searchUserReq);
 
 		Map<String, UserInfoSac> resMap = new HashMap<String, UserInfoSac>();
 		UserInfoSac userInfoSac;
@@ -113,8 +113,11 @@ public class SearchUserSCIController implements SearchUserSCI {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI
-	 * #searchUserPayplanet(com.skplanet .storeplatform.sac.client.internal.member .user.vo.SearchUserPayplanetSacReq)
+	 * @see
+	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI
+	 * #searchUserPayplanet(com.skplanet
+	 * .storeplatform.sac.client.internal.member
+	 * .user.vo.SearchUserPayplanetSacReq)
 	 */
 	@Override
 	@RequestMapping(value = "/searchUserPayplanet", method = RequestMethod.POST)
@@ -123,8 +126,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[SearchUserSCIController.searchUserPayplanet] RequestHeader : {}, \nRequestParameter : {}",
-				requestHeader, request);
+		LOGGER.info("[SearchUserSCIController.searchUserPayplanet] RequestHeader : {}, \nRequestParameter : {}", requestHeader, request);
 
 		String deviceKey = StringUtil.nvl(request.getDeviceKey(), "");
 		String userKey = StringUtil.nvl(request.getUserKey(), "");
@@ -145,12 +147,15 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		String skpAgreementYn = "N";
 		try {
-			ListTermsAgreementSacRes agreementRes = this.userSearchService.listTermsAgreement(requestHeader,
-					agreementReq);
+			ListTermsAgreementSacRes agreementRes = this.userSearchService.listTermsAgreement(requestHeader, agreementReq);
 
 			for (Agreement agree : agreementRes.getAgreementList()) {
 				if (agree.getExtraAgreementId().equals(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE)) {
-					skpAgreementYn = "Y";
+					if (agree.getIsExtraAgreement().equals("Y")) {
+						skpAgreementYn = "Y";
+					} else {
+						skpAgreementYn = "N";
+					}
 				}
 			}
 		} catch (StorePlatformException ex) {
