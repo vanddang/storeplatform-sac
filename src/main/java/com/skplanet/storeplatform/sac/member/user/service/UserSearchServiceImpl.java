@@ -1362,9 +1362,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 					policyInfos = new ArrayList<IndividualPolicyInfo>();
 					for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
 						policyInfo = new IndividualPolicyInfo();
-						policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
-						policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
-						policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
+						policyInfo.setKey(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey()));
+						policyInfo.setPolicyCode(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode()));
+						policyInfo.setValue(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue()));
+						policyInfo.setLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitAmount()));
+						policyInfo.setPreLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPreLimitAmount()));
+						policyInfo.setPermissionType(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPermissionType()));
+						policyInfo.setIsUsed(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getIsUsed()));
 						policyInfos.add(policyInfo);
 					}
 				}
@@ -1384,6 +1388,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 				policyInfos = new ArrayList<IndividualPolicyInfo>();
 				IndividualPolicyInfo policyInfo = new IndividualPolicyInfo();
 				policyInfo.setPolicyCode("");
+				policyInfo.setKey("");
+				policyInfo.setValue("");
+				policyInfo.setLimitAmount("");
+				policyInfo.setPreLimitAmount("");
+				policyInfo.setPermissionType("");
+				policyInfo.setIsUsed("");
 				policyInfos.add(policyInfo);
 			} else {
 				throw spe;
@@ -1517,10 +1527,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
-	 * searchUserByUserKey(com.skplanet.storeplatform
-	 * .sac.client.member.vo.user.SearchUserReq)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByUserKey(com.skplanet.storeplatform .sac.client.member.vo.user.SearchUserReq)
 	 */
 	@Override
 	public Map<String, UserInfoByUserKey> searchUserByUserKey(SacRequestHeader sacHeader, SearchUserReq request) {
