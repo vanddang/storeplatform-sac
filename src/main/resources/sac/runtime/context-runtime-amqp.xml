@@ -19,27 +19,27 @@
 		http://www.springframework.org/schema/integration/amqp    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.2.xsd
         http://www.springframework.org/schema/rabbit              http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
 
-<!--  	<import resource="classpath*:runtime/context-runtime-amqp.xml"/> -->
+ 	<import resource="classpath*:runtime/context-runtime-amqp.xml"/>
  	
-<!--  	<bean class="com.rabbitmq.client.ConnectionFactory"> -->
-<!--         <property name="host" ><value>#{propertiesForSac['skp.cms.mq.server.host']}</value></property> -->
-<!--         <property name="port" ><value>#{propertiesForSac['skp.cms.mq.server.port']}</value></property> -->
-<!--         <property name="username" ><value>#{propertiesForSac['skp.cms.mq.server.username']}</value></property> -->
-<!--         <property name="password" ><value>#{propertiesForSac['skp.cms.mq.server.password']}</value></property> -->
-<!--         <property name="virtualHost" ><value>#{propertiesForSac['skp.cms.mq.server.virtualHost']}</value></property> -->
-<!--     </bean> -->
+ 	<bean class="com.rabbitmq.client.ConnectionFactory">
+        <property name="host" ><value>#{propertiesForSac['skp.cms.mq.server.host']}</value></property>
+        <property name="port" ><value>#{propertiesForSac['skp.cms.mq.server.port']}</value></property>
+        <property name="username" ><value>#{propertiesForSac['skp.cms.mq.server.username']}</value></property>
+        <property name="password" ><value>#{propertiesForSac['skp.cms.mq.server.password']}</value></property>
+        <property name="virtualHost" ><value>#{propertiesForSac['skp.cms.mq.server.virtualHost']}</value></property>
+    </bean>
     
-<!--     <bean id="inboundQueueNames" class="com.skplanet.storeplatform.framework.core.util.StringUtils" factory-method="convertArrayListToString"> -->
-<!--         <constructor-arg> -->
-<!--             <list>                 -->
-<!--                 <value>local.icms-app-refactoring-deploy.sac.deploy.async</value> -->
-<!--                 <value>local.icms-app-admin.sac.device-mapping.async</value> -->
-<!--             </list> -->
-<!--         </constructor-arg> -->
-<!--         <constructor-arg type="java.lang.String"> -->
-<!--             <value>,</value> -->
-<!--         </constructor-arg> -->
-<!--     </bean> -->
+    <bean id="inboundQueueNames" class="com.skplanet.storeplatform.framework.core.util.StringUtils" factory-method="convertArrayListToString">
+        <constructor-arg>
+            <list>                
+                <value>local.icms-app-refactoring-deploy.sac.deploy.async</value>
+                <value>local.icms-app-admin.sac.device-mapping.async</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg type="java.lang.String">
+            <value>,</value>
+        </constructor-arg>
+    </bean>
     
     <!-- 
     <value>cmsapp.sac.request.sync.content.test99999</value>
@@ -49,72 +49,72 @@
     <value>tenant1.sac.response.sync.content.test0001</value> 
     -->
     
-<!--     <rabbit:queue id="local.icms-app-refactoring-deploy.sac.deploy.async" name="local.icms-app-refactoring-deploy.sac.deploy.async" > -->
-<!--         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments> -->
-<!--     </rabbit:queue> -->
-<!--     <rabbit:queue id="local.icms-app-admin.sac.device-mapping.async" name="local.icms-app-admin.sac.device-mapping.async" > -->
-<!--         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments> -->
-<!--     </rabbit:queue>     -->
-<!--     <rabbit:queue id="local.sac.icms-app-refactoring-deploy.deploy-result.async" name="local.sac.icms-app-refactoring-deploy.deploy-result.async" > -->
-<!--         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments> -->
-<!--     </rabbit:queue> -->
-<!--     <rabbit:queue id="local.sac.icms-app-admin.device-mapping-result.async" name="local.sac.icms-app-admin.device-mapping-result.async" > -->
-<!--         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments> -->
-<!--     </rabbit:queue> -->
+    <rabbit:queue id="local.icms-app-refactoring-deploy.sac.deploy.async" name="local.icms-app-refactoring-deploy.sac.deploy.async" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>
+    <rabbit:queue id="local.icms-app-admin.sac.device-mapping.async" name="local.icms-app-admin.sac.device-mapping.async" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>    
+    <rabbit:queue id="local.sac.icms-app-refactoring-deploy.deploy-result.async" name="local.sac.icms-app-refactoring-deploy.deploy-result.async" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>
+    <rabbit:queue id="local.sac.icms-app-admin.device-mapping-result.async" name="local.sac.icms-app-admin.device-mapping-result.async" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>
     
     
-<!--     <rabbit:admin connection-factory="sacRabbitConnectionFactory" auto-startup="true" /> -->
+    <rabbit:admin connection-factory="sacRabbitConnectionFactory" auto-startup="true" />
             
-<!--     <rabbit:connection-factory id="sacRabbitConnectionFactory" /> -->
+    <rabbit:connection-factory id="sacRabbitConnectionFactory" />
     
-<!--     <bean id="sacRabbitConnectionFactory" class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory" > -->
-<!--         <constructor-arg ref="com.rabbitmq.client.ConnectionFactory" /> -->
-<!--         <property name="channelCacheSize" value="10"/> -->
-<!--     </bean> -->
+    <bean id="sacRabbitConnectionFactory" class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory" >
+        <constructor-arg ref="com.rabbitmq.client.ConnectionFactory" />
+        <property name="channelCacheSize" value="10"/>
+    </bean>
     
-<!--     <rabbit:template id="storeplatformRabbitTemplate" connection-factory="sacRabbitConnectionFactory" message-converter="sacRabbitJsonMessageConverter" reply-timeout="60000" /> -->
+    <rabbit:template id="storeplatformRabbitTemplate" connection-factory="sacRabbitConnectionFactory" message-converter="sacRabbitJsonMessageConverter" reply-timeout="60000" />
     
-<!--     <bean id="sacRabbitJsonMessageConverter" class="org.springframework.amqp.support.converter.JsonMessageConverter" /> -->
+    <bean id="sacRabbitJsonMessageConverter" class="org.springframework.amqp.support.converter.JsonMessageConverter" />
     
     <!-- CMS DISPLAY RESULT Rabbit Template -->
-<!--     <bean id="cmsAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
-<!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
-<!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
-<!--         <property name="routingKey" value="local.sac.icms-app-refactoring-deploy.deploy-result.async" /> -->
-<!--     </bean> -->
+    <bean id="cmsAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="local.sac.icms-app-refactoring-deploy.deploy-result.async" />
+    </bean>
     
     <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
-<!--     <bean id="deviceMappingRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
-<!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
-<!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
-<!--         <property name="routingKey" value="local.sac.icms-app-admin.device-mapping-result.async" /> -->
-<!--     </bean> -->
+    <bean id="deviceMappingRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="local.sac.icms-app-admin.device-mapping-result.async" />
+    </bean>
 
 
     <!-- Member - Add Device Rabbit Template -->
-<!--     <bean id="memberAddDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
-<!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
-<!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
-<!--         <property name="routingKey" value="sac.tenant.member.add-device.async" /> -->
-<!--     </bean> -->
+    <bean id="memberAddDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="sac.tenant.member.add-device.async" />
+    </bean>
     <!-- Member - Modify Device Rabbit Template -->
-<!--     <bean id="memberModDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
-<!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
-<!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
-<!--         <property name="routingKey" value="sac.tenant.member.mod-device.async" /> -->
-<!--     </bean> -->
+    <bean id="memberModDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="sac.tenant.member.mod-device.async" />
+    </bean>
     <!-- Member - Delete Device Rabbit Template -->
-<!--     <bean id="memberDelDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
-<!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
-<!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
-<!--         <property name="routingKey" value="sac.tenant.member.mod-device.async" /> -->
-<!--     </bean> -->
+    <bean id="memberDelDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="sac.tenant.member.mod-device.async" />
+    </bean>
     <!-- Member - Retire Rabbit Template -->
-<!--     <bean id="memberRetireAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
-<!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
-<!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
-<!--         <property name="routingKey" value="sac.tenant.member.retire.async" /> -->
-<!--     </bean> -->
+    <bean id="memberRetireAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="sac.tenant.member.retire.async" />
+    </bean>
 
 
 </beans> 
