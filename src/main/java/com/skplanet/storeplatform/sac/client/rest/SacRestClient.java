@@ -55,6 +55,8 @@ public interface SacRestClient {
 	 * 		RequestParameter (Object, Map 모두 가능)
 	 * @param body
 	 * 		RequestBody (Object, Map 모두 가능)
+	 * @return
+	 * 		응답 데이터 객체
 	 */
 	<T> T post(String interfaceId, String path, Class<T> responseType, Object param, Object body) throws SacRestClientException;
 
