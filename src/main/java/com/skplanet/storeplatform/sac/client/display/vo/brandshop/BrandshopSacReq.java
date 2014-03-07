@@ -22,7 +22,6 @@ public class BrandshopSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	@NotBlank(message = "필수 파라미터 입니다.")
 	private String channelId;
 	private String menuId;
 	private String filteredBy; // 조회유형
@@ -32,6 +31,8 @@ public class BrandshopSacReq extends CommonInfo {
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
 	private String topMenuId; // TOP 메뉴 아이디
+
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String brandshopId; // 브랜드샵 메뉴 아이디
 	private String orderedBy; // orderedBy
 
