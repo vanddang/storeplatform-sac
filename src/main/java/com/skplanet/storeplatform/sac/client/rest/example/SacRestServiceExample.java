@@ -73,13 +73,13 @@ public class SacRestServiceExample {
 		// 응답 데이터를 담을 객체 타입
 		Class<ModifyFeedbackSacRes> responseType = ModifyFeedbackSacRes.class;
 
-
 		// 템플릿을 이용하여 호출 및 오류 처리
 		try {
 			ModifyFeedbackSacRes data = this.adaptor.post(interfaceId, path, responseType, req);
 			LOGGER.debug("# Data : \n{}", data);
 			return data;
 		} catch (SacRestClientException e) {
+			// 오류 발생 시, Tenant 오류 정책에 따라...
 			SacRestClientError error = e.getError();
 			LOGGER.debug("# Error : \n{}", error);
 			throw new RuntimeException("SAC Interface Error", e);

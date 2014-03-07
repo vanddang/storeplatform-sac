@@ -14,7 +14,7 @@ import com.skplanet.storeplatform.sac.client.rest.error.SacRestClientException;
 public class SacRestAdaptorExample {
 
 	// 추후 구현체 바꿀 수 있도록 인터페이스 사용 권장
-	private final SacRestClient template;
+	private final SacRestClient restClient;
 
 	public SacRestAdaptorExample() {
 		/*
@@ -30,16 +30,15 @@ public class SacRestAdaptorExample {
 		// 시스템 아이디 참조 (https://project.itopping.co.kr:82/projects/api_center/wiki/TenantSystem)
 		String systemId = "S01-06001";
 		// 호스트 및 인증 정보 입력하여 템플릿 생성
-		this.template= new SacRestClientApache(host, authKey, systemId);
+		this.restClient= new SacRestClientApache(host, authKey, systemId);
 	}
 
 	public <T> T get(String interfaceId, String path, Class<T> responseType, Object param) throws SacRestClientException {
-		return this.template.get(interfaceId, path, responseType, param);
+		return this.restClient.get(interfaceId, path, responseType, param);
 	}
 
 	public <T> T post(String interfaceId, String path, Class<T> responseType, Object body) throws SacRestClientException {
-		return this.template.post(interfaceId, path, responseType, body);
+		return this.restClient.post(interfaceId, path, responseType, body);
 	}
-
 
 }
