@@ -29,7 +29,7 @@ public class ShoppingDetailReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	@NotNull
 	@NotBlank
-	@Pattern(regexp = "catalog|^episode")
+	@Pattern(regexp = "^catalog|^episode")
 	private String type; // type: catalog, episode
 	@NotNull
 	@NotBlank
