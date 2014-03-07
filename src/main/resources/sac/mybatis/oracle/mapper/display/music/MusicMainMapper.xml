@@ -87,7 +87,7 @@
     
     <select id="getMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
         SELECT /* MusicMainMapper.xml, getMusicMetaInfo, 조준일, 2014-03-06 */
-               F.ARTIST1_ID
+               F.ARTIST1_ID AS ARTIST_ID
 		     , E.PROD_ID
 		     , E.PART_PROD_ID
 		     , D.MENU_ID
