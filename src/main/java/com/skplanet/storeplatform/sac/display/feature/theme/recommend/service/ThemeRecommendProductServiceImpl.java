@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendProdSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -74,7 +74,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	@Override
-	public ThemeRecommendSacRes searchThemeRecommendProductList(ThemeRecommendSacReq requestVO,
+	public ThemeRecommendSacRes searchThemeRecommendProductList(ThemeRecommendProdSacReq requestVO,
 			SacRequestHeader requestHeader) throws StorePlatformException {
 
 		// TODO Auto-generated method stub
@@ -86,11 +86,6 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		mapReq.put("tenantHeader", tenantHeader);
 		mapReq.put("deviceHeader", deviceHeader);
 		mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
-
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getRecommendId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "recommendId", requestVO.getRecommendId());
-		}
 
 		List<ThemeRecommend> packageInfo = new ArrayList<ThemeRecommend>();
 		List<ThemeRecommend> productInfo = new ArrayList<ThemeRecommend>();
@@ -560,7 +555,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public ThemeRecommendSacRes searchDummyThemeRecommendProductList(ThemeRecommendSacReq requestVO,
+	public ThemeRecommendSacRes searchDummyThemeRecommendProductList(ThemeRecommendProdSacReq requestVO,
 			SacRequestHeader header) {
 		// TODO Auto-generated method stub
 

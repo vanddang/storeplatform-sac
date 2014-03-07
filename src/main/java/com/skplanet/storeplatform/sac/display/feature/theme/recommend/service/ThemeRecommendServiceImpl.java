@@ -90,21 +90,6 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		this.log.debug("[searchThemeRecommendList] deviceId : {}", deviceId);
 		this.log.debug("----------------------------------------------------------------");
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(userKey)) {
-			throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-		}
-		if (StringUtils.isEmpty(deviceIdType)) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceIdType", deviceIdType);
-		}
-		if (StringUtils.isEmpty(deviceId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceId", deviceId);
-		}
-		// 기기ID유형 유효값 체크
-		if (!"msisdn".equals(deviceIdType)) {
-			throw new StorePlatformException("SAC_DSP_0003", "deviceIdType", deviceIdType);
-		}
-
 		ISFRes response = new ISFRes();
 		try {
 			// ISF 연동

@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.theme.recommend.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendProdSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -20,7 +20,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  */
 public interface ThemeRecommendProductService {
 
-	ThemeRecommendSacRes searchThemeRecommendProductList(ThemeRecommendSacReq requestVO, SacRequestHeader header);
+	ThemeRecommendSacRes searchThemeRecommendProductList(ThemeRecommendProdSacReq requestVO, SacRequestHeader header);
 
-	ThemeRecommendSacRes searchDummyThemeRecommendProductList(ThemeRecommendSacReq requestVO, SacRequestHeader header);
+	ThemeRecommendSacRes searchDummyThemeRecommendProductList(ThemeRecommendProdSacReq requestVO,
+			SacRequestHeader header);
 }

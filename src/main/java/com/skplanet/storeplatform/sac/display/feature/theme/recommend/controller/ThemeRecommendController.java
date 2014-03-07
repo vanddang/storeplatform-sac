@@ -8,11 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendProdSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -48,7 +50,7 @@ public class ThemeRecommendController {
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ThemeRecommendSacRes searchThemeRecommendList(@RequestBody ThemeRecommendSacReq requestVO,
+	public ThemeRecommendSacRes searchThemeRecommendList(@RequestBody @Validated ThemeRecommendSacReq requestVO,
 			SacRequestHeader header) {
 
 		this.log.debug("searchThemeRecommendList start !!");
@@ -72,7 +74,8 @@ public class ThemeRecommendController {
 	 */
 	@RequestMapping(value = "/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ThemeRecommendSacRes searchThemeRecommendProductList(ThemeRecommendSacReq requestVO, SacRequestHeader header) {
+	public ThemeRecommendSacRes searchThemeRecommendProductList(@Validated ThemeRecommendProdSacReq requestVO,
+			SacRequestHeader header) {
 
 		this.log.debug("searchThemeRecommendProductList start !!");
 		this.log.debug("request {}", requestVO);
