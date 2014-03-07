@@ -219,12 +219,12 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				// 이미지 리사이즈 처리
 				File srcFile = new File(uploadDir + srcFileName);
 				String outFile = uploadDir + targetFileName;
-
+				this.log.info("■■■■■BrandImgResize123123■■■■■ : " + targetFileName + "을 생성 하였습니다.");
 				// 이미지 리사이즈
 				if (!ImageUtil.setImgScale(srcFile, outFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
-				// log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
+				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
 
 				this.brandCatalogProdImgInfo.setProdId(dpBrandInfo.getCreateBrandId());
 				this.brandCatalogProdImgInfo.setImgCls(imgClsCode[i]);
