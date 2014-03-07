@@ -142,9 +142,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				keySearchList.add(key);
 
 				searchDeviceRequest.setKeySearchList(keySearchList);
-
-				LOGGER.info("::: searchDeviceRequest : {}", searchDeviceRequest.getCommonRequest().toString());
-				LOGGER.info("::: searchDeviceRequest : {}", searchDeviceRequest.getKeySearchList().toString());
 				SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
 				beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
