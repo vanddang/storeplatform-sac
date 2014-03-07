@@ -686,7 +686,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		mbrAuth.setRealNameDate(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameDate()));
 		mbrAuth.setRealNameMethod(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameMethod()));
 		mbrAuth.setRealNameSite(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameSite()));
-		mbrAuth.setSequence(StringUtil.setTrim(schUserRes.getMbrAuth().getSequence()));
 		mbrAuth.setSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
 		mbrAuth.setTelecom(StringUtil.setTrim(schUserRes.getMbrAuth().getTelecom()));
 
