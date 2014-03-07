@@ -27,13 +27,17 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.BellService;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProduct;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
@@ -58,6 +62,9 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 	@Autowired
 	private MetaInfoService metaInfoService;
 
+	@Autowired
+	private MusicInfoGenerator musicGenerator;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -73,6 +80,7 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 		Product product = null;
 		MetaInfo metaInfo = null;
 		List<Product> productList = new ArrayList<Product>();
+		CategorySpecificProduct categorySpecificProduct = null;
 
 		if (req.getDummy() == null) {
 
@@ -122,6 +130,25 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 								MetaInfo.class);
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
+							Music music = new Music();
+							product.setMusic(this.musicGenerator.generateMusic(metaInfo));
+							List<CategorySpecificProduct> metaList = this.commonDAO.queryForList(
+									"CategorySpecificProduct.selectMusicMetaList", metaInfo,
+									CategorySpecificProduct.class);
+							if (metaList != null) {
+
+								List<BellService> bellServiceList = new ArrayList<BellService>();
+								BellService bellService = null;
+								for (int i = 0; i < metaList.size(); i++) {
+									categorySpecificProduct = metaList.get(i);
+									bellService = new BellService();
+									bellService.setName(categorySpecificProduct.getMetaClsfCd());
+									bellService.setType(categorySpecificProduct.getProdId());
+									bellServiceList.add(bellService);
+								}
+								music.setBellServiceList(bellServiceList);
+							}
+							product.setMusic(music);
 							productList.add(product);
 						}
 					}

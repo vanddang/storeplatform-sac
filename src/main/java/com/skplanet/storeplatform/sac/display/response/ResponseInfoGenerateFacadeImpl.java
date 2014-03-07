@@ -504,7 +504,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(this.musicGenerator.generateContributor(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
-		product.setMusic(this.musicGenerator.generateMusic(metaInfo));
+		// product.setMusic(this.musicGenerator.generateMusic(metaInfo));
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
