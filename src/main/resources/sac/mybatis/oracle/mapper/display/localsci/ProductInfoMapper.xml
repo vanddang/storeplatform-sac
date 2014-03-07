@@ -176,7 +176,6 @@
 		       , E.AGENCY_NM
 		       , E.HDV_YN
 		       , E.HDCP_YN
-		       , E.BTV_YN
 		       , E.REG_DT
 		       , E.PLAY_TM
 		       , E.CHAPTER
