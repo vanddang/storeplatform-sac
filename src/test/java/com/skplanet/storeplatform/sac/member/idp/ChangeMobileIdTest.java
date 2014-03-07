@@ -94,7 +94,7 @@ public class ChangeMobileIdTest {
 				map.put("tenantID", "S01");
 
 				map.put("mdn", "01049545098");
-				map.put("svc_mng_num", "70355167651");
+				map.put("svc_mng_num", "7035516765");
 				map.put("model_id", "SSMF");
 				map.put("be_mdn", "01049545098");
 				map.put("min", "1049545098");
@@ -128,8 +128,8 @@ public class ChangeMobileIdTest {
 			map.put("tenantID", "S01");
 
 			map.put("mdn", "01048088874");
-			map.put("svc_mng_num", "1242345410");
-			map.put("model_id", "SSMF");
+			map.put("svc_mng_num", "7035516765");
+			map.put("model_id", "SSM1");
 			//map.put("be_mdn", "01048088874");
 			map.put("min", "1048088874");
 
