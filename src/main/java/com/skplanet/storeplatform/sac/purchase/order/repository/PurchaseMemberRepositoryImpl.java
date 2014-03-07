@@ -20,6 +20,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
@@ -88,6 +90,26 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		purchaseUserDevice.setAge(20); // TAKTODO:: DUMMY
 
 		return purchaseUserDevice;
+	}
+
+	/**
+	 * <pre>
+	 * 회원의 결제 관련 정보 조회: 통신과금 이용약관 동의여부, OCB 이용약관 동의여부, OCB 카드번호.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            내부 회원 NO
+	 * @param deviceKey
+	 *            내부 디바이스 ID
+	 * @return SearchUserPayplanetSacRes
+	 */
+	@Override
+	public SearchUserPayplanetSacRes searchUserPayplanet(String userKey, String deviceKey) {
+		SearchUserPayplanetSacReq searchUserPayplanetSacReq = new SearchUserPayplanetSacReq();
+		searchUserPayplanetSacReq.setUserKey(userKey);
+		searchUserPayplanetSacReq.setDeviceKey(deviceKey);
+
+		return this.searchUserSCI.searchUserPayplanet(searchUserPayplanetSacReq);
 	}
 
 }

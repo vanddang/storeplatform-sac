@@ -225,7 +225,7 @@ public class PurchaseOrderController {
 	 *            결제 결과 정보
 	 * @return 결제 결과 처리 응답
 	 */
-	@RequestMapping(value = "/notifyPayment/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/notifyPaymentTemp/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public NotifyPaymentTemporarySacRes temporaryNotifyPayment(
 			@RequestBody NotifyPaymentTemporarySacReq notifyPaymentReq) {
@@ -254,9 +254,9 @@ public class PurchaseOrderController {
 						"yyyyMMddHHmmss"));
 			}
 			paymentInfo.setBillKey(notifyPaymentReq.getGwBillkey());
-			paymentInfo.setApplNum("");
+			paymentInfo.setApprNo("");
 			if (StringUtils.equals(paymentInfo.getPaymentMtdCd(), "OR000606")) {
-				paymentInfo.setMoid(notifyPaymentReq.getNoCoupon());
+				paymentInfo.setCpnId(notifyPaymentReq.getNoCoupon());
 			} else {
 				paymentInfo.setMoid("");
 			}
@@ -290,7 +290,7 @@ public class PurchaseOrderController {
 	 *            결제 결과 정보
 	 * @return 결제 결과 처리 응답
 	 */
-	@RequestMapping(value = "/createPayment/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/notifyPayment/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public NotifyPaymentSacRes notifyPayment(@RequestBody NotifyPaymentSacReq notifyPaymentReq) {
 		this.logger.debug("PRCHS,INFO,NOTI_PAY,REQ,{}", notifyPaymentReq);
@@ -400,8 +400,8 @@ public class PurchaseOrderController {
 		// 상품 적합성 체크
 		this.validationService.validateProductDummy(purchaseOrderInfo);
 
-		// 제한정책 체크
-		this.policyService.checkTenantPolicy(purchaseOrderInfo);
+		// 회원정책 체크 : TestMDN / 구매차단
+		this.policyService.checkUserPolicy(purchaseOrderInfo);
 
 		// 구매 적합성(&가능여부) 체크
 		this.validationService.validatePurchaseDummy(purchaseOrderInfo);

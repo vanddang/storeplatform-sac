@@ -32,6 +32,8 @@ import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckResult;
 
 /**
  * 
@@ -166,6 +168,15 @@ public class PurchaseOrderPolicyServiceImplTest {
 	 */
 	@Test
 	public void checkTenantPolicy() {
-		this.purchasePolicyService.checkTenantPolicy(this.purchaseInfo);
+		SktPaymentPolicyCheckParam policyCheckParam = new SktPaymentPolicyCheckParam();
+		policyCheckParam.setTenantId("S01");
+		policyCheckParam.setUserKey("MBR01");
+		policyCheckParam.setDeviceKey("MBR01_1");
+		policyCheckParam.setDeviceId("01046353524");
+		policyCheckParam.setTenantProdGrpCd("DP15");
+		policyCheckParam.setPaymentTotAmt(10000.0);
+
+		SktPaymentPolicyCheckResult result = this.purchasePolicyService.checkSktPaymentPolicy(policyCheckParam);
+		System.out.println(result);
 	}
 }

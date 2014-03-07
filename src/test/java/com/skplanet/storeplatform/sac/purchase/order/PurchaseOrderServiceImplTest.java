@@ -165,7 +165,7 @@ public class PurchaseOrderServiceImplTest {
 	 */
 	@Test
 	public void checkPurchase() throws Exception {
-		this.purchasePolicyService.checkTenantPolicy(this.purchaseInfo);
+		this.purchasePolicyService.checkUserPolicy(this.purchaseInfo);
 
 	}
 

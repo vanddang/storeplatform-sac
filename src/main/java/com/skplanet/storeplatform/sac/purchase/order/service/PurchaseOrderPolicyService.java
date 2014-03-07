@@ -10,6 +10,8 @@
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckResult;
 
 /**
  * 
@@ -22,13 +24,25 @@ public interface PurchaseOrderPolicyService {
 	/**
 	 * 
 	 * <pre>
-	 * 테넌트 정책 체크.
+	 * SKT 후불 결제 진행 시 관련 정책 체크.
+	 * </pre>
+	 * 
+	 * @param policyCheckParam
+	 *            정책 체크 대상 데이터
+	 * @return 정책 체크 결과
+	 */
+	public SktPaymentPolicyCheckResult checkSktPaymentPolicy(SktPaymentPolicyCheckParam policyCheckParam);
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원 정책 체크: TestMDN / 구매차단.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매주문 정보
 	 */
-	public void checkTenantPolicy(PurchaseOrderInfo purchaseOrderInfo);
+	public void checkUserPolicy(PurchaseOrderInfo purchaseOrderInfo);
 
 	/**
 	 * 

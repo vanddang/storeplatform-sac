@@ -26,6 +26,8 @@ import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 public class PurchaseOrderInfo extends CommonInfo {
 	private static final long serialVersionUID = 201401101L;
 
+	// ------------------------------------------------------------------------
+	// 구매요청 파라미터 정보
 	private final CreatePurchaseSacReq createPurchaseReq;
 
 	private String tenantId; // 테넌트 ID
@@ -53,16 +55,29 @@ public class PurchaseOrderInfo extends CommonInfo {
 
 	private String deviceModelCd; // 요청 단말 모델 코드
 
+	// ------------------------------------------------------------------------
+	// 추가 구매 진행 정보
 	private String prchsId; // 구매 ID
 	private String prchsDt; // 구매 ID
 	private double realTotAmt; // 최종 결제 총 금액
 	private boolean freeChargeReq; // 비과금 요청 여부
+	private boolean testMdn; // Store 관리 Test MDN 여부
+	private boolean blockPayment; // 구매차단 여부
+	private String freePaymentMtdCd; // 무료구매처리 시 결제수단 코드 : 결제이력 생성하는 경우에만 세팅
+	private String specialCouponId; // 쇼핑 특가 상품 쿠폰ID
+	private double specialCouponAmt; // 쇼핑 특가 상품 쿠폰 금액
 
+	// ------------------------------------------------------------------------
+	// 회원 정보
 	private PurchaseUserDevice purchaseUser; // 구매(선물발신) 회원정보
 	private PurchaseUserDevice receiveUser; // 선물수신 회원정보
 
+	// ------------------------------------------------------------------------
+	// 상품 정보
 	private List<PurchaseProduct> purchaseProductList = new ArrayList<PurchaseProduct>(); // 구매할 상품 정보 리스트
 
+	// ------------------------------------------------------------------------
+	// 결제Page 정보
 	private String resultType; // 결과 타입: payment-결제Page 요청진행, free-무료구매 완료
 	private String paymentPageUrl; // 결제Page_URL
 	private String version; // [결제Page 요청 파라미터] 버전
@@ -70,12 +85,14 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String eData; // [결제Page 요청 파라미터] 암호화 데이터
 	private PaymentPageParam paymentPageParam; // 결제Page_요청_파라미터
 
+	// ------------------------------------------------------------------------
+	// Dummy
 	private DummyMember purchaseMember; // 구매(선물발신) 회원정보
 	private DummyMember recvMember; // 선물수신 회원정보
 
 	private List<DummyProduct> productList = new ArrayList<DummyProduct>(); // 구매할 상품 정보 리스트
 
-	private PurchaseOrderPolicyCheckResult policyInfo = new PurchaseOrderPolicyCheckResult(); // 제한정책 정보
+	private SktPaymentPolicyCheckResult policyInfo = new SktPaymentPolicyCheckResult(); // 제한정책 정보
 
 	// ================================================================================================
 
@@ -617,7 +634,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	/**
 	 * @return the policyInfo
 	 */
-	public PurchaseOrderPolicyCheckResult getPolicyInfo() {
+	public SktPaymentPolicyCheckResult getPolicyInfo() {
 		return this.policyInfo;
 	}
 
@@ -625,7 +642,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 * @param policyInfo
 	 *            the policyInfo to set
 	 */
-	public void setPolicyInfo(PurchaseOrderPolicyCheckResult policyInfo) {
+	public void setPolicyInfo(SktPaymentPolicyCheckResult policyInfo) {
 		this.policyInfo = policyInfo;
 	}
 
@@ -694,6 +711,81 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setPurchaseProductList(List<PurchaseProduct> purchaseProductList) {
 		this.purchaseProductList = purchaseProductList;
+	}
+
+	/**
+	 * @return the testMdn
+	 */
+	public boolean isTestMdn() {
+		return this.testMdn;
+	}
+
+	/**
+	 * @param testMdn
+	 *            the testMdn to set
+	 */
+	public void setTestMdn(boolean testMdn) {
+		this.testMdn = testMdn;
+	}
+
+	/**
+	 * @return the blockPayment
+	 */
+	public boolean isBlockPayment() {
+		return this.blockPayment;
+	}
+
+	/**
+	 * @param blockPayment
+	 *            the blockPayment to set
+	 */
+	public void setBlockPayment(boolean blockPayment) {
+		this.blockPayment = blockPayment;
+	}
+
+	/**
+	 * @return the freePaymentMtdCd
+	 */
+	public String getFreePaymentMtdCd() {
+		return this.freePaymentMtdCd;
+	}
+
+	/**
+	 * @param freePaymentMtdCd
+	 *            the freePaymentMtdCd to set
+	 */
+	public void setFreePaymentMtdCd(String freePaymentMtdCd) {
+		this.freePaymentMtdCd = freePaymentMtdCd;
+	}
+
+	/**
+	 * @return the specialCouponId
+	 */
+	public String getSpecialCouponId() {
+		return this.specialCouponId;
+	}
+
+	/**
+	 * @param specialCouponId
+	 *            the specialCouponId to set
+	 */
+	public void setSpecialCouponId(String specialCouponId) {
+		this.specialCouponId = specialCouponId;
+	}
+
+	/**
+	 * @return the specialCouponAmt
+	 */
+	public double getSpecialCouponAmt() {
+		return this.specialCouponAmt;
+	}
+
+	/**
+	 * @param specialCouponAmt
+	 *            the specialCouponAmt to set
+	 */
+	public void setSpecialCouponAmt(double specialCouponAmt) {
+		this.specialCouponAmt = specialCouponAmt;
 	}
 
 }

@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
+import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
+
 /**
  * 
  * 구매 처리 시, UAPS 연동
@@ -29,7 +31,7 @@ public interface PurchaseUapsRespository {
 	 *            해당 법인번호에 대한 법인폰 여부를 조회할 MDN
 	 * @return 법인폰 여부: true-법인폰
 	 */
-	public boolean searchUapsAuthorizeInfoByMdn(String corpNum, String mdn);
+	public UserEcRes searchUapsAuthorizeInfoByMdn(String corpNum, String mdn);
 
 	/**
 	 * 
@@ -38,8 +40,8 @@ public interface PurchaseUapsRespository {
 	 * </pre>
 	 * 
 	 * @param mdn
-	 *            SKT 시험폰 여부를 조회할 MDN
-	 * @return 시험폰 여부: true-시험폰
+	 *            UAPS 정보 조회할 MDN
+	 * @return UAPS 정보
 	 */
-	public String searchUapsMappingInfoByMdn(String mdn);
+	public UserEcRes searchUapsMappingInfoByMdn(String mdn);
 }

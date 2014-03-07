@@ -41,35 +41,32 @@ public class PurchaseUapsRespositoryImpl implements PurchaseUapsRespository {
 	 * @return 법인폰 여부: true-법인폰
 	 */
 	@Override
-	public boolean searchUapsAuthorizeInfoByMdn(String corpNum, String mdn) {
+	public UserEcRes searchUapsAuthorizeInfoByMdn(String corpNum, String mdn) {
 		UapsEcReq uapsEcReq = new UapsEcReq();
 		uapsEcReq.setCustId(corpNum);
 		uapsEcReq.setDeviceId(mdn);
 		uapsEcReq.setType("mdn");
 
-		this.uapsSCI.getAuthorizeInfo(uapsEcReq);
-
-		return true;
+		return this.uapsSCI.getAuthorizeInfo(uapsEcReq);
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * 고객정보 조회.
+	 * UAPS MDN Mapping 정보 조회.
 	 * </pre>
 	 * 
 	 * @param mdn
-	 *            SKT 시험폰 여부를 조회할 MDN
-	 * @return 시험폰 여부: true-시험폰
+	 *            UAPS 정보 조회할 MDN
+	 * @return UAPS 정보
 	 */
 	@Override
-	public String searchUapsMappingInfoByMdn(String mdn) {
+	public UserEcRes searchUapsMappingInfoByMdn(String mdn) {
 		UapsEcReq uapsEcReq = new UapsEcReq();
 		uapsEcReq.setDeviceId(mdn);
 		uapsEcReq.setType("mdn");
 
-		UserEcRes userEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
-		return userEcRes.getSvcTP();
+		return this.uapsSCI.getMappingInfo(uapsEcReq);
 	}
 
 }

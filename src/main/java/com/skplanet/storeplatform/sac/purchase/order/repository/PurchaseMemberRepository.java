@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
 /**
@@ -34,4 +35,17 @@ public interface PurchaseMemberRepository {
 	 * @return 회원/기기 정보
 	 */
 	public PurchaseUserDevice searchUserDeviceByKey(String tenantId, String userKey, String deviceKey);
+
+	/**
+	 * <pre>
+	 * 회원의 결제 관련 정보 조회: 통신과금 이용약관 동의여부, OCB 이용약관 동의여부, OCB 카드번호.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            내부 회원 NO
+	 * @param deviceKey
+	 *            내부 디바이스 ID
+	 * @return SearchUserPayplanetSacRes
+	 */
+	public SearchUserPayplanetSacRes searchUserPayplanet(String userKey, String deviceKey);
 }
