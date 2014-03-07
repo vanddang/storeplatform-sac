@@ -21,8 +21,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -33,12 +33,12 @@ import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 /**
- * App 목록 요청 인터페이스(CoreStoreBusiness) 구현체.
+ * 개발 App 목록 요청(회원 ID 기반) Service 인터페이스(CoreStoreBusiness) 구현체.
  * 
  * Updated on : 2014. 3. 6. Updated by : 오승민, 인크로스.
  */
 @Service
-public class SellerAppListServiceImpl implements SellerAppListService {
+public class SellerIdAppListServiceImpl implements SellerIdAppListService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -54,12 +54,14 @@ public class SellerAppListServiceImpl implements SellerAppListService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.product.service.DeviceProfileService#searchDeviceProfile(java.lang.String,
-	 * java.lang.String)
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.openapi.service.SellerIdAppListService#searchSellerIdAppList(com.skplanet
+	 * .storeplatform.sac.client.display.vo.openapi.SellerIdAppListReq,
+	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
 	 */
 	@Override
-	public SellerAppListRes searchSellerAppList(SellerAppListReq req, SacRequestHeader header) {
-		SellerAppListRes res = new SellerAppListRes();
+	public SellerIdAppListRes searchSellerIdAppList(SellerIdAppListReq req, SacRequestHeader header) {
+		SellerIdAppListRes res = new SellerIdAppListRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
 		TenantHeader tenantHeader = header.getTenantHeader();
@@ -84,4 +86,5 @@ public class SellerAppListServiceImpl implements SellerAppListService {
 		res.setCommonResponse(commonResponse);
 		return res;
 	}
+
 }

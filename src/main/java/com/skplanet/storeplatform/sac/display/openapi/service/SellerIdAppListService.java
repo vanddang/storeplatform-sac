@@ -9,27 +9,27 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppDetailReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * App 상세 정보 요청(CoreStoreBusiness).
+ * 개발 App 목록 요청(회원 ID 기반) (CoreStoreBusiness).
  * 
  * Updated on : 2014. 3. 6. Updated by : 오승민, 인크로스.
  */
-public interface SellerAppDetailService {
+public interface SellerIdAppListService {
 
 	/**
 	 * <pre>
-	 * App 상세 정보 요청.
+	 * 개발 App 목록 요청(회원 ID 기반).
 	 * </pre>
 	 * 
 	 * @param req
 	 *            req
 	 * @param header
 	 *            header
-	 * @return SellerAppDetailRes
+	 * @return SellerIdAppListRes
 	 */
-	public SellerAppDetailRes getSellerAppDetail(SellerAppDetailReq req, SacRequestHeader header);
+	public SellerIdAppListRes searchSellerIdAppList(SellerIdAppListReq req, SacRequestHeader header);
 }

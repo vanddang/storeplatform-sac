@@ -14,21 +14,22 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppListRes
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * 상품 ID에 대한 단말 Provisioning 조회 Service
+ * App 목록 요청(CoreStoreBusiness).
  * 
- * Updated on : 2014. 2. 3. Updated by : 오승민, 인크로스.
+ * Updated on : 2014. 3. 6. Updated by : 오승민, 인크로스.
  */
 public interface SellerAppListService {
+
 	/**
 	 * <pre>
-	 * 상품 ID에 대한 단말 Provisioning 조회.
+	 * App 목록 요청.
 	 * </pre>
 	 * 
 	 * @param req
 	 *            req
 	 * @param header
 	 *            header
-	 * @return DeviceProductProvisioningRes
+	 * @return SellerAppListRes
 	 */
 	public SellerAppListRes searchSellerAppList(SellerAppListReq req, SacRequestHeader header);
 }

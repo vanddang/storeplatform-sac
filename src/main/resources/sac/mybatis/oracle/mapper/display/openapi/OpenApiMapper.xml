@@ -1304,7 +1304,8 @@
     
     <!-- APP 목록 요청-->
     <select id="getAppList" parameterType="map" resultType="MetaInfo">
-       SELECT  NVL(APPPROD.AID, '') AS AID
+       SELECT  
+                NVL(APPPROD.AID, '') AS AID
 		       ,PRODDESC.PROD_NM
 		       ,PROD.REG_DT
 		       ,TENANTPROD.PROD_STATUS_CD
@@ -1314,24 +1315,57 @@
 		      ,TB_DP_TENANT_PROD TENANTPROD
 		WHERE PROD.PROD_ID = APPPROD.PROD_ID
 		 AND  PROD.PROD_ID = PRODDESC.PROD_ID
-		 AND  PRODDESC.LANG_CD = #{lang}
+		 AND  PRODDESC.LANG_CD = #{tenantHeader.langCd}
 		 AND  PROD.PROD_ID = TENANTPROD.PROD_ID
-		 AND  TENANTPROD.TENANT_ID = #{tenantId}
-		  <if test='admin != "Y"'>
-		 AND  PROD.REG_ID = #{regId}
-		 AND  PROD.SELLER_MBR_NO = #{mbrNo}
+		 AND  TENANTPROD.TENANT_ID = #{tenantHeader.tenantId}
+		  <if test='req.admin != "Y"'>
+		 AND  PROD.REG_ID = #{req.sellerId}
+		 AND  PROD.SELLER_MBR_NO = #{req.sellerKey}
 		 </if>
-		 AND  (APPPROD.PART_PARENT_CLSF_CD = 'PD012301' OR APPPROD.PART_PARENT_CLSF_CD is null)
-		 <if test='searchType == "AID"'>
-		 AND  APPPROD.AID = #{searchValue}
+		 AND  (APPPROD.PART_PARENT_CLSF_CD = #{partClsfCd} OR APPPROD.PART_PARENT_CLSF_CD is null)
+		 <if test='req.searchType == "AID"'>
+		 AND  APPPROD.AID = #{req.searchValue}
 		 </if>
-		 <if test='searchType == "APP"'>
-		 AND  PRODDESC.PROD_NM = #{searchValue}
+		 <if test='req.searchType == "APP"'>
+		 AND  PRODDESC.PROD_NM = #{req.searchValue}
 		 </if>
     </select>
     
+    <!-- APP 상세 요청-->
     <select id="getAppDetail" parameterType="map" resultType="MetaInfo">
-       
+       SELECT  
+               PRODDESC.PROD_NM
+              ,PROD.EXPO_SELLER_NM
+		      ,PRODDESC.PROD_BASE_DESC
+		      ,(   #{appUrl}
+		        || PROD.TOP_MENU_ID
+		        || CHR (38)
+		        || 'insProdId='
+		        || PROD.PROD_ID
+		        || CHR (38)
+		        || 'prodGrdCd='
+		        || PROD.PROD_GRD_CD
+		        || CHR (38)
+		        || 't_top='
+		        || PROD.TOP_MENU_ID)
+		          AS APP_URL
+		      ,PROD.REG_DT
+	  FROM  TB_DP_PROD PROD 
+	       ,TB_DP_PROD_DESC PRODDESC 
+	       ,TB_DP_PROD_IMG IMG
+	       ,TB_DP_APP_PROD APPPROD
+     WHERE     PROD.PROD_ID = PRODDESC.PROD_ID
+	       AND PROD.PROD_ID = IMG.PROD_ID
+	       AND PROD.PROD_ID = APPPROD.PROD_ID
+	       AND IMG.IMG_CD = #{imageCd}
+	       AND IMG.EXPO_ORD = '1'
+	       AND IMG.LANG_CD = #{lang}
+	       AND  (APPPROD.PART_PARENT_CLSF_CD = 'PD012301' OR APPPROD.PART_PARENT_CLSF_CD is null)
+	      <if test='admin != "Y"'>
+           AND  PROD.REG_ID = #{regId}
+           AND  PROD.SELLER_MBR_NO = #{mbrNo}
+           AND  APPPROD.AID = #{searchValue}
+          </if>
     </select>
     
      <!-- 개발APP 목록 요청-->
@@ -1347,16 +1381,17 @@
               ,TB_DP_TENANT_PROD TENANTPROD
         WHERE PROD.PROD_ID = APPPROD.PROD_ID
          AND  PROD.PROD_ID = PRODDESC.PROD_ID
-         AND  PRODDESC.LANG_CD = #{lang}
+         AND  PRODDESC.LANG_CD = #{tenantHeader.langCd}
          AND  PROD.PROD_ID = TENANTPROD.PROD_ID
-         AND  TENANTPROD.TENANT_ID = #{tenantId}
-         AND  PROD.REG_ID = #{regId}
-         AND  (APPPROD.PART_PARENT_CLSF_CD = 'PD012301' OR APPPROD.PART_PARENT_CLSF_CD is null)
-         <if test='searchType == "AID"'>
-         AND  APPPROD.AID = #{searchValue}
+         AND  TENANTPROD.TENANT_ID = #{tenantHeader.tenantId}
+         AND  PROD.REG_ID = #{req.sellerId}
+         AND  PROD.SELLER_MBR_NO = #{req.sellerKey}
+         AND  (APPPROD.PART_PARENT_CLSF_CD = #{partClsfCd} OR APPPROD.PART_PARENT_CLSF_CD is null)
+         <if test='req.searchType == "AID"'>
+         AND  APPPROD.AID = #{req.searchValue}
          </if>
-         <if test='searchType == "APP"'>
-         AND  PRODDESC.PROD_NM = #{searchValue}
+         <if test='req.searchType == "APP"'>
+         AND  PRODDESC.PROD_NM = #{req.searchValue}
          </if>
     </select>      
     

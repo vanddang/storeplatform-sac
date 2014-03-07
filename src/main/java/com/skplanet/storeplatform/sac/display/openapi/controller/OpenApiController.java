@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningReq;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq;
@@ -37,9 +33,13 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSac
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchSellerNameSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchSellerNameSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
-import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
 import com.skplanet.storeplatform.sac.display.openapi.service.BestDownloadAppService;
 import com.skplanet.storeplatform.sac.display.openapi.service.DownloadBestService;
 import com.skplanet.storeplatform.sac.display.openapi.service.NewAppRecommendService;
@@ -47,6 +47,9 @@ import com.skplanet.storeplatform.sac.display.openapi.service.NoProvisionService
 import com.skplanet.storeplatform.sac.display.openapi.service.SalesAppService;
 import com.skplanet.storeplatform.sac.display.openapi.service.SearchAppNameService;
 import com.skplanet.storeplatform.sac.display.openapi.service.SearchSellerNameService;
+import com.skplanet.storeplatform.sac.display.openapi.service.SellerAppDetailService;
+import com.skplanet.storeplatform.sac.display.openapi.service.SellerAppListService;
+import com.skplanet.storeplatform.sac.display.openapi.service.SellerIdAppListService;
 
 /**
  * Open API 관련 Controller
@@ -57,12 +60,6 @@ import com.skplanet.storeplatform.sac.display.openapi.service.SearchSellerNameSe
 @RequestMapping("/display/openapi")
 public class OpenApiController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	@Autowired
-	private DeviceProfileService deviceProfileService;
-
-	@Autowired
-	private DeviceProductProvisioningService deviceProductProvisioningService;
 
 	@Autowired
 	private DownloadBestService downloadBestService;
@@ -85,6 +82,15 @@ public class OpenApiController {
 	@Autowired
 	private SalesAppService salesAppService;
 
+	@Autowired
+	private SellerAppListService sellerAppListService;
+
+	@Autowired
+	private SellerAppDetailService sellerAppDetailService;
+
+	@Autowired
+	private SellerIdAppListService sellerIdAppListService;
+
 	/**
 	 * <pre>
 	 * App 목록 요청 - TBD.
@@ -96,10 +102,10 @@ public class OpenApiController {
 	 *            header
 	 * @return DeviceProfileRes
 	 */
-	@RequestMapping(value = "/sellerApp/list/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/sellerApp/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DeviceProfileRes searchSellerAppList(DeviceProfileReq req, SacRequestHeader header) {
-		return this.deviceProfileService.searchDeviceProfile(req, header);
+	public SellerAppListRes searchSellerAppList(@Validated @RequestBody SellerAppListReq req, SacRequestHeader header) {
+		return this.sellerAppListService.searchSellerAppList(req, header);
 	}
 
 	/**
@@ -113,10 +119,28 @@ public class OpenApiController {
 	 *            header
 	 * @return DeviceProductProvisioningRes
 	 */
-	@RequestMapping(value = "/sellerApp/detail/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/sellerApp/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DeviceProductProvisioningRes getSellerAppDetail(DeviceProductProvisioningReq req, SacRequestHeader header) {
-		return this.deviceProductProvisioningService.searchProductProvisioning(req, header);
+	public SellerAppDetailRes getSellerAppDetail(@Validated @RequestBody SellerAppDetailReq req, SacRequestHeader header) {
+		return this.sellerAppDetailService.getSellerAppDetail(req, header);
+	}
+
+	/**
+	 * <pre>
+	 * 개발 App 목록 요청(회원 ID 기반).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return DeviceProfileRes
+	 */
+	@RequestMapping(value = "/sellerIdApp/list/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public SellerIdAppListRes searchSellerIdAppList(@Validated @RequestBody SellerIdAppListReq req,
+			SacRequestHeader header) {
+		return this.sellerIdAppListService.searchSellerIdAppList(req, header);
 	}
 
 	/**
