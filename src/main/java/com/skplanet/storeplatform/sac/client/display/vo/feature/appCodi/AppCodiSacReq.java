@@ -9,6 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -20,12 +25,22 @@ public class AppCodiSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123145L;
 
+	@NotNull
+	@NotBlank
+	@Pattern(regexp = "short|long|dummy")
 	private String filteredBy; // 서비스 구분 (short|long)
 
+	@NotNull
+	@NotBlank
 	private String userKey; // 사용자고유키
 
+	@NotNull
+	@NotBlank
+	@Pattern(regexp = "msisdn")
 	private String deviceIdType; // 기기ID유형
 
+	@NotNull
+	@NotBlank
 	private String deviceId; // 기기ID
 
 	private int offset = 1; // 시작점 ROW
