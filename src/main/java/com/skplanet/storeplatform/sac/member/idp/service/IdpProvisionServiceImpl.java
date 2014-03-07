@@ -303,7 +303,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} finally {
 
-			/* IDP로그 저장 */
+			/* 휴대기기 변경 히스토리 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
 			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
 			changeDeviceLog.setDeviceID(mdn);
@@ -326,7 +326,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertIdpLog(commonRequest, changeDeviceLog);
+			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
 		}
 
 		return result;
@@ -342,7 +342,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @param changeDeviceLog
 	 *            ChangedDeviceLog
 	 */
-	public void insertIdpLog(CommonRequest commonRequest, ChangedDeviceLog changeDeviceLog) {
+	public void insertChangedDeviceHis(CommonRequest commonRequest, ChangedDeviceLog changeDeviceLog) {
 		CreateChangedDeviceRequest createChangeDeviceReq = new CreateChangedDeviceRequest();
 		createChangeDeviceReq.setCommonRequest(commonRequest);
 		createChangeDeviceReq.setChangedDeviceLog(changeDeviceLog);
@@ -386,6 +386,27 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			dcdInfo.setPriorityClass("0");
 			dcdInfo.setProductID(null);
 
+			CreateDCDRequest createDcdReq = new CreateDCDRequest();
+			createDcdReq.setCommonRequest(commonRequest);
+			createDcdReq.setDCDInfo(dcdInfo);
+			this.userSCI.createDCD(createDcdReq);
+
+		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_CHANGE_MODEL)) { // DCD 기기변경
+
+			dcdInfo.setRegChannel(commonRequest.getSystemID());
+			dcdInfo.setTenantID(commonRequest.getTenantID());
+			dcdInfo.setEntryClass(entryClass);
+			dcdInfo.setServiceNumber(svcMngNum);
+			dcdInfo.setDeviceID(mdn);
+			dcdInfo.setRegDeviceID(null);
+			dcdInfo.setPriorityClass("0");
+			dcdInfo.setProductID(null);
+
+			CreateDCDRequest createDcdReq = new CreateDCDRequest();
+			createDcdReq.setCommonRequest(commonRequest);
+			createDcdReq.setDCDInfo(dcdInfo);
+			this.userSCI.createDCD(createDcdReq);
+
 		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE) || StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_JOIN)) { // DCD 등록 및 해지
 
 			/* DCD 상품 조회 */
@@ -394,12 +415,10 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			List<ExistenceItem> existenceItemList = new ArrayList<ExistenceItem>();
 			ExistenceItem existenceItem = null;
 			for (ProductInfo prodDcdInfo : dcdSupportProductRes.getProductList()) {
-				if (StringUtil.equals(prodDcdInfo.getDcdSprtCd(), IdpConstants.DCD_SUPPORT_YES)) {
-					existenceItem = new ExistenceItem();
-					existenceItem.setProdId(prodDcdInfo.getProdId());
-					existenceItem.setTenantProdGrpCd(commonRequest.getTenantID()); //.TODO 어떤 값인지 확인필요!!
-					existenceItemList.add(existenceItem);
-				}
+				existenceItem = new ExistenceItem();
+				existenceItem.setProdId(prodDcdInfo.getProdId());
+				//existenceItem.setTenantProdGrpCd(commonRequest.getTenantID()); //.TODO 어떤 값인지 확인필요!!
+				existenceItemList.add(existenceItem);
 			}
 
 			/* 기구매상품 조회 */
@@ -433,22 +452,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				}
 			}
 
-			if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE)) {
-				/* 해지요청 */
-				dcdInfo = new DCDInfo();
-				dcdInfo.setRegChannel(commonRequest.getSystemID());
-				dcdInfo.setTenantID(commonRequest.getTenantID());
-				dcdInfo.setEntryClass(IdpConstants.DCD_ENTRY_SECEDE);
-				dcdInfo.setServiceNumber(svcMngNum);
-				dcdInfo.setDeviceID(mdn);
-				dcdInfo.setRegDeviceID(null);
-				dcdInfo.setPriorityClass("0");
-				dcdInfo.setProductID("A000Z00001");
-
-			}
-
-		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_CHANGE_MODEL)) { // DCD 기기변경
-
+			dcdInfo = new DCDInfo();
 			dcdInfo.setRegChannel(commonRequest.getSystemID());
 			dcdInfo.setTenantID(commonRequest.getTenantID());
 			dcdInfo.setEntryClass(entryClass);
@@ -456,14 +460,15 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			dcdInfo.setDeviceID(mdn);
 			dcdInfo.setRegDeviceID(null);
 			dcdInfo.setPriorityClass("0");
-			dcdInfo.setProductID(null);
+			dcdInfo.setProductID("A000Z00001");
+
+			CreateDCDRequest createDcdReq = new CreateDCDRequest();
+			createDcdReq.setCommonRequest(commonRequest);
+			createDcdReq.setDCDInfo(dcdInfo);
+			this.userSCI.createDCD(createDcdReq);
 
 		}
 
-		CreateDCDRequest createDcdReq = new CreateDCDRequest();
-		createDcdReq.setCommonRequest(commonRequest);
-		createDcdReq.setDCDInfo(dcdInfo);
-		this.userSCI.createDCD(createDcdReq);
 	}
 
 	/*
@@ -513,6 +518,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			searchDeviceRequest.setKeySearchList(keySearchList);
 			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
 			userKey = schDeviceRes.getUserMbrDevice().getUserKey();
 			deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
@@ -613,29 +619,26 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			/* DCD 연동 */
 			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
 
 				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
 
 				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_CHANGE_MODEL);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
 
 				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_JOIN);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
 
 				LOGGER.info("<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						device.getDeviceModelCd(), uacd, svcMngNum);
+						modelCd, uacd, svcMngNum);
 
 				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
 
@@ -659,7 +662,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} finally {
 
-			/* IDP로그 저장 */
+			/* 휴대기기 변경 히스토리 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
 			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE);
 			changeDeviceLog.setDeviceID(mdn);
@@ -681,7 +684,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertIdpLog(commonRequest, changeDeviceLog);
+			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
 		}
 
 		return result;
@@ -768,7 +771,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} finally {
 
-			/* IDP로그 저장 */
+			/* 휴대기기 변경 히스토리 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
 			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE);
 			changeDeviceLog.setDeviceID(mdn);
@@ -790,7 +793,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertIdpLog(commonRequest, changeDeviceLog);
+			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
 		}
 		return result;
 	}
@@ -865,7 +868,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 
 		} finally {
-			/* IDP로그 저장 */
+			/* 휴대기기 변경 히스토리 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
 			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_EMAIL_JOIN_COMPLETE);
 			changeDeviceLog.setDeviceID(mdn);
@@ -887,7 +890,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			// changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertIdpLog(commonRequest, changeDeviceLog);
+			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
 		}
 
 		return result;
@@ -1219,7 +1222,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 
 		} finally {
-			/* IDP로그 저장 */
+			/* 휴대기기 변경 히스토리 저장 */
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
 			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODIFY_PROFILE);
 			changeDeviceLog.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
@@ -1241,7 +1244,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			// changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertIdpLog(commonRequest, changeDeviceLog);
+			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
 		}
 
 		return result;
@@ -1348,7 +1351,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
 
-			this.insertIdpLog(commonRequest, changeDeviceLog);
+			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
 		}
 
 		return result;
