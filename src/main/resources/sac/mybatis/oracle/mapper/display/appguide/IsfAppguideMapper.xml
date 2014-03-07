@@ -34,7 +34,7 @@
       </if>
               AND CP.PROD_ID = PR.PROD_ID
               AND C.MENU_ID = CP.MENU_ID
-              AND P.PROD_ID = CP.PROD_ID
+              AND P.PROD_ID = PR.PROD_ID
               AND TP.PROD_ID = P.PROD_ID
               AND P2.PROD_ID = PR.PART_PROD_ID -- EPISODE
               AND TP2.PROD_ID = P2.PROD_ID
