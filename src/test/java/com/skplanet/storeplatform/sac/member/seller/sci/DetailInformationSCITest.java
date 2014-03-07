@@ -73,16 +73,16 @@ public class DetailInformationSCITest {
 		// req.setSellerKey("IF1023229565820110106110241");
 
 		List<SellerMbrSac> sellerMbrSacs = new ArrayList<SellerMbrSac>();
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 1; i++) {
 			SellerMbrSac sellerMbrSac = new SellerMbrSac();
 			if (i == 0) {
-				sellerMbrSac.setSellerBizNumber("1352668460");
+				sellerMbrSac.setSellerKey("SE201403041615354320000032");
 				sellerMbrSacs.add(sellerMbrSac);
 			} else if (i == 1) {
 				sellerMbrSac.setSellerKey("IF1023498592920130510112417");
 				sellerMbrSacs.add(sellerMbrSac);
 			} else if (i == 2) {
-				sellerMbrSac.setSellerKey("IF1023479054520130204101236");
+				sellerMbrSac.setSellerBizNumber("1352668460");
 				sellerMbrSacs.add(sellerMbrSac);
 			}
 		}
