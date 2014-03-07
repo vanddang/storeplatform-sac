@@ -557,13 +557,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			uapsReq.setType("mdn");
 
 			UafmapEcRes uapsRes = this.uapsSCI.getDeviceInfo(uapsReq);
-
 			if (uapsRes != null && StringUtils.isNotBlank(uapsRes.getDeviceModel())) {
 				LOGGER.info("[MiscellaneousService.getModelCode] UAPS Connection Response {}", uapsRes);
 				uaCd = uapsRes.getDeviceModel();
-			} else {
-				throw new StorePlatformException("SAC_MEM_3401", errorKey, errorValue);
+			} else if (StringUtils.isBlank(uapsRes.getDeviceModel())) {
+				LOGGER.info("[MiscellaneousService.getModelCode] Set uaCd=\"9999\"");
+				uaCd = "9999";
 			}
+			// // TODO UAPS 에러코드 확인해서 미지원 단말일 경우 uaCd = 9999로 셋팅
+			// throw new StorePlatformException("SAC_MEM_3401", errorKey, errorValue, e);
+			// }
+			// }
+
 		}
 
 		// uaCd로 PhoneInfo 테이블 조회.
@@ -598,6 +603,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		// throw new StorePlatformException(inicisAuthAccountEcRes.getResultCode(),
 		// inicisAuthAccountEcRes.getResultMsg());
 		// }
+
 		return new AuthorizeAccountRes();
 
 	}
