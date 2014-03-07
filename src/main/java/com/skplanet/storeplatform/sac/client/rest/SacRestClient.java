@@ -21,6 +21,8 @@ public interface SacRestClient {
 	 * 		응답 데이터 타입
 	 * @param param
 	 * 		RequestParameter (Object, Map 모두 가능)
+	 * @return
+	 * 		응답 데이터 객체
 	 */
 	<T> T get(String interfaceId, String path, Class<T> responseType, Object param) throws SacRestClientException;
 
@@ -35,6 +37,8 @@ public interface SacRestClient {
 	 * 		응답 데이터 타입
 	 * @param body
 	 * 		RequestBody (Object, Map 모두 가능)
+	 * @return
+	 * 		응답 데이터 객체
 	 */
 	<T> T post(String interfaceId, String path, Class<T> responseType, Object body) throws SacRestClientException;
 
