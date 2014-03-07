@@ -10,41 +10,28 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 테마추천 Request Value Object.
+ * 테마추천 상품 Request Value Object.
  * 
  * Updated on : 2014. 02. 05. Updated by : 윤주영, SK 플래닛.
  */
-public class ThemeRecommendSacReq extends CommonInfo {
+public class ThemeRecommendProdSacReq extends CommonInfo {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4984188877183740905L;
 
-	@NotNull
-	@NotBlank
-	@Pattern(regexp = "short|long|dummy")
 	private String filteredBy; // 서비스 구분 (short|long)
 
 	@NotNull
 	@NotBlank
-	private String userKey; // 사용자고유키
-
-	@NotNull
-	@NotBlank
-	@Pattern(regexp = "msisdn")
-	private String deviceIdType; // 기기ID유형
-
-	@NotNull
-	@NotBlank
-	private String deviceId; // 기기ID
+	private String recommendId; // 테마 추천 ID
 
 	private int offset = 1; // 시작점 ROW
 
@@ -59,48 +46,18 @@ public class ThemeRecommendSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the userKey
+	 * @return the recommendId
 	 */
-	public String getUserKey() {
-		return this.userKey;
+	public String getRecommendId() {
+		return this.recommendId;
 	}
 
 	/**
-	 * @param userKey
-	 *            the userKey to set
+	 * @param recommendId
+	 *            the recommendId to set
 	 */
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
-	}
-
-	/**
-	 * @return the deviceIdType
-	 */
-	public String getDeviceIdType() {
-		return this.deviceIdType;
-	}
-
-	/**
-	 * @param deviceIdType
-	 *            the deviceIdType to set
-	 */
-	public void setDeviceIdType(String deviceIdType) {
-		this.deviceIdType = deviceIdType;
-	}
-
-	/**
-	 * @return the deviceId
-	 */
-	public String getDeviceId() {
-		return this.deviceId;
-	}
-
-	/**
-	 * @param deviceId
-	 *            the deviceId to set
-	 */
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
+	public void setRecommendId(String recommendId) {
+		this.recommendId = recommendId;
 	}
 
 	public int getOffset() {
