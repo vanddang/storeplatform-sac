@@ -17,7 +17,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
@@ -28,7 +27,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 public class BrandshopSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;
-	private Layout layout;
 
 	private List<Product> productList;
 
@@ -55,31 +53,6 @@ public class BrandshopSacRes extends CommonInfo {
 	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Layout.
-	 * </pre>
-	 * 
-	 * @return Layout
-	 */
-	public Layout getLayout() {
-		return this.layout;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Layout.
-	 * </pre>
-	 * 
-	 * @param layout
-	 *            layout
-	 */
-	public void setLayout(Layout layout) {
-		this.layout = layout;
 	}
 
 	/**
