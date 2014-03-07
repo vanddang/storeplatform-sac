@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
@@ -253,6 +255,31 @@ public class SearchUserSCIControllerTest {
 			@Override
 			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/** ==================== DevceKey를 이용한 회원정보&디바이스정보 조회 ============ */
+	@Test
+	public void A_TEST_정상_DeviceKeyList_검색() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+				List<String> deviceKeyList = new ArrayList<String>();
+				deviceKeyList.add("IW1023284651220101007215215"); // 회원정보에 등록된 deviceId가 한 개.
+				deviceKeyList.add("IM142100006719244201304082142"); // 회원정보에 등록된 deviceId가 여러개.
+				deviceKeyList.add("IW1024171529820110627132506"); // 회원정보 없음.
+
+				searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
+				return searchUserDeviceSacReq;
+			}
+		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
 				LOGGER.info("response param : {}", res.toString());
 			}
 		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);

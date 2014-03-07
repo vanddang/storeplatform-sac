@@ -20,10 +20,13 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
@@ -34,7 +37,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSa
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByUserKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
@@ -204,5 +209,53 @@ public class SearchUserSCIController implements SearchUserSCI {
 		payplanetSacRes.setOcbAgreementYn(ocbAgreementYn);
 
 		return payplanetSacRes;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI
+	 * #searchUserPayplanet(com.skplanet
+	 * .storeplatform.sac.client.internal.member
+	 * .user.vo.SearchUserPayplanetSacReq)
+	 */
+	@Override
+	@RequestMapping(value = "/searchUserByDeviceKey", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchUserDeviceSacRes searchUserByDeviceKey(@RequestBody @Validated SearchUserDeviceSacReq request) {
+
+		// 헤더 정보 셋팅
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+		LOGGER.info("[SearchUserSCIController.searchUserPayplanet] RequestHeader : {}, \nRequestParameter : {}", requestHeader, request);
+
+		List<String> deviceKeyList = request.getDeviceKeyList();
+		SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
+		searchUserDeviceReq.setDeviceKeyList(deviceKeyList);
+
+		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader, searchUserDeviceReq);
+
+		Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
+		UserDeviceInfoSac userDeviceInfoSac;
+
+		for (int i = 0; i < deviceKeyList.size(); i++) {
+			if (userInfoMap.get(deviceKeyList.get(i)) != null) {
+				userDeviceInfoSac = new UserDeviceInfoSac();
+				userDeviceInfoSac.setDeviceId(userInfoMap.get(deviceKeyList.get(i)).getDeviceId());
+				userDeviceInfoSac.setDeviceModelName(userInfoMap.get(deviceKeyList.get(i)).getDeviceModelName());
+				userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
+				userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
+				userDeviceInfoSac.setDeviceTelecom(userInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
+
+				resMap.put(deviceKeyList.get(i), userDeviceInfoSac);
+			}
+		}
+
+		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
+		searchUserDeviceSacRes.setUserDeviceInfo(resMap);
+
+		LOGGER.info("[SearchUserSCIController.searchUserByDeviceKey] ResponseParameter : {}", searchUserDeviceSacRes.toString());
+
+		return searchUserDeviceSacRes;
 	}
 }

@@ -34,8 +34,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByUserKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -246,4 +248,15 @@ public interface UserSearchService {
 	 * @return
 	 */
 	public Map<String, UserInfoByUserKey> searchUserByUserKey(SacRequestHeader sacHeader, SearchUserReq request);
+
+	/**
+	 * <pre>
+	 * deviceKey 목록을 이용하여 회원정보 목록조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            SearchUserDeviceReq
+	 * @return
+	 */
+	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceReq request);
 }

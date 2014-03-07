@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceMbrStatus;
 import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceSystemStats;
 import com.skplanet.storeplatform.member.client.user.sci.vo.GameCenter;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
@@ -58,6 +59,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailRequest;
@@ -98,8 +101,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByUserKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -1527,8 +1532,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
-	 * searchUserByUserKey(com.skplanet.storeplatform .sac.client.member.vo.user.SearchUserReq)
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByUserKey(com.skplanet.storeplatform
+	 * .sac.client.member.vo.user.SearchUserReq)
 	 */
 	@Override
 	public Map<String, UserInfoByUserKey> searchUserByUserKey(SacRequestHeader sacHeader, SearchUserReq request) {
@@ -1574,6 +1581,61 @@ public class UserSearchServiceImpl implements UserSearchService {
 				// }
 			}
 			logger.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserInfo Response : {}", resMap);
+
+		} else {
+			throw new StorePlatformException("SAC_MEM_0003", "userKey", "");
+		}
+
+		return resMap;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByDeviceKey(com.skplanet.storeplatform
+	 * .sac.client.member.vo.user.SearchUserDeviceReq)
+	 */
+	@Override
+	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceReq request) {
+
+		// 공통파라미터 셋팅
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		List<String> deviceKeyList = request.getDeviceKeyList();
+
+		SearchMbrDeviceRequest searchMbrDeviceRequest = new SearchMbrDeviceRequest();
+		searchMbrDeviceRequest.setDeviceKeyList(deviceKeyList);
+		searchMbrDeviceRequest.setCommonRequest(commonRequest);
+
+		logger.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC UserSCI.searchMbrDevice() 호출.");
+
+		SearchMbrDeviceResponse searchMbrDeviceResponse = this.userSCI.searchMbrDevice(searchMbrDeviceRequest);
+
+		logger.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse.getCommonResponse().getResultCode());
+
+		Map<String, DeviceMbrStatus> userDeviceInfoMap = searchMbrDeviceResponse.getDeviceMbrStatusMap();
+
+		Map<String, UserInfoByDeviceKey> resMap = new HashMap<String, UserInfoByDeviceKey>();
+		UserInfoByDeviceKey userInfoByDeviceKey;
+
+		if (userDeviceInfoMap != null && !"".equals(userDeviceInfoMap)) {
+			for (int i = 0; i < deviceKeyList.size(); i++) {
+				if (userDeviceInfoMap.get(deviceKeyList.get(i)) != null) {
+					userInfoByDeviceKey = new UserInfoByDeviceKey();
+					userInfoByDeviceKey.setDeviceId(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceID());
+					userInfoByDeviceKey.setDeviceModelName(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
+					userInfoByDeviceKey.setUserBirthday(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthBirthDay());
+					userInfoByDeviceKey.setUserName(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthName());
+					userInfoByDeviceKey.setDeviceTelecom(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
+
+					resMap.put(deviceKeyList.get(i), userInfoByDeviceKey);
+				}
+			}
+			logger.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserDeviceInfo Response : {}", resMap);
 
 		} else {
 			throw new StorePlatformException("SAC_MEM_0003", "userKey", "");
