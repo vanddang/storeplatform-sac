@@ -12,6 +12,16 @@
 		                    WHERE AID=#{aid}
 		                  )                             
     </select>
+    
+    <!-- 상품 구매수 조회 -->
+    <select id="getPurchaseCount" parameterType="HashMap" resultType="Integer">
+        SELECT /* LocalSciMapper.xml, "getPurchaseCount", SAC : 이석희 , 2014-03-07 */ 
+               PRCHS_CNT
+          FROM TB_DP_TENANT_PROD_STATS
+         WHERE 1=1
+           AND TENANT_ID = #{tenantId}
+           AND PROD_ID = #{productId}                     
+    </select>    
         
     <!-- 상품 구매건수 업데이트 상품이 없을시 Insert-->
     <insert id="insertPurchaseProd" parameterType="HashMap">

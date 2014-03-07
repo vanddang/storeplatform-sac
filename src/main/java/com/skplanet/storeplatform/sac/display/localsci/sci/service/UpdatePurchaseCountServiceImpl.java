@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Update
 @Service
 public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountService {
 
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -43,7 +47,9 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 	@Override
 	public void updatePurchaseCount(List<UpdatePurchaseCountSacReq> reqList) {
 		Map<String, String> map = null;
-		int cnt = 0;
+		List<Map> productList = null;
+
+		int prchsCnt = 0;
 		for (int i = 0; i < reqList.size(); i++) {
 			map = new HashMap<String, String>();
 			if (i > 99) {
@@ -54,12 +60,14 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 			map.put("productId", reqList.get(i).getProductId());
 			map.put("purchaseCount", reqList.get(i).getPurchaseCount().toString());
 
-			// List<Map> productList = this.commonDAO.queryForList("LocalSci.getTenantStatsProduct", map, Map.class);
+			prchsCnt = (Integer) this.commonDAO.queryForObject("LocalSci.getPurchaseCount", map);
 
-			if (this.commonDAO.update("LocalSci.updatePurchaseCount", map) <= 0) {
-				this.commonDAO.update("LocalSci.insertPurchaseProd", map);
+			// 해당 상품의 구매수가 0이면 업데이트 할 구매건수도 0으로 SET
+			if (prchsCnt > 0) {
+				if (this.commonDAO.update("LocalSci.updatePurchaseCount", map) <= 0) {
+					this.commonDAO.update("LocalSci.insertPurchaseProd", map);
+				}
 			}
-
 		}
 	}
 }
