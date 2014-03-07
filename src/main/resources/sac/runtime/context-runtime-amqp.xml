@@ -41,13 +41,13 @@
 <!--         </constructor-arg> -->
 <!--     </bean> -->
     
-<!--     
-<!--     <value>cmsapp.sac.request.sync.content.test99999</value> -->
-<!--     <value>cmsapp.sac.request.sync.content.test0001</value> -->
-<!--     <value>cmsapp.sac.response.sync.content.test0001</value> -->
-<!--     <value>tenant1.sac.request.sync.content.test0001</value> -->
-<!--     <value>tenant1.sac.response.sync.content.test0001</value>  -->
-<!--     --> -->
+    <!-- 
+    <value>cmsapp.sac.request.sync.content.test99999</value>
+    <value>cmsapp.sac.request.sync.content.test0001</value>
+    <value>cmsapp.sac.response.sync.content.test0001</value>
+    <value>tenant1.sac.request.sync.content.test0001</value>
+    <value>tenant1.sac.response.sync.content.test0001</value> 
+    -->
     
 <!--     <rabbit:queue id="local.icms-app-refactoring-deploy.sac.deploy.async" name="local.icms-app-refactoring-deploy.sac.deploy.async" > -->
 <!--         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments> -->
@@ -76,14 +76,14 @@
     
 <!--     <bean id="sacRabbitJsonMessageConverter" class="org.springframework.amqp.support.converter.JsonMessageConverter" /> -->
     
-<!--     CMS DISPLAY RESULT Rabbit Template -->
+    <!-- CMS DISPLAY RESULT Rabbit Template -->
 <!--     <bean id="cmsAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
 <!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
 <!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
 <!--         <property name="routingKey" value="local.sac.icms-app-refactoring-deploy.deploy-result.async" /> -->
 <!--     </bean> -->
     
-<!--     CMS DEVICE REMAPPING RESULT Rabbit Template -->
+    <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
 <!--     <bean id="deviceMappingRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
 <!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
 <!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
@@ -91,25 +91,25 @@
 <!--     </bean> -->
 
 
-<!--     Member - Add Device Rabbit Template -->
+    <!-- Member - Add Device Rabbit Template -->
 <!--     <bean id="memberAddDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
 <!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
 <!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
 <!--         <property name="routingKey" value="sac.tenant.member.add-device.async" /> -->
 <!--     </bean> -->
-<!--     Member - Modify Device Rabbit Template -->
+    <!-- Member - Modify Device Rabbit Template -->
 <!--     <bean id="memberModDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
 <!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
 <!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
 <!--         <property name="routingKey" value="sac.tenant.member.mod-device.async" /> -->
 <!--     </bean> -->
-<!--     Member - Delete Device Rabbit Template -->
+    <!-- Member - Delete Device Rabbit Template -->
 <!--     <bean id="memberDelDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
 <!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
 <!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
 <!--         <property name="routingKey" value="sac.tenant.member.mod-device.async" /> -->
 <!--     </bean> -->
-<!--     Member - Retire Rabbit Template -->
+    <!-- Member - Retire Rabbit Template -->
 <!--     <bean id="memberRetireAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate"> -->
 <!--         <property name="connectionFactory" ref="sacRabbitConnectionFactory" /> -->
 <!--         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" /> -->
