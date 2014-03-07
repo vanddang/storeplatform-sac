@@ -686,8 +686,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 		mbrAuth.setRealNameDate(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameDate()));
 		mbrAuth.setRealNameMethod(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameMethod()));
 		mbrAuth.setRealNameSite(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameSite()));
+		mbrAuth.setSequence(StringUtil.setTrim(schUserRes.getMbrAuth().getSequence()));
 		mbrAuth.setSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
 		mbrAuth.setTelecom(StringUtil.setTrim(schUserRes.getMbrAuth().getTelecom()));
+		mbrAuth.setTenantID(StringUtil.setTrim(schUserRes.getMbrAuth().getTenantID()));
+		mbrAuth.setUpdateDate(StringUtil.setTrim(schUserRes.getMbrAuth().getUpdateDate()));
 
 		return mbrAuth;
 	}
@@ -758,6 +761,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		mbrLglAgent.setParentTelecom(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentTelecom()));
 		mbrLglAgent.setParentType(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentType()));
 		mbrLglAgent.setSequence(StringUtil.setTrim(schUserRes.getMbrLglAgent().getSequence()));
+		mbrLglAgent.setIsDomestic(StringUtil.setTrim(schUserRes.getMbrLglAgent().getIsDomestic()));
+		mbrLglAgent.setTenantId(StringUtil.setTrim(schUserRes.getMbrLglAgent().getTenantID()));
 
 		logger.debug("###### schUserRes.getMbrLglAgent Code : " + schUserRes.getCommonResponse().getResultCode());
 		logger.debug("###### schUserRes.getMbrLglAgent Message : " + schUserRes.getCommonResponse().getResultMessage());
