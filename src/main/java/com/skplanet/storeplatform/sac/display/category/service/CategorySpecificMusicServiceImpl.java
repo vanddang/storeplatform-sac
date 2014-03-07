@@ -84,11 +84,6 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 
 		if (req.getDummy() == null) {
 
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(req.getList())) {
-				throw new StorePlatformException("SAC_DSP_0002", "pid", req.getList());
-			}
-
 			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 			if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
 				throw new StorePlatformException("SAC_DSP_0004", "list",
@@ -128,12 +123,14 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 						// metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
 						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", paramMap,
 								MetaInfo.class);
+
 						if (metaInfo != null) {
+							paramMap.put("outsdContentsId", metaInfo.getOutsdContentsId());
 							product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
 							Music music = new Music();
 							product.setMusic(this.musicGenerator.generateMusic(metaInfo));
 							List<CategorySpecificProduct> metaList = this.commonDAO.queryForList(
-									"CategorySpecificProduct.selectMusicMetaList", metaInfo,
+									"CategorySpecificProduct.selectMusicMetaList", paramMap,
 									CategorySpecificProduct.class);
 							if (metaList != null) {
 

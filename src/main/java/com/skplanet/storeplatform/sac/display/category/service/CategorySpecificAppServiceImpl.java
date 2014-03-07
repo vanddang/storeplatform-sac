@@ -86,11 +86,6 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
 
 		if (req.getDummy() == null) {
 
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(req.getList())) {
-				throw new StorePlatformException("SAC_DSP_0002", "pid", req.getList());
-			}
-
 			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 			if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
 				throw new StorePlatformException("SAC_DSP_0004", "list",
