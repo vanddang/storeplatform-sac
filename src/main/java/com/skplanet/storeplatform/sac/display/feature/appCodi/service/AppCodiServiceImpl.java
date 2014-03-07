@@ -205,7 +205,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 				this.log.debug("##### parameter cnt : {}", listProdParam.size());
 				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
 			}
-			if (productBasicInfoList != null) {
+			if (!productBasicInfoList.isEmpty()) {
 
 				Product product = null;
 				MetaInfo metaInfo = null;
@@ -350,9 +350,11 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 				for (Product product : productList) {
 					for (Identifier id : product.getIdentifierList()) {
-						sPid = id.getText();
-						if (StringUtil.isNotEmpty(sPid))
-							break;
+						if (id.getType().equalsIgnoreCase(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD)) {
+							sPid = id.getText();
+							if (StringUtil.isNotEmpty(sPid))
+								break;
+						}
 					}
 					sRelId = mapRelProd.get(sPid);
 					sReasonCode = mapReason.get(sPid);
