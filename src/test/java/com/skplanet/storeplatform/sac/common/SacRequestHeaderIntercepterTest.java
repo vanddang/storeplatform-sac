@@ -84,4 +84,30 @@ public class SacRequestHeaderIntercepterTest {
         headerMap.put("x-sac-device-info", "model=\"SHW-M340S\", dpi=\"200,\", resolution =\"160*160\" , os=\"Android_/4.0.4\",pkg=\"test/38\",svc=\"\"");
         MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
     }
+
+    @Test
+    public void testAcceptLanguage1() throws Exception {
+        Map<String, String> headerMap = new HashMap<String, String>();
+        headerMap.put("Accept-Language", "da");
+        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
+    }
+
+    @Test
+    public void testAcceptLanguage2() throws Exception {
+        Map<String, String> headerMap = new HashMap<String, String>();
+        headerMap.put("Accept-Language", "ko");
+        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
+    }
+
+    @Test
+    public void testAcceptLanguage3() throws Exception {
+        MvcTestBuilder.build2(mvc, true, null, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
+    }
+
+    @Test
+    public void testAcceptLanguage4() throws Exception {
+        Map<String, String> headerMap = new HashMap<String, String>();
+        headerMap.put("Accept-Language", "da, jp, en-gb, en");
+        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
+    }
 }

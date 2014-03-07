@@ -26,7 +26,7 @@ public class HttpHeaderEnrichServiceImpl implements HttpHeaderEnrichService {
 	@Override
 	public HttpHeaders validateHeader(Map<String, Object> headerMap) {
 		String accept = (String) headerMap.get(CommonConstants.HEADER_ACCEPT);
-		String acceptLanguage = (String) headerMap.get(CommonConstants.HEADER_ACCEPT_LANGUATE);
+		String acceptLanguage = (String) headerMap.get(CommonConstants.HEADER_ACCEPT_LANGUAGE);
 		String requestUrl = (String) headerMap.get(CommonConstants.HEADER_HTTP_REQUEST_URL);
 		String authKey = (String) headerMap.get(CommonConstants.HEADER_AUTH_KEY);
 		String signature = (String) headerMap.get(CommonConstants.HEADER_AUTH_SIGNATURE);

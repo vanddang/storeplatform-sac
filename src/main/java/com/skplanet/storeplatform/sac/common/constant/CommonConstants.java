@@ -72,7 +72,7 @@ public class CommonConstants {
 	/**
 	 * 요청 스탠다드 헤더 상수 - 지원 다국어
 	 */
-	public static final String HEADER_ACCEPT_LANGUATE = "accept-language";
+	public static final String HEADER_ACCEPT_LANGUAGE = "accept-language";
 
 	/**
 	 * 요청 스탠다드 헤더 상수 - URL
