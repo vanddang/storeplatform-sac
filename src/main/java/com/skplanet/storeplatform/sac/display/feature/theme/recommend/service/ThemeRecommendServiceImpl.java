@@ -185,6 +185,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		Layout layout = new Layout();
 		if (StringUtils.isNotEmpty(reason)) {
 			layout.setName(reason);
+			response.setLayout(layout);
 		}
 
 		for (ThemeRecommend mapper : resultList) {
@@ -316,9 +317,6 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 			productList.add(packageProduct);
 
 		} // end of while
-
-		if (layout != null)
-			response.setLayout(layout);
 
 		commonResponse.setTotalCount(this.totalCount);
 		response.setCommonRes(commonResponse);
