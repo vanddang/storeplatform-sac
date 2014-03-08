@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserD
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
 /**
@@ -75,7 +76,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		// purchaseUserDevice.setUserId(userInfo.getUserId());
 		// purchaseUserDevice.setUserSubStatus(userInfo.getUserSubStatus());
 		// purchaseUserDevice.setUserType(userInfo.getUserType());
-		purchaseUserDevice.setUserMainStatus("US010201"); // TAKTODO:: 회원Part I/F 응답값 수정 요청
+		purchaseUserDevice.setUserMainStatus(PurchaseConstants.USER_STATUS_NORMAL); // TAKTODO:: 회원Part I/F 응답값 수정 요청
 		purchaseUserDevice.setDeviceKey(deviceKey);
 		purchaseUserDevice.setDeviceId(userDeviceInfoSac.getDeviceId());
 		purchaseUserDevice.setDeviceModelCd(userDeviceInfoSac.getDeviceModelName());

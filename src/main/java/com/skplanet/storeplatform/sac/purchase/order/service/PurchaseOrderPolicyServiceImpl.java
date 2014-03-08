@@ -339,7 +339,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	private boolean isSktTestMdn(String mdn) {
 		UserEcRes userEcRes = this.uapsRespository.searchUapsMappingInfoByMdn(mdn);
-		return (StringUtils.equals(userEcRes.getSvcTP(), "12"));
+		return (StringUtils.equals(userEcRes.getSvcTP(), PurchaseConstants.UAPS_SVC_TP_SKTTEST));
 	}
 
 	/*
@@ -354,7 +354,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	private boolean isSktTestMdnWhiteList(String tenantId, String mdn) {
 		// TAKTODO:: White List 관리 확인 및 조회 처리
-		return true;
+		return false;
 	}
 
 	/*

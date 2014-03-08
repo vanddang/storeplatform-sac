@@ -205,8 +205,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		VerifyOrderSacRes res = new VerifyOrderSacRes();
 		res.setMdn(reservedDataMap.get("deviceId")); // 결제 MDN
-		res.setFlgMbrStatus("1"); // [fix] 회원상태: 1-정상
-		res.setFlgProductStatus("1"); // [fix] 상품상태: 1-정상
+		res.setFlgMbrStatus(PurchaseConstants.VERIFYORDER_USER_STATUS_NORMAL); // [fix] 회원상태: 1-정상
+		res.setFlgProductStatus(PurchaseConstants.VERIFYORDER_PRODUCT_STATUS_NORMAL); // [fix] 상품상태: 1-정상
 		res.setBonusCashPoint(reservedDataMap.get("bonusCashPoint")); // 보너스 캐쉬 지급 Point
 		res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusCashUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		res.setAfterAutoPayDt(reservedDataMap.get("afterAutoPayDt")); // 다음 자동 결제일
@@ -236,9 +236,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// SKT 후불 관련 정책 체크: SKT시험폰, MVNO, 법인폰, 한도금액 조회
 
-		String testMdnType = "T03";
+		String testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_NORMAL;
 		double sktAvailableAmt = 0.0;
-		if (StringUtils.equals(reservedDataMap.get("useTelecom"), "1")) { // TAKTODO:: 통신사 코드 확인
+		if (StringUtils.equals(reservedDataMap.get("useTelecom"), PurchaseConstants.TELECOM_SKT)) {
 			SktPaymentPolicyCheckParam policyCheckParam = new SktPaymentPolicyCheckParam();
 			policyCheckParam.setDeviceId(reservedDataMap.get("deviceId"));
 			policyCheckParam.setPaymentTotAmt(createPurchaseSc.getTotAmt());
@@ -261,9 +261,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			// SKT 결제 처리 타입
 			if (policyResult.isSktTestMdn()) {
-				testMdnType = policyResult.isSktTestMdnWhiteList() ? "T01" : "T02";
+				testMdnType = policyResult.isSktTestMdnWhiteList() ? PurchaseConstants.SKT_PAYMENT_TYPE_TESTDEVICE : PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE;
 			} else if (policyResult.isCorporation() || policyResult.isMvno()) {
-				testMdnType = "T02";
+				testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE;
 			}
 
 			// SKT 결제 금액
@@ -276,7 +276,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 결제수단 별 가능 거래금액/비율 조정 정보
 		StringBuffer sbPaymentMtdAmtRate = new StringBuffer(64);
-		if (StringUtils.equals(testMdnType, "T02")) {
+		if (StringUtils.equals(testMdnType, PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE)) {
 			sbPaymentMtdAmtRate.append("11:0:0;");
 		} else {
 			sbPaymentMtdAmtRate.append("11:").append(sktAvailableAmt).append(":100;");
@@ -303,7 +303,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// userCouponListEcReq.setCouponType("");
 		userCouponListEcReq.setProdIdList(prodIdList);
 		UserCouponListEcRes tstoreCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
-		if (StringUtils.equals(tstoreCouponListEcRes.getResultCd(), "0000") == false) {
+		if (StringUtils.equals(tstoreCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
 			throw new StorePlatformException("SAC_PUR_7206", tstoreCouponListEcRes.getResultCd(),
 					tstoreCouponListEcRes.getResultMsg());
 		}
@@ -322,12 +322,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		TStoreCashEcReq tStoreCashEcReq = new TStoreCashEcReq();
 		tStoreCashEcReq.setUserKey(reservedDataMap.get("userKey"));
-		tStoreCashEcReq.setType("01"); // 서비스 타입 : 조회
-		tStoreCashEcReq.setDetailType("01"); // 서비스 상세 타입 : 조회
-		tStoreCashEcReq.setChannel("02"); // 서비스 채널 : SAC
-		tStoreCashEcReq.setProductGroup("00"); // 상품군 : 전체
+		tStoreCashEcReq.setType(PurchaseConstants.TSTORE_CASH_SVC_TYPE_INQUIRY); // 서비스 타입 : 조회
+		tStoreCashEcReq.setDetailType(PurchaseConstants.TSTORE_CASH_SVC_DETAIL_TYPE_INQUIRY); // 서비스 상세 타입 : 조회
+		tStoreCashEcReq.setChannel(PurchaseConstants.TSTORE_CASH_SVC_CHANNEL_SAC); // 서비스 채널 : SAC
+		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_ALL); // 상품군 : 전체
 		TStoreCashEcRes tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
-		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), "0000") == false) {
+		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
 			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
 					tStoreCashEcRes.getResultMsg());
 		}
@@ -416,7 +416,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		List<ShoppingCouponPublishInfo> shoppingCouponList = null;
 
-		if (createPurchaseSc.getTenantProdGrpCd().startsWith("OR006205")) {
+		if (createPurchaseSc.getTenantProdGrpCd().startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			CouponPublishEcReq couponPublishEcReq = new CouponPublishEcReq();
 			couponPublishEcReq.setPrchsId(createPurchaseSc.getPrchsId());
 			couponPublishEcReq.setUseMdn(reservedDataMap.get("useDeviceId"));
@@ -426,7 +426,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			couponPublishEcReq.setItemCount(createPurchaseSc.getProdQty());
 			CouponPublishEcRes couponPublishEcRes = this.shoppingSCI.createCouponPublish(couponPublishEcReq);
 
-			if (StringUtils.equals(couponPublishEcRes.getPublishType(), "0")) { // 0-즉시발급, 1-비동기발급
+			if (StringUtils.equals(couponPublishEcRes.getPublishType(), PurchaseConstants.SHOPPING_COUPON_PUBLISH_SYNC)) { // 0-즉시발급
 				String availStartDt = couponPublishEcRes.getAvailStartdate();
 				String availEndDt = couponPublishEcRes.getAvailEnddate();
 
@@ -467,7 +467,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"))) { // 쇼핑 특가상품 쿠폰 정보 입력
 			PaymentInfo paymentInfo = new PaymentInfo();
 			paymentInfo.setPaymentAmt(Double.parseDouble(reservedDataMap.get("specialCouponAmt")));
-			paymentInfo.setPaymentMtdCd("OR000606"); // TAKTODO:: 특가상품 쿠폰 수단 추가 여부 확인
+			paymentInfo.setPaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_COUPON); // TAKTODO:: 특가상품 쿠폰 수단 추가 여부 확인
 			paymentInfo.setTid(createPurchaseSc.getPrchsId());
 			paymentInfo.setPaymentDt(createPurchaseSc.getPrchsDt());
 			paymentInfo.setCpnId(reservedDataMap.get("specialCouponId"));
@@ -567,7 +567,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		paymentPageParam.setPid(product.getProdId());
 		paymentPageParam.setpName(product.getProdNm());
 		paymentPageParam.setpDescription(product.getProdId()); // TAKTODO
-		paymentPageParam.setpType("TC01"); // TAKTODO
+		paymentPageParam.setpType(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_NORMAL); // TAKTODO
 		paymentPageParam.setAid(product.getAid());
 		paymentPageParam.setReturnFormat(PaymentPageParam.PP_RETURN_FORMAT_JSON);
 		paymentPageParam.setReturnPath(purchaseOrderInfo.getReturnUrl());
@@ -645,7 +645,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			arReservedData = reservedData.split("&");
 
 			for (String param : arReservedData) {
-				this.logger.debug("[" + param + "]");
 				arParamKeyValue = param.split("=", 2);
 				reservedDataMap.put(arParamKeyValue[0], arParamKeyValue[1]);
 			}
@@ -749,7 +748,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				}
 				createPurchase.setUseFixrateProdId(product.getUseFixrateProdId());
 				createPurchase.setDrmYn(product.getDrmYn());
-				createPurchase.setAlarmYn("Y");
+				createPurchase.setAlarmYn(PurchaseConstants.USE_Y);
 				createPurchase.setCurrencyCd(purchaseOrderInfo.getCurrencyCd());
 
 				// 구매예약 시 저장할 데이터 (상품별)
@@ -864,11 +863,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				}
 				createPurchase.setUseFixrateProdId(null);
 				if (StringUtils.equals(product.getUsePeriodUnitCd(), "PD00310")) {
-					createPurchase.setDrmYn("N");
+					createPurchase.setDrmYn(PurchaseConstants.USE_N);
 				} else {
-					createPurchase.setDrmYn("Y");
+					createPurchase.setDrmYn(PurchaseConstants.USE_Y);
 				}
-				createPurchase.setAlarmYn("Y");
+				createPurchase.setAlarmYn(PurchaseConstants.USE_Y);
 				createPurchase.setCurrencyCd(purchaseOrderInfo.getCurrencyCd());
 
 				// 구매예약 시 저장할 데이터 (상품별)
@@ -1026,7 +1025,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		autoPrchs.setResvCol03(createPurchaseSc.getResvCol03());
 		autoPrchs.setResvCol04(createPurchaseSc.getResvCol04());
 		autoPrchs.setResvCol05(createPurchaseSc.getResvCol05());
-		autoPrchs.setAutoPaymentStatusCd("OR020101");
+		autoPrchs.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_STATUS_AUTO);
 		autoPrchsList.add(autoPrchs);
 
 		CreateAutoPurchaseScReq autoReq = new CreateAutoPurchaseScReq();

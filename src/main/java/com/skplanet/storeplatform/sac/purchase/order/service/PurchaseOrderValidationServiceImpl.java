@@ -76,11 +76,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	public PurchaseOrderValidationServiceImpl() {
 		// TAKTODO:: 비과금 요청 허용 코드 목록 관리
 		this.freeChargeReqCdList = new ArrayList<String>();
-		this.freeChargeReqCdList.add("OR000408"); // 정식판전환
-		this.freeChargeReqCdList.add("OR000421"); // B2B Gateway(정산)
-		this.freeChargeReqCdList.add("OR000422"); // B2B Gateway(비정산)
-		this.freeChargeReqCdList.add("OR000420"); // T freemium(DRM)
-		this.freeChargeReqCdList.add("OR000413"); // T혜택 이벤트
+		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_IAP_COMMERCIAL_CONVERTED); // OR000408-정식판전환
+		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_B2B_BALANCE); // OR000421-B2B Gateway(정산)
+		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_B2B_NON_BALANCE); // OR000422-B2B Gateway(비정산)
+		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM); // OR000420-T freemium(DRM)
+		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT); // OR000413-T혜택 이벤트
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			throw new StorePlatformException("SAC_PUR_4101");
 		}
 		// 회원상태 체크
-		if (StringUtils.equals(userInfo.getUserStatusCd(), "US010701") == false) {
+		if (StringUtils.equals(userInfo.getUserStatusCd(), PurchaseConstants.USER_STATUS_NORMAL) == false) {
 			throw new StorePlatformException("SAC_PUR_4102");
 		}
 
@@ -148,7 +148,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				throw new StorePlatformException("SAC_PUR_4103");
 			}
 			// 회원상태 체크
-			if (StringUtils.equals(recvUserInfo.getUserStatusCd(), "US010701") == false) {
+			if (StringUtils.equals(recvUserInfo.getUserStatusCd(), PurchaseConstants.USER_STATUS_NORMAL) == false) {
 				throw new StorePlatformException("SAC_PUR_4104");
 			}
 
@@ -180,7 +180,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		// 회원상태 체크
-		if (StringUtils.equals(purchaseUserDevice.getUserMainStatus(), "US010201") == false) {
+		if (StringUtils.equals(purchaseUserDevice.getUserMainStatus(), PurchaseConstants.USER_STATUS_NORMAL) == false) {
 			throw new StorePlatformException("SAC_PUR_4102");
 		}
 
@@ -206,7 +206,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// 회원상태 체크
-			if (StringUtils.equals(receiveUserDevice.getUserMainStatus(), "US010201") == false) {
+			if (StringUtils.equals(receiveUserDevice.getUserMainStatus(), PurchaseConstants.USER_STATUS_NORMAL) == false) {
 				throw new StorePlatformException("SAC_PUR_4104");
 			}
 
@@ -338,11 +338,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				throw new StorePlatformException("SAC_PUR_5101");
 			}
 			// 상품 판매상태 체크
-			if (StringUtils.equals(purchaseProduct.getProdStatusCd(), "PD000403") == false) {
+			if (StringUtils.equals(purchaseProduct.getProdStatusCd(), PurchaseConstants.PRODUCT_STATUS_SALE) == false) {
 				throw new StorePlatformException("SAC_PUR_5102");
 			}
 			// 상품 지원 여부 체크
-			if (StringUtils.equals(purchaseProduct.getProdSprtYn(), "Y") == false) {
+			if (StringUtils.equals(purchaseProduct.getProdSprtYn(), PurchaseConstants.USE_Y) == false) {
 				if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 					throw new StorePlatformException("SAC_PUR_5104");
 				} else {
@@ -418,12 +418,14 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
 			// 연령 체크
-			if (StringUtils.equals(product.getProdGrdCd(), "PD004404") && useUserInfo.getAge() < 20) {
+			if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19)
+					&& useUserInfo.getAge() < 20) {
 				throw new StorePlatformException("SAC_PUR_5110");
 			}
 
 			// TAKTODO:: 쇼핑상품 경우, 발급 가능 여부 확인
-			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(), "OR006205")) {
+			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 				this.checkAvailableCouponPublish(product.getCouponCode(), product.getItemCode(), product.getProdQty(),
 						purchaseOrderInfo.getPurchaseMember().getDeviceId()); // 결제자 MDN 기준
 
@@ -495,7 +497,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
 			// 연령 체크
-			if (StringUtils.equals(product.getProdGrdCd(), "PD004404") && useUser.getAge() < 20) {
+			if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19) && useUser.getAge() < 20) {
 				throw new StorePlatformException("SAC_PUR_5110");
 			}
 
@@ -571,16 +573,16 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					switch (Integer.parseInt(fixrateProduct.getCmpxProdClsfCd().substring(2))) {
 					// OR004301-정액권, OR004302-시리즈패스, OR004303-전권소장, OR004304-전권대여
 					case 4301:
-						mtdCd = "OR000612";
+						mtdCd = PurchaseConstants.PAYMENT_METHOD_FIXRATE; // OR000612-정액권
 						break;
 					case 4302:
-						mtdCd = "OR000613";
+						mtdCd = PurchaseConstants.PAYMENT_METHOD_SERIESPASS; // OR000613-시리즈패스권
 						break;
 					case 4303:
-						mtdCd = "OR000617";
+						mtdCd = PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_OWN; // OR000617-이북/코믹 전권 소장
 						break;
 					case 4304:
-						mtdCd = "OR000618";
+						mtdCd = PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_LOAN; // OR000618-이북/코믹 전권 대여
 						break;
 					}
 					purchaseOrderInfo.setFreePaymentMtdCd(mtdCd);
@@ -588,7 +590,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// 쇼핑 상품 추가 체크
-			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(), "OR006205")) {
+			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 				// TAKTODO:: 특가상품 구매 건수 체크
 				if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
 					// product.getSpecialSaleCouponId();
