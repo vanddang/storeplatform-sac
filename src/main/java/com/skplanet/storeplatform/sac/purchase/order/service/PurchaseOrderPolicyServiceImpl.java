@@ -175,23 +175,40 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// ----------------------------------------------------------------
 		// Store 관리 Test MDN 체크 (비과금 결제)
 
-		purchaseOrderInfo.getTenantId();
-		purchaseOrderInfo.getUserKey();
-		purchaseOrderInfo.getDeviceKey();
+		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
+				purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getTenantProdGrpCd(),
+				PurchaseConstants.POLICY_PATTERN_STORE_TEST_DEVICE_CD, false);
 
-		// purchaseOrderInfo.setTestMdn(true);
-		// purchaseOrderInfo.setFreePaymentMtdCd("OR000698"); // 테스트폰 결제
-		// purchaseOrderInfo.setRealTotAmt(0.0);
-		// return;
+		if (policyList.size() > 0) {
+
+			policyList.get(0).getApplyValue();
+
+			purchaseOrderInfo.getTenantId();
+			purchaseOrderInfo.getUserKey();
+			purchaseOrderInfo.getDeviceKey();
+
+			// purchaseOrderInfo.setTestMdn(true);
+			// purchaseOrderInfo.setFreePaymentMtdCd("OR000698"); // 테스트폰 결제
+			// purchaseOrderInfo.setRealTotAmt(0.0);
+			// return;
+		}
 
 		// ----------------------------------------------------------------
 		// 구매차단 체크
 
-		purchaseOrderInfo.getTenantId();
-		purchaseOrderInfo.getUserKey();
-		purchaseOrderInfo.getDeviceKey();
+		policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(purchaseOrderInfo.getTenantId(),
+				purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.POLICY_PATTERN_USER_BLOCK_CD, false);
 
-		// purchaseOrderInfo.setBlockPayment(true);
+		if (policyList.size() > 0) {
+
+			policyList.get(0).getApplyValue();
+
+			purchaseOrderInfo.getTenantId();
+			purchaseOrderInfo.getUserKey();
+			purchaseOrderInfo.getDeviceKey();
+
+			// purchaseOrderInfo.setBlockPayment(true);
+		}
 
 	}
 

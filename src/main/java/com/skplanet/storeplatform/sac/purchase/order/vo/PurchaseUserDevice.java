@@ -58,6 +58,11 @@ public class PurchaseUserDevice extends CommonInfo {
 	private int age;
 
 	/**
+	 * 실명 인증 여부
+	 */
+	private boolean realName;
+
+	/**
 	 * 내부 디바이스 고유 키
 	 */
 	private String deviceKey;
@@ -180,6 +185,21 @@ public class PurchaseUserDevice extends CommonInfo {
 	 */
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+	/**
+	 * @return the realName
+	 */
+	public boolean isRealName() {
+		return this.realName;
+	}
+
+	/**
+	 * @param realName
+	 *            the realName to set
+	 */
+	public void setRealName(boolean realName) {
+		this.realName = realName;
 	}
 
 	/**

@@ -184,6 +184,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			throw new StorePlatformException("SAC_PUR_4102");
 		}
 
+		if (purchaseUserDevice.isRealName() == false) {
+			throw new StorePlatformException("SAC_PUR_4105");
+		}
+
 		purchaseOrderInfo.setPurchaseUser(purchaseUserDevice);
 
 		// ----------------------------------------------------------------------------------------------

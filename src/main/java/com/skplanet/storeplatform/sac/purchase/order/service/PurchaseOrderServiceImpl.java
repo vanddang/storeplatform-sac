@@ -30,9 +30,13 @@ import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCouponSCI;
+import com.skplanet.storeplatform.external.client.tstore.vo.Cash;
 import com.skplanet.storeplatform.external.client.tstore.vo.Coupon;
 import com.skplanet.storeplatform.external.client.tstore.vo.ProdId;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -52,7 +56,6 @@ import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseListScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseListScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdatePurchaseCountSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
@@ -98,7 +101,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	@Autowired
 	private TStoreCouponSCI tStoreCouponSCI;
 	@Autowired
-	private UpdatePurchaseCountSCI updatePurchaseCountSCI;
+	private TStoreCashSCI tStoreCashSCI;
 	@Autowired
 	private InterworkingSacService interworkingSacService;
 	@Autowired
@@ -297,17 +300,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		UserCouponListEcReq userCouponListEcReq = new UserCouponListEcReq();
 		userCouponListEcReq.setUserKey(reservedDataMap.get("userKey"));
 		userCouponListEcReq.setMdn(reservedDataMap.get("deviceId"));
-		userCouponListEcReq.setCouponType("");
+		// userCouponListEcReq.setCouponType("");
 		userCouponListEcReq.setProdIdList(prodIdList);
-		UserCouponListEcRes userCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
-		if (StringUtils.equals(userCouponListEcRes.getResultCd(), "0000") == false) {
-			throw new StorePlatformException("SAC_PUR_7206", userCouponListEcRes.getResultCd(),
-					userCouponListEcRes.getResultMsg());
+		UserCouponListEcRes tstoreCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
+		if (StringUtils.equals(tstoreCouponListEcRes.getResultCd(), "0000") == false) {
+			throw new StorePlatformException("SAC_PUR_7206", tstoreCouponListEcRes.getResultCd(),
+					tstoreCouponListEcRes.getResultMsg());
 		}
 
 		StringBuffer sbTstoreCoupon = new StringBuffer(256);
-		if (userCouponListEcRes.getCouponList() != null && userCouponListEcRes.getCouponList().size() > 0) {
-			for (Coupon coupon : userCouponListEcRes.getCouponList()) {
+		if (tstoreCouponListEcRes.getCouponList() != null && tstoreCouponListEcRes.getCouponList().size() > 0) {
+			for (Coupon coupon : tstoreCouponListEcRes.getCouponList()) {
 				sbTstoreCoupon.append(coupon.getCouponName()).append(":").append(coupon.getCouponAmt()).append(":")
 						.append(coupon.getCouponId()).append(":").append(coupon.getMakeHost());
 			}
@@ -315,9 +318,25 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setNoCouponList(sbTstoreCoupon.toString());
 
 		// ------------------------------------------------------------------------------------------------
-		// TAKTODO:: T store Cash 조회
+		// T store Cash 조회
 
-		res.setTstoreCashAmt(0.0);
+		TStoreCashEcReq tStoreCashEcReq = new TStoreCashEcReq();
+		tStoreCashEcReq.setUserKey(reservedDataMap.get("userKey"));
+		tStoreCashEcReq.setType("01"); // 서비스 타입 : 조회
+		tStoreCashEcReq.setDetailType("01"); // 서비스 상세 타입 : 조회
+		tStoreCashEcReq.setChannel("02"); // 서비스 채널 : SAC
+		tStoreCashEcReq.setProductGroup("00"); // 상품군 : 전체
+		TStoreCashEcRes tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
+		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), "0000") == false) {
+			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
+					tStoreCashEcRes.getResultMsg());
+		}
+		List<Cash> tstoreCashList = tStoreCashEcRes.getCashList();
+		double cashAmt = 0.0;
+		for (Cash cash : tstoreCashList) {
+			cashAmt += Double.parseDouble(cash.getAmt());
+		}
+		res.setTstoreCashAmt(cashAmt);
 
 		// ------------------------------------------------------------------------------------------------
 		// TAKTODO:: OCB 적립율 관리
@@ -706,11 +725,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchase.setNetworkTypeCd(purchaseOrderInfo.getNetworkTypeCd()); // PRCHS
 
 				// if (product.isbFlat()) { // TAKTODO:: 권한상품 판단
-				// createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_FIX);
+				// createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_AUTH);
 				// } else {
-				// createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+				// createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_UNIT);
 				// }
-				createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN); // TAKTODO
+				createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_UNIT); // TAKTODO
 				createPurchase.setProdId(product.getProdId());
 				createPurchase.setProdAmt(product.getProdAmt());
 				createPurchase.setProdQty(product.getProdQty());
@@ -822,9 +841,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchase.setNetworkTypeCd(purchaseOrderInfo.getNetworkTypeCd()); // PRCHS
 
 				if (product.isbFlat()) { // TAKTODO:: 권한상품 판단
-					createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_FIX);
+					createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_AUTH);
 				} else {
-					createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+					createPurchase.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_UNIT);
 				}
 				createPurchase.setProdId(product.getProdId());
 				createPurchase.setProdAmt(product.getProdAmt());

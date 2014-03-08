@@ -10,20 +10,21 @@
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
 /**
@@ -55,39 +56,31 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	 */
 	@Override
 	public PurchaseUserDevice searchUserDeviceByKey(String tenantId, String userKey, String deviceKey) {
+		SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+		List<String> deviceKeyList = new ArrayList<String>();
+		deviceKeyList.add(deviceKey);
+		searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
 
-		List<String> userKeyList = new ArrayList<String>();
-		userKeyList.add(userKey);
+		SearchUserDeviceSacRes searchUserDeviceSacRes = this.searchUserSCI
+				.searchUserByDeviceKey(searchUserDeviceSacReq);
 
-		SearchUserSacReq userReq = new SearchUserSacReq();
-		userReq.setUserKeyList(userKeyList);
-		Map<String, UserInfoSac> userMap = this.searchUserSCI.searchUserByUserKey(userReq).getUserInfo();
-
-		UserInfoSac userInfo = userMap.get(userKey);
-		if (userInfo == null) {
+		Map<String, UserDeviceInfoSac> userDeviceInfoMap = searchUserDeviceSacRes.getUserDeviceInfo();
+		if (userDeviceInfoMap == null) {
 			return null;
 		}
-
-		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
-		deviceReq.setUserKey(userKey);
-		deviceReq.setDeviceKey(deviceKey);
-		SearchDeviceIdSacRes deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-		if (deviceRes == null) {
-			return null;
-		}
-
+		UserDeviceInfoSac userDeviceInfoSac = userDeviceInfoMap.get(deviceKey);
 		PurchaseUserDevice purchaseUserDevice = new PurchaseUserDevice();
 		purchaseUserDevice.setTenantId(tenantId);
 		purchaseUserDevice.setUserKey(userKey);
-		purchaseUserDevice.setUserId(userInfo.getUserId());
-		purchaseUserDevice.setUserMainStatus(userInfo.getUserMainStatus());
-		purchaseUserDevice.setUserSubStatus(userInfo.getUserSubStatus());
-		purchaseUserDevice.setUserType(userInfo.getUserType());
+		// purchaseUserDevice.setUserId(userInfo.getUserId());
+		// purchaseUserDevice.setUserSubStatus(userInfo.getUserSubStatus());
+		// purchaseUserDevice.setUserType(userInfo.getUserType());
+		purchaseUserDevice.setUserMainStatus("US010201"); // TAKTODO:: 회원Part I/F 응답값 수정 요청
 		purchaseUserDevice.setDeviceKey(deviceKey);
-		purchaseUserDevice.setDeviceId(deviceRes.getDeviceId());
-		purchaseUserDevice.setDeviceModelCd("SHV-E210S"); // TAKTODO:: DUMMY
-		purchaseUserDevice.setTelecom("SKT"); // TAKTODO:: DUMMY
-		purchaseUserDevice.setAge(20); // TAKTODO:: DUMMY
+		purchaseUserDevice.setDeviceId(userDeviceInfoSac.getDeviceId());
+		purchaseUserDevice.setDeviceModelCd(userDeviceInfoSac.getDeviceModelName());
+		purchaseUserDevice.setTelecom(userDeviceInfoSac.getDeviceTelecom());
+		purchaseUserDevice.setAge(this.getCurrDayAge(userDeviceInfoSac.getUserBirthday()));
 
 		return purchaseUserDevice;
 	}
@@ -112,4 +105,17 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		return this.searchUserSCI.searchUserPayplanet(searchUserPayplanetSacReq);
 	}
 
+	/*
+	 * 
+	 * <pre> 생일 일자 기준으로 나이 계산. </pre>
+	 * 
+	 * @param birthday 생일
+	 * 
+	 * @return 나이
+	 */
+	private int getCurrDayAge(String birthday) {
+		String currday = DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyyyMMdd");
+		int baseAge = Integer.parseInt(currday.substring(0, 4)) - Integer.parseInt(birthday.substring(0, 4)) + 1;
+		return (currday.substring(4, 8).compareTo(birthday.substring(4, 8)) > 0 ? baseAge - 1 : baseAge);
+	}
 }
