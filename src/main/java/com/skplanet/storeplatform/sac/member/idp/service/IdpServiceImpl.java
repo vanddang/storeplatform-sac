@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +81,8 @@ public class IdpServiceImpl implements IdpService {
 	@Autowired
 	private ChangeDisplayUserSCI changeDisplayUserSCI;
 
-	@Resource
+	// @Resource(name = "memberRetireAmqpTemplate")
+	@Autowired
 	private AmqpTemplate memberRetireAmqpTemplate;
 
 	/*
