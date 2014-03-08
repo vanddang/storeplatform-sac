@@ -16,6 +16,7 @@ import java.util.Map;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 
 /**
  * Interface Message Device Value Object.
@@ -84,6 +85,50 @@ public class Device extends CommonInfo implements Serializable {
 	private String msisdn;
 
 	private Map<String, Object> services;
+
+	/********************************************
+	 * 이용 단말 조회 영역
+	 ********************************************/
+
+	/**
+	 * 상품 ID.
+	 */
+	private List<Identifier> identifierList;
+
+	/**
+	 * Service Group Code.
+	 */
+	private String svcGrpCd;
+
+	/**
+	 * 단말 모델코드.
+	 */
+	private String deviceModelCd;
+
+	/**
+	 * 단말 모델명.
+	 */
+	private String deviceModelNm;
+
+	/**
+	 * 제조사 코드.
+	 */
+	private String mnftCompCd;
+
+	/**
+	 * 제조사 명.
+	 */
+	private String mnftCompNm;
+
+	/**
+	 * 리스트 노출 이미지 경로.
+	 */
+	private String listImagePath;
+
+	/**
+	 * 상세 노출 이미지 경로.
+	 */
+	private String dtlImagePath;
 
 	/**
 	 * @return String
@@ -278,6 +323,130 @@ public class Device extends CommonInfo implements Serializable {
 	 */
 	public void setServices(Map<String, Object> services) {
 		this.services = services;
+	}
+
+	/********************************************
+	 * 이용 단말 조회 영역
+	 ********************************************/
+
+	/**
+	 * @return the identifierList
+	 */
+	public List<Identifier> getIdentifierList() {
+		return this.identifierList;
+	}
+
+	/**
+	 * @param identifierList
+	 *            the identifierList to set
+	 */
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
+	}
+
+	/**
+	 * @return the svcGrpCd
+	 */
+	public String getSvcGrpCd() {
+		return this.svcGrpCd;
+	}
+
+	/**
+	 * @param svcGrpCd
+	 *            the svcGrpCd to set
+	 */
+	public void setSvcGrpCd(String svcGrpCd) {
+		this.svcGrpCd = svcGrpCd;
+	}
+
+	/**
+	 * @return the deviceModelCd
+	 */
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	/**
+	 * @param deviceModelCd
+	 *            the deviceModelCd to set
+	 */
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
+	}
+
+	/**
+	 * @return the deviceModelNm
+	 */
+	public String getDeviceModelNm() {
+		return this.deviceModelNm;
+	}
+
+	/**
+	 * @param deviceModelNm
+	 *            the deviceModelNm to set
+	 */
+	public void setDeviceModelNm(String deviceModelNm) {
+		this.deviceModelNm = deviceModelNm;
+	}
+
+	/**
+	 * @return the mnftCompCd
+	 */
+	public String getMnftCompCd() {
+		return this.mnftCompCd;
+	}
+
+	/**
+	 * @param mnftCompCd
+	 *            the mnftCompCd to set
+	 */
+	public void setMnftCompCd(String mnftCompCd) {
+		this.mnftCompCd = mnftCompCd;
+	}
+
+	/**
+	 * @return the mnftCompNm
+	 */
+	public String getMnftCompNm() {
+		return this.mnftCompNm;
+	}
+
+	/**
+	 * @param mnftCompNm
+	 *            the mnftCompNm to set
+	 */
+	public void setMnftCompNm(String mnftCompNm) {
+		this.mnftCompNm = mnftCompNm;
+	}
+
+	/**
+	 * @return the listImagePath
+	 */
+	public String getListImagePath() {
+		return this.listImagePath;
+	}
+
+	/**
+	 * @param listImagePath
+	 *            the listImagePath to set
+	 */
+	public void setListImagePath(String listImagePath) {
+		this.listImagePath = listImagePath;
+	}
+
+	/**
+	 * @return the dtlImagePath
+	 */
+	public String getDtlImagePath() {
+		return this.dtlImagePath;
+	}
+
+	/**
+	 * @param dtlImagePath
+	 *            the dtlImagePath to set
+	 */
+	public void setDtlImagePath(String dtlImagePath) {
+		this.dtlImagePath = dtlImagePath;
 	}
 
 }
