@@ -556,5 +556,6 @@
                     END ) = 1
            ) S
         WHERE S.RN = 1
+          AND ROWNUM BETWEEN #{START_ROW} AND #{END_ROW}
     </select>    
 </mapper>
