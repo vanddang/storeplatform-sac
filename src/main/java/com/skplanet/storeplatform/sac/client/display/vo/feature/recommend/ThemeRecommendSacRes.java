@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
 import java.util.List;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
@@ -21,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2014. 02. 05. Updated by : 윤주영, SK 플래닛.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ThemeRecommendSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123126L;
