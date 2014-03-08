@@ -219,7 +219,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			// 전시 쪽 정보 가져와서 appId 셋팅.
 			// 현재는 상품 정보가 어떻게 더 쓰일지 몰라 앞에 있지만 나중에 RO삭제 시 조회하도록 뒤로 옮겨야 할 듯..
-			if (StringUtils.contains(PurchaseConstants.APP_TENANT_PROD_GRP_CD, prchsDtl.getTenantProdGrpCd())) {
+			if (StringUtils.contains(PurchaseConstants.TENANT_PRODUCT_GROUP_APP, prchsDtl.getTenantProdGrpCd())) {
 				// 전시쪽 정보 가져와서 appId 셋팅.
 				PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
 				paymentInfoSacReq.setTenantId(prchsDtl.getUseTenantId());
@@ -248,8 +248,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		// 쇼핑쿠폰 상품일 경우 쇼핑쿠폰 상품 취소.
 		// 쇼핑쿠폰 사용유무 조회.
 		for (PrchsDtl prchsDtl : purchaseCancelDetailSacParam.getPrchsDtlList()) {
-			if (StringUtils.contains(PurchaseConstants.SHOPPING_COUPON_TENANT_PROD_GRP_CD,
-					prchsDtl.getTenantProdGrpCd())) {
+			if (StringUtils.contains(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING, prchsDtl.getTenantProdGrpCd())) {
 				this.updateCancelShoppingCoupon(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 				break;
 			}
