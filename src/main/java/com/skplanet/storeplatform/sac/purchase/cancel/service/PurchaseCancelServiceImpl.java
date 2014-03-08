@@ -237,7 +237,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			prchsProdDtlList.add(prchsProdDtl);
 
-			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_FIX, prchsDtl.getPrchsProdType())) {
+			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtl.getPrchsProdType())) {
 				// 정액권 상품 처리.
 				this.updateProdTypeFix(purchaseCancelSacParam, prchsDtl);
 
