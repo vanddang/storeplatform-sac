@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -15,11 +13,9 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/* 회원번호 */
-	@NotBlank
 	private String mbrNo;
 
 	/* 회원ID */
-	@NotBlank
 	private String mbrId;
 
 	/**

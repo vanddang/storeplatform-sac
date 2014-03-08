@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -15,19 +13,15 @@ public class ModifyDeviceAmqpSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/* 회원번호 */
-	@NotBlank
 	private String mbrNo;
 
 	/* 통신사코드 */
-	@NotBlank
 	private String mnoCd;
 
 	/* 내부기기번호 */
-	@NotBlank
 	private String deviceKey;
 
 	/* 기기 아이디 */
-	@NotBlank
 	private String deviceId;
 
 	/**
