@@ -126,7 +126,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		if (this.log.isDebugEnabled()) {
 			this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
 		}
-		if (productBasicInfoList != null) {
+		if (!productBasicInfoList.isEmpty()) {
 
 			Map<String, Object> paramMap = new HashMap<String, Object>();
 			paramMap.put("tenantHeader", tenantHeader);
@@ -160,7 +160,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 					}
 					metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
 					if (metaInfo != null) {
-						product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
+						product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
 						productList.add(product);
 					}
 
@@ -175,7 +175,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 						metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
 						if (metaInfo != null) {
 							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-								product = this.responseInfoGenerateFacade.generateSpecificMovieProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
 							} else {
 								product = this.responseInfoGenerateFacade.generateSpecificBroadcastProduct(metaInfo);
 							}
@@ -187,15 +187,15 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 						paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
 						if (this.log.isDebugEnabled()) {
-							this.log.debug("##### Search for EbookComic specific product");
+							this.log.debug("##### Search for EbookComic product");
 						}
 						metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap,
 								MetaInfo.class);
 						if (metaInfo != null) {
 							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-								product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
 							} else {
-								product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
 							}
 							productList.add(product);
 						}
@@ -211,7 +211,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 						metaInfo = this.commonDAO.queryForObject("Isf.MetaInfo.getMusicMetaInfo", paramMap,
 								MetaInfo.class);
 						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
+							product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
 							productList.add(product);
 						}
 					}
@@ -224,7 +224,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 					}
 					metaInfo = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
 					if (metaInfo != null) {
-						product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(metaInfo);
+						product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
 						productList.add(product);
 					}
 				}
