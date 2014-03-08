@@ -139,7 +139,7 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.commonDAO.queryForObject("BoughtTogetherProduct.selectMusicMetaInfo", reqMap,
+					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,
 							MetaInfo.class); // 뮤직 메타
 					// retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap); // 뮤직 공통 메타
 					if (retMetaInfo != null) {

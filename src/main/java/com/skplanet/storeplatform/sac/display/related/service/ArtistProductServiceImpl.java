@@ -29,6 +29,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
@@ -54,6 +56,9 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
+	@Autowired
+	private CommonMetaInfoGenerator commonGenerator;
 
 	/**
 	 * 
@@ -82,12 +87,12 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
 		requestVO.setOrderedBy(requestVO.getOrderedBy() != null ? requestVO.getOrderedBy() : "issuedDate");
-		requestVO.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+		// requestVO.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
 		ArtistProductSacRes artistProductSacRes = new ArtistProductSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Map<String, Object> reqMap = new HashMap<String, Object>();
-		// MetaInfo retMetaInfo = null;
+		MetaInfo retMetaInfo = null;
 		Product product = null;
 
 		// 특정 아티스트 정보 조회
@@ -100,14 +105,30 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 
 			// 특정 작가별 상품 조회
 			this.log.debug("특정 아티스트별 상품(곡) 조회");
-			List<MetaInfo> artistProductList = this.commonDAO.queryForList("ArtistProduct.selectArtistProductList",
-					requestVO, MetaInfo.class);
+			List<ProductBasicInfo> artistProductList = this.commonDAO.queryForList(
+					"ArtistProduct.selectArtistProductList", requestVO, ProductBasicInfo.class);
 			List<Product> productList = new ArrayList<Product>();
 
 			if (!artistProductList.isEmpty()) {
-				for (MetaInfo retMetaInfo : artistProductList) {
-					product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
-					productList.add(product);
+				reqMap.put("tenantHeader", requestHeader.getTenantHeader());
+				reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+
+				for (ProductBasicInfo productBasicInfo : artistProductList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,
+							MetaInfo.class); // 뮤직 메타
+					if (retMetaInfo != null) {
+						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+						product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
+						product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
+						productList.add(product);
+					}
+
+					// product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+					// productList.add(product);
+
 				}
 				commonResponse.setTotalCount(artistProductList.get(0).getTotalCount());
 				artistProductSacRes.setProductList(productList);

@@ -4,7 +4,7 @@
 
     <!-- 세부 카테고리정보 조회 - 앱 -->
     <select id="selectAppSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
-		SELECT 
+		SELECT /* MenuCategoryMapper.xml, selectAppSubCategoryList, SAC : 유시혁 , 2014-03-07 */
 		    COUNT(1) OVER() AS TOTAL_COUNT
 		    , A.MENU_PROD_CNT
             , A.TENANT_ID 
@@ -109,7 +109,7 @@
 
     <!-- 세부 카테고리정보 조회 - 뮤직 -->
     <select id="selectMusicSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
-		SELECT 
+		SELECT /* MenuCategoryMapper.xml, selectMusicSubCategoryList, SAC : 유시혁 , 2014-03-07 */
 		    COUNT(1) OVER() AS TOTAL_COUNT
             , A.MENU_PROD_CNT
             , A.TENANT_ID 
@@ -223,7 +223,7 @@
 
     <!-- 세부 카테고리정보 조회 - 멀티미디어 -->
     <select id="selectMultiSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
-		SELECT 
+		SELECT /* MenuCategoryMapper.xml, selectMultiSubCategoryList, SAC : 유시혁 , 2014-03-07 */
 		    COUNT(1) OVER() AS TOTAL_COUNT
             , A.MENU_PROD_CNT
             , A.TENANT_ID 
@@ -353,7 +353,7 @@
 
     <!-- 세부 카테고리정보 조회 - 쇼핑 -->
     <select id="selectShoppingSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
-		SELECT 
+		SELECT /* MenuCategoryMapper.xml, selectShoppingSubCategoryList, SAC : 유시혁 , 2014-03-07 */
 		    COUNT(1) OVER() AS TOTAL_COUNT
             , A.MENU_PROD_CNT
             , A.TENANT_ID 
