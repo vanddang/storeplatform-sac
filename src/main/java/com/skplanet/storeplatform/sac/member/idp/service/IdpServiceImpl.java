@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -43,6 +46,7 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.idp.constant.IdpConstants;
@@ -78,6 +82,9 @@ public class IdpServiceImpl implements IdpService {
 
 	@Autowired
 	private ChangeDisplayUserSCI changeDisplayUserSCI;
+
+	@Resource
+	private AmqpTemplate memberRetireAmqpTemplate;
 
 	/*
 	 * 
@@ -1494,8 +1501,6 @@ public class IdpServiceImpl implements IdpService {
 			return imResult;
 		}
 
-		// TO DO... 회원 탈퇴 정보를 전달 하는 TSTORE-TANENT-API가 추가되면 PARAMETER 셋팅해서 호출해야함.
-
 		try {
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
@@ -1511,6 +1516,14 @@ public class IdpServiceImpl implements IdpService {
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 			return imResult;
+		}
+
+		// 회원 탈퇴 정보를 전달 하는 mq 호출.
+		if (searchUserResponse != null) {
+			RemoveMemberAmqpSacReq removeMemberMq = new RemoveMemberAmqpSacReq();
+			removeMemberMq.setMbrId(userId);
+			removeMemberMq.setMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
+			this.memberRetireAmqpTemplate.convertAndSend(removeMemberMq);
 		}
 
 		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
