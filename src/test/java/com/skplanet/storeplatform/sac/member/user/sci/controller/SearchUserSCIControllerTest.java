@@ -313,6 +313,28 @@ public class SearchUserSCIControllerTest {
 
 	}
 
+	@Test
+	public void B_TEST_정상_DeviceKeyList_검색_실명인증데이터있음() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+				List<String> deviceKeyList = new ArrayList<String>();
+				deviceKeyList.add("01034669429");
+
+				searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
+				return searchUserDeviceSacReq;
+			}
+		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
 	@Test(expected = StorePlatformException.class)
 	public void C_TEST_오류_DeviceKeyList_검색_검색결과없음() throws Exception {
 		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
