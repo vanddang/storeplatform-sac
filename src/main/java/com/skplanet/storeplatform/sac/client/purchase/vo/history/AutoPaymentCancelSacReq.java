@@ -40,7 +40,7 @@ public class AutoPaymentCancelSacReq extends CommonInfo implements Serializable 
 	private String prchsId; // 구매ID
 	@NotNull
 	@NotEmpty
-	private String autoPaymentStatusCd; // 해지예약코드
+	private String autoPaymentStatusCd; // 자동결제상태코드
 	@NotNull
 	@NotEmpty
 	private String closedReasonCd; // 해지사유 코드
