@@ -26,6 +26,10 @@ public class UserInfoByDeviceKey extends CommonInfo {
 
 	private String isRealName;
 
+	private String userMainStatus;
+
+	private String userSubStatus;
+
 	public String getUserName() {
 		return this.userName;
 	}
@@ -72,6 +76,22 @@ public class UserInfoByDeviceKey extends CommonInfo {
 
 	public void setIsRealName(String isRealName) {
 		this.isRealName = isRealName;
+	}
+
+	public String getUserMainStatus() {
+		return this.userMainStatus;
+	}
+
+	public void setUserMainStatus(String userMainStatus) {
+		this.userMainStatus = userMainStatus;
+	}
+
+	public String getUserSubStatus() {
+		return this.userSubStatus;
+	}
+
+	public void setUserSubStatus(String userSubStatus) {
+		this.userSubStatus = userSubStatus;
 	}
 
 	public static long getSerialversionuid() {
