@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.api.util;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
@@ -92,12 +91,7 @@ public class ImageResizing {
 			this.log.info("log9993");
 			Image rtnImage = resizing(image, targetWidth, targetHeight);
 			this.log.info("log9994");
-			MediaTracker tracker = new MediaTracker(new java.awt.Frame());
-			this.log.info("log9995");
-			tracker.addImage(rtnImage, 0);
 
-			tracker.waitForAll();
-			this.log.info("log9996");
 			BufferedImage bi = new BufferedImage(rtnImage.getWidth(null),
 
 			rtnImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
