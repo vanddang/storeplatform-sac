@@ -30,6 +30,7 @@ public class SalesOption extends CommonInfo implements Serializable {
 	private String type;
 	private String satus; // 상품 상태 (soldout : 매진상품)
 	private String btob; // B2B 상품 여부(Y/N)
+	private Integer maxCount; // 최대 판매가능 수량
 	private Integer maxMonthlySale; // 월간 최대 판매가능 수량
 	private Integer maxDailySale; // 일간 최대 판매가능 수량
 	private Integer maxMonthlyBuy; // 1인 월간 최대 구매가능 수량
@@ -83,6 +84,21 @@ public class SalesOption extends CommonInfo implements Serializable {
 	 */
 	public void setBtob(String btob) {
 		this.btob = btob;
+	}
+
+	/**
+	 * @return the maxCount
+	 */
+	public Integer getMaxCount() {
+		return this.maxCount;
+	}
+
+	/**
+	 * @param maxCount
+	 *            the maxCount to set
+	 */
+	public void setMaxCount(Integer maxCount) {
+		this.maxCount = maxCount;
 	}
 
 	/**
