@@ -55,9 +55,11 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.appCodi.vo.AppCodiRes;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.IsfEcInvoker;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -82,6 +84,12 @@ public class AppCodiServiceImpl implements AppCodiService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private MetaInfoService metaInfoService;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
@@ -221,10 +229,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 							if (this.log.isDebugEnabled()) {
 								this.log.debug("##### Search for app  meta info product");
 							}
-							metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap,
-									MetaInfo.class);
+							metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
 							if (metaInfo != null) {
-								product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
 								productList.add(product);
 							}
 
@@ -236,15 +243,12 @@ public class AppCodiServiceImpl implements AppCodiService {
 								if (this.log.isDebugEnabled()) {
 									this.log.debug("##### Search for Vod  meta info product");
 								}
-								metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap,
-										MetaInfo.class);
+								metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
 								if (metaInfo != null) {
 									if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-										product = this.responseInfoGenerateFacade
-												.generateSpecificMovieProduct(metaInfo);
+										product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
 									} else {
-										product = this.responseInfoGenerateFacade
-												.generateSpecificBroadcastProduct(metaInfo);
+										product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
 									}
 									productList.add(product);
 								}
@@ -257,15 +261,12 @@ public class AppCodiServiceImpl implements AppCodiService {
 								if (this.log.isDebugEnabled()) {
 									this.log.debug("##### Search for EbookComic specific product");
 								}
-								metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap,
-										MetaInfo.class);
+								metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
 								if (metaInfo != null) {
 									if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-										product = this.responseInfoGenerateFacade
-												.generateSpecificEbookProduct(metaInfo);
+										product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
 									} else {
-										product = this.responseInfoGenerateFacade
-												.generateSpecificComicProduct(metaInfo);
+										product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
 									}
 									productList.add(product);
 								}
@@ -278,10 +279,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 								if (this.log.isDebugEnabled()) {
 									this.log.debug("##### Search for music meta info product");
 								}
-								metaInfo = this.commonDAO.queryForObject("Isf.MetaInfo.getMusicMetaInfo", paramMap,
-										MetaInfo.class);
+								metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
 								if (metaInfo != null) {
-									product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
 									productList.add(product);
 								}
 							}
@@ -292,10 +292,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 							if (this.log.isDebugEnabled()) {
 								this.log.debug("##### Search for Shopping  meta info product");
 							}
-							metaInfo = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap,
-									MetaInfo.class);
+							metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
 							if (metaInfo != null) {
-								product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
 								productList.add(product);
 							}
 						}
@@ -305,7 +304,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 				if (this.log.isDebugEnabled()) {
 					this.log.debug("product count : {}", productList.size());
 					this.log.debug("total count : {}", this.totalCount);
-					// productList.clear();
+					productList.clear();
 				}
 
 				if (productList.isEmpty()) {
@@ -504,10 +503,136 @@ public class AppCodiServiceImpl implements AppCodiService {
 			if (this.log.isDebugEnabled()) {
 				this.mapPrint(mapReq);
 			}
-			List<AppCodiRes> appCodiResultList = this.commonDAO.queryForList("Isf.AppCodi.getAdminRecommandProdList",
-					mapReq, AppCodiRes.class);
+			// 통쿼리 사용제한
+			/*
+			 * List<AppCodiRes> appCodiResultList = this.commonDAO.queryForList("Isf.AppCodi.getAdminRecommandProdList",
+			 * mapReq, AppCodiRes.class); productList = this.makeResultList(appCodiResultList);
+			 */
+			// 상품 기본 정보 List 조회 - 운영자 추천
+			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+					"Isf.AppCodi.getBasicAdminRecommandProdList", mapReq, ProductBasicInfo.class);
 
-			productList = this.makeResultList(appCodiResultList);
+			if (this.log.isDebugEnabled()) {
+				this.log.debug("##### parameter cnt : {}", listProdParam.size());
+				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
+			}
+			if (!productBasicInfoList.isEmpty()) {
+
+				Product product = null;
+				MetaInfo metaInfo = null;
+
+				Map<String, Object> paramMap = new HashMap<String, Object>();
+				paramMap.put("tenantHeader", tenantHeader);
+				paramMap.put("deviceHeader", deviceHeader);
+				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 판매중
+
+				// Meta 정보 조회
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+
+					this.totalCount = productBasicInfo.getTotalCount();
+
+					String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
+					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
+					paramMap.put("productBasicInfo", productBasicInfo);
+
+					if (this.log.isDebugEnabled()) {
+						this.log.debug("##### Top Menu Id : {}", topMenuId);
+						this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+					}
+					// 상품 SVC_GRP_CD 조회
+					// DP000203 : 멀티미디어
+					// DP000206 : Tstore 쇼핑
+					// DP000205 : 소셜쇼핑
+					// DP000204 : 폰꾸미기
+					// DP000201 : 애플리캐이션
+					// APP 상품의 경우
+					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+						if (this.log.isDebugEnabled()) {
+							this.log.debug("##### Search for app  meta info product");
+						}
+						metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+						if (metaInfo != null) {
+							product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
+							productList.add(product);
+						}
+
+					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
+						// 영화/방송 상품의 경우
+						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+							if (this.log.isDebugEnabled()) {
+								this.log.debug("##### Search for Vod  meta info product");
+							}
+							metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+							if (metaInfo != null) {
+								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
+								} else {
+									product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
+								}
+								productList.add(product);
+							}
+						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
+																							  // 경우
+
+							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+
+							if (this.log.isDebugEnabled()) {
+								this.log.debug("##### Search for EbookComic specific product");
+							}
+							metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
+							if (metaInfo != null) {
+								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
+								} else {
+									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
+								}
+								productList.add(product);
+							}
+
+						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
+
+							paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+							paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+
+							paramMap.put("chartClsfCd", "DP004901");
+							// 배치완료 기준일시 조회
+							String stdDt = this.displayCommonService.getBatchStandardDateString(
+									tenantHeader.getTenantId(), "MELON_DP004901");
+							paramMap.put("stdDt", stdDt.substring(0, 8));
+
+							if (this.log.isDebugEnabled()) {
+								this.log.debug("##### Search for music meta info product");
+							}
+							metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
+							if (metaInfo != null) {
+								product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
+								productList.add(product);
+							}
+						}
+					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
+						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+						paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+
+						if (this.log.isDebugEnabled()) {
+							this.log.debug("##### Search for Shopping  meta info product");
+						}
+						metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
+						if (metaInfo != null) {
+							product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
+							productList.add(product);
+						}
+					}
+				}
+			}
+
+			if (this.log.isDebugEnabled()) {
+				this.log.debug("product count : {}", productList.size());
+				this.log.debug("total count : {}", this.totalCount);
+			}
 
 			commonResponse.setTotalCount(this.totalCount);
 			responseVO.setCommonRes(commonResponse);
@@ -517,6 +642,240 @@ public class AppCodiServiceImpl implements AppCodiService {
 		return responseVO;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuReq
+	 * requestVO)
+	 */
+	@Override
+	public AppCodiListSacRes searchDummyAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader) {
+
+		AppCodiListSacRes response = new AppCodiListSacRes();
+		CommonResponse commonResponse = null;
+		List<Product> listVO = new ArrayList<Product>();
+
+		Product product;
+		Identifier identifier;
+		Title title;
+		App app;
+		Accrual accrual;
+		Rights rights;
+		Source source;
+		Price price;
+		Menu menu;
+
+		// Response VO를 만들기위한 생성자
+		List<Menu> menuList;
+		List<Source> sourceList;
+		List<Support> supportList;
+		List<Identifier> identifierList;
+
+		product = new Product();
+		identifier = new Identifier();
+		title = new Title();
+		app = new App();
+		accrual = new Accrual();
+		rights = new Rights();
+		source = new Source();
+		price = new Price();
+
+		// 상품ID
+		identifier = new Identifier();
+
+		// Response VO를 만들기위한 생성자
+		menuList = new ArrayList<Menu>();
+		sourceList = new ArrayList<Source>();
+		supportList = new ArrayList<Support>();
+		identifierList = new ArrayList<Identifier>();
+
+		identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+		identifier.setText("0000648339");
+		title.setText("뮤 더 제네시스 for Kakao");
+
+		menu = new Menu();
+		menu.setId("DP01");
+		menu.setName("GAME");
+		menu.setType("topClass");
+		menuList.add(menu);
+		menu = new Menu();
+		menu.setId("DP01004");
+		menu.setName("RPG");
+		// menu.setType("");
+		menuList.add(menu);
+
+		app.setAid("OA00648339");
+		app.setPackageName("com.webzenm.mtg4kakao");
+		app.setVersionCode("11");
+		app.setVersion("1.1");
+		product.setApp(app);
+
+		accrual.setVoterCount(1519);
+		accrual.setDownloadCount(31410);
+		accrual.setScore(4.5);
+
+		/*
+		 * Rights grade
+		 */
+		rights.setGrade("0");
+
+		source.setMediaType("image/png");
+		source.setSize(0);
+		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+		source.setUrl("http://wap.tstore.co.kr/android6/201312/04/IF1423502835320131125163752/0000648339/img/thumbnail/0000648339_130_130_0_91_20131204195212.PNG");
+		sourceList.add(source);
+
+		/*
+		 * Price text
+		 */
+		price.setText(0);
+
+		identifierList.add(identifier);
+		product.setIdentifierList(identifierList);
+
+		product.setTitle(title);
+		product.setSupportList(supportList);
+		product.setMenuList(menuList);
+
+		product.setAccrual(accrual);
+		product.setRights(rights);
+		product.setProductExplain("뮤 10년의 역사가 모바일로 펼쳐진다!");
+		product.setRecommendedReason("우리 또래의 인기 FUN 앱");
+		product.setSourceList(sourceList);
+		product.setPrice(price);
+
+		listVO.add(product);
+
+		commonResponse = new CommonResponse();
+		commonResponse.setTotalCount(1);
+
+		response.setCommonRes(commonResponse);
+		response.setProductList(listVO);
+
+		return response;
+	}
+
+	private void mapPrint(Map<String, Object> mapReq) {
+		// Get Map in Set interface to get key and value
+		Set<Entry<String, Object>> s = mapReq.entrySet();
+		// Move next key and value of Map by iterator
+		Iterator<Entry<String, Object>> it = s.iterator();
+		while (it.hasNext()) {
+			// key=value separator this by Map.Entry to get key and value
+			Entry<String, Object> m = it.next();
+
+			// getKey is used to get key of Map
+			String key = m.getKey();
+
+			// getValue is used to get value of key in Map
+			Object value = m.getValue();
+
+			this.log.debug(key + ":[" + value.toString() + "]");
+		}
+	}
+
+	private String cutStringLimit(String str, int limit) {
+		if (str == null || str.getBytes().length <= limit)
+			return str;
+
+		int len = str.length();
+		int cnt = 0, index = 0;
+
+		while (index < len && cnt < limit) {
+			if (str.charAt(index++) < 256)
+				// 1바이트 문자라면...
+				cnt++; // 길이 1 증가
+			else {
+				cnt += 2; // 길이 2 증가
+			}
+		}
+
+		if (index < len && limit >= cnt)
+			str = str.substring(0, index);
+		else if (index < len && limit < cnt)
+			str = str.substring(0, index - 1);
+
+		if (len > index) {
+			return str + "...";
+		} else {
+			return str;
+		}
+	}
+
+	static {
+		mapReasonCode.put("01", "$1 구매");
+		mapReasonCode.put("02", "시리즈 연속성 추천");
+		mapReasonCode.put("03", "Beginner’s Best 추천");
+		mapReasonCode.put("04", "Power User’s Best 추천");
+
+		// $1 : 연관상품 상품명
+		// $2 : 연관상품 대분류 카테고리명
+		// $3 : 연관상품 소분류 카테고리명
+		// $4 : 대상상품 대분류 카테고리명 -> 추천 코드 1191 / 9299 에 해당됨
+		mapReasonCode.put("1091", "$1 구매자의 인기 앱");
+		mapReasonCode.put("1191", "취향이 비슷한 구매자의 인기 앱");
+		mapReasonCode.put("1291", "$1 구매자의 인기 앱");
+		mapReasonCode.put("1391", "취향이 비슷한 구매자의 인기 앱");
+		mapReasonCode.put("2091", "$1 구매자의 인기 앱");
+		mapReasonCode.put("9001", "요즘 가장 인기 있는 게임 앱");
+		mapReasonCode.put("9003", "요즘 가장 인기 있는 FUN 앱");
+		mapReasonCode.put("9004", "요즘 가장 인기 있는 생활·위치 앱");
+		mapReasonCode.put("9008", "요즘 가장 인기 있는 어학·교육 앱");
+		mapReasonCode.put("2013", "$1 구매자의 인기 이북");
+		mapReasonCode.put("2014", "$1 구매자의 인기 만화");
+		mapReasonCode.put("2016", "$1 구매자의 인기 음악");
+		mapReasonCode.put("2017", "$1 구매자의 인기 영화");
+		mapReasonCode.put("2018", "$1 구매자의 인기 방송");
+
+		mapReasonCode.put("2191", "취향이 비슷한 구매자의 인기 앱");
+
+		mapReasonCode.put("3014", "따끈따끈한 $1의 신간");
+		mapReasonCode.put("3018", "따끈따끈한 $1의 신작");
+		mapReasonCode.put("4013", "$1 작가의 또 다른 이북");
+		mapReasonCode.put("4014", "$1 작가의 또 다른 만화");
+		mapReasonCode.put("9414", "요즘 가장 인기 있는 $3 만화");
+		mapReasonCode.put("9113", "요즘 가장 인기 있는 이북");
+		mapReasonCode.put("9114", "요즘 가장 인기 있는 만화");
+		mapReasonCode.put("9116", "요즘 가장 인기 있는 음악");
+		mapReasonCode.put("9117", "요즘 가장 인기 있는 영화");
+		mapReasonCode.put("9118", "요즘 가장 인기 있는 방송");
+		mapReasonCode.put("9199", "요즘 가장 인기 있는 컨텐츠");
+
+		mapReasonCode.put("9201", "우리 또래의 인기 게임 앱");
+		mapReasonCode.put("9203", "우리 또래의 인기 FUN 앱");
+		mapReasonCode.put("9204", "우리 또래의 인기 생활·위치 앱");
+		mapReasonCode.put("9208", "우리 또래의 인기 어학·교육 앱");
+
+		mapReasonCode.put("9213", "우리 또래의 인기 이북");
+		mapReasonCode.put("9214", "우리 또래의 인기 만화");
+		mapReasonCode.put("9216", "우리 또래의 인기 음악");
+		mapReasonCode.put("9217", "우리 또래의 인기 영화");
+		mapReasonCode.put("9218", "우리 또래의 인기 방송");
+		mapReasonCode.put("9299", "우리 또래의 인기 $4");
+		mapReasonCode.put("9399", "신규 사용자의 인기 컨텐츠");
+	}
+
+	private IsfEcReq makeRequest(AppCodiSacReq requestVO) {
+
+		IsfEcReq request = new IsfEcReq();
+
+		if ("long".equals(requestVO.getFilteredBy()))
+			request.setId("SVC_CODI_0001");
+		else
+			request.setId("SVC_MAIN_0003");
+
+		request.setChCode("M");
+		request.setMbn(requestVO.getUserKey());
+		request.setMdn(requestVO.getDeviceId());
+		request.setType(requestVO.getFilteredBy());
+
+		if (this.log.isDebugEnabled()) {
+			this.log.debug(request.toString());
+		}
+		return request;
+	}
+
+	@SuppressWarnings({ "unused" })
 	private List<Product> makeResultList(List<AppCodiRes> resultList) {
 
 		List<Product> listVO = new ArrayList<Product>();
@@ -775,238 +1134,5 @@ public class AppCodiServiceImpl implements AppCodiService {
 			identifierList.add(identifier);
 		}
 		return identifierList;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuReq
-	 * requestVO)
-	 */
-	@Override
-	public AppCodiListSacRes searchDummyAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader) {
-
-		AppCodiListSacRes response = new AppCodiListSacRes();
-		CommonResponse commonResponse = null;
-		List<Product> listVO = new ArrayList<Product>();
-
-		Product product;
-		Identifier identifier;
-		Title title;
-		App app;
-		Accrual accrual;
-		Rights rights;
-		Source source;
-		Price price;
-		Menu menu;
-
-		// Response VO를 만들기위한 생성자
-		List<Menu> menuList;
-		List<Source> sourceList;
-		List<Support> supportList;
-		List<Identifier> identifierList;
-
-		product = new Product();
-		identifier = new Identifier();
-		title = new Title();
-		app = new App();
-		accrual = new Accrual();
-		rights = new Rights();
-		source = new Source();
-		price = new Price();
-
-		// 상품ID
-		identifier = new Identifier();
-
-		// Response VO를 만들기위한 생성자
-		menuList = new ArrayList<Menu>();
-		sourceList = new ArrayList<Source>();
-		supportList = new ArrayList<Support>();
-		identifierList = new ArrayList<Identifier>();
-
-		identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-		identifier.setText("0000648339");
-		title.setText("뮤 더 제네시스 for Kakao");
-
-		menu = new Menu();
-		menu.setId("DP01");
-		menu.setName("GAME");
-		menu.setType("topClass");
-		menuList.add(menu);
-		menu = new Menu();
-		menu.setId("DP01004");
-		menu.setName("RPG");
-		// menu.setType("");
-		menuList.add(menu);
-
-		app.setAid("OA00648339");
-		app.setPackageName("com.webzenm.mtg4kakao");
-		app.setVersionCode("11");
-		app.setVersion("1.1");
-		product.setApp(app);
-
-		accrual.setVoterCount(1519);
-		accrual.setDownloadCount(31410);
-		accrual.setScore(4.5);
-
-		/*
-		 * Rights grade
-		 */
-		rights.setGrade("0");
-
-		source.setMediaType("image/png");
-		source.setSize(0);
-		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-		source.setUrl("http://wap.tstore.co.kr/android6/201312/04/IF1423502835320131125163752/0000648339/img/thumbnail/0000648339_130_130_0_91_20131204195212.PNG");
-		sourceList.add(source);
-
-		/*
-		 * Price text
-		 */
-		price.setText(0);
-
-		identifierList.add(identifier);
-		product.setIdentifierList(identifierList);
-
-		product.setTitle(title);
-		product.setSupportList(supportList);
-		product.setMenuList(menuList);
-
-		product.setAccrual(accrual);
-		product.setRights(rights);
-		product.setProductExplain("뮤 10년의 역사가 모바일로 펼쳐진다!");
-		product.setRecommendedReason("우리 또래의 인기 FUN 앱");
-		product.setSourceList(sourceList);
-		product.setPrice(price);
-
-		listVO.add(product);
-
-		commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(1);
-
-		response.setCommonRes(commonResponse);
-		response.setProductList(listVO);
-
-		return response;
-	}
-
-	private void mapPrint(Map<String, Object> mapReq) {
-		// Get Map in Set interface to get key and value
-		Set<Entry<String, Object>> s = mapReq.entrySet();
-		// Move next key and value of Map by iterator
-		Iterator<Entry<String, Object>> it = s.iterator();
-		while (it.hasNext()) {
-			// key=value separator this by Map.Entry to get key and value
-			Entry<String, Object> m = it.next();
-
-			// getKey is used to get key of Map
-			String key = m.getKey();
-
-			// getValue is used to get value of key in Map
-			Object value = m.getValue();
-
-			this.log.debug(key + ":[" + value.toString() + "]");
-		}
-	}
-
-	private String cutStringLimit(String str, int limit) {
-		if (str == null || str.getBytes().length <= limit)
-			return str;
-
-		int len = str.length();
-		int cnt = 0, index = 0;
-
-		while (index < len && cnt < limit) {
-			if (str.charAt(index++) < 256)
-				// 1바이트 문자라면...
-				cnt++; // 길이 1 증가
-			else {
-				cnt += 2; // 길이 2 증가
-			}
-		}
-
-		if (index < len && limit >= cnt)
-			str = str.substring(0, index);
-		else if (index < len && limit < cnt)
-			str = str.substring(0, index - 1);
-
-		if (len > index) {
-			return str + "...";
-		} else {
-			return str;
-		}
-	}
-
-	static {
-		mapReasonCode.put("01", "$1 구매");
-		mapReasonCode.put("02", "시리즈 연속성 추천");
-		mapReasonCode.put("03", "Beginner’s Best 추천");
-		mapReasonCode.put("04", "Power User’s Best 추천");
-
-		// $1 : 연관상품 상품명
-		// $2 : 연관상품 대분류 카테고리명
-		// $3 : 연관상품 소분류 카테고리명
-		// $4 : 대상상품 대분류 카테고리명 -> 추천 코드 1191 / 9299 에 해당됨
-		mapReasonCode.put("1091", "$1 구매자의 인기 앱");
-		mapReasonCode.put("1191", "취향이 비슷한 구매자의 인기 앱");
-		mapReasonCode.put("1291", "$1 구매자의 인기 앱");
-		mapReasonCode.put("1391", "취향이 비슷한 구매자의 인기 앱");
-		mapReasonCode.put("2091", "$1 구매자의 인기 앱");
-		mapReasonCode.put("9001", "요즘 가장 인기 있는 게임 앱");
-		mapReasonCode.put("9003", "요즘 가장 인기 있는 FUN 앱");
-		mapReasonCode.put("9004", "요즘 가장 인기 있는 생활·위치 앱");
-		mapReasonCode.put("9008", "요즘 가장 인기 있는 어학·교육 앱");
-		mapReasonCode.put("2013", "$1 구매자의 인기 이북");
-		mapReasonCode.put("2014", "$1 구매자의 인기 만화");
-		mapReasonCode.put("2016", "$1 구매자의 인기 음악");
-		mapReasonCode.put("2017", "$1 구매자의 인기 영화");
-		mapReasonCode.put("2018", "$1 구매자의 인기 방송");
-
-		mapReasonCode.put("2191", "취향이 비슷한 구매자의 인기 앱");
-
-		mapReasonCode.put("3014", "따끈따끈한 $1의 신간");
-		mapReasonCode.put("3018", "따끈따끈한 $1의 신작");
-		mapReasonCode.put("4013", "$1 작가의 또 다른 이북");
-		mapReasonCode.put("4014", "$1 작가의 또 다른 만화");
-		mapReasonCode.put("9414", "요즘 가장 인기 있는 $3 만화");
-		mapReasonCode.put("9113", "요즘 가장 인기 있는 이북");
-		mapReasonCode.put("9114", "요즘 가장 인기 있는 만화");
-		mapReasonCode.put("9116", "요즘 가장 인기 있는 음악");
-		mapReasonCode.put("9117", "요즘 가장 인기 있는 영화");
-		mapReasonCode.put("9118", "요즘 가장 인기 있는 방송");
-		mapReasonCode.put("9199", "요즘 가장 인기 있는 컨텐츠");
-
-		mapReasonCode.put("9201", "우리 또래의 인기 게임 앱");
-		mapReasonCode.put("9203", "우리 또래의 인기 FUN 앱");
-		mapReasonCode.put("9204", "우리 또래의 인기 생활·위치 앱");
-		mapReasonCode.put("9208", "우리 또래의 인기 어학·교육 앱");
-
-		mapReasonCode.put("9213", "우리 또래의 인기 이북");
-		mapReasonCode.put("9214", "우리 또래의 인기 만화");
-		mapReasonCode.put("9216", "우리 또래의 인기 음악");
-		mapReasonCode.put("9217", "우리 또래의 인기 영화");
-		mapReasonCode.put("9218", "우리 또래의 인기 방송");
-		mapReasonCode.put("9299", "우리 또래의 인기 $4");
-		mapReasonCode.put("9399", "신규 사용자의 인기 컨텐츠");
-	}
-
-	private IsfEcReq makeRequest(AppCodiSacReq requestVO) {
-
-		IsfEcReq request = new IsfEcReq();
-
-		if ("long".equals(requestVO.getFilteredBy()))
-			request.setId("SVC_CODI_0001");
-		else
-			request.setId("SVC_MAIN_0003");
-
-		request.setChCode("M");
-		request.setMbn(requestVO.getUserKey());
-		request.setMdn(requestVO.getDeviceId());
-		request.setType(requestVO.getFilteredBy());
-
-		if (this.log.isDebugEnabled()) {
-			this.log.debug(request.toString());
-		}
-		return request;
 	}
 }
