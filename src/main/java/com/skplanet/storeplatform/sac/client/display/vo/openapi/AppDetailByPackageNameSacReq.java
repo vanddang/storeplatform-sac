@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * OpenApi 상품 상세 정보 요청(By PackageName) Request Value Object.
  * 
- * Updated on : 2014. 03. 05. Updated by : 백승현, SK 플래닛.
+ * Updated on : 2014. 03. 05. Updated by : 백승현, 인크로스.
  */
 public class AppDetailByPackageNameSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
@@ -29,6 +29,9 @@ public class AppDetailByPackageNameSacReq extends CommonInfo {
 	private String version; // 패키지버전
 
 	private String prodId; // 상품ID
+
+	private String webPocUrl; // T Store WEB POC URL
+	private String scUrl; // T Store WEB POC URL
 
 	/**
 	 * @return the tenantId
@@ -103,6 +106,51 @@ public class AppDetailByPackageNameSacReq extends CommonInfo {
 	 */
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	/**
+	 * @return the prodId
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            the prodId to set
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
+	}
+
+	/**
+	 * @return the webPocUrl
+	 */
+	public String getWebPocUrl() {
+		return this.webPocUrl;
+	}
+
+	/**
+	 * @param webPocUrl
+	 *            the webPocUrl to set
+	 */
+	public void setWebPocUrl(String webPocUrl) {
+		this.webPocUrl = webPocUrl;
+	}
+
+	/**
+	 * @return the scUrl
+	 */
+	public String getScUrl() {
+		return this.scUrl;
+	}
+
+	/**
+	 * @param scUrl
+	 *            the scUrl to set
+	 */
+	public void setScUrl(String scUrl) {
+		this.scUrl = scUrl;
 	}
 
 }

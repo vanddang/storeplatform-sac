@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -35,6 +36,7 @@ public class App extends CommonInfo implements Serializable {
 	private Install install; // Install 정보
 	private String filePath; // 파일경로
 	private String scId; // sub contents Id
+	private List<Device> supportDeviceList;
 
 	/**
 	 * 
@@ -299,6 +301,21 @@ public class App extends CommonInfo implements Serializable {
 	 */
 	public void setScId(String scId) {
 		this.scId = scId;
+	}
+
+	/**
+	 * @return the supportDeviceList
+	 */
+	public List<Device> getSupportDeviceList() {
+		return this.supportDeviceList;
+	}
+
+	/**
+	 * @param supportDeviceList
+	 *            the supportDeviceList to set
+	 */
+	public void setSupportDeviceList(List<Device> supportDeviceList) {
+		this.supportDeviceList = supportDeviceList;
 	}
 
 }
