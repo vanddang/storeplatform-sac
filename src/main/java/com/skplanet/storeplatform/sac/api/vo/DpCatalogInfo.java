@@ -10,6 +10,8 @@
 
 package com.skplanet.storeplatform.sac.api.vo;
 
+import java.util.List;
+
 /**
  * <pre>
  * 전처리 카탈로그 Value Object.
@@ -34,6 +36,8 @@ public class DpCatalogInfo extends BrandCatalogProdImgInfo {
 	private String createCatalogId; // 카탈로그ID 생성
 	private String createBrandId; // 카탈로그ID 생성
 	private String catalogTag; // 카탈로그태그
+	private List<String> fileNameList;
+	private List<byte[]> isList;
 
 	/**
 	 * @return the catalogId
@@ -228,6 +232,36 @@ public class DpCatalogInfo extends BrandCatalogProdImgInfo {
 	 */
 	public void setCatalogTag(String catalogTag) {
 		this.catalogTag = catalogTag;
+	}
+
+	/**
+	 * @return the fileNameList
+	 */
+	public List<String> getFileNameList() {
+		return this.fileNameList;
+	}
+
+	/**
+	 * @param fileNameList
+	 *            the fileNameList to set
+	 */
+	public void setFileNameList(List<String> fileNameList) {
+		this.fileNameList = fileNameList;
+	}
+
+	/**
+	 * @return the isList
+	 */
+	public List<byte[]> getIsList() {
+		return this.isList;
+	}
+
+	/**
+	 * @param isList
+	 *            the isList to set
+	 */
+	public void setIsList(List<byte[]> isList) {
+		this.isList = isList;
 	}
 
 }

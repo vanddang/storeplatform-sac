@@ -10,6 +10,8 @@
 
 package com.skplanet.storeplatform.sac.api.vo;
 
+import java.util.List;
+
 /**
  * <pre>
  * 전처리 브랜드 Value Object.
@@ -26,6 +28,8 @@ public class DpBrandInfo extends BrandCatalogProdImgInfo {
 	private String txType; // 상품구분 브랜드 : bd, 카탈로그 : ct
 	private String cudType; // CUD
 	private String createBrandId; // 브랜드 생성 ID
+	private List<String> fileNameList;
+	private List<byte[]> isList;
 
 	/**
 	 * @return the brandId
@@ -130,6 +134,36 @@ public class DpBrandInfo extends BrandCatalogProdImgInfo {
 	 */
 	public void setCreateBrandId(String createBrandId) {
 		this.createBrandId = createBrandId;
+	}
+
+	/**
+	 * @return the fileNameList
+	 */
+	public List<String> getFileNameList() {
+		return this.fileNameList;
+	}
+
+	/**
+	 * @param fileNameList
+	 *            the fileNameList to set
+	 */
+	public void setFileNameList(List<String> fileNameList) {
+		this.fileNameList = fileNameList;
+	}
+
+	/**
+	 * @return the isList
+	 */
+	public List<byte[]> getIsList() {
+		return this.isList;
+	}
+
+	/**
+	 * @param isList
+	 *            the isList to set
+	 */
+	public void setIsList(List<byte[]> isList) {
+		this.isList = isList;
 	}
 
 }

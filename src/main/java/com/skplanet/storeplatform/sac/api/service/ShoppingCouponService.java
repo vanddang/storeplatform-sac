@@ -33,26 +33,4 @@ public interface ShoppingCouponService {
 	 */
 	public boolean insertCatalogInfo(DpCatalogInfo dpCatalogInfo);
 
-	/**
-	 * <pre>
-	 * 브랜드 파일 정보 입력.
-	 * </pre>
-	 * 
-	 * @param brandInfo
-	 *            brandInfo
-	 * @return boolean
-	 */
-	public boolean insertFileBrandInfo(DpBrandInfo brandInfo);
-
-	/**
-	 * <pre>
-	 * 카탈로그 파일 정보 입력.
-	 * </pre>
-	 * 
-	 * @param dpCatalogInfo
-	 *            dpCatalogInfo
-	 * @return boolean
-	 */
-	public boolean insertFileCatalogInfo(DpCatalogInfo dpCatalogInfo);
-
 }
