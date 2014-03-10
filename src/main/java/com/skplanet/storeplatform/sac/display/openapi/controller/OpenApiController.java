@@ -29,6 +29,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendS
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppInfoSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppInfoSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacReq;
@@ -272,7 +274,7 @@ public class OpenApiController {
 
 	/**
 	 * <pre>
-	 * PKG Name 기반 상품 정보 조회.
+	 * PKG Name 기반 상품 리스트 조회.
 	 * </pre>
 	 * 
 	 * @param header
@@ -290,6 +292,26 @@ public class OpenApiController {
 		this.log.debug("----------------------------------------------------------------");
 
 		return this.salesAppService.searchSalesAppList(header, salesAppReq);
+	}
+
+	/**
+	 * <pre>
+	 * PKG Name 기반 상품 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param salesAppReq
+	 * @return
+	 */
+	@RequestMapping(value = "/salesApp/detail/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public SalesAppInfoSacRes getSalesAppInfo(SacRequestHeader header, @Validated SalesAppInfoSacReq salesAppInfoReq) {
+		this.log.debug("----------------------------------------------------------------");
+		this.log.debug("[searchSalesAppInfo] SacRequestHeader\n{}", header.toString());
+		this.log.debug("[searchSalesAppInfo] SalesAppInfoSacReq\n{}", salesAppInfoReq.toString());
+		this.log.debug("----------------------------------------------------------------");
+
+		return this.salesAppService.getSalesAppInfo(header, salesAppInfoReq);
 	}
 
 	/**

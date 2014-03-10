@@ -1390,6 +1390,7 @@
          </if>
     </select>      
     
+    <!-- PKG Name 기반 상품 리스트 조회 -->
     <select id="searchSalesAppList" parameterType="SalesAppSacReq" resultType="MetaInfo">
 		SELECT  /* OpenApiMapper.xml, searchSalesAppList, tae hee Lee, 2014-03-10 */
 		        COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
@@ -1427,6 +1428,17 @@
 		 WHERE  RNUM = 1
     </select>
     
+    <!-- PKG Name 기반 상품 리스트 조회 -->
+    <select id="getSalesAppInfo" parameterType="SalesAppInfoSacReq" resultType="MetaInfo">
+		SELECT  /* OpenApiMapper.xml, getSalesAppInfo, tae hee Lee, 2014-03-10 */
+		        A.PROD_ID
+		      , A.AID
+		  FROM  TB_DP_APP_PROD     A
+		      , TB_DP_SUB_CONTENTS B
+		 WHERE  A.PROD_ID = B.PROD_ID
+		   AND  B.APK_PKG_NM = #{packName}
+		   AND  ROWNUM = 1
+    </select>
     
     <!-- PackageName으로 상품ID 조회 -->
     <select id="searchProductIdByPackageName" parameterType="appDetailByPackageNameSacReq" resultType="MetaInfo">     

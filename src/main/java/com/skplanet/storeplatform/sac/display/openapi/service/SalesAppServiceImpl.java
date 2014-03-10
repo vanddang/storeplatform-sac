@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppInfoSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppInfoSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -100,5 +102,32 @@ public class SalesAppServiceImpl implements SalesAppService {
 
 		salesAppSacRes.setCommonResponse(commonResponse);
 		return salesAppSacRes;
+	}
+
+	@Override
+	public SalesAppInfoSacRes getSalesAppInfo(SacRequestHeader header, SalesAppInfoSacReq salesAppInfoReq) {
+		SalesAppInfoSacRes salesAppInfoSacRes = new SalesAppInfoSacRes();
+		CommonResponse commonResponse = new CommonResponse();
+
+		MetaInfo metaInfo = this.commonDAO.queryForObject("OpenApi.getSalesAppInfo", salesAppInfoReq, MetaInfo.class);
+
+		if (metaInfo != null) {
+			Product product = new Product();
+
+			// 상품ID 정보
+			metaInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+			product.setIdentifierList(this.commonMetaInfoGenerator.generateIdentifierList(metaInfo));
+
+			// APP 정보
+			product.setApp(this.appInfoGenerator.generateApp(metaInfo));
+
+			salesAppInfoSacRes.setProduct(product);
+			commonResponse.setTotalCount(1);
+		} else {
+			commonResponse.setTotalCount(0);
+		}
+
+		salesAppInfoSacRes.setCommonResponse(commonResponse);
+		return salesAppInfoSacRes;
 	}
 }

@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppInfoSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppInfoSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -13,7 +15,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 public interface SalesAppService {
 	/**
 	 * <pre>
-	 * PKG Name 기반 상품 정보 조회.
+	 * PKG Name 기반 상품 리스트 조회.
 	 * </pre>
 	 * 
 	 * @param header
@@ -23,4 +25,17 @@ public interface SalesAppService {
 	 * @return SalesAppSacRes
 	 */
 	SalesAppSacRes searchSalesAppList(SacRequestHeader header, SalesAppSacReq salesAppReq);
+
+	/**
+	 * <pre>
+	 * PKG Name 기반 상품 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param salesAppReq
+	 *            salesAppReq
+	 * @return SalesAppSacRes
+	 */
+	SalesAppInfoSacRes getSalesAppInfo(SacRequestHeader header, SalesAppInfoSacReq salesAppInfoReq);
 }
