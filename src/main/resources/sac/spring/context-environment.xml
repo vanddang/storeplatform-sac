@@ -99,7 +99,7 @@
        <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
             <property name="fileEncoding" value="UTF-8" />
             <property name="locations" >
-                <list merge="true"><value>classpath:conf/external.real.properties</value></list>
+                <list merge="true"><value>classpath:sac/conf/external.real.properties</value></list>
             </property>
         </bean>
     </beans> 
