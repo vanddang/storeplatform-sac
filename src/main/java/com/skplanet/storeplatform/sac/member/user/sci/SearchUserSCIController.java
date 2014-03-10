@@ -227,7 +227,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[SearchUserSCIController.searchUserPayplanet] RequestHeader : {}, \nRequestParameter : {}", requestHeader, request);
+		LOGGER.info("[SearchUserSCIController.searchUserByDeviceKey] RequestHeader : {}, \nRequestParameter : {}", requestHeader, request);
 
 		List<String> deviceKeyList = request.getDeviceKeyList();
 		SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
@@ -242,10 +242,11 @@ public class SearchUserSCIController implements SearchUserSCI {
 			if (userInfoMap.get(deviceKeyList.get(i)) != null) {
 				userDeviceInfoSac = new UserDeviceInfoSac();
 				userDeviceInfoSac.setDeviceId(userInfoMap.get(deviceKeyList.get(i)).getDeviceId());
-				userDeviceInfoSac.setDeviceModelName(userInfoMap.get(deviceKeyList.get(i)).getDeviceModelName());
+				userDeviceInfoSac.setDeviceModelNo(userInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
 				userDeviceInfoSac.setDeviceTelecom(userInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
 				userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
 				userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
+				userDeviceInfoSac.setIsRealName(userInfoMap.get(deviceKeyList.get(i)).getIsRealName());
 
 				resMap.put(deviceKeyList.get(i), userDeviceInfoSac);
 			}

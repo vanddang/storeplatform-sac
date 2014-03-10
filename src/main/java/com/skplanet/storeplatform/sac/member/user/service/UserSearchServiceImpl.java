@@ -1627,10 +1627,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 				if (userDeviceInfoMap.get(deviceKeyList.get(i)) != null) {
 					userInfoByDeviceKey = new UserInfoByDeviceKey();
 					userInfoByDeviceKey.setDeviceId(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceID());
-					userInfoByDeviceKey.setDeviceModelName(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
+					userInfoByDeviceKey.setDeviceModelNo(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
 					userInfoByDeviceKey.setDeviceTelecom(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
 					userInfoByDeviceKey.setUserBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthBirthDay()));
 					userInfoByDeviceKey.setUserName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthName()));
+					userInfoByDeviceKey.setIsRealName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getIsRealName()));
 
 					resMap.put(deviceKeyList.get(i), userInfoByDeviceKey);
 				}

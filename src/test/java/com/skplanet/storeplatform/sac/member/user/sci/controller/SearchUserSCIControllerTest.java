@@ -168,6 +168,7 @@ public class SearchUserSCIControllerTest {
 			public Object requestBody() {
 				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
 				searchUserSacReq.setUserKey("IW1023857942220110414141217");
+				searchUserSacReq.setDeviceKey("");
 
 				return searchUserSacReq;
 			}
@@ -249,6 +250,7 @@ public class SearchUserSCIControllerTest {
 			public Object requestBody() {
 				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
 				searchUserSacReq.setDeviceKey("01031241569");
+				searchUserSacReq.setUserKey("");
 
 				return searchUserSacReq;
 			}
