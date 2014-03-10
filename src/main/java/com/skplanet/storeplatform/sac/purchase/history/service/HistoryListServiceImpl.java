@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.history.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,10 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.Produ
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
@@ -59,6 +64,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 	@Autowired
 	private ProductInfoSCI productInfoSCI;
+
+	@Autowired
+	private SearchUserSCI searchUserSCI;
 
 	/**
 	 * 구매내역 조회 기능을 제공한다.
@@ -159,10 +167,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setTotAmt(obj.getTotAmt());
 			historySac.setSendUserKey(obj.getSendUserKey());
 			historySac.setSendDeviceKey(obj.getSendDeviceKey());
-			// 수신자 정보 set
-			historySac.setRecvTenantId(obj.getRecvTenantId());
-			historySac.setRecvUserKey(obj.getRecvUserKey());
-			historySac.setRecvDeviceKey(obj.getRecvDeviceKey());
 
 			historySac.setRecvDt(obj.getRecvDt());
 			historySac.setRecvConfPathCd(obj.getRecvConfPathCd());
@@ -212,14 +216,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 			// 상품정보 조회를 위한 상품ID 셋팅
 			prodIdList.add(historySac.getProdId());
 
-			/**
-			 * 회원정보를 조회하기위한 DECIDE_ID SETTING 보유상품일 경우 발신자, 미보유상품 일 경우는 수신자 정보조회
-			 */
-			if (PurchaseConstants.USE_N.equals(request.getPrchsProdHaveYn())) {
-				deviceList.add(obj.getRecvDeviceKey());
-			} else {
-				deviceList.add(obj.getSendDeviceKey());
-			}
+			// DEVICE INFO 조회를 위한 deviceKey 셋팅
+			deviceList.add(obj.getUseDeviceKey());
+
 		}
 		/*************************************************
 		 * SC -> SAC Response Setting Start
@@ -266,6 +265,27 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 **************************************************/
 		if (deviceList.size() > 0) {
 
+			SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+			SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
+
+			searchUserDeviceSacReq.setDeviceKeyList(deviceList);
+
+			// 회원
+			searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+
+			Map<String, UserDeviceInfoSac> deviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
+
+			UserDeviceInfoSac deviceResult = new UserDeviceInfoSac();
+
+			for (HistorySac obj : sacHistoryList) {
+
+				deviceResult = new UserDeviceInfoSac();
+				deviceResult = deviceMap.get(obj.getUseDeviceKey());
+
+				if (deviceResult != null) {
+					obj.setUseDeviceId(deviceResult.getDeviceId());
+				}
+			}
 		}
 		/*************************************************
 		 * MDN Info Mapping End

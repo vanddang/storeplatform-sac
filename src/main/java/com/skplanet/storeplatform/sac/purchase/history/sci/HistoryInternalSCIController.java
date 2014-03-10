@@ -149,11 +149,6 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 			historySacIn.setAlarmYn(obj.getAlarmYn());
 			historySacIn.setPermitDeviceYn(obj.getPermitDeviceYn());
 
-			// 수신자 정보 set
-			historySacIn.setRecvTenantId(obj.getRecvTenantId());
-			historySacIn.setRecvUserKey(obj.getRecvUserKey());
-			historySacIn.setRecvDeviceKey(obj.getRecvDeviceKey());
-
 			// 정액제 정보 set
 			historySacIn.setPaymentStartDt(obj.getPaymentStartDt());
 			historySacIn.setPaymentEndDt(obj.getPaymentEndDt());
