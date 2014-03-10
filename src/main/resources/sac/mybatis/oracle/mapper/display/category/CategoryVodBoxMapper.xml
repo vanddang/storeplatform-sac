@@ -151,7 +151,10 @@
 		        AND F.SALE_YN = 'Y' /* 판매 여부 */
 				AND DECODE(NVL(A.DRM_YN, 'N'), 'N', 1, NVL(E.VIDEO_DRM_SPRT_YN, 'N'), 1, 0) = 1
 		        AND (D.DEVICE_MODEL_CD = #{deviceModelCd} OR D.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말 모델 코드 */
-                AND C.PROD_ID = #{channelId} /* 채널 ID(테스트 : H000047216) */
+                AND C.PROD_ID IN /* 채널 ID */
+                <foreach collection="arrayChannelId" item="channelId" separator="," open="(" close=")">
+                    #{channelId}
+                </foreach>
 		    
                 <if test="filteredBy == 'duration'">
                 /* 특정기간 이내 등록된 컨텐츠 */

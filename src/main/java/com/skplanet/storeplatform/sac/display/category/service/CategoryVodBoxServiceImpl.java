@@ -89,6 +89,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		requestVO.setDuration(requestVO.getDuration() != null ? requestVO.getDuration() : 30);
 		requestVO.setChapter(requestVO.getChapter() != null ? requestVO.getChapter() : 0);
 		requestVO.setRegDate(requestVO.getRegDate() != null ? requestVO.getRegDate() : "20000101000000");
+		if (!StringUtils.isEmpty(requestVO.getChannelId())) {
+			requestVO.setArrayChannelId(StringUtils.split(requestVO.getChannelId(), "+"));
+		}
 
 		CategoryVodBoxSacRes categoryVodBoxSacRes = new CategoryVodBoxSacRes();
 		CommonResponse commonResponse = new CommonResponse();

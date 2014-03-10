@@ -3,7 +3,7 @@
 <mapper namespace="RelatedProduct">
     <!-- 뮤직 상품 메타 조회 -->
     <select id="selectMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
-        SELECT 
+        SELECT /* RelatedProductMapper.xml, selectMusicMetaInfo, SAC : 유시혁 , 2014-03-08 */
                F.ARTIST1_ID AS ARTIST_ID
              , E.PROD_ID
              , E.PART_PROD_ID

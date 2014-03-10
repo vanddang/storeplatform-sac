@@ -85,7 +85,7 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
 		if (!StringUtils.isEmpty(requestVO.getExceptId())) {
-			requestVO.setArrayExceptId(requestVO.getExceptId().split("\\+"));
+			requestVO.setArrayExceptId(StringUtils.split(requestVO.getExceptId(), "+"));
 		}
 
 		BoughtTogetherProductSacRes boughtTogetherProductSacRes = new BoughtTogetherProductSacRes();
