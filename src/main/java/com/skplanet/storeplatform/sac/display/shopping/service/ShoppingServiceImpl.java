@@ -798,7 +798,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 공통 응답 변수 선언
 		ShoppingRes res = null;
 		CommonResponse commonResponse = new CommonResponse();
-		Integer totalCount = 0;
+		boolean menuIdFlag = false;
 		List<MetaInfo> resultList = null;
 		List<MetaInfo> hotBrandList = null;
 		List<MetaInfo> detailList = null;
@@ -820,7 +820,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = new ArrayList<MetaInfo>();
 
 		if (!StringUtils.isEmpty(req.getMenuId())) {
-
+			menuIdFlag = true;
 			resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
 		} else {
 			req.setMenuId(null);
@@ -872,12 +872,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setTitle(title);
 				product.setSourceList(sourceList);
 				productList.add(i, product);
-				commonResponse.setTotalCount(totalCount);
+				commonResponse.setTotalCount(shopping.getTotalCount());
 			}
 
 			res = new ShoppingRes();
 			res.setProductList(productList);
-			commonResponse.setTotalCount(resultList.size());
+			if (!menuIdFlag) {
+				commonResponse.setTotalCount(resultList.size());
+			}
+
 			res.setCommonResponse(commonResponse);
 		} else {
 			// 조회 결과 없음
