@@ -99,6 +99,7 @@
 		     , G.OUTSD_CONTENTS_ID
 		     , F.PROD_NM
 		     , F.PROD_DTL_DESC
+		     , F.PROD_BASE_DESC
 		     , H.PROD_AMT
 		     , I.META_CLSF_CD
 		     , I.PROD_GRD_CD
@@ -109,8 +110,8 @@
 		     , G.AGENCY_NM
 		     , G.ISSUE_DAY
 		     , 'Y' AS MP3_SPRT_YN
-		     , G.BELL_SPRT_YN
-		     , G.COLOR_SPRT_YN
+		     , NVL(G.BELL_SPRT_YN, 'N') AS BELL_SPRT_YN
+		     , NVL(G.COLOR_SPRT_YN, 'N') AS COLOR_SPRT_YN
 		     , CONCAT(J.FILE_PATH, J.FILE_NM) AS FILE_PATH
 		     , J.FILE_NM
 		     , J.FILE_SIZE
