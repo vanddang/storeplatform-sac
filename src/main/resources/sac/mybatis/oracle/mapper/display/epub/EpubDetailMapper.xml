@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="EpubDetail">
     
-    <select id="selectEpubChannel" parameterType="EpubChannelReq" resultType="EpubDetail">
+    <select id="selectEpubChannel" parameterType="map" resultType="EpubDetail">
 		SELECT /* EpubDetailMapper.xml, selectEpubChannel, SAC : 임근대 , 2014-01-28 */
 		          P.TENANT_ID, P.LANG_CD
 		        , P.MENU_ID, P.MENU_NM, P2.TOP_MENU_ID, (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = P2.TOP_MENU_ID AND LANG_CD = P.LANG_CD AND ROWNUM = 1) AS TOP_MENU_NM
@@ -15,7 +15,6 @@
 		        , MP.BOOK_TBCTNS
 		        , MP.CHNL_CLSF_CD
 		        , ( CASE WHEN P2.META_CLSF_CD = 'CT20' THEN DECODE( MP.CAPTION_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
-		        , P2.REG_DT
 		        , ( CASE WHEN P2.META_CLSF_CD = 'CT20' THEN 'serial' END ) AS BOOK_TYPE
 		        , ( CASE WHEN P2.META_CLSF_CD = 'CT20' THEN ( MP.EPSD_CNT + MP.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
 		        , NVL(STAT.PATICPERS_CNT, 0) AS PATICPERS_CNT, NVL(STAT.PRCHS_CNT, 0) AS PRCHS_CNT
@@ -29,17 +28,14 @@
 		        , P.BOOK_CNT
 		        , P.BOOK_FREE_CNT
 		        , P.SERIAL_FREE_CNT
-		
 		      FROM
 		         (
-		         
 				SELECT  TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
 			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004301' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS BOOK_CNT
 			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004302' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS SERIAL_CNT
 			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004301' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS BOOK_FREE_CNT
 			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004302' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS SERIAL_FREE_CNT
 				FROM (
-			
 					SELECT G.TENANT_ID, C.LANG_CD
 						, D.PROD_ID AS CHNL_PROD_ID
 						, A.MENU_ID, C.MENU_NM
@@ -58,7 +54,7 @@
 					AND G.TENANT_ID = #{tenantId}				/* tenant ID */
 					AND D.PROD_ID = #{channelId} 				/* channel ID */
 					AND C.LANG_CD = #{langCd}					/* 언어 */
-					AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = 'ANY-PHONE-4MM') 		/* 단말모델코드 */
+					AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo}) 		/* 단말모델코드 */
 					AND A.BASE_YN = 'Y' AND A.BASE_YN = 'Y'
 					AND B.USE_YN = 'Y'                        	/* Y : 사용 (사용여부) */
 					AND D.SVC_GRP_CD = 'DP000203'             	/* DP000203 : 멀티미디어 */
@@ -66,20 +62,18 @@
 					AND D.SVC_TYPE_CD = 'DP001116'				/* 서비스 타입 : 이북/코믹 */
 					AND D.TOP_MENU_ID IN ('DP13', 'DP014')				/* 이북,코믹 */
 					AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
-					AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */ 
-					AND K.PROD_ID IS NOT NULL                 	/* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
+					AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */
 					AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
 					GROUP BY G.TENANT_ID, C.LANG_CD, D.PROD_ID, A.MENU_ID, C.MENU_NM, E.BOOK_CLSF_CD
 				)
 		    GROUP BY TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
-				
 			) P
 			INNER JOIN TB_DP_PROD P2 		ON P2.PROD_ID = P.CHNL_PROD_ID
 			INNER JOIN UV_TB_DP_MULTIMDA_PROD MP  ON P2.PROD_ID = MP.PROD_ID
 			INNER JOIN TB_DP_TENANT_PROD TP	ON P2.PROD_ID = TP.PROD_ID AND P.TENANT_ID = TP.TENANT_ID
 			INNER JOIN TB_DP_TENANT_PROD_PRICE TPP ON P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
 			INNER JOIN TB_DP_PROD_DESC PD		ON P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
-			LEFT OUTER JOIN TB_DP_PROD_IMG PI 		ON PI.PROD_ID = P.CHNL_PROD_ID /* FIXME:이미지 OUTER JOIN 제거 */ AND PI.EXPO_ORD = '1' AND PI.IMG_CD = 'DP006207'
+			INNER JOIN TB_DP_PROD_IMG PI 		ON PI.PROD_ID = P2.PROD_ID AND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{imgCd}
 			LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS STAT ON STAT.PROD_ID = P2.PROD_ID AND P.TENANT_ID = STAT.TENANT_ID
 		WHERE 1=1
 		 AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
@@ -87,7 +81,7 @@
     </select>
     
 	
-    <select id="selectEpubSubscription" parameterType="EpubChannelReq" resultType="MgzinSubscription">
+    <select id="selectEpubSubscription" parameterType="map" resultType="MgzinSubscription">
 		SELECT /* EpubDetailMapper.xml, selectEpubSubscription, SAC : 임근대 , 2014-01-28 */
 			   EPI.MGZIN_SUBSCRIP_CD
 			 , P.USE_PERIOD
@@ -105,7 +99,7 @@
 		 ORDER BY EPI.MGZIN_TYPE_CD, TO_NUMBER( P.USE_PERIOD )
 	</select>
 	
-    <select id="selectEpubSeries" parameterType="EpubSeriesReq" resultType="EpubDetail">
+    <select id="selectEpubSeries" parameterType="map" resultType="EpubDetail">
 		SELECT /* EpubDetailMapper.xml, selectEpubSeries, SAC : 임근대 , 2014-01-28 */
 		        P.TOTAL_COUNT
 		      , P.TENANT_ID, P.LANG_CD, P.CID, P.PROD_STATUS_CD
@@ -172,14 +166,12 @@
 		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', NULL, A.PROD_STATUS_CD ) ) AS PLAY_PROD_STATUS_CD
 		                    FROM
 		                       (
-		                  
-		                  
 		                      SELECT *
 		                      FROM (
 		                          SELECT 
-		                                    G.TENANT_ID, C.LANG_CD, J.CID, G.PROD_STATUS_CD
-		                                    , A.MENU_ID , C.MENU_NM, C.MENU_DESC, J.TOP_MENU_ID, J.META_CLSF_CD
-		                                    , J.PROD_ID, D.PROD_ID AS CHNL_PROD_ID, J.REG_ID, J.REG_DT
+		                                     G.TENANT_ID, C.LANG_CD, J.CID, G.PROD_STATUS_CD
+		                                   , A.MENU_ID , C.MENU_NM, C.MENU_DESC, J.TOP_MENU_ID, J.META_CLSF_CD
+		                                   , J.PROD_ID, D.PROD_ID AS CHNL_PROD_ID, J.REG_ID, J.REG_DT
 		                                   , Q.PROD_NM, F.PROD_BASE_DESC, F.PROD_DTL_DESC, F.PROD_INTR_DSCR, F.ARTIST1_NM, F.ARTIST2_NM
 		                                   , J.PROD_GRD_CD, TO_NUMBER( P.CHAPTER ) AS CHAPTER
 		                                   , P.BOOK_CLSF_CD, O.PROD_AMT, O.PROD_NET_AMT
@@ -198,16 +190,16 @@
 		                                  INNER JOIN TB_DP_SPRT_DEVICE K			ON D.PROD_ID = K.PROD_ID
 		                                  INNER JOIN TB_DP_PROD_RSHP I			ON D.PROD_ID = I.PROD_ID
 		                                  INNER JOIN TB_DP_PROD J				ON I.PART_PROD_ID = J.PROD_ID
-		                                  INNER JOIN TB_DP_SUB_CONTENTS M		ON I.PART_PROD_ID = M.PROD_ID
-		                                  INNER JOIN TB_DP_TENANT_PROD N			ON J.PROD_ID = N.PROD_ID AND N.TENANT_ID = G.TENANT_ID
-		                                  INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON J.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
-		                                  INNER JOIN UV_TB_DP_MULTIMDA_PROD P		ON J.PROD_ID = P.PROD_ID
-		                                  INNER JOIN TB_DP_PROD_DESC Q			ON J.PROD_ID = Q.PROD_ID AND C.LANG_CD = Q.LANG_CD
+		                                  INNER JOIN TB_DP_SUB_CONTENTS M		ON M.PROD_ID = J.PROD_ID
+                                          INNER JOIN TB_DP_TENANT_PROD N		ON N.PROD_ID = J.PROD_ID AND N.TENANT_ID = G.TENANT_ID
+		                                  INNER JOIN TB_DP_TENANT_PROD_PRICE O	 ON O.PROD_ID  = J.PROD_ID AND O.TENANT_ID = G.TENANT_ID
+		                                  INNER JOIN UV_TB_DP_MULTIMDA_PROD P	ON P.PROD_ID = J.PROD_ID
+		                                  INNER JOIN TB_DP_PROD_DESC Q			ON Q.PROD_ID = J.PROD_ID AND C.LANG_CD = Q.LANG_CD
 		                            WHERE 1=1
 										AND G.TENANT_ID = #{tenantId}				/* tenant ID */
 										AND D.PROD_ID = #{channelId} 				/* channel ID */
 										AND C.LANG_CD = #{langCd}					/* 언어 */
-                                        AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = 'ANY-PHONE-4MM')
+                                        AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
                                         AND B.USE_YN = 'Y'                        	/* Y : 사용 (사용여부) */
 										AND D.SVC_GRP_CD = 'DP000203'             	/* DP000201 : 멀티미디어 */
 										AND D.CONTENTS_TYPE_CD = 'PD002501'       	/* PD002501 : 채널타입 */
@@ -215,7 +207,6 @@
 										AND D.TOP_MENU_ID IN ('DP13', 'DP014')				/* 이북 */
 										AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
 										AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */ 
-										AND K.PROD_ID IS NOT NULL                 	/* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
 										AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
 										AND J.SVC_GRP_CD = 'DP000203'       		/* 서비스그룹코드 : 멀티미디어 */  
 										AND J.CONTENTS_TYPE_CD = 'PD002502'       /* 컨텐츠 타입코드 : (PD002502:에피소드타입) */
@@ -228,36 +219,22 @@
                                             /* 특정 회차(chapter)기준 이후 회차 컨텐츠 */
                                             AND TO_NUMBER( REGEXP_REPLACE( NVL( P.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{chapter}
                                         </if>
-
 		                        )
 		                        WHERE RN = 1
-		                        
 		                   ) A
-		                   /* 미구매 체크 */
 		            ) C
-		          /*
-		          FIXME: ORDEREDBY
-
-		          */
+                    <if test="orderedBy == 'recent'">
+                        ORDER BY C.CHAPTER DESC
+                    </if>
+                    <if test="orderedBy == 'regDate'">
+                        ORDER BY C.CHAPTER DESC
+                    </if>
 		      ) D
 		    ) E
-		    WHERE RNUM BETWEEN 1 AND 10--#START_ROW# AND #END_ROW#
+            WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 		) P
-		LEFT OUTER JOIN TB_DP_PROD_IMG PI 		ON PI.PROD_ID = P.CHNL_PROD_ID /* FIXME:이미지 OUTER JOIN 제거 */ AND PI.EXPO_ORD = '1' AND PI.IMG_CD = 'DP000513'
-		  --, TBL_CCS_CAT CC
-			--, TBL_DP_PROD_IMG PI
+		INNER JOIN TB_DP_PROD_IMG PI 		ON PI.PROD_ID = P.CHNL_PROD_ID ND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{imgCd}
 		WHERE 1=1
-		  /*
-		   AND CC.CAT_CD = P.DP_CAT_NO
-		   AND PI.PROD_ID = DECODE( P.META_CLS_CD, 'CT19', P.CHNL_PROD_ID, P.PROD_ID )
-		   AND CC.CAT_GRP_CD = 'CCS00002'
-		   AND PI.IMG_CLS = ( SELECT SUBSTR( FN_GET_ICON_IMG_CLS( #DPI#
-		                                            , 'SC'
-		                              , 'MA'
-		                              , 'EBOOK'
-		                                , 'DP000513' )
-		                 , 1, 10 ) FROM DUAL )
-		    */
 
 	</select>
     
