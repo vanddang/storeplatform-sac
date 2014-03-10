@@ -703,8 +703,42 @@
 		           AND C.MENU_ID = D.MENU_ID
 		           AND D.USE_YN = 'Y'
 		           AND D.TOP_MENU_ID = #{topMenuId}
-                   <if test='menuId != null and menuId != ""'>
-                   AND D.MENU_ID = #{menuId}
+                   <if test='topMenuId == "DP13"'>
+                       <if test='filteredBy == "normal"'>
+                       /* 인기도서 일반 - 장르소설 / 작가출판>장르소설을 제외한 나머지 */
+                       AND D.MENU_ID NOT IN (SELECT MENU_ID
+                                               FROM TB_DP_MENU_CATEGORY
+                                              WHERE (MENU_ID LIKE 'DP13004%'  /* 장르소설 */
+                                                     OR MENU_ID IN ('DP13027002', 'DP13027008', 'DP13027009', 'DP13027010' )  /* 작가출판 장르소설 */
+                                                    )
+                                             )
+                       </if>
+                       <if test='filteredBy == "fantasy"'>
+                       /* 인기도서 판타지 - 장르소설>SF/판타지, 작가출판>장르소설-SF/판타지 */
+                       AND D.MENU_ID IN ('DP13004003', 'DP13027010')
+                       </if>
+                       <if test='filteredBy == "rommance"'>
+                       /* 인기도서 로맨스 - 장르소설>로맨스, 작가출판>장르소설-로맨스 */
+                       AND D.MENU_ID IN ( 'DP13004001', 'DP13027008' )
+                       </if>
+                       <if test='filteredBy == "martialArts"'>
+                       /* 인기도서 무협 - 장르소설>무협, 작가출판>장르소설-무협 */
+                       AND D.MENU_ID IN ( 'DP13004002', 'DP13027009' )
+                       </if>
+                   </if>
+                   <if test='topMenuId == "DP14"'>
+                       <if test='filteredBy == "martialArts"'>
+                       AND D.MENU_ID = 'DP14001'  /* 인기코믹 무협 */
+                       </if>
+                       <if test='filteredBy == "pureLove"'>
+                       AND D.MENU_ID = 'DP14002'  /* 인기코믹 순정 */
+                       </if>
+                       <if test='filteredBy == "action"'>
+                       AND D.MENU_ID = 'DP14003'  /* 인기코믹 액션 */
+                       </if>
+                       <if test='filteredBy == "drama"'>
+                       AND D.MENU_ID = 'DP14006'  /* 인기코믹 드라마 */
+                       </if>
                    </if>
 		           AND C.PROD_ID = E.PROD_ID
 		           AND E.CONTENTS_TYPE_CD = 'PD002502'
