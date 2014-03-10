@@ -170,13 +170,19 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// --------------------------------------------------------------------------------------
 		// 구매(선물발신) 회원/기기
 
-		// 조회
-		PurchaseUserDevice purchaseUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(
-				purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getUserKey(), purchaseOrderInfo.getDeviceKey());
+		PurchaseUserDevice purchaseUserDevice = null;
 
-		// 조회 실패
-		if (purchaseUserDevice == null) {
-			throw new StorePlatformException("SAC_PUR_4101");
+		// 조회
+		try {
+			purchaseUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(purchaseOrderInfo.getTenantId(),
+					purchaseOrderInfo.getUserKey(), purchaseOrderInfo.getDeviceKey());
+		} catch (StorePlatformException e) {
+			// 조회 실패
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_USER_NOTFOUND)) {
+				throw new StorePlatformException("SAC_PUR_4101");
+			} else {
+				throw e;
+			}
 		}
 
 		// 회원상태 체크
@@ -184,6 +190,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			throw new StorePlatformException("SAC_PUR_4102");
 		}
 
+		// 실명인증 체크
 		if (purchaseUserDevice.isRealName() == false) {
 			throw new StorePlatformException("SAC_PUR_4105");
 		}
@@ -194,15 +201,20 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 선물 수신 회원/기기
 
 		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			PurchaseUserDevice receiveUserDevice = null;
 
 			// 조회
-			PurchaseUserDevice receiveUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(
-					purchaseOrderInfo.getRecvTenantId(), purchaseOrderInfo.getRecvUserKey(),
-					purchaseOrderInfo.getRecvDeviceKey());
-
-			// 조회 실패
-			if (receiveUserDevice == null) {
-				throw new StorePlatformException("SAC_PUR_4103");
+			try {
+				receiveUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(
+						purchaseOrderInfo.getRecvTenantId(), purchaseOrderInfo.getRecvUserKey(),
+						purchaseOrderInfo.getRecvDeviceKey());
+			} catch (StorePlatformException e) {
+				// 조회 실패
+				if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_USER_NOTFOUND)) {
+					throw new StorePlatformException("SAC_PUR_4103");
+				} else {
+					throw e;
+				}
 			}
 
 			// 회원상태 체크
@@ -308,12 +320,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String tenantId = purchaseOrderInfo.getTenantId();
 		// String systemId = purchaseOrderInfo.getSystemId();
 		String langCd = purchaseOrderInfo.getLangCd();
-		String useDeviceModelCd = null;
-		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			useDeviceModelCd = purchaseOrderInfo.getReceiveUser().getDeviceModelCd();
-		} else {
-			useDeviceModelCd = purchaseOrderInfo.getPurchaseUser().getDeviceModelCd();
-		}
+		String useDeviceModelCd = (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
+				PurchaseConstants.PRCHS_CASE_GIFT_CD) ? purchaseOrderInfo.getReceiveUser().getDeviceModelCd() : purchaseOrderInfo
+				.getPurchaseUser().getDeviceModelCd());
 
 		List<String> prodIdList = new ArrayList<String>();
 		for (CreatePurchaseSacReqProduct reqProduct : purchaseOrderInfo.getCreatePurchaseReq().getProductList()) {
@@ -644,7 +653,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		// 기구매 체크
-		if (existenceItemScList.size() > 0) {
+		if (existenceItemScList.size() > 100) {
 
 			ExistenceScReq existenceScReq = new ExistenceScReq();
 			existenceScReq.setTenantId(useUser.getTenantId());
