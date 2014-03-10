@@ -1,10 +1,8 @@
 package com.skplanet.storeplatform.sac.client.display.vo.openapi;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Tag;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
  * App 상세 정보 요청 Response Value Object.
@@ -18,10 +16,8 @@ public class SellerAppDetailRes extends CommonInfo {
 	 * Common Response.
 	 */
 	private CommonResponse commonResponse;
-	/**
-	 * Tag List.
-	 */
-	private List<Tag> tagList;
+
+	private Product product;
 
 	/**
 	 * @return the commonResponse
@@ -39,18 +35,18 @@ public class SellerAppDetailRes extends CommonInfo {
 	}
 
 	/**
-	 * @return the tagList
+	 * @return the product
 	 */
-	public List<Tag> getTagList() {
-		return this.tagList;
+	public Product getProduct() {
+		return this.product;
 	}
 
 	/**
-	 * @param tagList
-	 *            the tagList to set
+	 * @param product
+	 *            the product to set
 	 */
-	public void setTagList(List<Tag> tagList) {
-		this.tagList = tagList;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 }

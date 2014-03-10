@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.openapi;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -13,6 +15,7 @@ public class SellerAppDetailReq extends CommonInfo {
 	/**
 	 * 관리자 여부.
 	 */
+	@NotBlank
 	private String admin;
 	/**
 	 * 판매자ID.
@@ -25,6 +28,7 @@ public class SellerAppDetailReq extends CommonInfo {
 	/**
 	 * AID.
 	 */
+	@NotBlank
 	private String aid;
 
 	/**

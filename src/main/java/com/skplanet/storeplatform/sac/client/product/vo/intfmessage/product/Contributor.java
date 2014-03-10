@@ -33,6 +33,9 @@ public class Contributor extends CommonInfo implements Serializable {
 	 * corporation : 법인사업자의 개발자ID > foreigner : 외국인 개발자ID > brand : 브랜드ID.
 	 */
 	private Identifier identifier;
+
+	private List<Identifier> identifierList;
+
 	/**
 	 * 제작자 또는 저자 이름.
 	 */
@@ -84,9 +87,9 @@ public class Contributor extends CommonInfo implements Serializable {
 	private String country;
 
 	/**
-	 * 데뷔 년도.
+	 * 데뷔 날짜 정보.
 	 */
-	private String debutYear;
+	private String debutDay;
 
 	/**
 	 * 데뷔 곡.
@@ -101,13 +104,6 @@ public class Contributor extends CommonInfo implements Serializable {
 	 * 앨범 출시 일 등 날짜를 기입할 경우 사용한다.
 	 */
 	private Date date;
-
-	private List<Identifier> identifierList;
-
-	/**
-	 * 데뷔 날짜.
-	 */
-	private java.util.Date debutDay;
 
 	/**
 	 * resource 정보.
@@ -310,21 +306,6 @@ public class Contributor extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the debutYear
-	 */
-	public String getDebutYear() {
-		return this.debutYear;
-	}
-
-	/**
-	 * @param debutYear
-	 *            the debutYear to set
-	 */
-	public void setDebutYear(String debutYear) {
-		this.debutYear = debutYear;
-	}
-
-	/**
 	 * @return the debutMusicNm
 	 */
 	public String getDebutMusicNm() {
@@ -337,6 +318,21 @@ public class Contributor extends CommonInfo implements Serializable {
 	 */
 	public void setDebutMusicNm(String debutMusicNm) {
 		this.debutMusicNm = debutMusicNm;
+	}
+
+	/**
+	 * @return the debutDay
+	 */
+	public String getDebutDay() {
+		return this.debutDay;
+	}
+
+	/**
+	 * @param debutDay
+	 *            the debutDay to set
+	 */
+	public void setDebutDay(String debutDay) {
+		this.debutDay = debutDay;
 	}
 
 	/**
@@ -418,20 +414,4 @@ public class Contributor extends CommonInfo implements Serializable {
 	public void setSourceList(List<Source> sourceList) {
 		this.sourceList = sourceList;
 	}
-
-	/**
-	 * @return the debutDay
-	 */
-	public java.util.Date getDebutDay() {
-		return this.debutDay;
-	}
-
-	/**
-	 * @param debutDay
-	 *            the debutDay to set
-	 */
-	public void setDebutDay(java.util.Date debutDay) {
-		this.debutDay = debutDay;
-	}
-
 }
