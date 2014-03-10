@@ -1859,7 +1859,16 @@ public class IdpServiceImpl implements IdpService {
 				return imResult;
 			}
 
-			// TO DO... 회원 탈퇴 정보를 전달 하는 TSTORE-TANENT-API가 추가되면 PARAMETER 셋팅해서 호출해야함.
+			// 회원 탈퇴 정보를 전달 하는 mq 호출.
+			if (searchUserResponse != null) {
+
+				RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+				mqInfo.setUserId(userID);
+				mqInfo.setUserKey(searchUserResponse.getUserKey());
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+
+				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+			}
 
 		} else { // 타사이트 이용동의 해지
 			try {
