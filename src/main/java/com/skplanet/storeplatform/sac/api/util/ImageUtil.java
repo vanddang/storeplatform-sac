@@ -68,10 +68,11 @@ public class ImageUtil {
 					FileUtil.createDirectory(outFile);
 			}
 			this.log.info("log444" + directoryName);
-			// ImageResizing imgResize = new ImageResizing();
 			ImageUtilResizing imgResize = new ImageUtilResizing();
+
 			boolean isOk = false;
 			isOk = imgResize.resize(inImgfle, outputfile, targetWidth, targetHeight);
+
 			this.log.info("isOk::::" + isOk);
 
 			if (!isOk) {
