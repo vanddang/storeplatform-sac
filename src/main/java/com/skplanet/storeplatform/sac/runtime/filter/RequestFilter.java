@@ -14,4 +14,15 @@ public class RequestFilter extends AbstractStorePlatformRequestFilter {
 		return "SAC";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.framework.integration.filter.AbstractStorePlatformRequestFilter#getFdsLoggerName()
+	 */
+	@Override
+	protected String getFdsLoggerName() {
+		return "FDS_SAC_LOGGER";
+	}
+
 }
