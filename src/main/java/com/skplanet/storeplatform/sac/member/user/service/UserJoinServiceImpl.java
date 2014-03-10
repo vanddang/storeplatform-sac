@@ -63,6 +63,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 
 /**
  * 회원 가입 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -85,6 +86,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	@Autowired
 	private ImIdpSCI imIdpSCI;
+
+	@Autowired
+	private SaveAndSyncService saveAndSyncService;
 
 	@Override
 	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
@@ -150,7 +154,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 						 */
 						SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
 						ecReq.setUserMdn(req.getDeviceId());
-
 						this.idpSCI.secedeForWap(ecReq);
 
 					}
@@ -587,25 +590,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		this.checkAlreadyJoin(sacHeader, req.getDeviceId());
 
 		/**
-		 * 변동성 대상 체크
-		 * 
-		 * TODO 변동성 체크 모듈 호출해야함.... TODO 변동성 체크 모듈 호출해야함.... TODO 변동성 체크 모듈 호출해야함....
+		 * 회원 가입 MSISDN, MAC (변동성 대상 체크 로직 포함)
 		 */
-		boolean targetYn = true;
-
-		/**
-		 * 신규 회원 가입
-		 */
-		String userKey = this.createSaveAndSyncNewMember(sacHeader, req);
-
-		/**
-		 * 결과 세팅
-		 */
-		CreateSaveAndSyncRes response = new CreateSaveAndSyncRes();
-		response.setUserKey(userKey);
-		response.setDeviceKey("");
-
-		return response;
+		return this.createSaveAndSyncUserJoin(sacHeader, req);
 
 	}
 
@@ -993,7 +980,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 * @param sacHeader
 	 *            공통 헤더
 	 * @param deviceId
-	 *            기기 ID
+	 *            기기 ID (MSISDN or MAC Address)
 	 */
 	private void checkAlreadyJoin(SacRequestHeader sacHeader, String deviceId) {
 
@@ -1018,19 +1005,195 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	}
 
-	private String createSaveAndSyncNewMember(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
+	/**
+	 * <pre>
+	 * Save & Sync 회원 가입 MSISDN, MAC (변동성 체크 포함).
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	private CreateSaveAndSyncRes createSaveAndSyncUserJoin(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
 
+		String userKey = null; // 사용자 Key
+		String deviceKey = null; // 휴대기기 Key
+
+		/**
+		 * 단말등록시 필요한 기본 정보 세팅.
+		 */
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
+				req.getDeviceId(), req.getDeviceIdType());
+
+		/**
+		 * MSISDN 가입자와 MAC 가입자를 분기하여 처리한다.
+		 */
 		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MACADDRESS)) {
 
-			LOGGER.info("## >> SAVE & SYNC MAC 가가입 START ===================================");
+			LOGGER.info("=========================================");
+			LOGGER.info("## >> SAVE & SYNC MAC 가가입 START ======");
+			LOGGER.info("=========================================");
+
+			/**
+			 * MAC IDP 연동없이 DB 만 가입처리.
+			 */
+			userKey = this.createSaveAndSyncMacUser(sacHeader, req);
+
+			/**
+			 * 휴대기기 등록.
+			 */
+			deviceKey = this.createDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
 
 		} else {
 
-			LOGGER.info("## >> SAVE & SYNC MDN 가입 START ===================================");
+			LOGGER.info("==========================================");
+			LOGGER.info("## >> SAVE & SYNC MSISDN 가입 START ======");
+			LOGGER.info("==========================================");
+
+			/**
+			 * 변동성 대상 체크
+			 * 
+			 * TODO 변동성 체크 모듈 호출해야함.... TODO 변동성 체크 모듈 호출해야함.... TODO 변동성 체크 모듈 호출해야함....
+			 */
+			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(req.getDeviceId());
+			if (StringUtils.equals(saveAndSync.getIsSaveAndSyncTarget(), MemberConstants.USE_Y)) { // 변동성 대상임.
+
+				userKey = "회원이전키";
+				deviceKey = "단말이전키";
+
+			} else { // 변동성 대상 아님.
+
+				/**
+				 * MSISDN IDP와 DB 모두 가입처리.
+				 */
+				userKey = this.createSaveAndSyncMsisdnUser(sacHeader, req);
+
+				/**
+				 * 휴대기기 등록.
+				 */
+				deviceKey = this.createDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
+
+			}
 
 		}
 
-		return "userKey";
+		/**
+		 * 결과 세팅
+		 */
+		CreateSaveAndSyncRes response = new CreateSaveAndSyncRes();
+		response.setUserKey(userKey);
+		response.setDeviceKey(deviceKey);
+
+		return response;
+
+	}
+
+	/**
+	 * <pre>
+	 * Save & Sync MSISDN 신규 가입.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return 사용자 Key
+	 */
+	private String createSaveAndSyncMsisdnUser(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
+
+		/**
+		 * (IDP 연동) 무선회원 가입 (cmd - joinForWap)
+		 */
+		JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
+		joinForWapEcReq.setUserMdn(req.getDeviceId());
+		joinForWapEcReq.setMdnCorp(this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
+		JoinForWapEcRes joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
+
+		/**
+		 * SC 가입 (공통 Request, 약관동의 Request) setting.
+		 */
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
+
+		/**
+		 * SC 사용자 기본정보 setting
+		 */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setImMbrNo(joinForWapEcRes.getUserKey()); // MBR_NO
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
+		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
+		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
+		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
+		createUserRequest.setUserMbr(userMbr);
+
+		/**
+		 * SC 사용자 가입요청
+		 */
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
+		}
+
+		return createUserResponse.getUserKey();
+
+	}
+
+	/**
+	 * <pre>
+	 * Save & Sync MAC 가가입.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return 사용자 Key
+	 */
+	private String createSaveAndSyncMacUser(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
+
+		/**
+		 * SC 가입 (공통 Request, 약관동의 Request) setting.
+		 */
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
+
+		/**
+		 * SC 사용자 기본정보 setting
+		 */
+		UserMbr userMbr = new UserMbr();
+		/**
+		 * TODO MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.)
+		 */
+		userMbr.setImMbrNo(req.getDeviceId() + "년월일시분초"); // MBR_NO
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING); // 가입승인 대기
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
+		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
+		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
+		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
+		createUserRequest.setUserMbr(userMbr);
+
+		/**
+		 * SC 사용자 가입요청
+		 */
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
+		}
+
+		return createUserResponse.getUserKey();
 
 	}
 
