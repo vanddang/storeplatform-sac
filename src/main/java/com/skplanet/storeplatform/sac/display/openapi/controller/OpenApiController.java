@@ -326,7 +326,7 @@ public class OpenApiController {
 	 *            requestheader
 	 * @return AppDetailByPackageNameSacRes
 	 */
-	@RequestMapping(value = "/seachPackageName/detail//v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/searchPackageName/detail//v1", method = RequestMethod.GET)
 	@ResponseBody
 	public AppDetailByPackageNameSacRes appDetailByPackageName(
 			@Validated AppDetailByPackageNameSacReq appDetailByPackageNameSacReq, SacRequestHeader requestheader) {
