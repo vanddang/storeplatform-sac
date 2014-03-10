@@ -130,6 +130,7 @@
 	      </if>
     </select>
 
+    <!-- 운영자 추천 통쿼리 - 미사용 -->
     <select id="getAdminRecommandProdList" parameterType="Map" resultType="AppCodiRes">
 		    SELECT /* IsfAppCodiMapper.xml, getAdminRecommandProdList, Yun JuYoung, 2014-02-06 */
 		            P.TOTAL_COUNT
@@ -370,99 +371,103 @@
     </select>
     
     <select id="getBasicAdminRecommandProdList" parameterType="Map" resultType="ProductBasicInfo">
-      SELECT /* IsfAppCodiMapper.xml, getBasicAdminRecommandProdList, Yun JuYoung, 2014-02-06 */
-             *
-        FROM            
-            (
-            SELECT 
-                  P.PROD_ID
-                , P.SVC_GRP_CD
-                , P.SVC_TYPE_CD
-                , P.CONTENTS_TYPE_CD
-                , P.META_CLSF_CD
-                , P.TOP_MENU_ID
-                , P2.PROD_ID AS PART_PROD_ID
-                , ROW_NUMBER( ) OVER ( PARTITION BY PR.PROD_ID
-                                           ORDER BY P2.REG_DT DESC ) AS RN
-            FROM TB_DP_LIST_PROD AR
-               , TB_DP_PROD_RSHP PR
-               , TB_DP_MENU_CATEGORY_PROD_MAPG CP
-               , TB_DP_MENU_CATEGORY C
-               , TB_DP_PROD P
-               , TB_DP_TENANT_PROD TP
-               , TB_DP_PROD P2
-               , TB_DP_TENANT_PROD TP2
-               , TB_DP_SPRT_DEVICE SH
-               , TB_CM_DEVICE PHI             
-           WHERE PR.PROD_ID = AR.PROD_ID -- RECOMMAND PID == CHNNEL PID 
-            AND CP.PROD_ID = PR.PROD_ID
-            AND C.MENU_ID = CP.MENU_ID
-            AND P.PROD_ID = PR.PROD_ID
-            AND TP.PROD_ID = P.PROD_ID
-            AND P2.PROD_ID = PR.PART_PROD_ID -- EPISODE
-            AND TP2.PROD_ID = P2.PROD_ID
-            AND SH.PROD_ID = P2.PROD_ID
-            AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
-            AND AR.TENANT_ID = 'S01'
-            AND CP.USE_YN = 'Y'
-            AND CP.BASE_YN = 'Y'
-            AND C.USE_YN = 'Y'
-            AND P.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
-            AND AR.LIST_ID = 'ADM000000012'
-            AND AR.EXPO_YN = 'Y'
-            AND TP.PROD_STATUS_CD = 'PD000403'
-            AND TP.EXPO_YN = 'Y'
-            AND TP.TENANT_ID = 'S01'
-            AND TP2.PROD_STATUS_CD = 'PD000403'
-            AND TP2.EXPO_YN = 'Y'
-            AND TP2.TENANT_ID = 'S01'
-            AND (PHI.DEVICE_MODEL_CD = 'SHW-M250S' OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
-            AND PHI.USE_YN = 'Y'
-            AND DECODE( P.TOP_MENU_ID
-                , 'DP13'
-                , DECODE( PHI.EBOOK_SPRT_YN
-                        , 'Y'
-                        , DECODE( P2.META_CLSF_CD
-                                , 'CT24'
-                                , DECODE( PHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                , 'CT26'
-                                , DECODE( PHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                , 1 )
-                        , 0 )
-                , 'DP14'
-                , DECODE( PHI.COMIC_SPRT_YN , 'Y', 1 , 0 )
-                , 'DP15'
-                , 0
-                , 'DP16'
-                , DECODE( P2.META_CLSF_CD
-                        , 'CT25'
-                        , DECODE( PHI.MUSIC_SPRT_YN, 'Y', 1, 0)
-                        , 1 )
-                , 1 ) = 1
-            AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-                 THEN ( SELECT 1
-                          FROM TB_DP_SUB_CONTENTS SC
-                         WHERE SC.PROD_ID = PR.PART_PROD_ID
-                           AND SC.SALE_YN = 'Y'
-                           AND DECODE( PHI.HDV_SPRT_YN
-                                     , 'PD005201'
-                                     , DECODE ( SC.DP_PG_QULT_CD
-                                              , 'PD009701', 1
-                                              , 'PD009702', 1
-                                              , DECODE( PHI.SD_VIDEO_SPRT_YN , 'Y', 1 , 0 ) )
-                                     , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
-                           AND ROWNUM <![CDATA[<=]]> 1  )
-                 ELSE 1
-             END ) = 1
-            AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-                 THEN DECODE( PHI.VIDEO_DRM_SPRT_YN
-                            , 'PD005200'
-                            , DECODE( NVL( P2.DRM_YN, 'N' ), 'N', 1, 0 )
-                            , 'PD005201'
-                            , 1 )
-                 ELSE 1
-             END ) = 1
-           ) S
-       WHERE S.RN = 1
+      SELECT  /* IsfAppCodiMapper.xml, getBasicAdminRecommandProdList, Yun JuYoung, 2014-02-06 */
+              A.*
+        FROM 
+             (
+		      SELECT            
+		             S.*
+		           , COUNT(S.PROD_ID) OVER() AS TOTAL_COUNT
+		        FROM            
+		            (
+		            SELECT 
+		                  P.PROD_ID
+		                , P.SVC_GRP_CD
+		                , P.SVC_TYPE_CD
+		                , P.CONTENTS_TYPE_CD
+		                , P.META_CLSF_CD
+		                , P.TOP_MENU_ID
+		                , P2.PROD_ID AS PART_PROD_ID
+		                , ROW_NUMBER( ) OVER ( PARTITION BY PR.PROD_ID
+		                                           ORDER BY P2.REG_DT DESC ) AS RN
+		            FROM TB_DP_LIST_PROD AR
+		               , TB_DP_PROD_RSHP PR
+		               , TB_DP_MENU_CATEGORY_PROD_MAPG CP
+		               , TB_DP_PROD P
+		               , TB_DP_TENANT_PROD TP
+		               , TB_DP_PROD P2
+		               , TB_DP_TENANT_PROD TP2
+		               , TB_DP_SPRT_DEVICE SH
+		               , TB_CM_DEVICE PHI             
+		           WHERE PR.PROD_ID = AR.PROD_ID -- RECOMMAND PID == CHNNEL PID 
+		            AND CP.PROD_ID = PR.PROD_ID
+		            AND P.PROD_ID = PR.PROD_ID
+		            AND TP.PROD_ID = P.PROD_ID
+		            AND P2.PROD_ID = PR.PART_PROD_ID -- EPISODE
+		            AND TP2.PROD_ID = P2.PROD_ID
+		            AND SH.PROD_ID = P2.PROD_ID
+		            AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
+		            AND AR.TENANT_ID = #{tenantHeader.tenantId}
+		            AND AR.LIST_ID = #{listId}
+		            AND AR.EXPO_YN = 'Y'
+		            AND CP.USE_YN = 'Y'
+		            AND CP.BASE_YN = 'Y'
+		            AND P.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
+		            AND TP.TENANT_ID = #{tenantHeader.tenantId}
+		            AND TP.PROD_STATUS_CD = 'PD000403'
+		            AND TP.EXPO_YN = 'Y'
+		            AND TP2.TENANT_ID = #{tenantHeader.tenantId}
+		            AND TP2.PROD_STATUS_CD = 'PD000403'
+		            AND TP2.EXPO_YN = 'Y'
+		            AND (PHI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
+		            AND PHI.USE_YN = 'Y'
+		            AND DECODE( P.TOP_MENU_ID
+		                , 'DP13'
+		                , DECODE( PHI.EBOOK_SPRT_YN
+		                        , 'Y'
+		                        , DECODE( P2.META_CLSF_CD
+		                                , 'CT24'
+		                                , DECODE( PHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+		                                , 'CT26'
+		                                , DECODE( PHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+		                                , 1 )
+		                        , 0 )
+		                , 'DP14'
+		                , DECODE( PHI.COMIC_SPRT_YN , 'Y', 1 , 0 )
+		                , 'DP15'
+		                , 0
+		                , 'DP16'
+		                , DECODE( P2.META_CLSF_CD
+		                        , 'CT25'
+		                        , DECODE( PHI.MUSIC_SPRT_YN, 'Y', 1, 0)
+		                        , 1 )
+		                , 1 ) = 1
+		            AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+		                 THEN ( SELECT 1
+		                          FROM TB_DP_SUB_CONTENTS SC
+		                         WHERE SC.PROD_ID = PR.PART_PROD_ID
+		                           AND SC.SALE_YN = 'Y'
+		                           AND DECODE( PHI.HDV_SPRT_YN
+		                                     , 'PD005201'
+		                                     , DECODE ( SC.DP_PG_QULT_CD
+		                                              , 'PD009701', 1
+		                                              , 'PD009702', 1
+		                                              , DECODE( PHI.SD_VIDEO_SPRT_YN , 'Y', 1 , 0 ) )
+		                                     , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+		                           AND ROWNUM <![CDATA[<=]]> 1 )
+		                 ELSE 1
+		             END ) = 1
+		            AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+		                 THEN DECODE( PHI.VIDEO_DRM_SPRT_YN
+		                            , 'PD005200'
+		                            , DECODE( NVL( P2.DRM_YN, 'N' ), 'N', 1, 0 )
+		                            , 'PD005201'
+		                            , 1 )
+		                 ELSE 1
+		             END ) = 1
+		           ) S
+		       WHERE S.RN = 1
+		     ) A
+         WHERE ROWNUM BETWEEN #{START_ROW} AND #{END_ROW}
     </select>    
 </mapper>
