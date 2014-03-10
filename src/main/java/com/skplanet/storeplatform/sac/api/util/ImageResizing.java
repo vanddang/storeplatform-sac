@@ -23,10 +23,15 @@ import java.io.FileOutputStream;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * ImageResizing 이미지 리사이즈 기능을 제공한다.
  */
 public class ImageResizing {
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	/**
 	 * ImageResizing 이미지 리사이즈 기능을 제공한다.
 	 * 
@@ -70,33 +75,33 @@ public class ImageResizing {
 		boolean result = false;
 
 		try {
-
+			this.log.info("log9991");
 			// img = ImageIO.read( new File(fName));
 
 			FileInputStream fis = new FileInputStream(imgResdFile);
 
 			byte[] data = new byte[fis.available()];
-
-			// log.info(fis.available());
+			this.log.info("log9992");
+			// this.log.info(fis.available());
 
 			fis.read(data);
 
 			fis.close();
 
 			Image image = Toolkit.getDefaultToolkit().createImage(data);
-
+			this.log.info("log9993");
 			Image rtnImage = resizing(image, targetWidth, targetHeight);
-
+			this.log.info("log9994");
 			MediaTracker tracker = new MediaTracker(new java.awt.Frame());
-
+			this.log.info("log9995");
 			tracker.addImage(rtnImage, 0);
 
 			tracker.waitForAll();
-
+			this.log.info("log9996");
 			BufferedImage bi = new BufferedImage(rtnImage.getWidth(null),
 
 			rtnImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
-
+			this.log.info("log9997");
 			Graphics g = bi.getGraphics();
 
 			g.drawImage(rtnImage, 0, 0, null);
@@ -104,7 +109,7 @@ public class ImageResizing {
 			g.dispose();
 
 			ByteArrayOutputStream bas = new ByteArrayOutputStream();
-
+			this.log.info("log9998");
 			ImageIO.write(bi, "jpeg", bas);
 
 			byte[] writeData = bas.toByteArray();
@@ -114,7 +119,7 @@ public class ImageResizing {
 			new BufferedOutputStream(new FileOutputStream(imgWriteFile)));
 
 			dos.write(writeData);
-
+			this.log.info("log9999");
 			dos.close();
 			result = true;
 
