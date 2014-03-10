@@ -71,9 +71,6 @@ public class EpubServiceImpl implements EpubService {
         param.put("channelId", req.getChannelId());
         param.put("langCd", req.getLangCd());
         param.put("deviceModel", req.getDeviceModel());
-        //param.put("orderedBy", org.apache.commons.lang3.StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT));
-        //param.put("offset", 1);
-        //param.put("count", 1);
         param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
 		EpubDetail epubDetail = this.getEpubChannel(param);
@@ -96,7 +93,6 @@ public class EpubServiceImpl implements EpubService {
         } else {
             throw new StorePlatformException("SAC_DSP_0009");
         }
-        /*
 		if(epubDetail != null) {
 
 			String sMetaClsCd = epubDetail.getMetaClsfCd();
@@ -111,6 +107,11 @@ public class EpubServiceImpl implements EpubService {
 
 			// 단행인 경우 시리즈 정보를 제공
 			if (sMetaClsCd.equals("CT19")) {
+
+                param.put("orderedBy", org.apache.commons.lang3.StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT));
+                param.put("offset", 1);
+                param.put("count", 1);
+
                 EpubSeriesReq epubSeriesReq = new EpubSeriesReq();
                 epubSeriesReq.setTenantId(req.getTenantId());
                 epubSeriesReq.setChannelId(req.getChannelId());
@@ -126,8 +127,6 @@ public class EpubServiceImpl implements EpubService {
         } else {
             throw new StorePlatformException("SAC_DSP_0009");
         }
-        */
-
 
 		return res;
 	}
@@ -402,7 +401,9 @@ public class EpubServiceImpl implements EpubService {
 
         if(StringUtils.isNotEmpty(mapperVO.getChapter())) {
             Chapter chapter = new Chapter();
-            chapter.setUnit(mapperVO.getChapter());
+            chapter.setUnit(mapperVO.getChapterUnit());
+            if(StringUtils.isNumeric(mapperVO.getChapter()))
+                chapter.setText(Integer.parseInt(mapperVO.getChapter()));
             book.setChapter(chapter);
         }
 
@@ -410,14 +411,13 @@ public class EpubServiceImpl implements EpubService {
         book.setType(mapperVO.getBookType());
         book.setStatus(mapperVO.getBookStatus());
 
-        // TODO: BookVersion
         book.setBookVersion(mapperVO.getProdVer());
 
 		// eBook 연재물인 경우에만 Type과 status를 적용한다.
 		if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(mapperVO.getMetaClsfCd())) {
 			book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
 		}
-		book.setSupportList(this.mapSupportList(mapperVO));
+		//book.setSupportList(this.mapSupportList(mapperVO));
 		return book;
 	}
 
@@ -481,7 +481,7 @@ public class EpubServiceImpl implements EpubService {
 	public List<Support> mapSupportList(EpubDetail mapperVO) {
 		List<Support> supportList = new ArrayList<Support>();
 		Support support = null;
-		if ("Y".equals(mapperVO.getSupportPlay())) {
+		if (StringUtils.equals(mapperVO.getSupportPlay(), "Y")) {
 			support = this.mapSupport(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM, "Y");
 			supportList.add(support);
 		} else {

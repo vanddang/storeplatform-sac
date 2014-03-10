@@ -25,9 +25,9 @@
 		                  ELSE ROUND(STAT.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
 		        , PI.FILE_PATH AS IMG_PATH, PI.FILE_NM AS IMG_NM, PI.FILE_SIZE AS IMG_SIZE
 		         ]]>
-		        , P.BOOK_CNT
-		        , P.BOOK_FREE_CNT
-		        , P.SERIAL_FREE_CNT
+		        , P.BOOK_CNT, P.BOOK_FREE_CNT, P.SERIAL_FREE_CNT
+                , REGEXP_REPLACE( MP.CHAPTER, '[^[:digit:]]') AS CHAPTER
+                , NVL(REGEXP_REPLACE( MP.CHAPTER, '[[:digit:], ]'), '회') AS CHAPTER_UNIT
 		      FROM
 		         (
 				SELECT  TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
@@ -42,14 +42,15 @@
 						, E.BOOK_CLSF_CD
 						, SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310'/*무제한*/ ) THEN 1 ELSE 0 END ) AS SALE_CNT
 						, SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310'/*무제한*/ AND O.PROD_AMT = 0 ) THEN 1 ELSE 0 END ) AS FREE_CNT
-					FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
-						INNER JOIN TB_DP_MENU_CATEGORY B		ON A.MENU_ID = B.MENU_ID
-						INNER JOIN TB_DP_MENU_CATEGORY_DESC C	ON A.MENU_ID = C.MENU_ID
-						INNER JOIN TB_DP_PROD D 				ON A.PROD_ID = D.PROD_ID
-						INNER JOIN UV_TB_DP_MULTIMDA_PROD E		ON D.PROD_ID = E.PROD_ID
-						INNER JOIN TB_DP_TENANT_PROD G			ON D.PROD_ID = G.PROD_ID
-						INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
-						INNER JOIN TB_DP_SPRT_DEVICE K			ON D.PROD_ID = K.PROD_ID
+                      FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
+                        INNER JOIN TB_DP_MENU_CATEGORY B		ON A.MENU_ID = B.MENU_ID
+                        INNER JOIN TB_DP_MENU_CATEGORY_DESC C	ON A.MENU_ID = C.MENU_ID
+                        INNER JOIN TB_DP_PROD D 				ON A.PROD_ID = D.PROD_ID
+                        INNER JOIN TB_DP_PROD_RSHP RSHP ON D.PROD_ID = RSHP.PROD_ID
+                        INNER JOIN UV_TB_DP_MULTIMDA_PROD E		ON D.PROD_ID = E.PROD_ID
+                        INNER JOIN TB_DP_TENANT_PROD G			ON D.PROD_ID = G.PROD_ID
+                        INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
+                        INNER JOIN TB_DP_SPRT_DEVICE K			ON RSHP.PART_PROD_ID = K.PROD_ID
 					WHERE 1=1
 					AND G.TENANT_ID = #{tenantId}				/* tenant ID */
 					AND D.PROD_ID = #{channelId} 				/* channel ID */
@@ -108,7 +109,9 @@
 		      , P.META_CLSF_CD
 		      , P.PROD_ID, P.CHNL_PROD_ID, P.REG_ID, P.REG_DT
 		      , P.PROD_NM, P.PROD_BASE_DESC, P.PROD_DTL_DESC, P.PROD_INTR_DSCR, P.ARTIST1_NM, P.ARTIST2_NM
-		      , P.PROD_GRD_CD, DECODE( P.CHAPTER, 0, NULL, P.CHAPTER ) AS CHAPTER
+		      , P.PROD_GRD_CD
+              , REGEXP_REPLACE( P.CHAPTER, '[^[:digit:]]') AS CHAPTER
+              , NVL(REGEXP_REPLACE( P.CHAPTER, '[[:digit:], ]'), '회') AS CHAPTER_UNIT
 		      , P.STORE_PROD_ID, P.PLAY_PROD_ID
 		      , P.STORE_PROD_AMT, P.PLAY_PROD_AMT
 		      , P.STORE_PROD_NET_AMT, P.PLAY_PROD_NET_AMT
@@ -187,7 +190,6 @@
 		                                  INNER JOIN TB_DP_PROD_DESC F			ON D.PROD_ID = F.PROD_ID AND F.LANG_CD = C.LANG_CD
 		                                  INNER JOIN TB_DP_TENANT_PROD G			ON D.PROD_ID = G.PROD_ID
 		                                  INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
-		                                  INNER JOIN TB_DP_SPRT_DEVICE K			ON D.PROD_ID = K.PROD_ID
 		                                  INNER JOIN TB_DP_PROD_RSHP I			ON D.PROD_ID = I.PROD_ID
 		                                  INNER JOIN TB_DP_PROD J				ON I.PART_PROD_ID = J.PROD_ID
 		                                  INNER JOIN TB_DP_SUB_CONTENTS M		ON M.PROD_ID = J.PROD_ID
@@ -195,6 +197,7 @@
 		                                  INNER JOIN TB_DP_TENANT_PROD_PRICE O	 ON O.PROD_ID  = J.PROD_ID AND O.TENANT_ID = G.TENANT_ID
 		                                  INNER JOIN UV_TB_DP_MULTIMDA_PROD P	ON P.PROD_ID = J.PROD_ID
 		                                  INNER JOIN TB_DP_PROD_DESC Q			ON Q.PROD_ID = J.PROD_ID AND C.LANG_CD = Q.LANG_CD
+                                          INNER JOIN TB_DP_SPRT_DEVICE K		ON I.PART_PROD_ID = K.PROD_ID
 		                            WHERE 1=1
 										AND G.TENANT_ID = #{tenantId}				/* tenant ID */
 										AND D.PROD_ID = #{channelId} 				/* channel ID */
@@ -233,9 +236,7 @@
 		    ) E
             WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 		) P
-		INNER JOIN TB_DP_PROD_IMG PI 		ON PI.PROD_ID = P.CHNL_PROD_ID ND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{imgCd}
-		WHERE 1=1
-
+		INNER JOIN TB_DP_PROD_IMG PI 		ON PI.PROD_ID = P.CHNL_PROD_ID AND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{imgCd}
 	</select>
     
 </mapper>
