@@ -85,11 +85,12 @@ public class CreateSubsellerTest {
 
 						// 필수
 						createSubsellerReq.setSellerKey("IF1023501184720130823173955");
-						createSubsellerReq.setSubSellerId("011ZXCddd");
+						createSubsellerReq.setSubSellerId("011ZXsCddd");
 						// createSubsellerReq.setIsNew("Y");
 
 						createSubsellerReq.setSubSellerMemo("test2");
 						createSubsellerReq.setSubSellerEmail("omc97asefd@hanmail.net");
+						createSubsellerReq.setSubSellerPhone("01073869700");
 
 						// 새로 추가됨
 						// createSubsellerReq.setSubSellerKey("SS201402061427346800000640");
