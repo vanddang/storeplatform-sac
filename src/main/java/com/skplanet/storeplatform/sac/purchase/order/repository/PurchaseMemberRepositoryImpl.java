@@ -79,7 +79,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		purchaseUserDevice.setUserMainStatus(PurchaseConstants.USER_STATUS_NORMAL); // TAKTODO:: 회원Part I/F 응답값 수정 요청
 		purchaseUserDevice.setDeviceKey(deviceKey);
 		purchaseUserDevice.setDeviceId(userDeviceInfoSac.getDeviceId());
-		purchaseUserDevice.setDeviceModelCd(userDeviceInfoSac.getDeviceModelName());
+		purchaseUserDevice.setDeviceModelCd(userDeviceInfoSac.getDeviceModelNo());
 		purchaseUserDevice.setTelecom(userDeviceInfoSac.getDeviceTelecom());
 		purchaseUserDevice.setAge(this.getCurrDayAge(userDeviceInfoSac.getUserBirthday()));
 
