@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -80,9 +83,9 @@ public class IdpServiceImpl implements IdpService {
 	@Autowired
 	private ChangeDisplayUserSCI changeDisplayUserSCI;
 
-	// @Resource(name = "memberRetireAmqpTemplate")
-	// @Autowired
-	// private AmqpTemplate memberRetireAmqpTemplate;
+	@Resource(name = "memberRetireAmqpTemplate")
+	@Autowired
+	private AmqpTemplate memberRetireAmqpTemplate;
 
 	/*
 	 * 
@@ -1515,12 +1518,12 @@ public class IdpServiceImpl implements IdpService {
 		// 회원 탈퇴 정보를 전달 하는 mq 호출.
 		if (searchUserResponse != null) {
 
-		// RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
-		// mqInfo.setUserId(userId);
-		// mqInfo.setUserKey(searchUserResponse.getUserKey());
-		// mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+		mqInfo.setUserId(userId);
+		mqInfo.setUserKey(searchUserResponse.getUserKey());
+		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 
-		// this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 		}
 
 		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
@@ -1862,7 +1865,7 @@ public class IdpServiceImpl implements IdpService {
 		mqInfo.setUserKey(searchUserResponse.getUserKey());
 		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 
-		// this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 		}
 
 		} else { // 타사이트 이용동의 해지

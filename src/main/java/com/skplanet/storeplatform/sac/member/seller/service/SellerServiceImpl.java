@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -110,8 +113,8 @@ public class SellerServiceImpl implements SellerService {
 	@Autowired
 	private MemberCommonComponent component;
 
-	// @Resource
-	// private AmqpTemplate cmsAmqpTemplate;
+	@Resource
+	private AmqpTemplate cmsAmqpTemplate;
 
 	/**
 	 * <pre>
@@ -1066,7 +1069,7 @@ public class SellerServiceImpl implements SellerService {
 
 		Message cancelAccountRequest = new Message(Command.CANCEL_ACCOUNT, new CancelAccountRequest(req.getSellerKey()));
 
-		// this.cmsAmqpTemplate.convertSendAndReceive(cancelAccountRequest);
+		this.cmsAmqpTemplate.convertSendAndReceive(cancelAccountRequest);
 
 		return response;
 	}

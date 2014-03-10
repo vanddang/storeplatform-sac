@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -44,8 +47,8 @@ public class CmsServiceImpl implements CmsService {
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
-	// @Resource
-	// private AmqpTemplate cmsAmqpTemplate;
+	@Resource
+	private AmqpTemplate cmsAmqpTemplate;
 
 	@Autowired
 	@Qualifier("cmsApp")
@@ -130,7 +133,7 @@ public class CmsServiceImpl implements CmsService {
 		this.log.info("CMS Return Code = " + ntr.getDeployResultCd());
 		this.log.info("CMS Return Message = " + ntr.getDeployResultDtlMsg());
 
-		// this.cmsAmqpTemplate.convertAndSend(ntr);
+		this.cmsAmqpTemplate.convertAndSend(ntr);
 
 	}
 

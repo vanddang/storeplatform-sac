@@ -3,8 +3,11 @@ package com.skplanet.storeplatform.sac.example.mq.service;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.Resource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,8 +23,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacR
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class RemoveDeviceAmqpTest {
 
-	// @Resource(name = "memberDelDeviceAmqpTemplate")
-	// private AmqpTemplate memberDelDeviceAmqpTemplate;
+	@Resource(name = "memberDelDeviceAmqpTemplate")
+	private AmqpTemplate memberDelDeviceAmqpTemplate;
 
 	class Worker implements Runnable {
 		@Override
@@ -34,7 +37,7 @@ public class RemoveDeviceAmqpTest {
 			mqInfo.setChgCaseCd("US012012"); // 번호이동
 			mqInfo.setSvcMangNo("7032891742");
 
-			// RemoveDeviceAmqpTest.this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
+			RemoveDeviceAmqpTest.this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
 
 			System.out.println("[" + this.toString() + "]convertAndSend");
 			try {
@@ -79,8 +82,8 @@ public class RemoveDeviceAmqpTest {
 	public void receive() {
 		Message message = null;
 		int count = 0;
-		// while ((message = this.memberDelDeviceAmqpTemplate.receive("sac.tenant.member.del-device.async")) != null) {
-		// System.out.println((++count) + "message = " + message);
-		// }
+		while ((message = this.memberDelDeviceAmqpTemplate.receive("sac.tenant.member.del-device.async")) != null) {
+		System.out.println((++count) + "message = " + message);
+		}
 	}
 }
