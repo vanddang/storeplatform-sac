@@ -129,11 +129,12 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 	@Override
 	public Contributor generateArtistDetailContributor(MetaInfo metaInfo) {
 		Contributor contributor = new Contributor();
-		contributor.setIdentifier(this.commonGenerator.generateIdentifier(DisplayConstants.DP_ARTIST_IDENTIFIER_CD,
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_ARTIST_IDENTIFIER_CD,
 				metaInfo.getArtistId()));
+		contributor.setIdentifierList(identifierList);
 		contributor.setName(metaInfo.getArtistNm());
-		// TODO osm1021 데뷔일을 Date로 할지 String으로 할지 미정
-		contributor.setDebutYear(metaInfo.getDebutDay());
+		contributor.setDebutDay(metaInfo.getDebutDay());
 		// contributor.setDebutDay(DateUtils.parseDate(metaInfo.getDebutDay()));
 		contributor.setDebutMusicNm(metaInfo.getDebutMusicNm());
 		contributor.setCountry(metaInfo.getCountry());

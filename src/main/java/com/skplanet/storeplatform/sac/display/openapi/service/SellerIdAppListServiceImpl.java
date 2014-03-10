@@ -76,7 +76,7 @@ public class SellerIdAppListServiceImpl implements SellerIdAppListService {
 		for (MetaInfo metaInfo : appList) {
 			Product product = new Product();
 			product.setTitle(this.commonGenerator.generateTitle(metaInfo));
-			product.setDate(this.commonGenerator.generateDate(null, metaInfo.getRegDt()));
+			product.setDate(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, metaInfo.getRegDt()));
 			product.setSalesStatus(metaInfo.getProdStatusCd());
 			product.setApp(this.appGenerator.generateApp(metaInfo));
 			productList.add(product);

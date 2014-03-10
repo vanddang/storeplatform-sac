@@ -1357,10 +1357,10 @@
 	       AND IMG.LANG_CD = #{lang}
 	       AND  (APPPROD.PART_PARENT_CLSF_CD = 'PD012301' OR APPPROD.PART_PARENT_CLSF_CD is null)
 	      <if test='admin != "Y"'>
-           AND  PROD.REG_ID = #{regId}
-           AND  PROD.SELLER_MBR_NO = #{mbrNo}
-           AND  APPPROD.AID = #{searchValue}
+           AND  PROD.REG_ID = #{req.sellerId}
+           AND  PROD.SELLER_MBR_NO = #{req.sellerKey}
           </if>
+          AND  APPPROD.AID = #{req.aid}
     </select>
     
      <!-- 개발APP 목록 요청-->

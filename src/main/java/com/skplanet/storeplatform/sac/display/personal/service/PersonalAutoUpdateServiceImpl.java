@@ -187,6 +187,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 					// 단말보다 Version Code 가 높은경우
 					if (sPkgNm.equals(sArrPkgInfo[0])) {
 						if (iPkgVerCd > NumberUtils.toInt(sArrPkgInfo[1])) {
+							this.log.debug("##### Add to update target!!!!!!!!!");
 							listProd.add(mapPkg);
 							listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
 						}
@@ -239,6 +240,8 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 
 					ExistenceListRes existenceListRes = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
 					listPrchs = existenceListRes.getExistenceListRes();
+					this.log.debug("##### Purchase check result size : {}", listPrchs.size());
+					this.log.debug("##### Purchase check result  : {}", listPrchs);
 				} catch (Exception e) {
 					// Exception 무시
 					this.log.error("Exception has occured using existence purchase!!!!!!!!!!!", e);
@@ -255,6 +258,10 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 						for (ExistenceRes prchInfo : listPrchs) {
 							// for (int j = 0; j < listPrchs.size(); j++) {
 							if (sPid.equals(prchInfo.getProdId())) {
+								sPkgNm = ObjectUtils.toString(mapUpdate.get("APK_PKG_NM"));
+								this.log.debug(
+										"#####  Exist purchase history of {}! Hence add purchase id to update target!!!!!!!!!",
+										sPkgNm);
 								mapUpdate.put("PRCHS_ID", prchInfo.getPrchsId());
 								listUpdate.add(mapUpdate);
 								break;
