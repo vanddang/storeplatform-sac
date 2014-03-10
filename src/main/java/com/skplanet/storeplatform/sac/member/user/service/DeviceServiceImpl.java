@@ -468,6 +468,8 @@ public class DeviceServiceImpl implements DeviceService {
 			changeDisplayUserSacReq.setTenantId(tenantId);
 			this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
 
+			LOGGER.info("::: changeDisplayUserSCI.changeUserKey SUCCESS");
+
 			/* 4. 구매파트 userKey, deviceKey 변경 */
 			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
 			userInfoSacInReq.setSystemId(systemId);
@@ -477,6 +479,8 @@ public class DeviceServiceImpl implements DeviceService {
 			userInfoSacInReq.setUserKey(previousUserKey);
 			userInfoSacInReq.setNewUserKey(userKey);
 			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
+
+			LOGGER.info("::: purchaseUserInfoInternalSCI.updateUserDevice SUCCESS");
 
 			/* 5. 약관 이관 처리 */
 			SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
