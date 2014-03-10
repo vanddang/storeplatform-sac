@@ -265,6 +265,14 @@ public class MetaInfo {
 	private String listImagePath; // 리스트 노출 이미지 경로
 	private String dtlImagePath; // 상세 노출 이미지 경로
 
+	// Planet X 제공 Open Api 변수
+	private String tinyUrl;
+	private String webUrl;
+	private String expoSellerId;
+	private String platform;
+	private String osVersion;
+	private String previewUrl;	
+	
 	/**
 	 * @return the topMenuId
 	 */
@@ -3759,4 +3767,94 @@ public class MetaInfo {
 	public void setDtlImagePath(String dtlImagePath) {
 		this.dtlImagePath = dtlImagePath;
 	}
+	
+	/**
+	 * @return the tinyUrl
+	 */
+	public String getTinyUrl() {
+		return this.tinyUrl;
+	}
+
+	/**
+	 * @param tinyUrl
+	 *            the tinyUrl to set
+	 */
+	public void setTinyUrl(String tinyUrl) {
+		this.tinyUrl = tinyUrl;
+	}
+
+	/**
+	 * @return the webUrl
+	 */
+	public String getWebUrl() {
+		return this.webUrl;
+	}
+
+	/**
+	 * @param webUrl
+	 *            the webUrl to set
+	 */
+	public void setWebUrl(String webUrl) {
+		this.webUrl = webUrl;
+	}
+
+	/**
+	 * @return the expoSellerId
+	 */
+	public String getExpoSellerId() {
+		return this.expoSellerId;
+	}
+
+	/**
+	 * @param expoSellerId
+	 *            the expoSellerId to set
+	 */
+	public void setExpoSellerId(String expoSellerId) {
+		this.expoSellerId = expoSellerId;
+	}
+
+	/**
+	 * @return the platform
+	 */
+	public String getPlatform() {
+		return this.platform;
+	}
+
+	/**
+	 * @param platform
+	 *            the platform to set
+	 */
+	public void setPlatform(String platform) {
+		this.platform = platform;
+	}
+
+	/**
+	 * @return the osVersion
+	 */
+	public String getOsVersion() {
+		return this.osVersion;
+	}
+
+	/**
+	 * @param osVersion
+	 *            the osVersion to set
+	 */
+	public void setOsVersion(String osVersion) {
+		this.osVersion = osVersion;
+	}
+
+	/**
+	 * @return the previewUrl
+	 */
+	public String getPreviewUrl() {
+		return this.previewUrl;
+	}
+
+	/**
+	 * @param previewUrl
+	 *            the previewUrl to set
+	 */
+	public void setPreviewUrl(String previewUrl) {
+		this.previewUrl = previewUrl;
+	}	
 }

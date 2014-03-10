@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
@@ -440,6 +441,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Override
 	public Distributor generateDistributor(MetaInfo metaInfo) {
 		Distributor distributor = new Distributor();
+		distributor.setIdentifier(metaInfo.getExpoSellerId());
 		distributor.setName(metaInfo.getExpoSellerNm());
 		distributor.setTel(metaInfo.getExpoSellerTelNo());
 		distributor.setEmail(metaInfo.getExpoSellerEmail());
@@ -559,5 +561,97 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	public Source generatePreviewSourceList(MetaInfo metaInfo) {
 		Source source = this.generateSource(DisplayConstants.DP_SOURCE_TYPE_PREVIEW, metaInfo.getPreviewImagePath());
 		return source;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateUrl(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Url generateUrl(MetaInfo metaInfo) {
+		Url url = new Url();
+
+		if (StringUtils.isNotEmpty(metaInfo.getTinyUrl())) {
+			url.setType(DisplayConstants.DP_EXTERNAL_CLIENT);
+			url = this.generateUrl(metaInfo.getTinyUrl());
+		} else {
+			url.setType(DisplayConstants.DP_EXTERNAL_PORTAL);
+			url = this.generateUrl(metaInfo.getWebUrl());
+		}
+		return url;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateUrl(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public Url generateUrl(String type, String text) {
+		Url url = new Url();
+
+		if (StringUtils.isNotEmpty(text)) {
+			url.setText(text);
+		}
+
+		if (StringUtils.isNotEmpty(type)) {
+			url.setType(type);
+		}
+
+		return url;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSource(java.lang.String,
+	 * java.lang.Integer)
+	 */
+	@Override
+	public Url generateUrl(String text) {
+		Url url = null;
+
+		if (StringUtils.isNotEmpty(text)) {
+			url = new Url();
+			url.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+			url.setText(text);
+		}
+		return url;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Url> generateUrlList(MetaInfo metaInfo) {
+		List<Url> urlList = new ArrayList<Url>();
+		Url url = this.generateUrl(metaInfo);
+		urlList.add(url);
+		return urlList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Url> generateUrlList(String type, String text) {
+		List<Url> urlList = new ArrayList<Url>();
+		Url url = new Url();
+		url.setType(type);
+		url.setText(text);
+		urlList.add(url);
+		return urlList;
 	}
 }

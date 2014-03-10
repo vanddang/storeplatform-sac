@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq;
@@ -40,6 +42,9 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppListRes
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
+import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
+import com.skplanet.storeplatform.sac.display.openapi.service.AppDetailByPkgNmService;
 import com.skplanet.storeplatform.sac.display.openapi.service.BestDownloadAppService;
 import com.skplanet.storeplatform.sac.display.openapi.service.DownloadBestService;
 import com.skplanet.storeplatform.sac.display.openapi.service.NewAppRecommendService;
@@ -60,6 +65,12 @@ import com.skplanet.storeplatform.sac.display.openapi.service.SellerIdAppListSer
 @RequestMapping("/display/openapi")
 public class OpenApiController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private DeviceProfileService deviceProfileService;
+
+	@Autowired
+	private DeviceProductProvisioningService deviceProductProvisioningService;
 
 	@Autowired
 	private DownloadBestService downloadBestService;
@@ -90,6 +101,9 @@ public class OpenApiController {
 
 	@Autowired
 	private SellerIdAppListService sellerIdAppListService;
+
+	@Autowired
+	private AppDetailByPkgNmService appDetailByPkgNmService;
 
 	/**
 	 * <pre>
@@ -276,5 +290,24 @@ public class OpenApiController {
 		this.log.debug("----------------------------------------------------------------");
 
 		return this.salesAppService.searchSalesAppList(requestheader, salesAppSacReq);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 상세 정보 요청(Package Name)
+	 * </pre>
+	 * 
+	 * @param appDetailByPackageNameSacReq
+	 *            appDetailByPackageNameSacReq
+	 * @param SacRequestheader
+	 *            requestheader
+	 * @return AppDetailByPackageNameSacRes
+	 */
+	@RequestMapping(value = "/seachPackageName/detail//v1", method = RequestMethod.GET)
+	@ResponseBody
+	public AppDetailByPackageNameSacRes appDetailByPackageName(
+			@Validated AppDetailByPackageNameSacReq appDetailByPackageNameSacReq, SacRequestHeader requestheader) {
+		return this.appDetailByPkgNmService.searchProductByPackageName(appDetailByPackageNameSacReq, requestheader);
 	}
 }

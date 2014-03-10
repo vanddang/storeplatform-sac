@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
@@ -333,4 +334,61 @@ public interface CommonMetaInfoGenerator {
 	 */
 	public Source generatePreviewSourceList(MetaInfo metaInfo);
 
+	/**
+	 * <pre>
+	 * 공통 Url 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Url>
+	 */
+	public Url generateUrl(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 공통 Url 객체 생성.
+	 * </pre>
+	 * 
+	 * @param type
+	 *            type
+	 * @param text
+	 *            text
+	 * @return Url
+	 */
+	public Url generateUrl(String type, String text);
+
+	/**
+	 * <pre>
+	 * 공통 Url 객체 생성.
+	 * </pre>
+	 * 
+	 * @param text
+	 *            text
+	 * @return Url
+	 */
+	public Url generateUrl(String text);
+
+	/**
+	 * <pre>
+	 * 공통 Url 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 * @return Url
+	 */
+	public List<Url> generateUrlList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 공통 Url 객체 생성.
+	 * </pre>
+	 * 
+	 * @param type
+	 *            type
+	 * @param text
+	 *            text
+	 * @return Url
+	 */
+	public List<Url> generateUrlList(String type, String text);
 }

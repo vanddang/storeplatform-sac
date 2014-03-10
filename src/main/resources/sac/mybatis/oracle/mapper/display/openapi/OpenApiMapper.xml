@@ -1423,4 +1423,230 @@
 		       ) IA
 		 WHERE RNUM = 1
     </select>
+    
+    
+    <!-- PackageName으로 상품ID 조회 -->
+    <select id="searchProductIdByPackageName" parameterType="appDetailByPackageNameSacReq" resultType="MetaInfo">     
+        SELECT 
+               T1.PROD_ID
+          FROM (
+                    SELECT 
+                           TSC.APK_PKG_NM
+                         , TDP.PROD_ID
+                         , TDPD.PROD_NM
+                         , TDP.REG_DT
+                         , TDP.UPD_DT
+                      FROM TB_DP_PROD TDP
+                         , TB_DP_APP_PROD TDAP
+                         , TB_DP_PROD_DESC TDPD
+                         , TB_DP_SPRT_DEVICE TSH
+                         , TB_CM_DEVICE TPI
+                         , TB_DP_SUB_CONTENTS TSC
+                         , TB_DP_PROD_RSHP TCP
+                         , TB_DP_TENANT_PROD TP
+                     WHERE TSH.DEVICE_MODEL_CD = TPI.DEVICE_MODEL_CD
+                       AND TSH.PROD_ID = TDP.PROD_ID                       
+                       AND TSC.PROD_ID = TDP.PROD_ID
+                       AND TSC.SUB_CONTENTS_ID = TSH.SUB_CONTENTS_ID
+                       AND TDP.PROD_ID = TCP.PART_PROD_ID
+                       AND TDP.PROD_ID = TP.PROD_ID
+                       AND TDP.PROD_ID = TDPD.PROD_ID
+                       AND TDP.PROD_ID = TDAP.PROD_ID
+                       AND TP.PROD_STATUS_CD = 'PD000403'
+                       AND TDAP.PLAT_CLSF_CD = 'PD005606'
+                       AND TDP.SVC_GRP_CD = 'DP000201'
+                       AND TCP.PROD_RSHP_CD = 'DP010802'
+                       AND TSC.SALE_YN = 'Y'
+                       AND TPI.REP_DEVICE_YN = 'Y'
+                       AND TPI.USE_YN = 'Y'
+                       AND TP.TENANT_ID = #{tenantId}
+                       AND TDPD.LANG_CD = #{langCd}
+                       AND TSC.APK_PKG_NM = #{packageName}
+                     ORDER BY NVL(TDP.UPD_DT, TDP.REG_DT) DESC
+               ) T1
+           WHERE ROWNUM = 1             
+    </select>
+    
+    <!-- 상품ID로 상품 상세정보 조회 -->
+    <select id="searchProductByProductId" parameterType="appDetailByPackageNameSacReq" resultType="MetaInfo">
+    <![CDATA[
+           SELECT  
+                 DP.PROD_ID AS PROD_ID
+                ,DPD.PROD_NM AS PROD_NM 
+                ,DAP.AID AS AID
+                ,NVL((CASE
+                    WHEN DP.PROD_CHRG_YN = 'N' THEN 0
+                    WHEN (DP.TOP_MENU_ID = 'DP09' OR DP.TOP_MENU_ID = 'DP17' OR DP.TOP_MENU_ID = 'DP18') THEN (
+                          CASE WHEN DTPP.CHNL_PERIOD_AMT >= 0 THEN DTPP.CHNL_PERIOD_AMT
+                               ELSE DTPP.CHNL_UNLMT_AMT
+                           END )
+                    ELSE DTPP.PROD_AMT
+                  END ),0) AS PROD_AMT
+                ,(SELECT 
+                    DECODE(INSTR(DPI.FILE_PATH, '.', 1, 1), 0, DPI.FILE_PATH || DPI.FILE_NM, DPI.FILE_PATH)
+                  FROM TB_DP_PROD_IMG DPI
+                  WHERE DP.PROD_ID = DPI.PROD_ID                
+                  AND DPI.IMG_CD = DECODE(DP.TOP_MENU_ID, 'DP09', 'DP000127'
+                                                          , 'DP17', 'DP000127'
+                                                          , 'DP18', 'DP000127'
+                                                          , 'DP13', 'DP000147'
+                                                          , 'DP14', 'DP000147'
+                                                          , 'DP000125')
+                  AND LANG_CD = #{langCd}                  
+                  AND ROWNUM = 1
+                 ) AS IMAGE_PATH
+                ,DPD.PROD_BASE_DESC  AS PROD_BASE_DESC
+                ,DPD.PROD_DTL_DESC  AS PROD_DTL_DESC
+                ,FN_COMM_CD_NM( DAP.PLAT_CLSF_CD, #{langCd} ) AS PLATFORM
+                ,(SELECT DMCD.MENU_DESC
+                    FROM TB_DP_MENU_CATEGORY DMC
+                    , TB_DP_MENU_CATEGORY_DESC DMCD
+                    , TB_DP_MENU_CATEGORY_PROD_MAPG DMCPM
+                    , TB_DP_PROD_RSHP DPR
+                   WHERE
+                   DP.PROD_ID = DPR.PART_PROD_ID
+                   AND DP.PROD_ID = DMCPM.PROD_ID
+                   AND DMC.MENU_ID = DMCPM.MENU_ID
+                   AND DMC.MENU_ID = DMCD.MENU_ID
+                   AND DMCPM.PROD_ID = DPR.PROD_ID
+                   AND DPR.PROD_RSHP_CD = 'DP010802' 
+                   AND DMCD.LANG_CD = #{langCd}
+                     AND DMCPM.BASE_YN = 'Y'
+                     AND DMCPM.USE_YN = 'Y'
+                     AND ROWNUM = 1) AS MENU_DESC
+                 ,(SELECT MENU_NM 
+                   FROM TB_DP_MENU_CATEGORY_DESC
+                  WHERE MENU_ID = DP.TOP_MENU_ID
+                    AND LANG_CD = #{langCd}
+                    AND ROWNUM = 1) AS TOP_MENU_NM
+                ,(SELECT DMCD.MENU_ID
+                    FROM TB_DP_MENU_CATEGORY DMC
+                    , TB_DP_MENU_CATEGORY_DESC DMCD
+                    , TB_DP_MENU_CATEGORY_PROD_MAPG DMCPM
+                    , TB_DP_PROD_RSHP DPR
+                   WHERE
+                   DP.PROD_ID = DPR.PART_PROD_ID
+                   AND DP.PROD_ID = DMCPM.PROD_ID
+                   AND DMC.MENU_ID = DMCPM.MENU_ID
+                   AND DMC.MENU_ID = DMCD.MENU_ID
+                   AND DMCPM.PROD_ID = DPR.PROD_ID
+                   AND DPR.PROD_RSHP_CD = 'DP010802' 
+                   AND DMCD.LANG_CD = #{langCd}
+                     AND DMCPM.BASE_YN = 'Y'
+                     AND DMCPM.USE_YN = 'Y'
+                     AND ROWNUM = 1) AS MENU_ID                     
+                ,(SELECT DMCD.MENU_NM
+                    FROM TB_DP_MENU_CATEGORY DMC
+                    , TB_DP_MENU_CATEGORY_DESC DMCD
+                    , TB_DP_MENU_CATEGORY_PROD_MAPG DMCPM
+                    , TB_DP_PROD_RSHP DPR
+                   WHERE
+                   DP.PROD_ID = DPR.PART_PROD_ID
+                   AND DP.PROD_ID = DMCPM.PROD_ID
+                   AND DMC.MENU_ID = DMCPM.MENU_ID
+                   AND DMC.MENU_ID = DMCD.MENU_ID
+                   AND DMCPM.PROD_ID = DPR.PROD_ID
+                   AND DPR.PROD_RSHP_CD = 'DP010802' 
+                   AND DMCD.LANG_CD = #{langCd}
+                     AND DMCPM.BASE_YN = 'Y'
+                     AND DMCPM.USE_YN = 'Y'
+                     AND ROWNUM = 1) AS MENU_NM
+                ,(SELECT REPLACE( RTRIM( XMLAGG( XMLELEMENT( A, CONCAT( VM_VER, ',' ) ).EXTRACT( '//text()' )), ',' ), ',', ';' )
+                      FROM
+                         (
+                         SELECT VM_VER
+                           FROM
+                              (
+                              SELECT TRIM( REGEXP_SUBSTR( VM_VER, '[^,]+', 1, ROWNUM ) ) AS VM_VER
+                                FROM
+                                   (
+                                   SELECT RTRIM( XMLAGG( XMLELEMENT( A, CONCAT( REPLACE( DSC.VM_VER, ';', ',' ) , ',' ) ).EXTRACT( '//text()' ) ORDER BY DSC.VM_VER ), ',' ) AS VM_VER
+                                     FROM TB_DP_SUB_CONTENTS DSC
+                                    WHERE DSC.PROD_ID = #{prodId}
+                                   )
+                              CONNECT BY ROWNUM <= LENGTH( REGEXP_REPLACE( VM_VER, '[^,]' ) ) + 1
+                              )
+                          GROUP BY VM_VER
+                         )  )                           AS OS_VERSION       /*OS 버전*/
+                ,NVL((SELECT PRCHS_CNT
+                    FROM TB_DP_TENANT_PROD_STATS DTPS
+                   WHERE DTPS.PROD_ID = DP.PROD_ID 
+                   AND TENANT_ID = #{tenantId}), 0)     AS PRCHS_CNT     /*다운로드 수*/
+                ,NVL((SELECT AVG_EVLU_SCORE
+                    FROM TB_DP_TENANT_PROD_STATS DTPS
+                   WHERE DTPS.PROD_ID = DP.PROD_ID 
+                   AND TENANT_ID = #{tenantId}), 0)      AS AVG_EVLU_SCORE    /*평점*/
+                ,NVL((SELECT PATICPERS_CNT
+                    FROM TB_DP_TENANT_PROD_STATS DTPS
+                   WHERE DTPS.PROD_ID= DP.PROD_ID 
+                   AND TENANT_ID = #{tenantId}), 0)      AS PATICPERS_CNT    /*평점 참여자*/
+                ,DP.EXPO_SELLER_NM         AS EXPO_SELLER_NM         
+                ,DP.REG_ID                 AS EXPO_SELLER_ID          
+                ,DP.TOP_MENU_ID            AS TOP_MENU_ID 
+                ,DAP.PKG_NM                AS APK_PKG_NM
+                ,DAP.VER_MAJOR || '.' || DAP.VER_MINOR  AS PROD_VER         
+                , (
+                    SELECT                        
+                        RTRIM(XMLAGG( XMLELEMENT(A, CONCAT('', FN_GETIMAGE(#{prodId}, DPI.IMG_CD )), ';' ).EXTRACT( '//text()' ) ORDER BY DPI.IMG_CD ), ';' )
+                    FROM
+                        TB_DP_PROD_IMG DPI
+                    WHERE
+                        DPI.PROD_ID = #{prodId}
+                        AND DPI.IMG_CD IN ( 'DP000103', 'DP000104', 'DP000105', 'DP000106' )
+                        AND DPI.LANG_CD = #{langCd}
+                    ) AS PREVIEW_URL
+                , (
+                    SELECT
+                        #{webPocUrl}
+                        || MCPM.MENU_ID
+                        || CHR (38)
+                        || 'insProdId='
+                        || DP.PROD_ID
+                        || CHR (38)
+                        || 'prodGrdCd='
+                        || DP.PROD_GRD_CD
+                        || CHR (38)
+                        || 't_top='
+                        || DP.TOP_MENU_ID
+                    FROM
+                        TB_DP_PROD_RSHP DPR, TB_DP_MENU_CATEGORY_PROD_MAPG MCPM
+                    WHERE
+                        DP.PROD_ID = DPR.PART_PROD_ID
+                        AND DP.PROD_ID = MCPM.PROD_ID
+                        AND DPR.PROD_ID = MCPM.PROD_ID
+                        AND DPR.PROD_RSHP_CD = 'DP010802'
+                        AND ROWNUM = 1
+                    )  AS WEB_URL
+              , (#{scUrl} || DP.PROD_ID ) AS TINY_URL
+          FROM TB_DP_PROD DP, TB_DP_APP_PROD DAP, TB_DP_PROD_DESC DPD, TB_DP_TENANT_PROD DTP, TB_DP_TENANT_PROD_PRICE DTPP
+         WHERE DP.PROD_ID = DAP.PROD_ID 
+           AND DP.PROD_ID = DPD.PROD_ID
+           AND DP.PROD_ID = DTP.PROD_ID
+           AND DTP.PROD_ID = DTPP.PROD_ID    
+           AND DP.PROD_ID = #{prodId}
+           AND DPD.LANG_CD = #{langCd}
+           AND DTP.TENANT_ID = DTPP.TENANT_ID
+           AND DTP.TENANT_ID = #{tenantId}
+    ]]>
+    </select>   
+    
+    <!-- 타켓 단말 리스트 -->
+    <select id="searchSupportDeviceList" parameterType="appDetailByPackageNameSacReq" resultType="SupportDeviceInfo">
+		 SELECT  
+		        DSC.APK_VER
+		      , CD.DEVICE_MODEL_CD
+		      , CD.MODEL_NM
+		  FROM TB_DP_PROD DP
+		     , TB_DP_SPRT_DEVICE DSD
+		     , TB_CM_DEVICE CD
+		     , TB_DP_SUB_CONTENTS DSC
+		     , TB_DP_PROD_RSHP DPR
+		 WHERE DSD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
+		   AND DSD.PROD_ID = DP.PROD_ID
+		   AND DSC.PROD_ID = DP.PROD_ID
+		   AND DSC.SUB_CONTENTS_ID = DSD.SUB_CONTENTS_ID
+		   AND DP.PROD_ID = DPR.PART_PROD_ID
+		   AND DPR.PROD_RSHP_CD = 'DP010802'
+		   AND DP.PROD_ID = #{prodId}        
+    </select>    
 </mapper>
