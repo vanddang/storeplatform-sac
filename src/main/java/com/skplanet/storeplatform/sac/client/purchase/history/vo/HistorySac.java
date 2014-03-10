@@ -21,9 +21,7 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String useTenantId;
 	private String useUserKey;
 	private String useDeviceKey;
-	private String recvTenantId;
-	private String recvUserKey;
-	private String recvDeviceKey;
+	private String useDeviceId;
 	private String prchsDt;
 	private String totAmt;
 	private String sendUserKey;
@@ -79,21 +77,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public String getTenantId() {
 		return this.tenantId;
-	}
-
-	/**
-	 * @return the prchsReqPathCd
-	 */
-	public String getPrchsReqPathCd() {
-		return this.prchsReqPathCd;
-	}
-
-	/**
-	 * @param prchsReqPathCd
-	 *            the prchsReqPathCd to set
-	 */
-	public void setPrchsReqPathCd(String prchsReqPathCd) {
-		this.prchsReqPathCd = prchsReqPathCd;
 	}
 
 	/**
@@ -180,48 +163,18 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the recvTenantId
+	 * @return the useDeviceId
 	 */
-	public String getRecvTenantId() {
-		return this.recvTenantId;
+	public String getUseDeviceId() {
+		return this.useDeviceId;
 	}
 
 	/**
-	 * @param recvTenantId
-	 *            the recvTenantId to set
+	 * @param useDeviceId
+	 *            the useDeviceId to set
 	 */
-	public void setRecvTenantId(String recvTenantId) {
-		this.recvTenantId = recvTenantId;
-	}
-
-	/**
-	 * @return the recvUserKey
-	 */
-	public String getRecvUserKey() {
-		return this.recvUserKey;
-	}
-
-	/**
-	 * @param recvUserKey
-	 *            the recvUserKey to set
-	 */
-	public void setRecvUserKey(String recvUserKey) {
-		this.recvUserKey = recvUserKey;
-	}
-
-	/**
-	 * @return the recvDeviceKey
-	 */
-	public String getRecvDeviceKey() {
-		return this.recvDeviceKey;
-	}
-
-	/**
-	 * @param recvDeviceKey
-	 *            the recvDeviceKey to set
-	 */
-	public void setRecvDeviceKey(String recvDeviceKey) {
-		this.recvDeviceKey = recvDeviceKey;
+	public void setUseDeviceId(String useDeviceId) {
+		this.useDeviceId = useDeviceId;
 	}
 
 	/**
@@ -312,6 +265,21 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setRecvConfPathCd(String recvConfPathCd) {
 		this.recvConfPathCd = recvConfPathCd;
+	}
+
+	/**
+	 * @return the prchsReqPathCd
+	 */
+	public String getPrchsReqPathCd() {
+		return this.prchsReqPathCd;
+	}
+
+	/**
+	 * @param prchsReqPathCd
+	 *            the prchsReqPathCd to set
+	 */
+	public void setPrchsReqPathCd(String prchsReqPathCd) {
+		this.prchsReqPathCd = prchsReqPathCd;
 	}
 
 	/**
@@ -570,78 +538,93 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the resvCol01
+	 * @return the drmYn
 	 */
-	public String getResvCol01() {
-		return this.resvCol01;
+	public String getDrmYn() {
+		return this.drmYn;
 	}
 
 	/**
-	 * @param resvCol01
-	 *            the resvCol01 to set
+	 * @param drmYn
+	 *            the drmYn to set
 	 */
-	public void setResvCol01(String resvCol01) {
-		this.resvCol01 = resvCol01;
+	public void setDrmYn(String drmYn) {
+		this.drmYn = drmYn;
 	}
 
 	/**
-	 * @return the resvCol02
+	 * @return the alarmYn
 	 */
-	public String getResvCol02() {
-		return this.resvCol02;
+	public String getAlarmYn() {
+		return this.alarmYn;
 	}
 
 	/**
-	 * @param resvCol02
-	 *            the resvCol02 to set
+	 * @param alarmYn
+	 *            the alarmYn to set
 	 */
-	public void setResvCol02(String resvCol02) {
-		this.resvCol02 = resvCol02;
+	public void setAlarmYn(String alarmYn) {
+		this.alarmYn = alarmYn;
 	}
 
 	/**
-	 * @return the resvCol03
+	 * @return the permitDeviceYn
 	 */
-	public String getResvCol03() {
-		return this.resvCol03;
+	public String getPermitDeviceYn() {
+		return this.permitDeviceYn;
 	}
 
 	/**
-	 * @param resvCol03
-	 *            the resvCol03 to set
+	 * @param permitDeviceYn
+	 *            the permitDeviceYn to set
 	 */
-	public void setResvCol03(String resvCol03) {
-		this.resvCol03 = resvCol03;
+	public void setPermitDeviceYn(String permitDeviceYn) {
+		this.permitDeviceYn = permitDeviceYn;
 	}
 
 	/**
-	 * @return the resvCol04
+	 * @return the cpnAddinfo
 	 */
-	public String getResvCol04() {
-		return this.resvCol04;
+	public String getCpnAddinfo() {
+		return this.cpnAddinfo;
 	}
 
 	/**
-	 * @param resvCol04
-	 *            the resvCol04 to set
+	 * @param cpnAddinfo
+	 *            the cpnAddinfo to set
 	 */
-	public void setResvCol04(String resvCol04) {
-		this.resvCol04 = resvCol04;
+	public void setCpnAddinfo(String cpnAddinfo) {
+		this.cpnAddinfo = cpnAddinfo;
 	}
 
 	/**
-	 * @return the resvCol05
+	 * @return the cpnBizProdSeq
 	 */
-	public String getResvCol05() {
-		return this.resvCol05;
+	public String getCpnBizProdSeq() {
+		return this.cpnBizProdSeq;
 	}
 
 	/**
-	 * @param resvCol05
-	 *            the resvCol05 to set
+	 * @param cpnBizProdSeq
+	 *            the cpnBizProdSeq to set
 	 */
-	public void setResvCol05(String resvCol05) {
-		this.resvCol05 = resvCol05;
+	public void setCpnBizProdSeq(String cpnBizProdSeq) {
+		this.cpnBizProdSeq = cpnBizProdSeq;
+	}
+
+	/**
+	 * @return the cpnBizOrderNo
+	 */
+	public String getCpnBizOrderNo() {
+		return this.cpnBizOrderNo;
+	}
+
+	/**
+	 * @param cpnBizOrderNo
+	 *            the cpnBizOrderNo to set
+	 */
+	public void setCpnBizOrderNo(String cpnBizOrderNo) {
+		this.cpnBizOrderNo = cpnBizOrderNo;
 	}
 
 	/**
@@ -765,48 +748,78 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the drmYn
+	 * @return the resvCol01
 	 */
-	public String getDrmYn() {
-		return this.drmYn;
+	public String getResvCol01() {
+		return this.resvCol01;
 	}
 
 	/**
-	 * @param drmYn
-	 *            the drmYn to set
+	 * @param resvCol01
+	 *            the resvCol01 to set
 	 */
-	public void setDrmYn(String drmYn) {
-		this.drmYn = drmYn;
+	public void setResvCol01(String resvCol01) {
+		this.resvCol01 = resvCol01;
 	}
 
 	/**
-	 * @return the alarmYn
+	 * @return the resvCol02
 	 */
-	public String getAlarmYn() {
-		return this.alarmYn;
+	public String getResvCol02() {
+		return this.resvCol02;
 	}
 
 	/**
-	 * @param alarmYn
-	 *            the alarmYn to set
+	 * @param resvCol02
+	 *            the resvCol02 to set
 	 */
-	public void setAlarmYn(String alarmYn) {
-		this.alarmYn = alarmYn;
+	public void setResvCol02(String resvCol02) {
+		this.resvCol02 = resvCol02;
 	}
 
 	/**
-	 * @return the permitDeviceYn
+	 * @return the resvCol03
 	 */
-	public String getPermitDeviceYn() {
-		return this.permitDeviceYn;
+	public String getResvCol03() {
+		return this.resvCol03;
 	}
 
 	/**
-	 * @param permitDeviceYn
-	 *            the permitDeviceYn to set
+	 * @param resvCol03
+	 *            the resvCol03 to set
 	 */
-	public void setPermitDeviceYn(String permitDeviceYn) {
-		this.permitDeviceYn = permitDeviceYn;
+	public void setResvCol03(String resvCol03) {
+		this.resvCol03 = resvCol03;
+	}
+
+	/**
+	 * @return the resvCol04
+	 */
+	public String getResvCol04() {
+		return this.resvCol04;
+	}
+
+	/**
+	 * @param resvCol04
+	 *            the resvCol04 to set
+	 */
+	public void setResvCol04(String resvCol04) {
+		this.resvCol04 = resvCol04;
+	}
+
+	/**
+	 * @return the resvCol05
+	 */
+	public String getResvCol05() {
+		return this.resvCol05;
+	}
+
+	/**
+	 * @param resvCol05
+	 *            the resvCol05 to set
+	 */
+	public void setResvCol05(String resvCol05) {
+		this.resvCol05 = resvCol05;
 	}
 
 	/**
@@ -822,51 +835,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setProductInfo(HashMap<String, Object> productInfo) {
 		this.productInfo = productInfo;
-	}
-
-	/**
-	 * @return the cpnAddinfo
-	 */
-	public String getCpnAddinfo() {
-		return this.cpnAddinfo;
-	}
-
-	/**
-	 * @param cpnAddinfo
-	 *            the cpnAddinfo to set
-	 */
-	public void setCpnAddinfo(String cpnAddinfo) {
-		this.cpnAddinfo = cpnAddinfo;
-	}
-
-	/**
-	 * @return the cpnBizProdSeq
-	 */
-	public String getCpnBizProdSeq() {
-		return this.cpnBizProdSeq;
-	}
-
-	/**
-	 * @param cpnBizProdSeq
-	 *            the cpnBizProdSeq to set
-	 */
-	public void setCpnBizProdSeq(String cpnBizProdSeq) {
-		this.cpnBizProdSeq = cpnBizProdSeq;
-	}
-
-	/**
-	 * @return the cpnBizOrderNo
-	 */
-	public String getCpnBizOrderNo() {
-		return this.cpnBizOrderNo;
-	}
-
-	/**
-	 * @param cpnBizOrderNo
-	 *            the cpnBizOrderNo to set
-	 */
-	public void setCpnBizOrderNo(String cpnBizOrderNo) {
-		this.cpnBizOrderNo = cpnBizOrderNo;
 	}
 
 }
