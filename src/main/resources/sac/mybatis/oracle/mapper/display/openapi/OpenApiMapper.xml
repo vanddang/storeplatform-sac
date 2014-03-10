@@ -984,7 +984,8 @@
     </select>
     
     <select id="searchProductList" parameterType="SearchAppNameSacReq" resultType="MetaInfo">
-        SELECT COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
+        SELECT  /*  OpenApi.xml, searchProductList, 이석희, 2014-03-03 */
+               COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
              , TOTAL_COUNT                      
         --     , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
              , KA.PROD_ID                       AS PROD_ID
@@ -1008,33 +1009,27 @@
                   FROM TB_DP_MENU_CATEGORY_DESC
                  WHERE MENU_ID = KA.MENU_ID
                    AND LANG_CD = #{langCd}
-                   AND ROWNUM = 1) AS MENU_NM                          
-             , NVL((CASE
-                        WHEN KA.PROD_CHRG_YN = 'N' THEN 0
-                        <if test="channelId == null">
-                        WHEN ( KA.TOP_MENU_ID = 'DP09' OR KA.TOP_MENU_ID = 'DP17' OR KA.TOP_MENU_ID = 'DP18' ) THEN (
-                              CASE WHEN KA.CHNL_PERIOD_AMT <![CDATA[>=]]> 0 THEN KA.CHNL_PERIOD_AMT
-                                   ELSE KA.CHNL_UNLMT_AMT
-                               END )
-                        WHEN KA.TOP_MENU_ID = 'DP13' THEN KA.CHNL_UNLMT_AMT
-                        WHEN KA.TOP_MENU_ID = 'DP14' THEN ( SELECT MAX( KA.PROD_AMT )
-                                                              FROM  TB_DP_PROD                    A
-                                                                  , TB_DP_PROD_RSHP               B
-                                                                  , TB_DP_MENU_CATEGORY_PROD_MAPG C
-                                                                  , TB_DP_TENANT_PROD             D
-                                                                  , TB_DP_TENANT_PROD_PRICE       E
-                                                             WHERE A.PROD_ID  = B.PART_PROD_ID
-                                                               AND KA.PROD_ID = B.PROD_ID
-                                                               AND A.PROD_ID  = D.PROD_ID
-                                                               AND A.PROD_ID  = E.PROD_ID 
-                                                               AND D.TENANT_ID ='S01'
-                                                               AND D.TENANT_ID = E.TENANT_ID
-                                                               AND D.PROD_STATUS_CD = 'PD000403'
-                                                               AND C.USE_YN = 'Y' 
-                                                           )
-                       </if>
-                       ELSE KA.PROD_AMT
-                     END ),0) AS PROD_AMT
+                   AND ROWNUM = 1) AS MENU_NM
+		     , NVL(CASE WHEN KA.PROD_CHRG_YN = 'N' THEN 0
+		                <if test="channelId == null">                                                                                                                                                                                                                                                                                        
+		                WHEN KA.TOP_MENU_ID = 'DP09'  OR KA.TOP_MENU_ID = 'DP17'   OR KA.TOP_MENU_ID = 'DP18' THEN CASE WHEN KA.CHNL_PERIOD_AMT >= 0 THEN KA.CHNL_PERIOD_AMT ELSE KA.CHNL_UNLMT_AMT END 
+		                WHEN KA.TOP_MENU_ID = 'DP13' THEN KA.CHNL_UNLMT_AMT 
+		                WHEN KA.TOP_MENU_ID = 'DP14' THEN (SELECT MAX(KA.PROD_AMT) 
+		                                                     FROM SPSAC.TB_DP_PROD A, 
+		                                                          SPSAC.TB_DP_PROD_RSHP B, 
+		                                                          SPSAC.TB_DP_MENU_CATEGORY_PROD_MAPG C, 
+		                                                          SPSAC.TB_DP_TENANT_PROD D, 
+		                                                          SPSAC.TB_DP_TENANT_PROD_PRICE E 
+		                                                    WHERE A.PROD_ID = B.PART_PROD_ID 
+		                                                      AND KA.PROD_ID = B.PROD_ID 
+		                                                      AND A.PROD_ID = D.PROD_ID 
+		                                                      AND A.PROD_ID = E.PROD_ID 
+		                                                      AND D.TENANT_ID = 'S01' 
+		                                                      AND D.TENANT_ID = E.TENANT_ID 
+		                                                      AND D.PROD_STATUS_CD = 'PD000403' 
+		                                                      AND C.USE_YN = 'Y')
+		               </if>
+		                ELSE KA.PROD_AMT END, 0) AS PROD_AMT                                              
              , KA.AVG_EVLU_SCORE  AS AVG_EVLU_SCORE
              , KA.PRCHS_CNT
              , (SELECT DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH)
@@ -1110,20 +1105,20 @@
                               , E.PART_PROD_ID AS EPSD_PROD_ID
                               , L.SUB_CONTENTS_ID
                         </if>      
-                          FROM  TB_DP_PROD                     A 
-                              , TB_DP_PROD_DESC                B      
-                              , TB_DP_TENANT_PROD              C
-                              , TB_DP_TENANT_PROD_PRICE        D
-                              , TB_DP_PROD_RSHP                E
-                              , TB_DP_MENU_CATEGORY_PROD_MAPG  F
-                              , TB_DP_MENU_CATEGORY            G
-                              , TB_DP_PROD                     H 
-                              , TB_DP_PROD_DESC                I      
-                              , TB_DP_TENANT_PROD              J
-                              , TB_DP_TENANT_PROD_PRICE        K
-                              , TB_DP_SUB_CONTENTS             L      
-                              , TB_DP_SPRT_DEVICE              M
-                              , TB_CM_DEVICE                   N
+		                  FROM SPSAC.TB_DP_PROD A, 
+		                       SPSAC.TB_DP_PROD_DESC B, 
+		                       SPSAC.TB_DP_TENANT_PROD C, 
+		                       SPSAC.TB_DP_TENANT_PROD_PRICE D, 
+		                       SPSAC.TB_DP_PROD_RSHP E, 
+		                       SPSAC.TB_DP_MENU_CATEGORY_PROD_MAPG F, 
+		                       SPSAC.TB_DP_MENU_CATEGORY G, 
+		                       SPSAC.TB_DP_PROD H, 
+		                       SPSAC.TB_DP_PROD_DESC I, 
+		                       SPSAC.TB_DP_TENANT_PROD J, 
+		                       SPSAC.TB_DP_TENANT_PROD_PRICE K, 
+		                       SPSAC.TB_DP_SUB_CONTENTS L, 
+		                       SPSAC.TB_DP_SPRT_DEVICE M, 
+		                       SPSAC.TB_CM_DEVICE N 
                          WHERE A.PROD_ID = B.PROD_ID
                            AND A.PROD_ID = C.PROD_ID
                            AND A.PROD_ID = D.PROD_ID   
