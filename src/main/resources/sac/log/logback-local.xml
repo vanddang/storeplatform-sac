@@ -11,6 +11,12 @@
         </layout>
     </appender>
     
+    <appender name="SIMPLE_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%msg%n</pattern>
+        </layout>
+    </appender>
+    
     <appender name="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${catalina.home}/logs/sac/svc/service_storeplatform-sac.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -52,7 +58,7 @@
             <FileNamePattern>${catalina.home}/logs/sac/fds/fds_%d{yyyyMMdd}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{yyyyMMddHHmmssSSS}\t%-5level\t%X{GUID}\t%X{requesTenantId}\t%X{interfaceId}\t${hostName}\t${instanceName}\t%X{type}\t%file:%method:%line\t${logVersion}\t%X{requestSystemId}\t%X{insdMbrNo}\t%X{insdDeviceId}\t%X{mbrNo}\t%X{deviceId}\t%X{mbrId}\t%X{resultCode}\t%X{resultMessage}\t%msg%n</pattern>
+            <pattern>%msg%n</pattern>            
         </layout>
     </appender>
     
@@ -99,6 +105,7 @@
     <logger name="FDS_SAC_LOGGER" additivity="false">
         <level value="INFO" />
         <appender-ref ref="FDS_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="SIMPLE_CONSOLE" />
     </logger>
     
     <!-- LOCAL 개발 CONSOL  로그 -->
