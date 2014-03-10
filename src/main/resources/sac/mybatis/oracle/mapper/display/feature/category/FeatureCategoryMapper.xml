@@ -151,7 +151,9 @@
                                 WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
                                   AND LP.LIST_ID = #{listId}       /* TGR000000002 : 운영자신규 멀티미디어 */
                                   AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+                                  <if test='listId != "TGR000000002"'>
                                   AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                                  </if>
                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                   AND LP.TENANT_ID = LT.TENANT_ID
                                   AND LP.LIST_ID = LT.LIST_ID
@@ -241,7 +243,9 @@
                                 WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
                                   AND LP.LIST_ID = #{listId}  /* TGR000000002 : 운영자신규 멀티미디어 */
                                   AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+                                  <if test='listId != "TGR000000002"'>
                                   AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                                  </if>
                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                   AND LP.MENU_ID LIKE 'DP18%'
                                   AND LP.TENANT_ID = LT.TENANT_ID
@@ -587,7 +591,9 @@
                            AND A.TENANT_ID = #{tenantId}
                            AND A.LIST_ID = #{listId}
                            AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+                           <if test='listId != "TGR000000001"'>
                            AND B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                           </if>
                            AND B.PROD_ID = C.PROD_ID  /* 채널 */
                            AND C.PROD_RSHP_CD = 'DP010802'
                            AND B.PROD_ID = D.PROD_ID
