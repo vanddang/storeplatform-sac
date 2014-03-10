@@ -74,14 +74,20 @@ public class IsfEcInvokerImpl implements IsfEcInvoker {
 				m1.marshal(isfRes, System.out);
 			}
 		} catch (RestClientException re) {
+			re.printStackTrace();
+
 			ErrorInfo error = new ErrorInfo();
 			error.setCode("SAC_DSP_0010");
 			error.setMessage(re.getLocalizedMessage());
 
 			throw new StorePlatformException(error, re);
 		} catch (StorePlatformException se) {
+			se.printStackTrace();
+
 			throw se;
 		} catch (Exception e) {
+			e.printStackTrace();
+
 			throw new StorePlatformException("SAC_DSP_0010", e);
 		}
 		if (this.log.isDebugEnabled()) {
