@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Ident
 /**
  * Interface Message Device Value Object.
  * 
- * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
+ * Updated on : 2013. 12. 17. Updated by : 오승민, Incross..
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Device extends CommonInfo implements Serializable {
