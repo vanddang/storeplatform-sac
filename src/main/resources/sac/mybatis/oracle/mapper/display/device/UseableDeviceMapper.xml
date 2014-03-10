@@ -32,12 +32,12 @@
 		             , A.DEVICE_MODEL_CD
 		             , A.MODEL_NM
 		             , A.MNFT_COMP_CD
-		             , SPSAC.FN_COMM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
-		             , SPSAC.FN_COMM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS NET_COMP
-		             , SPSAC.FN_COMM_CD_NM(A.LCD_SIZE_CD,  #{langCd}) AS LCD_SIZE
-		             , SPSAC.FN_COMM_CD_NM(A.COLOR_CD,     #{langCd}) AS COLOR_DEPTH
-		             , SPSAC.FN_COMM_CD_NM(A.AUDIO_TYPE_CD,#{langCd}) AS AUDIO_TYPE
-		             , SPSAC.FN_COMM_CD_NM(A.AUDIO_POLY_CD,#{langCd}) AS AUDIO_POLY
+		             , SPSAC.FC_GET_CM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
+		             , SPSAC.FC_GET_CM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS NET_COMP
+		             , SPSAC.FC_GET_CM_CD_NM(A.LCD_SIZE_CD,  #{langCd}) AS LCD_SIZE
+		             , SPSAC.FC_GET_CM_CD_NM(A.COLOR_CD,     #{langCd}) AS COLOR_DEPTH
+		             , SPSAC.FC_GET_CM_CD_NM(A.AUDIO_TYPE_CD,#{langCd}) AS AUDIO_TYPE
+		             , SPSAC.FC_GET_CM_CD_NM(A.AUDIO_POLY_CD,#{langCd}) AS AUDIO_POLY
 		             , A.TOUCH_SCREEN_YN
 		             , A.CAMERA_SPRT_YN
 		             , A.BLUETOOTH_SPRT_YN
@@ -97,12 +97,12 @@
 		             , A.DEVICE_MODEL_CD
 		             , A.MODEL_NM
 		             , A.MNFT_COMP_CD
-		             , SPSAC.FN_COMM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
-		             , SPSAC.FN_COMM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS NET_COMP
-		             , SPSAC.FN_COMM_CD_NM(A.LCD_SIZE_CD,  #{langCd}) AS LCD_SIZE
-		             , SPSAC.FN_COMM_CD_NM(A.COLOR_CD,     #{langCd}) AS COLOR_DEPTH
-		             , SPSAC.FN_COMM_CD_NM(A.AUDIO_TYPE_CD,#{langCd}) AS AUDIO_TYPE
-		             , SPSAC.FN_COMM_CD_NM(A.AUDIO_POLY_CD,#{langCd}) AS AUDIO_POLY
+		             , SPSAC.FC_GET_CM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
+		             , SPSAC.FC_GET_CM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS NET_COMP
+		             , SPSAC.FC_GET_CM_CD_NM(A.LCD_SIZE_CD,  #{langCd}) AS LCD_SIZE
+		             , SPSAC.FC_GET_CM_CD_NM(A.COLOR_CD,     #{langCd}) AS COLOR_DEPTH
+		             , SPSAC.FC_GET_CM_CD_NM(A.AUDIO_TYPE_CD,#{langCd}) AS AUDIO_TYPE
+		             , SPSAC.FC_GET_CM_CD_NM(A.AUDIO_POLY_CD,#{langCd}) AS AUDIO_POLY
 		             , A.TOUCH_SCREEN_YN
 		             , A.CAMERA_SPRT_YN
 		             , A.BLUETOOTH_SPRT_YN
@@ -160,12 +160,12 @@
 		             , A.DEVICE_MODEL_CD
 		             , A.MODEL_NM
 		             , A.MNFT_COMP_CD
-                     , SPSAC.FN_COMM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
-                     , SPSAC.FN_COMM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS NET_COMP
-                     , SPSAC.FN_COMM_CD_NM(A.LCD_SIZE_CD,  #{langCd}) AS LCD_SIZE
-                     , SPSAC.FN_COMM_CD_NM(A.COLOR_CD,     #{langCd}) AS COLOR_DEPTH
-                     , SPSAC.FN_COMM_CD_NM(A.AUDIO_TYPE_CD,#{langCd}) AS AUDIO_TYPE
-                     , SPSAC.FN_COMM_CD_NM(A.AUDIO_POLY_CD,#{langCd}) AS AUDIO_POLY
+                     , SPSAC.FC_GET_CM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
+                     , SPSAC.FC_GET_CM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS NET_COMP
+                     , SPSAC.FC_GET_CM_CD_NM(A.LCD_SIZE_CD,  #{langCd}) AS LCD_SIZE
+                     , SPSAC.FC_GET_CM_CD_NM(A.COLOR_CD,     #{langCd}) AS COLOR_DEPTH
+                     , SPSAC.FC_GET_CM_CD_NM(A.AUDIO_TYPE_CD,#{langCd}) AS AUDIO_TYPE
+                     , SPSAC.FC_GET_CM_CD_NM(A.AUDIO_POLY_CD,#{langCd}) AS AUDIO_POLY
 		             , A.TOUCH_SCREEN_YN
 		             , A.CAMERA_SPRT_YN
 		             , A.BLUETOOTH_SPRT_YN
