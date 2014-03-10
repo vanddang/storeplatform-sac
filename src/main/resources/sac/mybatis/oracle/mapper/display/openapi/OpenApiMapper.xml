@@ -1602,7 +1602,7 @@
                 ,DAP.VER_MAJOR || '.' || DAP.VER_MINOR  AS PROD_VER         
                 , (
                     SELECT                        
-                        RTRIM(XMLAGG( XMLELEMENT(A, CONCAT('', FN_GETIMAGE(#{prodId}, DPI.IMG_CD )), ';' ).EXTRACT( '//text()' ) ORDER BY DPI.IMG_CD ), ';' )
+                        RTRIM(XMLAGG( XMLELEMENT(A, CONCAT('', FC_GET_IMAGE(#{prodId}, DPI.IMG_CD )), ';' ).EXTRACT( '//text()' ) ORDER BY DPI.IMG_CD ), ';' )
                     FROM
                         TB_DP_PROD_IMG DPI
                     WHERE
