@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,25 +19,44 @@ import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
 @Service
 public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChangeDisplayUserServiceImpl.class);
+
 	@Autowired
 	private ChangeDisplayUserRepository changeDisplayUserRepository;
 
 	@Override
 	public void changeDisplayUserId(ChangeDisplayUser changeDisplayUser) {
-		this.changeDisplayUserRepository.changeMbrAvg(changeDisplayUser);
-		this.changeDisplayUserRepository.changeProdNoti(changeDisplayUser);
-		this.changeDisplayUserRepository.changeBadNoti(changeDisplayUser);
-		this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
-		this.changeDisplayUserRepository.changeTenantProdStats(changeDisplayUser);
-		this.changeDisplayUserRepository.changeMsgMbrMapg(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserId start ##");
+		Integer affectedRow = null;
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeMbrAvg(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeMbrAvg : {}", affectedRow);
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeProdNoti(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeProdNoti : {}", affectedRow);
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeBadNoti(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeBadNoti : {}", affectedRow);
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeProdNotiGood : {}", affectedRow);
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeTenantProdStats(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeTenantProdStats : {}", affectedRow);
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeMsgMbrMapg(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeMsgMbrMapg : {}", affectedRow);
+		LOGGER.info("## changeDisplayUserId end ##");
 	}
 
 	@Override
 	public void changeDisplayUserKey(ChangeDisplayUser changeDisplayUser) {
-		this.changeDisplayUserRepository.changeMbrAvg(changeDisplayUser);
-		this.changeDisplayUserRepository.changeProdNoti(changeDisplayUser);
-		this.changeDisplayUserRepository.changeBadNoti(changeDisplayUser);
-		this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
-		this.changeDisplayUserRepository.changeMsgMbrMapg(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserKey start ##");
+		Integer affectedRow = null;
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeMbrAvg(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeMbrAvg : {}", affectedRow);
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeProdNoti(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeProdNoti : {}", affectedRow);
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeBadNoti(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeBadNoti : {}", affectedRow);
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeProdNotiGood : {}", affectedRow);
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeMsgMbrMapg(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeMsgMbrMapg : {}", affectedRow);
+		LOGGER.info("## changeDisplayUserKey end ##");
 	}
 }
