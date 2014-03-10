@@ -488,17 +488,17 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 			mapReq.put("listId", "ADM000000012"); // 운영자 추천
 
-			List<String> imageCodeList = new ArrayList<String>();
-			imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-			imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-			imageCodeList.add(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-			imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-			imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			mapReq.put("imageCdList", imageCodeList);
-
-			if (this.log.isDebugEnabled()) {
-				this.mapPrint(mapReq);
-			}
+			/*
+			 * List<String> imageCodeList = new ArrayList<String>();
+			 * imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+			 * imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+			 * imageCodeList.add(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+			 * imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+			 * imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD); mapReq.put("imageCdList",
+			 * imageCodeList);
+			 * 
+			 * if (this.log.isDebugEnabled()) { this.mapPrint(mapReq); }
+			 */
 			// 통쿼리 사용제한
 			/*
 			 * List<AppCodiRes> appCodiResultList = this.commonDAO.queryForList("Isf.AppCodi.getAdminRecommandProdList",
@@ -745,6 +745,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 		return response;
 	}
 
+	@SuppressWarnings("unused")
 	private void mapPrint(Map<String, Object> mapReq) {
 		// Get Map in Set interface to get key and value
 		Set<Entry<String, Object>> s = mapReq.entrySet();
