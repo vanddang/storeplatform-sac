@@ -268,7 +268,7 @@
              , G.BOOK_PAGE_CNT
              , H.PROD_ID
              , H.PART_PROD_ID
-             , FN_GETALIAS(I.FILE_PATH) AS FILE_PATH
+             , FC_GET_ALIAS(I.FILE_PATH) AS FILE_PATH
              , FC_GET_IMAGE(H.PROD_ID, #{imageCd}) AS MAIN_FILE_PATH
              <![CDATA[
              , NVL((CASE WHEN (J.AVG_EVLU_SCORE > 0 AND J.AVG_EVLU_SCORE < 1) THEN 1
