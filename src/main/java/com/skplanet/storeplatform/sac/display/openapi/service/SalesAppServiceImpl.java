@@ -73,6 +73,7 @@ public class SalesAppServiceImpl implements SalesAppService {
 		Product product = null;
 		List<Product> productList = new ArrayList<Product>();
 
+		// PKG Name 기반 상품 리스트 조회
 		List<MetaInfo> resultList = this.commonDAO.queryForList("OpenApi.searchSalesAppList", salesAppReq,
 				MetaInfo.class);
 
@@ -104,11 +105,20 @@ public class SalesAppServiceImpl implements SalesAppService {
 		return salesAppSacRes;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.openapi.service.SalesAppService#getSalesAppInfo(com.skplanet.storeplatform
+	 * .sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppInfoSacReq)
+	 */
 	@Override
 	public SalesAppInfoSacRes getSalesAppInfo(SacRequestHeader header, SalesAppInfoSacReq salesAppInfoReq) {
 		SalesAppInfoSacRes salesAppInfoSacRes = new SalesAppInfoSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
+		// PKG Name 기반 상품 정보 조회
 		MetaInfo metaInfo = this.commonDAO.queryForObject("OpenApi.getSalesAppInfo", salesAppInfoReq, MetaInfo.class);
 
 		if (metaInfo != null) {
