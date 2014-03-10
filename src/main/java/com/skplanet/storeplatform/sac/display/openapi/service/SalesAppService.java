@@ -12,16 +12,15 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface SalesAppService {
 	/**
-	 * 
 	 * <pre>
 	 * PKG Name 기반 상품 정보 조회.
 	 * </pre>
 	 * 
 	 * @param header
 	 *            header
-	 * @param salesAppSacReq
-	 *            salesAppSacReq
+	 * @param salesAppReq
+	 *            salesAppReq
 	 * @return SalesAppSacRes
 	 */
-	SalesAppSacRes searchSalesAppList(SacRequestHeader header, SalesAppSacReq salesAppSacReq);
+	SalesAppSacRes searchSalesAppList(SacRequestHeader header, SalesAppSacReq salesAppReq);
 }

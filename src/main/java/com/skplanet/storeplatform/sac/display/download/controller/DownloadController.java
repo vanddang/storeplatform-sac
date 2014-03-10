@@ -114,22 +114,22 @@ public class DownloadController {
 	 * ebook 상품 정보 조회(for download).
 	 * </pre>
 	 * 
-	 * @param requestHeader
-	 *            requestHeader
-	 * @param downloadEbookReq
-	 *            downloadEbookReq
-	 * @return DownloadEbookRes
+	 * @param header
+	 *            header
+	 * @param ebookReq
+	 *            ebookReq
+	 * @return DownloadEbookSacRes
 	 */
 	@RequestMapping(value = "/ebook/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader,
-			@RequestBody @Validated DownloadEbookSacReq downloadEbookReq) {
+	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader header,
+			@RequestBody @Validated DownloadEbookSacReq ebookReq) {
 		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("getDownloadEbookInfo started.");
-		this.logger.debug("downloadEbookReq : {}", downloadEbookReq.toString());
+		this.logger.debug("[getDownloadEbookInfo] SacRequestHeader\n{}", header.toString());
+		this.logger.debug("[getDownloadEbookInfo] DownloadEbookSacReq\n{}", ebookReq.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.downloadEbookService.getDownloadEbookInfo(requestHeader, downloadEbookReq);
+		return this.downloadEbookService.getDownloadEbookInfo(header, ebookReq);
 	}
 
 	/**
@@ -137,21 +137,21 @@ public class DownloadController {
 	 * Comic 상품 정보 조회(for download).
 	 * </pre>
 	 * 
-	 * @param requestHeader
-	 *            requestHeader
-	 * @param downloadComicReq
-	 *            downloadComicReq
+	 * @param header
+	 *            header
+	 * @param comicReq
+	 *            comicReq
 	 * @return DownloadComicSacRes
 	 */
 	@RequestMapping(value = "/comic/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader,
-			@RequestBody @Validated DownloadComicSacReq downloadComicReq) {
+	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader header,
+			@RequestBody @Validated DownloadComicSacReq comicReq) {
 		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("getDownloadComicInfo started.");
-		this.logger.debug("downloadComicReq : {}", downloadComicReq.toString());
+		this.logger.debug("[getDownloadComicInfo] SacRequestHeader\n{}", header.toString());
+		this.logger.debug("[getDownloadComicInfo] DownloadComicSacReq\n{}", comicReq.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.downloadComicService.getDownloadComicInfo(requestHeader, downloadComicReq);
+		return this.downloadComicService.getDownloadComicInfo(header, comicReq);
 	}
 }

@@ -88,7 +88,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	 * com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq)
 	 */
 	@Override
-	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookSacReq ebookReq) {
+	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader header, DownloadEbookSacReq ebookReq) {
 		// 현재일시 및 요청만료일시 조회
 		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
@@ -117,9 +117,9 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		}
 
 		// 헤더정보 세팅
-		ebookReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		ebookReq.setLangCd(requestHeader.getTenantHeader().getLangCd());
-		ebookReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		ebookReq.setTenantId(header.getTenantHeader().getTenantId());
+		ebookReq.setLangCd(header.getTenantHeader().getLangCd());
+		ebookReq.setDeviceModelCd(header.getDeviceHeader().getModel());
 		ebookReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		ebookReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 

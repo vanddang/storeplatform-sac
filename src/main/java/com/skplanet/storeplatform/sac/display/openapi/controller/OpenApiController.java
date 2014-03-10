@@ -275,21 +275,21 @@ public class OpenApiController {
 	 * PKG Name 기반 상품 정보 조회.
 	 * </pre>
 	 * 
-	 * @param requestheader
-	 *            requestheader
-	 * @param salesAppSacReq
-	 *            salesAppSacReq
+	 * @param header
+	 *            header
+	 * @param salesAppReq
+	 *            salesAppReq
 	 * @return SalesAppSacRes
 	 */
 	@RequestMapping(value = "/salesApp/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SalesAppSacRes searchSalesAppList(SacRequestHeader requestheader, @Validated SalesAppSacReq salesAppSacReq) {
+	public SalesAppSacRes searchSalesAppList(SacRequestHeader header, @Validated SalesAppSacReq salesAppReq) {
 		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("[searchSalesAppList] requestheader\n", requestheader);
-		this.log.debug("[searchSalesAppList] salesAppSacReq\n", salesAppSacReq);
+		this.log.debug("[searchSalesAppList] SacRequestHeader\n{}", header.toString());
+		this.log.debug("[searchSalesAppList] SalesAppSacReq\n{}", salesAppReq.toString());
 		this.log.debug("----------------------------------------------------------------");
 
-		return this.salesAppService.searchSalesAppList(requestheader, salesAppSacReq);
+		return this.salesAppService.searchSalesAppList(header, salesAppReq);
 	}
 
 	/**

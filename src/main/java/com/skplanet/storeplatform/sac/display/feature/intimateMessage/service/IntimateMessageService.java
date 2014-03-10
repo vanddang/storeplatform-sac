@@ -15,12 +15,11 @@ public interface IntimateMessageService {
 	 * IntimateMessage 조회.
 	 * </pre>
 	 * 
-	 * @param requestHeader
-	 *            requestHeader
-	 * @param intimateMessageReq
-	 *            intimateMessageReq
+	 * @param header
+	 *            header
+	 * @param messageReq
+	 *            messageReq
 	 * @return IntimateMessageSacRes
 	 */
-	IntimateMessageSacRes searchIntimateMessageList(SacRequestHeader requestHeader,
-			IntimateMessageSacReq intimateMessageReq);
+	IntimateMessageSacRes searchIntimateMessageList(SacRequestHeader header, IntimateMessageSacReq messageReq);
 }

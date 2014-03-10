@@ -15,11 +15,11 @@ public interface DownloadEbookService {
 	 * ebook 상품 정보 조회(for download).
 	 * </pre>
 	 * 
-	 * @param requestHeader
-	 *            requestHeader
-	 * @param downloadEbookReq
-	 *            requestHeader
-	 * @return DownloadEbookRes
+	 * @param header
+	 *            header
+	 * @param ebookReq
+	 *            ebookReq
+	 * @return DownloadEbookSacRes
 	 */
-	DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookSacReq downloadEbookReq);
+	DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader header, DownloadEbookSacReq ebookReq);
 }

@@ -33,21 +33,21 @@ public class IntimateMessageController {
 	 * IntimateMessage 조회.
 	 * </pre>
 	 * 
-	 * @param requestHeader
-	 *            requestHeader
-	 * @param intimateMessageReq
-	 *            intimateMessageReq
-	 * @return IntimateMessageSacRes
+	 * @param header
+	 *            header
+	 * @param messageReq
+	 *            messageReq
+	 * @return
 	 */
 	@RequestMapping(value = "/intimateMessage/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public IntimateMessageSacRes searchIntimateMessageList(SacRequestHeader requestHeader,
-			@RequestBody @Validated IntimateMessageSacReq intimateMessageReq) {
+	public IntimateMessageSacRes searchIntimateMessageList(SacRequestHeader header,
+			@RequestBody @Validated IntimateMessageSacReq messageReq) {
 		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("searchIntimateMessageList started.");
-		this.logger.debug("intimateMessageReq : {}", intimateMessageReq.toString());
+		this.logger.debug("[searchIntimateMessageList] SacRequestHeader\n{}", header.toString());
+		this.logger.debug("[searchIntimateMessageList] IntimateMessageSacReq\n{}", messageReq.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.intimateMessageService.searchIntimateMessageList(requestHeader, intimateMessageReq);
+		return this.intimateMessageService.searchIntimateMessageList(header, messageReq);
 	}
 }

@@ -15,11 +15,11 @@ public interface DownloadComicService {
 	 * Comic 상품 정보 조회(for download).
 	 * </pre>
 	 * 
-	 * @param requestHeader
-	 *            requestHeader
-	 * @param downloadComicReq
-	 *            downloadComicReq
+	 * @param header
+	 *            header
+	 * @param comicReq
+	 *            comicReq
 	 * @return DownloadComicSacRes
 	 */
-	DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader, DownloadComicSacReq downloadComicReq);
+	DownloadComicSacRes getDownloadComicInfo(SacRequestHeader header, DownloadComicSacReq comicReq);
 }

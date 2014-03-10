@@ -55,9 +55,15 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 	@Autowired
 	private DeviceSCI deviceSCI;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.feature.intimateMessage.service.IntimateMessageService#
+	 * searchIntimateMessageList(com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacReq)
+	 */
 	@Override
-	public IntimateMessageSacRes searchIntimateMessageList(SacRequestHeader requestHeader,
-			IntimateMessageSacReq messageReq) {
+	public IntimateMessageSacRes searchIntimateMessageList(SacRequestHeader header, IntimateMessageSacReq messageReq) {
 		IntimateMessageSacRes intimateMessageRes = new IntimateMessageSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
@@ -91,7 +97,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		messageReq.setCount(messageReq.getOffset() + messageReq.getCount() - 1);
 
 		// 헤더정보 세팅
-		messageReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		messageReq.setTenantId(header.getTenantHeader().getTenantId());
 
 		String memberPassFlag = "Y";
 

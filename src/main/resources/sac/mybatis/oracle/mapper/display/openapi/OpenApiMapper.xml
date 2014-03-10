@@ -1391,7 +1391,9 @@
     </select>      
     
     <select id="searchSalesAppList" parameterType="SalesAppSacReq" resultType="MetaInfo">
-		SELECT *
+		SELECT  /* OpenApiMapper.xml, searchSalesAppList, tae hee Lee, 2014-03-10 */
+		        COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
+		      , IA.* 
 		  FROM (SELECT  ROW_NUMBER() OVER(PARTITION BY A.PROD_ID, F.VM_VER ORDER BY C.PROD_STATUS_CD, A.REG_DT) AS RNUM
 		              , A.PROD_ID
 		              , B.AID
@@ -1400,6 +1402,7 @@
 		              , F.VM_VER
 		              , F.APK_VER
 		              , F.APK_PKG_NM
+		              , F.FILE_SIZE
 		          FROM  TB_DP_PROD         A
 		              , TB_DP_APP_PROD     B
 		              , TB_DP_TENANT_PROD  C
@@ -1421,7 +1424,7 @@
 		           AND  F.APK_PKG_NM = #{packName}
 		           AND  F.VM_VER LIKE '%' || #{osVersion} || '%'
 		       ) IA
-		 WHERE RNUM = 1
+		 WHERE  RNUM = 1
     </select>
     
     

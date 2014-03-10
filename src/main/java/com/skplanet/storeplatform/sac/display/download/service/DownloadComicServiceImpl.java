@@ -79,8 +79,16 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 	@Autowired
 	private DisplayCommonService commonService;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.download.service.DownloadComicService#getDownloadComicInfo(com.skplanet
+	 * .storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq)
+	 */
 	@Override
-	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader, DownloadComicSacReq comicReq) {
+	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader header, DownloadComicSacReq comicReq) {
 		// 현재일시 및 만료일시 조회
 		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
@@ -102,9 +110,9 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		this.logger.debug("----------------------------------------------------------------");
 
 		// 헤더정보 세팅
-		comicReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		comicReq.setLangCd(requestHeader.getTenantHeader().getLangCd());
-		comicReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		comicReq.setTenantId(header.getTenantHeader().getTenantId());
+		comicReq.setLangCd(header.getTenantHeader().getLangCd());
+		comicReq.setDeviceModelCd(header.getDeviceHeader().getModel());
 		comicReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		comicReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
