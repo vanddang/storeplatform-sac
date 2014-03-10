@@ -119,21 +119,6 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 			this.log.debug("[{}] deviceId : {}", className, deviceId);
 		}
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(userKey)) {
-			throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-		}
-		if (StringUtils.isEmpty(deviceIdType)) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceIdType", deviceIdType);
-		}
-		if (StringUtils.isEmpty(deviceId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceId", deviceId);
-		}
-		// 기기ID유형 유효값 체크
-		if (!StringUtils.equalsIgnoreCase(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN, deviceIdType)) {
-			throw new StorePlatformException("SAC_DSP_0003", "deviceIdType", deviceIdType);
-		}
-
 		// 상품 아이디
 		String sPid = "";
 		// 추천 사유 코드
@@ -165,318 +150,322 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 		try {
 			// ISF 연동
 			response = this.invoker.invoke(this.makeRequest(requestVO));
-		} catch (Exception e) {
-			e.printStackTrace();
-			isExists = false;
-		}
 
-		int multiCount = (response.getProps().getMultiValues() != null) ? response.getProps().getMultiValues()
-				.getCount() : 0;
-		this.log.debug("multiCount : {}", multiCount);
+			int multiCount = (response.getProps().getMultiValues() != null) ? response.getProps().getMultiValues()
+					.getCount() : 0;
+			this.log.debug("multiCount : {}", multiCount);
 
-		if (multiCount > 0) {
-			MultiValuesType multis = new MultiValuesType();
-			multis = response.getProps().getMultiValues();
-			for (MultiValueType multi : multis.getMultiValue()) {
-				sPid = multi.getId(); // pid
-				sReasonCode = multi.getReasonCode(); // 추천 사유 코드
-				sRelId = multi.getRelId(); // 연관 상품 id
+			if (multiCount > 0) {
+				MultiValuesType multis = new MultiValuesType();
+				multis = response.getProps().getMultiValues();
+				for (MultiValueType multi : multis.getMultiValue()) {
+					sPid = multi.getId(); // pid
+					sReasonCode = multi.getReasonCode(); // 추천 사유 코드
+					sRelId = multi.getRelId(); // 연관 상품 id
 
-				// PID 리스트 저장
-				listProdParam.add(sPid);
-				// PID 리스트 순서 저장
-				mapRank.put(sPid, idx);
-				idx++;
-				// PID 별 추천사유 저장
-				mapReason.put(sPid, sReasonCode);
+					// PID 리스트 저장
+					listProdParam.add(sPid);
+					// PID 리스트 순서 저장
+					mapRank.put(sPid, idx);
+					idx++;
+					// PID 별 추천사유 저장
+					mapReason.put(sPid, sReasonCode);
 
-				// 연관 상품 정보가 있을 경우에 연관 상품 정보 저장
-				if (StringUtils.isNotEmpty(sRelId)) {
-					// 연관 상품 PID 저장 : DB 조회용
-					listRelProdParam.add(sRelId);
-					// PID - 연관상품 ID 매핑 관리
-					mapRelProd.put(sPid, sRelId);
-				}
-			}
-			this.log.debug("idx : {}", idx);
-			this.log.debug("size : {}", listProdParam.size());
-
-			// 앱코디 상품 리스트 조회
-			mapReq.put("pidList", listProdParam);
-			// 상품 기본 정보 List 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"Isf.Appguide.getAppguideProdList", mapReq, ProductBasicInfo.class);
-
-			MetaInfo metaInfo = null;
-
-			if (this.log.isDebugEnabled()) {
-				this.log.debug("##### parameter cnt : {}", listProdParam.size());
-				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
-			}
-			if (!productBasicInfoList.isEmpty()) {
-
-				Map<String, Object> paramMap = new HashMap<String, Object>();
-				paramMap.put("tenantHeader", tenantHeader);
-				paramMap.put("deviceHeader", deviceHeader);
-				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 판매중
-
-				// Meta 정보 조회
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-
-					this.totalCount = productBasicInfo.getTotalCount();
-
-					String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
-					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
-					paramMap.put("productBasicInfo", productBasicInfo);
-
-					Product product = null;
-
-					if (this.log.isDebugEnabled()) {
-						this.log.debug("##### Top Menu Id : {}", topMenuId);
-						this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+					// 연관 상품 정보가 있을 경우에 연관 상품 정보 저장
+					if (StringUtils.isNotEmpty(sRelId)) {
+						// 연관 상품 PID 저장 : DB 조회용
+						listRelProdParam.add(sRelId);
+						// PID - 연관상품 ID 매핑 관리
+						mapRelProd.put(sPid, sRelId);
 					}
-					// 상품 SVC_GRP_CD 조회
-					// DP000203 : 멀티미디어
-					// DP000206 : Tstore 쇼핑
-					// DP000205 : 소셜쇼핑
-					// DP000204 : 폰꾸미기
-					// DP000201 : 애플리캐이션
-					// APP 상품의 경우
-					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						if (this.log.isDebugEnabled()) {
-							this.log.debug("##### Search for app  meta info product");
-						}
-						metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
-						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
-							productList.add(product);
-						}
+				}
+				this.log.debug("idx : {}", idx);
+				this.log.debug("size : {}", listProdParam.size());
 
-					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
-						// 영화/방송 상품의 경우
-						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-							if (this.log.isDebugEnabled()) {
-								this.log.debug("##### Search for Vod  meta info product");
-							}
-							metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap,
-									MetaInfo.class);
-							if (metaInfo != null) {
-								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
-								} else {
-									product = this.responseInfoGenerateFacade
-											.generateSpecificBroadcastProduct(metaInfo);
-								}
-								productList.add(product);
-							}
-						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
+				// 앱코디 상품 리스트 조회
+				mapReq.put("pidList", listProdParam);
+				// 상품 기본 정보 List 조회
+				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+						"Isf.Appguide.getAppguideProdList", mapReq, ProductBasicInfo.class);
 
-							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+				MetaInfo metaInfo = null;
 
-							if (this.log.isDebugEnabled()) {
-								this.log.debug("##### Search for EbookComic specific product");
-							}
-							metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap,
-									MetaInfo.class);
-							if (metaInfo != null) {
-								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
-								} else {
-									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
-								}
-								productList.add(product);
-							}
+				if (this.log.isDebugEnabled()) {
+					this.log.debug("##### parameter cnt : {}", listProdParam.size());
+					this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
+				}
+				if (!productBasicInfoList.isEmpty()) {
 
-						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
+					Map<String, Object> paramMap = new HashMap<String, Object>();
+					paramMap.put("tenantHeader", tenantHeader);
+					paramMap.put("deviceHeader", deviceHeader);
+					paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 판매중
 
-							paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-							paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+					// Meta 정보 조회
+					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 
-							if (this.log.isDebugEnabled()) {
-								this.log.debug("##### Search for music meta info product");
-							}
-							metaInfo = this.commonDAO.queryForObject("Isf.MetaInfo.getMusicMetaInfo", paramMap,
-									MetaInfo.class);
-							if (metaInfo != null) {
-								product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
-								productList.add(product);
-							}
-						}
-					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
-						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-						paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+						this.totalCount = productBasicInfo.getTotalCount();
+
+						String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
+						String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
+						paramMap.put("productBasicInfo", productBasicInfo);
+
+						Product product = null;
 
 						if (this.log.isDebugEnabled()) {
-							this.log.debug("##### Search for Shopping  meta info product");
+							this.log.debug("##### Top Menu Id : {}", topMenuId);
+							this.log.debug("##### Service Group Cd : {}", svcGrpCd);
 						}
-						metaInfo = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap,
-								MetaInfo.class);
-						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
-							productList.add(product);
-						}
-					}
-				}
-			}
+						// 상품 SVC_GRP_CD 조회
+						// DP000203 : 멀티미디어
+						// DP000206 : Tstore 쇼핑
+						// DP000205 : 소셜쇼핑
+						// DP000204 : 폰꾸미기
+						// DP000201 : 애플리캐이션
+						// APP 상품의 경우
+						if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+							paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+							if (this.log.isDebugEnabled()) {
+								this.log.debug("##### Search for app  meta info product");
+							}
+							metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap,
+									MetaInfo.class);
+							if (metaInfo != null) {
+								product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
+								productList.add(product);
+							}
 
-			if (this.log.isDebugEnabled()) {
-				this.log.debug("product count : {}", productList.size());
-				this.log.debug("total count : {}", this.totalCount);
-				// productList.clear();
-			}
+						} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
+							// 영화/방송 상품의 경우
+							paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+									|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+								if (this.log.isDebugEnabled()) {
+									this.log.debug("##### Search for Vod  meta info product");
+								}
+								metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap,
+										MetaInfo.class);
+								if (metaInfo != null) {
+									if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+										product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
+									} else {
+										product = this.responseInfoGenerateFacade
+												.generateSpecificBroadcastProduct(metaInfo);
+									}
+									productList.add(product);
+								}
+							} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+									|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
+																								  // 경우
 
-			if (productList.isEmpty()) {
-				isExists = false;
-			} else {
-				// 연관상품 정보 조회
-				List<HashMap> listRelProd = null;
-				if (!listRelProdParam.isEmpty()) {
-					Map<String, Object> mapRel = new HashMap<String, Object>();
-					mapRel.put("tenantHeader", tenantHeader);
-					mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
-					mapRel.put("pidList", listRelProdParam);
+								paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
-					listRelProd = this.commonDAO.queryForList("Isf.Appguide.getRelProdList", mapRel, HashMap.class);
-				}
+								if (this.log.isDebugEnabled()) {
+									this.log.debug("##### Search for EbookComic specific product");
+								}
+								metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap,
+										MetaInfo.class);
+								if (metaInfo != null) {
+									if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+										product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
+									} else {
+										product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
+									}
+									productList.add(product);
+								}
 
-				// 추천사유코드 Mapping
-				boolean isRel = false;
-				String reasonMessage = "";
+							} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 
-				/*
-				 * 앱코디 상품 조회 리스트를 돌리면서 추천 사유 메세지 만드는 작업을 한다. 순서는 처음에 저장한 mapRank 를 참조로 Index 생성하여 처리한다.
-				 */
-				List<Product> listAppCodiReason = new ArrayList<Product>(idx);
-				for (int i = 0; i < idx; i++) {
-					listAppCodiReason.add(null);
-				}
+								paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+								paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
-				for (Product product : productList) {
-					for (Identifier id : product.getIdentifierList()) {
-						if (id.getType().equalsIgnoreCase(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD)) {
-							sPid = id.getText();
-							if (StringUtil.isNotEmpty(sPid))
-								break;
-						}
-					}
-					sRelId = mapRelProd.get(sPid);
-					sReasonCode = mapReason.get(sPid);
-					if ("02".equals(sReasonCode) || "03".equals(sReasonCode)) {
-						sReasonCode = "04";
-					}
-					if (sReasonCode != null) {
-						reasonMessage = mapReasonCode.get(sReasonCode);
-					}
-					if (reasonMessage == null)
-						reasonMessage = "";
+								if (this.log.isDebugEnabled()) {
+									this.log.debug("##### Search for music meta info product");
+								}
+								metaInfo = this.commonDAO.queryForObject("Isf.MetaInfo.getMusicMetaInfo", paramMap,
+										MetaInfo.class);
+								if (metaInfo != null) {
+									product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
+									productList.add(product);
+								}
+							}
+						} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
+							paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+							paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
-					// 기존 두자리 사유 코드 처리 정책 (4자리로 바뀌면 의미는 없음)
-					// 추천사유코드 : 01이고, 연관 상품이 있으면 구매 추천
-					// 추천사유코드 : 01이고, 연관 상품이 없으면, Power User’s Best 추천
-					// 추천사유코드 : 02이면, 무조건 Power User’s Best 추천
-					// 추천사유코드 : 03이면 무조건 Beginner’s Best 추천
-					// 연관상품 여부
-					isRel = false;
-					/* replace 해야하는 사유가 아니면 skip */
-					if (reasonMessage.indexOf("$") > -1) {
-
-						// 대상상품 대분류 카테고리명
-						// 대상상품은 연관상품과 별개로 처리함
-						String top_cat_nm_pid = "";
-						for (Menu menu : product.getMenuList()) {
-							if (!StringUtils.isEmpty(menu.getType())
-									&& DisplayConstants.DP_MENU_TOPCLASS_TYPE.equals(menu.getType())) {
-								top_cat_nm_pid = menu.getName();
+							if (this.log.isDebugEnabled()) {
+								this.log.debug("##### Search for Shopping  meta info product");
+							}
+							metaInfo = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap,
+									MetaInfo.class);
+							if (metaInfo != null) {
+								product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
+								productList.add(product);
 							}
 						}
-						reasonMessage = StringUtils.replace(reasonMessage, "$4", top_cat_nm_pid);
+					}
+				}
 
-						// 연관상품 정보가 있을 경우에 치환처리함
-						if (!listRelProd.isEmpty()) {
-							for (Map<String, Object> mapRelProdTemp : listRelProd) {
-								if (StringUtil.isNotEmpty(sRelId)
-										&& sRelId.equals(ObjectUtils.toString(mapRelProdTemp.get("PROD_ID")))) {
-									// 연관상품명
-									String prod_nm = (String) mapRelProdTemp.get("PROD_NM");
-									// DA 팀에서 24 byte(한글 12자리)로 상품명을 조절해 달라고 요청함
-									prod_nm = this.cutStringLimit(prod_nm, 24);
-									// 연관상품 대분류 카테고리명
-									String top_cat_nm = (String) mapRelProdTemp.get("TOP_MENU_NM");
-									// 연관상품 중분류 카테고리명
-									String dp_cat_nm = (String) mapRelProdTemp.get("MENU_NM");
+				if (this.log.isDebugEnabled()) {
+					this.log.debug("product count : {}", productList.size());
+					this.log.debug("total count : {}", this.totalCount);
+					// productList.clear();
+				}
 
-									// 메세지 치환
-									reasonMessage = StringUtils.replace(reasonMessage, "$1", prod_nm);
-									reasonMessage = StringUtils.replace(reasonMessage, "$2", top_cat_nm);
-									reasonMessage = StringUtils.replace(reasonMessage, "$3", dp_cat_nm);
+				if (productList.isEmpty()) {
+					isExists = false;
+				} else {
+					// 연관상품 정보 조회
+					List<HashMap> listRelProd = null;
+					if (!listRelProdParam.isEmpty()) {
+						Map<String, Object> mapRel = new HashMap<String, Object>();
+						mapRel.put("tenantHeader", tenantHeader);
+						mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
+						mapRel.put("pidList", listRelProdParam);
 
-									product.setRecommendedReason(reasonMessage);
-									isRel = true;
+						listRelProd = this.commonDAO.queryForList("Isf.Appguide.getRelProdList", mapRel, HashMap.class);
+					}
+
+					// 추천사유코드 Mapping
+					boolean isRel = false;
+					String reasonMessage = "";
+
+					/*
+					 * 앱코디 상품 조회 리스트를 돌리면서 추천 사유 메세지 만드는 작업을 한다. 순서는 처음에 저장한 mapRank 를 참조로 Index 생성하여 처리한다.
+					 */
+					List<Product> listAppCodiReason = new ArrayList<Product>(idx);
+					for (int i = 0; i < idx; i++) {
+						listAppCodiReason.add(null);
+					}
+
+					for (Product product : productList) {
+						for (Identifier id : product.getIdentifierList()) {
+							if (id.getType().equalsIgnoreCase(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD)) {
+								sPid = id.getText();
+								if (StringUtil.isNotEmpty(sPid))
 									break;
+							}
+						}
+						sRelId = mapRelProd.get(sPid);
+						sReasonCode = mapReason.get(sPid);
+						if ("02".equals(sReasonCode) || "03".equals(sReasonCode)) {
+							sReasonCode = "04";
+						}
+						if (sReasonCode != null) {
+							reasonMessage = mapReasonCode.get(sReasonCode);
+						}
+						if (reasonMessage == null)
+							reasonMessage = "";
+
+						// 기존 두자리 사유 코드 처리 정책 (4자리로 바뀌면 의미는 없음)
+						// 추천사유코드 : 01이고, 연관 상품이 있으면 구매 추천
+						// 추천사유코드 : 01이고, 연관 상품이 없으면, Power User’s Best 추천
+						// 추천사유코드 : 02이면, 무조건 Power User’s Best 추천
+						// 추천사유코드 : 03이면 무조건 Beginner’s Best 추천
+						// 연관상품 여부
+						isRel = false;
+						/* replace 해야하는 사유가 아니면 skip */
+						if (reasonMessage.indexOf("$") > -1) {
+
+							// 대상상품 대분류 카테고리명
+							// 대상상품은 연관상품과 별개로 처리함
+							String top_cat_nm_pid = "";
+							for (Menu menu : product.getMenuList()) {
+								if (!StringUtils.isEmpty(menu.getType())
+										&& DisplayConstants.DP_MENU_TOPCLASS_TYPE.equals(menu.getType())) {
+									top_cat_nm_pid = menu.getName();
+								}
+							}
+							reasonMessage = StringUtils.replace(reasonMessage, "$4", top_cat_nm_pid);
+
+							// 연관상품 정보가 있을 경우에 치환처리함
+							if (!listRelProd.isEmpty()) {
+								for (Map<String, Object> mapRelProdTemp : listRelProd) {
+									if (StringUtil.isNotEmpty(sRelId)
+											&& sRelId.equals(ObjectUtils.toString(mapRelProdTemp.get("PROD_ID")))) {
+										// 연관상품명
+										String prod_nm = (String) mapRelProdTemp.get("PROD_NM");
+										// DA 팀에서 24 byte(한글 12자리)로 상품명을 조절해 달라고 요청함
+										prod_nm = this.cutStringLimit(prod_nm, 24);
+										// 연관상품 대분류 카테고리명
+										String top_cat_nm = (String) mapRelProdTemp.get("TOP_MENU_NM");
+										// 연관상품 중분류 카테고리명
+										String dp_cat_nm = (String) mapRelProdTemp.get("MENU_NM");
+
+										// 메세지 치환
+										reasonMessage = StringUtils.replace(reasonMessage, "$1", prod_nm);
+										reasonMessage = StringUtils.replace(reasonMessage, "$2", top_cat_nm);
+										reasonMessage = StringUtils.replace(reasonMessage, "$3", dp_cat_nm);
+
+										product.setRecommendedReason(reasonMessage);
+										isRel = true;
+										break;
+									}
 								}
 							}
 						}
+
+						// 연관상품이 없을 경우에는 각각의 사유 메세지 정보를 셋팅
+						// 단, 2자리 사유코드 01일 경우에는 04 코드로 사용한다.
+						// 01일 경우에는 연관상품이 있어야 하나 없을 경우에...
+						// 기타 4자리 코드인데 연관상품으로 치환되지 않았을 경우에
+						// $1,2,3가 그냥 노출되기 때문에 임시로 04번 코드로 치환한다.
+						if (!isRel && reasonMessage.indexOf("$") > -1) {
+							reasonMessage = mapReasonCode.get("04");
+							product.setRecommendedReason(reasonMessage);
+						} else {
+							product.setRecommendedReason(reasonMessage);
+						}
+
+						if (this.log.isDebugEnabled()) {
+							this.log.debug("reasonMessage : " + product.getRecommendedReason());
+						}
+
+						// ISF연동 정보시 저장한 순서를 가져와서 최종 List에 해당 Index로 add 한다.
+						int index = mapRank.get(sPid);
+						listAppCodiReason.set(index, product);
 					}
 
-					// 연관상품이 없을 경우에는 각각의 사유 메세지 정보를 셋팅
-					// 단, 2자리 사유코드 01일 경우에는 04 코드로 사용한다.
-					// 01일 경우에는 연관상품이 있어야 하나 없을 경우에...
-					// 기타 4자리 코드인데 연관상품으로 치환되지 않았을 경우에
-					// $1,2,3가 그냥 노출되기 때문에 임시로 04번 코드로 치환한다.
-					if (!isRel && reasonMessage.indexOf("$") > -1) {
-						reasonMessage = mapReasonCode.get("04");
-						product.setRecommendedReason(reasonMessage);
-					} else {
-						product.setRecommendedReason(reasonMessage);
-					}
+					// 앱코디 상품리스트 조회 결과가 ISF 에서 넘겨주는 상품 정보보다 적을 수 있어서(판매중지 등의 사유)
+					// 중간에 Index가 비는 문제가 발생할 수 있다. 그래서 아래와 같이 null element 삭제 로직 추가한다.
+					listAppCodiReason.removeAll(Arrays.asList(new Object[] { null }));
 
-					if (this.log.isDebugEnabled()) {
-						this.log.debug("reasonMessage : " + product.getRecommendedReason());
-					}
+					// Range 가 정의된 경우
+					String sStartRow = StringUtils.defaultIfEmpty(ObjectUtils.toString(requestVO.getOffset()), "1");
+					String sEndRow = ObjectUtils.toString(requestVO.getCount() + requestVO.getOffset() - 1);
 
-					// ISF연동 정보시 저장한 순서를 가져와서 최종 List에 해당 Index로 add 한다.
-					int index = mapRank.get(sPid);
-					listAppCodiReason.set(index, product);
-				}
+					List<Product> listRes = new ArrayList<Product>();
+					if (StringUtils.isNotEmpty(sEndRow)) {
+						int iStartRow = NumberUtils.toInt(sStartRow) - 1;
+						int iEndRow = NumberUtils.toInt(sEndRow);
+						if (iEndRow > iStartRow) {
+							int iAppCodeReasonSize = listAppCodiReason.size();
+							iStartRow = (iStartRow < 0) ? 0 : iStartRow;
+							iEndRow = (iEndRow > iAppCodeReasonSize) ? iAppCodeReasonSize : iEndRow;
 
-				// 앱코디 상품리스트 조회 결과가 ISF 에서 넘겨주는 상품 정보보다 적을 수 있어서(판매중지 등의 사유)
-				// 중간에 Index가 비는 문제가 발생할 수 있다. 그래서 아래와 같이 null element 삭제 로직 추가한다.
-				listAppCodiReason.removeAll(Arrays.asList(new Object[] { null }));
+							// range 재설정
+							mapReq.put("START_ROW", Integer.toString(iStartRow + 1));
+							mapReq.put("END_ROW", Integer.toString(iEndRow));
 
-				// Range 가 정의된 경우
-				String sStartRow = StringUtils.defaultIfEmpty(ObjectUtils.toString(requestVO.getOffset()), "1");
-				String sEndRow = ObjectUtils.toString(requestVO.getCount() + requestVO.getOffset() - 1);
-
-				List<Product> listRes = new ArrayList<Product>();
-				if (StringUtils.isNotEmpty(sEndRow)) {
-					int iStartRow = NumberUtils.toInt(sStartRow) - 1;
-					int iEndRow = NumberUtils.toInt(sEndRow);
-					if (iEndRow > iStartRow) {
-						int iAppCodeReasonSize = listAppCodiReason.size();
-						iStartRow = (iStartRow < 0) ? 0 : iStartRow;
-						iEndRow = (iEndRow > iAppCodeReasonSize) ? iAppCodeReasonSize : iEndRow;
-
-						// range 재설정
-						mapReq.put("START_ROW", Integer.toString(iStartRow + 1));
-						mapReq.put("END_ROW", Integer.toString(iEndRow));
-
-						listRes.addAll(listAppCodiReason.subList(iStartRow, iEndRow));
+							listRes.addAll(listAppCodiReason.subList(iStartRow, iEndRow));
+						} else {
+							listRes.addAll(listAppCodiReason);
+						}
 					} else {
 						listRes.addAll(listAppCodiReason);
 					}
-				} else {
-					listRes.addAll(listAppCodiReason);
-				}
 
-				commonResponse.setTotalCount(this.totalCount);
-				responseVO.setCommonResponse(commonResponse);
-				responseVO.setProductList(listRes);
+					commonResponse.setTotalCount(this.totalCount);
+					responseVO.setCommonResponse(commonResponse);
+					responseVO.setProductList(listRes);
+				}
+			} else {
+				isExists = false;
 			}
-		} else {
+		} catch (StorePlatformException se) {
+			isExists = false;
+		} catch (Exception e) {
+			e.printStackTrace();
 			isExists = false;
 		}
 
