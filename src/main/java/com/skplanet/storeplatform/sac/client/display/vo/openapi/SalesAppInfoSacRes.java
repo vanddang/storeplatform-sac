@@ -10,71 +10,49 @@ lose such Confidential Information and
  */
 package com.skplanet.storeplatform.sac.client.display.vo.openapi;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * PKG Name 기반 상품 리스트 조회 Response Value Object.
+ * PKG Name 기반 상품 정보 조회 Response Value Object.
  * 
- * Updated on : 2014. 03. 06. Updated by : 이태희.
+ * Updated on : 2014. 03. 10. Updated by : 이태희.
  */
-public class SalesAppSacRes extends CommonInfo {
+public class SalesAppInfoSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private CommonResponse commonResponse;
 
-	private List<Product> productList;
+	private Product product;
 
 	/**
-	 * 
-	 * <pre>
-	 * 공통 Response.
-	 * </pre>
-	 * 
-	 * @return CommonResponse
+	 * @return the commonResponse
 	 */
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * 공통 Response.
-	 * </pre>
-	 * 
 	 * @param commonResponse
-	 *            commonResponse
+	 *            the commonResponse to set
 	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * 상품 List.
-	 * </pre>
-	 * 
-	 * @return productList
+	 * @return the product
 	 */
-	public List<Product> getProductList() {
-		return this.productList;
+	public Product getProduct() {
+		return this.product;
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * 상품 List.
-	 * </pre>
-	 * 
-	 * @param productList
-	 *            productList
+	 * @param product
+	 *            the product to set
 	 */
-	public void setProductList(List<Product> productList) {
-		this.productList = productList;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 }

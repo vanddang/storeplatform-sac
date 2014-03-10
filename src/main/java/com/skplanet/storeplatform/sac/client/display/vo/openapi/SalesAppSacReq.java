@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * PKG Name 기반 상품 정보 조회 Request Value Object.
+ * PKG Name 기반 상품 리스트 조회 Request Value Object.
  * 
  * Updated on : 2014. 03. 06. Updated by : 이태희.
  */
