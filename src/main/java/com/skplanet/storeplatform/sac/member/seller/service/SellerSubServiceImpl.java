@@ -222,6 +222,11 @@ public class SellerSubServiceImpl implements SellerSubService {
 			sellerMbrRes.setSubRegDate(sellerMbr.getRegDate());
 			sellerMbrRes.setSubSellerEmail(sellerMbr.getSellerEmail());
 			sellerMbrRes.setSubSellerCateList(sellerMbr.getRightProfileList());
+
+			sellerMbrRes.setSubSellerMemo(sellerMbr.getSubSellerMemo());
+			sellerMbrRes.setSubSellerPhone(sellerMbr.getSellerPhone());
+			sellerMbrRes.setSubSellerKey(sellerMbr.getSellerKey());
+
 		}
 		return sellerMbrRes;
 	}
