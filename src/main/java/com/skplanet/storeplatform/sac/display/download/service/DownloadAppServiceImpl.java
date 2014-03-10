@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
+import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -297,31 +299,31 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								metaInfo.setDeviceSubKey(deviceId);
 
 								// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
-								// if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
-								// && deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
-								// UapsEcReq uapsEcReq = new UapsEcReq();
-								// UserEcRes uapsEcRes = new UserEcRes();
-								// uapsEcReq.setDeviceId(deviceId);
-								// uapsEcReq.setType("mdn");
-								//
-								// try {
-								// uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
-								//
-								// this.log.debug("#########################################################");
-								// this.log.debug("serviceCd	:	" + uapsEcRes.getServiceCD()[i]);
-								// this.log.debug("#########################################################");
-								// for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-								// if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING.equals(uapsEcRes
-								// .getServiceCD()[i])) {
-								// metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
-								// }
-								// }
-								// } catch (Exception e) {
-								// this.log.debug("#########################################################");
-								// this.log.debug("Fee Type Is Not Ting");
-								// this.log.debug("#########################################################");
-								// }
-								// }
+								if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
+										&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
+									UapsEcReq uapsEcReq = new UapsEcReq();
+									UserEcRes uapsEcRes = new UserEcRes();
+									uapsEcReq.setDeviceId(deviceId);
+									uapsEcReq.setType("mdn");
+
+									try {
+										uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
+
+										this.log.debug("#########################################################");
+										this.log.debug("serviceCd	:	" + uapsEcRes.getServiceCD()[i]);
+										this.log.debug("#########################################################");
+										for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
+											if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING.equals(uapsEcRes
+													.getServiceCD()[i])) {
+												metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
+											}
+										}
+									} catch (Exception e) {
+										this.log.debug("#########################################################");
+										this.log.debug("Fee Type Is Not Ting");
+										this.log.debug("#########################################################");
+									}
+								}
 
 								// 암호화 정보 (JSON)
 								EncryptionContents contents = this.encryptionGenerator
