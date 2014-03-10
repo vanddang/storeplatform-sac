@@ -93,7 +93,8 @@
 	                      AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = 'android_standard2') /* 단말기 모델 코드 */
 	                      AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN 
 	                                        FROM TB_CM_DEVICE 
-	                                       WHERE DEVICE_MODEL_CD = #{deviceModelCd} )  = 'N' 
+	                                       WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+	                                         AND USE_YN = 'Y' )  = 'N' 
 	                                         AND NVL(E.DRM_YN, 'N') = 'Y' 
 	                                THEN 'NOT SUPPORT'
 	                                ELSE 'SUPPORT'
@@ -195,7 +196,8 @@
                           AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = 'android_standard2') /* 단말기 모델 코드 */
                           AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN 
                                             FROM TB_CM_DEVICE 
-                                           WHERE DEVICE_MODEL_CD = #{deviceModelCd} )  = 'N' 
+                                           WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                             AND USE_YN = 'Y' )  = 'N' 
                                              AND NVL(E.DRM_YN, 'N') = 'Y' 
                                     THEN 'NOT SUPPORT'
                                     ELSE 'SUPPORT'
@@ -310,7 +312,8 @@
                           AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = 'android_standard2') /* 단말기 모델 코드 */
                           AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN 
                                             FROM TB_CM_DEVICE 
-                                           WHERE DEVICE_MODEL_CD = #{deviceModelCd} )  = 'N' 
+                                           WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                             AND USE_YN = 'Y' )  = 'N' 
                                              AND NVL(E.DRM_YN, 'N') = 'Y' 
                                     THEN 'NOT SUPPORT'
                                     ELSE 'SUPPORT'
@@ -395,6 +398,7 @@
                            AND F.PROD_ID = G.PROD_ID
                            AND F.SUB_CONTENTS_ID = G.SUB_CONTENTS_ID
                            AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                           AND H.USE_YN = 'Y'
                            AND G.DEVICE_MODEL_CD = #{deviceModelCd}
                            AND B.PROD_ID = I.PROD_ID
                            AND I.TENANT_ID = #{tenantId}
@@ -464,6 +468,7 @@
                    AND F.PROD_ID = G.PROD_ID
                    AND F.SUB_CONTENTS_ID = G.SUB_CONTENTS_ID
                    AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                   AND H.USE_YN = 'Y'
                    AND G.DEVICE_MODEL_CD = #{deviceModelCd}
                    AND B.PROD_ID = I.PROD_ID
                    AND I.TENANT_ID = #{tenantId}
@@ -531,6 +536,7 @@
                    AND F.PROD_ID = G.PROD_ID
                    AND F.SUB_CONTENTS_ID = G.SUB_CONTENTS_ID
                    AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                   AND H.USE_YN = 'Y'
                    AND G.DEVICE_MODEL_CD = #{deviceModelCd}
                    AND B.PROD_ID = I.PROD_ID
                    AND I.TENANT_ID = #{tenantId}

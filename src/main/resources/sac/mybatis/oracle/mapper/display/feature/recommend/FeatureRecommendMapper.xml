@@ -58,6 +58,7 @@
                   AND F.PROD_ID = G.PROD_ID
 		          AND F.SUB_CONTENTS_ID = G.SUB_CONTENTS_ID
 		          AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+		          AND H.USE_YN = 'Y'
 		          AND G.DEVICE_MODEL_CD = #{deviceModelCd}
 		          AND B.PROD_ID = I.PROD_ID
 		          AND I.TENANT_ID = #{tenantId}
