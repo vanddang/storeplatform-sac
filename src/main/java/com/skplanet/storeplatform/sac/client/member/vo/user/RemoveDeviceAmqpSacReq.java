@@ -11,14 +11,53 @@ public class RemoveDeviceAmqpSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/* 작업일시 : YYYYMMDDHH24MISS */
+	private String workDt;
+
+	/* 회원 내부사용자키 */
+	private String userKey;
+
 	/* 내부기기번호 */
 	private String deviceKey;
 
 	/* 기기 아이디 */
 	private String deviceId;
 
+	/* 변경유형코드 (번호이동/번호변경등) */
+	private String chgCaseCd;
+
 	/* 서비스 관리 번호 */
 	private String svcMangNo;
+
+	/**
+	 * @return the workDt
+	 */
+	public String getWorkDt() {
+		return this.workDt;
+	}
+
+	/**
+	 * @param workDt
+	 *            the workDt to set
+	 */
+	public void setWorkDt(String workDt) {
+		this.workDt = workDt;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
 
 	/**
 	 * @return the deviceKey
@@ -48,6 +87,21 @@ public class RemoveDeviceAmqpSacReq extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return the chgCaseCd
+	 */
+	public String getChgCaseCd() {
+		return this.chgCaseCd;
+	}
+
+	/**
+	 * @param chgCaseCd
+	 *            the chgCaseCd to set
+	 */
+	public void setChgCaseCd(String chgCaseCd) {
+		this.chgCaseCd = chgCaseCd;
 	}
 
 	/**

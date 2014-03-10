@@ -12,46 +12,70 @@ public class CreateDeviceAmqpSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/* 회원번호 */
-	private String mbrNo;
+	/* 작업일시 : YYYYMMDDHH24MISS */
+	private String workDt;
 
-	/* 통신사코드 */
-	private String mnoCd;
+	/* 회원 내부사용자키 */
+	private String userKey;
+
+	/* 회원 이전 내부사용자키 */
+	private String oldUserKey;
 
 	/* 내부기기번호 */
 	private String deviceKey;
 
+	/* 이전 내부기기번호 */
+	private String oldDeviceKey;
+
 	/* 기기 아이디 */
 	private String deviceId;
 
+	/* 통신사코드 */
+	private String mnoCd;
+
 	/**
-	 * @return the mbrNo
+	 * @return the workDt
 	 */
-	public String getMbrNo() {
-		return this.mbrNo;
+	public String getWorkDt() {
+		return this.workDt;
 	}
 
 	/**
-	 * @param mbrNo
-	 *            the mbrNo to set
+	 * @param workDt
+	 *            the workDt to set
 	 */
-	public void setMbrNo(String mbrNo) {
-		this.mbrNo = mbrNo;
+	public void setWorkDt(String workDt) {
+		this.workDt = workDt;
 	}
 
 	/**
-	 * @return the mnoCd
+	 * @return the userKey
 	 */
-	public String getMnoCd() {
-		return this.mnoCd;
+	public String getUserKey() {
+		return this.userKey;
 	}
 
 	/**
-	 * @param mnoCd
-	 *            the mnoCd to set
+	 * @param userKey
+	 *            the userKey to set
 	 */
-	public void setMnoCd(String mnoCd) {
-		this.mnoCd = mnoCd;
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	/**
+	 * @return the oldUserKey
+	 */
+	public String getOldUserKey() {
+		return this.oldUserKey;
+	}
+
+	/**
+	 * @param oldUserKey
+	 *            the oldUserKey to set
+	 */
+	public void setOldUserKey(String oldUserKey) {
+		this.oldUserKey = oldUserKey;
 	}
 
 	/**
@@ -70,6 +94,21 @@ public class CreateDeviceAmqpSacReq extends CommonInfo {
 	}
 
 	/**
+	 * @return the oldDeviceKey
+	 */
+	public String getOldDeviceKey() {
+		return this.oldDeviceKey;
+	}
+
+	/**
+	 * @param oldDeviceKey
+	 *            the oldDeviceKey to set
+	 */
+	public void setOldDeviceKey(String oldDeviceKey) {
+		this.oldDeviceKey = oldDeviceKey;
+	}
+
+	/**
 	 * @return the deviceId
 	 */
 	public String getDeviceId() {
@@ -82,6 +121,21 @@ public class CreateDeviceAmqpSacReq extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return the mnoCd
+	 */
+	public String getMnoCd() {
+		return this.mnoCd;
+	}
+
+	/**
+	 * @param mnoCd
+	 *            the mnoCd to set
+	 */
+	public void setMnoCd(String mnoCd) {
+		this.mnoCd = mnoCd;
 	}
 
 }

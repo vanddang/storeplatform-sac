@@ -12,40 +12,57 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/* 작업일시 : YYYYMMDDHH24MISS */
+	private String workDt;
+
 	/* 회원번호 */
-	private String mbrNo;
+	private String userKey;
 
 	/* 회원ID */
-	private String mbrId;
+	private String userId;
 
 	/**
-	 * @return the mbrNo
+	 * @return the workDt
 	 */
-	public String getMbrNo() {
-		return this.mbrNo;
+	public String getWorkDt() {
+		return this.workDt;
 	}
 
 	/**
-	 * @param mbrNo
-	 *            the mbrNo to set
+	 * @param workDt
+	 *            the workDt to set
 	 */
-	public void setMbrNo(String mbrNo) {
-		this.mbrNo = mbrNo;
+	public void setWorkDt(String workDt) {
+		this.workDt = workDt;
 	}
 
 	/**
-	 * @return the mbrId
+	 * @return the userKey
 	 */
-	public String getMbrId() {
-		return this.mbrId;
+	public String getUserKey() {
+		return this.userKey;
 	}
 
 	/**
-	 * @param mbrId
-	 *            the mbrId to set
+	 * @param userKey
+	 *            the userKey to set
 	 */
-	public void setMbrId(String mbrId) {
-		this.mbrId = mbrId;
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
+	/**
+	 * @return the userId
+	 */
+	public String getUserId() {
+		return this.userId;
+	}
+
+	/**
+	 * @param userId
+	 *            the userId to set
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 }
