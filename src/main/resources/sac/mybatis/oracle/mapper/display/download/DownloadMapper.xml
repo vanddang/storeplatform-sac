@@ -22,7 +22,7 @@
     <select id="getDownloadAppInfo" parameterType="DownloadAppSacReq" resultType="MetaInfo">
 	  SELECT  /* DownloadMapper.xml, getDownloadAppInfo, SAC : 이석희 , 2014-01-23 */
 	            TA.*
-	          , NVL(TB.PROD_ID, ' ') AS SEED_PRODUCT_ID
+	          , NVL(TB.PROD_ID, '') AS SEED_PRODUCT_ID
 	          , TB.CASE_REF_CD AS SEED_CASE_REF_CD
 	          , TB.USE_YN AS SEED_USE_YN
 	          , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
