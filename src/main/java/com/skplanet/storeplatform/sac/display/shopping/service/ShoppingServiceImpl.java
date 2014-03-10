@@ -1552,7 +1552,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingDetailRes getShoppingDetail(SacRequestHeader header, ShoppingDetailReq req) {
 		// 공통 응답 변수 선언
 		ShoppingDetailRes res = new ShoppingDetailRes();
-		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 
@@ -1924,8 +1923,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				}
 				res.setProduct(product);
-				commonResponse.setTotalCount(1);
-				res.setCommonResponse(commonResponse);
 			} else {
 				throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
 			}
