@@ -36,7 +36,6 @@
 						, PD.DRM_SET_CD
 						, PD.DRM_SET_VALUE
 						, PD.CONTENTS_TYPE_CD
-						, PD.SUB_MENU_ID
 			      , TP.EXPO_ORD
 					FROM
 						TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
@@ -118,7 +117,6 @@
 			, PD.DRM_SET_CD
 			, PD.DRM_SET_VALUE
 			, PD.CONTENTS_TYPE_CD
-			, PD.SUB_MENU_ID
 			, CM.CMPX_PROD_CLSF_CD
 			, DC.PROD_INTR_DSCR
 			, PR.PROD_AMT
@@ -290,7 +288,6 @@
                         , PD.DRM_SET_CD
                         , PD.DRM_SET_VALUE
                         , PD.CONTENTS_TYPE_CD
-                        , PD.SUB_MENU_ID
                   		, TP.EXPO_ORD
                     FROM
                         TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
@@ -377,7 +374,6 @@
 						, PD.DRM_SET_CD
 						, PD.DRM_SET_VALUE
 						, PD.CONTENTS_TYPE_CD
-						, PD.SUB_MENU_ID
 			      , TP.EXPO_ORD
                   , MP.PART_PROD_ID
 					FROM
