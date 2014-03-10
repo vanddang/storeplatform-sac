@@ -77,6 +77,7 @@ public class ImageUtil {
 				return false;
 			}
 		} catch (Exception e) {
+			this.log.info(e.getMessage());
 			e.getStackTrace();
 		}
 

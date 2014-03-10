@@ -124,6 +124,7 @@ public class ImageResizing {
 			result = true;
 
 		} catch (Exception e) {
+			this.log.info(e.getMessage());
 			e.printStackTrace();
 		}
 		return result;
