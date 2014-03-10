@@ -22,7 +22,9 @@ public class UserInfoByDeviceKey extends CommonInfo {
 
 	private String deviceId;
 
-	private String deviceModelName;
+	private String deviceModelNo;
+
+	private String isRealName;
 
 	public String getUserName() {
 		return this.userName;
@@ -56,12 +58,20 @@ public class UserInfoByDeviceKey extends CommonInfo {
 		this.deviceId = deviceId;
 	}
 
-	public String getDeviceModelName() {
-		return this.deviceModelName;
+	public String getDeviceModelNo() {
+		return this.deviceModelNo;
 	}
 
-	public void setDeviceModelName(String deviceModelName) {
-		this.deviceModelName = deviceModelName;
+	public void setDeviceModelNo(String deviceModelNo) {
+		this.deviceModelNo = deviceModelNo;
+	}
+
+	public String getIsRealName() {
+		return this.isRealName;
+	}
+
+	public void setIsRealName(String isRealName) {
+		this.isRealName = isRealName;
 	}
 
 	public static long getSerialversionuid() {
