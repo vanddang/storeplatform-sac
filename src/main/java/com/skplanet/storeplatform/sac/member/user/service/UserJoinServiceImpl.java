@@ -1171,9 +1171,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		UserMbr userMbr = new UserMbr();
 		/**
-		 * TODO MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.)
+		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.) [MAC-yyyyMMddHHmmss] MBR_NO (27)
 		 */
-		userMbr.setImMbrNo(req.getDeviceId() + "년월일시분초"); // MBR_NO
+		userMbr.setImMbrNo(req.getDeviceId() + "-" + DateUtil.getToday("yyyyMMddHHmmss"));
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
