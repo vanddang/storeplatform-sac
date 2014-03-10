@@ -340,6 +340,8 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	 * @return boolean
 	 */
 	public boolean brandImgResize(DpBrandInfo dpBrandInfo) {
+		this.log.info("■■■■■BrandImgResize■■■■■ 시작 ");
+
 		// 파일명 끝에 추가할 명칭
 		String[] drivedFileNameForDrived = { "_260x170", "_177x177", "_114x114", "_29x29", "_56x56", "_27x27", "_25x25" };
 
@@ -388,7 +390,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				}
 
 				this.log.info("outFile22::::" + outFile);
-				// log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
+				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
 
 				this.brandCatalogProdImgInfo.setProdId(dpBrandInfo.getCreateBrandId());
 				this.brandCatalogProdImgInfo.setImgCls(imgClsCode[i]);
