@@ -321,6 +321,7 @@ public class SearchUserSCIControllerTest {
 				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
 				List<String> deviceKeyList = new ArrayList<String>();
 				deviceKeyList.add("01034669429");
+				deviceKeyList.add("01063438946");
 
 				searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
 				return searchUserDeviceSacReq;
