@@ -1521,6 +1521,7 @@
                         ,NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ) AS APPLY_END_DT                              
                         ,NVL(N.SPRC_DC_RATE, L.DC_RATE) AS DC_RATE
                         ,NVL(N.SPRC_PRICE, L.PROD_AMT) AS DC_AMT
+                        ,I.SALE_CNT 
                         ,NVL(N.MM_PROD_MAX_SALE_QTY, I.MM_MAX_SALE_QTY ) AS MTH_MAX_CNT     /* 월_최대_판매_수량 */
                         ,NVL(N.DLY_PROD_MAX_SALE_QTY, I.DAY_MAX_SALE_QTY ) AS DLY_MAX_CNT   /* 일_최대_판매_수량 */
                         ,NVL(N.PERMAN_MM_MAX_PRCHS_QTY, I.MM_MBR_MAX_PRCHS_QTY ) AS MTH_USR_MAX_CNT /* 월_회원_최대_구매_수량 */

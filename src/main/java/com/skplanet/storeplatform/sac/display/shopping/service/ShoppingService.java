@@ -7,6 +7,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRe
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingCategoryAnotherReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeatureReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
@@ -168,7 +169,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingDetailReq req);
+	public ShoppingDetailRes getShoppingDetail(SacRequestHeader header, ShoppingDetailReq req);
 
 	/**
 	 * 구매내역 필요한 정보.

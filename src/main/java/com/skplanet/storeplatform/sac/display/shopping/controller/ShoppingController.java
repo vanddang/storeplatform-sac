@@ -15,6 +15,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRe
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingCategoryAnotherReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeatureReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
@@ -305,7 +306,7 @@ public class ShoppingController {
 
 	@RequestMapping(value = "/shoppingDetail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ShoppingRes getShoppingDetail(SacRequestHeader header, @RequestBody @Validated ShoppingDetailReq req) {
+	public ShoppingDetailRes getShoppingDetail(SacRequestHeader header, @RequestBody @Validated ShoppingDetailReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getShoppingDetail Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");

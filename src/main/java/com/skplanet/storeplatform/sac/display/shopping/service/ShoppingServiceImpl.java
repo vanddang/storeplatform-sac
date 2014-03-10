@@ -28,6 +28,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRe
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingCategoryAnotherReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeatureReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
@@ -1548,9 +1549,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingDetailReq req) {
+	public ShoppingDetailRes getShoppingDetail(SacRequestHeader header, ShoppingDetailReq req) {
 		// 공통 응답 변수 선언
-		ShoppingRes res = new ShoppingRes();
+		ShoppingDetailRes res = new ShoppingDetailRes();
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
@@ -1635,9 +1636,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Title option2Title = null;
 				List<Product> subProductList = new ArrayList<Product>();
 
-				List<Product> productList = new ArrayList<Product>();
 				// 채널 list 조회
-				for (int i = 0; i < resultChannelList.size(); i++) {
+				for (int i = 0; i < 1; i++) {
 					MetaInfo shopping = resultChannelList.get(i);
 
 					product = new Product();
@@ -1822,7 +1822,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							} else {
 								episodeSaleOption.setSatus(DisplayConstants.DP_CONTINUE);
 							}
-
+							episodeSaleOption.setMaxCount(Integer.parseInt(episodeShopping.getSaleCnt()));
 							episodeSaleOption.setMaxMonthlySale(Integer.parseInt(episodeShopping.getMthMaxCnt())); // 월_최대_판매_수량
 							episodeSaleOption.setMaxDailySale(Integer.parseInt(episodeShopping.getDlyMaxCnt())); // 일_최대_판매_수량
 							episodeSaleOption.setMaxMonthlyBuy(Integer.parseInt(episodeShopping.getMthUsrMaxCnt())); // 월_회원_최대_구매_수량
@@ -1922,9 +1922,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 					product.setSubProductTotalCount(subProductList.size());
 					product.setSubProductList(subProductList);
 
-					productList.add(i, product);
 				}
-				res.setProductList(productList);
+				res.setProduct(product);
 				commonResponse.setTotalCount(1);
 				res.setCommonResponse(commonResponse);
 			} else {
