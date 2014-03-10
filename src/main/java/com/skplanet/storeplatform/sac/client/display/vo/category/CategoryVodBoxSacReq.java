@@ -30,6 +30,7 @@ public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 	private String filteredBy; // 차트 구분 코드
 	@NotBlank
 	private String channelId; // 채널 ID
+	private String[] arrayChannelId; // 채널 ID 리스트
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출 ROW 수
 	private Integer duration; // 기간
@@ -76,6 +77,31 @@ public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 	 */
 	public String getChannelId() {
 		return this.channelId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 채널 ID List.
+	 * </pre>
+	 * 
+	 * @return String[]
+	 */
+	public String[] getArrayChannelId() {
+		return this.arrayChannelId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 채널 ID List.
+	 * </pre>
+	 * 
+	 * @param arrayChannelId
+	 *            String[]
+	 */
+	public void setArrayChannelId(String[] arrayChannelId) {
+		this.arrayChannelId = arrayChannelId;
 	}
 
 	/**
