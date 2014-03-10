@@ -21,7 +21,7 @@ public interface ChangeDisplayUserService {
 	 * @param changeDisplayUser
 	 *            changeDisplayUser
 	 */
-	public void changeDisplayUserId(ChangeDisplayUser changeDisplayUser);
+	public void updateDisplayUserId(ChangeDisplayUser changeDisplayUser);
 
 	/**
 	 * 
@@ -32,5 +32,5 @@ public interface ChangeDisplayUserService {
 	 * @param changeDisplayUser
 	 *            changeDisplayUser
 	 */
-	public void changeDisplayUserKey(ChangeDisplayUser changeDisplayUser);
+	public void updateDisplayUserKey(ChangeDisplayUser changeDisplayUser);
 }

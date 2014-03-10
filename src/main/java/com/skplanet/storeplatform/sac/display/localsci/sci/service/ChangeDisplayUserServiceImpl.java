@@ -25,7 +25,7 @@ public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 	private ChangeDisplayUserRepository changeDisplayUserRepository;
 
 	@Override
-	public void changeDisplayUserId(ChangeDisplayUser changeDisplayUser) {
+	public void updateDisplayUserId(ChangeDisplayUser changeDisplayUser) {
 		LOGGER.info("## changeDisplayUserId start ##");
 		Integer affectedRow = null;
 		affectedRow = (Integer) this.changeDisplayUserRepository.changeMbrAvg(changeDisplayUser);
@@ -44,7 +44,7 @@ public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 	}
 
 	@Override
-	public void changeDisplayUserKey(ChangeDisplayUser changeDisplayUser) {
+	public void updateDisplayUserKey(ChangeDisplayUser changeDisplayUser) {
 		LOGGER.info("## changeDisplayUserKey start ##");
 		Integer affectedRow = null;
 		affectedRow = (Integer) this.changeDisplayUserRepository.changeMbrAvg(changeDisplayUser);

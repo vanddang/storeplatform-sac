@@ -39,7 +39,7 @@ public class ChangeDisplayUserSCIController implements ChangeDisplayUserSCI {
 		changeDisplayUser.setTenantId(changeDisplayUserSacReq.getTenantId());
 		changeDisplayUser.setNewUserId(changeDisplayUserSacReq.getNewUserId());
 		changeDisplayUser.setOldUserId(changeDisplayUserSacReq.getOldUserId());
-		this.changeDisplayUserService.changeDisplayUserId(changeDisplayUser);
+		this.changeDisplayUserService.updateDisplayUserId(changeDisplayUser);
 	}
 
 	@Override
@@ -53,7 +53,6 @@ public class ChangeDisplayUserSCIController implements ChangeDisplayUserSCI {
 		changeDisplayUser.setTenantId(changeDisplayUserSacReq.getTenantId());
 		changeDisplayUser.setNewUserKey(changeDisplayUserSacReq.getNewUseKey());
 		changeDisplayUser.setOldUserKey(changeDisplayUserSacReq.getOldUserKey());
-		this.changeDisplayUserService.changeDisplayUserKey(changeDisplayUser);
+		this.changeDisplayUserService.updateDisplayUserKey(changeDisplayUser);
 	}
-
 }
