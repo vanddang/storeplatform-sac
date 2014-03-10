@@ -11,7 +11,6 @@ lose such Confidential Information and
 package com.skplanet.storeplatform.sac.client.display.vo.shopping;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
@@ -22,27 +21,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
 public class ShoppingDetailRes extends CommonInfo {
-	/**
-	 * 
-	 */
-	private CommonResponse commonResponse;
 	private static final long serialVersionUID = 1L;
 	private Product product;
-
-	/**
-	 * @return the commonResponse
-	 */
-	public CommonResponse getCommonResponse() {
-		return this.commonResponse;
-	}
-
-	/**
-	 * @param commonResponse
-	 *            the commonResponse to set
-	 */
-	public void setCommonResponse(CommonResponse commonResponse) {
-		this.commonResponse = commonResponse;
-	}
 
 	/**
 	 * @return the product
