@@ -26,14 +26,14 @@ public class SaveAndSync extends CommonInfo {
 	private String isSaveAndSyncTarget = "";
 
 	/**
-	 * 사용자 이전 Key
+	 * 변동성 사용자 Key
 	 */
-	private String preUserKey = "";
+	private String userKey = "";
 
 	/**
-	 * 휴대기기 이전 Key
+	 * 변동성 휴대기기 Key
 	 */
-	private String preDeviceKey = "";
+	private String deviceKey = "";
 
 	/**
 	 * @return the isSaveAndSyncTarget
@@ -51,33 +51,33 @@ public class SaveAndSync extends CommonInfo {
 	}
 
 	/**
-	 * @return the preUserKey
+	 * @return the userKey
 	 */
-	public String getPreUserKey() {
-		return this.preUserKey;
+	public String getUserKey() {
+		return this.userKey;
 	}
 
 	/**
-	 * @param preUserKey
-	 *            the preUserKey to set
+	 * @param userKey
+	 *            the userKey to set
 	 */
-	public void setPreUserKey(String preUserKey) {
-		this.preUserKey = preUserKey;
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 	/**
-	 * @return the preDeviceKey
+	 * @return the deviceKey
 	 */
-	public String getPreDeviceKey() {
-		return this.preDeviceKey;
+	public String getDeviceKey() {
+		return this.deviceKey;
 	}
 
 	/**
-	 * @param preDeviceKey
-	 *            the preDeviceKey to set
+	 * @param deviceKey
+	 *            the deviceKey to set
 	 */
-	public void setPreDeviceKey(String preDeviceKey) {
-		this.preDeviceKey = preDeviceKey;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 }

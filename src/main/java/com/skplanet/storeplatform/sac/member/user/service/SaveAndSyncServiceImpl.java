@@ -73,8 +73,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		 */
 		SaveAndSync saveAndSync = new SaveAndSync();
 		saveAndSync.setIsSaveAndSyncTarget(MemberConstants.USE_Y);
-		saveAndSync.setPreUserKey("");
-		saveAndSync.setPreDeviceKey("");
+		saveAndSync.setUserKey("");
+		saveAndSync.setDeviceKey("");
 
 		LOGGER.info("## >> SaveAndSync : {}", saveAndSync);
 
