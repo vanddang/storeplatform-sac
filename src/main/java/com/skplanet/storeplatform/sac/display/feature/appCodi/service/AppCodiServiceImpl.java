@@ -55,7 +55,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.appCodi.vo.AppCodiRes;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.IsfEcInvoker;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
@@ -87,9 +86,6 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 	@Autowired
 	private MetaInfoService metaInfoService;
-
-	@Autowired
-	private DisplayCommonService displayCommonService;
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
@@ -597,12 +593,6 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 							paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 							paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-
-							paramMap.put("chartClsfCd", "DP004901");
-							// 배치완료 기준일시 조회
-							String stdDt = this.displayCommonService.getBatchStandardDateString(
-									tenantHeader.getTenantId(), "MELON_DP004901");
-							paramMap.put("stdDt", stdDt.substring(0, 8));
 
 							if (this.log.isDebugEnabled()) {
 								this.log.debug("##### Search for music meta info product");
