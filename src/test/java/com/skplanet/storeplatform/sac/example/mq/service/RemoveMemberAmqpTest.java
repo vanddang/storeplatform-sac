@@ -30,8 +30,9 @@ public class RemoveMemberAmqpTest {
 		@Override
 		public void run() {
 			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
-			mqInfo.setMbrId("itachi20140307001");
-			mqInfo.setMbrNo("IM190000008392120140307134941");
+			mqInfo.setUserId("itachi20170307011");
+			mqInfo.setUserKey("IM500000008392120140307224922");
+			mqInfo.setWorkDt("20140310151011"); /* YYYYMMDDHH24MISS */
 			RemoveMemberAmqpTest.this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 			System.out.println("[" + this.toString() + "]convertAndSend");

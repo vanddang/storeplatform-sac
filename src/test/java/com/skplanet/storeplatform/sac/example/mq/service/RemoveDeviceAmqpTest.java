@@ -30,9 +30,13 @@ public class RemoveDeviceAmqpTest {
 		@Override
 		public void run() {
 			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
+			mqInfo.setWorkDt("20140310130101");
+			mqInfo.setUserKey("US201403071349411360004171");
 			mqInfo.setDeviceKey("01091074897");
 			mqInfo.setDeviceId("01091074897");
+			mqInfo.setChgCaseCd("US012012"); // 번호이동
 			mqInfo.setSvcMangNo("7032891742");
+
 			RemoveDeviceAmqpTest.this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
 
 			System.out.println("[" + this.toString() + "]convertAndSend");

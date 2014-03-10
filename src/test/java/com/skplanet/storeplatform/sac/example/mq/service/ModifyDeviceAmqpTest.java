@@ -30,10 +30,16 @@ public class ModifyDeviceAmqpTest {
 		@Override
 		public void run() {
 			ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
-			mqInfo.setMbrNo("IM190000008392320140308115548");
-			mqInfo.setMnoCd("US001201"); // SKT
+			mqInfo.setWorkDt("20140310150303");
+			mqInfo.setUserKey("US201403071349411360004171");
+			mqInfo.setOldUserKey("US201403071349411360004171");
 			mqInfo.setDeviceKey("01035870955");
+			mqInfo.setOldDeviceKey("01035870955");
 			mqInfo.setDeviceId("01035870955");
+			mqInfo.setOldDeviceId("01035870955");
+			mqInfo.setMnoCd("US001201"); // SKT
+			mqInfo.setOldMnoCd("US001203"); // U+
+			mqInfo.setChgCaseCd("US012012");// 번호이동
 			ModifyDeviceAmqpTest.this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
 
 			System.out.println("[" + this.toString() + "]convertAndSend");

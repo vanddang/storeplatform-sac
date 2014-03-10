@@ -30,10 +30,15 @@ public class CreateDeviceAmqpTest {
 		@Override
 		public void run() {
 			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-			mqInfo.setMbrNo("IM190000008392120140307134941");
-			mqInfo.setMnoCd("US001201"); // SKT
+
+			mqInfo.setWorkDt("20140310160101");
+			mqInfo.setUserKey("US201403071349411360004171");
+			mqInfo.setOldUserKey("US201403071349411360004171");
 			mqInfo.setDeviceKey("01035870955");
+			mqInfo.setOldDeviceKey("01035870955");
 			mqInfo.setDeviceId("01035870955");
+			mqInfo.setMnoCd("US001201"); // SKT
+
 			CreateDeviceAmqpTest.this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 
 			System.out.println("[" + this.toString() + "]convertAndSend");

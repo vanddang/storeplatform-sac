@@ -1519,10 +1519,13 @@ public class IdpServiceImpl implements IdpService {
 
 		// 회원 탈퇴 정보를 전달 하는 mq 호출.
 		if (searchUserResponse != null) {
-			RemoveMemberAmqpSacReq removeMemberMq = new RemoveMemberAmqpSacReq();
-			removeMemberMq.setMbrId(userId);
-			removeMemberMq.setMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
-			this.memberRetireAmqpTemplate.convertAndSend(removeMemberMq);
+
+			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+			mqInfo.setUserId(userId);
+			mqInfo.setUserKey(searchUserResponse.getUserKey());
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+
+			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 		}
 
 		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
