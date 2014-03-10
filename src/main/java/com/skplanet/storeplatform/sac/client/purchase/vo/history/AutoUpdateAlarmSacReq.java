@@ -30,9 +30,9 @@ public class AutoUpdateAlarmSacReq extends CommonInfo implements Serializable {
 	@NotNull
 	@NotEmpty
 	private String userKey; // 내부사용자번호
-//	@NotEmpty
-//	@NotNull
-//	@Valid
+	@NotEmpty
+	@NotNull
+	@Valid
 	private List<AutoUpdateAlarmSac> productList; // 알람YN
 
 	/**
