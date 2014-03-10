@@ -100,7 +100,7 @@ public class SearchUserSCIControllerTest {
 
 	}
 
-	/** =============== UserKey 이용한 조회 =============== */
+	/** =============== UserKey 이용한 결제페이지 노출정보조회 =============== */
 	@Test
 	public void TEST_USERKEY_정상_사용자_결제페이지_노출정보조회_통신과금정보없음() throws Exception {
 		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
@@ -181,7 +181,7 @@ public class SearchUserSCIControllerTest {
 
 	}
 
-	/** =============== DeviceKey 이용한 조회 =============== */
+	/** =============== DeviceKey 이용한 결제페이지 노출정보조회 =============== */
 	@Test
 	public void TEST_DeviceKey_정상_사용자_결제페이지_노출정보조회_통신과금정보없음() throws Exception {
 		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
@@ -287,9 +287,32 @@ public class SearchUserSCIControllerTest {
 
 	}
 
-	/** ==================== DevceKey를 이용한 회원정보&디바이스정보 조회 ============ */
+	@Test
+	public void B_TEST_정상_DeviceKeyList_검색_일부검색결과있음() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+				List<String> deviceKeyList = new ArrayList<String>();
+				deviceKeyList.add("DE20140212040954148000155211");
+				deviceKeyList.add("DE201402120522137350001556");
+				deviceKeyList.add("DE201402121456183890001558");
+
+				searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
+				return searchUserDeviceSacReq;
+			}
+		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
 	@Test(expected = StorePlatformException.class)
-	public void B_TEST_오류_DeviceKeyList_검색() throws Exception {
+	public void C_TEST_오류_DeviceKeyList_검색_검색결과없음() throws Exception {
 		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 			@Override
 			public Object requestBody() {
@@ -298,6 +321,28 @@ public class SearchUserSCIControllerTest {
 				deviceKeyList.add("DE20140212040954148000155211");
 				deviceKeyList.add("DE20140212052213735000155611");
 				deviceKeyList.add("DE20140212145618389000155811");
+
+				searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
+				return searchUserDeviceSacReq;
+			}
+		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	@Test(expected = StorePlatformException.class)
+	public void D_TEST_오류_DeviceKeyList_검색_검색결과없음() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+				List<String> deviceKeyList = new ArrayList<String>();
+				deviceKeyList.add("");
 
 				searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
 				return searchUserDeviceSacReq;
