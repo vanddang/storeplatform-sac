@@ -22,7 +22,7 @@
               , policy_prior
           FROM  tb_cm_tenant_sale_policy 
          WHERE  tenant_id = #{tenantId}
-         <if test="procPatternCd != null and procPatternCd != ''">
+         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(procPatternCd)">
            AND  proc_pattern_cd = #{procPatternCd}
          </if>
          <if test="ignoreTenantProdGrpCd == null or ignoreTenantProdGrpCd != true">
