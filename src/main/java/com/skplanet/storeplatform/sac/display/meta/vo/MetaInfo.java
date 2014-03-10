@@ -215,6 +215,7 @@ public class MetaInfo {
 
 	private String allow;
 	private String b2bProdYn;
+	private String saleCnt; // 최대_판매_수량
 	private String mthMaxCnt; // 월_최대_판매_수량
 	private String dlyMaxCnt; // 일_최대_판매_수량
 	private String mthUsrMaxCnt; // 월_회원_최대_구매_수량
@@ -271,8 +272,8 @@ public class MetaInfo {
 	private String expoSellerId;
 	private String platform;
 	private String osVersion;
-	private String previewUrl;	
-	
+	private String previewUrl;
+
 	/**
 	 * @return the topMenuId
 	 */
@@ -3184,6 +3185,21 @@ public class MetaInfo {
 	}
 
 	/**
+	 * @return the saleCnt
+	 */
+	public String getSaleCnt() {
+		return this.saleCnt;
+	}
+
+	/**
+	 * @param saleCnt
+	 *            the saleCnt to set
+	 */
+	public void setSaleCnt(String saleCnt) {
+		this.saleCnt = saleCnt;
+	}
+
+	/**
 	 * @return the mthMaxCnt
 	 */
 	public String getMthMaxCnt() {
@@ -3767,7 +3783,7 @@ public class MetaInfo {
 	public void setDtlImagePath(String dtlImagePath) {
 		this.dtlImagePath = dtlImagePath;
 	}
-	
+
 	/**
 	 * @return the tinyUrl
 	 */
@@ -3856,5 +3872,5 @@ public class MetaInfo {
 	 */
 	public void setPreviewUrl(String previewUrl) {
 		this.previewUrl = previewUrl;
-	}	
+	}
 }
