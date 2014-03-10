@@ -3,11 +3,8 @@ package com.skplanet.storeplatform.sac.display.product.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -47,8 +44,8 @@ public class CmsDeviceServiceImpl implements CmsDeviceService {
 	@Qualifier("cmsApp")
 	private CommonDAO commonDAO;
 
-	@Resource
-	private AmqpTemplate deviceMappingRabbitTemplate;
+	// @Resource
+	// private AmqpTemplate deviceMappingRabbitTemplate;
 
 	/**
 	 * @descriion DEVICE-MPING 통합CMS > dev3.0 전문 처리
@@ -213,7 +210,7 @@ public class CmsDeviceServiceImpl implements CmsDeviceService {
 		dmr.setMsg(cv.getResultMsg()); // Result Message
 		dmr.setContentList(resultFailList);
 
-		this.deviceMappingRabbitTemplate.convertAndSend(dmr);
+		// this.deviceMappingRabbitTemplate.convertAndSend(dmr);
 
 		this.log.debug("*********************************************************");
 		this.log.debug("***** dmr.getResult         :::: {}", dmr.getResult());

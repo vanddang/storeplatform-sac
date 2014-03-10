@@ -3,11 +3,8 @@ package com.skplanet.storeplatform.sac.example.mq.service;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.annotation.Resource;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,8 +20,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceAmqpSacR
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class ModifyDeviceAmqpTest {
 
-	@Resource(name = "memberModDeviceAmqpTemplate")
-	private AmqpTemplate memberModDeviceAmqpTemplate;
+	// @Resource(name = "memberModDeviceAmqpTemplate")
+	// private AmqpTemplate memberModDeviceAmqpTemplate;
 
 	class Worker implements Runnable {
 		@Override
@@ -40,13 +37,13 @@ public class ModifyDeviceAmqpTest {
 			mqInfo.setMnoCd("US001201"); // SKT
 			mqInfo.setOldMnoCd("US001203"); // U+
 			mqInfo.setChgCaseCd("US012012");// 번호이동
-			ModifyDeviceAmqpTest.this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
+			// ModifyDeviceAmqpTest.this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
 
 			System.out.println("[" + this.toString() + "]convertAndSend");
 			try {
-				Thread.sleep(1000);
+			Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+			e.printStackTrace();
 			}
 		}
 	}
@@ -65,8 +62,8 @@ public class ModifyDeviceAmqpTest {
 		int count = 1;
 		ExecutorService executor = Executors.newFixedThreadPool(count);
 		for (int i = 0; i < count; i++) {
-			Runnable worker = new Worker();
-			executor.execute(worker);
+		Runnable worker = new Worker();
+		executor.execute(worker);
 		}
 		executor.shutdown();
 
@@ -85,8 +82,8 @@ public class ModifyDeviceAmqpTest {
 	public void receive() {
 		Message message = null;
 		int count = 0;
-		while ((message = this.memberModDeviceAmqpTemplate.receive("sac.tenant.member.mod-device.async")) != null) {
-			System.out.println((++count) + "message = " + message);
-		}
+		// while ((message = this.memberModDeviceAmqpTemplate.receive("sac.tenant.member.mod-device.async")) != null) {
+		// System.out.println((++count) + "message = " + message);
+		// }
 	}
 }

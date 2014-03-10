@@ -3,11 +3,8 @@ package com.skplanet.storeplatform.sac.example.mq.service;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.annotation.Resource;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,8 +20,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacR
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class RemoveMemberAmqpTest {
 
-	@Resource(name = "memberRetireAmqpTemplate")
-	private AmqpTemplate memberRetireAmqpTemplate;
+	// @Resource(name = "memberRetireAmqpTemplate")
+	// private AmqpTemplate memberRetireAmqpTemplate;
 
 	class Worker implements Runnable {
 		@Override
@@ -33,13 +30,13 @@ public class RemoveMemberAmqpTest {
 			mqInfo.setUserId("itachi20170307011");
 			mqInfo.setUserKey("IM500000008392120140307224922");
 			mqInfo.setWorkDt("20140310151011"); /* YYYYMMDDHH24MISS */
-			RemoveMemberAmqpTest.this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+			// RemoveMemberAmqpTest.this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 			System.out.println("[" + this.toString() + "]convertAndSend");
 			try {
-				Thread.sleep(1000);
+			Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+			e.printStackTrace();
 			}
 		}
 	}
@@ -58,8 +55,8 @@ public class RemoveMemberAmqpTest {
 		int count = 1;
 		ExecutorService executor = Executors.newFixedThreadPool(count);
 		for (int i = 0; i < count; i++) {
-			Runnable worker = new Worker();
-			executor.execute(worker);
+		Runnable worker = new Worker();
+		executor.execute(worker);
 		}
 		executor.shutdown();
 
@@ -72,8 +69,8 @@ public class RemoveMemberAmqpTest {
 	public void receive() {
 		Message message = null;
 		int count = 0;
-		while ((message = this.memberRetireAmqpTemplate.receive("sac.tenant.member.retire.async")) != null) {
-			System.out.println((++count) + "message = " + message);
-		}
+		// while ((message = this.memberRetireAmqpTemplate.receive("sac.tenant.member.retire.async")) != null) {
+		// System.out.println((++count) + "message = " + message);
+		// }
 	}
 }
