@@ -256,6 +256,14 @@ public class MetaInfo {
 	private String partChrgmonyAppYn;
 	private Integer freeItemAmt;
 
+	// ////////////////////// 이용가능단말 정보 변수 /////////////////////////
+	private String deviceModelCd; // 단말 모델코드
+	private String deviceModelNm; // 단말 모델명
+	private String mnftCompCd; // 제조사 코드
+	private String mnftCompNm; // 제조사 명
+	private String listImagePath; // 리스트 노출 이미지 경로
+	private String dtlImagePath; // 상세 노출 이미지 경로
+
 	/**
 	 * @return the topMenuId
 	 */
@@ -3646,4 +3654,93 @@ public class MetaInfo {
 		this.freeItemAmt = freeItemAmt;
 	}
 
+	/**
+	 * @return the deviceModelCd
+	 */
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	/**
+	 * @param deviceModelCd
+	 *            the deviceModelCd to set
+	 */
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
+	}
+
+	/**
+	 * @return the deviceModelNm
+	 */
+	public String getDeviceModelNm() {
+		return this.deviceModelNm;
+	}
+
+	/**
+	 * @param deviceModelNm
+	 *            the deviceModelNm to set
+	 */
+	public void setDeviceModelNm(String deviceModelNm) {
+		this.deviceModelNm = deviceModelNm;
+	}
+
+	/**
+	 * @return the mnftCompCd
+	 */
+	public String getMnftCompCd() {
+		return this.mnftCompCd;
+	}
+
+	/**
+	 * @param mnftCompCd
+	 *            the mnftCompCd to set
+	 */
+	public void setMnftCompCd(String mnftCompCd) {
+		this.mnftCompCd = mnftCompCd;
+	}
+
+	/**
+	 * @return the mnftCompNm
+	 */
+	public String getMnftCompNm() {
+		return this.mnftCompNm;
+	}
+
+	/**
+	 * @param mnftCompNm
+	 *            the mnftCompNm to set
+	 */
+	public void setMnftCompNm(String mnftCompNm) {
+		this.mnftCompNm = mnftCompNm;
+	}
+
+	/**
+	 * @return the listImagePath
+	 */
+	public String getListImagePath() {
+		return this.listImagePath;
+	}
+
+	/**
+	 * @param listImagePath
+	 *            the listImagePath to set
+	 */
+	public void setListImagePath(String listImagePath) {
+		this.listImagePath = listImagePath;
+	}
+
+	/**
+	 * @return the dtlImagePath
+	 */
+	public String getDtlImagePath() {
+		return this.dtlImagePath;
+	}
+
+	/**
+	 * @param dtlImagePath
+	 *            the dtlImagePath to set
+	 */
+	public void setDtlImagePath(String dtlImagePath) {
+		this.dtlImagePath = dtlImagePath;
+	}
 }

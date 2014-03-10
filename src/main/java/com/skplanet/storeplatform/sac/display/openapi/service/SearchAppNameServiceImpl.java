@@ -89,7 +89,7 @@ public class SearchAppNameServiceImpl implements SearchAppNameService {
 		try {
 
 			// searchKeyword = new String(searchAppNameSacReq.getSearchKeyword().getBytes("8859_1"), "UTF-8");
-			// 한글 키워드 처리
+			// 한글 키워드 처리 ex) %EC%97%AC%ED%96%89(여행 utf0-8 encode 결과) 아래서 decode
 			searchKeyword = URLDecoder.decode(searchAppNameSacReq.getSearchKeyword(), "utf-8");
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_DSP_0014");

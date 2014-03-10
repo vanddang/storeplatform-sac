@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UseableDevice">
+	<!-- 이용가능 단말 조회(서비스 그룹코드 : DP000201)-->
+	<select id="selectUseableDeviceForApp" parameterType="UseableDeviceSacReq" resultType="MetaInfo">
+		SELECT TOTAL_COUNT
+		     , RNUM
+		     , PROD_ID
+		     , DEVICE_MODEL_CD
+		     , MODEL_NM AS DEVICE_MODEL_NM
+		     , MNFT_COMP_CD
+		     , MAKE_COMP_NM AS MNFT_COMP_NM
+		     , NET_COMP
+		     , LCD_SIZE
+		     , COLOR_DEPTH
+		     , AUDIO_TYPE
+		     , AUDIO_POLY
+		     , TOUCH_SCREEN_YN
+		     , CAMERA_SPRT_YN
+		     , BLUETOOTH_SPRT_YN
+		     , GPS_SPRT_YN
+		     , EXTRR_MEM_YN
+		     , ITOPP_V4_SPRT_YN
+		     , LIST_IMAGE_PATH
+		     , DTL_IMAGE_PATH
+		     , SOUND_3D_SPRT_YN
+		  FROM
+		       (
+		        SELECT COUNT(*) OVER() AS TOTAL_COUNT
+		             , ROWNUM AS RNUM
+		             , B.PROD_ID
+		             , A.DEVICE_MODEL_CD
+		             , A.MODEL_NM
+		             , A.MNFT_COMP_CD
+		             , SPSAC.FN_COMM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
+		             , SPSAC.FN_COMM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS NET_COMP
+		             , SPSAC.FN_COMM_CD_NM(A.LCD_SIZE_CD,  #{langCd}) AS LCD_SIZE
+		             , SPSAC.FN_COMM_CD_NM(A.COLOR_CD,     #{langCd}) AS COLOR_DEPTH
+		             , SPSAC.FN_COMM_CD_NM(A.AUDIO_TYPE_CD,#{langCd}) AS AUDIO_TYPE
+		             , SPSAC.FN_COMM_CD_NM(A.AUDIO_POLY_CD,#{langCd}) AS AUDIO_POLY
+		             , A.TOUCH_SCREEN_YN
+		             , A.CAMERA_SPRT_YN
+		             , A.BLUETOOTH_SPRT_YN
+		             , A.GPS_SPRT_YN
+		             , A.EXTRR_MEM_YN
+		             , A.ITOPP_V4_SPRT_YN
+		             , REPLACE( REPLACE( REPLACE( NVL(A.LIST_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS LIST_IMAGE_PATH
+		             , REPLACE( REPLACE( REPLACE( NVL(A.DTL_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS DTL_IMAGE_PATH
+		             , A.SOUND_3D_SPRT_YN
+		          FROM TB_CM_DEVICE       A
+		             , TB_DP_SPRT_DEVICE  B
+		         WHERE 1=1
+		           AND NVL(A.VERIFY_DVC_YN, 'N') = 'N'
+		           AND A.USE_YN = 'Y' 
+		           AND A.REP_DEVICE_YN = 'Y'
+		           AND B.PROD_ID = #{productId}
+		          <if test="deviceModelNm != null">
+		           AND (A.MODEL_NM LIKE '%'||#{deviceModelNm}||'%' OR A.DEVICE_MODEL_CD LIKE '%'||#{deviceModelNm}||'%')
+		          </if>
+		          <if test="mnftCompCd != null">
+		           AND MNFT_COMP_CD = #{mnftCompCd}
+		          </if>
+		           AND A.DEVICE_MODEL_CD = B.DEVICE_MODEL_CD
+		          ORDER BY A.REG_DT
+		       )
+		  WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select>
+    
+    <!-- 이용가능 단말 조회(서비스 그룹코드 : DP000205)-->
+    <select id="selectUseableDeviceForShopping" parameterType="UseableDeviceSacReq" resultType="MetaInfo">
+		SELECT TOTAL_COUNT
+		     , RNUM
+		     , PROD_ID
+		     , DEVICE_MODEL_CD
+		     , MODEL_NM AS DEVICE_MODEL_NM
+		     , MNFT_COMP_CD
+		     , MAKE_COMP_NM AS MNFT_COMP_NM
+		     , NET_COMP
+		     , LCD_SIZE
+		     , COLOR_DEPTH
+		     , AUDIO_TYPE
+		     , AUDIO_POLY
+		     , TOUCH_SCREEN_YN
+		     , CAMERA_SPRT_YN
+		     , BLUETOOTH_SPRT_YN
+		     , GPS_SPRT_YN
+		     , EXTRR_MEM_YN
+		     , ITOPP_V4_SPRT_YN
+		     , LIST_IMAGE_PATH
+		     , DTL_IMAGE_PATH
+		     , SOUND_3D_SPRT_YN
+		  FROM
+		      (
+		        SELECT COUNT(*) OVER() AS TOTAL_COUNT
+		             , ROWNUM AS RNUM
+		             , '' AS PROD_ID
+		             , A.DEVICE_MODEL_CD
+		             , A.MODEL_NM
+		             , A.MNFT_COMP_CD
+		             , SPSAC.FN_COMM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
+		             , SPSAC.FN_COMM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS NET_COMP
+		             , SPSAC.FN_COMM_CD_NM(A.LCD_SIZE_CD,  #{langCd}) AS LCD_SIZE
+		             , SPSAC.FN_COMM_CD_NM(A.COLOR_CD,     #{langCd}) AS COLOR_DEPTH
+		             , SPSAC.FN_COMM_CD_NM(A.AUDIO_TYPE_CD,#{langCd}) AS AUDIO_TYPE
+		             , SPSAC.FN_COMM_CD_NM(A.AUDIO_POLY_CD,#{langCd}) AS AUDIO_POLY
+		             , A.TOUCH_SCREEN_YN
+		             , A.CAMERA_SPRT_YN
+		             , A.BLUETOOTH_SPRT_YN
+		             , A.GPS_SPRT_YN
+		             , A.EXTRR_MEM_YN
+		             , A.ITOPP_V4_SPRT_YN
+		             , REPLACE( REPLACE( REPLACE( NVL(A.LIST_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS LIST_IMAGE_PATH
+		             , REPLACE( REPLACE( REPLACE( NVL(A.DTL_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS DTL_IMAGE_PATH
+		             , A.SOUND_3D_SPRT_YN
+		          FROM TB_CM_DEVICE A
+		         WHERE 1=1
+		           AND A.SCL_SHPG_SPRT_YN = 'Y'      
+		           AND NVL(A.VERIFY_DVC_YN, 'N') = 'N'
+		           AND A.USE_YN = 'Y' 
+		           AND A.REP_DEVICE_YN = 'Y'
+		         <if test="deviceModelNm != null">
+		           AND (A.MODEL_NM LIKE '%'||#{deviceModelNm}||'%' OR A.DEVICE_MODEL_CD LIKE '%'||#{deviceModelNm}||'%')
+		         </if>
+		         <if test="mnftCompCd != null">
+		           AND A.MNFT_COMP_CD = #{mnftCompCd}
+		         </if>
+		         ORDER BY A.REG_DT                   
+		       )
+		  WHERE RNUM BETWEEN #{offset} AND #{count}  
+    </select>
+    
+    <!-- 이용가능 단말 조회(서비스 그룹코드 : DP000201, DP000205 제외)-->
+    <select id="selectUseableDeviceForOther" parameterType="UseableDeviceSacReq" resultType="MetaInfo">
+		SELECT TOTAL_COUNT
+		     , RNUM
+		     , PROD_ID
+		     , DEVICE_MODEL_CD
+		     , MODEL_NM AS DEVICE_MODEL_NM
+		     , MNFT_COMP_CD
+		     , MAKE_COMP_NM AS MNFT_COMP_NM
+		     , NET_COMP
+		     , LCD_SIZE
+		     , COLOR_DEPTH
+		     , AUDIO_TYPE
+		     , AUDIO_POLY
+		     , TOUCH_SCREEN_YN
+		     , CAMERA_SPRT_YN
+		     , BLUETOOTH_SPRT_YN
+		     , GPS_SPRT_YN
+		     , EXTRR_MEM_YN
+		     , ITOPP_V4_SPRT_YN
+		     , LIST_IMAGE_PATH
+		     , DTL_IMAGE_PATH
+		     , SOUND_3D_SPRT_YN
+		  FROM
+		       (
+		        SELECT COUNT(*) OVER() AS TOTAL_COUNT
+		             , ROWNUM AS RNUM
+		             , #{productId} AS PROD_ID
+		             , A.DEVICE_MODEL_CD
+		             , A.MODEL_NM
+		             , A.MNFT_COMP_CD
+                     , SPSAC.FN_COMM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
+                     , SPSAC.FN_COMM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS NET_COMP
+                     , SPSAC.FN_COMM_CD_NM(A.LCD_SIZE_CD,  #{langCd}) AS LCD_SIZE
+                     , SPSAC.FN_COMM_CD_NM(A.COLOR_CD,     #{langCd}) AS COLOR_DEPTH
+                     , SPSAC.FN_COMM_CD_NM(A.AUDIO_TYPE_CD,#{langCd}) AS AUDIO_TYPE
+                     , SPSAC.FN_COMM_CD_NM(A.AUDIO_POLY_CD,#{langCd}) AS AUDIO_POLY
+		             , A.TOUCH_SCREEN_YN
+		             , A.CAMERA_SPRT_YN
+		             , A.BLUETOOTH_SPRT_YN
+		             , A.GPS_SPRT_YN
+		             , A.EXTRR_MEM_YN
+		             , A.ITOPP_V4_SPRT_YN
+		             , REPLACE( REPLACE( REPLACE( NVL(A.LIST_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS LIST_IMAGE_PATH
+		             , REPLACE( REPLACE( REPLACE( NVL(A.DTL_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS DTL_IMAGE_PATH
+		             , A.SOUND_3D_SPRT_YN
+		          FROM TB_CM_DEVICE       A
+		            ,  (SELECT DISTINCT SP.DEVICE_MODEL_CD
+		                  FROM TB_DP_SPRT_DEVICE SP
+		                      ,TB_DP_PROD_RSHP   RS
+		                 WHERE RS.PROD_ID = #{productId}
+		                   AND SP.PROD_ID = RS.PART_PROD_ID
+		                   AND SP.PROD_ID != #{productId}) B          
+		         WHERE 1=1
+		           AND A.DEVICE_MODEL_CD = B.DEVICE_MODEL_CD
+		           AND NVL(A.VERIFY_DVC_YN, 'N') = 'N'
+		           AND A.USE_YN = 'Y' 
+		           AND A.REP_DEVICE_YN = 'Y'
+		         <if test="deviceModelNm != null">
+		           AND (A.MODEL_NM LIKE '%'||#{deviceModelNm}||'%' OR A.DEVICE_MODEL_CD LIKE '%'||#{deviceModelNm}||'%')
+		         </if>
+		         <if test="mnftCompCd != null">
+		           AND MNFT_COMP_CD = #{mnftCompCd}
+		         </if>
+		           AND A.DEVICE_MODEL_CD = B.DEVICE_MODEL_CD
+		          ORDER BY A.REG_DT
+		       )
+		  WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select>        
+</mapper>

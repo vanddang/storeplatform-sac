@@ -22,9 +22,12 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProv
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
+import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
+import com.skplanet.storeplatform.sac.display.device.service.UseableDeviceService;
 
 /**
  * 특정 단말 조회 관련 Controller
@@ -41,6 +44,9 @@ public class DeviceController {
 
 	@Autowired
 	private DeviceProductProvisioningService deviceProductProvisioningService;
+
+	@Autowired
+	private UseableDeviceService useableDeviceService;
 
 	/**
 	 * <pre>
@@ -75,6 +81,23 @@ public class DeviceController {
 	public DeviceProductProvisioningRes searchProductProvisioning(@Validated DeviceProductProvisioningReq req,
 			SacRequestHeader header) {
 		return this.deviceProductProvisioningService.searchProductProvisioning(req, header);
+	}
+
+	/**
+	 * <pre>
+	 * 이용 가능 단말 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return DeviceProductProvisioningRes
+	 */
+	@RequestMapping(value = "/useableDevice/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public UseableDeviceSacRes searchUseableDeviceList(@Validated UseableDeviceSacReq req, SacRequestHeader header) {
+		return this.useableDeviceService.searchUseableDeviceList(req, header);
 	}
 
 }
