@@ -88,6 +88,7 @@ public class MetaInfo {
 	private String supportedOs;
 	private String seedUseYn;
 	private String packFee;
+	private String vmVer;
 
 	// ////////////////////////// 멀티미디어 상품 변수 ////////////////////////////
 	private String vodTitlNm;
@@ -1417,6 +1418,21 @@ public class MetaInfo {
 	 */
 	public void setPackFee(String packFee) {
 		this.packFee = packFee;
+	}
+
+	/**
+	 * @return the vmVer
+	 */
+	public String getVmVer() {
+		return this.vmVer;
+	}
+
+	/**
+	 * @param vmVer
+	 *            the vmVer to set
+	 */
+	public void setVmVer(String vmVer) {
+		this.vmVer = vmVer;
 	}
 
 	/**
