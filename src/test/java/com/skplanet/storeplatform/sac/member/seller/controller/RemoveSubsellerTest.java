@@ -85,7 +85,7 @@ public class RemoveSubsellerTest {
 
 						// 필수
 						createSubsellerReq.setSellerKey("IF1023501184720130823173955");
-						createSubsellerReq.setSubSellerID("011ZXCsssssss");
+						createSubsellerReq.setSubSellerId("011ZXCsssssss");
 						// createSubsellerReq.setIsNew("Y");
 
 						createSubsellerReq.setSubSellerMemo("test2");
