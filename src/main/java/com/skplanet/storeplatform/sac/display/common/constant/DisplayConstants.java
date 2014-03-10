@@ -612,6 +612,8 @@ public class DisplayConstants {
 	 */
 	public static final String DP_OPENAPI_APP_URL = "http://www.tstore.co.kr/userpoc/game/viewProduct.omp?insDpCatNo=";
 
+	public static final String DP_OPENAPI_SC_URL = "http://tsto.re/";
+
 	public static final String DP_EXTERNAL_CLIENT = "externalClient";
 
 	public static final String DP_EXTERNAL_PORTAL = "externalPotal";
