@@ -121,27 +121,35 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	 */
 	private String cheackMdn(ExistenceScReq existenceScReq, ExistenceScRes existenceScRes,
 			List<PurchaseTenantPolicy> purchaseTenantPolicyList, String flag) {
+		if (existenceScReq.getPrchsId() != null && existenceScReq.getDeviceKey() == null) {
+			flag = "ID";
+		} else {
+			// flag의 값은 ID, MDN, NOT_MDN를 가진다
+			// flag : ID => ID기반
+			// flag : MDN => MDN기반
+			// flag : NOT_MDN => 정책과 조회한 tenantProdGrpCd는 같지만 DeviceKey가 다른 경우는기구매체크에서 제외한다.
+			if (purchaseTenantPolicyList.size() > 0) {
+				for (PurchaseTenantPolicy purchaseTenantPolicy : purchaseTenantPolicyList) {
 
-		// flag의 값은 ID, MDN, NOT_MDN를 가진다
-		// flag : ID => ID기반
-		// flag : MDN => MDN기반
-		// flag : NOT_MDN => 정책과 조회한 tenantProdGrpCd는 같지만 DeviceKey가 다른 경우는기구매체크에서 제외한다.
-		for (PurchaseTenantPolicy purchaseTenantPolicy : purchaseTenantPolicyList) {
-
-			String tenantProdGrpCd = existenceScRes.getTenantProdGrpCd();
-			// 조회한 tenantProdGrpCd의 시작 코드와 정책코드가 같다면 MDN기반
-			if (tenantProdGrpCd.startsWith(purchaseTenantPolicy.getTenantProdGrpCd())) {
-				// 정책이 같을 경우에는 조회한 DeviceKey와 입력받은 DeviceKey를 비교하여 flag 셋팅
-				if (existenceScRes.getUseInsdDeviceId().equals(existenceScReq.getDeviceKey())) {
-					return flag = "MDN";
-				} else {
-					flag = "NOT_MDN";
+					String tenantProdGrpCd = existenceScRes.getTenantProdGrpCd();
+					// 조회한 tenantProdGrpCd의 시작 코드와 정책코드가 같다면 MDN기반
+					if (tenantProdGrpCd.startsWith(purchaseTenantPolicy.getTenantProdGrpCd())) {
+						// 정책이 같을 경우에는 조회한 DeviceKey와 입력받은 DeviceKey를 비교하여 flag 셋팅
+						if (existenceScRes.getUseInsdDeviceId().equals(existenceScReq.getDeviceKey())) {
+							return flag = "MDN";
+						} else {
+							flag = "NOT_MDN";
+						}
+					} else {
+						// 조회한 tenantProdGrpCd의 시작 코드와 정책코드가 다르면 ID기반
+						if (!flag.equals("NOT_MDN")) {
+							flag = "ID";
+						}
+					}
 				}
 			} else {
-				// 조회한 tenantProdGrpCd의 시작 코드와 정책코드가 다르면 ID기반
-				if (!flag.equals("NOT_MDN")) {
-					flag = "ID";
-				}
+				// 정책 조회시 정책이 없는경우
+				flag = "ID";
 			}
 		}
 		return flag;
