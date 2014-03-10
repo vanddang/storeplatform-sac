@@ -43,6 +43,7 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.idp.constant.IdpConstants;
@@ -1360,8 +1361,7 @@ public class IdpServiceImpl implements IdpService {
 		if (searchUserResponse != null) { // 통합서비스 번호로 조회한 회원정보가 있을경우만 로직처리
 		// 조회되어진 사용자의 상태값이 정상이 아닌경우에 사용자 상태변경 정상 상태로 TB_US_USERMBR 데이터를 수정함
 		if (!MemberConstants.MAIN_STATUS_NORMAL.equals(searchUserResponse.getUserMbr().getUserMainStatus())
-				|| !MemberConstants.SUB_STATUS_NORMAL
-				.equals(searchUserResponse.getUserMbr().getUserSubStatus())) {
+				|| !MemberConstants.SUB_STATUS_NORMAL.equals(searchUserResponse.getUserMbr().getUserSubStatus())) {
 		UpdateStatusUserRequest updateStatusUserRequest = new UpdateStatusUserRequest();
 
 		updateStatusUserRequest.setCommonRequest(commonRequest);
@@ -1515,10 +1515,10 @@ public class IdpServiceImpl implements IdpService {
 		// 회원 탈퇴 정보를 전달 하는 mq 호출.
 		if (searchUserResponse != null) {
 
-		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
-		mqInfo.setUserId(userId);
-		mqInfo.setUserKey(searchUserResponse.getUserKey());
-		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+		// RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+		// mqInfo.setUserId(userId);
+		// mqInfo.setUserKey(searchUserResponse.getUserKey());
+		// mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 
 		// this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 		}
