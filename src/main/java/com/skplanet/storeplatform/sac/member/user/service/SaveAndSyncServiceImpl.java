@@ -45,6 +45,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		LOGGER.info("===== 변동성 대상 체크 공통 모듈 =====");
 		LOGGER.info("===================================");
 
+		SaveAndSync saveAndSync = new SaveAndSync();
+
 		/**
 		 * 14일 이내 번호이동, 14일 이내 번호변경 체크.
 		 * 
@@ -66,15 +68,16 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			 * TODO SC API 호출...... 회원 복구
 			 */
 
-		}
+		} else {
 
-		/**
-		 * 결과 setting.
-		 */
-		SaveAndSync saveAndSync = new SaveAndSync();
-		saveAndSync.setIsSaveAndSyncTarget(MemberConstants.USE_Y);
-		saveAndSync.setUserKey("");
-		saveAndSync.setDeviceKey("");
+			/**
+			 * 결과 setting.
+			 */
+			saveAndSync.setIsSaveAndSyncTarget(MemberConstants.USE_Y);
+			saveAndSync.setUserKey("");
+			saveAndSync.setDeviceKey("");
+
+		}
 
 		LOGGER.info("## >> SaveAndSync : {}", saveAndSync);
 

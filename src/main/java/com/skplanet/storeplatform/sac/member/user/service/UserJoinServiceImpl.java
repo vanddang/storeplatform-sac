@@ -825,6 +825,30 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
 			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
+		} else if (obj instanceof CreateSaveAndSyncReq) {
+
+			/**
+			 * Save & Sync 가입
+			 */
+			LOGGER.info("======================= ## CreateSaveAndSyncReq");
+			CreateSaveAndSyncReq req = (CreateSaveAndSyncReq) obj;
+			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
+			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
+			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
+			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
+			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
+			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
+			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
+			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
+			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
+			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
+
+		} else {
+
+			LOGGER.info("======================= ## Not Found Request VO Type");
+
 		}
 
 		try {
@@ -1054,14 +1078,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 			/**
 			 * 변동성 대상 체크
-			 * 
-			 * TODO 변동성 체크 모듈 호출해야함.... TODO 변동성 체크 모듈 호출해야함.... TODO 변동성 체크 모듈 호출해야함....
 			 */
 			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(req.getDeviceId());
 			if (StringUtils.equals(saveAndSync.getIsSaveAndSyncTarget(), MemberConstants.USE_Y)) { // 변동성 대상임.
 
-				userKey = "회원이전키";
-				deviceKey = "단말이전키";
+				userKey = saveAndSync.getUserKey();
+				deviceKey = saveAndSync.getDeviceKey();
 
 			} else { // 변동성 대상 아님.
 
@@ -1171,9 +1193,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		UserMbr userMbr = new UserMbr();
 		/**
-		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.) [MAC-yyyyMMddHHmmss] MBR_NO (27)
+		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.) [MAC-yyyyMMdd] MBR_NO (26)
 		 */
-		userMbr.setImMbrNo(req.getDeviceId() + "-" + DateUtil.getToday("yyyyMMddHHmmss"));
+		userMbr.setImMbrNo(req.getDeviceId() + "-" + DateUtil.getToday());
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
