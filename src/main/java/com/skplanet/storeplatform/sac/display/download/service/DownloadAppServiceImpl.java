@@ -262,6 +262,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						metaInfo.setPurchaseDwldExprDt(dwldExprDt);
 						metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
 						metaInfo.setDrmYn(drmYn);
+						// 구매 정보
+						purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
 
 						/************************************************************************************************
 						 * 구매 정보에 따른 암호화 시작
@@ -362,8 +364,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						}
 					}
 
-					// 구매 정보
-					purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
 					product.setPurchaseList(purchaseList);
 
 					// 암호화 정보
