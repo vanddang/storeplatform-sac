@@ -1632,6 +1632,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 					userInfoByDeviceKey.setUserBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthBirthDay()));
 					userInfoByDeviceKey.setUserName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthName()));
 					userInfoByDeviceKey.setIsRealName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getIsRealName()));
+					userInfoByDeviceKey.setUserMainStatus(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getUserMainStatus()));
+					userInfoByDeviceKey.setUserSubStatus(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getUserSubStatus()));
 
 					resMap.put(deviceKeyList.get(i), userInfoByDeviceKey);
 				}

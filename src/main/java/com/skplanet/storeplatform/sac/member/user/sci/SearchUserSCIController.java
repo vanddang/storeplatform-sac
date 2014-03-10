@@ -247,6 +247,8 @@ public class SearchUserSCIController implements SearchUserSCI {
 				userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
 				userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
 				userDeviceInfoSac.setIsRealName(userInfoMap.get(deviceKeyList.get(i)).getIsRealName());
+				userDeviceInfoSac.setUserMainStatus(userInfoMap.get(deviceKeyList.get(i)).getUserMainStatus());
+				userDeviceInfoSac.setUserSubStatus(userInfoMap.get(deviceKeyList.get(i)).getUserSubStatus());
 
 				resMap.put(deviceKeyList.get(i), userDeviceInfoSac);
 			}
