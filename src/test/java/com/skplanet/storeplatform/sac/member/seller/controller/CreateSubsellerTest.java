@@ -85,7 +85,7 @@ public class CreateSubsellerTest {
 
 						// 필수
 						createSubsellerReq.setSellerKey("IF1023501184720130823173955");
-						createSubsellerReq.setSubSellerId("011ZXCdd");
+						createSubsellerReq.setSubSellerId("011ZXCddd");
 						// createSubsellerReq.setIsNew("Y");
 
 						createSubsellerReq.setSubSellerMemo("test2");
