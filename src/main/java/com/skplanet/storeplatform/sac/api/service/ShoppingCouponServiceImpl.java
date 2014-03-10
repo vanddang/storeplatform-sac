@@ -341,6 +341,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	 */
 	public boolean brandImgResize(DpBrandInfo dpBrandInfo) {
 		this.log.info("■■■■■BrandImgResize■■■■■ 시작 ");
+		ImageUtil imgUtil = new ImageUtil();
 
 		// 파일명 끝에 추가할 명칭
 		String[] drivedFileNameForDrived = { "_260x170", "_177x177", "_114x114", "_29x29", "_56x56", "_27x27", "_25x25" };
@@ -385,7 +386,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				String outFile = uploadDir + targetFileName;
 				this.log.info("outFile11::::" + outFile);
 				// 이미지 리사이즈
-				if (!ImageUtil.setImgScale(srcFile, outFile, width, height, uploadDir)) {
+				if (!imgUtil.setImgScale(srcFile, outFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
 
@@ -420,6 +421,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	 */
 	public boolean catalogImgResize(DpCatalogInfo dpCatalogInfo) {
 
+		ImageUtil imgUtil = new ImageUtil();
 		// 파일명 끝에 추가할 명칭
 		String[] drivedFileNameForDrivedTop = { "_60x60", "_120x120", "_130x130", "_40x40", "_80x80", "_110x110",
 				"_180x180", "_182x182", "_31x30" };
@@ -494,9 +496,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				String outFile = uploadDir + targetFileName;
 
 				// 이미지 리사이즈
-				ImageUtil.setImgScale(srcFile, outFile, width, height, uploadDir);
+				imgUtil.setImgScale(srcFile, outFile, width, height, uploadDir);
 				// 이미지 리사이즈
-				if (!ImageUtil.setImgScale(srcFile, outFile, width, height, uploadDir)) {
+				if (!imgUtil.setImgScale(srcFile, outFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
 				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
@@ -526,10 +528,10 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				String cutOutFile = uploadDir1 + targetFileName1;
 
 				// 이미지 리사이즈
-				if (!ImageUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir)) {
+				if (!imgUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
-				ImageUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir1);
+				imgUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir1);
 
 				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName1 + "을 생성 하였습니다.");
 
@@ -556,12 +558,13 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 					for (seq = 1; nHeightSize < height; seq++) {
 
 						String resizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
+
 						// 이미지 리사이즈
-						if (!ImageUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir)) {
+						if (!imgUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir)) {
 							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ",
 									null);
 						}
-						ImageUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
+						imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
 								width, 1170);
 						this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
 						// log.info("■■■■■BrandImgResize■■■■■ : " + resizetargetFileName1 + "을 생성 하였습니다.");
@@ -584,8 +587,8 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 							resizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
 							this.log.info("resizetargetFileName1" + resizetargetFileName1);
 
-							ImageUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0,
-									cY, width, height - cY);
+							imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
+									width, height - cY);
 							this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
 							// log.info("■■■■■BrandImgResize■■■■■ : " + resizetargetFileName1 + "을 생성 하였습니다.");
 

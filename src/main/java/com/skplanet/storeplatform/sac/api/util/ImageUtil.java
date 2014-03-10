@@ -46,17 +46,19 @@ public class ImageUtil {
 	 *            변경 후 이미지 저장 디렉토리 명
 	 * @return boolean
 	 */
-	public static boolean setImgScale(File inImgfle, String outFile, int targetWidth, int targetHeight,
-			String directoryName) {
+	public boolean setImgScale(File inImgfle, String outFile, int targetWidth, int targetHeight, String directoryName) {
 		try {
+			this.log.info("log111");
 			if (!inImgfle.isFile()) {
 				return false;
 			}
+			this.log.info("log222");
 			File outputfile = new File(outFile);
 			if (outputfile.exists() == true) {
-				// this.log.info("변경하려는 파일과 동일한 파일이 존재하여 삭제합나디. 파일명 [" + outputfile.getName() + "]");
+				this.log.info("변경하려는 파일과 동일한 파일이 존재하여 삭제합나디. 파일명 [" + outputfile.getName() + "]");
 				outputfile.delete();
 			}
+			this.log.info("log333" + directoryName);
 
 			if (directoryName != null) {
 				if (!FileUtil.directoryCheck(directoryName))
@@ -65,10 +67,11 @@ public class ImageUtil {
 				if (!FileUtil.directoryCheck(outFile))
 					FileUtil.createDirectory(outFile);
 			}
+			this.log.info("log444" + directoryName);
 			ImageResizing imgResize = new ImageResizing();
 			boolean isOk = false;
 			isOk = imgResize.imageResizing(inImgfle.getPath(), outFile, targetWidth, targetHeight);
-			// log.info("isOk::::"+isOk);
+			this.log.info("isOk::::" + isOk);
 
 			if (!isOk) {
 				return false;
@@ -97,11 +100,11 @@ public class ImageUtil {
 	 *            dH
 	 * @return boolean
 	 */
-	public static String cutImage2(String srcFile, String destFile, int cX, int cY, int dW, int dH) {
+	public String cutImage2(String srcFile, String destFile, int cX, int cY, int dW, int dH) {
 
 		ImageIcon img = new ImageIcon(srcFile);
 
-		BufferedImage bufImage = imageToBufferedImage(img.getImage(), img.getIconWidth(), img.getIconHeight());
+		BufferedImage bufImage = this.imageToBufferedImage(img.getImage(), img.getIconWidth(), img.getIconHeight());
 
 		BufferedImage bufImage2 = bufImage.getSubimage(cX, cY, dW, dH);
 
@@ -132,7 +135,7 @@ public class ImageUtil {
 	 * 
 	 * @return BufferedImage
 	 */
-	private static BufferedImage imageToBufferedImage(Image im, int width, int height) {
+	private BufferedImage imageToBufferedImage(Image im, int width, int height) {
 		BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
 		Graphics g2d = copy.createGraphics();
 		g2d.drawImage(im, 0, 0, null);
