@@ -41,7 +41,8 @@ public class Play extends CommonInfo implements Serializable {
 	private List<Support> supportList; // 지원매체 리스트
 	private String playProductStatusCode; // play 상품의 상태(restrict)
 	private String usePeriodUnitCd; // 이용기간단위
-    private String salesStatus; // 판매 상태(restrict)
+	private String salesStatus; // 판매 상태(restrict)
+	private List<Source> sourceList;
 
 	/**
 	 * Play().
@@ -231,19 +232,47 @@ public class Play extends CommonInfo implements Serializable {
 		this.usePeriodUnitCd = usePeriodUnitCd;
 	}
 
-    /**
-     * 판매 상태
-     * @return
-     */
-    public String getSalesStatus() {
-        return salesStatus;
-    }
+	/**
+	 * 판매 상태
+	 * 
+	 * @return
+	 */
+	public String getSalesStatus() {
+		return this.salesStatus;
+	}
 
-    /**
-     * 판매 상태
-     * @param salesStatus
-     */
-    public void setSalesStatus(String salesStatus) {
-        this.salesStatus = salesStatus;
-    }
+	/**
+	 * 판매 상태
+	 * 
+	 * @param salesStatus
+	 */
+	public void setSalesStatus(String salesStatus) {
+		this.salesStatus = salesStatus;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * sourceList.
+	 * </pre>
+	 * 
+	 * @return List<Source>
+	 */
+	public List<Source> getSourceList() {
+		return this.sourceList;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * sourceList.
+	 * </pre>
+	 * 
+	 * @param sourceList
+	 *            List<Source>
+	 */
+	public void setSourceList(List<Source> sourceList) {
+		this.sourceList = sourceList;
+	}
+
 }
