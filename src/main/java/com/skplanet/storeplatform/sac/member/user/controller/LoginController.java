@@ -26,6 +26,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSync
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeVariabilityReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeVariabilityRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
@@ -58,6 +60,40 @@ public class LoginController {
 	}
 
 	/**
+	 * 변동성 회원 인증.
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeVariabilityReq
+	 * @return AuthorizeVariabilityRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeVariability/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeVariabilityRes authorizeVariability(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeVariabilityReq req) {
+
+		return this.loginService.executeAuthorizeVariability(requestHeader, req);
+
+	}
+
+	/**
+	 * 모바일 전용 회원 인증 V2 (MDN 인증, 변동성 포함).
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeByMdnReq
+	 * @return AuthorizeByMdnRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeByMdn/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
+
+		return this.loginService.executeAuthorizeByMdnV2(requestHeader, req);
+
+	}
+
+	/**
 	 * ID 기반 회원 인증 (One ID, IDP 회원).
 	 * 
 	 * @param requestHeader
@@ -85,7 +121,7 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/member/user/authorizeSimpleByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeSimpleByMdnRes authorizeForAutoUpdate(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSimpleByMdnReq req) {
+	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSimpleByMdnReq req) {
 
 		return this.loginService.executeAuthorizeSimpleByMdn(requestHeader, req);
 
@@ -102,11 +138,11 @@ public class LoginController {
 	 *            AuthorizeSaveAndSyncByMacReq
 	 * @return AuthorizeSaveAndSyncByMacRes
 	 */
-	@RequestMapping(value = "/member/user/authorizeSaveAndSync/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/authorizeSaveAndSyncByMac/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSync(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
+	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
 
-		return this.loginService.executeAuthorizeSaveAndSync(requestHeader, req);
+		return this.loginService.executeAuthorizeSaveAndSyncByMac(requestHeader, req);
 
 	}
 }

@@ -8,6 +8,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSync
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeVariabilityReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeVariabilityRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -29,6 +31,19 @@ public interface LoginService {
 	public AuthorizeByMdnRes executeAuthorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
 
 	/**
+	 * <pre>
+	 * 변동성 회원 인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeVariabilityReq
+	 * @return AuthorizeVariabilityRes
+	 */
+	public AuthorizeVariabilityRes executeAuthorizeVariability(SacRequestHeader requestHeader, AuthorizeVariabilityReq req);
+
+	/**
 	 * 모바일 전용 회원 인증 (MDN 인증, 변동성 포함).
 	 * 
 	 * @param requestHeader
@@ -37,7 +52,7 @@ public interface LoginService {
 	 *            AuthorizeByMdnReq
 	 * @return AuthorizeByMdnRes
 	 */
-	public AuthorizeByMdnRes executeAuthorizeByMdnTempDev(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
+	public AuthorizeByMdnRes executeAuthorizeByMdnV2(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
 
 	/**
 	 * ID 기반 회원 인증 (One ID, IDP 회원).
@@ -72,6 +87,6 @@ public interface LoginService {
 	 *            AuthorizeSaveAndSyncByMacReq
 	 * @return AuthorizeSaveAndSyncByMacRes
 	 */
-	public AuthorizeSaveAndSyncByMacRes executeAuthorizeSaveAndSync(SacRequestHeader requestHeader, AuthorizeSaveAndSyncByMacReq req);
+	public AuthorizeSaveAndSyncByMacRes executeAuthorizeSaveAndSyncByMac(SacRequestHeader requestHeader, AuthorizeSaveAndSyncByMacReq req);
 
 }

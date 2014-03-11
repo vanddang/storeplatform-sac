@@ -118,7 +118,7 @@ public interface DeviceService {
 	 *            DeviceInfo
 	 * @return deviceKey String
 	 */
-	public String updateLoginDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
+	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo req);
 
 	/**
 	 * 휴대기기 대표단말 설정.

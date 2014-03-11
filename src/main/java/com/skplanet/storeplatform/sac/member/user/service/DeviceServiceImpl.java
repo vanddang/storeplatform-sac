@@ -483,14 +483,12 @@ public class DeviceServiceImpl implements DeviceService {
 			LOGGER.info("::: purchaseUserInfoInternalSCI.updateUserDevice SUCCESS");
 
 			/* 5. 약관 이관 처리 */
-			SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
-			schAgreeListReq.setCommonRequest(commonRequest);
-			schAgreeListReq.setUserKey(previousUserKey);
-
-			SearchAgreementListResponse schAgreeListRes = null;
 			try {
+				SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
+				schAgreeListReq.setCommonRequest(commonRequest);
+				schAgreeListReq.setUserKey(previousUserKey);
 
-				schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
+				SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
 				List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
 				for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
 					agreeInfo.setMemberKey(userKey);
@@ -754,9 +752,9 @@ public class DeviceServiceImpl implements DeviceService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public String updateLoginDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
+	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
-		LOGGER.info("################ updateLoginDeviceInfo start ##################");
+		LOGGER.info("################ updateDeviceInfoForIdLogin start ##################");
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -956,7 +954,7 @@ public class DeviceServiceImpl implements DeviceService {
 			this.insertGameCenterIF(gameCenterSacReq);
 		}
 
-		LOGGER.info("################ updateLoginDeviceInfo end ##################");
+		LOGGER.info("################ updateDeviceInfoForIdLogin end ##################");
 
 		return createDeviceRes.getDeviceKey();
 
