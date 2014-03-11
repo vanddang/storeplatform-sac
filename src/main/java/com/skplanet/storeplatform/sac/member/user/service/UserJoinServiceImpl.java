@@ -1010,7 +1010,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 
-				LOGGER.info("## 회원 조회시 Error 일 경우 Skip.......");
+				LOGGER.info("## 회원 조회시 [ 검색결과 없음 OR 사용자키 또는 회원키 없음 ] 일 경우 Skip.....");
 				LOGGER.info("## Error Code : {}", spe.getErrorInfo().getCode());
 				LOGGER.info("## Error Msg  : {}", spe.getErrorInfo().getMessage());
 
