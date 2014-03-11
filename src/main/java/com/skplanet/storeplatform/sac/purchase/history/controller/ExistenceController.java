@@ -67,8 +67,8 @@ public class ExistenceController {
 
 		ExistenceListSacRes existenceListSacRes = new ExistenceListSacRes();
 
-		existenceListSacRes.setExistenceList(this.resConvert(this.existenceSacService.searchExistenceList(
-				this.reqConvert(existenceSacReq, header), false)));
+		existenceListSacRes.setExistenceList(this.resConvert(this.existenceSacService.searchExistenceList(this
+				.reqConvert(existenceSacReq, header))));
 		return existenceListSacRes;
 	}
 

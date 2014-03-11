@@ -63,7 +63,7 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
 
 		ExistenceScReq req = this.reqConvert(existenceReq);
-		res = this.resConvert(this.existenceSacService.searchExistenceList(req, false));
+		res = this.resConvert(this.existenceSacService.searchExistenceList(req));
 
 		ExistenceListRes existenceListRes = new ExistenceListRes();
 		existenceListRes.setExistenceListRes(res);
