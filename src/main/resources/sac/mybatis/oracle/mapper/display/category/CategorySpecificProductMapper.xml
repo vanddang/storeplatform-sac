@@ -66,11 +66,12 @@
 			     A.META_CLSF_CD,
 			     A.TOP_MENU_ID,
 			     A.PROD_ID AS PART_PROD_ID,
+			     B.OUTSD_CONTENTS_ID,
 			     ROWNUM
 			FROM TB_DP_PROD A
 			     , UV_TB_DP_MULTIMDA_PROD B   
               WHERE 1=1
-              AND OUTSD_CONTENTS_ID IN
+              AND B.OUTSD_CONTENTS_ID IN
                    <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
                         #{item}
                    </foreach>
@@ -504,7 +505,7 @@
 		AND A.PROD_ID = C.PROD_ID
 		AND C.TENANT_ID = #{tenantHeader.tenantId}
 		AND C.EXPO_YN = 'Y'
-		/*AND B.META_CLSF_CD IN ('CT30','CT31','CT32','CT33')*/
+		AND B.META_CLSF_CD IN ('CT30','CT31','CT32','CT33')
     </select>
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="MetaInfo">
        SELECT TB.UP_MENU_ID
