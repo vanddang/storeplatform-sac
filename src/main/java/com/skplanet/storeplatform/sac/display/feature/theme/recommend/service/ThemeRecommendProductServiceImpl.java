@@ -50,6 +50,7 @@ import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.feature.theme.recommend.vo.ThemeRecommend;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -71,6 +72,9 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 	private CommonDAO commonDAO;
 
 	@Autowired
+	private MetaInfoService metaInfoService;
+
+	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	@Override
@@ -88,7 +92,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
 		List<ThemeRecommend> packageInfo = new ArrayList<ThemeRecommend>();
-		List<ThemeRecommend> productInfo = new ArrayList<ThemeRecommend>();
+		// List<ThemeRecommend> productInfo = new ArrayList<ThemeRecommend>();
 		List<String> imageCodeList = new ArrayList<String>();
 		imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 		imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
@@ -101,9 +105,9 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		mapReq.put("START_ROW", requestVO.getOffset());
 		mapReq.put("END_ROW", requestVO.getOffset() + requestVO.getCount() - 1);
 
-		if (this.log.isDebugEnabled()) {
-			this.mapPrint(mapReq);
-		}
+		/*
+		 * if (this.log.isDebugEnabled()) { this.mapPrint(mapReq); }
+		 */
 		packageInfo = this.commonDAO
 				.queryForList("Isf.ThemeRecommend.getRecomendPkgList", mapReq, ThemeRecommend.class);
 
@@ -158,7 +162,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 					if (this.log.isDebugEnabled()) {
 						this.log.debug("##### Search for app  meta info product");
 					}
-					metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
+					metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
 					if (metaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
 						productList.add(product);
@@ -172,12 +176,12 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 						if (this.log.isDebugEnabled()) {
 							this.log.debug("##### Search for Vod  meta info product");
 						}
-						metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
+						metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
 						if (metaInfo != null) {
 							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
 								product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
 							} else {
-								product = this.responseInfoGenerateFacade.generateSpecificBroadcastProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
 							}
 							productList.add(product);
 						}
@@ -189,8 +193,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 						if (this.log.isDebugEnabled()) {
 							this.log.debug("##### Search for EbookComic product");
 						}
-						metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap,
-								MetaInfo.class);
+						metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
 						if (metaInfo != null) {
 							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
 								product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
@@ -208,8 +211,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 						if (this.log.isDebugEnabled()) {
 							this.log.debug("##### Search for music meta info product");
 						}
-						metaInfo = this.commonDAO.queryForObject("Isf.MetaInfo.getMusicMetaInfo", paramMap,
-								MetaInfo.class);
+						metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
 							productList.add(product);
@@ -222,7 +224,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 					if (this.log.isDebugEnabled()) {
 						this.log.debug("##### Search for Shopping  meta info product");
 					}
-					metaInfo = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
+					metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
 					if (metaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
 						productList.add(product);
@@ -234,18 +236,39 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		if (this.log.isDebugEnabled()) {
 			this.log.debug("product count : {}", productList.size());
 			this.log.debug("total count : {}", this.totalCount);
-			// productList.clear();
+			productList.clear();
 		}
 
 		// data 무존재시 운영자 추천으로 대체
 		if (productList.isEmpty()) {
 			this.totalCount = 0;
-			productInfo = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecommendPkgProdList", mapReq,
-					ThemeRecommend.class);
-			if (productInfo.isEmpty()) {
+			List<MetaInfo> metaInfoList = new ArrayList<MetaInfo>();
+			metaInfoList = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecommendPkgProdList", mapReq,
+					MetaInfo.class);
+			if (metaInfoList.isEmpty()) {
 				throw new StorePlatformException("SAC_DSP_0009");
 			}
-			productList = this.makeProductList(productInfo);
+
+			for (MetaInfo metaInfo1 : metaInfoList) {
+				String topMenuId = metaInfo1.getTopMenuId();
+
+				if (topMenuId.equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) {
+					product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo1);
+				} else if (topMenuId.equals(DisplayConstants.DP_TV_TOP_MENU_ID)) {
+					product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo1);
+				} else if (topMenuId.equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) {
+					product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo1);
+				} else if (topMenuId.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) { // 멀티미디어 카테고리 조회
+					product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo1);
+				} else if (topMenuId.equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) { // 뮤직 카테고리 조회
+					product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo1);
+				} else if (topMenuId.equals(DisplayConstants.DP_SHOPPING_TOP_MENU_ID)) { // 쇼핑 카테고리 조회
+					product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo1);
+				} else { // 앱 카테고리 조회
+					product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo1);
+				}
+				productList.add(product);
+			}
 		}
 
 		ThemeRecommendSacRes responseVO = new ThemeRecommendSacRes();
@@ -284,6 +307,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		return layout;
 	}
 
+	@SuppressWarnings("unused")
 	private List<Product> makeProductList(List<ThemeRecommend> resultList) {
 
 		List<Product> listVO = new ArrayList<Product>();
@@ -693,6 +717,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		return response;
 	}
 
+	@SuppressWarnings("unused")
 	private void mapPrint(Map<String, Object> mapReq) {
 		// Get Map in Set interface to get key and value
 		Set<Entry<String, Object>> s = mapReq.entrySet();
