@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.purchase.client.interworking.sci.InterworkingSCI;
 import com.skplanet.storeplatform.purchase.client.interworking.vo.InterworkingScReq;
-import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSacReq;
 
