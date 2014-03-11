@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -136,6 +137,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
+
+	@Autowired
+	private AmqpTemplate memberRetireAmqpTemplate;
 
 	//	@Autowired
 	//	private PurchaseUserInfoInternalSacSCI historyInternalSCI;
@@ -567,8 +571,20 @@ public class DeviceServiceImpl implements DeviceService {
 		} else {
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 		}
-
 		this.insertGameCenterIF(gameCenterSacReq);
+
+		/* 9. MQ 연동 */
+		//		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+		//		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+		//		if (previousUserKey != null && previousDeviceKey != null) {
+		//			mqInfo.setOldUserKey(previousUserKey);
+		//			mqInfo.setOldDeviceKey(previousDeviceKey);
+		//		}
+		//		mqInfo.setUserKey(userKey);
+		//		mqInfo.setDeviceKey(deviceKey);
+		//		mqInfo.setDeviceId(deviceInfo.getDeviceId());
+		//		mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+		//		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 		LOGGER.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
 
@@ -736,6 +752,15 @@ public class DeviceServiceImpl implements DeviceService {
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 			this.insertGameCenterIF(gameCenterSacReq);
 		}
+
+		/* MQ 연동 */
+		//		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+		//		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+		//		mqInfo.setUserKey(userKey);
+		//		mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
+		//		mqInfo.setDeviceId(deviceId);
+		//		mqInfo.setMnoCd(deviceTelecom);
+		//		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 		LOGGER.info("################ updateDeviceInfo end ##################");
 
