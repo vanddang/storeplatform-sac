@@ -573,7 +573,7 @@
                             DV.COMIC_SPRT_YN = ( CASE WHEN PD.TOP_MENU_ID='DP14' 
                                         THEN 'Y' ELSE 'NOT SUPPORT' END)
                            )
-                      )
+                      ) AS PHONE_SPRT_YN
 		            , CM.AUTO_APPR_YN
 		            , DC.LANG_CD
                     , PD.CID
