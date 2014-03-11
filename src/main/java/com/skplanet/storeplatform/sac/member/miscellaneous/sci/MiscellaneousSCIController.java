@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.sci.MiscellaneousSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacRes;
@@ -80,13 +81,13 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 
 		for (IndividualPolicyInfo policyList : getIndividualPolicyRes.getPolicyList()) {
 			IndividualPolicyInfoSac infoSac = new IndividualPolicyInfoSac();
-			infoSac.setIsUsed(policyList.getIsUsed());
-			infoSac.setKey(policyList.getKey());
-			infoSac.setLimitAmount(policyList.getLimitAmount());
-			infoSac.setPermissionType(policyList.getPermissionType());
-			infoSac.setPolicyCode(policyList.getPolicyCode());
-			infoSac.setPreLimitAmount(policyList.getPreLimitAmount());
-			infoSac.setValue(policyList.getValue());
+			infoSac.setIsUsed(StringUtil.setTrim(policyList.getIsUsed()));
+			infoSac.setKey(StringUtil.setTrim(policyList.getKey()));
+			infoSac.setLimitAmount(StringUtil.setTrim(policyList.getLimitAmount()));
+			infoSac.setPermissionType(StringUtil.setTrim(policyList.getPermissionType()));
+			infoSac.setPolicyCode(StringUtil.setTrim(policyList.getPolicyCode()));
+			infoSac.setPreLimitAmount(StringUtil.setTrim(policyList.getPreLimitAmount()));
+			infoSac.setValue(StringUtil.setTrim(policyList.getValue()));
 
 			infoSacList.add(infoSac);
 		}
