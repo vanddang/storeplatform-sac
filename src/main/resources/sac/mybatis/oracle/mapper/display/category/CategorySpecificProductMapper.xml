@@ -80,7 +80,7 @@
          )
         <if test = "list != null">  
          ORDER BY INSTR
-             <foreach collection="list" item="item" index="index" open="(" separator="||" close=",PROD_ID)"> 
+             <foreach collection="list" item="item" index="index" open="(" separator="||" close=",OUTSD_CONTENTS_ID)"> 
                  #{item}
              </foreach>
         </if>   
