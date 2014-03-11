@@ -317,9 +317,11 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 										this.log.debug("#########################################################");
 										for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-											this.log.debug("serviceCd	:	" + uapsEcRes.getServiceCD()[i]);
+											this.log.debug("serviceCd	:	" + uapsEcRes.getServiceCD()[k]);
 											if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING.equals(uapsEcRes
-													.getServiceCD()[i])) {
+													.getServiceCD()[k])) {
+
+												this.log.debug("#######		Fee Type Is Ting Paid Is Half		######");
 												metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
 											}
 										}
