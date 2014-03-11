@@ -220,7 +220,7 @@
     </select>
     
     <!-- 테마추천 상품 리스트 -->
-    <select id="getRecommendPkgProdList" parameterType="Map" resultType="ThemeRecommend">
+    <select id="getRecommendPkgProdList" parameterType="Map" resultType="MetaInfo">
 	SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgMainList, Yun JuYoung, 2014-02-19 */
               P.TOTAL_COUNT
 	        , P.TOP_MENU_ID
@@ -235,11 +235,10 @@
 	                           AND LANG_CD = #{tenantHeader.langCd}), 'TOP', '')) AS MENU_NM
 	        , P.META_CLSF_CD
 	        , P.PROD_ID
-	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN
-	                      CONCAT( P.VOD_TITL_NM, P.PROD_NM )
-	                 ELSE P.PROD_NM
-	             END ) AS PROD_NM
-	        , DECODE( P.TOP_MENU_ID, 'DP13', P.PROD_DTL_DESC, P.PROD_BASE_DESC ) AS PROD_DESC
+	        , P.VOD_TITL_NM
+	        , P.PROD_NM
+	        , P.PROD_DTL_DESC
+	        , P.PROD_BASE_DESC
 	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN
 	                     ( CASE WHEN ( P.CHNL_PERIOD_AMT <![CDATA[>=]]> 0 AND P.STRM_EPSD_CNT <![CDATA[>]]> 0 ) THEN P.CHNL_PERIOD_AMT
 	                            ELSE P.CHNL_UNLMT_AMT
@@ -247,50 +246,39 @@
 	                  ELSE P.PROD_AMT
 	             END ) AS PROD_AMT
 	        , NVL(P.PROD_NET_AMT, 0) AS PROD_NET_AMT
-	        , DECODE( P.PROD_GRD_CD
-	                , 'PD004401', 0
-	                , 'PD004402', 1
-	                , 'PD004403', 2
-	                , 'PD004404', 4 ) AS PROD_GRD_CD
+	        , P.PROD_GRD_CD
 	        , P.SVC_GRP_CD
 	        , P.CONTENTS_TYPE_CD
 	        , P.OUTSD_CONTENTS_ID
-	        , DECODE( P.SVC_GRP_CD, 'DP000201', P.AID ) AS AID
-	        , DECODE( P.SVC_GRP_CD, 'DP000201', REGEXP_SUBSTR(P.PKG_INF,'[^,]+',1,1) ) AS APK_PKG
+	        , P.AID
+	        , DECODE( P.SVC_GRP_CD, 'DP000201', REGEXP_SUBSTR(P.PKG_INF,'[^,]+',1,1) ) AS APK_PKG_NM
 	        , DECODE( P.SVC_GRP_CD, 'DP000201', REGEXP_SUBSTR(P.PKG_INF,'[^,]+',1,2) ) AS APK_VER_CD
 	        , DECODE( P.SVC_GRP_CD, 'DP000201', REGEXP_SUBSTR(P.PKG_INF,'[^,]+',1,3) ) AS APK_FILE_SIZE
 	        , DECODE( P.SVC_GRP_CD, 'DP000201', P.VER_MAJOR||'.'||P.VER_MINOR ) AS PROD_VER
-	        , DECODE( P.SVC_GRP_CD, 'DP000201', DECODE( P.PART_PARENT_CLSF_CD, 'PD012301', 'iab', NULL ) ) AS IN_APP_BILLING
-	        , DECODE( P.SVC_GRP_CD, 'DP000201', DECODE( P.DRM_YN, 'Y', 'drm', NULL ) ) AS DRM
-	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN P.ARTIST1_NM END ) AS BOOK_ARTIST_NM
-	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN P.ARTIST2_NM END ) AS BOOK_ARTIST_NM2
-	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN P.ARTIST3_NM END ) AS BOOK_ARTIST_NM3
-	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN P.CHNL_COMP_NM END ) AS BOOK_CHNL_COMP_NM
-	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN P.ISSUE_DAY END ) AS BOOK_SALE_DT
+	        , P.VER_MAJOR
+	        , P.VER_MINOR
+	        , P.PART_PARENT_CLSF_CD
+	        , P.DRM_YN
+	        , P.ARTIST1_NM
+	        , P.ARTIST2_NM
+	        , P.ARTIST3_NM
+	        , P.CHNL_COMP_NM
+	        , P.PLN_COMP_NM
+	        , P.ISSUE_DAY
 	        , DECODE( P.HDV_YN, 'Y', 'hd', NULL ) AS HDV_YN
 	        , DECODE( P.DOLBY_SPRT_YN, 'Y', 'dolby', NULL ) AS DOLBY_SPRT_YN
-	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN P.ARTIST1_NM END ) AS VOD_ARTIST_NM
-	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN P.ARTIST2_NM END ) AS VOD_ARTIST_NM2
-	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN P.CHNL_COMP_NM END ) AS VOD_CHNL_COMP_NM
-	        , ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN P.ISSUE_DAY END ) AS VOD_SALE_DT
-	        , DECODE( P.TOP_MENU_ID, 'DP16', P.ARTIST1_NM ) AS MUSIC_ARTIST_NM
-	        , DECODE( P.TOP_MENU_ID, 'DP16', P.ARTIST2_NM ) AS MUSIC_ARTIST_NM2
-	        , DECODE( P.TOP_MENU_ID, 'DP16', P.ARTIST3_NM ) AS MUSIC_ARTIST_NM3
-	        , DECODE( P.TOP_MENU_ID, 'DP16', P.CHNL_COMP_NM ) AS MUSIC_CHNL_COMP_NM
-	        , DECODE( P.TOP_MENU_ID, 'DP16', P.PLN_COMP_NM ) AS MUSIC_AGENCY_NM
-	        , DECODE( P.TOP_MENU_ID, 'DP16', 'support' ) AS MP3_SPRT
-	        , DECODE( P.TOP_MENU_ID, 'DP16', DECODE( P.BELL_SPRT_YN, 'Y', 'support', 'restrict' ) ) AS BELL_SPRT
-	        , DECODE( P.TOP_MENU_ID, 'DP16', DECODE( P.COLORRING_SPRT_YN, 'Y', 'support', 'restrict' ) ) AS RING_SPRT
-	        , ( CASE WHEN P.SVC_GRP_CD = 'DP000203' THEN CONCAT( PI.FILE_PATH, PI.FILE_NM )
-	                 ELSE PI.FILE_PATH
-	             END ) AS FILE_POS
+	        , DECODE( P.TOP_MENU_ID, 'DP16', 'support' ) AS MP3_SPRT_YN
+	        , P.BELL_SPRT_YN
+	        , P.COLORRING_SPRT_YN
+	        , PI.FILE_PATH
+	        , PI.FILE_NM
 	        , NVL( ( CASE WHEN ( PP.AVG_EVLU_SCORE <![CDATA[>]]> 0 AND PP.AVG_EVLU_SCORE <![CDATA[<]]> 1 ) THEN 1
 	                      WHEN PP.AVG_EVLU_SCORE <![CDATA[>]]> 5 THEN 5
 	                      ELSE ROUND( PP.AVG_EVLU_SCORE , 1 )
 	                  END )
-	             , 0 ) AS AVG_SCORE
-	        , NVL( PP.PATICPERS_CNT, 0 ) AS PART_CNT
-	        , NVL( PP.PRCHS_CNT, 0 ) AS DWLD_CNT
+	             , 0 ) AS AVG_EVLU_SCORE
+	        , NVL( PP.PATICPERS_CNT, 0 ) AS PATICPERS_CNT
+	        , NVL( PP.PRCHS_CNT, 0 ) AS PRCHS_CNT
 	   FROM
 	      (
 	         SELECT C.*
