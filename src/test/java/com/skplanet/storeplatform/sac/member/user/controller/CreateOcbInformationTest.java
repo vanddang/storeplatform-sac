@@ -85,6 +85,7 @@ public class CreateOcbInformationTest {
 						reqJson.setCardNumber("3306-3306-3306-3306"); // 카드 번호 (암호화..??)
 						/* 인증수단 코드 (OR003400 비인증, OR003401 카드번호인증, OR003402 주민번호인증) */
 						reqJson.setAuthMethodCode("OR003401");
+						reqJson.setRegId("SAC TEST");
 
 						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
