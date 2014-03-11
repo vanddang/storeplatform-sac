@@ -193,6 +193,11 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				this.logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
 			}
 
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[getDownloadComicInfo] purchasePassFlag : {}", purchasePassFlag);
+			this.logger.debug("[getDownloadComicInfo] historyRes : {}", historyRes);
+			this.logger.debug("----------------------------------------------------------------");
+
 			if (purchasePassFlag && historyRes != null) {
 				String prchsId = null; // 구매ID
 				String prchsDt = null; // 구매일시
