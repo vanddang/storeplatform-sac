@@ -57,7 +57,7 @@
             ) BETWEEN start_day AND end_day
         </if>
         
-        ORDER BY clause_item_cd ASC
+        ORDER BY clause_id DESC
     </select>
 
     <!-- 폰 정보 조회 -->
