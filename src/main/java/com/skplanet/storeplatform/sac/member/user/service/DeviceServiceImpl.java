@@ -557,7 +557,7 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
-		/* 9. 게임센터 연동 */
+		/* 8. 게임센터 연동 */
 		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 		gameCenterSacReq.setUserKey(userKey);
 		gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
