@@ -15,8 +15,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.framework.integration.serviceactivator.InvocationMethodSearcher;
 import com.skplanet.storeplatform.framework.integration.serviceactivator.InvocationMethod;
+import com.skplanet.storeplatform.framework.integration.serviceactivator.InvocationMethodSearcher;
 import com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService;
 import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo;
 
@@ -39,7 +39,7 @@ public class SacInvocationMethodSearcher implements InvocationMethodSearcher {
 	 * )
 	 */
 	@Override
-	public InvocationMethod search(String interfaceId) {
+	public InvocationMethod searchId(String interfaceId) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("interfaceId", interfaceId);
 
@@ -55,5 +55,18 @@ public class SacInvocationMethodSearcher implements InvocationMethodSearcher {
 		InvocationMethod invocationMethodVO = new InvocationMethod(serviceNm, mtdNm);
 
 		return invocationMethodVO;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.framework.integration.serviceactivator.InvocationMethodSearcher#searchName(java.lang
+	 * .String)
+	 */
+	@Override
+	public InvocationMethod searchName(String messageQueueName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
