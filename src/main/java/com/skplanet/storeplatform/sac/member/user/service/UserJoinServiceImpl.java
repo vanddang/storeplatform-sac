@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -61,7 +62,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 
@@ -979,12 +979,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 타사(KTF,LGT)일경우. (ROOTING 단말 체크)
 			 */
-			String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, req.getDeviceExtraInfoList());
-			LOGGER.info("## >> ROOTING YN : {}", rooting);
-			if (StringUtils.equals(rooting, MemberConstants.USE_Y)) {
-				LOGGER.info("## >> ROOTING 단말 입니다.");
-				throw new StorePlatformException("SAC_MEM_1105");
-			}
+			LOGGER.info("## >> 타사(KTF, LGT)일 경우는 [ROOTING 단말 체크-테넌트 로직으로 넘어감] Skip........");
 
 		}
 
@@ -1010,11 +1005,20 @@ public class UserJoinServiceImpl implements UserJoinService {
 		} catch (StorePlatformException spe) {
 
 			/**
-			 * 회원 조회시 Error 일 경우 Skip.
+			 * 회원 조회시 [ 검색결과 없음 OR 사용자키 또는 회원키 없음 ] 일 경우 Skip.
 			 */
-			LOGGER.info("## 회원 조회시 Error 일 경우 Skip.......");
-			LOGGER.info("## Error Code : {}", spe.getErrorInfo().getCode());
-			LOGGER.info("## Error Msg  : {}", spe.getErrorInfo().getMessage());
+			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+					|| StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+
+				LOGGER.info("## 회원 조회시 Error 일 경우 Skip.......");
+				LOGGER.info("## Error Code : {}", spe.getErrorInfo().getCode());
+				LOGGER.info("## Error Msg  : {}", spe.getErrorInfo().getMessage());
+
+			} else {
+
+				throw spe;
+
+			}
 
 		}
 
@@ -1186,7 +1190,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.) [MAC-yyyyMMdd] MBR_NO (26)
 		 */
-		userMbr.setImMbrNo(req.getDeviceId() + "-" + DateUtil.getToday());
+		userMbr.setImMbrNo(this.getFixMbrNo()); // 고정된 MBR_NO 세팅함.
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
@@ -1208,6 +1212,22 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		return createUserResponse.getUserKey();
 
+	}
+
+	/**
+	 * <pre>
+	 *  MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정).
+	 * </pre>
+	 * 
+	 * @return fix MBR_NO {MAC}{yyyyMMddHHmmssSSS}{난수} (21자리)
+	 */
+	private String getFixMbrNo() {
+		StringBuffer fixMbrNo = new StringBuffer();
+		fixMbrNo.append("MAC");
+		fixMbrNo.append(DateUtil.getToday("yyyyMMddHHmmssSSS"));
+		Random random = new Random();
+		fixMbrNo.append(String.valueOf(random.nextInt(10)));
+		return fixMbrNo.toString();
 	}
 
 }

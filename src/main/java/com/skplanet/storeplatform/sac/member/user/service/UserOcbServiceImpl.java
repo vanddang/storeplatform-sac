@@ -66,6 +66,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 		memberPoint.setCardNumber(req.getCardNumber()); // 카드 번호
 		memberPoint.setStartDate(DateUtil.getToday("yyyyMMddHHmmss")); // 사용시작 일시
 		memberPoint.setEndDate("99991231115959"); // 사용종료 일시
+		memberPoint.setRegID(req.getRegId()); // 등록자 아이디
 		updateMemberPointRequest.setMemberPoint(memberPoint);
 
 		/**
