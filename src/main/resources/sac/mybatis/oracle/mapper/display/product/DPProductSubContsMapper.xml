@@ -27,7 +27,6 @@
 		<result property="rsltnCd"				column="RSLTN_CD"					/>
 		<result property="dpPgRatioCd"			column="DP_PG_RATIO_CD"				/>
 		<result property="dpPgQultCd"			column="DP_PG_QULT_CD"				/>
-		<result property="btvCid"				column="BTV_CID"					/>
 		<result property="fileClsfCd"			column="FILE_CLSF_CD"				/>
 		<result property="filePath"				column="FILE_PATH"					/>
 		<result property="fileSize"				column="FILE_SIZE"					/>
@@ -70,7 +69,6 @@
 			,RSLTN_CD
 			,DP_PG_RATIO_CD
 			,DP_PG_QULT_CD
-			,BTV_CID
 			,FILE_CLSF_CD
 			,FILE_PATH
 			,FILE_SIZE
@@ -114,7 +112,6 @@
 			,RSLTN_CD
 			,DP_PG_RATIO_CD
 			,DP_PG_QULT_CD
-			,BTV_CID
 			,FILE_CLSF_CD
 			,FILE_PATH
 			,FILE_SIZE
@@ -153,7 +150,6 @@
 			,#{rsltnCd, jdbcType=VARCHAR}
 			,#{dpPgRatioCd, jdbcType=VARCHAR}
 			,#{dpPgQultCd, jdbcType=VARCHAR}
-			,#{btvCid, jdbcType=VARCHAR}
 			,#{fileClsfCd, jdbcType=VARCHAR}
 			,#{filePath, jdbcType=VARCHAR}
 			,#{fileSize, jdbcType=INTEGER}

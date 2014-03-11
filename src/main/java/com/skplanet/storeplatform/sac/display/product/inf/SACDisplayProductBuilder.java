@@ -431,6 +431,9 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 										pv.setTenantId(vo.getTenantId());
 										pv.setProdStatCd(vo.getProdStatusCd());
 
+										String result = this.prodService.registProdSettl(pv);
+										log.info("CMS 정산율 = " + result);
+										
 										// 신규 상품 등록
 										// 트리거 확인 후 작업
 										log.info("CMS New Free Data Insert");

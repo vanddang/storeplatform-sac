@@ -5,10 +5,12 @@
 	<resultMap id="dpProductImgMap" type="com.skplanet.icms.refactoring.deploy.DPProductImgVO">
 		<result property="prodId"   column="PROD_ID"    />
 		<result property="imgCd"    column="IMG_CD"    	/>
-		<result property="langCd"    column="LANG_CD"    	/>
+		<result property="langCd"    column="LANG_CD"   />
 		<result property="filePath" column="FILE_PATH"  />
 		<result property="fileNm"   column="FILE_NM"    />
 		<result property="fileSize" column="FILE_SIZE"  />
+		<result property="width"    column="WIDTH"      />
+		<result property="height"   column="HEIGHT"     />		
 		<result property="expoOrd"  column="EXPO_ORD"   />
 		<result property="regId"    column="REG_ID"   	/>
 		<result property="regDt"    column="REG_DT"     />
@@ -24,6 +26,8 @@
 			,FILE_PATH
 			,FILE_NM
 			,FILE_SIZE
+			,WIDTH
+			,HEIGHT			
 			,EXPO_ORD
 			,REG_ID
 			,REG_DT
@@ -49,6 +53,8 @@
 			,FILE_PATH
 			,FILE_NM
 			,FILE_SIZE
+			,WIDTH
+			,HEIGHT			
 			,EXPO_ORD
 			,REG_ID
 			,REG_DT
@@ -62,6 +68,8 @@
 			,#{filePath, jdbcType=VARCHAR}
 			,#{fileNm, jdbcType=VARCHAR} 
 			,#{fileSize, jdbcType=INTEGER}
+			,#{width, jdbcType=INTEGER}
+			,#{height, jdbcType=INTEGER}			
 			,#{expoOrd, jdbcType=INTEGER}
 			,#{regId, jdbcType=VARCHAR} 
 			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
