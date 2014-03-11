@@ -38,6 +38,7 @@ public class BestDownloadSacReq extends CommonInfo {
 	private String hdv; // HDV 지원구분
 	private String drm; // drm 지원구분
 	private String prodGradeCd; // 상품등급코드
+	private String possLendClsfCd; // 소장/대여 구분 코드
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출 ROW 수
@@ -316,6 +317,31 @@ public class BestDownloadSacReq extends CommonInfo {
 	 */
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 소장/대여 구분 코드.
+	 * </pre>
+	 * 
+	 * @return the possLendClsfCd
+	 */
+	public String getPossLendClsfCd() {
+		return this.possLendClsfCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 소장/대여 구분 코드.
+	 * </pre>
+	 * 
+	 * @param possLendClsfCd
+	 *            the possLendClsfCd to set
+	 */
+	public void setPossLendClsfCd(String possLendClsfCd) {
+		this.possLendClsfCd = possLendClsfCd;
 	}
 
 	/**
