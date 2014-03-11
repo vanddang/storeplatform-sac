@@ -430,7 +430,14 @@
                         ,J.USE_PERIOD_UNIT_CD
                         ,J.USE_PERIOD
                         ,J.DRM_YN
-                        ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID  = H.PART_PROD_ID) AS PHONE_SPRT_YN                                                 
+                        ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
+                            FROM  TB_DP_SPRT_DEVICE DV  
+                                 ,TB_CM_DEVICE CM
+                           WHERE DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
+                             AND CM.SCL_SHPG_SPRT_YN = 'Y'
+                             AND DV.DEVICE_MODEL_CD = #{deviceModelNo}
+                             AND PROD_ID  = H.PART_PROD_ID
+                          ) AS PHONE_SPRT_YN                                                                         
                         ,B.CATALOG_ID
                         ,A.BRAND_ID
                         ,A.BRAND_NM    
