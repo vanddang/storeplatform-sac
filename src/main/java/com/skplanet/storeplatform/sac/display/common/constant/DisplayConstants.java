@@ -441,6 +441,8 @@ public class DisplayConstants {
 
 	public static final String DP_OPENAPI_PRODUCT_SEARCHTYPE_SELLERNM = "sellerNm"; // openapi 상품 검색 유형 (by 판매자명)
 
+	public static final String DP_TELECOM_TYPE_CD_SKT = "US001201"; // 통신사 코드 타입 (US001201 : SKT)
+
 	/*
 	 * 배너 타입 코드
 	 */
