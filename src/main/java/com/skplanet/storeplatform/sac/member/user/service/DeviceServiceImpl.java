@@ -1046,7 +1046,6 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
 		}
 
-		/* <NODATA> 적용요부 확인필요 */
 		deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum());
 
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd() == null ? ""
