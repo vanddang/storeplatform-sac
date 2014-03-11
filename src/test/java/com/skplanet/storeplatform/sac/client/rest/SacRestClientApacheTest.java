@@ -113,4 +113,39 @@ public class SacRestClientApacheTest {
 
 	}
 
+	/**
+	 * 한글이 깨지는 현상 재현을 위한 테스트
+	 */
+	@Test
+	@SuppressWarnings("rawtypes")
+	public void testForSms() {
+		String interfaceId = "I04000019";
+		String path = "/other/message/sms/send/v1";
+		Class<Map> responseType = Map.class;
+
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("campaignId", "");
+		map.put("resvDtTm", "20140310180505");
+		map.put("callbackUrl", "");
+		map.put("interfaceId", "");
+		map.put("recvMdn", "01033070713");
+		map.put("teleSvcId", "0");
+		map.put("carrier", "SKT");
+		map.put("srcId", "OR00401");
+		map.put("sendMdn", "01085226051");
+		map.put("msg", "문자 메시지 전송 테스트");
+		map.put("sendOrder", "");
+
+		try {
+			Map<?, ?> resObject = this.client.post(interfaceId, path, responseType, map);
+			System.out.println("# PostForMap Data : \n" + resObject);
+			assertTrue(StringUtils.isNotEmpty((String) resObject.get("resultStatus")));
+		} catch (SacRestClientException e) {
+			SacRestClientError error = e.getError();
+			System.out.println("# PostForMap Error : \n" + error);
+			assertTrue(StringUtils.isNotEmpty(error.getCode()));
+		}
+
+	}
+
 }
