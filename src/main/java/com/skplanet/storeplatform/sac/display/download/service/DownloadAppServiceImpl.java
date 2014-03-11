@@ -272,6 +272,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
 							String deviceId = null; // Device Id
 							String deviceIdType = null; // Device Id 유형
+							String deviceTelecom = null;
 							SearchDeviceIdSacReq deviceReq = null;
 							SearchDeviceIdSacRes deviceRes = null;
 							boolean memberFlag = true;
@@ -291,6 +292,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 							if (memberFlag && deviceRes != null) {
 								deviceId = deviceRes.getDeviceId();
+								deviceTelecom = deviceRes.getDeviceTelecom();
 								deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
 								metaInfo.setExpiredDate(reqExpireDate);
@@ -300,6 +302,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								metaInfo.setDeviceType(deviceIdType);
 								metaInfo.setDeviceSubKey(deviceId);
 
+								// 단말의 통신사가 SKT 일때만 적용
+								// if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
 								// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
 								if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
 										&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
@@ -312,20 +316,21 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
 
 										this.log.debug("#########################################################");
-										this.log.debug("serviceCd	:	" + uapsEcRes.getServiceCD()[i]);
-										this.log.debug("#########################################################");
 										for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
+											this.log.debug("serviceCd	:	" + uapsEcRes.getServiceCD()[i]);
 											if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING.equals(uapsEcRes
 													.getServiceCD()[i])) {
 												metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
 											}
 										}
+										this.log.debug("#########################################################");
 									} catch (Exception e) {
 										this.log.debug("#########################################################");
 										this.log.debug("Fee Type Is Not Ting");
 										this.log.debug("#########################################################");
 									}
 								}
+								// }
 
 								// 암호화 정보 (JSON)
 								EncryptionContents contents = this.encryptionGenerator
