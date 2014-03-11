@@ -171,7 +171,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			if (!this.setTbDpSprtDeviceListValue(couponInfo, itemInfoList, tbDpSprtDeviceList, couponReq.getCudType())) {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
-			// TB_DP_SPRT_DEVICE 값 셋팅
+			// SP_SETT_REG_PROD 프로시저 호출
 			// log.info("■■■■■ setTbDpTenantProdPriceListValue 시작 ■■■■■");
 			// if (!this.setCallSpSettRegProd(couponInfo, itemInfoList, spRegistProdList, couponReq.getCudType())) {
 			// throw new CouponException(this.errorCode, this.message, null);
