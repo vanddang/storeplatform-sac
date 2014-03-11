@@ -107,7 +107,7 @@
     <bean id="memberDelDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
         <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
         <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
-        <property name="routingKey" value="sac.tenant.member.mod-device.async" />
+        <property name="routingKey" value="sac.tenant.member.del-device.async" />
     </bean>
     <!-- Member - Retire Rabbit Template -->
     <bean id="memberRetireAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
