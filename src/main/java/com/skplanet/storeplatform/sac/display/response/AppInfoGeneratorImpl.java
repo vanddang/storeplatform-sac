@@ -139,6 +139,14 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 			menu.setId(metaInfo.getMetaClsfCd());
 			menuList.add(menu);
 		}
+		// 서비스 그룹 코드 클래스 정보
+		if (StringUtils.isNotEmpty(metaInfo.getSvcGrpCd())) {
+			menu = new Menu();
+			menu.setType(DisplayConstants.DP_SVC_GRP_CD_TYPE);
+			menu.setName(metaInfo.getSvcGrpNm());
+			menu.setId(metaInfo.getSvcGrpCd());
+			menuList.add(menu);
+		}
 		return menuList;
 	}
 

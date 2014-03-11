@@ -128,6 +128,8 @@
               , TB.SELLER_MBR_NO
               , TB.META_CLSF_CD
               , TB.CID
+              , TB.SVC_GRP_CD
+              , TB.SVC_GRP_NM
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
                       , A.MENU_ID
@@ -162,6 +164,8 @@
                       , D.SELLER_MBR_NO
                       , D.META_CLSF_CD
                       , D.CID
+                      , D.SVC_GRP_CD
+                      , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -274,6 +278,8 @@
               , LA.PROD_STATUS_CD
               , LA.SELLER_MBR_NO
               , LA.CID
+              , LA.SVC_GRP_CD
+              , LA.SVC_GRP_NM
           FROM (          
                 SELECT JA.*
                 FROM (SELECT G.TENANT_ID
@@ -320,6 +326,8 @@
                            , G.PROD_STATUS_CD
                            , D.SELLER_MBR_NO
                            , D.CID
+                           , D.SVC_GRP_CD                    
+                           , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM       
                         FROM TB_DP_MENU_CATEGORY           A
                            , TB_DP_MENU_CATEGORY_PROD_MAPG B
                            , TB_DP_MENU_CATEGORY_DESC      C
@@ -421,6 +429,8 @@
             , MCI.REG_DT
             , P.SELLER_MBR_NO
             , P.CID
+            , P.SVC_GRP_CD      
+            , FC_GET_CM_CD_NM(P.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM    
          FROM UV_TB_DP_MULTIMDA_PROD MP
             , TB_DP_MUSIC_CHART MCI
             , TB_DP_PROD P
@@ -562,6 +572,8 @@
              , TB.SELLER_MBR_NO
              , TB.CID
              , TB.OUTSD_CONTENTS_ID
+             , TB.SVC_GRP_CD
+             , TB.SVC_GRP_NM      
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
@@ -609,6 +621,8 @@
                       , D.SELLER_MBR_NO
                       , D.CID
                       , L.OUTSD_CONTENTS_ID
+                      , D.SVC_GRP_CD      
+                      , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM                
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -717,6 +731,8 @@
              , TB.PROD_STATUS_CD
              , TB.SELLER_MBR_NO
              , TB.CID
+             , TB.SVC_GRP_CD
+             , TB.SVC_GRP_NM      
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID ORDER BY J.UPD_DT DESC ) AS RN
                       , A.UP_MENU_ID
@@ -758,6 +774,8 @@
                       , G.PROD_STATUS_CD
                       , D.SELLER_MBR_NO
                       , D.CID
+                      , D.SVC_GRP_CD          
+                      , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM            
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C

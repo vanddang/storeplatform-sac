@@ -71,6 +71,8 @@ public class MetaInfo {
 	private String company;
 	private String cid;
 	private Integer curCount;
+	private String svcGrpCd;
+	private String svcGrpNm;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -3873,4 +3875,35 @@ public class MetaInfo {
 	public void setPreviewUrl(String previewUrl) {
 		this.previewUrl = previewUrl;
 	}
+
+	/**
+	 * @return the svcGrpCd
+	 */
+	public String getSvcGrpCd() {
+		return this.svcGrpCd;
+	}
+
+	/**
+	 * @param svcGrpCd
+	 *            the svcGrpCd to set
+	 */
+	public void setSvcGrpCd(String svcGrpCd) {
+		this.svcGrpCd = svcGrpCd;
+	}
+
+	/**
+	 * @return the svcGrpNm
+	 */
+	public String getSvcGrpNm() {
+		return this.svcGrpNm;
+	}
+
+	/**
+	 * @param svcGrpNm
+	 *            the svcGrpNm to set
+	 */
+	public void setSvcGrpNm(String svcGrpNm) {
+		this.svcGrpNm = svcGrpNm;
+	}
+
 }

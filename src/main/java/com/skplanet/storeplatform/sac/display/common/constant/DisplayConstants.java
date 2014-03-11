@@ -205,6 +205,7 @@ public class DisplayConstants {
 
 	public static final String DP_MENU_TOPCLASS_TYPE = "topClass";
 	public static final String DP_META_CLASS_MENU_TYPE = "metaClass";
+	public static final String DP_SVC_GRP_CD_TYPE = "svcGrpCd";
 	/** 장르. */
 	public static final String DP_MENU_TYPE_GENRE = "genre";
 	public static final String DP_MENU_TYPE_SUB_GENRE = "subGenre";
