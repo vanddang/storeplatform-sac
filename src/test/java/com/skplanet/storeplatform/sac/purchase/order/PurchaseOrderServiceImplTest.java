@@ -24,14 +24,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
-import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartService;
-import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyMember;
-import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
 /**
  * 
@@ -59,22 +57,22 @@ public class PurchaseOrderServiceImplTest {
 	@Before
 	public void init() {
 		this.createPurchaseReq = new CreatePurchaseSacReq();
-		this.createPurchaseReq.setUserKey("MBR01"); // 내부 회원 번호
-		this.createPurchaseReq.setDeviceKey("MBR01_1"); // 내부 디바이스 ID
+		this.createPurchaseReq.setUserKey("IM142100005724280201303121051"); // 내부 회원 번호
+		this.createPurchaseReq.setDeviceKey("01046353524"); // 내부 디바이스 ID
 		this.createPurchaseReq.setPrchsReqPathCd("OR000401"); // 구매 요청 경로 코드
 		this.createPurchaseReq.setPrchsCaseCd(PurchaseConstants.PRCHS_CASE_PURCHASE_CD); // 구매 유형 코드
 		this.createPurchaseReq.setCurrencyCd("ko"); // 통화 코드
 		this.createPurchaseReq.setTotAmt(0.0);
 		this.createPurchaseReq.setClientIp("127.0.0.1"); // 클라이언트 IP
 		this.createPurchaseReq.setNetworkTypeCd("DP004401"); // 네트워크 타입 코드
-		this.createPurchaseReq.setMid("MID01");
-		this.createPurchaseReq.setAuthKey("MID01_KEY01");
+		this.createPurchaseReq.setMid("SKTstore01");
+		this.createPurchaseReq.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 		this.createPurchaseReq.setReturnUrl("http://localhost:8080/tenant/completePurchase");
-		this.createPurchaseReq.setTenantProdGrpCd("DP150101");
+		this.createPurchaseReq.setTenantProdGrpCd("OR006211DP01");
 
 		List<CreatePurchaseSacReqProduct> productList = new ArrayList<CreatePurchaseSacReqProduct>();
-		productList.add(new CreatePurchaseSacReqProduct("0000044819", 0.0, 1));
-		productList.add(new CreatePurchaseSacReqProduct("0000044820", 0.0, 1));
+		productList.add(new CreatePurchaseSacReqProduct("0000024129", 0.0, 1));
+		// productList.add(new CreatePurchaseSacReqProduct("0000044820", 0.0, 1));
 		this.createPurchaseReq.setProductList(productList);
 
 		this.purchaseInfo = new PurchaseOrderInfo(this.createPurchaseReq);
@@ -97,15 +95,26 @@ public class PurchaseOrderServiceImplTest {
 		this.purchaseInfo.setTenantProdGrpCd(this.createPurchaseReq.getTenantProdGrpCd()); // 테넌트 상품 분류 코드
 
 		String tenantId = this.purchaseInfo.getTenantId();
-		String systemId = this.purchaseInfo.getSystemId();
-		String deviceModelCd = "SHV-E210S";
-		PurchaseDisplayPartService displayPartService = new PurchaseDisplayPartServiceImpl();
 
-		List<DummyProduct> dummyProductList = this.purchaseInfo.getProductList();
-		DummyProduct product = null;
+		List<PurchaseProduct> purchaseProductList = this.purchaseInfo.getPurchaseProductList();
+		PurchaseProduct product = null;
 		for (CreatePurchaseSacReqProduct reqProduct : productList) {
-			product = displayPartService.searchDummyProductDetail(tenantId, systemId, reqProduct.getProdId(),
-					deviceModelCd);
+			product = new PurchaseProduct();
+
+			product.setProdId("0000024129");
+			product.setProdNm("G마켓");
+			product.setProdAmt(0.0);
+			product.setProdStatusCd("PD000403");
+			product.setProdGrdCd("PD004401");
+			product.setProdSprtYn("Y");
+			product.setDrmYn("N");
+			product.setUsePeriodUnitCd("PD00310");
+			product.setUsePeriod(0);
+			product.setAid("OA00024129");
+			product.setSellerMbrNo("IF102158942020090723111912");
+			product.setSellerNm("Seed");
+			product.setSellerEmail("signtest@yopmail.com");
+			product.setSellerTelno("0211112222");
 
 			product.setProdQty(reqProduct.getProdQty());
 			product.setResvCol01(reqProduct.getResvCol01());
@@ -114,44 +123,34 @@ public class PurchaseOrderServiceImplTest {
 			product.setResvCol04(reqProduct.getResvCol04());
 			product.setResvCol05(reqProduct.getResvCol05());
 
-			dummyProductList.add(product);
+			purchaseProductList.add(product);
 		}
 
-		DummyMember user = new DummyMember();
+		PurchaseUserDevice user = new PurchaseUserDevice();
 		user.setTenantId(tenantId);
-		user.setSystemId(systemId);
 		user.setUserKey(this.purchaseInfo.getUserKey());
 		user.setUserId("testid01");
 		user.setDeviceKey(this.purchaseInfo.getDeviceKey());
 		user.setDeviceId("01046353524");
 		user.setDeviceModelCd("SHV-E210S");
-		user.setUserTypeCd("US011501"); // 사용자 구분 코드 - US011501 : 기기 사용자 - US011502 : IDP 사용자 - US011503 : OneID 사용자 -
-										// null : Tstore 회원 아님
-		user.setUserStatusCd("US010701"); // 회원상태코드: US010701-정상, US010702-탈퇴, US010703-대기(가가입), US010704-가입,
-										  // US010705-전환, US010706 : 탈퇴 - US010707-승인대기
+		user.setUserMainStatus("US010201"); // 사용자 메인 상태 코드. - US010201 정상 - US010202 자의탈퇴/직권탈퇴 - US010203 가가입 -
+											// US010204 계정잠금/7일이용정지/30일이용정지/영구이용정지
 		user.setAge(20);
-		user.setbLogin(true);
 
-		this.purchaseInfo.setPurchaseMember(user);
+		this.purchaseInfo.setPurchaseUser(user);
 
 		if (StringUtils.equals(this.purchaseInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			user = new DummyMember();
+			user = new PurchaseUserDevice();
 			user.setTenantId(tenantId);
-			user.setSystemId(systemId);
 			user.setUserKey(this.purchaseInfo.getRecvUserKey());
 			user.setUserId("testid01");
 			user.setDeviceKey(this.purchaseInfo.getRecvDeviceKey());
 			user.setDeviceId("01046353524");
 			user.setDeviceModelCd("SHV-E210S");
-			user.setUserTypeCd("US011501"); // 사용자 구분 코드 - US011501 : 기기 사용자 - US011502 : IDP 사용자 - US011503 : OneID 사용자
-											// -
-											// null : Tstore 회원 아님
-			user.setUserStatusCd("US010701"); // 회원상태코드: US010701-정상, US010702-탈퇴, US010703-대기(가가입), US010704-가입,
-											  // US010705-전환, US010706 : 탈퇴 - US010707-승인대기
+			user.setUserMainStatus("US010201");
 			user.setAge(20);
-			user.setbLogin(true);
 
-			this.purchaseInfo.setRecvMember(user);
+			this.purchaseInfo.setReceiveUser(user);
 		}
 	}
 

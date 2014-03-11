@@ -14,12 +14,10 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
-import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyMember;
-import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 
 /**
  * 
- * Dummy 구매요청 정보
+ * 구매요청 정보
  * 
  * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
  */
@@ -84,15 +82,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String token; // [결제Page 요청 파라미터] 토큰
 	private String eData; // [결제Page 요청 파라미터] 암호화 데이터
 	private PaymentPageParam paymentPageParam; // 결제Page_요청_파라미터
-
-	// ------------------------------------------------------------------------
-	// Dummy
-	private DummyMember purchaseMember; // 구매(선물발신) 회원정보
-	private DummyMember recvMember; // 선물수신 회원정보
-
-	private List<DummyProduct> productList = new ArrayList<DummyProduct>(); // 구매할 상품 정보 리스트
-
-	private SktPaymentPolicyCheckResult policyInfo = new SktPaymentPolicyCheckResult(); // 제한정책 정보
 
 	// ================================================================================================
 
@@ -584,66 +573,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setPaymentPageParam(PaymentPageParam paymentPageParam) {
 		this.paymentPageParam = paymentPageParam;
-	}
-
-	/**
-	 * @return the purchaseMember
-	 */
-	public DummyMember getPurchaseMember() {
-		return this.purchaseMember;
-	}
-
-	/**
-	 * @param purchaseMember
-	 *            the purchaseMember to set
-	 */
-	public void setPurchaseMember(DummyMember purchaseMember) {
-		this.purchaseMember = purchaseMember;
-	}
-
-	/**
-	 * @return the recvMember
-	 */
-	public DummyMember getRecvMember() {
-		return this.recvMember;
-	}
-
-	/**
-	 * @param recvMember
-	 *            the recvMember to set
-	 */
-	public void setRecvMember(DummyMember recvMember) {
-		this.recvMember = recvMember;
-	}
-
-	/**
-	 * @return the productList
-	 */
-	public List<DummyProduct> getProductList() {
-		return this.productList;
-	}
-
-	/**
-	 * @param productList
-	 *            the productList to set
-	 */
-	public void setProductList(List<DummyProduct> productList) {
-		this.productList = productList;
-	}
-
-	/**
-	 * @return the policyInfo
-	 */
-	public SktPaymentPolicyCheckResult getPolicyInfo() {
-		return this.policyInfo;
-	}
-
-	/**
-	 * @param policyInfo
-	 *            the policyInfo to set
-	 */
-	public void setPolicyInfo(SktPaymentPolicyCheckResult policyInfo) {
-		this.policyInfo = policyInfo;
 	}
 
 	/**
