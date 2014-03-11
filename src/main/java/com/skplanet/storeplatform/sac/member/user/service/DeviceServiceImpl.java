@@ -555,15 +555,6 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 
 			}
-
-			/* 8. 사용자 제한 정책 userKey 변경 처리 */
-			//			UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
-			//			updPolicyKeyReq.setCommonRequest(commonRequest);
-			//			updPolicyKeyReq.setOldLimitPolicyKey(previousUserKey);
-			//			updPolicyKeyReq.setNewLimitPolicyKey(userKey);
-			//			UpdatePolicyKeyResponse updPolicyKeyRes = this.userSCI.updatePolicyKey(updPolicyKeyReq);
-			//
-			//			LOGGER.info("::: 사용자 제한 정책 previousUserKey -> userKey 변경 카운트 : {}", updPolicyKeyRes.getUpdateCount());
 		}
 
 		/* 9. 게임센터 연동 */
