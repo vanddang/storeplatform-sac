@@ -237,7 +237,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				productInfoSacReq.setLang(request.getLangCd());
 				productInfoSacReq.setList(prodIdList);
 
-				this.LOGGER.debug("### productInfoSacReq : {}" + productInfoSacReq.toString());
+				this.LOGGER.debug("### productInfoSacReq  : {}" + productInfoSacReq.toString());
 
 				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
 
@@ -247,7 +247,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 						for (ProductInfo info : productInfoSacRes.getProductList()) {
 							if (obj.getProdId().equals(info.getProdId())) {
 								prodMap = new HashMap<String, Object>();
-								prodMap.put("productList", info);
+								prodMap.put("productMap", info);
 								obj.setProductInfo(prodMap);
 								break;
 							}
