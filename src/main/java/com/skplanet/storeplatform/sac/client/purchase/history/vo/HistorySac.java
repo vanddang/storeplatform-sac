@@ -28,7 +28,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String sendDeviceKey;
 	private String recvDt;
 	private String recvConfPathCd;
-	private String prchsReqPathCd;
 	private String tenantProdGrpCd;
 	private String prodId;
 	private String prodAmt;
@@ -36,34 +35,47 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String statusCd;
 	private String useStartDt;
 	private String useExprDt;
+	private String prchsReqPathCd;
 	private String hidingYn;
 	private String cancelReqPathCd;
 	private String cancelDt;
+	private String prchsProdType;
 	private String prchsCaseCd;
 	private String dwldStartDt;
 	private String dwldExprDt;
 	private String cpnPublishCd;
 	private String cpnDlvUrl;
+	private String cpnAddinfo;
+	private String cpnBizProdSeq;
+	private String cpnBizOrderNo;
 	private String useFixrateProdId;
-	private String prchsProdType;
 	private String drmYn;
 	private String alarmYn;
+	private String currencyCd;
+	private String tid;
+	private String txId;
+	private String parentProdId;
+	private String ver;
+	private String subNm;
+	private String rnPid;
+	private String isuAmtAdd;
+	private String cid;
+	private String contentsCls;
+	private String contentsType;
+	private String prchsType;
+	private String sundCls;
+	private String sundSec;
+	private String menuId;
+	private String dpCatSubNo;
 	private String permitDeviceYn;
-	private String cpnAddinfo; // 쇼핑쿠폰_추가정보
-	private String cpnBizProdSeq; // 쇼핑쿠폰_biz상품_순번
-	private String cpnBizOrderNo; // 쇼핑쿠폰_biz상품_주문번호
-
-	// 자동결제정보
-	private String paymentStartDt; // 결제시작일시
-	private String paymentEndDt; // 결제종료일시
-	private String afterPaymentDt; // 이후결제일시
-	private String prchsTme; // 회차
-	private String autoPaymentStatusCd; // 자동결제상태코드
-	private String closedDt; // 해지일시
-	private String closedReasonCd; // 해지사유코드
-	private String closedReqPathCd; // 해지요청경로
-
-	// 예비컬럼
+	private String paymentStartDt;
+	private String paymentEndDt;
+	private String afterPaymentDt;
+	private String autoPaymentStatusCd;
+	private String closedDt;
+	private String closedReasonCd;
+	private String closedReqPathCd;
+	private String prchsTme;
 	private String resvCol01;
 	private String resvCol02;
 	private String resvCol03;
@@ -835,6 +847,246 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setProductInfo(HashMap<String, Object> productInfo) {
 		this.productInfo = productInfo;
+	}
+
+	/**
+	 * @return the currencyCd
+	 */
+	public String getCurrencyCd() {
+		return this.currencyCd;
+	}
+
+	/**
+	 * @param currencyCd
+	 *            the currencyCd to set
+	 */
+	public void setCurrencyCd(String currencyCd) {
+		this.currencyCd = currencyCd;
+	}
+
+	/**
+	 * @return the tid
+	 */
+	public String getTid() {
+		return this.tid;
+	}
+
+	/**
+	 * @param tid
+	 *            the tid to set
+	 */
+	public void setTid(String tid) {
+		this.tid = tid;
+	}
+
+	/**
+	 * @return the txId
+	 */
+	public String getTxId() {
+		return this.txId;
+	}
+
+	/**
+	 * @param txId
+	 *            the txId to set
+	 */
+	public void setTxId(String txId) {
+		this.txId = txId;
+	}
+
+	/**
+	 * @return the parentProdId
+	 */
+	public String getParentProdId() {
+		return this.parentProdId;
+	}
+
+	/**
+	 * @param parentProdId
+	 *            the parentProdId to set
+	 */
+	public void setParentProdId(String parentProdId) {
+		this.parentProdId = parentProdId;
+	}
+
+	/**
+	 * @return the ver
+	 */
+	public String getVer() {
+		return this.ver;
+	}
+
+	/**
+	 * @param ver
+	 *            the ver to set
+	 */
+	public void setVer(String ver) {
+		this.ver = ver;
+	}
+
+	/**
+	 * @return the subNm
+	 */
+	public String getSubNm() {
+		return this.subNm;
+	}
+
+	/**
+	 * @param subNm
+	 *            the subNm to set
+	 */
+	public void setSubNm(String subNm) {
+		this.subNm = subNm;
+	}
+
+	/**
+	 * @return the rnPid
+	 */
+	public String getRnPid() {
+		return this.rnPid;
+	}
+
+	/**
+	 * @param rnPid
+	 *            the rnPid to set
+	 */
+	public void setRnPid(String rnPid) {
+		this.rnPid = rnPid;
+	}
+
+	/**
+	 * @return the isuAmtAdd
+	 */
+	public String getIsuAmtAdd() {
+		return this.isuAmtAdd;
+	}
+
+	/**
+	 * @param isuAmtAdd
+	 *            the isuAmtAdd to set
+	 */
+	public void setIsuAmtAdd(String isuAmtAdd) {
+		this.isuAmtAdd = isuAmtAdd;
+	}
+
+	/**
+	 * @return the cid
+	 */
+	public String getCid() {
+		return this.cid;
+	}
+
+	/**
+	 * @param cid
+	 *            the cid to set
+	 */
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	/**
+	 * @return the contentsCls
+	 */
+	public String getContentsCls() {
+		return this.contentsCls;
+	}
+
+	/**
+	 * @param contentsCls
+	 *            the contentsCls to set
+	 */
+	public void setContentsCls(String contentsCls) {
+		this.contentsCls = contentsCls;
+	}
+
+	/**
+	 * @return the contentsType
+	 */
+	public String getContentsType() {
+		return this.contentsType;
+	}
+
+	/**
+	 * @param contentsType
+	 *            the contentsType to set
+	 */
+	public void setContentsType(String contentsType) {
+		this.contentsType = contentsType;
+	}
+
+	/**
+	 * @return the prchsType
+	 */
+	public String getPrchsType() {
+		return this.prchsType;
+	}
+
+	/**
+	 * @param prchsType
+	 *            the prchsType to set
+	 */
+	public void setPrchsType(String prchsType) {
+		this.prchsType = prchsType;
+	}
+
+	/**
+	 * @return the sundCls
+	 */
+	public String getSundCls() {
+		return this.sundCls;
+	}
+
+	/**
+	 * @param sundCls
+	 *            the sundCls to set
+	 */
+	public void setSundCls(String sundCls) {
+		this.sundCls = sundCls;
+	}
+
+	/**
+	 * @return the sundSec
+	 */
+	public String getSundSec() {
+		return this.sundSec;
+	}
+
+	/**
+	 * @param sundSec
+	 *            the sundSec to set
+	 */
+	public void setSundSec(String sundSec) {
+		this.sundSec = sundSec;
+	}
+
+	/**
+	 * @return the menuId
+	 */
+	public String getMenuId() {
+		return this.menuId;
+	}
+
+	/**
+	 * @param menuId
+	 *            the menuId to set
+	 */
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
+
+	/**
+	 * @return the dpCatSubNo
+	 */
+	public String getDpCatSubNo() {
+		return this.dpCatSubNo;
+	}
+
+	/**
+	 * @param dpCatSubNo
+	 *            the dpCatSubNo to set
+	 */
+	public void setDpCatSubNo(String dpCatSubNo) {
+		this.dpCatSubNo = dpCatSubNo;
 	}
 
 }
