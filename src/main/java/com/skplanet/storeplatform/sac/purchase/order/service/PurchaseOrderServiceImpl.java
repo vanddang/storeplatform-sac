@@ -616,11 +616,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// TAKTODO:: 서버ID(2), 인스턴스ID(2) 적용 방안 확인
 		String prchsIdSeq = this.purchaseOrderSearchSCI.searchNextPurchaseIdSequence();
 		StringBuffer sbPrchsId = new StringBuffer(20);
-		// sbPrchsId.append("01").append("01").append(DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(),
-		// "yyMMddHHmmss")).append(prchsIdSeq);
-		sbPrchsId.append("TAK").append("1")
+		sbPrchsId.append("01").append("01")
 				.append(DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyMMddHHmmss"))
 				.append(prchsIdSeq);
+		// sbPrchsId.append("TAK").append("1")
+		// .append(DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyMMddHHmmss"))
+		// .append(prchsIdSeq);
 		return sbPrchsId.toString();
 	}
 
