@@ -1706,6 +1706,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 							// 특가 상품일 경우
 							episodeProduct.setSpecialProdYn(episodeShopping.getSpecialSale());
 
+							// Title 생성
+							Title episodeTitle = this.commonGenerator.generateTitle(episodeShopping);
+							episodeProduct.setTitle(episodeTitle);
+
 							// 채널 상품 정보 (상품ID)
 							episodeIdentifierList = new ArrayList<Identifier>();
 							episodeIdentifierList.add(this.commonGenerator.generateIdentifier(

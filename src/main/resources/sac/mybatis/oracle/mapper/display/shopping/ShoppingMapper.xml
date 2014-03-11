@@ -1562,6 +1562,7 @@
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
                         ,I.SRC_CONTENT_ID
                         ,K.PROD_STATUS_CD
+                        ,O.PROD_NM as catalogNm
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -1575,6 +1576,7 @@
                          ,TB_DP_PROD J
                          ,TB_DP_TENANT_PROD K
                          ,TB_DP_TENANT_PROD_PRICE L
+                         ,TB_DP_PROD_DESC O
                          ,(SELECT 
                                  B1.PROD_ID
                                , B1.SPRC_DC_RATE
@@ -1609,12 +1611,14 @@
                 AND I.PROD_ID = J.PROD_ID
                 AND I.PROD_ID = K.PROD_ID
                 AND I.PROD_ID = L.PROD_ID
+                AND I.PROD_ID = O.PROD_ID
                 AND K.TENANT_ID = L.TENANT_ID
                 AND I.PROD_ID = N.PROD_ID(+)
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                 AND NVL(B.CHNL_CNT, 0) > 0          
                 AND C.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND F.LANG_CD= #{lang}          /* ko : 한국어 */
+                AND O.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
                 AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
