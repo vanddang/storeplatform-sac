@@ -211,6 +211,23 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setClosedReasonCd(obj.getClosedReasonCd());
 			historySac.setClosedReqPathCd(obj.getClosedReqPathCd());
 
+			historySac.setCurrencyCd(obj.getCurrencyCd());
+			historySac.setTid(obj.getTid());
+			historySac.setTxId(obj.getTxId());
+			historySac.setParentProdId(obj.getParentProdId());
+			historySac.setVer(obj.getVer());
+			historySac.setSubNm(obj.getSubNm());
+			historySac.setRnPid(obj.getRnPid());
+			historySac.setIsuAmtAdd(obj.getIsuAmtAdd());
+			historySac.setCid(obj.getCid());
+			historySac.setContentsCls(obj.getContentsCls());
+			historySac.setContentsType(obj.getContentsType());
+			historySac.setPrchsType(obj.getPrchsType());
+			historySac.setSundCls(obj.getSundCls());
+			historySac.setSundSec(obj.getSundSec());
+			historySac.setMenuId(obj.getMenuId());
+			historySac.setDpCatSubNo(obj.getDpCatSubNo());
+
 			sacHistoryList.add(historySac);
 
 			// 상품정보 조회를 위한 상품ID 셋팅

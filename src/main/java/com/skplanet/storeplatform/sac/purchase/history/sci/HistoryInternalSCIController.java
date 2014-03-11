@@ -159,6 +159,23 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 			historySacIn.setClosedReasonCd(obj.getClosedReasonCd());
 			historySacIn.setClosedReqPathCd(obj.getClosedReqPathCd());
 
+			historySacIn.setCurrencyCd(obj.getCurrencyCd());
+			historySacIn.setTid(obj.getTid());
+			historySacIn.setTxId(obj.getTxId());
+			historySacIn.setParentProdId(obj.getParentProdId());
+			historySacIn.setVer(obj.getVer());
+			historySacIn.setSubNm(obj.getSubNm());
+			historySacIn.setRnPid(obj.getRnPid());
+			historySacIn.setIsuAmtAdd(obj.getIsuAmtAdd());
+			historySacIn.setCid(obj.getCid());
+			historySacIn.setContentsCls(obj.getContentsCls());
+			historySacIn.setContentsType(obj.getContentsType());
+			historySacIn.setPrchsType(obj.getPrchsType());
+			historySacIn.setSundCls(obj.getSundCls());
+			historySacIn.setSundSec(obj.getSundSec());
+			historySacIn.setMenuId(obj.getMenuId());
+			historySacIn.setDpCatSubNo(obj.getDpCatSubNo());
+
 			historySacInList.add(historySacIn);
 
 		}
