@@ -149,6 +149,7 @@ public class EpubServiceImpl implements EpubService {
         param.put("channelId", req.getChannelId());
         param.put("langCd", req.getLangCd());
         param.put("deviceModel", req.getDeviceModel());
+        param.put("bookTypeCd", req.getBookTypeCd());
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
         param.put("orderedBy", StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT));
         param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
@@ -531,8 +532,6 @@ public class EpubServiceImpl implements EpubService {
 		play.setSupportList(supportList);
 
 		mapperVO.setProdAmt(mapperVO.getPlayProdAmt());
-		//TODO :
-		//mapperVO.setProdNetAmt(mapperVO.getPlayProdNetAmt());
 		play.setPrice(this.mapPrice(mapperVO));
 
 		Date date = new Date();

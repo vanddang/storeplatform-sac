@@ -218,6 +218,10 @@
 										AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
 										AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
 										AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+                                        <!-- 단행/연재/잡지 -->
+                                        <if test="bookTypeCd != null and bookTypeCd !=''">
+                                        AND P.BOOK_TYPE_CLSF_CD = #{bookTypeCd}
+                                        </if>
                                         <if test="filteredBy == 'chapter'">
                                             /* 특정 회차(chapter)기준 이후 회차 컨텐츠 */
                                             AND TO_NUMBER( REGEXP_REPLACE( NVL( P.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{chapter}

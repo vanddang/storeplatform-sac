@@ -60,6 +60,7 @@ public class EpubControllerTest {
 				.andExpect(content().contentType("application/json;charset=UTF-8"));
 	}
 
+	
     @Test
     public void searchEpubSeries_ebook() throws Exception {
         Map<String, Object> param = new HashMap<String, Object>();
@@ -83,6 +84,7 @@ public class EpubControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
     }
+    
 
     @Test
     public void searchEpubChannel_comic() throws Exception {
