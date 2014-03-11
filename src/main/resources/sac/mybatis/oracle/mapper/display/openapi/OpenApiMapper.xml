@@ -1343,8 +1343,10 @@
 		        || CHR (38)
 		        || 't_top='
 		        || PROD.TOP_MENU_ID)
-		          AS APP_URL
+		          AS WEB_URL
 		      ,PROD.REG_DT
+		      ,APPPROD.AID
+		      ,IMG.FILE_PATH AS IMAGE_PATH
 	  FROM  TB_DP_PROD PROD 
 	       ,TB_DP_PROD_DESC PRODDESC 
 	       ,TB_DP_PROD_IMG IMG
@@ -1354,7 +1356,7 @@
 	       AND PROD.PROD_ID = APPPROD.PROD_ID
 	       AND IMG.IMG_CD = #{imageCd}
 	       AND IMG.EXPO_ORD = '1'
-	       AND IMG.LANG_CD = #{lang}
+	       AND IMG.LANG_CD = #{tenantHeader.langCd}
 	       AND  (APPPROD.PART_PARENT_CLSF_CD = 'PD012301' OR APPPROD.PART_PARENT_CLSF_CD is null)
 	      <if test='admin != "Y"'>
            AND  PROD.REG_ID = #{req.sellerId}

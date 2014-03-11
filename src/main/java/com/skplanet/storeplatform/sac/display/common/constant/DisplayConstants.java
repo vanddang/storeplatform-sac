@@ -617,4 +617,6 @@ public class DisplayConstants {
 	public static final String DP_EXTERNAL_CLIENT = "externalClient";
 
 	public static final String DP_EXTERNAL_PORTAL = "externalPotal";
+
+	public static final String DP_EXTERNAL = "external";
 }

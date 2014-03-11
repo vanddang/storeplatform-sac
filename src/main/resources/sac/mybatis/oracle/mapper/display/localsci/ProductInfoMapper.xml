@@ -238,9 +238,6 @@
     
     <select id="getMusicMetaInfo" parameterType="Map" resultType="ProductInfo">
        SELECT 
-    --          MCI.RANK_CHG_CNT
-    --        , MCI.RANK_CHG_CLSF_CD
-    --        , MCI.ARTIST_ID
              CP.PROD_ID 
             , CP.PART_PROD_ID
             , C.MENU_ID
@@ -256,7 +253,6 @@
             , PD.PROD_NM
             , PD.PROD_DTL_DESC
             , PD.PROD_BASE_DESC
-          --  , TPP.PROD_AMT
             , P.PROD_GRD_CD
             , P.EXPO_SELLER_EMAIL
             , P.EXPO_SELLER_NM
@@ -274,12 +270,13 @@
             , 'Y' AS MP3_SPRT_YN
             , MP.BELL_SPRT_YN
             , MP.COLORRING_SPRT_YN
-            , PI.FILE_PATH
-            , PI.FILE_NM
-            , PI.FILE_SIZE
+            , (SELECT IMG.FILE_PATH 
+                 FROM TB_DP_PROD_IMG IMG 
+                WHERE IMG.PROD_ID = P.PROD_ID 
+                  AND IMG.IMG_CD = #{imageCd}) AS FILE_PATH
             , P.CID
             ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = CP.PART_PROD_ID) AS PHONE_SPRT_YN
-            ,CHARTPROD.MUSIC_ID AS SONG_ID
+            , MP.OUTSD_CONTENTS_ID AS SONG_ID
             FROM 
                   TB_DP_MENU_CATEGORY_PROD_MAPG CPM
                 , TB_DP_MENU_CATEGORY C
@@ -288,16 +285,12 @@
                 , TB_DP_PROD P
                 , TB_DP_PROD_DESC PD
                 , TB_DP_PROD_RSHP CP
-                , TB_DP_PROD_IMG PI
-                , TB_DP_CHART_PROD_MAPG CHARTPROD
         WHERE  C.MENU_ID = CPM.MENU_ID
           AND CD.MENU_ID = C.MENU_ID
           AND CPM.PROD_ID = CP.PART_PROD_ID
           AND MP.PROD_ID = CP.PART_PROD_ID
           AND P.PROD_ID = CP.PART_PROD_ID
           AND P.PROD_ID = PD.PROD_ID
-          AND PI.PROD_ID = CP.PROD_ID
-          AND P.PROD_ID  = CHARTPROD.PROD_ID
        -----------------------------------------------------------------------------
        -- 차트 정보 조건절 END
        ----------------------------------------------------------------------------- 
@@ -305,8 +298,7 @@
        -----------------------------------------------------------------------------
        -- INPUT PARAMETER
        ----------------------------------------------------------------------------- 
-            AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
-          AND PI.IMG_CD = #{imageCd}
+          AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
           AND PD.LANG_CD = #{lang}
           AND CD.LANG_CD = #{lang}
        

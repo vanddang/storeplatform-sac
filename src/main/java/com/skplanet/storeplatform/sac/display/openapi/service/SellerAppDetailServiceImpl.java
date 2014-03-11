@@ -3,7 +3,9 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppDetailRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -63,7 +66,8 @@ public class SellerAppDetailServiceImpl implements SellerAppDetailService {
 		paramMap.put("tenantHeader", tenantHeader);
 		paramMap.put("req", req);
 		paramMap.put("partClsfCd", DisplayConstants.DP_PART_PARENT_CLSF_CD);
-
+		paramMap.put("appUrl", DisplayConstants.DP_OPENAPI_APP_URL);
+		paramMap.put("imageCd", DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
 		MetaInfo metaInfo = this.commonDAO.queryForObject("OpenApi.getAppDetail", paramMap, MetaInfo.class);
 
 		if (metaInfo != null) {
@@ -73,6 +77,11 @@ public class SellerAppDetailServiceImpl implements SellerAppDetailService {
 			product.setApp(this.appGenerator.generateApp(metaInfo));
 			product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 			product.setProductExplain(metaInfo.getProdBaseDesc());
+			product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
+			List<Url> urlList = new ArrayList<Url>();
+			urlList.add(this.commonGenerator.generateUrl(DisplayConstants.DP_EXTERNAL, metaInfo.getWebUrl()));
+			product.setUrlList(urlList);
+
 			commonResponse.setTotalCount(1);
 		} else {
 			commonResponse.setTotalCount(0);
