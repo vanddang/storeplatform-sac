@@ -200,7 +200,7 @@ public interface CouponItemService {
 	 * @param spRegistProdList
 	 *            spRegistProdList
 	 */
-	public void insertCallSpRegistProd(List<SpRegistProd> spRegistProdList);
+	public void insertCallSpSettRegProd(List<SpRegistProd> spRegistProdList);
 
 	/**
 	 * <pre>

@@ -496,8 +496,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				String outFile = uploadDir + targetFileName;
 
 				// 이미지 리사이즈
-				imgUtil.setImgScale(srcFile, outFile, width, height, uploadDir);
-				// 이미지 리사이즈
 				if (!imgUtil.setImgScale(srcFile, outFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
@@ -531,7 +529,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				if (!imgUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
-				imgUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir1);
 
 				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName1 + "을 생성 하였습니다.");
 
@@ -559,11 +556,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 						String resizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
 
-						// 이미지 리사이즈
-						if (!imgUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir)) {
-							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ",
-									null);
-						}
 						imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
 								width, 1170);
 						this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);

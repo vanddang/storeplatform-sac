@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SpRegistProd extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private String prodId; // 상품_ID
-	private String settlRt; // 정산율
+	private Integer settlRt; // 정산율
 	private String saleMbrNo; // 판매자번호
 	private String saleStdDt; // 판매시작일
 	private String saleEndDt; // 판매완료일
@@ -47,7 +47,7 @@ public class SpRegistProd extends CommonInfo {
 	/**
 	 * @return the settlRt
 	 */
-	public String getSettlRt() {
+	public Integer getSettlRt() {
 		return this.settlRt;
 	}
 
@@ -55,7 +55,7 @@ public class SpRegistProd extends CommonInfo {
 	 * @param settlRt
 	 *            the settlRt to set
 	 */
-	public void setSettlRt(String settlRt) {
+	public void setSettlRt(Integer settlRt) {
 		this.settlRt = settlRt;
 	}
 

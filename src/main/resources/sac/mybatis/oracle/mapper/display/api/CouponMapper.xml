@@ -479,9 +479,9 @@
 	    <parameter property="rtn" mode="OUT" jdbcType="VARCHAR" javaType="String" />
 	</parameterMap>   
     
-   <select id="selectSpRegistProd" statementType="CALLABLE" parameterMap="procMap">
-      /* CouponMapper.xml, selectSpRegistProd,SP_REGIST_PROD 프로시저 호출, 김형식/SK플래닛  , 2013-01-08 */
-        {CALL SP_REGIST_PROD(?,?,?,?,?,?,?)}
+   <select id="selectSpSettleRegProd" statementType="CALLABLE" parameterMap="procMap">
+      /* CouponMapper.xml, selectSpSettleRegProd,SP_SETT_REG_PROD 프로시저 호출, 김형식/SK플래닛  , 2013-01-08 */
+        {CALL SP_SETT_REG_PROD(?,?,?,?,?,?,?)}
    </select>        
     
     <!-- 전시단 쿠폰상품 상태변경 -->

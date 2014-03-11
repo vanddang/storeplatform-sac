@@ -423,20 +423,19 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertCallSpRegistProd(List<SpRegistProd> spRegistProdList) {
+	public void insertCallSpSettRegProd(List<SpRegistProd> spRegistProdList) {
 		try {
 			HashMap<String, String> param = new HashMap<String, String>();
 
 			for (SpRegistProd vo : spRegistProdList) {
 				param.put("prodId", vo.getProdId());
-				param.put("settlRt", vo.getSettlRt());
-				param.put("saleMbrNo", vo.getSaleMbrNo());
-				param.put("saleStdDt", vo.getSaleStdDt());
-				param.put("saleEndDt", vo.getSaleEndDt());
+				param.put("settlRt", String.valueOf(vo.getSettlRt()));
+				param.put("saleMbrNo", null);
+				param.put("saleStdDt", null);
+				param.put("saleEndDt", null);
 				param.put("regId", vo.getRegId());
 				param.put("rtn", "");
-
-				this.commonDAO.queryForObject("Coupon.selectSpRegistProd", param);
+				this.commonDAO.queryForObject("Coupon.selectSpSettleRegProd", param);
 				String result = param.get("rtn");
 				this.log.info("정산율 배포 결과 : " + result);
 

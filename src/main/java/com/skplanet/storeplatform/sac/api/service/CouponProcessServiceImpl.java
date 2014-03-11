@@ -91,7 +91,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList = new ArrayList<TbDpTenantProdPriceInfo>();
 		List<DpCatalogTagInfo> tbDpProdTagList = new ArrayList<DpCatalogTagInfo>();
 		List<TbDpSprtDeviceInfo> tbDpSprtDeviceList = new ArrayList<TbDpSprtDeviceInfo>();
-
+		List<SpRegistProd> spRegistProdList = new ArrayList<SpRegistProd>();
 		if (couponReq != null) {
 			List<DpItemInfo> itemInfoList = null; // 아이템 정보 List;
 			itemInfoList = new ArrayList<DpItemInfo>(); // 아이템 정보 List;
@@ -171,6 +171,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			if (!this.setTbDpSprtDeviceListValue(couponInfo, itemInfoList, tbDpSprtDeviceList, couponReq.getCudType())) {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
+			// TB_DP_SPRT_DEVICE 값 셋팅
+			// log.info("■■■■■ setTbDpTenantProdPriceListValue 시작 ■■■■■");
+			// if (!this.setCallSpSettRegProd(couponInfo, itemInfoList, spRegistProdList, couponReq.getCudType())) {
+			// throw new CouponException(this.errorCode, this.message, null);
+			// }
 
 			this.log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■");
 
@@ -920,14 +925,14 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 *            cudType
 	 * @return boolean
 	 */
-	private boolean setCallSpRegistProd(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
+	private boolean setCallSpSettRegProd(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<SpRegistProd> spRegistProdList, String cudType) {
 		SpRegistProd spRegistProd = new SpRegistProd();
 		try {
 
 			// ////////////////// Coupon 정보 S////////////////////////////
 			spRegistProd.setProdId(couponInfo.getProdId());
-			spRegistProd.setSettlRt(couponInfo.getAccountingRate());
+			spRegistProd.setSettlRt(Integer.parseInt(couponInfo.getAccountingRate()));
 			spRegistProd.setSaleMbrNo(this.mbrNo);
 			spRegistProd.setSaleStdDt(couponInfo.getIssueSDate());
 			spRegistProd.setSaleEndDt(couponInfo.getIssueEDate());
@@ -941,7 +946,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				DpItemInfo itemInfo = itemInfoList.get(i);
 				spRegistProd = new SpRegistProd();
 				spRegistProd.setProdId(itemInfo.getProdId());
-				spRegistProd.setSettlRt(couponInfo.getAccountingRate());
+				spRegistProd.setSettlRt(Integer.parseInt(couponInfo.getAccountingRate()));
 				spRegistProd.setSaleMbrNo(this.mbrNo);
 				spRegistProd.setSaleStdDt(couponInfo.getIssueSDate());
 				spRegistProd.setSaleEndDt(couponInfo.getIssueEDate());
@@ -951,7 +956,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 
 			// 저장
-			this.couponItemService.insertCallSpRegistProd(spRegistProdList);
+			this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
 
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "정산율 배포 실패!!", null);
