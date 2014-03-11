@@ -27,7 +27,7 @@ public class ArtistProductSacReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 11123123143L;
 	@NotBlank
 	private String artistId; // 아티스트ID
-	@Pattern(regexp = "|issuedDate|popular")
+	@Pattern(regexp = "|issueDate|popular")
 	private String orderedBy; // 상품 정렬 순서
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출 ROW 수
