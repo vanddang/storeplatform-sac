@@ -31,6 +31,17 @@ public interface LoginService {
 	public AuthorizeByMdnRes executeAuthorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
 
 	/**
+	 * 모바일 전용 회원 인증 (MDN 인증, 변동성 포함).
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeByMdnReq
+	 * @return AuthorizeByMdnRes
+	 */
+	public AuthorizeByMdnRes executeAuthorizeByMdnV2(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
+
+	/**
 	 * <pre>
 	 * 변동성 회원 체크.
 	 * </pre>
@@ -42,17 +53,6 @@ public interface LoginService {
 	 * @return CheckVariabilityRes
 	 */
 	public CheckVariabilityRes executCheckVariability(SacRequestHeader requestHeader, CheckVariabilityReq req);
-
-	/**
-	 * 모바일 전용 회원 인증 (MDN 인증, 변동성 포함).
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            AuthorizeByMdnReq
-	 * @return AuthorizeByMdnRes
-	 */
-	public AuthorizeByMdnRes executeAuthorizeByMdnV2(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
 
 	/**
 	 * ID 기반 회원 인증 (One ID, IDP 회원).

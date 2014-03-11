@@ -156,20 +156,9 @@ public class LoginServiceImpl implements LoginService {
 		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
 		stopStatusCode = chkDupRes.getUserMbr().getStopStatusCode();
 
-		/* 로그인 제한 인경우 */
-		if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
-			res.setUserKey(userKey);
-			res.setUserType(userType);
-			res.setUserMainStatus(userMainStatus);
-			res.setUserSubStatus(userSubStatus);
-			res.setLoginStatusCode(loginStatusCode);
-			res.setStopStatusCode(stopStatusCode);
-			res.setIsLoginSuccess("N");
-			return res;
-		}
-
-		/* 직권중지 인경우 */
-		if (StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
+		/* 로그인 제한 / 직권중지 인경우 */
+		if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
+				|| StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
 			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
@@ -184,7 +173,7 @@ public class LoginServiceImpl implements LoginService {
 		if (chkDupRes.getUserMbr().getImSvcNo() != null) {
 
 			/* 단말정보 update */
-			//this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
+			this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 			/* 로그인 성공이력 저장 */
 			LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, null, "Y", "Y", deviceId);
@@ -210,7 +199,7 @@ public class LoginServiceImpl implements LoginService {
 				this.idpSCI.authForWap(authForWapEcReq);
 
 				/* 단말정보 update */
-				//this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
+				this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 				/* 로그인 성공이력 저장 */
 				LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, null, "Y", "Y", deviceId);
@@ -244,106 +233,6 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		return res;
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
-	 * executCheckVariability
-	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq)
-	 */
-	@Override
-	public CheckVariabilityRes executCheckVariability(SacRequestHeader requestHeader, CheckVariabilityReq req) {
-
-		CheckVariabilityRes res = new CheckVariabilityRes();
-
-		/* 모번호 조회 */
-		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
-
-		/* 휴대기기 정보 조회 */
-		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
-
-		if (deviceInfo == null) { // 회원아님
-
-			/* 변동성 여부 조회 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
-
-			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "N")) {
-
-				/* 회원 정보가 존재 하지 않습니다. */
-				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
-
-			} else { // 변동성 정보 존재시 성공처리
-
-				/* 기기정보 업데이트(GMAIL, 통신사) */
-				UserMbrDevice userMbrDevice = new UserMbrDevice();
-				userMbrDevice.setDeviceAccount(req.getDeviceAccount());
-				userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
-				this.updateDeviceForMdnLogin(requestHeader, saveAndSync.getUserKey(), userMbrDevice);
-
-				res.setIsLoginSuccess("Y");
-
-				return res;
-
-			}
-		}
-
-		/** 이하 SC회원정보 존재한 경우 */
-
-		/* 통신사 비교 */
-		if (StringUtil.equals(deviceInfo.getDeviceTelecom(), req.getDeviceTelecom())) {
-
-			/* 통신사가 일치하면 GMAIL만 업데이트 후 성공처리 */
-			UserMbrDevice userMbrDevice = new UserMbrDevice();
-			userMbrDevice.setDeviceAccount(req.getDeviceAccount());
-			this.updateDeviceForMdnLogin(requestHeader, deviceInfo.getUserKey(), userMbrDevice);
-
-			res.setIsLoginSuccess("Y");
-
-			return res;
-
-		} else {
-
-			/* 통신사가 다른경우 GMAIL 비교 */
-			if (StringUtil.equals(deviceInfo.getDeviceAccount(), req.getDeviceAccount())) {
-
-				/* GMAIL 일치하면 GMAIL, 통신사 업데이트 후 성공처리 */
-				UserMbrDevice userMbrDevice = new UserMbrDevice();
-				userMbrDevice.setDeviceAccount(req.getDeviceAccount());
-				userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
-				this.updateDeviceForMdnLogin(requestHeader, deviceInfo.getUserKey(), userMbrDevice);
-
-				res.setIsLoginSuccess("Y");
-
-				return res;
-
-			} else {
-
-				CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
-
-				if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
-					/* 회원 정보가 존재 하지 않습니다. */
-					throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
-				}
-
-				/* 인증 수단 셋팅 후 로그인 실패 처리 */
-				UserAuthMethod userAuthMethod = new UserAuthMethod();
-				if (!StringUtil.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
-					userAuthMethod.setUserId(chkDupRes.getUserMbr().getUserID());
-				}
-				userAuthMethod.setUserEmail(chkDupRes.getUserMbr().getUserEmail());
-				userAuthMethod.setIsRealName(chkDupRes.getUserMbr().getIsRealName());
-				res.setUserAuthMethod(userAuthMethod);
-
-				res.setIsLoginSuccess("N");
-
-				return res;
-
-			}
-		}
 
 	}
 
@@ -503,6 +392,106 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		return res;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
+	 * executCheckVariability
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq)
+	 */
+	@Override
+	public CheckVariabilityRes executCheckVariability(SacRequestHeader requestHeader, CheckVariabilityReq req) {
+
+		CheckVariabilityRes res = new CheckVariabilityRes();
+
+		/* 모번호 조회 */
+		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
+
+		/* 휴대기기 정보 조회 */
+		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+
+		if (deviceInfo == null) { // 회원아님
+
+			/* 변동성 여부 조회 */
+			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
+
+			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "N")) {
+
+				/* 회원 정보가 존재 하지 않습니다. */
+				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
+
+			} else { // 변동성 정보 존재시 성공처리
+
+				/* 기기정보 업데이트(GMAIL, 통신사) */
+				UserMbrDevice userMbrDevice = new UserMbrDevice();
+				userMbrDevice.setDeviceAccount(req.getDeviceAccount());
+				userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
+				this.updateDeviceForMdnLogin(requestHeader, saveAndSync.getUserKey(), userMbrDevice);
+
+				res.setIsLoginSuccess("Y");
+
+				return res;
+
+			}
+		}
+
+		/** 이하 SC회원정보 존재한 경우 */
+
+		/* 통신사 비교 */
+		if (StringUtil.equals(deviceInfo.getDeviceTelecom(), req.getDeviceTelecom())) {
+
+			/* 통신사가 일치하면 GMAIL만 업데이트 후 성공처리 */
+			UserMbrDevice userMbrDevice = new UserMbrDevice();
+			userMbrDevice.setDeviceAccount(req.getDeviceAccount());
+			this.updateDeviceForMdnLogin(requestHeader, deviceInfo.getUserKey(), userMbrDevice);
+
+			res.setIsLoginSuccess("Y");
+
+			return res;
+
+		} else {
+
+			/* 통신사가 다른경우 GMAIL 비교 */
+			if (StringUtil.equals(deviceInfo.getDeviceAccount(), req.getDeviceAccount())) {
+
+				/* GMAIL 일치하면 GMAIL, 통신사 업데이트 후 성공처리 */
+				UserMbrDevice userMbrDevice = new UserMbrDevice();
+				userMbrDevice.setDeviceAccount(req.getDeviceAccount());
+				userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
+				this.updateDeviceForMdnLogin(requestHeader, deviceInfo.getUserKey(), userMbrDevice);
+
+				res.setIsLoginSuccess("Y");
+
+				return res;
+
+			} else {
+
+				CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+
+				if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
+					/* 회원 정보가 존재 하지 않습니다. */
+					throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
+				}
+
+				/* 인증 수단 셋팅 후 로그인 실패 처리 */
+				UserAuthMethod userAuthMethod = new UserAuthMethod();
+				if (!StringUtil.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+					userAuthMethod.setUserId(chkDupRes.getUserMbr().getUserID());
+				}
+				userAuthMethod.setUserEmail(chkDupRes.getUserMbr().getUserEmail());
+				userAuthMethod.setIsRealName(chkDupRes.getUserMbr().getIsRealName());
+				res.setUserAuthMethod(userAuthMethod);
+
+				res.setIsLoginSuccess("N");
+
+				return res;
+
+			}
+		}
 
 	}
 
@@ -901,7 +890,6 @@ public class LoginServiceImpl implements LoginService {
 	 * @param obj
 	 *            요청객체
 	 */
-	@Deprecated
 	public void updateLoginDeviceInfo(SacRequestHeader requestHeader, String userKey, String userAuthKey, Object obj) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
