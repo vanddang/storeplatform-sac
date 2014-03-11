@@ -41,6 +41,7 @@ public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
 	private String mmDeviceModelCd; // 가상 프로비저닝 모델명 (멀티미디어).
+	private String imageCd; // 이미지 코드
 
 	/**
 	 * 
@@ -365,6 +366,31 @@ public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setMmDeviceModelCd(String mmDeviceModelCd) {
 		this.mmDeviceModelCd = mmDeviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이미지 코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getImageCd() {
+		return this.imageCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이미지 코드.
+	 * </pre>
+	 * 
+	 * @param imageCd
+	 *            String
+	 */
+	public void setImageCd(String imageCd) {
+		this.imageCd = imageCd;
 	}
 
 }
