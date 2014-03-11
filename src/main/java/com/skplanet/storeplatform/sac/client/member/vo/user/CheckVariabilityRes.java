@@ -7,12 +7,12 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserAuthMethod;
 
 /**
- * [RESPONSE] 변동성 회원 인증.
+ * [RESPONSE] 변동성 회원 체크.
  * 
  * Updated on : 2014. 3. 11. Updated by : 반범진. 지티소프트.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class AuthorizeVariabilityRes extends CommonInfo {
+public class CheckVariabilityRes extends CommonInfo {
 
 	/**
 	 * 

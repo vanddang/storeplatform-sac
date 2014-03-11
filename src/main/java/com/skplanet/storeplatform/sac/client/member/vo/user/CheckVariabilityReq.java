@@ -5,11 +5,11 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [REQUEST] 변동성 회원 인증.
+ * [REQUEST] 변동성 회원 체크.
  * 
  * Updated on : 2014. 3. 11. Updated by : 반범진. 지티소프트.
  */
-public class AuthorizeVariabilityReq extends CommonInfo {
+public class CheckVariabilityReq extends CommonInfo {
 
 	/**
 	 * 
