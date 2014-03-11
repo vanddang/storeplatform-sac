@@ -16,10 +16,10 @@
 						http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
 						">
 
-    <!-- PlanDas : Global Cache -->	
-	<bean id="globalAnnotationCacheOperationSource" class="org.springframework.cache.annotation.AnnotationCacheOperationSource" />
-	<bean id="globalCacheInterceptor" class="com.skplanet.storeplatform.framework.core.cache.interceptor.StoreplatformCacheInterceptor"> 
-	    <property name="cacheOperationSources" ref="globalAnnotationCacheOperationSource"/>
+    <!-- PlanDas : Global Cache -->
+    <bean id="globalAnnotationCacheOperationSource" class="org.springframework.cache.annotation.AnnotationCacheOperationSource" />
+    <bean id="globalCacheInterceptor" class="com.skplanet.storeplatform.framework.core.cache.interceptor.StoreplatformCacheInterceptor"> 
+        <property name="cacheOperationSources" ref="globalAnnotationCacheOperationSource"/>
         <property name="cacheManager" ref="plandasjCacheManager" />
     </bean>
     <bean id="globalCacheAdvisor" class="org.springframework.cache.interceptor.BeanFactoryCacheOperationSourceAdvisor">
@@ -29,22 +29,29 @@
     <aop:config> 
         <aop:advisor advice-ref="globalCacheAdvisor" pointcut="execution(* com.skplanet.storeplatform.*.*(..))" order="0" /> 
     </aop:config>
-	
- 	<bean id="plandasjConnectionFactory" 
- 		class="com.skplanet.spring.data.plandasj.PlandasjConnectionFactory"
- 		p:domainName="#{propertiesForSac['plandasj.domainName']}" 
- 		p:serviceCode="#{propertiesForSac['plandasj.serviceCode']}" 
- 		p:authCode="#{propertiesForSac['plandasj.authCode']}" /> 
+    
+    <bean id="plandasjConnectionFactory" 
+        class="com.skplanet.spring.data.plandasj.PlandasjConnectionFactory"
+        p:domainName="#{propertiesForSac['plandasj.domainName']}" 
+        p:serviceCode="#{propertiesForSac['plandasj.serviceCode']}" 
+        p:authCode="#{propertiesForSac['plandasj.authCode']}" /> 
 
- 	<bean id="plandasjTemplate" 
- 		class="com.skplanet.spring.data.plandasj.PlandasjTemplate" 
- 		p:connection-factory-ref="plandasjConnectionFactory" /> 
+    <bean id="plandasjTemplate" 
+        class="com.skplanet.spring.data.plandasj.PlandasjTemplate" 
+        p:connection-factory-ref="plandasjConnectionFactory" /> 
 
- 	<bean id="plandasjCacheManager" 
- 		class="com.skplanet.spring.data.plandasj.PlandasjCacheManager" 
- 		p:template-ref="plandasjTemplate" >
- 		<property name="usePrefix" value="true" />
- 	</bean>
+    <bean id="plandasjCacheManager" 
+        class="com.skplanet.spring.data.plandasj.PlandasjCacheManager" 
+        p:template-ref="plandasjTemplate" >
+        <property name="usePrefix" value="true" />
+    </bean>
+      
+    <bean name="plandasjpool" class="com.skplanet.plandasj.PlandasjPool" destroy-method="release">
+        <constructor-arg type="java.lang.String" name="domainName" value="#{propertiesForSac['plandasj.domainName']}" />
+        <constructor-arg type="java.lang.String" name="serviceCode" value="#{propertiesForSac['plandasj.serviceCode']}" />
+        <constructor-arg type="java.lang.String" name="authCode" value="#{propertiesForSac['plandasj.authCode']}" />
+    </bean> 
+    <!-- pool client 방식 -->
     <!-- PlanDas : Global Cache -->
 
 </beans>
