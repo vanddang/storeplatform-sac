@@ -48,17 +48,14 @@ public class ImageUtil {
 	 */
 	public boolean setImgScale(File inImgfle, String outFile, int targetWidth, int targetHeight, String directoryName) {
 		try {
-			this.log.info("log111");
 			if (!inImgfle.isFile()) {
 				return false;
 			}
-			this.log.info("log222");
 			File outputfile = new File(outFile);
 			if (outputfile.exists() == true) {
 				this.log.info("변경하려는 파일과 동일한 파일이 존재하여 삭제합나디. 파일명 [" + outputfile.getName() + "]");
 				outputfile.delete();
 			}
-			this.log.info("log333" + directoryName);
 
 			if (directoryName != null) {
 				if (!FileUtil.directoryCheck(directoryName))
@@ -67,8 +64,7 @@ public class ImageUtil {
 				if (!FileUtil.directoryCheck(outFile))
 					FileUtil.createDirectory(outFile);
 			}
-			this.log.info("log444" + directoryName);
-			ImageUtilResizing imgResize = new ImageUtilResizing();
+			ImageResizing imgResize = new ImageResizing();
 
 			boolean isOk = false;
 			isOk = imgResize.resize(inImgfle, outputfile, targetWidth, targetHeight);

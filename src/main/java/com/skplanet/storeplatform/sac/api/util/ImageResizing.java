@@ -10,18 +10,14 @@
 
 package com.skplanet.storeplatform.sac.api.util;
 
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.awt.image.PixelGrabber;
+import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,104 +27,88 @@ import org.slf4j.LoggerFactory;
  */
 public class ImageResizing {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	public static final int RATIO = 0;
+	public static final int SAME = -1;
 
 	/**
 	 * ImageResizing 이미지 리사이즈 기능을 제공한다.
 	 * 
-	 * @param soruce
-	 *            soruce
+	 * @param src
+	 *            src
+	 * @param dest
+	 *            dest
 	 * @param width
 	 *            width
 	 * @param height
 	 *            height
-	 * @return Image
+	 * @return boolean
 	 * @throws Exception
 	 *             Exception
 	 */
-	public static Image resizing(Image soruce, int width, int height)
-
-	throws Exception {
-
-		int newW = width;
-
-		int newH = height;
-
-		return soruce.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
-
-	}
-
-	/**
-	 * ImageResizing 이미지 리사이즈 기능을 제공한다.
-	 * 
-	 * @param imgResdFile
-	 *            imgResdFile
-	 * @param imgWriteFile
-	 *            imgWriteFile
-	 * @param targetWidth
-	 *            targetWidth
-	 * @param targetHeight
-	 *            targetHeight
-	 * @return boolean
-	 */
-	public boolean imageResizing(String imgResdFile, String imgWriteFile, int targetWidth, int targetHeight) {
-
-		boolean result = false;
-
+	public boolean resize(File src, File dest, int width, int height) {
 		try {
-			this.log.info("log9991");
-			// img = ImageIO.read( new File(fName));
+			Image srcImg = null;
+			String suffix = src.getName().substring(src.getName().lastIndexOf('.') + 1).toLowerCase();
+			this.log.info("log8881");
+			if (suffix.equals("bmp") || suffix.equals("png") || suffix.equals("gif")) {
+				srcImg = ImageIO.read(src);
+			} else {
+				// BMP가 아닌 경우 ImageIcon을 활용해서 Image 생성
+				// 이렇게 하는 이유는 getScaledInstance를 통해 구한 이미지를
+				// PixelGrabber.grabPixels로 리사이즈 할때
+				// 빠르게 처리하기 위함이다.
+				srcImg = new ImageIcon(src.toURL()).getImage();
+			}
+			this.log.info("log8882");
 
-			FileInputStream fis = new FileInputStream(imgResdFile);
+			int srcWidth = srcImg.getWidth(null);
+			int srcHeight = srcImg.getHeight(null);
 
-			byte[] data = new byte[fis.available()];
-			this.log.info("log9992");
-			// this.log.info(fis.available());
+			int destWidth = -1, destHeight = -1;
+			this.log.info("log8883");
+			if (width == SAME) {
+				destWidth = srcWidth;
+			} else if (width > 0) {
+				destWidth = width;
+			}
 
-			fis.read(data);
-
-			fis.close();
-
-			Image image = Toolkit.getDefaultToolkit().createImage(data);
-			this.log.info("log9993");
-			Image rtnImage = resizing(image, targetWidth, targetHeight);
-			this.log.info("log9994");
-			MediaTracker tracker = new MediaTracker(new java.awt.Frame());
-			this.log.info("log9995");
-			tracker.addImage(rtnImage, 0);
-
-			tracker.waitForAll();
-			this.log.info("log9996");
-			BufferedImage bi = new BufferedImage(rtnImage.getWidth(null),
-
-			rtnImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
-			this.log.info("log9997");
-			Graphics g = bi.getGraphics();
-
-			g.drawImage(rtnImage, 0, 0, null);
-
-			g.dispose();
-
-			ByteArrayOutputStream bas = new ByteArrayOutputStream();
-			this.log.info("log9998");
-			ImageIO.write(bi, "jpeg", bas);
-
-			byte[] writeData = bas.toByteArray();
-
-			DataOutputStream dos = new DataOutputStream(
-
-			new BufferedOutputStream(new FileOutputStream(imgWriteFile)));
-
-			dos.write(writeData);
-			this.log.info("log9999");
-			dos.close();
-			result = true;
-
+			if (height == SAME) {
+				destHeight = srcHeight;
+			} else if (height > 0) {
+				destHeight = height;
+			}
+			this.log.info("log8884");
+			if (width == RATIO && height == RATIO) {
+				destWidth = srcWidth;
+				destHeight = srcHeight;
+			} else if (width == RATIO) {
+				double ratio = ((double) destHeight) / ((double) srcHeight);
+				destWidth = (int) (srcWidth * ratio);
+			} else if (height == RATIO) {
+				double ratio = ((double) destWidth) / ((double) srcWidth);
+				destHeight = (int) (srcHeight * ratio);
+			}
+			this.log.info("log8885");
+			Image imgTarget = srcImg.getScaledInstance(destWidth, destHeight, Image.SCALE_SMOOTH);
+			int pixels[] = new int[destWidth * destHeight];
+			PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, destWidth, destHeight, pixels, 0, destWidth);
+			this.log.info("log8886");
+			try {
+				pg.grabPixels();
+			} catch (InterruptedException e) {
+				throw new IOException(e.getMessage());
+			}
+			this.log.info("log8887");
+			BufferedImage destImg = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
+			destImg.setRGB(0, 0, destWidth, destHeight, pixels, 0, destWidth);
+			this.log.info("log8888");
+			ImageIO.write(destImg, "jpg", dest);
+			this.log.info("log8889");
+			return true;
 		} catch (Exception e) {
 			this.log.info(e.getMessage());
-			e.printStackTrace();
+			return false;
 		}
-		return result;
-
 	}
 
 }
