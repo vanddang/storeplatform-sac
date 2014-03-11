@@ -128,7 +128,7 @@ public class SacRestClientApacheTest {
 		map.put("resvDtTm", "20140310180505");
 		map.put("callbackUrl", "");
 		map.put("interfaceId", "");
-		map.put("recvMdn", "01033070713");
+		map.put("recvMdn", "01085226051");
 		map.put("teleSvcId", "0");
 		map.put("carrier", "SKT");
 		map.put("srcId", "OR00401");
