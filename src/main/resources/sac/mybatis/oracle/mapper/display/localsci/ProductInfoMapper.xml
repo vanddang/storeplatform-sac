@@ -554,8 +554,26 @@
 	                , MP.POSS_LEND_CLSF_CD
 		            , PD.USE_PERIOD_UNIT_CD
 		            , PD.USE_PERIOD
-		            , PD.DRM_YN    
-		            , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID  = PM.PART_PROD_ID) AS PHONE_SPRT_YN        
+		            , PD.DRM_YN 
+                    ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y')
+                         FROM TB_CM_DEVICE DV
+                          WHERE DV.DEVICE_MODEL_CD = #{deviceModelNo}
+                          AND (
+                            /*DV.VOD_FIXISTT_SPRT_YN = ( CASE WHEN CM.CMPX_PROD_CLSF_CD='OR004301' OR CM.CMPX_PROD_CLSF_CD='OR004302' 
+                                        THEN 'Y' ELSE 'NOT SUPPORT' END)
+                            OR
+                            DV.EBOOK_SPRT_YN = ( CASE WHEN CM.CMPX_PROD_CLSF_CD='OR004303' OR CM.CMPX_PROD_CLSF_CD='OR004304' 
+                                        THEN 'Y' ELSE 'NOT SUPPORT' END)*/
+                            DV.VOD_FIXISTT_SPRT_YN = ( CASE WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' 
+                                        THEN 'Y' ELSE 'NOT SUPPORT' END)
+                            OR
+                            DV.EBOOK_SPRT_YN = ( CASE WHEN PD.TOP_MENU_ID='DP13' 
+                                        THEN 'Y' ELSE 'NOT SUPPORT' END)
+                            OR
+                            DV.COMIC_SPRT_YN = ( CASE WHEN PD.TOP_MENU_ID='DP14' 
+                                        THEN 'Y' ELSE 'NOT SUPPORT' END)
+                           )
+                      )
 		            , CM.AUTO_APPR_YN
 		            , DC.LANG_CD
                     , PD.CID
