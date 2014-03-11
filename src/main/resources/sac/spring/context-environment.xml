@@ -95,7 +95,7 @@
     </beans>
 
     <beans profile="real">
-       <util:properties id="propertiesForSac" location="classpath:sac/properties/app.local.properties" /> 
+       <util:properties id="propertiesForSac" location="classpath:sac/properties/app.real.properties" /> 
        <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
             <property name="fileEncoding" value="UTF-8" />
             <property name="locations" >
