@@ -205,13 +205,5 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		ReviveUserResponse reviveUserResponse = this.deviceSCI.reviveUser(reviveUserRequest);
 		LOGGER.info("## >> reviveUserResponse : {}", reviveUserResponse);
 
-		/**
-		 * TODO 아래 내용들은 어디서 처리 되는지 확인 필요..??? SC 에서 처리되는듯....확인은 필요..
-		 * 
-		 * 기기정보 : Valid
-		 * 
-		 * 단말속성 수정 필요...? 이건....어디서...????
-		 */
-
 	}
 }
