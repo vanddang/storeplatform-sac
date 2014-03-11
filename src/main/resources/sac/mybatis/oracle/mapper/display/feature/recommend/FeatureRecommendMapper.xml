@@ -180,6 +180,7 @@
 			 , TDMC.TOP_MENU_ID
 			 , PROD.META_CLSF_CD
              , PROD.SVC_GRP_CD
+             , FC_GET_CM_CD_NM(PROD.SVC_GRP_CD,#{langCd}) AS SVC_GRP_NM     
 			 , PROD.CONTENTS_TYPE_CD
 			FROM TB_DP_ONEDAY_ONE_APP ONE
 			    , TB_DP_PROD PROD

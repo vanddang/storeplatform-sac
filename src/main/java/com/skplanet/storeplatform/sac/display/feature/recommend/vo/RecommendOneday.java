@@ -24,6 +24,7 @@ public class RecommendOneday extends CommonInfo {
 	private String prodId;
 	private String partProdId;
 	private String svcGrpCd;
+	private String svcGrpNm;
 	private String svcTypeCd;
 	private String contentsTypeCd;
 	private String metaClsfCd;
@@ -224,6 +225,21 @@ public class RecommendOneday extends CommonInfo {
 	 */
 	public void setProdOffrAmt(Integer prodOffrAmt) {
 		this.prodOffrAmt = prodOffrAmt;
+	}
+
+	/**
+	 * @return the svcGrpNm
+	 */
+	public String getSvcGrpNm() {
+		return this.svcGrpNm;
+	}
+
+	/**
+	 * @param svcGrpNm
+	 *            the svcGrpNm to set
+	 */
+	public void setSvcGrpNm(String svcGrpNm) {
+		this.svcGrpNm = svcGrpNm;
 	}
 
 }

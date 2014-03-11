@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.Recomm
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendOnedaySacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -202,6 +203,14 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 						date.setText(recommendOneday.getExpoEndDt());
 						dateList.add(date);
 						product.setDateList(dateList);
+						// svcgrpcd추가
+						Menu menu = new Menu();
+						List<Menu> menuList = product.getMenuList();
+						menu.setType(DisplayConstants.DP_SVC_GRP_CD_TYPE);
+						menu.setName(recommendOneday.getSvcGrpNm());
+						menu.setId(recommendOneday.getSvcGrpCd());
+						menuList.add(menu);
+						product.setMenuList(menuList);
 						productList.add(product);
 					}
 
@@ -234,6 +243,14 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 							date.setText(recommendOneday.getExpoEndDt());
 							dateList.add(date);
 							product.setDateList(dateList);
+							// svcgrpcd추가
+							Menu menu = new Menu();
+							List<Menu> menuList = product.getMenuList();
+							menu.setType(DisplayConstants.DP_SVC_GRP_CD_TYPE);
+							menu.setName(recommendOneday.getSvcGrpNm());
+							menu.setId(recommendOneday.getSvcGrpCd());
+							menuList.add(menu);
+							product.setMenuList(menuList);
 							productList.add(product);
 						}
 					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
@@ -263,6 +280,14 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 								date.setText(recommendOneday.getExpoEndDt());
 								dateList.add(date);
 								product.setDateList(dateList);
+								// svcgrpcd추가
+								Menu menu = new Menu();
+								List<Menu> menuList = product.getMenuList();
+								menu.setType(DisplayConstants.DP_SVC_GRP_CD_TYPE);
+								menu.setName(recommendOneday.getSvcGrpNm());
+								menu.setId(recommendOneday.getSvcGrpCd());
+								menuList.add(menu);
+								product.setMenuList(menuList);
 								productList.add(product);
 							} else {
 								retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
@@ -286,6 +311,14 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 								date.setText(recommendOneday.getExpoEndDt());
 								dateList.add(date);
 								product.setDateList(dateList);
+								// svcgrpcd추가
+								Menu menu = new Menu();
+								List<Menu> menuList = product.getMenuList();
+								menu.setType(DisplayConstants.DP_SVC_GRP_CD_TYPE);
+								menu.setName(recommendOneday.getSvcGrpNm());
+								menu.setId(recommendOneday.getSvcGrpCd());
+								menuList.add(menu);
+								product.setMenuList(menuList);
 								productList.add(product);
 							}
 						}
@@ -314,6 +347,14 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 							date.setText(recommendOneday.getExpoEndDt());
 							dateList.add(date);
 							product.setDateList(dateList);
+							// svcgrpcd추가
+							Menu menu = new Menu();
+							List<Menu> menuList = product.getMenuList();
+							menu.setType(DisplayConstants.DP_SVC_GRP_CD_TYPE);
+							menu.setName(recommendOneday.getSvcGrpNm());
+							menu.setId(recommendOneday.getSvcGrpCd());
+							menuList.add(menu);
+							product.setMenuList(menuList);
 							productList.add(product);
 						}
 
@@ -341,6 +382,14 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 							date.setText(recommendOneday.getExpoEndDt());
 							dateList.add(date);
 							product.setDateList(dateList);
+							// svcgrpcd추가
+							Menu menu = new Menu();
+							List<Menu> menuList = product.getMenuList();
+							menu.setType(DisplayConstants.DP_SVC_GRP_CD_TYPE);
+							menu.setName(recommendOneday.getSvcGrpNm());
+							menu.setId(recommendOneday.getSvcGrpCd());
+							menuList.add(menu);
+							product.setMenuList(menuList);
 							productList.add(product);
 						}
 
