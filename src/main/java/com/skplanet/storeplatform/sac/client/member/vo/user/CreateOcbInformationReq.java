@@ -32,6 +32,12 @@ public class CreateOcbInformationReq extends CommonInfo {
 	private String cardNumber = "";
 
 	/**
+	 * 등록자 ID.
+	 */
+	@NotEmpty
+	private String regId = "";
+
+	/**
 	 * @return String : userKey
 	 */
 	public String getUserKey() {
@@ -74,6 +80,21 @@ public class CreateOcbInformationReq extends CommonInfo {
 	 */
 	public void setCardNumber(String cardNumber) {
 		this.cardNumber = cardNumber;
+	}
+
+	/**
+	 * @return String : regId
+	 */
+	public String getRegId() {
+		return this.regId;
+	}
+
+	/**
+	 * @param regId
+	 *            String : the regId to set
+	 */
+	public void setRegId(String regId) {
+		this.regId = regId;
 	}
 
 }
