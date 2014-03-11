@@ -112,13 +112,13 @@ public class DeviceServiceImpl implements DeviceService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceServiceImpl.class);
 
 	@Autowired
-	private MemberCommonComponent commService; // 회원 공통 서비스
+	private MemberCommonComponent commService;
 
 	@Autowired
-	private UserSCI userSCI; // 회원 콤포넌트 사용자 기능 인터페이스
+	private UserSCI userSCI;
 
 	@Autowired
-	private DeviceSCI deviceSCI; // 회원 콤포넌트 휴대기기 기능 인터페이스
+	private DeviceSCI deviceSCI;
 
 	@Autowired
 	private ImIdpSCI imIdpSCI;
@@ -140,9 +140,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private AmqpTemplate memberRetireAmqpTemplate;
-
-	//	@Autowired
-	//	private PurchaseUserInfoInternalSacSCI historyInternalSCI;
 
 	/*
 	 * (non-Javadoc)
