@@ -111,47 +111,43 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		for (PurchaseCancelDetailSacParam purchaseCancelDetailSacParam : purchaseCancelSacParam.getPrchsCancelList()) {
 
 			totCnt++;
-			PurchaseCancelDetailSacResult purchaseCanDetailSacResult = new PurchaseCancelDetailSacResult();
+			PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 			try {
 
-				purchaseCanDetailSacResult = this.updatePurchaseCancel(purchaseCancelSacParam,
+				purchaseCancelDetailSacResult = this.updatePurchaseCancel(purchaseCancelSacParam,
 						purchaseCancelDetailSacParam);
 
 			} catch (StorePlatformException e) {
 
-				purchaseCanDetailSacResult = new PurchaseCancelDetailSacResult();
-				purchaseCanDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+				purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
+				purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 
-				this.logger
-						.info("PurchaseCancelServiceImpl Error Info : {}", purchaseCancelDetailSacParam.getPrchsId());
-				this.logger.info("PurchaseCancelServiceImpl Error Info : {}", e.getErrorInfo().getCode());
-
-				purchaseCanDetailSacResult.setResultCd(e.getErrorInfo().getCode());
+				purchaseCancelDetailSacResult.setResultCd(e.getErrorInfo().getCode());
 				if (StringUtils.isBlank(e.getErrorInfo().getMessage())) {
-					purchaseCanDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage(e.getErrorInfo()
+					purchaseCancelDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage(e.getErrorInfo()
 							.getCode()));
 				} else {
-					purchaseCanDetailSacResult.setResultMsg(e.getErrorInfo().getMessage());
+					purchaseCancelDetailSacResult.setResultMsg(e.getErrorInfo().getMessage());
 				}
 
 			} catch (Exception e) {
 
 				this.logger.info("SAC_PUR_9999 : {}", e);
 
-				purchaseCanDetailSacResult = new PurchaseCancelDetailSacResult();
-				purchaseCanDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-				purchaseCanDetailSacResult.setResultCd("SAC_PUR_9999");
-				purchaseCanDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage("SAC_PUR_9999"));
+				purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
+				purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+				purchaseCancelDetailSacResult.setResultCd("SAC_PUR_9999");
+				purchaseCancelDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage("SAC_PUR_9999"));
 
 			}
 
-			if (StringUtils.equals("SAC_PUR_0000", purchaseCanDetailSacResult.getResultCd())) {
+			if (StringUtils.equals("SAC_PUR_0000", purchaseCancelDetailSacResult.getResultCd())) {
 				successCnt++;
 			} else {
 				failCnt++;
 			}
 
-			prchsCancelList.add(purchaseCanDetailSacResult);
+			prchsCancelList.add(purchaseCancelDetailSacResult);
 
 		}
 
@@ -170,7 +166,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 
-		// 구매 정보 조회.
+		/** 구매 정보 조회. */
 		PurchaseScReq purchaseScReq = new PurchaseScReq();
 
 		// 인입 된 사람의 정보 넣어준다.
@@ -179,6 +175,11 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		purchaseScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 
 		PurchaseScRes purchaseScRes = this.purchaseCancelSCI.getPurchase(purchaseScReq);
+		if (purchaseScRes.getPrchs() == null || StringUtils.isEmpty(purchaseScRes.getPrchs().getPrchsId())
+				|| purchaseScRes.getPrchsDtlList() == null || purchaseScRes.getPrchsDtlList().size() < 1) {
+			// 구매 정보가 존재하지 않을 경우 취소 불가.
+			throw new StorePlatformException("SAC_PUR_8100");
+		}
 
 		// 구매 정보 가져와서 셋팅.
 		purchaseCancelDetailSacParam.setPrchs(purchaseScRes.getPrchs());
@@ -188,7 +189,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		List<PrchsProdDtl> prchsProdDtlList = new ArrayList<PrchsProdDtl>();
 		purchaseCancelDetailSacParam.setPrchsProdDtlList(prchsProdDtlList);
 
-		// 각 상품 별 체크.
+		/** 각 상품 별 체크. */
 		for (PrchsDtl prchsDtl : purchaseCancelDetailSacParam.getPrchsDtlList()) {
 
 			if (!StringUtils.equals(PurchaseConstants.PRCHS_STATUS_COMPT, prchsDtl.getStatusCd())) {
