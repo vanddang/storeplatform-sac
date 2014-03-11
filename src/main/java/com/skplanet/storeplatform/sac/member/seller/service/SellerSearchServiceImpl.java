@@ -92,7 +92,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	private SellerSCI sellerSCI;
 
 	@Autowired
-	private SearchSellerKeySCI searchSellerKeyService;
+	private SearchSellerKeySCI searchSellerKeySCI;
 
 	@Autowired
 	@Qualifier("sac")
@@ -167,7 +167,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			keySearch.setKeyString(req.getSellerId());
 			keySearch.setKeyType("SELLERMBR_ID");
 		} else {
-			keySearch.setKeyString(this.searchSellerKeyService.searchSellerKeyForAid(req.getAid()));
+			keySearch.setKeyString(this.searchSellerKeySCI.searchSellerKeyForAid(req.getAid()));
 			keySearch.setKeyType("INSD_SELLERMBR_NO");
 		}
 
