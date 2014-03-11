@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -90,7 +91,9 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setProdSprtYn(displayInfo.getProdSprtYn());
 			purchaseProduct.setDrmYn(displayInfo.getDrmYn());
 			purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
-			purchaseProduct.setUsePeriod(displayInfo.getUsePeriod());
+			purchaseProduct
+					.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(), "PD00310") ? 0 : displayInfo
+							.getUsePeriod());
 			purchaseProduct.setAid(displayInfo.getAid());
 			purchaseProduct.setTenantProdGrpCd(displayInfo.getTenantProdGrpCd());
 			purchaseProduct.setMallCd(displayInfo.getMallCd());

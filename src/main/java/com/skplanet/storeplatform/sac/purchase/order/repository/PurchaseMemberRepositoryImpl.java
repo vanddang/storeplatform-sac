@@ -83,11 +83,8 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		purchaseUserDevice.setDeviceId(userDeviceInfoSac.getDeviceId());
 		purchaseUserDevice.setDeviceModelCd(userDeviceInfoSac.getDeviceModelNo());
 		purchaseUserDevice.setTelecom(userDeviceInfoSac.getDeviceTelecom());
-		if (StringUtils.isNotBlank(userDeviceInfoSac.getUserBirthday())) {
-			purchaseUserDevice.setAge(this.getCurrDayAge(userDeviceInfoSac.getUserBirthday()));
-		} else {
-			purchaseUserDevice.setAge(0);
-		}
+		purchaseUserDevice.setAge(StringUtils.isNotBlank(userDeviceInfoSac.getUserBirthday()) ? this
+				.getCurrDayAge(userDeviceInfoSac.getUserBirthday()) : 0);
 
 		return purchaseUserDevice;
 	}
