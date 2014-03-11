@@ -581,10 +581,10 @@
                     , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE PROD_ID = PM.PART_PROD_ID AND EXPO_YN ='Y' AND ROWNUM =1) CHNL_PROD_STAT
                     , TP.PROD_STATUS_CD
                     , DECODE(CM.CMPX_PROD_CLSF_CD
-                             ,'OR004301','movieFreepass'
-                             ,'OR004302','seriesFreepass'
-                             ,'OR004303','seriesFreepass/ebook'
-                             ,'OR004304','rentalFreepass/ebook'                                                  
+                             ,'OR004301','movieFreepass'  -- 영화 자동결제
+                             ,'OR004302','seriesFreepass' -- 시리즈 1회결제
+                             ,'OR004303','seriesFreepass/ebook' -- 전권 소장
+                             ,'OR004304','rentalFreepass/ebook' -- 전권 대여                                                
                             ) AS KIND
                     , CM.CMPX_PROD_CLSF_CD AS PLAN_TYPE		            
 		        FROM 
