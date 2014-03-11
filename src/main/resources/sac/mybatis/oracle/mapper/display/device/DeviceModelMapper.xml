@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DeviceModel">
+	<select id="searchDeviceChangeModelList" resultType="MetaInfo">
+		SELECT  COUNT(1) OVER() AS TOTAL_COUNT
+		      , MODEL_NM AS DEVICE_MODEL_CD
+		      , TRFM_MODEL_NM AS DEVICE_MODEL_NM
+		  FROM  TB_CM_DEVICE_TRFM
+    </select>        
+</mapper>

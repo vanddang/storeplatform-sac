@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.device.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceChangeSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
@@ -25,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.device.service.DeviceChangeService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
 import com.skplanet.storeplatform.sac.display.device.service.UseableDeviceService;
@@ -37,8 +37,6 @@ import com.skplanet.storeplatform.sac.display.device.service.UseableDeviceServic
 @Controller
 @RequestMapping("/display/device")
 public class DeviceController {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
 	@Autowired
 	private DeviceProfileService deviceProfileService;
 
@@ -47,6 +45,9 @@ public class DeviceController {
 
 	@Autowired
 	private UseableDeviceService useableDeviceService;
+
+	@Autowired
+	private DeviceChangeService deviceChangeService;
 
 	/**
 	 * <pre>
@@ -100,4 +101,16 @@ public class DeviceController {
 		return this.useableDeviceService.searchUseableDeviceList(req, header);
 	}
 
+	/**
+	 * <pre>
+	 * 단말 UserAgent 관리 정보 조회.
+	 * </pre>
+	 * 
+	 * @return DeviceChangeSacRes
+	 */
+	@RequestMapping(value = "/changeModel/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public DeviceChangeSacRes searchDeviceChangeModelList() {
+		return this.deviceChangeService.searchDeviceChangeModelList();
+	}
 }
