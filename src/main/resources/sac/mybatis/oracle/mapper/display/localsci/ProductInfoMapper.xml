@@ -551,6 +551,17 @@
 		            , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID  = PM.PART_PROD_ID) AS PHONE_SPRT_YN        
 		            , CM.AUTO_APPR_YN
 		            , DC.LANG_CD
+                    , PD.CID
+                    , MCD.MENU_DESC AS META_CLS_DESC
+                    , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE PROD_ID = PM.PART_PROD_ID AND EXPO_YN ='Y' AND ROWNUM =1) CHNL_PROD_STAT
+                    , TP.PROD_STATUS_CD
+                    , DECODE(CM.CMPX_PROD_CLSF_CD
+                             ,'OR004301','movieFreepass'
+                             ,'OR004302','seriesFreepass'
+                             ,'OR004303','seriesFreepass/ebook'
+                             ,'OR004304','rentalFreepass/ebook'                                                  
+                            ) AS KIND
+                    , CM.CMPX_PROD_CLSF_CD AS PLAN_TYPE		            
 		        FROM 
 		              TB_DP_MENU_CATEGORY MC
 		            , TB_DP_MENU_CATEGORY_PROD_MAPG MCPM
