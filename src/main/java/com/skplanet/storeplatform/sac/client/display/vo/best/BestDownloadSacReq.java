@@ -38,6 +38,7 @@ public class BestDownloadSacReq extends CommonInfo {
 	private String hdv; // HDV 지원구분
 	private String drm; // drm 지원구분
 	private String prodGradeCd; // 상품등급코드
+	@Pattern(regexp = "|DP010601|DP010602")
 	private String possLendClsfCd; // 소장/대여 구분 코드
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
 	private Integer offset; // 시작점 ROW
