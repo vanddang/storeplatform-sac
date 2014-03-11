@@ -50,6 +50,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
@@ -62,8 +63,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSync
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeVariabilityReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeVariabilityRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -124,8 +125,6 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeByMdnRes executeAuthorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
 
-		LOGGER.info("############################ LoginServiceImpl authorizeByMdn start ############################");
-
 		String deviceId = req.getDeviceId();
 		String userKey = null;
 		String userType = null;
@@ -181,17 +180,11 @@ public class LoginServiceImpl implements LoginService {
 			return res;
 		}
 
-		/* 변동성 회원인 경우 */
-		// if (StringUtils.equals(userType, MemberConstants.USER_TYPE_MOBILE) &&
-		// StringUtils.equals(chkDupRes.getIsChangeSubject(), "Y")) {
-		// this.volatileMemberPoc(requestHeader, deviceId, userKey, req.getDeviceTelecom());
-		// }
-
 		/* 원아이디인 경우 */
 		if (chkDupRes.getUserMbr().getImSvcNo() != null) {
 
 			/* 단말정보 update */
-			this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
+			//this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 			/* 로그인 성공이력 저장 */
 			LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, null, "Y", "Y", deviceId);
@@ -217,7 +210,7 @@ public class LoginServiceImpl implements LoginService {
 				this.idpSCI.authForWap(authForWapEcReq);
 
 				/* 단말정보 update */
-				this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
+				//this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 				/* 로그인 성공이력 저장 */
 				LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, null, "Y", "Y", deviceId);
@@ -250,8 +243,6 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
-		LOGGER.info("############################ LoginServiceImpl authorizeByMdn end ############################");
-
 		return res;
 
 	}
@@ -260,15 +251,14 @@ public class LoginServiceImpl implements LoginService {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
-	 * executeAuthorizeByVariability
+	 * executCheckVariability
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet
-	 * .storeplatform.sac.client.member.vo.user.AuthorizeByVariabilityReq)
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq)
 	 */
 	@Override
-	public AuthorizeVariabilityRes executeAuthorizeVariability(SacRequestHeader requestHeader, AuthorizeVariabilityReq req) {
+	public CheckVariabilityRes executCheckVariability(SacRequestHeader requestHeader, CheckVariabilityReq req) {
 
-		AuthorizeVariabilityRes res = new AuthorizeVariabilityRes();
+		CheckVariabilityRes res = new CheckVariabilityRes();
 
 		/* 모번호 조회 */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
@@ -357,35 +347,6 @@ public class LoginServiceImpl implements LoginService {
 
 	}
 
-	/**
-	 * <pre>
-	 * MDN 로그인용 휴대기기 정보 업데이트.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param userKey
-	 *            String
-	 * @param userMbrDevice
-	 *            UserMbrDevice
-	 */
-	public void updateDeviceForMdnLogin(SacRequestHeader requestHeader, String userKey, UserMbrDevice userMbrDevice) {
-
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
-		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
-
-		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
-		createDeviceReq.setCommonRequest(commonRequest);
-		createDeviceReq.setUserKey(userKey);
-		createDeviceReq.setIsNew("N");
-		createDeviceReq.setUserMbrDevice(userMbrDevice);
-		this.deviceSCI.createDevice(createDeviceReq);
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -443,28 +404,49 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 휴대기기 정보 조회 */
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+		UserMbrDevice userMbrDevice = new UserMbrDevice();
 
 		/* IMEI 비교 */
 		if (!StringUtil.equals(deviceInfo.getNativeId(), req.getNativeId())) {
 
 			if (StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
 
-				/* 3자 이용동의 약관 동의 여부 확인 */
+				/* 3자 이용동의 미동의인 경우 */
 				if (!StringUtil.equals(this.isAgreement(requestHeader, deviceInfo.getUserKey(),
 						MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS), "Y")) {
 
 					throw new StorePlatformException("SAC_MEM_1201");
 				}
-			} else { // 타사는 무조건 에러
+
+				/* ICAS IMEI와 틀린경우 */
+				if (!this.deviceService.isImeiEquality(req.getDeviceId(), req.getNativeId())) {
+					throw new StorePlatformException("SAC_MEM_1503");
+				}
+
+				/* IMEI 수정 */
+				userMbrDevice.setNativeID(req.getNativeId());
+
+			} else { // 타사는 IMEI가 다르면 에러
 				throw new StorePlatformException("SAC_MEM_1504");
 			}
 		}
 
+		/* 모델명, UACD 수정 */
+		userMbrDevice.setDeviceModelNo(requestHeader.getDeviceHeader().getModel());
+		List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+		userMbrDeviceDetail.setDeviceKey(deviceInfo.getDeviceKey());
+		userMbrDeviceDetail.setUserKey(userKey);
+		userMbrDeviceDetail.setTenantID(requestHeader.getTenantHeader().getTenantId());
+		userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+		userMbrDeviceDetail.setExtraProfileValue(this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo()).getUaCd());
+		userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
+
+		/* 휴대기기 정보 업데이트 */
+		this.updateDeviceForMdnLogin(requestHeader, userKey, userMbrDevice);
+
 		/* 원아이디인 경우 */
 		if (chkDupRes.getUserMbr().getImSvcNo() != null) {
-
-			/* 단말정보 update */
-			this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 			/* 로그인 성공이력 저장 */
 			LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, null, "Y", "Y", deviceId);
@@ -488,9 +470,6 @@ public class LoginServiceImpl implements LoginService {
 				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
 				authForWapEcReq.setUserMdn(deviceId);
 				this.idpSCI.authForWap(authForWapEcReq);
-
-				/* 단말정보 update */
-				this.updateLoginDeviceInfo(requestHeader, userKey, null, req);
 
 				/* 로그인 성공이력 저장 */
 				LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, deviceId, null, "Y", "Y", deviceId);
@@ -527,154 +506,6 @@ public class LoginServiceImpl implements LoginService {
 
 	}
 
-	/**
-	 * <pre>
-	 * 약관동의 여부 조회.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param userKey
-	 *            String
-	 * @param agreementCode
-	 *            String
-	 * @return String 약관 동의 여부
-	 */
-	public String isAgreement(SacRequestHeader requestHeader, String userKey, String agreementCode) {
-
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
-		SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
-		schAgreeListReq.setCommonRequest(commonRequest);
-		schAgreeListReq.setUserKey(userKey);
-
-		SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
-		for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
-			if (StringUtil.equals(agreeInfo.getExtraAgreementID(), agreementCode)) {
-				return agreeInfo.getIsExtraAgreement();
-			}
-
-		}
-
-		return "N";
-
-	}
-
-	/**
-	 * <pre>
-	 * 변동성 회원 체크.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            AuthorizeByMdnReq
-	 * @return String 변동성회원여부
-	 */
-	public String signVariabilityCheck(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
-
-		SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
-
-		if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "N")) {
-
-			/* 회원 정보가 존재 하지 않습니다. */
-			throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
-
-		} else {
-
-			/* 단말정보 수정(gmail/통신사) */
-			DeviceInfo deviceInfo = new DeviceInfo();
-			deviceInfo.setDeviceId(req.getDeviceId());
-			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-			deviceInfo.setDeviceAccount(req.getDeviceAccount());
-			this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo);
-			return "Y";
-		}
-	}
-
-	/**
-	 * <pre>
-	 * MDN 로그인 시 변동성 대상 및 필수 주요 데이터를 점검한다.
-	 * </pre>
-	 * 
-	 * @param req
-	 *            AuthorizeByMdnReq
-	 * @return
-	 */
-	public String executeMdnLoginCheck(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
-
-		/* mdn 존재유무 확인 */
-		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
-
-		if (deviceInfo == null) {
-
-			/* 변동성 대상체크 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
-
-		} else {
-
-			/* SKT인경우 icas연동하여 imei 비교 */
-			if (StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-					&& !this.deviceService.isImeiEquality(req.getDeviceId(), req.getNativeId())) {
-
-				/* 추가인증 수단을 조회하여 내려준다. */
-				throw new StorePlatformException("", "추가인증수단 조회 내려줌");
-
-			}
-
-			/* imei 일 */
-			if (StringUtil.isEmpty(deviceInfo.getNativeId()) || StringUtil.equals(deviceInfo.getNativeId(), req.getNativeId())) {
-
-				if (StringUtil.isEmpty(deviceInfo.getDeviceTelecom()) || StringUtil.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())) {
-
-					//S/C 최초접속여부확인(테넌트한테 파라메터로 받을 예정)
-					String isFirstJoin = "N";
-
-					if (StringUtil.equals(isFirstJoin, "Y") && !StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-
-						/* gmail 비교하여 gmail계정이 동일하면 동일사용자로 판단 */
-						if (StringUtil.equals(deviceInfo.getDeviceAccount(), req.getDeviceAccount())) {
-							return "";
-						} else {
-							/* 추가인증 수단을 조회하여 내려준다. */
-							throw new StorePlatformException("", "추가인증수단 조회 내려줌");
-						}
-
-					}
-
-				} else {
-
-				}
-				if (StringUtil.equals(req.getDeviceTelecom(), req.getDeviceTelecom())) {
-
-				}
-
-			} else {
-
-				if (StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-
-					/* gmail 비교하여 gmail계정이 동일하면 동일사용자로 판단 */
-					if (StringUtil.equals(deviceInfo.getDeviceAccount(), req.getDeviceAccount())) {
-						return "";
-					} else {
-						/* 추가인증 수단을 조회하여 내려준다. */
-						throw new StorePlatformException("", "추가인증수단 조회 내려줌");
-					}
-
-				} else {
-					throw new StorePlatformException("", "IMEI 값이 상이합니다.");
-				}
-
-			}
-
-		}
-
-		return "";
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -685,8 +516,6 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	@Override
 	public AuthorizeByIdRes executeAuthorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) {
-
-		LOGGER.info("############################ LoginServiceImpl authorizeById start ############################");
 
 		String userId = req.getUserId();
 		String userPw = req.getUserPw();
@@ -881,7 +710,7 @@ public class LoginServiceImpl implements LoginService {
 				authForIdEcRes.getCommonRes().toString();
 
 				/* 단말정보 update */
-				this.updateLoginDeviceInfo(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
+				//this.updateLoginDeviceInfo(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 				/* 로그인 성공이력 저장 */
 				LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
@@ -940,7 +769,7 @@ public class LoginServiceImpl implements LoginService {
 				}
 
 				/* 단말정보 update */
-				this.updateLoginDeviceInfo(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
+				//this.updateLoginDeviceInfo(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 				/* 로그인 성공이력 저장 */
 				LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
@@ -981,8 +810,6 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 		}
-
-		LOGGER.info("######################## LoginServiceImpl authorizeById end ############################");
 
 		return res;
 	}
@@ -1074,6 +901,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @param obj
 	 *            요청객체
 	 */
+	@Deprecated
 	public void updateLoginDeviceInfo(SacRequestHeader requestHeader, String userKey, String userAuthKey, Object obj) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
@@ -1188,6 +1016,70 @@ public class LoginServiceImpl implements LoginService {
 		updStatusUserReq.setLoginStatusCode(loginStatusCode);
 
 		this.userSCI.updateStatus(updStatusUserReq);
+
+	}
+
+	/**
+	 * <pre>
+	 * MDN 로그인용 휴대기기 정보 업데이트.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userKey
+	 *            String
+	 * @param userMbrDevice
+	 *            UserMbrDevice
+	 */
+	public void updateDeviceForMdnLogin(SacRequestHeader requestHeader, String userKey, UserMbrDevice userMbrDevice) {
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
+		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
+
+		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+		createDeviceReq.setCommonRequest(commonRequest);
+		createDeviceReq.setUserKey(userKey);
+		createDeviceReq.setIsNew("N");
+		createDeviceReq.setUserMbrDevice(userMbrDevice);
+		this.deviceSCI.createDevice(createDeviceReq);
+
+	}
+
+	/**
+	 * <pre>
+	 * 약관동의 여부 조회.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userKey
+	 *            String
+	 * @param agreementCode
+	 *            String
+	 * @return String 약관 동의 여부
+	 */
+	public String isAgreement(SacRequestHeader requestHeader, String userKey, String agreementCode) {
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
+		SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
+		schAgreeListReq.setCommonRequest(commonRequest);
+		schAgreeListReq.setUserKey(userKey);
+
+		SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
+		for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
+			if (StringUtil.equals(agreeInfo.getExtraAgreementID(), agreementCode)) {
+				return agreeInfo.getIsExtraAgreement();
+			}
+
+		}
+
+		return "N";
 
 	}
 

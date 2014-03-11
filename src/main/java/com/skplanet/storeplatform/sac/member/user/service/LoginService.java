@@ -8,8 +8,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSync
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeVariabilityReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeVariabilityRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -32,16 +32,16 @@ public interface LoginService {
 
 	/**
 	 * <pre>
-	 * 변동성 회원 인증.
+	 * 변동성 회원 체크.
 	 * </pre>
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param req
-	 *            AuthorizeVariabilityReq
-	 * @return AuthorizeVariabilityRes
+	 *            CheckVariabilityReq
+	 * @return CheckVariabilityRes
 	 */
-	public AuthorizeVariabilityRes executeAuthorizeVariability(SacRequestHeader requestHeader, AuthorizeVariabilityReq req);
+	public CheckVariabilityRes executCheckVariability(SacRequestHeader requestHeader, CheckVariabilityReq req);
 
 	/**
 	 * 모바일 전용 회원 인증 (MDN 인증, 변동성 포함).

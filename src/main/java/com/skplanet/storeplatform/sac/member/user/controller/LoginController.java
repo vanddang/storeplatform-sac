@@ -26,8 +26,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSync
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeVariabilityReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeVariabilityRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
@@ -60,19 +60,19 @@ public class LoginController {
 	}
 
 	/**
-	 * 변동성 회원 인증.
+	 * 변동성 회원 체크.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param req
-	 *            AuthorizeVariabilityReq
-	 * @return AuthorizeVariabilityRes
+	 *            CheckVariabilityReq
+	 * @return CheckVariabilityRes
 	 */
-	@RequestMapping(value = "/member/user/authorizeVariability/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/checkVariability/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeVariabilityRes authorizeVariability(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeVariabilityReq req) {
+	public CheckVariabilityRes checkVariability(SacRequestHeader requestHeader, @Valid @RequestBody CheckVariabilityReq req) {
 
-		return this.loginService.executeAuthorizeVariability(requestHeader, req);
+		return this.loginService.executCheckVariability(requestHeader, req);
 
 	}
 
