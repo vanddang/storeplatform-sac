@@ -69,6 +69,7 @@ public class CategoryVodBox {
 	private String chnlCompNm;
 	private String agencyNm;
 	private String regDt;
+	private String filePath;
 
 	/**
 	 * 
@@ -1397,6 +1398,31 @@ public class CategoryVodBox {
 	 */
 	public void setRegDt(String regDt) {
 		this.regDt = regDt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이미지 경로.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getFilePath() {
+		return this.filePath;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이미지 경로.
+	 * </pre>
+	 * 
+	 * @param filePath
+	 *            String
+	 */
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 
 }

@@ -58,6 +58,7 @@
 		    , A.CHNL_COMP_NM
 		    , A.AGENCY_NM
 		    , TO_CHAR(A.REG_DT,'YYYYMMDDHH24MISS') REG_DT
+		    , A.FILE_PATH
 		FROM (
 		    SELECT 
 		    COUNT(1) OVER () AS TOTAL_COUNT
@@ -94,6 +95,7 @@
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.DP_PG_RATIO_CD)) OVER(PARTITION BY A.CID) HD_DP_PG_RATIO_CD
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.HD_SUB_CONTENTS_ID, A.PROD_VER)) OVER(PARTITION BY A.CID) HD_PROD_VER
 		        , F.REG_DT CHNL_REG_DT
+                , CONCAT(I.FILE_PATH, I.FILE_NM) AS FILE_PATH
 		    FROM (
 		        SELECT 
 		         C.PROD_ID AS CHNL_PROD_ID
@@ -178,6 +180,7 @@
 		        , TB_DP_PROD F /* 채널 기준 */
 		        , UV_TB_DP_MULTIMDA_PROD G /* 채널 기준 */
 		        , TB_DP_PROD_DESC H /* 채널 기준 */
+                , TB_DP_PROD_IMG I /* 에피소드 기준 */
 		    WHERE 1=1
 		    AND A.TENANT_ID = C.TENANT_ID
 		    AND A.PROD_ID = C.PROD_ID
@@ -186,9 +189,12 @@
 		    AND A.CHNL_PROD_ID = F.PROD_ID
 		    AND A.CHNL_PROD_ID = G.PROD_ID
 		    AND A.CHNL_PROD_ID = H.PROD_ID
+		    AND A.CHNL_PROD_ID = I.PROD_ID(+)
 		    AND SYSDATE BETWEEN C.APPLY_START_DT AND C.APPLY_END_DT
 		    AND D.LANG_CD = H.LANG_CD
 		    AND D.LANG_CD = #{langCd} /* 언어 코드 */
+            AND I.LANG_CD(+) = #{langCd} /* 언어 코드 */
+            AND I.IMG_CD(+) = #{imageCd}
 		    ) A
 		    WHERE A.RNUM = 1
 		) A

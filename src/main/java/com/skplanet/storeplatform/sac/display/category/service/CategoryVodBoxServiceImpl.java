@@ -92,6 +92,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		if (!StringUtils.isEmpty(requestVO.getChannelId())) {
 			requestVO.setArrayChannelId(StringUtils.split(requestVO.getChannelId(), "+"));
 		}
+		requestVO.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 
 		CategoryVodBoxSacRes categoryVodBoxSacRes = new CategoryVodBoxSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -199,6 +200,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, categoryVodBox.getProdId()));
 					play.setIdentifierList(identifierList);
 					// play.setPlayProductStatusCode("restrict"); // "사용중" 상태가 아닐경우에 "restrict" 노출(항상 사용중)
+					sourceList = new ArrayList<Source>();
+					sourceList.add(this.commonMetaInfo.generateSource(categoryVodBox.getFilePath()));
+					play.setSourceList(sourceList);
 					rights.setPlay(play);
 				} else if (categoryVodBox.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) { // 다운로드
 					store = new Store();
@@ -213,6 +217,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, categoryVodBox.getProdId()));
 					store.setIdentifierList(identifierList);
 					// store.setStoreProductStatusCode("restrict"); // "사용중" 상태가 아닐경우에 "restrict" 노출(항상 사용중)
+					sourceList = new ArrayList<Source>();
+					sourceList.add(this.commonMetaInfo.generateSource(categoryVodBox.getFilePath()));
+					store.setSourceList(sourceList);
 					rights.setStore(store);
 				}
 				product.setRights(rights);
