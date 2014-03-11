@@ -86,7 +86,7 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 		this.log.debug("요청 값 세팅");
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
-		requestVO.setOrderedBy(requestVO.getOrderedBy() != null ? requestVO.getOrderedBy() : "issuedDate");
+		requestVO.setOrderedBy(requestVO.getOrderedBy() != null ? requestVO.getOrderedBy() : "issueDate");
 		// requestVO.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
 		ArtistProductSacRes artistProductSacRes = new ArtistProductSacRes();

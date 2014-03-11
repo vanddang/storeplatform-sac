@@ -27,7 +27,7 @@
         FROM (
             SELECT 
                 COUNT(1) OVER() TOTAL_COUNT
-                <if test="orderedBy == 'issuedDate'">
+                <if test="orderedBy == 'issueDate'">
                 , ROW_NUMBER() OVER(ORDER BY I.ISSUE_DAY DESC, D.PROD_NM) RNK
                 </if>
                 <if test="orderedBy == 'popular'">
@@ -105,7 +105,7 @@
 		FROM (
 		    SELECT 
 		        COUNT(1) OVER() TOTAL_COUNT
-                <if test="orderedBy == 'issuedDate'">
+                <if test="orderedBy == 'issueDate'">
                 , ROW_NUMBER() OVER(ORDER BY I.ISSUE_DAY DESC, D.PROD_NM) RNK
                 </if>
                 <if test="orderedBy == 'popular'">
