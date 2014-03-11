@@ -38,4 +38,25 @@ public class DisplayCommonUtil {
 
 		return sMimeType;
 	}
+
+	/**
+	 * <pre>
+	 * OS verion 추출 메소드.
+	 * Ex) Android/4.0.4 -> 4.0 .
+	 * </pre>
+	 * 
+	 * @param osVer
+	 * @return String
+	 */
+	public static String getOsVer(String osVer) {
+		String[] temp = osVer.trim().split("/");
+
+		String osVersion = temp[1];
+		String osVersionOrginal = osVersion;
+		String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
+		if (osVersionTemp.length == 3) {
+			osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
+		}
+		return osVersion;
+	}
 }

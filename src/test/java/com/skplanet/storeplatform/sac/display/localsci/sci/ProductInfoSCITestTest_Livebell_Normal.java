@@ -39,7 +39,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Produc
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @Transactional
-public class ProductInfoSCITestTest_Ring {
+public class ProductInfoSCITestTest_Livebell_Normal {
 
 	@Autowired
 	private ProductInfoSCI productInfoSCI;
@@ -55,12 +55,12 @@ public class ProductInfoSCITestTest_Ring {
 	 * @throws JsonGenerationException
 	 */
 	@Test
-	public void testSearchRingProductList() throws JsonGenerationException, JsonMappingException, IOException {
+	public void testSearchNormalRingProductList() throws JsonGenerationException, JsonMappingException, IOException {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
-		list.add("H000460197");
-		list.add("H000460203");
-		list.add("H000460209");
+		list.add("H090131788");
+		list.add("H090131598");
+		list.add("H090131602");
 
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
