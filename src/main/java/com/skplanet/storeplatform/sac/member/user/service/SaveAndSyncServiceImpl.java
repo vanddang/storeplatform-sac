@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,12 @@ import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserResponse;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
@@ -33,83 +40,76 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SaveAndSyncServiceImpl.class);
 
 	@Autowired
+	private DeviceSCI deviceSCI;
+
+	@Autowired
 	private IdpSCI idpSCI;
 
 	@Autowired
 	private MemberCommonComponent mcc;
 
 	@Override
-	public SaveAndSync checkSaveAndSync(String deviceId) {
+	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId) {
 
 		LOGGER.info("===================================");
 		LOGGER.info("===== 변동성 대상 체크 공통 모듈 =====");
 		LOGGER.info("===================================");
 
-		SaveAndSync saveAndSync = new SaveAndSync();
-
 		/**
-		 * 14일 이내 번호이동, 14일 이내 번호변경 체크.
-		 * 
-		 * TODO SC API 호출 해야함.
+		 * SC 변동성 대상 체크. (번호변경 OR 번호이동)
 		 */
-		boolean check = false;
+		CheckSaveNSyncRequest checkSaveNSyncRequest = new CheckSaveNSyncRequest();
+		checkSaveNSyncRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		checkSaveNSyncRequest.setDeviceID(deviceId);
+		CheckSaveNSyncResponse checkSaveNSyncResponse = this.deviceSCI.checkSaveNSync(checkSaveNSyncRequest);
 
-		if (check) {
+		String isActive = checkSaveNSyncResponse.getIsActive(); // 정상여부.
+		String isSaveNSync = checkSaveNSyncResponse.getIsSaveNSync(); // 변동성대상여부.
+		String imMbrNo = checkSaveNSyncResponse.getImMbrNo(); // 외부(IDP)에서 할당된 사용자 Key.
+		String deviceKey = checkSaveNSyncResponse.getDeviceKey(); // 휴대기기 Key.
+		String userKey = checkSaveNSyncResponse.getUserKey(); // 사용자 Key.
+		/**
+		 * TODO SC 추가후에 바꿀것...........
+		 */
+		String preDeviceId = checkSaveNSyncResponse.getUserKey(); // 이전 MSISDN.
+
+		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
+
+			LOGGER.info("## >> ★★★  변동성 대상!!!");
 
 			/**
-			 * TODO IDP 기존회원탈퇴
+			 * 변동성 대상 회원의 상태를 확인한다.
 			 */
+			if (StringUtils.equals(isActive, MemberConstants.USE_Y)) { // 정상 회원
+
+				/**
+				 * 기존 IDP 모바일 회원 탈퇴.
+				 */
+				this.secedeForWap(preDeviceId);
+
+			}
 
 			/**
-			 * TODO IDP 신규가입
+			 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
 			 */
-
-			/**
-			 * TODO SC API 호출...... 회원 복구
-			 */
+			this.reviveUser(sacHeader, deviceId);
 
 		} else {
 
-			/**
-			 * 결과 setting.
-			 */
-			saveAndSync.setIsSaveAndSyncTarget(MemberConstants.USE_Y);
-			saveAndSync.setUserKey("");
-			saveAndSync.setDeviceKey("");
+			LOGGER.info("## >> ★★★  변동성 대상 아님!!!");
 
 		}
 
+		/**
+		 * 결과 setting.
+		 */
+		SaveAndSync saveAndSync = new SaveAndSync();
+		saveAndSync.setIsSaveAndSyncTarget(isSaveNSync); // 변동성 대상 여부 (Y/N)
+		saveAndSync.setUserKey(userKey); // 사용자 Key
+		saveAndSync.setDeviceKey(deviceKey); // 휴대기기 Key
 		LOGGER.info("## >> SaveAndSync : {}", saveAndSync);
 
 		return saveAndSync;
-
-	}
-
-	/**
-	 * <pre>
-	 * IDP 모바일 회원 탈퇴.
-	 * </pre>
-	 * 
-	 * @param deviceId
-	 */
-	private void secedeForWap(String deviceId) {
-
-		try {
-
-			/**
-			 * IDP 모바일 회원 가입 탈퇴 요청.
-			 */
-			SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-			ecReq.setUserMdn(deviceId);
-			this.idpSCI.secedeForWap(ecReq);
-
-		} catch (StorePlatformException spe) {
-
-			LOGGER.info("## IDP 회원 탈퇴 Error 시에 Skip......");
-			LOGGER.info("## errorCode : {}", spe.getErrorInfo().getCode());
-			LOGGER.info("## errorMsg  : {}", spe.getErrorInfo().getMessage());
-
-		}
 
 	}
 
@@ -129,8 +129,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		try {
 
 			/**
-			 * (IDP 연동) 무선회원 가입 (cmd - joinForWap)
+			 * (IDP 연동) 무선회원 가입 요청 (cmd - joinForWap).
 			 */
+			LOGGER.info("## IDP 모바일 회원 가입 요청.");
 			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 			joinForWapEcReq.setUserMdn(deviceId);
 			joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT); // SKT 고정 (변동성 회원은 SKT 만...)
@@ -148,4 +149,69 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 	}
 
+	/**
+	 * <pre>
+	 * IDP 모바일 회원 탈퇴.
+	 * </pre>
+	 * 
+	 * @param preDeviceId
+	 *            이전 기기 ID
+	 */
+	private void secedeForWap(String preDeviceId) {
+
+		try {
+
+			/**
+			 * IDP 모바일 회원 가입 탈퇴 요청.
+			 */
+			LOGGER.info("## IDP 모바일 회원 가입 탈퇴 요청.");
+			SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+			ecReq.setUserMdn(preDeviceId);
+			this.idpSCI.secedeForWap(ecReq);
+
+		} catch (StorePlatformException spe) {
+
+			LOGGER.info("## IDP 회원 탈퇴 Error 시에 Skip......");
+			LOGGER.info("## errorCode : {}", spe.getErrorInfo().getCode());
+			LOGGER.info("## errorMsg  : {}", spe.getErrorInfo().getMessage());
+
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 복구.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param deviceId
+	 *            기기 ID
+	 */
+	private void reviveUser(SacRequestHeader sacHeader, String deviceId) {
+
+		/**
+		 * IDP 모바일 회원 가입.
+		 */
+		String newMbrNo = this.joinForWap(deviceId);
+
+		/**
+		 * SC 회원 복구 요청.
+		 */
+		ReviveUserRequest reviveUserRequest = new ReviveUserRequest();
+		reviveUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		reviveUserRequest.setImMbrNo(newMbrNo);
+		ReviveUserResponse reviveUserResponse = this.deviceSCI.reviveUser(reviveUserRequest);
+		LOGGER.info("## >> reviveUserResponse : {}", reviveUserResponse);
+
+		/**
+		 * TODO 아래 내용들은 어디서 처리 되는지 확인 필요..??? SC 에서 처리되는듯....확인은 필요..
+		 * 
+		 * 기기정보 : Valid
+		 * 
+		 * 단말속성 수정 필요...? 이건....어디서...????
+		 */
+
+	}
 }

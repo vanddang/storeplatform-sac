@@ -978,12 +978,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 			/**
 			 * 타사(KTF,LGT)일경우. (ROOTING 단말 체크)
-			 * 
-			 * TODO 현재 로직 정의중이며 완료시 수정.........
-			 * 
-			 * TODO 현재 로직 정의중이며 완료시 수정.........
-			 * 
-			 * TODO 현재 로직 정의중이며 완료시 수정.........
 			 */
 			String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, req.getDeviceExtraInfoList());
 			LOGGER.info("## >> ROOTING YN : {}", rooting);
@@ -1010,9 +1004,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		try {
 			UserInfo userInfo = this.mcc.getUserBaseInfo("deviceId", deviceId, sacHeader);
-			/**
-			 * TODO 메인상태와 서브 상태가 정상일 경우만 기가입으로 보는지..??
-			 */
 			LOGGER.info("## 메인 상태 : {}", userInfo.getUserMainStatus());
 			LOGGER.info("## 서브 상태 : {}", userInfo.getUserSubStatus());
 			throw new StorePlatformException("SAC_MEM_1104");
@@ -1079,7 +1070,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 변동성 대상 체크
 			 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(req.getDeviceId());
+			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(sacHeader, req.getDeviceId());
 			if (StringUtils.equals(saveAndSync.getIsSaveAndSyncTarget(), MemberConstants.USE_Y)) { // 변동성 대상임.
 
 				userKey = saveAndSync.getUserKey();

@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 
 /**
@@ -14,10 +15,12 @@ public interface SaveAndSyncService {
 	 * 변동성 대상 체크.
 	 * </pre>
 	 * 
+	 * @param sacHeader
+	 *            공통 헤더
 	 * @param deviceId
 	 *            기기 ID
 	 * @return SaveAndSync
 	 */
-	public SaveAndSync checkSaveAndSync(String deviceId);
+	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId);
 
 }
