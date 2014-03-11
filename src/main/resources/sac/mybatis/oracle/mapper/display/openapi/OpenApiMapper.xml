@@ -1514,7 +1514,7 @@
                  ) AS IMAGE_PATH
                 ,DPD.PROD_BASE_DESC  AS PROD_BASE_DESC
                 ,DPD.PROD_DTL_DESC  AS PROD_DTL_DESC
-                ,FN_COMM_CD_NM( DAP.PLAT_CLSF_CD, #{langCd} ) AS PLATFORM
+                ,FC_GET_CM_CD_NM( DAP.PLAT_CLSF_CD, #{langCd} ) AS PLATFORM
                 ,(SELECT DMCD.MENU_DESC
                     FROM TB_DP_MENU_CATEGORY DMC
                     , TB_DP_MENU_CATEGORY_DESC DMCD
