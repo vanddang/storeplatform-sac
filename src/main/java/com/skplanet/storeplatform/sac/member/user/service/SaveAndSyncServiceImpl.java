@@ -92,7 +92,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			/**
 			 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
 			 */
-			this.reviveUser(sacHeader, deviceId);
+			this.reviveUser(sacHeader, userKey, deviceId);
 
 		} else {
 
@@ -186,10 +186,12 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 * 
 	 * @param sacHeader
 	 *            공통 헤더
+	 * @param userKey
+	 *            사용자 Key
 	 * @param deviceId
 	 *            기기 ID
 	 */
-	private void reviveUser(SacRequestHeader sacHeader, String deviceId) {
+	private void reviveUser(SacRequestHeader sacHeader, String userKey, String deviceId) {
 
 		/**
 		 * IDP 모바일 회원 가입.
