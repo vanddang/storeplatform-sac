@@ -272,7 +272,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
 							String deviceId = null; // Device Id
 							String deviceIdType = null; // Device Id 유형
-							String deviceTelecom = null;
+							// String deviceTelecom = null;
 							SearchDeviceIdSacReq deviceReq = null;
 							SearchDeviceIdSacRes deviceRes = null;
 							boolean memberFlag = true;
@@ -292,7 +292,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 							if (memberFlag && deviceRes != null) {
 								deviceId = deviceRes.getDeviceId();
-								deviceTelecom = deviceRes.getDeviceTelecom();
+								// deviceTelecom = deviceRes.getDeviceTelecom();
 								deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
 								metaInfo.setExpiredDate(reqExpireDate);
