@@ -20,11 +20,12 @@ public class BrandshopInfo {
 	private String brandShopNm;
 	private String categoryNo;
 	private String logImgPos;
-	private String bnrImgSize;
+	private int bnrImgSize;
 	private String expoOrd;
 	private String mbrNo;
 	private String menuNm;
 	private String topMenuId;
+	private String bnrImgNm;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -62,11 +63,18 @@ public class BrandshopInfo {
 		this.logImgPos = logImgPos;
 	}
 
-	public String getBnrImgSize() {
+	/**
+	 * @return the bnrImgSize
+	 */
+	public int getBnrImgSize() {
 		return this.bnrImgSize;
 	}
 
-	public void setBnrImgSize(String bnrImgSize) {
+	/**
+	 * @param bnrImgSize
+	 *            the bnrImgSize to set
+	 */
+	public void setBnrImgSize(int bnrImgSize) {
 		this.bnrImgSize = bnrImgSize;
 	}
 
@@ -104,6 +112,21 @@ public class BrandshopInfo {
 
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
+	}
+
+	/**
+	 * @return the bnrImgNm
+	 */
+	public String getBnrImgNm() {
+		return this.bnrImgNm;
+	}
+
+	/**
+	 * @param bnrImgNm
+	 *            the bnrImgNm to set
+	 */
+	public void setBnrImgNm(String bnrImgNm) {
+		this.bnrImgNm = bnrImgNm;
 	}
 
 }

@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.feature.brandshop.vo.BrandshopInfo;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -153,6 +154,8 @@ public class BrandshopServiceImpl implements BrandshopService {
 					sourceList = new ArrayList<Source>();
 					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 					source.setUrl(brandshopInfo.getLogImgPos());
+					source.setSize(brandshopInfo.getBnrImgSize());
+					source.setMediaType(DisplayCommonUtil.getMimeType(brandshopInfo.getBnrImgNm()));
 					sourceList.add(source);
 					product.setSourceList(sourceList);
 

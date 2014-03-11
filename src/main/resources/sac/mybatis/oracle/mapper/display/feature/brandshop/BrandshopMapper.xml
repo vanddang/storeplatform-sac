@@ -10,6 +10,7 @@
           , CATEGORY_NO
           , MENU_NM
           , LOG_IMG_POS
+          , BNR_IMG_NM
           , BNR_IMG_SIZE
           , EXPO_ORD
         FROM
@@ -26,6 +27,7 @@
 		              AND LANG_CD = 'ko'
 		              AND ROWNUM = 1) AS MENU_NM	     
 			    , A.LOG_IMG_POS
+                , A.BNR_IMG_NM
 			    , A.BNR_IMG_SIZE
 			    , A.EXPO_ORD
 		    FROM
@@ -34,6 +36,7 @@
 				    , BS.BRAND_SHOP_NM
 				    , BS.CATEGORY_NO
 				    , CONCAT( BS.BNR_IMG_PATH, BS.BNR_IMG_NM ) AS LOG_IMG_POS
+				    , BS.BNR_IMG_NM
 				    , BS.BNR_IMG_SIZE
 				    , BS.EXPO_ORD
 	            FROM TB_DP_BRAND_SHOP BS
