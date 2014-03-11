@@ -1389,7 +1389,7 @@
            FROM (
                   SELECT 
                          B.CATALOG_ID 
-                         <if test="req.specialProdId == null and req.type == 'catalog'">
+                         <if test="(req.specialProdId == null and req.type == 'catalog') or req.type == 'episode' ">
                         ,C.CATALOG_NM 
                         </if>
                         <if test="req.specialProdId != null and req.type == 'catalog'">
@@ -1408,7 +1408,8 @@
                            WHERE MENU_ID = J.TOP_MENU_ID
                              AND LANG_CD = #{lang}
                              AND ROWNUM = 1
-                         ) AS TOP_MENU_NM                                   
+                         ) AS TOP_MENU_NM 
+                        ,F.MENU_DESC                                   
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY L.PROD_AMT ASC) as NO
                         ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT 
                         ,DECODE(I.PROD_CASE_CD
@@ -1422,6 +1423,7 @@
                            WHERE prod_id=H.PROD_ID 
                          ) AS SRC_CONTENT_ID
                         ,K.PROD_STATUS_CD
+                        
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
