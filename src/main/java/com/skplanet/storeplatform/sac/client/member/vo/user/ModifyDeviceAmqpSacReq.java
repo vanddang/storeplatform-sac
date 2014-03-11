@@ -30,7 +30,7 @@ public class ModifyDeviceAmqpSacReq extends CommonInfo {
 	/* 기기 아이디 */
 	private String deviceId;
 
-	/* 기기 아이디 */
+	/* 이전 기기 아이디 */
 	private String oldDeviceId;
 
 	/* 통신사코드 */

@@ -15,7 +15,7 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 	/* 작업일시 : YYYYMMDDHH24MISS */
 	private String workDt;
 
-	/* 회원번호 */
+	/* 회원 내부사용자키 */
 	private String userKey;
 
 	/* 회원ID */
