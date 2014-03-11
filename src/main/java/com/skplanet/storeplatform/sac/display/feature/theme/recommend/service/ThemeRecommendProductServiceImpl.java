@@ -251,6 +251,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 
 			for (MetaInfo metaInfo1 : metaInfoList) {
 				String topMenuId = metaInfo1.getTopMenuId();
+				this.totalCount = metaInfo1.getTotalCount();
 
 				if (topMenuId.equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) {
 					product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo1);
