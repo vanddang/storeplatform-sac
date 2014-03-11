@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -54,6 +55,9 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private MetaInfoService metaInfoService;
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
@@ -154,9 +158,9 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 					if (this.log.isDebugEnabled()) {
 						this.log.debug("##### Search for app  meta info product");
 					}
-					metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
+					metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
 					if (metaInfo != null) {
-						product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
+						product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
 						productList.add(product);
 					}
 
@@ -168,12 +172,12 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 						if (this.log.isDebugEnabled()) {
 							this.log.debug("##### Search for Vod  meta info product");
 						}
-						metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
+						metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
 						if (metaInfo != null) {
 							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-								product = this.responseInfoGenerateFacade.generateSpecificMovieProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
 							} else {
-								product = this.responseInfoGenerateFacade.generateSpecificBroadcastProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
 							}
 							productList.add(product);
 						}
@@ -185,17 +189,15 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 						if (this.log.isDebugEnabled()) {
 							this.log.debug("##### Search for EbookComic specific product");
 						}
-						metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap,
-								MetaInfo.class);
+						metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
 						if (metaInfo != null) {
 							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-								product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
 							} else {
-								product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
+								product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
 							}
 							productList.add(product);
 						}
-
 					} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 
 						paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
@@ -204,10 +206,9 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 						if (this.log.isDebugEnabled()) {
 							this.log.debug("##### Search for music meta info product");
 						}
-						metaInfo = this.commonDAO.queryForObject("Isf.MetaInfo.getMusicMetaInfo", paramMap,
-								MetaInfo.class);
+						metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
 						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
+							product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
 							productList.add(product);
 						}
 					}
@@ -218,9 +219,9 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 					if (this.log.isDebugEnabled()) {
 						this.log.debug("##### Search for Shopping  meta info product");
 					}
-					metaInfo = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
+					metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
 					if (metaInfo != null) {
-						product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(metaInfo);
+						product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
 						productList.add(product);
 					}
 				}
