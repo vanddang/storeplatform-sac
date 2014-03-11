@@ -42,6 +42,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerReques
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchSellerKeySCI;
 import com.skplanet.storeplatform.sac.client.member.vo.common.BanksByCountry;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
@@ -74,7 +75,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.localsci.sci.service.SearchSellerKeyService;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
@@ -92,7 +92,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	private SellerSCI sellerSCI;
 
 	@Autowired
-	private SearchSellerKeyService searchSellerKeyService;
+	private SearchSellerKeySCI searchSellerKeyService;
 
 	@Autowired
 	@Qualifier("sac")
