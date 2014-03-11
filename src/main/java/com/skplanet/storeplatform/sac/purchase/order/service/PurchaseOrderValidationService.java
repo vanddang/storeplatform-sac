@@ -41,8 +41,6 @@ public interface PurchaseOrderValidationService {
 	 */
 	public void validateMember(PurchaseOrderInfo purchaseOrderInfo);
 
-	public void validateMemberDummy(PurchaseOrderInfo purchaseOrderInfo);
-
 	/**
 	 * 
 	 * <pre>
@@ -54,8 +52,6 @@ public interface PurchaseOrderValidationService {
 	 */
 	public void validateProduct(PurchaseOrderInfo purchaseOrderInfo);
 
-	public void validateProductDummy(PurchaseOrderInfo purchaseOrderInfo);
-
 	/**
 	 * 
 	 * <pre>
@@ -66,7 +62,5 @@ public interface PurchaseOrderValidationService {
 	 *            구매 주문 정보
 	 */
 	public void validatePurchase(PurchaseOrderInfo purchaseOrderInfo);
-
-	public void validatePurchaseDummy(PurchaseOrderInfo purchaseOrderInfo);
 
 }

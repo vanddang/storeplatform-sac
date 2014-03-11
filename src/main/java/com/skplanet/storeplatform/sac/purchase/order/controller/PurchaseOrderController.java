@@ -395,16 +395,16 @@ public class PurchaseOrderController {
 	private void preCheckBeforeProcessOrder(PurchaseOrderInfo purchaseOrderInfo) {
 
 		// 회원 적합성 체크
-		this.validationService.validateMemberDummy(purchaseOrderInfo);
+		this.validationService.validateMember(purchaseOrderInfo);
 
 		// 상품 적합성 체크
-		this.validationService.validateProductDummy(purchaseOrderInfo);
+		this.validationService.validateProduct(purchaseOrderInfo);
 
 		// 회원정책 체크 : TestMDN / 구매차단
 		this.policyService.checkUserPolicy(purchaseOrderInfo);
 
 		// 구매 적합성(&가능여부) 체크
-		this.validationService.validatePurchaseDummy(purchaseOrderInfo);
+		this.validationService.validatePurchase(purchaseOrderInfo);
 	}
 
 }
