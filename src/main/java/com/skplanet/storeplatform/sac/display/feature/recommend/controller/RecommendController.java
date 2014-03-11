@@ -120,7 +120,7 @@ public class RecommendController {
 	 */
 	@RequestMapping(value = "/oneday/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public RecommendOnedaySacRes searchOnedayList(@Validated RecommendOnedaySacReq requestVO, SacRequestHeader header) {
+	public RecommendOnedaySacRes searchOnedayList(RecommendOnedaySacReq requestVO, SacRequestHeader header) {
 
 		RecommendOnedaySacRes responseVO;
 		responseVO = this.recommendOnedayService.searchOnedayList(requestVO, header);

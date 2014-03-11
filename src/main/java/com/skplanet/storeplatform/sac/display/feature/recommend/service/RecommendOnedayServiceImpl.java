@@ -100,11 +100,9 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 		}
 
 		// 검색조건 설정 없을때 A로 설정
-		if (StringUtils.isEmpty(requestVO.getSearchType())) {
+		if (StringUtils.isEmpty(requestVO.getPeriod())) {
 			requestVO.setSearchType("A");
-		}
-
-		if (StringUtils.isNotEmpty(requestVO.getPeriod())) {
+		} else {
 			// 검색시간 설정
 			List<String> periodList = Arrays.asList(StringUtils.split(requestVO.getPeriod(), "/"));
 			if (periodList.size() > 0) {
@@ -116,13 +114,13 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 					if (findStirng == 0) {
 						periodEnd = periodList.get(0);
 						periodEnd = periodEnd.replace("T", "");
-						periodEnd = periodEnd.substring(0, 14);
+						periodEnd = periodEnd.substring(0, 8);
 						requestVO.setPeriodEnd(periodEnd);
 
 					} else {
 						periodStart = periodList.get(0);
 						periodStart = periodStart.replace("T", "");
-						periodStart = periodStart.substring(0, 14);
+						periodStart = periodStart.substring(0, 8);
 						requestVO.setPeriodStart(periodStart);
 
 					}
@@ -131,11 +129,11 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 					periodEnd = periodList.get(1);
 
 					periodStart = periodStart.replace("T", "");
-					periodStart = periodStart.substring(0, 14);
+					periodStart = periodStart.substring(0, 8);
 					requestVO.setPeriodStart(periodStart);
 
 					periodEnd = periodEnd.replace("T", "");
-					periodEnd = periodEnd.substring(0, 14);
+					periodEnd = periodEnd.substring(0, 8);
 					requestVO.setPeriodEnd(periodEnd);
 
 				}
