@@ -64,7 +64,7 @@ public class DeviceSCITest {
 
 	/**
 	 * <pre>
-	 * 단말 MDN 정보 조회 SCI TEST.
+	 * 단말 MDN 정보 조회 SCI TEST. (개발기 data)
 	 * - 검색결과 존재.
 	 * </pre>
 	 */
@@ -80,6 +80,25 @@ public class DeviceSCITest {
 
 		LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
 	}
+
+	// /**
+	// * <pre>
+	// * 단말 MDN 정보 조회 SCI TEST. (QA data)
+	// * - 검색결과 존재.
+	// * </pre>
+	// */
+	// @Test
+	// public void testGetDeviceId() {
+	// SearchDeviceIdSacReq request = new SearchDeviceIdSacReq();
+	// request.setUserKey("US201402281808328020000001");
+	// request.setDeviceKey("DE201402281808329680000001");
+	//
+	// LOGGER.debug("[DeviceSCI-REQUSET] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+	// SearchDeviceIdSacRes result = this.deviceSCI.searchDeviceId(request);
+	// assertThat(result.getDeviceId(), notNullValue());
+	//
+	// LOGGER.debug("[DeviceSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(result));
+	// }
 
 	/**
 	 * <pre>

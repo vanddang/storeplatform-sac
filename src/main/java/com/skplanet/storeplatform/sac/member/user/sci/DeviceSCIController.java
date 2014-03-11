@@ -1,6 +1,5 @@
 package com.skplanet.storeplatform.sac.member.user.sci;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
@@ -61,8 +61,9 @@ public class DeviceSCIController implements DeviceSCI {
 		LOGGER.info("[DeviceSCIController.searchDeviceId] SearchDevice Info : {}", deviceInfo);
 
 		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
-		if (deviceInfo != null && deviceInfo.getDeviceId() != null) {
+		if (deviceInfo != null && StringUtils.isNotBlank(deviceInfo.getDeviceId())) {
 			responseVO.setDeviceId(deviceInfo.getDeviceId());
+			responseVO.setDeviceTelecom(deviceInfo.getDeviceTelecom());
 		} else {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
@@ -87,7 +88,6 @@ public class DeviceSCIController implements DeviceSCI {
 
 		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] RequestHeader : {}, \nRequestParameter : {}",
 				requestHeader, request);
-
 		if (StringUtils.isBlank(request.getDeviceId()) && StringUtils.isBlank(request.getDeviceKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId 또는 deviceKey");
 		}
