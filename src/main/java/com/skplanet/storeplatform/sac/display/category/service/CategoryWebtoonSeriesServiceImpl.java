@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -104,15 +102,6 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 		List<Product> productList = new ArrayList<Product>();
 
 		if (req.getDummy() == null) {
-
-			// 필수 파라미터 체크 channelId
-			if (StringUtils.isEmpty(req.getChannelId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "channelId", req.getChannelId());
-			}
-			// 필수 파라미터 체크 menuId
-			if (StringUtils.isEmpty(req.getMenuId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "menuId", req.getMenuId());
-			}
 
 			int offset = 1; // default
 			int count = 20; // default
