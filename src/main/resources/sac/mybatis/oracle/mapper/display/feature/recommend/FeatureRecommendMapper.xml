@@ -205,7 +205,7 @@
 				AND ONE.USE_YN = 'Y'
 				AND TDTP.EXPO_YN = 'Y'
 				AND TDPI.IMG_CD = 'DP000102'
-                <if test="menuId != null">
+                <if test="menuId != null and menuId != ''">
                 AND TDMM.MENU_ID = #{menuId}
                 </if>
                 <if test="arrayProdGradeCd != null">

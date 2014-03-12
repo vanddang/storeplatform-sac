@@ -67,7 +67,7 @@
                              , TB_CM_DEVICE H
                              , TB_DP_SPRT_DEVICE I
                        WHERE 1=1
-	                   <if test='themeZoneId != null'>
+                       <if test="themeZoneId != null and themeZoneId != ''">
                           <if test='themeZoneId == "TAR"'>
                             AND A.LIST_GRP_CD = 'TAR'
                           </if>
@@ -180,7 +180,7 @@
 					             , TB_DP_PROD F  
 					             , TB_DP_TENANT_PROD G
 					       WHERE 1=1
-	                      <if test='themeZoneId != null'>
+                          <if test="themeZoneId != null and themeZoneId != ''">
 	                         <if test='themeZoneId == "TAR"'>
 	                           AND A.LIST_GRP_CD = 'TAR'
 	                         </if>
