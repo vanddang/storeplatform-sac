@@ -520,6 +520,8 @@ public class MemberCommonComponent {
 			return MemberConstants.NM_DEVICE_TELECOM_NON;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
 			return MemberConstants.NM_DEVICE_TELECOM_IOS;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKM)) {
+			return MemberConstants.NM_DEVICE_TELECOM_SKM;
 		} else {
 			throw new StorePlatformException("SAC_MEM_1103", deviceTelecom);
 		}
@@ -549,6 +551,8 @@ public class MemberCommonComponent {
 			return MemberConstants.DEVICE_TELECOM_NON;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_IOS)) {
 			return MemberConstants.DEVICE_TELECOM_IOS;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_SKM)) {
+			return MemberConstants.DEVICE_TELECOM_SKM;
 		} else {
 			throw new StorePlatformException("SAC_MEM_1103", deviceTelecom);
 		}
