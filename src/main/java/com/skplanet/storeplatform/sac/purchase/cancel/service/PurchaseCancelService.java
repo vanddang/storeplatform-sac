@@ -35,7 +35,7 @@ public interface PurchaseCancelService {
 	/**
 	 * <pre>
 	 * 구매 취소.
-	 * Transaction을 위해 함수명 update* 적용.
+	 * Transaction을 위해 함수명 execute* 적용.
 	 * </pre>
 	 * 
 	 * @param purchaseCommonSacParam
@@ -44,7 +44,7 @@ public interface PurchaseCancelService {
 	 *            purchaseCancelDetailSacParam
 	 * @return PurchaseCancelDetailSacResult
 	 */
-	public PurchaseCancelDetailSacResult updatePurchaseCancel(PurchaseCancelSacParam purchaseCancelSacParam,
+	public PurchaseCancelDetailSacResult executePurchaseCancel(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
 
 }

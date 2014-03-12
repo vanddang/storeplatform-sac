@@ -15,7 +15,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.arm.sci.ArmSCI;
@@ -24,6 +23,8 @@ import com.skplanet.storeplatform.external.client.arm.vo.RemoveLicenseEcRes;
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
+import com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScReq;
@@ -67,7 +68,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
+	private MultiMessageSourceAccessor multiMessageSourceAccessor;
 
 	@Autowired
 	private PurchaseCancelSCI purchaseCancelSCI;
@@ -114,7 +115,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 			try {
 
-				purchaseCancelDetailSacResult = this.updatePurchaseCancel(purchaseCancelSacParam,
+				purchaseCancelDetailSacResult = this.executePurchaseCancel(purchaseCancelSacParam,
 						purchaseCancelDetailSacParam);
 
 			} catch (StorePlatformException e) {
@@ -122,13 +123,11 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 				purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 
-				purchaseCancelDetailSacResult.setResultCd(e.getErrorInfo().getCode());
-				if (StringUtils.isBlank(e.getErrorInfo().getMessage())) {
-					purchaseCancelDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage(e.getErrorInfo()
-							.getCode()));
-				} else {
-					purchaseCancelDetailSacResult.setResultMsg(e.getErrorInfo().getMessage());
-				}
+				ErrorInfo errorInfo = e.getErrorInfo();
+
+				purchaseCancelDetailSacResult.setResultCd(errorInfo.getCode());
+				purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage(
+						errorInfo.getCode(), errorInfo.getArgs()));
 
 			} catch (Exception e) {
 
@@ -137,7 +136,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 				purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 				purchaseCancelDetailSacResult.setResultCd("SAC_PUR_9999");
-				purchaseCancelDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage("SAC_PUR_9999"));
+
+				purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_9999")
+						+ "cause : " + e.getMessage());
 
 			}
 
@@ -161,7 +162,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	}
 
 	@Override
-	public PurchaseCancelDetailSacResult updatePurchaseCancel(PurchaseCancelSacParam purchaseCancelSacParam,
+	public PurchaseCancelDetailSacResult executePurchaseCancel(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
 
 		PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
@@ -292,9 +293,6 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		// TODO : TEST MDN 확인. 요건 어케 할지 생각 좀 해봐야 함..
 
-		// TODO : payment 테이블 가져와야 함? 결제 취소 후 머 벨리데이션 해야하나? payPlanet 연동 규격서 확인 후 작업..
-		// TODO : payPlanet에 취소 요청
-
 		// TODO : 쇼핑 쿠폰이면 처리 .. 쇼핑 쿠폰 처리 위치가 변경 될 수 있음.. 구 쿠폰의경우 PP 후에 처리 되야 할꺼고..
 		// TODO : 신 쿠폰의 경우 PP에서 한도체크나 다날체크를 하면 쇼핑쿠폰처리가 뒤에 오고..
 		// TODO : PP에서 한도체크나 다날체크 안하고 SAC에서 해야하면 쇼핑쿠폰처리가 앞에 오고..? 쇼핑쿠폰은 실물쿠폰인데 결제취소만 되고 쿠폰은 취소 안되어도 컴플레인이 없나?
@@ -303,30 +301,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		 * 경우. 티스토어 쇼핑 구매취소불가. CASE 6 : CMS 쿠폰사용조회 오류가 발생할 경우 티스토어 쇼핑 구매취소불가. CASE 7 : CMS 쿠폰사용조회 후 사용된 쿠폰이 존재할 경우.
 		 */
 
-		// TR 시작
-		// DB 업데이트
-		/*
-		 * purchaseCancelParamDetail = this.purchaseCancelRepository.cancelPurchase(purchaseCommonParam,
-		 * purchaseCancelParamDetail);
-		 * 
-		 * if (purchaseCancelParamDetail.getPrchsCancelCnt() != 1 || purchaseCancelParamDetail.getPrchsDtlCancelCnt() <
-		 * 1) { throw new StorePlatformException("구매 취소 처리 실패!"); }
-		 */
-
-		// TR 끝
 		// RO 삭제 - 코드 DP0002의DP000201면 APP
 		// // 구매 상품이 APP이고 appid가 null이 아닌경우
 
 		// 상품 구매 건수 차감 호출.
-
-		/*
-		 * purchaseCancelResultDetail.setPrchsId(purchaseCancelParamDetail.getPrchsId());
-		 * purchaseCancelResultDetail.setPrchsCancelResultCd("성공");
-		 * purchaseCancelResultDetail.setPrchsCancelResultMsg("성공");
-		 * 
-		 * // ro 삭제 진행 삭제 실패해도 구매취소는 성공! try { this.removeRO(purchaseCommonParam, purchaseCancelParamDetail); } catch
-		 * (Exception e) { this.logger.debug("ro 삭제 실패! : {} ", e.getMessage()); }
-		 */
 
 		/*
 		 * 
@@ -350,7 +328,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
-		purchaseCancelDetailSacResult.setResultMsg(this.messageSourceAccessor.getMessage("SAC_PUR_0000"));
+		purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_0000"));
 
 		this.logger.debug("구매 취소 성공!");
 
@@ -388,9 +366,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		autoPaymentCancelScReq.setUserKey(prchsDtl.getUseInsdUsermbrNo());
 		autoPaymentCancelScReq.setDeviceKey(prchsDtl.getUseInsdDeviceId());
 		autoPaymentCancelScReq.setPrchsId(prchsDtl.getPrchsId());
-		autoPaymentCancelScReq.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_CLOSE_RESERVE);
-		// TODO : 추후 구매 취소 코드 정의 되면 받아야 함. 일단 고객요청으로 셋팅.
-		autoPaymentCancelScReq.setClosedReasonCd("OR004601");
+		autoPaymentCancelScReq.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_STATUS_CLOSE_RESERVATION);
+		autoPaymentCancelScReq.setClosedReasonCd(PurchaseConstants.AUTO_PRCHS_CLOSE_PATH_PURCHASE_CANCEL);
 		autoPaymentCancelScReq.setClosedReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
 
 		AutoPaymentCancelScRes autoPaymentCancelScRes = this.autoPaymentCancelSacService

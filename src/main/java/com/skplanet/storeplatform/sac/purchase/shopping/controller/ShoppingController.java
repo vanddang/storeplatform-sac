@@ -154,8 +154,10 @@ public class ShoppingController {
 
 		CouponPublishAvailableSacParam couponPublishAvailableSacParam = new CouponPublishAvailableSacParam();
 
-		ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, couponPublishAvailableSacReq,
-				couponPublishAvailableSacParam);
+		if (!ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, couponPublishAvailableSacReq,
+				couponPublishAvailableSacParam)) {
+			throw new StorePlatformException("SAC_PUR_9901");
+		}
 
 		couponPublishAvailableSacParam.setCouponCode(couponPublishAvailableSacReq.getCouponCode());
 		couponPublishAvailableSacParam.setItemCode(couponPublishAvailableSacReq.getItemCode());
@@ -204,7 +206,9 @@ public class ShoppingController {
 
 		CouponUseStatusSacParam couponUseStatusSacParam = new CouponUseStatusSacParam();
 
-		ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, couponUseStatusSacReq, couponUseStatusSacParam);
+		if (!ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, couponUseStatusSacReq, couponUseStatusSacParam)) {
+			throw new StorePlatformException("SAC_PUR_9901");
+		}
 
 		couponUseStatusSacParam.setPrchsId(couponUseStatusSacReq.getPrchsId());
 		couponUseStatusSacParam.setCpnPublishCd(couponUseStatusSacReq.getCpnPublishCd());

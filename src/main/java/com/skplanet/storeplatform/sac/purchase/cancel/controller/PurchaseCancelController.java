@@ -20,14 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByAdminDetailSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByAdminDetailSacRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByAdminSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByAdminSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserDetailSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserDetailSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelDetailSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelDetailSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.cancel.service.PurchaseCancelService;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
@@ -116,7 +115,10 @@ public class PurchaseCancelController {
 		PurchaseCancelSacParam purchaseCancelSacParam = new PurchaseCancelSacParam();
 
 		// common parameter setting.
-		ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelByUserSacReq, purchaseCancelSacParam);
+		if (!ConvertVO
+				.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelByUserSacReq, purchaseCancelSacParam)) {
+			throw new StorePlatformException("SAC_PUR_9901");
+		}
 
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByUserSacReq.getCancelReqPathCd());
 		purchaseCancelSacParam.setForceCancelYn("N");
@@ -125,12 +127,11 @@ public class PurchaseCancelController {
 
 		// parameter setting.
 		List<PurchaseCancelDetailSacParam> prchsCancelList = new ArrayList<PurchaseCancelDetailSacParam>();
-		for (PurchaseCancelByUserDetailSacReq purchaseCancelByUserDetailSacReq : purchaseCancelByUserSacReq
-				.getPrchsCancelList()) {
+		for (PurchaseCancelDetailSacReq purchaseCancelDetailSacReq : purchaseCancelByUserSacReq.getPrchsCancelList()) {
 
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
 
-			purchaseCancelDetailSacParam.setPrchsId(purchaseCancelByUserDetailSacReq.getPrchsId());
+			purchaseCancelDetailSacParam.setPrchsId(purchaseCancelDetailSacReq.getPrchsId());
 
 			prchsCancelList.add(purchaseCancelDetailSacParam);
 
@@ -161,16 +162,16 @@ public class PurchaseCancelController {
 		purchaseCancelByUserSacRes.setSuccessCnt(purchaseCancelSacResult.getSuccessCnt());
 		purchaseCancelByUserSacRes.setFailCnt(purchaseCancelSacResult.getFailCnt());
 
-		List<PurchaseCancelByUserDetailSacRes> prchsCancelList = new ArrayList<PurchaseCancelByUserDetailSacRes>();
+		List<PurchaseCancelDetailSacRes> prchsCancelList = new ArrayList<PurchaseCancelDetailSacRes>();
 		for (PurchaseCancelDetailSacResult purchaseCancelDetailSacResult : purchaseCancelSacResult.getPrchsCancelList()) {
 
-			PurchaseCancelByUserDetailSacRes purchaseCancelByUserDetailSacRes = new PurchaseCancelByUserDetailSacRes();
+			PurchaseCancelDetailSacRes purchaseCancelDetailSacRes = new PurchaseCancelDetailSacRes();
 
-			purchaseCancelByUserDetailSacRes.setPrchsId(purchaseCancelDetailSacResult.getPrchsId());
-			purchaseCancelByUserDetailSacRes.setResultCd(purchaseCancelDetailSacResult.getResultCd());
-			purchaseCancelByUserDetailSacRes.setResultMsg(purchaseCancelDetailSacResult.getResultMsg());
+			purchaseCancelDetailSacRes.setPrchsId(purchaseCancelDetailSacResult.getPrchsId());
+			purchaseCancelDetailSacRes.setResultCd(purchaseCancelDetailSacResult.getResultCd());
+			purchaseCancelDetailSacRes.setResultMsg(purchaseCancelDetailSacResult.getResultMsg());
 
-			prchsCancelList.add(purchaseCancelByUserDetailSacRes);
+			prchsCancelList.add(purchaseCancelDetailSacRes);
 
 		}
 
@@ -180,13 +181,28 @@ public class PurchaseCancelController {
 
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * convertReqForCancelPurchaseByAdmin.
+	 * </pre>
+	 * 
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @param purchaseCancelByAdminSacReq
+	 *            purchaseCancelByAdminSacReq
+	 * @return PurchaseCancelSacParam
+	 */
 	private PurchaseCancelSacParam convertReqForCancelPurchaseByAdmin(SacRequestHeader sacRequestHeader,
 			PurchaseCancelByAdminSacReq purchaseCancelByAdminSacReq) {
 
 		PurchaseCancelSacParam purchaseCancelSacParam = new PurchaseCancelSacParam();
 
 		// common parameter setting.
-		ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelByAdminSacReq, purchaseCancelSacParam);
+		if (!ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelByAdminSacReq,
+				purchaseCancelSacParam)) {
+			throw new StorePlatformException("SAC_PUR_9901");
+		}
 
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByAdminSacReq.getCancelReqPathCd());
 		purchaseCancelSacParam.setForceCancelYn(purchaseCancelByAdminSacReq.getForceCancelYn());
@@ -195,12 +211,11 @@ public class PurchaseCancelController {
 
 		// parameter setting.
 		List<PurchaseCancelDetailSacParam> prchsCancelList = new ArrayList<PurchaseCancelDetailSacParam>();
-		for (PurchaseCancelByAdminDetailSacReq purchaseCancelByAdminDetailSacReq : purchaseCancelByAdminSacReq
-				.getPrchsCancelList()) {
+		for (PurchaseCancelDetailSacReq purchaseCancelDetailSacReq : purchaseCancelByAdminSacReq.getPrchsCancelList()) {
 
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
 
-			purchaseCancelDetailSacParam.setPrchsId(purchaseCancelByAdminDetailSacReq.getPrchsId());
+			purchaseCancelDetailSacParam.setPrchsId(purchaseCancelDetailSacReq.getPrchsId());
 
 			prchsCancelList.add(purchaseCancelDetailSacParam);
 
@@ -212,6 +227,16 @@ public class PurchaseCancelController {
 
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * convertResForCancelPurchaseByAdmin.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelSacResult
+	 *            purchaseCancelSacResult
+	 * @return PurchaseCancelByAdminSacRes
+	 */
 	private PurchaseCancelByAdminSacRes convertResForCancelPurchaseByAdmin(
 			PurchaseCancelSacResult purchaseCancelSacResult) {
 
@@ -222,16 +247,16 @@ public class PurchaseCancelController {
 		purchaseCancelByAdminSacRes.setSuccessCnt(purchaseCancelSacResult.getSuccessCnt());
 		purchaseCancelByAdminSacRes.setFailCnt(purchaseCancelSacResult.getFailCnt());
 
-		List<PurchaseCancelByAdminDetailSacRes> prchsCancelList = new ArrayList<PurchaseCancelByAdminDetailSacRes>();
+		List<PurchaseCancelDetailSacRes> prchsCancelList = new ArrayList<PurchaseCancelDetailSacRes>();
 		for (PurchaseCancelDetailSacResult purchaseCancelDetailSacResult : purchaseCancelSacResult.getPrchsCancelList()) {
 
-			PurchaseCancelByAdminDetailSacRes purchaseCancelByAdminDetailSacRes = new PurchaseCancelByAdminDetailSacRes();
+			PurchaseCancelDetailSacRes purchaseCancelDetailSacRes = new PurchaseCancelDetailSacRes();
 
-			purchaseCancelByAdminDetailSacRes.setPrchsId(purchaseCancelDetailSacResult.getPrchsId());
-			purchaseCancelByAdminDetailSacRes.setResultCd(purchaseCancelDetailSacResult.getResultCd());
-			purchaseCancelByAdminDetailSacRes.setResultMsg(purchaseCancelDetailSacResult.getResultMsg());
+			purchaseCancelDetailSacRes.setPrchsId(purchaseCancelDetailSacResult.getPrchsId());
+			purchaseCancelDetailSacRes.setResultCd(purchaseCancelDetailSacResult.getResultCd());
+			purchaseCancelDetailSacRes.setResultMsg(purchaseCancelDetailSacResult.getResultMsg());
 
-			prchsCancelList.add(purchaseCancelByAdminDetailSacRes);
+			prchsCancelList.add(purchaseCancelDetailSacRes);
 
 		}
 

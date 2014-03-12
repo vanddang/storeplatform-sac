@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.purchase.payment.vo.CheckBillingForSktCarrierSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.payment.vo.CheckBillingForSktCarrierSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -57,8 +58,10 @@ public class CheckBillingController {
 
 		CheckBillingForSktCarrierSacParam checkBillingForSktCarrierSacParam = new CheckBillingForSktCarrierSacParam();
 
-		ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, checkBillingForSktCarrierSacRes,
-				checkBillingForSktCarrierSacParam);
+		if (!ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, checkBillingForSktCarrierSacRes,
+				checkBillingForSktCarrierSacParam)) {
+			throw new StorePlatformException("SAC_PUR_9901");
+		}
 
 		return checkBillingForSktCarrierSacParam;
 	}
