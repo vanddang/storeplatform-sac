@@ -643,6 +643,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrAuth.setRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 실명인증 사이트 코드
 			mbrAuth.setRealNameDate(req.getRealNameDate()); // 실명인증 일시
 			mbrAuth.setRealNameMethod(req.getRealNameMethod()); // 실명인증 수단코드
+			mbrAuth.setIsDomestic(this.convertIsDomestic(req.getResident())); // 내외국인 구분 (Y : 내국인, N : 외국인)
 			updateRealNameRequest.setUserMbrAuth(mbrAuth);
 
 			/**
@@ -697,25 +698,34 @@ public class UserModifyServiceImpl implements UserModifyService {
 		} else { // 법인
 
 			/**
-			 * 법인 단말일 경우. (사용자 기본정보의 REALNM_AUTH_YN = 'Y' 로만 업데이트 한다.)
+			 * 실명인증 기본 setting.
 			 */
-			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-			updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-
-			UserMbr userMbr = new UserMbr();
-			userMbr.setUserKey(req.getUserKey()); // 사용자 Key
-			userMbr.setIsRealName(MemberConstants.USE_Y); // 본인 인증 여부
-			updateUserRequest.setUserMbr(userMbr);
+			UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
+			updateRealNameRequest = new UpdateRealNameRequest();
+			updateRealNameRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+			updateRealNameRequest.setIsOwn(MemberConstants.AUTH_TYPE_OWN);
+			updateRealNameRequest.setIsRealName(MemberConstants.USE_Y);
+			updateRealNameRequest.setUserKey(req.getUserKey());
 
 			/**
-			 * SC 사용자 회원 기본정보 수정 요청.
+			 * 실명인증 (본인)
 			 */
-			UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
-			if (updateUserResponse.getUserKey() == null || StringUtils.equals(updateUserResponse.getUserKey(), "")) {
+			MbrAuth mbrAuth = new MbrAuth();
+			mbrAuth.setIsRealName(MemberConstants.USE_Y); // 실명인증 여부
+			mbrAuth.setCi(" "); // CI 값은 필수인데... ' ' 공백으로 넣기로 SC와 협의함.
+			mbrAuth.setBirthDay(req.getUserBirthDay()); // 생년월일
+			mbrAuth.setIsDomestic(this.convertIsDomestic(req.getResident())); // 내외국인 구분 (Y : 내국인, N : 외국인)
+			updateRealNameRequest.setUserMbrAuth(mbrAuth);
+
+			/**
+			 * SC 실명인증정보 수정 연동.
+			 */
+			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
+			if (updateRealNameResponse.getUserKey() == null || StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
 				throw new StorePlatformException("SAC_MEM_0002", "userKey");
 			}
 
-			return updateUserResponse.getUserKey();
+			return updateRealNameResponse.getUserKey();
 
 		}
 
@@ -918,6 +928,25 @@ public class UserModifyServiceImpl implements UserModifyService {
 			return "10"; // 내국인
 		} else if (StringUtils.equals(resident, "foreign")) {
 			return "20"; // 외국인
+		} else {
+			return "";
+		}
+	}
+
+	/**
+	 * <pre>
+	 * SC에 사용하는 정보로 내외국인 여부 Converting.
+	 * </pre>
+	 * 
+	 * @param resident
+	 *            실명인증 회원코드 (local : 내국인, foreign : 외국인)
+	 * @return 내외국인 여부 (Y or N)
+	 */
+	private String convertIsDomestic(String resident) {
+		if (StringUtils.equals(resident, "local")) {
+			return MemberConstants.USE_Y; // 내국인
+		} else if (StringUtils.equals(resident, "foreign")) {
+			return MemberConstants.USE_Y; // 외국인
 		} else {
 			return "";
 		}

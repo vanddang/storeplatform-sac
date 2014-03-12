@@ -285,7 +285,6 @@ public class CreateRealNameTest {
 
 						reqJson.setIsOwn("CORP"); // 실명인증 대상
 						reqJson.setResident("local"); // 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
-						reqJson.setUserName("법인단말"); // 이름
 						reqJson.setUserBirthDay("99991231"); // 생년월일
 
 						TestConvertMapperUtils.convertObjectToJson(reqJson);
