@@ -236,7 +236,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		if (this.log.isDebugEnabled()) {
 			this.log.debug("product count : {}", productList.size());
 			this.log.debug("total count : {}", this.totalCount);
-			productList.clear();
+			// productList.clear();
 		}
 
 		// data 무존재시 운영자 추천으로 대체
