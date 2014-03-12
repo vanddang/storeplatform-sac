@@ -262,6 +262,7 @@
               ,T.TOTAL_COUNT
               ,T.THEME_ID
               ,T.PROD_ID
+              ,T.PART_PROD_ID
               ,T.PROD_NM
               ,SF.APK_PKG_NM AS APK_PKG
               ,SF.APK_VER AS APK_VER_CD
@@ -281,6 +282,7 @@
               ,T.META_CLSF_CD
               ,T.PROD_GRD_CD
               ,T.CONTENTS_TYPE_CD
+              ,T.SVC_GRP_CD
         FROM   (
               SELECT 
                      COUNT(*) OVER() AS TOTAL_COUNT
