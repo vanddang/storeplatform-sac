@@ -499,6 +499,7 @@
                 AND K.TENANT_ID = L.TENANT_ID
                 AND C.CATALOG_ID = PI.PROD_ID
                 AND PI.IMG_CD = #{imageCd}
+                AND K.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
                 AND PI.EXPO_ORD ='1'           
                 AND I.PROD_ID = N.PROD_ID(+)   
                 AND I.PROD_ID = OPT.EPSD_PROD_ID(+)     
@@ -619,6 +620,7 @@
 		        AND MCD.LANG_CD = DC.LANG_CD 		        
 		        AND DC.LANG_CD = #{lang}
 		        AND TP.TENANT_ID = PR.TENANT_ID
+		        AND TP.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
 		        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 		     ) IV  LEFT OUTER JOIN TB_DP_PROD_IMG TIG
 		       ON TIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = TIG.PROD_ID AND TIG.IMG_CD = #{imageCd}
