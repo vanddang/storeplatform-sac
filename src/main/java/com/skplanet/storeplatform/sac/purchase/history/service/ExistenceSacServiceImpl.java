@@ -71,7 +71,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 
 				// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
 				if (existenceScRes.getTenantProdGrpCd() != null) {
-					flag = this.cheackMdn(existenceScReq, existenceScRes, purchaseTenantPolicyList, flag);
+					flag = this.checkMdn(existenceScReq, existenceScRes, purchaseTenantPolicyList, flag);
 					this.logger.info("리턴 FLAG : {}", flag);
 					// flag가 ID 이거나 MDN일 경우에만 기구매셋팅
 					if (flag.equals("ID") || flag.equals("MDN")) {
@@ -102,7 +102,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	 *            정책구분
 	 * @return String
 	 */
-	private String cheackMdn(ExistenceScReq existenceScReq, ExistenceScRes existenceScRes,
+	private String checkMdn(ExistenceScReq existenceScReq, ExistenceScRes existenceScRes,
 			List<PurchaseTenantPolicy> purchaseTenantPolicyList, String flag) {
 
 		// flag의 값은 ID, MDN, NOT_MDN를 가진다
