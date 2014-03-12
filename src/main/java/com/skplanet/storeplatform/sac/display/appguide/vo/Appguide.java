@@ -11,6 +11,7 @@ public class Appguide {
 	private String menuNm;
 	private String metaClsfCd;
 	private String prodId;
+	private String partProdId;
 	private String prodNm;
 	private String prodDesc;
 	private String prodAmt;
@@ -174,6 +175,21 @@ public class Appguide {
 	 */
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
+	}
+
+	/**
+	 * @return the partProdId
+	 */
+	public String getPartProdId() {
+		return this.partProdId;
+	}
+
+	/**
+	 * @param partProdId
+	 *            the partProdId to set
+	 */
+	public void setPartProdId(String partProdId) {
+		this.partProdId = partProdId;
 	}
 
 	/**

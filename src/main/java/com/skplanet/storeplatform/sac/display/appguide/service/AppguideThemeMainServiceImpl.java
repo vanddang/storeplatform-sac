@@ -27,7 +27,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideThemeSacReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
@@ -39,6 +38,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 /**
  * App guide 테마 추천 메인 Service 인터페이스(CoreStoreBusiness) 구현체
@@ -55,6 +56,9 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private CommonMetaInfoGenerator commonMetaInfoGenerator;
 
 	/*
 	 * (non-Javadoc)
@@ -151,54 +155,23 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 			for (Appguide mapper : themeProductList) {
 				if (main.getThemeId().equals(mapper.getThemeId())) {
 
+					MetaInfo metaInfo = this.setMetaInfo(mapper);
+
 					// 테마별 상품 정보
-					Product product;
-					Identifier identifier;
-					Title title;
-					App app;
-					Rights rights;
-					Source source;
-					Menu menu;
+					Product product = new Product();
+					Title title = new Title();
+					App app = new App();
+					Rights rights = new Rights();
+					Source source = new Source();
 
 					// Response VO를 만들기위한 생성자
-					List<Menu> menuList;
-					List<Source> sourceList;
-					List<Identifier> identifierList;
-
-					product = new Product();
-					identifier = new Identifier();
-					title = new Title();
-					app = new App();
-					rights = new Rights();
-					source = new Source();
-
-					// 상품ID
-					identifier = new Identifier();
-
-					// Response VO를 만들기위한 생성자
-					menuList = new ArrayList<Menu>();
-					sourceList = new ArrayList<Source>();
-					identifierList = new ArrayList<Identifier>();
-
-					Map<String, String> idReqMap = new HashMap<String, String>();
-					idReqMap.put("prodId", mapper.getProdId());
-					idReqMap.put("topMenuId", mapper.getTopMenuId());
-					idReqMap.put("contentsTypeCd", mapper.getContentsTypeCd());
-					// idReqMap.put("outsdContentsId", mapper.getOutsdContentsId());
+					List<Source> sourceList = new ArrayList<Source>();
 
 					title.setText(mapper.getProdNm());
 					product.setTitle(title);
 
-					menu = new Menu();
-					menu.setId(mapper.getTopMenuId());
-					menu.setName(mapper.getTopMenuNm());
-					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-					menuList.add(menu);
-					menu = new Menu();
-					menu.setId(mapper.getMenuId());
-					menu.setName(mapper.getMenuNm());
-					menuList.add(menu);
-					product.setMenuList(menuList);
+					product.setIdentifierList(this.commonMetaInfoGenerator.generateIdentifierList(metaInfo));
+					product.setMenuList(this.commonMetaInfoGenerator.generateMenuList(metaInfo));
 
 					/*
 					 * Rights grade
@@ -219,23 +192,12 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 					// DP000204 : 폰꾸미기
 					// DP000201 : 애플리캐이션
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 앱 타입일 경우
-
-						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-						identifier.setText(mapper.getProdId());
-						identifierList.add(identifier);
-						product.setIdentifierList(identifierList);
-
 						app.setAid(mapper.getAid());
 						app.setPackageName(mapper.getApkPkg());
 						app.setVersionCode(mapper.getApkVerCd());
 						app.setVersion(mapper.getProdVer()); // 확인 필요
 						product.setApp(app);
 					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 멀티미디어
-																											  // 타입일
-																											  // 경우
-						identifierList = this.generateIdentifierList(idReqMap);
-						product.setIdentifierList(identifierList);
-
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(mapper.getTopMenuId())
 								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(mapper.getTopMenuId())) { // 영화/방송
 						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(mapper.getTopMenuId())
@@ -244,10 +206,6 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(mapper.getTopMenuId())) { // 음원 상품의 경우
 						}
 					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 쇼핑
-																												   // 상품의
-																												   // 경우
-						identifierList = this.generateIdentifierList(idReqMap);
-						product.setIdentifierList(identifierList);
 					}
 
 					sublistVO.add(product);
@@ -262,6 +220,39 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 		return mainListVO;
 	}
 
+	private MetaInfo setMetaInfo(Appguide mapper) {
+
+		MetaInfo metaInfo = new MetaInfo();
+
+		// set Indentifier list informations
+		if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 앱 타입일 경우
+			metaInfo.setContentsTypeCd(mapper.getContentsTypeCd());
+			metaInfo.setPartProdId(mapper.getPartProdId());
+			metaInfo.setTopMenuId(mapper.getTopMenuId());
+		} else {
+			metaInfo.setContentsTypeCd(mapper.getContentsTypeCd());
+			metaInfo.setProdId(mapper.getProdId());
+			metaInfo.setPartProdId(mapper.getPartProdId());
+			metaInfo.setTopMenuId(mapper.getTopMenuId());
+		}
+
+		// set menu list
+		if (!StringUtils.isNullOrEmpty(mapper.getTopMenuId())) {
+			metaInfo.setTopMenuId(mapper.getTopMenuId());
+			metaInfo.setTopMenuNm(mapper.getTopMenuNm());
+		}
+		if (!StringUtils.isNullOrEmpty(mapper.getMenuId())) {
+			metaInfo.setMenuId(mapper.getMenuId());
+			metaInfo.setMenuNm(mapper.getMenuNm());
+		}
+		if (!StringUtils.isNullOrEmpty(mapper.getMetaClsfCd())) {
+			metaInfo.setMetaClsfCd(mapper.getMetaClsfCd());
+		}
+		return metaInfo;
+
+	}
+
+	@SuppressWarnings("unused")
 	private List<Identifier> generateIdentifierList(Map<String, String> param) {
 		Identifier identifier = null;
 		List<Identifier> identifierList = new ArrayList<Identifier>();
