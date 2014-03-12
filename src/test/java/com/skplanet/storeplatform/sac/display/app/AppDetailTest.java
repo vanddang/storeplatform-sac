@@ -20,6 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -116,6 +117,14 @@ public class AppDetailTest {
 //        Map<String, String> headerMap = MvcTestBuilder.getDefaultHeader();
 //        headerMap.put("model", "SHW-M340S");
         MvcTestBuilder.build2(mvc, true, null, URL, req, false);
+    }
+
+    @Test
+    public void checkImgOrientation() throws Exception {
+        AppDetailReq req = new AppDetailReq();
+        req.setChannelId("0000065131");
+        MvcTestBuilder.build2(mvc, true, null, URL, req, true)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.product.sourceList[0].orientation").value("portrait"));
     }
 
 

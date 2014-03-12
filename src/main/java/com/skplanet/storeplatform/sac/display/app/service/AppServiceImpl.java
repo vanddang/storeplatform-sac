@@ -113,6 +113,13 @@ public class AppServiceImpl implements AppService {
             Source source = new Source();
             source.setMediaType(DisplayCommonUtil.getMimeType(imgSrc.getFileNm()));
             source.setUrl(imgSrc.getFilePath());
+            if(imgSrc.getWidth() != null && imgSrc.getHeight() != null) {
+                source.setHeight(imgSrc.getHeight());
+                source.setWidth(imgSrc.getWidth());
+                source.setOrientation(imgSrc.getWidth() < imgSrc.getHeight() ? "portrait" : "landscape");
+            } else {
+                source.setOrientation("portrait");
+            }
 
 			if (SOURCE_LIST_SCREENSHOT_ORIGINAL.contains(imgSrc.getImgCd()))
 				source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);

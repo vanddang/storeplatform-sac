@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.product.inf;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

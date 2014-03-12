@@ -7,8 +7,9 @@ import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSacResult;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.display.product.inf.DisplayProductBuilder;
 import com.skplanet.storeplatform.sac.display.product.inf.DisplayProductInitializer;
-import com.skplanet.storeplatform.sac.display.product.inf.IFConstants;
+import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import com.skplanet.storeplatform.sac.display.product.vo.CmsVo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -22,11 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * CmsServiceImpl CMS 전시 배포 서비스 구현체. Updated on : 2014. 2. 13. Updated by : 차명호, ANB
+ * ProductDeployCompositeServiceImpl CMS 전시 배포 서비스 구현체. Updated on : 2014. 2. 13. Updated by : 차명호, ANB
  */
 
 @Service
-public class CmsServiceImpl implements CmsService {
+public class ProductDeployCompositeServiceImpl implements ProductDeployCompositeService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -47,7 +48,7 @@ public class CmsServiceImpl implements CmsService {
 	private AmqpTemplate cmsAmqpTemplate;
 
 	@Override
-	public void executeProcess(NotificationRefactoringSac message) throws StorePlatformException {
+	public void executeProcess(NotificationRefactoringSac message){
 
         this.log.info("CMS MQ APP Process Start");
 
@@ -61,8 +62,8 @@ public class CmsServiceImpl implements CmsService {
         // Deploy
         DPProductVO dpProd = message.getDpProductTotal().getDpProduct();
         if (null != dpProd) {
-            String prodId = nvlStr(dpProd.getProdId());
-            String mbrNo = nvlStr(dpProd.getSellerMbrNo());
+            String prodId = StringUtils.defaultString(dpProd.getProdId());
+            String mbrNo = StringUtils.defaultString(dpProd.getSellerMbrNo());
             this.log.info("CMS Prod Info = " + prodId + " / " + mbrNo);
             cv.setProdId(prodId);
             cv.setMbrNo(mbrNo);
@@ -127,17 +128,6 @@ public class CmsServiceImpl implements CmsService {
 
         this.cmsAmqpTemplate.convertAndSend(ntr);
 
-	}
-
-	public static String nvlStr(Object src, String initStr) {
-		if (src == null)
-			return initStr;
-		else
-			return src.toString();
-	}
-
-	public static String nvlStr(Object src) {
-		return nvlStr(src, "");
 	}
 
 }

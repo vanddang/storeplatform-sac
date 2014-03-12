@@ -73,12 +73,12 @@ public class SacInvocationMethodSearcher implements InvocationMethodSearcher {
             throw new RuntimeException("Service not found.");
 
         if(messageQueueName.contains("icms-app-refactoring-deploy.sac.deploy.async")) {
-            serviceNm = "com.skplanet.storeplatform.sac.display.product.service.CmsServiceImpl";
+            serviceNm = "com.skplanet.storeplatform.sac.display.product.service.ProductDeployCompositeServiceImpl";
             mtdNm = "executeProcess";
         }
         else if(messageQueueName.contains("icms-app-admin.sac.device-mapping.async")) {
-            serviceNm = "com.skplanet.storeplatform.sac.display.product.service.CmsDeviceServiceImpl";
-            mtdNm = "remappingDeviceProcess";
+            serviceNm = "com.skplanet.storeplatform.sac.display.product.service.DeviceMappingCompositeServiceImpl";
+            mtdNm = "executeProcess";
         }
         else
             throw new RuntimeException();

@@ -3,8 +3,8 @@
 <mapper namespace="AppDetail">
     
     <select id="getAppDetail" parameterType="com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam" resultType="com.skplanet.storeplatform.sac.display.app.vo.AppDetail">
-        /* AppDetailMapper.xml, getAppDetail, SAC : 정희원 , 2014-01-24 */
         SELECT
+            /* AppDetailMapper.xml, getAppDetail, SAC : 정희원 , 2014-01-24 */
             PD.PROD_ID,
             SC.SUB_CONTENTS_ID,
             PDESC.PROD_NM,
@@ -61,7 +61,7 @@
 
     <select id="getSourceList" parameterType="com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.ImageSource">
         /* AppDetailMapper.xml, getSourceList, SAC : 정희원 , 2014-01-24 */
-        SELECT FILE_PATH, FILE_NM, IMG_CD
+        SELECT FILE_PATH, FILE_NM, IMG_CD, WIDTH, HEIGHT
         FROM TB_DP_PROD_IMG
         WHERE PROD_ID = #{channelId}
         AND IMG_CD IN

@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.display.product.inf;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

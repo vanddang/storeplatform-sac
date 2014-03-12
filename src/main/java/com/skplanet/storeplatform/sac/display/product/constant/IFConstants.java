@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.display.product.inf;
+package com.skplanet.storeplatform.sac.display.product.constant;
 
 public class IFConstants {
 	

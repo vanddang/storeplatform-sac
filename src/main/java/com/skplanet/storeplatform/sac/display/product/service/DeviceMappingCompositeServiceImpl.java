@@ -21,13 +21,13 @@ import com.skplanet.icms.refactoring.deploy.DPProductSubContsVO;
 import com.skplanet.icms.refactoring.deploy.DPSprtDeviceVO;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.product.inf.IFConstants;
+import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import com.skplanet.storeplatform.sac.display.product.vo.CmsVo;
 import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
 
 /**
  * 
- * CmsDeviceServiceImpl
+ * DeviceMappingCompositeServiceImpl
  * 
  * CMS DeviceRemapping 서비스 구현체.
  * 
@@ -35,7 +35,7 @@ import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
  */
 
 @Service
-public class CmsDeviceServiceImpl implements CmsDeviceService {
+public class DeviceMappingCompositeServiceImpl implements DeviceMappingCompositeService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -57,7 +57,7 @@ public class CmsDeviceServiceImpl implements CmsDeviceService {
 	 * @exception StorePlatformException
 	 */
 	@Override
-	public void remappingDeviceProcess(DeviceMappingQueueVO message) throws StorePlatformException {
+	public void executeProcess(DeviceMappingQueueVO message) {
 
         this.log.debug("*********************************************************");
         this.log.debug("CmsDeviceController process started!!");
@@ -222,17 +222,6 @@ public class CmsDeviceServiceImpl implements CmsDeviceService {
         this.log.debug("CmsDeviceController process end!!");
         this.log.debug("*********************************************************");
 
-	}
-
-	public static String nvlStr(Object src, String initStr) {
-		if (src == null)
-			return initStr;
-		else
-			return src.toString();
-	}
-
-	public static String nvlStr(Object src) {
-		return nvlStr(src, "");
 	}
 
 }
