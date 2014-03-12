@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceChangeSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -47,7 +49,7 @@ public class DeviceChangeServiceImpl implements DeviceChangeService {
 		Device device = null;
 		List<Device> deviceList = new ArrayList<Device>();
 
-		// 단말 UserAgent 관리 정보 조회
+		// 단말 모델 정보 조회 (운영자 관리)
 		List<MetaInfo> resultList = this.commonDAO.queryForList("DeviceModel.searchDeviceChangeModelList", null,
 				MetaInfo.class);
 
@@ -69,5 +71,45 @@ public class DeviceChangeServiceImpl implements DeviceChangeService {
 
 		deviceChangeSacRes.setCommonResponse(commonResponse);
 		return deviceChangeSacRes;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.device.service.DeviceChangeService#searchDeviceUserAgentList(com.skplanet
+	 * .storeplatform.sac.client.display.vo.device.DeviceUserAgentSacReq)
+	 */
+	@Override
+	public DeviceUserAgentSacRes searchDeviceUserAgentList(DeviceUserAgentSacReq deviceReq) {
+		DeviceUserAgentSacRes deviceUserAgentSacRes = new DeviceUserAgentSacRes();
+		CommonResponse commonResponse = new CommonResponse();
+		MetaInfo metaInfo = new MetaInfo();
+
+		Device device = null;
+		List<Device> deviceList = new ArrayList<Device>();
+
+		// 단말 모델 정보 조회 (by UserAgent)
+		List<MetaInfo> resultList = this.commonDAO.queryForList("DeviceModel.searchDeviceUserAgentList", deviceReq,
+				MetaInfo.class);
+
+		if (resultList != null && !resultList.isEmpty()) {
+			for (int i = 0; i < resultList.size(); i++) {
+				metaInfo = resultList.get(i);
+				device = new Device();
+
+				device.setDeviceModelCd(metaInfo.getDeviceModelCd());
+				device.setUaCd(metaInfo.getUaCd());
+				deviceList.add(device);
+			}
+
+			deviceUserAgentSacRes.setDeviceList(deviceList);
+			commonResponse.setTotalCount(metaInfo.getTotalCount());
+		} else {
+			commonResponse.setTotalCount(0);
+		}
+
+		deviceUserAgentSacRes.setCommonResponse(commonResponse);
+		return deviceUserAgentSacRes;
 	}
 }

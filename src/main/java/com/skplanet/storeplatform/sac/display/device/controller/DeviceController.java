@@ -21,6 +21,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProv
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -103,7 +105,7 @@ public class DeviceController {
 
 	/**
 	 * <pre>
-	 * 단말 UserAgent 관리 정보 조회.
+	 * 단말 모델 정보 조회 (운영자 관리)
 	 * </pre>
 	 * 
 	 * @return DeviceChangeSacRes
@@ -112,5 +114,20 @@ public class DeviceController {
 	@ResponseBody
 	public DeviceChangeSacRes searchDeviceChangeModelList() {
 		return this.deviceChangeService.searchDeviceChangeModelList();
+	}
+
+	/**
+	 * <pre>
+	 * 단말 모델 정보 조회 (by UserAgent).
+	 * </pre>
+	 * 
+	 * @param deviceReq
+	 *            deviceReq
+	 * @return DeviceUserAgentSacRes
+	 */
+	@RequestMapping(value = "/userAgent/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public DeviceUserAgentSacRes searchDeviceChangeModelList(DeviceUserAgentSacReq deviceReq) {
+		return this.deviceChangeService.searchDeviceUserAgentList(deviceReq);
 	}
 }

@@ -315,7 +315,10 @@
         <typeAlias alias="ArtistProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacReq" />
         
         <!-- 이용가능 단말 조회 -->
-        <typeAlias alias="UseableDeviceSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacReq" />        
+        <typeAlias alias="UseableDeviceSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacReq" />
+                
+        <!-- 단말 모델 정보 조회 (by UserAgent) -->
+        <typeAlias alias="DeviceUserAgentSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSacReq" />        
         
         <!-- 상품 상세 정보 요청(Product Id, Package Name) -->
         <typeAlias alias="AppDetailByPackageNameSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacReq" /> 

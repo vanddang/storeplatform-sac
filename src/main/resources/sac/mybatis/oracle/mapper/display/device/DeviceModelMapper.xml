@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="DeviceModel">
+    <!-- 단말 모델 정보 조회 (운영자 관리) -->
 	<select id="searchDeviceChangeModelList" resultType="MetaInfo">
-		SELECT  COUNT(1) OVER() AS TOTAL_COUNT
+		SELECT  /* DeviceModelMapper.xml, searchDeviceChangeModelList, tae hee Lee, 2014-03-12 */
+		        COUNT(1) OVER() AS TOTAL_COUNT
 		      , MODEL_NM AS DEVICE_MODEL_CD
 		      , TRFM_MODEL_NM AS DEVICE_MODEL_NM
 		  FROM  TB_CM_DEVICE_TRFM
-    </select>        
+    </select>
+    
+    <!-- 단말 모델 정보 조회 (by UserAgent) -->
+	<select id="searchDeviceUserAgentList" parameterType="DeviceUserAgentSacReq" resultType="MetaInfo">
+		SELECT  /* DeviceModelMapper.xml, searchDeviceUserAgentList, tae hee Lee, 2014-03-12 */
+		        COUNT(1) OVER() AS TOTAL_COUNT
+		      , DEVICE_MODEL_CD
+		      , UA_CD
+		  FROM  TB_CM_DEVICE
+		 WHERE  REP_DEVICE_YN = 'Y'
+		   AND  UA_CD IN (SELECT UA_CD
+		                    FROM TB_CM_DEVICE
+		                   WHERE USE_YN = 'Y'
+		                     AND UPPER(#{userAgent}) LIKE '%' || UPPER(DEVICE_MODEL_CD) || '%')
+		   AND  ROWNUM = 1
+    </select>
 </mapper>

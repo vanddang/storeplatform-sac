@@ -267,6 +267,7 @@ public class MetaInfo {
 	private String mnftCompNm; // 제조사 명
 	private String listImagePath; // 리스트 노출 이미지 경로
 	private String dtlImagePath; // 상세 노출 이미지 경로
+	private String uaCd;
 
 	// Planet X 제공 Open Api 변수
 	private String tinyUrl;
@@ -3784,6 +3785,21 @@ public class MetaInfo {
 	 */
 	public void setDtlImagePath(String dtlImagePath) {
 		this.dtlImagePath = dtlImagePath;
+	}
+
+	/**
+	 * @return the uaCd
+	 */
+	public String getUaCd() {
+		return this.uaCd;
+	}
+
+	/**
+	 * @param uaCd
+	 *            the uaCd to set
+	 */
+	public void setUaCd(String uaCd) {
+		this.uaCd = uaCd;
 	}
 
 	/**
