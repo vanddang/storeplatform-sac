@@ -184,15 +184,15 @@
                         , UV_TB_DP_MULTIMDA_PROD F /* 채널 */
                     WHERE A.MENU_ID = B.MENU_ID
                     AND B.PROD_ID = D.PROD_ID
-                    AND A.TOP_MENU_ID = #{menuId}
+                    AND A.MENU_ID = #{menuId}
                     AND C.PROD_ID = #{channelId}
                     AND C.PROD_RSHP_CD ='DP010802'
                     AND C.PART_PROD_ID = D.PROD_ID
                     AND C.PART_PROD_ID = F.PROD_ID
                     AND D.CONTENTS_TYPE_CD = 'PD002501'
                     AND D.SVC_GRP_CD = 'DP000203'
-                    --AND C.PART_PROD_ID = E.PROD_ID
-                    --AND E.EXPO_YN = 'Y'
+                    AND C.PART_PROD_ID = E.PROD_ID
+                    AND E.EXPO_YN = 'Y'
                     AND A.MENU_ID = #{menuId}
                     ORDER BY TO_NUMBER(F.CHAPTER) DESC
                  ) AA
