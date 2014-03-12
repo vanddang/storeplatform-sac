@@ -193,7 +193,6 @@
                     AND D.SVC_GRP_CD = 'DP000203'
                     AND C.PART_PROD_ID = E.PROD_ID
                     AND E.EXPO_YN = 'Y'
-                    AND A.MENU_ID = #{menuId}
                     ORDER BY TO_NUMBER(F.CHAPTER) DESC
                  ) AA
             ) BB 
