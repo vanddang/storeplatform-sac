@@ -37,6 +37,9 @@ public class Source extends CommonInfo implements Serializable {
 	private String url; // Resource URL
 	private String expoOrd; // 노출 순서
 	private String imageCode; // 이미지 코드
+    private Integer width;  // 폭
+    private Integer height; // 높이
+    private String orientation; // 가로 세로 형태
 
 	/**
 	 * @return the mediaType
@@ -128,4 +131,27 @@ public class Source extends CommonInfo implements Serializable {
 		this.imageCode = imageCode;
 	}
 
+    public Integer getWidth() {
+        return width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+    public String getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(String orientation) {
+        this.orientation = orientation;
+    }
 }
