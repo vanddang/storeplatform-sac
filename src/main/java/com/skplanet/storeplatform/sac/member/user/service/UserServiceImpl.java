@@ -111,7 +111,6 @@ public class UserServiceImpl implements UserService {
 				req.setUserAuthKey(userAuthKey);
 				req.setKey(schUserRes.getUserMbr().getImSvcNo());
 				req.setUserMdn(userPhoneStr);
-				LOGGER.info(req.toString());
 				this.imIdpSCI.updateAdditionalInfo(req);
 			} else {
 				ModifyProfileEcReq req = new ModifyProfileEcReq();
@@ -119,7 +118,6 @@ public class UserServiceImpl implements UserService {
 				req.setUserAuthKey(userAuthKey);
 				req.setKey(schUserRes.getUserMbr().getImMbrNo());
 				req.setUserPhone(userPhoneStr);
-				LOGGER.info(req.toString());
 				this.idpSCI.modifyProfile(req);
 			}
 
