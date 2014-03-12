@@ -17,11 +17,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * OpenApi 상품 상세 정보 요청(Package Name) Value Object.
+ * OpenApi 상품 상세 정보 요청(Product Id) Value Object.
  * 
- * Updated on : 2014. 03. 06. Updated by : 백승현, 인크로스.
+ * Updated on : 2014. 03. 12. Updated by : 백승현, 인크로스.
  */
-public class AppDetailByPackageNameSacRes extends CommonInfo {
+public class AppDetailByProductIdSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;

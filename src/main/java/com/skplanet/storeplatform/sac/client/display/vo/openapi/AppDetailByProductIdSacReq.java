@@ -14,20 +14,17 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * OpenApi 상품 상세 정보 요청(By PackageName) Request Value Object.
+ * OpenApi 상품 상세 정보 요청(By ProductId) Request Value Object.
  * 
- * Updated on : 2014. 03. 05. Updated by : 백승현, 인크로스.
+ * Updated on : 2014. 03. 12. Updated by : 백승현, 인크로스.
  */
-public class AppDetailByPackageNameSacReq extends CommonInfo {
+public class AppDetailByProductIdSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private String tenantId; // tenantId
 	private String langCd; // 언어코드
 	private String imageCd; // 원본 이미지 코드
 
 	@NotBlank
-	private String packageName; // 패키지명
-	private String version; // 패키지버전
-
 	private String productId; // 상품ID
 
 	private String webPocUrl; // T Store WEB POC URL
@@ -76,36 +73,6 @@ public class AppDetailByPackageNameSacReq extends CommonInfo {
 	 */
 	public void setImageCd(String imageCd) {
 		this.imageCd = imageCd;
-	}
-
-	/**
-	 * @return the packageName
-	 */
-	public String getPackageName() {
-		return this.packageName;
-	}
-
-	/**
-	 * @param packageName
-	 *            the packageName to set
-	 */
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
-
-	/**
-	 * @return the version
-	 */
-	public String getVersion() {
-		return this.version;
-	}
-
-	/**
-	 * @param version
-	 *            the version to set
-	 */
-	public void setVersion(String version) {
-		this.version = version;
 	}
 
 	/**
