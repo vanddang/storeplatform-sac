@@ -180,7 +180,7 @@
                         , TB_DP_MENU_CATEGORY_PROD_MAPG B
                         , TB_DP_PROD_RSHP C
                         , TB_DP_PROD D /* 채널 */
-                        --, TB_DP_TENANT_PROD E
+                        , TB_DP_TENANT_PROD E
                         , UV_TB_DP_MULTIMDA_PROD F /* 채널 */
                     WHERE A.MENU_ID = B.MENU_ID
                     AND B.PROD_ID = D.PROD_ID
