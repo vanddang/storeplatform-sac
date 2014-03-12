@@ -56,7 +56,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
 			paramMap.put("lang", req.getLang());
 			paramMap.put("deviceModelNo", req.getDeviceModelNo());
-
+			paramMap.put("tenantId", req.getTenantId());
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 				String topMenuId = productBasicInfo.getTopMenuId();
 				String svcGrpCd = productBasicInfo.getSvcGrpCd();
