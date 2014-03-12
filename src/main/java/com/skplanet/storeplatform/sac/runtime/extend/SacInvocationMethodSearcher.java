@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.framework.integration.serviceactivator.Invocat
 import com.skplanet.storeplatform.framework.integration.serviceactivator.InvocationMethodSearcher;
 import com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService;
 import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo;
+import org.springframework.util.StringUtils;
 
 /**
  * 실행메소드정보를 가져오는 구현클래스
@@ -66,7 +67,22 @@ public class SacInvocationMethodSearcher implements InvocationMethodSearcher {
 	 */
 	@Override
 	public InvocationMethod searchName(String messageQueueName) {
-		// TODO Auto-generated method stub
-		return null;
+        String serviceNm, mtdNm;
+
+        if(StringUtils.isEmpty(messageQueueName))
+            throw new RuntimeException("Service not found.");
+
+        if(messageQueueName.contains("icms-app-refactoring-deploy.sac.deploy.async")) {
+            serviceNm = "com.skplanet.storeplatform.sac.display.product.service.CmsServiceImpl";
+            mtdNm = "executeProcess";
+        }
+        else if(messageQueueName.contains("icms-app-admin.sac.device-mapping.async")) {
+            serviceNm = "com.skplanet.storeplatform.sac.display.product.service.CmsDeviceServiceImpl";
+            mtdNm = "remappingDeviceProcess";
+        }
+        else
+            throw new RuntimeException();
+
+        return new InvocationMethod(serviceNm, mtdNm);
 	}
 }

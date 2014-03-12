@@ -23,6 +23,7 @@ public class SacServiceActivatorChannelSearcher implements ServiceActivatorChann
 
 	@Override
 	public String search(String interfaceId) {
-		return "bypassChannel";
+//		return "bypassChannel";
+		return "bizChannel";
 	}
 }
