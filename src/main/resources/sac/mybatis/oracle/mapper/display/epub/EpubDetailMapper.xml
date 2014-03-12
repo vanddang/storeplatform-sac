@@ -117,9 +117,11 @@
 		      , P.STORE_PROD_NET_AMT, P.PLAY_PROD_NET_AMT
 		      , P.STORE_DRM_YN, P.PLAY_DRM_YN
 		      , P.STORE_PROD_STATUS_CD, P.PLAY_PROD_STATUS_CD
+		      , P.STORE_USE_PERIOD_UNIT_CD, P.PLAY_USE_PERIOD_UNIT_CD
+		      , CASE WHEN P.USE_PERIOD_UNIT_CD != 'PD00310' THEN CONCAT(USE_PERIOD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = P.USE_PERIOD_UNIT_CD AND LANG_CD = P.LANG_CD)) ELSE '' END AS USE_PERIOD_NM
 		      , P.BOOK_CLSF_CD, P.PROD_AMT
 		      , P.USE_PERIOD, P.USE_PERIOD_UNIT_CD
-		      , P.SVC_START_DT , NVL( P.BOOK_PAGE_CNT, 0 ) AS BOOK_PAGE_CNT, P.DRM_YN
+		      , P.SVC_START_DT , NVL( P.BOOK_PAGE_CNT, 0 ) AS BOOK_PAGE_CNT, P.DRM_YN, P.COMPT_YN, P.ISSUE_DAY
 		      , P.SUB_CONTENTS_ID, P.FILE_SIZE, P.PROD_VER
 		      , PI.FILE_PATH  AS IMG_PATH, PI.FILE_NM AS IMG_NM, PI.FILE_SIZE AS IMG_SIZE
 		  FROM
@@ -141,9 +143,10 @@
 		                    , C.STORE_PROD_NET_AMT, C.PLAY_PROD_NET_AMT
 		                    , C.STORE_DRM_YN, C.PLAY_DRM_YN
 		                    , C.STORE_PROD_STATUS_CD, C.PLAY_PROD_STATUS_CD
+		                    , C.STORE_USE_PERIOD_UNIT_CD, C.PLAY_USE_PERIOD_UNIT_CD
 		                    , C.BOOK_CLSF_CD, C.PROD_AMT
 		                    , C.USE_PERIOD, C.USE_PERIOD_UNIT_CD
-		                    , C.SVC_START_DT, C.BOOK_PAGE_CNT, C.DRM_YN
+		                    , C.SVC_START_DT, C.BOOK_PAGE_CNT, C.DRM_YN, C.COMPT_YN, C.ISSUE_DAY
 		                    , C.SUB_CONTENTS_ID, C.FILE_SIZE, C.PROD_VER
 		             FROM (
 		                  SELECT 
@@ -155,7 +158,7 @@
 		                          , MAX(A.PROD_GRD_CD) AS PROD_GRD_CD, MAX(A.CHAPTER) AS CHAPTER
 		                          , MAX(A.BOOK_CLSF_CD) AS BOOK_CLSF_CD, MAX(A.PROD_AMT) AS PROD_AMT
 		                          , MAX(A.USE_PERIOD) AS USE_PERIOD, MAX(A.USE_PERIOD_UNIT_CD) AS USE_PERIOD_UNIT_CD
-		                          , MAX(A.SVC_START_DT) AS SVC_START_DT, MAX(A.BOOK_PAGE_CNT) AS BOOK_PAGE_CNT, MAX(A.DRM_YN) AS DRM_YN
+		                          , MAX(A.SVC_START_DT) AS SVC_START_DT, MAX(A.BOOK_PAGE_CNT) AS BOOK_PAGE_CNT, MAX(A.DRM_YN) AS DRM_YN, MAX(A.COMPT_YN) AS COMPT_YN, MAX(A.ISSUE_DAY) AS ISSUE_DAY
 		                          , MAX(A.SUB_CONTENTS_ID) AS SUB_CONTENTS_ID, MAX(A.FILE_SIZE) AS FILE_SIZE, MAX(A.PROD_VER) AS PROD_VER
 		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', A.PROD_ID ) ) AS STORE_PROD_ID
 		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', NULL, A.PROD_ID ) ) AS PLAY_PROD_ID
@@ -167,6 +170,8 @@
 		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', NULL, A.DRM_YN ) ) AS PLAY_DRM_YN
 		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', A.PROD_STATUS_CD ) ) AS STORE_PROD_STATUS_CD
 		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', NULL, A.PROD_STATUS_CD ) ) AS PLAY_PROD_STATUS_CD
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', A.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
+		                          , MAX( DECODE( A.USE_PERIOD, 'PD00310', NULL, A.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD
 		                    FROM
 		                       (
 		                      SELECT *
@@ -179,7 +184,7 @@
 		                                   , J.PROD_GRD_CD, TO_NUMBER( P.CHAPTER ) AS CHAPTER
 		                                   , P.BOOK_CLSF_CD, O.PROD_AMT, O.PROD_NET_AMT
 		                                   , J.USE_PERIOD, J.USE_PERIOD_UNIT_CD
-		                                   , P.SVC_START_DT /* SALE_DT */, E.BOOK_PAGE_CNT, J.DRM_YN
+		                                   , P.SVC_START_DT /* SALE_DT */, E.BOOK_PAGE_CNT, J.DRM_YN, E.COMPT_YN, E.ISSUE_DAY
 		                                   , M.SUB_CONTENTS_ID, M.FILE_SIZE, M.PROD_VER
 		                                   , ROW_NUMBER() OVER ( PARTITION BY J.PROD_ID ORDER BY M.PROD_VER DESC ) AS RN
 		                          FROM TB_DP_MENU_CATEGORY_PROD_MAPG A

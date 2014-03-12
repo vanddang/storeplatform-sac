@@ -74,7 +74,7 @@ public class EpubDetail extends CommonInfo {
 
     private String bookClsfCd;
 
-    private Integer bookPageCnt;
+    private String bookPageCnt;
 
     /** 다운로드 지역제한 */
 	private String dwldAreaLimtYn;
@@ -82,9 +82,11 @@ public class EpubDetail extends CommonInfo {
     private String subContentsId;
     private Integer fileSize;
     private String prodVer;
-	// ---------------------------------------------------
+    
+    private String usePeriodNm;
+    
+    
 	// 다운로드 상품
-	// ---------------------------------------------------
 	/** 다운로드 상품ID */
 	private String storeProdId;
 	/** 다운로드 상품 가격 */
@@ -92,10 +94,11 @@ public class EpubDetail extends CommonInfo {
 	/** 다운로드 DRM */
 	private String storeDrmYn;
     private String storeStatusCd;
+    private String storeUsePeriodUnitCd;
 
-	// ---------------------------------------------------
+    
+    
 	// 바로보기 상품
-	// ---------------------------------------------------
 	/** 바로보기 상품ID */
 	private String playProdId;
 	/** 바로보기 상품 가격 */
@@ -103,6 +106,7 @@ public class EpubDetail extends CommonInfo {
 	/** 바로보기 DRM */
 	private String playDrmYn;
     private String playStatusCd;
+    private String playUsePeriodUnitCd;
 
 	/** 챕터 */
 	private String chapter;
@@ -122,9 +126,7 @@ public class EpubDetail extends CommonInfo {
 	/** 발매일 */
 	private String issueDay;
 
-	// ---------------------------------------------------
 	// Thumbnail
-	// ---------------------------------------------------
 	/** thumbnail filePath */
 	private String imgPath;
 	/** thumbnail fileName */
@@ -132,9 +134,7 @@ public class EpubDetail extends CommonInfo {
 	/** thumbnail fileSize */
 	private Integer imgSize;
 
-	// ---------------------------------------------------
 	// Accrual
-	// ---------------------------------------------------
 	/** 참여자수 */
 	private Integer paticpersCnt;
 	/** 구매수 */
@@ -147,9 +147,7 @@ public class EpubDetail extends CommonInfo {
 	/** 채널 회사명 */
 	private String chnlCompNm;
 
-	// ----------------------------------------
 	// 판매자 정보
-	// ----------------------------------------
 	/** 판매자 회원 번호 */
 	private String sellerMbrNo;
 	/** 노출 판매자 명 */
@@ -159,14 +157,10 @@ public class EpubDetail extends CommonInfo {
 	/** 노출 판매자 이메일 */
 	private String expoSellerEmail;
 
-	// ----------------------------------------
 	// 시리즈 조회
-	// ----------------------------------------
 	private Integer totalCount;
 
-	// ----------------------------------------
 	// Book
-	// ----------------------------------------
 	private String bookStatus;
 	private String bookType;
 	private Integer bookCount;
@@ -175,6 +169,7 @@ public class EpubDetail extends CommonInfo {
 	private String mgzinSubscripCd;
 	private String svcGrpCd;
 	private String chnlClsfCd;
+	private String comptYn;
 
 	private String bookCnt;
 	private String bookFreeCnt;
@@ -788,11 +783,11 @@ public class EpubDetail extends CommonInfo {
         this.bookClsfCd = bookClsfCd;
     }
 
-    public Integer getBookPageCnt() {
+    public String getBookPageCnt() {
         return this.bookPageCnt;
     }
 
-    public void setBookPageCnt(Integer bookPageCnt) {
+    public void setBookPageCnt(String bookPageCnt) {
         this.bookPageCnt = bookPageCnt;
     }
 
@@ -851,4 +846,64 @@ public class EpubDetail extends CommonInfo {
     public void setUsePeriodUnitCd(String usePeriodUnitCd) {
         this.usePeriodUnitCd = usePeriodUnitCd;
     }
+
+	/**
+	 * @return the comptYn
+	 */
+	public String getComptYn() {
+		return comptYn;
+	}
+
+	/**
+	 * @param comptYn the comptYn to set
+	 */
+	public void setComptYn(String comptYn) {
+		this.comptYn = comptYn;
+	}
+
+	/**
+	 * @return the usePeriodNm
+	 */
+	public String getUsePeriodNm() {
+		return usePeriodNm;
+	}
+
+	/**
+	 * @param usePeriodNm the usePeriodNm to set
+	 */
+	public void setUsePeriodNm(String usePeriodNm) {
+		this.usePeriodNm = usePeriodNm;
+	}
+
+	/**
+	 * @return the storeUsePeriodUnitCd
+	 */
+	public String getStoreUsePeriodUnitCd() {
+		return storeUsePeriodUnitCd;
+	}
+
+	/**
+	 * @param storeUsePeriodUnitCd the storeUsePeriodUnitCd to set
+	 */
+	public void setStoreUsePeriodUnitCd(String storeUsePeriodUnitCd) {
+		this.storeUsePeriodUnitCd = storeUsePeriodUnitCd;
+	}
+
+	/**
+	 * @return the playUsePeriodUnitCd
+	 */
+	public String getPlayUsePeriodUnitCd() {
+		return playUsePeriodUnitCd;
+	}
+
+	/**
+	 * @param playUsePeriodUnitCd the playUsePeriodUnitCd to set
+	 */
+	public void setPlayUsePeriodUnitCd(String playUsePeriodUnitCd) {
+		this.playUsePeriodUnitCd = playUsePeriodUnitCd;
+	}
+ 
+	
+	
+	
 }

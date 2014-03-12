@@ -9,6 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.display.epub.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -17,22 +28,27 @@ import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * EPUB Service
@@ -106,7 +122,7 @@ public class EpubServiceImpl implements EpubService {
 			this.mapProduct(param, product, epubDetail, mzinSubscription);
 
 			// 단행인 경우 시리즈 정보를 제공
-			if (sMetaClsCd.equals("CT19")) {
+			if(StringUtils.equals(sMetaClsCd, "CT19")) {
 
                 param.put("orderedBy", org.apache.commons.lang3.StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT));
                 param.put("offset", 1);
@@ -170,6 +186,11 @@ public class EpubServiceImpl implements EpubService {
 
             this.mapProduct(param, product, epubDetail, mzinSubscription);
 
+            
+            //orderedBy=noPayment 기구매 체크.
+            
+            
+            
             // 단행인 경우 시리즈 정보를 제공
             if (sMetaClsCd.equals("CT19")) {
                 List<EpubDetail> subProductList = getEpubSeries(param);
@@ -225,19 +246,24 @@ public class EpubServiceImpl implements EpubService {
      * @return
      */
     private List<ExistenceScRes> getExistenceScReses(String tenantId, String userKey, String deviceKey, List<EpubDetail> subProductList) {
+    	
+    	if(StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
+    		return new ArrayList<ExistenceScRes>();
+    	}
+    	
         List<ExistenceScRes> existenceScResList = null;
         if(subProductList != null && subProductList.size() > 0) {
             //기구매 체크
             List<String> episodeIdList = new ArrayList<String>();
             for(EpubDetail subProduct : subProductList) {
-                if(org.apache.commons.lang3.StringUtils.isNotEmpty(subProduct.getPlayProdId())) {
+                if(StringUtils.isNotEmpty(subProduct.getPlayProdId())) {
                     episodeIdList.add(subProduct.getPlayProdId());
-                } else if(org.apache.commons.lang3.StringUtils.isNotEmpty(subProduct.getStoreProdId())) {
+                } else if(StringUtils.isNotEmpty(subProduct.getStoreProdId())) {
                     episodeIdList.add(subProduct.getStoreProdId());
                 }
             }
             try {
-                existenceScResList = commonService.checkPurchaseList(tenantId, userKey, deviceKey, episodeIdList);
+        		existenceScResList = commonService.checkPurchaseList(tenantId, userKey, deviceKey, episodeIdList);
             } catch (StorePlatformException e) {
                 //ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로 처리한다.
                 existenceScResList = new ArrayList<ExistenceScRes>();
@@ -256,15 +282,6 @@ public class EpubServiceImpl implements EpubService {
      * @param mzinSubscription
      */
 	private void mapProduct(Map<String, Object> param, Product product, EpubDetail mapperVO, MgzinSubscription mzinSubscription) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
-		Menu menu = null;
-		Date date = null;
-		Source source = null;
-		Book book = null;
-		Support support = null;
-
-		List<Source> sourceList = null;
-		List<Support> supportList = null;
 
 		// 상품ID
 		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
@@ -314,16 +331,17 @@ public class EpubServiceImpl implements EpubService {
     private List<Source> mapSourceList(EpubDetail mapperVO) {
         Source source;
         List<Source> sourceList;
-        source = new Source();
         sourceList = new ArrayList<Source>();
-
-        if (StringUtils.isNotEmpty(mapperVO.getImgPath())) {
-            source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+        if (StringUtils.isNotEmpty(mapperVO.getImgPath()) && StringUtils.isNotEmpty(mapperVO.getImgNm())) {
+        	source = new Source();
+        	String imagePath = mapperVO.getImgPath() + mapperVO.getImgNm();
+            source.setMediaType(DisplayCommonUtil.getMimeType(imagePath));
             source.setSize(mapperVO.getImgSize());
             source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-            source.setUrl(mapperVO.getImgPath());
+            source.setUrl(imagePath);
             sourceList.add(source);
         }
+        
         return sourceList;
     }
 
@@ -354,25 +372,19 @@ public class EpubServiceImpl implements EpubService {
             contributor.setName(mapperVO.getArtist1Nm());
             contributor.setPublisher(mapperVO.getChnlCompNm());
 
-            // 출판일
-            if (StringUtils.isNotEmpty(mapperVO.getIssueDay())) {
-                date = new Date();
-                date.setType(DisplayConstants.DP_DATE_PUBLISH);
-                date.setText(mapperVO.getIssueDay());
-                contributor.setDate(date);
-            }
         } else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(mapperVO.getTopMenuId())) { // 코믹
             contributor = new Contributor();
             contributor.setName(mapperVO.getArtist1Nm());
             contributor.setPainter(mapperVO.getArtist2Nm());
             contributor.setPublisher(mapperVO.getChnlCompNm());
-
-            if (StringUtils.isNotEmpty(mapperVO.getIssueDay())) {
-                date = new Date();
-                date.setType(DisplayConstants.DP_DATE_PUBLISH);
-                date.setText(mapperVO.getIssueDay());
-                contributor.setDate(date);
-            }
+        }
+        
+        // 출판일
+        if (StringUtils.isNotEmpty(mapperVO.getIssueDay())) {
+            date = new Date();
+            date.setType(DisplayConstants.DP_DATE_PUBLISH);
+            date.setText(mapperVO.getIssueDay());
+            contributor.setDate(date);
         }
         return contributor;
     }
@@ -400,7 +412,7 @@ public class EpubServiceImpl implements EpubService {
 
 		Book book = new Book();
 
-        if(StringUtils.isNotEmpty(mapperVO.getChapter())) {
+    	if (StringUtils.equals(mapperVO.getMetaClsfCd(), DisplayConstants.DP_SERIAL_META_CLASS_CD) && StringUtils.isNotEmpty(mapperVO.getChapter())) {
             Chapter chapter = new Chapter();
             chapter.setUnit(mapperVO.getChapterUnit());
             if(StringUtils.isNumeric(mapperVO.getChapter()))
@@ -408,15 +420,19 @@ public class EpubServiceImpl implements EpubService {
             book.setChapter(chapter);
         }
 
+        book.setScid(mapperVO.getSubContentsId());
+        book.setSize(mapperVO.getFileSize());
+        book.setTotalPages(mapperVO.getBookPageCnt());
 		book.setTotalCount(mapperVO.getBookCount());
-        book.setType(mapperVO.getBookType());
-        book.setStatus(mapperVO.getBookStatus());
-
         book.setBookVersion(mapperVO.getProdVer());
-
-		// eBook 연재물인 경우에만 Type과 status를 적용한다.
-		if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(mapperVO.getMetaClsfCd())) {
-			book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
+        book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
+        
+		if (StringUtils.equals(mapperVO.getMetaClsfCd(), DisplayConstants.DP_SERIAL_META_CLASS_CD)) {
+			if (StringUtils.equals(mapperVO.getComptYn(), "Y")) {
+				book.setStatus(DisplayConstants.DP_EBOOK_COMPLETED_NM);
+			} else {
+				book.setStatus(DisplayConstants.DP_EBOOK_CONTINUE_NM);
+			}
 		}
 		//book.setSupportList(this.mapSupportList(mapperVO));
 		return book;
@@ -534,12 +550,18 @@ public class EpubServiceImpl implements EpubService {
 		mapperVO.setProdAmt(mapperVO.getPlayProdAmt());
 		play.setPrice(this.mapPrice(mapperVO));
 
-		Date date = new Date();
-		date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-		//TODO :
-		//date.setText(mapperVO.getUsePeriodNm());
-		play.setDate(date);
+		if(StringUtils.isNotEmpty(mapperVO.getUsePeriodNm())) {
+			Date date = new Date();
+			date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
+			date.setText(mapperVO.getUsePeriodNm());
+			play.setDate(date);
+		}
 
+		// 이용기간단위
+		if (StringUtils.isNotEmpty(mapperVO.getPlayUsePeriodUnitCd())) {
+			play.setUsePeriodUnitCd(mapperVO.getPlayUsePeriodUnitCd());
+		}
+		
         //Sales Status
         if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId())) {
             String salesStatus = getSalesStatus(mapperVO, (String) param.get("userKey"), (String) param.get("deviceKey"));
@@ -548,19 +570,6 @@ public class EpubServiceImpl implements EpubService {
 
 
 		return play;
-	}
-
-
-	/**
-	 * Mapping Price
-	 * @param mapperVO
-	 * @return
-	 */
-	private Price mapPrice(EpubDetail mapperVO) {
-		Price price = new Price();
-		price.setText(mapperVO.getProdAmt());
-		price.setFixedPrice(mapperVO.getProdNetAmt());
-		return price;
 	}
 
 
@@ -583,9 +592,11 @@ public class EpubServiceImpl implements EpubService {
 		store.setSupportList(supportList);
 
 		mapperVO.setProdAmt(mapperVO.getStoreProdAmt());
-		//TODO:
-		//mapperVO.setProdNetAmt(mapperVO.getStoreProdNetAmt());
-		//store.setPrice(this.mapPrice(mapperVO));
+
+		// 이용기간단위
+		if (StringUtils.isNotEmpty(mapperVO.getStoreUsePeriodUnitCd())) {
+			store.setUsePeriodUnitCd(mapperVO.getStoreUsePeriodUnitCd());
+		}
 
         //Sales Status
         if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId())) {
@@ -593,8 +604,21 @@ public class EpubServiceImpl implements EpubService {
             if(salesStatus != null)  store.setSalesStatus(salesStatus);
         }
 
-
 		return store;
+	}
+
+
+
+	/**
+	 * Mapping Price
+	 * @param mapperVO
+	 * @return
+	 */
+	private Price mapPrice(EpubDetail mapperVO) {
+		Price price = new Price();
+		price.setText(mapperVO.getProdAmt());
+		price.setFixedPrice(mapperVO.getProdNetAmt());
+		return price;
 	}
 
 
@@ -607,16 +631,10 @@ public class EpubServiceImpl implements EpubService {
      */
 	private void mapSubProductList(Map<String, Object> param, Product product, List<EpubDetail> epubSeriesList, List<ExistenceScRes> existenceScResList) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
-
-        List<Source> sourceList = null;
-        Source source = null;
-        Date date;
-
         List<Product> subProjectList = new ArrayList<Product>();
 
         if(epubSeriesList != null && epubSeriesList.size() > 0) {
-            logger.debug("epubSeriesList={}", epubSeriesList);
+            //logger.debug("epubSeriesList={}", epubSeriesList);
             EpubDetail temp = epubSeriesList.get(0);
             product.setSubProductTotalCount(temp.getTotalCount());
 
@@ -636,17 +654,15 @@ public class EpubServiceImpl implements EpubService {
                 subProduct.setIdentifierList(identifierList);
 
                 subProduct.setTitle(new Title(mapperVO.getProdNm()));
-
+                
                 // 상품 설명
                 subProduct.setProductExplain(mapperVO.getProdBaseDesc());
                 subProduct.setProductDetailExplain(mapperVO.getProdDtlDesc());
                 subProduct.setProductIntroduction(mapperVO.getProdIntrDscr());
 
-                Rights rights = mapRights(mapperVO, param, existenceMap);
-                subProduct.setRights(rights);
+                subProduct.setRights(mapRights(mapperVO, param, existenceMap));
 
-                Book book = mapBook(mapperVO);
-                subProduct.setBook(book);
+                subProduct.setBook(mapBook(mapperVO));
 
                 subProjectList.add(subProduct);
 

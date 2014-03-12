@@ -43,7 +43,7 @@ public class EpubControllerTest {
 	@Test
 	public void searchEpubChannel_ebook() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("channelId", "H900066655");
+		param.put("channelId", "H900008262");
 		param.put("deviceKey", "DE201402201711283140002222");
 		param.put("userKey", "US201402201711282940003170");
 		String json = this.convertMapToJson(param);
