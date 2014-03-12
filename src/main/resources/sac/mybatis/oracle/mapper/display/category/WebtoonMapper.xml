@@ -242,7 +242,12 @@
 	                AND D.SVC_GRP_CD = 'DP000203'
 	                AND C.PART_PROD_ID = E.PROD_ID
 	                AND E.EXPO_YN = 'Y'
+                   <if test='orderedBy == "DESC"'>
 	                ORDER BY TO_NUMBER(F.CHAPTER) DESC
+	                </if>
+                   <if test='orderedBy == "ASC "'>
+                    ORDER BY TO_NUMBER(F.CHAPTER)
+                    </if>
 	             ) AA
 	        ) BB 
          WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
