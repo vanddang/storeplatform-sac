@@ -71,9 +71,9 @@
 	            AND D.PROD_ID = E.PROD_ID
 	            AND D.PROD_ID = H.PROD_ID
 	            AND BS.TENANT_ID = E.TENANT_ID
-	            AND BSD.DVC_TYPE_CD = F.DEVICE_MODEL_CD
-	            AND F.DEVICE_MODEL_CD = 'SHV-E230S'
-	            AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
+	            AND BSD.DVC_TYPE_CD = #{deviceModelCd}
+	            AND F.DEVICE_MODEL_CD = #{deviceModelCd}
+	            AND G.DEVICE_MODEL_CD = #{deviceModelCd}
 	            AND F.USE_YN = 'Y'
 	            AND A.PART_PROD_ID = G.PROD_ID
 	            AND DECODE( D.TOP_MENU_ID

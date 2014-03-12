@@ -159,6 +159,30 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 						ThemeThemeZoneInfo.class);
 			}
 
+			// Rights rights = null;
+			Layout layout = new Layout();
+
+			ThemeThemeZoneInfo themeThemeZoneInfo = null;
+			// layout 설정
+			if (!themeThemeZoneInfoMeta.isEmpty()) {
+
+				Menu menu = null;
+				// List<Menu> menuList = null;
+				Title title = null;
+				themeThemeZoneInfo = themeThemeZoneInfoMeta.get(0);
+				layout = new Layout();
+
+				title = new Title();
+				title.setText(themeThemeZoneInfo.getBnrNm());
+				layout.setTitle(title);
+
+				// 메뉴 정보
+				menu = new Menu(); // 메뉴
+				menu.setId(themeThemeZoneInfo.getBnrMenuId());
+				menu.setName(themeThemeZoneInfo.getBnrMenuNm());
+				layout.setMenu(menu);
+
+			}
 			// 테마상품 조회
 			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 					"ThemeThemeZone.selectThemeThemeZoneList", req, ProductBasicInfo.class);
@@ -169,30 +193,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				// Identifier 설정
 				Identifier identifier = null;
 				List<Identifier> identifierList = null;
-				Menu menu = null;
-				// List<Menu> menuList = null;
-				Title title = null;
-
-				// Rights rights = null;
-				Layout layout = new Layout();
-
-				// layout 설정
-				if (!themeThemeZoneInfoMeta.isEmpty()) {
-					ThemeThemeZoneInfo themeThemeZoneInfo = null;
-					themeThemeZoneInfo = themeThemeZoneInfoMeta.get(0);
-					layout = new Layout();
-
-					title = new Title();
-					title.setText(themeThemeZoneInfo.getBnrNm());
-					layout.setTitle(title);
-
-					// 메뉴 정보
-					menu = new Menu(); // 메뉴
-					menu.setId(themeThemeZoneInfo.getBnrMenuId());
-					menu.setName(themeThemeZoneInfo.getBnrMenuNm());
-					layout.setMenu(menu);
-
-				}
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 					String topMenuId = productBasicInfo.getTopMenuId();
 					String svcGrpCd = productBasicInfo.getSvcGrpCd();
@@ -311,14 +311,13 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 				}
 				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+				res.setLayOut(layout);
 				res.setProductList(productList);
-				if (!themeThemeZoneInfoMeta.isEmpty()) {
-					res.setLayOut(layout);
-				}
 				res.setCommonResponse(commonResponse);
 			} else {
 				// 조회 결과 없음
 				commonResponse.setTotalCount(0);
+				res.setLayOut(layout);
 				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			}
