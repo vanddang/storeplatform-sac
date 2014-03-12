@@ -11,22 +11,20 @@ package com.skplanet.storeplatform.sac.runtime.extend;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearcher;
 
 /**
@@ -38,71 +36,65 @@ import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearc
 @Component
 public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
-	@Value("#{propertiesForSac['skp.common.controller.host']}")
-	private String localHost;
-	@Value("#{propertiesForSac['skp.common.controller.servletPath']}")
-	private String servletPath;
+	/**
+	 * 내부 요청 서블릿 Host.
+	 */
+	@Value("#{propertiesForSac['skp.common.inner.servlet.host']}")
+	private String innerServletHost;
+	/**
+	 * 내부 요청 서블릿 Path.
+	 */
+	@Value("#{propertiesForSac['skp.common.inner.servlet.path']}")
+	private String innerServletPath;
+	/**
+	 * 임시 external URL -> 추후 Component 테이블의 URL 조합이 됨.
+	 */
 	@Value("#{propertiesForSac['component.external.baseUrl']}")
 	private String externalBaseUrl;
-	@Value("#{propertiesForSac['skp.common.server.rootPath']}")
-	private String rootPath;
 
 	@Resource(name = "propertiesForSac")
 	private Properties properties;
 
 	@Override
 	public String search(Map<String, Object> headerMap) {
+		// 요청 객체 획득
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
-		String requestUrl = (String) headerMap.get("http_requestUrl");
-		String requestMethod = (String) headerMap.get("http_requestMethod");
-		UriComponents from = UriComponentsBuilder.fromHttpUrl(requestUrl).build();
+
+		// 요청 서블릿 컨텍스트 Path
+		String requestContextPath = request.getContextPath();
+		// 요청 URI
+		String requestURI = request.getRequestURI();
+		// 내부 요청 URI
+		String innerRequestURI = StringUtils.removeStart(requestURI, requestContextPath);
+		// 요청 Method
+		String requestMethod = request.getMethod();
+
+		// External Component는 SAC에서 Bypass 대상이나 우선 프로퍼티로 해당 기능이 가능하게 구현.
+		// 1. 해당 인터페이스의 bypass유무가 'Y' 인 대상.
+		// 2. 인터페이스 Route에 등록된 Bypass 정보를 기준으로
+		// 3. 컴포넌트 정보와, Bypass의 URL 정보를 조합하여 return URL을 생성.
+		String bypassPath = this.properties.getProperty(innerRequestURI, "");
+
 		UriComponentsBuilder to;
 
-		String bypassPath = this.properties.getProperty(from.getPath(), "");
-
+		// Bypass 이면.
 		if (StringUtils.isNotEmpty(bypassPath)) {
 			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
 		} else {
-			to = UriComponentsBuilder.fromHttpUrl(this.localHost);
-			List<String> rootPathList = UriComponentsBuilder.newInstance().path(this.rootPath).build()
-					.getPathSegments();
-			List<String> pathSegments = from.getPathSegments();
-
-			if (!CollectionUtils.isEmpty(rootPathList) && !CollectionUtils.isEmpty(pathSegments)) {
-				if (rootPathList.size() <= pathSegments.size()) {
-					for (int i = 0; i < rootPathList.size(); i++) {
-						if (!StringUtils.equals(rootPathList.get(i), pathSegments.get(i))) {
-							throw new RuntimeException("SAC 서버 루트 Path가 불일치하여 오류가 발생하였습니다.");
-						}
-					}
-					for (String path : rootPathList) {
-						to.path("/" + path);
-					}
-					to.path("/" + this.servletPath);
-					if (rootPathList.size() < pathSegments.size()) {
-						for (int i = rootPathList.size(); i < pathSegments.size(); i++) {
-							to.path("/" + pathSegments.get(i));
-						}
-					}
-				} else {
-					throw new RuntimeException("SAC 서버 루트 Path가 설정 파일보다 Depth");
-				}
-			} else {
-				to.path("/" + this.servletPath + from.getPath());
-			}
+			// 그외는 내부 서블릿 URL 호출.
+			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).path(requestContextPath)
+					.path(this.innerServletPath).path(innerRequestURI);
 		}
-		// 컨트롤러 전송시에는 한글이 깨지면 안됨으로 위에서 Decoding을 시킴.
-		if (StringUtils.equals(requestMethod, "GET")) {
-			if (StringUtils.isNotEmpty(request.getQueryString())) {
-				String queryString = null;
-				try {
-					queryString = URLDecoder.decode(request.getQueryString(), "UTF-8");
-				} catch (UnsupportedEncodingException e) {
-					throw new RuntimeException("Controller URL 생성시 Decoding 오류가 발생하였습니다.", e);
-				}
-				to.query(queryString);
+		if (requestMethod.equals("GET")) {
+			// 쿼리 Decoding 후 Controller로 전달.
+			String queryString = request.getQueryString();
+			try {
+				queryString = URLDecoder.decode(request.getQueryString(), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new StorePlatformException("GET URL Decode시 오류가 발생하였습니다.", e);
 			}
+			to.query(queryString);
 		}
 		return to.build().toUriString();
 	}
