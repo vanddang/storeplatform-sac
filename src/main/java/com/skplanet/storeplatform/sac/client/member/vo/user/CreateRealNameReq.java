@@ -93,6 +93,7 @@ public class CreateRealNameReq extends CommonInfo {
 	/**
 	 * 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
 	 */
+	@Pattern(regexp = "^local|foreign")
 	private String resident = "";
 
 	/**
