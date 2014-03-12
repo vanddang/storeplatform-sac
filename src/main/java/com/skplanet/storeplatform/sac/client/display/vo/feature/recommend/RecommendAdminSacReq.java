@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
-import javax.validation.constraints.Pattern;
-
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -14,7 +12,6 @@ public class RecommendAdminSacReq {
 	private static final long serialVersionUID = 1L;
 
 	@NotBlank
-	@Pattern(regexp = "^ADM000000013")
 	private String listId; // 리스트ID
 	private String prodCharge; // 유무료 구분
 	private String prodGradeCd; // 상품 등급
