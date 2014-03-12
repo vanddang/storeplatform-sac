@@ -12,11 +12,11 @@ package com.skplanet.storeplatform.sac.client.purchase.cancel.vo;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 구매 취소(사용자) 응답 상세 VO.
+ * Class 설명
  * 
- * Updated on : 2014. 2. 12. Updated by : nTels_cswoo81, nTels.
+ * Updated on : 2014. 3. 11. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelByAdminDetailSacRes extends CommonInfo {
+public class PurchaseCancelDetailSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 

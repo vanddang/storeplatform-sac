@@ -25,7 +25,7 @@ public class PurchaseCancelByUserSacRes extends PurchaseCommonSacRes {
 	private Integer totCnt;
 	private Integer successCnt;
 	private Integer failCnt;
-	private List<PurchaseCancelByUserDetailSacRes> prchsCancelList;
+	private List<PurchaseCancelDetailSacRes> prchsCancelList;
 
 	/**
 	 * @return the totCnt
@@ -75,7 +75,7 @@ public class PurchaseCancelByUserSacRes extends PurchaseCommonSacRes {
 	/**
 	 * @return the prchsCancelList
 	 */
-	public List<PurchaseCancelByUserDetailSacRes> getPrchsCancelList() {
+	public List<PurchaseCancelDetailSacRes> getPrchsCancelList() {
 		return this.prchsCancelList;
 	}
 
@@ -83,7 +83,7 @@ public class PurchaseCancelByUserSacRes extends PurchaseCommonSacRes {
 	 * @param prchsCancelList
 	 *            the prchsCancelList to set
 	 */
-	public void setPrchsCancelList(List<PurchaseCancelByUserDetailSacRes> prchsCancelList) {
+	public void setPrchsCancelList(List<PurchaseCancelDetailSacRes> prchsCancelList) {
 		this.prchsCancelList = prchsCancelList;
 	}
 

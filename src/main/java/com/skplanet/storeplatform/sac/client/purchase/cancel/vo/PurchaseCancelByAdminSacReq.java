@@ -37,7 +37,7 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 
 	@NotEmpty
 	@Valid
-	private List<PurchaseCancelByAdminDetailSacReq> prchsCancelList;
+	private List<PurchaseCancelDetailSacReq> prchsCancelList;
 
 	/**
 	 * @return the cancelReqPathCd
@@ -72,7 +72,7 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	/**
 	 * @return the prchsCancelList
 	 */
-	public List<PurchaseCancelByAdminDetailSacReq> getPrchsCancelList() {
+	public List<PurchaseCancelDetailSacReq> getPrchsCancelList() {
 		return this.prchsCancelList;
 	}
 
@@ -80,7 +80,7 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	 * @param prchsCancelList
 	 *            the prchsCancelList to set
 	 */
-	public void setPrchsCancelList(List<PurchaseCancelByAdminDetailSacReq> prchsCancelList) {
+	public void setPrchsCancelList(List<PurchaseCancelDetailSacReq> prchsCancelList) {
 		this.prchsCancelList = prchsCancelList;
 	}
 

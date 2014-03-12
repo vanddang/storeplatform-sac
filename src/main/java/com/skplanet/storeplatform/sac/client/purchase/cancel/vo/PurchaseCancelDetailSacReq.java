@@ -9,20 +9,21 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.cancel.vo;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 구매 취소(사용자) 응답 상세 VO.
+ * Class 설명
  * 
- * Updated on : 2014. 2. 12. Updated by : nTels_cswoo81, nTels.
+ * Updated on : 2014. 3. 11. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelByUserDetailSacRes extends CommonInfo {
+public class PurchaseCancelDetailSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank
 	private String prchsId;
-	private String resultCd;
-	private String resultMsg;
 
 	/**
 	 * @return the prchsId
@@ -37,36 +38,6 @@ public class PurchaseCancelByUserDetailSacRes extends CommonInfo {
 	 */
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
-	}
-
-	/**
-	 * @return the resultCd
-	 */
-	public String getResultCd() {
-		return this.resultCd;
-	}
-
-	/**
-	 * @param resultCd
-	 *            the resultCd to set
-	 */
-	public void setResultCd(String resultCd) {
-		this.resultCd = resultCd;
-	}
-
-	/**
-	 * @return the resultMsg
-	 */
-	public String getResultMsg() {
-		return this.resultMsg;
-	}
-
-	/**
-	 * @param resultMsg
-	 *            the resultMsg to set
-	 */
-	public void setResultMsg(String resultMsg) {
-		this.resultMsg = resultMsg;
 	}
 
 }
