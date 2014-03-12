@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.purchase.interworking.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.purchase.client.interworking.sci.InterworkingSCI;
@@ -31,8 +30,8 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Value("#{config['interwork.cine21.sellermbrno']}")
-	private String sellerMbrNo;
+	// @Value("#{config['interwork.cine21.sellermbrno']}")
+	// private String sellerMbrNo;
 	@Autowired
 	private InterworkingSCI interworkingSCI;
 
@@ -46,7 +45,7 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 	@Override
 	public void createInterworking(InterworkingSacReq interworkingSacReq) {
 		// proterties에서 cine21 sellermbrno 리스트를 가저온다
-		String[] cine21MbrNo = this.sellerMbrNo.split(",");
+		String[] cine21MbrNo = "IF1423480114120130207203721,IF1423480303720130208105536".split(",");
 		InterworkingScReq req = new InterworkingScReq();
 		// 조건 셋팅
 		req.setTenantId(interworkingSacReq.getTenantId());
