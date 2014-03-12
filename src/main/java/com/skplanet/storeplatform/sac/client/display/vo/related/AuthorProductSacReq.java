@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.client.display.vo.related;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -33,7 +34,9 @@ public class AuthorProductSacReq extends CommonInfo implements Serializable {
 	private String filteredBy; // 필터링 조건
 	@NotBlank
 	private String exceptId; // 제외 상품 아이디
+	@Valid
 	private Integer offset; // 시작점 ROW
+	@Valid
 	private Integer count; // 페이지당 노출 ROW 수
 	private String tenantId; // 테넌트 ID
 	private String systemId; // 시스템Id

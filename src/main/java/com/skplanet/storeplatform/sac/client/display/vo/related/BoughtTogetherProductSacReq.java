@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.client.display.vo.related;
 
 import java.io.Serializable;
 
+import javax.validation.Valid;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -27,7 +29,9 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	private String productId; // 상품 아이디
 	private String exceptId; // 제외 상품 아이디
 	private String[] arrayExceptId; // 제외 상품 아이디 배열
+	@Valid
 	private Integer offset; // 시작점 ROW
+	@Valid
 	private Integer count; // 페이지당 노출 ROW 수
 	private String tenantId; // 테넌트 ID
 	private String systemId; // 시스템Id

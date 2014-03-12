@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.appzine;
 
+import javax.validation.Valid;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -28,8 +30,10 @@ public class AppzineDetailSacReq extends CommonInfo {
 
 	private String langCd; // language code
 
+	@Valid
 	private Integer offset; // 시작점 ROW
 
+	@Valid
 	private Integer count; // 페이지당 노출될 ROW 개수
 
 	private String appznNo; // 웹진 번호
