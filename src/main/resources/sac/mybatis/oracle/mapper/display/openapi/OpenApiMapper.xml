@@ -1579,7 +1579,7 @@
                                    (
                                    SELECT RTRIM( XMLAGG( XMLELEMENT( A, CONCAT( REPLACE( DSC.VM_VER, ';', ',' ) , ',' ) ).EXTRACT( '//text()' ) ORDER BY DSC.VM_VER ), ',' ) AS VM_VER
                                      FROM TB_DP_SUB_CONTENTS DSC
-                                    WHERE DSC.PROD_ID = #{prodId}
+                                    WHERE DSC.PROD_ID = #{productId}
                                    )
                               CONNECT BY ROWNUM <= LENGTH( REGEXP_REPLACE( VM_VER, '[^,]' ) ) + 1
                               )
@@ -1595,7 +1595,7 @@
                    AND TENANT_ID = #{tenantId}), 0)      AS AVG_EVLU_SCORE    /*평점*/
                 ,NVL((SELECT PATICPERS_CNT
                     FROM TB_DP_TENANT_PROD_STATS DTPS
-                   WHERE DTPS.PROD_ID= DP.PROD_ID 
+                   WHERE DTPS.PROD_ID = DP.PROD_ID 
                    AND TENANT_ID = #{tenantId}), 0)      AS PATICPERS_CNT    /*평점 참여자*/
                 ,DP.EXPO_SELLER_NM         AS EXPO_SELLER_NM         
                 ,DP.REG_ID                 AS EXPO_SELLER_ID          
@@ -1604,11 +1604,11 @@
                 ,DAP.VER_MAJOR || '.' || DAP.VER_MINOR  AS PROD_VER         
                 , (
                     SELECT                        
-                        RTRIM(XMLAGG( XMLELEMENT(A, CONCAT('', FC_GET_IMAGE(#{prodId}, DPI.IMG_CD )), ';' ).EXTRACT( '//text()' ) ORDER BY DPI.IMG_CD ), ';' )
+                        RTRIM(XMLAGG( XMLELEMENT(A, CONCAT('', FC_GET_IMAGE(#{productId}, DPI.IMG_CD )), ';' ).EXTRACT( '//text()' ) ORDER BY DPI.IMG_CD ), ';' )
                     FROM
                         TB_DP_PROD_IMG DPI
                     WHERE
-                        DPI.PROD_ID = #{prodId}
+                        DPI.PROD_ID = #{productId}
                         AND DPI.IMG_CD IN ( 'DP000103', 'DP000104', 'DP000105', 'DP000106' )
                         AND DPI.LANG_CD = #{langCd}
                     ) AS PREVIEW_URL
@@ -1640,19 +1640,19 @@
            AND DP.PROD_ID = DPD.PROD_ID
            AND DP.PROD_ID = DTP.PROD_ID
            AND DTP.PROD_ID = DTPP.PROD_ID    
-           AND DP.PROD_ID = #{prodId}
+           AND DP.PROD_ID = #{productId}
            AND DPD.LANG_CD = #{langCd}
            AND DTP.TENANT_ID = DTPP.TENANT_ID
            AND DTP.TENANT_ID = #{tenantId}
     ]]>
     </select>   
     
-    <!-- 타켓 단말 리스트 -->
-    <select id="searchSupportDeviceList" parameterType="appDetailByPackageNameSacReq" resultType="SupportDeviceInfo">
+    <!-- 타켓 단말 리스트 (By PackageName)-->
+    <select id="searchSupportDeviceListByPkgNm" parameterType="appDetailByPackageNameSacReq" resultType="SupportDeviceInfo">
 		 SELECT  
-		        DSC.APK_VER
-		      , CD.DEVICE_MODEL_CD
-		      , CD.MODEL_NM
+		        DSC.APK_VER AS VERSION_CODE
+		      , CD.DEVICE_MODEL_CD AS DEVICE_MODEL_CD
+		      , CD.MODEL_NM AS DEVICE_MODEL_NM
 		  FROM TB_DP_PROD DP
 		     , TB_DP_SPRT_DEVICE DSD
 		     , TB_CM_DEVICE CD
@@ -1664,6 +1664,16 @@
 		   AND DSC.SUB_CONTENTS_ID = DSD.SUB_CONTENTS_ID
 		   AND DP.PROD_ID = DPR.PART_PROD_ID
 		   AND DPR.PROD_RSHP_CD = 'DP010802'
-		   AND DP.PROD_ID = #{prodId}        
-    </select>    
+		   AND DP.PROD_ID = #{productId}        
+    </select>   
+
+    <!-- 타켓 단말 리스트 (By ProductId)-->
+    <select id="searchSupportDeviceListByProdId" parameterType="appDetailByProductIdSacReq" resultType="MetaInfo">    
+        SELECT CD.DEVICE_MODEL_CD AS DEVICE_MODEL_CD
+              ,CD.MODEL_NM AS DEVICE_MODEL_NM
+        FROM   TB_DP_SPRT_DEVICE DSD
+              ,TB_CM_DEVICE CD
+        WHERE  CD.DEVICE_MODEL_CD = DSD.DEVICE_MODEL_CD
+        AND    DSD.PROD_ID = #{productId} 
+    </select>  
 </mapper>

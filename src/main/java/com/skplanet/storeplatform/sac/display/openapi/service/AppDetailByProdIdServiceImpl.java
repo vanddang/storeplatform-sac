@@ -13,10 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -33,12 +32,12 @@ import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 /**
- * 상품 상세 정보 요청(Package Name) Service 구현체
+ * 상품 상세 정보 요청(Product Id) Service 구현체
  * 
- * Updated on : 2014. 3. 6. Updated by : 백승현, 인크로스.
+ * Updated on : 2014. 3. 12. Updated by : 백승현, 인크로스.
  */
 @Service
-public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
+public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -55,68 +54,54 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.openapi.service.AppDetailByPkgNmService(com.skplanet
-	 * com.skplanet.storeplatform.sac.client.display.vo.openapi.appDetailByPackageNameSacReq)
+	 * @see com.skplanet.storeplatform.sac.display.openapi.service.AppDetailByProdIdService(com.skplanet
+	 * com.skplanet.storeplatform.sac.client.display.vo.openapi.appDetailByProductIdSacReq)
 	 */
 	@Override
-	public AppDetailByPackageNameSacRes searchProductByPackageName(
-			AppDetailByPackageNameSacReq appDetailByPackageNameSacReq, SacRequestHeader requestheader) {
+	public AppDetailByProductIdSacRes searchProductByProductId(AppDetailByProductIdSacReq appDetailByProductIdSacReq,
+			SacRequestHeader requestheader) {
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
 
-		appDetailByPackageNameSacReq.setTenantId(tenantHeader.getTenantId());
-		appDetailByPackageNameSacReq.setLangCd(tenantHeader.getLangCd());
-		appDetailByPackageNameSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
-		appDetailByPackageNameSacReq.setWebPocUrl(DisplayConstants.DP_OPENAPI_APP_URL);
-		appDetailByPackageNameSacReq.setScUrl(DisplayConstants.DP_OPENAPI_SC_URL);
+		appDetailByProductIdSacReq.setTenantId(tenantHeader.getTenantId());
+		appDetailByProductIdSacReq.setLangCd(tenantHeader.getLangCd());
+		appDetailByProductIdSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
+		appDetailByProductIdSacReq.setWebPocUrl(DisplayConstants.DP_OPENAPI_APP_URL);
+		appDetailByProductIdSacReq.setScUrl(DisplayConstants.DP_OPENAPI_SC_URL);
 
-		AppDetailByPackageNameSacRes response = new AppDetailByPackageNameSacRes();
+		AppDetailByProductIdSacRes response = new AppDetailByProductIdSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
 
-		// 패키지명
-		String packageName = appDetailByPackageNameSacReq.getPackageName();
-		appDetailByPackageNameSacReq.setPackageName(packageName);
-
-		this.log.debug("####### packageName : " + packageName);
-
 		// 상품ID
-		String productId = "";
-		/*
-		 * 패키지명을 이용하여 상품ID 가져오기
-		 */
-		List<MetaInfo> prodIdList = null;
-		prodIdList = this.commonDAO.queryForList("OpenApi.searchProductIdByPackageName", appDetailByPackageNameSacReq,
-				MetaInfo.class);
-
-		if (prodIdList.size() != 0) {
-			Iterator<MetaInfo> iterator = prodIdList.iterator();
-			while (iterator.hasNext()) {
-				MetaInfo metaInfo = iterator.next();
-
-				productId = metaInfo.getProdId();
-				appDetailByPackageNameSacReq.setProductId(productId);
-				this.log.debug("####### prodId : " + productId);
-			}
-		} else {
-			// 패키지 정보에 대한 상품이 존재하지 않는다.
-			throw new StorePlatformException("SAC_DSP_0005", packageName);
-		}
+		this.log.debug("####### ProductId : " + appDetailByProductIdSacReq.getProductId());
 
 		Identifier identifier = new Identifier();
 		Product product = null;
 
 		List<MetaInfo> productMetaInfoList = null;
-
 		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchProductByProductId",
-				appDetailByPackageNameSacReq, MetaInfo.class);
+				appDetailByProductIdSacReq, MetaInfo.class);
 
 		if (productMetaInfoList.size() != 0) {
 
 			// 지원 단말 리스트 조회
-			List<Device> supportDeviceList = null;
+			Device device = null;
+			List<Device> deviceList = new ArrayList<Device>();
 
-			supportDeviceList = this.commonDAO.queryForList("OpenApi.searchSupportDeviceListByPkgNm",
-					appDetailByPackageNameSacReq, Device.class);
+			List<MetaInfo> resultList = this.commonDAO.queryForList("OpenApi.searchSupportDeviceListByProdId",
+					appDetailByProductIdSacReq, MetaInfo.class);
+
+			if (resultList != null && !resultList.isEmpty()) {
+				for (int i = 0; i < resultList.size(); i++) {
+					device = new Device();
+
+					device.setDeviceModelCd(resultList.get(i).getDeviceModelCd());
+					device.setDeviceModelNm(resultList.get(i).getDeviceModelNm());
+					deviceList.add(device);
+				}
+			} else {
+				this.log.debug("####### 지원단말 목록이 존재하지 않음 #######");
+			}
 
 			// 상품 상세정보 Meta 데이타
 			Iterator<MetaInfo> iterator = productMetaInfoList.iterator();
@@ -157,9 +142,10 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 				app.setAid(metaInfo.getAid());
 				app.setSupportedOs(metaInfo.getOsVersion());
 				app.setPackageName(metaInfo.getApkPkgNm());
-				app.setSupportDeviceList(supportDeviceList); // 지원 단말 목록
 				app.setVersion(metaInfo.getProdVer());
 				product.setApp(app);
+
+				product.setDeviceList(deviceList); // 지원 단말 목록
 
 				product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
 

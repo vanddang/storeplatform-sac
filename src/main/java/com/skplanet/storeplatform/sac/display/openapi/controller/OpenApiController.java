@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq;
@@ -47,6 +49,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
 import com.skplanet.storeplatform.sac.display.openapi.service.AppDetailByPkgNmService;
+import com.skplanet.storeplatform.sac.display.openapi.service.AppDetailByProdIdService;
 import com.skplanet.storeplatform.sac.display.openapi.service.BestDownloadAppService;
 import com.skplanet.storeplatform.sac.display.openapi.service.DownloadBestService;
 import com.skplanet.storeplatform.sac.display.openapi.service.NewAppRecommendService;
@@ -106,6 +109,9 @@ public class OpenApiController {
 
 	@Autowired
 	private AppDetailByPkgNmService appDetailByPkgNmService;
+
+	@Autowired
+	private AppDetailByProdIdService appDetailByProdIdService;
 
 	/**
 	 * <pre>
@@ -317,6 +323,25 @@ public class OpenApiController {
 	/**
 	 * 
 	 * <pre>
+	 * 상품 상세 정보 요청(Product Id)
+	 * </pre>
+	 * 
+	 * @param appDetailByProductIdSacReq
+	 *            appDetailByProductIdSacReq
+	 * @param SacRequestheader
+	 *            requestheader
+	 * @return AppDetailByProductIdSacRes
+	 */
+	@RequestMapping(value = "/searchProductId/detail/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public AppDetailByProductIdSacRes appDetailByProductId(
+			@Validated AppDetailByProductIdSacReq appDetailByProductIdSacReq, SacRequestHeader requestheader) {
+		return this.appDetailByProdIdService.searchProductByProductId(appDetailByProductIdSacReq, requestheader);
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 상품 상세 정보 요청(Package Name)
 	 * </pre>
 	 * 
@@ -326,7 +351,7 @@ public class OpenApiController {
 	 *            requestheader
 	 * @return AppDetailByPackageNameSacRes
 	 */
-	@RequestMapping(value = "/searchPackageName/detail//v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/searchPackageName/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public AppDetailByPackageNameSacRes appDetailByPackageName(
 			@Validated AppDetailByPackageNameSacReq appDetailByPackageNameSacReq, SacRequestHeader requestheader) {

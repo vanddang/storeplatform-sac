@@ -317,8 +317,9 @@
         <!-- 이용가능 단말 조회 -->
         <typeAlias alias="UseableDeviceSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacReq" />        
         
-        <!-- 상품 상세 정보 요청(Package Name) -->
-        <typeAlias alias="AppDetailByPackageNameSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacReq" />       
+        <!-- 상품 상세 정보 요청(Product Id, Package Name) -->
+        <typeAlias alias="AppDetailByPackageNameSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacReq" /> 
+        <typeAlias alias="AppDetailByProductIdSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacReq" />       
         <typeAlias alias="SupportDeviceInfo"  type="com.skplanet.storeplatform.sac.display.openapi.vo.SupportDeviceInfo" />
         
     </typeAliases>

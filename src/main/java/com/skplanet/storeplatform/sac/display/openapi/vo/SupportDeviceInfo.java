@@ -16,8 +16,8 @@ package com.skplanet.storeplatform.sac.display.openapi.vo;
  */
 public class SupportDeviceInfo {
 	private String deviceModelCd;
-	private String modelNm;
-	private String apkVer;
+	private String deviceModelNm;
+	private String versionCode; // 패키지 버전 코드
 
 	/**
 	 * @return the deviceModelCd
@@ -35,32 +35,32 @@ public class SupportDeviceInfo {
 	}
 
 	/**
-	 * @return the modelNm
+	 * @return the deviceModelNm
 	 */
-	public String getModelNm() {
-		return this.modelNm;
+	public String getDeviceModelNm() {
+		return this.deviceModelNm;
 	}
 
 	/**
-	 * @param modelNm
-	 *            the modelNm to set
+	 * @param deviceModelNm
+	 *            the deviceModelNm to set
 	 */
-	public void setModelNm(String modelNm) {
-		this.modelNm = modelNm;
+	public void setDeviceModelNm(String deviceModelNm) {
+		this.deviceModelNm = deviceModelNm;
 	}
 
 	/**
-	 * @return the apkVer
+	 * @return the versionCode
 	 */
-	public String getApkVer() {
-		return this.apkVer;
+	public String getVersionCode() {
+		return this.versionCode;
 	}
 
 	/**
-	 * @param apkVer
-	 *            the apkVer to set
+	 * @param versionCode
+	 *            the versionCode to set
 	 */
-	public void setApkVer(String apkVer) {
-		this.apkVer = apkVer;
+	public void setVersionCode(String versionCode) {
+		this.versionCode = versionCode;
 	}
 }
