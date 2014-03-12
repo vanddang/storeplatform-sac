@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.category;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -38,8 +39,10 @@ public class CategoryEbookComicSacReq extends CommonInfo {
 	@Pattern(regexp = "recent|recent\\+complete")
 	private String filteredBy; // 조회유형
 
+	@Valid
 	private Integer offset; // 시작점 ROW
 
+	@Valid
 	private Integer count; // 페이지당 노출될 ROW 개수
 
 	private String deviceModelCd; // 단말 모델 코드

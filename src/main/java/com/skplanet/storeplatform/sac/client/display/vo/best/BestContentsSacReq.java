@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.best;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -39,7 +40,9 @@ public class BestContentsSacReq extends CommonInfo {
 	private String drm; // drm 지원구분
 	private String prodGradeCd; // 상품등급코드
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
+	@Valid
 	private Integer offset; // 시작점 ROW
+	@Valid
 	private Integer count; // 페이지당 노출 ROW 수
 	private String dummy;
 	private String imgCd;

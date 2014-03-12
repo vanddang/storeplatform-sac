@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.best;
 
+import javax.validation.Valid;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -32,7 +34,9 @@ public class BestAppSacReq extends CommonInfo {
 	private String prodGradeCd; // 상품등급코드
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
 	private String menuId; // 메뉴 Id
+	@Valid
 	private Integer offset; // 시작점 ROW
+	@Valid
 	private Integer count; // 페이지당 노출 ROW 수
 	private String dummy; // dummy data check
 

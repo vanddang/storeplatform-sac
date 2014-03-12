@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.best;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -41,7 +42,9 @@ public class BestDownloadSacReq extends CommonInfo {
 	@Pattern(regexp = "|DP010601|DP010602")
 	private String possLendClsfCd; // 소장/대여 구분 코드
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
+	@Valid
 	private Integer offset; // 시작점 ROW
+	@Valid
 	private Integer count; // 페이지당 노출 ROW 수
 	private String dummy;
 

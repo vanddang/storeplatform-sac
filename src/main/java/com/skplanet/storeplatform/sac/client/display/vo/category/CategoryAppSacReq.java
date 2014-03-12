@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.category;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -31,14 +32,17 @@ public class CategoryAppSacReq extends CommonInfo {
 
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
 
+	@NotBlank
 	private String menuId; // 메뉴ID
 
 	@NotBlank
 	@Pattern(regexp = "download")
 	private String orderedBy; // 상품정렬순서
 
+	@Valid
 	private Integer offset; // 시작점 ROW
 
+	@Valid
 	private Integer count; // 페이지당 노출될 ROW 개수
 
 	private String deviceModelCd; // 단말 모델 코드

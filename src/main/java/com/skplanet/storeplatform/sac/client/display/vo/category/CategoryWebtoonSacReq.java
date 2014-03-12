@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.category;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -32,7 +33,9 @@ public class CategoryWebtoonSacReq extends CommonInfo {
 	private String weekDayCd; // 요일별 구분 코드
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
+	@Valid
 	private Integer offset = 1; // offset
+	@Valid
 	private Integer count = 20; // count
 
 	public String getTenantId() {
