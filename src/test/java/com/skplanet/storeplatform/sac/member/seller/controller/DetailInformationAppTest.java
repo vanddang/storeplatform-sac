@@ -54,7 +54,7 @@ public class DetailInformationAppTest {
 
 	/**
 	 * <pre>
-	 * 판매자 기본정보 조회(모든키존재).
+	 * App상세 판매자 기본정보 조회.
 	 * </pre>
 	 */
 	@Test
