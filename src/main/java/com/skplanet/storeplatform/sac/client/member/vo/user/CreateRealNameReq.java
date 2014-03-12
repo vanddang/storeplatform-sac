@@ -77,7 +77,6 @@ public class CreateRealNameReq extends CommonInfo {
 	/**
 	 * 사용자 이름
 	 */
-	@NotEmpty
 	private String userName = "";
 
 	/**
