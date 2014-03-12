@@ -200,7 +200,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 				sellerMbrRes.setSubSellerPhone(sellerMbr.get(i).getSellerPhone());
 				sellerMbrRes.setSubSellerPhoneCountry(sellerMbr.get(i).getSellerPhoneCountry());
 				sellerMbrRes.setSubSellerCateList(sellerMbr.get(i).getRightProfileList());
-				sellerMbrRes.setRegDate(sellerMbr.get(i).getLoginDate());
+				sellerMbrRes.setSubSellerLoginDttm(sellerMbr.get(i).getLoginDate());
 				sList.add(sellerMbrRes);
 			}
 
