@@ -888,22 +888,23 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// ////////////////// Coupon 정보 S////////////////////////////
 			ArrayList<DpCatalogTagInfo> tagList = new ArrayList<DpCatalogTagInfo>(); // TBL_DP_TAG_INFO 정보
-			String[] tags = couponInfo.getTag().split(",");
+			if (StringUtils.isNotEmpty(couponInfo.getTag())) {
+				String[] tags = couponInfo.getTag().split(",");
 
-			for (String tagNm : tags) {
-				DpCatalogTagInfo tagInfo = new DpCatalogTagInfo();
+				for (String tagNm : tags) {
+					DpCatalogTagInfo tagInfo = new DpCatalogTagInfo();
 
-				tagInfo.setCid(couponInfo.getProdId());
-				tagInfo.setTagTypeCd(CouponConstants.TAG_TYPE_FOR_COUPON_TAG);
-				tagInfo.setTagCd("");
-				tagInfo.setTagNm(tagNm);
-				tagInfo.setRegId(couponInfo.getBpId());
-				tagInfo.setUpdId(couponInfo.getBpId());
-				tagList.add(tagInfo);
+					tagInfo.setCid(couponInfo.getProdId());
+					tagInfo.setTagTypeCd(CouponConstants.TAG_TYPE_FOR_COUPON_TAG);
+					tagInfo.setTagCd("");
+					tagInfo.setTagNm(tagNm);
+					tagInfo.setRegId(couponInfo.getBpId());
+					tagInfo.setUpdId(couponInfo.getBpId());
+					tagList.add(tagInfo);
+				}
+				// 저장
+				this.couponItemService.insertTblTagInfo(tagList);
 			}
-			// 저장
-			this.couponItemService.insertTblTagInfo(tagList);
-
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TBL_DP_TAG_INFO VO 셋팅 실패", null);
 		} catch (Exception e) {
