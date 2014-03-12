@@ -39,7 +39,9 @@ public class SacBypassUrlSearcher implements BypassUrlSearcher {
 	 */
 	@Override
 	public String search(String interfaceId) {
-
+		// TODO : 이전 Bypass 기능의 호환성을 위해서 유지. 현재는 사용되지 않는다.
+		// SWA 문의 : 해당 구현체의 기능을 SacServiceUrlSearcher 구현으로 변경.
+		// 해당 인터페스 구현체는 F/W 에서 @Autowired 사용되고 있음.
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("interfaceId", interfaceId);
 
