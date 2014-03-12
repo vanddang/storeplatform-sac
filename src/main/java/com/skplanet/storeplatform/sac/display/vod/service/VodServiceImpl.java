@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
 import com.skplanet.storeplatform.sac.display.vod.vo.VodDetail;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,10 +85,7 @@ public class VodServiceImpl implements VodService {
 
 		if(vodDetail != null) {
 			//Screenshots
-			ProductImage productImage = new ProductImage();
-			productImage.setProdId(req.getChannelId());
-			productImage.setLangCd(req.getLangCd());
-			List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", param, ProductImage.class);
+			List<ProductImage> screenshotList = getScreenshotList(req.getChannelId(), req.getLangCd());
 			this.mapProduct(req, product, vodDetail, screenshotList);
 
 			// 2. subProjectList
@@ -103,6 +101,19 @@ public class VodServiceImpl implements VodService {
 		return res;
 	}
 
+	/**
+	 * Mapping Screenshot
+	 * @param param
+	 * @return
+	 */
+	private List<ProductImage> getScreenshotList(String channelId, String langCd) {
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("channelId", channelId);
+		param.put("langCd", langCd);
+		List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", param, ProductImage.class);
+		return screenshotList;
+	}
+
     /**
      * 기구매 체크 (구매서버 연동)
      * @param req
@@ -110,6 +121,9 @@ public class VodServiceImpl implements VodService {
      * @return
      */
     private List<ExistenceScRes> getExistenceScReses(VodDetailReq req, List<VodDetail> subProductList) {
+    	if(StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
+    		return new ArrayList<ExistenceScRes>();
+    	}
         List<ExistenceScRes> existenceScResList = null;
         if(subProductList != null && subProductList.size() > 0) {
             //기구매 체크
@@ -122,10 +136,10 @@ public class VodServiceImpl implements VodService {
                 }
             }
             try {
-                existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
+        		existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
             } catch (StorePlatformException e) {
                 //ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로 처리한다.
-                existenceScResList = new ArrayList<ExistenceScRes>();
+            	existenceScResList = new ArrayList<ExistenceScRes>();
             }
         }
         return existenceScResList;
@@ -195,7 +209,7 @@ public class VodServiceImpl implements VodService {
     private Title mapTitle(VodDetail mapperVO) {
         Title title = new Title();
         title.setPrefix(mapperVO.getVodTitlNm());
-        title.setName(mapperVO.getProdNm());
+        title.setText(mapperVO.getProdNm());
         return title;
     }
 
@@ -220,8 +234,6 @@ public class VodServiceImpl implements VodService {
      * @return
      */
 	private Rights mapRights(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
-		List<Source> sourceList;
-		Date date;
 		Rights rights = new Rights();
 		rights.setGrade(mapperVO.getProdGrdCd());
 		rights.setAllow(mapperVO.getDwldAreaLimtYn());
@@ -234,9 +246,130 @@ public class VodServiceImpl implements VodService {
 		}
 		*/
 
-		//-------------------------------------------
 		// Preview
+		rights.setPreview(mapPreview(mapperVO));
+
+
 		//-------------------------------------------
+		// Store, Play
+		//-------------------------------------------
+		/** play 정보 */
+		rights.setPlay(mapPlay(mapperVO, req, existenceMap));
+
+		/** Store 정보 */
+		rights.setStore(mapStore(mapperVO, req, existenceMap));
+		return rights;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * @param mapperVO
+	 * @param req
+	 * @param existenceMap
+	 * @param rights
+	 * @return 
+	 */
+	private Store mapStore(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
+		Store store = null;
+		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
+			store = new Store();
+			// Store.Identifier
+			store.setIdentifier(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getStoreProdId()));
+
+			Support storeSupport = new Support();
+			Price storePrice = new Price();
+
+			storeSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
+			storeSupport.setText(mapperVO.getStoreDrmYn());
+			store.setSupport(storeSupport);
+
+			storePrice.setText(mapperVO.getStoreProdAmt() == null ? 0 : mapperVO.getStoreProdAmt());
+
+			store.setPrice(storePrice);
+
+			Source source = null;
+			if (StringUtils.isNotEmpty(mapperVO.getFilePath())) {
+				source = new Source();
+				source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getFilePath()));
+				source.setUrl(mapperVO.getFilePath());
+			}
+			
+			// 네트워크 제한이 있을경우
+			if (mapperVO.getDwldNetworkCd() != null) {
+				store.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
+			}
+
+            if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId())) {
+                String salesStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
+                if(salesStatus != null)  store.setSalesStatus(salesStatus);
+            }
+
+		}
+		return store;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * @param mapperVO
+	 * @param req
+	 * @param existenceMap
+	 * @param rights
+	 * @return 
+	 */
+	private Play mapPlay(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
+		Date date;
+		Play play = null;
+		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
+			play = new Play();
+			//Play.Identifier
+			play.setIdentifier(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getPlayProdId()));
+
+			Support playSupport = new Support();
+			Price playPrice = new Price();
+			playSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
+			playSupport.setText(mapperVO.getPlayDrmYn());
+			play.setSupport(playSupport);
+
+			date = new Date();
+			date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
+			date.setText(mapperVO.getUsagePeriod());
+			playPrice.setText(mapperVO.getPlayProdAmt() == null ? 0 : mapperVO.getPlayProdAmt());
+
+			Source source = null;
+			if (StringUtils.isNotEmpty(mapperVO.getFilePath())) {
+				source = new Source();
+				source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getFilePath()));
+				source.setUrl(mapperVO.getFilePath());
+			}
+
+			play.setDate(date); // 이용기간
+			play.setPrice(playPrice); // 바로보기 상품 금액
+			if (mapperVO.getStrmNetworkCd() != null) {
+				play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
+			}
+
+            if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId())) {
+                String salesStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
+                if(salesStatus != null)  play.setSalesStatus(salesStatus);
+            }
+
+		}
+		return play;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * @param mapperVO
+	 * @return
+	 */
+	private Preview mapPreview(VodDetail mapperVO) {
+		List<Source> sourceList;
 		Preview preview = new Preview();
 
 		sourceList = new ArrayList<Source>();
@@ -253,81 +386,7 @@ public class VodServiceImpl implements VodService {
 			sourceList.add(source);
         }
 		preview.setSourceList(sourceList);
-		rights.setPreview(preview);
-
-
-		//-------------------------------------------
-		// Store, Play
-		//-------------------------------------------
-		/** play 정보 */
-		Play play = new Play();
-		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
-			//Play.Identifier
-			play.setIdentifier(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getPlayProdId()));
-
-			Support playSupport = new Support();
-			Price playPrice = new Price();
-			playSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-			playSupport.setText(mapperVO.getPlayDrmYn());
-			play.setSupport(playSupport);
-
-			date = new Date();
-			date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-			date.setText(mapperVO.getUsagePeriod());
-			playPrice.setText(mapperVO.getPlayProdAmt() == null ? 0 : mapperVO.getPlayProdAmt());
-
-			Source playSource = new Source();
-			playSource.setUrl(mapperVO.getPlayProdId());
-
-			play.setDate(date); // 이용기간
-			play.setPrice(playPrice); // 바로보기 상품 금액
-			play.setSource(playSource); // 바로보기 상품 url
-			if (mapperVO.getStrmNetworkCd() != null) {
-				play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
-			}
-
-            if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId())) {
-                String salesStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
-                if(salesStatus != null)  play.setSalesStatus(salesStatus);
-            }
-
-			rights.setPlay(play);
-		}
-
-		/** Store 정보 */
-		Store store = new Store();
-		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
-			// Store.Identifier
-			store.setIdentifier(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getStoreProdId()));
-
-			Support storeSupport = new Support();
-			Price storePrice = new Price();
-			Source storeSource = new Source();
-
-			storeSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-			storeSupport.setText(mapperVO.getStoreDrmYn());
-			store.setSupport(storeSupport);
-
-			storePrice.setText(mapperVO.getStoreProdAmt() == null ? 0 : mapperVO.getStoreProdAmt());
-			storeSource.setUrl(mapperVO.getStoreProdId());
-
-			store.setPrice(storePrice);
-			store.setSource(storeSource);
-
-			// 네트워크 제한이 있을경우
-			if (mapperVO.getDwldNetworkCd() != null) {
-				store.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
-			}
-
-            if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId())) {
-                String salesStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
-                if(salesStatus != null)  store.setSalesStatus(salesStatus);
-            }
-
-			rights.setStore(store);
-
-		}
-		return rights;
+		return preview;
 	}
 
     /**
@@ -370,8 +429,7 @@ public class VodServiceImpl implements VodService {
      * @param screenshotList
      * @return
      */
-	private List<Source> mapSourceList(VodDetail mapperVO,
-                                       List<ProductImage> screenshotList) {
+	private List<Source> mapSourceList(VodDetail mapperVO, List<ProductImage> screenshotList) {
 		// 대표 이미지 (thumbnail)
 		List<Source> sourceList = new ArrayList<Source>();
 		if(StringUtils.isNotEmpty(mapperVO.getImgPath())) {
@@ -505,6 +563,8 @@ public class VodServiceImpl implements VodService {
 
 			for(VodDetail mapperVO : vodDetailList) {
 				Product subProduct = new Product();
+				
+				//List<ProductImage> screenshotList = getScreenshotList(mapperVO.getProdId(), req.getLangCd());
 
 				List<Identifier> identifierList = new ArrayList<Identifier>();
 
@@ -631,7 +691,7 @@ public class VodServiceImpl implements VodService {
             if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getProdStatusCd()) ||
                     DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getProdStatusCd()) ||
                     DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(mapperVO.getProdStatusCd())) {
-                if (!com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(userKey) && !com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(deviceKey)) {
+                if (StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
                 }
                 else
                     salesStatus = "restricted";

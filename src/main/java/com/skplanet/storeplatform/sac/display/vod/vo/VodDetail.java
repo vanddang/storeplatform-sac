@@ -108,6 +108,12 @@ public class VodDetail extends CommonInfo {
 	/** 발매일 */
 	private String issueDay;
 
+	
+	// ---------------------------------------------------
+	// Source File path
+	// ---------------------------------------------------
+	private String filePath;
+	
 	// ---------------------------------------------------
 	// Thumbnail
 	// ---------------------------------------------------
@@ -1187,6 +1193,22 @@ public class VodDetail extends CommonInfo {
 		this.agencyNm = agencyNm;
 	}
 
+	/**
+	 * @return the filePath
+	 */
+	public String getFilePath() {
+		return filePath;
+	}
+
+	/**
+	 * @param filePath the filePath to set
+	 */
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	
+	
 	//public String getPlayTm() { return this.playTm; }
 	//public void setPlayTm(String playTm) { this.playTm = playTm; }
 
