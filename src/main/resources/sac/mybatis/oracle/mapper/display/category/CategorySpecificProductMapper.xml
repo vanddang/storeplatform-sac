@@ -200,7 +200,7 @@
                    AND  D.SVC_GRP_CD = #{productBasicInfo.svcGrpCd}       /* DP000201 : 애플리캐이션 */
                    </if>
                    AND  F.LANG_CD = #{tenantHeader.langCd}                /* ko : 한국어 */
-                   <if test='prodStatusCd != null'>
+                   <if test="prodStatusCd != null and prodStatusCd != ''">
                    AND  G.PROD_STATUS_CD = #{prodStatusCd}                /* PD000403 : 판매중 */
                    </if>
                    AND  G.EXPO_YN = 'Y'                 /* Y : 노출 (노출여부) */
@@ -365,7 +365,7 @@
                          AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                          AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                          AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
-                          <if test='prodStatusCd != null'>
+                         <if test="prodStatusCd != null and prodStatusCd != ''">
                          AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
                          </if>
                          AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
@@ -467,7 +467,7 @@
           AND TPP.TENANT_ID = TP.TENANT_ID
           AND PD.PROD_ID = P.PROD_ID
           AND PI.PROD_ID = CP.PROD_ID
-          <if test='prodStatusCd != null'>
+          <if test="prodStatusCd != null and prodStatusCd != ''">
           AND TP.PROD_STATUS_CD = #{prodStatusCd}   -- 판매중
           </if>
           AND TP.EXPO_YN = 'Y'                 -- 노출 여부
@@ -660,7 +660,7 @@
                    AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                    AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                    AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
-                    <if test='prodStatusCd != null'>
+                   <if test="prodStatusCd != null and prodStatusCd != ''">
                    AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
                    </if>
                    AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
@@ -813,7 +813,7 @@
                    AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                    AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                    AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
-                   <if test='prodStatusCd != null'>
+                   <if test="prodStatusCd != null and prodStatusCd != ''">
                    AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
                    </if>
                    AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
