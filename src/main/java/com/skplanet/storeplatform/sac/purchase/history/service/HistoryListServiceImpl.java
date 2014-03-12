@@ -231,10 +231,14 @@ public class HistoryListServiceImpl implements HistoryListService {
 			sacHistoryList.add(historySac);
 
 			// 상품정보 조회를 위한 상품ID 셋팅
-			prodIdList.add(historySac.getProdId());
+			if (!StringUtils.isEmpty(historySac.getProdId())) {
+				prodIdList.add(historySac.getProdId());
+			}
 
 			// DEVICE INFO 조회를 위한 deviceKey 셋팅
-			deviceList.add(obj.getUseDeviceKey());
+			if (!StringUtils.isEmpty(historySac.getUseDeviceKey())) {
+				deviceList.add(historySac.getUseDeviceKey());
+			}
 
 		}
 		/*************************************************
@@ -242,7 +246,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 *************************************************/
 
 		/*************************************************
-		 * 상품정보 Mapping Start - SAC내부호출일 경우에는 상품정보를 조회하지 않는다.
+		 * productInfo Mapping Start - SAC내부호출일 경우에는 상품정보를 조회하지 않는다.
 		 **************************************************/
 		if (!PurchaseConstants.USE_Y.equals(request.getInternalYn())) {
 			if (prodIdList.size() > 0) {
@@ -250,6 +254,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
 				ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
 
+				productInfoSacReq.setTenantId(request.getTenantId());
 				productInfoSacReq.setDeviceModelNo(request.getModel());
 				productInfoSacReq.setLang(request.getLangCd());
 				productInfoSacReq.setList(prodIdList);
@@ -274,26 +279,29 @@ public class HistoryListServiceImpl implements HistoryListService {
 			}
 		}
 		/*************************************************
-		 * 상품정보 Mapping End
+		 * productInfo Mapping End
 		 **************************************************/
 
 		/*************************************************
-		 * MDN Info Mapping Start
+		 * device Info Mapping Start
 		 **************************************************/
 		if (deviceList.size() > 0) {
 
 			SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
 			SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
 
+			// member request parameter set
 			searchUserDeviceSacReq.setDeviceKeyList(deviceList);
 
-			// 회원
+			this.LOGGER.debug("### searchUserDeviceSacReq  : {}" + searchUserDeviceSacReq.toString());
+
+			// member InternalSCI Call
 			searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
 
 			Map<String, UserDeviceInfoSac> deviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
-
 			UserDeviceInfoSac deviceResult = new UserDeviceInfoSac();
 
+			// member response set
 			for (HistorySac obj : sacHistoryList) {
 
 				deviceResult = new UserDeviceInfoSac();
@@ -305,7 +313,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			}
 		}
 		/*************************************************
-		 * MDN Info Mapping End
+		 * device Info Mapping End
 		 **************************************************/
 
 		response.setHistoryList(sacHistoryList);
