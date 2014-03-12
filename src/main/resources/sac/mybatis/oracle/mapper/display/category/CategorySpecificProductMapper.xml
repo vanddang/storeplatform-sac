@@ -131,6 +131,9 @@
               , TB.CID
               , TB.SVC_GRP_CD
               , TB.SVC_GRP_NM
+              , TB.EXPO_SELLER_NM
+              , TB.EXPO_SELLER_TELNO
+              , TB.EXPO_SELLER_EMAIL
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
                       , A.MENU_ID
@@ -167,6 +170,9 @@
                       , D.CID
                       , D.SVC_GRP_CD
                       , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM
+                      , D.EXPO_SELLER_NM
+					  , D.EXPO_SELLER_TELNO
+					  , D.EXPO_SELLER_EMAIL
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -432,6 +438,9 @@
             , P.CID
             , P.SVC_GRP_CD      
             , FC_GET_CM_CD_NM(P.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM    
+            , P.EXPO_SELLER_NM
+            , P.EXPO_SELLER_TELNO
+            , P.EXPO_SELLER_EMAIL
          FROM UV_TB_DP_MULTIMDA_PROD MP
             , TB_DP_MUSIC_CHART MCI
             , TB_DP_PROD P
@@ -575,6 +584,9 @@
              , TB.OUTSD_CONTENTS_ID
              , TB.SVC_GRP_CD
              , TB.SVC_GRP_NM      
+             , TB.EXPO_SELLER_NM
+             , TB.EXPO_SELLER_TELNO
+             , TB.EXPO_SELLER_EMAIL
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
@@ -623,7 +635,10 @@
                       , D.CID
                       , L.OUTSD_CONTENTS_ID
                       , D.SVC_GRP_CD      
-                      , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM                
+                      , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM  
+                      , D.EXPO_SELLER_NM
+                      , D.EXPO_SELLER_TELNO
+                      , D.EXPO_SELLER_EMAIL              
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -734,6 +749,9 @@
              , TB.CID
              , TB.SVC_GRP_CD
              , TB.SVC_GRP_NM      
+             , TB.EXPO_SELLER_NM
+             , TB.EXPO_SELLER_TELNO
+             , TB.EXPO_SELLER_EMAIL
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID ORDER BY J.UPD_DT DESC ) AS RN
                       , A.UP_MENU_ID
@@ -776,7 +794,10 @@
                       , D.SELLER_MBR_NO
                       , D.CID
                       , D.SVC_GRP_CD          
-                      , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM            
+                      , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM       
+                      , D.EXPO_SELLER_NM
+                      , D.EXPO_SELLER_TELNO
+                      , D.EXPO_SELLER_EMAIL     
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -887,6 +908,9 @@
                                ,PI.FILE_SIZE      
                                ,J.SELLER_MBR_NO      
                                ,J.CID                   
+		                       , J.EXPO_SELLER_NM
+		                       , J.EXPO_SELLER_TELNO
+		                       , J.EXPO_SELLER_EMAIL
                           FROM 
                                   TB_DP_SHPG_BRAND         A
                                  ,TB_DP_SHPG_CATALOG       B
