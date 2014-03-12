@@ -127,7 +127,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		try {
 
-			if (StringUtil.equals(mdn, beMdn)) { // 변경mdn과 이전mdn이 동일한 경우 타통신사에서 SKT로 번호이동 한걸로 간주한다. 
+			if (StringUtil.equals(mdn, beMdn)) {
 
 				LOGGER.info("::: 변경mdn과 이전mdn이 동일한 경우 mdn : {}, beMdn : {}, svcMngNum : {}", mdn, beMdn, svcMngNum);
 
