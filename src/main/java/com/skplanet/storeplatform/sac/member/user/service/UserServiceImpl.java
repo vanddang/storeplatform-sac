@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcRes;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -111,14 +113,16 @@ public class UserServiceImpl implements UserService {
 				req.setUserAuthKey(userAuthKey);
 				req.setKey(schUserRes.getUserMbr().getImSvcNo());
 				req.setUserMdn(userPhoneStr);
-				this.imIdpSCI.updateAdditionalInfo(req);
+				UpdateAdditionalInfoEcRes res = this.imIdpSCI.updateAdditionalInfo(req);
+				LOGGER.info(res.toString());
 			} else {
 				ModifyProfileEcReq req = new ModifyProfileEcReq();
 				req.setKeyType("2"); // idp키로 조회 
 				req.setUserAuthKey(userAuthKey);
 				req.setKey(schUserRes.getUserMbr().getImMbrNo());
 				req.setUserPhone(userPhoneStr);
-				this.idpSCI.modifyProfile(req);
+				ModifyProfileEcRes res = this.idpSCI.modifyProfile(req);
+				LOGGER.info(res.toString());
 			}
 
 		}
