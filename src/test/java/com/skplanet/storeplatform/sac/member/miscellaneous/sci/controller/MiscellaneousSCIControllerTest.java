@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.member.miscellaneous.sci;
+package com.skplanet.storeplatform.sac.member.miscellaneous.sci.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -46,9 +46,9 @@ import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class GetIndividualPolicyTest {
+public class MiscellaneousSCIControllerTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(GetIndividualPolicyTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MiscellaneousSCIControllerTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
