@@ -946,7 +946,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		if (StringUtils.equals(resident, "local")) {
 			return MemberConstants.USE_Y; // 내국인
 		} else if (StringUtils.equals(resident, "foreign")) {
-			return MemberConstants.USE_Y; // 외국인
+			return MemberConstants.USE_N; // 외국인
 		} else {
 			return "";
 		}
