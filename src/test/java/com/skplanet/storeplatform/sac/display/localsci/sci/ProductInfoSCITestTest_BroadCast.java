@@ -61,7 +61,7 @@ public class ProductInfoSCITestTest_BroadCast {
 		list.add("H000044277");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
-
+		// req.setTenantId("S01");
 		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
 		List<ProductInfo> productList = res.getProductList();
 		this.log.debug("##### productInfo cnt : ", productList.size());

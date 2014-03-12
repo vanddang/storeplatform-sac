@@ -82,6 +82,9 @@
               , TB.PART_PARENT_CLSF_CD
               , TB.PROD_CASE
               , TB.PROD_KIND
+              , TB.CID
+              , TB.PROD_STATUS_CD
+              , TB.PLAT_CLSF_CD
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
                       , A.MENU_ID
@@ -98,6 +101,7 @@
                       , D.EXPO_SELLER_EMAIL
                       , D.EXPO_SELLER_NM
                       , D.EXPO_SELLER_TELNO
+                      , D.CID
                       , E.AID
                       , E.VER_MAJOR
                       , E.VER_MINOR
@@ -105,11 +109,13 @@
                       , E.PROD_CLSF_CD
                       , E.PROD_CASE
                       , E.PROD_KIND
+                      , E.PLAT_CLSF_CD
                       , F.PROD_NM
                       , F.PROD_BASE_DESC
                       , K.FILE_PATH
                       , RSHP.PROD_ID
                       , DESC2.PROD_NM AS PARENT_PROD_NM
+                      , TENANT.PROD_STATUS_CD
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -119,12 +125,15 @@
                       , TB_DP_PROD_IMG                K
                       , TB_DP_PROD_DESC               DESC2
                       , TB_DP_PROD_RSHP               RSHP
+                      , TB_DP_TENANT_PROD             TENANT
                  WHERE  A.MENU_ID = B.MENU_ID
                    AND  A.MENU_ID = C.MENU_ID
                    AND  B.PROD_ID = D.PROD_ID
                    AND  B.PROD_ID = E.PROD_ID
                    AND  B.PROD_ID = F.PROD_ID
                    AND  B.PROD_ID = K.PROD_ID
+                   AND  B.PROD_ID = TENANT.PROD_ID
+                   AND  TENANT.TENANT_ID = #{tenantId}
                    AND  C.LANG_CD = #{lang}                /* ko : 한국어 */
                    <if test='productBasicInfo.svcGrpCd != null'>
                    AND  D.SVC_GRP_CD = #{productBasicInfo.svcGrpCd}       /* DP000201 : 애플리캐이션 */
@@ -136,9 +145,6 @@
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    -----------------------------------------------------------------------------
-                   <if test='menuId != null'>
-                   AND  A.MENU_ID = #{productBasicInfo.menuId}           /* 메뉴ID */
-                   </if>
                    AND  B.PROD_ID = #{productBasicInfo.prodId}        /* 상품ID */
                    AND  D.PROD_ID = RSHP.PART_PROD_ID
                    AND  RSHP.PROD_ID = DESC2.PROD_ID
@@ -167,6 +173,7 @@
 		       , D.USE_PERIOD
 		       , D.USE_PERIOD_UNIT_CD
 		       , D.SELLER_MBR_NO
+		       , D.CID
 		       , E.COMPT_YN
 		       , E.VOD_TITL_NM
 		       , E.STRM_EPSD_CNT
@@ -193,6 +200,7 @@
 		       , D.CID       
 		       , E.OUTSD_CONTENTS_ID
 		       , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = I.PART_PROD_ID) AS PHONE_SPRT_YN
+		       , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId}) as chnlProdStat
 		  <![CDATA[
 		  , ( CASE WHEN E.EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_STORE
 		 ]]>
@@ -210,14 +218,9 @@
 		        , TB_DP_PROD                    D
 		        , UV_TB_DP_MULTIMDA_PROD        E
 		        , TB_DP_PROD_DESC               F
-		    --    , TB_DP_TENANT_PROD             G
-		    --    , TB_DP_TENANT_PROD_PRICE       H
 		        , TB_DP_PROD_RSHP               I
-		    --    , TB_DP_PROD                    J
-		   --     , TB_DP_SPRT_DEVICE             K
-		   --     , UV_TB_DP_MULTIMDA_PROD        L
 		        , TB_DP_PROD_IMG                M
-		   --     , TB_DP_TENANT_PROD_STATS       N              
+		        , TB_DP_TENANT_PROD             TENANT
 		   WHERE A.MENU_ID = B.MENU_ID
 		     AND A.MENU_ID = C.MENU_ID
 		     AND B.PROD_ID = D.PROD_ID
@@ -225,6 +228,8 @@
 		     AND B.PROD_ID = F.PROD_ID
 		     AND B.PROD_ID = I.PART_PROD_ID
 		     AND B.PROD_ID = M.PROD_ID
+		     AND B.PROD_ID = TENANT.PROD_ID
+		     AND TENANT.TENANT_ID = #{tenantId}
 		     AND B.BASE_YN = 'Y'
 		     AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
 		     AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
@@ -261,6 +266,7 @@
             , 'paid' as PROD_CLSF_CD
             , P.USE_PERIOD
             , P.USE_PERIOD_UNIT_CD
+            , P.CID
             , PD.ARTIST1_NM  AS  ARTIST_NM
             , PD.ARTIST2_NM
             , PD.ARTIST3_NM   AS ALBUM                     
@@ -285,12 +291,15 @@
                 , TB_DP_PROD P
                 , TB_DP_PROD_DESC PD
                 , TB_DP_PROD_RSHP CP
+                , TB_DP_TENANT_PROD  TENANT
         WHERE  C.MENU_ID = CPM.MENU_ID
           AND CD.MENU_ID = C.MENU_ID
           AND CPM.PROD_ID = CP.PART_PROD_ID
           AND MP.PROD_ID = CP.PART_PROD_ID
           AND P.PROD_ID = CP.PART_PROD_ID
           AND P.PROD_ID = PD.PROD_ID
+          AND P.PROD_ID = TENANT.PROD_ID
+          AND TENANT.TENANT_ID = #{tenantId}
        -----------------------------------------------------------------------------
        -- 차트 정보 조건절 END
        ----------------------------------------------------------------------------- 
@@ -327,6 +336,7 @@
              , D.DRM_YN
              , D.USE_PERIOD
              , D.USE_PERIOD_UNIT_CD
+             , D.CID
              , E.COMPT_YN
              , E.VOD_TITL_NM
              , E.STRM_EPSD_CNT
@@ -363,28 +373,24 @@
              , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) OR E.BOOK_CLSF_CD = 'DP004302' THEN 'serial' END ) AS BOOK_TYPE
 		     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( E.EPSD_CNT + E.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
 		     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( E.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
-             , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = I.PART_PROD_ID) AS PHONE_SPRT_YN                          
-   FROM  TB_DP_MENU_CATEGORY           A
+             , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = I.PART_PROD_ID) AS PHONE_SPRT_YN
+             , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId}) as chnlProdStat                          
+         FROM  TB_DP_MENU_CATEGORY           A
              , TB_DP_MENU_CATEGORY_PROD_MAPG B
              , TB_DP_MENU_CATEGORY_DESC      C
              , TB_DP_PROD                    D
              , UV_TB_DP_MULTIMDA_PROD        E
              , TB_DP_PROD_DESC               F
-       --    , TB_DP_TENANT_PROD             G
-        --   , TB_DP_TENANT_PROD_PRICE       H
              , TB_DP_PROD_RSHP               I
-        --   , TB_DP_PROD                    J
-       --    , TB_DP_SPRT_DEVICE             K
-       --    , UV_TB_DP_MULTIMDA_PROD        L
              , TB_DP_PROD_IMG                M
-       --    , TB_DP_TENANT_PROD_STATS       N              
+             , TB_DP_TENANT_PROD             TENANT
         WHERE A.MENU_ID = B.MENU_ID
           AND A.MENU_ID = C.MENU_ID
           AND B.PROD_ID = D.PROD_ID
           AND B.PROD_ID = E.PROD_ID
           AND B.PROD_ID = F.PROD_ID
-     --     AND B.PROD_ID = G.PROD_ID
-     --     AND B.PROD_ID = H.PROD_ID
+          AND B.PROD_ID = TENANT.PROD_ID
+          AND TENANT.TENANT_ID = #{tenantId}
           AND B.PROD_ID = I.PART_PROD_ID
           AND B.PROD_ID = M.PROD_ID
           AND C.LANG_CD = #{lang}                      /* ko : 한국어 */

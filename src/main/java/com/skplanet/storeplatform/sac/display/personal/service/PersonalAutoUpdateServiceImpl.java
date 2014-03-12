@@ -99,9 +99,6 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 
 		// 다운로드 서버 상태 조회는 & 앱 버전 정보 활용 조회 처리 & 업그레이드 관리이력 조회는 tenant 단에서 처리하기 때문에 제외
 
-		// String sPkgNms = ObjectUtils.toString(mapReq.get("PKG_NM_LIST"));
-		// String sPolicy = ObjectUtils.toString(mapReq.get("policy"));
-		// String sDigest = ObjectUtils.toString(mapReq.get("digest"));
 		String sArrPkgNm[] = StringUtils.split(req.getPackageInfo(), "+");
 
 		/**************************************************************
@@ -329,9 +326,6 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				commonResponse.setTotalCount(productList.size());
 				res.setCommonResponse(commonResponse);
 				res.setProductList(productList);
-				// Log.info("[업데이트 내역] " + listUpdate);
-				// ods.putRes("0", listUpdate);
-
 			} else {
 				throw new StorePlatformException("SAC_DSP_0006");
 			}

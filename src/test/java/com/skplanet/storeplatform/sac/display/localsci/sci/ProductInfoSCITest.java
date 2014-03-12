@@ -62,6 +62,7 @@ public class ProductInfoSCITest {
 		list.add("0000048923");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
+		req.setTenantId("S01");
 
 		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
 		List<ProductInfo> productList = res.getProductList();
