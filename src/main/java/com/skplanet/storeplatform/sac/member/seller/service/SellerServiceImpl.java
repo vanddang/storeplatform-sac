@@ -149,7 +149,7 @@ public class SellerServiceImpl implements SellerService {
 		/** 1-3. SC회원(Email 중복) Call */
 		if (StringUtils.equals(MemberConstants.USE_Y,
 				this.sellerSCI.checkDuplicationSeller(checkDuplicationSellerRequest).getIsRegistered())) {
-		throw new StorePlatformException("SAC_MEM_2012", req.getSellerEmail());
+			throw new StorePlatformException("SAC_MEM_2012", req.getSellerEmail());
 		}
 
 		/** 2. SC회원 Req 생성 및 주입. */
@@ -192,17 +192,17 @@ public class SellerServiceImpl implements SellerService {
 		List<PWReminder> pWReminderList = null;
 
 		if (req.getPwReminderList() != null) {
-		pWReminderList = new ArrayList<PWReminder>();
-		for (int i = 0; i < req.getPwReminderList().size(); i++) {
-		PWReminder pwReminder = new PWReminder();
-		pwReminder.setAnswerString(req.getPwReminderList().get(i).getAnswerString());
-		pwReminder.setQuestionID(req.getPwReminderList().get(i).getQuestionID());
-		pwReminder.setQuestionMessage(req.getPwReminderList().get(i).getQuestionMessage());
-		pWReminderList.add(pwReminder);
-		LOGGER.debug("==>>[SC] CreateSellerRequest.PWReminder[{}].toString() : {}", i, pwReminder.toString());
-		}
-		createSellerRequest.setPWReminderList(pWReminderList);
-		LOGGER.debug("==>>[SC] CreateSellerRequest.pWReminderList.toString() : {}", pWReminderList.toString());
+			pWReminderList = new ArrayList<PWReminder>();
+			for (int i = 0; i < req.getPwReminderList().size(); i++) {
+				PWReminder pwReminder = new PWReminder();
+				pwReminder.setAnswerString(req.getPwReminderList().get(i).getAnswerString());
+				pwReminder.setQuestionID(req.getPwReminderList().get(i).getQuestionID());
+				pwReminder.setQuestionMessage(req.getPwReminderList().get(i).getQuestionMessage());
+				pWReminderList.add(pwReminder);
+				LOGGER.debug("==>>[SC] CreateSellerRequest.PWReminder[{}].toString() : {}", i, pwReminder.toString());
+			}
+			createSellerRequest.setPWReminderList(pWReminderList);
+			LOGGER.debug("==>>[SC] CreateSellerRequest.pWReminderList.toString() : {}", pWReminderList.toString());
 		}
 		/** 보안질문 리스트 주입 - [끝]. */
 
@@ -356,89 +356,94 @@ public class SellerServiceImpl implements SellerService {
 		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr sellerMbr = null;
 
 		if (logInSellerResponse != null) {
-		sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
-		String loginStatusCode = logInSellerResponse.getLoginStatusCode();
-		String isLoginSuccess = logInSellerResponse.getIsLoginSuccess();
-		String loginFailCount = String.valueOf(logInSellerResponse.getLoginFailCount());
-		// 존재 하지 않는 회원일 경우
-		if (StringUtils.equals(logInSellerResponse.getCommonResponse().getResultCode(),
-				MemberConstants.RESULT_UNKNOWN_USER_ID)) {
-		res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
-		} else {
-		// 회원 인증 "Y" 일 경우
-		if (StringUtils.equals(logInSellerResponse.getIsLoginSuccess(), MemberConstants.USE_Y)) {
+			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
+			String loginStatusCode = logInSellerResponse.getLoginStatusCode();
+			String isLoginSuccess = logInSellerResponse.getIsLoginSuccess();
+			String loginFailCount = String.valueOf(logInSellerResponse.getLoginFailCount());
+			// 존재 하지 않는 회원일 경우
+			if (StringUtils.equals(logInSellerResponse.getCommonResponse().getResultCode(),
+					MemberConstants.RESULT_UNKNOWN_USER_ID)) {
+				res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
+			} else {
+				// 회원 인증 "Y" 일 경우
+				if (StringUtils.equals(logInSellerResponse.getIsLoginSuccess(), MemberConstants.USE_Y)) {
 
-		/** 3. 계정 잠금 해제 요청. */
-		if (StringUtils.equals(req.getReleaseLock(), MemberConstants.USE_Y)
-				&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
-				&& StringUtils.equals(MemberConstants.USE_N, logInSellerResponse.getIsSubSeller())) {
-		/** 3-1. SC회원 Req 생성 및 주입. */
-		UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
-		updateStatusSellerRequest.setSellerID(req.getSellerId());
-		updateStatusSellerRequest.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
+					/** 3. 계정 잠금 해제 요청. */
+					if (StringUtils.equals(req.getReleaseLock(), MemberConstants.USE_Y)
+							&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
+							&& StringUtils.equals(MemberConstants.USE_N, logInSellerResponse.getIsSubSeller())) {
+						/** 3-1. SC회원 Req 생성 및 주입. */
+						UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
+						updateStatusSellerRequest.setSellerID(req.getSellerId());
+						updateStatusSellerRequest.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
 
-		/** 3-2. 공통 헤더 생성 및 주입. */
-		updateStatusSellerRequest.setCommonRequest(commonRequest);
+						/** 3-2. 공통 헤더 생성 및 주입. */
+						updateStatusSellerRequest.setCommonRequest(commonRequest);
 
-		LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
+						LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}",
+								updateStatusSellerRequest.toString());
 
-		/** 3-3. SC회원 - 상태변경 Call. */
-		this.sellerSCI.updateStatusSeller(updateStatusSellerRequest);
+						/** 3-3. SC회원 - 상태변경 Call. */
+						this.sellerSCI.updateStatusSeller(updateStatusSellerRequest);
 
-		/** 3-4. 회원 정보 조회 */
-		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
-				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, logInSellerResponse.getSellerKey());
-		/** 3-5. 로그인 상태 코드 주입. */
-		loginStatusCode = searchSellerResponse.getSellerMbr().getLoginStatusCode();
-		// FailCount '0' Reset
-		loginFailCount = "0";
-		}
+						/** 3-4. 회원 정보 조회 */
+						SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
+								MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, logInSellerResponse.getSellerKey());
+						/** 3-5. 로그인 상태 코드 주입. */
+						loginStatusCode = searchSellerResponse.getSellerMbr().getLoginStatusCode();
+						// FailCount '0' Reset
+						loginFailCount = "0";
+					}
 
-		// logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
+					// logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
 
-		if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
-		/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
-		UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
+					if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
+						/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
+						UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
 
-		LoginInfo loginInfo = new LoginInfo();
-		// 만료일시 생성
-		String expireDate = this.component.getExpirationTime(Integer.parseInt(req.getExpireDate()));
-		loginInfo.setSellerKey(logInSellerResponse.getSellerKey());
-		loginInfo.setIpAddress(req.getIpAddress());
-		loginInfo.setSessionKey(UUID.randomUUID().toString().replaceAll("-", ""));
-		loginInfo.setExpireDate(expireDate);
-		updateLoginInfoRequest.setLoginInfo(loginInfo);
+						LoginInfo loginInfo = new LoginInfo();
+						// 만료일시 생성
+						String expireDate = this.component.getExpirationTime(Integer.parseInt(req.getExpireDate()));
+						loginInfo.setSellerKey(logInSellerResponse.getSellerKey());
+						loginInfo.setIpAddress(req.getIpAddress());
+						loginInfo.setSessionKey(UUID.randomUUID().toString().replaceAll("-", ""));
+						loginInfo.setExpireDate(expireDate);
+						updateLoginInfoRequest.setLoginInfo(loginInfo);
 
-		/** 4-1. 공통 헤더 생성 및 주입. */
-		updateLoginInfoRequest.setCommonRequest(commonRequest);
+						/** 4-1. 공통 헤더 생성 및 주입. */
+						updateLoginInfoRequest.setCommonRequest(commonRequest);
 
-		/** 4-2. SC회원 - 상태변경(회원인증키) Call. */
-		this.sellerSCI.updateLoginInfo(updateLoginInfoRequest);
-
-		/** 4-3. [RESPONSE] 회원 인증키 주입. */
-		res.setSessionKey(loginInfo.getSessionKey());
-		res.setExpireDate(expireDate);
-		sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
-		// 서브 계정 Key
-		if (StringUtils.equals(MemberConstants.USE_Y, logInSellerResponse.getIsSubSeller())) {
-		res.setSubSellerKey(logInSellerResponse.getSubSellerKey());
-		}
-		} else {
-		isLoginSuccess = MemberConstants.USE_N;
-		}
-		}
-		/** 2-1. [RESPONSE] 회원 상태 및 로그인 상태 주입. */
-		sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
-		sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
-		sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
-		res.setLoginFailCount(loginFailCount);
-		res.setIsSubSeller(logInSellerResponse.getIsSubSeller());
-		res.setIsLoginSuccess(isLoginSuccess);
-		res.setLoginStatusCode(loginStatusCode);
-		}
-		/** 2-2. [RESPONSE] 회원 정보 주입. */
-		res.setSellerMbr(sellerMbr);
-		LOGGER.debug("==>>[SAC] SellerMbr.toString() : {}", sellerMbr.toString());
+						/** 4-2. SC회원 - 상태변경(회원인증키) Call. */
+						this.sellerSCI.updateLoginInfo(updateLoginInfoRequest);
+						/** 4-3. [RESPONSE] 회원 인증키 주입. */
+						res.setSessionKey(loginInfo.getSessionKey());
+						res.setExpireDate(expireDate);
+						sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
+						// 서브 계정 Key
+						if (StringUtils.equals(MemberConstants.USE_Y, logInSellerResponse.getIsSubSeller())) {
+							loginInfo.setSellerKey(logInSellerResponse.getSubSellerKey());
+							loginInfo.setSessionKey(null);
+							// 서브 계정 로그인info 업데이트
+							this.sellerSCI.updateLoginInfo(updateLoginInfoRequest);
+							// Return Tenant
+							res.setSubSellerKey(logInSellerResponse.getSubSellerKey());
+						}
+					} else {
+						isLoginSuccess = MemberConstants.USE_N;
+					}
+				}
+				/** 2-1. [RESPONSE] 회원 상태 및 로그인 상태 주입. */
+				sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
+				sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
+				sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
+				res.setLoginFailCount(loginFailCount);
+				res.setIsSubSeller(logInSellerResponse.getIsSubSeller());
+				res.setIsLoginSuccess(isLoginSuccess);
+				res.setLoginStatusCode(loginStatusCode);
+			}
+			/** 2-2. [RESPONSE] 회원 정보 주입. */
+			res.setSellerMbr(sellerMbr);
+			LOGGER.debug("==>>[SAC] SellerMbr.toString() : {}", sellerMbr.toString());
 		}
 
 		// Response Debug
@@ -548,8 +553,8 @@ public class SellerServiceImpl implements SellerService {
 				.getSellerMainStatus())
 				|| !StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
 						.getSellerSubStatus())) {
-		throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-				searchSellerResponse.getSellerMbr().getSellerSubStatus());
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 		}
 
 		// 무료, BP
@@ -557,8 +562,8 @@ public class SellerServiceImpl implements SellerService {
 				.getSellerCategory())
 				|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_BP, searchSellerResponse
 						.getSellerMbr().getSellerCategory())) {
-		throw new StorePlatformException("SAC_MEM_2004", searchSellerResponse.getSellerMbr().getSellerCategory(),
-				searchSellerResponse.getSellerMbr().getSellerClass());
+			throw new StorePlatformException("SAC_MEM_2004", searchSellerResponse.getSellerMbr().getSellerCategory(),
+					searchSellerResponse.getSellerMbr().getSellerClass());
 		}
 
 		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
@@ -611,17 +616,17 @@ public class SellerServiceImpl implements SellerService {
 
 		List<Document> documentList = null;
 		if (req.getExtraDocumentList() != null) {
-		documentList = new ArrayList<Document>();
-		for (int i = 0; i < req.getExtraDocumentList().size(); i++) {
-		Document document = new Document();
-		document.setDocumentCode(req.getExtraDocumentList().get(i).getDocumentCode());
-		document.setDocumentName(req.getExtraDocumentList().get(i).getDocumentName());
-		document.setDocumentPath(req.getExtraDocumentList().get(i).getDocumentPath());
-		document.setDocumentSize(req.getExtraDocumentList().get(i).getDocumentSize());
-		document.setIsUsed(req.getExtraDocumentList().get(i).getIsUsed());
-		documentList.add(document);
-		}
-		updateAccountSellerRequest.setDocumentList(documentList);
+			documentList = new ArrayList<Document>();
+			for (int i = 0; i < req.getExtraDocumentList().size(); i++) {
+				Document document = new Document();
+				document.setDocumentCode(req.getExtraDocumentList().get(i).getDocumentCode());
+				document.setDocumentName(req.getExtraDocumentList().get(i).getDocumentName());
+				document.setDocumentPath(req.getExtraDocumentList().get(i).getDocumentPath());
+				document.setDocumentSize(req.getExtraDocumentList().get(i).getDocumentSize());
+				document.setIsUsed(req.getExtraDocumentList().get(i).getIsUsed());
+				documentList.add(document);
+			}
+			updateAccountSellerRequest.setDocumentList(documentList);
 		}
 
 		/** 2. 공통 헤더 생성 및 주입. */
@@ -675,7 +680,7 @@ public class SellerServiceImpl implements SellerService {
 		/** 1-3. SC회원(Email 중복) Call */
 		if (StringUtils.equals(MemberConstants.USE_Y,
 				this.sellerSCI.checkDuplicationSeller(checkDuplicationSellerRequest).getIsRegistered())) {
-		throw new StorePlatformException("SAC_MEM_2012", req.getNewEmailAddress());
+			throw new StorePlatformException("SAC_MEM_2012", req.getNewEmailAddress());
 		}
 
 		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
@@ -761,11 +766,11 @@ public class SellerServiceImpl implements SellerService {
 				&& !StringUtils.equals(searchSellerResponse.getSellerMbr().getSellerSubStatus(),
 						MemberConstants.SUB_STATUS_JOIN_APPLY_WATING)) {
 
-		LOGGER.debug("[SC] 회원메인 상태 : {}, 서브 상태 {}", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-				searchSellerResponse.getSellerMbr().getSellerSubStatus());
+			LOGGER.debug("[SC] 회원메인 상태 : {}, 서브 상태 {}", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 
-		throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-				searchSellerResponse.getSellerMbr().getSellerSubStatus());
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 		}
 
 		/** 1. SC회원 Req 생성 및 주입. */
@@ -819,8 +824,8 @@ public class SellerServiceImpl implements SellerService {
 				.getSellerMainStatus())
 				|| !StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
 						.getSellerSubStatus())) {
-		throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-				searchSellerResponse.getSellerMbr().getSellerSubStatus());
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 		}
 
 		// 법인 / BP
@@ -828,8 +833,8 @@ public class SellerServiceImpl implements SellerService {
 				.getSellerMbr().getSellerClass())
 				|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_BP, searchSellerResponse
 						.getSellerMbr().getSellerCategory())) {
-		throw new StorePlatformException("SAC_MEM_2004", searchSellerResponse.getSellerMbr().getSellerCategory(),
-				searchSellerResponse.getSellerMbr().getSellerClass());
+			throw new StorePlatformException("SAC_MEM_2004", searchSellerResponse.getSellerMbr().getSellerCategory(),
+					searchSellerResponse.getSellerMbr().getSellerClass());
 		}
 
 		UpgradeSellerRequest upgradeSellerRequest = new UpgradeSellerRequest();
@@ -892,7 +897,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setCordedTelephone(req.getCordedTelephone());
 		sellerUpgrade.setChargerPhone(req.getChargerPhone());
 		sellerUpgrade.setIsRecvSMS(req.getIsRecvSMS());
-		sellerUpgrade.setCeoName(req.getCeoName());
 		sellerUpgrade.setCharger(req.getCharger());
 		sellerUpgrade.setSellerBizType(req.getSellerBizType());
 
@@ -901,18 +905,18 @@ public class SellerServiceImpl implements SellerService {
 		// 서류
 		List<Document> documentList = null;
 		if (req.getExtraDocumentList() != null) {
-		documentList = new ArrayList<Document>();
-		for (int i = 0; i < req.getExtraDocumentList().size(); i++) {
-		Document document = new Document();
-		document.setDocumentCode(req.getExtraDocumentList().get(i).getDocumentCode());
-		document.setDocumentName(req.getExtraDocumentList().get(i).getDocumentName());
-		document.setDocumentPath(req.getExtraDocumentList().get(i).getDocumentPath());
-		document.setDocumentSize(req.getExtraDocumentList().get(i).getDocumentSize());
-		document.setIsUsed(MemberConstants.USE_Y);
+			documentList = new ArrayList<Document>();
+			for (int i = 0; i < req.getExtraDocumentList().size(); i++) {
+				Document document = new Document();
+				document.setDocumentCode(req.getExtraDocumentList().get(i).getDocumentCode());
+				document.setDocumentName(req.getExtraDocumentList().get(i).getDocumentName());
+				document.setDocumentPath(req.getExtraDocumentList().get(i).getDocumentPath());
+				document.setDocumentSize(req.getExtraDocumentList().get(i).getDocumentSize());
+				document.setIsUsed(MemberConstants.USE_Y);
 
-		documentList.add(document);
-		}
-		upgradeSellerRequest.setDocumentList(documentList);
+				documentList.add(document);
+			}
+			upgradeSellerRequest.setDocumentList(documentList);
 		}
 
 		upgradeSellerRequest.setSellerKey(req.getSellerKey());
@@ -952,7 +956,7 @@ public class SellerServiceImpl implements SellerService {
 		// 로그인 잠금 상태 확인
 		if (StringUtils.equals(MemberConstants.USER_LOGIN_STATUS_PAUSE, searchSellerResponse.getSellerMbr()
 				.getLoginStatusCode())) {
-		throw new StorePlatformException("SAC_MEM_2011", req.getSellerId());
+			throw new StorePlatformException("SAC_MEM_2011", req.getSellerId());
 		}
 
 		/** 2. SC회원 Req 생성 및 주입. */
@@ -1000,37 +1004,37 @@ public class SellerServiceImpl implements SellerService {
 		updateRealNameSellerRequest.setSellerKey(req.getSellerKey());
 
 		if (StringUtils.equals(MemberConstants.AUTH_TYPE_OWN, req.getIsOwn())) {
-		// 실명인증 정보
-		MbrAuth mbrAuth = new MbrAuth();
-		mbrAuth.setBirthDay(req.getSellerBirthDay());
-		mbrAuth.setCi(req.getSellerCI());
-		mbrAuth.setDi(req.getSellerDI());
-		mbrAuth.setIsDomestic(req.getIsDomestic());
-		mbrAuth.setIsRealName(req.getIsRealName());
-		mbrAuth.setName(req.getSellerName());
-		mbrAuth.setPhone(req.getSellerPhone());
-		mbrAuth.setRealNameDate(req.getRealNameDate());
-		mbrAuth.setRealNameMethod(req.getRealNameMethod());
-		mbrAuth.setRealNameSite(commonRequest.getSystemID());
-		mbrAuth.setSex(req.getSex());
-		mbrAuth.setTelecom(req.getSellerTelecom());
-		updateRealNameSellerRequest.setMbrAuth(mbrAuth);
+			// 실명인증 정보
+			MbrAuth mbrAuth = new MbrAuth();
+			mbrAuth.setBirthDay(req.getSellerBirthDay());
+			mbrAuth.setCi(req.getSellerCI());
+			mbrAuth.setDi(req.getSellerDI());
+			mbrAuth.setIsDomestic(req.getIsDomestic());
+			mbrAuth.setIsRealName(req.getIsRealName());
+			mbrAuth.setName(req.getSellerName());
+			mbrAuth.setPhone(req.getSellerPhone());
+			mbrAuth.setRealNameDate(req.getRealNameDate());
+			mbrAuth.setRealNameMethod(req.getRealNameMethod());
+			mbrAuth.setRealNameSite(commonRequest.getSystemID());
+			mbrAuth.setSex(req.getSex());
+			mbrAuth.setTelecom(req.getSellerTelecom());
+			updateRealNameSellerRequest.setMbrAuth(mbrAuth);
 
 		} else if (StringUtils.equals(MemberConstants.AUTH_TYPE_PARENT, req.getIsOwn())) {
-		// 법정 대리인 정보
-		MbrLglAgent mbrLglAgent = new MbrLglAgent();
-		mbrLglAgent.setParentBirthDay(req.getParentBirthDay());
-		mbrLglAgent.setParentDate(req.getParentDate());
-		mbrLglAgent.setParentEmail(req.getParentEmail());
-		mbrLglAgent.setParentType(req.getParentType());
-		mbrLglAgent.setParentCI(req.getSellerCI());
-		mbrLglAgent.setParentMDN(req.getSellerPhone());
-		mbrLglAgent.setParentName(req.getSellerName());
-		mbrLglAgent.setParentRealNameDate(req.getRealNameDate());
-		mbrLglAgent.setParentRealNameMethod(req.getRealNameMethod());
-		mbrLglAgent.setParentRealNameSite(commonRequest.getSystemID());
-		mbrLglAgent.setParentTelecom(req.getSellerTelecom());
-		updateRealNameSellerRequest.setMbrLglAgent(mbrLglAgent);
+			// 법정 대리인 정보
+			MbrLglAgent mbrLglAgent = new MbrLglAgent();
+			mbrLglAgent.setParentBirthDay(req.getParentBirthDay());
+			mbrLglAgent.setParentDate(req.getParentDate());
+			mbrLglAgent.setParentEmail(req.getParentEmail());
+			mbrLglAgent.setParentType(req.getParentType());
+			mbrLglAgent.setParentCI(req.getSellerCI());
+			mbrLglAgent.setParentMDN(req.getSellerPhone());
+			mbrLglAgent.setParentName(req.getSellerName());
+			mbrLglAgent.setParentRealNameDate(req.getRealNameDate());
+			mbrLglAgent.setParentRealNameMethod(req.getRealNameMethod());
+			mbrLglAgent.setParentRealNameSite(commonRequest.getSystemID());
+			mbrLglAgent.setParentTelecom(req.getSellerTelecom());
+			updateRealNameSellerRequest.setMbrLglAgent(mbrLglAgent);
 		}
 
 		updateRealNameSellerRequest.setCommonRequest(commonRequest);
@@ -1169,15 +1173,15 @@ public class SellerServiceImpl implements SellerService {
 		removeFlurryRequest.setSellerKey(req.getSellerKey());
 
 		if (req.getFlurryAuthList() != null) {
-		List<FlurryAuth> flurrtAuthList = new ArrayList<FlurryAuth>();
-		FlurryAuth flurryAuth = null;
-		for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
-		flurryAuth = new FlurryAuth();
-		flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
-		flurryAuth.setSellerKey(req.getSellerKey());
-		flurrtAuthList.add(flurryAuth);
-		}
-		removeFlurryRequest.setFlurryAuthList(flurrtAuthList);
+			List<FlurryAuth> flurrtAuthList = new ArrayList<FlurryAuth>();
+			FlurryAuth flurryAuth = null;
+			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
+				flurryAuth = new FlurryAuth();
+				flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
+				flurryAuth.setSellerKey(req.getSellerKey());
+				flurrtAuthList.add(flurryAuth);
+			}
+			removeFlurryRequest.setFlurryAuthList(flurrtAuthList);
 		}
 
 		RemoveFlurryResponse removeFlurryResponse = this.sellerSCI.removeFlurry(removeFlurryRequest);
@@ -1215,16 +1219,16 @@ public class SellerServiceImpl implements SellerService {
 		updateFlurryRequest.setCommonRequest(commonRequest);
 
 		if (req.getFlurryAuthList() != null) {
-		List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
-		FlurryAuth flurryAuth = null;
-		for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
-		flurryAuth = new FlurryAuth();
-		flurryAuth.setSellerKey(req.getSellerKey());
-		flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
-		flurryAuth.setAccessCode(req.getFlurryAuthList().get(i).getAccessCode());
-		flurryAuthList.add(flurryAuth);
-		}
-		updateFlurryRequest.setFlurryAuthList(flurryAuthList);
+			List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
+			FlurryAuth flurryAuth = null;
+			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
+				flurryAuth = new FlurryAuth();
+				flurryAuth.setSellerKey(req.getSellerKey());
+				flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
+				flurryAuth.setAccessCode(req.getFlurryAuthList().get(i).getAccessCode());
+				flurryAuthList.add(flurryAuth);
+			}
+			updateFlurryRequest.setFlurryAuthList(flurryAuthList);
 		}
 
 		UpdateFlurryResponse updateFlurryResponse = this.sellerSCI.updateFlurry(updateFlurryRequest);
@@ -1260,8 +1264,8 @@ public class SellerServiceImpl implements SellerService {
 		// 메인, 서브 상태
 		if (!StringUtils.equals(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING, searchSellerResponse.getSellerMbr()
 				.getSellerSubStatus())) {
-		throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-				searchSellerResponse.getSellerMbr().getSellerSubStatus());
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 		}
 		/** 1. Email 중복체크 [REQUEST] 생성 및 주입 */
 		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
@@ -1279,7 +1283,7 @@ public class SellerServiceImpl implements SellerService {
 		/** 1-3. SC회원(Email 중복) Call */
 		if (StringUtils.equals(MemberConstants.USE_Y,
 				this.sellerSCI.checkDuplicationSeller(checkDuplicationSellerRequest).getIsRegistered())) {
-		throw new StorePlatformException("SAC_MEM_2012", req.getNewEmailAddress());
+			throw new StorePlatformException("SAC_MEM_2012", req.getNewEmailAddress());
 		}
 
 		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
