@@ -4,13 +4,16 @@
 	<!-- package 정보로 상품 ID 조회-->
 	<select id="searchProdListByPackageNm" parameterType="Map" resultType="MetaInfo">
 		 SELECT 
-                   PROD.PROD_ID AS PART_PROD_ID
+                   RSHP.PROD_ID
+                  ,RSHP.PART_PROD_ID
                   ,CONTENTS.APK_PKG_NM
                   ,PROD.CONTENTS_TYPE_CD
             FROM  TB_DP_PROD PROD
+                 ,TB_DP_PROD_RSHP  RSHP
                  ,TB_DP_SPRT_DEVICE DEVICE
                  ,TB_DP_SUB_CONTENTS CONTENTS
            WHERE PROD.PROD_ID = DEVICE.PROD_ID
+             AND PROD.PROD_ID = RSHP.PROD_ID
              AND DEVICE.DEVICE_MODEL_CD = #{deviceHeader.model}
              AND DEVICE.PROD_ID = CONTENTS.PROD_ID
              AND DEVICE.SUB_CONTENTS_ID = CONTENTS.SUB_CONTENTS_ID 
@@ -19,5 +22,6 @@
                 #{item}
              </foreach>
              AND CONTENTS.VM_VER LIKE '%'||#{osVersion}||'%' /* Provisioning OS VERSION 체크 */
+             AND RSHP.PROD_RSHP_CD = #{rshpCd}
  	</select>
 </mapper>

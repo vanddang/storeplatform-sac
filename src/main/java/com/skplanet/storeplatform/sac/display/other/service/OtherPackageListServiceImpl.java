@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
@@ -68,6 +69,7 @@ public class OtherPackageListServiceImpl implements OtherPackageListService {
 		paramMap.put("PKG_LIST", prodIdList);
 		paramMap.put("osVersion", osVersion);
 		paramMap.put("deviceHeader", deviceHeader);
+		paramMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 
 		List<MetaInfo> appList = this.commonDAO.queryForList("OtherPackageList.searchProdListByPackageNm", paramMap,
 				MetaInfo.class);
