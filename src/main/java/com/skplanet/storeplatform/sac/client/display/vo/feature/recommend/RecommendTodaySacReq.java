@@ -14,7 +14,7 @@ public class RecommendTodaySacReq {
 	private static final long serialVersionUID = 1L;
 
 	@NotBlank
-	@Pattern(regexp = "^ADM000000007")
+	@Pattern(regexp = "^ADM000000017|^ADM000000018|^ADM000000019")
 	private String listId; // 리스트ID
 	private String prodCharge; // 유무료 구분
 	private String prodGradeCd; // 상품 등급
