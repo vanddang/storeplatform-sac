@@ -228,9 +228,9 @@
 	                FROM TB_DP_MENU_CATEGORY      A
 	                    , TB_DP_MENU_CATEGORY_PROD_MAPG B
 	                    , TB_DP_PROD_RSHP C
-	                    , TB_DP_PROD D /* 채널 */
+	                    , TB_DP_PROD D /* 에피소드 */
 	                    , TB_DP_TENANT_PROD E
-	                    , UV_TB_DP_MULTIMDA_PROD F /* 채널 */
+	                    , UV_TB_DP_MULTIMDA_PROD F /* 에피소드 */
 	                WHERE A.MENU_ID = B.MENU_ID
 	                AND B.PROD_ID = D.PROD_ID
                     AND A.MENU_ID = #{menuId}
