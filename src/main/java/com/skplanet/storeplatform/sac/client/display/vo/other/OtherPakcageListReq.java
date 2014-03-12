@@ -13,24 +13,24 @@ public class OtherPakcageListReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Package 이름 리스트.
+	 * Package 정보.
 	 */
 	@NotBlank
-	private String list;
+	private String packageInfo;
 
 	/**
-	 * @return the list
+	 * @return the packageInfo
 	 */
-	public String getList() {
-		return this.list;
+	public String getPackageInfo() {
+		return this.packageInfo;
 	}
 
 	/**
-	 * @param list
-	 *            the list to set
+	 * @param packageInfo
+	 *            the packageInfo to set
 	 */
-	public void setList(String list) {
-		this.list = list;
+	public void setPackageInfo(String packageInfo) {
+		this.packageInfo = packageInfo;
 	}
 
 }
