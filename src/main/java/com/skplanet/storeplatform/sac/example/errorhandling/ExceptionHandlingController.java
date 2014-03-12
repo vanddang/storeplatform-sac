@@ -36,23 +36,19 @@ public class ExceptionHandlingController {
 			try {
 				try {
 					try {
-						try {
-							throw new NullPointerException("사용자정보가 NULL임.");
-						} catch (Exception ex) {
-							throw ex;
-						}
+						throw new NullPointerException("사용자정보가 NULL임.");
 					} catch (Exception ex) {
-						throw new IllegalArgumentException("사용자정보가 정상적으로 입력되지 않았음.", ex);
+						throw ex;
 					}
-
 				} catch (Exception ex) {
-					throw new StorePlatformException("SC_MEM_0002", ex);
+					throw new IllegalArgumentException("사용자정보가 정상적으로 입력되지 않았음.", ex);
 				}
+
 			} catch (Exception ex) {
-				throw new StorePlatformException("SAC_MEM_0002", ex);
+				throw new StorePlatformException("SC_MEM_0002", ex);
 			}
 		} catch (Exception ex) {
-			throw new StorePlatformException("SAC_001", ex, "SAC_MEM_0002");
+			throw new StorePlatformException("SAC_MEM_0002", ex);
 		}
 	}
 
