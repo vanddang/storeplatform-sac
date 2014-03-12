@@ -30,7 +30,8 @@
 
     <bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
         <constructor-arg ref="messageSource" />
-    </bean>
+    </bean> 
+    <bean class="com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor" /> 
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
