@@ -118,6 +118,7 @@
                                            )                        A
                                          , TB_DP_MENU_CATEGORY      B
                                          , TB_DP_PROD               D /* 에피소드 상품 */
+                                         , UV_TB_DP_MULTIMDA_PROD   E /* 에피소드 상품 */
                                          , TB_DP_TENANT_PROD        G
                                          , TB_DP_PROD_RSHP          I
                                          , TB_DP_PROD               J /* 채널 상품 */
@@ -125,6 +126,7 @@
                                          , TB_CM_DEVICE             M
                                      WHERE A.MENU_ID = B.MENU_ID
                                        AND A.PROD_ID = D.PROD_ID
+                                       AND D.PROD_ID = E.PROD_ID
                                        AND A.PROD_ID = G.PROD_ID
                                        AND A.TENANT_ID = G.TENANT_ID
                                        AND A.PROD_ID = I.PART_PROD_ID
@@ -182,6 +184,9 @@
                                                                             , 'DP13027008'
                                                                             , 'DP13027009'
                                                                             , 'DP13027010' ) )
+                                   </if>
+                                   <if test='possLendClsfCd != null and possLendClsfCd != "" '>
+                                       AND E.POSS_LEND_CLSF_CD = #{possLendClsfCd}  /* 소장/대여 구분 코드 */
                                    </if>
                                ) JA
                        ) KA
