@@ -23,7 +23,7 @@
                      , COUNT(*) OVER () AS TOTAL_COUNT
                      <!-- TOP Music -->
                      <if test='filteredBy == "top"'>
-                     , ROW_NUMBER() OVER(ORDER BY A.RANK_CHG_CNT, E.PROD_NM) AS RNUM
+                     , ROW_NUMBER() OVER(ORDER BY A.NOW_RANK ASC, E.PROD_NM) AS RNUM
                      </if>
                      <!-- 최신음악, 장르별 -->
                      <if test='filteredBy == "recent" || filteredBy == "genre"'>
