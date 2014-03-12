@@ -65,13 +65,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 		String isActive = checkSaveNSyncResponse.getIsActive(); // 정상여부.
 		String isSaveNSync = checkSaveNSyncResponse.getIsSaveNSync(); // 변동성대상여부.
-		String imMbrNo = checkSaveNSyncResponse.getImMbrNo(); // 외부(IDP)에서 할당된 사용자 Key.
 		String deviceKey = checkSaveNSyncResponse.getDeviceKey(); // 휴대기기 Key.
 		String userKey = checkSaveNSyncResponse.getUserKey(); // 사용자 Key.
-		/**
-		 * TODO SC 추가후에 바꿀것...........
-		 */
-		String preDeviceId = checkSaveNSyncResponse.getUserKey(); // 이전 MSISDN.
+		String preDeviceId = checkSaveNSyncResponse.getPreDeviceID(); // 이전 MSISDN.
 
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 

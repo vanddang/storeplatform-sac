@@ -146,11 +146,12 @@ public class CreateSaveAndSyncTest {
 
 	/**
 	 * <pre>
-	 * Save&Sync 변동성 대상가입 테스트.
+	 * Save&Sync 변동성 대상아닌가입 테스트.
 	 * </pre>
 	 */
+	@Ignore
 	@Test
-	public void TEST_B_SaveAndSync_변동성대상가입() {
+	public void TEST_B_SaveAndSync_변동성대상아닌가입() {
 
 		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createSaveAndSync/v1").httpMethod(HttpMethod.POST)
@@ -163,7 +164,76 @@ public class CreateSaveAndSyncTest {
 						CreateSaveAndSyncReq reqJson = new CreateSaveAndSyncReq();
 
 						// 단말 정보
-						reqJson.setDeviceId("01500001111"); // 기기 ID
+						reqJson.setDeviceId("01500001112"); // 기기 ID
+						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입 (MDN or MAC 만...)
+						reqJson.setDeviceTelecom("US001202"); // 통신사
+						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
+						reqJson.setDeviceAccount("jUnitTest@gmail.com"); // 기기 계정 (Gmail)
+						reqJson.setJoinId("US002903"); // 가입채널코드
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+
+						// 단말 부가 정보 리스트
+						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
+						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+						deviceExtraInfo.setExtraProfile("US011407");
+						deviceExtraInfo.setExtraProfileValue("3.0");
+
+						deviceExtraList.add(deviceExtraInfo);
+						reqJson.setDeviceExtraInfoList(deviceExtraList);
+
+						// 동의 정보
+						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
+						AgreementInfo agreement1 = new AgreementInfo();
+						agreement1.setExtraAgreementId("US010607");
+						agreement1.setExtraAgreementVersion("0.1");
+						agreement1.setIsExtraAgreement("Y");
+						AgreementInfo agreement2 = new AgreementInfo();
+						agreement2.setExtraAgreementId("US010608");
+						agreement2.setExtraAgreementVersion("0.1");
+						agreement2.setIsExtraAgreement("Y");
+						AgreementInfo agreement3 = new AgreementInfo();
+						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementVersion("0.1");
+						agreement3.setIsExtraAgreement("Y");
+
+						agreementList.add(agreement1);
+						agreementList.add(agreement2);
+						agreementList.add(agreement3);
+						reqJson.setAgreementList(agreementList);
+
+						TestConvertMapperUtils.convertObjectToJson(reqJson);
+						return reqJson;
+					}
+				}).success(CreateSaveAndSyncRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateSaveAndSyncRes res = (CreateSaveAndSyncRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * Save&Sync 변동성 대상가입 테스트.
+	 * </pre>
+	 */
+	@Test
+	public void TEST_C_SaveAndSync_변동성대상가입() {
+
+		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createSaveAndSync/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("Accept", "application/json")
+				.addHeaders("x-sac-device-info", "model=\"SHW-M110S\",dpi=\"320\",resolution=\"480*720\",os=\"Android/4.0.4\",pkg=\"com.skt.skaf.A000Z00040/37\",svc=\"SHOPCLIENT/4.3\"")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateSaveAndSyncReq reqJson = new CreateSaveAndSyncReq();
+
+						// 단말 정보
+						reqJson.setDeviceId("01500001120"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입 (MDN or MAC 만...)
 						reqJson.setDeviceTelecom("US001202"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
