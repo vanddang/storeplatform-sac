@@ -39,9 +39,9 @@
                          <if test='orderedBy == "title"'>
                      , ROW_NUMBER() OVER(ORDER BY E.PROD_NM, E.ARTIST1_NM) AS RNUM
                          </if>
-                         <!-- 음악 > 최신음악 -->
+                         <!-- Default 인기순 -->
                          <if test='orderedBy == null || orderedBy == ""'>
-                     , ROW_NUMBER() OVER(ORDER BY G.ISSUE_DAY DESC, E.PROD_NM) AS RNUM
+                     , ROW_NUMBER() OVER(ORDER BY A.NOW_RANK ASC, G.ISSUE_DAY, E.PROD_NM) AS RNUM
                          </if>
                      </if> 
                   FROM TB_DP_MUSIC_CHART A  /* 에피소드 */
