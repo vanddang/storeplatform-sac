@@ -770,7 +770,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				gameCenterSacReq.setDeviceId(mdn);
 				gameCenterSacReq.setSystemId(systemId);
 				gameCenterSacReq.setTenantId(tenantId);
-				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT); //TODO. 번호이동시 게임센터 연동 코드 확인필요!!
+				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
 
 				this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
@@ -794,7 +794,12 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				gameCenterSacReq.setDeviceId(mdn);
 				gameCenterSacReq.setSystemId(systemId);
 				gameCenterSacReq.setTenantId(tenantId);
-				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
+
+				if (StringUtil.equals(svcRsnCd, "M1NC")) { // 명의변경
+					gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_NAME_CHANGE);
+				} else {
+					gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
+				}
 
 				this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
