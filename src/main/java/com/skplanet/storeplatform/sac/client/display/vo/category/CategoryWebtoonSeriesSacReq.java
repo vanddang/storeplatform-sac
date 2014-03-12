@@ -9,7 +9,9 @@ public class CategoryWebtoonSeriesSacReq extends CommonInfo {
 
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String channelId;
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String menuId;
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String orderedBy;
 	private Integer offset = 1; // offset
 	private Integer count = 20; // count
