@@ -22,7 +22,7 @@ public class RequestFilter extends AbstractStorePlatformRequestFilter {
 	 */
 	@Override
 	protected String getFdsLoggerName() {
-		return "FDS_SAC_LOGGER";
+		return "TLOG_SAC_LOGGER";
 	}
 
 }

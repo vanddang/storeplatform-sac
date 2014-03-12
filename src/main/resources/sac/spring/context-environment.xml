@@ -14,7 +14,7 @@
     
     <beans profile="local"> 
 	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
-	        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>        
+	        <property name="logVersion" value="#{propertiesForSac['skp.common.tlog.logversion']}"/>        
 	        <property name="logbackPath">
 	            <list>
 	               <value>sac/log/logback-local.xml</value>
@@ -27,7 +27,7 @@
         
     <beans profile="dev"> 
 	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
-	        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>        
+	        <property name="logVersion" value="#{propertiesForSac['skp.common.tlog.logversion']}"/>        
 	        <property name="logbackPath">
 	            <list>
 	               <value>sac/log/logback-dev.xml</value>
@@ -40,7 +40,7 @@
         
     <beans profile="qa"> 
 	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
-	        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>        
+	        <property name="logVersion" value="#{propertiesForSac['skp.common.tlog.logversion']}"/>        
 	        <property name="logbackPath">
 	            <list>
 	               <value>sac/log/logback-qa.xml</value>
@@ -53,7 +53,7 @@
         
     <beans profile="real"> 
 	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
-	        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>        
+	        <property name="logVersion" value="#{propertiesForSac['skp.common.tlog.logversion']}"/>        
 	        <property name="logbackPath">
 	            <list>
 	               <value>sac/log/logback-real.xml</value>

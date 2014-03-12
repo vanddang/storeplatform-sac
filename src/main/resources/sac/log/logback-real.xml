@@ -41,10 +41,10 @@
         </layout>
     </appender>
     
-    <appender name="FDS_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${catalina.base}/logs/sac/fds/fds.log</File>
+    <appender name="TLOG_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${catalina.base}/logs/sac/tlog/tlog.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${catalina.base}/logs/sac/fds/fds_%d{yyyyMMdd}.log</FileNamePattern>            
+            <FileNamePattern>${catalina.base}/logs/sac/tlog/tlog_%d{yyyyMMdd}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>%msg%n</pattern>
@@ -88,10 +88,10 @@
         <appender-ref ref="OMC_요건1_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
     
-    <!-- FDS 로그 -->
-    <logger name="FDS_SAC_LOGGER" additivity="false">
+    <!-- TLOG 로그 -->
+    <logger name="TLOG_SAC_LOGGER" additivity="false">
         <level value="INFO" />
-        <appender-ref ref="FDS_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="TLOG_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
     
     <!-- LOCAL 개발 CONSOL  로그 -->
