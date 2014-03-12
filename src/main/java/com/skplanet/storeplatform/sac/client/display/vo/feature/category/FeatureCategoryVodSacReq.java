@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -39,8 +40,10 @@ public class FeatureCategoryVodSacReq extends CommonInfo {
 
 	private String orderedBy; // 상품정렬순서
 
+	@Valid
 	private Integer offset; // 시작점 ROW
 
+	@Valid
 	private Integer count; // 페이지당 노출될 ROW 개수
 
 	private String stdDt; // 기준일시

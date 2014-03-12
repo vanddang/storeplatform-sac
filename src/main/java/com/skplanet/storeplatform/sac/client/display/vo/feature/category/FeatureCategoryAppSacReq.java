@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -21,7 +22,9 @@ public class FeatureCategoryAppSacReq extends CommonInfo {
 	private String prodCharge; // 유무료 구분
 	private String prodGradeCd; // 상품 등급
 	private String menuId; // 메뉴ID
+	@Valid
 	private Integer offset; // offset
+	@Valid
 	private Integer count; // count
 
 	// common req 전까지 임시

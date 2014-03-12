@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -35,7 +36,9 @@ public class RecommendWebtoonSacReq extends CommonInfo {
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
 	private String stdDt;
+	@Valid
 	private Integer offset = 1; // offset
+	@Valid
 	private Integer count = 20; // count
 
 	/**

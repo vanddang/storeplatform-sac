@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
+import javax.validation.Valid;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -17,7 +19,9 @@ public class RecommendAdminSacReq {
 	private String prodGradeCd; // 상품 등급
 	@NotBlank
 	private String topMenuId; // 메뉴ID
+	@Valid
 	private Integer offset; // offset
+	@Valid
 	private Integer count; // count
 
 	// common req 전까지 임시

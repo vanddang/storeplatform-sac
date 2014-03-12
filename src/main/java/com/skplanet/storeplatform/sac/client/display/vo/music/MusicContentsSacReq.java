@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.music;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -44,8 +45,10 @@ public class MusicContentsSacReq extends CommonInfo {
 
 	private String tenantId;
 
+	@Valid
 	private Integer offset; // 시작점 ROW
 
+	@Valid
 	private Integer count; // 페이지당 노출 ROW 수
 
 	private String chartClsfCd;

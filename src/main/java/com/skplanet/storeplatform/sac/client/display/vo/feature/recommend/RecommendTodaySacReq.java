@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -20,7 +21,9 @@ public class RecommendTodaySacReq {
 	@NotBlank
 	@Pattern(regexp = "^DP13|^DP14|^DP16")
 	private String topMenuId; // 메뉴ID
+	@Valid
 	private Integer offset; // offset
+	@Valid
 	private Integer count; // count
 
 	// common req 전까지 임시

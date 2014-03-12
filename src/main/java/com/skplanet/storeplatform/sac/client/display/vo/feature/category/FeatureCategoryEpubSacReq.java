@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -23,7 +24,9 @@ public class FeatureCategoryEpubSacReq extends CommonInfo {
 	@NotBlank
 	@Pattern(regexp = "^DP13|^DP14")
 	private String topMenuId; // 메뉴ID
+	@Valid
 	private Integer offset; // offset
+	@Valid
 	private Integer count; // count
 	private String filteredBy; // 필터 조건
 	private String menuId; // 메뉴ID
