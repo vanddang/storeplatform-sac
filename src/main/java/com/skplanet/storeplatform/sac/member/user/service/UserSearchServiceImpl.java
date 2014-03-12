@@ -1051,10 +1051,30 @@ public class UserSearchServiceImpl implements UserSearchService {
 			userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
 			userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
 
+			// 실명인증이 되어 있으면 실명인증 데이터가 내려간다.
+			// 실명인증이 되어 있지만 이름, 성명, 생년월일 데이터가 없으면 회원정보 데이터가 내려간다.
 			if (schUserRes.getMbrAuth().getIsRealName().equals("Y")) {
-				userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getMbrAuth().getBirthDay()));
-				userInfo.setUserName(StringUtil.setTrim(schUserRes.getMbrAuth().getName()));
-				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
+				// 생년월일
+				if (schUserRes.getMbrAuth().getBirthDay() != null) {
+					userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getMbrAuth().getBirthDay()));
+				} else {
+					userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
+				}
+
+				// 이름
+				if (schUserRes.getMbrAuth().getName() != null) {
+					userInfo.setUserName(StringUtil.setTrim(schUserRes.getMbrAuth().getName()));
+				} else {
+					userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
+				}
+
+				// 성별
+				if (schUserRes.getMbrAuth().getSex() != null) {
+					userInfo.setUserSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
+				} else {
+					userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
+				}
+
 			} else if (schUserRes.getMbrAuth().getIsRealName().equals("N")) {
 				userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
 				userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));

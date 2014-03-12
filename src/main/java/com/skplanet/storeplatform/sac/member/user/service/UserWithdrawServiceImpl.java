@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,10 @@ import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -81,6 +84,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 	@Autowired
 	private ImIdpSCI imIdpSCI;
+
+	@Autowired
+	private AmqpTemplate memberRetireAmqpTemplate;
 
 	/**
 	 * 
@@ -160,6 +166,14 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
 		this.deviceService.insertGameCenterIF(gameCenterSacReq);
+
+		/* MQ 연동 */
+		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+		mqInfo.setUserId(schUserRes.getUserMbr().getUserID());
+		mqInfo.setUserKey(schUserRes.getUserKey());
+		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+
+		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 		return withdrawRes;
 
