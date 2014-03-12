@@ -7,11 +7,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
 
 /**
- * 단말 모델 정보 조회 (운영자 관리) Response Value Object.
+ * 단말 모델 정보 조회 (by UserAgent) Response Value Object.
  * 
- * Updated on : 2014. 03. 11. Updated by : 이태희.
+ * Updated on : 2014. 03. 12. Updated by : 이태희.
  */
-public class DeviceChangeSacRes extends CommonInfo {
+public class DeviceUserAgentSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private CommonResponse commonResponse;
