@@ -220,7 +220,7 @@
 										AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
                                         <!-- 단행/연재/잡지 -->
                                         <if test="bookTypeCd != null and bookTypeCd !=''">
-                                        AND P.BOOK_TYPE_CLSF_CD = #{bookTypeCd}
+                                        AND P.BOOK_CLSF_CD = #{bookTypeCd}
                                         </if>
                                         <if test="filteredBy == 'chapter'">
                                             /* 특정 회차(chapter)기준 이후 회차 컨텐츠 */
