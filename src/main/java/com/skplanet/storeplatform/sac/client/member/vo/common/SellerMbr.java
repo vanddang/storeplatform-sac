@@ -253,6 +253,16 @@ public class SellerMbr extends CommonInfo {
 	private String subSellerCateList;
 	private String subRegDate;
 
+	private String subSellerLoginDttm;
+
+	public String getSubSellerLoginDttm() {
+		return this.subSellerLoginDttm;
+	}
+
+	public void setSubSellerLoginDttm(String subSellerLoginDttm) {
+		this.subSellerLoginDttm = subSellerLoginDttm;
+	}
+
 	public String getSubRegDate() {
 		return this.subRegDate;
 	}
