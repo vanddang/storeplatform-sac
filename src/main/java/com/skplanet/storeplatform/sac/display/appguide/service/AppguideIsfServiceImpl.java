@@ -303,7 +303,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 				if (this.log.isDebugEnabled()) {
 					this.log.debug("product count : {}", productList.size());
 					this.log.debug("total count : {}", this.totalCount);
-					productList.clear();
+					// productList.clear();
 				}
 
 				if (productList.isEmpty()) {
