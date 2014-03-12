@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductInfo">
+    <!--<resultMap id="AppMetaInfoMap" type="MetaInfo" autoMapping="true">-->
+        <!--<association property="support" javaType="java.util.HashMap">-->
+            <!--<result column="DRM_YN" property="drm" />-->
+            <!--<result column="PART_PARENT_CLSF_CD" property="iab" />-->
+        <!--</association>-->
+    <!--</resultMap>-->
+
+    <select id="getAppInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.AppMetaInfo">
+        SELECT
+            /* ProductInfoMapper.xml, getAppInfo, 정희원, 2014-03-05 */
+              PROD.PROD_ID
+            , PROD.PROD_ID AS PART_PROD_ID
+            , PROD.PROD_CHRG_YN AS PROD_CHRG
+            , PROD.PROD_GRD_CD
+            , PROD.DRM_YN
+            , PROD.REG_DT
+            , PROD.CONTENTS_TYPE_CD
+            , APROD.AID
+            , APROD.VER_MAJOR || '.' || APROD.VER_MINOR AS PROD_VER
+            , APROD.PART_PARENT_CLSF_CD
+            , PDESC.PROD_NM
+            , PDESC.PROD_BASE_DESC
+            , TPP.PROD_AMT
+            , IMG.FILE_PATH AS IMAGE_PATH
+            , IMG.FILE_SIZE AS IMAGE_SIZE
+            , NVL(TPS.PATICPERS_CNT, 0) AS PATICPERS_CNT
+            , NVL(TPS.PRCHS_CNT, 0) AS PRCHS_CNT
+            <![CDATA[
+              , NVL((CASE WHEN (TPS.AVG_EVLU_SCORE > 0 AND TPS.AVG_EVLU_SCORE < 1) THEN 1
+                          WHEN TPS.AVG_EVLU_SCORE > 5 THEN 5
+                          ELSE ROUND(TPS.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
+            ]]>
+            , PDESC.PROD_DTL_DESC
+            , TP.PROD_STATUS_CD
+        FROM TB_DP_PROD PROD
+            INNER JOIN TB_DP_APP_PROD APROD
+                ON APROD.PROD_ID = PROD.PROD_ID
+            INNER JOIN TB_DP_PROD_DESC PDESC
+                ON PDESC.PROD_ID = PROD.PROD_ID -- PDESC.LANG_CD
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID = PROD.PROD_ID -- TP.TENANT_ID
+            INNER JOIN TB_DP_TENANT_PROD_PRICE TPP
+                ON TPP.PROD_ID = PROD.PROD_ID AND TPP.TENANT_ID = TP.TENANT_ID
+            INNER JOIN TB_DP_PROD_IMG IMG
+                ON IMG.PROD_ID = PROD.PROD_ID AND IMG.LANG_CD = PDESC.LANG_CD
+            LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TPS
+                ON TPS.PROD_ID = PROD.PROD_ID AND TPS.TENANT_ID = TP.TENANT_ID
+        WHERE 1=1
+              AND PROD.PROD_ID = #{channelId}
+              AND PDESC.LANG_CD = #{langCd}
+              AND TP.TENANT_ID = #{tenantId}
+              AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
+              AND TP.EXPO_YN = 'Y'
+        <if test='prodStatusCd != null'>
+              AND TP.PROD_STATUS_CD = #{prodStatusCd} -- PD000403: 판매중
+        </if>
+              AND TPP.SEQ = 1 -- Needed?
+              AND IMG.IMG_CD = #{imageCd}  --'DP000101'
+              AND IMG.EXPO_ORD = 1  -- 노출순서
+              AND PROD.SVC_GRP_CD = #{svcGrpCd}  -- DP000201 : App
+    </select>
+
+    <select id="getSubContent" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.SubContent">
+        SELECT
+            /* ProductInfoMapper.xml, getSubContent, 정희원, 2014-03-05 */
+            SC.SUB_CONTENTS_ID,
+            SC.APK_PKG_NM,
+            SC.APK_VER
+        FROM TB_DP_SPRT_DEVICE SD
+            INNER JOIN TB_DP_SUB_CONTENTS SC
+                ON SC.PROD_ID = SD.PROD_ID AND SC.SUB_CONTENTS_ID = SD.SUB_CONTENTS_ID
+        WHERE 1 = 1
+              AND SD.PROD_ID = #{prodId}
+              AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
+    </select>
+
+    <select id="getMenuInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.MenuInfo">
+        SELECT
+            /* ProductInfoMapper.xml, getMenuInfo, 정희원, 2014-03-05 */
+            MM.PROD_ID,
+            MC.TOP_MENU_ID,
+            TMD.MENU_NM AS TOP_MENU_NM,
+            TMD.MENU_DESC AS TOP_MENU_DESC,
+            MC.MENU_ID,
+            MD.MENU_NM,
+            MD.MENU_DESC,
+            MC.UP_MENU_ID
+        FROM TB_DP_MENU_CATEGORY_PROD_MAPG MM
+            INNER JOIN TB_DP_MENU_CATEGORY MC
+                ON MC.MENU_ID = MM.MENU_ID
+            INNER JOIN TB_DP_MENU_CATEGORY_DESC MD
+                ON MD.MENU_ID = MM.MENU_ID
+            INNER JOIN TB_DP_MENU_CATEGORY TMC
+                ON TMC.MENU_ID = MC.TOP_MENU_ID
+            INNER JOIN TB_DP_MENU_CATEGORY_DESC TMD
+                ON TMD.MENU_ID = MC.TOP_MENU_ID AND TMD.LANG_CD = MD.LANG_CD
+        WHERE 1=1
+              AND MM.PROD_ID = #{prodId}
+              AND MM.MENU_ID = #{menuId}
+              AND MD.LANG_CD = #{langCd}
+              AND MM.USE_YN = 'Y'
+              AND MC.USE_YN = 'Y'
+    </select>
+
+</mapper>

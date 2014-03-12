@@ -133,8 +133,10 @@ public class MvcTestBuilder {
         else
             request = get(url);
 
-        for(Map.Entry<String, String> header : headerMap.entrySet()) {
-            request.header(header.getKey(), header.getValue());
+        if(headerMap != null) {
+            for(Map.Entry<String, String> header : headerMap.entrySet()) {
+                request.header(header.getKey(), header.getValue());
+            }
         }
 
         request.contentType(MediaType.APPLICATION_JSON);

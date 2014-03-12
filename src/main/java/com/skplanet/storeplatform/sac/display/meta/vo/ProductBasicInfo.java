@@ -1,11 +1,15 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * 상품 기본 정보 조회 Info
  * 
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
-public class ProductBasicInfo {
+public class ProductBasicInfo extends CommonInfo {
+    private static final long serialVersionUID = 1L;
+
 	private Integer totalCount;
 	private String tenantId;
 	private String menuId;

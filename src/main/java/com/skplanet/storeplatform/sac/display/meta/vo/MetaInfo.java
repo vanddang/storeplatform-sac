@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 import java.util.Map;
 
 /**
@@ -7,7 +9,8 @@ import java.util.Map;
  * 
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
-public class MetaInfo {
+public class MetaInfo extends CommonInfo {
+    private static final long serialVersionUID = 1L;
 	// ////////////////////////// 공통 변수 ////////////////////////////
 	private String topMenuId;
 	private String topMenuNm;
