@@ -272,12 +272,14 @@ public class UserModifyController {
 			 */
 			if (StringUtils.equals(req.getUserCi(), "")) {
 				throw new StorePlatformException("SAC_MEM_0001", "userCi");
+			} else if (StringUtils.equals(req.getUserName(), "")) {
+				throw new StorePlatformException("SAC_MEM_0001", "userName");
 			}
 
 		}
 
 		/**
-		 * 실명인증 등록/수정 Biz (본인/법정대리인)
+		 * 실명인증 등록/수정 Biz
 		 */
 		CreateRealNameRes res = this.svc.createRealName(sacHeader, req);
 
