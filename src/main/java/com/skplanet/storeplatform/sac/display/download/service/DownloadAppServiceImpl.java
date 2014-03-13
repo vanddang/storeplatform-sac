@@ -47,6 +47,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -98,18 +99,20 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
-
-		// OS VERSION 가공
-		String[] temp = deviceHeader.getOs().trim().split("/");
-
-		String osVersion = temp[1];
 		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
-		String osVersionOrginal = osVersion;
-		String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
-		if (osVersionTemp.length == 3) {
-			osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
-		}
+
+		// OS VERSION 가공
+
+		// String[] temp = deviceHeader.getOs().trim().split("/");
+		//
+		// String osVersion = temp[1];
+		// String osVersionOrginal = osVersion;
+		// String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
+		// if (osVersionTemp.length == 3) {
+		// osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
+		// }
+		String osVersion = DisplayCommonUtil.getOsVer(deviceHeader.getOs());
 
 		downloadAppSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
