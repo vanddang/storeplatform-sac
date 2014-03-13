@@ -1,8 +1,5 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -56,15 +53,8 @@ import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
 @RequestMapping(value = "/member/seller")
 public class SellerController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SellerController.class);
-
 	@Autowired
 	private SellerService sellerService;
-
-	/**
-	 * Data Binding.
-	 */
-	ObjectMapper objMapper = new ObjectMapper();
 
 	/**
 	 * <pre>
