@@ -454,7 +454,7 @@
                               , 'DP006302', 'exchange'
                               , 'DP006303', 'delivery' ) as PROD_CASE_CD  
                         ,J.CID
-                        ,(SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE PROD_ID = H.PROD_ID AND EXPO_YN ='Y' AND ROWNUM =1) CHNL_PROD_STAT
+                        ,(SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE PROD_ID = H.PROD_ID AND EXPO_YN ='Y' AND TENANT_ID = #{tenantId}  AND ROWNUM =1) chnlProdStatusCd
                         ,K.PROD_STATUS_CD
                         ,OPT.OPT1_NM
                         ,OPT.OPT2_NM                                                                                                                             
@@ -583,7 +583,7 @@
 		            , CM.AUTO_APPR_YN
 		            , DC.LANG_CD
                     , PD.CID
-                    , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE PROD_ID = PM.PART_PROD_ID AND EXPO_YN ='Y' AND ROWNUM =1) CHNL_PROD_STAT
+                    , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE PROD_ID = PM.PART_PROD_ID AND EXPO_YN ='Y' AND TENANT_ID = #{tenantId}  AND ROWNUM =1) chnlProdStatusCd
                     , TP.PROD_STATUS_CD
                     , DECODE(CM.CMPX_PROD_CLSF_CD
                              ,'OR004301','movieFreepass'  -- 영화 자동결제
