@@ -36,6 +36,7 @@ public class Music extends CommonInfo implements Serializable {
 	private List<Service> serviceList;
 	private List<BellService> bellServiceList;
 	private Bell bell; // 컬러링/벨소리 부가 정보
+    private List<Identifier> relatedProductList;
 
 	/**
 	 * @return the identifier
@@ -127,4 +128,11 @@ public class Music extends CommonInfo implements Serializable {
 		this.bell = bell;
 	}
 
+    public List<Identifier> getRelatedProductList() {
+        return relatedProductList;
+    }
+
+    public void setRelatedProductList(List<Identifier> relatedProductList) {
+        this.relatedProductList = relatedProductList;
+    }
 }
