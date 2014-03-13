@@ -221,20 +221,18 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 							this.log.debug("############# prchsId : " + prchsId + " ### prchsProdId : " + prchsProdId
 									+ " #### prchsCaseCd : " + prchsCaseCd + " #### dwldExprDt : " + dwldExprDt);
 
-							// 다운로드 만료일자가 오늘보다 큰날짜의 상품ID만 가져온다.
-							if (Long.parseLong(sysDate) <= Long.parseLong(dwldExprDt)) {
+							purchase = new Purchase();
+							// 조회한 상품이 구매한 상품인 경우
+							if (prchsProdId.equals(metaInfo.getProdId())) {
+								// 구매 및 선물 여부 확인
+								if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
+									prchsState = "payment";
+								} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
+									prchsState = "gift";
+								}
 
-								purchase = new Purchase();
-								// 조회한 상품이 구매한 상품인 경우
-								if (prchsProdId.equals(metaInfo.getProdId())) {
-
-									// 구매 및 선물 여부 확인
-									if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
-										prchsState = "payment";
-									} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
-										prchsState = "gift";
-									}
-
+								// 다운로드 만료일자가 오늘보다 큰날짜의 상품ID만 가져온다.
+								if (Long.parseLong(sysDate) <= Long.parseLong(dwldExprDt)) {
 									purchase.setState(prchsState);
 									product.setPurchase(purchase);
 								} else {
@@ -242,11 +240,14 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 									product.setPurchase(purchase);
 								}
 							} else {
-								purchase = new Purchase();
 								purchase.setState("none");
 								product.setPurchase(purchase);
 							}
 						}
+					} else {
+						purchase = new Purchase();
+						purchase.setState("none");
+						product.setPurchase(purchase);
 					}
 				} else {
 					// 구매내역이 존재하지 않는 경우
