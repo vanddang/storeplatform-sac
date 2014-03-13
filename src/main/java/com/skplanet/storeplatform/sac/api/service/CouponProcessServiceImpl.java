@@ -643,7 +643,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dtpp.setChnlUnlmtAmt(0); // 채널_무제한_금액
 			dtpp.setChnlPeriodAmt(0); // 채널_기간_금액
 			dtpp.setProdNetAmt(0); // 상품_정찰_금액
-			dtpp.setDcRate(Long.parseLong(couponInfo.getAccountingRate())); // 할인_율
+			dtpp.setDcRate(0); // 할인_율
 			dtpp.setDcAmt(0); // 할인_금액
 			dtpp.setTaxClsf(couponInfo.getTaxType()); // 세금_구분
 			dtpp.setRegId(couponInfo.getBpId());
