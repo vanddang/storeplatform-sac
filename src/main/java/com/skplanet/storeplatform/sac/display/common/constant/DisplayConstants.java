@@ -271,10 +271,17 @@ public class DisplayConstants {
 
 	public static final String DP_EBOOK_CONTINUE_NM = "continue";
 
+	/** eBook 단편 메타 클래스 코드 */
+	public static final String DP_BOOK_META_CLASS_CD = "CT19";
 	/**
 	 * eBook 시리즈 메타 클래스 코드.
 	 */
 	public static final String DP_SERIAL_META_CLASS_CD = "CT20";
+	
+	/** 잡지 */
+	public static final String DP_MAGAZINE_META_CLASS_CD = "CT24";
+	/** 인터렉티브 잡지 */
+	public static final String DP_INTERACTIVE_MAGAZINE_META_CLASS_CD = "CT26";
 
 	public static final String DP_EBOOK_STORE_SUPPORT_NM = "store";
 
@@ -471,6 +478,7 @@ public class DisplayConstants {
 	public static final String DP_BANNER_TYPE_THEME_RECOMM = "themeRecomm"; // 배너타입 : 상황별 추천
 	public static final String DP_BANNER_TYPE_APP_GUIDE = "appGuide"; // 배너타입 : 앱가이드 테마
 	public static final String DP_ORDEREDBY_TYPE_RECENT = "recent";
+	public static final String DP_ORDEREDBY_TYPE_NONPAYMENT = "nonPayment";
 	public static final String DP_ORDEREDBY_TYPE_POPULAR = "popular";
 	public static final String DP_ORDEREDBY_TYPE_RECOMMEND = "recommend";
 	/*

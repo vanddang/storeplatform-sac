@@ -69,6 +69,7 @@ public class VodServiceImpl implements VodService {
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 
 		// 1. Channel 정보 조회
+		final String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("imgCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
@@ -76,22 +77,39 @@ public class VodServiceImpl implements VodService {
         param.put("channelId", req.getChannelId());
         param.put("langCd", req.getLangCd());
         param.put("tenantId", req.getTenantId());
-        param.put("orderedBy", StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT));
+        param.put("orderedBy", orderedBy);
         param.put("offset", req.getOffset());
         param.put("count", req.getCount());
 
-		VodDetail vodDetail = this.commonDAO.queryForObject("VodDetail.selectVodChannel", param, VodDetail.class);
-		logger.debug("vodDetail={}", vodDetail);
+		VodDetail vodDetail = getVodChanndel(param);
 
 		if(vodDetail != null) {
 			//Screenshots
 			List<ProductImage> screenshotList = getScreenshotList(req.getChannelId(), req.getLangCd());
 			this.mapProduct(req, product, vodDetail, screenshotList);
 
+			List<ExistenceScRes> existenceScResList = null;
+			//orderedBy='nonPayment'
+			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)) {
+				List<String> episodeIdList = getEpisodeIdList(param);
+				existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
+				
+				List<String> paymentProdIdList = new ArrayList<String>();
+				for(ExistenceScRes existenceScRes : existenceScResList) {
+					paymentProdIdList.add(existenceScRes.getProdId());
+				}
+				param.put("paymentProdIdList", paymentProdIdList);
+			}
+			
+			
 			// 2. subProjectList
-            List<VodDetail> subProductList = this.commonDAO.queryForList("VodDetail.selectVodSeries", param, VodDetail.class);
+            List<VodDetail> subProductList = getSubProjectList(param);
 
-            List<ExistenceScRes> existenceScResList = getExistenceScReses(req, subProductList);
+            
+            if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)) {
+            	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
+            	existenceScResList = getExistenceScReses(req, subProductList);
+            }
             this.mapSubProductList(req, product, subProductList, existenceScResList);
 
 			res.setProduct(product);
@@ -99,6 +117,36 @@ public class VodServiceImpl implements VodService {
             throw new StorePlatformException("SAC_DSP_0009");
         }
 		return res;
+	}
+
+	/**
+	 * VOD Channel
+	 * @param param
+	 * @return
+	 */
+	private VodDetail getVodChanndel(Map<String, Object> param) {
+		VodDetail vodDetail = this.commonDAO.queryForObject("VodDetail.selectVodChannel", param, VodDetail.class);
+		return vodDetail;
+	}
+
+	/**
+	 * Episode Id List
+	 * @param param
+	 * @return
+	 */
+	private List<String> getEpisodeIdList(Map<String, Object> param) {
+		List<String> episodeIdList = this.commonDAO.queryForList("VodDetail.selectProdRshp", param, String.class);
+		return episodeIdList;
+	}
+
+	/**
+	 * Episode List 
+	 * @param param
+	 * @return
+	 */
+	private List<VodDetail> getSubProjectList(Map<String, Object> param) {
+		List<VodDetail> subProductList = this.commonDAO.queryForList("VodDetail.selectVodSeries", param, VodDetail.class);
+		return subProductList;
 	}
 
 	/**
@@ -614,7 +662,7 @@ public class VodServiceImpl implements VodService {
 
 				subProjectList.add(subProduct);
 			}
-		}
+		} else product.setSubProductTotalCount(0);
 		product.setSubProductList(subProjectList);
 
 	}

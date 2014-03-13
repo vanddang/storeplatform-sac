@@ -2,6 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="VodDetail">
     
+    <select id="selectProdRshp" parameterType="map" resultType="string">
+		SELECT /* VodDetailMapper.xml, selectProdRshp, SAC : 임근대 , 2014-01-28 */
+			PART_PROD_ID
+	  	FROM TB_DP_PROD_RSHP
+		WHERE PROD_ID = #{channelId}
+	</select>    
+    
     <select id="selectVodChannel" parameterType="map" resultType="VodDetail">
 		SELECT /* VodDetailMapper.xml, selectVodChannel, SAC : 임근대 , 2014-01-28 */
 			P.TENANT_ID, P.LANG_CD
@@ -254,7 +261,7 @@
 											 INNER JOIN TB_DP_SPRT_DEVICE K			ON I.PART_PROD_ID = K.PROD_ID
 											 INNER JOIN TB_CM_DEVICE L				ON K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD
 											 INNER JOIN TB_DP_PROD J				ON I.PART_PROD_ID = J.PROD_ID
-											 INNER JOIN TB_DP_SUB_CONTENTS M		ON I.PART_PROD_ID = M.PROD_ID
+											 INNER JOIN TB_DP_SUB_CONTENTS M		ON J.PROD_ID = M.PROD_ID
 											 INNER JOIN TB_DP_TENANT_PROD N			ON J.PROD_ID = N.PROD_ID AND N.TENANT_ID = G.TENANT_ID
 											 INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON J.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
 											 INNER JOIN UV_TB_DP_MULTIMDA_PROD P		ON J.PROD_ID = P.PROD_ID
@@ -281,6 +288,14 @@
 										   AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
 										   AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
 										   AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+										   <if test="orderedBy == 'nonPayment'">
+										   <if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
+										   AND J.PROD_ID NOT IN  
+											  <foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
+											  #{item}
+											  </foreach>
+										   </if>
+										   </if>
 									   ) IA
 							   )JA
 						  GROUP BY JA.CID, JA.TENANT_ID, JA.LANG_CD
@@ -290,8 +305,6 @@
 						  <if test="orderedBy == 'regDate'">
 						      ORDER BY TO_NUMBER( REGEXP_REPLACE(CHAPTER, '[^[:digit:]]') ) ASC, UPD_DT DESC
 						  </if>
-						  <if test="orderedBy == 'nonPayment'">
-						  </if>
 					  )  KA
 			 ) TA  
 				 LEFT OUTER JOIN TB_DP_PROD_IMG TB
@@ -300,7 +313,7 @@
 					ON TA.TENANT_ID = STAT.TENANT_ID AND TA.CHNL_PROD_ID = STAT.PROD_ID
 		  	WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 			  AND TB.EXPO_ORD = '1'
-			  AND TB.IMG_CD = #{imgCd} /* (원본)대표아이콘 */
+			  AND TB.IMG_CD = #{imgCd}
     </select>
     
 </mapper>

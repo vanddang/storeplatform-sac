@@ -41,6 +41,28 @@ public class VodControllerTest {
 	}
 
 	@Test
+	public void searchVodDetail_영화_recent1() throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("channelId", "H001424265");
+		param.put("orderedBy", "recent");
+		param.put("offset", 1);
+		param.put("count", 20);
+		String json = this.convertMapToJson(param);
+		
+		this.mvc.perform(post("/display/vod/detail/v1")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				;
+	}
+	
+	@Test
 	public void searchVodDetail_영화_recent() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("channelId", "H001424265");
