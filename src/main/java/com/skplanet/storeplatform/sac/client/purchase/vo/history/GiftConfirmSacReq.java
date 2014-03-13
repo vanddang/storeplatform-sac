@@ -13,6 +13,7 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -44,6 +45,8 @@ public class GiftConfirmSacReq extends CommonInfo implements Serializable {
 	@NotNull
 	@NotEmpty
 	@Pattern(regexp = "(20[0-9]{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])([0-1][0-9]|2[0-3])([0-5][0-9]){2}", message = "YYYYMMDDHH24MISS")
+	// @Pattern(regexp = "|^[0-9]*$", message = "YYYYMMDDHH24MISS")
+	@Size(max = 14, min = 14)
 	private String recvDt; // 선물수신일시
 	@NotNull
 	@NotEmpty
