@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
+import java.util.List;
+
 import javax.validation.constraints.Pattern;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -87,6 +89,9 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String repEmail;
 	/** 웹사이트. */
 	private String website;
+
+	/** 보안질문 정보들. */
+	private List<PwReminder> pwReminderList;
 
 	/**
 	 * @return the sellerKey
@@ -551,6 +556,83 @@ public class ModifyInformationSacReq extends CommonInfo {
 	 */
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+
+	/**
+	 * @return the pwReminderList
+	 */
+	public List<PwReminder> getPwReminderList() {
+		return this.pwReminderList;
+	}
+
+	/**
+	 * @param pwReminderList
+	 *            the pwReminderList to set
+	 */
+	public void setPwReminderList(List<PwReminder> pwReminderList) {
+		this.pwReminderList = pwReminderList;
+	}
+
+	/**
+	 * Calss 설명
+	 * 
+	 * Updated on : 2014. 3. 13. Updated by : Rejoice, Burkhan
+	 */
+	public static class PwReminder {
+		/** 보안질문 답변. */
+		private String answerString;
+
+		/** 보안질문 ID. */
+		private String questionID;
+
+		/** 보안질문 직접입력 값. */
+		private String questionMessage;
+
+		/**
+		 * @return the answerString
+		 */
+		public String getAnswerString() {
+			return this.answerString;
+		}
+
+		/**
+		 * @param answerString
+		 *            the answerString to set
+		 */
+		public void setAnswerString(String answerString) {
+			this.answerString = answerString;
+		}
+
+		/**
+		 * @return the questionID
+		 */
+		public String getQuestionID() {
+			return this.questionID;
+		}
+
+		/**
+		 * @param questionID
+		 *            the questionID to set
+		 */
+		public void setQuestionID(String questionID) {
+			this.questionID = questionID;
+		}
+
+		/**
+		 * @return the questionMessage
+		 */
+		public String getQuestionMessage() {
+			return this.questionMessage;
+		}
+
+		/**
+		 * @param questionMessage
+		 *            the questionMessage to set
+		 */
+		public void setQuestionMessage(String questionMessage) {
+			this.questionMessage = questionMessage;
+		}
+
 	}
 
 }
