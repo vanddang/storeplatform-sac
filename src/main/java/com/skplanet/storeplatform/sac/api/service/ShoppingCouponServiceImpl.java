@@ -162,6 +162,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			// 디렉토리가 존재하지 않으면 만든다.
 			if (!downloadDir.exists()) {
 				downloadDir.mkdirs();
+				this.log.info("폴더 생성 성공");
 			}
 
 			this.log.info("brandImgPath(downloadPath) = " + uploadPath);
@@ -182,7 +183,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 					if (fileOk != -1) {
 
-						this.log.info("File DownLoad Start!!");
+						this.log.info("File DownLoad Start!");
 
 						String downloadFilePath = uploadPath + File.separator + orgDownloadFileName;
 						this.log.info("downloadFilePath : " + downloadFilePath);
