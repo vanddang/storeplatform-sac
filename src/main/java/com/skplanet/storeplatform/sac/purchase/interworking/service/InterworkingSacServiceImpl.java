@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.interworking.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.purchase.client.interworking.sci.InterworkingSCI;
@@ -30,8 +31,10 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	// @Value("#{config['interwork.cine21.sellermbrno']}")
-	// private String sellerMbrNo;
+	@Value("#{propertiesForSac['interwork.cine21.sellermbrno']}")
+	private String sellerMbrNo;
+	@Value("#{propertiesForSac['interwork.interpark.maillcd']}")
+	private String mallCd;
 	@Autowired
 	private InterworkingSCI interworkingSCI;
 
@@ -44,8 +47,8 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 	 */
 	@Override
 	public void createInterworking(InterworkingSacReq interworkingSacReq) {
-		// proterties에서 cine21 sellermbrno 리스트를 가저온다
-		String[] cine21MbrNo = "IF1423480114120130207203721,IF1423480303720130208105536".split(",");
+		// 씨네21 판매자 회원번호를 properties에서 가저온다.
+		String[] cine21MbrNo = this.sellerMbrNo.split(",");
 		InterworkingScReq req = new InterworkingScReq();
 		// 조건 셋팅
 		req.setTenantId(interworkingSacReq.getTenantId());
@@ -57,13 +60,14 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 		req.setPrchsCancelDt(interworkingSacReq.getPrchsCancelDt());
 
 		int updateCount = 0;
+		// cine21는 sellermbrNo로 구분한다 (인터파크 2014-03-10 실시간연동 제거)
 		for (Interworking interworkingSac : interworkingSacReq.getInterworkingList()) {
 			// 상품리스트에 대한 조건 셋팅
 			req.setProdId(interworkingSac.getProdId());
 			req.setProdAmt(interworkingSac.getProdAmt());
 			req.setCompContentsId(interworkingSac.getCompContentsId());
+			// cine21 상품인지 확인(구매상품이의 판매자회원번호가 cine21이면 전송테이블에 저장)
 			for (int i = 0; i < cine21MbrNo.length; i++) {
-				// cine21는 sellermbrNo로 구분한다 (인터파크 2014-03-10 실시간연동 제거)
 				if (interworkingSac.getSellermbrNo().equals(cine21MbrNo[i])) {
 					this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 					this.logger.debug("@@@@@@@@@@@@ cine21 Start @@@@@@@@@@@@");
