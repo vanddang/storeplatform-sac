@@ -418,8 +418,8 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * SP_REGIST_PROD 프로시저 호출한다.
 	 * </pre>
 	 * 
-	 * @param tagList
-	 *            tagList
+	 * @param spRegistProdList
+	 *            spRegistProdList
 	 */
 
 	@Override
