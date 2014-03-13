@@ -31,12 +31,13 @@
     <bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
         <constructor-arg ref="messageSource" />
     </bean> 
+    
     <bean class="com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor" /> 
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
             <list merge="true">
-                <value>classpath:messages/messages</value>
+                <value>classpath:messages/messages_common</value>
                 <value>classpath:sac/messages/messages_common</value>
                 <value>classpath:sac/messages/messages_member</value>
                 <value>classpath:sac/messages/messages_display</value>
