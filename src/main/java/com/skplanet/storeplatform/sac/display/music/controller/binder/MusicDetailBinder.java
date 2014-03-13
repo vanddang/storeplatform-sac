@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.music.controller.binder;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetail;
+import com.skplanet.storeplatform.sac.display.music.vo.RelatedProduct;
 import com.skplanet.storeplatform.sac.display.music.vo.SubContent;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
  * Updated on : 2014. 01. 06 Updated by : 정희원, SK 플래닛.
  */
 public interface MusicDetailBinder {
-    void mapMusic(Product product, MusicDetail musicDetail, List<SubContent> contentList);
+    void mapMusic(Product product, MusicDetail musicDetail, List<SubContent> contentList, List<RelatedProduct> relatedProductList);
 
     void mapThumbnail(Product product, MusicDetail musicDetail);
 

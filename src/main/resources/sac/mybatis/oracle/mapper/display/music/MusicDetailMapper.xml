@@ -80,5 +80,21 @@
         where
             SC.PROD_ID = #{value}
     </select>
+
+    <select id="getRelatedProductList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.music.vo.RelatedProduct">
+        SELECT
+            RPROD.PROD_ID,
+            RPROD.META_CLSF_CD
+        FROM
+            TB_DP_PROD CPROD
+            INNER JOIN TB_DP_PROD_RSHP RSHP
+                ON RSHP.PROD_ID = CPROD.PROD_ID AND PROD_RSHP_CD = 'DP010802' -- CHNL - EPSD
+            INNER JOIN TB_DP_PROD RPROD
+                ON RPROD.PROD_ID = RSHP.PART_PROD_ID
+        WHERE 1=1
+              AND CPROD.PROD_ID = #{channelId}
+              AND RPROD.META_CLSF_CD IN
+        <foreach collection="metaCodes" separator="," item="v" open="(" close=")">#{v}</foreach>
+    </select>
     
 </mapper>

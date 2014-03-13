@@ -1,21 +1,25 @@
 package com.skplanet.storeplatform.sac.display.music.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
+ * 음악 상품 정보
  * User: joyspring
  * Date: 1/28/14
  * Time: 3:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MusicDetailComposite {
+public class MusicDetailComposite extends CommonInfo {
+
+    private static final long serialVersionUID = 1L;
     
     private MusicDetail musicDetail;
     private List<MenuItem> menuList;
     private List<SubContent> contentList;
+    private List<RelatedProduct> relatedProductList;
 
     public MusicDetail getMusicDetail() {
         return musicDetail;
@@ -39,5 +43,13 @@ public class MusicDetailComposite {
 
     public void setContentList(List<SubContent> contentList) {
         this.contentList = contentList;
+    }
+
+    public List<RelatedProduct> getRelatedProductList() {
+        return relatedProductList;
+    }
+
+    public void setRelatedProductList(List<RelatedProduct> relatedProductList) {
+        this.relatedProductList = relatedProductList;
     }
 }

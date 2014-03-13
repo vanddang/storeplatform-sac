@@ -8,11 +8,10 @@ import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetail;
+import com.skplanet.storeplatform.sac.display.music.vo.RelatedProduct;
 import com.skplanet.storeplatform.sac.display.music.vo.SubContent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * 음악 상세정보 VO매퍼
@@ -21,8 +20,17 @@ import java.util.List;
 @org.springframework.stereotype.Component
 public class MusicDetailBinderImpl implements MusicDetailBinder {
 
+    private static Map<String, String> META_CLS_TO_PROD_TYPE;
+    static {
+        META_CLS_TO_PROD_TYPE = new HashMap<String, String>();
+        META_CLS_TO_PROD_TYPE.put("CT30", "colorRing/normal");
+        META_CLS_TO_PROD_TYPE.put("CT31", "colorRing/long");
+        META_CLS_TO_PROD_TYPE.put("CT32", "liveBell/sq");
+        META_CLS_TO_PROD_TYPE.put("CT33", "liveBell/hq");
+    }
+
     @Override
-    public void mapMusic(Product product, MusicDetail musicDetail, List<SubContent> contentList) {
+    public void mapMusic(Product product, MusicDetail musicDetail, List<SubContent> contentList, List<RelatedProduct> relatedProductList) {
         Music music = new Music();
 
         // Music Source List
@@ -45,6 +53,15 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
                         new Service("ring", musicDetail.isColorringSprtYn() ? "Y" : "N")
                 )
         ));
+
+        music.setRelatedProductList(new ArrayList<Identifier>());
+        if(relatedProductList != null && relatedProductList.size() > 0) {
+            for (RelatedProduct relatedProduct : relatedProductList) {
+
+                music.getRelatedProductList().add(
+                        new Identifier(META_CLS_TO_PROD_TYPE.get(relatedProduct.getMetaClsfCd()), relatedProduct.getProdId()));
+            }
+        }
 
         product.setMusic(music);
     }

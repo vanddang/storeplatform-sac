@@ -10,11 +10,6 @@
 package com.skplanet.storeplatform.sac.display.music.controller;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -32,7 +27,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,7 +84,7 @@ public class MusicController {
         musicDetailBinder.mapBasicInfo(product, musicDetail);
         musicDetailBinder.mapMenu(product, menuList);
         musicDetailBinder.mapThumbnail(product, musicDetail);
-        musicDetailBinder.mapMusic(product, musicDetail, contentList);
+        musicDetailBinder.mapMusic(product, musicDetail, contentList, musicDetailComp.getRelatedProductList());
     }
 
 }

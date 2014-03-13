@@ -39,6 +39,7 @@ public class MusicDetailTest {
 
     private static final String URL = "/display/music/detail/v1";
     private static final String CHNL_ID_OK = "H000460202";
+    private static final String CHNL_ID_HAS_RELATED_PRODUCT = "H090131914";
     private static final String CHNL_ID_INVAL = "H000460";
 
     @Autowired
@@ -99,7 +100,7 @@ public class MusicDetailTest {
 //        req.setUserKey("");
 
         MvcTestBuilder.buildPost(mvc, URL, req, true)
-                .andExpect(jsonPath("/product/salesStatus").doesNotExist());
+                .andExpect(jsonPath("$.product.salesStatus").doesNotExist());
     }
 
     @Test
@@ -110,7 +111,16 @@ public class MusicDetailTest {
         req.setUserKey("IF1023541315020111207133720");
 
         MvcTestBuilder.buildPost(mvc, URL, req, true)
-                .andExpect(jsonPath("/product/salesStatus").doesNotExist());
+                .andExpect(jsonPath("$.product.salesStatus").doesNotExist());
+    }
+
+    @Test
+    public void relatedProductTest() throws Exception {
+        MusicDetailReq req = new MusicDetailReq();
+        req.setChannelId(CHNL_ID_HAS_RELATED_PRODUCT);
+
+        MvcTestBuilder.build2(mvc, true, null, URL, req, true)
+            .andExpect(jsonPath("$.product.music.relatedProductList").exists());
     }
 
 }
