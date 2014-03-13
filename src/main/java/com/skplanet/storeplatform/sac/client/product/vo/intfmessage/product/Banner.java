@@ -15,6 +15,7 @@ import java.util.List;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -36,6 +37,7 @@ public class Banner extends CommonInfo implements Serializable {
 	private Title title;
 	private List<Menu> menuList;
 	private List<Source> sourceList;
+	private Date date;
 	private Preview preview;
 	private SalesOption salesOption;
 	private Url url;
@@ -128,6 +130,21 @@ public class Banner extends CommonInfo implements Serializable {
 	 */
 	public void setSourceList(List<Source> sourceList) {
 		this.sourceList = sourceList;
+	}
+
+	/**
+	 * @return the date
+	 */
+	public Date getDate() {
+		return this.date;
+	}
+
+	/**
+	 * @param date
+	 *            the date to set
+	 */
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	/**
