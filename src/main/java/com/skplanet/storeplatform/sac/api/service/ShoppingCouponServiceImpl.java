@@ -3,7 +3,6 @@ package com.skplanet.storeplatform.sac.api.service;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -118,7 +117,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 		// log.info("<inputBrandFile> inputBrandFile...");
 
-		OutputStream os = null;
 		byte[] bytes = null;
 		String uploadPath = null;
 		ArrayList<byte[]> isList = null;
