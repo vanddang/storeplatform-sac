@@ -90,7 +90,7 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		req.setUserKey(existenceReq.getUserKey());
 		req.setDeviceKey(existenceReq.getDeviceKey());
 		req.setPrchsId(existenceReq.getPrchsId());
-
+		req.setCheckValue(false);
 		// 상품리스트가 없을시 제외
 		if (existenceReq.getExistenceItem() != null) {
 			int size = existenceReq.getExistenceItem().size();
