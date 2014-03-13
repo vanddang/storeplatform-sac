@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
+import java.util.List;
+import java.util.Map;
+
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
@@ -48,4 +52,18 @@ public interface PurchaseMemberRepository {
 	 * @return SearchUserPayplanetSacRes
 	 */
 	public SearchUserPayplanetSacRes searchUserPayplanet(String userKey, String deviceKey);
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원의 비과금단말 / 구매차단 정책 조회.
+	 * </pre>
+	 * 
+	 * @param deviceKey
+	 *            내부 디바이스 ID
+	 * @param policyCodeList
+	 *            정책코드 목록
+	 * @return
+	 */
+	public Map<String, IndividualPolicyInfoSac> getPurchaseUserPolicy(String deviceKey, List<String> policyCodeList);
 }

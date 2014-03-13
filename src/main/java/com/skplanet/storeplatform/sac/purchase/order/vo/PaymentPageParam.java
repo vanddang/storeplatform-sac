@@ -23,7 +23,7 @@ public class PaymentPageParam extends CommonInfo {
 	private static final long serialVersionUID = 201401241L;
 
 	private String version;
-	private String token; // MD5( AuthKey+OrderID+MctTrDate+AmtPurchase+MID )
+	private String token; // MD5( AuthKey+OrderID+AmtPurchase+MID )
 	private String eData;
 
 	private String authKey; // 가맹점 인증키
@@ -56,7 +56,7 @@ public class PaymentPageParam extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * Token 데이터 구성: AuthKey+OrderID+MctTrDate+AmtPurchase+MID.
+	 * Token 데이터 구성: AuthKey+OrderID+AmtPurchase+MID.
 	 * </pre>
 	 * 
 	 * @return Token 데이터
@@ -64,7 +64,7 @@ public class PaymentPageParam extends CommonInfo {
 	public String makeTokenFormat() {
 		StringBuffer sb = new StringBuffer(128);
 
-		sb.append(this.authKey).append(this.orderId).append(this.mctTrDate).append(this.amtPurchase).append(this.mid);
+		sb.append(this.authKey).append(this.orderId).append(this.amtPurchase).append(this.mid);
 
 		return sb.toString();
 	}
@@ -80,12 +80,20 @@ public class PaymentPageParam extends CommonInfo {
 	public String makeEncDataFormat() {
 		StringBuffer sb = new StringBuffer(1024);
 
+		// sb.append("mid=").append(this.mid).append(";orderId=").append(this.orderId).append(";mctTrDate=")
+		// .append(this.mctTrDate).append(";amtPurchase=").append(this.amtPurchase).append(";pid=")
+		// .append(this.pid).append(";pName=").append(this.pName).append(";pDescription=")
+		// .append(this.pDescription).append(";pType=").append(this.pType).append(";aid=").append(this.aid)
+		// .append(";returnFormat=").append(this.returnFormat).append(";flgMchtAuth=").append(this.flgMchtAuth)
+		// .append(";returnPath=").append(this.returnPath).append(";resultPath=").append(this.resultPath)
+		// .append(";mctSpareParam=").append(this.mctSpareParam).append(";mdn=").append(this.mdn)
+		// .append(";nmDevice=").append(this.nmDevice).append(";imei=").append(this.imei).append(";uacd=")
+		// .append(this.uacd).append(";typeNetwork=").append(this.typeNetwork).append(";carrier=")
+		// .append(this.carrier).append(";noSim=").append(this.noSim).append(";flgSim=").append(this.flgSim);
 		sb.append("mid=").append(this.mid).append(";orderId=").append(this.orderId).append(";mctTrDate=")
 				.append(this.mctTrDate).append(";amtPurchase=").append(this.amtPurchase).append(";pid=")
-				.append(this.pid).append(";pName=").append(this.pName).append(";pDescription=")
-				.append(this.pDescription).append(";pType=").append(this.pType).append(";aid=").append(this.aid)
+				.append(this.pid).append(";pName=").append(this.pName).append(";aid=").append(this.aid)
 				.append(";returnFormat=").append(this.returnFormat).append(";flgMchtAuth=").append(this.flgMchtAuth)
-				.append(";returnPath=").append(this.returnPath).append(";resultPath=").append(this.resultPath)
 				.append(";mctSpareParam=").append(this.mctSpareParam).append(";mdn=").append(this.mdn)
 				.append(";nmDevice=").append(this.nmDevice).append(";imei=").append(this.imei).append(";uacd=")
 				.append(this.uacd).append(";typeNetwork=").append(this.typeNetwork).append(";carrier=")

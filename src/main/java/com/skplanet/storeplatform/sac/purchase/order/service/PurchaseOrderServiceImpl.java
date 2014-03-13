@@ -394,15 +394,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			if (tenantProdGrpCd.startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 				res.setCdPaymentTemplate(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING); // 쇼핑: TC05
 
-			} else if (StringUtils.equals(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
-					|| StringUtils.equals(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
+			} else if (tenantProdGrpCd.startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
+					|| tenantProdGrpCd.startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
 				res.setCdPaymentTemplate(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY); // 자동결제: TC04
 
-			} else if (StringUtils.equals(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE)
-					|| StringUtils.equals(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_COMIC_FIXRATE)) {
+			} else if (tenantProdGrpCd.startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)
+					|| tenantProdGrpCd.startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_BOOK)) {
 				res.setCdPaymentTemplate(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN); // 대여/소장: TC03
 
-			} else if (StringUtils.equals(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+			} else if (tenantProdGrpCd.startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
 				res.setCdPaymentTemplate(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE); // 정액제(게임캐쉬): TC02
 
 			} else {
@@ -671,9 +671,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		paymentPageParam.setNmDevice(purchaseOrderInfo.getDeviceModelCd());
 		paymentPageParam.setImei(purchaseOrderInfo.getImei());
 		paymentPageParam.setUacd(purchaseOrderInfo.getUacd());
-		paymentPageParam.setTypeNetwork(purchaseOrderInfo.getNetworkTypeCd().substring(
-				purchaseOrderInfo.getNetworkTypeCd().length() - 1));
-		paymentPageParam.setCarrier(purchaseOrderInfo.getPurchaseUser().getTelecom());
+		if (StringUtils.equals(purchaseOrderInfo.getNetworkTypeCd(), PurchaseConstants.NETWORK_TYPE_3G)) {
+			paymentPageParam.setTypeNetwork("1"); // 3G, LTE
+		} else if (StringUtils.equals(purchaseOrderInfo.getNetworkTypeCd(), PurchaseConstants.NETWORK_TYPE_WIFI)) {
+			paymentPageParam.setTypeNetwork("2"); // WIFI
+		} else {
+			paymentPageParam.setTypeNetwork("3");
+		}
+		if (StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_SKT)) {
+			paymentPageParam.setCarrier("1"); // SKT
+		} else if (StringUtils
+				.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_UPLUS)) {
+			paymentPageParam.setCarrier("2"); // LGT
+		} else if (StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_KT)) {
+			paymentPageParam.setCarrier("3"); // KT
+		} else {
+			paymentPageParam.setCarrier("4"); // UKNOWN
+		}
 		paymentPageParam.setNoSim(purchaseOrderInfo.getSimNo());
 		paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
 

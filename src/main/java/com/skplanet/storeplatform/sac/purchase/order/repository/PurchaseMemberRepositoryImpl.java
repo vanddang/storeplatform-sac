@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.order.repository;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,11 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.sci.MiscellaneousSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq.PolicyCode;
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
@@ -41,6 +47,8 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	private SearchUserSCI searchUserSCI;
 	@Autowired
 	private DeviceSCI deviceSCI;
+	@Autowired
+	private MiscellaneousSCI miscellaneousSCI;
 
 	/**
 	 * 
@@ -107,6 +115,44 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		searchUserPayplanetSacReq.setDeviceKey(deviceKey);
 
 		return this.searchUserSCI.searchUserPayplanet(searchUserPayplanetSacReq);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원의 비과금단말 / 구매차단 정책 조회.
+	 * </pre>
+	 * 
+	 * @param deviceKey
+	 *            내부 디바이스 ID
+	 * @param policyCodeList
+	 *            정책코드 목록
+	 * @return
+	 */
+	@Override
+	public Map<String, IndividualPolicyInfoSac> getPurchaseUserPolicy(String deviceKey, List<String> policyCodeList) {
+		List<PolicyCode> policyCodeObjList = new ArrayList<PolicyCode>();
+		PolicyCode policyCodeObj = null;
+		for (String policyCode : policyCodeList) {
+			policyCodeObj = new PolicyCode();
+			policyCodeObj.setPolicyCode(policyCode);
+			policyCodeObjList.add(policyCodeObj);
+		}
+		GetIndividualPolicySacReq getIndividualPolicySacReq = new GetIndividualPolicySacReq();
+		getIndividualPolicySacReq.setKey(deviceKey);
+		getIndividualPolicySacReq.setPolicyCodeList(policyCodeObjList);
+
+		GetIndividualPolicySacRes getIndividualPolicySacRes = this.miscellaneousSCI
+				.getIndividualPolicy(getIndividualPolicySacReq);
+
+		Map<String, IndividualPolicyInfoSac> resMap = new HashMap<String, IndividualPolicyInfoSac>();
+
+		List<IndividualPolicyInfoSac> individualPolicyInfoSacList = getIndividualPolicySacRes.getPolicyList();
+		for (IndividualPolicyInfoSac individualPolicyInfoSac : individualPolicyInfoSacList) {
+			resMap.put(individualPolicyInfoSac.getKey(), individualPolicyInfoSac);
+		}
+
+		return resMap;
 	}
 
 	/*
