@@ -1779,13 +1779,7 @@
            <foreach collection="arrayProductId" item="productId" separator="," open="(" close=")">
               #{productId}
            </foreach>
-        </if>
-        <if test="arrayAId != null">
-        AND DAP.AID IN
-           <foreach collection="arrayAId" item="aId" separator="," open="(" close=")">
-              #{aId}
-           </foreach>
-        </if>        
+        </if>       
 		AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> 'PD012302'  /* 부분유료화 모상품만 */
 		        OR DAP.PART_PARENT_CLSF_CD IS NULL ) 
 		        
