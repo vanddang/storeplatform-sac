@@ -88,13 +88,14 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		}
 		if (requestMethod.equals("GET")) {
 			// 쿼리 Decoding 후 Controller로 전달.
-			String queryString = request.getQueryString();
-			try {
-				queryString = URLDecoder.decode(request.getQueryString(), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				throw new StorePlatformException("GET URL Decode시 오류가 발생하였습니다.", e);
+			if (StringUtils.isNotBlank(request.getQueryString())) {
+				try {
+					String queryString = URLDecoder.decode(request.getQueryString(), "UTF-8");
+					to.query(queryString);
+				} catch (UnsupportedEncodingException e) {
+					throw new StorePlatformException("GET URL Decode시 오류가 발생하였습니다.", e);
+				}
 			}
-			to.query(queryString);
 		}
 		return to.build().toUriString();
 	}
