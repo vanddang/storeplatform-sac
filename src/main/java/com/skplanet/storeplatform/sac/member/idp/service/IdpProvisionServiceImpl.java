@@ -296,7 +296,12 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} catch (StorePlatformException ex) {
 
-			result = IdpConstants.IDP_RESPONSE_FAIL_CODE;
+			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				result = IdpConstants.IDP_RESPONSE_NO_DATA;
+			} else {
+				result = IdpConstants.IDP_RESPONSE_FAIL_CODE;
+			}
 
 		} finally {
 
@@ -645,16 +650,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} catch (StorePlatformException ex) {
 
-			ex.printStackTrace();
-
-			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-
+			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				result = IdpConstants.IDP_RESPONSE_NO_DATA;
-
 			} else {
-
 				result = IdpConstants.IDP_RESPONSE_FAIL_CODE;
-
 			}
 
 		} finally {
@@ -809,12 +809,10 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} catch (StorePlatformException ex) {
 
-			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-
+			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				result = IdpConstants.IDP_RESPONSE_NO_DATA;
-
 			} else {
-
 				result = IdpConstants.IDP_RESPONSE_FAIL_CODE;
 			}
 
@@ -1356,15 +1354,13 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} catch (StorePlatformException ex) {
 
-			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-
+			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				result = IdpConstants.IDP_RESPONSE_NO_DATA;
-
 			} else {
-
 				result = IdpConstants.IDP_RESPONSE_FAIL_CODE;
-
 			}
+
 		} finally {
 			ChangedDeviceLog changeDeviceLog = new ChangedDeviceLog();
 			changeDeviceLog.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_JOIN_ECG);
