@@ -461,7 +461,8 @@ public class DisplayConstants {
 	public static final String DP_BANNER_THEME_RECOMM_CD = "DP010312"; // 테마추천 리스트 연결
 
 	public static final String DP_BANNER_TYPE_PRODUCT = "product"; // 배너타입 : 상품
-	public static final String DP_BANNER_TYPE_EXTERNAL_URL = "externalUrl"; // 배너타입 : 외부 URL
+	public static final String DP_BANNER_TYPE_EXTERNAL_URL = "externalUrl"; // 배너타입 : 외부 URL 새 페이지(New)
+	public static final String DP_BANNER_TYPE_POPUP_URL = "popupUrl"; // 배너타입 : 외부 URL 매뉴 내 삽입(POPUP)
 	public static final String DP_BANNER_TYPE_URL = "url"; // 배너타입 : 내부 URL
 	public static final String DP_BANNER_TYPE_CATEGORY = "category"; // 배너타입 : 카테고리
 	public static final String DP_BANNER_TYPE_THEME_ZONE = "themeZone"; // 배너타입 : 운영자 임의 추천
