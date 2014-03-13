@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
@@ -22,13 +23,24 @@ public interface PurchaseOrderValidationService {
 	/**
 	 * 
 	 * <pre>
-	 * 비과금 구매요청 적합성 체크.
+	 * 구매요청 파라미터 적합성 체크.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
 	 */
-	public void validateFreeCharge(PurchaseOrderInfo purchaseOrderInfo);
+	public void validatePurchaseRequestParameter(CreatePurchaseSacReq req);
+
+	/**
+	 * 
+	 * <pre>
+	 * 비과금 구매요청 권한 체크.
+	 * </pre>
+	 * 
+	 * @param prchsReqPathCd
+	 *            구매 요청 경로 코드
+	 */
+	public void validateFreeChargeAuth(String prchsReqPathCd);
 
 	/**
 	 * 

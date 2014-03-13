@@ -10,6 +10,13 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 회원Part 회원정보 조회 결과 에러 코드 */
 	public static final String SACINNER_MEMBER_RESULT_USER_NOTFOUND = "SC_MEM_9982";
 
+	/** SKP 법인번호 */
+	public static final String SKP_CORPORATION_NO = "1101114699794";
+
+	/** 구매 이력 생성 타입 */
+	public static final int CREATE_PURCHASE_TYPE_COMPLETED = 1;
+	public static final int CREATE_PURCHASE_TYPE_RESERVED = 2;
+
 	/** 구매 취소 요청자. */
 	public static final Integer PRCHS_CANCEL_BY_ADMIN = 1; // ADMIN
 	public static final Integer PRCHS_CANCEL_BY_USER = 2; // USER

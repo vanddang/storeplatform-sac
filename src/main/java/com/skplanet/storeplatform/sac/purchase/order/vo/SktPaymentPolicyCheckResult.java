@@ -23,6 +23,7 @@ public class SktPaymentPolicyCheckResult extends CommonInfo {
 	private boolean sktTestMdn; // SKT 시험폰 여부
 	private boolean sktTestMdnWhiteList; // SKT 시험폰 White List 등록 여부
 	private boolean corporation; // SKT/SKP 법인폰 여부
+	private boolean skpCorporation; // SKP 법인폰 여부 (SKP후불 OCB적립 제한으로, 법인 구분 필요)
 	private boolean mvno; // MVNO 회선 여부
 	private double sktRestAmt; // SKT 후불 잔여 금액
 
@@ -69,6 +70,21 @@ public class SktPaymentPolicyCheckResult extends CommonInfo {
 	 */
 	public void setCorporation(boolean corporation) {
 		this.corporation = corporation;
+	}
+
+	/**
+	 * @return the skpCorporation
+	 */
+	public boolean isSkpCorporation() {
+		return this.skpCorporation;
+	}
+
+	/**
+	 * @param skpCorporation
+	 *            the skpCorporation to set
+	 */
+	public void setSkpCorporation(boolean skpCorporation) {
+		this.skpCorporation = skpCorporation;
 	}
 
 	/**

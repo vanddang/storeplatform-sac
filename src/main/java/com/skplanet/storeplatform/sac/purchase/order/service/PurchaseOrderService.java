@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.util.List;
+
+import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseSc;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
@@ -58,13 +61,22 @@ public interface PurchaseOrderService {
 	/**
 	 * 
 	 * <pre>
-	 * 유료구매 - 구매 후처리(쇼핑발급, 구매건수 증가, 인터파크, 씨네21) & 구매확정(구매상세내역 상태변경, 구매내역 저장, 결제내역 저장).
+	 * 유료구매 - 구매확정(구매상세내역 상태변경, 구매내역 저장, 결제내역 저장).
 	 * </pre>
 	 * 
 	 * @param notifyPaymentReq
 	 *            결제결과 정보
+	 * @return 구매예약했던 구매이력 목록
 	 */
-	public void executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq);
+	public List<CreatePurchaseSc> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq);
+
+	/**
+	 * 
+	 * <pre>
+	 * 구매 후처리( 인터파크/씨네21, 구매건수 증가).
+	 * </pre>
+	 */
+	public void postPurchase(List<CreatePurchaseSc> createPurchaseScList);
 
 	/**
 	 * 

@@ -10,7 +10,9 @@
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -53,11 +55,40 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	@Autowired
 	private PurchaseUapsRespository uapsRespository;
 
-	private final List<String> allowMvnoCdList; // 허용하는 MVNO 코드 목록
+	// TAKTODO:: 임시용, 정책 테이블에 관련 정책 추가 후 정책 테이블 조회로 변경
+	private static final List<String> TEMPORARY_ALLOW_MVNO_CODE_LIST; // 허용하는 MVNO 코드 목록
+	private static final Map<String, String> TEMPORARY_PAYMETHOD_MAP;
+	static {
+		TEMPORARY_ALLOW_MVNO_CODE_LIST = new ArrayList<String>();
+		TEMPORARY_ALLOW_MVNO_CODE_LIST.add("0");
 
-	public PurchaseOrderPolicyServiceImpl() {
-		this.allowMvnoCdList = new ArrayList<String>();
-		this.allowMvnoCdList.add("0");
+		TEMPORARY_PAYMETHOD_MAP = new HashMap<String, String>();
+		TEMPORARY_PAYMETHOD_MAP.put("OR006201DP00OR006311", "");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP01OR006311", "21::50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP03OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP04OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP08OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP12OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP07OR006311", "21::50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP09OR006311", "21::50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP17OR006311", "21::50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP17OR006331", "14:0:0;20:0:0;21::50;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP18OR006311", "21::50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP18OR006331", "14:0:0;20:0:0;21::50;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006213DP05OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006213DP16OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP06OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP13OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP13OR006331", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP14OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP14OR006331", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP26OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP29OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006221DP15OR006311", "20:0:0;21:0:0;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006221DP28OR006311", "20:0:0;21:0:0;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006231DP02OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006311", "");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006321", "");
 	}
 
 	/**
@@ -78,6 +109,28 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	public boolean isDeviceBasedPurchaseHistory(String tenantId, String tenantProdGrpCd) {
 		return (this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd,
 				PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, false).size() > 0);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보 조회
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트 ID
+	 * 
+	 * @param tenantProdGrpCd
+	 *            테넌트상품분류코드
+	 * 
+	 * @return 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보
+	 */
+	@Override
+	public String getAvailablePaymethodAdjustInfo(String tenantId, String tenantProdGrpCd) {
+		// this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd,
+		// PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD, false);
+
+		return TEMPORARY_PAYMETHOD_MAP.get(tenantProdGrpCd);
 	}
 
 	/**
@@ -128,8 +181,11 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 					continue;
 				}
 
-				policyResult.setCorporation(this.isCorporationMdn(policy.getApplyValue(),
-						policyCheckParam.getDeviceId()));
+				if (this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
+					policyResult.setCorporation(true);
+					policyResult.setSkpCorporation(StringUtils.equals(policy.getApplyValue(),
+							PurchaseConstants.SKP_CORPORATION_NO));
+				}
 
 			} else if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_SKT_TEST_DEVICE)) {
 				if (this.isSktTestMdn(policyCheckParam.getDeviceId())) { // CM011604: SKT 시험폰 제한
@@ -138,12 +194,12 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 							policyCheckParam.getDeviceId()));
 				}
 
-			} else if (StringUtils.equals(policy.getProcPatternCd(), "TAKTODO:: MVNO")) {
+			} else if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_MVNO_ALLOW_CD)) {
 				if (policyResult.isMvno()) { // CM0116xx: MVNO 제한
 					continue;
 				}
 
-				policyResult.setMvno(this.isMvno(policyCheckParam.getDeviceId()));
+				policyResult.setMvno(this.isMvno(policy.getApplyValue(), policyCheckParam.getDeviceId()));
 			}
 		}
 
@@ -365,8 +421,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @return SKT 시험폰 여부: true-SKT 시험폰, false-SKT 시험폰 아님
 	 */
-	private boolean isMvno(String mdn) {
+	private boolean isMvno(String allowMvnoCode, String mdn) {
 		UserEcRes userEcRes = this.uapsRespository.searchUapsMappingInfoByMdn(mdn);
-		return this.allowMvnoCdList.contains(userEcRes.getMvnoCD());
+		return StringUtils.equals(userEcRes.getMvnoCD(), allowMvnoCode);
 	}
 }

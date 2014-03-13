@@ -59,4 +59,20 @@ public interface PurchaseOrderPolicyService {
 	 * @return 디바이스 기반 구매정책 여부: true-디바이스 기반, false-ID 기반
 	 */
 	public boolean isDeviceBasedPurchaseHistory(String tenantId, String tenantProdGrpCd);
+
+	/**
+	 * 
+	 * <pre>
+	 * 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보 조회
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트 ID
+	 * 
+	 * @param tenantProdGrpCd
+	 *            테넌트상품분류코드
+	 * 
+	 * @return 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보
+	 */
+	public String getAvailablePaymethodAdjustInfo(String tenantId, String tenantProdGrpCd);
 }
