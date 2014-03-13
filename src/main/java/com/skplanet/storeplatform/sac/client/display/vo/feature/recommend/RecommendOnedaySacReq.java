@@ -1,6 +1,5 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
-
 /**
  * Onday 상품 조회 Request Value Object.
  * 
@@ -13,6 +12,7 @@ public class RecommendOnedaySacReq {
 	private String searchType; // 검색조건
 	private String menuId; // 메뉴ID
 
+	private String seq; // seq
 	private String period; // 조회 기간
 	private String periodStart; // 조회시작 기간
 	private String periodEnd; // 조회종료 기간
@@ -270,6 +270,21 @@ public class RecommendOnedaySacReq {
 
 	public void setPeriodEnd(String periodEnd) {
 		this.periodEnd = periodEnd;
+	}
+
+	/**
+	 * @return the seq
+	 */
+	public String getSeq() {
+		return this.seq;
+	}
+
+	/**
+	 * @param seq
+	 *            the seq to set
+	 */
+	public void setSeq(String seq) {
+		this.seq = seq;
 	}
 
 }
