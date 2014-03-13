@@ -510,6 +510,22 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setWebsite(req.getWebsite());
 		updateSellerRequest.setSellerMbr(sellerMbr);
 
+		/** 보안질문 리스트 주입 - [시작]. */
+		List<PWReminder> pWReminderList = null;
+		if (req.getPwReminderList() != null) {
+			pWReminderList = new ArrayList<PWReminder>();
+			for (int i = 0; i < req.getPwReminderList().size(); i++) {
+				PWReminder pwReminder = new PWReminder();
+				pwReminder.setAnswerString(req.getPwReminderList().get(i).getAnswerString());
+				pwReminder.setQuestionID(req.getPwReminderList().get(i).getQuestionID());
+				pwReminder.setQuestionMessage(req.getPwReminderList().get(i).getQuestionMessage());
+				pWReminderList.add(pwReminder);
+			}
+			updateSellerRequest.setPWReminderList(pWReminderList);
+			LOGGER.debug("==>>[SC] CreateSellerRequest.pWReminderList.toString() : {}", pWReminderList.toString());
+		}
+		/** 보안질문 리스트 주입 - [끝]. */
+
 		/** 2-4. 공통 헤더 생성 및 주입. */
 		updateSellerRequest.setCommonRequest(commonRequest);
 
