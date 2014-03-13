@@ -287,6 +287,11 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private List<Device> deviceList;
 
+	/**
+	 * 지원여부
+	 */
+	private Support support;
+
 	public String getSalesStatus() {
 		return this.salesStatus;
 	}
@@ -1153,6 +1158,21 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setDeviceList(List<Device> deviceList) {
 		this.deviceList = deviceList;
+	}
+
+	/**
+	 * @return the support
+	 */
+	public Support getSupport() {
+		return this.support;
+	}
+
+	/**
+	 * @param support
+	 *            the support to set
+	 */
+	public void setSupport(Support support) {
+		this.support = support;
 	}
 
 }
