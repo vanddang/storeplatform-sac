@@ -72,6 +72,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
 			LOGGER.info("## >> ★★★  변동성 대상!!!");
+			LOGGER.info("## >> ★★★  preDeviceId : {}", preDeviceId);
 
 			/**
 			 * 변동성 대상 회원의 상태를 확인한다.
