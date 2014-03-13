@@ -21,9 +21,15 @@ import com.skplanet.storeplatform.framework.integration.router.ServiceActivatorC
 @Component
 public class SacServiceActivatorChannelSearcher implements ServiceActivatorChannelSearcher {
 
+    private static final String IID_FORCE_BIZ = "_IF_BIZ";
+
 	@Override
 	public String search(String interfaceId) {
-		return "bypassChannel";
-//		return "bizChannel";
-	}
+        if (IID_FORCE_BIZ.equals(interfaceId)) {
+            return "bizChannel";
+        }
+        else {
+            return "bypassChannel";
+        }
+    }
 }
