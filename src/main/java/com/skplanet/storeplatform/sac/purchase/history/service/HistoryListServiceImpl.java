@@ -201,7 +201,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setResvCol04(obj.getResvCol04());
 			historySac.setResvCol05(obj.getResvCol05());
 
-			// 정액제 정보 set
+			// 자동결제 정보 set
 			historySac.setPaymentStartDt(obj.getPaymentStartDt());
 			historySac.setPaymentEndDt(obj.getPaymentEndDt());
 			historySac.setAfterPaymentDt(obj.getAfterPaymentDt());
