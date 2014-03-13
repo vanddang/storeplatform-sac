@@ -25,9 +25,9 @@ public class SupportGameCenterSacReq extends CommonInfo {
 
 	@NotBlank
 	private String aidList; // App 상품 AID 리스트
-	@NotBlank
+
 	private String userKey; // userKey
-	@NotBlank
+
 	private String deviceKey; // deviceKey
 	@NotBlank
 	private String deviceModelNo; // 단말 모델명.
