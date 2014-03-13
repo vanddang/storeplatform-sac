@@ -223,6 +223,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 
 							// 다운로드 만료일자가 오늘보다 큰날짜의 상품ID만 가져온다.
 							if (Long.parseLong(sysDate) <= Long.parseLong(dwldExprDt)) {
+
 								purchase = new Purchase();
 								// 조회한 상품이 구매한 상품인 경우
 								if (prchsProdId.equals(metaInfo.getProdId())) {
@@ -240,6 +241,10 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 									purchase.setState("none");
 									product.setPurchase(purchase);
 								}
+							} else {
+								purchase = new Purchase();
+								purchase.setState("none");
+								product.setPurchase(purchase);
 							}
 						}
 					}
