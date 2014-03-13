@@ -59,9 +59,8 @@ public class HistoryProdClsiController {
 		// this.purchaseCommonUtils.getBindingValid(bindingResult);
 		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
-		// return this.historyProdClsiService.searchHistoryProdClsiList(request);
+		return this.historyProdClsiService.searchHistoryProdClsiList(request);
 
-		return new HistoryProdClsiSacRes();
 	}
 
 }
