@@ -325,6 +325,9 @@
         <typeAlias alias="AppDetailByProductIdSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacReq" />       
         <typeAlias alias="SupportDeviceInfo"  type="com.skplanet.storeplatform.sac.display.openapi.vo.SupportDeviceInfo" />
         
+        <!-- 게임센터 상품 지원 여부 조회 -->
+        <typeAlias alias="SupportGameCenterSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.SupportGameCenterSacReq" />        
+        
     </typeAliases>
     
     <typeHandlers>

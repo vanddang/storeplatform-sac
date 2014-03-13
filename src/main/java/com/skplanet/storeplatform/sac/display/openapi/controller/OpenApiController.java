@@ -45,6 +45,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppListReq
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SupportGameCenterSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SupportGameCenterSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
@@ -60,6 +62,7 @@ import com.skplanet.storeplatform.sac.display.openapi.service.SearchSellerNameSe
 import com.skplanet.storeplatform.sac.display.openapi.service.SellerAppDetailService;
 import com.skplanet.storeplatform.sac.display.openapi.service.SellerAppListService;
 import com.skplanet.storeplatform.sac.display.openapi.service.SellerIdAppListService;
+import com.skplanet.storeplatform.sac.display.openapi.service.SupportGameCenterService;
 
 /**
  * Open API 관련 Controller
@@ -112,6 +115,9 @@ public class OpenApiController {
 
 	@Autowired
 	private AppDetailByProdIdService appDetailByProdIdService;
+
+	@Autowired
+	private SupportGameCenterService supportGameCenterService;
 
 	/**
 	 * <pre>
@@ -356,5 +362,24 @@ public class OpenApiController {
 	public AppDetailByPackageNameSacRes appDetailByPackageName(
 			@Validated AppDetailByPackageNameSacReq appDetailByPackageNameSacReq, SacRequestHeader requestheader) {
 		return this.appDetailByPkgNmService.searchProductByPackageName(appDetailByPackageNameSacReq, requestheader);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 게임센터 상품 지원 여부 조회
+	 * </pre>
+	 * 
+	 * @param supportGameCenterSacReq
+	 *            supportGameCenterSacReq
+	 * @param SacRequestheader
+	 *            requestheader
+	 * @return SupportGameCenterSacRes
+	 */
+	@RequestMapping(value = "/supportGameCenter/list/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public SupportGameCenterSacRes getSupportGameCenter(
+			@RequestBody @Validated SupportGameCenterSacReq supportGameCenterSacReq, SacRequestHeader requestheader) {
+		return this.supportGameCenterService.searchSupportGameCenterByAid(supportGameCenterSacReq, requestheader);
 	}
 }

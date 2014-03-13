@@ -279,6 +279,7 @@ public class MetaInfo extends CommonInfo {
 	private String platform;
 	private String osVersion;
 	private String previewUrl;
+	private String deviceSupport;
 
 	/**
 	 * @return the topMenuId
@@ -3923,6 +3924,21 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setSvcGrpNm(String svcGrpNm) {
 		this.svcGrpNm = svcGrpNm;
+	}
+
+	/**
+	 * @return the deviceSupport
+	 */
+	public String getDeviceSupport() {
+		return this.deviceSupport;
+	}
+
+	/**
+	 * @param deviceSupport
+	 *            the deviceSupport to set
+	 */
+	public void setDeviceSupport(String deviceSupport) {
+		this.deviceSupport = deviceSupport;
 	}
 
 }

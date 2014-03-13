@@ -442,7 +442,7 @@
                                    AND C.PROD_RSHP_CD     = 'DP010802'
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
-                                   AND H.TENANT_ID ='S01'
+                                   AND H.TENANT_ID =#{tenantId}
                                    AND H.PROD_STATUS_CD   = 'PD000403'
                                    AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
@@ -1024,7 +1024,7 @@
 		                                                      AND KA.PROD_ID = B.PROD_ID 
 		                                                      AND A.PROD_ID = D.PROD_ID 
 		                                                      AND A.PROD_ID = E.PROD_ID 
-		                                                      AND D.TENANT_ID = 'S01' 
+		                                                      AND D.TENANT_ID = #{tenantId} 
 		                                                      AND D.TENANT_ID = E.TENANT_ID 
 		                                                      AND D.PROD_STATUS_CD = 'PD000403' 
 		                                                      AND C.USE_YN = 'Y')
@@ -1676,4 +1676,92 @@
         WHERE  CD.DEVICE_MODEL_CD = DSD.DEVICE_MODEL_CD
         AND    DSD.PROD_ID = #{productId} 
     </select>  
+    
+    <!-- 상품 ID 리스트 (BY AID)-->
+    <select id="getProductIdByAid" parameterType="supportGameCenterSacReq" resultType="MetaInfo">    
+        SELECT A.PROD_ID, B.AID
+		FROM TB_DP_PROD A, TB_DP_APP_PROD B, TB_DP_PROD_RSHP C
+		WHERE A.PROD_ID = B.PROD_ID
+		AND A.PROD_ID = C.PART_PROD_ID
+		AND C.PROD_RSHP_CD = 'DP010802'		
+		<if test="arrayAId != null">
+          AND B.AID IN
+           <foreach collection="arrayAId" item="aId" separator="," open="(" close=")">
+              #{aId}
+           </foreach>
+           <!-- ('OA00066183', 'OA00066188', 'OM00066185', 'OA00066190', 'OA00300590', 'OA00064861', 'OM00066196', 'OA00066381', 'OA00066198', 'OA00067016', 'OA00066197', 'OA00154180') -->
+        </if> 
+		AND (B.PART_PARENT_CLSF_CD != 'PD012302' OR B.PART_PARENT_CLSF_CD IS NULL )
+    </select> 
+    
+    <!-- 게임센터 지원 여부 조회 -->
+    <select id="searchSupportGameCenter" parameterType="supportGameCenterSacReq" resultType="MetaInfo">
+		SELECT 
+		      P.PROD_ID
+		      ,DAP.AID
+		      ,DPD.PROD_NM
+		      ,DECODE(DTP.PROD_STATUS_CD,'PD000403',NVL(( SELECT 'Y'
+		                              FROM   TB_DP_SPRT_DEVICE SH
+		                              WHERE  SH.DEVICE_MODEL_CD = #{deviceModelNo}
+		                              AND    SH.PROD_ID = P.PROD_ID
+		                              AND    ROWNUM = 1
+		                             ), 'N')
+		            ,'N') AS DEVICE_SUPPORT
+		      ,NVL(DTPP.PROD_AMT , 0) AS PROD_AMT
+		      ,NVL(PA.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE
+		      ,NVL(PA.PATICPERS_CNT, 0) AS PATICPERS_CNT
+		      ,P.PROD_GRD_CD AS PROD_GRD_CD
+		      ,(SELECT APK_PKG_NM
+		        FROM   TB_DP_SUB_CONTENTS SF
+		        WHERE  SF.PROD_ID = P.PROD_ID
+		        AND    SF.SUB_CONTENTS_ID = SH.SUB_CONTENTS_ID ) AS APK_PKG_NM
+		      ,NVL(PA.PRCHS_CNT, 0)     AS PRCHS_CNT      /*다운로드 수*/
+		      ,P.TOP_MENU_ID AS TOP_MENU_ID
+		      ,(SELECT 
+		          MENU_NM 
+		        FROM TB_DP_MENU_CATEGORY_DESC
+		          WHERE MENU_ID = P.TOP_MENU_ID
+		          AND LANG_CD = #{langCd}
+		          AND ROWNUM = 1) AS TOP_MENU_NM
+		      ,CP.MENU_ID AS MENU_ID       /* 카테고리 코드*/
+		      ,DMCD.MENU_NM AS MENU_NM       /* 카테코리 명*/
+		FROM   TB_DP_PROD P
+		      ,TB_DP_APP_PROD DAP
+		      ,TB_DP_PROD_DESC DPD
+		      ,TB_DP_TENANT_PROD_STATS PA
+		      ,TB_DP_TENANT_PROD DTP
+		      ,TB_DP_TENANT_PROD_PRICE DTPP
+		      ,TB_DP_SPRT_DEVICE SH              
+		      ,TB_DP_MENU_CATEGORY_PROD_MAPG CP
+		      ,TB_DP_MENU_CATEGORY DMC
+		      ,TB_DP_MENU_CATEGORY_DESC DMCD
+		      ,TB_DP_PROD_RSHP C
+		WHERE P.PROD_ID = C.PART_PROD_ID
+		AND P.PROD_ID = DAP.PROD_ID
+		AND P.PROD_ID = DPD.PROD_ID
+		AND C.PROD_ID = CP.PROD_ID
+		AND CP.MENU_ID = DMC.MENU_ID
+		AND CP.MENU_ID = DMCD.MENU_ID
+		AND P.PROD_ID = DTP.PROD_ID
+		AND DTP.PROD_ID = DTPP.PROD_ID
+		AND C.PROD_RSHP_CD = 'DP010802'
+		AND PA.TENANT_ID = #{tenantId}
+		AND DTP.TENANT_ID = #{tenantId}
+		AND DTP.TENANT_ID = DTPP.TENANT_ID
+		AND PA.PROD_ID(+) = P.PROD_ID
+		AND SH.PROD_ID(+) = P.PROD_ID        
+		AND SH.DEVICE_MODEL_CD(+) = #{deviceModelNo}
+		AND CP.USE_YN = 'Y'
+		AND DMCD.LANG_CD = #{langCd}
+		AND DPD.LANG_CD = #{langCd}
+		<if test="arrayProductId != null">
+        AND P.PROD_ID IN
+           <foreach collection="arrayProductId" item="productId" separator="," open="(" close=")">
+              #{productId}
+           </foreach>
+           <!-- ('0000064861', '0000066183', '0000066185', '0000066185', '0000066190') -->
+        </if> 
+		AND (DAP.PART_PARENT_CLSF_CD != 'PD012302'  /* 부분유료화 모상품만 */
+		        OR DAP.PART_PARENT_CLSF_CD  IS NULL )   
+    </select>
 </mapper>
