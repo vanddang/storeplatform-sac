@@ -26,11 +26,13 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String flgTeleBillingAgree; // 통신과금 동의여부 (Y/N)
 	private String flgOcbUseAgree; // OCB 이용약관 동의여부 (Y/N)
 	private String cdMaxAmtRate; // 결제수단 별 가능 거래금액/비율 조정 정보
-	private String CdOcbSaveInfo; // OCB 적립코드
+	private String cdPriority; // 결제수단 정렬 재조정
+	private String cdOcbSaveInfo; // OCB 적립코드
 	private String noOcbCard; // OCB 카드번호
 	private String noCouponList; // 쿠폰 List
 	private Double tstoreCashAmt; // T store Cash 잔액
 	private String typeTestMdn; // 법인 및 일반 시험폰 처리 타입 (T01, T02, T03)
+	private String cdPaymentTemplate; // 결제Page 템플릿 코드: TC01-일반, TC02-정액제(게임캐쉬), TC03-대여/소장, TC04-자동결제, TC05-쇼핑, TC06-선물
 	private String bonusCashPoint; // 보너스 캐쉬 지급 Point
 	private String bonusCashUsableDayCnt; // 보너스 캐쉬 유효기간(일)
 	private String afterAutoPayDt; // 다음 자동 결제일
@@ -137,10 +139,25 @@ public class VerifyOrderSacRes extends CommonInfo {
 	}
 
 	/**
+	 * @return the cdPriority
+	 */
+	public String getCdPriority() {
+		return this.cdPriority;
+	}
+
+	/**
+	 * @param cdPriority
+	 *            the cdPriority to set
+	 */
+	public void setCdPriority(String cdPriority) {
+		this.cdPriority = cdPriority;
+	}
+
+	/**
 	 * @return the cdOcbSaveInfo
 	 */
 	public String getCdOcbSaveInfo() {
-		return this.CdOcbSaveInfo;
+		return this.cdOcbSaveInfo;
 	}
 
 	/**
@@ -148,7 +165,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 *            the cdOcbSaveInfo to set
 	 */
 	public void setCdOcbSaveInfo(String cdOcbSaveInfo) {
-		this.CdOcbSaveInfo = cdOcbSaveInfo;
+		this.cdOcbSaveInfo = cdOcbSaveInfo;
 	}
 
 	/**
@@ -209,6 +226,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setTypeTestMdn(String typeTestMdn) {
 		this.typeTestMdn = typeTestMdn;
+	}
+
+	/**
+	 * @return the cdPaymentTemplate
+	 */
+	public String getCdPaymentTemplate() {
+		return this.cdPaymentTemplate;
+	}
+
+	/**
+	 * @param cdPaymentTemplate
+	 *            the cdPaymentTemplate to set
+	 */
+	public void setCdPaymentTemplate(String cdPaymentTemplate) {
+		this.cdPaymentTemplate = cdPaymentTemplate;
 	}
 
 	/**
