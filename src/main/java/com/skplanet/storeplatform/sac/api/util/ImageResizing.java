@@ -42,8 +42,6 @@ public class ImageResizing {
 	 * @param height
 	 *            height
 	 * @return boolean
-	 * @throws Exception
-	 *             Exception
 	 */
 	public boolean resize(File src, File dest, int width, int height) {
 		try {
