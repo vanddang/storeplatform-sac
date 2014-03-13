@@ -80,6 +80,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		// 헤더값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		requestVO.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		requestVO.setLangCd(requestHeader.getTenantHeader().getLangCd());
 
 		// 시작점 ROW Default 세팅

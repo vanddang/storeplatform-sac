@@ -94,6 +94,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 
 		// 헤더값 세팅
 		req.setDeviceModelCd(header.getDeviceHeader().getModel());
+		req.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		req.setTenantId(header.getTenantHeader().getTenantId());
 		req.setImageCd("DP000101");
 		req.setLangCd(header.getTenantHeader().getLangCd());

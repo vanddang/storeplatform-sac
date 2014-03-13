@@ -70,6 +70,7 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 		// 헤더값 세팅
 		requestVO.setTenantId(header.getTenantHeader().getTenantId());
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
+		requestVO.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
 		// tenantId 필수 파라미터 체크

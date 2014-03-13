@@ -107,6 +107,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 
 		// 헤더값 세팅
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
+		requestVO.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		requestVO.setTenantId(header.getTenantHeader().getTenantId());
 		requestVO.setLangCd("ko");
 		// requestVO.setImageCd("DP000101");
