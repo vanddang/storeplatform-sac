@@ -72,6 +72,10 @@
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
     </rabbit:queue>
 
+    <rabbit:queue name="tstore.icms-app-admin.rmc.sync" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>
+    
     
     <rabbit:admin connection-factory="sacRabbitConnectionFactory" auto-startup="true" />
             
@@ -125,5 +129,11 @@
         <property name="routingKey" value="sac.tenant.member-retire.async" />
     </bean>
 
+   <!-- Member - Seller Withdraw Rabbit Template -->
+    <bean id="sellerWithdrawAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
+        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+        <property name="routingKey" value="tstore.icms-app-admin.rmc.sync" />
+    </bean>
 
 </beans> 

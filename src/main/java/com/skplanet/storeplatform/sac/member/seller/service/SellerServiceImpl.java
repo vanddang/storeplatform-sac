@@ -113,8 +113,11 @@ public class SellerServiceImpl implements SellerService {
 	@Autowired
 	private MemberCommonComponent component;
 
-	@Resource
-	private AmqpTemplate cmsAmqpTemplate;
+	/**
+	 * Queue Name 설정
+	 */
+	@Resource(name = "sellerWithdrawAmqpTemplate")
+	private AmqpTemplate sellerWithdrawAmqpTemplate;
 
 	/**
 	 * <pre>
@@ -1087,9 +1090,8 @@ public class SellerServiceImpl implements SellerService {
 		WithdrawRes response = new WithdrawRes();
 		response.setSellerKey(req.getSellerKey());
 
-		Message cancelAccountRequest = new Message(Command.CANCEL_ACCOUNT, new CancelAccountRequest(req.getSellerKey()));
-
-		this.cmsAmqpTemplate.convertSendAndReceive(cancelAccountRequest);
+		this.sellerWithdrawAmqpTemplate.convertSendAndReceive(new Message(Command.CANCEL_ACCOUNT,
+				new CancelAccountRequest(req.getSellerKey())));
 
 		return response;
 	}
