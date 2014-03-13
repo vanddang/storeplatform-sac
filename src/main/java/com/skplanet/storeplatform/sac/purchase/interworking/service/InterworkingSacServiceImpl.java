@@ -60,12 +60,16 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 		req.setPrchsCancelDt(interworkingSacReq.getPrchsCancelDt());
 
 		int updateCount = 0;
-		// cine21는 sellermbrNo로 구분한다 (인터파크 2014-03-10 실시간연동 제거)
+		// cine21는 sellermbrNo로 구분한다 (인터파크 2014-03-10 실시간연동 제거(전송테이블저장 추가 2014-03-13))
 		for (Interworking interworkingSac : interworkingSacReq.getInterworkingList()) {
 			// 상품리스트에 대한 조건 셋팅
 			req.setProdId(interworkingSac.getProdId());
 			req.setProdAmt(interworkingSac.getProdAmt());
 			req.setCompContentsId(interworkingSac.getCompContentsId());
+			// 인터파크 상품인지 확인후 전송테이블에 저장
+			if (interworkingSac.equals(this.mallCd)) {
+				updateCount += this.interworkingSCI.createInterworking(req);
+			}
 			// cine21 상품인지 확인(구매상품이의 판매자회원번호가 cine21이면 전송테이블에 저장)
 			for (int i = 0; i < cine21MbrNo.length; i++) {
 				if (interworkingSac.getSellermbrNo().equals(cine21MbrNo[i])) {
