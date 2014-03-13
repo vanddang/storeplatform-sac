@@ -558,6 +558,10 @@ public class BannerServceImpl implements BannerService {
 				metaInfo.setImagePath(bannerDf.getImgPath());
 				banner.setSourceList(this.commonMetaInfoGenerator.generateBannerSourceList(metaInfo));
 
+				// 배너등록일 정보
+				banner.setDate(this.commonMetaInfoGenerator.generateDate(DisplayConstants.DP_DATE_REG,
+						bannerDf.getRegDt()));
+
 				// 배너타입 : 상품 지정 입력
 				if (DisplayConstants.DP_BANNER_PRODUCT_CD.equals(bnrType)) {
 					// 배너유형 정보
@@ -593,10 +597,20 @@ public class BannerServceImpl implements BannerService {
 						banner.setSalesOption(salesOption);
 					}
 				}
-				// 배너타입 : URL 직접 입력 (외부 URL)
+				// 배너타입 : URL 직접 입력 새 페이지(New)
 				else if (DisplayConstants.DP_BANNER_URL_NEW_CD.equals(bnrType)) {
 					// 배너유형 정보
 					banner.setType(DisplayConstants.DP_BANNER_TYPE_EXTERNAL_URL);
+
+					// URL 정보
+					url = new Url();
+					url.setText(bnrInfo);
+					banner.setUrl(url);
+				}
+				// 배너타입 : URL 직접 입력 매뉴 내 삽입(POPUP)
+				else if (DisplayConstants.DP_BANNER_URL_POPUP_CD.equals(bnrType)) {
+					// 배너유형 정보
+					banner.setType(DisplayConstants.DP_BANNER_TYPE_POPUP_URL);
 
 					// URL 정보
 					url = new Url();
