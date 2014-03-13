@@ -213,25 +213,30 @@
                      <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
                        #{prodGradeCd}
                      </foreach>
-                 </if>
-                <if test='searchType == "A"'>         
-                AND ONE.EXPO_DT <![CDATA[ >= ]]>
-                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE -1, 'YYYYMMDD')
-                        ELSE  TO_CHAR(SYSDATE -0, 'YYYYMMDD')
-                    END
-                AND ONE.EXPO_DT <![CDATA[ <= ]]>
-                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE +3, 'YYYYMMDD')
-                        ELSE  TO_CHAR(SYSDATE +4, 'YYYYMMDD')
-                    END
+                 </if>                 
+                <if test='searchType == "S"'>    
+                    AND ONE.SEQ = #{seq}
                 </if>
-                <if test='searchType != "A"'>   
-                     <if test="periodStart != null">
-                         AND ONE.EXPO_DT <![CDATA[ >= ]]> #{periodStart}
-                     </if>
-                     <if test="periodEnd != null">
-                         AND ONE.EXPO_DT <![CDATA[ <= ]]> #{periodEnd}
-                     </if>
-                </if>
+                <if test='searchType != "S"'>    
+	                <if test='searchType == "A"'>         
+	                AND ONE.EXPO_DT <![CDATA[ >= ]]>
+	                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE -1, 'YYYYMMDD')
+	                        ELSE  TO_CHAR(SYSDATE -0, 'YYYYMMDD')
+	                    END
+	                AND ONE.EXPO_DT <![CDATA[ <= ]]>
+	                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE +3, 'YYYYMMDD')
+	                        ELSE  TO_CHAR(SYSDATE +4, 'YYYYMMDD')
+	                    END
+	                </if>
+	                <if test='searchType != "A"'>   
+	                     <if test="periodStart != null">
+	                         AND ONE.EXPO_DT <![CDATA[ >= ]]> #{periodStart}
+	                     </if>
+	                     <if test="periodEnd != null">
+	                         AND ONE.EXPO_DT <![CDATA[ <= ]]> #{periodEnd}
+	                     </if>
+	                </if>
+	              </if>
 			ORDER BY ONE.EXPO_DT
     </select>
 </mapper>

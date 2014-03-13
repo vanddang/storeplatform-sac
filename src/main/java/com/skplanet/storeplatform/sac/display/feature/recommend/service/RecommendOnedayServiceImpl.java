@@ -101,7 +101,9 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 		}
 
 		// 검색조건 설정 없을때 A로 설정
-		if (StringUtils.isEmpty(requestVO.getPeriod())) {
+		if (!StringUtils.isEmpty(requestVO.getSeq())) {
+			requestVO.setSearchType("S");
+		} else if (StringUtils.isEmpty(requestVO.getPeriod())) {
 			requestVO.setSearchType("A");
 		} else {
 			// 검색시간 설정
