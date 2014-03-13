@@ -247,7 +247,7 @@ public class EpubServiceImpl implements EpubService {
      */
     private List<ExistenceScRes> getExistenceScReses(String tenantId, String userKey, String deviceKey, List<EpubDetail> subProductList) {
     	
-    	if(StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
+    	if(StringUtils.isNotEmpty(userKey) || StringUtils.isNotEmpty(deviceKey)) {
     		return new ArrayList<ExistenceScRes>();
     	}
     	
@@ -425,16 +425,10 @@ public class EpubServiceImpl implements EpubService {
         book.setTotalPages(mapperVO.getBookPageCnt());
 		book.setTotalCount(mapperVO.getBookCount());
         book.setBookVersion(mapperVO.getProdVer());
-        book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
-        
-		if (StringUtils.equals(mapperVO.getMetaClsfCd(), DisplayConstants.DP_SERIAL_META_CLASS_CD)) {
-			if (StringUtils.equals(mapperVO.getComptYn(), "Y")) {
-				book.setStatus(DisplayConstants.DP_EBOOK_COMPLETED_NM);
-			} else {
-				book.setStatus(DisplayConstants.DP_EBOOK_CONTINUE_NM);
-			}
-		}
-		//book.setSupportList(this.mapSupportList(mapperVO));
+        book.setStatus(mapperVO.getBookStatus());
+        book.setType(mapperVO.getBookType());
+		book.setSupportList(this.mapSupportList(mapperVO));
+		
 		return book;
 	}
 

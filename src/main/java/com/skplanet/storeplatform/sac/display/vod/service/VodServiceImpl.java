@@ -121,9 +121,10 @@ public class VodServiceImpl implements VodService {
      * @return
      */
     private List<ExistenceScRes> getExistenceScReses(VodDetailReq req, List<VodDetail> subProductList) {
-    	if(StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
+    	if(StringUtils.isNotEmpty(req.getUserKey()) || StringUtils.isNotEmpty(req.getDeviceKey())) {
     		return new ArrayList<ExistenceScRes>();
     	}
+    	
         List<ExistenceScRes> existenceScResList = null;
         if(subProductList != null && subProductList.size() > 0) {
             //기구매 체크
