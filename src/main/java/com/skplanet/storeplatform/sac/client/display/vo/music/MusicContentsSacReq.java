@@ -43,6 +43,8 @@ public class MusicContentsSacReq extends CommonInfo {
 
 	private String deviceModelCd;
 
+	private String anyDeviceModelCd; // 가상단말명
+
 	private String tenantId;
 
 	@Valid
@@ -407,4 +409,28 @@ public class MusicContentsSacReq extends CommonInfo {
 		this.stdDt = stdDt;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 가상단말모델명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getAnyDeviceModelCd() {
+		return this.anyDeviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 가상단말모델명.
+	 * </pre>
+	 * 
+	 * @param anyDeviceModelCd
+	 *            anyDeviceModelCd
+	 */
+	public void setAnyDeviceModelCd(String anyDeviceModelCd) {
+		this.anyDeviceModelCd = anyDeviceModelCd;
+	}
 }

@@ -27,7 +27,8 @@ public class RecommendAdminSacReq {
 	// common req 전까지 임시
 	private String tenantId; // 메뉴ID
 	private String langCd; // 메뉴ID
-	private String deviceModelCd; // 메뉴ID
+	private String deviceModelCd; // 단말명
+	private String anyDeviceModelCd; // 가상단말
 	private String stdDt; // 배치일자
 
 	private String[] topMenuIdArr;
@@ -343,6 +344,31 @@ public class RecommendAdminSacReq {
 	 */
 	public void setProdGradeCdArr(String[] prodGradeCdArr) {
 		this.prodGradeCdArr = prodGradeCdArr == null ? null : prodGradeCdArr.clone();
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 가상단말모델명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getAnyDeviceModelCd() {
+		return this.anyDeviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 가상단말모델명.
+	 * </pre>
+	 * 
+	 * @param anyDeviceModelCd
+	 *            anyDeviceModelCd
+	 */
+	public void setAnyDeviceModelCd(String anyDeviceModelCd) {
+		this.anyDeviceModelCd = anyDeviceModelCd;
 	}
 
 }

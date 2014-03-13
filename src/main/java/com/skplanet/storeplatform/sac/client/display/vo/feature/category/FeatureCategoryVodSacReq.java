@@ -52,6 +52,8 @@ public class FeatureCategoryVodSacReq extends CommonInfo {
 
 	private String deviceModelCd; // 단말 모델 코드
 
+	private String anyDeviceModelCd; // 가상단말명
+
 	private String tenantId; // 테넌트ID
 
 	private String imageCd; // 이미지 코드
@@ -435,4 +437,28 @@ public class FeatureCategoryVodSacReq extends CommonInfo {
 		this.subStdDt = subStdDt;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 가상단말모델명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getAnyDeviceModelCd() {
+		return this.anyDeviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 가상단말모델명.
+	 * </pre>
+	 * 
+	 * @param anyDeviceModelCd
+	 *            anyDeviceModelCd
+	 */
+	public void setAnyDeviceModelCd(String anyDeviceModelCd) {
+		this.anyDeviceModelCd = anyDeviceModelCd;
+	}
 }
