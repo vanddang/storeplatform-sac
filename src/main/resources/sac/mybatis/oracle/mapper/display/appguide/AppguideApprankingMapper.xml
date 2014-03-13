@@ -120,7 +120,6 @@
 	                                  <if test='b2bProd != "A"'>
 	                                  AND SP.B2B_PROD_YN = #{b2bProd}
 	                                  </if>
-                                      AND SP.B2B_PROD_YN = 'Y'
                                       AND ROWNUM <![CDATA[ <= ]]> 1  )
                             ELSE 1
                         END ) = 1
@@ -134,9 +133,9 @@
                              , F.META_CLSF_CD
                              , F.SVC_GRP_CD
                              , F.CONTENTS_TYPE_CD
-                             , B.EXPO_ORD_ALWAYS_YN
-                             , B.EXPO_ORD
-                             , B.EXPO_ORD_SUB
+                             , A.EXPO_ORD_ALWAYS_YN
+                             , A.EXPO_ORD
+                             , A.EXPO_ORD_SUB
                              , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS RN
                           FROM  (SELECT LP.*
                                FROM TB_DP_LIST_PROD LP  /* 채널 */
@@ -189,14 +188,13 @@
                                       <if test='b2bProd != "A"'>
                                       AND SP.B2B_PROD_YN = #{b2bProd}
                                       </if>
-                                      AND SP.B2B_PROD_YN = 'Y'
                                       AND ROWNUM <![CDATA[ <= ]]> 1  )
                             ELSE 1
                         END ) = 1
                     ) A
               WHERE RN = 1
             ) B
-    WHERE RNUM BETWEEN 1 AND (1+20-1)
+        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
       ORDER BY RNUM
     </select>
 </mapper>
