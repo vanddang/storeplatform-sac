@@ -83,7 +83,7 @@
                 #{topMenuId}
                 </foreach>
             </if>
-			    ORDER BY TP.EXPO_ORD
+			    ORDER BY PD.REG_DT DESC
 			  ) IV
 			) OV
 			WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
