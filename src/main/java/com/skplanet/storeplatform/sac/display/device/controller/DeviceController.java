@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.device.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -125,9 +126,9 @@ public class DeviceController {
 	 *            deviceReq
 	 * @return DeviceUserAgentSacRes
 	 */
-	@RequestMapping(value = "/userAgent/list/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/userAgent/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DeviceUserAgentSacRes searchDeviceChangeModelList(DeviceUserAgentSacReq deviceReq) {
+	public DeviceUserAgentSacRes searchDeviceChangeModelList(@RequestBody @Validated DeviceUserAgentSacReq deviceReq) {
 		return this.deviceChangeService.searchDeviceUserAgentList(deviceReq);
 	}
 }

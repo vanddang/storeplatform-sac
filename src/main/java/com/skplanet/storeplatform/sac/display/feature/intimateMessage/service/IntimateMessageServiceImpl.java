@@ -189,9 +189,9 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 					url.setText(messageDefault.getOfrDesc());
 					intimateMessage.setUrl(url);
 				} else if ("themeRecomm".equals(messageDefault.getOfrTypeCd())) {
-					intimateMessage.setThemeRecommId(messageDefault.getOfrDesc());
+					intimateMessage.setThemeRecommId(this.isEmpty(messageDefault.getOfrDesc()));
 				} else if ("appCodi".equals(messageDefault.getOfrTypeCd())) {
-					intimateMessage.setAppCodi(messageDefault.getOfrDesc());
+					intimateMessage.setAppCodi(this.isEmpty(messageDefault.getOfrDesc()));
 				} else if ("purchaseHistory".equals(messageDefault.getOfrTypeCd())) {
 					intimateMessage.setPurchaseHistory("purchaseHistory");
 				}
@@ -234,5 +234,12 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		}
 
 		return intimateMessageRes;
+	}
+
+	private String isEmpty(String str) {
+		if (StringUtils.isEmpty(str)) {
+			return "";
+		}
+		return str;
 	}
 }
