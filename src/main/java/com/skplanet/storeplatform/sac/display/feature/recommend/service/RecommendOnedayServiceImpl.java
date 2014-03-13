@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendOneday;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -198,11 +199,11 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 						dateList.add(date);
 						date = new Date();
 						date.setType("date/expoStart");
-						date.setText(recommendOneday.getExpoStartDt());
+						date.setText(DateUtils.parseDate(recommendOneday.getExpoStartDt()));
 						dateList.add(date);
 						date = new Date();
 						date.setType("date/expoEnd");
-						date.setText(recommendOneday.getExpoEndDt());
+						date.setText(DateUtils.parseDate(recommendOneday.getExpoEndDt()));
 						dateList.add(date);
 						product.setDateList(dateList);
 						// svcgrpcd추가
@@ -238,11 +239,11 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 							dateList.add(date);
 							date = new Date();
 							date.setType("date/expoStart");
-							date.setText(recommendOneday.getExpoStartDt());
+							date.setText(DateUtils.parseDate(recommendOneday.getExpoStartDt()));
 							dateList.add(date);
 							date = new Date();
 							date.setType("date/expoEnd");
-							date.setText(recommendOneday.getExpoEndDt());
+							date.setText(DateUtils.parseDate(recommendOneday.getExpoEndDt()));
 							dateList.add(date);
 							product.setDateList(dateList);
 							// svcgrpcd추가
@@ -275,11 +276,11 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 								dateList.add(date);
 								date = new Date();
 								date.setType("date/expoStart");
-								date.setText(recommendOneday.getExpoStartDt());
+								date.setText(DateUtils.parseDate(recommendOneday.getExpoStartDt()));
 								dateList.add(date);
 								date = new Date();
 								date.setType("date/expoEnd");
-								date.setText(recommendOneday.getExpoEndDt());
+								date.setText(DateUtils.parseDate(recommendOneday.getExpoEndDt()));
 								dateList.add(date);
 								product.setDateList(dateList);
 								// svcgrpcd추가
@@ -302,11 +303,11 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 								dateList = new ArrayList<Date>();
 								date = new Date();
 								date.setType("date/expo");
-								date.setText(recommendOneday.getExpoDt());
+								date.setText(DateUtils.parseDate(recommendOneday.getExpoStartDt()));
 								dateList.add(date);
 								date = new Date();
-								date.setType("date/expoStart");
-								date.setText(recommendOneday.getExpoStartDt());
+								date.setType("date/expoEnd");
+								date.setText(DateUtils.parseDate(recommendOneday.getExpoEndDt()));
 								dateList.add(date);
 								date = new Date();
 								date.setType("date/expoEnd");
@@ -342,11 +343,11 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 							dateList.add(date);
 							date = new Date();
 							date.setType("date/expoStart");
-							date.setText(recommendOneday.getExpoStartDt());
+							date.setText(DateUtils.parseDate(recommendOneday.getExpoStartDt()));
 							dateList.add(date);
 							date = new Date();
 							date.setType("date/expoEnd");
-							date.setText(recommendOneday.getExpoEndDt());
+							date.setText(DateUtils.parseDate(recommendOneday.getExpoEndDt()));
 							dateList.add(date);
 							product.setDateList(dateList);
 							// svcgrpcd추가
@@ -377,11 +378,11 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 							dateList.add(date);
 							date = new Date();
 							date.setType("date/expoStart");
-							date.setText(recommendOneday.getExpoStartDt());
+							date.setText(DateUtils.parseDate(recommendOneday.getExpoStartDt()));
 							dateList.add(date);
 							date = new Date();
 							date.setType("date/expoEnd");
-							date.setText(recommendOneday.getExpoEndDt());
+							date.setText(DateUtils.parseDate(recommendOneday.getExpoEndDt()));
 							dateList.add(date);
 							product.setDateList(dateList);
 							// svcgrpcd추가
@@ -413,11 +414,11 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 						dateList.add(date);
 						date = new Date();
 						date.setType("date/expoStart");
-						date.setText(recommendOneday.getExpoStartDt());
+						date.setText(DateUtils.parseDate(recommendOneday.getExpoStartDt()));
 						dateList.add(date);
 						date = new Date();
 						date.setType("date/expoEnd");
-						date.setText(recommendOneday.getExpoEndDt());
+						date.setText(DateUtils.parseDate(recommendOneday.getExpoEndDt()));
 						dateList.add(date);
 						product.setDateList(dateList);
 						productList.add(product);
