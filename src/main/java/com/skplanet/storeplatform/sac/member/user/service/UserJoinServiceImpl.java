@@ -1074,7 +1074,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 변동성 대상 체크
 			 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(sacHeader, req.getDeviceId());
+			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(sacHeader, req.getDeviceId(), req.getDeviceTelecom());
 			if (StringUtils.equals(saveAndSync.getIsSaveAndSyncTarget(), MemberConstants.USE_Y)) { // 변동성 대상임.
 
 				userKey = saveAndSync.getUserKey();
