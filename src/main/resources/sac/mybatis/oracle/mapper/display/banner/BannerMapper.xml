@@ -213,7 +213,7 @@
     <!-- 테마추천 상품 리스트 조회 (앱가이드) -->
     <select id="searchThemeRecommProdList" parameterType="BannerSacReq" resultType="BannerDefault">
 		SELECT  /* BannerMapper.xml, searchThemeRecommProdList, tae hee Lee, 2014-03-03 */
-		      , A.LIST_NM
+		        A.LIST_NM
 		      , B.PART_PROD_ID
 		      , E.TOP_MENU_ID
 		  FROM  (SELECT  A.TENANT_ID
