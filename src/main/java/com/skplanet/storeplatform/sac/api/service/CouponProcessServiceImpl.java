@@ -957,7 +957,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 
 			// 저장
-			this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
+			// this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
 
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "정산율 배포 실패!!", null);
