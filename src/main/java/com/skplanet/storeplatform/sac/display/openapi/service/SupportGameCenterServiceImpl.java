@@ -104,30 +104,32 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		prodIdList = this.commonDAO.queryForList("OpenApi.getProductIdByAid", supportGameCenterSacReq, MetaInfo.class);
 
 		if (prodIdList.size() != 0) {
+			// 구매내역 조회를 위한 생성자
+			ProductListSacIn productListSacIn = null;
+			List<ProductListSacIn> ProductListSacInList = null;
+			try {
+				productListSacIn = new ProductListSacIn();
+				ProductListSacInList = new ArrayList<ProductListSacIn>();
 
-			// userKey와 deviceKey가 존재하는 경우 구매내역 조회
-			if (StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
-				// 구매내역 조회를 위한 생성자
-				ProductListSacIn productListSacIn = null;
-				List<ProductListSacIn> ProductListSacInList = null;
-				try {
-					productListSacIn = new ProductListSacIn();
-					ProductListSacInList = new ArrayList<ProductListSacIn>();
+				int k = 0;
+				String[] arrayProductId = new String[prodIdList.size()];
+				; // 상품ID LIST
+				Iterator<MetaInfo> iterator = prodIdList.iterator();
+				while (iterator.hasNext()) {
+					MetaInfo metaInfo = iterator.next();
+					this.log.debug("####### prodId : " + metaInfo.getProdId());
+					// 조회할 상품ID SET
+					arrayProductId[k] = metaInfo.getProdId();
+					productListSacIn.setProdId(metaInfo.getProdId());
+					ProductListSacInList.add(productListSacIn);
+					k++;
+				}
 
-					int k = 0;
-					String[] arrayProductId = new String[prodIdList.size()];
-					; // 상품ID LIST
-					Iterator<MetaInfo> iterator = prodIdList.iterator();
-					while (iterator.hasNext()) {
-						MetaInfo metaInfo = iterator.next();
-						this.log.debug("####### prodId : " + metaInfo.getProdId());
-						// 조회할 상품ID SET
-						arrayProductId[k] = metaInfo.getProdId();
-						productListSacIn.setProdId(metaInfo.getProdId());
-						ProductListSacInList.add(productListSacIn);
-						k++;
-					}
-					supportGameCenterSacReq.setArrayProductId(arrayProductId);
+				// AID로 조회한 상품ID SET
+				supportGameCenterSacReq.setArrayProductId(arrayProductId);
+
+				// userKey와 deviceKey가 존재하는 경우에만 구매내역 조회
+				if (StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
 
 					historyReq = new HistoryListSacInReq();
 					historyReq.setTenantId(supportGameCenterSacReq.getTenantId());
@@ -144,14 +146,14 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 
 					// 구매내역 조회 실행
 					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
-
-				} catch (Exception ex) {
+				} else {
 					purchaseFlag = false;
-					this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-					// throw new StorePlatformException("SAC_DSP_2001", ex);
 				}
-			} else {
+
+			} catch (Exception ex) {
 				purchaseFlag = false;
+				this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+				// throw new StorePlatformException("SAC_DSP_2001", ex);
 			}
 		} else {
 			// 요청한 AID 상품이 존재하지 않는다.
@@ -207,7 +209,6 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 					this.log.debug("############# historyRes.getTotalCnt() : " + historyRes.getTotalCnt());
 					if (historyRes.getTotalCnt() > 0) {
 						// 구매 내역이 존재하는 경우
-
 						for (int i = 0; i < historyRes.getTotalCnt(); i++) {
 							prchsId = historyRes.getHistoryList().get(i).getPrchsId();
 							prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();

@@ -1791,7 +1791,7 @@
 		        
         <if test="arrayProductId != null">  
          ORDER BY INSTR
-             <foreach collection="arrayProductId" item="productId" index="index" open="(" separator="||" close=")"> 
+             <foreach collection="arrayProductId" item="productId" open="(" separator=" || " close=" ,PROD_ID)"> 
                  #{productId}
              </foreach>
         </if> 		         
