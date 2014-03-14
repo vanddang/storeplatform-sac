@@ -844,6 +844,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 		mapReasonCode.put("9218", "우리 또래의 인기 방송");
 		mapReasonCode.put("9299", "우리 또래의 인기 $4");
 		mapReasonCode.put("9399", "신규 사용자의 인기 컨텐츠");
+		mapReasonCode.put("8016", "당신의 성향에 맞는 영화");
 	}
 
 	private IsfEcReq makeRequest(AppCodiSacReq requestVO) {
