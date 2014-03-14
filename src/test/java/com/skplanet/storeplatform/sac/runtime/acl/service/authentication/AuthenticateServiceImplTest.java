@@ -1,53 +1,34 @@
 package com.skplanet.storeplatform.sac.runtime.acl.service.authentication;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyStatus;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthType;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.System;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.SystemStatus;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.TenantStatus;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-@ActiveProfiles(value = "local")
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@RunWith(MockitoJUnitRunner.class)
 public class AuthenticateServiceImplTest {
-
-	private static final Logger logger = LoggerFactory.getLogger(AuthenticateServiceImplTest.class);
-
-    @Autowired
-    private AclDataAccessService dbAccessService;
 
 	@InjectMocks
 	private AuthenticateServiceImpl authenticateService;
 
 	@Mock
 	private AclDataAccessService dbAccessMock;
-
-    /**
-     * AuthKey 조회 테스트
-     */
-    @Test
-    public void authenticate_1_selectAuthKey() {
-        String pAuthKey = "25f9aabf90acf38aa2e6d0da49e9eee75";
-
-        AuthKey authKey = dbAccessService.selectAuthKey(pAuthKey);
-        logger.debug("authKey={}", authKey);
-    }
 
 	@Test
 	public void authenticate_1_1_AuthKey_NotExist() {
@@ -74,6 +55,7 @@ public class AuthenticateServiceImplTest {
         String authKey = "UNAVAILABLE";
 
         AuthKey obj = new AuthKey();
+        obj.setAuthKey(authKey);
 		obj.setTenantId("S01");
 		obj.setStatus(AuthKeyStatus.UNAVAILABLE);
 
@@ -98,8 +80,9 @@ public class AuthenticateServiceImplTest {
         String authKey = "UNAVAILABLE";
 
         AuthKey obj = new AuthKey();
+        obj.setAuthKey(authKey);
         obj.setTenantId("S01");
-        obj.setStatus(AuthKeyStatus.UNAVAILABLE);
+        obj.setUsableDateYn("N");
 
         when(this.dbAccessMock.selectAuthKey(authKey)).thenReturn(obj);
 
@@ -120,29 +103,46 @@ public class AuthenticateServiceImplTest {
 	@Test
 	public void authenticate_Tenant_MAC인증_성공() {
 		String authKey = "25f9aabf90acf38aa2e6d0da49e9eee75";
-		String secret = "25f9aabf90acf38aa2e6d0da49e9eee75";
+		String tenantId = "S01";
+		String systemId = "S01-01002";
 
-		String requestUri = "/member/user/createByMdn/v1";
+		// Mock AuthKey
+		AuthKey auth = new AuthKey();
+		auth.setAuthKey(authKey);
+		auth.setTenantId(tenantId);
+		auth.setStatus(AuthKeyStatus.AVAILABLE);
+		auth.setAuthType(AuthType.MAC);
+		auth.setUsableDateYn("Y");
 
-		AuthKey obj = new AuthKey();
-		obj.setTenantId("S01");
-		obj.setStatus(AuthKeyStatus.AVAILABLE);
-		obj.setAuthType(AuthType.MAC);
-		obj.setSecret(secret);
+		when(this.dbAccessMock.selectAuthKey(authKey)).thenReturn(auth);
 
-		when(this.dbAccessMock.selectAuthKey(authKey)).thenReturn(obj);
+		// Mock Tenant
+		Tenant tenant = new Tenant();
+		tenant.setTenantId(tenantId);
+		tenant.setStatus(TenantStatus.AVAILABLE);
 
+		when(this.dbAccessMock.selectTenant(tenantId)).thenReturn(tenant);
+
+		// Mock System
+		System system = new System();
+		system.setSystemId(systemId);
+		system.setStatus(SystemStatus.AVAILABLE);
+
+		when(this.dbAccessMock.selectSystem(systemId)).thenReturn(system);
+
+		// Test Data
 		HttpHeaders headers = new HttpHeaders();
-		headers.setInterfaceId("I01000001");
 		headers.setAuthKey(authKey);
-		headers.setRequestUrl(requestUri);
+		headers.setSystemId(systemId);
 		headers.setTimestamp("1392659265");
 		headers.setNonce("1392659265");
 		headers.setSignature("ispGcmR2Ngi3XKBKjUQLKhU47AM=");
 
 		this.authenticateService.authenticate(headers);
 
-		//verify(this.dbAccessMock).selectAuthKey(authKey);
+		verify(this.dbAccessMock).selectAuthKey(authKey);
+		verify(this.dbAccessMock).selectTenant(tenantId);
+		verify(this.dbAccessMock).selectSystem(systemId);
 	}
 
 	@Test
@@ -154,6 +154,7 @@ public class AuthenticateServiceImplTest {
 
 
 		AuthKey obj = new AuthKey();
+		obj.setAuthKey(authKey);
 		obj.setTenantId("S01");
 		obj.setAuthType(AuthType.MAC);
 		obj.setSecret(secret);
@@ -189,6 +190,7 @@ public class AuthenticateServiceImplTest {
 
 
 		AuthKey obj = new AuthKey();
+		obj.setAuthKey(authKey);
 		obj.setTenantId("S01");
 		obj.setAuthType(AuthType.MAC);
 		obj.setSecret(secret);

@@ -39,7 +39,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
 
 		Interface intf = this.service.selectInterfaceById(interfaceId);
 
-		if (intf == null) {
+		if (intf == null || StringUtils.isBlank(intf.getInterfaceId())) {
 			throw new StorePlatformException("SAC_CMN_0061");
 		}
 

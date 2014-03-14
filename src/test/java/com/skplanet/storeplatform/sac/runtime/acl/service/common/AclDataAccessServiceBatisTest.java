@@ -1,7 +1,8 @@
 package com.skplanet.storeplatform.sac.runtime.acl.service.common;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +16,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,12 +40,20 @@ public class AclDataAccessServiceBatisTest {
 	}
 
 	@Test
-	public void test() {
+	public void testInterfaceById() {
 		String interfaceId = "I03000001";
 		Interface intf = this.service.selectInterfaceById(interfaceId);
 		System.out.println("# intf : " + intf);
 		assertEquals("I03000001", intf.getInterfaceId());
 		assertTrue(StringUtils.isNotBlank(intf.getUrl()));
+	}
+
+	@Test
+	public void testSelectAuthKey() {
+        String pAuthKey = "S01c61c0cad59adc6e03069e71614a5a0a3";
+        AuthKey authKey = this.service.selectAuthKey(pAuthKey);
+        System.out.println("authKey : " + authKey);
+        assertEquals("S01", authKey.getTenantId());
 	}
 
     /*

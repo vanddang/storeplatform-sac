@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.vo;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-
 import java.util.Date;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  *
@@ -57,9 +57,8 @@ public class AuthKey extends CommonInfo {
     /** 사용기한 체크 Y/N  */
 	private String usableDateYn;
 
-
     public String getTenantId() {
-        return tenantId;
+        return this.tenantId;
     }
 
     public void setTenantId(String tenantId) {
@@ -67,7 +66,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public String getAuthKey() {
-        return authKey;
+        return this.authKey;
     }
 
     public void setAuthKey(String authKey) {
@@ -75,7 +74,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public AuthKeyType getAuthKeyType() {
-        return authKeyType;
+        return this.authKeyType;
     }
 
     public void setAuthKeyType(AuthKeyType authKeyType) {
@@ -83,7 +82,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public String getAuthKeyTypeCd() {
-        return authKeyTypeCd;
+        return this.authKeyTypeCd;
     }
 
     public void setAuthKeyTypeCd(String authKeyTypeCd) {
@@ -91,7 +90,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public String getAuthKeyTypeNm() {
-        return authKeyTypeNm;
+        return this.authKeyTypeNm;
     }
 
     public void setAuthKeyTypeNm(String authKeyTypeNm) {
@@ -99,7 +98,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public Date getIssuDt() {
-        return issuDt;
+        return this.issuDt;
     }
 
     public void setIssuDt(Date issuDt) {
@@ -107,7 +106,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public Date getExprDt() {
-        return exprDt;
+        return this.exprDt;
     }
 
     public void setExprDt(Date exprDt) {
@@ -115,7 +114,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public AuthKeyStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(AuthKeyStatus status) {
@@ -123,7 +122,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public String getStatusCd() {
-        return statusCd;
+        return this.statusCd;
     }
 
     public void setStatusCd(String statusCd) {
@@ -131,7 +130,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public String getSecret() {
-        return secret;
+        return this.secret;
     }
 
     public void setSecret(String secret) {
@@ -139,7 +138,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public String getUsableDateYn() {
-        return usableDateYn;
+        return this.usableDateYn;
     }
 
     public void setUsableDateYn(String usableDateYn) {
@@ -147,7 +146,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public AuthType getAuthType() {
-        return authType;
+        return this.authType;
     }
 
     public void setAuthType(AuthType authType) {
@@ -155,7 +154,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public String getAuthTypeCd() {
-        return authTypeCd;
+        return this.authTypeCd;
     }
 
     public void setAuthTypeCd(String authTypeCd) {
@@ -163,7 +162,7 @@ public class AuthKey extends CommonInfo {
     }
 
     public String getAuthTypeNm() {
-        return authTypeNm;
+        return this.authTypeNm;
     }
 
     public void setAuthTypeNm(String authTypeNm) {

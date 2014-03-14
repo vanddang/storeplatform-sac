@@ -9,19 +9,25 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service.authentication;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
-import com.skplanet.storeplatform.sac.runtime.acl.util.HmacSha1Util;
-import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.*;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.System;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.Override;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
+import com.skplanet.storeplatform.sac.runtime.acl.util.HmacSha1Util;
+import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyStatus;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyType;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthType;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.System;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.SystemStatus;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.TenantStatus;
 
 /**
  *
@@ -52,13 +58,13 @@ public class AuthenticateServiceImpl implements AuthenticateService {
         // 1. AuthKey 정보 조회
         AuthKey authKeyInfo = this.dataAccessService.selectAuthKey(pAuthKey);
         logger.debug("authKeyInfo={}", authKeyInfo);
-        checkAuthKeyInfo(authKeyInfo);
+        this.checkAuthKeyInfo(authKeyInfo);
 
         // Tenant
-        checkTenantInfo(authKeyInfo);
+        this.checkTenantInfo(authKeyInfo);
 
         // System
-        System system = checkSystemInfo(headers);
+        System system = this.checkSystemInfo(headers);
 
         // 4. AuthKey 유형에 따라 분기 (상용키/테스트키)
         // 테스트키일 경우 인증 Pass
@@ -68,10 +74,10 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
             if(authKeyInfo.getAuthType() != null && authKeyInfo.getAuthType() == AuthType.IP) {
                 // IP 인증
-                authIp(system, headers);
+                this.authIp(system, headers);
             } else {
                 // MAC 인증 (default)
-                authMac(headers, authKeyInfo);
+                this.authMac(headers, authKeyInfo);
             }
         }
 
@@ -94,13 +100,13 @@ public class AuthenticateServiceImpl implements AuthenticateService {
     @Override
     public void checkAuthKeyInfo(AuthKey authKeyInfo) throws StorePlatformException {
         // 1.1. AuthKey 데이터 존재 여부 체크
-        if(authKeyInfo == null) {
+        if(authKeyInfo == null || StringUtils.isBlank(authKeyInfo.getAuthKey())) {
             // 인증키 정보 없음
             throw new StorePlatformException("SAC_CMN_0031");
         }
 
         // 1.2. AuthKey 상태 체크
-        if(!StringUtils.equals(AuthKeyStatus.AVAILABLE.name(), authKeyInfo.getStatusCd())) {
+        if(authKeyInfo.getStatus() != AuthKeyStatus.AVAILABLE) {
             // 인증키가 유효하지 않음
             throw new StorePlatformException("SAC_CMN_0032");
         }
@@ -130,10 +136,10 @@ public class AuthenticateServiceImpl implements AuthenticateService {
         String tenantId = authKeyInfo.getTenantId();
 
         // 2. Tenant 정보 조회
-        Tenant tenant = dataAccessService.selectTenant(tenantId);
+        Tenant tenant = this.dataAccessService.selectTenant(tenantId);
 
         // 2.1. Tenant 데이터 존재 여부 체크
-        if(tenant ==  null) {
+        if(tenant ==  null || StringUtils.isBlank(tenant.getTenantId())) {
 			throw new StorePlatformException("SAC_CMN_0034");
         }
 
@@ -164,7 +170,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
         System dbSystem = this.dataAccessService.selectSystem(headers.getSystemId());
 
         // 3.1. System 데이터 존재 여부 체크
-        if(dbSystem == null || StringUtils.isEmpty(dbSystem.getSystemId())) {
+        if(dbSystem == null || StringUtils.isBlank(dbSystem.getSystemId())) {
             // System 정보가 없음
             throw new StorePlatformException("SAC_CMN_0036");
         }

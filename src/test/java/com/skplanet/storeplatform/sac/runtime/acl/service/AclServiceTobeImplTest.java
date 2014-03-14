@@ -26,13 +26,13 @@ public class AclServiceTobeImplTest {
 	private AclServiceTobeImpl aclService;
 
 	@Mock
-	private VerifyService verifyServiceMock;
+	private VerifyService verifyMock;
 
 	@Mock
-	private AuthenticateService authenticateServiceMock;
+	private AuthenticateService authenticateMock;
 
 	@Mock
-	private AuthorizeService authorizeServiceMock;
+	private AuthorizeService authorizeMock;
 
 	@Before
 	public void setUp() throws Exception {
@@ -45,14 +45,14 @@ public class AclServiceTobeImplTest {
 		headers.setRequestUrl("/member/user/createByMdn/v1");
 		headers.setTimestamp(AclUtils.getTimestamp() + "");
 
-		doThrow(new StorePlatformException("SAC_CMN_0001")).when(this.verifyServiceMock).verifyHeaders(headers);
+		doThrow(new StorePlatformException("SAC_CMN_0001")).when(this.verifyMock).verifyHeaders(headers);
 		try {
 			this.aclService.validate(headers);
 		} catch (StorePlatformException e) {
 			assertEquals("SAC_CMN_0001", e.getErrorInfo().getCode());
 			throw e;
 		} finally {
-			verify(this.verifyServiceMock).verifyHeaders(headers);
+			verify(this.verifyMock).verifyHeaders(headers);
 		}
 	}
 
@@ -65,14 +65,14 @@ public class AclServiceTobeImplTest {
 		headers.setNonce("1392659261");
 		headers.setSignature("");
 
-		doThrow(new StorePlatformException("SAC_CMN_0036")).when(this.authenticateServiceMock).authenticate(headers);
+		doThrow(new StorePlatformException("SAC_CMN_0036")).when(this.authenticateMock).authenticate(headers);
 		try {
 			this.aclService.authenticate(headers);
 		} catch (StorePlatformException e) {
 			assertEquals("SAC_CMN_0036", e.getErrorInfo().getCode());
 			throw e;
 		} finally {
-			verify(this.authenticateServiceMock).authenticate(headers);
+			verify(this.authenticateMock).authenticate(headers);
 		}
 	}
 
@@ -84,16 +84,16 @@ public class AclServiceTobeImplTest {
 		headers.setInterfaceId("IS01000001");
 		headers.setRequestUrl("/member/user/createByMdn/v1");
 
-		doNothing().when(this.authorizeServiceMock).checkInterface(headers);
-		doThrow(new StorePlatformException("SAC_CMN_0064")).when(this.authorizeServiceMock).checkMapping(headers);
+		doNothing().when(this.authorizeMock).checkInterface(headers);
+		doThrow(new StorePlatformException("SAC_CMN_0064")).when(this.authorizeMock).checkMapping(headers);
 		try {
 			this.aclService.authorize(headers);
 		} catch (StorePlatformException e) {
 			assertEquals("SAC_CMN_0064", e.getErrorInfo().getCode());
 			throw e;
 		} finally {
-			verify(this.authorizeServiceMock).checkInterface(headers);
-			verify(this.authorizeServiceMock).checkMapping(headers);
+			verify(this.authorizeMock).checkInterface(headers);
+			verify(this.authorizeMock).checkMapping(headers);
 		}
 	}
 

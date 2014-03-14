@@ -10,8 +10,8 @@
 	<select id="detail" parameterType="String" resultMap="InterfaceResultMap">
 			SELECT /* InterfaceMapper.searchDetail, 인터페이스 상세 조회, 서대영/SK플래닛, 2014-02-17 */
 			       interface_id,
-			       interface_type_cd,
-			       (SELECT cd_nm FROM tb_cm_cd where cd_id = interface_type_cd) as interface_type_nm,
+			       category_cd,
+			       (SELECT cd_nm FROM tb_cm_cd where cd_id = category_cd) as interface_type_nm,
 			       url,
 			       version,
 			       interface_nm,
