@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrSegment;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchDcdSupportProductSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.DcdSupportProductRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
@@ -61,6 +63,9 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListR
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceAmqpSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
@@ -94,6 +99,15 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 	@Autowired
 	private ExistenceInternalSacSCI existenceInternalSacSCI;
+
+	@Autowired
+	private AmqpTemplate memberModDeviceAmqpTemplate;
+
+	@Autowired
+	private AmqpTemplate memberDelDeviceAmqpTemplate;
+
+	@Autowired
+	private AmqpTemplate memberRetireAmqpTemplate;
 
 	/*
 	 * 
@@ -280,6 +294,20 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				gameCenterSacReq.setTenantId(tenantId);
 				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
 				this.deviceService.insertGameCenterIF(gameCenterSacReq);
+
+				/* MQ 연동 */
+				ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+				mqInfo.setUserKey(userKey);
+				mqInfo.setOldUserKey(userKey);
+				mqInfo.setDeviceKey(deviceKey);
+				mqInfo.setOldDeviceKey(deviceKey);
+				mqInfo.setDeviceId(mdn);
+				mqInfo.setOldDeviceId(beMdn);
+				mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+				mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+				mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
+				this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
 
 				/* 사용자제한정책 mdn 변경(as-is 구매한도/선물수신한도 변경용) */
 				UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
@@ -646,6 +674,20 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			}
 
+			/* MQ 연동 */
+			ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+			mqInfo.setUserKey(userKey);
+			mqInfo.setOldUserKey(userKey);
+			mqInfo.setDeviceKey(deviceKey);
+			mqInfo.setOldDeviceKey(deviceKey);
+			mqInfo.setDeviceId(mdn);
+			mqInfo.setOldDeviceId(mdn);
+			mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+			mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+			mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+			this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
+
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 
 		} catch (StorePlatformException ex) {
@@ -712,6 +754,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String deviceKey = null;
 		String result = null;
 		String changeCaseCode = null;
+		String gameCenterWorkCd = null;
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
@@ -737,6 +780,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			if (StringUtil.equals(svcRsnCd, "Z222") || StringUtil.equals(svcRsnCd, "Z261")) { //번호이동당일해지 || 번호이동해지
 
 				changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_MOVE;
+				gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
 
 				/* 회원상태 업데이트 */
 				UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
@@ -764,19 +808,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 				this.deviceSCI.createDevice(createDeviceReq);
 
-				/* 게임센터 연동 */
-				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-				gameCenterSacReq.setUserKey(userKey);
-				gameCenterSacReq.setDeviceId(mdn);
-				gameCenterSacReq.setSystemId(systemId);
-				gameCenterSacReq.setTenantId(tenantId);
-				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
-
-				this.deviceService.insertGameCenterIF(gameCenterSacReq);
-
 			} else {
 
 				changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE;
+				if (StringUtil.equals(svcRsnCd, "M1NC")) { // 명의변경
+					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_NAME_CHANGE;
+				} else {
+					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
+				}
 
 				/* 휴대기기 삭제 요청 */
 				List<String> removeKeyList = new ArrayList<String>();
@@ -788,22 +827,26 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				removeDeviceReq.setDeviceKey(removeKeyList);
 				this.deviceSCI.removeDevice(removeDeviceReq);
 
-				/* 게임센터 연동 */
-				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-				gameCenterSacReq.setUserKey(userKey);
-				gameCenterSacReq.setDeviceId(mdn);
-				gameCenterSacReq.setSystemId(systemId);
-				gameCenterSacReq.setTenantId(tenantId);
-
-				if (StringUtil.equals(svcRsnCd, "M1NC")) { // 명의변경
-					gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_NAME_CHANGE);
-				} else {
-					gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
-				}
-
-				this.deviceService.insertGameCenterIF(gameCenterSacReq);
-
 			}
+
+			/* 게임센터 연동 */
+			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			gameCenterSacReq.setUserKey(userKey);
+			gameCenterSacReq.setDeviceId(mdn);
+			gameCenterSacReq.setSystemId(systemId);
+			gameCenterSacReq.setTenantId(tenantId);
+			gameCenterSacReq.setWorkCd(gameCenterWorkCd);
+			this.deviceService.insertGameCenterIF(gameCenterSacReq);
+
+			/* MQ 연동 */
+			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+			mqInfo.setUserKey(userKey);
+			mqInfo.setDeviceKey(deviceKey);
+			mqInfo.setDeviceId(mdn);
+			mqInfo.setChgCaseCd(gameCenterWorkCd);
+			mqInfo.setSvcMangNo(svcMngNum);
+			this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
 
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 
@@ -902,6 +945,13 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			gameCenterSacReq.setTenantId(tenantId);
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
+
+			/* MQ 연동 */
+			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+			mqInfo.setUserId(schUserRes.getUserMbr().getUserID());
+			mqInfo.setUserKey(schUserRes.getUserMbr().getImMbrNo());
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 
