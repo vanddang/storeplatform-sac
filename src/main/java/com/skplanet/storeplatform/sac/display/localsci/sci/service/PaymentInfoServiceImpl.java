@@ -80,14 +80,15 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 		PaymentInfo paymentProdType = this.commonDAO.queryForObject("PaymentInfo.searchProdType", prodIdList.get(0),
 				PaymentInfo.class);
 
-		if (paymentProdType != null) {
+		if (paymentProdType == null) {
+			throw new StorePlatformException("SAC_DSP_0005", "[상품 군 조회]" + prodIdList.get(0));
+		} else {
 			this.log.debug("##### searchProdType result : {}, {}", paymentProdType.getTopMenuId(),
 					paymentProdType.getSvcGrpCd());
 
 			if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(paymentProdType.getSvcGrpCd())) { // 쇼핑 상품
 				paymentInfoList = this.shoppingService.getShoppingforPayment(req);
-			} else if (DisplayConstants.DP_TSTORE_FREEPASS_PROD_SVC_GRP_CD.equals(paymentProdType.getSvcGrpCd())) { // 정액권
-																													// 상품
+			} else if (DisplayConstants.DP_TSTORE_FREEPASS_PROD_SVC_GRP_CD.equals(paymentProdType.getSvcGrpCd())) { // 정액권_상품
 				paymentInfoList = this.freepassService.getFreePassforPayment(req);
 			} else {
 				for (int i = 0; i < prodIdList.size(); i++) {
@@ -95,7 +96,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 					PaymentInfo paymentInfo = this.commonDAO.queryForObject("PaymentInfo.searchPaymentInfo", req,
 							PaymentInfo.class);
 
-					if (paymentInfo != null) {
+					if (paymentInfo == null) {
+						throw new StorePlatformException("SAC_DSP_0005", "[일반상품 조회]" + prodIdList.get(0));
+					} else {
 						// 상품분류코드는 SVC_GRP_CD||TOP_MENU_ID 로 제공
 						paymentInfo.setTenantProdGrpCd(paymentProdType.getSvcGrpCd() + "||"
 								+ paymentProdType.getTopMenuId());
