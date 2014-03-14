@@ -29,7 +29,7 @@ public class MusicDetail extends CommonInfo {
     private int fileSize;
     private boolean bellSprtYn;
     private boolean colorringSprtYn;
-    private String prodGrd;
+    private String prodGrdCd;
     private String agencyNm;
     private String chnlCompNm;
     private String outsdContentsId;
@@ -84,12 +84,12 @@ public class MusicDetail extends CommonInfo {
         this.chnlCompNm = chnlCompNm;
     }
 
-    public String getProdGrd() {
-        return prodGrd;
+    public String getProdGrdCd() {
+        return prodGrdCd;
     }
 
-    public void setProdGrd(String prodGrd) {
-        this.prodGrd = prodGrd;
+    public void setProdGrdCd(String prodGrdCd) {
+        this.prodGrdCd = prodGrdCd;
     }
 
     public int getProdAmt() {

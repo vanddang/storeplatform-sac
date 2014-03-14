@@ -20,11 +20,7 @@
             PDESC.ARTIST3_NM,
             DECODE(MM.BELL_SPRT_YN, 'Y', 1, 0) AS BELL_SPRT_YN,
             DECODE(MM.COLORRING_SPRT_YN, 'Y', 1, 0) AS COLORRING_SPRT_YN,
-            DECODE( EPD.PROD_GRD_CD
-            , 'PD004401', 0
-            , 'PD004402', 1
-            , 'PD004403', 2
-            , 'PD004404', 4 ) AS PROD_GRD,
+            EPD.PROD_GRD_CD,
             MM.AGENCY_NM,
             MM.CHNL_COMP_NM,
             MM.OUTSD_CONTENTS_ID,

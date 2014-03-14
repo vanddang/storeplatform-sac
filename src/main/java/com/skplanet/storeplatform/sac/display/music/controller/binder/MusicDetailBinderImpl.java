@@ -115,7 +115,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         accrual.setScore(musicDetail.getAvgEvluScore());
         product.setAccrual(accrual);
         Rights rights = new Rights();
-        rights.setGrade(musicDetail.getProdGrd());
+        rights.setGrade(musicDetail.getProdGrdCd());
         product.setRights(rights);
 
         if(!DisplayConstants.DP_SALE_STAT_ING.equals(musicDetail.getProdStatusCd()))
