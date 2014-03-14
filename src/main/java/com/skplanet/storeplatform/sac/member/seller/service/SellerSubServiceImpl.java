@@ -226,7 +226,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 			sellerMbrRes.setSubSellerMemo(sellerMbr.getSubSellerMemo());
 			sellerMbrRes.setSubSellerPhone(sellerMbr.getSellerPhone());
 			sellerMbrRes.setSubSellerKey(sellerMbr.getSellerKey());
-
+			sellerMbrRes.setSubSellerLoginDttm(sellerMbr.getLoginDate());
 		}
 		return sellerMbrRes;
 	}
