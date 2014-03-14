@@ -9,7 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.Header;
+import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.runtime.acl.service.authentication.AuthenticateService;
 import com.skplanet.storeplatform.sac.runtime.acl.service.authorization.AuthorizeService;
@@ -23,10 +25,10 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
  * Updated on : 2014. 2. 5.
  * Updated by : 서대영/임근대/정희원, SK 플래닛
  */
-// @Service
+@Service
 public class AclServiceTobeImpl implements AclServiceTobe {
 
-	// @Autowired
+	@Autowired
 	private VerifyService validator;
 	private AuthenticateService authenticateService;
     private AuthorizeService authorizationService;
