@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
@@ -141,10 +142,10 @@ public class DeviceServiceImpl implements DeviceService {
 	@Autowired
 	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
 
-	@Autowired
+	@Resource(name = "memberAddDeviceAmqpTemplate")
 	private AmqpTemplate memberAddDeviceAmqpTemplate;
 
-	@Autowired
+	@Resource(name = "memberDelDeviceAmqpTemplate")
 	private AmqpTemplate memberDelDeviceAmqpTemplate;
 
 	/*
@@ -1624,7 +1625,7 @@ public class DeviceServiceImpl implements DeviceService {
 			mqInfo.setDeviceKey(deviceInfo.getDeviceKey());
 			mqInfo.setDeviceId(deviceInfo.getDeviceId());
 			mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
-			mqInfo.setChgCaseCd("");
+			mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
 
 			LOGGER.info("======== 휴대기기 삭제 MQ 연동 mqInfo : {}", mqInfo.toString());
 
