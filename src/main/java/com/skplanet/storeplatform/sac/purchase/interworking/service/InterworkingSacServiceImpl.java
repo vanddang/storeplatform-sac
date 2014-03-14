@@ -68,6 +68,9 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 			req.setCompContentsId(interworkingSac.getCompContentsId());
 			// 인터파크 상품인지 확인후 전송테이블에 저장
 			if (interworkingSac.equals(this.mallCd)) {
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+				this.logger.debug("@@@@@@@@@@@@ interpark Start @@@@@@@@@@@@");
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 				updateCount += this.interworkingSCI.createInterworking(req);
 			}
 			// cine21 상품인지 확인(구매상품이의 판매자회원번호가 cine21이면 전송테이블에 저장)
