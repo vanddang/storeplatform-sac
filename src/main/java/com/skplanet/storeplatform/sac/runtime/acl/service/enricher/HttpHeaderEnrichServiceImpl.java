@@ -9,10 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service.enricher;
 
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
-
-import java.util.Map;
 
 /**
 *
@@ -21,10 +23,11 @@ import java.util.Map;
 * Updated on : 2014. 2. 10.
 * Updated by : 서대영, SK 플래닛
 */
+@Service
 public class HttpHeaderEnrichServiceImpl implements HttpHeaderEnrichService {
 
 	@Override
-	public HttpHeaders validateHeader(Map<String, Object> headerMap) {
+	public HttpHeaders enrichHeader(Map<String, Object> headerMap) {
 		String accept = (String) headerMap.get(CommonConstants.HEADER_ACCEPT);
 		String acceptLanguage = (String) headerMap.get(CommonConstants.HEADER_ACCEPT_LANGUAGE);
 		String requestUrl = (String) headerMap.get(CommonConstants.HEADER_HTTP_REQUEST_URL);

@@ -21,6 +21,6 @@ public interface HttpHeaderEnrichService {
 	 * </pre>
 	 * @param headerMap
 	 */
-	HttpHeaders validateHeader(Map<String, Object> headerMap);
+	HttpHeaders enrichHeader(Map<String, Object> headerMap);
 
 }
