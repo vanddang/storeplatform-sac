@@ -1062,8 +1062,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 서비스 관리번호
 
 		/* IMEI가 다른경우 */
-		if (StringUtil.isNotBlank(nativeId) && StringUtil.isNotBlank(userMbrDevice.getNativeID())
-				&& !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
+		if (StringUtil.isNotBlank(userMbrDevice.getNativeID()) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
 
 			if (StringUtil.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
@@ -1078,8 +1077,8 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 통신사 / GMAIL 정보 모두 상이하면 로그인 실패 */
-		if (!StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom()) && StringUtil.isNotBlank(deviceAccount)
-				&& StringUtil.isNotBlank(userMbrDevice.getDeviceAccount()) && !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
+		if (!StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom()) && StringUtil.isNotBlank(userMbrDevice.getDeviceAccount())
+				&& !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
 
 			throw new StorePlatformException("SAC_MEM_1505"); // 통신사, GMAIL 정보가 상이합니다.
 
@@ -1212,8 +1211,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 서비스 관리번호
 
 		/* IMEI가 다른경우 */
-		if (StringUtil.isNotBlank(nativeId) && StringUtil.isNotBlank(userMbrDevice.getNativeID())
-				&& !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
+		if (StringUtil.isNotBlank(userMbrDevice.getNativeID()) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
 
 			if (StringUtil.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
