@@ -25,7 +25,6 @@ public class PwReminder extends CommonInfo {
 	private String questionID;
 
 	/** 보안질문 직접입력 값. */
-	@NotBlank
 	private String questionMessage;
 
 	/** 판매자 키. */
