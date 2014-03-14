@@ -4,7 +4,7 @@
 	<!-- package 정보로 상품 ID 조회-->
 	<select id="searchProdListByPackageNm" parameterType="Map" resultType="MetaInfo">
 		 SELECT 
-                   RSHP.PROD_ID
+                   P.PROD_ID
                   ,RSHP.PART_PROD_ID
                   ,CONTENTS.APK_PKG_NM
                   ,PROD.CONTENTS_TYPE_CD
@@ -24,4 +24,50 @@
              AND CONTENTS.VM_VER LIKE '%'||#{osVersion}||'%' /* Provisioning OS VERSION 체크 */
              AND RSHP.PROD_RSHP_CD = #{rshpCd}
  	</select>
+ 	
+ 	<!-- 상품 ID 리스트 (BY AID)-->
+    <select id="searchProdListByAid" parameterType="Map" resultType="MetaInfo">    
+        SELECT
+               C.PROD_ID AS PROD_ID
+              ,C.PART_PROD_ID AS PART_PROD_ID
+              ,DAP.AID AS AID
+              ,DTP.PROD_STATUS_CD AS PROD_STATUS_CD
+              ,NVL((SELECT 'Y'
+                    FROM TB_DP_SPRT_DEVICE DSD
+                    WHERE DSD.DEVICE_MODEL_CD = #{deviceModelNo}
+                    AND DSD.PROD_ID = P.PROD_ID
+                    AND ROWNUM = 1
+                  ), 'N') AS DEVICE_SUPPORT
+              ,P.CONTENTS_TYPE_CD
+        FROM   TB_DP_PROD P
+              ,TB_DP_APP_PROD DAP
+              ,TB_DP_TENANT_PROD_STATS PA
+              ,TB_DP_TENANT_PROD DTP
+              ,TB_DP_SPRT_DEVICE SH              
+              ,TB_DP_MENU_CATEGORY_PROD_MAPG CP
+              ,TB_DP_MENU_CATEGORY DMC
+              ,TB_DP_MENU_CATEGORY_DESC DMCD
+              ,TB_DP_PROD_RSHP C
+        WHERE P.PROD_ID = C.PART_PROD_ID
+        AND P.PROD_ID = DAP.PROD_ID
+        AND C.PROD_ID = CP.PROD_ID
+        AND CP.MENU_ID = DMC.MENU_ID
+        AND CP.MENU_ID = DMCD.MENU_ID
+        AND P.PROD_ID = DTP.PROD_ID
+        AND C.PROD_RSHP_CD = 'DP010802'
+        AND PA.TENANT_ID = #{tenantId}
+        AND DTP.TENANT_ID = #{tenantId}
+        AND PA.PROD_ID(+) = P.PROD_ID
+        AND SH.PROD_ID(+) = P.PROD_ID        
+        AND SH.DEVICE_MODEL_CD(+) = #{deviceModelNo}
+        AND CP.USE_YN = 'Y'
+        AND DMCD.LANG_CD = #{langCd}
+        <if test="arrayAId != null">
+        AND DAP.AID IN
+           <foreach collection="arrayAId" item="aId" index="index" separator="," open="(" close=")">
+              #{aId}
+           </foreach>
+        </if> 
+        AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> 'PD012302' OR DAP.PART_PARENT_CLSF_CD IS NULL )
+    </select> 
 </mapper>
