@@ -142,7 +142,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 					historyReq.setOffset(1);
 					historyReq.setCount(prodIdList.size());
 					historyReq.setProductList(ProductListSacInList);
-					historyReq.setPrchsStatusCd("OR000301"); // 구매완료
+					historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD); // 구매완료
 
 					// 구매내역 조회 실행
 					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
