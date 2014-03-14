@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceReq;
@@ -69,16 +68,8 @@ public class DeviceController {
 	@ResponseBody
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) {
 
-		String userId = StringUtil.nvl(req.getUserId(), "");
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
-		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), "");
-
-		if (!StringUtil.equals(userId, "") && StringUtil.equals(isMainDevice, "")) {
-			throw new StorePlatformException("SAC_MEM_0001", "isMainDevice");
-		}
-
-		if (StringUtil.equals(deviceId, "") && StringUtil.equals(deviceKey, "") && StringUtil.equals(isMainDevice, "")) {
+		/* userKey, userId 조회 요청한 걸로 판단하여 isMainDevice 필수 파라메터 체크 */
+		if (StringUtil.isBlank(req.getDeviceId()) && StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getIsMainDevice())) {
 			throw new StorePlatformException("SAC_MEM_0001", "isMainDevice");
 		}
 
@@ -103,48 +94,37 @@ public class DeviceController {
 	@ResponseBody
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) {
 
-		DeviceInfo deviceInfo = req.getDeviceInfo();
-
-		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
-		String regMaxCnt = StringUtil.nvl(req.getRegMaxCnt(), "");
-		String deviceId = StringUtil.nvl(deviceInfo.getDeviceId(), "");
-		String deviceIdType = StringUtil.nvl(deviceInfo.getDeviceIdType(), "");
-		String deviceTelecom = StringUtil.nvl(deviceInfo.getDeviceTelecom(), "");
-		String deviceModelNo = StringUtil.nvl(deviceInfo.getDeviceModelNo(), "");
-		String isPrimary = StringUtil.nvl(deviceInfo.getIsPrimary(), "");
-
 		/* 휴대기기 정보 필수 파라메터 체크 */
 
-		if (StringUtil.equals(userAuthKey, "")) {
+		if (StringUtil.isBlank(req.getUserAuthKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "userAuthKey");
 		}
 
-		if (StringUtil.equals(userKey, "")) {
+		if (StringUtil.isBlank(req.getUserKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
-		if (StringUtil.equals(regMaxCnt, "")) {
+		if (StringUtil.isBlank(req.getRegMaxCnt())) {
 			throw new StorePlatformException("SAC_MEM_0001", "regMaxCnt");
 		}
 
-		if (StringUtil.equals(deviceId, "")) {
+		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
 
-		if (StringUtil.equals(deviceIdType, "")) {
+		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceIdType())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
 		}
 
-		if (StringUtil.equals(deviceTelecom, "")) {
+		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceTelecom())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
 		}
 
-		if (StringUtil.equals(deviceModelNo, "")) {
+		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceModelNo())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceModelNo");
 		}
 
-		if (StringUtil.equals(isPrimary, "")) {
+		if (StringUtil.isBlank(req.getDeviceInfo().getIsPrimary())) {
 			throw new StorePlatformException("SAC_MEM_0001", "isPrimary");
 		}
 
@@ -165,15 +145,13 @@ public class DeviceController {
 	@RequestMapping(value = "/modifyDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) {
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
-		String deviceKey = StringUtil.nvl(req.getDeviceInfo().getDeviceKey(), "");
-		String deviceId = StringUtil.nvl(req.getDeviceInfo().getDeviceId(), "");
 
-		if (StringUtil.equals(userKey, "")) {
+		if (StringUtil.isBlank(req.getUserKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
-		if (StringUtil.equals(deviceKey, "") && StringUtil.equals(deviceId, "")) {
+		/* deviceId, deviceKey 둘중하나는 필수 */
+		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceKey()) && StringUtil.isBlank(req.getDeviceInfo().getDeviceId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceKey || deviceId");
 		}
 
