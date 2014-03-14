@@ -253,11 +253,11 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUserKey(userKey);
 
 		/* 휴대기기 정보 수정 */
-		deviceKey = this.updateDeviceInfo(requestHeader, deviceInfo);
+		DeviceInfo retDeviceInfo = this.updateDeviceInfo(requestHeader, deviceInfo);
 
 		ModifyDeviceRes res = new ModifyDeviceRes();
-		res.setDeviceKey(deviceKey);
-		res.setUserKey(req.getUserKey());
+		res.setDeviceKey(retDeviceInfo.getDeviceKey());
+		res.setUserKey(retDeviceInfo.getUserKey());
 
 		return res;
 	}
@@ -602,7 +602,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
+	public DeviceInfo updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
 		LOGGER.info("################ updateDeviceInfo start ##################");
 
@@ -670,7 +670,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info(":::::::::::::::::: device update field start ::::::::::::::::::");
 
-		if (deviceModelNo != null && !StringUtils.equals(deviceModelNo, "") && !StringUtils.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
+		if (StringUtil.isNotBlank(deviceModelNo)) {
 
 			LOGGER.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
@@ -680,50 +680,49 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (nativeId != null && !StringUtils.equals(nativeId, "") && !StringUtils.equals(nativeId, userMbrDevice.getNativeID())) {
+		if (StringUtil.isNotBlank(nativeId)) {
 
 			LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 			userMbrDevice.setNativeID(nativeId);
 
 		}
 
-		if (deviceAccount != null && !StringUtils.equals(deviceAccount, "") && !StringUtils.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
+		if (StringUtil.isNotBlank(deviceAccount)) {
 
 			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
 			userMbrDevice.setDeviceAccount(deviceAccount);
 
 		}
 
-		if (deviceTelecom != null && !StringUtils.equals(deviceTelecom, "") && !StringUtils.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
+		if (StringUtil.isNotBlank(deviceTelecom)) {
 
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 
 		}
 
-		if (deviceNickName != null && !StringUtils.equals(deviceNickName, "")
-				&& !StringUtils.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
+		if (StringUtil.isNotBlank(deviceNickName)) {
 
 			LOGGER.info("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
 			userMbrDevice.setDeviceNickName(deviceNickName);
 
 		}
 
-		if (isPrimary != null && !StringUtils.equals(isPrimary, "") && !StringUtils.equals(isPrimary, userMbrDevice.getIsPrimary())) {
+		if (StringUtil.isNotBlank(isPrimary)) {
 
 			LOGGER.info("[isPrimary] {} -> {}", userMbrDevice.getIsPrimary(), isPrimary);
 			userMbrDevice.setIsPrimary(isPrimary);
 
 		}
 
-		if (isRecvSms != null && !StringUtils.equals(isRecvSms, "") && !StringUtils.equals(isRecvSms, userMbrDevice.getIsRecvSMS())) {
+		if (StringUtil.isNotBlank(isRecvSms)) {
 
 			LOGGER.info("[isRecvSms] {} -> {}", userMbrDevice.getIsRecvSMS(), isRecvSms);
 			userMbrDevice.setIsRecvSMS(isRecvSms);
 
 		}
 
-		if (svcMangNum != null && !StringUtils.equals(svcMangNum, "") && !StringUtils.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
+		if (StringUtil.isNotBlank(svcMangNum)) {
 			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
@@ -766,7 +765,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info("################ updateDeviceInfo end ##################");
 
-		return createDeviceRes.getDeviceKey();
+		deviceInfo.setDeviceKey(createDeviceRes.getDeviceKey());
+		return deviceInfo;
 
 	}
 
@@ -849,9 +849,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info(":::::::::::::::::: device update field start ::::::::::::::::::");
 
-		if (deviceModelNo != null && !StringUtil.equals(deviceModelNo, "") && !StringUtils.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
+		if (StringUtil.isNotBlank(deviceModelNo) && !StringUtils.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
 
-			if (deviceTelecom != null && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			if (StringUtil.isNotBlank(deviceTelecom) && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
 				// 폰정보 조회 (deviceModelNo)
 				Device device = this.commService.getPhoneInfo(deviceModelNo);
@@ -889,12 +889,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (nativeId != null && !StringUtil.equals(nativeId, "")) {
+		if (StringUtil.isNotBlank(nativeId)) {
 
 			// nativeId 비교 여부
 			String isNativeIdAuth = deviceInfo.getIsNativeIdAuth();
 
-			if (deviceTelecom != null && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			if (StringUtil.isNotBlank(deviceTelecom) && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
 				// OPMD 여부
 				boolean isOpmd = StringUtils.substring(deviceId, 0, 3).equals("989");
@@ -911,7 +911,7 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			} else { // 타사
 
-				if (userMbrDevice.getNativeID() == null || StringUtils.equals(userMbrDevice.getNativeID(), "")) {
+				if (StringUtil.isBlank(userMbrDevice.getNativeID())) {
 					// DB에 저장된 IMEI 값이 없는 경우 최초 인증으로 보고 IMEI 수집
 					LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 					userMbrDevice.setNativeID(nativeId);
@@ -927,29 +927,28 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (deviceAccount != null && !StringUtils.equals(deviceAccount, "") && !StringUtils.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
+		if (StringUtil.isNotBlank(deviceAccount) && !StringUtils.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
 
 			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
 			userMbrDevice.setDeviceAccount(deviceAccount);
 
 		}
 
-		if (deviceTelecom != null && !StringUtils.equals(deviceTelecom, "") && !StringUtils.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
+		if (StringUtil.isNotBlank(deviceTelecom) && !StringUtils.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
 
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 
 		}
 
-		if (deviceNickName != null && !StringUtils.equals(deviceNickName, "")
-				&& !StringUtils.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
+		if (StringUtil.isNotBlank(deviceNickName) && !StringUtils.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
 
 			LOGGER.info("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
 			userMbrDevice.setDeviceNickName(deviceNickName);
 
 		}
 
-		if (svcMangNum != null && !StringUtils.equals(svcMangNum, "") && !StringUtils.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
+		if (StringUtil.isNotBlank(svcMangNum) && !StringUtils.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
 			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
@@ -996,7 +995,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public String updateDeviceForMdnLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
+	public DeviceInfo updateDeviceForMdnLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -1053,7 +1052,8 @@ public class DeviceServiceImpl implements DeviceService {
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 서비스 관리번호
 
 		/* IMEI가 다른경우 */
-		if (StringUtil.isNotEmpty(nativeId) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
+		if (StringUtil.isNotBlank(nativeId) && StringUtil.isNotBlank(userMbrDevice.getNativeID())
+				&& !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
 
 			if (StringUtil.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
@@ -1068,8 +1068,8 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 통신사 / GMAIL 정보 모두 상이하면 로그인 실패 */
-		if (!StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom()) && StringUtil.isNotEmpty(deviceAccount)
-				&& !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
+		if (!StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom()) && StringUtil.isNotBlank(deviceAccount)
+				&& StringUtil.isNotBlank(userMbrDevice.getDeviceAccount()) && !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
 
 			throw new StorePlatformException("SAC_MEM_1505"); // 통신사, GMAIL 정보가 상이합니다.
 
@@ -1077,28 +1077,28 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info(":::::::::::::::::: {} login device update field start ::::::::::::::::::", deviceId);
 
-		if (StringUtil.isNotEmpty(deviceModelNo) && !StringUtil.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
+		if (StringUtil.isNotBlank(deviceModelNo) && !StringUtil.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
 			gameCenterYn = "Y"; // 단말모델이 바뀌면 게임센터 연동
 			LOGGER.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 		}
 
-		if (StringUtil.isNotEmpty(svcMangNum) && !StringUtil.equals(deviceInfo.getSvcMangNum(), userMbrDevice.getSvcMangNum())) {
+		if (StringUtil.isNotBlank(svcMangNum) && !StringUtil.equals(deviceInfo.getSvcMangNum(), userMbrDevice.getSvcMangNum())) {
 			userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
 		}
 
-		if (StringUtil.isNotEmpty(nativeId) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
+		if (StringUtil.isNotBlank(nativeId) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
 			userMbrDevice.setNativeID(nativeId);
 			LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 		}
 
-		if (StringUtil.isNotEmpty(deviceTelecom) && !StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
+		if (StringUtil.isNotBlank(deviceTelecom) && !StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
 		}
 
-		if (StringUtil.isNotEmpty(deviceAccount) && !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
+		if (StringUtil.isNotBlank(deviceAccount) && !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
 			userMbrDevice.setDeviceAccount(deviceAccount);
 			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
 		}
@@ -1130,12 +1130,13 @@ public class DeviceServiceImpl implements DeviceService {
 			this.insertGameCenterIF(gameCenterSacReq);
 		}
 
-		return createDeviceRes.getDeviceKey();
+		deviceInfo.setDeviceKey(createDeviceRes.getDeviceKey());
+		return deviceInfo;
 
 	}
 
 	@Override
-	public String updateDeviceForMdnLoginV2(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
+	public DeviceInfo updateDeviceForMdnLoginV2(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -1192,7 +1193,8 @@ public class DeviceServiceImpl implements DeviceService {
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 서비스 관리번호
 
 		/* IMEI가 다른경우 */
-		if (StringUtil.isNotEmpty(nativeId) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
+		if (StringUtil.isNotBlank(nativeId) && StringUtil.isNotBlank(userMbrDevice.getNativeID())
+				&& !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
 
 			if (StringUtil.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
@@ -1206,38 +1208,30 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
-		/* 통신사 / GMAIL 정보 모두 상이하면 로그인 실패 */
-		//		if (!StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom()) && StringUtil.isNotEmpty(deviceAccount)
-		//				&& !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
-		//
-		//			throw new StorePlatformException("SAC_MEM_1505"); // 통신사, GMAIL 정보가 상이합니다.
-		//
-		//		}
-
 		LOGGER.info(":::::::::::::::::: {} login device update field start ::::::::::::::::::", deviceId);
 
-		if (StringUtil.isNotEmpty(deviceModelNo) && !StringUtil.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
+		if (StringUtil.isNotBlank(deviceModelNo) && !StringUtil.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
 			gameCenterYn = "Y"; // 단말모델이 바뀌면 게임센터 연동
 			LOGGER.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 		}
 
-		if (StringUtil.isNotEmpty(svcMangNum) && !StringUtil.equals(deviceInfo.getSvcMangNum(), userMbrDevice.getSvcMangNum())) {
+		if (StringUtil.isNotBlank(svcMangNum) && !StringUtil.equals(deviceInfo.getSvcMangNum(), userMbrDevice.getSvcMangNum())) {
 			userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
 		}
 
-		if (StringUtil.isNotEmpty(nativeId) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
+		if (StringUtil.isNotBlank(nativeId) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
 			userMbrDevice.setNativeID(nativeId);
 			LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 		}
 
-		if (StringUtil.isNotEmpty(deviceTelecom) && !StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
+		if (StringUtil.isNotBlank(deviceTelecom) && !StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
 		}
 
-		if (StringUtil.isNotEmpty(deviceAccount) && !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
+		if (StringUtil.isNotBlank(deviceAccount) && !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
 			userMbrDevice.setDeviceAccount(deviceAccount);
 			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
 		}
@@ -1269,7 +1263,8 @@ public class DeviceServiceImpl implements DeviceService {
 			this.insertGameCenterIF(gameCenterSacReq);
 		}
 
-		return createDeviceRes.getDeviceKey();
+		deviceInfo.setDeviceKey(createDeviceRes.getDeviceKey());
+		return deviceInfo;
 
 	}
 

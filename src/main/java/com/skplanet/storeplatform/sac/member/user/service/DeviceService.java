@@ -105,9 +105,9 @@ public interface DeviceService {
 	 *            SacRequestHeader
 	 * @param req
 	 *            DeviceInfo
-	 * @return deviceKey String
+	 * @return DeviceInfo
 	 */
-	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
+	public DeviceInfo updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
 
 	/**
 	 * 로그인한 기기정보 update.
@@ -127,9 +127,9 @@ public interface DeviceService {
 	 *            SacRequestHeader
 	 * @param req
 	 *            DeviceInfo
-	 * @return deviceKey String
+	 * @return DeviceInfo
 	 */
-	public String updateDeviceForMdnLogin(SacRequestHeader requestHeader, DeviceInfo req);
+	public DeviceInfo updateDeviceForMdnLogin(SacRequestHeader requestHeader, DeviceInfo req);
 
 	/**
 	 * MDN 로그인 v2 기기정보 update.
@@ -138,9 +138,9 @@ public interface DeviceService {
 	 *            SacRequestHeader
 	 * @param req
 	 *            DeviceInfo
-	 * @return deviceKey String
+	 * @return DeviceInfo
 	 */
-	public String updateDeviceForMdnLoginV2(SacRequestHeader requestHeader, DeviceInfo req);
+	public DeviceInfo updateDeviceForMdnLoginV2(SacRequestHeader requestHeader, DeviceInfo req);
 
 	/**
 	 * 휴대기기 대표단말 설정.
