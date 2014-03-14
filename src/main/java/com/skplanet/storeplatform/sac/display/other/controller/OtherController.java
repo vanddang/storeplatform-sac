@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherAIDListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherAIDListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackcageListReq;
@@ -33,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.other.service.OtherAIDListService;
 import com.skplanet.storeplatform.sac.display.other.service.OtherArtistService;
 import com.skplanet.storeplatform.sac.display.other.service.OtherPackageListService;
 import com.skplanet.storeplatform.sac.display.other.service.OtherServiceGroupService;
@@ -59,6 +62,9 @@ public class OtherController {
 
 	@Autowired
 	private OtherPackageListService otherPackageListService;
+
+	@Autowired
+	private OtherAIDListService otherAIDListService;
 
 	/**
 	 * <pre>
@@ -130,11 +136,34 @@ public class OtherController {
 	 */
 	@RequestMapping(value = "/package/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public OtherPackcageListRes searchProductListByPackageNm(@Validated OtherPackcageListReq req, SacRequestHeader header) {
+	public OtherPackcageListRes searchProductListByPackageNm(@Validated OtherPackcageListReq req,
+			SacRequestHeader header) {
 		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
 		if (prodIdList.size() > DisplayConstants.DP_UPDATE_PARAM_LIMIT) {
 			throw new StorePlatformException("SAC_DSP_0004", "list", DisplayConstants.DP_UPDATE_PARAM_LIMIT);
 		}
 		return this.otherPackageListService.searchProductListByPackageNm(req, header, prodIdList);
+	}
+
+	/**
+	 * <pre>
+	 * 상품 ID 조회(by AID)
+	 * </pre>
+	 * 
+	 * @param OtherAIDListReq
+	 *            req
+	 * @param SacRequestHeader
+	 *            header
+	 * @return OtherAIDListRes
+	 */
+	@RequestMapping(value = "/aid/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public OtherAIDListRes searchProductListByAID(@Validated OtherAIDListReq req, SacRequestHeader header) {
+		System.out.println("###########sfdsdfsfdsdfds");
+		List<String> aIdList = Arrays.asList(StringUtils.split(req.getAidList(), "+"));
+		if (aIdList.size() > DisplayConstants.DP_UPDATE_PARAM_LIMIT) {
+			throw new StorePlatformException("SAC_DSP_0004", "list", DisplayConstants.DP_UPDATE_PARAM_LIMIT);
+		}
+		return this.otherAIDListService.searchProductListByAID(req, header, aIdList);
 	}
 }
