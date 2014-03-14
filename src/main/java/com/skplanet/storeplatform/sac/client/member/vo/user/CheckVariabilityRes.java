@@ -20,72 +20,32 @@ public class CheckVariabilityRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 변동성 체크 성공유무(Y/N).
+	 * 로그인 성공여부(Y/N).
 	 */
-	private String isVariability;
+	private String isLoginSuccess;
 
 	/**
-	 * 사용자 키.
-	 */
-	private String userKey;
-
-	/**
-	 * 기기 Key.
-	 */
-	private String deviceKey;
-
-	/**
-	 * 변동성 회원 추가 인증 정보.
+	 * 변동성 회원 추가 인증 정보
 	 */
 	private UserAuthMethod userAuthMethod;
 
 	/**
-	 * @return isVariability
+	 * @return isLoginSuccess
 	 */
-	public String getIsVariability() {
-		return this.isVariability;
+	public String getIsLoginSuccess() {
+		return this.isLoginSuccess;
 	}
 
 	/**
-	 * @param isVariability
+	 * @param isLoginSuccess
 	 *            String
 	 */
-	public void setIsVariability(String isVariability) {
-		this.isVariability = isVariability;
+	public void setIsLoginSuccess(String isLoginSuccess) {
+		this.isLoginSuccess = isLoginSuccess;
 	}
 
 	/**
-	 * @return userKey
-	 */
-	public String getUserKey() {
-		return this.userKey;
-	}
-
-	/**
-	 * @param userKey
-	 *            String
-	 */
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
-	}
-
-	/**
-	 * @return deviceKey
-	 */
-	public String getDeviceKey() {
-		return this.deviceKey;
-	}
-
-	/**
-	 * @param deviceKey
-	 *            String
-	 */
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
-	}
-
-	/**
-	 * @return userAuthMethod
+	 * @return String
 	 */
 	public UserAuthMethod getUserAuthMethod() {
 		return this.userAuthMethod;
