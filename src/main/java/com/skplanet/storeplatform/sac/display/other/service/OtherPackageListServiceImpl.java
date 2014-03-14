@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPakcageListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPakcageListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackcageListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackcageListRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
@@ -56,9 +56,9 @@ public class OtherPackageListServiceImpl implements OtherPackageListService {
 	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
 	 */
 	@Override
-	public OtherPakcageListRes searchProductListByPackageNm(OtherPakcageListReq req, SacRequestHeader header,
+	public OtherPackcageListRes searchProductListByPackageNm(OtherPackcageListReq req, SacRequestHeader header,
 			List<String> prodIdList) {
-		OtherPakcageListRes res = new OtherPakcageListRes();
+		OtherPackcageListRes res = new OtherPackcageListRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
 		DeviceHeader deviceHeader = header.getDeviceHeader();

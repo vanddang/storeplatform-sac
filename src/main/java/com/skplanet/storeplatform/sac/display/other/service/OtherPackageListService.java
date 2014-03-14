@@ -11,8 +11,8 @@ package com.skplanet.storeplatform.sac.display.other.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPakcageListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPakcageListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackcageListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackcageListRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -37,6 +37,6 @@ public interface OtherPackageListService {
 	 * 
 	 * @return OtherPakcageListRes
 	 */
-	public OtherPakcageListRes searchProductListByPackageNm(OtherPakcageListReq req, SacRequestHeader header,
+	public OtherPackcageListRes searchProductListByPackageNm(OtherPackcageListReq req, SacRequestHeader header,
 			List<String> prodIdList);
 }
