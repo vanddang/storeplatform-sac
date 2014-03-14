@@ -50,6 +50,9 @@ public class VodGeneratorImpl implements VodGenerator {
 	public Contributor generateBroadcastContributor(MetaInfo metaInfo) {
 		Contributor contributor = new Contributor();
 		contributor.setArtist(metaInfo.getArtist1Nm()); // 출연자
+		Date date = new Date();
+		date.setText(metaInfo.getIssueDay());
+		contributor.setDate(date);
 		return contributor;
 	}
 
