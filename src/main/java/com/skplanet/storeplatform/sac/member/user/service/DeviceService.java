@@ -121,6 +121,28 @@ public interface DeviceService {
 	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo req);
 
 	/**
+	 * MDN 로그인 기기정보 update.
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            DeviceInfo
+	 * @return deviceKey String
+	 */
+	public String updateDeviceForMdnLogin(SacRequestHeader requestHeader, DeviceInfo req);
+
+	/**
+	 * MDN 로그인 v2 기기정보 update.
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            DeviceInfo
+	 * @return deviceKey String
+	 */
+	public String updateDeviceForMdnLoginV2(SacRequestHeader requestHeader, DeviceInfo req);
+
+	/**
 	 * 휴대기기 대표단말 설정.
 	 * 
 	 * @param requestHeader

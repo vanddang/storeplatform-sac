@@ -31,7 +31,7 @@ public interface LoginService {
 	public AuthorizeByMdnRes executeAuthorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
 
 	/**
-	 * 모바일 전용 회원 인증 (MDN 인증, 변동성 포함).
+	 * 모바일 전용 회원 인증 v2 (MDN 인증, 변동성 포함).
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
