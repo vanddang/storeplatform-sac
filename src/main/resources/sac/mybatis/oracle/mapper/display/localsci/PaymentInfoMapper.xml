@@ -88,9 +88,9 @@
                         ,J.MALL_CD  
                         ,'' as outsdContentsId      
                         ,J.SELLER_MBR_NO 
-                        ,'' AS sellerNm
-                        ,'' AS sellerEmail
-                        ,'' AS sellerTelno
+			            ,J.EXPO_SELLER_NM AS SELLER_NM
+			            ,J.EXPO_SELLER_EMAIL AS SELLER_EMAIL
+			            ,J.EXPO_SELLER_TELNO AS SELLER_TELNO                        
                         ,(SELECT SRC_CONTENT_ID 
                             FROM TB_DP_SHPG_PROD 
                            WHERE prod_id=H.PROD_ID 
