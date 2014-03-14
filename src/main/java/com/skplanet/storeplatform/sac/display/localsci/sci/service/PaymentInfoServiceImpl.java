@@ -97,7 +97,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 							PaymentInfo.class);
 
 					if (paymentInfo == null) {
-						throw new StorePlatformException("SAC_DSP_0005", "[일반상품 조회]" + prodIdList.get(0));
+						throw new StorePlatformException("SAC_DSP_0005", "[일반상품 조회]" + prodIdList.get(i));
 					} else {
 						// 상품분류코드는 SVC_GRP_CD||TOP_MENU_ID 로 제공
 						paymentInfo.setTenantProdGrpCd(paymentProdType.getSvcGrpCd() + "||"
