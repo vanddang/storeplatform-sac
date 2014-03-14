@@ -332,11 +332,11 @@
 		           AND C.PROD_ID = D.PROD_ID
 		           <if test='orderedBy == "pre"'>
 		           AND TO_NUMBER(REGEXP_REPLACE(D.CHAPTER, '[^[:digit:]]')) <![CDATA[ < ]]> #{chapter}
-		         ORDER BY D.CHAPTER DESC
+		         ORDER BY TO_NUMBER(REGEXP_REPLACE(D.CHAPTER, '[^[:digit:]]')) DESC
 		           </if>
 		           <if test='orderedBy == "next"'>
 		           AND TO_NUMBER(REGEXP_REPLACE(D.CHAPTER, '[^[:digit:]]')) <![CDATA[> ]]> #{chapter}
-		         ORDER BY D.CHAPTER ASC
+		         ORDER BY TO_NUMBER(REGEXP_REPLACE(D.CHAPTER, '[^[:digit:]]')) ASC
 		           </if>
 		       )
 		 WHERE ROWNUM = 1
