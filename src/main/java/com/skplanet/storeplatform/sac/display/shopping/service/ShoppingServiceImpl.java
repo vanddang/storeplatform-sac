@@ -63,6 +63,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -1671,6 +1672,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 								"Shopping.getShoppingImgDetailList", reqMap, MetaInfo.class);
 						for (int pp = 0; pp < resultImgDetailList.size(); pp++) {
 							source = new Source();
+							source.setMediaType(DisplayCommonUtil
+									.getMimeType(resultImgDetailList.get(pp).getFilePath()));
 							if (qq == 0) {
 								source.setType(DisplayConstants.DP_SOURCE_TYPE_DETAIL);
 							} else {
