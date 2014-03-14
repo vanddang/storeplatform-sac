@@ -38,13 +38,15 @@ public class DeviceSCIController implements DeviceSCI {
 	@Autowired
 	private DeviceService deviceService; // 휴대기기 관련 SAC 내부 인터페이스.
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * 단말 ID 정보(msisdn|uuid|mac) 조회.
+	 * </pre>
 	 * 
-	 * @see com.skplanet.storeplatform.sac.client.internal.member.sci.DeviceSCI#getDeviceMdn(com.skplanet.storeplatform
-	 * .sac .client.internal.member.vo.GetMdnReq)
+	 * @param request
+	 *            SearchDeviceIdSacReq
+	 * @return SearchDeviceIdSacRes
 	 */
-
 	@Override
 	@RequestMapping(value = "/searchDeviceId", method = RequestMethod.POST)
 	public @ResponseBody
@@ -72,11 +74,14 @@ public class DeviceSCIController implements DeviceSCI {
 		return responseVO;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * 기기변경 이력 조회.
+	 * </pre>
 	 * 
-	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI#searchChangedDeviceHistoryList
-	 * (com.skplanet .storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq)
+	 * @param request
+	 *            ChangedDeviceHistorySacReq
+	 * @return ChangedDeviceHistorySacRes
 	 */
 	@Override
 	@RequestMapping(value = "/searchChangedDeviceHistory", method = RequestMethod.POST)
