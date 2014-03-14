@@ -253,6 +253,9 @@ public class SellerMbr extends CommonInfo {
 	private String subSellerCateList;
 	private String subRegDate;
 
+	/**
+	 * 서브계정 로그인 시간.
+	 */
 	private String subSellerLoginDttm;
 
 	public String getSubSellerLoginDttm() {
