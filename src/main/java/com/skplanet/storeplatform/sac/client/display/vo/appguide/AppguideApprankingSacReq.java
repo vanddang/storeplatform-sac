@@ -51,6 +51,8 @@ public class AppguideApprankingSacReq extends CommonInfo {
 
 	private String b2bProd; // B2B 상품 구분
 
+	private String prodCharge; // 유/무료 여부
+
 	/**
 	 * 
 	 * <pre>
@@ -357,6 +359,21 @@ public class AppguideApprankingSacReq extends CommonInfo {
 
 	public void setB2bProd(String b2bProd) {
 		this.b2bProd = b2bProd;
+	}
+
+	/**
+	 * @return the prodCharge
+	 */
+	public String getProdCharge() {
+		return this.prodCharge;
+	}
+
+	/**
+	 * @param prodCharge
+	 *            the prodCharge to set
+	 */
+	public void setProdCharge(String prodCharge) {
+		this.prodCharge = prodCharge;
 	}
 
 }
