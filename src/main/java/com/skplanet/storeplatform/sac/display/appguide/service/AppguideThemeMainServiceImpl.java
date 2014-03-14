@@ -39,6 +39,7 @@ import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 /**
@@ -58,6 +59,9 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 	private CommonDAO commonDAO;
 
 	@Autowired
+	private AppInfoGenerator appInfoGenerator;
+
+	@Autowired
 	private CommonMetaInfoGenerator commonMetaInfoGenerator;
 
 	/*
@@ -75,7 +79,7 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 
 		CommonResponse commonResponse = new CommonResponse();
 
-		String className = this.getClass().getName();
+		// String className = this.getClass().getName();
 
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
 		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
@@ -170,8 +174,13 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 					title.setText(mapper.getProdNm());
 					product.setTitle(title);
 
-					product.setIdentifierList(this.commonMetaInfoGenerator.generateIdentifierList(metaInfo));
-					product.setMenuList(this.commonMetaInfoGenerator.generateMenuList(metaInfo));
+					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 앱 타입일 경우
+						product.setIdentifierList(this.appInfoGenerator.generateIdentifierList(metaInfo));
+						product.setMenuList(this.appInfoGenerator.generateMenuList(metaInfo));
+					} else {
+						product.setIdentifierList(this.commonMetaInfoGenerator.generateIdentifierList(metaInfo));
+						product.setMenuList(this.commonMetaInfoGenerator.generateMenuList(metaInfo));
+					}
 
 					/*
 					 * Rights grade
@@ -225,16 +234,10 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 		MetaInfo metaInfo = new MetaInfo();
 
 		// set Indentifier list informations
-		if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 앱 타입일 경우
-			metaInfo.setContentsTypeCd(mapper.getContentsTypeCd());
-			metaInfo.setPartProdId(mapper.getPartProdId());
-			metaInfo.setTopMenuId(mapper.getTopMenuId());
-		} else {
-			metaInfo.setContentsTypeCd(mapper.getContentsTypeCd());
-			metaInfo.setProdId(mapper.getProdId());
-			metaInfo.setPartProdId(mapper.getPartProdId());
-			metaInfo.setTopMenuId(mapper.getTopMenuId());
-		}
+		metaInfo.setContentsTypeCd(mapper.getContentsTypeCd());
+		metaInfo.setProdId(mapper.getProdId());
+		metaInfo.setPartProdId(mapper.getPartProdId());
+		metaInfo.setTopMenuId(mapper.getTopMenuId());
 
 		// set menu list
 		if (!StringUtils.isNullOrEmpty(mapper.getTopMenuId())) {
@@ -248,59 +251,8 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 		if (!StringUtils.isNullOrEmpty(mapper.getMetaClsfCd())) {
 			metaInfo.setMetaClsfCd(mapper.getMetaClsfCd());
 		}
+
 		return metaInfo;
 
-	}
-
-	@SuppressWarnings("unused")
-	private List<Identifier> generateIdentifierList(Map<String, String> param) {
-		Identifier identifier = null;
-		List<Identifier> identifierList = new ArrayList<Identifier>();
-
-		String contentsTypeCd = param.get("contentsTypeCd");
-		if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Episode ID 기준검색일 경우 (PD002502)
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(param.get("prodId"));
-			identifierList.add(identifier);
-
-			if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(param.get("topMenuId"))) {
-				if (param.get("catalogId") != null) {
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-					identifier.setText(param.get("catalogId"));
-					identifierList.add(identifier);
-				} else {
-					if (param.get("prodId") != null) {
-						identifier = new Identifier();
-						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-						identifier.setText(param.get("prodId"));
-						identifierList.add(identifier);
-					}
-				}
-			} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(param.get("topMenuId"))) {
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_SONG_IDENTIFIER_CD);
-				identifier.setText(param.get("outsdContentsId"));
-				identifierList.add(identifier);
-			}
-		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd) // Catalog ID 기준 검색일 경우
-				&& DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(param.get("topMenuId"))) {
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(param.get("prodId"));
-			identifierList.add(identifier);
-
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(param.get("catalogId"));
-			identifierList.add(identifier);
-		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Channel ID 기준 검색일 경우
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-			identifier.setText(param.get("prodId"));
-			identifierList.add(identifier);
-		}
-		return identifierList;
 	}
 }
