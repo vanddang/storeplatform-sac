@@ -100,7 +100,7 @@ public class PersonalController {
 	 *            header
 	 * @return DeviceProductProvisioningRes
 	 */
-	@RequestMapping(value = "/recommendNewMember/product/List/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/recommendNewMember/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public RecommendNewMemberProductRes recommendNewMemberProductList(SacRequestHeader header,
 			@Validated RecommendNewMemberProductReq req) {
