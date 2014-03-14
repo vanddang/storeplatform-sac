@@ -45,7 +45,7 @@
                           , TB_DP_MENU_CATEGORY_PROD_MAPG C
                           , TB_DP_MENU_CATEGORY D
                           , TB_DP_PROD E
-                          , TB_DP_TENANT_PROD F
+                          , TB_DP_TENANT_PROD F 
                           , TB_DP_SPRT_DEVICE G
                           , TB_DP_PROD_DESC H  /* 채널 */
                           , TB_CM_DEVICE I
@@ -53,6 +53,9 @@
                         AND B.PROD_RSHP_CD = 'DP010802'
                        <if test='menuId != null'>
                         AND A.MENU_ID = #{menuId}
+                       </if>
+                       <if test='prodCharge != "A"'>
+                         AND  E.PROD_CHRG_YN = #{prodCharge}       /* 상품유료여부 */
                        </if>
                         AND A.MENU_ID = C.MENU_ID
                         AND B.PART_PROD_ID = C.PROD_ID
@@ -164,6 +167,9 @@
                        AND D.CATALOG_ID = ESM.CATALOG_ID   
                        <if test='menuId != null'>
                         AND ESM.MENU_ID = #{menuId}
+                       </if>
+                       <if test='prodCharge != "A"'>
+                         AND  F.PROD_CHRG_YN = #{prodCharge}       /* 상품유료여부 */
                        </if>
                        AND E.BASE_YN = 'Y'
                        AND E.USE_YN = 'Y'

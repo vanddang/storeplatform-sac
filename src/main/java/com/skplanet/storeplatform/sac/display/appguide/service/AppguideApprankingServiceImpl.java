@@ -102,6 +102,18 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 			req.setStdDt(stdDt);
 		}
 
+		// 유/무료 여부 설정
+		if (listId.equals("RNK000000009") || listId.equals("RNK000000010") || listId.equals("RNK000000014")) {
+			// 무료 여부 설정 RNK000000009 : 랭킹_ 무료_일간, RNK000000010 : 랭킹_ 무료_주간, RNK000000014 : 랭킹_신규상품(최신)_무료
+			req.setProdCharge("N");
+		} else if (listId.equals("RNK000000012") || listId.equals("RNK000000013") || listId.equals("RNK000000015")) {
+			// 유료 여부 설정 RNK000000012 : 랭킹_ 유료_일간, RNK000000013 : 랭킹_ 유료_주간, RNK000000015 : 랭킹_ 신규상품(최신)_유료
+			req.setProdCharge("Y");
+		} else {
+			// RNK000000011 : 랭킹_ 누적
+			req.setProdCharge("A"); // 전체 기본 설정
+		}
+
 		List<ProductBasicInfo> productBasicInfoList;
 
 		// 추천 리스트 조회
