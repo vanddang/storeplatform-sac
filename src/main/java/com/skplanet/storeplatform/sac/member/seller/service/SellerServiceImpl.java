@@ -1078,9 +1078,15 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req) {
 
+		LOGGER.debug("############ SellerServiceImpl.withdraw() [START] ############");
+
 		RemoveSellerRequest schReq = new RemoveSellerRequest();
 
-		schReq.setCommonRequest(this.component.getSCCommonRequest(header));
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+		// SessionKey 유효성 체크
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+
+		schReq.setCommonRequest(commonRequest);
 		schReq.setSellerKey(req.getSellerKey());
 		schReq.setSecedeReasonCode(req.getSecedeReasonCode());
 		schReq.setSecedeReasonMessage(req.getSecedeReasonMessage());
@@ -1093,7 +1099,9 @@ public class SellerServiceImpl implements SellerService {
 		this.sellerWithdrawAmqpTemplate.convertSendAndReceive(new Message(Command.CANCEL_ACCOUNT,
 				new CancelAccountRequest(req.getSellerKey())));
 
+		LOGGER.debug("############ SellerServiceImpl.withdraw() [END] ############");
 		return response;
+
 	}
 
 	/**
