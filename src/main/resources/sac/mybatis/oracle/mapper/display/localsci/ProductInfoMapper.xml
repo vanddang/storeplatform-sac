@@ -178,7 +178,7 @@
 		       , E.VOD_TITL_NM
 		       , E.STRM_EPSD_CNT
 		       , E.EPSD_CNT
-		       , TO_CHAR(E.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"')
+		       , TO_CHAR(E.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"') AS ISSUE_DAY
 		       , E.CHNL_COMP_NM
 		       , E.AGENCY_NM
 		       , E.HDV_YN
@@ -200,7 +200,8 @@
 		       , D.CID       
 		       , E.OUTSD_CONTENTS_ID
 		       , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = I.PART_PROD_ID) AS PHONE_SPRT_YN
-		       , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId}) as chnlProdStat
+		       , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId} AND TENANT1.EXPO_YN ='Y') as chnlProdStatusCd
+		       , TENANT.PROD_STATUS_CD
 		  <![CDATA[
 		  , ( CASE WHEN E.EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_STORE
 		 ]]>
@@ -254,7 +255,6 @@
               WHERE MENU_ID = C.TOP_MENU_ID
                 AND LANG_CD = 'ko'
                 AND ROWNUM = 1) AS TOP_MENU_NM
-            , MP.OUTSD_CONTENTS_ID -- 외부_컨텐츠_ID
             , PD.PROD_NM
             , PD.PROD_DTL_DESC
             , PD.PROD_BASE_DESC
@@ -272,7 +272,7 @@
             , PD.ARTIST3_NM   AS ALBUM                     
             , MP.CHNL_COMP_NM AS PUBLISHER
             , MP.AGENCY_NM    AS AGENCY
-            , TO_CHAR(MP.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"')
+            , TO_CHAR(MP.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"') AS ISSUE_DAY
             , 'Y' AS MP3_SPRT_YN
             , MP.BELL_SPRT_YN
             , MP.COLORRING_SPRT_YN
@@ -283,6 +283,7 @@
             , P.CID
             ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = CP.PART_PROD_ID) AS PHONE_SPRT_YN
             , MP.OUTSD_CONTENTS_ID AS SONG_ID
+            , TENANT.PROD_STATUS_CD
             FROM 
                   TB_DP_MENU_CATEGORY_PROD_MAPG CPM
                 , TB_DP_MENU_CATEGORY C
@@ -340,7 +341,7 @@
              , E.COMPT_YN
              , E.VOD_TITL_NM
              , E.STRM_EPSD_CNT
-             , TO_CHAR(E.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"')
+             , TO_CHAR(E.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"') AS ISSUE_DAY
              , E.CHNL_COMP_NM as PUBLISHER
              , E.AGENCY_NM
              , E.EPSD_CNT
@@ -374,7 +375,8 @@
 		     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( E.EPSD_CNT + E.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
 		     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( E.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
              , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = I.PART_PROD_ID) AS PHONE_SPRT_YN
-             , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId}) as chnlProdStat                          
+             , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId} AND TENANT1.EXPO_YN ='Y') as chnlProdStatusCd
+             , TENANT.PROD_STATUS_CD                          
          FROM  TB_DP_MENU_CATEGORY           A
              , TB_DP_MENU_CATEGORY_PROD_MAPG B
              , TB_DP_MENU_CATEGORY_DESC      C

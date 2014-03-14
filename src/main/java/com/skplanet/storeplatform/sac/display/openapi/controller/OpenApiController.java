@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacReq;
@@ -132,7 +134,15 @@ public class OpenApiController {
 	 */
 	@RequestMapping(value = "/sellerApp/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SellerAppListRes searchSellerAppList(@Validated @RequestBody SellerAppListReq req, SacRequestHeader header) {
+	public SellerAppListRes searchSellerAppList(@RequestBody @Validated SellerAppListReq req, SacRequestHeader header) {
+		if ("N".equals(req.getAdmin())) {
+			if (StringUtils.isEmpty(req.getSellerId())) {
+				throw new StorePlatformException("SAC_DSP_0002", "sellerId", req.getSellerId());
+			}
+			if (StringUtils.isEmpty(req.getSellerKey())) {
+				throw new StorePlatformException("SAC_DSP_0002", "sellerKey", req.getSellerKey());
+			}
+		}
 		return this.sellerAppListService.searchSellerAppList(req, header);
 	}
 
@@ -150,6 +160,14 @@ public class OpenApiController {
 	@RequestMapping(value = "/sellerApp/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SellerAppDetailRes getSellerAppDetail(@Validated @RequestBody SellerAppDetailReq req, SacRequestHeader header) {
+		if ("N".equals(req.getAdmin())) {
+			if (StringUtils.isEmpty(req.getSellerId())) {
+				throw new StorePlatformException("SAC_DSP_0002", "sellerId", req.getSellerId());
+			}
+			if (StringUtils.isEmpty(req.getSellerKey())) {
+				throw new StorePlatformException("SAC_DSP_0002", "sellerKey", req.getSellerKey());
+			}
+		}
 		return this.sellerAppDetailService.getSellerAppDetail(req, header);
 	}
 

@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -39,7 +38,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Produc
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @Transactional
-public class ProductInfoSCITestTest_Bell {
+public class ProductInfoSCITestTest_VOD {
 
 	@Autowired
 	private ProductInfoSCI productInfoSCI;
@@ -55,26 +54,47 @@ public class ProductInfoSCITestTest_Bell {
 	 * @throws JsonGenerationException
 	 */
 	@Test
-	public void testSearchBellProductList() throws JsonGenerationException, JsonMappingException, IOException {
+	public void testSearchBroadCastProductList() throws JsonGenerationException, JsonMappingException, IOException {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
-		list.add("H000460197");
-		list.add("H000460203");
-		list.add("H000460209");
-
+		list.add("H000044277");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
+		req.setTenantId("S01");
 
 		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
 		List<ProductInfo> productList = res.getProductList();
 		this.log.debug("##### productInfo cnt : ", productList.size());
 		for (ProductInfo productInfo : productList) {
-			this.log.debug("##### Bell productInfo VO : {}",
+			this.log.debug("##### BroadCast productInfo VO : {}",
 					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
 		}
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json = objectMapper.writeValueAsString(productList);
-		this.log.debug("##### Bell productInfo  JSON : {}", json);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.skplanet.storeplatform.sac.display.localsci.sci.ProductInfoSCITest#searchEbookProductList()}.
+	 * 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonGenerationException
+	 */
+	@Test
+	public void testSearchMovieProductList() throws JsonGenerationException, JsonMappingException, IOException {
+		ProductInfoSacReq req = new ProductInfoSacReq();
+		List<String> list = new ArrayList<String>();
+		list.add("H000044277");
+		req.setList(list);
+		req.setDeviceModelNo("SHW-M100S");
+		req.setTenantId("S01");
+
+		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
+		List<ProductInfo> productList = res.getProductList();
+		this.log.debug("##### productInfo cnt : ", productList.size());
+		for (ProductInfo productInfo : productList) {
+			this.log.debug("##### Movie productInfo VO : {}",
+					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
+		}
 	}
 
 }

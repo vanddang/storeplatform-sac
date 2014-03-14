@@ -65,6 +65,7 @@ public class ProductInfoSCITestTest_Ebook {
 		list.add("H900006019");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
+		req.setTenantId("S01");
 
 		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
 		List<ProductInfo> productList = res.getProductList();
@@ -76,6 +77,39 @@ public class ProductInfoSCITestTest_Ebook {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(productList);
 		this.log.debug("##### Ebook productInfo  JSON : {}", json);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.skplanet.storeplatform.sac.display.localsci.sci.ProductInfoSCITest#searchEbookProductList()}.
+	 * 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonGenerationException
+	 */
+	@Test
+	public void testSearchComicProductList() throws JsonGenerationException, JsonMappingException, IOException {
+		ProductInfoSacReq req = new ProductInfoSacReq();
+		List<String> list = new ArrayList<String>();
+		list.add("H900005941");
+		list.add("H900006037");
+		list.add("H900006041");
+		list.add("H900008864");
+		list.add("H900006019");
+		req.setList(list);
+		req.setDeviceModelNo("SHW-M100S");
+		req.setTenantId("S01");
+
+		ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
+		List<ProductInfo> productList = res.getProductList();
+		this.log.debug("##### productInfo cnt : ", productList.size());
+		for (ProductInfo productInfo : productList) {
+			this.log.debug("##### Comic productInfo VO : {}",
+					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
+		}
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(productList);
+		this.log.debug("##### Comic productInfo  JSON : {}", json);
 	}
 
 }
