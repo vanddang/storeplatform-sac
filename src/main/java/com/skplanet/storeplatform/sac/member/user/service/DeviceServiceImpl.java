@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -85,6 +86,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
@@ -140,6 +142,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private AmqpTemplate memberRetireAmqpTemplate;
+
+	@Autowired
+	private AmqpTemplate memberDelDeviceAmqpTemplate;
 
 	/*
 	 * (non-Javadoc)
@@ -1582,6 +1587,32 @@ public class DeviceServiceImpl implements DeviceService {
 
 			removeKeyList.add(deviceKey);
 		}
+
+		/* MQ 연동 : SC휴대기기 삭제를 하면 정보조회 할수 없어서 미리 처리함. */
+		for (String key : removeKeyList) {
+			LOGGER.info("======== 휴대기기 삭제 MQ 연동 deviceKey : {}", key);
+
+			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, key, req.getUserKey());
+			if (deviceInfo == null) {
+				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+			}
+
+			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+			mqInfo.setUserKey(deviceInfo.getUserKey());
+			mqInfo.setDeviceKey(deviceInfo.getDeviceKey());
+			mqInfo.setDeviceId(deviceInfo.getDeviceId());
+			mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
+			mqInfo.setChgCaseCd("");
+
+			LOGGER.info("======== 휴대기기 삭제 MQ 연동 mqInfo : {}", mqInfo.toString());
+
+			this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
+
+		}
+
+		Message message = this.memberDelDeviceAmqpTemplate.receive("sac.tenant.member.del-device.async");
+		LOGGER.info("======== 휴대기기 삭제 MQ 연동 Result : {}", message);
 
 		/* SC 휴대기기 삭제요청 */
 		RemoveDeviceRequest removeDeviceRequest = new RemoveDeviceRequest();

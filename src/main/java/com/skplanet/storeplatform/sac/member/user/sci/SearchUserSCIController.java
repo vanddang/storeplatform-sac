@@ -244,11 +244,29 @@ public class SearchUserSCIController implements SearchUserSCI {
 				userDeviceInfoSac.setDeviceId(userInfoMap.get(deviceKeyList.get(i)).getDeviceId());
 				userDeviceInfoSac.setDeviceModelNo(userInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
 				userDeviceInfoSac.setDeviceTelecom(userInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
-				userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
-				userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
 				userDeviceInfoSac.setIsRealName(userInfoMap.get(deviceKeyList.get(i)).getIsRealName());
 				userDeviceInfoSac.setUserMainStatus(userInfoMap.get(deviceKeyList.get(i)).getUserMainStatus());
 				userDeviceInfoSac.setUserSubStatus(userInfoMap.get(deviceKeyList.get(i)).getUserSubStatus());
+
+				if (userInfoMap.get(deviceKeyList.get(i)).getIsRealName().equals("Y")) {
+					String birthday = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthBirthday(), "");
+					String name = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthName(), "");
+
+					if (birthday.equals("")) {
+						userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
+					} else {
+						userDeviceInfoSac.setUserBirthday(birthday);
+					}
+
+					if (name.equals("")) {
+						userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
+					} else {
+						userDeviceInfoSac.setUserName(name);
+					}
+				} else {
+					userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
+					userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
+				}
 
 				resMap.put(deviceKeyList.get(i), userDeviceInfoSac);
 			}
