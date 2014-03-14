@@ -14,6 +14,10 @@ public class UserInfoByDeviceKey extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	private String authName;
+
+	private String authBirthday;
+
 	private String userName;
 
 	private String userBirthday;
@@ -29,6 +33,22 @@ public class UserInfoByDeviceKey extends CommonInfo {
 	private String userMainStatus;
 
 	private String userSubStatus;
+
+	public String getAuthName() {
+		return this.authName;
+	}
+
+	public void setAuthName(String authName) {
+		this.authName = authName;
+	}
+
+	public String getAuthBirthday() {
+		return this.authBirthday;
+	}
+
+	public void setAuthBirthday(String authBirthday) {
+		this.authBirthday = authBirthday;
+	}
 
 	public String getUserName() {
 		return this.userName;
