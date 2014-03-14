@@ -2,8 +2,10 @@ package com.skplanet.storeplatform.sac.display.music.controller.binder;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
@@ -130,5 +132,11 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         contributor.setPublisher(musicDetail.getChnlCompNm());
         contributor.setAgency(musicDetail.getAgencyNm());
         product.setContributor(contributor);
+
+        // Date
+        product.setDateList(new ArrayList<Date>());
+        if(StringUtils.isNotEmpty(musicDetail.getIssueDay())) {
+            product.getDateList().add(new Date("date/issue", DateUtils.parseDate(musicDetail.getIssueDay())));
+        }
     }
 }

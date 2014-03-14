@@ -35,6 +35,7 @@ public class MusicDetail extends CommonInfo {
     private String outsdContentsId;
     private String thmPath;
     private String prodStatusCd;
+    private String issueDay;
 
     public String getProdStatusCd() {
         return prodStatusCd;
@@ -234,5 +235,13 @@ public class MusicDetail extends CommonInfo {
 
     public void setColorringSprtYn(boolean colorringSprtYn) {
         this.colorringSprtYn = colorringSprtYn;
+    }
+
+    public String getIssueDay() {
+        return issueDay;
+    }
+
+    public void setIssueDay(String issueDay) {
+        this.issueDay = issueDay;
     }
 }

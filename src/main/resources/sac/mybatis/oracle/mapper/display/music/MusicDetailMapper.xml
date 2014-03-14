@@ -24,6 +24,7 @@
             MM.AGENCY_NM,
             MM.CHNL_COMP_NM,
             MM.OUTSD_CONTENTS_ID,
+            MM.ISSUE_DAY,
             PI.FILE_PATH || PI.FILE_NM AS THM_PATH,
             TP.PROD_STATUS_CD
         FROM TB_DP_PROD CPD
