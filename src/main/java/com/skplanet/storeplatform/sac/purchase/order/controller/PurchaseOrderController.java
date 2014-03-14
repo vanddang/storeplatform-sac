@@ -38,6 +38,7 @@ import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderValidationService;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
 
@@ -116,12 +117,15 @@ public class PurchaseOrderController {
 		CreatePurchaseSacRes res = new CreatePurchaseSacRes();
 		res.setResultType(purchaseOrderInfo.getResultType());
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
+
 		if (StringUtils.equals(purchaseOrderInfo.getResultType(), "payment")) {
-			StringBuffer sbParam = new StringBuffer(purchaseOrderInfo.getPaymentPageParam().geteData().length()
-					+ purchaseOrderInfo.getPaymentPageParam().getToken().length() + 25);
-			sbParam.append("version=").append(purchaseOrderInfo.getPaymentPageParam().getVersion()).append("&token=")
-					.append(purchaseOrderInfo.getPaymentPageParam().getToken()).append("&eData=")
-					.append(purchaseOrderInfo.getPaymentPageParam().geteData());
+			PaymentPageParam paymentPageParam = purchaseOrderInfo.getPaymentPageParam();
+
+			StringBuffer sbParam = new StringBuffer(paymentPageParam.geteData().length()
+					+ paymentPageParam.getToken().length() + 25);
+			sbParam.append("version=").append(paymentPageParam.getVersion()).append("&token=")
+					.append(paymentPageParam.getToken()).append("&eData=").append(paymentPageParam.geteData());
+
 			res.setPaymentPageParam(sbParam.toString());
 			res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
 		}

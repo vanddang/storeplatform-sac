@@ -26,9 +26,11 @@ import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchSktPaymentScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchSktPaymentScRes;
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRespository;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
@@ -51,6 +53,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 	@Autowired
 	private PurchaseTenantPolicyService purchaseTenantPolicyService;
+
+	@Autowired
+	private PurchaseMemberRepository purchaseMemberRepository;
 
 	@Autowired
 	private PurchaseUapsRespository uapsRespository;
@@ -143,6 +148,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public String getAvailablePaymethodAdjustInfo(String tenantId, String tenantProdGrpCd) {
+		// TAKTODO:: 임시용, 정책 테이블에 관련 정책 추가 후 정책 테이블 조회로 변경
+
 		// this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd,
 		// PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD, false);
 
@@ -240,48 +247,100 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public void checkUserPolicy(PurchaseOrderInfo purchaseOrderInfo) {
+
 		if (purchaseOrderInfo.getRealTotAmt() == 0.0) {
 			return;
 		}
 
-		// ----------------------------------------------------------------
-		// Store 관리 Test MDN 체크 (비과금 결제)
-
-		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
-				purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getTenantProdGrpCd(),
-				PurchaseConstants.POLICY_PATTERN_STORE_TEST_DEVICE_CD, false);
-
-		if (policyList.size() > 0) {
-
-			policyList.get(0).getApplyValue();
-
-			purchaseOrderInfo.getTenantId();
-			purchaseOrderInfo.getUserKey();
-			purchaseOrderInfo.getDeviceKey();
-
-			// purchaseOrderInfo.setTestMdn(true);
-			// purchaseOrderInfo.setFreePaymentMtdCd("OR000698"); // 테스트폰 결제
-			// purchaseOrderInfo.setRealTotAmt(0.0);
-			// return;
-		}
+		List<String> policyCodeList = new ArrayList<String>();
+		List<String> testMdnPolicyCodeList = null;
+		List<String> blockPolicyCodeList = null;
 
 		// ----------------------------------------------------------------
-		// 구매차단 체크
+		// 비과금결제 / 구매차단 정책 조회 : 회원Part 정책 코드 조회
+
+		List<PurchaseTenantPolicy> policyList = null;
 
 		policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(purchaseOrderInfo.getTenantId(),
-				purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.POLICY_PATTERN_USER_BLOCK_CD, false);
-
+				purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.POLICY_PATTERN_STORE_TEST_DEVICE_CD, false);
 		if (policyList.size() > 0) {
-
-			policyList.get(0).getApplyValue();
-
-			purchaseOrderInfo.getTenantId();
-			purchaseOrderInfo.getUserKey();
-			purchaseOrderInfo.getDeviceKey();
-
-			// purchaseOrderInfo.setBlockPayment(true);
+			testMdnPolicyCodeList = new ArrayList<String>();
+			for (PurchaseTenantPolicy policy : policyList) {
+				policyCodeList.add(policy.getApplyValue());
+				testMdnPolicyCodeList.add(policy.getApplyValue());
+			}
+		}
+		policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(purchaseOrderInfo.getTenantId(),
+				purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.POLICY_PATTERN_USER_BLOCK_CD, false);
+		if (policyList.size() > 0) {
+			blockPolicyCodeList = new ArrayList<String>();
+			;
+			for (PurchaseTenantPolicy policy : policyList) {
+				policyCodeList.add(policy.getApplyValue());
+				blockPolicyCodeList.add(policy.getApplyValue());
+			}
 		}
 
+		if (policyCodeList.size() < 1) {
+			return;
+		}
+
+		// ----------------------------------------------------------------
+		// 회원Part 사용자 정책 조회
+
+		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
+				purchaseOrderInfo.getDeviceKey(), policyCodeList);
+
+		if (policyResMap == null) {
+			return;
+		}
+
+		// ----------------------------------------------------------------
+		// 정책 체크
+
+		IndividualPolicyInfoSac individualPolicyInfoSac = null;
+
+		// 비과금결제 우선 체크
+		if (testMdnPolicyCodeList != null) {
+			for (String key : policyResMap.keySet()) {
+				if (testMdnPolicyCodeList.contains(key) == false) {
+					continue;
+				}
+
+				individualPolicyInfoSac = policyResMap.get(key);
+
+				if (StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)
+						&& StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+					// 테스트폰 결제
+					purchaseOrderInfo.setTestMdn(true);
+					purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_STORE_TEST_DEVICE);
+					purchaseOrderInfo.setRealTotAmt(0.0);
+					return;
+				}
+
+				policyResMap.remove(key);
+			}
+		}
+
+		// 구매차단 체크
+		if (blockPolicyCodeList != null) {
+			for (String key : policyResMap.keySet()) {
+				if (blockPolicyCodeList.contains(key) == false) {
+					continue;
+				}
+
+				individualPolicyInfoSac = policyResMap.get(key);
+
+				if (StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)
+						&& StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+					// 구매차단
+					purchaseOrderInfo.setBlockPayment(true);
+					return;
+				}
+
+				policyResMap.remove(key);
+			}
+		}
 	}
 
 	/*

@@ -24,7 +24,6 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePa
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
-import com.skplanet.storeplatform.sac.purchase.order.vo.FixrateProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 
 /**
@@ -142,25 +141,16 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	 *            정액제 상품 ID
 	 * @param episodeProdId
 	 *            해당 정액제 상품을 이용하여 구매할 상품 ID
-	 * @return 상품ID에 매핑되는 상품정보를 담은 Map
+	 * @return 정액제 상품 DRM 정보
 	 */
 	@Override
-	public FixrateProduct searchFreePassDrmInfo(String tenantId, String langCd, String fixrateProdId,
-			String episodeProdId) {
+	public FreePassInfo searchFreePassDrmInfo(String tenantId, String langCd, String fixrateProdId, String episodeProdId) {
 		FreePassInfoSacReq req = new FreePassInfoSacReq();
 		req.setTenantId(tenantId);
 		req.setLangCd(langCd);
 		req.setProdId(fixrateProdId);
 		req.setEpisodeProdId(episodeProdId);
 
-		FreePassInfo res = this.freepassInfoSCI.searchFreePassDrmInfo(req);
-		// TAKTODO:: 혹시 모르니 판매상태 체크 하는지 확인 - 판매대기, 판매중, 판매중지, 판매금지, 판매종료
-		FixrateProduct fixrateProduct = new FixrateProduct();
-		fixrateProduct.setFixrateProdId(res.getProdId());
-		fixrateProduct.setDrmYn(res.getDrmYn());
-		fixrateProduct.setUsePeriodUnitCd(res.getUsePeriodUnitCd());
-		fixrateProduct.setUsePeriod(res.getUsePeriod());
-		fixrateProduct.setCmpxProdClsfCd(res.getCmpxProdClsfCd());
-		return fixrateProduct;
+		return this.freepassInfoSCI.searchFreePassDrmInfo(req);
 	}
 }

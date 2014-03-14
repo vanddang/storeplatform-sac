@@ -7,8 +7,8 @@ package com.skplanet.storeplatform.sac.purchase.constant;
  */
 public final class PurchaseConstants extends com.skplanet.storeplatform.purchase.constant.PurchaseConstants {
 
-	/** 회원Part 회원정보 조회 결과 에러 코드 */
-	public static final String SACINNER_MEMBER_RESULT_USER_NOTFOUND = "SC_MEM_9982";
+	/** 회원Part 조회 결과 에러 코드 */
+	public static final String SACINNER_MEMBER_RESULT_NOTFOUND = "SC_MEM_9982";
 
 	/** SKP 법인번호 */
 	public static final String SKP_CORPORATION_NO = "1101114699794";
@@ -71,6 +71,16 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** T Store Coupon */
 	/* 응답코드 */
 	public static final String TSTORE_COUPON_RESULT_CD_SUCCESS = "0000"; // SUCCESS
+
+	/** T Store 구매완료 Noti */
+	/* Noti 타입 */
+	public static final String TSTORE_NOTI_TYPE_NORMALPAY = "01"; // Type: 일반결제
+	public static final String TSTORE_NOTI_TYPE_AUTOPAY = "02"; // Type: 자동결제
+	public static final String TSTORE_NOTI_TYPE_AUTOPAY_RESERVED = "03"; // Type: 자동결제 해지예약
+	public static final String TSTORE_NOTI_TYPE_AUTOPAY_CLOSED = "04"; // Type: 자동결제 해지완료
+	/* Noti 결과 */
+	public static final String TSTORE_NOTI_RESULT_SUCCESS = "00"; // 00: 성공
+	public static final String TSTORE_NOTI_RESULT_FAIL = "01"; // 01: 실패
 
 	/** UAPS */
 	public static final String UAPS_SVC_TP_SKTTEST = "12"; // 회선 타입: 시험폰

@@ -16,14 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 
 /**
@@ -40,8 +45,16 @@ public class PurchaseMemberRepositoryImplTest {
 	@Autowired
 	private PurchaseMemberRepository purchaseMemberRepository;
 
-	// @Test
+	@Test
 	public void getUserPolicy() {
+		TenantHeader tenantHeader = new TenantHeader();
+		tenantHeader.setTenantId("S01");
+		tenantHeader.setSystemId("S01-01002");
+		SacRequestHeader sacRequestHeader = new SacRequestHeader();
+		sacRequestHeader.setTenantHeader(tenantHeader);
+		RequestContextHolder.getRequestAttributes().setAttribute(SacRequestHeader.class.getName(), sacRequestHeader,
+				RequestAttributes.SCOPE_REQUEST);
+
 		String deviceKey = "01046353524";
 		List<String> policyCodeList = new ArrayList<String>();
 		policyCodeList.add("US011712"); // 비과금 단말

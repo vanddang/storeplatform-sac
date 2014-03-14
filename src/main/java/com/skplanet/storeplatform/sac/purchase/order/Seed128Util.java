@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserveimport java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.codec.binary.Base64;
+ot disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order;
 
 import java.util.ArrayList;
@@ -5,6 +15,12 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 
+/**
+ * 
+ * Seed 암호화 Util
+ * 
+ * Updated on : 2014. 3. 14. Updated by : 이승택, nTels.
+ */
 public class Seed128Util {
 
 	private static final String CHARACTER_SET = "UTF-8";

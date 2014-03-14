@@ -20,6 +20,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.sci.MiscellaneousSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq.PolicyCode;
@@ -142,8 +143,16 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		getIndividualPolicySacReq.setKey(deviceKey);
 		getIndividualPolicySacReq.setPolicyCodeList(policyCodeObjList);
 
-		GetIndividualPolicySacRes getIndividualPolicySacRes = this.miscellaneousSCI
-				.getIndividualPolicy(getIndividualPolicySacReq);
+		GetIndividualPolicySacRes getIndividualPolicySacRes = null;
+		try {
+			getIndividualPolicySacRes = this.miscellaneousSCI.getIndividualPolicy(getIndividualPolicySacReq);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
+				return null;
+			} else {
+				throw e;
+			}
+		}
 
 		Map<String, IndividualPolicyInfoSac> resMap = new HashMap<String, IndividualPolicyInfoSac>();
 

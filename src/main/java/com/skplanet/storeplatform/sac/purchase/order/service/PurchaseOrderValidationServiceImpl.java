@@ -27,13 +27,13 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
-import com.skplanet.storeplatform.sac.purchase.order.vo.FixrateProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
@@ -145,7 +145,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					purchaseOrderInfo.getUserKey(), purchaseOrderInfo.getDeviceKey());
 		} catch (StorePlatformException e) {
 			// 조회 실패
-			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_USER_NOTFOUND)) {
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
 				throw new StorePlatformException("SAC_PUR_4101");
 			} else {
 				throw e;
@@ -177,7 +177,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						purchaseOrderInfo.getRecvDeviceKey());
 			} catch (StorePlatformException e) {
 				// 조회 실패
-				if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_USER_NOTFOUND)) {
+				if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
 					throw new StorePlatformException("SAC_PUR_4103");
 				} else {
 					throw e;
@@ -265,6 +265,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// 비과금 구매요청 경우, 이용종료일시 세팅
 			if (purchaseOrderInfo.isFreeChargeReq()) {
 				purchaseProduct.setUseExprDt(reqProduct.getUseExprDt());
+			}
+
+			// 쇼핑특가 쿠폰 정보 저장
+			if (StringUtils.isNotBlank(purchaseProduct.getSpecialSaleCouponId())) {
+				purchaseOrderInfo.setSpecialCouponId(purchaseProduct.getSpecialSaleCouponId());
+				purchaseOrderInfo.setSpecialCouponAmt(purchaseProduct.getProdAmt()
+						- purchaseProduct.getSpecialSaleAmt());
 			}
 
 			purchaseProductList.add(purchaseProduct);
@@ -368,34 +375,41 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				}
 
 				if (useExistenceScRes != null) {
+
 					// 정액권 DRM 정보 조회 및 반영
-					FixrateProduct fixrateProduct = this.purchaseDisplayRepository.searchFreePassDrmInfo(
+					FreePassInfo freepassInfo = this.purchaseDisplayRepository.searchFreePassDrmInfo(
 							useUser.getTenantId(), purchaseOrderInfo.getLangCd(), useExistenceScRes.getProdId(),
 							product.getProdId());
-					product.setUsePeriodUnitCd(fixrateProduct.getUsePeriodUnitCd());
-					product.setUsePeriod(Integer.parseInt(fixrateProduct.getUsePeriod()));
-					product.setDrmYn(fixrateProduct.getDrmYn());
-					product.setUseFixrateProdId(fixrateProduct.getFixrateProdId()); // 사용할 정액권ID 세팅
+					if (freepassInfo != null) {
+						product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
+						product.setUsePeriod(Integer.parseInt(freepassInfo.getUsePeriod()));
+						product.setDrmYn(freepassInfo.getDrmYn());
+						product.setUseFixrateProdId(useExistenceScRes.getProdId()); // 사용할 정액권ID 세팅
 
-					// 무료구매 처리 데이터 세팅
-					purchaseOrderInfo.setRealTotAmt(0.0);
-					String mtdCd = null;
-					// OR004301-정액권, OR004302-시리즈패스, OR004303-전권소장, OR004304-전권대여
-					switch (Integer.parseInt(fixrateProduct.getCmpxProdClsfCd().substring(2))) {
-					case 4301:
-						mtdCd = PurchaseConstants.PAYMENT_METHOD_FIXRATE; // OR000612-정액권
-						break;
-					case 4302:
-						mtdCd = PurchaseConstants.PAYMENT_METHOD_SERIESPASS; // OR000613-시리즈패스권
-						break;
-					case 4303:
-						mtdCd = PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_OWN; // OR000617-이북/코믹 전권 소장
-						break;
-					case 4304:
-						mtdCd = PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_LOAN; // OR000618-이북/코믹 전권 대여
-						break;
+						// 무료구매 처리 데이터 세팅
+						purchaseOrderInfo.setRealTotAmt(0.0);
+
+						if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
+								PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
+							// OR000612-정액권
+							purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_FIXRATE);
+
+						} else if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
+								PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+							// OR000613-시리즈패스권
+							purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_SERIESPASS);
+
+						} else if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
+								PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
+							// OR000617-이북/코믹 전권 소장
+							purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_OWN);
+
+						} else if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
+								PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
+							// OR000618-이북/코믹 전권 대여
+							purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_LOAN);
+						}
 					}
-					purchaseOrderInfo.setFreePaymentMtdCd(mtdCd);
 				}
 			}
 
@@ -408,7 +422,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					specialReq.setUserKey(purchaseOrderInfo.getPurchaseUser().getUserKey());
 					specialReq.setDeviceKey(purchaseOrderInfo.getPurchaseUser().getDeviceKey());
 					specialReq.setSpecialCouponId(product.getSpecialSaleCouponId());
-					specialReq.setSpecialAmt(product.getProdAmt() - product.getSpecialSaleAmt());
+					specialReq.setSpecialCouponAmt(product.getProdAmt() - product.getSpecialSaleAmt());
 
 					SearchShoppingSpecialCountScRes specialRes = this.purchaseOrderSearchSCI
 							.SearchShoppingSpecialCount(specialReq);
@@ -483,7 +497,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			shoppingRes = this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
 			availCd = shoppingRes.getStatusCd();
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7205");
+			throw new StorePlatformException("SAC_PUR_7205", e);
 		}
 
 		if (availCd == null) {

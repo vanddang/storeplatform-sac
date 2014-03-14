@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order.repository;
 import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.purchase.order.vo.FixrateProduct;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 
 /**
@@ -56,8 +56,7 @@ public interface PurchaseDisplayRepository {
 	 *            정액제 상품 ID
 	 * @param episodeProdId
 	 *            해당 정액제 상품을 이용하여 구매할 상품 ID
-	 * @return 상품ID에 매핑되는 상품정보를 담은 Map
+	 * @return 정액제 상품 DRM 정보
 	 */
-	public FixrateProduct searchFreePassDrmInfo(String tenantId, String langCd, String fixrateProdId,
-			String episodeProdId);
+	public FreePassInfo searchFreePassDrmInfo(String tenantId, String langCd, String fixrateProdId, String episodeProdId);
 }

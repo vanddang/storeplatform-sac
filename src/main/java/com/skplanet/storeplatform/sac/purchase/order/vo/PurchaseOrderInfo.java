@@ -78,9 +78,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	// 결제Page 정보
 	private String resultType; // 결과 타입: payment-결제Page 요청진행, free-무료구매 완료
 	private String paymentPageUrl; // 결제Page_URL
-	private String version; // [결제Page 요청 파라미터] 버전
-	private String token; // [결제Page 요청 파라미터] 토큰
-	private String eData; // [결제Page 요청 파라미터] 암호화 데이터
 	private PaymentPageParam paymentPageParam; // 결제Page_요청_파라미터
 
 	// ================================================================================================
@@ -513,51 +510,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setPaymentPageUrl(String paymentPageUrl) {
 		this.paymentPageUrl = paymentPageUrl;
-	}
-
-	/**
-	 * @return the version
-	 */
-	public String getVersion() {
-		return this.version;
-	}
-
-	/**
-	 * @param version
-	 *            the version to set
-	 */
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	/**
-	 * @return the token
-	 */
-	public String getToken() {
-		return this.token;
-	}
-
-	/**
-	 * @param token
-	 *            the token to set
-	 */
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	/**
-	 * @return the eData
-	 */
-	public String geteData() {
-		return this.eData;
-	}
-
-	/**
-	 * @param eData
-	 *            the eData to set
-	 */
-	public void seteData(String eData) {
-		this.eData = eData;
 	}
 
 	/**
