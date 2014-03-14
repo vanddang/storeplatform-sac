@@ -22,6 +22,10 @@ public class WithdrawReq extends CommonInfo {
 	@NotBlank
 	private String secedeReasonMessage;
 
+	/** 인증 키. */
+	@NotBlank
+	private String sessionKey;
+
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
@@ -44,6 +48,21 @@ public class WithdrawReq extends CommonInfo {
 
 	public void setSecedeReasonMessage(String secedeReasonMessage) {
 		this.secedeReasonMessage = secedeReasonMessage;
+	}
+
+	/**
+	 * @return the sessionKey
+	 */
+	public String getSessionKey() {
+		return this.sessionKey;
+	}
+
+	/**
+	 * @param sessionKey
+	 *            the sessionKey to set
+	 */
+	public void setSessionKey(String sessionKey) {
+		this.sessionKey = sessionKey;
 	}
 
 }
