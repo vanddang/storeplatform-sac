@@ -65,6 +65,7 @@ public class CouponConstants {
 	public static final String COUPON_IF_ERROR_CODE_IMGCRE_ERR = "4013"; // 이미지 생성 오류
 	public static final String COUPON_IF_ERROR_CODE_IMGSIZE_ERR = "4014"; // 이미지 사이즈 오류
 	public static final String COUPON_IF_ERROR_CODE_NOT_SPECIAL = "4015"; // 특가상품 없음
+	public static final String COUPON_IF_ERROR_CODE_CATALOG_DIFFERENT_PROD = "4016"; // 기존 등록된 상품과 CATALOG_ID가 다릅니다.
 
 	public static final String COUPON_IF_ERROR_CODE_DATA_ERR = "4021"; // Data 오류 [xxxx]
 	public static final String COUPON_IF_ERROR_CODE_DB_ERR = "4031"; // DB 장애 오류 [xxxx]
