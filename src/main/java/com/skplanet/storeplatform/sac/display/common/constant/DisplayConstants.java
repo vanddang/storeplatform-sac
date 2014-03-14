@@ -277,7 +277,7 @@ public class DisplayConstants {
 	 * eBook 시리즈 메타 클래스 코드.
 	 */
 	public static final String DP_SERIAL_META_CLASS_CD = "CT20";
-	
+
 	/** 잡지 */
 	public static final String DP_MAGAZINE_META_CLASS_CD = "CT24";
 	/** 인터렉티브 잡지 */
@@ -574,6 +574,7 @@ public class DisplayConstants {
 	public static final String PRCHS_CASE_GIFT_CD = "OR020302"; // 선물
 	public static final String PRCHS_START_DATE = "19000101000000"; // 구매조회 시작일시
 	public static final String PRCHS_STATE_TYPE_EXPIRED = "expired"; // 구매상태(만료)
+	public static final String PRCHS_STSTUS_COMPLETE_CD = "OR000301"; // 구매상태코드 - 완료
 
 	// 정액제 상품 자동결제 구분
 	public static final String DP_AUTOPAY_AUTO = "auto"; // 자동결제
