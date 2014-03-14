@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes;
+import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
@@ -262,7 +263,18 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		// 결제 취소.
-		// TODO : PayPlanet 연동.
+		boolean isPayPlanet = true;
+		for (Payment payment : purchaseCancelDetailSacParam.getPaymentList()) {
+			if (!StringUtils.isBlank(payment.getMoid())) {
+				isPayPlanet = false;
+				break;
+			}
+		}
+		if (isPayPlanet) {
+			// TODO : PayPlanet 연동.
+		} else {
+			// TODO : TStore PaymentCancel 연동.
+		}
 
 		// 구매 취소.
 		PurchaseCancelScReq purchaseCancelScReq = new PurchaseCancelScReq();
