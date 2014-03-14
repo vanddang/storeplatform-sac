@@ -142,7 +142,7 @@ public class DeviceServiceImpl implements DeviceService {
 	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
 
 	@Autowired
-	private AmqpTemplate memberRetireAmqpTemplate;
+	private AmqpTemplate memberAddDeviceAmqpTemplate;
 
 	@Autowired
 	private AmqpTemplate memberDelDeviceAmqpTemplate;
@@ -587,7 +587,7 @@ public class DeviceServiceImpl implements DeviceService {
 		mqInfo.setDeviceKey(deviceKey);
 		mqInfo.setDeviceId(deviceInfo.getDeviceId());
 		mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+		this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 
 		LOGGER.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
 
@@ -761,7 +761,7 @@ public class DeviceServiceImpl implements DeviceService {
 			mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
 			mqInfo.setDeviceId(deviceInfo.getDeviceId());
 			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 		}
 
 		LOGGER.info("################ updateDeviceInfo end ##################");
@@ -987,7 +987,7 @@ public class DeviceServiceImpl implements DeviceService {
 			mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
 			mqInfo.setDeviceId(deviceInfo.getDeviceId());
 			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 		}
 
 		LOGGER.info("################ updateDeviceInfoForIdLogin end ##################");
@@ -1146,7 +1146,7 @@ public class DeviceServiceImpl implements DeviceService {
 			mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
 			mqInfo.setDeviceId(deviceInfo.getDeviceId());
 			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 		}
 
 		deviceInfo.setDeviceKey(createDeviceRes.getDeviceKey());
@@ -1288,7 +1288,7 @@ public class DeviceServiceImpl implements DeviceService {
 			mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
 			mqInfo.setDeviceId(deviceInfo.getDeviceId());
 			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 		}
 
 		deviceInfo.setDeviceKey(createDeviceRes.getDeviceKey());
