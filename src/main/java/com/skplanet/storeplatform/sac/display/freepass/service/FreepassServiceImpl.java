@@ -720,6 +720,8 @@ public class FreepassServiceImpl implements FreepassService {
 						paramMap, String.class);
 
 				paymentInfo.setExclusiveFixrateProdIdList(exclusiveFixrateProdIdList);
+			} else {
+				throw new StorePlatformException("SAC_DSP_0005", "[정액권 상품 조회]" + prodIdList.get(0));
 			}
 			paymentInfoList.add(paymentInfo);
 		}
