@@ -211,6 +211,7 @@ public class CouponConstants {
 				.equals(COUPON_IF_ERROR_CODE_IMGCRE_ERR)) ? "이미지 생성 오류" : (code
 				.equals(COUPON_IF_ERROR_CODE_IMGSIZE_ERR)) ? "이미지 사이즈 오류" : (code.equals(COUPON_IF_ERROR_CODE_DATA_ERR)) ? "Data 오류" : (code
 				.equals(COUPON_IF_ERROR_CODE_DB_ERR)) ? "DB 장애 오류" : (code.equals(COUPON_IF_ERROR_CODE_NOT_SPECIAL)) ? "특가상품 없음" : (code
+				.equals(COUPON_IF_ERROR_CODE_CATALOG_DIFFERENT_PROD)) ? "기존 등록된 상품과 CATALOG_ID가 다릅니다" : (code
 				.equals(COUPON_IF_ERROR_CODE_DB_ETC)) ? errorMsg : code;
 	}
 
