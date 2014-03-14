@@ -15,17 +15,17 @@ public class UserAuthMethod extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 인증한 userId
+	 * 인증한 userId.
 	 */
 	private String userId;
 
 	/**
-	 * 인증한 EMAIL주소
+	 * 인증한 EMAIL주소.
 	 */
 	private String userEmail;
 
 	/**
-	 * 실명인증여부(Y/N)
+	 * 실명인증여부(Y/N).
 	 */
 	private String isRealName;
 

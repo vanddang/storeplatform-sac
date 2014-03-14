@@ -43,11 +43,6 @@ public class DeviceInfo extends CommonInfo {
 	private String deviceIdType;
 
 	/**
-	 * 기기 타입 코드.
-	 */
-	private String deviceType;
-
-	/**
 	 * 기기 모델 번호.
 	 */
 	private String deviceModelNo;
@@ -133,12 +128,12 @@ public class DeviceInfo extends CommonInfo {
 	private String svcMangNum;
 
 	/**
-	 * 휴대기기 인증여부
+	 * 휴대기기 인증여부.
 	 */
 	private String isAuthenticated;
 
 	/**
-	 * 휴대기기 인증일자
+	 * 휴대기기 인증일자.
 	 */
 	private String authenticationDate;
 
@@ -175,21 +170,6 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
-	}
-
-	/**
-	 * @return deviceType
-	 */
-	public String getDeviceType() {
-		return this.deviceType;
-	}
-
-	/**
-	 * @param deviceType
-	 *            String
-	 */
-	public void setDeviceType(String deviceType) {
-		this.deviceType = deviceType;
 	}
 
 	/**

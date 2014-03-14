@@ -57,6 +57,7 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	/**
 	 * 기기 고유 번호 비교 여부.
 	 */
+	@Deprecated
 	private String isNativeIdAuth;
 
 	/**

@@ -43,12 +43,12 @@ public class GameCenterSacReq extends CommonInfo {
 	private String preUserKey;
 
 	/**
-	 * IDP 관리키
+	 * IDP 관리키.
 	 */
 	private String preMbrNo;
 
 	/**
-	 * 이전 IDP 관리키
+	 * 이전 IDP 관리키.
 	 */
 	private String mbrNo;
 

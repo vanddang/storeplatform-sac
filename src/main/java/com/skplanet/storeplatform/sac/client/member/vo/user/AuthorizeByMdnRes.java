@@ -180,10 +180,17 @@ public class AuthorizeByMdnRes extends CommonInfo {
 		this.isLoginSuccess = isLoginSuccess;
 	}
 
+	/**
+	 * @return userAuthKey
+	 */
 	public String getUserAuthKey() {
 		return this.userAuthKey;
 	}
 
+	/**
+	 * @param userAuthKey
+	 *            String
+	 */
 	public void setUserAuthKey(String userAuthKey) {
 		this.userAuthKey = userAuthKey;
 	}

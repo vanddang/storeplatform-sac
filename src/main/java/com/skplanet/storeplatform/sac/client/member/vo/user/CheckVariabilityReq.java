@@ -35,6 +35,12 @@ public class CheckVariabilityReq extends CommonInfo {
 	private String deviceAccount;
 
 	/**
+	 * 기기 고유 번호.
+	 */
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
+	private String nativeId;
+
+	/**
 	 * @return deviceId
 	 */
 	public String getDeviceId() {
@@ -77,5 +83,20 @@ public class CheckVariabilityReq extends CommonInfo {
 	 */
 	public void setDeviceAccount(String deviceAccount) {
 		this.deviceAccount = deviceAccount;
+	}
+
+	/**
+	 * @return nativeId
+	 */
+	public String getNativeId() {
+		return this.nativeId;
+	}
+
+	/**
+	 * @param nativeId
+	 *            String
+	 */
+	public void setNativeId(String nativeId) {
+		this.nativeId = nativeId;
 	}
 }

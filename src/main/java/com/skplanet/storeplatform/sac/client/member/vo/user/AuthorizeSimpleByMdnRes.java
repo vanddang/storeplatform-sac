@@ -21,7 +21,7 @@ public class AuthorizeSimpleByMdnRes extends CommonInfo implements Serializable 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 인증키
+	 * 인증키.
 	 */
 	private String userAuthKey;
 

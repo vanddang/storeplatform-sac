@@ -40,14 +40,15 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	private String nativeId;
 
 	/**
-	 * 기기 고유 번호 비교여부.
-	 */
-	private String isNativeIdAuth;
-
-	/**
 	 * 기기 계정(Gmail 주소).
 	 */
 	private String deviceAccount;
+
+	/**
+	 * 기기 고유 번호 비교여부.
+	 */
+	@Deprecated
+	private String isNativeIdAuth;
 
 	/**
 	 * 자동 업데이트 여부.

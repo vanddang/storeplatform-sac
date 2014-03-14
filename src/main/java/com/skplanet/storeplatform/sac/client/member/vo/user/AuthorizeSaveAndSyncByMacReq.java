@@ -31,7 +31,7 @@ public class AuthorizeSaveAndSyncByMacReq extends CommonInfo implements Serializ
 	private String deviceTelecom;
 
 	/**
-	 * mac 주소
+	 * mac 주소.
 	 */
 	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String macAddress;
