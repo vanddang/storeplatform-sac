@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -74,9 +73,6 @@ public class ProductInfoSCITestTest_Ebook {
 			this.log.debug("##### Ebook productInfo VO : {}",
 					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
 		}
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json = objectMapper.writeValueAsString(productList);
-		this.log.debug("##### Ebook productInfo  JSON : {}", json);
 	}
 
 	/**
@@ -107,9 +103,6 @@ public class ProductInfoSCITestTest_Ebook {
 			this.log.debug("##### Comic productInfo VO : {}",
 					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
 		}
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json = objectMapper.writeValueAsString(productList);
-		this.log.debug("##### Comic productInfo  JSON : {}", json);
 	}
 
 }
