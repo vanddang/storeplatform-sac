@@ -792,7 +792,7 @@
                                      FROM TB_DP_TENANT_PROD_STATS 
                                     WHERE TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
                                    ) M
-                                 ,(SELECT 
+                                 ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
