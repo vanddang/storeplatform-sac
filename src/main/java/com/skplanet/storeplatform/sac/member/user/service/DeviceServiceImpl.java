@@ -74,6 +74,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ChangedDeviceHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ChangedDeviceHistoryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceReq;
@@ -576,17 +577,17 @@ public class DeviceServiceImpl implements DeviceService {
 		this.insertGameCenterIF(gameCenterSacReq);
 
 		/* 9. MQ 연동 */
-		//		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-		//		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-		//		if (previousUserKey != null && previousDeviceKey != null) {
-		//			mqInfo.setOldUserKey(previousUserKey);
-		//			mqInfo.setOldDeviceKey(previousDeviceKey);
-		//		}
-		//		mqInfo.setUserKey(userKey);
-		//		mqInfo.setDeviceKey(deviceKey);
-		//		mqInfo.setDeviceId(deviceInfo.getDeviceId());
-		//		mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-		//		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+		if (previousUserKey != null && previousDeviceKey != null) {
+			mqInfo.setOldUserKey(previousUserKey);
+			mqInfo.setOldDeviceKey(previousDeviceKey);
+		}
+		mqInfo.setUserKey(userKey);
+		mqInfo.setDeviceKey(deviceKey);
+		mqInfo.setDeviceId(deviceInfo.getDeviceId());
+		mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 		LOGGER.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
 
@@ -752,16 +753,16 @@ public class DeviceServiceImpl implements DeviceService {
 			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 			this.insertGameCenterIF(gameCenterSacReq);
-		}
 
-		/* MQ 연동 */
-		//		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-		//		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-		//		mqInfo.setUserKey(userKey);
-		//		mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
-		//		mqInfo.setDeviceId(deviceId);
-		//		mqInfo.setMnoCd(deviceTelecom);
-		//		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+			/* MQ 연동 */
+			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+			mqInfo.setUserKey(createDeviceRes.getUserKey());
+			mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
+			mqInfo.setDeviceId(deviceInfo.getDeviceId());
+			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+		}
 
 		LOGGER.info("################ updateDeviceInfo end ##################");
 
@@ -978,6 +979,15 @@ public class DeviceServiceImpl implements DeviceService {
 			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 			this.insertGameCenterIF(gameCenterSacReq);
+
+			/* MQ 연동 */
+			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+			mqInfo.setUserKey(createDeviceRes.getUserKey());
+			mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
+			mqInfo.setDeviceId(deviceInfo.getDeviceId());
+			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 		}
 
 		LOGGER.info("################ updateDeviceInfoForIdLogin end ##################");
@@ -1128,6 +1138,15 @@ public class DeviceServiceImpl implements DeviceService {
 			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 			this.insertGameCenterIF(gameCenterSacReq);
+
+			/* MQ 연동 */
+			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+			mqInfo.setUserKey(createDeviceRes.getUserKey());
+			mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
+			mqInfo.setDeviceId(deviceInfo.getDeviceId());
+			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 		}
 
 		deviceInfo.setDeviceKey(createDeviceRes.getDeviceKey());
@@ -1261,6 +1280,15 @@ public class DeviceServiceImpl implements DeviceService {
 			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 			this.insertGameCenterIF(gameCenterSacReq);
+
+			/* MQ 연동 */
+			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+			mqInfo.setUserKey(createDeviceRes.getUserKey());
+			mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
+			mqInfo.setDeviceId(deviceInfo.getDeviceId());
+			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 		}
 
 		deviceInfo.setDeviceKey(createDeviceRes.getDeviceKey());
