@@ -168,8 +168,8 @@
 			    ONE.TENANT_ID
              , ONE.SEQ AS ONE_SEQ
 			 , ONE.EXPO_DT
-             , ONE.EXPO_START_DT
-             , ONE.EXPO_END_DT
+             , TO_CHAR(ONE.EXPO_START_DT,'YYYYMMDDHHmiss') AS EXPO_START_DT
+             , TO_CHAR(ONE.EXPO_END_DT,'YYYYMMDDHHmiss') AS EXPO_END_DT
              , ONE.PART_CHRGMONY_APP_YN
              , NVL(ONE.FREE_ITEM_AMT, 0) AS FREE_ITEM_AMT        
              , NVL(ONE.PROD_REALRE_AMT, 0) AS PROD_REALRE_AMT        
