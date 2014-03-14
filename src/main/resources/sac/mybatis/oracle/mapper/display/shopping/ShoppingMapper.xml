@@ -66,7 +66,7 @@
                                        AND  TO_CHAR(TDLP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                
-                                 ,(SELECT 
+                                 ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
@@ -175,7 +175,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 ,(SELECT 
+                                 ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
@@ -314,7 +314,7 @@
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
                                  </if>
-                                 ,(SELECT 
+                                 ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
@@ -653,7 +653,7 @@
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
                                  ,TB_DP_PLAN_CATALOG_MANG M
-                                 ,(SELECT 
+                                 ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
@@ -873,7 +873,7 @@
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
                                  </if>                                 
-                                 ,(SELECT 
+                                 ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
@@ -1017,7 +1017,7 @@
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
                                  ,TB_DP_LIST_PROD M
-                                 ,(SELECT 
+                                 ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
@@ -1157,7 +1157,7 @@
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
                                  </if>
-                                 ,(SELECT 
+                                 ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
@@ -1305,7 +1305,7 @@
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
                                  </if>
-                                 ,(SELECT 
+                                 ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
@@ -1577,7 +1577,7 @@
                          ,TB_DP_TENANT_PROD K
                          ,TB_DP_TENANT_PROD_PRICE L
                          ,TB_DP_PROD_DESC O
-                         ,(SELECT 
+                         ,(SELECT /*+ ORDERED */
                                  B1.PROD_ID
                                , B1.SPRC_DC_RATE
                                , B1.SPRC_PRICE
