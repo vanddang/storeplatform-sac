@@ -33,7 +33,6 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -110,7 +109,7 @@ public class AuthorizeSaveAndSyncByMacTest {
 
 							return req;
 						}
-					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+					}).success(AuthorizeSaveAndSyncByMacRes.class, new SuccessCallback() {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							AuthorizeSaveAndSyncByMacRes res = (AuthorizeSaveAndSyncByMacRes) result;

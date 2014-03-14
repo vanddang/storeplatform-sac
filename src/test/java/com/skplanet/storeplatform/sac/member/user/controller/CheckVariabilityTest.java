@@ -32,7 +32,6 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -108,7 +107,7 @@ public class CheckVariabilityTest {
 
 							return req;
 						}
-					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+					}).success(CheckVariabilityRes.class, new SuccessCallback() {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							CheckVariabilityRes res = (CheckVariabilityRes) result;
@@ -156,7 +155,7 @@ public class CheckVariabilityTest {
 
 							return req;
 						}
-					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+					}).success(CheckVariabilityRes.class, new SuccessCallback() {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							CheckVariabilityRes res = (CheckVariabilityRes) result;
