@@ -111,8 +111,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 		// flag : NOT_MDN => 정책과 조회한 tenantProdGrpCd는 같지만 DeviceKey가 다른 경우는기구매체크에서 제외한다.
 		// 정책조회된 것이 없으면 ID기반으로 정의한다.(2014-03-10)
 		// 구매아이디로 조회시 devicekey가 null이면 ID기반으로 정의한다.(2014-03-10)
-		if (existenceScReq.getPrchsId() != null
-				&& (existenceScReq.getDeviceKey() == null || existenceScReq.getDeviceKey().equals(""))) {
+		if (existenceScReq.getPrchsId() != null) {
 			flag = "ID";
 		} else {
 			if (purchaseTenantPolicyList.size() > 0) {

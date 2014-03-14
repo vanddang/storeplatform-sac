@@ -93,6 +93,7 @@ public class ExistenceController {
 		req.setUserKey(existenceSacReq.getUserKey());
 		req.setDeviceKey(existenceSacReq.getDeviceKey());
 		req.setPrchsId(existenceSacReq.getPrchsId());
+		req.setCheckValue(false);
 
 		// 상품리스트가 없을시 제외
 		if (existenceSacReq.getProductList() != null) {
