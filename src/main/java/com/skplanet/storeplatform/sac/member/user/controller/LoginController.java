@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.member.user.controller;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +41,8 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 @Controller
 public class LoginController {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+
 	@Autowired
 	private LoginService loginService;
 
@@ -55,7 +59,36 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
-		return this.loginService.executeAuthorizeByMdn(requestHeader, req);
+		LOGGER.info(":::::::::::::::::::: authorizeByMdn v1 start ::::::::::::::::::::");
+		LOGGER.info(req.toString());
+
+		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdn(requestHeader, req);
+
+		LOGGER.info(":::::::::::::::::::: authorizeByMdn v1 end ::::::::::::::::::::");
+		return res;
+	}
+
+	/**
+	 * 모바일 전용 회원 인증 v2 (MDN 인증, 변동성 포함).
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeByMdnReq
+	 * @return AuthorizeByMdnRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeByMdn/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
+
+		LOGGER.info(":::::::::::::::::::: authorizeByMdn v2 start ::::::::::::::::::::");
+		LOGGER.info(req.toString());
+
+		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdnV2(requestHeader, req);
+
+		LOGGER.info(":::::::::::::::::::: authorizeByMdn v2 end ::::::::::::::::::::");
+
+		return res;
 
 	}
 
@@ -72,24 +105,14 @@ public class LoginController {
 	@ResponseBody
 	public CheckVariabilityRes checkVariability(SacRequestHeader requestHeader, @Valid @RequestBody CheckVariabilityReq req) {
 
-		return this.loginService.executCheckVariability(requestHeader, req);
+		LOGGER.info(":::::::::::::::::::: checkVariability v1 start ::::::::::::::::::::");
+		LOGGER.info(req.toString());
 
-	}
+		CheckVariabilityRes res = this.loginService.executCheckVariability(requestHeader, req);
 
-	/**
-	 * 모바일 전용 회원 인증 V2 (MDN 인증, 변동성 포함).
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            AuthorizeByMdnReq
-	 * @return AuthorizeByMdnRes
-	 */
-	@RequestMapping(value = "/member/user/authorizeByMdn/v2", method = RequestMethod.POST)
-	@ResponseBody
-	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
+		LOGGER.info(":::::::::::::::::::: checkVariability v1 start ::::::::::::::::::::");
 
-		return this.loginService.executeAuthorizeByMdnV2(requestHeader, req);
+		return res;
 
 	}
 
@@ -106,7 +129,14 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) {
 
-		return this.loginService.executeAuthorizeById(requestHeader, req);
+		LOGGER.info(":::::::::::::::::::: authorizeById v1 start ::::::::::::::::::::");
+		LOGGER.info(req.toString());
+
+		AuthorizeByIdRes res = this.loginService.executeAuthorizeById(requestHeader, req);
+
+		LOGGER.info(":::::::::::::::::::: authorizeById v1 end ::::::::::::::::::::");
+
+		return res;
 
 	}
 
@@ -123,7 +153,14 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSimpleByMdnReq req) {
 
-		return this.loginService.executeAuthorizeSimpleByMdn(requestHeader, req);
+		LOGGER.info(":::::::::::::::::::: authorizeSimpleByMdn v1 start ::::::::::::::::::::");
+		LOGGER.info(req.toString());
+
+		AuthorizeSimpleByMdnRes res = this.loginService.executeAuthorizeSimpleByMdn(requestHeader, req);
+
+		LOGGER.info(":::::::::::::::::::: authorizeSimpleByMdn v1 end ::::::::::::::::::::");
+
+		return res;
 
 	}
 
@@ -142,7 +179,14 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
 
-		return this.loginService.executeAuthorizeSaveAndSyncByMac(requestHeader, req);
+		LOGGER.info(":::::::::::::::::::: authorizeSaveAndSyncByMac v1 start ::::::::::::::::::::");
+		LOGGER.info(req.toString());
+
+		AuthorizeSaveAndSyncByMacRes res = this.loginService.executeAuthorizeSaveAndSyncByMac(requestHeader, req);
+
+		LOGGER.info(":::::::::::::::::::: authorizeSaveAndSyncByMac v1 end ::::::::::::::::::::");
+
+		return res;
 
 	}
 }
