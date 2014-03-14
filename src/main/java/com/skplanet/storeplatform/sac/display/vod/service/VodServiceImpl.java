@@ -617,7 +617,6 @@ public class VodServiceImpl implements VodService {
 
 				List<Identifier> identifierList = new ArrayList<Identifier>();
 
-				identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getProdId()));
 				identifierList.add(new Identifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, mapperVO.getCid()));
 
 				subProduct.setIdentifierList(identifierList);
