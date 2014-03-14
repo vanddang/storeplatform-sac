@@ -2139,6 +2139,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		for (int i = 0; i < prodIdList.size(); i++) {
 			paramMap.put("prodId", prodIdList.get(i));
 			paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getShoppingMetaInfo", paramMap, PaymentInfo.class);
+			if (paymentInfo == null) {
+				throw new StorePlatformException("SAC_DSP_0005", "[쇼핑상품 조회]" + prodIdList.get(0));
+			}
 			paymentInfoList.add(paymentInfo);
 		}
 
