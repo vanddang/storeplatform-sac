@@ -48,9 +48,6 @@ public class AppCodiController {
 
 		this.logger.debug("AppCodiController.searchAppCodiList start !!");
 		this.logger.debug("request {}", requestVO);
-		if ("dummy".equals(requestVO.getFilteredBy()))
-			return this.appCodiService.searchDummyAppCodiList(requestVO, requestHeader);
-		else
-			return this.appCodiService.searchAppCodiList(requestVO, requestHeader);
+		return this.appCodiService.searchAppCodiList(requestVO, requestHeader);
 	}
 }

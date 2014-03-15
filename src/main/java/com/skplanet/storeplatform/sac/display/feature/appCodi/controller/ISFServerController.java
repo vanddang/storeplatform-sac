@@ -54,6 +54,18 @@ public class ISFServerController {
 		return response;
 	}
 
+	@RequestMapping(value = "/appCodi/st", method = RequestMethod.POST)
+	@ResponseBody
+	public String makeAppCodiListToString(@RequestBody Request requestVO) throws Exception {
+
+		this.logger.debug("ISFServerController.makeAppCodiListToString start !!");
+		this.logger.debug("request {}", requestVO);
+
+		String response = this.isfServerService.makeAppCodiXML();
+
+		return response;
+	}
+
 	/**
 	 * <pre>
 	 * ISF TSTORE LOCAL SERVER METHOD.

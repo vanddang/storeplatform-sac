@@ -26,16 +26,4 @@ public interface AppCodiService {
 	public AppCodiListSacRes searchAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException;
 
-	/**
-	 * <pre>
-	 * App Codi Dummy 조회.
-	 * </pre>
-	 * 
-	 * @param AppCodiSacReq
-	 *            requestVO
-	 * @param SacRequestHeader
-	 *            requestHeader
-	 * @return AppCodiListRes
-	 */
-	public AppCodiListSacRes searchDummyAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader);
 }

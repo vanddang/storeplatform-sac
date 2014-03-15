@@ -79,10 +79,7 @@ public class ThemeRecommendController {
 
 		this.log.debug("searchThemeRecommendProductList start !!");
 		this.log.debug("request {}", requestVO);
-		if ("dummy".equals(requestVO.getFilteredBy()))
-			return this.themeRecommendProductService.searchDummyThemeRecommendProductList(requestVO, header);
-		else
-			return this.themeRecommendProductService.searchThemeRecommendProductList(requestVO, header);
+		return this.themeRecommendProductService.searchThemeRecommendProductList(requestVO, header);
 	}
 
 }

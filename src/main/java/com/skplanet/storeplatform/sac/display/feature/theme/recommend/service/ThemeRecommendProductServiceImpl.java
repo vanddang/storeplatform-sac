@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +47,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.feature.isf.common.util.IsfUtils;
 import com.skplanet.storeplatform.sac.display.feature.theme.recommend.vo.ThemeRecommend;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -436,7 +435,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 
 			} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 멀티미디어 타입일 경우
 
-				identifierList = this.generateIdentifierList(idReqMap);
+				identifierList = IsfUtils.generateIdentifierList(idReqMap);
 				product.setIdentifierList(identifierList);
 
 				// support list
@@ -507,7 +506,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 				}
 			} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 쇼핑 상품의 경우
 
-				identifierList = this.generateIdentifierList(idReqMap);
+				identifierList = IsfUtils.generateIdentifierList(idReqMap);
 				product.setIdentifierList(identifierList);
 
 			}
@@ -519,222 +518,5 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		} // end of while
 
 		return listVO;
-	}
-
-	private List<Identifier> generateIdentifierList(Map<String, String> param) {
-		Identifier identifier = null;
-		List<Identifier> identifierList = new ArrayList<Identifier>();
-
-		String contentsTypeCd = param.get("contentsTypeCd");
-		if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Episode ID 기준검색일 경우 (PD002502)
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(param.get("prodId"));
-			identifierList.add(identifier);
-
-			if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(param.get("topMenuId"))) {
-				if (param.get("catalogId") != null) {
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-					identifier.setText(param.get("catalogId"));
-					identifierList.add(identifier);
-				} else {
-					if (param.get("prodId") != null) {
-						identifier = new Identifier();
-						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-						identifier.setText(param.get("prodId"));
-						identifierList.add(identifier);
-					}
-				}
-			} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(param.get("topMenuId"))) {
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_SONG_IDENTIFIER_CD);
-				identifier.setText(param.get("outsdContentsId"));
-				identifierList.add(identifier);
-			}
-		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd) // Catalog ID 기준 검색일 경우
-				&& DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(param.get("topMenuId"))) {
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(param.get("prodId"));
-			identifierList.add(identifier);
-
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(param.get("catalogId"));
-			identifierList.add(identifier);
-		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Channel ID 기준 검색일 경우
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-			identifier.setText(param.get("prodId"));
-			identifierList.add(identifier);
-		}
-		return identifierList;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
-	 */
-	@Override
-	public ThemeRecommendSacRes searchDummyThemeRecommendProductList(ThemeRecommendProdSacReq requestVO,
-			SacRequestHeader header) {
-		// TODO Auto-generated method stub
-
-		ThemeRecommendSacRes response = new ThemeRecommendSacRes();
-		CommonResponse commonResponse = null;
-		List<Product> listVO = new ArrayList<Product>();
-
-		Product product;
-		Layout layout;
-		Identifier identifier;
-		Title title;
-		Source source;
-		Menu menu;
-		App app;
-		Accrual accrual;
-		Rights right;
-		Date date;
-		Price price;
-		Support support;
-
-		// Response VO를 만들기위한 생성자
-		List<Menu> menuList;
-		List<Source> sourceList;
-		List<Identifier> identifierList;
-		List<Support> supportList;
-
-		product = new Product();
-		layout = new Layout();
-		identifier = new Identifier();
-		title = new Title();
-		source = new Source();
-
-		// Response VO를 만들기위한 생성자
-		sourceList = new ArrayList<Source>();
-
-		// 추천 패키지 추천 사유
-		title.setText("나도 이젠 프로게이머");
-
-		source.setMediaType("image/jpeg");
-		source.setSize(128);
-		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-		source.setUrl("http://wap.tstore.co.kr/android6/201312/04/IF1423502835320131125163752/0000648339/img/thumbnail/bb.jpg");
-
-		layout.setTitle(title);
-		layout.setSource(source);
-
-		product = new Product();
-		menuList = new ArrayList<Menu>();
-		sourceList = new ArrayList<Source>();
-		identifierList = new ArrayList<Identifier>();
-		supportList = new ArrayList<Support>();
-
-		title = new Title();
-		source = new Source();
-
-		// 상품ID
-		identifier = new Identifier();
-
-		identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-		identifier.setText("0000648339");
-		identifierList.add(identifier);
-
-		menu = new Menu();
-		menu.setId("DP01");
-		menu.setName("GAME");
-		menu.setType("topClass");
-		menuList.add(menu);
-		menu = new Menu();
-		menu.setId("DP01004");
-		menu.setName("RPG");
-		menuList.add(menu);
-
-		app = new App();
-		app.setAid("OA00648339");
-		app.setPackageName("com.webzenm.mtg4kakao");
-		app.setVersionCode("11");
-		app.setVersion("1.1");
-		app.setSize(256);
-
-		accrual = new Accrual();
-		accrual.setVoterCount(1519);
-		accrual.setDownloadCount(31410);
-		accrual.setScore(4.5);
-
-		right = new Rights();
-		right.setGrade("0");
-
-		date = new Date();
-		date.setType("date/issue");
-		date.setText("20120913T195630+0900/20121013T195630+0900");
-
-		price = new Price();
-		price.setFixedPrice(4300);
-		price.setDiscountRate(0.0);
-		price.setText(4300);
-
-		title.setText("뮤 더 제네시스 for Kakao ");
-
-		source.setMediaType("image/png");
-		source.setSize(0);
-		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-		source.setUrl("http://wap.tstore.co.kr/android6/201312/04/IF1423502835320131125163752/0000648339/img/thumbnail/0000648339_130_130_0_91_20131204195212.PNG");
-		sourceList.add(source);
-
-		support = new Support();
-		support.setText("iab");
-		support.setText("Y");
-		supportList.add(support);
-
-		support = new Support();
-		support.setText("drm");
-		support.setText("Y");
-		supportList.add(support);
-
-		product.setTitle(title);
-		product.setMenuList(menuList);
-		product.setApp(app);
-		product.setAccrual(accrual);
-		product.setRights(right);
-		product.setDate(date);
-		product.setPrice(price);
-		product.setSourceList(sourceList);
-		product.setSupportList(supportList);
-		product.setIdentifierList(identifierList);
-
-		listVO.add(product);
-
-		commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(listVO.size());
-
-		response.setCommonRes(commonResponse);
-		response.setLayout(layout);
-		response.setProductList(listVO);
-
-		return response;
-	}
-
-	@SuppressWarnings("unused")
-	private void mapPrint(Map<String, Object> mapReq) {
-		// Get Map in Set interface to get key and value
-		Set<Entry<String, Object>> s = mapReq.entrySet();
-		// Move next key and value of Map by iterator
-		Iterator<Entry<String, Object>> it = s.iterator();
-		while (it.hasNext()) {
-			// key=value separator this by Map.Entry to get key and value
-			Entry<String, Object> m = it.next();
-
-			// getKey is used to get key of Map
-			String key = m.getKey();
-
-			// getValue is used to get value of key in Map
-			Object value = m.getValue();
-
-			this.log.debug(key + ":[" + value.toString() + "]");
-		}
 	}
 }
