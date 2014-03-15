@@ -253,6 +253,15 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		List<Source> sourceList = new ArrayList<Source>();
 		Source source = this.generateSource(metaInfo);
 		sourceList.add(source);
+
+		if (StringUtils.isNotEmpty(metaInfo.getSamplUrl())) {
+			source = new Source();
+			source.setType(DisplayConstants.DP_SOURCE_TYPE_PREVIEW);
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
+			source.setUrl(metaInfo.getSamplUrl());
+			sourceList.add(source);
+		}
+
 		return sourceList;
 	}
 
