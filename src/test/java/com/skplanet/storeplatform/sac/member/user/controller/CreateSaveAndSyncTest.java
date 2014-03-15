@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -79,7 +78,6 @@ public class CreateSaveAndSyncTest {
 	 * Save&Sync MAC 가가입 테스트.
 	 * </pre>
 	 */
-	@Ignore
 	@Test
 	public void TEST_A_SaveAndSync_MAC가가입() {
 
@@ -95,12 +93,7 @@ public class CreateSaveAndSyncTest {
 
 						// 단말 정보
 						reqJson.setDeviceId("01:23:45:67:89:ab"); // 기기 ID
-						reqJson.setDeviceIdType("macaddress"); // 기기 ID 타입 (MDN or MAC 만...)
-						reqJson.setDeviceTelecom("US001202"); // 통신사
-						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
-						reqJson.setDeviceAccount("jUnitTest@gmail.com"); // 기기 계정 (Gmail)
-						reqJson.setJoinId("US002903"); // 가입채널코드
-						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+						reqJson.setDeviceIdType("macaddress"); // 기기 타입
 
 						// 단말 부가 정보 리스트
 						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
@@ -149,7 +142,6 @@ public class CreateSaveAndSyncTest {
 	 * Save&Sync 변동성 대상아닌가입 테스트.
 	 * </pre>
 	 */
-	@Ignore
 	@Test
 	public void TEST_B_SaveAndSync_변동성대상아닌가입() {
 
@@ -164,13 +156,8 @@ public class CreateSaveAndSyncTest {
 						CreateSaveAndSyncReq reqJson = new CreateSaveAndSyncReq();
 
 						// 단말 정보
-						reqJson.setDeviceId("01500001112"); // 기기 ID
+						reqJson.setDeviceId("01020284280"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입 (MDN or MAC 만...)
-						reqJson.setDeviceTelecom("US001202"); // 통신사
-						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
-						reqJson.setDeviceAccount("jUnitTest@gmail.com"); // 기기 계정 (Gmail)
-						reqJson.setJoinId("US002903"); // 가입채널코드
-						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
 
 						// 단말 부가 정보 리스트
 						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
@@ -209,6 +196,7 @@ public class CreateSaveAndSyncTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateSaveAndSyncRes res = (CreateSaveAndSyncRes) result;
 						assertThat(res.getUserKey(), notNullValue());
+						CreateSaveAndSyncTest.this.회원탈퇴("01020284280");
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -233,13 +221,8 @@ public class CreateSaveAndSyncTest {
 						CreateSaveAndSyncReq reqJson = new CreateSaveAndSyncReq();
 
 						// 단말 정보
-						reqJson.setDeviceId("01500001120"); // 기기 ID
+						reqJson.setDeviceId("01500001121"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입 (MDN or MAC 만...)
-						reqJson.setDeviceTelecom("US001202"); // 통신사
-						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
-						reqJson.setDeviceAccount("jUnitTest@gmail.com"); // 기기 계정 (Gmail)
-						reqJson.setJoinId("US002903"); // 가입채널코드
-						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
 
 						// 단말 부가 정보 리스트
 						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
