@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
@@ -142,10 +141,10 @@ public class DeviceServiceImpl implements DeviceService {
 	@Autowired
 	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
 
-	@Resource(name = "memberAddDeviceAmqpTemplate")
+	@Autowired
 	private AmqpTemplate memberAddDeviceAmqpTemplate;
 
-	@Resource(name = "memberDelDeviceAmqpTemplate")
+	@Autowired
 	private AmqpTemplate memberDelDeviceAmqpTemplate;
 
 	/*
@@ -783,7 +782,7 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
-		LOGGER.info("################ updateDeviceInfoForIdLogin start ##################");
+		LOGGER.info("################ updateDeviceInfoForLogin start ##################");
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -991,7 +990,7 @@ public class DeviceServiceImpl implements DeviceService {
 			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 		}
 
-		LOGGER.info("################ updateDeviceInfoForIdLogin end ##################");
+		LOGGER.info("################ updateDeviceInfoForLogin end ##################");
 
 		return createDeviceRes.getDeviceKey();
 
@@ -1078,10 +1077,11 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 통신사 / GMAIL 정보 모두 상이하면 로그인 실패 */
-		if (!StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom()) && StringUtil.isNotBlank(userMbrDevice.getDeviceAccount())
+		if (!StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())
+				&& (!StringUtil.isNotBlank(deviceAccount) || !StringUtil.isNotBlank(userMbrDevice.getDeviceAccount()))
 				&& !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
 
-			throw new StorePlatformException("SAC_MEM_1505"); // 통신사, GMAIL 정보가 상이합니다.
+			throw new StorePlatformException("SAC_MEM_1505"); // 통신사, GMAIL 정보가 상이합니다.	
 
 		}
 
