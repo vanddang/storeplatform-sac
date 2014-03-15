@@ -1061,8 +1061,14 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 서비스 관리번호
 
+		/** 로그인한 휴대기기 정보 비교 */
+		DeviceInfo tmpDeviceInfo = new DeviceInfo();
+		tmpDeviceInfo.setDeviceId(deviceId);
+		tmpDeviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
+		tmpDeviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
+		tmpDeviceInfo.setNativeId(userMbrDevice.getNativeID());
 		/* IMEI가 다른경우 */
-		if (StringUtil.isNotBlank(userMbrDevice.getNativeID()) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
+		if (!this.isLoginDeviceEquality(tmpDeviceInfo, nativeId, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
 			if (StringUtil.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
@@ -1077,40 +1083,40 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 통신사 / GMAIL 정보 모두 상이하면 로그인 실패 */
-		if (!StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())
-				&& (!StringUtil.isNotBlank(deviceAccount) || !StringUtil.isNotBlank(userMbrDevice.getDeviceAccount()))
-				&& !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
+		if (!this.isLoginDeviceEquality(tmpDeviceInfo, deviceTelecom, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
 
-			throw new StorePlatformException("SAC_MEM_1505"); // 통신사, GMAIL 정보가 상이합니다.	
-
+			if (!this.isLoginDeviceEquality(tmpDeviceInfo, deviceAccount, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
+				throw new StorePlatformException("SAC_MEM_1505"); // 통신사, GMAIL 정보가 상이합니다.	
+			}
 		}
+		/** 로그인한 휴대기기 정보 비교 */
 
 		LOGGER.info(":::::::::::::::::: {} login device update field start ::::::::::::::::::", deviceId);
 
 		if (StringUtil.isNotBlank(deviceModelNo) && !StringUtil.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
+			LOGGER.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
 			gameCenterYn = "Y"; // 단말모델이 바뀌면 게임센터 연동
-			LOGGER.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 		}
 
 		if (StringUtil.isNotBlank(svcMangNum) && !StringUtil.equals(deviceInfo.getSvcMangNum(), userMbrDevice.getSvcMangNum())) {
-			userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
+			userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 		}
 
 		if (StringUtil.isNotBlank(nativeId) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
-			userMbrDevice.setNativeID(nativeId);
 			LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
+			userMbrDevice.setNativeID(nativeId);
 		}
 
 		if (StringUtil.isNotBlank(deviceTelecom) && !StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
-			userMbrDevice.setDeviceTelecom(deviceTelecom);
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
+			userMbrDevice.setDeviceTelecom(deviceTelecom);
 		}
 
 		if (StringUtil.isNotBlank(deviceAccount) && !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
-			userMbrDevice.setDeviceAccount(deviceAccount);
 			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
+			userMbrDevice.setDeviceAccount(deviceAccount);
 		}
 
 		LOGGER.info(":::::::::::::::::: {} login device update field end ::::::::::::::::::", deviceId);
@@ -1211,8 +1217,14 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 서비스 관리번호
 
+		/** 로그인한 휴대기기 정보 비교 */
+		DeviceInfo tmpDeviceInfo = new DeviceInfo();
+		tmpDeviceInfo.setDeviceId(deviceId);
+		tmpDeviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
+		tmpDeviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
+		tmpDeviceInfo.setNativeId(userMbrDevice.getNativeID());
 		/* IMEI가 다른경우 */
-		if (StringUtil.isNotBlank(userMbrDevice.getNativeID()) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
+		if (!this.isLoginDeviceEquality(tmpDeviceInfo, nativeId, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
 			if (StringUtil.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
@@ -1225,33 +1237,34 @@ public class DeviceServiceImpl implements DeviceService {
 				throw new StorePlatformException("SAC_MEM_1504");
 			}
 		}
+		/** 로그인한 휴대기기 정보 비교 */
 
 		LOGGER.info(":::::::::::::::::: {} login device update field start ::::::::::::::::::", deviceId);
 
 		if (StringUtil.isNotBlank(deviceModelNo) && !StringUtil.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
+			LOGGER.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
 			gameCenterYn = "Y"; // 단말모델이 바뀌면 게임센터 연동
-			LOGGER.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 		}
 
 		if (StringUtil.isNotBlank(svcMangNum) && !StringUtil.equals(deviceInfo.getSvcMangNum(), userMbrDevice.getSvcMangNum())) {
-			userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
+			userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 		}
 
 		if (StringUtil.isNotBlank(nativeId) && !StringUtil.equals(nativeId, userMbrDevice.getNativeID())) {
-			userMbrDevice.setNativeID(nativeId);
 			LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
+			userMbrDevice.setNativeID(nativeId);
 		}
 
 		if (StringUtil.isNotBlank(deviceTelecom) && !StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
-			userMbrDevice.setDeviceTelecom(deviceTelecom);
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
+			userMbrDevice.setDeviceTelecom(deviceTelecom);
 		}
 
 		if (StringUtil.isNotBlank(deviceAccount) && !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
-			userMbrDevice.setDeviceAccount(deviceAccount);
 			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
+			userMbrDevice.setDeviceAccount(deviceAccount);
 		}
 
 		LOGGER.info(":::::::::::::::::: {} login device update field end ::::::::::::::::::", deviceId);
@@ -1882,6 +1895,47 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (StringUtils.equals(imei, icasImei)) {
 			return true;
+		}
+
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
+	 * isLoginDeviceEquality
+	 * (com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean isLoginDeviceEquality(DeviceInfo dbDeviceInfo, String equalsVal, String equalsValType) {
+
+		if (StringUtil.equals(equalsValType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
+			LOGGER.info("::: {} {} equals request : {}, db : {}", dbDeviceInfo.getDeviceId(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM,
+					equalsVal, dbDeviceInfo.getDeviceTelecom());
+			if (StringUtil.isBlank(dbDeviceInfo.getDeviceTelecom()) || StringUtil.equals(dbDeviceInfo.getDeviceTelecom(), equalsVal)) {
+				return true;
+			}
+
+		} else if (StringUtil.equals(equalsValType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
+			LOGGER.info("::: {} {} equals request : {}, db : {}", dbDeviceInfo.getDeviceId(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT,
+					equalsVal, dbDeviceInfo.getDeviceAccount());
+			if (StringUtil.isBlank(equalsVal) && StringUtil.isBlank(dbDeviceInfo.getDeviceAccount())) {
+				return true;
+			} else {
+				if (StringUtil.equals(equalsVal, dbDeviceInfo.getDeviceAccount())) {
+					return true;
+				}
+			}
+
+		} else if (StringUtil.equals(equalsValType, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
+			LOGGER.info("::: {} {} equals request : {}, db : {}", dbDeviceInfo.getDeviceId(), MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID,
+					equalsVal, dbDeviceInfo.getNativeId());
+			if (StringUtil.isNotBlank(dbDeviceInfo.getNativeId()) && StringUtil.equals(dbDeviceInfo.getNativeId(), equalsVal)) {
+				return true;
+			}
+
 		}
 
 		return false;

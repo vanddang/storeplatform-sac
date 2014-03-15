@@ -227,6 +227,13 @@ public final class MemberConstants {
 	public static final String JOIN_STATUS_CODE_HALF_AUTH = "11"; // 가인증
 
 	/**
+	 * 로그인시 휴대기기 정보 비교 필드
+	 */
+	public static final String LOGIN_DEVICE_EQUALS_DEVICE_TELECOM = "deviceTelecom";
+	public static final String LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT = "deviceAccount";
+	public static final String LOGIN_DEVICE_EQUALS_NATIVE_ID = "nativeId";
+
+	/**
 	 * 판매자 회원 상수들.
 	 * 
 	 * Updated on : 2014. 1. 9. Updated by : 김경복, 부르칸.

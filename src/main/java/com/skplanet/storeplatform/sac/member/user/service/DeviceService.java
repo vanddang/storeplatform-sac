@@ -233,4 +233,19 @@ public interface DeviceService {
 	 */
 	public boolean isImeiEquality(String deviceId, String imei);
 
+	/**
+	 * <pre>
+	 * 로그인한 휴대기기 정보를 비교한다.
+	 * </pre>
+	 * 
+	 * @param dbDeviceInfo
+	 *            DeviceInfo
+	 * @param equalsVal
+	 *            String
+	 * @param equalsValType
+	 *            String
+	 * @return boolean
+	 */
+	public boolean isLoginDeviceEquality(DeviceInfo dbDeviceInfo, String equalsVal, String equalsValType);
+
 }
