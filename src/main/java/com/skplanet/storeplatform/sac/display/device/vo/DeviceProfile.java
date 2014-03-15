@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * Calss 설명
  * 
- * Updated on : 2014. 1. 27. Updated by : 홍길동, SK 플래닛.
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스.
  */
 public class DeviceProfile extends CommonInfo {
 	private String deviceModelCd;
@@ -45,6 +45,7 @@ public class DeviceProfile extends CommonInfo {
 	private Map<String, Object> servicesMap;
 	private Map<String, Object> supportedHardwareMap;
 	private String deviceTypeCd;
+	private String vodFixisttSprtYn;
 
 	/**
 	 * @return the deviceModelCd
@@ -434,6 +435,21 @@ public class DeviceProfile extends CommonInfo {
 	 */
 	public void setDeviceTypeCd(String deviceTypeCd) {
 		this.deviceTypeCd = deviceTypeCd;
+	}
+
+	/**
+	 * @return the vodFixisttSprtYn
+	 */
+	public String getVodFixisttSprtYn() {
+		return this.vodFixisttSprtYn;
+	}
+
+	/**
+	 * @param vodFixisttSprtYn
+	 *            the vodFixisttSprtYn to set
+	 */
+	public void setVodFixisttSprtYn(String vodFixisttSprtYn) {
+		this.vodFixisttSprtYn = vodFixisttSprtYn;
 	}
 
 }

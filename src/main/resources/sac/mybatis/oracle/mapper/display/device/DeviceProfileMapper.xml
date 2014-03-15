@@ -15,6 +15,7 @@
              <result column="STRM_SPRT_YN" property="drm" />
              <result column="STRM_SPRT_YN" property="view" />
              <result column="WEBTOON_SPRT_YN" property="webtoon" />
+             <result column="VOD_FIXISTT_SPRT_YN" property="freepassVod" />
         </association>
         <association property="supportedHardwareMap" javaType="java.util.HashMap">
              <result column="LCD_SIZE_NM" property="resolution" />
@@ -25,30 +26,31 @@
         </association>
     </resultMap>
     <select id="selectDeviceProfile" parameterType="DeviceProfileRequest" resultMap="deviceProfileMap">
-		SELECT DEVICE_MODEL_CD                                                                     /* 모델 코드 */
+		SELECT DEVICE_MODEL_CD                                                                 /* 모델 코드 */
 		      , (SELECT CD_NM
 		           FROM TB_CM_CD
 		          WHERE CD_ID = MNFT_COMP_CD
 		          AND   LANG_CD = #{tenantHeader.langCd})
 		          AS MAKE_COMP_NM
-		      ,MODEL_NM                                                                             /* 모델 명 */
-		      ,UA_CD                                                                                /* UA 코드 */
-		      ,NVL(EBOOK_SPRT_YN,'N') AS EBOOK_SPRT_YN                                                                /*이북 지원 여부 */
-		      ,NVL(COMIC_SPRT_YN,'N') AS COMIC_SPRT_YN                                                                  /*코믹 지원 여부 */
-		      ,NVL(HDV_SPRT_YN,'N')   AS HDV_SPRT_YN                                                                    /*HDV 지원 여부 */
-		      ,NVL(SD_VIDEO_SPRT_YN,'N') AS SD_VIDEO_SPRT_YN                                                                  /*SD HDV 지원 여부 */
-		      ,NVL(SCL_SHPG_SPRT_YN,'N') AS SCL_SHPG_SPRT_YN                                                             /*소셜_쇼핑_지원_여부 */
-		      ,NVL(MAGAZINE_SPRT_YN,'N') AS MAGAZINE_SPRT_YN                                                               /*잡지_지원_여부 */
-		      ,NVL(MUSIC_SPRT_YN,'N')    AS MUSIC_SPRT_YN                                                           /*뮤직_지원_여부 */
-		      ,NVL(AOM_SPRT_YN,'N')  AS AOM_SPRT_YN                                                           /*AOM_지원_여부 */
-		      ,NVL(SKT_DRM_SPRT_YN,'N') AS SKT_DRM_SPRT_YN                                                                     /*SKT_DRM_지원_여부 */
-		      ,NVL(STRM_SPRT_YN,'N') AS STRM_SPRT_YN                                                              /*바로보기_지원_여부 */
-		      ,NVL(WEBTOON_SPRT_YN,'N') AS WEBTOON_SPRT_YN                                                                      /*웹툰 지원_여부 */
-		      ,NVL(HDCP_SPRT_YN,'N') AS HDCP_SPRT_YN                                                                 /*HDCP_지원_여부 */
-		      ,NVL(HDMI_SPRT_YN,'N') AS HDMI_SPRT_YN
-		      ,DECODE (NETWORK_TYPE, 'LTE','Y', 'N') AS NETWORK_TYPE                                /*네트워크_타입 */
-		      ,NVL(GIFT_SPRT_YN,'N') AS GIFT_SPRT_YN                                                                      /*선물_지원_여부 */
-		      ,NVL(DOLBY_SPRT_YN,'N') AS DOLBY_SPRT_YN                                                                    /*DOLBY_지원_여부 */
+		      ,MODEL_NM                                                                        /* 모델 명 */
+		      ,UA_CD                                                                           /* UA 코드 */
+		      ,NVL(EBOOK_SPRT_YN,'N') AS EBOOK_SPRT_YN                                         /*이북 지원 여부 */
+		      ,NVL(COMIC_SPRT_YN,'N') AS COMIC_SPRT_YN                                         /*코믹 지원 여부 */
+		      ,NVL(HDV_SPRT_YN,'N')   AS HDV_SPRT_YN                                           /*HDV 지원 여부 */
+		      ,NVL(SD_VIDEO_SPRT_YN,'N') AS SD_VIDEO_SPRT_YN                                   /*SD HDV 지원 여부 */
+		      ,NVL(SCL_SHPG_SPRT_YN,'N') AS SCL_SHPG_SPRT_YN                                   /*소셜_쇼핑_지원_여부 */
+		      ,NVL(MAGAZINE_SPRT_YN,'N') AS MAGAZINE_SPRT_YN                                   /*잡지_지원_여부 */
+		      ,NVL(MUSIC_SPRT_YN,'N')    AS MUSIC_SPRT_YN                                      /*뮤직_지원_여부 */
+		      ,NVL(AOM_SPRT_YN,'N')  AS AOM_SPRT_YN                                            /*AOM_지원_여부 */
+		      ,NVL(SKT_DRM_SPRT_YN,'N') AS SKT_DRM_SPRT_YN                                     /*SKT_DRM_지원_여부 */
+		      ,NVL(STRM_SPRT_YN,'N') AS STRM_SPRT_YN                                           /*바로보기_지원_여부 */
+		      ,NVL(WEBTOON_SPRT_YN,'N') AS WEBTOON_SPRT_YN                                     /*웹툰 지원_여부 */
+		      ,NVL(HDCP_SPRT_YN,'N') AS HDCP_SPRT_YN                                           /*HDCP_지원_여부 */
+		      ,NVL(HDMI_SPRT_YN,'N') AS HDMI_SPRT_YN                                           /*HDMI_지원_여부 */
+		      ,DECODE (NETWORK_TYPE, 'LTE','Y', 'N') AS NETWORK_TYPE                           /*네트워크_타입 */
+		      ,NVL(GIFT_SPRT_YN,'N') AS GIFT_SPRT_YN                                           /*선물_지원_여부 */
+		      ,NVL(DOLBY_SPRT_YN,'N') AS DOLBY_SPRT_YN                                         /*DOLBY_지원_여부 */
+		      ,NVL(VOD_FIXISTT_SPRT_YN,'N') AS VOD_FIXISTT_SPRT_YN                             /*정액제_VOD_지원_여부 */
 		      ,VM_TYPE_CD
 		      , (SELECT CD_NM
 		           FROM TB_CM_CD
