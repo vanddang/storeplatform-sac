@@ -27,8 +27,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.other.OtherAIDListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherAIDListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistRes;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackcageListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackcageListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackageListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackageListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagReq;
@@ -136,7 +136,7 @@ public class OtherController {
 	 */
 	@RequestMapping(value = "/package/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public OtherPackcageListRes searchProductListByPackageNm(@Validated OtherPackcageListReq req,
+	public OtherPackageListRes searchProductListByPackageNm(@Validated OtherPackageListReq req,
 			SacRequestHeader header) {
 		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
 		if (prodIdList.size() > DisplayConstants.DP_UPDATE_PARAM_LIMIT) {

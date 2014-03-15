@@ -4,7 +4,7 @@
 	<!-- package 정보로 상품 ID 조회-->
 	<select id="searchProdListByPackageNm" parameterType="Map" resultType="MetaInfo">
 		 SELECT 
-                   P.PROD_ID
+                   PROD.PROD_ID
                   ,RSHP.PART_PROD_ID
                   ,CONTENTS.APK_PKG_NM
                   ,PROD.CONTENTS_TYPE_CD
