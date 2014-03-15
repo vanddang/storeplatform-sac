@@ -272,7 +272,6 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		if (StringUtils.isNotEmpty(metaInfo.getScSamplUrl())) {
 			source = new Source();
-			sourceList = new ArrayList<Source>();
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
 			source.setUrl(metaInfo.getScSamplUrl());
