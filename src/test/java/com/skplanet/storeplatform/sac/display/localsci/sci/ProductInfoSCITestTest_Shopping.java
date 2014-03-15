@@ -26,9 +26,9 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Produc
 
 /**
  * 
- * FreePassInfo SCI Test
+ * ProductInfo SCI Test.
  * 
- * 정액제 상품 DRM 메타 정보 조회
+ * 구매 내역 조회 시 필요한 쇼핑,정액제 메타 정보 조회
  * 
  * Updated on : 2014. 2. 28. Updated by : 김형식 , 지티소프트
  */
