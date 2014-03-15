@@ -810,10 +810,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			} else {
 
-				changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE;
 				if (StringUtil.equals(svcRsnCd, "M1NC")) { // 명의변경
+					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NAME_CHANGE;
 					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_NAME_CHANGE;
 				} else {
+					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE;
 					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
 				}
 
