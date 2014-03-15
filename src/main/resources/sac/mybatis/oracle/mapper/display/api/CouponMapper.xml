@@ -280,6 +280,17 @@
         )
     </insert>
     
+    <!--상품 ID로 카탈로그 가져오기 조회-->
+    <select id="selectTbDpProdCatalogMapgInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo" resultType="String">
+     /* CouponMapper.xml, selectTbDpProdCatalogMapgInfo,상품 ID로 카탈로그 가져오기 조회, 김형식/SK플래닛 , 2013-01-08 */
+		SELECT CATALOG_ID 
+		  FROM TB_DP_PROD_CATALOG_MAPG
+		 WHERE PROD_ID= #{prodId}
+		   AND BASE_YN ='Y'
+		   AND USE_YN ='Y'
+		   AND ROWNUM =1
+    </select>    
+    
      <!--TB_DP_PROD_CATALOG_MAPG 테이블에 UPDATE--> 
     <update id="updateTbDpProdCatalogMapgInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo">
      /* CouponMapper.xml, updateTbDpProdCatalogMapgInfo,TB_DP_PROD_CATALOG_MAPG 테이블에 UPDATE, 김형식/SK플래닛 , 2013-01-08 */
@@ -556,6 +567,9 @@
 				             CATALOG_ID 
 				         FROM TB_DP_PROD_CATALOG_MAPG
 				         WHERE PROD_ID =#{prodId}
+			               AND BASE_YN ='Y'
+			               AND USE_YN ='Y'    	
+			               AND ROWNUM =1			         
 				   )                 
         )
         WHERE CATALOG_ID =
@@ -565,7 +579,8 @@
             FROM TB_DP_PROD_CATALOG_MAPG
            WHERE PROD_ID =#{prodId}
              AND BASE_YN ='Y'
-             AND USE_YN ='Y'    
+             AND USE_YN ='Y'
+             AND ROWNUM =1    
         )
         
     </update>

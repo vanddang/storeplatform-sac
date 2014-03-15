@@ -322,10 +322,21 @@ public class CouponItemServiceImpl implements CouponItemService {
 				if ("C".equalsIgnoreCase(vo.getCudType())) {
 					this.commonDAO.insert("Coupon.createTbDpProdCatalogMapgInfo", vo);
 				} else { // 수정
-					this.commonDAO.update("Coupon.updateTbDpProdCatalogMapgInfo", vo);
+					// 2014.03.14 쇼핑 상품 고도화건 (쇼핑상품 변경연동시 카탈로그 변경여부 확인하여 카탈로그 변경시 연동Error Return 로직 추가)
+					String resuntCatalog = (String) this.commonDAO.queryForObject(
+							"Coupon.selectTbDpProdCatalogMapgInfo", vo);
+					if (vo.getCatalogId().equals(resuntCatalog)) {
+						this.commonDAO.update("Coupon.updateTbDpProdCatalogMapgInfo", vo);
+					} else {
+						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_CATALOG_DIFFERENT_PROD,
+								"기존 등록된 상품과 CATALOG_ID가 다릅니다.", null);
+					}
 				}
 			}
 			this.commonDAO.update("Coupon.updateDPCouponCNT", prodId);
+
+		} catch (CouponException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}

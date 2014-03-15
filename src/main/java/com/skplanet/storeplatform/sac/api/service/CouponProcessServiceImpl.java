@@ -723,8 +723,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			this.couponItemService.insertTbDpProdCatalogMapgInfo(tbDpProdCatalogMapgList, couponInfo.getProdId());
 		} catch (CouponException e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_CATALOG_MAPG VO 셋팅 실패",
-					null);
+			throw new CouponException(e.getErrCode(), e.getMessage(), null);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_CATALOG_MAPG VO 셋팅 실패",
 					null);
@@ -960,7 +959,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
 
 		} catch (CouponException e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "정산율 배포 실패!!", null);
+			throw new CouponException(e.getErrCode(), e.getMessage(), null);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "정산율 배포 실패!!", null);
 		}
