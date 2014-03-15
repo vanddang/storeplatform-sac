@@ -254,9 +254,34 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		Source source = this.generateSource(metaInfo);
 		sourceList.add(source);
 
+		return sourceList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Source> generateVodSourceList(MetaInfo metaInfo) {
+		List<Source> sourceList = new ArrayList<Source>();
+		Source source = this.generateSource(metaInfo);
+		sourceList.add(source);
+
+		if (StringUtils.isNotEmpty(metaInfo.getScSamplUrl())) {
+			source = new Source();
+			sourceList = new ArrayList<Source>();
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
+			source.setType(DisplayConstants.DP_PREVIEW_LQ);
+			source.setUrl(metaInfo.getScSamplUrl());
+			sourceList.add(source);
+		}
+
 		if (StringUtils.isNotEmpty(metaInfo.getSamplUrl())) {
 			source = new Source();
-			source.setType(DisplayConstants.DP_SOURCE_TYPE_PREVIEW);
+			source.setType(DisplayConstants.DP_PREVIEW_HQ);
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
 			source.setUrl(metaInfo.getSamplUrl());
 			sourceList.add(source);

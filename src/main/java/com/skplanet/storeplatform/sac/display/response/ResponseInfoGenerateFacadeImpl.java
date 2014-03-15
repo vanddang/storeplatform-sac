@@ -181,7 +181,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
-		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		List<Source> sourceList = this.commonGenerator.generateVodSourceList(metaInfo);
 		// Accrual 생성
 		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
 		// Rights 설정
@@ -225,7 +225,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
-		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		List<Source> sourceList = this.commonGenerator.generateVodSourceList(metaInfo);
 		// Accrual 생성
 		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
 		// Rights 설정
@@ -702,7 +702,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// SourceList 생성
 		coupon.setSourceList(this.freepassGenerator.generateSourceList(metaInfo));
 		// Date 생성
-		//Date date = this.freepassGenerator.generateDate(metaInfo);
+		// Date date = this.freepassGenerator.generateDate(metaInfo);
 		coupon.setDateList(this.freepassGenerator.generateDateList(metaInfo));
 		// Menu 생성
 		coupon.setMenuList(this.freepassGenerator.generateMenuList(metaInfo));
@@ -713,7 +713,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		coupon.setTitle(title);
 		coupon.setPrice(price);
 		coupon.setAutopay(autoPay);
-		//coupon.setDate(date);
+		// coupon.setDate(date);
 		coupon.setSaleStatus(metaInfo.getProdStatusCd());
 
 		return coupon;

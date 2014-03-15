@@ -118,6 +118,17 @@ public interface CommonMetaInfoGenerator {
 
 	/**
 	 * <pre>
+	 * 공통 VOD Source List 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Source>
+	 */
+	public List<Source> generateVodSourceList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
 	 * for download Source List 생성.
 	 * </pre>
 	 * 
