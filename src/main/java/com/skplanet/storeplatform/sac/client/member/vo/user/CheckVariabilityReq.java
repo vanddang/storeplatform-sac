@@ -31,13 +31,11 @@ public class CheckVariabilityReq extends CommonInfo {
 	/**
 	 * 기기 계정(Gmail 주소).
 	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String deviceAccount;
 
 	/**
 	 * 기기 고유 번호.
 	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String nativeId;
 
 	/**
