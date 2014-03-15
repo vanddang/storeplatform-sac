@@ -19,10 +19,8 @@ public interface SaveAndSyncService {
 	 *            공통 헤더
 	 * @param deviceId
 	 *            기기 ID
-	 * @param deviceTelecom
-	 *            이동 통신사
 	 * @return SaveAndSync
 	 */
-	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId, String deviceTelecom);
+	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId);
 
 }

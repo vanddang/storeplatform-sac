@@ -49,7 +49,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	private MemberCommonComponent mcc;
 
 	@Override
-	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId, String deviceTelecom) {
+	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId) {
 
 		LOGGER.info("===================================");
 		LOGGER.info("===== 변동성 대상 체크 공통 모듈 =====");
@@ -89,7 +89,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			/**
 			 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
 			 */
-			this.reviveUser(sacHeader, userKey, deviceId, deviceTelecom);
+			this.reviveUser(sacHeader, userKey, deviceId);
 
 		} else {
 
@@ -117,11 +117,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 * 
 	 * @param deviceId
 	 *            기기 ID
-	 * @param deviceTelecom
-	 *            이동 통신사
 	 * @return IDP (MBR_NO)
 	 */
-	private String joinForWap(String deviceId, String deviceTelecom) {
+	private String joinForWap(String deviceId) {
 
 		String mbrNo = "";
 
@@ -133,7 +131,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			LOGGER.info("## IDP 모바일 회원 가입 요청.");
 			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 			joinForWapEcReq.setUserMdn(deviceId);
-			joinForWapEcReq.setMdnCorp(this.mcc.convertDeviceTelecom(deviceTelecom)); // 이동 통신사
+			joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT); // 이동 통신사
 			mbrNo = this.idpSCI.joinForWap(joinForWapEcReq).getUserKey();
 
 		} catch (StorePlatformException spe) {
@@ -190,12 +188,12 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 * @param deviceId
 	 *            기기 ID
 	 */
-	private void reviveUser(SacRequestHeader sacHeader, String userKey, String deviceId, String deviceTelecom) {
+	private void reviveUser(SacRequestHeader sacHeader, String userKey, String deviceId) {
 
 		/**
 		 * IDP 모바일 회원 가입.
 		 */
-		String newMbrNo = this.joinForWap(deviceId, deviceTelecom);
+		String newMbrNo = this.joinForWap(deviceId);
 
 		/**
 		 * SC 회원 복구 요청.

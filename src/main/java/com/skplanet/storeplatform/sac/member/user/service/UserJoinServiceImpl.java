@@ -834,13 +834,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 			CreateSaveAndSyncReq req = (CreateSaveAndSyncReq) obj;
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
-			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
+			deviceInfo.setJoinId(""); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
-			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
-			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
-			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
+			deviceInfo.setDeviceAccount(""); // 기기 계정 (Gmail)
+			deviceInfo.setNativeId(""); // 기기고유 ID (imei)
+			deviceInfo.setIsRecvSms(""); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
 			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
@@ -1039,11 +1039,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		String userKey = null; // 사용자 Key
 		String deviceKey = null; // 휴대기기 Key
+		String deviceTelecom = MemberConstants.DEVICE_TELECOM_SKT; // 이동통신사
 
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), deviceTelecom,
 				req.getDeviceId(), req.getDeviceIdType());
 
 		/**
@@ -1074,7 +1075,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 변동성 대상 체크
 			 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(sacHeader, req.getDeviceId(), req.getDeviceTelecom());
+			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(sacHeader, req.getDeviceId());
 			if (StringUtils.equals(saveAndSync.getIsSaveAndSyncTarget(), MemberConstants.USE_Y)) { // 변동성 대상임.
 
 				userKey = saveAndSync.getUserKey();
@@ -1125,7 +1126,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 		joinForWapEcReq.setUserMdn(req.getDeviceId());
-		joinForWapEcReq.setMdnCorp(this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
+		joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT);
 		JoinForWapEcRes joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
 
 		/**
@@ -1145,7 +1146,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
-		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
+		userMbr.setIsRecvSMS(MemberConstants.USE_N); // SMS 수신 여부
 		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
@@ -1196,7 +1197,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
 		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING); // 가입승인 대기
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
-		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
+		userMbr.setIsRecvSMS(MemberConstants.USE_N); // SMS 수신 여부
 		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
