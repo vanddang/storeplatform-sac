@@ -53,6 +53,8 @@ import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.feature.isf.common.constant.IsfConstants;
+import com.skplanet.storeplatform.sac.display.feature.isf.common.util.IsfUtils;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.IsfEcInvoker;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -69,8 +71,6 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
 public class AppguideIsfServiceImpl implements AppguideIsfService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	private static final Map<String, String> mapReasonCode = new HashMap<String, String>();
 
 	private int totalCount = 0;
 
@@ -346,7 +346,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 							sReasonCode = "04";
 						}
 						if (sReasonCode != null) {
-							reasonMessage = mapReasonCode.get(sReasonCode);
+							reasonMessage = IsfConstants.mapReasonCode.get(sReasonCode);
 						}
 						if (reasonMessage == null)
 							reasonMessage = "";
@@ -380,7 +380,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 										// 연관상품명
 										String prod_nm = (String) mapRelProdTemp.get("PROD_NM");
 										// DA 팀에서 24 byte(한글 12자리)로 상품명을 조절해 달라고 요청함
-										prod_nm = this.cutStringLimit(prod_nm, 24);
+										prod_nm = IsfUtils.cutStringLimit(prod_nm, 24);
 										// 연관상품 대분류 카테고리명
 										String top_cat_nm = (String) mapRelProdTemp.get("TOP_MENU_NM");
 										// 연관상품 중분류 카테고리명
@@ -405,7 +405,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 						// 기타 4자리 코드인데 연관상품으로 치환되지 않았을 경우에
 						// $1,2,3가 그냥 노출되기 때문에 임시로 04번 코드로 치환한다.
 						if (!isRel && reasonMessage.indexOf("$") > -1) {
-							reasonMessage = mapReasonCode.get("04");
+							reasonMessage = IsfConstants.mapReasonCode.get("04");
 							product.setRecommendedReason(reasonMessage);
 						} else {
 							product.setRecommendedReason(reasonMessage);
@@ -477,7 +477,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 			mapReq.put("deviceHeader", requestHeader.getDeviceHeader());
 			mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
-			mapReq.put("listId", "ADM000000012"); // 운영자 추천
+			mapReq.put("listId", IsfConstants.recommandListId); // 운영자 추천
 
 			/*
 			 * List<String> imageCodeList = new ArrayList<String>();
@@ -624,204 +624,6 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 		return responseVO;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuReq
-	 * requestVO)
-	 */
-	@Override
-	public AppguideSacRes searchDummyIsfRecommendList(AppguideIsfSacReq requestVO, SacRequestHeader requestHeader) {
-
-		AppguideSacRes response = new AppguideSacRes();
-		CommonResponse commonResponse = null;
-		List<Product> listVO = new ArrayList<Product>();
-
-		Product product;
-		Identifier identifier;
-		Title title;
-		App app;
-		Accrual accrual;
-		Rights rights;
-		Source source;
-		Price price;
-		Menu menu;
-
-		// Response VO를 만들기위한 생성자
-		List<Menu> menuList;
-		List<Source> sourceList;
-		List<Support> supportList;
-		List<Identifier> identifierList;
-
-		product = new Product();
-		identifier = new Identifier();
-		title = new Title();
-		app = new App();
-		accrual = new Accrual();
-		rights = new Rights();
-		source = new Source();
-		price = new Price();
-
-		// 상품ID
-		identifier = new Identifier();
-
-		// Response VO를 만들기위한 생성자
-		menuList = new ArrayList<Menu>();
-		sourceList = new ArrayList<Source>();
-		supportList = new ArrayList<Support>();
-		identifierList = new ArrayList<Identifier>();
-
-		identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-		identifier.setText("0000648339");
-		title.setText("뮤 더 제네시스 for Kakao");
-
-		menu = new Menu();
-		menu.setId("DP01");
-		menu.setName("GAME");
-		menu.setType("topClass");
-		menuList.add(menu);
-		menu = new Menu();
-		menu.setId("DP01004");
-		menu.setName("RPG");
-		// menu.setType("");
-		menuList.add(menu);
-
-		app.setAid("OA00648339");
-		app.setPackageName("com.webzenm.mtg4kakao");
-		app.setVersionCode("11");
-		app.setVersion("1.1");
-		product.setApp(app);
-
-		accrual.setVoterCount(1519);
-		accrual.setDownloadCount(31410);
-		accrual.setScore(4.5);
-
-		/*
-		 * Rights grade
-		 */
-		rights.setGrade("0");
-
-		source.setMediaType("image/png");
-		source.setSize(0);
-		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-		source.setUrl("http://wap.tstore.co.kr/android6/201312/04/IF1423502835320131125163752/0000648339/img/thumbnail/0000648339_130_130_0_91_20131204195212.PNG");
-		sourceList.add(source);
-
-		/*
-		 * Price text
-		 */
-		price.setText(0);
-
-		identifierList.add(identifier);
-		product.setIdentifierList(identifierList);
-
-		product.setTitle(title);
-		product.setSupportList(supportList);
-		product.setMenuList(menuList);
-
-		product.setAccrual(accrual);
-		product.setRights(rights);
-		product.setProductExplain("뮤 10년의 역사가 모바일로 펼쳐진다!");
-		product.setRecommendedReason("우리 또래의 인기 FUN 앱");
-		product.setSourceList(sourceList);
-		product.setPrice(price);
-
-		listVO.add(product);
-
-		commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(1);
-
-		response.setCommonResponse(commonResponse);
-		response.setProductList(listVO);
-
-		return response;
-	}
-
-	private String cutStringLimit(String str, int limit) {
-		if (str == null || str.getBytes().length <= limit)
-			return str;
-
-		int len = str.length();
-		int cnt = 0, index = 0;
-
-		while (index < len && cnt < limit) {
-			if (str.charAt(index++) < 256)
-				// 1바이트 문자라면...
-				cnt++; // 길이 1 증가
-			else {
-				cnt += 2; // 길이 2 증가
-			}
-		}
-
-		if (index < len && limit >= cnt)
-			str = str.substring(0, index);
-		else if (index < len && limit < cnt)
-			str = str.substring(0, index - 1);
-
-		if (len > index) {
-			return str + "...";
-		} else {
-			return str;
-		}
-	}
-
-	static {
-		mapReasonCode.put("01", "$1 구매");
-		mapReasonCode.put("02", "시리즈 연속성 추천");
-		mapReasonCode.put("03", "Beginner’s Best 추천");
-		mapReasonCode.put("04", "Power User’s Best 추천");
-
-		// $1 : 연관상품 상품명
-		// $2 : 연관상품 대분류 카테고리명
-		// $3 : 연관상품 소분류 카테고리명
-		// $4 : 대상상품 대분류 카테고리명 -> 추천 코드 1191 / 9299 에 해당됨
-		mapReasonCode.put("1091", "$1 구매자의 인기 앱");
-		mapReasonCode.put("1191", "취향이 비슷한 구매자의 인기 앱");
-		mapReasonCode.put("1291", "$1 구매자의 인기 앱");
-		mapReasonCode.put("1391", "취향이 비슷한 구매자의 인기 앱");
-		mapReasonCode.put("2091", "$1 구매자의 인기 앱");
-		mapReasonCode.put("9001", "요즘 가장 인기 있는 게임 앱");
-		mapReasonCode.put("9003", "요즘 가장 인기 있는 FUN 앱");
-		mapReasonCode.put("9004", "요즘 가장 인기 있는 생활·위치 앱");
-		mapReasonCode.put("9008", "요즘 가장 인기 있는 어학·교육 앱");
-		mapReasonCode.put("2013", "$1 구매자의 인기 이북");
-		mapReasonCode.put("2014", "$1 구매자의 인기 만화");
-		mapReasonCode.put("2016", "$1 구매자의 인기 음악");
-		mapReasonCode.put("2017", "$1 구매자의 인기 영화");
-		mapReasonCode.put("2018", "$1 구매자의 인기 방송");
-
-		mapReasonCode.put("2191", "취향이 비슷한 구매자의 인기 앱");
-
-		mapReasonCode.put("3014", "따끈따끈한 $1의 신간");
-		mapReasonCode.put("3018", "따끈따끈한 $1의 신작");
-		mapReasonCode.put("4013", "$1 작가의 또다른 이북");
-		mapReasonCode.put("4014", "$1 작가의 또다른 만화");
-
-		/* 2013.12.20 8016 / 감성기반영화추천 / 당신의 성향에 맞는 영화 / 감성이 비슷한 구매자의 인기 영화 */
-		mapReasonCode.put("8016", "당신의 성향에 맞는 영화");
-
-		mapReasonCode.put("9414", "요즘 가장 인기 있는 $3 만화");
-		mapReasonCode.put("9113", "요즘 가장 인기 있는 이북");
-		mapReasonCode.put("9114", "요즘 가장 인기 있는 만화");
-		mapReasonCode.put("9116", "요즘 가장 인기 있는 음악");
-		mapReasonCode.put("9117", "요즘 가장 인기 있는 영화");
-		mapReasonCode.put("9118", "요즘 가장 인기 있는 방송");
-		mapReasonCode.put("9199", "요즘 가장 인기 있는 컨텐츠");
-
-		mapReasonCode.put("9201", "우리 또래의 인기 게임 앱");
-		mapReasonCode.put("9203", "우리 또래의 인기 FUN 앱");
-		mapReasonCode.put("9204", "우리 또래의 인기 생활·위치 앱");
-		mapReasonCode.put("9208", "우리 또래의 인기 어학·교육 앱");
-
-		mapReasonCode.put("9213", "우리 또래의 인기 이북");
-		mapReasonCode.put("9214", "우리 또래의 인기 만화");
-		mapReasonCode.put("9216", "우리 또래의 인기 음악");
-		mapReasonCode.put("9217", "우리 또래의 인기 영화");
-		mapReasonCode.put("9218", "우리 또래의 인기 방송");
-		mapReasonCode.put("9299", "우리 또래의 인기 $4");
-		mapReasonCode.put("9399", "신규 사용자의 인기 컨텐츠");
-	}
-
 	private IsfEcReq makeRequest(AppguideIsfSacReq requestVO) {
 
 		IsfEcReq request = new IsfEcReq();
@@ -830,7 +632,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 		request.setMbn(requestVO.getUserKey());
 		request.setMdn(requestVO.getDeviceId());
 		request.setChCode("M");
-		// request.setType("appguide");
+		//request.setType("appguide");
 
 		if (this.log.isDebugEnabled()) {
 			this.log.debug(request.toString());
@@ -963,7 +765,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 
 			} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 멀티미디어 타입일 경우
 
-				identifierList = this.generateIdentifierList(idReqMap);
+				identifierList = IsfUtils.generateIdentifierList(idReqMap);
 				product.setIdentifierList(identifierList);
 
 				// support list
@@ -1034,13 +836,13 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 				}
 			} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 쇼핑 상품의 경우
 
-				identifierList = this.generateIdentifierList(idReqMap);
+				identifierList = IsfUtils.generateIdentifierList(idReqMap);
 				product.setIdentifierList(identifierList);
 
 			}
 
 			product.setProductExplain(mapper.getProdDesc());
-			product.setRecommendedReason(mapReasonCode.get("04"));
+			product.setRecommendedReason(IsfConstants.mapReasonCode.get("04"));
 
 			listVO.add(product);
 
@@ -1049,54 +851,4 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 		return listVO;
 	}
 
-	private List<Identifier> generateIdentifierList(Map<String, String> param) {
-		Identifier identifier = null;
-		List<Identifier> identifierList = new ArrayList<Identifier>();
-
-		String contentsTypeCd = param.get("contentsTypeCd");
-		if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Episode ID 기준검색일 경우 (PD002502)
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(param.get("prodId"));
-			identifierList.add(identifier);
-
-			if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(param.get("topMenuId"))) {
-				if (param.get("catalogId") != null) {
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-					identifier.setText(param.get("catalogId"));
-					identifierList.add(identifier);
-				} else {
-					if (param.get("prodId") != null) {
-						identifier = new Identifier();
-						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-						identifier.setText(param.get("prodId"));
-						identifierList.add(identifier);
-					}
-				}
-			} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(param.get("topMenuId"))) {
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_SONG_IDENTIFIER_CD);
-				identifier.setText(param.get("outsdContentsId"));
-				identifierList.add(identifier);
-			}
-		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd) // Catalog ID 기준 검색일 경우
-				&& DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(param.get("topMenuId"))) {
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(param.get("prodId"));
-			identifierList.add(identifier);
-
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(param.get("catalogId"));
-			identifierList.add(identifier);
-		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Channel ID 기준 검색일 경우
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-			identifier.setText(param.get("prodId"));
-			identifierList.add(identifier);
-		}
-		return identifierList;
-	}
 }

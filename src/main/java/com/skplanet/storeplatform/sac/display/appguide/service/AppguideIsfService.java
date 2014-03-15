@@ -26,17 +26,4 @@ public interface AppguideIsfService {
 	public AppguideSacRes searchIsfRecommendList(AppguideIsfSacReq requestVO, SacRequestHeader requestHeader)
 			throws StorePlatformException;
 
-	/**
-	 * <pre>
-	 * App guide Dummy 조회.
-	 * </pre>
-	 * 
-	 * @param AppguideSacReq
-	 *            requestVO
-	 * @param SacRequestHeader
-	 *            requestHeader
-	 * @return AppguideSacRes
-	 */
-	public AppguideSacRes searchDummyIsfRecommendList(AppguideIsfSacReq requestVO, SacRequestHeader requestHeader);
-
 }
