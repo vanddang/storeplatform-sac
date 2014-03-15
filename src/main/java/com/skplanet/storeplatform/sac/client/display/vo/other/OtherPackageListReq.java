@@ -9,7 +9,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 3. 11. Updated by : 오승민, 인크로스.
  */
-public class OtherPackcageListReq extends CommonInfo {
+public class OtherPackageListReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**

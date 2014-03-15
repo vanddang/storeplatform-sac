@@ -11,7 +11,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2014. 3. 11. Updated by : 오승민, 인크로스.
  */
-public class OtherPackcageListRes extends CommonInfo {
+public class OtherPackageListRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
