@@ -450,7 +450,7 @@ public class LoginServiceImpl implements LoginService {
 		paramDeviceInfo.setUserKey(deviceInfo.getUserKey());
 		paramDeviceInfo.setDeviceId(deviceInfo.getDeviceId());
 		paramDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-		if (StringUtil.isNotEmpty(deviceInfo.getDeviceAccount())) {
+		if (StringUtil.isNotEmpty(req.getDeviceAccount())) {
 			paramDeviceInfo.setDeviceAccount(req.getDeviceAccount());
 		}
 		DeviceInfo retDeviceInfo = this.deviceService.updateDeviceInfo(requestHeader, paramDeviceInfo);
