@@ -164,24 +164,26 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 			ThemeThemeZoneInfo themeThemeZoneInfo = null;
 			// layout 설정
-			if (!themeThemeZoneInfoMeta.isEmpty()) {
+			if (!req.getThemeZoneId().equals("TAR")) {
+				if (!themeThemeZoneInfoMeta.isEmpty()) {
 
-				Menu menu = null;
-				// List<Menu> menuList = null;
-				Title title = null;
-				themeThemeZoneInfo = themeThemeZoneInfoMeta.get(0);
-				layout = new Layout();
+					Menu menu = null;
+					// List<Menu> menuList = null;
+					Title title = null;
+					themeThemeZoneInfo = themeThemeZoneInfoMeta.get(0);
+					layout = new Layout();
 
-				title = new Title();
-				title.setText(themeThemeZoneInfo.getBnrNm());
-				layout.setTitle(title);
+					title = new Title();
+					title.setText(themeThemeZoneInfo.getBnrNm());
+					layout.setTitle(title);
 
-				// 메뉴 정보
-				menu = new Menu(); // 메뉴
-				menu.setId(themeThemeZoneInfo.getBnrMenuId());
-				menu.setName(themeThemeZoneInfo.getBnrMenuNm());
-				layout.setMenu(menu);
+					// 메뉴 정보
+					menu = new Menu(); // 메뉴
+					menu.setId(themeThemeZoneInfo.getBnrMenuId());
+					menu.setName(themeThemeZoneInfo.getBnrMenuNm());
+					layout.setMenu(menu);
 
+				}
 			}
 			// 테마상품 조회
 			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(

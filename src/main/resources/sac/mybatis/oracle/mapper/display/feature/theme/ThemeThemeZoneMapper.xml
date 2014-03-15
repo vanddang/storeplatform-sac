@@ -69,7 +69,7 @@
                        WHERE 1=1
                        <if test="themeZoneId != null and themeZoneId != ''">
                           <if test='themeZoneId == "TAR"'>
-                            AND A.LIST_GRP_CD = 'TAR'
+                            AND A.LIST_ID like 'TAR%'
                           </if>
                           <if test='themeZoneId != "TAR"'>
                             AND A.LIST_ID = #{themeZoneId}
@@ -182,7 +182,7 @@
 					       WHERE 1=1
                           <if test="themeZoneId != null and themeZoneId != ''">
 	                         <if test='themeZoneId == "TAR"'>
-	                           AND A.LIST_GRP_CD = 'TAR'
+	                           AND A.LIST_ID like 'TAR%'
 	                         </if>
 	                         <if test='themeZoneId != "TAR"'>
 	                           AND A.LIST_ID = #{themeZoneId}
