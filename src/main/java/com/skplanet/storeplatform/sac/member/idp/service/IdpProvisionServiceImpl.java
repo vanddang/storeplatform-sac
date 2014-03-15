@@ -200,9 +200,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 				this.deviceSCI.createDevice(createDeviceReq);
 
-			} else { // SKT MDN이 번호변경된 경우
+			} else {
 
-				LOGGER.info("::: SKT MDN이 번호변경된 경우 mdn : {}, beMdn : {}, svcMngNum : {}", mdn, beMdn, svcMngNum);
+				LOGGER.info("::: MDN이 번호변경된 경우 mdn : {}, beMdn : {}, svcMngNum : {}", mdn, beMdn, svcMngNum);
 
 				/* 휴대기기 정보조회 - 서비스 관리 번호 */
 				SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
