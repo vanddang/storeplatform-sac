@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
 public class ProductBasicInfo extends CommonInfo {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private Integer totalCount;
 	private String tenantId;
@@ -21,6 +21,7 @@ public class ProductBasicInfo extends CommonInfo {
 	private String metaClsfCd;
 	private String topMenuId;
 	private String expoOrd;
+	private String firstProdId;
 
 	// 쇼핑 관련
 	private String catalogId;
@@ -205,6 +206,21 @@ public class ProductBasicInfo extends CommonInfo {
 
 	public void setBrandId(String brandId) {
 		this.brandId = brandId;
+	}
+
+	/**
+	 * @return the firstProdId
+	 */
+	public String getFirstProdId() {
+		return this.firstProdId;
+	}
+
+	/**
+	 * @param firstProdId
+	 *            the firstProdId to set
+	 */
+	public void setFirstProdId(String firstProdId) {
+		this.firstProdId = firstProdId;
 	}
 
 }

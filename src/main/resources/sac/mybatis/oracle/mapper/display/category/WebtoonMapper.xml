@@ -157,6 +157,7 @@
             BB.MENU_ID
              , BB.PROD_ID
              , BB.PART_PROD_ID
+             , BB.FIRST_PROD_ID
              , BB.TOP_MENU_ID
              , BB.CONTENTS_TYPE_CD
              , BB.TOTAL_COUNT
@@ -170,12 +171,30 @@
                 (
                     SELECT 
                          C.PART_PROD_ID
-                         , C.PROD_ID
                          , D.TOP_MENU_ID
                          , D.CONTENTS_TYPE_CD
                          , A.MENU_ID
                          , D.UPD_DT
                          , F.CHAPTER
+                         , C.PROD_ID
+                         ,(  SELECT ZZ.PROD_ID
+						    FROM (
+						        SELECT C1.PROD_ID
+						        FROM TB_DP_PROD_RSHP A1
+						            ,TB_DP_PROD B1 /* 에피소드 */
+						            ,TB_DP_TENANT_PROD C1
+						            ,UV_TB_DP_MULTIMDA_PROD D1 /* 에피소드 */
+						        WHERE A1.PROD_ID = #{channelId}
+						            AND A1.PROD_RSHP_CD = 'DP010802'
+						            AND A1.PART_PROD_ID = B1.PROD_ID
+						            AND A1.PART_PROD_ID = D1.PROD_ID
+						            AND B1.CONTENTS_TYPE_CD = 'PD002502'
+						            AND B1.SVC_GRP_CD = 'DP000203'
+						            AND A1.PART_PROD_ID = C1.PROD_ID
+						            AND C1.EXPO_YN = 'Y'
+						      ORDER BY TO_NUMBER(D1.CHAPTER)
+						        ) ZZ
+						WHERE ROWNUM = 1) AS FIRST_PROD_ID
                     FROM TB_DP_MENU_CATEGORY      A
                         , TB_DP_MENU_CATEGORY_PROD_MAPG B
                         , TB_DP_PROD_RSHP C

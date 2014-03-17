@@ -144,13 +144,21 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 				MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
 				layout = new Layout();
 				if (retMetaInfo != null) {
-					layout.setIdentifier(this.ebookComicGenerator.generateIdentifier(retMetaInfo));
+					Identifier identifier = null;
+					List<Identifier> identifierList = new ArrayList<Identifier>();
+
+					identifier = this.ebookComicGenerator.generateIdentifier(retMetaInfo);
+					identifierList.add(identifier);
+					identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+							productBasicInfo.getFirstProdId());
+					identifierList.add(identifier);
+
+					layout.setIdentifierList(identifierList);
 					layout.setTitle(this.commonGenerator.generateTitle(retMetaInfo));
 					layout.setProductExplain(retMetaInfo.getProdBaseDesc());
 					layout.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo));
 					layout.setSourceList(this.commonGenerator.generateSourceList(retMetaInfo));
 					layout.setContributor(this.ebookComicGenerator.generateComicContributor(retMetaInfo));
-					res.setLayout(layout);
 				}
 			}
 			if (!productBasicInfoList.isEmpty()) {
@@ -169,11 +177,13 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 					}
 				}
 				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+				res.setLayout(layout);
 				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			} else {
 				// 조회 결과 없음
 				commonResponse.setTotalCount(0);
+				res.setLayout(layout);
 				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			}
