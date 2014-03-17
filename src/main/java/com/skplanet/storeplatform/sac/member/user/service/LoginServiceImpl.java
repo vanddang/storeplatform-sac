@@ -937,7 +937,7 @@ public class LoginServiceImpl implements LoginService {
 			/* IDP 모바일전용회원 가입 */
 			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 			joinForWapEcReq.setUserMdn(req.getDeviceId());
-			joinForWapEcReq.setMdnCorp(this.commService.convertDeviceTelecom(req.getDeviceTelecom()));
+			joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT);
 			JoinForWapEcRes joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
 			LOGGER.info(joinForWapEcRes.toString());
 

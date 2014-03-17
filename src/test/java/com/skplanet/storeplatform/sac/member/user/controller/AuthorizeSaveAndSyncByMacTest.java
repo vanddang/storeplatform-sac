@@ -36,7 +36,6 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
 /**
@@ -97,7 +96,6 @@ public class AuthorizeSaveAndSyncByMacTest {
 
 							AuthorizeSaveAndSyncByMacReq req = new AuthorizeSaveAndSyncByMacReq();
 							req.setDeviceId("01066786220");
-							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
 							req.setMacAddress("00-0D-F0-8A-5A-A0");
 
 							try {
