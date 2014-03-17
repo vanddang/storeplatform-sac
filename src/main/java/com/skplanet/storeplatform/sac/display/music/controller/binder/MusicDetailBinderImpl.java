@@ -65,6 +65,8 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
             }
         }
 
+        music.setAlbumType(musicDetail.getRepSong());   // 앨범 유형
+
         product.setMusic(music);
     }
 
@@ -82,16 +84,13 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
     @Override
     public void mapMenu(Product product, List<MenuItem> menuList) {
         product.setMenuList(new ArrayList<Menu>());
-        product.getMenuList().add(new Menu("DP000516", "music", "topClass"));
-        for (MenuItem mi : menuList) {
+        if(menuList != null && menuList.size() > 0) {
+            int lastMenuIdx = 0, topMenuIdx = menuList.size() - 1;
+            MenuItem lastMenu = menuList.get(lastMenuIdx);
+            MenuItem topMenu = menuList.get(topMenuIdx);
 
-            if (!mi.isInfrMenu()) {
-                Menu menu = new Menu();
-                menu.setId(mi.getMenuId());
-                menu.setName(mi.getMenuNm());
-
-                product.getMenuList().add(menu);
-            }
+            product.getMenuList().add(new Menu(topMenu.getMenuId(), topMenu.getMenuNm(), "topClass"));
+            product.getMenuList().add(new Menu(lastMenu.getMenuId(), lastMenu.getMenuNm(), null));
         }
 
         product.getMenuList().add(new Menu("CT25", "mp3", "metaClass"));

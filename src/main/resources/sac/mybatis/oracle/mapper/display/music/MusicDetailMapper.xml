@@ -28,6 +28,7 @@
             PI.FILE_PATH || PI.FILE_NM AS THM_PATH,
             TP.PROD_STATUS_CD,
             PDESC.PROD_BASE_DESC
+            -- MM.REP_SONG TODO DB반영 확인 후
         FROM TB_DP_PROD CPD
             INNER JOIN TB_DP_PROD_RSHP RS
                 ON RS.PROD_ID = CPD.PROD_ID
