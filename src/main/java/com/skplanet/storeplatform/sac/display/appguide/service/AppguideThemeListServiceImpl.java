@@ -92,7 +92,14 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 		List<Appguide> themeList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
 				Appguide.class);
 		if (themeList == null) {
-			throw new StorePlatformException("SAC_DSP_0009");
+			this.log.debug("hi~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			// throw new StorePlatformException("SAC_DSP_0009");
+			commonResponse.setTotalCount(this.totalCount);
+			responseVO.setCommonResponse(commonResponse);
+			// responseVO.setProductList(productList);
+
+			return responseVO;
+
 		}
 
 		List<Product> productList = this.makeProductList(themeList);
