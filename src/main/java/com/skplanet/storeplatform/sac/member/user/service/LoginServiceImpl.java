@@ -415,11 +415,13 @@ public class LoginServiceImpl implements LoginService {
 
 		} else {
 
-			if (this.deviceService.isLoginDeviceEquality(deviceInfo, req.getDeviceTelecom(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
+			if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(), deviceInfo.getDeviceTelecom(),
+					MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
 
-				if (!this.deviceService.isLoginDeviceEquality(deviceInfo, req.getNativeId(), MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
+				if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getNativeId(), deviceInfo.getNativeId(),
+						MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
-					if (!this.deviceService.isLoginDeviceEquality(deviceInfo, req.getDeviceAccount(),
+					if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(), deviceInfo.getDeviceAccount(),
 							MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
 
 						isVariability = "N";
@@ -430,7 +432,8 @@ public class LoginServiceImpl implements LoginService {
 
 			} else {
 
-				if (!this.deviceService.isLoginDeviceEquality(deviceInfo, req.getDeviceAccount(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
+				if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(), deviceInfo.getDeviceAccount(),
+						MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
 
 					isVariability = "N";
 

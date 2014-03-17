@@ -222,7 +222,7 @@ public interface DeviceService {
 
 	/**
 	 * <pre>
-	 * ICAS 연동하여 imei 일치여부 판단.
+	 * ICAS 연동하여 imei 일치여부 판단..
 	 * </pre>
 	 * 
 	 * @param deviceId
@@ -231,21 +231,23 @@ public interface DeviceService {
 	 *            String
 	 * @return boolean
 	 */
-	public boolean isImeiEquality(String deviceId, String imei);
+	public boolean isEqualsImei(String deviceId, String imei);
 
 	/**
 	 * <pre>
 	 * 로그인한 휴대기기 정보를 비교한다.
 	 * </pre>
 	 * 
-	 * @param dbDeviceInfo
-	 *            DeviceInfo
-	 * @param equalsVal
+	 * @param deviceId
 	 *            String
-	 * @param equalsValType
+	 * @param reqVal
+	 *            String
+	 * @param dbVal
+	 *            String
+	 * @param equalsType
 	 *            String
 	 * @return boolean
 	 */
-	public boolean isLoginDeviceEquality(DeviceInfo dbDeviceInfo, String equalsVal, String equalsValType);
+	public boolean isEqualsLoginDevice(String deviceId, String reqVal, String dbVal, String equalsType);
 
 }

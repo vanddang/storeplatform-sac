@@ -902,7 +902,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 				if (!StringUtils.equals(nativeId, userMbrDevice.getNativeID()) && !isOpmd) {
 
-					if (this.isImeiEquality(deviceId, nativeId)) {
+					if (this.isEqualsImei(deviceId, nativeId)) {
 						LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 						userMbrDevice.setNativeID(nativeId);
 					} else {
@@ -1061,19 +1061,13 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 서비스 관리번호
 
-		/** 로그인한 휴대기기 정보 비교 */
-		DeviceInfo tmpDeviceInfo = new DeviceInfo();
-		tmpDeviceInfo.setDeviceId(deviceId);
-		tmpDeviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
-		tmpDeviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
-		tmpDeviceInfo.setNativeId(userMbrDevice.getNativeID());
 		/* IMEI가 다른경우 */
-		if (!this.isLoginDeviceEquality(tmpDeviceInfo, nativeId, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
+		if (!this.isEqualsLoginDevice(deviceId, nativeId, userMbrDevice.getNativeID(), MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
 			if (StringUtil.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
 				/* ICAS IMEI와 틀린경우 */
-				if (!this.isImeiEquality(deviceId, nativeId)) {
+				if (!this.isEqualsImei(deviceId, nativeId)) {
 					throw new StorePlatformException("SAC_MEM_1503");
 				}
 
@@ -1083,13 +1077,14 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 통신사 / GMAIL 정보 모두 상이하면 로그인 실패 */
-		if (!this.isLoginDeviceEquality(tmpDeviceInfo, deviceTelecom, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
+		if (!this.isEqualsLoginDevice(deviceId, deviceTelecom, userMbrDevice.getDeviceTelecom(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
 
-			if (!this.isLoginDeviceEquality(tmpDeviceInfo, deviceAccount, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
+			if (!this.isEqualsLoginDevice(deviceId, deviceAccount, userMbrDevice.getDeviceAccount(),
+					MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
 				throw new StorePlatformException("SAC_MEM_1505"); // 통신사, GMAIL 정보가 상이합니다.	
 			}
+
 		}
-		/** 로그인한 휴대기기 정보 비교 */
 
 		LOGGER.info(":::::::::::::::::: {} login device update field start ::::::::::::::::::", deviceId);
 
@@ -1217,19 +1212,13 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 서비스 관리번호
 
-		/** 로그인한 휴대기기 정보 비교 */
-		DeviceInfo tmpDeviceInfo = new DeviceInfo();
-		tmpDeviceInfo.setDeviceId(deviceId);
-		tmpDeviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
-		tmpDeviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
-		tmpDeviceInfo.setNativeId(userMbrDevice.getNativeID());
 		/* IMEI가 다른경우 */
-		if (!this.isLoginDeviceEquality(tmpDeviceInfo, nativeId, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
+		if (!this.isEqualsLoginDevice(deviceId, nativeId, userMbrDevice.getNativeID(), MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
 			if (StringUtil.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
 				/* ICAS IMEI와 틀린경우 */
-				if (!this.isImeiEquality(deviceId, nativeId)) {
+				if (!this.isEqualsImei(deviceId, nativeId)) {
 					throw new StorePlatformException("SAC_MEM_1503");
 				}
 
@@ -1237,7 +1226,6 @@ public class DeviceServiceImpl implements DeviceService {
 				throw new StorePlatformException("SAC_MEM_1504");
 			}
 		}
-		/** 로그인한 휴대기기 정보 비교 */
 
 		LOGGER.info(":::::::::::::::::: {} login device update field start ::::::::::::::::::", deviceId);
 
@@ -1869,11 +1857,12 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
-	 * isImeiEquality(java.lang.String, java.lang.String)
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#isEqualsImei
+	 * (java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean isImeiEquality(String deviceId, String imei) {
+	public boolean isEqualsImei(String deviceId, String imei) {
 
 		String icasImei = null;
 
@@ -1904,40 +1893,40 @@ public class DeviceServiceImpl implements DeviceService {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
-	 * isLoginDeviceEquality
-	 * (com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo,
-	 * java.lang.String, java.lang.String)
+	 * isEqualsLoginDevice(java.lang.String, java.lang.String, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
-	public boolean isLoginDeviceEquality(DeviceInfo dbDeviceInfo, String equalsVal, String equalsValType) {
+	public boolean isEqualsLoginDevice(String deviceId, String reqVal, String dbVal, String equalsType) {
 
-		if (StringUtil.equals(equalsValType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
-			LOGGER.info("::: {} {} equals request : {}, db : {}", dbDeviceInfo.getDeviceId(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM,
-					equalsVal, dbDeviceInfo.getDeviceTelecom());
-			if (StringUtil.isBlank(dbDeviceInfo.getDeviceTelecom()) || StringUtil.equals(dbDeviceInfo.getDeviceTelecom(), equalsVal)) {
-				return true;
+		boolean isEquals = false;
+
+		if (StringUtil.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
+
+			if (StringUtil.isBlank(dbVal) || StringUtil.equals(reqVal, dbVal)) {
+				isEquals = true;
 			}
 
-		} else if (StringUtil.equals(equalsValType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
-			LOGGER.info("::: {} {} equals request : {}, db : {}", dbDeviceInfo.getDeviceId(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT,
-					equalsVal, dbDeviceInfo.getDeviceAccount());
-			if (StringUtil.isBlank(equalsVal) && StringUtil.isBlank(dbDeviceInfo.getDeviceAccount())) {
-				return true;
+		} else if (StringUtil.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
+
+			if (StringUtil.isBlank(reqVal) && StringUtil.isBlank(dbVal)) {
+				isEquals = true;
 			} else {
-				if (StringUtil.equals(equalsVal, dbDeviceInfo.getDeviceAccount())) {
-					return true;
+				if (StringUtil.equals(reqVal, dbVal)) {
+					isEquals = true;
 				}
 			}
 
-		} else if (StringUtil.equals(equalsValType, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
-			LOGGER.info("::: {} {} equals request : {}, db : {}", dbDeviceInfo.getDeviceId(), MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID,
-					equalsVal, dbDeviceInfo.getNativeId());
-			if (StringUtil.isNotBlank(dbDeviceInfo.getNativeId()) && StringUtil.equals(dbDeviceInfo.getNativeId(), equalsVal)) {
-				return true;
+		} else if (StringUtil.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
+
+			if (StringUtil.isNotBlank(dbVal) && StringUtil.equals(reqVal, dbVal)) {
+				isEquals = true;
 			}
 
 		}
 
-		return false;
+		LOGGER.info("::: {} {} equals request : {}, db : {}, isEquals : {}", deviceId, equalsType, reqVal, dbVal, isEquals);
+
+		return isEquals;
 	}
 }
