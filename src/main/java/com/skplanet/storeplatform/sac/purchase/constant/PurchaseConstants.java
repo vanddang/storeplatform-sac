@@ -51,6 +51,10 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String TSTORE_CASH_SVC_TYPE_INQUIRY = "01"; // 조회
 	public static final String TSTORE_CASH_SVC_TYPE_CHARGE = "02"; // 충전
 	public static final String TSTORE_CASH_SVC_TYPE_USE = "03"; // 사용
+
+	public static final String TSTORE_CASH_SVC_TYPE_CHARGE_CANCEL = "01"; // 충전취소
+	public static final String TSTORE_CASH_SVC_TYPE_USE_CANCEL = "02"; // 사용취소
+
 	/* 서비스 상세타입 */
 	public static final String TSTORE_CASH_SVC_DETAIL_TYPE_INQUIRY = "01"; // 조회
 	public static final String TSTORE_CASH_SVC_DETAIL_TYPE_RESERVATION = "02"; // 예약
