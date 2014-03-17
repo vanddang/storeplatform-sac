@@ -287,7 +287,7 @@ public class CategoryController {
 	 *            header
 	 * @return CategorySpecificSacRes
 	 */
-	@RequestMapping(value = "/specific/ebook/list/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/specific/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public CategorySpecificSacRes searchSpecificEbookList(@Validated CategorySpecificSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
