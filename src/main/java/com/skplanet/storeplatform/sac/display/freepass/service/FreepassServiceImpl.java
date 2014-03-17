@@ -251,6 +251,7 @@ public class FreepassServiceImpl implements FreepassService {
 			reqMap.put("tenantHeader", header.getTenantHeader());
 			reqMap.put("deviceHeader", header.getDeviceHeader());
 			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+			int minusCount = 0;
 
 			for (FreepassProdMap prodMap : mapList) {
 
@@ -261,26 +262,43 @@ public class FreepassServiceImpl implements FreepassService {
 
 				commonResponse.setTotalCount(prodMap.getTotalCount());
 
-				if ("DP13".equals(retMetaInfo.getTopMenuId())) {
+				if ("DP13".equals(prodMap.getTopMenuId())) {
 					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-					product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
-				} else if ("DP14".equals(retMetaInfo.getTopMenuId())) {
+					if (retMetaInfo == null) {
+						minusCount += 1;
+						continue;
+					} else
+						product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+				} else if ("DP14".equals(prodMap.getTopMenuId())) {
 					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-					product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
-				} else if ("DP17".equals(retMetaInfo.getTopMenuId())) {
+					if (retMetaInfo == null) {
+						minusCount += 1;
+						continue;
+					} else
+						product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+				} else if ("DP17".equals(prodMap.getTopMenuId())) {
 					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
-				} else if ("DP18".equals(retMetaInfo.getTopMenuId())) {
+					if (retMetaInfo == null) {
+						minusCount += 1;
+						continue;
+					} else
+						product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+				} else if ("DP18".equals(prodMap.getTopMenuId())) {
 					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+					if (retMetaInfo == null) {
+						minusCount += 1;
+						continue;
+					} else
+						product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 				}
 				productList.add(product);
 
 			}
+			commonResponse.setTotalCount(commonResponse.getTotalCount() - minusCount);
 
 		} else {
 

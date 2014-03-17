@@ -206,6 +206,7 @@
     		        , FM.SETT_RATE
     		        , FM.STD_PRICE
     		        , FM.STRM_DRM_YN
+    		        , PD.TOP_MENU_ID
 				FROM
 						TB_DP_FIXRATE_PROD_MAPG FM, TB_DP_PROD PD, TB_DP_TENANT_PROD TP,
     		    TB_DP_MENU_CATEGORY_PROD_MAPG MP, TB_DP_MENU_CATEGORY CT

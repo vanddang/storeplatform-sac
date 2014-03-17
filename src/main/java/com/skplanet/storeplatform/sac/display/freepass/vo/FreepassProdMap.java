@@ -28,6 +28,7 @@ public class FreepassProdMap {
 	private String drmSetClsfCd;
 	private String iconClsfCd;
 	private String expoOrd;
+	private String topMenuId;
 	
 	private Integer totalCount;
 	/**
@@ -167,6 +168,18 @@ public class FreepassProdMap {
 	 */
 	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
+	}
+	/**
+	 * @return the topMenuId
+	 */
+	public String getTopMenuId() {
+		return topMenuId;
+	}
+	/**
+	 * @param topMenuId the topMenuId to set
+	 */
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 	
 	
