@@ -66,6 +66,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         }
 
         music.setAlbumType(musicDetail.getRepSong());   // 앨범 유형
+        music.setCid(musicDetail.getCid());
 
         product.setMusic(music);
     }

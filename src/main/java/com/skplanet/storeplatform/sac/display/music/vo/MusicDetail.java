@@ -38,6 +38,15 @@ public class MusicDetail extends CommonInfo {
     private String issueDay;
     private String prodBaseDesc;
     private String repSong;
+    private String cid;
+
+    public String getCid() {
+        return cid;
+    }
+
+    public void setCid(String cid) {
+        this.cid = cid;
+    }
 
     public String getRepSong() {
         return repSong;
