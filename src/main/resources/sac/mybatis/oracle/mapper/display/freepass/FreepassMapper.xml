@@ -3,7 +3,7 @@
 <mapper namespace="Freepass">
     <!-- 정액제 리스트 조회-->
     <select id="selectFreepassList" parameterType="FreepassListSacReq" resultType="ProductBasicInfo">
-			/* FreepassMapper.xml, selectFreepassList, SAC : 서영배 , 2014-02-12 */
+			/* FreepassMapper.xml, selectFreepassList, SAC 전시 : 서영배 , 2014-02-12 */
 			SELECT 
 				* 
 			FROM
@@ -92,7 +92,7 @@
     
     <!-- 정액제 상품 상세 조회 -->
     <select id="selectFreepassDetail" parameterType="FreepassDetailSacReq" resultType="metaInfo">
-	SELECT  /* MetaInfoMapper.xml, getFreepassMetaInfo, 서영배, 2014-02-11 */
+	SELECT  /* MetaInfoMapper.xml, getFreepassMetaInfo, SAC 전시 : 서영배, 2014-02-11 */
 		IV.*
 		, NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
 		, NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
@@ -185,7 +185,7 @@
     
     <!-- 정액제 매핑상품 조회 -->
     <select id="selectFreepassMapProduct" parameterType="FreepassDetailSacReq" resultType="FreepassMapProduct">
-		SELECT  /* FreepassMapper.xml, getFreepassMapProduct, 서영배, 2014-02-17 */
+		SELECT  /* FreepassMapper.xml, getFreepassMapProduct, SAC 전시 : 서영배, 2014-02-17 */
 			*
 		FROM
 		(
@@ -193,7 +193,7 @@
 				ROWNUM AS RNUM
 				, IV.*
 			FROM (
-				SELECT  /* FreepassMapper.xml, getFreepassMapProduct, 서영배, 2014-02-17 */
+				SELECT  
 					COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
 					, FM.PROD_ID
     		        , FM.PART_PROD_ID
@@ -256,7 +256,7 @@
     
     <!-- 특정 상품에 적용할 자유 이용권 조회-->
     <select id="searchFreepassListByChannel" parameterType="FreepassSpecificSacReq" resultType="ProductBasicInfo">
-            /* FreepassMapper.xml, searchFreepassListByChannel, SAC : 서영배 , 2014-02-12 */
+            /* FreepassMapper.xml, searchFreepassListByChannel, SAC 전시 : 서영배 , 2014-02-12 */
             SELECT 
                 * 
             FROM
@@ -342,7 +342,7 @@
     
     <!-- 정액제 리스트 조회-->
     <select id="selectFreepassSeries" parameterType="FreepassSeriesSacReq" resultType="ProductBasicInfo">
-			/* FreepassMapper.xml, selectFreepassSeries, SAC : 서영배 , 2014-02-26 */
+			/* FreepassMapper.xml, selectFreepassSeries, SAC 전시 : 서영배 , 2014-02-26 */
 			SELECT 
 				* 
 			FROM
