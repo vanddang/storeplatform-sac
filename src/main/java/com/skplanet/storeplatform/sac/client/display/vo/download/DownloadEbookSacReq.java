@@ -25,9 +25,9 @@ public class DownloadEbookSacReq extends CommonInfo {
 	private String idType; // ID유형
 	@NotBlank
 	private String productId; // 상품ID
-	@NotBlank
+
 	private String deviceKey; // 디바이스키
-	@NotBlank
+
 	private String userKey; // 사용자고유키
 
 	private String prchsDt; // 구매일시
