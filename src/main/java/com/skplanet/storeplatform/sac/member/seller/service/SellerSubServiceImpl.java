@@ -155,7 +155,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 	/**
 	 * <pre>
-	 * 서브계정 상세 조회.
+	 * 서브계정 상세 조회. TODO
 	 * </pre>
 	 * 
 	 * @param DetailSubsellerReq
@@ -163,6 +163,8 @@ public class SellerSubServiceImpl implements SellerSubService {
 	 */
 	@Override
 	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req) {
+
+		LOGGER.debug("############ SellerSubServiceImpl.detailSubseller() [START] ############");
 
 		SearchSubSellerRequest schReq = new SearchSubSellerRequest();
 
@@ -176,6 +178,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		DetailSubsellerRes response = new DetailSubsellerRes();
 		response.setSubSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
 
+		LOGGER.debug("############ SellerSubServiceImpl.detailSubseller() [END] ############");
 		return response;
 	}
 

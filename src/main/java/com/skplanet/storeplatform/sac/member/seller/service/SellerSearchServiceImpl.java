@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -154,6 +154,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 */
 	@Override
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) {
+		LOGGER.debug("[SellerSearchServiceImpl.detailInformation()] START.");
 
 		SearchSellerRequest schReq = new SearchSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
@@ -175,12 +176,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		list.add(keySearch);
 		schReq.setKeySearchList(list);
 
+		// SC 판매자회원 기본정보 조회.
 		SearchSellerResponse schRes = this.sellerSCI.searchSeller(schReq);
 
 		SearchFlurryListRequest schReq2 = new SearchFlurryListRequest();
 		schReq2.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq2.setSellerKey(schRes.getSellerKey());
 
+		// SC 판매자회원 Fluury 연동정보 목록조회.
 		SearchFlurryListResponse schRes2 = this.sellerSCI.searchFlurryList(schReq2);
 
 		// 판매자 멀티미디어정보
@@ -251,10 +254,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		response.setExtraRightList(eList);// 판매자 멀티미디어정보
 		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
 		response.setSellerKey(schRes.getSellerKey());// 판매자Key
-		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr(), schRes.getMbrAuth()));// 판매자 정보
+		// 실명인증 여부에 따른 판매자 회원정보 Setting.
+		SellerMbr sellerMbr = this.sellerMbr(schRes.getSellerMbr(), schRes.getMbrAuth()); // 실명인증 판매자 정보 & 판매자 정보
+		response.setSellerMbr(sellerMbr);// 판매자 정보
 		response.setTabAuthList(tList);
 		response.setFlurryAuthList(fList);
 
+		LOGGER.debug("[SellerSearchServiceImpl.detailInformation()] END.");
 		return response;
 
 	}
@@ -696,7 +702,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * Password 보안 질문 조회 All.
+	 * Password 보안 질문 조회 All. TODO
 	 * </pre>
 	 * 
 	 * @param language
@@ -731,7 +737,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * Password 보안 질문 확인.
+	 * Password 보안 질문 확인. TODO
 	 * </pre>
 	 * 
 	 * @param language
@@ -788,7 +794,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		schReq.setMbrPwd(mbrPwd);
 
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		ResetPasswordSellerResponse schRes = this.sellerSCI.resetPasswordSeller(schReq);
@@ -920,7 +925,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * TODO 판매자 정보.
+	 * 판매자 정보. TODO
 	 * </pre>
 	 * 
 	 * @return
@@ -929,6 +934,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			com.skplanet.storeplatform.member.client.common.vo.MbrAuth mbrAuth) {
 		// 판매자 정보
 		SellerMbr sellerMbrRes = new SellerMbr();
+
 		if (sellerMbr != null) {
 			sellerMbrRes.setApproveDate(sellerMbr.getApproveDate());
 			sellerMbrRes.setBizGrade(sellerMbr.getBizGrade());
@@ -986,29 +992,21 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setSellerTelecom(sellerMbr.getSellerTelecom());
 			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
 			sellerMbrRes.setVendorCode(sellerMbr.getVendorCode());
+			sellerMbrRes.setUpdateDate(sellerMbr.getUpdateDate());
 
-			if (mbrAuth == null) {
+			if (mbrAuth != null && StringUtils.isNotBlank(sellerMbr.getIsRealName())
+					&& "Y".equals(sellerMbr.getIsRealName())) {
+				// 실명인증 판매자 정보 셋팅.
+				sellerMbrRes.setSellerName(mbrAuth.getName());
+				sellerMbrRes.setSellerSex(mbrAuth.getSex());
+				sellerMbrRes.setSellerBirthDay(mbrAuth.getBirthDay());
+			} else {
+				// 판매자 정보 셋팅.
 				sellerMbrRes.setSellerName(sellerMbr.getSellerName());
 				sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
 				sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
-			} else {
-				if (mbrAuth.getIsRealName() == null) {
-					sellerMbrRes.setSellerName(sellerMbr.getSellerName());
-					sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
-					sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
-				} else if (mbrAuth.getIsRealName().equals("N")) {
-					sellerMbrRes.setSellerName(sellerMbr.getSellerName());
-					sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
-					sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
-				} else if (mbrAuth.getIsRealName().equals("Y")) {
-					sellerMbrRes.setSellerName(mbrAuth.getName());
-					sellerMbrRes.setSellerSex(mbrAuth.getSex());
-					sellerMbrRes.setSellerBirthDay(mbrAuth.getBirthDay());
-				}
-
 			}
 		}
 		return sellerMbrRes;
 	}
-
 }
