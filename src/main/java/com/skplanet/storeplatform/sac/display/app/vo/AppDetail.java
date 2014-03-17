@@ -30,6 +30,24 @@ public class AppDetail extends CommonInfo {
     private String expoSellerNm;
     private String expoSellerTelno;
     private String prodStatusCd;
+    private String prodBaseDesc;
+    private String prodDtlDesc;
+
+    public String getProdBaseDesc() {
+        return prodBaseDesc;
+    }
+
+    public void setProdBaseDesc(String prodBaseDesc) {
+        this.prodBaseDesc = prodBaseDesc;
+    }
+
+    public String getProdDtlDesc() {
+        return prodDtlDesc;
+    }
+
+    public void setProdDtlDesc(String prodDtlDesc) {
+        this.prodDtlDesc = prodDtlDesc;
+    }
 
     public String getProdStatusCd() {
         return prodStatusCd;

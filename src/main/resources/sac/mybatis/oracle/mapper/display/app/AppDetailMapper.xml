@@ -31,7 +31,9 @@
             PD.EXPO_SELLER_EMAIL,
             PD.EXPO_SELLER_NM,
             PD.EXPO_SELLER_TELNO,
-            TP.PROD_STATUS_CD
+            TP.PROD_STATUS_CD,
+            PDESC.PROD_BASE_DESC,
+            PDESC.PROD_DTL_DESC
         FROM
                 TB_DP_PROD PD
                 INNER JOIN TB_DP_APP_PROD APP

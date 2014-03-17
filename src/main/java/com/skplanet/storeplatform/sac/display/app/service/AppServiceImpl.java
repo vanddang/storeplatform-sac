@@ -92,6 +92,8 @@ public class AppServiceImpl implements AppService {
 		price.setFixedPrice(appDetail.getFixedAmt());
         price.setText(appDetail.getProdAmt());
 		product.setPrice(price);
+        product.setProductExplain(appDetail.getProdBaseDesc());
+        product.setProductDetailExplain(appDetail.getProdDtlDesc());
 
         // Menu
         List<MenuItem> menuList = commonService.getMenuItemList(request.getChannelId(), request.getLangCd());
