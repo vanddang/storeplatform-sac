@@ -181,7 +181,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
-		List<Source> sourceList = this.commonGenerator.generateVodSourceList(metaInfo);
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// previewSourceList 생성
+		List<Source> previewSourceList = this.commonGenerator.generateVodSourceList(metaInfo);
 		// Accrual 생성
 		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
 		// Rights 설정
@@ -193,6 +195,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setPrice(price);
 		product.setMenuList(menuList);
 		product.setSourceList(sourceList);
+		product.setPreviewSourceList(previewSourceList);
 		product.setAccrual(accrual);
 		product.setRights(rights);
 		product.setContributor(contributor);
@@ -225,7 +228,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
-		List<Source> sourceList = this.commonGenerator.generateVodSourceList(metaInfo);
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// previewSourceList 생성
+		List<Source> previewSourceList = this.commonGenerator.generateVodSourceList(metaInfo);
 		// Accrual 생성
 		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
 		// Rights 설정
@@ -239,6 +244,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setPrice(price);
 		product.setMenuList(menuList);
 		product.setSourceList(sourceList);
+		product.setPreviewSourceList(previewSourceList);
 		product.setAccrual(accrual);
 		product.setRights(rights);
 		product.setContributor(contributor);
