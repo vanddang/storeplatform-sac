@@ -167,7 +167,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
 		deviceInfo.setNativeId(req.getNativeId()); // IMEI
 
-		DeviceInfo retDeviceInfo = this.deviceService.updateDeviceForMdnLogin(requestHeader, deviceInfo);
+		DeviceInfo retDeviceInfo = this.deviceService.updateDeviceForMdnLogin(requestHeader, deviceInfo, "v1");
 
 		/* 원아이디인 경우 */
 		if (chkDupRes.getUserMbr().getImSvcNo() != null) {
@@ -312,7 +312,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
 		deviceInfo.setNativeId(req.getNativeId()); // IMEI
-		DeviceInfo retDeviceInfo = this.deviceService.updateDeviceForMdnLoginV2(requestHeader, deviceInfo);
+		DeviceInfo retDeviceInfo = this.deviceService.updateDeviceForMdnLogin(requestHeader, deviceInfo, "v2");
 
 		/* 원아이디인 경우 */
 		if (chkDupRes.getUserMbr().getImSvcNo() != null) {
