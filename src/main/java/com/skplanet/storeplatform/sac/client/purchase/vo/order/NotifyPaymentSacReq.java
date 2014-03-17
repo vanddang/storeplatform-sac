@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -32,7 +33,7 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	private String resultMsg; // 결제처리결과 메시지
 	@NotBlank
 	private String prchsId; // 구매 ID
-	@NotBlank
+	@NotNull
 	private double totAmt; // 결제 총 금액
 
 	@NotEmpty
