@@ -77,7 +77,7 @@ public class ProductInfoMangerAdoptedMetaInfoServiceTest {
     public void test2() throws Exception {
 
         Map<String, String> headerMap = new HashMap<String, String>();
-        headerMap.put("x-sac-disable-cache", "true");
+        headerMap.put("x-sac-use-cache", "true");
 
         MvcTestBuilder.build2(mvc, false, headerMap, "/display/feature/best/app/list/v1?listId=ADM000000012", null, true);
     }

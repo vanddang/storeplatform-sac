@@ -50,9 +50,9 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 				RequestAttributes.SCOPE_REQUEST);
 
         // for Debug - 캐쉬 이용 여부 처리
-        String headerDisCache = request.getHeader("x-sac-use-cache");
+        String headerUseCache = request.getHeader("x-sac-use-cache");
         RequestContextHolder.currentRequestAttributes()
-                .setAttribute("useCache", StringUtils.isNotEmpty(headerDisCache) && headerDisCache.toLowerCase().equals("true"), RequestAttributes.SCOPE_REQUEST);
+                .setAttribute("useCache", StringUtils.isEmpty(headerUseCache) || headerUseCache.toLowerCase().equals("true"), RequestAttributes.SCOPE_REQUEST);
 
         return true;
 	}
