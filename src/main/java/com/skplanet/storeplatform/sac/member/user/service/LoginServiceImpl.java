@@ -825,7 +825,7 @@ public class LoginServiceImpl implements LoginService {
 			loginReq.setIsAutoLogin("Y");
 
 			String svcVersion = requestHeader.getDeviceHeader().getSvc();
-			if (svcVersion != null) {
+			if (StringUtil.isNotBlank(svcVersion)) {
 				loginReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
 			}
 			loginReq.setIpAddress(deviceId);
@@ -1151,7 +1151,8 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setIsMobile(isMobile);
 		loginReq.setIsAutoLogin("N");
 		String svcVersion = requestHeader.getDeviceHeader().getSvc();
-		if (svcVersion != null) {
+
+		if (StringUtil.isNotBlank(svcVersion)) {
 			loginReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
 		}
 		loginReq.setIpAddress(ipAddress);
