@@ -253,6 +253,24 @@ public class SellerMbr extends CommonInfo {
 	private String subSellerCateList;
 	private String subRegDate;
 
+	/** 수정일시. */
+	private String updateDate; // UPD_DT
+
+	/**
+	 * @return the updateDate
+	 */
+	public String getUpdateDate() {
+		return this.updateDate;
+	}
+
+	/**
+	 * @param updateDate
+	 *            the updateDate to set
+	 */
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
+
 	/**
 	 * 서브계정 로그인 시간.
 	 */
