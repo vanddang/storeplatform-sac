@@ -4,7 +4,7 @@
 
     <!-- 아티스트 정보 조회 -->
     <select id="selectArtistInfo" parameterType="ArtistProductSacReq" resultType="MetaInfo">
-		SELECT /* ArtistProductMapper.xml, selectArtistInfo, SAC : 유시혁 , 2014-03-08 */
+		SELECT /* ArtistProductMapper.xml, selectArtistInfo, SAC 전시 : 유시혁 , 2014-03-08 */
 		    A.ARTIST_ID
 		    , A.ARTIST_NM
 		    , A.IMG_FILE_PATH AS FILE_PATH
@@ -17,7 +17,7 @@
 
     <!-- 특정 아티스트별 상품 조회 -->
     <select id="selectArtistProductList" parameterType="ArtistProductSacReq" resultType="ProductBasicInfo">
-        SELECT /* ArtistProductMapper.xml, selectArtistInfo, SAC : 유시혁 , 2014-03-08 */
+        SELECT /* ArtistProductMapper.xml, selectArtistInfo, SAC 전시 : 유시혁 , 2014-03-08 */
             A.TOTAL_COUNT
             , A.RNK
             , A.TOP_MENU_ID

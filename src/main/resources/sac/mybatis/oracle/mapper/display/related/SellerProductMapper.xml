@@ -3,7 +3,7 @@
 <mapper namespace="SellerProduct">
     <!-- 특정 판매자별 상품 조회 -->
     <select id="selectSellerProductList" parameterType="SellerProductSacReq" resultType="ProductBasicInfo">
-        SELECT /* SellerProductMapper.xml, selectSellerProductList, SAC : 유시혁 , 2014-02-18 */
+        SELECT /* SellerProductMapper.xml, selectSellerProductList, SAC 전시 : 유시혁 , 2014-02-18 */
             A.TOTAL_COUNT
             , A.TOP_MENU_ID
             , A.MENU_ID

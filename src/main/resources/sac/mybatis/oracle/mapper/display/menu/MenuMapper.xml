@@ -3,7 +3,7 @@
 <mapper namespace="Menu">
     <!-- Menu 리스트 조회-->
     <select id="selectMenuList" parameterType="MenuSacReq" resultType="Menu">
-		SELECT /* MenuMapper.xml, selectMenuList, SAC : 유시혁 , 2014-03-07 */
+		SELECT /* MenuMapper.xml, selectMenuList, SAC 전시 : 유시혁 , 2014-03-07 */
 		    COUNT(1) OVER() AS TOTAL_COUNT
 		    , A.TENANT_ID 
             , A.MENU_ID 
@@ -75,7 +75,7 @@
     
     <!-- Menu Detail 조회-->
     <select id="selectMenuDetail" parameterType="MenuSacReq" resultType="Menu">
-        SELECT /* MenuMapper.xml, selectMenuDetail, SAC : 유시혁 , 2014-03-07 */
+        SELECT /* MenuMapper.xml, selectMenuDetail, SAC 전시 : 유시혁 , 2014-03-07 */
             COUNT(1) OVER() AS TOTAL_COUNT
             , A.TENANT_ID 
             , A.TENANT_MENU_ID AS MENU_ID 
@@ -114,7 +114,7 @@
 
     <!-- 대분류 카테고리정보 조회 -->
     <select id="selectTopCategoryList" parameterType="MenuSacReq" resultType="Menu">
-	    SELECT /* MenuMapper.xml, selectTopCategoryList, SAC : 유시혁 , 2014-03-07 */
+	    SELECT /* MenuMapper.xml, selectTopCategoryList, SAC 전시 : 유시혁 , 2014-03-07 */
 	        COUNT(1) OVER() TOTAL_COUNT
 	        , A.TENANT_ID 
 	        , A.TENANT_MENU_ID AS MENU_ID 

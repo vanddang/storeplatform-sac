@@ -14,7 +14,7 @@
         AND B.MENU_ID = C.MENU_ID
         )    
         </if>
-        SELECT /* SimilarProductMapper.xml, selectSimilarProductList, SAC : 유시혁 , 2014-02-18 */
+        SELECT /* SimilarProductMapper.xml, selectSimilarProductList, SAC 전시 : 유시혁 , 2014-02-18 */
             A.TOTAL_COUNT
             , A.TOP_MENU_ID
             , A.MENU_ID

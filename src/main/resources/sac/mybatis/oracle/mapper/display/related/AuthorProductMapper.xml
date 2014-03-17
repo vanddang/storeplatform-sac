@@ -4,7 +4,7 @@
 
     <!-- 특정 작가 정보 조회 -->
     <select id="selectAuthorInfo" parameterType="AuthorProductSacReq" resultType="MetaInfo">
-		SELECT /* AuthorProductMapper.xml, selectAuthorInfo, SAC : 유시혁 , 2014-03-04 */
+		SELECT /* AuthorProductMapper.xml, selectAuthorInfo, SAC 전시 : 유시혁 , 2014-03-04 */
 		    A.ARTIST1_NM
 		    , A.ARTIST2_NM
 		    , A.ARTIST3_NM
@@ -19,7 +19,7 @@
     
     <!-- 특정 작가별 상품 조회 -->
     <select id="selectAuthorProductList" parameterType="AuthorProductSacReq" resultType="ProductBasicInfo">
-        SELECT /* AuthorProductMapper.xml, selectAuthorProductList, SAC : 유시혁 , 2014-02-26 */
+        SELECT /* AuthorProductMapper.xml, selectAuthorProductList, SAC 전시 : 유시혁 , 2014-02-26 */
             A.TOTAL_COUNT
             , A.TOP_MENU_ID
             , A.MENU_ID

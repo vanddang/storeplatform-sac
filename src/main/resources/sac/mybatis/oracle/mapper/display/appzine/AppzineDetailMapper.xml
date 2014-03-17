@@ -3,7 +3,7 @@
 <mapper namespace="AppzineDetail">
     <!-- Appzine 상세 조회-->
     <select id="selectAppzineDetail" parameterType="AppzineDetailSacReq" resultType="AppzineDetail">
-	    SELECT /* AppzineDetailMapper.xml, selectAppzineDetail, SAC : 유시혁 , 2014-02-18 */
+	    SELECT /* AppzineDetailMapper.xml, selectAppzineDetail, SAC 전시 : 유시혁 , 2014-02-18 */
 	       A.*
 	    FROM (
 				SELECT
