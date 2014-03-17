@@ -3,7 +3,7 @@
 <mapper namespace="Category">
     <!-- 일반 카테고리 앱 상품 조회 -->
     <select id="selectCategoryAppList" parameterType="CategoryAppSacReq" resultType="ProductBasicInfo">
-		SELECT  /* CategoryMapper.XML, selectCategoryAppList, Tae hee Lee, 2014-01-14 */
+		SELECT  /* CategoryMapper.XML, selectCategoryAppList, SAC 전시, 2014-01-14 */
                 KA.TOTAL_COUNT
               , KA.RNUM
               , KA.TOP_MENU_ID
@@ -65,7 +65,7 @@
     
     <!-- 일반 카테고리 이북/코믹 상품 조회 -->
     <select id="selectCategoryEbookComicList" parameterType="CategoryEbookComicSacReq" resultType="ProductBasicInfo">
-        SELECT  /* CategoryMapper.xml, selectCategoryEbookComicList, 홍지호, 2014-01-28 */
+        SELECT  /* CategoryMapper.xml, selectCategoryEbookComicList, SAC 전시, 2014-01-28 */
                 LA.TOTAL_COUNT
               , LA.RNUM
               , LA.TOP_MENU_ID

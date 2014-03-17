@@ -3,7 +3,7 @@
 <mapper namespace="BestContents">
     <!-- BEST 컨텐츠 상품 조회(movie, broadcast) -->
     <select id="selectBestContentsVodList" parameterType="BestContentsSacReq" resultType="ProductBasicInfo">
-        SELECT  /* BestContentsMapper.xml, selectBestContentsVodList, 홍지호, 2014-02-03 */
+        SELECT  /* BestContentsMapper.xml, selectBestContentsVodList, SAC 전시, 2014-02-03 */
                 LA.TOTAL_COUNT
               , LA.RNUM
               , LA.TOP_MENU_ID
@@ -94,7 +94,7 @@
     
     <!-- BEST 컨텐츠 상품 조회(ebook, comic) -->
     <select id="selectBestContentsBookList" parameterType="BestContentsSacReq" resultType="ProductBasicInfo">
-        SELECT  /* BestContentsMapper.xml, selectBestContentsBookList, 홍지호, 2014-02-03 */
+        SELECT  /* BestContentsMapper.xml, selectBestContentsBookList, SAC 전시, 2014-02-03 */
                 LA.TOTAL_COUNT
               , LA.RNUM
               , LA.TOP_MENU_ID
