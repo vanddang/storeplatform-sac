@@ -3,7 +3,7 @@
 <mapper namespace="Download">
 <!-- 패키지명으로 상품 ID 조회 -->
     <select id="getProductIdForPackageName" resultType="String">
-	 SELECT  /* DownloadMapper.xml, getProductIdForPackageName, SAC : 이석희 , 2014-01-23 */
+	 SELECT  /* DownloadMapper.xml, getProductIdForPackageName, SAC 전시, 2014-01-23 */
 	         A.PROD_ID
 	       , D.APK_PKG_NM
 	   FROM  TB_DP_PROD                    A
@@ -20,7 +20,7 @@
 
     <!-- 상품정보요청(for download) App -->
     <select id="getDownloadAppInfo" parameterType="DownloadAppSacReq" resultType="MetaInfo">
-	  SELECT  /* DownloadMapper.xml, getDownloadAppInfo, SAC : 이석희 , 2014-01-23 */
+	  SELECT  /* DownloadMapper.xml, getDownloadAppInfo, SAC 전시, 2014-01-23 */
 	            TA.*
 	          , NVL(TB.PROD_ID, '') AS SEED_PRODUCT_ID
 	          , TB.CASE_REF_CD AS SEED_CASE_REF_CD
@@ -144,7 +144,7 @@
     
     <!-- 상품정보요청(for download) Vod -->
     <select id="getDownloadVodInfo" parameterType="DownloadVodSacReq" resultType="MetaInfo">
-	SELECT /* DownloadMapper.xml, getDownloadVodInfo, SAC : 이석희 , 2014-01-25 */
+	SELECT /* DownloadMapper.xml, getDownloadVodInfo, SAC 전시, 2014-01-23 */
 	        XA.*
 	      ,(SELECT FILE_PATH FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = XA.ESPD_PROD_ID AND SUB_CONTENTS_ID = XA.NM_SUB_CONTS_ID  ) AS NM_FILE_PATH
 	      ,(SELECT FILE_PATH FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = XA.ESPD_PROD_ID AND SUB_CONTENTS_ID = XA.SD_SUB_CONTS_ID  ) AS SD_FILE_PATH
@@ -787,7 +787,7 @@
     </select>
 
     <select id="getDownloadMusicInfo" parameterType="DownloadMusicSacReq" resultType="MetaInfo">
-		SELECT /* DownloadMapper.xml, getDownloadMusicInfo, SAC : 이석희 , 2014-02-03 */
+		SELECT /* DownloadMapper.xml, getDownloadMusicInfo, SAC 전시, 2014-02-03 */
 		        TA.PROD_ID
 		      , TA.MUSIC_ID
 		      , TA.OUTSD_CONTENTS_ID
