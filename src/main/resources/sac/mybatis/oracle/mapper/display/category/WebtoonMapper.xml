@@ -78,17 +78,17 @@
     
     <!-- 운영자 웹툰 상품 리스트 조회-->
     <select id="getAdminWebtoonList" parameterType="RecommendWebtoonSacReq" resultType="ProductBasicInfo">
-        SELECT /* WebtoonMapper.xml, getAdminWebtoonList, SAC 전시, 2014-02-10 */
-               B.TENANT_ID
-             , B.MENU_ID
-             , B.PROD_ID
-             , B.PART_PROD_ID
-             , B.TOP_MENU_ID
-             , B.CONTENTS_TYPE_CD
-             , B.TOTAL_COUNT
-          FROM (SELECT A.*
+        SELECT /* WebtoonMapper.xml, getAdminWebtoonList, SAC 전시, 2014-03-17 */
+               B1.TENANT_ID
+             , B1.MENU_ID
+             , B1.PROD_ID
+             , B1.PART_PROD_ID
+             , B1.TOP_MENU_ID
+             , B1.CONTENTS_TYPE_CD
+             , B1.TOTAL_COUNT
+          FROM (SELECT A1.*
                      , COUNT(*) OVER () AS TOTAL_COUNT
-                     , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
+                     , ROW_NUMBER() OVER(ORDER BY A1.EXPO_ORD_ALWAYS_YN DESC, A1.EXPO_ORD, A1.EXPO_ORD_SUB) AS RNUM
                   FROM (SELECT A.TENANT_ID
                              , D.MENU_ID
                              , C.PROD_ID
@@ -100,8 +100,8 @@
                              , F.CONTENTS_TYPE_CD
                              , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS NO
                           FROM (SELECT LP.*
-                                  FROM TB_DP_LIST LT
-                                     , TB_DP_LIST_PROD LP
+                                  FROM TB_DP_LIST_PROD LP
+                                     , TB_DP_LIST LT
                                  WHERE LT.TENANT_ID = LP.TENANT_ID
                                    AND LT.LIST_ID = LP.LIST_ID
                                    AND LT.EXPO_YN = 'Y'
@@ -116,6 +116,9 @@
                                    </if>
                                    AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
                                    AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+                                   AND LP.TENANT_ID = #{tenantId}
+                                   AND LP.LIST_ID = #{listId}
+                                   AND LT.EXPO_YN = LP.EXPO_YN
                                ) A  /* 채널 */
                              , UV_TB_DP_MULTIMDA_PROD B  /* 채널 */
                              , TB_DP_PROD_RSHP C
@@ -125,28 +128,37 @@
                              , TB_DP_TENANT_PROD G
                              , UV_TB_DP_MULTIMDA_PROD H  /* 에피소드 */
                          WHERE A.PROD_ID = B.PROD_ID
-                           AND NVL(B.EPSD_CNT, 0) > 0
-                           AND B.PROD_ID = C.PROD_ID
-                           AND C.PART_PROD_ID = D.PROD_ID
-                           AND C.PROD_RSHP_CD ='DP010802'
-                           AND D.USE_YN = 'Y'
-                           AND D.MENU_ID = E.MENU_ID
-                           AND E.USE_YN = 'Y'
-                           AND E.TOP_MENU_ID = 'DP26'
-                           AND D.PROD_ID = F.PROD_ID
-                           AND F.SVC_GRP_CD = 'DP000203'
-                           AND F.CONTENTS_TYPE_CD = 'PD002502'
-                           AND F.PROD_ID = G.PROD_ID
-                           AND G.TENANT_ID = #{tenantId}
-                           AND G.PROD_STATUS_CD = 'PD000403'
-                           AND G.EXPO_YN = 'Y'
-                           AND C.PART_PROD_ID = H.PROD_ID
+                           AND 0 <![CDATA[ < ]]> NVL(B.EPSD_CNT, 0)
+                           AND C.PROD_ID = B.PROD_ID
+                           AND D.PROD_ID = C.PART_PROD_ID
+                           AND 'DP010802' = C.PROD_RSHP_CD
+                           AND 'Y' = D.USE_YN
+                           AND E.MENU_ID = D.MENU_ID
+                           AND 'Y' = E.USE_YN
+                           AND 'DP26' = E.TOP_MENU_ID
+                           AND F.PROD_ID = D.PROD_ID
+                           AND 'DP000203' = F.SVC_GRP_CD
+                           AND 'PD002502' = F.CONTENTS_TYPE_CD
+                           AND G.PROD_ID = F.PROD_ID
+                           AND #{tenantId} = G.TENANT_ID
+                           AND 'PD000403' = G.PROD_STATUS_CD
+                           AND 'Y' = G.EXPO_YN
+                           AND H.PROD_ID = C.PART_PROD_ID
                            <if test="weekDayCd != null and weekDayCd != ''">
                            AND H.SERIALLY_WKDY LIKE CONCAT('%', CONCAT((SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd}), '%'))  /* DP010101 ~DP010107  :월~토*/
                            </if>
-                       ) A
+                           AND A.PROD_ID = C.PROD_ID 
+                           AND C.PART_PROD_ID = F.PROD_ID 
+                           AND H.PROD_ID = D.PROD_ID 
+                           AND D.USE_YN = E.USE_YN 
+                           AND D.USE_YN = G.EXPO_YN 
+                           AND E.USE_YN = G.EXPO_YN 
+                           AND D.PROD_ID = G.PROD_ID 
+                           AND H.PROD_ID = F.PROD_ID 
+                           AND G.PROD_ID = C.PART_PROD_ID
+                       ) A1
                  WHERE NO = 1
-               ) B
+               ) B1
          WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
          ORDER BY RNUM
     </select>        
