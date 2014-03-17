@@ -3,7 +3,7 @@
 <mapper namespace="DeviceModel">
     <!-- 단말 모델 정보 조회 (운영자 관리) -->
 	<select id="searchDeviceChangeModelList" resultType="MetaInfo">
-		SELECT  /* DeviceModelMapper.xml, searchDeviceChangeModelList, tae hee Lee, 2014-03-12 */
+		SELECT  /* DeviceModelMapper.xml, searchDeviceChangeModelList, SAC 전시, 2014-03-17 */
 		        COUNT(1) OVER() AS TOTAL_COUNT
 		      , MODEL_NM AS DEVICE_MODEL_CD
 		      , TRFM_MODEL_NM AS DEVICE_MODEL_NM
@@ -12,7 +12,7 @@
     
     <!-- 단말 모델 정보 조회 (by UserAgent) -->
 	<select id="searchDeviceUserAgentList" parameterType="DeviceUserAgentSacReq" resultType="MetaInfo">
-		SELECT  /* DeviceModelMapper.xml, searchDeviceUserAgentList, tae hee Lee, 2014-03-12 */
+		SELECT  /* DeviceModelMapper.xml, searchDeviceUserAgentList, SAC 전시, 2014-03-17 */
 		        COUNT(1) OVER() AS TOTAL_COUNT
 		      , DEVICE_MODEL_CD
 		      , UA_CD

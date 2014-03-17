@@ -3,7 +3,7 @@
 <mapper namespace="Banner">
     <!-- 배너 리스트 조회-->
     <select id="searchBannerList" parameterType="BannerSacReq" resultType="BannerDefault">
-		SELECT  /* BannerMapper.xml, searchBannerList, tae hee Lee, 2014-02-21 */
+		SELECT  /* BannerMapper.xml, searchBannerList, SAC 전시, 2014-03-17 */
 		        JA.TOTAL_COUNT
 		      , JA.BNR_MENU_ID
 		      , JA.BNR_SEQ
@@ -127,7 +127,7 @@
     
     <!-- 운영자 임의추천 상품 리스트 조회 -->
     <select id="searchRecommendProdList" parameterType="BannerSacReq" resultType="BannerDefault">
-		SELECT  /* BannerMapper.xml, searchRecommendProdList, tae hee Lee, 2014-02-21 */
+		SELECT  /* BannerMapper.xml, searchRecommendProdList, SAC 전시, 2014-03-17 */
 		        IA.PART_PROD_ID
 		      , IB.TOP_MENU_ID
 		  FROM (SELECT  B.PART_PROD_ID
@@ -191,7 +191,7 @@
     
     <!-- 특정 브랜드샵 상품 리스트 조회 -->
     <select id="searchBrandShopProdList" parameterType="BannerSacReq" resultType="BannerDefault">
-		SELECT  /* BannerMapper.xml, searchBrandShopProdList, tae hee Lee, 2014-02-21 */
+		SELECT  /* BannerMapper.xml, searchBrandShopProdList, SAC 전시, 2014-03-17 */
 		        D.PROD_ID AS PART_PROD_ID
 		      , D.TOP_MENU_ID
 		  FROM  TB_DP_BRAND_SHOP        A
@@ -212,7 +212,7 @@
     
     <!-- 테마추천 상품 리스트 조회 (앱가이드) -->
     <select id="searchThemeRecommProdList" parameterType="BannerSacReq" resultType="BannerDefault">
-		SELECT  /* BannerMapper.xml, searchThemeRecommProdList, tae hee Lee, 2014-03-03 */
+		SELECT  /* BannerMapper.xml, searchThemeRecommProdList, SAC 전시, 2014-03-17 */
 		        A.LIST_NM
 		      , B.PART_PROD_ID
 		      , E.TOP_MENU_ID
@@ -246,7 +246,7 @@
     
     <!-- 테마추천 상품 리스트 조회 (앱가이드) -->
     <select id="searchAppGuideProdList" parameterType="BannerSacReq" resultType="BannerDefault">
-		SELECT  /* BannerMapper.xml, searchAppGuideProdList, tae hee Lee, 2014-03-03 */
+		SELECT  /* BannerMapper.xml, searchAppGuideProdList, SAC 전시, 2014-03-03 */
 		        A.PART_PROD_ID
 		      , D.TOP_MENU_ID
 		  FROM  TB_DP_PROD_RSHP   A /* 채널-에피소드 매핑 */
@@ -265,7 +265,7 @@
     
     <!-- 상품 프로비저닝 (에피소드 상품) -->
     <select id="getBannerProvisioing" parameterType="BannerSacReq" resultType="java.lang.Integer">
-		SELECT  /* BannerMapper.xml, getBannerProvisioing, tae hee Lee, 2014-02-21 */
+		SELECT  /* BannerMapper.xml, getBannerProvisioing, SAC 전시, 2014-03-17 */
 		        COUNT(A.PROD_ID) AS PROD_CNT
 		  FROM  TB_DP_PROD        A
 		      , TB_DP_TENANT_PROD B

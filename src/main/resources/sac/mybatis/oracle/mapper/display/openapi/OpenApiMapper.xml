@@ -1390,7 +1390,7 @@
     
     <!-- PKG Name 기반 상품 리스트 조회 -->
     <select id="searchSalesAppList" parameterType="SalesAppSacReq" resultType="MetaInfo">
-		SELECT  /* OpenApiMapper.xml, searchSalesAppList, tae hee Lee, 2014-03-10 */
+		SELECT  /* OpenApiMapper.xml, searchSalesAppList, SAC 전시, 2014-03-17 */
 		        COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
 		      , IA.* 
 		  FROM (SELECT  ROW_NUMBER() OVER(PARTITION BY A.PROD_ID, F.VM_VER ORDER BY C.PROD_STATUS_CD, A.REG_DT) AS RNUM
@@ -1428,7 +1428,7 @@
     
     <!-- PKG Name 기반 상품 정보 조회 -->
     <select id="getSalesAppInfo" parameterType="SalesAppInfoSacReq" resultType="MetaInfo">
-		SELECT  /* OpenApiMapper.xml, getSalesAppInfo, tae hee Lee, 2014-03-10 */
+		SELECT  /* OpenApiMapper.xml, getSalesAppInfo, SAC 전시, 2014-03-17 */
 		        A.PROD_ID
 		      , A.AID
 		  FROM  TB_DP_APP_PROD     A
