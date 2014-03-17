@@ -37,8 +37,17 @@ public class Music extends CommonInfo implements Serializable {
 	private List<BellService> bellServiceList;
 	private Bell bell; // 컬러링/벨소리 부가 정보
     private List<Identifier> relatedProductList;
+    private String albumType;   // 앨범 유형
 
-	/**
+    public String getAlbumType() {
+        return albumType;
+    }
+
+    public void setAlbumType(String albumType) {
+        this.albumType = albumType;
+    }
+
+    /**
 	 * @return the identifier
 	 */
 	public Identifier getIdentifier() {
