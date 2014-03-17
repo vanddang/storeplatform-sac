@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -20,9 +24,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class PaymentInfo extends CommonInfo {
 	private static final long serialVersionUID = 201402281L;
 
+	@NotBlank
 	private String tid; // PG사 거래번호
+	@NotBlank
 	private String paymentMtdCd; // 결제수단 코드
+	@NotBlank
 	private String paymentDt; // 결제 일시 (승인 일시)
+	@NotNull
 	private double paymentAmt; // 결제 금액
 	private String apprNo; // 승인번호
 	private String billKey; // 빌링키
