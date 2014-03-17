@@ -504,7 +504,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setCustomerPhone(req.getCustomerPhone());
 		sellerMbr.setCustomerEmail(req.getCustomerEmail());
 		sellerMbr.setCharger(req.getCharger());
-		sellerMbr.setChargerPhone(req.getChargerphone());
+		sellerMbr.setChargerPhone(req.getChargerPhone());
 		sellerMbr.setCordedTelephone(req.getCordedTelephone());
 		sellerMbr.setCordedTelephoneCountry(req.getCordedTelephoneCountry());
 		sellerMbr.setRepEmail(req.getRepEmail());
