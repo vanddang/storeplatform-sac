@@ -9,18 +9,19 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service.common;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.System;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.System;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
 /**
  * ACL 관련 DB 접근 서비스
@@ -54,7 +55,7 @@ public class AclDataAccessServiceBatis implements AclDataAccessService {
 
     @Override
     public Tenant selectTenant(String tenantId) {
-        return this.commonDAO.queryForObject("Tenant.selectTenant", tenantId, Tenant.class);
+        return this.commonDAO.queryForObject("AclTenant.selectTenant", tenantId, Tenant.class);
     }
 
     @Override
