@@ -46,7 +46,7 @@ public class VerifyServiceImpl implements VerifyService {
 
 	@Override
 	public void verifyTimestamp(HttpHeaders header) {
-		String requestTimestamp = header.getInterfaceId();
+		String requestTimestamp = header.getTimestamp();
 		if (!AclUtils.isTimeOut(requestTimestamp)) {
 			throw new StorePlatformException("SAC_CMN_0002");
 		}

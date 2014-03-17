@@ -11,7 +11,8 @@ package com.skplanet.storeplatform.sac.runtime.acl.service.enricher;
 
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
+import org.springframework.http.MediaType;
+import org.springframework.integration.annotation.Headers;
 
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
@@ -23,23 +24,22 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 * Updated on : 2014. 2. 10.
 * Updated by : 서대영, SK 플래닛
 */
-@Service
-public class HttpHeaderEnrichServiceImpl implements HttpHeaderEnrichService {
 
-	@Override
-	public HttpHeaders enrichHeader(Map<String, Object> headerMap) {
-		String accept = (String) headerMap.get(CommonConstants.HEADER_ACCEPT);
-		String acceptLanguage = (String) headerMap.get(CommonConstants.HEADER_ACCEPT_LANGUAGE);
-		String requestUrl = (String) headerMap.get(CommonConstants.HEADER_HTTP_REQUEST_URL);
-		String authKey = (String) headerMap.get(CommonConstants.HEADER_AUTH_KEY);
-		String signature = (String) headerMap.get(CommonConstants.HEADER_AUTH_SIGNATURE);
-		String timestamp = (String) headerMap.get(CommonConstants.HEADER_AUTH_TIMESTAMP);
-		String nonce = (String) headerMap.get(CommonConstants.HEADER_AUTH_NONCE);
-		String systemId = (String) headerMap.get(CommonConstants.HEADER_SYSTEM_ID);
-		String interfaceId = (String) headerMap.get(CommonConstants.HEADER_INTERFACE_ID);
-		String guid = (String) headerMap.get(CommonConstants.HEADER_GUID);
-		String remoteHost = (String) headerMap.get(CommonConstants.HEADER_REMOTE_HOST);
-		String remotePort = (String) headerMap.get(CommonConstants.HEADER_REMOTE_PORT);
+public class HttpHeaderEnricher {
+
+	public HttpHeaders enrichHeader(@Headers Map<String, Object> headers) {
+		String accept = ((MediaType) headers.get(CommonConstants.HEADER_ACCEPT)).toString();
+		String acceptLanguage = (String) headers.get(CommonConstants.HEADER_ACCEPT_LANGUAGE);
+		String requestUrl = (String) headers.get(CommonConstants.HEADER_HTTP_REQUEST_URL);
+		String authKey = (String) headers.get(CommonConstants.HEADER_AUTH_KEY);
+		String signature = (String) headers.get(CommonConstants.HEADER_AUTH_SIGNATURE);
+		String timestamp = (String) headers.get(CommonConstants.HEADER_AUTH_TIMESTAMP);
+		String nonce = (String) headers.get(CommonConstants.HEADER_AUTH_NONCE);
+		String systemId = (String) headers.get(CommonConstants.HEADER_SYSTEM_ID);
+		String interfaceId = (String) headers.get(CommonConstants.HEADER_INTERFACE_ID);
+		String guid = (String) headers.get(CommonConstants.HEADER_GUID);
+		String remoteHost = (String) headers.get(CommonConstants.HEADER_REMOTE_HOST);
+		String remotePort = (String) headers.get(CommonConstants.HEADER_REMOTE_PORT);
 
 		HttpHeaders httpHeader = new HttpHeaders();
 

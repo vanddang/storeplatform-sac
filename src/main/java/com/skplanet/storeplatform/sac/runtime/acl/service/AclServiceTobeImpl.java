@@ -20,48 +20,63 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 /**
  *
- * Access Control Layer 구현체
+ * Access Control Layer
  *
  * Updated on : 2014. 2. 5.
  * Updated by : 서대영/임근대/정희원, SK 플래닛
  */
 @Service
-public class AclServiceTobeImpl implements AclServiceTobe {
+public class AclServiceTobeImpl {
 
 	@Autowired
-	private VerifyService validator;
+	private VerifyService verifyService;
+
+	@Autowired
 	private AuthenticateService authenticateService;
-    private AuthorizeService authorizationService;
+
+	@Autowired
+	private AuthorizeService authorizationService;
+
+    private final boolean isEffective = true;
 
 	/**
 	 * Request를 검증한다. (Interface 및 Timestamp 검사)
 	 */
-	@Override
-	public void validate(@Header("httpHeaders") HttpHeaders headers) {
+	public boolean validate(@Header("httpHeaders") HttpHeaders headers) {
+		if (!this.isEffective) return true;
+
 		// Step 1) 필수 헤더 검사
-		this.validator.verifyHeaders(headers);
+		this.verifyService.verifyHeaders(headers);
 		// Step 2) 요청 시간 검사
-		this.validator.verifyTimestamp(headers);
+		this.verifyService.verifyTimestamp(headers);
+
+		return true;
 	}
 
 	/**
 	 * Tenant를 인증한다. (등록된 Tenant인지 확인)
 	 */
-	@Override
-	public void authenticate(@Header("httpHeaders") HttpHeaders headers) {
+	public boolean authenticate(@Header("httpHeaders") HttpHeaders headers) {
+		if (!this.isEffective) return true;
+
 		// Step 1) Tenant 인증
 		this.authenticateService.authenticate(headers);
+
+		return true;
 	}
 
 	/**
 	 * Interface를 인가한다. (호출하는 API에 권한이 있는지 확인)
 	 */
-	@Override
-	public void authorize(@Header("httpHeaders") HttpHeaders headers) {
+	public boolean authorize(@Header("httpHeaders") HttpHeaders headers) {
+		if (!this.isEffective) return true;
+
 		// 1. Interface 유효성 확인
 		this.authorizationService.checkInterface(headers);
     	// 2. Interface, Tenant 간 맵핑 확인
 		this.authorizationService.checkMapping(headers);
+
+		return true;
 	}
 
 }

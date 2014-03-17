@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service.enricher;
 
-import java.util.Map;
+import org.springframework.integration.Message;
 
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
@@ -21,6 +21,6 @@ public interface HttpHeaderEnrichService {
 	 * </pre>
 	 * @param headerMap
 	 */
-	HttpHeaders enrichHeader(Map<String, Object> headerMap);
+	HttpHeaders enrichHeader(Message<?> message);
 
 }
