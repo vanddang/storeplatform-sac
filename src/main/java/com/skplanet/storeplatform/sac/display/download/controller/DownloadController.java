@@ -154,4 +154,5 @@ public class DownloadController {
 
 		return this.downloadComicService.getDownloadComicInfo(header, comicReq);
 	}
+
 }
