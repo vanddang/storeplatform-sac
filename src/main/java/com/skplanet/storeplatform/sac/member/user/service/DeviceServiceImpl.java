@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
@@ -144,7 +145,7 @@ public class DeviceServiceImpl implements DeviceService {
 	@Autowired
 	private AmqpTemplate memberAddDeviceAmqpTemplate;
 
-	@Autowired
+	@Resource(name = "memberDelDeviceAmqpTemplate")
 	private AmqpTemplate memberDelDeviceAmqpTemplate;
 
 	/*
