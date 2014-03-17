@@ -1398,7 +1398,7 @@
 		              , B.AID
 		              , B.VER_MAJOR || '.' || VER_MINOR AS PROD_VER
 		              , C.PROD_STATUS_CD
-		              , F.VM_VER
+		              , F.VM_VER AS SUPPORTED_OS
 		              , F.APK_VER
 		              , F.APK_PKG_NM
 		              , F.FILE_SIZE
