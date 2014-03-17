@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.runtime.acl.service.common;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -54,6 +56,37 @@ public class AclDataAccessServiceBatisTest {
         AuthKey authKey = this.service.selectAuthKey(pAuthKey);
         System.out.println("authKey : " + authKey);
         assertEquals("S01", authKey.getTenantId());
+	}
+	
+	
+	@Test
+	public void selectTenant() {
+		String pAuthKey = "S01";
+		Tenant tenant = this.service.selectTenant(pAuthKey);
+		System.out.println("tenant : " + tenant);
+		assertEquals("S01", tenant.getTenantId());
+		System.out.println("status="+tenant.getStatus());
+		assertNotNull(tenant.getStatus());
+	}
+	
+	@Test
+	public void selectSystem() {
+		String param = "S01-01002";
+		com.skplanet.storeplatform.sac.runtime.acl.vo.System system = this.service.selectSystem(param);
+		System.out.println("system : " + system);
+		assertEquals("S01-01002", system.getSystemId());
+		System.out.println("status="+system.getStatus());
+		assertNotNull(system.getStatus());
+	}
+	@Test
+	public void selectSystemByIp() {
+		com.skplanet.storeplatform.sac.runtime.acl.vo.System param = new com.skplanet.storeplatform.sac.runtime.acl.vo.System();
+		param.setIp("1.1.1.1");
+		com.skplanet.storeplatform.sac.runtime.acl.vo.System system = this.service.selectSystemByIp(param);
+		System.out.println("system : " + system);
+		assertEquals("S01-01002", system.getSystemId());
+		System.out.println("status="+system.getStatus());
+		assertNotNull(system.getStatus());
 	}
 
     /*

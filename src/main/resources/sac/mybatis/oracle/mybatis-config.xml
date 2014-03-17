@@ -338,5 +338,9 @@
                 handler="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKeyTypeTypeHandler" />
         <typeHandler javaType="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthType"
                 handler="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthTypeTypeHandler" />
+        <typeHandler javaType="com.skplanet.storeplatform.sac.runtime.acl.vo.TenantStatus"
+                handler="com.skplanet.storeplatform.sac.runtime.acl.vo.TenantStatusTypeHandler" />
+        <typeHandler javaType="com.skplanet.storeplatform.sac.runtime.acl.vo.SystemStatus"
+                handler="com.skplanet.storeplatform.sac.runtime.acl.vo.SystemStatusTypeHandler" />
     </typeHandlers>
 </configuration>

@@ -59,8 +59,8 @@ public class AclDataAccessServiceBatis implements AclDataAccessService {
     }
 
     @Override
-    public com.skplanet.storeplatform.sac.runtime.acl.vo.System selectSystem(String tenantId) {
-        return this.commonDAO.queryForObject("System.selectSystem", tenantId, System.class);
+    public com.skplanet.storeplatform.sac.runtime.acl.vo.System selectSystem(String systemId) {
+        return this.commonDAO.queryForObject("System.selectSystem", systemId, System.class);
     }
 
     @Override

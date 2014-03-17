@@ -3,7 +3,7 @@
 <mapper namespace="System">
 
     <resultMap id="SystemResultMap" type="System" autoMapping="true">
-        <id property="STATUS" column="STATUS_CD"/>
+        <id property="status" column="STATUS_CD"/>
     </resultMap>
 
     <!-- System 정보 조회  -->
