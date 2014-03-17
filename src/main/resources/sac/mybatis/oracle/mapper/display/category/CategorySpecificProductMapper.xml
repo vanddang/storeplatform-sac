@@ -3,7 +3,7 @@
 <mapper namespace="CategorySpecificProduct">
 	<!-- 상품별 서비스 그룹 코드 조회-->
 	<select id="selectProductInfoList" resultType="ProductBasicInfo">
-		SELECT 
+		SELECT /* CategorySpecificProductMapper.xml, selectProductInfoList, SAC 전시, 2014-03-03*/
 		* 
 		FROM 
 		( 	 
@@ -54,7 +54,7 @@
     
     <!-- 상품별 서비스 그룹 코드 조회-->
     <select id="selectProductSongInfoList" resultType="ProductBasicInfo">
-        SELECT 
+        SELECT /* CategorySpecificProductMapper.xml, selectProductSongInfoList, SAC 전시, 2014-03-03*/
         * 
         FROM 
         (    
@@ -88,7 +88,7 @@
     </select>
     
     <select id="getAppMetaInfo" parameterType="Map" resultType="MetaInfo">
-       SELECT 
+       SELECT /* CategorySpecificProductMapper.xml, getAppMetaInfo, SAC 전시, 2014-03-03*/
                 TB.TOP_MENU_ID
               , TB.UP_MENU_ID
               , TB.MENU_ID
@@ -227,7 +227,7 @@
        ) TB
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="MetaInfo">
-       SELECT  /* MetaInfoMapper.xml, getVODMetaInfo, tae hee Lee, 2014-01-07 */
+       SELECT  /* CategorySpecificProductMapper.xml, getVODMetaInfo, SAC 전시, 2014-03-03*/
                 LA.UP_MENU_ID
               , LA.TOP_MENU_ID
               , LA.MENU_ID
@@ -401,7 +401,7 @@
     </select>
     
     <select id="getMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
-       SELECT 
+       SELECT /* CategorySpecificProductMapper.xml, getMusicMetaInfo, SAC 전시, 2014-03-03*/
               MCI.RANK_CHG_CNT
             , MCI.RANK_CHG_CLSF_CD
             , MCI.ARTIST_ID
@@ -502,7 +502,7 @@
        
     </select>
     <select id="selectMusicMetaList" parameterType="Map" resultType="CategorySpecificProduct">
-       SELECT /* CategorySpecificProductMapper.xml, selectMusicMetaList, seung hun Lee, 2014-03-06 */
+       SELECT /* CategorySpecificProductMapper.xml, selectMusicMetaList, SAC 전시, 2014-03-03*/
             A.PROD_ID
 		    , B.META_CLSF_CD
 		FROM UV_TB_DP_MULTIMDA_PROD A
@@ -517,7 +517,8 @@
 		AND B.META_CLSF_CD IN ('CT30','CT31','CT32','CT33')
     </select>
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="MetaInfo">
-       SELECT TB.UP_MENU_ID
+       SELECT /* CategorySpecificProductMapper.xml, getEbookComicMetaInfo, SAC 전시, 2014-03-03*/
+              TB.UP_MENU_ID
              , (SELECT MENU_NM
                   FROM TB_DP_MENU_CATEGORY_DESC
                  WHERE MENU_ID = TB.TOP_MENU_ID
@@ -701,7 +702,8 @@
            WHERE TB.RN = 1 
     </select>
     <select id="getWebtoonMetaInfo" parameterType="Map" resultType="MetaInfo">
-       SELECT TB.UP_MENU_ID
+       SELECT /* CategorySpecificProductMapper.xml, getWebtoonMetaInfo, SAC 전시, 2014-03-03*/
+              TB.UP_MENU_ID
              , (SELECT MENU_NM
                   FROM TB_DP_MENU_CATEGORY_DESC
                  WHERE MENU_ID = TB.TOP_MENU_ID
@@ -860,7 +862,8 @@
            WHERE TB.RN = 1 
     </select>
     <select id="getShoppingMetaInfo" parameterType="Map" resultType="MetaInfo">
-        SELECT  * 
+        SELECT  /* CategorySpecificProductMapper.xml, getShoppingMetaInfo, SAC 전시, 2014-03-03*/
+                * 
                    FROM (
                           SELECT 
                                 B.CATALOG_ID 

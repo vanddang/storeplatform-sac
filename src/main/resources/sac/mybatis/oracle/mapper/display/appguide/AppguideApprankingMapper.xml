@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="AppguideAppranking">
     <select id="selectApprankingList" parameterType="AppguideApprankingSacReq" resultType="ProductBasicInfo">
-    SELECT /* AppguideAppranking.xml, selectApprankingList,  SeungHun Lee , 2014-03-03*/
+    SELECT /* AppguideAppranking.xml, selectApprankingList,  SAC 전시, 2014-03-03*/
            B.TENANT_ID
            , B.MENU_ID
            , B.PROD_ID

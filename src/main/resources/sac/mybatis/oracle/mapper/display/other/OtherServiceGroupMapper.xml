@@ -3,7 +3,7 @@
 <mapper namespace="OtherServiceGroup">
     <!-- 일반 카테고리 앱 상품 조회 -->
     <select id="selectOtherServiceGroupList" parameterType="ServiceGroupReq" resultType="ServiceGroup">
-		SELECT  /* OtherServiceGroupMapper.XML, selectOtherServiceGroupList, seung hun Lee, 2014-01-27 */		
+		SELECT  /* OtherServiceGroupMapper.XML, selectOtherServiceGroupList, SAC 전시, 2014-01-27 */		
               COUNT(*) OVER () AS TOTAL_COUNT
               , TDP.PROD_ID
 		      , TDP.CONTENTS_TYPE_CD

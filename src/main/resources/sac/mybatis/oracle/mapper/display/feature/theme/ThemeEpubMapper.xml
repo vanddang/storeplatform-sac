@@ -3,7 +3,7 @@
 <mapper namespace="ThemeEpub">
     <!-- ebook/코믹 테마상품 조회 -->
     <select id="selectThemeEpubList" parameterType="ThemeEpubSacReq" resultType="ThemeEpub">
-		SELECT  /* ThemeEpubMapper.XML, selectThemeEpubList, seung hun Lee, 2014-02-17 */     
+		SELECT  /* ThemeEpubMapper.XML, selectThemeEpubList, SAC 전시, 2014-02-17 */     
               TOTAL_COUNT
             , A.BNR_MENU_ID
             , A.BNR_SEQ

@@ -3,7 +3,7 @@
 <mapper namespace="Brandshop">
     <!-- 브렌드샵 테마 조회 -->
     <select id="selectBrandshop" parameterType="BrandshopSacReq" resultType="Brandshop">
-		SELECT  /* BrandshopMapper.XML, selectBrandshop, seung hun Lee, 2014-02-19 */    
+		SELECT  /* BrandshopMapper.XML, selectBrandshop, SAC 전시, 2014-02-19 */    
             TOTAL_COUNT
           , BRAND_ID
           , BRAND_SHOP_NM
@@ -125,7 +125,7 @@
     
     <!-- 브렌드샵 테마 상품 조회 -->
     <select id="selectBrandshopList" parameterType="BrandshopSacReq" resultType="ProductBasicInfo">
-        SELECT  /* BrandshopMapper.XML, selectBrandshop, seung hun Lee, 2014-02-28 */    
+        SELECT  /* BrandshopMapper.XML, selectBrandshop, SAC 전시, 2014-02-28 */    
             TOTAL_COUNT
             , PROD_ID
             , TOP_MENU_ID

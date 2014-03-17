@@ -3,7 +3,7 @@
 <mapper namespace="ThemeThemeZone">
     <!-- 테마 조회 -->
     <select id="selectThemeThemeZone" parameterType="ThemeThemeZoneSacReq" resultType="ThemeThemeZone">
-        SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZone, seung hun Lee, 2014-02-21 */ 
+        SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZone, SAC 전시, 2014-02-21 */ 
               BNR_MENU_NM
 			, BNR_MENU_ID
             , BNR_NM
@@ -30,7 +30,7 @@
      
     <!-- 테마 상품 조회 -->
     <select id="selectThemeThemeZoneList" parameterType="ThemeThemeZoneSacReq" resultType="ProductBasicInfo">
-		SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZoneList, seung hun Lee, 2014-02-17 */     
+		SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZoneList, SAC 전시, 2014-02-17 */     
               B.TENANT_ID
              , B.MENU_ID
              , B.PROD_ID
