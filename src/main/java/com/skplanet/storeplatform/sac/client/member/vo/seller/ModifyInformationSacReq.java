@@ -76,7 +76,7 @@ public class ModifyInformationSacReq extends CommonInfo {
 	/** 담당자 명. */
 	private String charger;
 	/** 담당자 무선 전화번호. */
-	private String chargerphone;
+	private String chargerPhone;
 	/** 유선 국가번호. */
 	private String cordedTelephoneCountry;
 	/** 유선 전화번호. */
@@ -454,18 +454,18 @@ public class ModifyInformationSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the chargerphone
+	 * @return the chargerPhone
 	 */
-	public String getChargerphone() {
-		return this.chargerphone;
+	public String getChargerPhone() {
+		return this.chargerPhone;
 	}
 
 	/**
-	 * @param chargerphone
-	 *            the chargerphone to set
+	 * @param chargerPhone
+	 *            the chargerPhone to set
 	 */
-	public void setChargerphone(String chargerphone) {
-		this.chargerphone = chargerphone;
+	public void setChargerPhone(String chargerPhone) {
+		this.chargerPhone = chargerPhone;
 	}
 
 	/**
