@@ -241,18 +241,15 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
-		String userKey = req.getUserKey();
-		String deviceKey = req.getDeviceInfo().getDeviceKey();
-
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
 		/* 모번호 조회 */
-		if (deviceInfo.getDeviceId() != null && !StringUtil.equals(deviceInfo.getDeviceId(), "")) {
+		if (StringUtil.isNotBlank(deviceInfo.getDeviceId())) {
 			deviceInfo.setDeviceId(this.commService.getOpmdMdnInfo(deviceInfo.getDeviceId()));
 		}
 
 		/* 수정할 userKey 값 셋팅 */
-		deviceInfo.setUserKey(userKey);
+		deviceInfo.setUserKey(req.getUserKey());
 
 		/* 휴대기기 정보 수정 */
 		DeviceInfo retDeviceInfo = this.updateDeviceInfo(requestHeader, deviceInfo);
@@ -292,7 +289,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		ListDeviceRes res = new ListDeviceRes();
 
-		if (req.getDeviceId() != null && !req.getDeviceId().equals("")) {
+		if (StringUtil.isNotBlank(req.getDeviceId())) {
 			/* 단건 조회 처리 */
 			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userKey);
 			if (deviceInfo != null) {
@@ -304,7 +301,7 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 			return res;
-		} else if (req.getDeviceKey() != null && !req.getDeviceKey().equals("")) {
+		} else if (StringUtil.isNotBlank(req.getDeviceKey())) {
 			/* 단건 조회 처리 */
 			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, req.getDeviceKey(), userKey);
 			if (deviceInfo != null) {
@@ -315,10 +312,10 @@ public class DeviceServiceImpl implements DeviceService {
 				res.setDeviceInfoList(deviceInfoList);
 			}
 			return res;
-		} else if (req.getUserId() != null && !req.getUserId().equals("")) {
+		} else if (StringUtil.isNotBlank(req.getUserId())) {
 			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 			key.setKeyString(req.getUserId());
-		} else if (req.getUserKey() != null && !req.getUserKey().equals("")) {
+		} else if (StringUtil.isNotBlank(req.getUserKey())) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
 			key.setKeyString(req.getUserKey());
 		}
@@ -462,7 +459,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String previousDeviceKey = createDeviceRes.getPreviousDeviceKey();
 		String deviceKey = createDeviceRes.getDeviceKey();
 
-		if (previousUserKey != null && previousDeviceKey != null) {
+		if (StringUtil.isNotBlank(previousUserKey) && StringUtil.isNotBlank(previousDeviceKey)) {
 
 			LOGGER.info(":::: [PreviousDeviceKey] {}", previousDeviceKey);
 			LOGGER.info(":::: [nowDeviceKey] {}", deviceKey);
@@ -623,10 +620,10 @@ public class DeviceServiceImpl implements DeviceService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 
-		if (deviceKey != null && !StringUtil.equals(deviceKey, "")) {
+		if (StringUtil.isNotBlank(deviceKey)) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 			key.setKeyString(deviceKey);
-		} else if (deviceId != null && !StringUtil.equals(deviceId, "")) {
+		} else if (StringUtil.isNotBlank(deviceId)) {
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			key.setKeyString(deviceId);
 		}
@@ -800,10 +797,10 @@ public class DeviceServiceImpl implements DeviceService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 
-		if (deviceKey != null && !StringUtil.equals(deviceKey, "")) {
+		if (StringUtil.isNotBlank(deviceKey)) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 			key.setKeyString(deviceKey);
-		} else if (deviceId != null && !StringUtil.equals(deviceId, "")) {
+		} else if (StringUtil.isNotBlank(deviceId)) {
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			key.setKeyString(deviceId);
 		}
@@ -1210,16 +1207,16 @@ public class DeviceServiceImpl implements DeviceService {
 		String osVersion = deviceheader.getOs(); // OS버젼
 		String svcVersion = deviceheader.getSvc(); // SC버젼
 
-		if (deviceInfo.getDeviceModelNo() == null && model != null) {
+		if (StringUtil.isBlank(deviceInfo.getDeviceModelNo()) && StringUtil.isNotBlank(model)) {
 			deviceInfo.setDeviceModelNo(model);
 		}
 
-		if (osVersion != null) {
+		if (StringUtil.isNotBlank(osVersion)) {
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
 					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo));
 		}
 
-		if (svcVersion != null) {
+		if (StringUtil.isNotBlank(svcVersion)) {
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
 					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo));
 		}
