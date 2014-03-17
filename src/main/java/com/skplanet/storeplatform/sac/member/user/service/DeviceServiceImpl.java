@@ -201,7 +201,7 @@ public class DeviceServiceImpl implements DeviceService {
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
 		/* device header 값 셋팅 */
-		// deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 		/* 휴대기기 주요정보 확인 */
 		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
@@ -657,7 +657,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUserKey(userMbrDevice.getUserKey());
 
 		/* device header 값 셋팅 */
-		// deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 		/* 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
@@ -1341,18 +1341,20 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	public DeviceInfo setDeviceHeader(DeviceHeader deviceheader, DeviceInfo deviceInfo) {
 
-		if (deviceheader.getModel() != null) { // 단말모델
-			deviceInfo.setDeviceModelNo(deviceheader.getModel());
+		String model = deviceheader.getModel();// 단말모델코드
+		String osVersion = deviceheader.getOs(); // OS버젼
+		String svcVersion = deviceheader.getSvc(); // SC버젼
+
+		if (deviceInfo.getDeviceModelNo() == null && model != null) {
+			deviceInfo.setDeviceModelNo(model);
 		}
 
-		String osVersion = deviceheader.getOs();
-		if (osVersion != null) { // OS버젼
+		if (osVersion != null) {
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
 					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo));
 		}
 
-		String svcVersion = deviceheader.getSvc();
-		if (svcVersion != null) { // SC버젼
+		if (svcVersion != null) {
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
 					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo));
 		}
