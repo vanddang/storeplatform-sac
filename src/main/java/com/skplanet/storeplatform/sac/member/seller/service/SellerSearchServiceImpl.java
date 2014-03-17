@@ -680,6 +680,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchPwdHintListRequest schReq = new SearchPwdHintListRequest();
 		schReq.setSellerKey(req.getSellerKey());
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		schReq.setLanguageCode(header.getTenantHeader().getLangCd());
 
 		SearchPwdHintListResponse schRes = this.sellerSCI.searchPwdHintList(schReq);
 
