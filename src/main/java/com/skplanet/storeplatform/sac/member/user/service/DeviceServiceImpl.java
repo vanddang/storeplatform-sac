@@ -566,7 +566,7 @@ public class DeviceServiceImpl implements DeviceService {
 		gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
 		gameCenterSacReq.setSystemId(systemId);
 		gameCenterSacReq.setTenantId(tenantId);
-		if (previousUserKey != null && previousDeviceKey != null) {
+		if (StringUtil.isNotBlank(previousUserKey) && StringUtil.isNotBlank(previousDeviceKey)) {
 			gameCenterSacReq.setPreUserKey(previousUserKey);
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
 		} else {
