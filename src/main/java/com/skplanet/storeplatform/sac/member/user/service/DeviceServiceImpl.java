@@ -1062,6 +1062,8 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 서비스 관리번호
 
+		LOGGER.info(":::::::: {} updateDeviceForMdnLogin version : {}", deviceInfo.getDeviceId(), version);
+
 		/* IMEI가 다른경우 */
 		if (!this.isEqualsLoginDevice(deviceId, nativeId, userMbrDevice.getNativeID(), MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
