@@ -1766,6 +1766,9 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public boolean isEqualsLoginDevice(String deviceId, String reqVal, String dbVal, String equalsType) {
 
+		//		DB에 값이 없을 경우 아래와 같이 처리
+		//		1. gmail : 불일치. 단, 단말에서 gmail 없이 올라온 경우 일치로 판별
+		//		2. 통신사, IMEI : 일치.
 		boolean isEquals = false;
 
 		if (StringUtil.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
@@ -1774,15 +1777,15 @@ public class DeviceServiceImpl implements DeviceService {
 				isEquals = true;
 			}
 
-		} else if (StringUtil.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
-
-			if ((StringUtil.isBlank(reqVal) && StringUtil.isBlank(dbVal)) || StringUtil.equals(reqVal, dbVal)) {
-				isEquals = true;
-			}
-
 		} else if (StringUtil.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
 			if (StringUtil.isBlank(dbVal) || StringUtil.equals(reqVal, dbVal)) {
+				isEquals = true;
+			}
+
+		} else if (StringUtil.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
+
+			if ((StringUtil.isNotBlank(reqVal) && StringUtil.isBlank(dbVal)) || StringUtil.equals(reqVal, dbVal)) {
 				isEquals = true;
 			}
 
