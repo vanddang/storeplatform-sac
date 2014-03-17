@@ -262,11 +262,11 @@ public class FreepassServiceImpl implements FreepassService {
 				commonResponse.setTotalCount(prodMap.getTotalCount());
 
 				if ("DP13".equals(retMetaInfo.getTopMenuId())) {
-					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_CHANNEL_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
 					product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
 				} else if ("DP14".equals(retMetaInfo.getTopMenuId())) {
-					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_CHANNEL_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
 					product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
 				} else if ("DP17".equals(retMetaInfo.getTopMenuId())) {
