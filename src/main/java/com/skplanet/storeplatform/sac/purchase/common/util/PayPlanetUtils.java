@@ -33,7 +33,7 @@ public class PayPlanetUtils {
 			token = MD5Util.digestInHexFormat(token);
 
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_8133");
+			throw new StorePlatformException("SAC_PUR_9911");
 		}
 
 		return token;
