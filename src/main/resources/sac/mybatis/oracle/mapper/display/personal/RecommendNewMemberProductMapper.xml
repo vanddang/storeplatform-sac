@@ -31,11 +31,11 @@
                             AND B.PROD_ID = C.PROD_ID 
                             AND D.PROD_ID = C.PART_PROD_ID
                             AND D.PROD_ID = E.PROD_ID
-                            -- 단말 프로비저닝 --
+                            /* 단말 프로비저닝 */
                             AND (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
                             AND F.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
-                            -- 상품 프로비저닝 시작
-                            -- 이북 코믹 일때
+                            /* 상품 프로비저닝 시작 */
+                            /* 이북 코믹 일때 */
                             AND DECODE( B.TOP_MENU_ID
                                       , 'DP13'
                                       , DECODE( F.EBOOK_SPRT_YN
@@ -57,7 +57,7 @@
                                               , DECODE( F.MUSIC_SPRT_YN, 'Y', 1, 0)
                                               , 1 )
                                       , 1 ) = 1
-                             -- 영화 방송 일때
+                             /* 영화 방송 일때 */
                              AND ( CASE WHEN B.TOP_MENU_ID IN ( 'DP17', 'DP18' )
                                         THEN ( SELECT 1
                                                  FROM TB_DP_SUB_CONTENTS SC
@@ -73,7 +73,7 @@
                                                    AND ROWNUM <![CDATA[ <= ]]> 1  )
                                         ELSE 1
                                     END ) = 1                  
---                             -- 영화 방송 일때
+                             /* 영화 방송 일때 */
                              AND ( CASE WHEN B.TOP_MENU_ID IN ( 'DP17', 'DP18' )
                                         THEN DECODE( F.VIDEO_DRM_SPRT_YN
                                                    , 'N'
