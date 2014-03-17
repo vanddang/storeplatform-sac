@@ -120,7 +120,7 @@ public class DownloadController {
 	 *            ebookReq
 	 * @return DownloadEbookSacRes
 	 */
-	@RequestMapping(value = "/ebook/detail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/epub/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader header,
 			@RequestBody @Validated DownloadEbookSacReq ebookReq) {
