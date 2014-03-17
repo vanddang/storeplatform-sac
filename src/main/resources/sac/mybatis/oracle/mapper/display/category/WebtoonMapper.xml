@@ -276,7 +276,7 @@
                    <if test='orderedBy == "DESC"'>
 	                ORDER BY TO_NUMBER(F.CHAPTER) DESC
 	                </if>
-                   <if test='orderedBy == "ASC "'>
+                   <if test='orderedBy == "ASC"'>
                     ORDER BY TO_NUMBER(F.CHAPTER)
                     </if>
 	             ) AA
