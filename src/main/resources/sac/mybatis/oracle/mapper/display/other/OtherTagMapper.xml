@@ -3,7 +3,7 @@
 <mapper namespace="OtherTag">
 	<!-- 특정 단말 정보 조회-->
 	<select id="searchTagList" parameterType="Map" resultType="MetaInfo">
-		SELECT /*  */
+		SELECT /* OtherTagMapper.xml, searchTagList, SAC 전시, 2014-02-06 */
             TAG_CD
            ,TAG_NM
            ,TAG_TYPE_CD
