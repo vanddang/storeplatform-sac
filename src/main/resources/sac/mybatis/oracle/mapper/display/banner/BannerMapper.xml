@@ -140,7 +140,7 @@
 		                    AND  A.EXPO_YN = 'Y'
 		                    AND  A.LIST_ID = #{recommendId}
 		                    AND  B.EXPO_YN = 'Y'
-		                    AND  TO_CHAR(B.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+		                    AND  B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
 		                    AND  SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
 		                )                   A /* 운영자 임의 추천 */
 		                , TB_DP_PROD_RSHP   B /* 채널-에피소드 매핑 */
@@ -164,7 +164,7 @@
 		                    AND  A.EXPO_YN = 'Y'
 		                    AND  A.LIST_ID = #{recommendId}
 		                    AND  B.EXPO_YN = 'Y'
-		                    AND  TO_CHAR(B.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+		                    AND  B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
 		                    AND  SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
 		                )                         A /* 운영자 임의 추천 */
 		                , TB_DP_SHPG_CATALOG      B /* 쇼핑 카탈로그 */
@@ -227,7 +227,7 @@
 		            AND  A.EXPO_YN = 'Y'
 		            AND  A.LIST_ID = #{themeId}
 		            AND  B.EXPO_YN = 'Y'
-		            AND  TO_CHAR(B.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+		            AND  B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
 		            AND  SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
 		        )                   A /* 앱가이드 테마 */
 		        , TB_DP_PROD_RSHP   B /* 채널-에피소드 매핑 */
