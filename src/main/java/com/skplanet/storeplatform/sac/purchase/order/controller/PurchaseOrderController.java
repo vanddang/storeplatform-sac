@@ -199,7 +199,8 @@ public class PurchaseOrderController {
 	 */
 	@RequestMapping(value = "/verifyOrder/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public VerifyOrderSacRes verifyOrder(@RequestBody VerifyOrderSacReq req, SacRequestHeader sacRequestHeader) {
+	public VerifyOrderSacRes verifyOrder(@RequestBody @Validated VerifyOrderSacReq req,
+			SacRequestHeader sacRequestHeader) {
 		this.logger.debug("PRCHS,INFO,VERIFY,REQ,{}", req);
 
 		// TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
@@ -223,7 +224,7 @@ public class PurchaseOrderController {
 	 */
 	@RequestMapping(value = "/notifyPayment/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public NotifyPaymentSacRes notifyPayment(@RequestBody NotifyPaymentSacReq notifyPaymentReq) {
+	public NotifyPaymentSacRes notifyPayment(@RequestBody @Validated NotifyPaymentSacReq notifyPaymentReq) {
 		this.logger.debug("PRCHS,INFO,NOTI_PAY,REQ,{}", notifyPaymentReq);
 
 		// TAKTODO:: 결제실패 경우 처리 - 구매실패(결제실패) 이력 관리 할건가?
