@@ -4,7 +4,7 @@
 
     <!-- 쇼핑/인기 추천 상품 리스트 조회-->
     <select id="getFeatureProductList" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getFeatureProductList,쇼핑/인기 추천 상품 리스트 조회, 김형식/SK플래닛 , 2014-01-07 */
+       /* ShoppingMapper.xml.getFeatureProductList,쇼핑/인기 추천 상품 리스트 조회,  SAC 전시 김형식/SK플래닛 , 2014-01-07 */
         SELECT *
          FROM ( 
              SELECT 
@@ -136,7 +136,7 @@
     
     <!-- 최신 상품 리스트 조회-->
     <select id="getNewProductList" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getNewProductList,최신 상품 리스트 조회, 김형식/SK플래닛 , 2014-01-07 */
+       /* ShoppingMapper.xml.getNewProductList,최신 상품 리스트 조회, SAC 전시 김형식/SK플래닛 , 2014-01-07 */
         SELECT *
          FROM ( 
              SELECT 
@@ -246,7 +246,7 @@
     
     <!-- 쇼핑 세부카테고리  상품 조회-->
     <select id="getSubProductList" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getSubProductList,쇼핑 세부카테고리 상품 조회, 김형식/SK플래닛 , 2014-01-07 */
+       /* ShoppingMapper.xml.getSubProductList,쇼핑 세부카테고리 상품 조회, SAC 전시 김형식/SK플래닛 , 2014-01-07 */
         SELECT *
          FROM ( 
              SELECT 
@@ -392,7 +392,7 @@
     
     <!-- 특가 상품 리스트 조회-->
     <select id="getSecialPriceProductList"  parameterType="ShoppingReq" resultType="MetaInfo">
-       /* ShoppingMapper.xml.getSecialPriceProductList,특가 상품 리스트 조회, 김형식/SK플래닛 , 2014-02-04 */
+       /* ShoppingMapper.xml.getSecialPriceProductList,특가 상품 리스트 조회, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
        SELECT *
          FROM ( 
              SELECT 
@@ -571,7 +571,7 @@
     
     <!-- 기획전 상품 조회-->
     <select id="getSpecialSalesList" parameterType="ShoppingReq" resultType="MetaInfo">
-       /* ShoppingMapper.xml.getSpecialSalesList,기획전 상품 조회, 김형식/SK플래닛 , 2014-02-03 */
+       /* ShoppingMapper.xml.getSpecialSalesList,기획전 상품 조회, SAC 전시 김형식/SK플래닛 , 2014-02-03 */
       SELECT * FROM ( 
            SELECT 
                  KK.*
@@ -611,7 +611,7 @@
     
     <!-- 특정 기획전에 대한 상품 리스트 조회-->
     <select id="getSpecialSalesProductList" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getSpecialSalesProductList,특정 기획전에 대한 상품 리스트 조회, 김형식/SK플래닛 , 2014-02-04 */
+       /* ShoppingMapper.xml.getSpecialSalesProductList,특정 기획전에 대한 상품 리스트 조회, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
         SELECT *
          FROM ( 
              SELECT 
@@ -724,7 +724,7 @@
         
     <!-- 브랜드샵 - 메인 메뉴 리스트 조회-->
     <select id="getShoppingBrandMenuList" parameterType="ShoppingReq" resultType="MetaInfo">
-       /* ShoppingMapper.xml.getShoppingBrandMenuList,브랜드샵 - 메인 메뉴 리스트 조회, 김형식/SK플래닛 , 2014-01-30 */
+       /* ShoppingMapper.xml.getShoppingBrandMenuList,브랜드샵 - 메인 메뉴 리스트 조회, SAC 전시 김형식/SK플래닛 , 2014-01-30 */
         SELECT  
                 A.MENU_ID 
                ,B.MENU_NM 
@@ -739,7 +739,7 @@
     
     <!-- 브랜드샵 - 메인 리스트 조회-->
     <select id="getBrandshopMainList" parameterType="ShoppingReq" resultType="MetaInfo">
-       /* ShoppingMapper.xml.getBrandshopMainList,브랜드샵 - 메인 리스트 조회, 김형식/SK플래닛 , 2014-01-30 */
+       /* ShoppingMapper.xml.getBrandshopMainList,브랜드샵 - 메인 리스트 조회, SAC 전시 김형식/SK플래닛 , 2014-01-30 */
        SELECT * FROM (
            SELECT 
                      KK.*
@@ -805,7 +805,7 @@
     
     <!-- 특정 브랜드샵 상품 리스트 조회-->
     <select id="getBrandshopProductList" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getBrandshopProductList,특정 브랜드샵 상품 리스트 조회, 김형식/SK플래닛 , 2014-02-04 */
+       /* ShoppingMapper.xml.getBrandshopProductList,특정 브랜드샵 상품 리스트 조회, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
         SELECT *
          FROM ( 
              SELECT 
@@ -951,7 +951,7 @@
 
     <!-- 쇼핑테마  리스트 조회-->
     <select id="getThemeList" parameterType="ShoppingReq" resultType="MetaInfo">
-       /* ShoppingMapper.xml.getThemeList,쇼핑테마  리스트 조회, 김형식/SK플래닛 , 2014-02-03 */
+       /* ShoppingMapper.xml.getThemeList,쇼핑테마  리스트 조회, SAC 전시 김형식/SK플래닛 , 2014-02-03 */
        SELECT * FROM (
            SELECT 
                      KK.*
@@ -975,7 +975,7 @@
     
     <!-- 특정 테마 리스트상품 리스트 조회-->
     <select id="getThemeProductList" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getThemeProductList,특정 테마 리스트상품 리스트 조회, 김형식/SK플래닛 , 2014-02-04 */
+       /* ShoppingMapper.xml.getThemeProductList,특정 테마 리스트상품 리스트 조회, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
         SELECT *
          FROM ( 
              SELECT 
@@ -1089,7 +1089,7 @@
     
     <!-- 특정 카탈로그에 대한 다른 상품 리스트 조회-->
     <select id="getCatagoryAnotherProductList" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getCatagoryAnotherProductList,특정 카탈로그에 대한 다른 상품 리스트 조회, 김형식/SK플래닛 , 2014-02-04 */
+       /* ShoppingMapper.xml.getCatagoryAnotherProductList,특정 카탈로그에 대한 다른 상품 리스트 조회, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
         SELECT *
          FROM ( 
              SELECT 
@@ -1236,7 +1236,7 @@
      
    <!-- 특정 브랜드에 대한 다른 상품 리스트 조회-->
     <select id="getBrandAnotherProductList" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getBrandAnotherProductList,특정 브랜드에 대한 다른 상품 리스트, 김형식/SK플래닛 , 2014-02-04 */
+       /* ShoppingMapper.xml.getBrandAnotherProductList,특정 브랜드에 대한 다른 상품 리스트, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
         SELECT *
          FROM ( 
              SELECT 
@@ -1384,7 +1384,7 @@
 
     <!-- 쇼핑상세(채널) 조회-->
     <select id="getShoppingChannelDetail" parameterType="Map" resultType="MetaInfo">
-     /* ShoppingMapper.xml.getShoppingChannelDetail,쇼핑상세(채널) 조회, 김형식/SK플래닛 , 2014-02-04 */
+     /* ShoppingMapper.xml.getShoppingChannelDetail,쇼핑상세(채널) 조회, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
           SELECT  * 
            FROM (
                   SELECT 
@@ -1493,7 +1493,7 @@
     </select>    
    <!-- 쇼핑상세(에피소드) 조회-->
     <select id="getShoppingEpisodeDetail" parameterType="Map" resultType="MetaInfo">
-     /* ShoppingMapper.xml.getShoppingEpisodeDetail,쇼핑상세(에피소드) 조회, 김형식/SK플래닛 , 2014-02-04 */
+     /* ShoppingMapper.xml.getShoppingEpisodeDetail,쇼핑상세(에피소드) 조회, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
           SELECT  
                 KK.*
                , DECODE( KK.SPECIAL_SALE_YN,'Y'
@@ -1651,7 +1651,7 @@
     
    <!-- 쇼핑상세(옵션) 조회-->
     <select id="getShoppingOption" parameterType="Map" resultType="MetaInfo">
-     /* ShoppingMapper.xml.getShoppingOption,쇼핑상세(옵션) 조회, 김형식/SK플래닛 , 2014-02-04 */
+     /* ShoppingMapper.xml.getShoppingOption,쇼핑상세(옵션) 조회, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
 		 SELECT 
                 A.CHNL_PROD_ID AS prodId
                ,A.EPSD_PROD_ID AS partProdId
@@ -1709,7 +1709,7 @@
     
   <!-- 쇼핑상세(이미지) 조회-->
     <select id="getShoppingImgDetailList" parameterType="Map" resultType="MetaInfo">
-     /* ShoppingMapper.xml.getShoppingImgDetailList,쇼핑상세(이미지) 조회, 김형식/SK플래닛 , 2014-02-04 */
+     /* ShoppingMapper.xml.getShoppingImgDetailList,쇼핑상세(이미지) 조회, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
         SELECT 
                  CONCAT(FILE_PATH,FILE_NM) FILE_PATH 
                , EXPO_ORD
@@ -1722,7 +1722,7 @@
     
   <!-- 쇼핑상세(에피소드로 카탈로그 가져오기) 조회-->
     <select id="getChannelByepisode" parameterType="ShoppingReq" resultType="MetaInfo">
-     /* ShoppingMapper.xml.getChannelByepisode,쇼핑상세(에피소드로 카탈로그 가져오기) 조회, 김형식/SK플래닛 , 2014-02-04 */
+     /* ShoppingMapper.xml.getChannelByepisode,쇼핑상세(에피소드로 카탈로그 가져오기) 조회, SAC 전시 김형식/SK플래닛 , 2014-02-04 */
         SELECT 
                CATALOG_ID
           FROM TB_DP_PROD_CATALOG_MAPG
