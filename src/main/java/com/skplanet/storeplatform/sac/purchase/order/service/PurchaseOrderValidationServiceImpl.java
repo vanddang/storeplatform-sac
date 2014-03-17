@@ -235,7 +235,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				throw new StorePlatformException("SAC_PUR_5101");
 			}
 			// 상품 판매상태 체크
-			if (StringUtils.equals(purchaseProduct.getProdStatusCd(), PurchaseConstants.PRODUCT_STATUS_SALE) == false) {
+			if (StringUtils.equals(purchaseProduct.getProdStatusCd(), PurchaseConstants.PRODUCT_STATUS_SALE) == false
+					&& StringUtils.equals(purchaseProduct.getProdStatusCd(),
+							PurchaseConstants.PRODUCT_STATUS_FIXRATE_SALE) == false) {
 				throw new StorePlatformException("SAC_PUR_5102");
 			}
 			// 상품 지원 여부 체크
