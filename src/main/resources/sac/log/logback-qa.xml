@@ -130,7 +130,7 @@
     <logger name="jdbc.sqltiming" additivity="false">
         <level value="INFO" /> 
         <appender-ref ref="SQL_ERROR_LOGGING_ROLLINGFILE" />
-        <appender-ref ref="SQL_LOGGING_ROLLINGFILE" />
+        <!-- appender-ref ref="SQL_LOGGING_ROLLINGFILE" / -->
     </logger>
     
     <!-- rabbit mq BlockingQueue INFO 로그 -->
