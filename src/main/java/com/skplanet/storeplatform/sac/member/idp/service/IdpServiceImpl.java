@@ -1410,7 +1410,6 @@ public class IdpServiceImpl implements IdpService {
 
 			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-			// this.deviceSCI.setMainDevice(setMainDeviceRequest); check중
 			LOGGER.debug("ONEID DATA MERGE COMPLETE");
 		} catch (StorePlatformException spe) {
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
