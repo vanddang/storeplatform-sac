@@ -36,6 +36,15 @@ public class MusicDetail extends CommonInfo {
     private String thmPath;
     private String prodStatusCd;
     private String issueDay;
+    private String prodBaseDesc;
+
+    public String getProdBaseDesc() {
+        return prodBaseDesc;
+    }
+
+    public void setProdBaseDesc(String prodBaseDesc) {
+        this.prodBaseDesc = prodBaseDesc;
+    }
 
     public String getProdStatusCd() {
         return prodStatusCd;

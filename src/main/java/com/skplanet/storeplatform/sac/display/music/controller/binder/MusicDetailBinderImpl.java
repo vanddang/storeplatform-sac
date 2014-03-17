@@ -104,6 +104,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         product.getIdentifierList().add(new Identifier("channel", musicDetail.getChnlId()));
         product.getIdentifierList().add(new Identifier("episode", musicDetail.getEpsdId()));
         product.getIdentifierList().add(new Identifier("song", musicDetail.getOutsdContentsId()));
+        product.setProductExplain(musicDetail.getProdBaseDesc());
 
         Title title = new Title();
         title.setText(musicDetail.getProdNm());
