@@ -3,11 +3,10 @@
 <mapper namespace="PersonalUpdateProduct">
     
      <select id="searchRecentFromPkgNm" parameterType="Map" resultType="Map">
-        SELECT 
+        SELECT /*PersonalUpdateProductMapper.xml, searchRecentFromPkgNm, SAC 전시, 2014-02-28 */
               LA.* 
           FROM                                            
-              ( SELECT  /* PersonalUpdateProductMapper.xml, searchUpdateProductList, SAC : 오승민 , 2014-02-28 */
-                           CONTENTS.PROD_ID
+              ( SELECT  CONTENTS.PROD_ID
                          , CONTENTS.APK_PKG_NM
                          , CONTENTS.APK_VER
                          , CONTENTS.SUB_CONTENTS_ID
@@ -31,7 +30,7 @@
     
     
     <select id="getAppInfo" parameterType="Map" resultType="Map">
-        SELECT 
+        SELECT /*PersonalUpdateProductMapper.xml, getAppInfo, SAC 전시, 2014-02-28 */
         LB.* 
        ,( CASE WHEN ( LB.FAKE_CNT > 0 AND NVL( LB.PROD_AMT, 0 ) = 0 ) THEN 'Y' ELSE 'N' END ) AS FAKE_YN
        ,(SELECT MENU_NM
