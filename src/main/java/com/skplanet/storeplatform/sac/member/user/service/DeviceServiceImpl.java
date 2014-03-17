@@ -176,7 +176,7 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
 		/* 등록 가능한 휴대기기 개수 초과 */
-		if (StringUtils.equals(req.getRegMaxCnt(), "0")
+		if (StringUtil.equals(req.getRegMaxCnt(), "0")
 				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= Integer
 						.parseInt(req.getRegMaxCnt()))) {
 			throw new StorePlatformException("SAC_MEM_1501");
@@ -192,7 +192,7 @@ public class DeviceServiceImpl implements DeviceService {
 			List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
 			if (deviceInfoList != null) {
 				for (DeviceInfo deviceInfo : deviceInfoList) {
-					if (StringUtils.equals(deviceInfo.getDeviceId(), deviceId)) {
+					if (StringUtil.equals(deviceInfo.getDeviceId(), deviceId)) {
 						throw new StorePlatformException("SAC_MEM_1502");
 					}
 				}
@@ -507,7 +507,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			} catch (StorePlatformException ex) {
 				/* 약관 조회 결과 없는경우를 제외하고 throw */
-				if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+				if (!StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 					throw ex;
 				}
 			}
@@ -551,7 +551,7 @@ public class DeviceServiceImpl implements DeviceService {
 					this.idpSCI.secedeForWap(secedeForWapEcReq);
 
 				} catch (StorePlatformException ex) {
-					if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+					if (!StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 							+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
 						throw ex;
 					}
@@ -743,7 +743,7 @@ public class DeviceServiceImpl implements DeviceService {
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		/* 게임센터 연동 */
-		if (StringUtils.equals(gameCenterYn, "Y")) {
+		if (StringUtil.equals(gameCenterYn, "Y")) {
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 			gameCenterSacReq.setUserKey(userKey);
 			gameCenterSacReq.setDeviceId(deviceId);
@@ -848,16 +848,16 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info(":::::::::::::::::: device update field start ::::::::::::::::::");
 
-		if (StringUtil.isNotBlank(deviceModelNo) && !StringUtils.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
+		if (StringUtil.isNotBlank(deviceModelNo) && !StringUtil.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
 
-			if (StringUtil.isNotBlank(deviceTelecom) && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			if (StringUtil.isNotBlank(deviceTelecom) && StringUtil.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
 				// 폰정보 조회 (deviceModelNo)
 				Device device = this.commService.getPhoneInfo(deviceModelNo);
 
 				if (device != null) {
 					// OMD 단말이 아닐 경우만
-					if (!StringUtils.equals(MemberConstants.DEVICE_TELECOM_OMD, device.getCmntCompCd())) {
+					if (!StringUtil.equals(MemberConstants.DEVICE_TELECOM_OMD, device.getCmntCompCd())) {
 
 						DeviceCompareEcReq deviceCompareEcReq = new DeviceCompareEcReq();
 						deviceCompareEcReq.setUserMdn(deviceId);
@@ -866,9 +866,9 @@ public class DeviceServiceImpl implements DeviceService {
 						String idpModelId = deviceCompareEcRes.getModelId();
 
 						// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
-						if (StringUtils.equals(idpModelId, "SSNU")) { // SHW-M200K->SHW-M200S
+						if (StringUtil.equals(idpModelId, "SSNU")) { // SHW-M200K->SHW-M200S
 							idpModelId = "SSNL";
-						} else if (StringUtils.equals(idpModelId, "SP05")) { // SHW-M420K->SHW-M420S
+						} else if (StringUtil.equals(idpModelId, "SP05")) { // SHW-M420K->SHW-M420S
 							idpModelId = "SSO0";
 						}
 
@@ -893,12 +893,12 @@ public class DeviceServiceImpl implements DeviceService {
 			// nativeId 비교 여부
 			String isNativeIdAuth = deviceInfo.getIsNativeIdAuth();
 
-			if (StringUtil.isNotBlank(deviceTelecom) && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			if (StringUtil.isNotBlank(deviceTelecom) && StringUtil.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
 				// OPMD 여부
 				boolean isOpmd = StringUtils.substring(deviceId, 0, 3).equals("989");
 
-				if (!StringUtils.equals(nativeId, userMbrDevice.getNativeID()) && !isOpmd) {
+				if (!StringUtil.equals(nativeId, userMbrDevice.getNativeID()) && !isOpmd) {
 
 					if (this.isEqualsImei(deviceId, nativeId)) {
 						LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
@@ -916,7 +916,7 @@ public class DeviceServiceImpl implements DeviceService {
 					userMbrDevice.setNativeID(nativeId);
 				} else {
 					// isNativeIdAuth="Y"인경우 루팅여부 관계없이 비교
-					if (StringUtils.equals(rooting, "Y") || StringUtils.equals(isNativeIdAuth, "Y")) {
+					if (StringUtil.equals(rooting, "Y") || StringUtil.equals(isNativeIdAuth, "Y")) {
 						if (!nativeId.equals(userMbrDevice.getNativeID())) {
 							throw new StorePlatformException("SAC_MEM_1504");
 						}
@@ -926,28 +926,28 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (StringUtil.isNotBlank(deviceAccount) && !StringUtils.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
+		if (StringUtil.isNotBlank(deviceAccount) && !StringUtil.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
 
 			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
 			userMbrDevice.setDeviceAccount(deviceAccount);
 
 		}
 
-		if (StringUtil.isNotBlank(deviceTelecom) && !StringUtils.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
+		if (StringUtil.isNotBlank(deviceTelecom) && !StringUtil.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
 
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 
 		}
 
-		if (StringUtil.isNotBlank(deviceNickName) && !StringUtils.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
+		if (StringUtil.isNotBlank(deviceNickName) && !StringUtil.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
 
 			LOGGER.info("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
 			userMbrDevice.setDeviceNickName(deviceNickName);
 
 		}
 
-		if (StringUtil.isNotBlank(svcMangNum) && !StringUtils.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
+		if (StringUtil.isNotBlank(svcMangNum) && !StringUtil.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
 			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
@@ -969,7 +969,7 @@ public class DeviceServiceImpl implements DeviceService {
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		/* 게임센터 연동 */
-		if (StringUtils.equals(gameCenterYn, "Y")) {
+		if (StringUtil.equals(gameCenterYn, "Y")) {
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 			gameCenterSacReq.setUserKey(userKey);
 			gameCenterSacReq.setDeviceId(deviceId);
@@ -1134,7 +1134,7 @@ public class DeviceServiceImpl implements DeviceService {
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		/* 게임센터 연동 */
-		if (StringUtils.equals(gameCenterYn, "Y")) {
+		if (StringUtil.equals(gameCenterYn, "Y")) {
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 			gameCenterSacReq.setUserKey(userKey);
 			gameCenterSacReq.setDeviceId(deviceId);
@@ -1732,7 +1732,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info("::::  ICAS 연동 :::: deviceId : {}", deviceId);
 
-		if (!StringUtils.equals(this.commService.getMappingInfo(deviceId, "mdn").getMvnoCD(), "0")) { // MVNO
+		if (!StringUtil.equals(this.commService.getMappingInfo(deviceId, "mdn").getMvnoCD(), "0")) { // MVNO
 
 			GetMvnoEcRes mvnoRes = this.commService.getMvService(deviceId);
 			icasImei = mvnoRes.getImeiNum();
@@ -1746,7 +1746,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info("::::  ICAS 연동 :::: icasImei : {}", icasImei);
 
-		if (StringUtils.equals(imei, icasImei)) {
+		if (StringUtil.equals(imei, icasImei)) {
 			return true;
 		}
 
