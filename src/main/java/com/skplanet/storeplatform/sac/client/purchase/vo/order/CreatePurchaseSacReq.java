@@ -35,15 +35,15 @@ public class CreatePurchaseSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 201401031L;
 
-	@NotBlank
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private String userKey; // 내부 회원 번호
-	@NotBlank
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private String deviceKey; // 내부 디바이스 ID
 	@Null(groups = { GroupCreateFreePurchase.class })
 	private String recvUserKey; // (선물 경우 필수) 수신자 내부 회원 번호
 	@Null(groups = { GroupCreateFreePurchase.class })
 	private String recvDeviceKey; // (선물 경우 필수) 수신자 내부 디바이스 ID
-	@NotBlank
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private String prchsReqPathCd; // 구매 요청 경로 코드
 	@Null(groups = { GroupCreateFreePurchase.class })
 	private String mid; // 가맹점 ID
@@ -51,18 +51,18 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String authKey; // 가맹점 인증키
 	@Null(groups = { GroupCreateFreePurchase.class })
 	private String returnUrl; // 결과처리 URL
-	@NotBlank
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private String currencyCd; // 통화 코드
-	@NotNull
+	@NotNull(groups = { GroupCreatePurchase.class })
 	@Null(groups = { GroupCreateFreePurchase.class })
 	private Double totAmt; // 총 결제 금액
-	@NotBlank
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private String clientIp; // 클라이언트 IP
-	@NotBlank
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private String networkTypeCd; // 네트워크 타입 코드
-	@NotBlank
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private String prchsCaseCd; // 구매 유형 코드
-	@NotBlank
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private String tenantProdGrpCd; // 테넌트 상품 분류 코드
 	@Null(groups = { GroupCreateFreePurchase.class })
 	private String imei; // 단말 식별 번호
@@ -73,7 +73,7 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	@Null(groups = { GroupCreateFreePurchase.class })
 	private String simYn; // SIM 조회 가능 여부
 
-	@NotEmpty
+	@NotEmpty(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	@Valid
 	private List<CreatePurchaseSacReqProduct> productList; // 구매할 상품 리스트
 

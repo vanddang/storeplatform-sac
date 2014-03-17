@@ -15,6 +15,7 @@ import javax.validation.constraints.Null;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateFreePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchase;
 
 /**
@@ -26,11 +27,11 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSac
 public class CreatePurchaseSacReqProduct extends CommonInfo {
 	private static final long serialVersionUID = 201401031L;
 
-	@NotBlank
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private String prodId; // 상품 ID
-	@NotNull
+	@NotNull(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private Double prodAmt; // 상품 가격
-	@NotNull
+	@NotNull(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private int prodQty; // 상품 수량
 	@Null(groups = { GroupCreatePurchase.class })
 	private String useExprDt; // 이용종료일

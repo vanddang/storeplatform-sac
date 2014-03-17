@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -20,6 +22,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class VerifyOrderSacReq extends CommonInfo {
 	private static final long serialVersionUID = 201402261L;
 
+	@NotBlank
 	private String prchsId; // 구매ID
 
 	/**

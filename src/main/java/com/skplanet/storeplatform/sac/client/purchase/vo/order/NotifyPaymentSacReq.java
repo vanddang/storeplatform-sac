@@ -11,6 +11,11 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -22,10 +27,16 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class NotifyPaymentSacReq extends CommonInfo {
 	private static final long serialVersionUID = 201402281L;
 
+	@NotBlank
 	private String resultCd; // 결제처리결과 코드
 	private String resultMsg; // 결제처리결과 메시지
+	@NotBlank
 	private String prchsId; // 구매 ID
+	@NotBlank
 	private double totAmt; // 결제 총 금액
+
+	@NotEmpty
+	@Valid
 	private List<PaymentInfo> paymentInfoList; // 결제수단정보 리스트
 
 	/**
