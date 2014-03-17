@@ -201,6 +201,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		ReviveUserRequest reviveUserRequest = new ReviveUserRequest();
 		reviveUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		reviveUserRequest.setImMbrNo(newMbrNo);
+		reviveUserRequest.setUserKey(userKey);
 		ReviveUserResponse reviveUserResponse = this.deviceSCI.reviveUser(reviveUserRequest);
 		LOGGER.info("## >> reviveUserResponse : {}", reviveUserResponse);
 
