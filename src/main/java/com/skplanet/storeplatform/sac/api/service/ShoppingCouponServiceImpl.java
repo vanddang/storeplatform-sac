@@ -343,16 +343,13 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		ImageUtil imgUtil = new ImageUtil();
 
 		// 파일명 끝에 추가할 명칭
-		String[] drivedFileNameForDrived = { "_260x170", "_177x177", "_114x114", "_29x29", "_56x56", "_27x27", "_25x25" };
+		String[] drivedFileNameForDrived = { "_177x177" };
 
 		// TBL_DP_PROD_IMG.IMG_CLS 설정
-		String[] imgClsCode = { CouponConstants.BRAND_IMG_260_170, CouponConstants.BRAND_IMG_177_177,
-				CouponConstants.BRAND_IMG_114_114, CouponConstants.BRAND_IMG_29_29, CouponConstants.BRAND_IMG_56_56,
-				CouponConstants.BRAND_IMG_27_27, CouponConstants.BRAND_IMG_25_25 };
+		String[] imgClsCode = { CouponConstants.BRAND_IMG_177_177 };
 
 		// 파일 생성 크기
-		int[][] imageSizeForDrived = { { 260, 170 }, { 177, 177 }, { 114, 114 }, { 29, 29 }, { 56, 56 }, { 27, 27 },
-				{ 25, 25 } };
+		int[][] imageSizeForDrived = { { 177, 177 } };
 		// String IMAGE_TYPE = "PNG";
 
 		String targetFileName = null;
@@ -422,16 +419,11 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 		ImageUtil imgUtil = new ImageUtil();
 		// 파일명 끝에 추가할 명칭
-		String[] drivedFileNameForDrivedTop = { "_60x60", "_120x120", "_130x130", "_40x40", "_80x80", "_110x110",
-				"_180x180", "_182x182", "_31x30" };
+		String[] drivedFileNameForDrivedTop = { "_182x182" };
 		String[] drivedFileNameForDrivedDtl = { "_684x" };
 
 		// TBL_DP_PROD_IMG.IMG_CLS 설정
-		String[] imgClsCodeTop = { CouponConstants.CATALOG_TOP_IMG_60_60, CouponConstants.CATALOG_TOP_IMG_120_120,
-				CouponConstants.CATALOG_TOP_IMG_130_130, CouponConstants.CATALOG_TOP_IMG_40_40,
-				CouponConstants.CATALOG_TOP_IMG_80_80, CouponConstants.CATALOG_TOP_IMG_110_110,
-				CouponConstants.CATALOG_TOP_IMG_180_180, CouponConstants.CATALOG_TOP_IMG_182_182,
-				CouponConstants.CATALOG_TOP_IMG_31_30 };
+		String[] imgClsCodeTop = { CouponConstants.CATALOG_TOP_IMG_182_182 };
 
 		String[] imgClsCodeDtl = { CouponConstants.CATALOG_DTL_IMG_684_X };
 
@@ -477,8 +469,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			int nHeightSize = oHeight * 684 / oWidth;
 
 			// 파일 생성 크기
-			int[][] imageSizeForDrived = { { 60, 60 }, { 120, 120 }, { 130, 130 }, { 40, 40 }, { 80, 80 },
-					{ 110, 110 }, { 180, 180 }, { 182, 182 }, { 31, 30 } };
+			int[][] imageSizeForDrived = { { 182, 182 } };
 			int[][] imageSizeForDrivedDtl = { { 684, nHeightSize } };
 
 			// 카탈로그 대표이미지 리사이즈
