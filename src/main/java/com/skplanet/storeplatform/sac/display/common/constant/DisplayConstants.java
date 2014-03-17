@@ -328,6 +328,7 @@ public class DisplayConstants {
 	public static final String DP_VOD_REPRESENT_IMAGE_CD = "DP000101";
 
 	public static final String DP_EBOOK_COMIC_REPRESENT_IMAGE_CD = "DP000194";
+	public static final String DP_EBOOK_COMIC_CHANNEL_REPRESENT_IMAGE_CD = "DP006207";
 
 	public static final String DP_MUSIC_REPRESENT_IMAGE_CD = "DP000162";
 
