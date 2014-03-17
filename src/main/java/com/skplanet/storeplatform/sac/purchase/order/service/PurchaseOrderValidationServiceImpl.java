@@ -241,13 +241,14 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				throw new StorePlatformException("SAC_PUR_5102");
 			}
 			// 상품 지원 여부 체크
-			if (StringUtils.equals(purchaseProduct.getProdSprtYn(), PurchaseConstants.USE_Y) == false) {
-				if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-					throw new StorePlatformException("SAC_PUR_5104");
-				} else {
-					throw new StorePlatformException("SAC_PUR_5103");
-				}
-			}
+			// TAKTEST:: 테스트 위해 주석
+			// if (StringUtils.equals(purchaseProduct.getProdSprtYn(), PurchaseConstants.USE_Y) == false) {
+			// if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			// throw new StorePlatformException("SAC_PUR_5104");
+			// } else {
+			// throw new StorePlatformException("SAC_PUR_5103");
+			// }
+			// }
 			// 상품 가격 체크
 			nowPurchaseProdAmt = StringUtils.isBlank(purchaseProduct.getSpecialSaleCouponId()) ? purchaseProduct
 					.getProdAmt() : purchaseProduct.getSpecialSaleAmt();
