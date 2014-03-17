@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.example.sample.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,18 @@ public class SampleController {
 	@RequestMapping(value = "/detail", method = RequestMethod.GET)
 	@ResponseBody
 	public SampleRes detail(@RequestParam("no") Integer no) {
+		SampleRes res = new SampleRes();
+		res.setNo(no);
+		res.setId("#" + no);
+		res.setName("My name");
+		res.setDescription("My description");
+		res.setDate(new Date());
+		return res;
+	}
+
+	@RequestMapping(value = "/detailFromEC", method = RequestMethod.GET)
+	@ResponseBody
+	public SampleRes detailFromEC(@RequestParam("no") Integer no) {
 		Sample sample = this.service.detail(no);
 		SampleRes res = this.convert(sample);
 		return res;
