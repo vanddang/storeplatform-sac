@@ -267,8 +267,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Override
 	public List<Source> generateVodSourceList(MetaInfo metaInfo) {
 		List<Source> sourceList = new ArrayList<Source>();
-		Source source = this.generateSource(metaInfo);
-		sourceList.add(source);
+		Source source = null;
 
 		if (StringUtils.isNotEmpty(metaInfo.getScSamplUrl())) {
 			source = new Source();
