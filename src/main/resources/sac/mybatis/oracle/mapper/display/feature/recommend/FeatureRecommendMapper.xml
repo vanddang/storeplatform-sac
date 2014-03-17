@@ -4,7 +4,7 @@
 
     <!--운영자 추천 앱상품 조회 -->
     <select id="selectRecommendAdminList" parameterType="FeatureRecommendAdminSacReq" resultType="ProductBasicInfo">
-       SELECT /* FeatureRecommendMapper.xml, selectRecommendAdminList, SAC : 조준일 , 2014-02-03 */
+       SELECT /* FeatureRecommendMapper.xml, selectRecommendAdminList, SAC 전시 , 2014-02-03 */
               A.TENANT_ID
 		    , A.MENU_ID
 		    , A.PROD_ID
@@ -71,7 +71,7 @@
     
     <!-- TODAY 상품 조회 -->
     <select id="selectRecommendTodayList" parameterType="RecommendTodaySacReq" resultType="ProductBasicInfo">
-	    SELECT /* FeatureRecommendMapper.xml, selectRecommendTodayList, SAC : 조준일 , 2014-02-06 */
+	    SELECT /* FeatureRecommendMapper.xml, selectRecommendTodayList, SAC 전시 , 2014-02-06 */
 	           B.TENANT_ID
 		     , B.MENU_ID
 		     , B.PROD_ID
@@ -164,7 +164,7 @@
      
     <!-- 하루에 하나 상품 조회 -->
     <select id="selectRecommendOnedayList" parameterType="RecommendOnedaySacReq" resultType="RecommendOneday">
-        SELECT /* FeatureRecommendMapper.xml, selectRecommendOnedayList, SAC : 이승훈 , 2014-02-28 */
+        SELECT /* FeatureRecommendMapper.xml, selectRecommendOnedayList, SAC 전시 , 2014-02-28 */
 			    ONE.TENANT_ID
              , ONE.SEQ AS ONE_SEQ
 			 , ONE.EXPO_DT

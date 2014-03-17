@@ -4,7 +4,7 @@
 
     <!-- Music Main -->
     <select id="getMusicMainList" parameterType="MusicContentsSacReq" resultType="ProductBasicInfo">
-        SELECT /* MusicMainMapper.xml, getMusicMainList, 조준일, 2014-02-05 */
+        SELECT /* MusicMainMapper.xml, getMusicMainList, SAC 전시, 2014-02-05 */
                A.TENANT_ID
              , A.MENU_ID
              , A.PROD_ID
@@ -86,7 +86,7 @@
     </select>
     
     <select id="getMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
-        SELECT /* MusicMainMapper.xml, getMusicMetaInfo, 조준일, 2014-03-06 */
+        SELECT /* MusicMainMapper.xml, getMusicMetaInfo, SAC 전시, 2014-03-06 */
                F.ARTIST1_ID AS ARTIST_ID
 		     , E.PROD_ID
 		     , E.PART_PROD_ID

@@ -8,7 +8,7 @@
          </association>
      </resultMap>
     <select id="getAppMetaInfo" parameterType="Map" resultType="MetaInfo">
-        SELECT 
+        SELECT /* MetaInfoMapper.xml, getAppMetaInfo, SAC 전시, 2014-01-07 */
                 TB.TOP_MENU_ID
               , TB.UP_MENU_ID
               , TB.MENU_ID
@@ -131,7 +131,7 @@
        ) TB
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="MetaInfo">
-       SELECT  /* MetaInfoMapper.xml, getVODMetaInfo, tae hee Lee, 2014-01-07 */
+       SELECT  /* MetaInfoMapper.xml, getVODMetaInfo, SAC 전시, 2014-01-07 */
                 LA.UP_MENU_ID
               , LA.TOP_MENU_ID
               , LA.MENU_ID
@@ -297,7 +297,7 @@
     </select>
     
     <select id="getMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
-       SELECT 
+       SELECT /* MetaInfoMapper.xml, getMusicMetaInfo, SAC 전시, 2014-01-07 */
               CP.PROD_ID 
             , CP.PART_PROD_ID
             , C.MENU_ID
@@ -412,7 +412,8 @@
     </select>
     
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="MetaInfo">
-       SELECT TB.UP_MENU_ID
+       SELECT /* MetaInfoMapper.xml, getEbookComicMetaInfo, SAC 전시, 2014-01-07 */
+               TB.UP_MENU_ID
              , (SELECT MENU_NM
                   FROM TB_DP_MENU_CATEGORY_DESC
                  WHERE MENU_ID = TB.TOP_MENU_ID
@@ -583,7 +584,8 @@
     </select>
     
     <select id="getWebtoonMetaInfo" parameterType="Map" resultType="MetaInfo">
-       SELECT TB.UP_MENU_ID
+       SELECT /* MetaInfoMapper.xml, getWebtoonMetaInfo, SAC 전시, 2014-01-07 */
+               TB.UP_MENU_ID
              , (SELECT MENU_NM
                   FROM TB_DP_MENU_CATEGORY_DESC
                  WHERE MENU_ID = TB.TOP_MENU_ID
