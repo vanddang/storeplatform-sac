@@ -85,7 +85,7 @@ public class RemoveDeviceAmqpTest {
 		Message message = null;
 		int count = 0;
 		try {
-			while ((message = this.memberDelDeviceAmqpTemplate.receive("sac.tenant.member.del-device.async")) != null) {
+			while ((message = this.memberDelDeviceAmqpTemplate.receive("sac.tenant.member-del-device.async")) != null) {
 				System.out.println((++count) + "message = " + message);
 				byte[] jsonData = message.getBody();
 				RemoveDeviceAmqpSacReq obj = new ObjectMapper().readValue(jsonData, RemoveDeviceAmqpSacReq.class);

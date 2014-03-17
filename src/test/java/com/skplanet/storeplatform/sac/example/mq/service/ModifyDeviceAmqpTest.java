@@ -89,7 +89,7 @@ public class ModifyDeviceAmqpTest {
 		Message message = null;
 		int count = 0;
 		try {
-			while ((message = this.memberModDeviceAmqpTemplate.receive("sac.tenant.member.mod-device.async")) != null) {
+			while ((message = this.memberModDeviceAmqpTemplate.receive("sac.tenant.member-mod-device.async")) != null) {
 				System.out.println((++count) + "message = " + message);
 				byte[] jsonData = message.getBody();
 				ModifyDeviceAmqpSacReq obj = new ObjectMapper().readValue(jsonData, ModifyDeviceAmqpSacReq.class);

@@ -87,7 +87,7 @@ public class CreateDeviceAmqpTest {
 		Message message = null;
 		int count = 0;
 		try {
-			while ((message = this.memberAddDeviceAmqpTemplate.receive("sac.tenant.member.add-device.async")) != null) {
+			while ((message = this.memberAddDeviceAmqpTemplate.receive("sac.tenant.member-add-device.async")) != null) {
 				System.out.println((++count) + "message = " + message);
 				byte[] jsonData = message.getBody();
 				CreateDeviceAmqpSacReq obj = new ObjectMapper().readValue(jsonData, CreateDeviceAmqpSacReq.class);
