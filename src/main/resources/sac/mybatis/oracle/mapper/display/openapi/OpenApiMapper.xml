@@ -58,9 +58,8 @@
 		                           AND B.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
 		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
 		                           AND E.PROD_STATUS_CD ='PD000403'
-		                           /* =======================================  INPUT PARAMS  ======================================= */
 		                           <if test='inquiryType == "1"'> 
-		                              AND B.REG_ID = #{inquiryValue}        -- 개발자 ID
+		                              AND B.REG_ID = #{inquiryValue}        /* 개발자 ID */
 		                           </if>
                                    <if test='inquiryType == "2"'>
                                       <if test="arraySellerKey != null">
@@ -70,7 +69,7 @@
                                      </foreach>                           
                                      </if> 
                                    </if>		                           
-		                           AND B.PROD_CHRG_YN = #{prodCharge}    --유무료 구분       
+		                           AND B.PROD_CHRG_YN = #{prodCharge}    /* 유무료 구분 */       
 		                         ORDER BY A.DWLD_QTY
 		                                , C.PROD_NM
 		                       ) IA
@@ -478,7 +477,6 @@
         SELECT /*  OpenApi.xml, searchBestDownloadAppListByListId, RNK000000006, 이석희, 2014-03-03 */
                COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
              , TOTAL_CNT                        AS TOTAL_COUNT                    /*총상품갯수*/
---           , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
              , KA.PROD_ID                       AS PROD_ID                      
              , KA.EPSD_PROD_ID                  AS PART_PROD_ID
              , KA.AID                           AS AID
@@ -606,7 +604,6 @@
         SELECT /*  OpenApi.xml, searchBestDownloadAppListByListId, RNK000000003, 이석희, 2014-03-03 */
                COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
              , TOTAL_CNT                        AS TOTAL_COUNT                    /*총상품갯수*/
---           , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
              , KA.PROD_ID                       AS PROD_ID                      
              , KA.EPSD_PROD_ID                  AS PART_PROD_ID
              , KA.AID                           AS AID
@@ -734,7 +731,6 @@
         SELECT /*  OpenApi.xml, searchBestDownloadAppListByListId, ADM000000001, 이석희, 2014-03-03 */
                COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
              , TOTAL_CNT                        AS TOTAL_COUNT                    /*총상품갯수*/
---           , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
              , KA.PROD_ID                       AS PROD_ID                      
              , KA.EPSD_PROD_ID                  AS PART_PROD_ID
              , KA.AID                           AS AID
@@ -860,7 +856,6 @@
         SELECT /*  OpenApi.xml, searchBestDownloadAppListByListId, ADM000000013, 이석희, 2014-03-03 */
                COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
              , TOTAL_CNT                        AS TOTAL_COUNT                    /*총상품갯수*/
---           , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
              , KA.PROD_ID                       AS PROD_ID                      
              , KA.EPSD_PROD_ID                  AS PART_PROD_ID
              , KA.AID                           AS AID
@@ -989,7 +984,6 @@
         SELECT  /*  OpenApi.xml, searchProductList, 이석희, 2014-03-03 */
                COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
              , TOTAL_COUNT                      
-        --     , TRUNC((TOTAL_CNT-1)/20)+1        AS TOTAL_PAGE                   /*총페이지수*/
              , KA.PROD_ID                       AS PROD_ID
              , KA.META_CLSF_CD                  AS META_CLSF_CD                      
              , KA.EPSD_PROD_ID                  AS PART_PROD_ID
@@ -1034,7 +1028,7 @@
 		                ELSE KA.PROD_AMT END, 0) AS PROD_AMT                                              
              , KA.AVG_EVLU_SCORE  AS AVG_EVLU_SCORE
              , KA.PRCHS_CNT
-             , (SELECT DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH)
+             , NVL((SELECT DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH)
                   FROM TB_DP_PROD_IMG KC
                  WHERE KA.PROD_ID = KC.PROD_ID
                    AND KC.IMG_CD = DECODE(KA.TOP_MENU_ID , 'DP09', 'DP000127'
@@ -1042,7 +1036,7 @@
                                                          , 'DP18', 'DP000127'
                                                          , 'DP000147')
                    AND KC.LANG_CD = #{langCd}
-                   AND ROWNUM = 1)        AS IMAGE_PATH       
+                   AND ROWNUM = 1), NULL)        AS IMAGE_PATH       
           FROM
               (
                 SELECT  COUNT(*) OVER() AS TOTAL_COUNT
@@ -1146,15 +1140,15 @@
                            <if test='topMenuId != "DP09"'>
                            AND A.TOP_MENU_ID =#{topMenuId}
                            </if>
-                           AND A.SVC_GRP_CD = 'DP000203' --멀티미디어
-                           AND A.CONTENTS_TYPE_CD = 'PD002501' --채널
-                           AND C.PROD_STATUS_CD   = 'PD000403' --판매중
+                           AND A.SVC_GRP_CD = 'DP000203' /* 멀티미디어 */
+                           AND A.CONTENTS_TYPE_CD = 'PD002501' /* 채널 */
+                           AND C.PROD_STATUS_CD   = 'PD000403' /* 판매중 */
                            AND B.LANG_CD =#{langCd}   
                            AND F.USE_YN = 'Y'
                            AND G.USE_YN = 'Y'
-                           AND H.SVC_GRP_CD = 'DP000203' --멀티미디어
-                           AND H.CONTENTS_TYPE_CD = 'PD002502' --에피소드
-                           AND J.PROD_STATUS_CD   = 'PD000403' --판매중   
+                           AND H.SVC_GRP_CD = 'DP000203' /* 멀티미디어 */
+                           AND H.CONTENTS_TYPE_CD = 'PD002502' /* 에피소드 */
+                           AND J.PROD_STATUS_CD   = 'PD000403' /* 판매중 */
                            <if test='topMenuId == "DP09"'>
                            AND H.TOP_MENU_ID IN ('DP09' ,'DP17' ,'DP18')
                            </if>
