@@ -156,6 +156,8 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 
 				product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품가격
 
+				product.setAccrual(this.commonGenerator.generateAccrual(metaInfo)); // accrual 정보
+
 				product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
 
 				product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
