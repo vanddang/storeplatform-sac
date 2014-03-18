@@ -1084,8 +1084,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 			if (schUserRes.getMbrMangItemPtcrList() != null) {
 				for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-					logger.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
-					logger.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
+					logger.debug("============================================ UserExtraInfo CODE : {}",
+							ptcr.getExtraProfile());
+					logger.debug("============================================ UserExtraInfo VALUE : {}",
+							ptcr.getExtraProfileValue());
 
 					UserExtraInfo extra = new UserExtraInfo();
 					extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -1099,7 +1101,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		}
 
-		logger.debug("============================================ UserSearch Req : {}", searchUserRequest.getKeySearchList().toString());
+		logger.debug("============================================ UserSearch Req : {}", searchUserRequest
+				.getKeySearchList().toString());
 		logger.debug("============================================ UserSearch Res : {}", userInfo.toString());
 
 		return userInfo;
@@ -1387,13 +1390,20 @@ public class UserSearchServiceImpl implements UserSearchService {
 					policyInfos = new ArrayList<IndividualPolicyInfo>();
 					for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
 						policyInfo = new IndividualPolicyInfo();
-						policyInfo.setKey(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey()));
-						policyInfo.setPolicyCode(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode()));
-						policyInfo.setValue(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue()));
-						policyInfo.setLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitAmount()));
-						policyInfo.setPreLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPreLimitAmount()));
-						policyInfo.setPermissionType(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPermissionType()));
-						policyInfo.setIsUsed(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getIsUsed()));
+						policyInfo.setKey(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getLimitPolicyKey()));
+						policyInfo.setPolicyCode(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getLimitPolicyCode()));
+						policyInfo.setValue(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getPolicyApplyValue()));
+						policyInfo.setLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getLimitAmount()));
+						policyInfo.setPreLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getPreLimitAmount()));
+						policyInfo.setPermissionType(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getPermissionType()));
+						policyInfo.setIsUsed(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getIsUsed()));
 						policyInfos.add(policyInfo);
 					}
 				}
@@ -1439,7 +1449,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @param response
 	 * @return DetailByDeviceIdSacRes
 	 */
-	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req, DetailByDeviceIdSacRes response) {
+	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req,
+			DetailByDeviceIdSacRes response) {
 
 		/**
 		 * 검색조건 정보 setting.
@@ -1509,7 +1520,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
 		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
-		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo()).getGiftSprtYn());
+		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo())
+				.getGiftSprtYn());
 
 		return response;
 
@@ -1549,13 +1561,14 @@ public class UserSearchServiceImpl implements UserSearchService {
 		return schUserRes;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * userKey 목록을 이용하여 회원정보 목록조회.
+	 * </pre>
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
-	 * searchUserByUserKey(com.skplanet.storeplatform
-	 * .sac.client.member.vo.user.SearchUserReq)
+	 * @param request
+	 *            SearchUserReq
+	 * @return
 	 */
 	@Override
 	public Map<String, UserInfoByUserKey> searchUserByUserKey(SacRequestHeader sacHeader, SearchUserReq request) {
@@ -1573,7 +1586,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC UserSCI.searchMbrUser() 호출.");
 		SearchMbrUserResponse searchMbrUserResponse = this.userSCI.searchMbrUser(searchMbrUserRequest);
 
-		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse.getCommonResponse().getResultCode());
+		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse
+				.getCommonResponse().getResultCode());
 
 		Map<String, UserMbrStatus> userInfoMap = searchMbrUserResponse.getUserMbrStatusMap();
 
@@ -1612,13 +1626,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
-	 * searchUserByDeviceKey(com.skplanet.storeplatform
-	 * .sac.client.member.vo.user.SearchUserDeviceReq)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByDeviceKey(com.skplanet.storeplatform .sac.client.member.vo.user.SearchUserDeviceReq)
 	 */
 	@Override
-	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceReq request) {
+	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader,
+			SearchUserDeviceReq request) {
 
 		// 공통파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();
@@ -1635,7 +1648,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		SearchMbrDeviceResponse searchMbrDeviceResponse = this.userSCI.searchMbrDevice(searchMbrDeviceRequest);
 
-		logger.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse.getCommonResponse().getResultCode());
+		logger.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse
+				.getCommonResponse().getResultCode());
 
 		Map<String, DeviceMbrStatus> userDeviceInfoMap = searchMbrDeviceResponse.getDeviceMbrStatusMap();
 
@@ -1647,15 +1661,24 @@ public class UserSearchServiceImpl implements UserSearchService {
 				if (userDeviceInfoMap.get(deviceKeyList.get(i)) != null) {
 					userInfoByDeviceKey = new UserInfoByDeviceKey();
 					userInfoByDeviceKey.setDeviceId(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceID());
-					userInfoByDeviceKey.setDeviceModelNo(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
-					userInfoByDeviceKey.setDeviceTelecom(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
-					userInfoByDeviceKey.setUserBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthBirthDay()));
-					userInfoByDeviceKey.setUserName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthName()));
-					userInfoByDeviceKey.setIsRealName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getIsRealName()));
-					userInfoByDeviceKey.setUserMainStatus(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getUserMainStatus()));
-					userInfoByDeviceKey.setUserSubStatus(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getUserSubStatus()));
-					userInfoByDeviceKey.setAuthBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthBirthDay()));
-					userInfoByDeviceKey.setAuthName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthName()));
+					userInfoByDeviceKey
+							.setDeviceModelNo(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
+					userInfoByDeviceKey
+							.setDeviceTelecom(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
+					userInfoByDeviceKey.setUserBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getAuthBirthDay()));
+					userInfoByDeviceKey.setUserName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getAuthName()));
+					userInfoByDeviceKey.setIsRealName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getIsRealName()));
+					userInfoByDeviceKey.setUserMainStatus(StringUtil.setTrim(userDeviceInfoMap
+							.get(deviceKeyList.get(i)).getUserMainStatus()));
+					userInfoByDeviceKey.setUserSubStatus(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getUserSubStatus()));
+					userInfoByDeviceKey.setAuthBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getAuthBirthDay()));
+					userInfoByDeviceKey.setAuthName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getAuthName()));
 
 					resMap.put(deviceKeyList.get(i), userInfoByDeviceKey);
 				}
