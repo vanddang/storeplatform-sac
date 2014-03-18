@@ -273,7 +273,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 					HashMap<String, Object> prodMap = new HashMap<String, Object>();
 					for (HistorySac obj : sacHistoryList) {
 						for (ProductInfo info : productInfoSacRes.getProductList()) {
-							if (obj.getProdId().equals(info.getProdId())) {
+							if (obj.getProdId().equals(info.getPartProdId())) {
 								prodMap = new HashMap<String, Object>();
 								prodMap.put("productMap", info);
 								obj.setProductInfo(prodMap);
