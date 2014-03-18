@@ -62,6 +62,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 		PaymentInfoSacReq req = new PaymentInfoSacReq();
 		req.setTenantId(tenantId);
 		req.setLangCd(langCd);
+		req.setDeviceModelCd(deviceModelCd);
 		req.setProdIdList(prodIdList);
 
 		PaymentInfoSacRes res = this.purchaseProductSCI.searchPaymentInfo(req);
