@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSubSellerRequest;
@@ -77,12 +78,12 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setSellerMbr(sellerMbr);
 		schReq.setIsNew(req.getIsNew());
 
-		if (req.getMemberPW() != null) {
+		if (StringUtils.isNotBlank(req.getMemberPW())) {
 			MbrPwd mbrPwd = new MbrPwd();
 			mbrPwd.setMemberPW(req.getMemberPW());
 			schReq.setMbrPwd(mbrPwd);
 		}
-		if (req.getIsNew().equals("Y")) {
+		if ("Y".equals(req.getIsNew())) {
 			MbrPwd mbrPwd = new MbrPwd();
 			mbrPwd.setMemberPW(req.getMemberPW());
 			schReq.setMbrPwd(mbrPwd);
