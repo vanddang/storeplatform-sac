@@ -22,6 +22,7 @@
                 , A.CONTENTS_TYPE_CD
                 , A.META_CLSF_CD
                 , A.TOP_MENU_ID
+                , A.MENU_ID
                 , A.PART_PROD_ID
                 , A.RN
            FROM   (
@@ -32,6 +33,7 @@
                           , P2.CONTENTS_TYPE_CD
                           , P2.META_CLSF_CD
                           , P2.TOP_MENU_ID
+                          , CP.MENU_ID
                           , P.PROD_ID AS PART_PROD_ID
                           , ROW_NUMBER( ) OVER ( PARTITION BY PR.PROD_ID
                                                      ORDER BY P.REG_DT DESC ) AS RN
