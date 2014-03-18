@@ -60,7 +60,13 @@ public class AutoPaymentCancelSacServiceImpl implements AutoPaymentCancelSacServ
 			tStoreNotiEcReq.setPrchsDt(autoPaymentCancelRes.getPrchsDt());
 			// type code = 01:일반결제, 02:자동결제, 03:자동결제해지예약, 04:자동결제 해지완료
 			tStoreNotiEcReq.setType("03");
-			// this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
+			// 2014-03-18 쇼핑의 동기와 비동기 수용을 위해 추가됨
+			// publishType code = (01:동기, 02:비동기, 03:비동기완료)
+			// - 동기 : 쇼핑 상품의 비동기 방식을 제외한 전 상품 구매시 사용, E-Mail/MMS/SMS 발송
+			// - 비동기 : 쇼핑 상품의 비동기 방식을 경우, E-Mail만 발송
+			// - 비동기완료 : 비동기로 응답이 되었을 경우, MMS만 발송
+			tStoreNotiEcReq.setPublishType("01");
+			this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
 		}
 		return autoPaymentCancelRes;
 	}
