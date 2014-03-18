@@ -160,6 +160,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * UA 코드 정보 조회.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param request
+	 *            GetUaCodeReq
+	 * @return GetUaCodeRes
+	 */
 	@Override
 	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, GetUaCodeReq req) {
 		String deviceModelNo = req.getDeviceModelNo();
@@ -320,6 +331,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 휴대폰 인증 코드 확인.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param request
+	 *            ConfirmPhoneAuthorizationCodeReq
+	 * @return ConfirmPhoneAuthorizationCodeRes
+	 */
 	@Override
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request) {
 
@@ -361,6 +383,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * Captcha 문자 발급.
+	 * </pre>
+	 * 
+	 * @return GetCaptchaRes
+	 */
 	@Override
 	public GetCaptchaRes getCaptcha() {
 		String waterMarkImageUrl = "";
@@ -404,6 +433,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * Captcha 문자 인증.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            ConfirmCaptchaReq
+	 * @return ConfirmCaptchaRes
+	 */
 	@Override
 	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) {
 
@@ -421,6 +459,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 이메일 인증 코드 생성.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param request
+	 *            GetEmailAuthorizationCodeReq
+	 * @return GetEmailAuthorizationCodeRes
+	 */
 	@Override
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(SacRequestHeader sacRequestHeader,
 			GetEmailAuthorizationCodeReq request) {
@@ -469,6 +518,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 이메일 인증 코드 확인.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            ConfirmEmailAuthorizationCodeReq
+	 * @return ConfirmEmailAuthorizationCodeRes
+	 */
 	@Override
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request) {
 
@@ -510,6 +568,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 부가서비스 가입.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            CreateAdditionalServiceReq
+	 * @return CreateAdditionalServiceRes
+	 */
 	@Override
 	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) {
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
@@ -530,6 +597,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 부가서비스 가입 조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            GetAdditionalServiceReq
+	 * @return GetAdditionalServiceRes
+	 */
 	@Override
 	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) {
 
@@ -552,6 +628,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 단말 모델코드 조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            GetModelCodeReq
+	 * @return GetModelCodeRes
+	 */
 	@Override
 	public GetModelCodeRes getModelCode(GetModelCodeReq request) {
 		LOGGER.info("[MiscellaneousService.getModelCode] Request : {}", request);
@@ -593,6 +678,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 결제 계좌 정보 인증.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            AuthorizeAccountReq
+	 * @return AuthorizeAccountRes
+	 */
 	@Override
 	public AuthorizeAccountRes authorizeAccount(AuthorizeAccountReq request) {
 
