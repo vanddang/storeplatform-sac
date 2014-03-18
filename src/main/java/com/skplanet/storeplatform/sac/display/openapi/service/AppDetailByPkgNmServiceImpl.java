@@ -4,8 +4,10 @@
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,13 +63,20 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 	@Override
 	public AppDetailByPackageNameSacRes searchProductByPackageName(
 			AppDetailByPackageNameSacReq appDetailByPackageNameSacReq, SacRequestHeader requestheader) {
+
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
 
-		appDetailByPackageNameSacReq.setTenantId(tenantHeader.getTenantId());
-		appDetailByPackageNameSacReq.setLangCd(tenantHeader.getLangCd());
-		appDetailByPackageNameSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
-		appDetailByPackageNameSacReq.setWebPocUrl(DisplayConstants.DP_OPENAPI_APP_URL);
-		appDetailByPackageNameSacReq.setScUrl(DisplayConstants.DP_OPENAPI_SC_URL);
+		String tenantId = tenantHeader.getTenantId();
+		String langCd = tenantHeader.getLangCd();
+		String imageCd = DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD;
+		String webPocUrl = DisplayConstants.DP_OPENAPI_APP_URL;
+		String scUrl = DisplayConstants.DP_OPENAPI_SC_URL;
+
+		// appDetailByPackageNameSacReq.setTenantId(tenantHeader.getTenantId());
+		// appDetailByPackageNameSacReq.setLangCd(tenantHeader.getLangCd());
+		// appDetailByPackageNameSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
+		// appDetailByPackageNameSacReq.setWebPocUrl(DisplayConstants.DP_OPENAPI_APP_URL);
+		// appDetailByPackageNameSacReq.setScUrl(DisplayConstants.DP_OPENAPI_SC_URL);
 
 		AppDetailByPackageNameSacRes response = new AppDetailByPackageNameSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -77,7 +86,19 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		String packageName = appDetailByPackageNameSacReq.getPackageName();
 		appDetailByPackageNameSacReq.setPackageName(packageName);
 
+		// Request Parameter
+		this.log.debug("####### tenantId : " + tenantId);
+		this.log.debug("####### langCd : " + langCd);
+		this.log.debug("####### imageCd : " + imageCd);
+		this.log.debug("####### webPocUrl : " + webPocUrl);
+		this.log.debug("####### scUrl : " + scUrl);
 		this.log.debug("####### packageName : " + packageName);
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("req", appDetailByPackageNameSacReq);
+		paramMap.put("tenantId", tenantId);
+		paramMap.put("langCd", langCd);
+		paramMap.put("packageName", packageName);
 
 		// 상품ID
 		String productId = "";
@@ -85,8 +106,7 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		 * 패키지명을 이용하여 상품ID 가져오기
 		 */
 		List<MetaInfo> prodIdList = null;
-		prodIdList = this.commonDAO.queryForList("OpenApi.searchProductIdByPackageName", appDetailByPackageNameSacReq,
-				MetaInfo.class);
+		prodIdList = this.commonDAO.queryForList("OpenApi.searchProductIdByPackageName", paramMap, MetaInfo.class);
 
 		if (prodIdList.size() != 0) {
 			Iterator<MetaInfo> iterator = prodIdList.iterator();
@@ -105,18 +125,26 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		Identifier identifier = new Identifier();
 		Product product = null;
 
-		List<MetaInfo> productMetaInfoList = null;
+		paramMap.clear();
+		paramMap.put("req", appDetailByPackageNameSacReq);
+		paramMap.put("tenantId", tenantId);
+		paramMap.put("langCd", langCd);
+		paramMap.put("imageCd", imageCd);
+		paramMap.put("webPocUrl", webPocUrl);
+		paramMap.put("scUrl", scUrl);
+		paramMap.put("productId", productId);
 
-		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchProductByProductId",
-				appDetailByPackageNameSacReq, MetaInfo.class);
+		List<MetaInfo> productMetaInfoList = null;
+		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchProductByProductId", paramMap, MetaInfo.class);
 
 		if (productMetaInfoList.size() != 0) {
 
+			paramMap.clear();
+			paramMap.put("productId", productId);
 			// 지원 단말 리스트 조회
 			List<Device> supportDeviceList = null;
-
-			supportDeviceList = this.commonDAO.queryForList("OpenApi.searchSupportDeviceListByPkgNm",
-					appDetailByPackageNameSacReq, Device.class);
+			supportDeviceList = this.commonDAO.queryForList("OpenApi.searchSupportDeviceListByPkgNm", paramMap,
+					Device.class);
 
 			// 상품 상세정보 Meta 데이타
 			Iterator<MetaInfo> iterator = productMetaInfoList.iterator();

@@ -4,8 +4,10 @@
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,25 +64,44 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 			SacRequestHeader requestheader) {
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
 
-		appDetailByProductIdSacReq.setTenantId(tenantHeader.getTenantId());
-		appDetailByProductIdSacReq.setLangCd(tenantHeader.getLangCd());
-		appDetailByProductIdSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
-		appDetailByProductIdSacReq.setWebPocUrl(DisplayConstants.DP_OPENAPI_APP_URL);
-		appDetailByProductIdSacReq.setScUrl(DisplayConstants.DP_OPENAPI_SC_URL);
+		String tenantId = tenantHeader.getTenantId();
+		String langCd = tenantHeader.getLangCd();
+		String imageCd = DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD;
+		String webPocUrl = DisplayConstants.DP_OPENAPI_APP_URL;
+		String scUrl = DisplayConstants.DP_OPENAPI_SC_URL;
+
+		// appDetailByProductIdSacReq.setTenantId(tenantHeader.getTenantId());
+		// appDetailByProductIdSacReq.setLangCd(tenantHeader.getLangCd());
+		// appDetailByProductIdSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
+		// appDetailByProductIdSacReq.setWebPocUrl(DisplayConstants.DP_OPENAPI_APP_URL);
+		// appDetailByProductIdSacReq.setScUrl(DisplayConstants.DP_OPENAPI_SC_URL);
 
 		AppDetailByProductIdSacRes response = new AppDetailByProductIdSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
 
-		// 상품ID
-		this.log.debug("####### ProductId : " + appDetailByProductIdSacReq.getProductId());
+		// Request Parameter
+		this.log.debug("####### tenantId : " + tenantId);
+		this.log.debug("####### langCd : " + langCd);
+		this.log.debug("####### imageCd : " + imageCd);
+		this.log.debug("####### webPocUrl : " + webPocUrl);
+		this.log.debug("####### scUrl : " + scUrl);
+		this.log.debug("####### productId : " + appDetailByProductIdSacReq.getProductId());
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("req", appDetailByProductIdSacReq);
+		paramMap.put("tenantId", tenantId);
+		paramMap.put("langCd", langCd);
+		paramMap.put("imageCd", imageCd);
+		paramMap.put("webPocUrl", webPocUrl);
+		paramMap.put("scUrl", scUrl);
+		paramMap.put("productId", appDetailByProductIdSacReq.getProductId());
 
 		Identifier identifier = new Identifier();
 		Product product = null;
 
 		List<MetaInfo> productMetaInfoList = null;
-		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchProductByProductId",
-				appDetailByProductIdSacReq, MetaInfo.class);
+		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchProductByProductId", paramMap, MetaInfo.class);
 
 		if (productMetaInfoList.size() != 0) {
 
@@ -88,8 +109,11 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 			Device device = null;
 			List<Device> deviceList = new ArrayList<Device>();
 
+			paramMap.clear();
+			paramMap.put("productId", appDetailByProductIdSacReq.getProductId());
+
 			List<MetaInfo> resultList = this.commonDAO.queryForList("OpenApi.searchSupportDeviceListByProdId",
-					appDetailByProductIdSacReq, MetaInfo.class);
+					paramMap, MetaInfo.class);
 
 			if (resultList != null && !resultList.isEmpty()) {
 				for (int i = 0; i < resultList.size(); i++) {

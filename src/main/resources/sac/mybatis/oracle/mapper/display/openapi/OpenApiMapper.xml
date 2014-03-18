@@ -1441,7 +1441,7 @@
     </select>
     
     <!-- PackageName으로 상품ID 조회 -->
-    <select id="searchProductIdByPackageName" parameterType="appDetailByPackageNameSacReq" resultType="MetaInfo">     
+    <select id="searchProductIdByPackageName" parameterType="map" resultType="MetaInfo">     
         SELECT /* OpenApiMapper.xml, searchProductIdByPackageName, SAC 전시, 2014-03-03 */
                T1.PROD_ID
           FROM (
@@ -1483,7 +1483,7 @@
     </select>
     
     <!-- 상품ID로 상품 상세정보 조회 -->
-    <select id="searchProductByProductId" parameterType="appDetailByPackageNameSacReq" resultType="MetaInfo">
+    <select id="searchProductByProductId" parameterType="map" resultType="MetaInfo">
     <![CDATA[
            SELECT  /* OpenApiMapper.xml, searchProductByProductId, SAC 전시, 2014-03-03 */
                  DP.PROD_ID AS PROD_ID
@@ -1647,7 +1647,7 @@
     </select>   
     
     <!-- 타켓 단말 리스트 (By PackageName)-->
-    <select id="searchSupportDeviceListByPkgNm" parameterType="appDetailByPackageNameSacReq" resultType="SupportDeviceInfo">
+    <select id="searchSupportDeviceListByPkgNm" parameterType="map" resultType="SupportDeviceInfo">
 		 SELECT  /* OpenApiMapper.xml, searchSupportDeviceListByPkgNm, SAC 전시, 2014-03-03 */
 		        DSC.APK_VER AS VERSION_CODE
 		      , CD.DEVICE_MODEL_CD AS DEVICE_MODEL_CD
@@ -1667,7 +1667,7 @@
     </select>   
 
     <!-- 타켓 단말 리스트 (By ProductId)-->
-    <select id="searchSupportDeviceListByProdId" parameterType="appDetailByProductIdSacReq" resultType="MetaInfo">    
+    <select id="searchSupportDeviceListByProdId" parameterType="map" resultType="MetaInfo">    
         SELECT /* OpenApiMapper.xml, searchSupportDeviceListByProdId, SAC 전시, 2014-03-03 */
                CD.DEVICE_MODEL_CD AS DEVICE_MODEL_CD
               ,CD.MODEL_NM AS DEVICE_MODEL_NM
