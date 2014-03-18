@@ -117,10 +117,12 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 			historySacIn.setUseTenantId(obj.getUseTenantId());
 			historySacIn.setUseUserKey(obj.getUseUserKey());
 			historySacIn.setUseDeviceKey(obj.getUseDeviceKey());
+			historySacIn.setUseDeviceId(obj.getUseDeviceId());
 			historySacIn.setPrchsDt(obj.getPrchsDt());
 			historySacIn.setTotAmt(obj.getTotAmt());
 			historySacIn.setSendUserKey(obj.getSendUserKey());
 			historySacIn.setSendDeviceKey(obj.getSendDeviceKey());
+			historySacIn.setSendDeviceId(obj.getSendDeviceId());
 			historySacIn.setPrchsReqPathCd(obj.getPrchsReqPathCd());
 			historySacIn.setRecvDt(obj.getRecvDt());
 			historySacIn.setProdId(obj.getProdId());

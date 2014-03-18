@@ -90,6 +90,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		List<String> prodIdList = new ArrayList<String>();
 		List<String> deviceList = new ArrayList<String>();
+		List<String> sendDeviceList = new ArrayList<String>();
 
 		List<String> mdnCategoryList = new ArrayList<String>();
 
@@ -240,6 +241,11 @@ public class HistoryListServiceImpl implements HistoryListService {
 				deviceList.add(historySac.getUseDeviceKey());
 			}
 
+			// DEVICE INFO 조회를 위한 deviceKey 셋팅
+			if (!StringUtils.isEmpty(historySac.getSendDeviceKey())) {
+				sendDeviceList.add(historySac.getSendDeviceKey());
+			}
+
 		}
 		/*************************************************
 		 * SC -> SAC Response Setting Start
@@ -285,21 +291,32 @@ public class HistoryListServiceImpl implements HistoryListService {
 		/*************************************************
 		 * device Info Mapping Start
 		 **************************************************/
-		if (deviceList.size() > 0) {
-
+		try {
 			SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
 			SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
 
-			// member request parameter set
-			searchUserDeviceSacReq.setDeviceKeyList(deviceList);
-
 			this.LOGGER.debug("### searchUserDeviceSacReq  : {}" + searchUserDeviceSacReq.toString());
 
-			// member InternalSCI Call
-			searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+			if (deviceList.size() > 0) {
+				// member request parameter set
+				searchUserDeviceSacReq.setDeviceKeyList(deviceList);
+				// member InternalSCI Call
+				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+			}
 
 			Map<String, UserDeviceInfoSac> deviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
-			UserDeviceInfoSac deviceResult = new UserDeviceInfoSac();
+
+			if (sendDeviceList.size() > 0) {
+				searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+				searchUserDeviceSacReq.setDeviceKeyList(sendDeviceList);
+				// member InternalSCI Call
+				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+			}
+
+			Map<String, UserDeviceInfoSac> sendDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
+
+			UserDeviceInfoSac deviceResult;
+			UserDeviceInfoSac sendDeviceResult;
 
 			// member response set
 			for (HistorySac obj : sacHistoryList) {
@@ -307,11 +324,21 @@ public class HistoryListServiceImpl implements HistoryListService {
 				deviceResult = new UserDeviceInfoSac();
 				deviceResult = deviceMap.get(obj.getUseDeviceKey());
 
+				sendDeviceResult = new UserDeviceInfoSac();
+				sendDeviceResult = sendDeviceMap.get(obj.getSendDeviceKey());
+
 				if (deviceResult != null) {
 					obj.setUseDeviceId(deviceResult.getDeviceId());
 				}
+
+				if (sendDeviceResult != null) {
+					obj.setSendDeviceId(sendDeviceResult.getDeviceId());
+				}
 			}
+		} catch (Exception e) {
+
 		}
+
 		/*************************************************
 		 * device Info Mapping End
 		 **************************************************/
