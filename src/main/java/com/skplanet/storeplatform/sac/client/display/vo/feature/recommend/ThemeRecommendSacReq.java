@@ -46,6 +46,9 @@ public class ThemeRecommendSacReq extends CommonInfo {
 	@NotBlank
 	private String deviceId; // 기기ID
 
+	@Pattern(regexp = "v2")
+	private String ver; // New UI 지원
+
 	private int offset = 1; // 시작점 ROW
 
 	private int count = 20; // 페이지당 노출 ROW 수
@@ -101,6 +104,21 @@ public class ThemeRecommendSacReq extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return the ver
+	 */
+	public String getVer() {
+		return this.ver;
+	}
+
+	/**
+	 * @param ver
+	 *            the ver to set
+	 */
+	public void setVer(String ver) {
+		this.ver = ver;
 	}
 
 	public int getOffset() {
