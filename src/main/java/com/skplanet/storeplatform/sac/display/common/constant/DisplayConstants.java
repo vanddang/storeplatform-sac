@@ -306,10 +306,6 @@ public class DisplayConstants {
 	public static final String DP_SOURCE_TYPE_BANNER = "banner";
 	/** 프로모션이미지. */
 	public static final String DP_SOURCE_TYPE_PROMOTION = "promotion";
-	/** 쇼핑상세이미지. */
-	public static final String DP_SOURCE_TYPE_DETAIL = "detail";
-	/** 쇼핑컷상세이미지. */
-	public static final String DP_SOURCE_TYPE_CUT_DETAIL = "cutDetail";
 	/** 미리보기. */
 	public static final String DP_SOURCE_TYPE_PREVIEW = "preview";
 
@@ -327,8 +323,8 @@ public class DisplayConstants {
 
 	public static final String DP_VOD_REPRESENT_IMAGE_CD = "DP000101";
 
-	public static final String DP_EBOOK_COMIC_REPRESENT_IMAGE_CD = "DP006207";	/*이북(채널,시리즈에피소드) + 코믹(채널) 이미지 코드*/
-	public static final String DP_COMIC_EPISODE_REPRESENT_IMAGE_CD = "DP000194";	/*코믹 에피소드 이미지 코드*/
+	public static final String DP_EBOOK_COMIC_REPRESENT_IMAGE_CD = "DP006207"; /* 이북(채널,시리즈에피소드) + 코믹(채널) 이미지 코드 */
+	public static final String DP_COMIC_EPISODE_REPRESENT_IMAGE_CD = "DP000194"; /* 코믹 에피소드 이미지 코드 */
 
 	public static final String DP_MUSIC_REPRESENT_IMAGE_CD = "DP000162";
 

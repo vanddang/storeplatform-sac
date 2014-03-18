@@ -1675,10 +1675,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 							source.setMediaType(DisplayCommonUtil
 									.getMimeType(resultImgDetailList.get(pp).getFilePath()));
 							if (qq == 0) {
-								source.setType(DisplayConstants.DP_SOURCE_TYPE_DETAIL);
+								source.setType(DisplayConstants.DP_SOURCE_TYPE_ORIGINAL);
 							} else {
 								source.setExpoOrd(resultImgDetailList.get(pp).getExpoOrd());
-								source.setType(DisplayConstants.DP_SOURCE_TYPE_CUT_DETAIL);
+								source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
 							}
 							source.setUrl(resultImgDetailList.get(pp).getFilePath());
 							sourceList.add(source);
