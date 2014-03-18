@@ -146,7 +146,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
         // 2.2. Tenant 상태 체크
         if(tenant.getStatus() != TenantStatus.AVAILABLE) {
             //Tenant 상태가 유효하지 않음.
-			throw new StorePlatformException("SAC_CMN_0031");
+			throw new StorePlatformException("SAC_CMN_0035");
         }
 
     }
@@ -235,7 +235,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
         String ip = headers.getRemoteHost(); //TODO:IP 정보 확인
 		system.setIp(ip);
         System dbSystem = this.dataAccessService.selectSystemByIp(system);
-        if(StringUtils.isEmpty(dbSystem.getIp())) {
+        if(dbSystem == null || StringUtils.isEmpty(dbSystem.getIp())) {
             throw new StorePlatformException("SAC_CMN_0039");
         }
     }

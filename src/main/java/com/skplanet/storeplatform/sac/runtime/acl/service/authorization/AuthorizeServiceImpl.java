@@ -35,7 +35,7 @@ public class AuthorizeServiceImpl implements AuthorizeService {
     @Override
     public void checkInterface(HttpHeaders header) {
 		String interfaceId = header.getInterfaceId();
-		String requestUrl = header.getRequestUrl();
+		String servletPath = header.getServletPath();
 
 		Interface intf = this.service.selectInterfaceById(interfaceId);
 
@@ -47,8 +47,8 @@ public class AuthorizeServiceImpl implements AuthorizeService {
 			throw new StorePlatformException("SAC_CMN_0062");
 		}
 
-		String urlFromDb = intf.getUrl();
-		if (!StringUtils.equalsIgnoreCase(requestUrl, urlFromDb)) {
+		String pathFromDb = intf.getUrl();
+		if (!StringUtils.equalsIgnoreCase(servletPath, pathFromDb)) {
 			throw new StorePlatformException("SAC_CMN_0063");
 		}
 

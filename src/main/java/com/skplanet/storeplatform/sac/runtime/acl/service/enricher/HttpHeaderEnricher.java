@@ -11,8 +11,12 @@ package com.skplanet.storeplatform.sac.runtime.acl.service.enricher;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.MediaType;
 import org.springframework.integration.annotation.Headers;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
@@ -55,8 +59,15 @@ public class HttpHeaderEnricher {
 		httpHeader.setGuid(guid);
 		httpHeader.setRemoteHost(remoteHost);
 		httpHeader.setRemotePort(remotePort);
+		httpHeader.setServletPath(this.getServletPath());
 
 		return httpHeader;
+	}
+
+	private String getServletPath() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		String servletPath = request.getServletPath();
+		return servletPath;
 	}
 
 }

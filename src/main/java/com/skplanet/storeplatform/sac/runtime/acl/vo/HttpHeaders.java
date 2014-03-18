@@ -25,6 +25,7 @@ public class HttpHeaders extends CommonInfo {
 	private String accept;
 	private String acceptLanguage;
 	private String requestUrl;
+	private String servletPath;
 
 	private String authKey;
 	private String signature;
@@ -57,6 +58,14 @@ public class HttpHeaders extends CommonInfo {
 
 	public String getRequestUrl() {
 		return this.requestUrl;
+	}
+
+	public String getServletPath() {
+		return this.servletPath;
+	}
+
+	public void setServletPath(String servletPath) {
+		this.servletPath = servletPath;
 	}
 
 	public void setRequestUrl(String requestUrl) {
@@ -119,11 +128,11 @@ public class HttpHeaders extends CommonInfo {
 		this.guid = guid;
 	}
 
-    public String getRemoteHost() { return remoteHost; }
+    public String getRemoteHost() { return this.remoteHost; }
 
     public void setRemoteHost(String remoteHost) { this.remoteHost = remoteHost; }
 
-    public String getRemotePort() { return remotePort; }
+    public String getRemotePort() { return this.remotePort; }
 
     public void setRemotePort(String remotePort) { this.remotePort = remotePort; }
 }
