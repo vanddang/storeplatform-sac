@@ -502,7 +502,7 @@
             TB_DP_TENANT_PROD
         SET PROD_STATUS_CD = #{dpStatusCode}
         WHERE 1=1
-          AND TENANT_ID ='S01'
+          AND TENANT_ID =#{tenentId}
         <if test='upType == "0"'>
           AND PROD_ID =#{prodId}
         </if>
@@ -527,7 +527,7 @@
     </update>
     
     <!-- 전시단 쿠폰상품 판매중인 ITEM의 갯수 변경 -->
-    <update id="updateDPCouponItemCNT" parameterType="String">
+    <update id="updateDPCouponItemCNT" parameterType="HashMap">
         /* CouponMapper.xml, updateDPCouponItemCNT, 전시단 쿠폰상품 판매중인 ITEM의 갯수 변경, SAC 전시 김형식/SK플래닛 , 2013-01-08 */
         UPDATE 
              TB_DP_SHPG_PROD
@@ -541,13 +541,13 @@
 				  AND A.PROD_ID =C.PROD_ID
 				  AND C.PROD_STATUS_CD = 'PD000403'
 				  AND C.EXPO_YN ='Y'
-				  AND C.TENANT_ID ='S01'
+				  AND C.TENANT_ID =#{tenentId}
         )
         WHERE PROD_ID = #{prodId}
     </update>    
     
     <!-- 전시단 판매중인 채널의 갯수 변경 -->
-    <update id="updateDPCouponCNT" parameterType="String">
+    <update id="updateDPCouponCNT" parameterType="HashMap">
         /* CouponMapper.xml, updateDPCouponCNT, 전시단 판매중인 채널의 갯수 변경, SAC 전시 김형식/SK플래닛 , 2013-01-08 */
         UPDATE 
             TB_DP_SHPG_CATALOG
@@ -561,7 +561,7 @@
 				    AND A.USE_YN ='Y'
 				    AND B.EXPO_YN ='Y' 
 				    AND B.PROD_STATUS_CD = 'PD000403' 
-				    AND B.TENANT_ID ='S01'     
+				    AND B.TENANT_ID =#{tenentId}     
 				    AND A.CATALOG_ID = (
 				         SELECT 
 				             CATALOG_ID 
@@ -602,7 +602,7 @@
                 AND T1.EPSD_PROD_ID = T3.PROD_ID
                 AND T3.EXPO_YN ='Y'                
                 AND T1.CHNL_PROD_ID = #{prodId}
-                AND T3.TENANT_ID ='S01'
+                AND T3.TENANT_ID =#{tenentId}     
                 GROUP BY T1.CHNL_PROD_ID, T1.OPT1_NM
         ) B
         ON (A.CHNL_PROD_ID = B.CHNL_PROD_ID AND A.OPT1_NM = B.OPT1_NM AND EXPO_ORD = 1)

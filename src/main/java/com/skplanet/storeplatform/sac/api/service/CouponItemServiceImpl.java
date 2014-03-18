@@ -333,7 +333,11 @@ public class CouponItemServiceImpl implements CouponItemService {
 					}
 				}
 			}
-			this.commonDAO.update("Coupon.updateDPCouponCNT", prodId);
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("prodId", prodId);
+			map.put("tenentId", CouponConstants.TENANT_ID);
+
+			this.commonDAO.update("Coupon.updateDPCouponCNT", map);
 
 		} catch (CouponException e) {
 			throw e;
@@ -365,7 +369,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 			}
 
 			if (StringUtils.isNotBlank(prodId)) {
-				this.commonDAO.update("Coupon.updateDPYNStatus", prodId);
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("prodId", prodId);
+				map.put("tenentId", CouponConstants.TENANT_ID);
+				this.commonDAO.update("Coupon.updateDPYNStatus", map);
 			}
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
@@ -485,21 +492,22 @@ public class CouponItemServiceImpl implements CouponItemService {
 			map.put("dpStatusCode", dpStatusCode);
 			map.put("upType", upType);
 			map.put("itemCode", itemCode);
+			map.put("tenentId", CouponConstants.TENANT_ID);
 
 			if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 						"Coupon.updateDPCouponStatus 실패", null);
 			}
-			if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", couponCode) <= 0) {
+			if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", map) <= 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 						"Coupon.updateDPcouponItemCNT 실패", null);
 			}
-			if (this.commonDAO.update("Coupon.updateDPCouponCNT", couponCode) <= 0) {
+			if (this.commonDAO.update("Coupon.updateDPCouponCNT", map) <= 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateDPcouponCNT 실패",
 						null);
 			}
 			if (!StringUtils.equalsIgnoreCase(upType, "1")) {
-				this.commonDAO.update("Coupon.updateDPYNStatus", couponCode);
+				this.commonDAO.update("Coupon.updateDPYNStatus", map);
 			}
 		} catch (CouponException e) {
 			throw e;
@@ -615,20 +623,20 @@ public class CouponItemServiceImpl implements CouponItemService {
 				map.put("dpStatusCode", couponCd.getCoupnStatus());
 				map.put("upType", couponCd.getUpType());
 				map.put("itemCode", couponCd.getNewItemId());
-
+				map.put("tenentId", CouponConstants.TENANT_ID);
 				// if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
 				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 				// "Coupon.updateDPCouponStatus 실패", null);
 				// }
-				// if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", couponCd.getNewCouponId()) <= 0) {
+				// if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", map) <= 0) {
 				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 				// "Coupon.updateDPcouponItemCNT 실패", null);
 				// }
-				// if (this.commonDAO.update("Coupon.updateDPCouponCNT", couponCd.getNewCouponId()) <= 0) {
+				// if (this.commonDAO.update("Coupon.updateDPCouponCNT", map) <= 0) {
 				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 				// "Coupon.updateDPcouponCNT 실패", null);
 				// }
-				// this.commonDAO.update("Coupon.updateDPYNStatus", couponCd.getNewCouponId());
+				// this.commonDAO.update("Coupon.updateDPYNStatus", map);
 
 			}
 		}
