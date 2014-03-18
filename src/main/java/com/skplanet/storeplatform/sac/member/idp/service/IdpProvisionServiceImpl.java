@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -100,12 +102,15 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	@Autowired
 	private ExistenceInternalSacSCI existenceInternalSacSCI;
 
+	@Resource(name = "memberModDeviceAmqpTemplate")
 	@Autowired
 	private AmqpTemplate memberModDeviceAmqpTemplate;
 
+	@Resource(name = "memberDelDeviceAmqpTemplate")
 	@Autowired
 	private AmqpTemplate memberDelDeviceAmqpTemplate;
 
+	@Resource(name = "memberRetireAmqpTemplate")
 	@Autowired
 	private AmqpTemplate memberRetireAmqpTemplate;
 
@@ -678,11 +683,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
 			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 			mqInfo.setUserKey(userKey);
-			mqInfo.setOldUserKey(userKey);
+			//mqInfo.setOldUserKey(userKey);
 			mqInfo.setDeviceKey(deviceKey);
-			mqInfo.setOldDeviceKey(deviceKey);
+			//mqInfo.setOldDeviceKey(deviceKey);
 			mqInfo.setDeviceId(mdn);
-			mqInfo.setOldDeviceId(mdn);
+			//mqInfo.setOldDeviceId(mdn);
 			mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
 			mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
 			mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
