@@ -1423,7 +1423,7 @@
                            WHERE prod_id=H.PROD_ID 
                          ) AS SRC_CONTENT_ID
                         ,K.PROD_STATUS_CD
-                        ,(SELECT PROD_DTL_DESC FROM TB_DP_PROD_DESC WHERE PROD_ID = H.PROD_ID AND LANG_CD =#{lang} and rownum =1)  PROD_DTL_DESC
+                        ,C.CATALOG_DTL_DESC AS PROD_DTL_DESC
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
