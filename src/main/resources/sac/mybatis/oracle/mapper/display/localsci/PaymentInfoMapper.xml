@@ -47,7 +47,7 @@
                 KK.*
            FROM (
                   SELECT 
-                         H.PROD_ID
+                         I.PROD_ID
                         ,CASE WHEN N.PROD_ID IS NOT NULL THEN M.PROD_NM ELSE C.CATALOG_NM  END PROD_NM
                         ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
                         ,K.PROD_STATUS_CD
