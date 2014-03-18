@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadMMSa
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -168,6 +169,7 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 
 				MetaInfo metaInfo = iterator.next();
 				List<Identifier> identifierList = new ArrayList<Identifier>();
+				List<Source> sourceList = new ArrayList<Source>();
 
 				product = new Product();
 
