@@ -42,6 +42,7 @@ public class BestDownloadSacReq extends CommonInfo {
 	@Pattern(regexp = "|DP010601|DP010602")
 	private String possLendClsfCd; // 소장/대여 구분 코드
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
+	private String prodChrgYn; // 상품 유/무료 구분
 	@Valid
 	private Integer offset; // 시작점 ROW
 	@Valid
@@ -371,6 +372,31 @@ public class BestDownloadSacReq extends CommonInfo {
 	 */
 	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
 		this.arrayProdGradeCd = arrayProdGradeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 유/무료 구분.
+	 * </pre>
+	 * 
+	 * @return the prodChrgYn
+	 */
+	public String getProdChrgYn() {
+		return this.prodChrgYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 유/무료 구분.
+	 * </pre>
+	 * 
+	 * @param prodChrgYn
+	 *            the prodChrgYn to set
+	 */
+	public void setProdChrgYn(String prodChrgYn) {
+		this.prodChrgYn = prodChrgYn;
 	}
 
 	/**
