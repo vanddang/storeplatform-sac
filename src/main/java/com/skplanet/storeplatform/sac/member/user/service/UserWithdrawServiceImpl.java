@@ -87,6 +87,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Autowired
 	private ImIdpSCI imIdpSCI;
 
+	@Autowired
 	@Resource(name = "memberRetireAmqpTemplate")
 	private AmqpTemplate memberRetireAmqpTemplate;
 

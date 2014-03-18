@@ -141,13 +141,13 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
-
-	@Resource(name = "memberAddDeviceAmqpTemplate")
+	
 	@Autowired
+	@Resource(name = "memberAddDeviceAmqpTemplate")
 	private AmqpTemplate memberAddDeviceAmqpTemplate;
 
-	@Resource(name = "memberDelDeviceAmqpTemplate")
 	@Autowired
+	@Resource(name = "memberDelDeviceAmqpTemplate")
 	private AmqpTemplate memberDelDeviceAmqpTemplate;
 
 	/*
