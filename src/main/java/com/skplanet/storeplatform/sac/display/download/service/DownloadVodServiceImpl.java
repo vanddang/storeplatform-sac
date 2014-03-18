@@ -245,8 +245,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								/************************************************************************************************
 								 * 구매 정보에 따른 암호화 시작
 								 ************************************************************************************************/
+								this.log.debug("----------------------------------------------------------------");
+								this.log.debug("[DownloadVodInfo] prchsState	:	" + prchsState);
+								this.log.debug("----------------------------------------------------------------");
+
 								// 구매상태 만료 여부 확인
 								if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+									this.log.debug("----------------------------  start set Purchase Info  ------------------------------------");
 									String deviceId = null; // Device Id
 									String deviceIdType = null; // Device Id 유형
 									SearchDeviceIdSacReq deviceReq = null;
@@ -260,15 +265,34 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 										// 기기정보 조회
 										deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
+										this.log.debug("---------------------------------------------------------------");
+										this.log.debug("[DownloadVodInfo] deviceRes.getDeviceId{} : "
+												+ deviceRes.getDeviceId());
+										this.log.debug("---------------------------------------------------------------");
 									} catch (Exception ex) {
 										memberFlag = false;
+										this.log.debug("[DownloadVodInfo] Device Search Exception : {}");
 										this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 										// throw new StorePlatformException("SAC_DSP_1001", ex);
 									}
 
+									this.log.debug("----------------------------------------------------------------");
+									this.log.debug("[DownloadVodInfo] memberFlag	:	" + memberFlag);
+									this.log.debug("[DownloadVodInfo] deviceRes	:	" + deviceRes);
+									this.log.debug("----------------------------------------------------------------");
+
 									if (memberFlag && deviceRes != null) {
+										this.log.debug("----------------------------------------------------------------");
+										this.log.debug("[DownloadVodInfo] Start Encription");
+
 										deviceId = deviceRes.getDeviceId();
+										this.log.debug("[DownloadVodInfo] deviceId	: {}" + deviceId);
 										deviceIdType = this.commonService.getDeviceIdType(deviceId);
+										this.log.debug("[DownloadVodInfo] deviceIdType	:	{}" + deviceIdType);
+										this.log.debug("[DownloadVodInfo] reqExpireDate	:	{}" + reqExpireDate);
+										this.log.debug("[DownloadVodInfo] useExprDt	:	{}" + useExprDt);
+										this.log.debug("[DownloadVodInfo] userKey	:	{}" + userKey);
+										this.log.debug("[DownloadVodInfo] deviceKey	:	{}" + deviceKey);
 
 										metaInfo.setExpiredDate(reqExpireDate);
 										metaInfo.setUseExprDt(useExprDt);
@@ -296,9 +320,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										EncryptionContents contents = this.encryptionGenerator
 												.generateEncryptionContents(metaInfo);
 
+										this.log.debug("[DownloadVodInfo] contents	:	" + contents);
+
 										// JSON 파싱
 										MarshallingHelper marshaller = new JacksonMarshallingHelper();
 										byte[] jsonData = marshaller.marshal(contents);
+										this.log.debug("[DownloadVodInfo] jsonData	:	" + jsonData.toString());
 
 										// JSON 암호화
 										byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
@@ -313,6 +340,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 												.getSacRandomNo()));
 										encryption.setToken(encryptString);
 										encryptionList.add(encryption);
+										this.log.debug("[DownloadVodInfo] keyIndex	:	"
+												+ String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
+
+										this.log.debug("[DownloadVodInfo] Token	:	" + encryptString);
 
 										// JSON 복호화
 										byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
@@ -321,21 +352,27 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										try {
 											String decData = new String(decrypt, "UTF-8");
 											this.log.debug("----------------------------------------------------------------");
-											this.log.debug("[getDownloadVodInfo] decData : {}", decData);
+											this.log.debug("[DownloadVodInfo] decData : {}", decData);
 											this.log.debug("----------------------------------------------------------------");
 										} catch (UnsupportedEncodingException e) {
 											e.printStackTrace();
 										}
+										this.log.debug("[DownloadVodInfo] End Encription");
+										this.log.debug("----------------------------------------------------------------");
 									}
+									this.log.debug("----------------------------  end set Purchase Info  ------------------------------------");
 								}
 							}
 							// 구매 정보
 							product.setPurchaseList(purchaseList);
-
+							this.log.debug("----------------------------------------------------------------");
+							this.log.debug("[DownloadVodInfo]	encryptionList.size : {}" + encryptionList.size());
 							// 암호화 정보
 							if (!encryptionList.isEmpty()) {
+								this.log.debug("[DownloadVodInfo]	setDl : {}");
 								product.setDl(encryptionList);
 							}
+							this.log.debug("----------------------------------------------------------------");
 						}
 					}
 				}
