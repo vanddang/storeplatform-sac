@@ -20,7 +20,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -141,7 +140,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
-	
+
 	@Autowired
 	@Resource(name = "memberAddDeviceAmqpTemplate")
 	private AmqpTemplate memberAddDeviceAmqpTemplate;
@@ -1498,9 +1497,6 @@ public class DeviceServiceImpl implements DeviceService {
 			this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
 
 		}
-
-		Message message = this.memberDelDeviceAmqpTemplate.receive("sac.tenant.member.del-device.async");
-		LOGGER.info("======== 휴대기기 삭제 MQ 연동 Result : {}", message);
 
 		/* SC 휴대기기 삭제요청 */
 		RemoveDeviceRequest removeDeviceRequest = new RemoveDeviceRequest();
