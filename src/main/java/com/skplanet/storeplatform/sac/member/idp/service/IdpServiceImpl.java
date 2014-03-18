@@ -422,9 +422,13 @@ public class IdpServiceImpl implements IdpService {
 						searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 					}
 
-					prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터 연동을 위한 이전 mbrNo셋팅
+					if (searchUserResponse != null) {
+						prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터 연동을 위한 이전 mbrNo셋팅
+						updateUserResponse = this.userSCI
+								.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
 
-					updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
+						userKey = updateUserResponse.getUserKey();
+					}
 					LOGGER.debug("전환가입 정보 입력 완료");
 
 				} catch (StorePlatformException spe) {
@@ -432,8 +436,6 @@ public class IdpServiceImpl implements IdpService {
 					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 					return imResult;
 				}
-
-				userKey = updateUserResponse.getUserKey();
 
 			} else if (!userID.equals(oldID)) { // 변경가입, 변경전환
 				LOGGER.debug("변경가입,변경전환 정보 입력 시작");
@@ -460,9 +462,14 @@ public class IdpServiceImpl implements IdpService {
 
 						searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 					}
-					prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터 연동을 위한 이전 mbrNo셋팅
 
-					updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
+					if (searchUserResponse != null) {
+						prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터 연동을 위한 이전 mbrNo셋팅
+
+						updateUserResponse = this.userSCI
+								.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
+						userKey = updateUserResponse.getUserKey();
+					}
 					LOGGER.debug("변경가입,변경전환 정보 입력 완료");
 
 					// 공통_기타 회원ID 변경 시작
@@ -479,7 +486,6 @@ public class IdpServiceImpl implements IdpService {
 					return imResult;
 				}
 
-				userKey = updateUserResponse.getUserKey();
 			}
 
 			LOGGER.debug("ONEID DATA UPDATE START");
@@ -2687,8 +2693,6 @@ public class IdpServiceImpl implements IdpService {
 							return imResult;
 						}
 
-						userKey = updateUserResponse.getUserKey();
-
 					} else if (!userID.equals(oldID)) { // 변경가입, 변경전환
 						LOGGER.debug("변경가입,변경전환 정보 입력 시작");
 						SearchUserRequest searchUserRequest = new SearchUserRequest();
@@ -2719,6 +2723,8 @@ public class IdpServiceImpl implements IdpService {
 
 							updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 									searchUserResponse));
+
+							userKey = updateUserResponse.getUserKey();
 							LOGGER.debug("변경가입,변경전환 정보 입력 완료");
 
 							// 공통_기타 회원ID 변경 시작
@@ -2735,7 +2741,6 @@ public class IdpServiceImpl implements IdpService {
 							return imResult;
 						}
 
-						userKey = updateUserResponse.getUserKey();
 					}
 
 					LOGGER.debug("ONEID DATA UPDATE START");
