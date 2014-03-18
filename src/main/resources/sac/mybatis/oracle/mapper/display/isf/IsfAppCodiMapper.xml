@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Isf.AppCodi">
     <select id="getAppCodiProdList" parameterType="Map" resultType="ProductBasicInfo">
-    SELECT /* IsfAppCodiMapper.xml, getAppCodiProdList, Yun JuYoung, 2014-02-06 */
+    SELECT /* IsfAppCodiMapper.xml, getAppCodiProdList, SAC 전시, 2014-02-06 */
            COUNT(S.PROD_ID) OVER() AS TOTAL_COUNT
          , S.*
       FROM
@@ -102,7 +102,7 @@
     </select>
  
      <select id="getRelProdList" resultType="java.util.HashMap" parameterType="java.util.Map">
-		    SELECT /* IsfAppCodiMapper.xml, getRelProdList, Yun JuYoung, 2014-02-06 */
+		    SELECT /* IsfAppCodiMapper.xml, getRelProdList, SAC 전시, 2014-02-06 */
 		           DISTINCT 
 		           P.TOP_MENU_ID
 		         , CP.PROD_ID
@@ -133,7 +133,7 @@
 
     <!-- 운영자 추천 통쿼리 - 미사용 -->
     <select id="getAdminRecommandProdList" parameterType="Map" resultType="AppCodiRes">
-		    SELECT /* IsfAppCodiMapper.xml, getAdminRecommandProdList, Yun JuYoung, 2014-02-06 */
+		    SELECT /* IsfAppCodiMapper.xml, getAdminRecommandProdList, SAC 전시, 2014-02-06 */
 		            P.TOTAL_COUNT
 		          , P.TOP_MENU_ID
 		          , TRIM(REPLACE((SELECT MENU_NM
@@ -372,7 +372,7 @@
     </select>
     
     <select id="getBasicAdminRecommandProdList" parameterType="Map" resultType="ProductBasicInfo">
-      SELECT  /* IsfAppCodiMapper.xml, getBasicAdminRecommandProdList, Yun JuYoung, 2014-02-06 */
+      SELECT  /* IsfAppCodiMapper.xml, getBasicAdminRecommandProdList, SAC 전시, 2014-02-06 */
               A.*
         FROM 
              (

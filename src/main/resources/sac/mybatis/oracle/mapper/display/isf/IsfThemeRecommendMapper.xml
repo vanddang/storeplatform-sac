@@ -3,7 +3,7 @@
 <mapper namespace="Isf.ThemeRecommend">
     <!-- 테마추천 목록 -->
     <select id="getRecomendPkgList" parameterType="Map" resultType="ThemeRecommend">
-    SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgList, Yun JuYoung, 2014-02-11 */
+    SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgList, SAC 전시, 2014-02-11 */
            PKG.*
          , COUNT(*) OVER () AS TOTAL_COUNT
       FROM
@@ -52,7 +52,7 @@
 
     <!-- 테마추천 v2 노출갯수 -->
     <select id="getRecommendViewCount" resultType="java.lang.Integer">
-    SELECT /* IsfThemeRecommendMapper.xml, getRecommendViewCount, Yun JuYoung, 2014-03-17 */
+    SELECT /* IsfThemeRecommendMapper.xml, getRecommendViewCount, SAC 전시, 2014-03-17 */
            DECODE( SET_CD, 'US004701', 2, 'US004702', 3 ) AS VIEW_COUNT
       FROM TB_DP_RECOM_PKG_SET
      WHERE ROWNUM = 1
@@ -60,7 +60,7 @@
    
     <!-- 테마추천 메인 -->
     <select id="getRecomendPkgMainList" parameterType="Map" resultType="ThemeRecommend">
-    SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgMainList, Yun JuYoung, 2014-02-13 */
+    SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgMainList, SAC 전시, 2014-02-13 */
            COUNT(*) OVER () AS TOTAL_COUNT
          , PKG_ID
          , PKG_NM
@@ -277,7 +277,7 @@
     
     <!-- 테마추천 상품 리스트 -->
     <select id="getRecommendPkgProdList" parameterType="Map" resultType="MetaInfo">
-	SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgMainList, Yun JuYoung, 2014-02-19 */
+	SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgMainList, SAC 전시, 2014-02-19 */
               P.TOTAL_COUNT
 	        , P.TOP_MENU_ID
 	        , TRIM(REPLACE((SELECT MENU_NM
@@ -512,7 +512,7 @@
     
     <!-- 테마추천 상품 리스트 -->
     <select id="getBasicRecommendPkgProdList" parameterType="Map" resultType="ProductBasicInfo">
-    SELECT /* IsfThemeRecommendMapper.xml, getBasicRecommendPkgProdList, Yun JuYoung, 2014-02-25 */
+    SELECT /* IsfThemeRecommendMapper.xml, getBasicRecommendPkgProdList, SAC 전시, 2014-02-25 */
             A.*
       FROM
             (
