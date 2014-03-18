@@ -101,8 +101,9 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		purchaseUserDevice.setDeviceId(userDeviceInfoSac.getDeviceId());
 		purchaseUserDevice.setDeviceModelCd(userDeviceInfoSac.getDeviceModelNo());
 		purchaseUserDevice.setTelecom(userDeviceInfoSac.getDeviceTelecom());
-		purchaseUserDevice.setAge(StringUtils.isNotBlank(userDeviceInfoSac.getUserBirthday()) ? this
-				.getCurrDayAge(userDeviceInfoSac.getUserBirthday()) : 0);
+		// 연령체크 안함: 생년월일도 * 문자 포함으로 확인불가
+		// purchaseUserDevice.setAge(StringUtils.isNotBlank(userDeviceInfoSac.getUserBirthday()) ? this
+		// .getCurrDayAge(userDeviceInfoSac.getUserBirthday()) : 0);
 
 		return purchaseUserDevice;
 	}
