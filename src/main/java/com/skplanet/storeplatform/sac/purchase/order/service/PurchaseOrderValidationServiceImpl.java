@@ -314,9 +314,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
 			// 연령 체크
-			if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19) && useUser.getAge() < 20) {
-				throw new StorePlatformException("SAC_PUR_5110");
-			}
+			// if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19) && useUser.getAge() <
+			// 20) {
+			// throw new StorePlatformException("SAC_PUR_5110");
+			// }
 
 			// (정액권) 배타 상품 체크
 			if (product.getExclusiveFixrateProdIdList() != null && product.getExclusiveFixrateProdIdList().size() > 0) {
