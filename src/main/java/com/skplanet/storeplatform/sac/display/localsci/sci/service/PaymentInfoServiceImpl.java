@@ -56,6 +56,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 		List<String> prodIdList = req.getProdIdList();
 		String tenantId = req.getTenantId();
 		String langCd = req.getLangCd();
+		String deviceModelCd = req.getDeviceModelCd();
 
 		this.log.debug("##### prodIdList size : {}", prodIdList.size());
 
@@ -68,6 +69,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 		}
 		if (StringUtils.isEmpty(langCd)) {
 			throw new StorePlatformException("SAC_DSP_0002", "langCd", langCd);
+		}
+		if (StringUtils.isEmpty(deviceModelCd)) {
+			throw new StorePlatformException("SAC_DSP_0002", "deviceModelCd", deviceModelCd);
 		}
 
 		// 파라미터 유효 값 체크

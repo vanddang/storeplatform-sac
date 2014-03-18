@@ -3,7 +3,7 @@
 <mapper namespace="PaymentInfo">
     <!-- 상품 군 조회 -->
     <select id="searchProdType" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
-		SELECT /* PaymentInfoMapper.xml, searchProdType, H.J.H, 2014-02-27 */ 
+		SELECT /* PaymentInfoMapper.xml, searchProdType, SAC 전시, 2014-02-27 */ 
 		       TOP_MENU_ID
 		      ,SVC_GRP_CD
 		FROM   TB_DP_PROD
@@ -11,13 +11,17 @@
     </select>
     
     <select id="searchPaymentInfo" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
-        SELECT /* PaymentInfoMapper.xml, searchPaymentInfo, H.J.H, 2014-02-27 */
+        SELECT /* PaymentInfoMapper.xml, searchPaymentInfo, SAC 전시, 2014-02-27 */
 		       A.PROD_ID
 		      ,B.PROD_NM
 		      ,D.PROD_AMT
 		      ,C.PROD_STATUS_CD
 		      ,A.PROD_GRD_CD
-		      ,'Y' AS PROD_SPRT_YN
+		      ,CASE
+                   WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = #{prodId} AND DEVICE_MODEL_CD = #{deviceModelCd}) > 0
+                   THEN 'Y'
+                   ELSE 'N'
+               END AS PROD_SPRT_YN
 		      ,A.DRM_YN
 		      ,A.USE_PERIOD_UNIT_CD
 		      ,A.USE_PERIOD
