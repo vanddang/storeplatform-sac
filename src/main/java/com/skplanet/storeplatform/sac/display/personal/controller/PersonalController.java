@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
@@ -68,6 +70,14 @@ public class PersonalController {
 	@ResponseBody
 	public PersonalUpdateProductRes searchUpdateProductList(@Validated @RequestBody PersonalUpdateProductReq req,
 			SacRequestHeader header) {
+		if ("updatedList".equals(req.getMemberType())) {
+			if (StringUtils.isEmpty(req.getUserKey())) {
+				throw new StorePlatformException("SAC_DSP_0002", "userKye", req.getUserKey());
+			}
+			if (StringUtils.isEmpty(req.getDeviceKey())) {
+				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", req.getDeviceKey());
+			}
+		}
 		return this.personalUpdateProductService.searchUpdateProductList(req, header);
 	}
 
