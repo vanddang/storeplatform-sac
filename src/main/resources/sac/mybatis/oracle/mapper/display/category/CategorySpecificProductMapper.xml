@@ -402,9 +402,7 @@
     
     <select id="getMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
        SELECT /* CategorySpecificProductMapper.xml, getMusicMetaInfo, SAC 전시, 2014-03-03*/
-              MCI.RANK_CHG_CNT
-            , MCI.RANK_CHG_CLSF_CD
-            , MCI.ARTIST_ID
+              PD.ARTIST1_ID AS ARTIST_ID
             , CP.PROD_ID 
             , CP.PART_PROD_ID
             , C.MENU_ID
@@ -416,6 +414,9 @@
             , MP.OUTSD_CONTENTS_ID -- 외부_컨텐츠_ID
             , PD.PROD_NM
             , PD.PROD_DTL_DESC
+            , PD.ARTIST1_NM
+            , PD.ARTIST2_NM
+            , PD.ARTIST3_NM
             , TPP.PROD_AMT
             , P.PROD_GRD_CD
             , P.META_CLSF_CD
@@ -433,7 +434,7 @@
             , PI.FILE_SIZE
             , P.CONTENTS_TYPE_CD
             , TP.PROD_STATUS_CD
-            , MCI.REG_DT
+            , P.REG_DT
             , P.SELLER_MBR_NO
             , P.CID
             , P.SVC_GRP_CD      
@@ -442,7 +443,6 @@
             , P.EXPO_SELLER_TELNO
             , P.EXPO_SELLER_EMAIL
          FROM UV_TB_DP_MULTIMDA_PROD MP
-            , TB_DP_MUSIC_CHART MCI
             , TB_DP_PROD P
             , TB_DP_PROD_DESC PD
             , TB_DP_PROD_RSHP CP
@@ -458,7 +458,6 @@
             , TB_DP_PROD_IMG PI
         WHERE MP.PROD_ID = CP.PART_PROD_ID
           AND P.PROD_ID = CP.PART_PROD_ID
-          AND MCI.PROD_ID = CP.PART_PROD_ID -- EPISODE PROD ID
           AND CPM.PROD_ID = CP.PART_PROD_ID
           AND C.MENU_ID = CPM.MENU_ID
           AND CD.MENU_ID = C.MENU_ID
@@ -513,6 +512,7 @@
 		AND A.PROD_ID = B.PROD_ID
 		AND A.PROD_ID = C.PROD_ID
 		AND C.TENANT_ID = #{tenantHeader.tenantId}
+		--AND C.PROD_STATUS_CD = 'PD000403'
 		AND C.EXPO_YN = 'Y'
 		AND B.META_CLSF_CD IN ('CT30','CT31','CT32','CT33')
     </select>
