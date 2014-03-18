@@ -562,15 +562,22 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		// 자동구매 신규이력 저장
-		if (StringUtils.equals(createPurchaseSc.getPrchsProdType(), PurchaseConstants.PRCHS_PROD_TYPE_AUTH)) {
-			for (PaymentInfo paymentInfo : notifyPaymentReq.getPaymentInfoList()) {
-				if (StringUtils.isNotBlank(paymentInfo.getBillKey())) {
-					createCnt = this.createAutoPurchase(createPurchaseSc);
-					if (createCnt != 1) {
-						throw new StorePlatformException("SAC_PUR_7204");
-					}
-					break;
-				}
+		// if (StringUtils.equals(createPurchaseSc.getPrchsProdType(), PurchaseConstants.PRCHS_PROD_TYPE_AUTH)) {
+		// for (PaymentInfo paymentInfo : notifyPaymentReq.getPaymentInfoList()) {
+		// if (StringUtils.isNotBlank(paymentInfo.getBillKey())) {
+		// createCnt = this.createAutoPurchase(createPurchaseSc);
+		// if (createCnt != 1) {
+		// throw new StorePlatformException("SAC_PUR_7204");
+		// }
+		// break;
+		// }
+		// }
+		// }
+		if (StringUtils.equals(createPurchaseSc.getPrchsProdType(), PurchaseConstants.PRCHS_PROD_TYPE_AUTH)
+				&& StringUtils.equals(reservedDataMap.get("autoPrchsYn"), PurchaseConstants.USE_Y)) {
+			createCnt = this.createAutoPurchase(createPurchaseSc);
+			if (createCnt != 1) {
+				throw new StorePlatformException("SAC_PUR_7204");
 			}
 		}
 
@@ -916,7 +923,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							.append("").append("&ownPid=").append("").append("&ownAmt=").append("")
 							.append("&sellerNm=").append("").append("&sellerEmail=").append("").append("&sellerTelno=")
 							.append("").append("&sellerMbrNo=").append("").append("&mallCd=").append("")
-							.append("&outsdContentsId=").append("");
+							.append("&outsdContentsId=").append("").append("&autoPrchsYn=")
+							.append(product.getAutoPrchsYN());
 					createPurchase.setPrchsResvInfo(sbReserveData.toString());
 				}
 
