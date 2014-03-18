@@ -42,7 +42,7 @@ public class HttpHeaderEnricher {
 		String systemId = (String) headers.get(CommonConstants.HEADER_SYSTEM_ID);
 		String interfaceId = (String) headers.get(CommonConstants.HEADER_INTERFACE_ID);
 		String guid = (String) headers.get(CommonConstants.HEADER_GUID);
-		String remoteHost = (String) headers.get(CommonConstants.HEADER_REMOTE_HOST);
+		// String remoteHost = (String) headers.get(CommonConstants.HEADER_REMOTE_HOST);
 		String remotePort = (String) headers.get(CommonConstants.HEADER_REMOTE_PORT);
 
 		HttpHeaders httpHeader = new HttpHeaders();
@@ -57,7 +57,7 @@ public class HttpHeaderEnricher {
 		httpHeader.setSystemId(systemId);
 		httpHeader.setInterfaceId(interfaceId);
 		httpHeader.setGuid(guid);
-		httpHeader.setRemoteHost(remoteHost);
+		httpHeader.setRemoteHost(this.getRemoteHost());
 		httpHeader.setRemotePort(remotePort);
 		httpHeader.setServletPath(this.getServletPath());
 
@@ -68,6 +68,12 @@ public class HttpHeaderEnricher {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		String servletPath = request.getServletPath();
 		return servletPath;
+	}
+
+	private String getRemoteHost() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		String remoteAddr = request.getRemoteAddr();
+		return remoteAddr;
 	}
 
 }
