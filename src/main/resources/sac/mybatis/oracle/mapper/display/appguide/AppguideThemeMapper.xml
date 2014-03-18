@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Appguide.Theme">
     <select id="getThemeRecommendInfo" parameterType="java.util.Map" resultType="Appguide">
-        SELECT /* AppguideThemeMapper.xml, getThemeRecommendInfo, JuYoung Yun, 2014-03-06 */
+        SELECT /* AppguideThemeMapper.xml, getThemeRecommendInfo, SAC 전시, 2014-03-06 */
                 T.LIST_ID THEME_ID
                ,T.LIST_NM THEME_NM
                ,DECODE(T.IMG_PATH,NULL,2,1) THEME_TYPE
@@ -14,7 +14,7 @@
     </select>
 
     <select id="getBasicThemeRecommendProductList" parameterType="java.util.Map" resultType="ProductBasicInfo">
-         SELECT   /* AppguideThemeMapper.xml, getBasicThemeRecommendProductList, JuYoung Yun, 2014-03-06 */
+         SELECT   /* AppguideThemeMapper.xml, getBasicThemeRecommendProductList, SAC 전시, 2014-03-06 */
                   COUNT(*) OVER() AS TOTAL_COUNT
                 , A.PROD_ID
                 , A.SVC_GRP_CD
@@ -136,7 +136,7 @@
     </select>
 
     <select id="getThemeRecommendList" parameterType="java.util.Map" resultType="Appguide">
-        SELECT /* AppguideThemeMapper.xml, getThemeRecommendMain, JuYoung Yun, 2014-03-03 */
+        SELECT /* AppguideThemeMapper.xml, getThemeRecommendMain, SAC 전시, 2014-03-03 */
                AA.*
         FROM   (
                 SELECT  COUNT(*) OVER() AS TOTAL_COUNT
@@ -259,7 +259,7 @@
     
     
     <select id="getThemeRecommendProductList" parameterType="java.util.Map" resultType="Appguide">
-        SELECT /* AppguideThemeMapper.xml, getThemeRecommendProductList, JuYoung Yun, 2014-03-04 */
+        SELECT /* AppguideThemeMapper.xml, getThemeRecommendProductList, SAC 전시, 2014-03-04 */
                COUNT(*) OVER( PARTITION BY T.THEME_ID ) AS CUR_COUNT
               ,T.TOTAL_COUNT
               ,T.THEME_ID
