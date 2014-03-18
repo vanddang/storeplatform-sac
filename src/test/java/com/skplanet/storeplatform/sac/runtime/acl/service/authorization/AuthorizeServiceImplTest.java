@@ -37,7 +37,7 @@ public class AuthorizeServiceImplTest {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setInterfaceId("I01000001");
-		headers.setRequestUrl("/member/user/createByMdn/v1");
+		headers.setServletPath("/member/user/createByMdn/v1");
 
 		this.authorizeService.checkInterface(headers);
 
@@ -51,7 +51,7 @@ public class AuthorizeServiceImplTest {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setInterfaceId("I01000002");
-		headers.setRequestUrl("/member/user/createByAgreement/v1");
+		headers.setServletPath("/member/user/createByAgreement/v1");
 
 		try {
 			this.authorizeService.checkInterface(headers);

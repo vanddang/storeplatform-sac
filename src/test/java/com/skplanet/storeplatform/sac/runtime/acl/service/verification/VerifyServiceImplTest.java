@@ -6,11 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.runtime.acl.service.verification.VerifyServiceImpl;
 import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
-public class RequestValidateServiceImplTest {
+public class VerifyServiceImplTest {
 
 	private VerifyServiceImpl validateService;
 
@@ -55,7 +54,9 @@ public class RequestValidateServiceImplTest {
 	public void testValidateTimestampForException() throws InterruptedException {
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.setTimestamp(AclUtils.getTimestamp() + "");
+		String timestamp = AclUtils.getTimestamp() + "";
+		System.out.println("# Timestamp : " + timestamp);
+		headers.setTimestamp(timestamp);
 		this.validateService.verifyTimestamp(headers); // Success
 
 		Thread.sleep(11000); // Wait 11 sec (Timeout = 10 sec)
