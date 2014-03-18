@@ -130,9 +130,6 @@ public class DeviceServiceImpl implements DeviceService {
 	private IdpSCI idpSCI;
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private UserSearchService userSearchService;
 
 	@Autowired
@@ -212,9 +209,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 휴대기기 등록 처리 */
 		String deviceKey = this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, deviceInfo);
-
-		/* 변경된 정보 idp 연동 */
-		this.userService.updateProfileIdp(requestHeader, userKey, req.getUserAuthKey());
 
 		CreateDeviceRes res = new CreateDeviceRes();
 		res.setDeviceId(deviceId);
@@ -1504,9 +1498,6 @@ public class DeviceServiceImpl implements DeviceService {
 		removeDeviceRequest.setUserKey(req.getUserKey());
 		removeDeviceRequest.setDeviceKey(removeKeyList);
 		RemoveDeviceResponse removeDeviceResponse = this.deviceSCI.removeDevice(removeDeviceRequest);
-
-		/* IDP 회원정보 수정 */
-		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
 		/* 게임센터 연동 */
 		for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {

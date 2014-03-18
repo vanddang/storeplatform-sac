@@ -40,6 +40,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
+import com.skplanet.storeplatform.sac.member.user.service.UserService;
 
 /**
  * 휴대기기관련 Controller.
@@ -54,6 +55,9 @@ public class DeviceController {
 
 	@Autowired
 	private DeviceService deviceService;
+
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * 휴대기기 목록조회.
@@ -129,6 +133,9 @@ public class DeviceController {
 		}
 
 		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, req);
+
+		/* 변경된 정보 idp 연동 */
+		this.userService.updateProfileIdp(requestHeader, res.getUserKey(), req.getUserAuthKey());
 
 		return res;
 	}
@@ -250,6 +257,9 @@ public class DeviceController {
 		req.setUserKey(userKey);
 
 		RemoveDeviceRes res = this.deviceService.removeDevice(requestHeader, req);
+
+		/* IDP 회원정보 수정 */
+		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
 		LOGGER.info("============================================ Final removeDevice Response : {}", res.toString());
 		return res;
