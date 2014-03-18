@@ -289,7 +289,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// 회원Part 사용자 정책 조회
 
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-				purchaseOrderInfo.getDeviceKey(), policyCodeList);
+				purchaseOrderInfo.getPurchaseUser().getDeviceId(), policyCodeList);
 
 		if (policyResMap == null) {
 			return;
