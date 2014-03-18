@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.personal;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -13,6 +15,7 @@ public class PersonalUpdateProductReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	@NotBlank
+	@Pattern(regexp = "^updatedList|^updatedListForGuest")
 	private String memberType;
 	@NotBlank
 	private String packageInfo;
