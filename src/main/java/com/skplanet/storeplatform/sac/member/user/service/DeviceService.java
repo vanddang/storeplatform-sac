@@ -116,11 +116,11 @@ public interface DeviceService {
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param req
-	 *            DeviceInfo
+	 *            파라메터 휴대기기 정보
 	 * @param userMbrDevice
-	 *            UserMbrDevice
+	 *            db 휴대기기 정보
 	 * @param version
-	 *            String
+	 *            MDN 로그인 버젼
 	 * @return deviceKey String
 	 */
 	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo req, UserMbrDevice userMbrDevice, String version);
