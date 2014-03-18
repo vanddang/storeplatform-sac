@@ -54,7 +54,7 @@ import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 @Service
 public class HistoryListServiceImpl implements HistoryListService {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private HistorySCI historySci;
@@ -77,7 +77,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 */
 	@Override
 	public HistoryListSacRes searchHistoryList(HistoryListSacReq request) {
-		this.LOGGER.debug("HistoryListSacRes : {}", request);
+		this.logger.debug("HistoryListSacRes : {}", request);
 
 		// SC request/response VO
 		HistoryListScReq scRequest = new HistoryListScReq();
@@ -265,7 +265,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				productInfoSacReq.setLang(request.getLangCd());
 				productInfoSacReq.setList(prodIdList);
 
-				this.LOGGER.debug("### productInfoSacReq  : {}" + productInfoSacReq.toString());
+				this.logger.debug("### productInfoSacReq  : {}" + productInfoSacReq.toString());
 
 				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
 
@@ -295,7 +295,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
 			SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
 
-			this.LOGGER.debug("### searchUserDeviceSacReq  : {}" + searchUserDeviceSacReq.toString());
+			this.logger.debug("### searchUserDeviceSacReq  : {}" + searchUserDeviceSacReq.toString());
 
 			if (deviceList.size() > 0) {
 				// member request parameter set
@@ -337,6 +337,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 			}
 		} catch (Exception e) {
 
+			this.logger.info("---------------------------------------------------");
+			this.logger.info("------Device Info null");
+			this.logger.info("---------------------------------------------------");
 		}
 
 		/*************************************************
