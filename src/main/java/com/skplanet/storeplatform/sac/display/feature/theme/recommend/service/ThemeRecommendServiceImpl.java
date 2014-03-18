@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,11 +84,13 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		String userKey = requestVO.getUserKey();
 		String deviceIdType = requestVO.getDeviceIdType();
 		String deviceId = requestVO.getDeviceId();
+		String ver = requestVO.getVer();
 
 		this.log.debug("----------------------------------------------------------------");
 		this.log.debug("[searchThemeRecommendList] userKey : {}", userKey);
 		this.log.debug("[searchThemeRecommendList] deviceIdType : {}", deviceIdType);
 		this.log.debug("[searchThemeRecommendList] deviceId : {}", deviceId);
+		this.log.debug("[searchThemeRecommendList] ver : {}", ver);
 		this.log.debug("----------------------------------------------------------------");
 
 		ISFRes response = new ISFRes();
@@ -125,7 +128,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 				listProd.add(mapIsf);
 			}
-			mapReq.put("multiValue_id", listProd);
+			mapReq.put("multiValueId", listProd);
 		}
 
 		// 추천 사유
@@ -154,8 +157,39 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 			imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 			mapReq.put("imageCdList", imageCodeList);
 
-			listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList", mapReq,
-					ThemeRecommend.class);
+			// 테마추천 v2 (맞춤테마)
+			if (StringUtils.equalsIgnoreCase(requestVO.getVer(), "v2")) {
+				// 2단, 3단 노출건수 조회
+				int themeCnt = this.commonDAO.queryForInt("Isf.ThemeRecommend.getRecommendViewCount", null);
+
+				// ISF 연동 결과가 있는 경우
+				if (StringUtils.isNotEmpty(ObjectUtils.toString(mapReq.get("multiValueId")))) {
+					mapReq.put("END_ROW", "1"); // 최 상단의 테마는 사용자에 맞는 추천
+					listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList",
+							mapReq, ThemeRecommend.class);
+
+					// 최 상단에 노출되는 테마는 2번째, 3번째 조회 시 제외 처리
+					if (!listThemeRecommend.isEmpty()) {
+						ThemeRecommend themeRecommend = listThemeRecommend.get(0);
+						mapReq.put("excludePkgId", themeRecommend.getPkgId());
+						mapReq.put("END_ROW", themeCnt - listThemeRecommend.size());
+					}
+
+					mapReq.remove("multiValueId");
+
+					// 2번째와 3번째 테마는 DB 우선 노출 항목 노출
+					listThemeRecommend.addAll(this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList",
+							mapReq, ThemeRecommend.class));
+					mapReq.put("END_ROW", themeCnt);
+				} else {
+					mapReq.put("END_ROW", themeCnt);
+					listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList",
+							mapReq, ThemeRecommend.class);
+				}
+			} else { // 기존 테마추천 (4개 고정)
+				listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList", mapReq,
+						ThemeRecommend.class);
+			}
 
 		} else if (StringUtils.equalsIgnoreCase(requestVO.getFilteredBy(), "long")) {
 
