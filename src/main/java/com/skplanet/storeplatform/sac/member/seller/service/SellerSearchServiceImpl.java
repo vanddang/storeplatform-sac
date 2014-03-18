@@ -690,7 +690,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			for (int i = 0; i < schRes.getPWReminderList().size(); i++) {
 				sellerMbrPwdHint = new SellerMbrPwdHint();
 				sellerMbrPwdHint.setQuestionID(schRes.getPWReminderList().get(i).getQuestionID());
-				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderList().get(i).getQuestionMessage());
+				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderList().get(i).getQuestionName());
 				sList.add(sellerMbrPwdHint);
 			}
 
@@ -724,7 +724,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			for (int i = 0; i < schRes.getPWReminderAllList().size(); i++) {
 				sellerMbrPwdHint = new SellerMbrPwdHint();
 				sellerMbrPwdHint.setQuestionID(schRes.getPWReminderAllList().get(i).getQuestionID());
-				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderAllList().get(i).getQuestionMessage());
+				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderAllList().get(i).getQuestionName());
 				sellerMbrPwdHint.setDisplayOrder(schRes.getPWReminderAllList().get(i).getDisplayOrder());
 				sList.add(sellerMbrPwdHint);
 			}

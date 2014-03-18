@@ -235,10 +235,22 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
-	// 헤더는 controller 에서 SacRequestHeader 셋팅된걸 사용한다. (tennatId, systemId 사용시에만 선언)
+	/**
+	 * <pre>
+	 * 휴대폰 인증 SMS 발송.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param request
+	 *            GetPhoneAuthorizationCodeReq
+	 * @return GetPhoneAuthorizationCodeRes
+	 */
 	@Override
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(SacRequestHeader sacRequestHeader,
 			GetPhoneAuthorizationCodeReq request) {
+		// 헤더는 controller 에서 SacRequestHeader 셋팅된걸 사용한다. (tennatId, systemId 사용시에만 선언)
+
 		LOGGER.info("[MiscellaneousService.getPhoneAuthorizationCode] Request : {}", request);
 		String authCode = "";
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
