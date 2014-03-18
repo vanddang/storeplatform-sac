@@ -51,6 +51,7 @@
                                         #{prodGradeCd}
                                       </foreach>
                                   </if>
+                                    AND B.PROD_CHRG_YN = #{prodChrgYn}  /* 상품 유/무료 여부 */
                                     AND A.PROD_ID = E.PROD_ID
                                     AND A.MENU_ID = E.MENU_ID                    
                                     AND E.MENU_ID = F.MENU_ID
@@ -151,6 +152,7 @@
                                    <if test='menuId != null and menuId != "" '>
                                        AND B.MENU_ID = #{menuId}
                                    </if>
+                                       AND D.PROD_CHRG_YN = #{prodChrgYn}        /* 상품 유/무료 여부 */
                                    <if test='topMenuId == "DP17" || topMenuId == "DP18"'>
                                        AND (CASE WHEN M.VIDEO_DRM_SPRT_YN = 'N' AND NVL(D.DRM_YN, 'N') = 'Y'
                                                  THEN 'NOT SUPPORT'

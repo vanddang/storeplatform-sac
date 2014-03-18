@@ -138,6 +138,14 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 				bestDownloadReq.getListId());
 		bestDownloadReq.setStdDt(stdDt);
 
+		// 유/무료 리스트 선택
+		if ("RNK000000006".equals(bestDownloadReq.getListId()) || "RNK000000008".equals(bestDownloadReq.getListId())
+				|| "RNK000000007".equals(bestDownloadReq.getListId())) { // 유료 리스트
+			bestDownloadReq.setProdChrgYn("Y");
+		} else { // 무료 리스트
+			bestDownloadReq.setProdChrgYn("N");
+		}
+
 		// 검색하는 상품 타입(APP, MM)
 		String prodType = "APP"; // default
 
