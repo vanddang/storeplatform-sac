@@ -23,7 +23,7 @@ public class AclUtils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AclUtils.class);
 
-	private static final int TIMEOUT = 10; // 10 sec (Temporary)
+	private static final int TIMEOUT = 100; // 100 sec (Temporary)
 
 	/**
 	 * <pre>
