@@ -50,6 +50,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
@@ -158,6 +160,10 @@ public class LoginServiceImpl implements LoginService {
 			return res;
 		}
 
+		/* 휴대기기 정보 조회 */
+		SearchDeviceResponse schDeviceRes = this.searchDeviceInfo(requestHeader, req.getDeviceId());
+		String dbDeviceTelecom = schDeviceRes.getUserMbrDevice().getDeviceTelecom();
+
 		/* 휴대기기 정보 수정 */
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(chkDupRes.getUserMbr().getUserKey());
@@ -166,17 +172,18 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
 		deviceInfo.setNativeId(req.getNativeId()); // IMEI
-
-		String deviceKey = this.deviceService.updateDeviceForMdnLogin(requestHeader, deviceInfo, "v1");
+		deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth()); // IMEI 비교여부
+		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
+		String deviceKey = this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo, schDeviceRes.getUserMbrDevice(), "v1");
 
 		try {
 
 			if (chkDupRes.getUserMbr().getImSvcNo() != null) { /* 원아이디인 경우 */
-
-				/* 로그인할때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
-				UpdateAdditionalInfoEcRes updAddInfoRes = this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(),
-						chkDupRes.getUserMbr().getImSvcNo());
-				LOGGER.info(updAddInfoRes.toString());
+				
+				if (!StringUtil.equals(req.getDeviceTelecom(), dbDeviceTelecom)) {
+					/* 로그인할때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
+					this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr().getImSvcNo());
+				}
 
 			} else { /* 기존IDP회원 / 모바일회원인 경우 */
 
@@ -270,6 +277,9 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_1506"); // 개인정보 3자 제공 동의약관 미동의 상태입니다.
 		}
 
+		/* 휴대기기 정보 조회 */
+		SearchDeviceResponse schDeviceRes = this.searchDeviceInfo(requestHeader, req.getDeviceId());
+
 		/* 휴대기기 정보 수정 */
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(chkDupRes.getUserMbr().getUserKey());
@@ -278,16 +288,17 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
 		deviceInfo.setNativeId(req.getNativeId()); // IMEI
-		String deviceKey = this.deviceService.updateDeviceForMdnLogin(requestHeader, deviceInfo, "v2");
+		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
+		String deviceKey = this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo, schDeviceRes.getUserMbrDevice(), "v2");
 
 		try {
 
 			if (chkDupRes.getUserMbr().getImSvcNo() != null) { /* 원아이디인 경우 */
 
-				/* 로그인할때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
-				UpdateAdditionalInfoEcRes updAddInfoRes = this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(),
-						chkDupRes.getUserMbr().getImSvcNo());
-				LOGGER.info(updAddInfoRes.toString());
+				if (!StringUtil.equals(req.getDeviceTelecom(), schDeviceRes.getUserMbrDevice().getDeviceTelecom())) {
+					/* 로그인할때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
+					this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr().getImSvcNo());
+				}
 
 			} else { /* 기존IDP회원 / 모바일회원인 경우 */
 
@@ -1013,64 +1024,6 @@ public class LoginServiceImpl implements LoginService {
 
 	/**
 	 * 
-	 * 휴대기기정보 update.
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param userKey
-	 *            사용자 키
-	 * @param userAuthKey
-	 *            IDP 키
-	 * @param obj
-	 *            요청객체
-	 */
-	@Deprecated
-	public void updateLoginDeviceInfo(SacRequestHeader requestHeader, String userKey, String userAuthKey, Object obj) {
-
-		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setUserKey(userKey);
-
-		if (obj instanceof AuthorizeByMdnReq) { // mdn인증
-
-			AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-			req = (AuthorizeByMdnReq) obj;
-
-			deviceInfo.setDeviceId(req.getDeviceId());
-			deviceInfo.setDeviceIdType(req.getDeviceIdType());
-			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-			deviceInfo.setNativeId(req.getNativeId());
-			// deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth());
-			deviceInfo.setDeviceAccount(req.getDeviceAccount());
-			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-			this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo);
-
-		} else if (obj instanceof AuthorizeByIdReq) { // id인증
-
-			AuthorizeByIdReq req = new AuthorizeByIdReq();
-			req = (AuthorizeByIdReq) obj;
-
-			if (req.getDeviceId() != null && !StringUtil.equals(req.getDeviceId(), "")) { // deviceId가 파라메터로 넘어왔을 경우에만
-																							// 휴대기기 정보 update 요청
-
-				deviceInfo.setDeviceId(req.getDeviceId());
-				deviceInfo.setDeviceIdType(req.getDeviceIdType());
-				deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-				deviceInfo.setNativeId(req.getNativeId());
-				// deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth());
-				deviceInfo.setDeviceAccount(req.getDeviceAccount());
-				deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-				this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo);
-
-				/* 변경된 휴대기기 정보 IDP도 변경 */
-				this.userService.updateProfileIdp(requestHeader, userKey, userAuthKey);
-			}
-
-		}
-
-	}
-
-	/**
-	 * 
 	 * SC콤포넌트 로그인 이력저장.
 	 * 
 	 * @param requestHeader
@@ -1225,7 +1178,10 @@ public class LoginServiceImpl implements LoginService {
 		req.setExecuteMode("A");
 		req.setKey(imSvcNo);
 		req.setUserMdn(userPhoneStr);
-		return this.imIdpSCI.updateAdditionalInfo(req);
+		UpdateAdditionalInfoEcRes updAddInfoRes = this.imIdpSCI.updateAdditionalInfo(req);
+		LOGGER.info(":::: UpdateAdditionalInfoEcRes : {}", updAddInfoRes.toString());
+
+		return updAddInfoRes;
 	}
 
 	/**
@@ -1255,6 +1211,46 @@ public class LoginServiceImpl implements LoginService {
 		userAuthMethod.setUserEmail(chkDupRes.getUserMbr().getUserEmail());
 		userAuthMethod.setIsRealName(chkDupRes.getUserMbr().getIsRealName());
 		return userAuthMethod;
+	}
+
+	/**
+	 * <pre>
+	 * 로그인한 MDN의 휴대기기 정보 조회.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param deviceId
+	 *            String
+	 * @return SearchDeviceResponse
+	 */
+	public SearchDeviceResponse searchDeviceInfo(SacRequestHeader requestHeader, String deviceId) {
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
+		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+		key.setKeyString(deviceId);
+		keySearchList.add(key);
+		schDeviceReq.setCommonRequest(commonRequest);
+		schDeviceReq.setKeySearchList(keySearchList);
+
+		try {
+
+			return this.deviceSCI.searchDevice(schDeviceReq);
+
+		} catch (StorePlatformException ex) {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+			} else {
+				throw ex;
+			}
+		}
+
 	}
 
 }
