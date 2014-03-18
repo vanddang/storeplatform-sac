@@ -27,6 +27,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProdu
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadMMSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadMMSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq;
@@ -55,6 +57,7 @@ import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileServic
 import com.skplanet.storeplatform.sac.display.openapi.service.AppDetailByPkgNmService;
 import com.skplanet.storeplatform.sac.display.openapi.service.AppDetailByProdIdService;
 import com.skplanet.storeplatform.sac.display.openapi.service.BestDownloadAppService;
+import com.skplanet.storeplatform.sac.display.openapi.service.BestDownloadMMService;
 import com.skplanet.storeplatform.sac.display.openapi.service.DownloadBestService;
 import com.skplanet.storeplatform.sac.display.openapi.service.NewAppRecommendService;
 import com.skplanet.storeplatform.sac.display.openapi.service.NoProvisionService;
@@ -93,6 +96,9 @@ public class OpenApiController {
 
 	@Autowired
 	private BestDownloadAppService bestDownloadAppService;
+
+	@Autowired
+	private BestDownloadMMService bestDownloadMMService;
 
 	@Autowired
 	private SearchAppNameService searchAppNameService;
@@ -249,6 +255,25 @@ public class OpenApiController {
 	/**
 	 * 
 	 * <pre>
+	 * 멀티미디어 상품 목록 조회.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param bestDownloadMMSacReq
+	 *            bestDownloadMMSacReq
+	 * @return BestDownloadMMSacRes
+	 */
+	@RequestMapping(value = "/bestDownloadMM/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public BestDownloadMMSacRes bestDownloadMM(SacRequestHeader requestheader,
+			@Validated BestDownloadMMSacReq bestDownloadMMSacReq) {
+		return this.bestDownloadMMService.searchBestDownloadMMList(requestheader, bestDownloadMMSacReq);
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 상품 검색 요청 (상품명).
 	 * </pre>
 	 * 
@@ -400,4 +425,5 @@ public class OpenApiController {
 			@RequestBody @Validated SupportGameCenterSacReq supportGameCenterSacReq, SacRequestHeader requestheader) {
 		return this.supportGameCenterService.searchSupportGameCenterByAid(supportGameCenterSacReq, requestheader);
 	}
+
 }
