@@ -103,7 +103,7 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 
 		List<Appguide> themeMainList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
 				Appguide.class);
-		if (themeMainList == null) {
+		if (themeMainList == null || themeMainList.isEmpty()) {
 			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
@@ -115,7 +115,7 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 
 		List<Appguide> themeProductList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendProductList",
 				mapReq, Appguide.class);
-		if (themeProductList == null) {
+		if (themeProductList == null || themeProductList.isEmpty()) {
 			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
