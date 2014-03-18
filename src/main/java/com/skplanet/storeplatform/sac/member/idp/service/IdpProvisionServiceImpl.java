@@ -102,16 +102,16 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	@Autowired
 	private ExistenceInternalSacSCI existenceInternalSacSCI;
 
-	@Resource(name = "memberModDeviceAmqpTemplate")
 	@Autowired
+	@Resource(name = "memberModDeviceAmqpTemplate")
 	private AmqpTemplate memberModDeviceAmqpTemplate;
 
-	@Resource(name = "memberDelDeviceAmqpTemplate")
 	@Autowired
+	@Resource(name = "memberDelDeviceAmqpTemplate")
 	private AmqpTemplate memberDelDeviceAmqpTemplate;
 
-	@Resource(name = "memberRetireAmqpTemplate")
 	@Autowired
+	@Resource(name = "memberRetireAmqpTemplate")
 	private AmqpTemplate memberRetireAmqpTemplate;
 
 	/*
