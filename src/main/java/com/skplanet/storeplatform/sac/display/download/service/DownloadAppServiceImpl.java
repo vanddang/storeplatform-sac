@@ -219,6 +219,11 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						// throw new StorePlatformException("SAC_DSP_2001", ex);
 					}
 
+					this.log.debug("---------------------------------------------------------------------");
+					this.log.debug("[DownloadAppServiceImpl]	== historyRes :" + historyRes);
+					this.log.debug("[DownloadAppServiceImpl]	== purchaseFlag :" + purchaseFlag);
+					this.log.debug("[DownloadAppServiceImpl]	== historyRes.getTotalCnt() :" + historyRes.getTotalCnt());
+					this.log.debug("---------------------------------------------------------------------");
 					if (purchaseFlag && historyRes != null) {
 
 						String prchsId = null; // 구매ID
