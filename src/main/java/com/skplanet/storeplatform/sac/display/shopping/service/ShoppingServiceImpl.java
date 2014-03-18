@@ -1797,19 +1797,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 							}
 
 							// 에피소드 날짜 권한 정보
-							episodeDateList = new ArrayList<Date>();
+							episodeProduct.setDateList(this.shoppingGenerator.generateDateList(episodeShopping));
 							episodeRights = new Rights();
-
-							episodeDate = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM,
-									DateUtils.parseDate(episodeShopping.getApplyStartDt()),
-									DateUtils.parseDate(episodeShopping.getApplyEndDt()));
-							episodeDateList.add(episodeDate);
-
-							episodeDate = new Date();
-							episodeDate.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_UNIT_NM);
-							episodeDate.setText(episodeShopping.getUsePeriod());
-
-							episodeDateList.add(episodeDate);
 
 							// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
 							if (purchseCount > 0) {
@@ -1922,6 +1911,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					}
 					// 데이터 매핑
 					// 채널 상품 판매 상태 코드
+					product.setProductExplain(shopping.getProdDtlDesc());
 					product.setSalesStatus(shopping.getProdStatusCd());
 					product.setMenuList(menuList);
 					product.setTitle(title);

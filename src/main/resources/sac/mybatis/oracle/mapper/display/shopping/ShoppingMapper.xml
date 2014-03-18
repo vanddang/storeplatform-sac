@@ -444,9 +444,9 @@
                                 B.CATALOG_ID 
                                ,C.CATALOG_NM 
                                ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
-                               ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
-                               ,NVL(N.SPRC_DC_RATE, L.DC_RATE) AS DC_RATE
-                               ,NVL(N.SPRC_PRICE, L.PROD_AMT) AS DC_AMT
+                               ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT 
+                               ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
+                               ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT
                                ,A.BRAND_ID  
                                ,A.BRAND_NM  
                                ,D.MENU_ID  
@@ -1423,7 +1423,7 @@
                            WHERE prod_id=H.PROD_ID 
                          ) AS SRC_CONTENT_ID
                         ,K.PROD_STATUS_CD
-                        
+                        ,(SELECT PROD_DTL_DESC FROM TB_DP_PROD_DESC WHERE PROD_ID = H.PROD_ID AND LANG_CD =#{lang} and rownum =1)  PROD_DTL_DESC
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -1511,18 +1511,18 @@
                         ,H.PART_PROD_ID 
                         ,J.SELLER_MBR_NO 
                         ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
-                        ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
+                        ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT
+                        ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
+                        ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT                        
                         ,J.PROD_GRD_CD
                         ,J.USE_PERIOD_UNIT_CD
-                        ,CONCAT(J.USE_PERIOD,(SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = J.USE_PERIOD_UNIT_CD AND LANG_CD =#{lang} AND ROWNUM=1)) as USE_PERIOD
+                        ,J.USE_PERIOD
                         ,DECODE(I.PROD_CASE_CD
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
                               , 'DP006303', 'delivery' ) PROD_CASE_CD
                         ,NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT  ) AS APPLY_START_DT
                         ,NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ) AS APPLY_END_DT                              
-                        ,NVL(N.SPRC_DC_RATE, L.DC_RATE) AS DC_RATE
-                        ,NVL(N.SPRC_PRICE, L.PROD_AMT) AS DC_AMT
                         ,I.SALE_CNT 
                         ,NVL(N.MM_PROD_MAX_SALE_QTY, I.MM_MAX_SALE_QTY ) AS MTH_MAX_CNT     /* 월_최대_판매_수량 */
                         ,NVL(N.DLY_PROD_MAX_SALE_QTY, I.DAY_MAX_SALE_QTY ) AS DLY_MAX_CNT   /* 일_최대_판매_수량 */
@@ -1581,6 +1581,7 @@
                                  B1.PROD_ID
                                , B1.SPRC_DC_RATE
                                , B1.SPRC_PRICE
+                               , B1.SPRC_DC_PRICE
                                , B1.SPRC_APPLY_START_DT
                                , B1.SPRC_APPLY_END_DT
                                , B1.MM_PROD_MAX_SALE_QTY
@@ -1666,14 +1667,21 @@
                        AND SP.CPN_ID IS NOT NULL
                        AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
                        AND SP.PROD_ID = B.PROD_ID
-                    ), D.DC_RATE) AS DC_RATE
+                    ), NVL(D.DC_RATE,0)) AS DC_RATE
                ,NVL((SELECT SP.SPRC_PRICE
                       FROM TB_DP_SPRC_PROD SP
                      WHERE SP.EXPO_YN = 'Y'
                        AND SP.CPN_ID IS NOT NULL
                        AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
                        AND SP.PROD_ID = B.PROD_ID
-                    ), D.PROD_AMT) AS PROD_AMT    
+                    ), NVL(D.PROD_AMT,0)) AS PROD_AMT    
+               ,NVL((SELECT SP.SPRC_DC_PRICE
+                      FROM TB_DP_SPRC_PROD SP
+                     WHERE SP.EXPO_YN = 'Y'
+                       AND SP.CPN_ID IS NOT NULL
+                       AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
+                       AND SP.PROD_ID = B.PROD_ID
+                    ), NVL(D.DC_AMT,0)) AS DC_AMT                       
                ,D.PROD_NET_AMT
                ,D.DC_AFT_PROD_AMT
                ,B.FIRST_MAX_PRCHS_QTY     

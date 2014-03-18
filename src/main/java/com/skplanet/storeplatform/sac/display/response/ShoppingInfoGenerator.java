@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.response;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
@@ -90,5 +91,27 @@ public interface ShoppingInfoGenerator {
 	 * @return List<Source>
 	 */
 	public List<Source> generateSpecialSalesSourceList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 쇼핑 Date 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Date
+	 */
+	public Date generateDate(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 쇼핑 Date 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List
+	 */
+	public List<Date> generateDateList(MetaInfo metaInfo);
 
 }

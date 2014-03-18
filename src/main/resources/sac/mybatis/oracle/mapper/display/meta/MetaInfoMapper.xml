@@ -744,9 +744,9 @@
                                ,C.CATALOG_NM 
                                ,C.CATALOG_DESC
                                ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
-                               ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
-                               ,NVL(N.SPRC_DC_RATE, L.DC_RATE) AS DC_RATE
-                               ,NVL(N.SPRC_PRICE, L.PROD_AMT) AS DC_AMT
+                               ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT 
+                               ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
+                               ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT
                                ,CASE WHEN N.SPRC_DC_RATE IS NOT NULL THEN 'Y' ELSE 'N'END AS SPECIAL_SALE_YN
                                ,A.BRAND_ID  
                                ,A.BRAND_NM  
@@ -806,6 +806,7 @@
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
+                                      , B1.SPRC_DC_PRICE
                                       , B1.SPRC_APPLY_START_DT
                                       , B1.SPRC_APPLY_END_DT
                                    FROM  TB_DP_PROD_RSHP A1
