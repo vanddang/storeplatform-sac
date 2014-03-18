@@ -53,8 +53,8 @@ public class HistoryInternalSCITest {
 		HistoryListSacInReq request = new HistoryListSacInReq();
 
 		request.setTenantId("S01");
-		request.setUserKey("US201402040504554230001487");
-		request.setDeviceKey("DE201402040504557980000851");
+		request.setUserKey("IW1425293681120130426154758");
+		request.setDeviceKey("01021474880");
 		request.setStartDt("20000101000000");
 		request.setEndDt("99991231235959");
 		request.setPrchsProdHaveYn("Y");
