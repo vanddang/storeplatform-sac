@@ -89,10 +89,12 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setProdGrdCd(displayInfo.getProdGrdCd());
 			purchaseProduct.setProdSprtYn(displayInfo.getProdSprtYn());
 			purchaseProduct.setDrmYn(displayInfo.getDrmYn());
-			purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
-			purchaseProduct
-					.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(), "PD00310") ? 0 : displayInfo
-							.getUsePeriod());
+			if (displayInfo.getUsePeriodUnitCd() != null) {
+				purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
+				purchaseProduct
+						.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(), "PD00310") ? 0 : displayInfo
+								.getUsePeriod());
+			}
 			purchaseProduct.setAid(displayInfo.getAid());
 			purchaseProduct.setTenantProdGrpCd(displayInfo.getTenantProdGrpCd());
 			purchaseProduct.setMallCd(displayInfo.getMallCd());
