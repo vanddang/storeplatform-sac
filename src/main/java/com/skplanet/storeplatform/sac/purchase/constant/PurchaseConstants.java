@@ -82,6 +82,10 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String TSTORE_NOTI_TYPE_AUTOPAY = "02"; // Type: 자동결제
 	public static final String TSTORE_NOTI_TYPE_AUTOPAY_RESERVED = "03"; // Type: 자동결제 해지예약
 	public static final String TSTORE_NOTI_TYPE_AUTOPAY_CLOSED = "04"; // Type: 자동결제 해지완료
+	/* Noti 쇼핑쿠폰 발행 처리 타입 */
+	public static final String TSTORE_NOTI_PUBLISH_TYPE_SYNC = "01"; // Type: 동기 (또는 쇼핑 이외 상품)
+	public static final String TSTORE_NOTI_PUBLISH_TYPE_ASYNC = "02"; // Type: 비동기
+	public static final String TSTORE_NOTI_PUBLISH_TYPE_ASYNC_COMPLETED = "03"; // Type: 비동기 완료
 	/* Noti 결과 */
 	public static final String TSTORE_NOTI_RESULT_SUCCESS = "00"; // 00: 성공
 	public static final String TSTORE_NOTI_RESULT_FAIL = "01"; // 01: 실패
