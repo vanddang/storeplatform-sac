@@ -157,14 +157,17 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		}
 
 		/* SC Remove */
+		logger.info("회원탈퇴 SC 삭제 Start");
 		RemoveUserRequest scReq = new RemoveUserRequest();
 		scReq.setCommonRequest(commonRequest);
 		scReq.setUserKey(schUserRes.getUserKey());
 		scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
 		scReq.setSecedeReasonMessage("");
 		this.userSCI.remove(scReq);
+		logger.info("회원탈퇴 SC 삭제 End");
 
 		/* 게임센터 연동 */
+		logger.info("회원탈퇴 게임센터 연동 Start");
 		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 		gameCenterSacReq.setUserKey(schUserRes.getUserKey());
 		if (!deviceId.equals("")) {
@@ -174,14 +177,17 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
 		this.deviceService.insertGameCenterIF(gameCenterSacReq);
+		logger.info("회원탈퇴 게임센터 연동 End");
 
 		/* MQ 연동 */
+		logger.info("회원탈퇴 MQ 연동 Start");
 		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
 		mqInfo.setUserId(schUserRes.getUserMbr().getUserID());
 		mqInfo.setUserKey(schUserRes.getUserKey());
 		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 
 		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+		logger.info("회원탈퇴 MQ 연동 End");
 
 		return withdrawRes;
 
