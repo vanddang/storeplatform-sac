@@ -253,8 +253,16 @@ public class SellerMbr extends CommonInfo {
 	private String subSellerCateList;
 	private String subRegDate;
 
+	/**
+	 * 서브계정 로그인 시간.
+	 */
+	private String subSellerLoginDttm;
+
 	/** 수정일시. */
 	private String updateDate; // UPD_DT
+
+	/** 외국인 웹사이트. */
+	private String website;
 
 	/**
 	 * @return the updateDate
@@ -272,9 +280,23 @@ public class SellerMbr extends CommonInfo {
 	}
 
 	/**
-	 * 서브계정 로그인 시간.
+	 * 외국인 웹사이트 리턴한다.
+	 * 
+	 * @return website - 외국인 웹사이트
 	 */
-	private String subSellerLoginDttm;
+	public String getWebsite() {
+		return this.website;
+	}
+
+	/**
+	 * 외국인 웹사이트 설정한다.
+	 * 
+	 * @param website
+	 *            외국인 웹사이트
+	 */
+	public void setWebsite(String website) {
+		this.website = website;
+	}
 
 	public String getSubSellerLoginDttm() {
 		return this.subSellerLoginDttm;
