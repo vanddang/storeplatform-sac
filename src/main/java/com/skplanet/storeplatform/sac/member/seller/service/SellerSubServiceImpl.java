@@ -173,7 +173,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setSellerKey(req.getSubSellerKey());
 
 		SearchSubSellerResponse schRes = this.sellerSCI.searchSubSeller(schReq);
-		if (schRes.getSellerMbr().getParentSellerKey() == null)
+		if (StringUtils.isBlank(schRes.getSellerMbr().getParentSellerKey()))
 			throw new StorePlatformException("SAC_MEM_2201");
 
 		DetailSubsellerRes response = new DetailSubsellerRes();

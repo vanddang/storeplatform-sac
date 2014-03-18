@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
@@ -55,9 +55,9 @@ public class SellerSubController {
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
-		if (StringUtil.nvl(req.getMemberPW(), "").equals("")) {
+		if (StringUtils.isBlank(req.getMemberPW())) {
 			throw new StorePlatformException("SAC_MEM_0001", "memberPW");
-		} else if (StringUtil.nvl(req.getSubSellerId(), "").equals("")) {
+		} else if (StringUtils.isBlank(req.getSubSellerId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerID");
 		}
 		req.setIsNew("Y");
@@ -76,7 +76,7 @@ public class SellerSubController {
 	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CreateSubsellerRes modifySubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
-		if (StringUtil.nvl(req.getSubSellerKey(), "").equals("")) {
+		if (StringUtils.isBlank(req.getSubSellerKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerKey");
 		}
 		req.setIsNew("N");
