@@ -189,14 +189,13 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 		} catch (StorePlatformException ex) {
-
+			LOGGER.info(ex.getErrorInfo().toString());
 			if ((StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 					+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN))
 					|| (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER))) {
 
 				/* 미가입 회원인 경우 로그 남김 */
-				LOGGER.info(ex.getErrorInfo().toString());
 				LOGGER.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
 				throw ex;
 
@@ -219,28 +218,6 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserAuthKey(this.tempUserAuthKey);
 		res.setDeviceKey(deviceKey);
 		res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
-
-		/* FDS 로그 */
-		// final String fdsSvcMngNo = req.getDeviceTelecom() == MemberConstants.DEVICE_TELECOM_SKT ?
-		// retDeviceInfo.getSvcMangNum() : "";
-		// final String fdsCompanyOwnPhoneYn = req.getDeviceTelecom() == MemberConstants.DEVICE_TELECOM_SKT ? "Y" : "N";
-		// final String fdsImei = req.getNativeId();
-		// final String fdsMnoType = req.getDeviceTelecom();
-		// final String fdsUsermbrNo = chkDupRes.getUserMbr().getImMbrNo();
-		// final String fdsOneId = chkDupRes.getUserMbr().getImSvcNo() == null ? "" :
-		// chkDupRes.getMbrOneID().getUserID();
-		// final String fdsPhoneModel = requestHeader.getDeviceHeader().getModel();
-		// final String fdsSystemId = requestHeader.getTenantHeader().getSystemId();
-		// final String fdsDeviceId = req.getDeviceId();
-		//
-		// new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
-		// @Override
-		// public void customize(TstoreSentinelShuttle shuttle) {
-		// shuttle.log_id("TL00001").interface_id("I01000004").svc_mng_no(fdsSvcMngNo).company_own_phone_yn(fdsCompanyOwnPhoneYn).imei(fdsImei)
-		// .mno_type(fdsMnoType).usermbr_no(fdsUsermbrNo).one_id(fdsOneId).phone_model(fdsPhoneModel).system_id(fdsSystemId)
-		// .device_id(fdsDeviceId);
-		// }
-		// });
 
 		return res;
 
@@ -323,14 +300,13 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 		} catch (StorePlatformException ex) {
-
+			LOGGER.info(ex.getErrorInfo().toString());
 			if ((StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 					+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN))
 					|| (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER))) {
 
 				/* 미가입 회원인 경우 로그 남김 */
-				LOGGER.info(ex.getErrorInfo().toString());
 				LOGGER.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
 				throw ex;
 
@@ -559,7 +535,9 @@ public class LoginServiceImpl implements LoginService {
 					}
 
 				} catch (StorePlatformException ex) {
-
+					
+					LOGGER.info(ex.getErrorInfo().toString());
+					
 					if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER)) { // 서비스 간편가입 대상
 
@@ -661,7 +639,7 @@ public class LoginServiceImpl implements LoginService {
 				// this.updateDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 			} catch (StorePlatformException ex) {
-
+				LOGGER.info(ex.getErrorInfo().toString());
 				if (StringUtils
 						.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
@@ -709,7 +687,7 @@ public class LoginServiceImpl implements LoginService {
 				// this.updateDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 			} catch (StorePlatformException ex) {
-
+				LOGGER.info(ex.getErrorInfo().toString());
 				if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
