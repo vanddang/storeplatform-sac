@@ -54,6 +54,7 @@ public class PaymentInfoSCITest {
 			req.setProdIdList(prodIdList);
 			req.setTenantId("S01");
 			req.setLangCd("ko");
+			req.setDeviceModelCd("SHW-M100S");
 
 			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
 			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
