@@ -179,7 +179,7 @@ public class LoginServiceImpl implements LoginService {
 		try {
 
 			if (chkDupRes.getUserMbr().getImSvcNo() != null) { /* 원아이디인 경우 */
-				
+
 				if (!StringUtil.equals(req.getDeviceTelecom(), dbDeviceTelecom)) {
 					/* 로그인할때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
 					this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr().getImSvcNo());
@@ -279,6 +279,7 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 휴대기기 정보 조회 */
 		SearchDeviceResponse schDeviceRes = this.searchDeviceInfo(requestHeader, req.getDeviceId());
+		String dbDeviceTelecom = schDeviceRes.getUserMbrDevice().getDeviceTelecom();
 
 		/* 휴대기기 정보 수정 */
 		DeviceInfo deviceInfo = new DeviceInfo();
@@ -295,7 +296,7 @@ public class LoginServiceImpl implements LoginService {
 
 			if (chkDupRes.getUserMbr().getImSvcNo() != null) { /* 원아이디인 경우 */
 
-				if (!StringUtil.equals(req.getDeviceTelecom(), schDeviceRes.getUserMbrDevice().getDeviceTelecom())) {
+				if (!StringUtil.equals(req.getDeviceTelecom(), dbDeviceTelecom)) {
 					/* 로그인할때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
 					this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr().getImSvcNo());
 				}
