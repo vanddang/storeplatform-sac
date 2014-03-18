@@ -129,9 +129,9 @@ public interface DeviceService {
 	 *            DeviceInfo
 	 * @param version
 	 *            String
-	 * @return DeviceInfo
+	 * @return deviceKey String
 	 */
-	public DeviceInfo updateDeviceForMdnLogin(SacRequestHeader requestHeader, DeviceInfo req, String version);
+	public String updateDeviceForMdnLogin(SacRequestHeader requestHeader, DeviceInfo req, String version);
 
 	/**
 	 * 휴대기기 대표단말 설정.

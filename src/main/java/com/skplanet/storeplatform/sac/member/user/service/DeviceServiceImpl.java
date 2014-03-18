@@ -1003,7 +1003,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public DeviceInfo updateDeviceForMdnLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, String version) {
+	public String updateDeviceForMdnLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, String version) {
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -1153,8 +1153,7 @@ public class DeviceServiceImpl implements DeviceService {
 			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 		}
 
-		deviceInfo.setDeviceKey(createDeviceRes.getDeviceKey());
-		return deviceInfo;
+		return createDeviceRes.getDeviceKey();
 
 	}
 

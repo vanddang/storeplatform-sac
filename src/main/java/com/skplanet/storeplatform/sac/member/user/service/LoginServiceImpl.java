@@ -167,7 +167,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
 		deviceInfo.setNativeId(req.getNativeId()); // IMEI
 
-		DeviceInfo retDeviceInfo = this.deviceService.updateDeviceForMdnLogin(requestHeader, deviceInfo, "v1");
+		String deviceKey = this.deviceService.updateDeviceForMdnLogin(requestHeader, deviceInfo, "v1");
 
 		try {
 
@@ -217,7 +217,7 @@ public class LoginServiceImpl implements LoginService {
 		res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
 		res.setStopStatusCode(chkDupRes.getUserMbr().getStopStatusCode());
 		res.setUserAuthKey(this.tempUserAuthKey);
-		res.setDeviceKey(retDeviceInfo.getDeviceKey());
+		res.setDeviceKey(deviceKey);
 		res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 
 		/* FDS 로그 */
@@ -301,7 +301,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
 		deviceInfo.setNativeId(req.getNativeId()); // IMEI
-		DeviceInfo retDeviceInfo = this.deviceService.updateDeviceForMdnLogin(requestHeader, deviceInfo, "v2");
+		String deviceKey = this.deviceService.updateDeviceForMdnLogin(requestHeader, deviceInfo, "v2");
 
 		try {
 
@@ -351,7 +351,7 @@ public class LoginServiceImpl implements LoginService {
 		res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
 		res.setStopStatusCode(chkDupRes.getUserMbr().getStopStatusCode());
 		res.setUserAuthKey(this.tempUserAuthKey);
-		res.setDeviceKey(retDeviceInfo.getDeviceKey());
+		res.setDeviceKey(deviceKey);
 		res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 
 		return res;
