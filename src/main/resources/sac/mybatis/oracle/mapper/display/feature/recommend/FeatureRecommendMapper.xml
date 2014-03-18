@@ -154,6 +154,7 @@
 		                   AND F.PROD_ID = G.PROD_ID
 		                   AND G.TENANT_ID = #{tenantId}
 		                   AND G.EXPO_YN = 'Y'
+		                   AND G.PROD_STATUS_CD = 'PD000403'
 		                   AND C.PART_PROD_ID = H.PROD_ID
 		              ) A
 		         WHERE RN = 1
