@@ -24,6 +24,7 @@ public class VerifyOrderSacReq extends CommonInfo {
 
 	@NotBlank
 	private String prchsId; // 구매ID
+	private String mctSpareParam; // 가맹점 파라미터
 
 	/**
 	 * @return the prchsId
@@ -38,6 +39,21 @@ public class VerifyOrderSacReq extends CommonInfo {
 	 */
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the mctSpareParam
+	 */
+	public String getMctSpareParam() {
+		return this.mctSpareParam;
+	}
+
+	/**
+	 * @param mctSpareParam
+	 *            the mctSpareParam to set
+	 */
+	public void setMctSpareParam(String mctSpareParam) {
+		this.mctSpareParam = mctSpareParam;
 	}
 
 }

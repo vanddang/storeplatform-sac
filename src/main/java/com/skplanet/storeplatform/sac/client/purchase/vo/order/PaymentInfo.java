@@ -28,10 +28,9 @@ public class PaymentInfo extends CommonInfo {
 	private String tid; // PG사 거래번호
 	@NotBlank
 	private String paymentMtdCd; // 결제수단 코드
-	@NotBlank
-	private String paymentDt; // 결제 일시 (승인 일시)
 	@NotNull
 	private double paymentAmt; // 결제 금액
+	private String paymentDt; // 결제 일시 (승인 일시)
 	private String apprNo; // 승인번호
 	private String billKey; // 빌링키
 	private String cpnId; // 이용한 쿠폰 ID
@@ -68,21 +67,6 @@ public class PaymentInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the paymentDt
-	 */
-	public String getPaymentDt() {
-		return this.paymentDt;
-	}
-
-	/**
-	 * @param paymentDt
-	 *            the paymentDt to set
-	 */
-	public void setPaymentDt(String paymentDt) {
-		this.paymentDt = paymentDt;
-	}
-
-	/**
 	 * @return the paymentAmt
 	 */
 	public double getPaymentAmt() {
@@ -95,6 +79,21 @@ public class PaymentInfo extends CommonInfo {
 	 */
 	public void setPaymentAmt(double paymentAmt) {
 		this.paymentAmt = paymentAmt;
+	}
+
+	/**
+	 * @return the paymentDt
+	 */
+	public String getPaymentDt() {
+		return this.paymentDt;
+	}
+
+	/**
+	 * @param paymentDt
+	 *            the paymentDt to set
+	 */
+	public void setPaymentDt(String paymentDt) {
+		this.paymentDt = paymentDt;
 	}
 
 	/**
