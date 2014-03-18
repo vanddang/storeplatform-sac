@@ -35,6 +35,7 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	private String prchsId; // 구매 ID
 	@NotNull
 	private double totAmt; // 결제 총 금액
+	private String mctSpareParam; // 가맹점 파라미터
 
 	@NotEmpty
 	@Valid
@@ -98,6 +99,21 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	 */
 	public void setTotAmt(double totAmt) {
 		this.totAmt = totAmt;
+	}
+
+	/**
+	 * @return the mctSpareParam
+	 */
+	public String getMctSpareParam() {
+		return this.mctSpareParam;
+	}
+
+	/**
+	 * @param mctSpareParam
+	 *            the mctSpareParam to set
+	 */
+	public void setMctSpareParam(String mctSpareParam) {
+		this.mctSpareParam = mctSpareParam;
 	}
 
 	/**
