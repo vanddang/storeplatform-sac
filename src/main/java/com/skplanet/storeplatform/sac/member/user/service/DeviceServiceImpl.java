@@ -1777,7 +1777,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		} else if (StringUtil.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
-			if (StringUtil.isBlank(dbVal) || StringUtil.equals(reqVal, dbVal)) {
+			//if ( StringUtil.isBlank(dbVal) || StringUtil.equals(reqVal, dbVal)) {
+			if (StringUtil.isBlank(reqVal) || (StringUtil.isNotBlank(dbVal) && StringUtil.equals(reqVal, dbVal))) {
 				isEquals = true;
 			}
 
