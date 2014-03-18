@@ -18,6 +18,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class RecommendOneday extends CommonInfo {
 
+	private static final long serialVersionUID = 1L;
+
 	private Integer totalCount;
 	private String tenantId;
 	private String menuId;
