@@ -52,7 +52,6 @@
 	                  , KA.PART_PARENT_CLSF_CD
 	                  , KA.DRM_YN
 	                  , DECODE( KA.PROD_CLSF_CD , 'PD000601', 'paid' , 'PD000602', 'library' , 'PD000603', 'vm' , 'PD000604', 'free' , 'PD000605', 'paid-rss' , 'PD000606', 'free-rss' , 'paid' ) AS PROD_CLSF_CD
-	            --      , KA.PROD_CLSF_CD
 	                  , KA.VER_MAJOR || '.' || KA.VER_MINOR AS PROD_VER
 	                  , NVL(KB.APK_PKG_NM, '' ) AS APK_PKG_NM
 	                  , NVL2( KB.APK_VER, KB.APK_VER, KA.PKG_VER_CD ) AS APK_VER   
@@ -162,15 +161,12 @@
 		         , META_CLSF_CD
 		         , STORE_PROD_ID
 		         , PLAY_PROD_ID
-		--         , ( CASE WHEN STORE_PROD_ID IS NOT NULL THEN '/'||C.CAT_DESC||'/'||STORE_PROD_ID END  ) AS STORE_PROD_ID
-		--         , ( CASE WHEN PLAY_PROD_ID IS NOT NULL THEN '/'||C.CAT_DESC||'/'||PLAY_PROD_ID END  ) AS PLAY_PROD_ID
 		         , NVL(STORE_PROD_AMT, 0) AS STORE_PROD_AMT
 		         , NVL(PLAY_PROD_AMT, 0) AS PLAY_PROD_AMT
 		         , STORE_PROD_CHRG
 		         , PLAY_PROD_CHRG
 		         , DECODE( STORE_DRM_YN, 'Y', STORE_DRM_YN, 'N' ) AS STORE_DRM_YN
 		         , DECODE( PLAY_DRM_YN, 'Y', PLAY_DRM_YN, 'N' ) AS PLAY_DRM_YN  
---		         , DECODE( BTV_YN, 'Y', BTV_YN, 'N' ) AS BTV_YN
 		         , DECODE( HDCP_YN, 'Y', HDCP_YN, 'N' ) AS HDCP_YN
 		         , DECODE( HDV_YN, 'Y', HDV_YN, 'N' ) AS HDV_YN
 		         , PROD_NM
@@ -188,7 +184,6 @@
 		         , EXPO_SELLER_TELNO
 		         , EXPO_SELLER_EMAIL            
 		         , DECODE( DOLBY_YN , 'Y' , DECODE( DOLBY_SPRT_YN, 'Y', DOLBY_SPRT_YN, 'N' ), 'N' ) AS DOLBY_SPRT_YN
-		--         , DOLBY_YN AS DOLBY_SPRT_YN
 		         , REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,1) AS NM_SUB_CONTS_ID
 		         , REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,1) AS SD_SUB_CONTS_ID
 		         , REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,1) AS HD_SUB_CONTS_ID
@@ -232,7 +227,6 @@
 		                 , PLAY_PROD_CHRG
 		                 , STORE_DRM_YN
 		                 , PLAY_DRM_YN
---		                 , BTV_YN
 		                 , HDCP_YN
 		                 , HDV_YN
 		                 , PROD_NM
@@ -273,7 +267,6 @@
 		                          , MAX( JA.PLAY_DRM_YN ) AS PLAY_DRM_YN
 			                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS STORE_PROD_CHRG
 			                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG		                          
---		                          , MAX( JA.BTV_YN ) AS BTV_YN
 		                          , MAX( JA.HDCP_YN ) AS HDCP_YN
 		                          , MAX( JA.HDV_YN ) AS HDV_YN
 		                          , MAX( JA.PROD_NM ) AS PROD_NM
@@ -315,7 +308,6 @@
 		                                  , IA.PLAY_PROD_AMT
 		                                  , IA.STORE_DRM_YN
 		                                  , IA.PLAY_DRM_YN
---		                                  , IA.BTV_YN
 		                                  , IA.HDCP_YN
 		                                  , IA.HDV_YN
 		                                  , IA.PROD_NM
@@ -347,7 +339,6 @@
 		                                    SELECT A.MENU_ID
 		                                         , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC T WHERE T.MENU_ID = A.MENU_ID AND LANG_CD=#{langCd}) AS MENU_NM                                    
 		                                         , D.PROD_ID AS CHNL_PROD_ID
---                                                 , P.BTV_YN
                                                  , E.HDCP_YN
                                                  , E.HDV_YN
                                                  , P.DWLD_AREA_LIMT_YN
@@ -420,7 +411,6 @@
 		                                       AND I.PART_PROD_ID = J.PROD_ID
 		                                       AND I.PART_PROD_ID = K.PROD_ID
 		                                       AND I.PART_PROD_ID = M.PROD_ID
-		                                       --AND K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD                                    
 		                                       AND J.PROD_ID = N.PROD_ID
 		                                       AND J.PROD_ID = O.PROD_ID  
 		                                       AND N.TENANT_ID = #{tenantId}
@@ -437,7 +427,6 @@
 		                                       AND J.SVC_GRP_CD = 'DP000203'       /* PD002501 : 에피소드타입 */  
 		                                       AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 에피소드타입 */  
 		                                       AND J.TOP_MENU_ID IN ('DP17', 'DP18')
-		                                       --AND K.PROD_ID IS NOT NULL                
 		                                       AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
 		                                       AND DECODE( L.SD_VIDEO_SPRT_YN , 'Y' , DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( L.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1   
 		                                       AND (CASE WHEN L.VIDEO_DRM_SPRT_YN = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
@@ -854,7 +843,6 @@
 		           AND I.PART_PROD_ID = J.PROD_ID
 		           AND I.PART_PROD_ID = K.PROD_ID
 		           AND I.PART_PROD_ID = M.PROD_ID
---		           AND K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD                                    
 		           AND J.PROD_ID = N.PROD_ID
 		           AND J.PROD_ID = O.PROD_ID  
 		           AND N.TENANT_ID = #{tenantId}
