@@ -132,6 +132,8 @@ public class BestDownloadAppServiceImpl implements BestDownloadAppService {
 			}
 		}
 
+		bestDownloadAppSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
+
 		// OpenApi Best Download App 상품 조회
 		if (DisplayConstants.DP_ORDEREDBY_TYPE_RECENT.equals(orderedBy)
 				|| DisplayConstants.DP_ORDEREDBY_TYPE_POPULAR.equals(orderedBy)) {
