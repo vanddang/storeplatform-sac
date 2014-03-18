@@ -221,8 +221,8 @@
                 <if test='searchType != "S"'>    
 	                <if test='searchType == "A"'>         
 	                AND ONE.EXPO_DT <![CDATA[ >= ]]>
-	                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE -1, 'YYYYMMDD')
-	                        ELSE  TO_CHAR(SYSDATE -0, 'YYYYMMDD')
+	                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE -8, 'YYYYMMDD')
+	                        ELSE  TO_CHAR(SYSDATE -7, 'YYYYMMDD')
 	                    END
 	                AND ONE.EXPO_DT <![CDATA[ <= ]]>
 	                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE +3, 'YYYYMMDD')
