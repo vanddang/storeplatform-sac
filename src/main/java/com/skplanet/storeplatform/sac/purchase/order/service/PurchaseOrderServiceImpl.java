@@ -496,7 +496,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			CouponPublishEcRes couponPublishEcRes = this.shoppingSCI.createCouponPublish(couponPublishEcReq);
 			this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,SHOPPING,{}", couponPublishEcRes);
 
-			if (StringUtils.equals(couponPublishEcRes.getPublishType(), PurchaseConstants.SHOPPING_COUPON_PUBLISH_SYNC)) { // 0-즉시발급
+			if (StringUtils
+					.equals(couponPublishEcRes.getPublishType(), PurchaseConstants.SHOPPING_COUPON_PUBLISH_ASYNC) == false
+					&& couponPublishEcRes.getItems() != null && couponPublishEcRes.getItems().size() > 0) { // 0-즉시발급
 				String availStartDt = couponPublishEcRes.getAvailStartdate();
 				String availEndDt = couponPublishEcRes.getAvailEnddate();
 
