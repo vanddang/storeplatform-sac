@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendOneday;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
@@ -169,8 +170,14 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 			for (RecommendOneday recommendOneday : recommendOnedayList) {
 				String topMenuId = recommendOneday.getTopMenuId();
 				String svcGrpCd = recommendOneday.getSvcGrpCd();
-
-				reqMap.put("productBasicInfo", recommendOneday);
+				ProductBasicInfo basicInfo = new ProductBasicInfo();
+				basicInfo.setProdId(recommendOneday.getProdId());
+				basicInfo.setMenuId(recommendOneday.getMenuId());
+				basicInfo.setPartProdId(recommendOneday.getPartProdId());
+				basicInfo.setTopMenuId(recommendOneday.getTopMenuId());
+				basicInfo.setContentsTypeCd(recommendOneday.getContentsTypeCd());
+				basicInfo.setTenantId(recommendOneday.getTenantId());
+				reqMap.put("productBasicInfo", basicInfo);
 				reqMap.put("req", reqMap);
 				reqMap.put("tenantHeader", tenantHeader);
 				reqMap.put("deviceHeader", deviceHeader);
