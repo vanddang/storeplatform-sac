@@ -225,7 +225,9 @@
         <!-- OpenApi 신규 앱 추천 리스트 조회(출시 1주일 이내) -->
         <typeAlias alias="NewAppRecommendSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq" />
         <!-- OpenApi Best Download App -->
-        <typeAlias alias="BestDownloadAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq" />                
+        <typeAlias alias="BestDownloadAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq" />
+        <!-- OpenApi Best Download 멀티미디어 상품 조회 -->
+        <typeAlias alias="BestDownloadMMSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadMMSacReq" />
         <!-- OpenApi PKG Name 기반 상품 리스트 조회 -->
         <typeAlias alias="SalesAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacReq" />                
         <!-- OpenApi PKG Name 기반 상품 정보 조회 -->
