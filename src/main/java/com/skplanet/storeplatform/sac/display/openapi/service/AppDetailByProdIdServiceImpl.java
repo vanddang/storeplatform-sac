@@ -143,6 +143,7 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 				app.setSupportedOs(metaInfo.getOsVersion());
 				app.setPackageName(metaInfo.getApkPkgNm());
 				app.setVersion(metaInfo.getProdVer());
+				app.setVersionCode(metaInfo.getApkVer());
 				product.setApp(app);
 
 				product.setDeviceList(deviceList); // 지원 단말 목록

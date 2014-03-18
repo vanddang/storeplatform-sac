@@ -1599,6 +1599,7 @@
                 ,DP.REG_ID                 AS EXPO_SELLER_ID          
                 ,DP.TOP_MENU_ID            AS TOP_MENU_ID 
                 ,DAP.PKG_NM                AS APK_PKG_NM
+                ,DAP.PKG_VER_CD            AS APK_VER
                 ,DAP.VER_MAJOR || '.' || DAP.VER_MINOR  AS PROD_VER         
                 , (
                     SELECT                        
