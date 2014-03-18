@@ -129,13 +129,18 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		WithdrawRes withdrawRes = new WithdrawRes();
 
 		/* 통합회원 연동 */
+
+		logger.info("회원탈퇴 userType : {}", schUserRes.getUserMbr().getUserType());
+
 		if (schUserRes.getUserMbr().getImSvcNo() != null) {
+
 			this.oneIdUser(requestHeader, schUserRes, req);
 
 			logger.info("oneIdUser Discard Success req : ", req.toString());
 			withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 		} else {
 			if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+
 				this.idpMobileUser(requestHeader, schUserRes, req);
 
 				logger.info("secedeUser4Wap Success req : ", req.toString());
@@ -143,6 +148,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			}
 			/* IDP 아이디 회원 */
 			else if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
+
 				this.idpIdUser(requestHeader, schUserRes, req);
 
 				logger.info("secedeUser Success req ", req.toString());
