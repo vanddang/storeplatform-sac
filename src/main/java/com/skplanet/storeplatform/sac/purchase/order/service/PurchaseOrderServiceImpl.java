@@ -68,6 +68,7 @@ import com.skplanet.storeplatform.sac.purchase.interworking.service.Interworking
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSacReq;
 import com.skplanet.storeplatform.sac.purchase.order.MD5Util;
+import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
 import com.skplanet.storeplatform.sac.purchase.order.Seed128Util;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CreatePaymentSacInfo;
@@ -427,14 +428,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 *            결제결과 정보
 	 */
 	@Override
-	public List<CreatePurchaseSc> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq) {
+	public List<CreatePurchaseSc> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId) {
 		this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,START");
 
 		// ------------------------------------------------------------------------------
 		// 구매 예약 건 조회
 
 		SearchReservedPurchaseListScReq reqSearch = new SearchReservedPurchaseListScReq();
-		reqSearch.setTenantId("S01");
+		reqSearch.setTenantId(tenantId);
 		reqSearch.setPrchsId(notifyPaymentReq.getPrchsId());
 
 		SearchReservedPurchaseListScRes res = this.purchaseOrderSearchSCI.searchReservedPurchaseList(reqSearch);
@@ -701,6 +702,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// paymentPageParam.setpType("remove");
 		paymentPageParam.setAid(product.getAid());
 		paymentPageParam.setReturnFormat(PaymentPageParam.PP_RETURN_FORMAT_JSON);
+		paymentPageParam.setMctSpareParam(purchaseOrderInfo.getTenantId());
 		paymentPageParam.setMdn(purchaseOrderInfo.getPurchaseUser().getDeviceId());
 		paymentPageParam.setNmDevice(purchaseOrderInfo.getDeviceModelCd());
 		paymentPageParam.setImei(purchaseOrderInfo.getImei());
@@ -812,23 +814,28 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		} else {
 			useUser = purchaseOrderInfo.getPurchaseUser();
 		}
-		StringBuffer sbReserveData = new StringBuffer(1024);
-		sbReserveData.append("tenantId=").append(useUser.getTenantId()).append("&systemId=")
-				.append(purchaseOrderInfo.getSystemId()).append("&userKey=").append(purchaseOrderInfo.getUserKey())
-				.append("&deviceId=").append(purchaseOrderInfo.getPurchaseUser().getDeviceId()).append("&telecom=")
-				.append(purchaseOrderInfo.getPurchaseUser().getTelecom()).append("&useUserKey=")
-				.append(useUser.getUserKey()).append("&useDeviceKey=").append(useUser.getDeviceKey())
-				.append("&useDeviceId=").append(useUser.getDeviceId()).append("&useDeviceModelCd=")
-				.append(useUser.getDeviceModelCd()).append("&networkTypeCd=")
-				.append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
-				.append(purchaseOrderInfo.getCurrencyCd()).append("&specialCouponId=");
-		if (StringUtils.isNotBlank(purchaseOrderInfo.getSpecialCouponId())) {
-			sbReserveData.append(purchaseOrderInfo.getSpecialCouponId());
-		}
-		sbReserveData.append("&specialCouponAmt=").append(purchaseOrderInfo.getSpecialCouponAmt());
 
-		// receiveNames; // 선물수신자 성명
-		// receiveMdns; // 선물수신자 MDN
+		boolean bCharge = purchaseOrderInfo.getRealTotAmt() > 0.0;
+
+		StringBuffer sbReserveData = new StringBuffer(1024);
+		if (bCharge) {
+			sbReserveData.append("tenantId=").append(useUser.getTenantId()).append("&systemId=")
+					.append(purchaseOrderInfo.getSystemId()).append("&userKey=").append(purchaseOrderInfo.getUserKey())
+					.append("&deviceId=").append(purchaseOrderInfo.getPurchaseUser().getDeviceId()).append("&telecom=")
+					.append(purchaseOrderInfo.getPurchaseUser().getTelecom()).append("&useUserKey=")
+					.append(useUser.getUserKey()).append("&useDeviceKey=").append(useUser.getDeviceKey())
+					.append("&useDeviceId=").append(useUser.getDeviceId()).append("&useDeviceModelCd=")
+					.append(useUser.getDeviceModelCd()).append("&networkTypeCd=")
+					.append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
+					.append(purchaseOrderInfo.getCurrencyCd()).append("&specialCouponId=");
+			if (StringUtils.isNotBlank(purchaseOrderInfo.getSpecialCouponId())) {
+				sbReserveData.append(purchaseOrderInfo.getSpecialCouponId());
+			}
+			sbReserveData.append("&specialCouponAmt=").append(purchaseOrderInfo.getSpecialCouponAmt());
+
+			// receiveNames; // 선물수신자 성명
+			// receiveMdns; // 선물수신자 MDN
+		}
 
 		int commonReserveDataLen = sbReserveData.length();
 
@@ -898,17 +905,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchase.setCurrencyCd(purchaseOrderInfo.getCurrencyCd());
 
 				// 구매예약 시 저장할 데이터 (상품별)
-				sbReserveData.setLength(commonReserveDataLen);
-				sbReserveData.append("&aid=").append(product.getAid()).append("&couponCode=")
-						.append(product.getCouponCode()).append("&itemCode=").append(product.getItemCode())
-						.append("&bonusCashPoint=").append("").append("&bonusCashUsableDayCnt=").append("")
-						.append("&afterAutoPayDt=").append("").append("&dwldAvailableDayCnt=").append("")
-						.append("&usePeriodCnt=").append("").append("&loanPid=").append("").append("&loanAmt=")
-						.append("").append("&ownPid=").append("").append("&ownAmt=").append("").append("&sellerNm=")
-						.append("").append("&sellerEmail=").append("").append("&sellerTelno=").append("")
-						.append("&sellerMbrNo=").append("").append("&mallCd=").append("").append("&outsdContentsId=")
-						.append("");
-				createPurchase.setPrchsResvInfo(sbReserveData.toString());
+				if (bCharge) {
+					sbReserveData.setLength(commonReserveDataLen);
+					sbReserveData.append("&aid=").append(product.getAid()).append("&couponCode=")
+							.append(product.getCouponCode()).append("&itemCode=").append(product.getItemCode())
+							.append("&bonusCashPoint=").append("").append("&bonusCashUsableDayCnt=").append("")
+							.append("&afterAutoPayDt=").append("").append("&dwldAvailableDayCnt=").append("")
+							.append("&usePeriodCnt=").append("").append("&loanPid=").append("").append("&loanAmt=")
+							.append("").append("&ownPid=").append("").append("&ownAmt=").append("")
+							.append("&sellerNm=").append("").append("&sellerEmail=").append("").append("&sellerTelno=")
+							.append("").append("&sellerMbrNo=").append("").append("&mallCd=").append("")
+							.append("&outsdContentsId=").append("");
+					createPurchase.setPrchsResvInfo(sbReserveData.toString());
+				}
 
 				createPurchaseList.add(createPurchase);
 			}
@@ -994,7 +1003,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			payment.setCpnId(paymentInfo.getCpnId());
 			payment.setMoid(paymentInfo.getMoid());
 
-			payment.setPaymentMtdCd(paymentInfo.getPaymentMtdCd());
+			payment.setPaymentMtdCd(PaymethodUtil.convert2StoreCode(paymentInfo.getPaymentMtdCd()));
 			payment.setPaymentAmt(paymentInfo.getPaymentAmt());
 			payment.setPaymentDt(paymentInfo.getPaymentDt());
 			payment.setStatusCd(statusCd);

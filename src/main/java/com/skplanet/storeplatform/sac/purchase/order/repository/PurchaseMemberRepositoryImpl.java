@@ -67,16 +67,25 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	 */
 	@Override
 	public PurchaseUserDevice searchUserDeviceByKey(String tenantId, String userKey, String deviceKey) {
-		SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
 		List<String> deviceKeyList = new ArrayList<String>();
 		deviceKeyList.add(deviceKey);
+
+		SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
 		searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
 
-		SearchUserDeviceSacRes searchUserDeviceSacRes = this.searchUserSCI
-				.searchUserByDeviceKey(searchUserDeviceSacReq);
+		SearchUserDeviceSacRes searchUserDeviceSacRes = null;
+		try {
+			searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
+				return null;
+			} else {
+				throw e;
+			}
+		}
 
 		Map<String, UserDeviceInfoSac> userDeviceInfoMap = searchUserDeviceSacRes.getUserDeviceInfo();
-		if (userDeviceInfoMap == null) {
+		if (userDeviceInfoMap == null || (userDeviceInfoMap.containsKey(deviceKey) == false)) {
 			return null;
 		}
 		UserDeviceInfoSac userDeviceInfoSac = userDeviceInfoMap.get(deviceKey);

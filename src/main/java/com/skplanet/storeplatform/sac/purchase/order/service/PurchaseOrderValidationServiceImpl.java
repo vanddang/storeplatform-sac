@@ -137,19 +137,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// --------------------------------------------------------------------------------------
 		// 구매(선물발신) 회원/기기
 
-		PurchaseUserDevice purchaseUserDevice = null;
-
 		// 조회
-		try {
-			purchaseUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(purchaseOrderInfo.getTenantId(),
-					purchaseOrderInfo.getUserKey(), purchaseOrderInfo.getDeviceKey());
-		} catch (StorePlatformException e) {
-			// 조회 실패
-			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
-				throw new StorePlatformException("SAC_PUR_4101");
-			} else {
-				throw e;
-			}
+		PurchaseUserDevice purchaseUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(
+				purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getUserKey(), purchaseOrderInfo.getDeviceKey());
+		if (purchaseUserDevice == null) {
+			throw new StorePlatformException("SAC_PUR_4101");
 		}
 
 		// 회원상태 체크
@@ -168,20 +160,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 선물 수신 회원/기기
 
 		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			PurchaseUserDevice receiveUserDevice = null;
 
 			// 조회
-			try {
-				receiveUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(
-						purchaseOrderInfo.getRecvTenantId(), purchaseOrderInfo.getRecvUserKey(),
-						purchaseOrderInfo.getRecvDeviceKey());
-			} catch (StorePlatformException e) {
-				// 조회 실패
-				if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
-					throw new StorePlatformException("SAC_PUR_4103");
-				} else {
-					throw e;
-				}
+			PurchaseUserDevice receiveUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(
+					purchaseOrderInfo.getRecvTenantId(), purchaseOrderInfo.getRecvUserKey(),
+					purchaseOrderInfo.getRecvDeviceKey());
+			if (receiveUserDevice == null) {
+				throw new StorePlatformException("SAC_PUR_4103");
 			}
 
 			// 회원상태 체크

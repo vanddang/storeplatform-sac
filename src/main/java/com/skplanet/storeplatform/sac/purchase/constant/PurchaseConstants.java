@@ -89,4 +89,16 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** UAPS */
 	public static final String UAPS_SVC_TP_SKTTEST = "12"; // 회선 타입: 시험폰
 
+	/** Pay Planet 결제 방법 코드 */
+	public static final String PAYPLANET_PAYMENT_METHOD_SKT_CARRIER = "11"; // SKT 후불
+	public static final String PAYPLANET_PAYMENT_METHOD_DANAL = "12"; // 다날
+	public static final String PAYPLANET_PAYMENT_METHOD_CREDIT_CARD = "13"; // 신용카드
+	public static final String PAYPLANET_PAYMENT_METHOD_PAYPIN = "14"; // PayPin
+	public static final String PAYPLANET_PAYMENT_METHOD_OCB = "20"; // OK CASHBAG
+	public static final String PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP = "21"; // T Membership (YTmembership)
+	public static final String PAYPLANET_PAYMENT_METHOD_MOBILE_TMONEY = "22"; // T Money
+	public static final String PAYPLANET_PAYMENT_METHOD_DOTORI = "23"; // 도토리
+	public static final String PAYPLANET_PAYMENT_METHOD_CULTURE = "24"; // 문화상품권
+	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_CASH = "25"; // T store 캐쉬
+	public static final String PAYPLANET_PAYMENT_METHOD_COUPON = "26"; // 쿠폰
 }

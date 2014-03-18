@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.purchase.order;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+
 /**
  * 
  * Pay Planet 과 결제수단코드 매핑
@@ -25,7 +27,7 @@ public class PaymethodUtil {
 
 	static {
 		convert2StoreMap = new HashMap<String, String>();
-		convert2StoreMap.put("11", "OR000605"); // SKT후불
+		convert2StoreMap.put(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER, "OR000605"); // SKT후불
 		convert2StoreMap.put("12", "OR000602"); // 다날
 		convert2StoreMap.put("13", "OR000601"); // 신용카드
 		convert2StoreMap.put("14", "OR000605"); // PayPin
@@ -38,7 +40,7 @@ public class PaymethodUtil {
 		convert2StoreMap.put("26", "OR000606"); // Coupon
 
 		convert2PayPlanetMap = new HashMap<String, String>();
-		convert2PayPlanetMap.put("OR000605", "11"); // SKT후불
+		convert2PayPlanetMap.put("OR000605", PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER); // SKT후불
 		convert2PayPlanetMap.put("OR000602", "12"); // 다날
 		convert2PayPlanetMap.put("OR000601", "13"); // 신용카드
 		convert2PayPlanetMap.put("OR000605", "14"); // PayPin

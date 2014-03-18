@@ -201,12 +201,18 @@ public class PurchaseOrderController {
 	@ResponseBody
 	public VerifyOrderSacRes verifyOrder(@RequestBody @Validated VerifyOrderSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.debug("PRCHS,INFO,VERIFY,REQ,{}", req);
+		this.logger.debug("PRCHS,INFO,VERIFY,REQ,{},{}", req, sacRequestHeader);
 
-		// TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
+		String tenantId = null;
+		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
+		if (tenantHeader != null) {
+			tenantHeader.getTenantId();
+		} else { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
+			tenantId = req.getMctSpareParam();
+		}
 
 		VerifyOrderInfo verifyOrderInfo = new VerifyOrderInfo();
-		verifyOrderInfo.setTenantId("S01"); // TAKTODO:: 테넌트ID 요청 방안 (PP / 테넌트)
+		verifyOrderInfo.setTenantId(tenantId);
 		verifyOrderInfo.setPrchsId(req.getPrchsId());
 
 		return this.orderService.verifyPurchaseOrder(verifyOrderInfo);
@@ -224,7 +230,8 @@ public class PurchaseOrderController {
 	 */
 	@RequestMapping(value = "/notifyPayment/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public NotifyPaymentSacRes notifyPayment(@RequestBody @Validated NotifyPaymentSacReq notifyPaymentReq) {
+	public NotifyPaymentSacRes notifyPayment(@RequestBody @Validated NotifyPaymentSacReq notifyPaymentReq,
+			SacRequestHeader sacRequestHeader) {
 		this.logger.debug("PRCHS,INFO,NOTI_PAY,REQ,{}", notifyPaymentReq);
 
 		// TAKTODO:: 결제실패 경우 처리 - 구매실패(결제실패) 이력 관리 할건가?
@@ -232,11 +239,20 @@ public class PurchaseOrderController {
 			return new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq.getPaymentInfoList().size());
 		}
 
+		String tenantId = null;
+		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
+		if (tenantHeader != null) {
+			tenantHeader.getTenantId();
+		} else { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
+			tenantId = notifyPaymentReq.getMctSpareParam();
+		}
+
 		// ------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
 		// 구매 확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장
 
-		List<CreatePurchaseSc> createPurchaseScList = this.orderService.executeConfirmPurchase(notifyPaymentReq);
+		List<CreatePurchaseSc> createPurchaseScList = this.orderService.executeConfirmPurchase(notifyPaymentReq,
+				tenantId);
 
 		// ------------------------------------------------------------------------------
 		// 구매 후 처리 - 씨네21/인터파크, 구매건수 증가 등등

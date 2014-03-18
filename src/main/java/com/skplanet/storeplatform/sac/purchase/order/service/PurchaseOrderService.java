@@ -66,9 +66,11 @@ public interface PurchaseOrderService {
 	 * 
 	 * @param notifyPaymentReq
 	 *            결제결과 정보
+	 * @param tenantId
+	 *            테넌트 ID
 	 * @return 구매예약했던 구매이력 목록
 	 */
-	public List<CreatePurchaseSc> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq);
+	public List<CreatePurchaseSc> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId);
 
 	/**
 	 * 
