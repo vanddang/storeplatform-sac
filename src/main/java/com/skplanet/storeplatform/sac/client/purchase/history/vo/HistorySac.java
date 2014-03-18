@@ -26,6 +26,7 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String totAmt;
 	private String sendUserKey;
 	private String sendDeviceKey;
+	private String sendDeviceId;
 	private String recvDt;
 	private String recvConfPathCd;
 	private String tenantProdGrpCd;
@@ -1087,6 +1088,21 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setDpCatSubNo(String dpCatSubNo) {
 		this.dpCatSubNo = dpCatSubNo;
+	}
+
+	/**
+	 * @return the sendDeviceId
+	 */
+	public String getSendDeviceId() {
+		return this.sendDeviceId;
+	}
+
+	/**
+	 * @param sendDeviceId
+	 *            the sendDeviceId to set
+	 */
+	public void setSendDeviceId(String sendDeviceId) {
+		this.sendDeviceId = sendDeviceId;
 	}
 
 }
