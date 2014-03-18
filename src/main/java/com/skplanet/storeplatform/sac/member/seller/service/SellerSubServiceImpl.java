@@ -66,7 +66,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr = new com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr();
 		sellerMbr.setParentSellerKey(req.getSellerKey()); // US201401231325534800000164
 														  // IF1023501437920130904104346
-		if (req.getIsNew().equals("Y")) {
+		if ("Y".equals(req.getIsNew())) {
 			sellerMbr.setSellerID(req.getSubSellerId());
 		}
 		sellerMbr.setSellerKey(req.getSubSellerKey());
