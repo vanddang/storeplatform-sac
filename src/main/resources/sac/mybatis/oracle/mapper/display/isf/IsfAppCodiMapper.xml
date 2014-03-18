@@ -14,6 +14,7 @@
                , P.CONTENTS_TYPE_CD
                , P.META_CLSF_CD
                , P.TOP_MENU_ID
+               , CP.MENU_ID
                , P2.PROD_ID AS PART_PROD_ID
                , ROW_NUMBER( ) OVER ( PARTITION BY PR.PROD_ID
                                           ORDER BY P2.REG_DT DESC ) AS RN
@@ -155,14 +156,14 @@
 		                       ( CASE WHEN ( P.CHNL_PERIOD_AMT <![CDATA[>=]]> 0 AND P.STRM_EPSD_CNT <![CDATA[>]]> 0 ) THEN P.CHNL_PERIOD_AMT
 		                              ELSE P.CHNL_UNLMT_AMT
 		                          END )
-		                    ELSE P.PROD_AMT
+	                       WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN
+	                           ( CASE WHEN ( P.CHNL_UNLMT_AMT >= 0 AND P.STRM_EPSD_CNT > 0 ) THEN P.CHNL_UNLMT_AMT
+	                                  ELSE P.CHNL_PERIOD_AMT
+	                              END )                              
+			               ELSE P.PROD_AMT
 		               END ) AS PROD_AMT
 		          , NVL(P.PROD_NET_AMT, 0) AS PROD_NET_AMT
-		          , DECODE( P.PROD_GRD_CD
-		                  , 'PD004401', 0
-		                  , 'PD004402', 1
-		                  , 'PD004403', 2
-		                  , 'PD004404', 4 ) AS PROD_GRD_CD
+		          , P.PROD_GRD_CD
 		          , P.SVC_GRP_CD
 		          , P.CONTENTS_TYPE_CD
 		          , P.OUTSD_CONTENTS_ID
@@ -387,6 +388,7 @@
 		                , P.CONTENTS_TYPE_CD
 		                , P.META_CLSF_CD
 		                , P.TOP_MENU_ID
+		                , CP.MENU_ID
 		                , P2.PROD_ID AS PART_PROD_ID
 		                , ROW_NUMBER( ) OVER ( PARTITION BY PR.PROD_ID
 		                                           ORDER BY P2.REG_DT DESC ) AS RN

@@ -10,12 +10,24 @@
          (
          SELECT PKG_ID
               , PKG_NM
+	     <choose>
+	        <!-- 구 테마추천 -->
+	        <when test="ver != v2">
+	          , IMG2 AS PKG_IMG_POS
+	        </when>
+	        <!-- New 테마추천 -->
+	        <when test="ver != v2">
+	          , DECODE ( #{deviceHeader.dpi}, '320', SET_IMG1, '240', SET_IMG2, '160', SET_IMG3, SET_IMG3 ) AS PKG_IMG_POS
+	        </when>
+	        <otherwise>
               , IMG2 AS PKG_IMG_POS
+	        </otherwise>
+	     </choose>
            FROM TB_DP_RECOM_PKG UP
-      <if test="multiValue_id  != null">
+      <if test="multiValueId  != null">
              , (
-              <foreach collection="multiValue_id" item="multiValue_id" separator="UNION ALL">
-                SELECT #{multiValue_id.id} ISF_ID, #{multiValue_id.order} ISF_ORDER FROM DUAL
+              <foreach collection="multiValueId" item="multiValueId" separator="UNION ALL">
+                SELECT #{multiValueId.id} ISF_ID, #{multiValueId.order} ISF_ORDER FROM DUAL
               </foreach>
                ) ISF
       </if>
@@ -25,7 +37,7 @@
          <when test="recommendId != null">
             AND PKG_ID = #{recommendId}
          </when>
-         <when test="multiValue_id != null">
+         <when test="multiValueId != null">
             AND PKG_ID = ISF_ID
           ORDER BY ISF_ORDER
          </when>
@@ -37,6 +49,14 @@
          PKG
      WHERE ROWNUM BETWEEN #{START_ROW} AND #{END_ROW}
     </select>
+
+    <!-- 테마추천 v2 노출갯수 -->
+    <select id="getRecommendViewCount" resultType="java.lang.Integer">
+    SELECT /* IsfThemeRecommendMapper.xml, getRecommendViewCount, Yun JuYoung, 2014-03-17 */
+           DECODE( SET_CD, 'US004701', 2, 'US004702', 3 ) AS VIEW_COUNT
+      FROM TB_DP_RECOM_PKG_SET
+     WHERE ROWNUM = 1
+    </select>
    
     <!-- 테마추천 메인 -->
     <select id="getRecomendPkgMainList" parameterType="Map" resultType="ThemeRecommend">
@@ -44,7 +64,19 @@
            COUNT(*) OVER () AS TOTAL_COUNT
          , PKG_ID
          , PKG_NM
+     <choose>
+         <!-- 구 테마추천 -->
+         <when test="ver != v2">
          , PKG_IMG_POS
+         </when>
+         <!-- New 테마추천 -->
+	     <when test="ver != v2">
+	     , DECODE ( #{deviceHeader.dpi}, '320', SET_IMG1, '240', SET_IMG2, '160', SET_IMG3, SET_IMG3 ) AS PKG_IMG_POS
+	     </when>
+         <otherwise>
+         , PKG_IMG_POS
+         </otherwise>
+     </choose>
          , REGEXP_SUBSTR( PROD_INF1, '[^^]+', 1, 1 ) AS TOP_MENU_ID1
          , REGEXP_SUBSTR( PROD_INF1, '[^^]+', 1, 2 ) AS MENU_ID1
          , REGEXP_SUBSTR( PROD_INF1, '[^^]+', 1, 3 ) AS PROD_ID1
@@ -62,6 +94,9 @@
          SELECT PKG_ID
               , PKG_NM
               , PKG_IMG_POS
+              , SET_IMG1
+              , SET_IMG2
+              , SET_IMG3
               , REGEXP_SUBSTR( PROD_INF, '[^|]+', 1, 1 ) AS PROD_INF1
               , REGEXP_SUBSTR( PROD_INF, '[^|]+', 1, 2 ) AS PROD_INF2
            FROM
@@ -69,10 +104,13 @@
               SELECT A.PKG_ID
                    , MAX( A.PKG_NM ) AS PKG_NM
                    , MAX( A.IMG2 ) AS PKG_IMG_POS
+                   , MAX( SET_IMG1 ) AS SET_IMG1
+                   , MAX( SET_IMG2 ) AS SET_IMG2
+                   , MAX( SET_IMG3 ) AS SET_IMG3
                    , MAX( A.ATTR_PRTY_EXPO_YN ) AS ATTR_PRTY_EXPO_YN
                    , MAX( A.EXPO_ORD ) AS EXPO_ORD
                    , MAX( A.REG_DT ) AS REG_DT
-               <if test="multiValue_id  != null">
+               <if test="multiValueId  != null">
                    , MAX( ISF_ORDER ) AS ISF_ORDER
                </if>
                    , RTRIM( XMLAGG( XMLELEMENT( A
@@ -90,6 +128,9 @@
                    SELECT UP.PKG_ID
                         , UP.PKG_NM
                         , UP.IMG2
+                        , UP.SET_IMG1
+                        , UP.SET_IMG2
+                        , UP.SET_IMG3
                         , UP.ATTR_PRTY_EXPO_YN
                         , UP.EXPO_ORD
                         , UP.REG_DT
@@ -99,7 +140,7 @@
                         , P.META_CLSF_CD
                         , P.SVC_GRP_CD
                         , MP.MENU_ID
-                  <if test="multiValue_id  != null">
+                  <if test="multiValueId  != null">
                         , ISF.ISF_ORDER
                   </if>
                         , ROW_NUMBER() OVER ( PARTITION BY UPD.PKG_ID
@@ -116,10 +157,10 @@
                         , TB_DP_SPRT_DEVICE SH
                         , TB_CM_DEVICE PHI
                         , TB_DP_PROD_DESC PD
-			      <if test="multiValue_id  != null">
+			      <if test="multiValueId  != null">
 			            , (
-			              <foreach collection="multiValue_id" item="multiValue_id" separator="UNION ALL">
-			              SELECT #{multiValue_id.id} ISF_ID, #{multiValue_id.order} ISF_ORDER FROM DUAL
+			              <foreach collection="multiValueId" item="multiValueId" separator="UNION ALL">
+			              SELECT #{multiValueId.id} ISF_ID, #{multiValueId.order} ISF_ORDER FROM DUAL
 			              </foreach>
 			              ) ISF
 			      </if>
@@ -140,9 +181,12 @@
                       AND SH.PROD_ID = P2.PROD_ID
                       AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
                       AND (SYSDATE BETWEEN UP.EXPO_START_DT AND UP.EXPO_END_DT OR UP.ALWAYS_EXPO_YN = 'Y')
-			    <if test="multiValue_id  != null">
+			    <if test="multiValueId != null">
 			          AND UP.PKG_ID = ISF.ISF_ID
 			    </if>
+                <if test="excludePkgId != null">
+                      AND UP.PKG_ID <![CDATA[<>]]> #{excludePkgId}
+                </if>
                       AND UP.TENANT_ID = #{tenantHeader.tenantId}
                       AND UP.EXPO_YN = 'Y'
                       AND UPD.EXPO_YN = 'Y'
@@ -206,7 +250,7 @@
                GROUP BY A.PKG_ID
                )
         <choose>
-            <when test="multiValue_id != null">
+            <when test="multiValueId != null">
                ORDER BY ISF_ORDER
             </when>
             <otherwise>
@@ -216,7 +260,19 @@
             </otherwise>
         </choose>
          )
-     WHERE ROWNUM <![CDATA[<=]]> 4    
+     <choose>
+        <!-- 구 테마추천 -->
+        <when test="ver != v2">
+     WHERE ROWNUM <![CDATA[<=]]> 4
+        </when>
+        <!-- New 테마추천 -->
+        <when test="ver != v2">
+     WHERE ROWNUM <![CDATA[<=]]> #{END_ROW}
+        </when>
+        <otherwise>
+     WHERE ROWNUM <![CDATA[<=]]> 4
+        </otherwise>
+     </choose>
     </select>
     
     <!-- 테마추천 상품 리스트 -->
@@ -243,6 +299,10 @@
 	                     ( CASE WHEN ( P.CHNL_PERIOD_AMT <![CDATA[>=]]> 0 AND P.STRM_EPSD_CNT <![CDATA[>]]> 0 ) THEN P.CHNL_PERIOD_AMT
 	                            ELSE P.CHNL_UNLMT_AMT
 	                        END )
+	                  WHEN P.TOP_MENU_ID IN ( 'DP13', 'DP14' ) THEN
+	                      ( CASE WHEN ( P.CHNL_UNLMT_AMT >= 0 AND P.STRM_EPSD_CNT > 0 ) THEN P.CHNL_UNLMT_AMT
+	                             ELSE P.CHNL_PERIOD_AMT
+	                         END )   	                        
 	                  ELSE P.PROD_AMT
 	             END ) AS PROD_AMT
 	        , NVL(P.PROD_NET_AMT, 0) AS PROD_NET_AMT
@@ -468,6 +528,7 @@
 		               , P2.CONTENTS_TYPE_CD
 		               , P2.META_CLSF_CD
 		               , P2.TOP_MENU_ID
+		               , C.MENU_ID
 		               , P.PROD_ID AS PART_PROD_ID
 		               , ROW_NUMBER( ) OVER ( PARTITION BY CP.PROD_ID
 		                                          ORDER BY P2.REG_DT DESC ) AS RN
