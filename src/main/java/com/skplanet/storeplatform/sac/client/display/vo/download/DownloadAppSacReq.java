@@ -34,9 +34,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	private String filteredBy; // 조회유형
 	private String productId; // 상품Id
 	private String packageName; // 패키지명
-	@NotBlank
 	private String deviceKey; // device key
-	@NotBlank
 	private String userKey; // 판매자 회원번호
 	private String dummy; // dummy data check
 	private String imageCd; // 이미지 코드

@@ -31,9 +31,7 @@ public class DownloadVodSacReq extends CommonInfo {
 	private String productId; // 상품Id
 	@NotBlank
 	private String idType; // Id 유형
-	@NotBlank
 	private String deviceKey; // device Key
-	@NotBlank
 	private String userKey; // 사용자 Key
 	private String imageCd; // 이미지 코드
 	private String dummy; // dummy data check

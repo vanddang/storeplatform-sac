@@ -29,9 +29,7 @@ public class DownloadMusicSacReq extends CommonInfo {
 	private String category; // 상품 유형
 	@NotBlank
 	private String productId; // 상품Id
-	@NotBlank
 	private String deviceKey; // 디바이스키
-	@NotBlank
 	private String userKey; // 사용자고유키
 	private String dummy; // dummy data check
 	private String imageCd; // 이미지 코드
