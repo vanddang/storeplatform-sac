@@ -535,9 +535,9 @@ public class LoginServiceImpl implements LoginService {
 					}
 
 				} catch (StorePlatformException ex) {
-					
+
 					LOGGER.info(ex.getErrorInfo().toString());
-					
+
 					if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER)) { // 서비스 간편가입 대상
 
@@ -649,6 +649,7 @@ public class LoginServiceImpl implements LoginService {
 					/* 로그인 결과 */
 					res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
 					res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
+					return res;
 
 				} else if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 						+ ImIdpConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
@@ -687,7 +688,9 @@ public class LoginServiceImpl implements LoginService {
 				// this.updateDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 			} catch (StorePlatformException ex) {
+
 				LOGGER.info(ex.getErrorInfo().toString());
+
 				if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
@@ -696,6 +699,7 @@ public class LoginServiceImpl implements LoginService {
 					/* 로그인 결과 */
 					res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
 					res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
+					return res;
 
 				} else if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 						+ IdpConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
