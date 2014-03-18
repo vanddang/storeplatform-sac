@@ -313,6 +313,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String existDeviceKey = bDeviceBased ? useUser.getDeviceKey() : null;
 
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
+			// 연령체크 안함: 생년월일도 * 문자 포함으로 확인불가
 			// 연령 체크
 			// if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19) && useUser.getAge() <
 			// 20) {
