@@ -994,6 +994,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
 			sellerMbrRes.setVendorCode(sellerMbr.getVendorCode());
 			sellerMbrRes.setUpdateDate(sellerMbr.getUpdateDate());
+			sellerMbrRes.setWebsite(sellerMbr.getWebsite());
 
 			if (mbrAuth != null && StringUtils.isNotBlank(sellerMbr.getIsRealName())
 					&& "Y".equals(sellerMbr.getIsRealName())) {
