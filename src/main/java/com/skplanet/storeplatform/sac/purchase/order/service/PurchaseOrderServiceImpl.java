@@ -483,6 +483,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -------------------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
 
+		String tstoreNotiPublishType = PurchaseConstants.TSTORE_NOTI_PUBLISH_TYPE_SYNC;
+
 		List<ShoppingCouponPublishInfo> shoppingCouponList = null;
 
 		if (createPurchaseSc.getTenantProdGrpCd().startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
@@ -514,8 +516,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 					shoppingCouponList.add(shoppingCouponPublishInfo);
 				}
+			} else {
+				tstoreNotiPublishType = PurchaseConstants.TSTORE_NOTI_PUBLISH_TYPE_ASYNC;
 			}
 		}
+
+		createPurchaseSc.setPrchsResvInfo(createPurchaseSc.getPrchsResvInfo() + "&tstoreNotiPublishType="
+				+ tstoreNotiPublishType);
 
 		// -------------------------------------------------------------------------------------------
 		// 구매확정
@@ -636,12 +643,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// Tstore 측으로 알림: 이메일 발송, SMS / MMS 등등 처리
 
 		createPurchaseSc = createPurchaseScList.get(0);
+		reservedDataMap = this.parseReservedData(createPurchaseSc.getPrchsResvInfo());
+		String tstoreNotiPublishType = reservedDataMap.get("tstoreNotiPublishType");
 
 		TStoreNotiEcReq tStoreNotiEcReq = new TStoreNotiEcReq();
 		tStoreNotiEcReq.setPrchsId(createPurchaseSc.getPrchsId());
 		tStoreNotiEcReq.setPrchsDt(createPurchaseSc.getPrchsDt());
 		tStoreNotiEcReq.setUserKey(createPurchaseSc.getUseInsdUsermbrNo());
 		tStoreNotiEcReq.setDeviceKey(createPurchaseSc.getUseInsdDeviceId());
+		tStoreNotiEcReq.setPublishType(tstoreNotiPublishType);
 		tStoreNotiEcReq.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
 
 		try {
