@@ -154,6 +154,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 			String[] arrayTopMenuId = bestDownloadReq.getTopMenuId().split("\\+");
 			bestDownloadReq.setArrayTopMenuId(arrayTopMenuId);
 
+			// 검색하는 상품 타입을 MM 으로 설정
 			if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(arrayTopMenuId[0])
 					|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(arrayTopMenuId[0])
 					|| DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(arrayTopMenuId[0])
@@ -165,6 +166,15 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 		if (StringUtils.isNotEmpty(bestDownloadReq.getProdGradeCd())) {
 			String[] arrayProdGradeCd = bestDownloadReq.getProdGradeCd().split("\\+");
 			bestDownloadReq.setArrayProdGradeCd(arrayProdGradeCd);
+		}
+
+		// 검색하는 상품 타입을 MM 으로 설정
+		String menuIdSubString = StringUtils.substring(bestDownloadReq.getMenuId(), 0, 4);
+		if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(menuIdSubString)
+				|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(menuIdSubString)
+				|| DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(menuIdSubString)
+				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(menuIdSubString)) { // 멀티미디어 상품
+			prodType = "MM";
 		}
 
 		// BEST 다운로드 상품 조회
