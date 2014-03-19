@@ -1,6 +1,5 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
@@ -90,25 +89,11 @@ public class SellerSearchController {
 			@RequestBody @Validated DetailInformationReq req) {
 		LOGGER.debug("request param : {}", req.toString());
 
-		// TODO validation check Logic 수정.
-		String sellerId = StringUtil.nvl(req.getSellerId(), "");
-		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
-		String aid = StringUtil.nvl(req.getAid(), "");
-
-		req.setSellerId(sellerId);
-		req.setSellerKey(sellerKey);
-		req.setAid(aid);
-
-		int Stat = 0;
-		if (sellerId.equals(""))
-			Stat++;
-		if (sellerKey.equals(""))
-			Stat++;
-		if (aid.equals(""))
-			Stat++;
-		if (Stat == 3) {
+		if (StringUtils.isBlank(req.getSellerId()) && StringUtils.isBlank(req.getAid())
+				&& StringUtils.isBlank(req.getSellerKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "aid, sellerKey, sellerId");
 		}
+
 		return this.sellerSearchService.detailInformation(header, req);
 	}
 
