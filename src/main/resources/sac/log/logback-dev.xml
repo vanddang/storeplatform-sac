@@ -44,7 +44,7 @@
     <appender name="TLOG_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${catalina.home}/logs/sac/tlog/tlog.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${catalina.home}/logs/sac/tlog/tlog_%d{yyyyMMdd}.log</FileNamePattern>            
+            <FileNamePattern>${catalina.home}/logs/sac/tlog/%d{yyyyMMdd, AUX}/tlog_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>%msg%n</pattern>
