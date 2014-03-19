@@ -37,8 +37,17 @@ public class App extends CommonInfo implements Serializable {
 	private String filePath; // 파일경로
 	private String scId; // sub contents Id
 	private List<Device> supportDeviceList;
+    private String isDeviceSupported;   // 현재 단말기 지원 여부
 
-	/**
+    public String getIsDeviceSupported() {
+        return isDeviceSupported;
+    }
+
+    public void setIsDeviceSupported(String isDeviceSupported) {
+        this.isDeviceSupported = isDeviceSupported;
+    }
+
+    /**
 	 * 
 	 * <pre>
 	 * Applicaton ID.
