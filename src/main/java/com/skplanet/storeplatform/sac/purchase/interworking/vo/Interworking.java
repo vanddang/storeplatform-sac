@@ -19,7 +19,7 @@ public class Interworking extends CommonInfo implements Serializable {
 	private String sellermbrNo;
 	private String prodId;
 	private Double prodAmt;
-	private String compContentsId;
+	private String compCid;
 
 	/**
 	 * @return the mallCd
@@ -82,18 +82,18 @@ public class Interworking extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the compContentsId
+	 * @return the compCid
 	 */
-	public String getCompContentsId() {
-		return this.compContentsId;
+	public String getCompCid() {
+		return this.compCid;
 	}
 
 	/**
-	 * @param compContentsId
-	 *            the compContentsId to set
+	 * @param compCid
+	 *            the compCid to set
 	 */
-	public void setCompContentsId(String compContentsId) {
-		this.compContentsId = compContentsId;
+	public void setCompCid(String compCid) {
+		this.compCid = compCid;
 	}
 
 }

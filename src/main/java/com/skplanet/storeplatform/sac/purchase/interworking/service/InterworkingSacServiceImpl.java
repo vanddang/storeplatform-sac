@@ -65,7 +65,7 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 			// 상품리스트에 대한 조건 셋팅
 			req.setProdId(interworkingSac.getProdId());
 			req.setProdAmt(interworkingSac.getProdAmt());
-			req.setCompContentsId(interworkingSac.getCompContentsId());
+			req.setCompCid(interworkingSac.getCompCid());
 			// 인터파크 상품인지 확인후 전송테이블에 저장
 			if (interworkingSac.equals(this.mallCd)) {
 				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
