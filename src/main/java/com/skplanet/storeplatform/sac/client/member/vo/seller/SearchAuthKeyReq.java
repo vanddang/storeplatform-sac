@@ -11,9 +11,6 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class SearchAuthKeyReq extends CommonInfo {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7071714845900743242L;
 
 	/** 판매자 회원키. */
