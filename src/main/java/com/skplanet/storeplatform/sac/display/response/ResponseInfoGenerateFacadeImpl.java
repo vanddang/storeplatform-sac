@@ -644,7 +644,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
 		product.setIdentifierList(identifierList);
-		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
 		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
@@ -655,6 +654,11 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
 		product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo));
+		// Title 정보 설정
+		Title title = new Title();
+		title.setText(metaInfo.getProdNm());
+		title.setAlias(metaInfo.getChnlProdNm());
+		product.setTitle(title);
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 		return product;
