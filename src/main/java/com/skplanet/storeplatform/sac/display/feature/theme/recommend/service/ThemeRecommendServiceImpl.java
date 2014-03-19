@@ -80,6 +80,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		mapReq.put("tenantHeader", tenantHeader);
 		mapReq.put("deviceHeader", deviceHeader);
 		mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
+		mapReq.put("ver", requestVO.getVer());
 
 		String userKey = requestVO.getUserKey();
 		String deviceIdType = requestVO.getDeviceIdType();
