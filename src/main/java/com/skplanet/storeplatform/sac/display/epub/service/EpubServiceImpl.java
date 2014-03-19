@@ -89,6 +89,7 @@ public class EpubServiceImpl implements EpubService {
         param.put("langCd", req.getLangCd());
         param.put("deviceModel", req.getDeviceModel());
         param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+		param.put("comicEpisodeRepresentImgCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD); //코믹 에피소드 대표이미지
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
 		EpubDetail epubDetail = this.getEpubChannel(param);
 		//logger.debug("epubDetail={}", epubDetail);
@@ -171,6 +172,7 @@ public class EpubServiceImpl implements EpubService {
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
         param.put("orderedBy", orderedBy);
         param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+        param.put("comicEpisodeRepresentImgCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD); //코믹 에피소드 대표이미지
         param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
         param.put("count", req.getCount() == null ? 20 : req.getCount());
         final EpubDetail epubDetail = getEpubChannel(param);
@@ -198,9 +200,7 @@ public class EpubServiceImpl implements EpubService {
 				}
 				param.put("paymentProdIdList", paymentProdIdList);
 			}
-            
-			//코믹 에피소드 대표이미지
-			param.put("comicEpisodeRepresentImgCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD);
+
 			
             List<EpubDetail> subProductList = getEpubSeries(param);
             if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)) {
