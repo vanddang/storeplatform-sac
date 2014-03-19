@@ -31,7 +31,7 @@ public class DetailByDeviceIdSacRes extends CommonInfo {
 	/**
 	 * SKT 이용정지회원 여부 (Y or N).
 	 */
-	private String isSktPause = "";
+	private String isSktStop = "";
 
 	/**
 	 * 정책 리스트.
@@ -124,18 +124,18 @@ public class DetailByDeviceIdSacRes extends CommonInfo {
 	}
 
 	/**
-	 * @return String : isSktPause
+	 * @return String : isSktStop
 	 */
-	public String getIsSktPause() {
-		return this.isSktPause;
+	public String getIsSktStop() {
+		return this.isSktStop;
 	}
 
 	/**
-	 * @param isSktPause
-	 *            String : the isSktPause to set
+	 * @param isSktStop
+	 *            String : the isSktStop to set
 	 */
-	public void setIsSktPause(String isSktPause) {
-		this.isSktPause = isSktPause;
+	public void setIsSktStop(String isSktStop) {
+		this.isSktStop = isSktStop;
 	}
 
 	/**
