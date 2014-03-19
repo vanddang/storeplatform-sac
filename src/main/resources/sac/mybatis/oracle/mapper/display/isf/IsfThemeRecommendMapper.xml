@@ -11,12 +11,8 @@
          SELECT PKG_ID
               , PKG_NM
 	     <choose>
-	        <!-- 구 테마추천 -->
-	        <when test="ver != v2">
-	          , IMG2 AS PKG_IMG_POS
-	        </when>
 	        <!-- New 테마추천 -->
-	        <when test="ver == v2">
+	        <when test="ver == 'v2'">
 	          , DECODE ( #{deviceHeader.dpi}, '320', SET_IMG1, '240', SET_IMG2, '160', SET_IMG3, SET_IMG3 ) AS PKG_IMG_POS
 	        </when>
 	        <otherwise>
@@ -65,13 +61,9 @@
          , PKG_ID
          , PKG_NM
      <choose>
-         <!-- 구 테마추천 -->
-         <when test="ver != v2">
-         , PKG_IMG_POS
-         </when>
          <!-- New 테마추천 -->
-	     <when test="ver == v2">
-	     , DECODE ( #{deviceHeader.dpi}, '320', SET_IMG1, '240', SET_IMG2, '160', SET_IMG3, SET_IMG3 ) AS PKG_IMG_POS
+         <when test="ver == 'v2'">
+         , DECODE ( #{deviceHeader.dpi}, '320', SET_IMG1, '240', SET_IMG2, '160', SET_IMG3, SET_IMG3 ) AS PKG_IMG_POS
 	     </when>
          <otherwise>
          , PKG_IMG_POS
@@ -261,14 +253,11 @@
         </choose>
          )
      <choose>
-        <!-- 구 테마추천 -->
-        <when test="ver != v2">
-     WHERE ROWNUM <![CDATA[<=]]> 4
-        </when>
-        <!-- New 테마추천 -->
-        <when test="ver == v2">
+        <!-- NEW 테마추천 -->
+         <when test="ver == 'v2'">
      WHERE ROWNUM <![CDATA[<=]]> #{END_ROW}
         </when>
+        <!-- 구 테마추천 -->
         <otherwise>
      WHERE ROWNUM <![CDATA[<=]]> 4
         </otherwise>
@@ -277,7 +266,7 @@
     
     <!-- 테마추천 상품 리스트 -->
     <select id="getRecommendPkgProdList" parameterType="Map" resultType="MetaInfo">
-	SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgMainList, SAC 전시, 2014-02-19 */
+	SELECT /* IsfThemeRecommendMapper.xml, getRecommendPkgProdList, SAC 전시, 2014-02-19 */
               P.TOTAL_COUNT
 	        , P.TOP_MENU_ID
 	        , TRIM(REPLACE((SELECT MENU_NM
