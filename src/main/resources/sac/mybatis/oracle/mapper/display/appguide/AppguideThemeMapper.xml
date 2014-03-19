@@ -136,7 +136,7 @@
     </select>
 
     <select id="getThemeRecommendList" parameterType="java.util.Map" resultType="Appguide">
-        SELECT /* AppguideThemeMapper.xml, getThemeRecommendMain, SAC 전시, 2014-03-03 */
+        SELECT /* AppguideThemeMapper.xml, getThemeRecommendList, SAC 전시, 2014-03-03 */
                AA.*
         FROM   (
                 SELECT  COUNT(*) OVER() AS TOTAL_COUNT
