@@ -57,6 +57,12 @@ public class UserOcbServiceImpl implements UserOcbService {
 	@Override
 	public CreateOcbInformationRes createOcbInformation(SacRequestHeader sacHeader, CreateOcbInformationReq req) {
 
+		/**
+		 * TODO OCB 카드번호 정보 조회 연동
+		 * 
+		 * TODO 연동 성공시에만 등록할것.
+		 */
+
 		UpdateMemberPointRequest updateMemberPointRequest = new UpdateMemberPointRequest();
 		updateMemberPointRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
