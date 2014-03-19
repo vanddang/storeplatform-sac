@@ -20,11 +20,6 @@ public class UserAuthMethod extends CommonInfo {
 	private String userId;
 
 	/**
-	 * 인증한 EMAIL주소.
-	 */
-	private String userEmail;
-
-	/**
 	 * 실명인증여부(Y/N).
 	 */
 	private String isRealName;
@@ -42,21 +37,6 @@ public class UserAuthMethod extends CommonInfo {
 	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	/**
-	 * @return userEmail
-	 */
-	public String getUserEmail() {
-		return this.userEmail;
-	}
-
-	/**
-	 * @param userEmail
-	 *            String
-	 */
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
 	}
 
 	/**
