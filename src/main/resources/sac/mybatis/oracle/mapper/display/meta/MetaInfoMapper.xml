@@ -476,7 +476,7 @@
              , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
              , TB.PROD_STATUS_CD
           FROM (
-                 SELECT /*+ USE_NL(O,N) ORDERED */
+                 SELECT 
                         ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
                                                         , TO_NUMBER( REGEXP_REPLACE( L.CHAPTER, '[^[:digit:]]') ) DESC
