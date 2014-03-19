@@ -67,14 +67,7 @@
                              , TB_CM_DEVICE H
                              , TB_DP_SPRT_DEVICE I
                        WHERE 1=1
-                       <if test="themeZoneId != null and themeZoneId != ''">
-                          <if test='themeZoneId == "TAR"'>
-                            AND A.LIST_ID like 'TAR%'
-                          </if>
-                          <if test='themeZoneId != "TAR"'>
-                            AND A.LIST_ID = #{themeZoneId}
-                          </if>
-	                   </if>
+                       AND A.LIST_ID = #{themeZoneId}
                        AND A.LIST_ID = B.LIST_ID
                        AND A.TENANT_ID = #{tenantId}
                        AND B.TENANT_ID = #{tenantId}
@@ -180,14 +173,7 @@
 					             , TB_DP_PROD F  
 					             , TB_DP_TENANT_PROD G
 					       WHERE 1=1
-                          <if test="themeZoneId != null and themeZoneId != ''">
-	                         <if test='themeZoneId == "TAR"'>
-	                           AND A.LIST_ID like 'TAR%'
-	                         </if>
-	                         <if test='themeZoneId != "TAR"'>
-	                           AND A.LIST_ID = #{themeZoneId}
-	                         </if>
-	                      </if>
+                           AND A.LIST_ID = #{themeZoneId}
 					       AND A.LIST_ID = B.LIST_ID
 					       AND A.TENANT_ID = #{tenantId}
 					       AND B.TENANT_ID = #{tenantId}
