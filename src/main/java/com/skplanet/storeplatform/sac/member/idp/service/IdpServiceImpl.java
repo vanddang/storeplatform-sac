@@ -1854,29 +1854,28 @@ public class IdpServiceImpl implements IdpService {
 			}
 
 			try {
-				RemoveUserRequest removeUserRequest = new RemoveUserRequest();
-				removeUserRequest.setCommonRequest(commonRequest);
-				removeUserRequest.setUserKey(searchUserResponse.getUserKey());
-				removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
-				removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
-				removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
-				this.userSCI.remove(removeUserRequest);
 
-				// as is src 이용동의 해지시 tstore에서 이용동의 해지면서 변경서비스사이트코드가 티스토어가 아닌경우 게임센터 연동을 함
-				if (!MemberConstants.SSO_SST_CD_TSTORE.equals(modifySstCode)) {
-					GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-					gameCenterSacReq.setUserKey(searchUserResponse.getUserKey());
-					gameCenterSacReq.setPreUserKey(searchUserResponse.getUserKey());
-					gameCenterSacReq.setMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
-					gameCenterSacReq.setPreMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
-					gameCenterSacReq.setSystemId(systemID);
-					gameCenterSacReq.setTenantId(tenantID);
-					gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
-					this.deviceService.insertGameCenterIF(gameCenterSacReq);
-				}
-
-				// 회원 탈퇴 정보를 전달 하는 mq 호출.
 				if (searchUserResponse != null) {
+					RemoveUserRequest removeUserRequest = new RemoveUserRequest();
+					removeUserRequest.setCommonRequest(commonRequest);
+					removeUserRequest.setUserKey(searchUserResponse.getUserKey());
+					removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
+					removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
+					removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
+					this.userSCI.remove(removeUserRequest);
+
+					// as is src 이용동의 해지시 tstore에서 이용동의 해지면서 변경서비스사이트코드가 티스토어가 아닌경우 게임센터 연동을 함
+					if (!MemberConstants.SSO_SST_CD_TSTORE.equals(modifySstCode)) {
+						GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+						gameCenterSacReq.setUserKey(searchUserResponse.getUserKey());
+						gameCenterSacReq.setPreUserKey(searchUserResponse.getUserKey());
+						gameCenterSacReq.setMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
+						gameCenterSacReq.setPreMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
+						gameCenterSacReq.setSystemId(systemID);
+						gameCenterSacReq.setTenantId(tenantID);
+						gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
+						this.deviceService.insertGameCenterIF(gameCenterSacReq);
+					}
 
 					RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
 					mqInfo.setUserId(userID);
@@ -1897,17 +1896,18 @@ public class IdpServiceImpl implements IdpService {
 			try {
 				searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
-				UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-				updateUserRequest.setCommonRequest(commonRequest);
-				UserMbr userMbr = searchUserResponse.getUserMbr();
+				if (searchUserResponse != null) {
+					UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+					updateUserRequest.setCommonRequest(commonRequest);
+					UserMbr userMbr = searchUserResponse.getUserMbr();
 
-				if (!"".equals(joinSiteTotalList)) {
-					userMbr.setImSiteCode(joinSiteTotalList);
+					if (!"".equals(joinSiteTotalList)) {
+						userMbr.setImSiteCode(joinSiteTotalList);
+					}
+
+					updateUserRequest.setUserMbr(userMbr);
+					this.userSCI.updateUser(updateUserRequest);
 				}
-
-				updateUserRequest.setUserMbr(userMbr);
-				this.userSCI.updateUser(updateUserRequest);
-
 			} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
