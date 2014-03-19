@@ -886,9 +886,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				sbReserveData.append(purchaseOrderInfo.getSpecialCouponId());
 			}
 			sbReserveData.append("&specialCouponAmt=").append(purchaseOrderInfo.getSpecialCouponAmt());
-
-			// receiveNames; // 선물수신자 성명
-			// receiveMdns; // 선물수신자 MDN
+			if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+				sbReserveData.append("&receiveNames=").append(useUser.getUserId()).append("&receiveMdns=")
+						.append(useUser.getDeviceId()); // 선물수신자 성명, 선물수신자 MDN
+			}
 		}
 
 		int commonReserveDataLen = sbReserveData.length();
