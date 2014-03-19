@@ -189,7 +189,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		searchFlurryListRequest.setSellerKey(schRes.getSellerKey());
 		SearchFlurryListResponse searchFlurryListResponse = this.sellerSCI.searchFlurryList(searchFlurryListRequest);
 
-		// TODO 파라미터 셋팅하는 부분 누락없는지 확인 필요.
 		// 판매자 멀티미디어정보
 		List<ExtraRight> eList = new ArrayList<ExtraRight>();
 		ExtraRight extraRightList = null;
@@ -384,7 +383,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrSacs.add(sellerMbrSac);
 		}
 
-		// TODO 문자열 null/"" 체크 로직 수정 필요한지 확인....
 		// 내국인, 개인사업자 OR 법인 사업자
 		else if ("Y".equals(sellerMbrs.get(0).getIsDomestic())
 				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
@@ -433,7 +431,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrSacs.add(sellerMbrSac);
 		}
 
-		// TODO 문자열 null/"" 체크 로직 수정 필요 여부 확인.
 		// 외국인, 개인
 		else if ("N".equals(sellerMbrs.get(0).getIsDomestic())
 				&& MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON
@@ -460,7 +457,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrSacs.add(sellerMbrSac);
 		}
 
-		// TODO 문자열 null/"" 체크 로직 수정 필요 여부 확인.
 		// 외국인, 개인사업자or법인사업자
 		else if ("N".equals(sellerMbrs.get(0).getIsDomestic())
 				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
@@ -635,13 +631,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		List<SecedeReson> sList = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", header
 				.getTenantHeader().getLangCd(), SecedeReson.class);
-
-		/*
-		 * TODO - 이거 뭐지???? List<SecedeReson> sList = new ArrayList<SecedeReson>(); SecedeReson secedeReson = null; if
-		 * (sellerDTO != null) for (int i = 0; i < sellerDTO.size(); i++) { secedeReson = new SecedeReson();
-		 * secedeReson.setSecedeReasonCode(sellerDTO.get(i).getSecedeReasonCode());
-		 * secedeReson.setSecedeReasonMessage(sellerDTO.get(i).getSecedeReasonMessage()); sList.add(secedeReson); }
-		 */
 
 		ListWithdrawalReasonRes response = new ListWithdrawalReasonRes();
 		response.setSecedeResonList(sList);
