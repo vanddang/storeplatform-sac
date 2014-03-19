@@ -56,18 +56,18 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String tid;
 	private String txId;
 	private String parentProdId;
-	private String ver;
-	private String subNm;
-	private String rnPid;
-	private String isuAmtAdd;
+	private String partChrgVer;
+	private String partChrgProdNm;
+	private String rnBillCd;
+	private String infoUseFee;
 	private String cid;
-	private String contentsCls;
+	private String contentsClsf;
 	private String contentsType;
 	private String prchsType;
-	private String sundCls;
-	private String sundSec;
+	private String timbreClsf;
+	private String timbreSctn;
 	private String menuId;
-	private String dpCatSubNo;
+	private String genreClsfCd;
 	private String permitDeviceYn;
 	private String paymentStartDt;
 	private String paymentEndDt;
@@ -251,6 +251,21 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
+	 * @return the sendDeviceId
+	 */
+	public String getSendDeviceId() {
+		return this.sendDeviceId;
+	}
+
+	/**
+	 * @param sendDeviceId
+	 *            the sendDeviceId to set
+	 */
+	public void setSendDeviceId(String sendDeviceId) {
+		this.sendDeviceId = sendDeviceId;
+	}
+
+	/**
 	 * @return the recvDt
 	 */
 	public String getRecvDt() {
@@ -278,21 +293,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setRecvConfPathCd(String recvConfPathCd) {
 		this.recvConfPathCd = recvConfPathCd;
-	}
-
-	/**
-	 * @return the prchsReqPathCd
-	 */
-	public String getPrchsReqPathCd() {
-		return this.prchsReqPathCd;
-	}
-
-	/**
-	 * @param prchsReqPathCd
-	 *            the prchsReqPathCd to set
-	 */
-	public void setPrchsReqPathCd(String prchsReqPathCd) {
-		this.prchsReqPathCd = prchsReqPathCd;
 	}
 
 	/**
@@ -401,6 +401,21 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
+	 * @return the prchsReqPathCd
+	 */
+	public String getPrchsReqPathCd() {
+		return this.prchsReqPathCd;
+	}
+
+	/**
+	 * @param prchsReqPathCd
+	 *            the prchsReqPathCd to set
+	 */
+	public void setPrchsReqPathCd(String prchsReqPathCd) {
+		this.prchsReqPathCd = prchsReqPathCd;
+	}
+
+	/**
 	 * @return the hidingYn
 	 */
 	public String getHidingYn() {
@@ -443,6 +458,21 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setCancelDt(String cancelDt) {
 		this.cancelDt = cancelDt;
+	}
+
+	/**
+	 * @return the prchsProdType
+	 */
+	public String getPrchsProdType() {
+		return this.prchsProdType;
+	}
+
+	/**
+	 * @param prchsProdType
+	 *            the prchsProdType to set
+	 */
+	public void setPrchsProdType(String prchsProdType) {
+		this.prchsProdType = prchsProdType;
 	}
 
 	/**
@@ -521,81 +551,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the useFixrateProdId
-	 */
-	public String getUseFixrateProdId() {
-		return this.useFixrateProdId;
-	}
-
-	/**
-	 * @param useFixrateProdId
-	 *            the useFixrateProdId to set
-	 */
-	public void setUseFixrateProdId(String useFixrateProdId) {
-		this.useFixrateProdId = useFixrateProdId;
-	}
-
-	/**
-	 * @return the prchsProdType
-	 */
-	public String getPrchsProdType() {
-		return this.prchsProdType;
-	}
-
-	/**
-	 * @param prchsProdType
-	 *            the prchsProdType to set
-	 */
-	public void setPrchsProdType(String prchsProdType) {
-		this.prchsProdType = prchsProdType;
-	}
-
-	/**
-	 * @return the drmYn
-	 */
-	public String getDrmYn() {
-		return this.drmYn;
-	}
-
-	/**
-	 * @param drmYn
-	 *            the drmYn to set
-	 */
-	public void setDrmYn(String drmYn) {
-		this.drmYn = drmYn;
-	}
-
-	/**
-	 * @return the alarmYn
-	 */
-	public String getAlarmYn() {
-		return this.alarmYn;
-	}
-
-	/**
-	 * @param alarmYn
-	 *            the alarmYn to set
-	 */
-	public void setAlarmYn(String alarmYn) {
-		this.alarmYn = alarmYn;
-	}
-
-	/**
-	 * @return the permitDeviceYn
-	 */
-	public String getPermitDeviceYn() {
-		return this.permitDeviceYn;
-	}
-
-	/**
-	 * @param permitDeviceYn
-	 *            the permitDeviceYn to set
-	 */
-	public void setPermitDeviceYn(String permitDeviceYn) {
-		this.permitDeviceYn = permitDeviceYn;
-	}
-
-	/**
 	 * @return the cpnAddinfo
 	 */
 	public String getCpnAddinfo() {
@@ -641,6 +596,306 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
+	 * @return the useFixrateProdId
+	 */
+	public String getUseFixrateProdId() {
+		return this.useFixrateProdId;
+	}
+
+	/**
+	 * @param useFixrateProdId
+	 *            the useFixrateProdId to set
+	 */
+	public void setUseFixrateProdId(String useFixrateProdId) {
+		this.useFixrateProdId = useFixrateProdId;
+	}
+
+	/**
+	 * @return the drmYn
+	 */
+	public String getDrmYn() {
+		return this.drmYn;
+	}
+
+	/**
+	 * @param drmYn
+	 *            the drmYn to set
+	 */
+	public void setDrmYn(String drmYn) {
+		this.drmYn = drmYn;
+	}
+
+	/**
+	 * @return the alarmYn
+	 */
+	public String getAlarmYn() {
+		return this.alarmYn;
+	}
+
+	/**
+	 * @param alarmYn
+	 *            the alarmYn to set
+	 */
+	public void setAlarmYn(String alarmYn) {
+		this.alarmYn = alarmYn;
+	}
+
+	/**
+	 * @return the currencyCd
+	 */
+	public String getCurrencyCd() {
+		return this.currencyCd;
+	}
+
+	/**
+	 * @param currencyCd
+	 *            the currencyCd to set
+	 */
+	public void setCurrencyCd(String currencyCd) {
+		this.currencyCd = currencyCd;
+	}
+
+	/**
+	 * @return the tid
+	 */
+	public String getTid() {
+		return this.tid;
+	}
+
+	/**
+	 * @param tid
+	 *            the tid to set
+	 */
+	public void setTid(String tid) {
+		this.tid = tid;
+	}
+
+	/**
+	 * @return the txId
+	 */
+	public String getTxId() {
+		return this.txId;
+	}
+
+	/**
+	 * @param txId
+	 *            the txId to set
+	 */
+	public void setTxId(String txId) {
+		this.txId = txId;
+	}
+
+	/**
+	 * @return the parentProdId
+	 */
+	public String getParentProdId() {
+		return this.parentProdId;
+	}
+
+	/**
+	 * @param parentProdId
+	 *            the parentProdId to set
+	 */
+	public void setParentProdId(String parentProdId) {
+		this.parentProdId = parentProdId;
+	}
+
+	/**
+	 * @return the partChrgVer
+	 */
+	public String getPartChrgVer() {
+		return this.partChrgVer;
+	}
+
+	/**
+	 * @param partChrgVer
+	 *            the partChrgVer to set
+	 */
+	public void setPartChrgVer(String partChrgVer) {
+		this.partChrgVer = partChrgVer;
+	}
+
+	/**
+	 * @return the partChrgProdNm
+	 */
+	public String getPartChrgProdNm() {
+		return this.partChrgProdNm;
+	}
+
+	/**
+	 * @param partChrgProdNm
+	 *            the partChrgProdNm to set
+	 */
+	public void setPartChrgProdNm(String partChrgProdNm) {
+		this.partChrgProdNm = partChrgProdNm;
+	}
+
+	/**
+	 * @return the rnBillCd
+	 */
+	public String getRnBillCd() {
+		return this.rnBillCd;
+	}
+
+	/**
+	 * @param rnBillCd
+	 *            the rnBillCd to set
+	 */
+	public void setRnBillCd(String rnBillCd) {
+		this.rnBillCd = rnBillCd;
+	}
+
+	/**
+	 * @return the infoUseFee
+	 */
+	public String getInfoUseFee() {
+		return this.infoUseFee;
+	}
+
+	/**
+	 * @param infoUseFee
+	 *            the infoUseFee to set
+	 */
+	public void setInfoUseFee(String infoUseFee) {
+		this.infoUseFee = infoUseFee;
+	}
+
+	/**
+	 * @return the cid
+	 */
+	public String getCid() {
+		return this.cid;
+	}
+
+	/**
+	 * @param cid
+	 *            the cid to set
+	 */
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	/**
+	 * @return the contentsClsf
+	 */
+	public String getContentsClsf() {
+		return this.contentsClsf;
+	}
+
+	/**
+	 * @param contentsClsf
+	 *            the contentsClsf to set
+	 */
+	public void setContentsClsf(String contentsClsf) {
+		this.contentsClsf = contentsClsf;
+	}
+
+	/**
+	 * @return the contentsType
+	 */
+	public String getContentsType() {
+		return this.contentsType;
+	}
+
+	/**
+	 * @param contentsType
+	 *            the contentsType to set
+	 */
+	public void setContentsType(String contentsType) {
+		this.contentsType = contentsType;
+	}
+
+	/**
+	 * @return the prchsType
+	 */
+	public String getPrchsType() {
+		return this.prchsType;
+	}
+
+	/**
+	 * @param prchsType
+	 *            the prchsType to set
+	 */
+	public void setPrchsType(String prchsType) {
+		this.prchsType = prchsType;
+	}
+
+	/**
+	 * @return the timbreClsf
+	 */
+	public String getTimbreClsf() {
+		return this.timbreClsf;
+	}
+
+	/**
+	 * @param timbreClsf
+	 *            the timbreClsf to set
+	 */
+	public void setTimbreClsf(String timbreClsf) {
+		this.timbreClsf = timbreClsf;
+	}
+
+	/**
+	 * @return the timbreSctn
+	 */
+	public String getTimbreSctn() {
+		return this.timbreSctn;
+	}
+
+	/**
+	 * @param timbreSctn
+	 *            the timbreSctn to set
+	 */
+	public void setTimbreSctn(String timbreSctn) {
+		this.timbreSctn = timbreSctn;
+	}
+
+	/**
+	 * @return the menuId
+	 */
+	public String getMenuId() {
+		return this.menuId;
+	}
+
+	/**
+	 * @param menuId
+	 *            the menuId to set
+	 */
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
+
+	/**
+	 * @return the genreClsfCd
+	 */
+	public String getGenreClsfCd() {
+		return this.genreClsfCd;
+	}
+
+	/**
+	 * @param genreClsfCd
+	 *            the genreClsfCd to set
+	 */
+	public void setGenreClsfCd(String genreClsfCd) {
+		this.genreClsfCd = genreClsfCd;
+	}
+
+	/**
+	 * @return the permitDeviceYn
+	 */
+	public String getPermitDeviceYn() {
+		return this.permitDeviceYn;
+	}
+
+	/**
+	 * @param permitDeviceYn
+	 *            the permitDeviceYn to set
+	 */
+	public void setPermitDeviceYn(String permitDeviceYn) {
+		this.permitDeviceYn = permitDeviceYn;
+	}
+
+	/**
 	 * @return the paymentStartDt
 	 */
 	public String getPaymentStartDt() {
@@ -683,21 +938,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setAfterPaymentDt(String afterPaymentDt) {
 		this.afterPaymentDt = afterPaymentDt;
-	}
-
-	/**
-	 * @return the prchsTme
-	 */
-	public String getPrchsTme() {
-		return this.prchsTme;
-	}
-
-	/**
-	 * @param prchsTme
-	 *            the prchsTme to set
-	 */
-	public void setPrchsTme(String prchsTme) {
-		this.prchsTme = prchsTme;
 	}
 
 	/**
@@ -758,6 +998,21 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setClosedReqPathCd(String closedReqPathCd) {
 		this.closedReqPathCd = closedReqPathCd;
+	}
+
+	/**
+	 * @return the prchsTme
+	 */
+	public String getPrchsTme() {
+		return this.prchsTme;
+	}
+
+	/**
+	 * @param prchsTme
+	 *            the prchsTme to set
+	 */
+	public void setPrchsTme(String prchsTme) {
+		this.prchsTme = prchsTme;
 	}
 
 	/**
@@ -848,261 +1103,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setProductInfo(HashMap<String, Object> productInfo) {
 		this.productInfo = productInfo;
-	}
-
-	/**
-	 * @return the currencyCd
-	 */
-	public String getCurrencyCd() {
-		return this.currencyCd;
-	}
-
-	/**
-	 * @param currencyCd
-	 *            the currencyCd to set
-	 */
-	public void setCurrencyCd(String currencyCd) {
-		this.currencyCd = currencyCd;
-	}
-
-	/**
-	 * @return the tid
-	 */
-	public String getTid() {
-		return this.tid;
-	}
-
-	/**
-	 * @param tid
-	 *            the tid to set
-	 */
-	public void setTid(String tid) {
-		this.tid = tid;
-	}
-
-	/**
-	 * @return the txId
-	 */
-	public String getTxId() {
-		return this.txId;
-	}
-
-	/**
-	 * @param txId
-	 *            the txId to set
-	 */
-	public void setTxId(String txId) {
-		this.txId = txId;
-	}
-
-	/**
-	 * @return the parentProdId
-	 */
-	public String getParentProdId() {
-		return this.parentProdId;
-	}
-
-	/**
-	 * @param parentProdId
-	 *            the parentProdId to set
-	 */
-	public void setParentProdId(String parentProdId) {
-		this.parentProdId = parentProdId;
-	}
-
-	/**
-	 * @return the ver
-	 */
-	public String getVer() {
-		return this.ver;
-	}
-
-	/**
-	 * @param ver
-	 *            the ver to set
-	 */
-	public void setVer(String ver) {
-		this.ver = ver;
-	}
-
-	/**
-	 * @return the subNm
-	 */
-	public String getSubNm() {
-		return this.subNm;
-	}
-
-	/**
-	 * @param subNm
-	 *            the subNm to set
-	 */
-	public void setSubNm(String subNm) {
-		this.subNm = subNm;
-	}
-
-	/**
-	 * @return the rnPid
-	 */
-	public String getRnPid() {
-		return this.rnPid;
-	}
-
-	/**
-	 * @param rnPid
-	 *            the rnPid to set
-	 */
-	public void setRnPid(String rnPid) {
-		this.rnPid = rnPid;
-	}
-
-	/**
-	 * @return the isuAmtAdd
-	 */
-	public String getIsuAmtAdd() {
-		return this.isuAmtAdd;
-	}
-
-	/**
-	 * @param isuAmtAdd
-	 *            the isuAmtAdd to set
-	 */
-	public void setIsuAmtAdd(String isuAmtAdd) {
-		this.isuAmtAdd = isuAmtAdd;
-	}
-
-	/**
-	 * @return the cid
-	 */
-	public String getCid() {
-		return this.cid;
-	}
-
-	/**
-	 * @param cid
-	 *            the cid to set
-	 */
-	public void setCid(String cid) {
-		this.cid = cid;
-	}
-
-	/**
-	 * @return the contentsCls
-	 */
-	public String getContentsCls() {
-		return this.contentsCls;
-	}
-
-	/**
-	 * @param contentsCls
-	 *            the contentsCls to set
-	 */
-	public void setContentsCls(String contentsCls) {
-		this.contentsCls = contentsCls;
-	}
-
-	/**
-	 * @return the contentsType
-	 */
-	public String getContentsType() {
-		return this.contentsType;
-	}
-
-	/**
-	 * @param contentsType
-	 *            the contentsType to set
-	 */
-	public void setContentsType(String contentsType) {
-		this.contentsType = contentsType;
-	}
-
-	/**
-	 * @return the prchsType
-	 */
-	public String getPrchsType() {
-		return this.prchsType;
-	}
-
-	/**
-	 * @param prchsType
-	 *            the prchsType to set
-	 */
-	public void setPrchsType(String prchsType) {
-		this.prchsType = prchsType;
-	}
-
-	/**
-	 * @return the sundCls
-	 */
-	public String getSundCls() {
-		return this.sundCls;
-	}
-
-	/**
-	 * @param sundCls
-	 *            the sundCls to set
-	 */
-	public void setSundCls(String sundCls) {
-		this.sundCls = sundCls;
-	}
-
-	/**
-	 * @return the sundSec
-	 */
-	public String getSundSec() {
-		return this.sundSec;
-	}
-
-	/**
-	 * @param sundSec
-	 *            the sundSec to set
-	 */
-	public void setSundSec(String sundSec) {
-		this.sundSec = sundSec;
-	}
-
-	/**
-	 * @return the menuId
-	 */
-	public String getMenuId() {
-		return this.menuId;
-	}
-
-	/**
-	 * @param menuId
-	 *            the menuId to set
-	 */
-	public void setMenuId(String menuId) {
-		this.menuId = menuId;
-	}
-
-	/**
-	 * @return the dpCatSubNo
-	 */
-	public String getDpCatSubNo() {
-		return this.dpCatSubNo;
-	}
-
-	/**
-	 * @param dpCatSubNo
-	 *            the dpCatSubNo to set
-	 */
-	public void setDpCatSubNo(String dpCatSubNo) {
-		this.dpCatSubNo = dpCatSubNo;
-	}
-
-	/**
-	 * @return the sendDeviceId
-	 */
-	public String getSendDeviceId() {
-		return this.sendDeviceId;
-	}
-
-	/**
-	 * @param sendDeviceId
-	 *            the sendDeviceId to set
-	 */
-	public void setSendDeviceId(String sendDeviceId) {
-		this.sendDeviceId = sendDeviceId;
 	}
 
 }
