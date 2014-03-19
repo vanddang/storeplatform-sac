@@ -4,8 +4,10 @@
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,16 +71,28 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 			SacRequestHeader requestheader) {
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
 
+		String tenantId = tenantHeader.getTenantId();
+		String langCd = tenantHeader.getLangCd();
+
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
 		String sysDate = downloadSystemDate.getSysDate();
 
-		supportGameCenterSacReq.setTenantId(tenantHeader.getTenantId());
-		supportGameCenterSacReq.setLangCd(tenantHeader.getLangCd());
+		String deviceModelNo = supportGameCenterSacReq.getDeviceModelNo();
+		String userKey = supportGameCenterSacReq.getUserKey();
+		String deviceKey = supportGameCenterSacReq.getDeviceKey();
+
+		// Request Parameter
+		this.log.debug("####### tenantId : " + tenantId);
+		this.log.debug("####### langCd : " + langCd);
+		this.log.debug("####### deviceModelNo : " + deviceModelNo);
+		this.log.debug("####### userKey : " + userKey);
+		this.log.debug("####### deviceKey : " + deviceKey);
 
 		SupportGameCenterSacRes response = new SupportGameCenterSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
+		List<String> listProductId = new ArrayList<String>();
 
 		int totalCnt = 0;
 		HistoryListSacInReq historyReq = null;
@@ -88,41 +102,34 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		 * AID LIST
 		 */
 		String[] arrayAid = supportGameCenterSacReq.getAidList().split("\\+");
-		supportGameCenterSacReq.setArrayAId(arrayAid);
 
-		String userKey = supportGameCenterSacReq.getUserKey();
-		String deviceKey = supportGameCenterSacReq.getDeviceKey();
-
-		this.log.debug("####### deviceModelNo : " + supportGameCenterSacReq.getDeviceModelNo());
-		this.log.debug("####### userKey : " + supportGameCenterSacReq.getUserKey());
-		this.log.debug("####### deviceKey : " + supportGameCenterSacReq.getDeviceKey());
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("req", supportGameCenterSacReq);
+		paramMap.put("tenantId", tenantId);
+		paramMap.put("langCd", langCd);
+		paramMap.put("deviceModelNo", deviceModelNo);
+		paramMap.put("arrayAId", arrayAid);
 
 		/*
 		 * AID로 상품ID 가져오기
 		 */
-		List<MetaInfo> prodIdList = null;
-		prodIdList = this.commonDAO.queryForList("OpenApi.getProductIdByAid", supportGameCenterSacReq, MetaInfo.class);
+		List<Map> prodIdList = null;
+		prodIdList = this.commonDAO.queryForList("OpenApi.getProductIdByAid", paramMap, Map.class);
 
 		if (prodIdList.size() != 0) {
-			// 구매내역 조회를 위한 생성자
-			ProductListSacIn productListSacIn = null;
-			List<ProductListSacIn> ProductListSacInList = null;
-			try {
-				productListSacIn = new ProductListSacIn();
-				ProductListSacInList = new ArrayList<ProductListSacIn>();
 
-				int k = 0;
+			// 구매내역 조회를 위한 생성자
+			try {
+				List<ProductListSacIn> productListSacInList = new ArrayList<ProductListSacIn>();
 				String[] arrayProductId = new String[prodIdList.size()];
-				; // 상품ID LIST
-				Iterator<MetaInfo> iterator = prodIdList.iterator();
-				while (iterator.hasNext()) {
-					MetaInfo metaInfo = iterator.next();
-					this.log.debug("####### prodId : " + metaInfo.getProdId());
-					// 조회할 상품ID SET
-					arrayProductId[k] = metaInfo.getProdId();
-					productListSacIn.setProdId(metaInfo.getProdId());
-					ProductListSacInList.add(productListSacIn);
-					k++;
+
+				for (int k = 0; k < prodIdList.size(); k++) {
+					this.log.debug("####### PROD_ID, AID : " + prodIdList.get(k).get("PROD_ID").toString() + ", "
+							+ prodIdList.get(k).get("AID").toString());
+					listProductId.add(prodIdList.get(k).get("PROD_ID").toString());
+					ProductListSacIn productListSacIn = new ProductListSacIn();
+					productListSacIn.setProdId(prodIdList.get(k).get("PROD_ID").toString());
+					productListSacInList.add(productListSacIn);
 				}
 
 				// AID로 조회한 상품ID SET
@@ -132,7 +139,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 				if (StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
 
 					historyReq = new HistoryListSacInReq();
-					historyReq.setTenantId(supportGameCenterSacReq.getTenantId());
+					historyReq.setTenantId(tenantId);
 					historyReq.setUserKey(userKey);
 					historyReq.setDeviceKey(deviceKey);
 					historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
@@ -140,8 +147,8 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 					historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 					historyReq.setEndDt(sysDate);
 					historyReq.setOffset(1);
-					historyReq.setCount(prodIdList.size());
-					historyReq.setProductList(ProductListSacInList);
+					historyReq.setCount(productListSacInList.size());
+					historyReq.setProductList(productListSacInList);
 					historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD); // 구매완료
 
 					// 구매내역 조회 실행
@@ -164,10 +171,15 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		Product product = null;
 		Purchase purchase = null;
 
-		List<MetaInfo> productMetaInfoList = null;
+		paramMap.clear();
+		paramMap.put("req", supportGameCenterSacReq);
+		paramMap.put("tenantId", tenantId);
+		paramMap.put("langCd", langCd);
+		paramMap.put("deviceModelNo", deviceModelNo);
+		paramMap.put("arrayProductId", listProductId);
 
-		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchSupportGameCenter", supportGameCenterSacReq,
-				MetaInfo.class);
+		List<MetaInfo> productMetaInfoList = null;
+		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchSupportGameCenter", paramMap, MetaInfo.class);
 		totalCnt = productMetaInfoList.size();
 		if (totalCnt != 0) {
 

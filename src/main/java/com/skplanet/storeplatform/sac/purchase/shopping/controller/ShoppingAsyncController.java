@@ -13,17 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.shopping.service.ShoppingAsyncService;
+//import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
+//import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponRes;
 
 /**
  * 쿠폰발급비동기응답 Controller
@@ -51,20 +46,21 @@ public class ShoppingAsyncController {
 	 *            공통헤더정보
 	 * @return BizCouponRes
 	 */
-	@RequestMapping(value = "/couponAsync/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public BizCouponRes getShoppingAsync(@RequestBody @Validated BizCouponReq request, SacRequestHeader sacRequestHeader) {
-
-		this.logger.debug("######################################");
-		this.logger.debug("######################################");
-		this.logger.debug("######################################");
-		this.logger.debug("######################################");
-		this.logger.debug("######################################");
-
-		// // this.purchaseCommonUtils.getBindingValid(bindingResult);
-		// this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
-
-		return this.shoppongAsyncService.getShoppingAsync(request);
-	}
-
+	/*
+	 * @RequestMapping(value = "/couponAsync/v1", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public BizCouponRes getShoppingAsync(@RequestBody @Validated BizCouponReq request, SacRequestHeader
+	 * sacRequestHeader) {
+	 * 
+	 * this.logger.debug("######################################");
+	 * this.logger.debug("######################################");
+	 * this.logger.debug("######################################");
+	 * this.logger.debug("######################################");
+	 * this.logger.debug("######################################");
+	 * 
+	 * // // this.purchaseCommonUtils.getBindingValid(bindingResult); // this.purchaseCommonUtils.setHeader(request,
+	 * sacRequestHeader);
+	 * 
+	 * return this.shoppongAsyncService.getShoppingAsync(request); }
+	 */
 }

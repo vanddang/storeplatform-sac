@@ -2117,7 +2117,7 @@
     </select>  
     
     <!-- 상품 ID 리스트 (BY AID)-->
-    <select id="getProductIdByAid" parameterType="supportGameCenterSacReq" resultType="MetaInfo">    
+    <select id="getProductIdByAid" parameterType="map" resultType="Map">    
         SELECT /* OpenApiMapper.xml, getProductIdByAid, SAC 전시, 2014-03-03 */
               P.PROD_ID AS PROD_ID
               ,DAP.AID AS AID
@@ -2146,7 +2146,7 @@
         AND DMCD.LANG_CD = #{langCd}
         <if test="arrayAId != null">
         AND DAP.AID IN
-           <foreach collection="arrayAId" item="aId" separator="," open="(" close=")">
+           <foreach collection="arrayAId" item="aId" index="index" open="(" separator="," close=")">
               #{aId}
            </foreach>
         </if> 
@@ -2154,7 +2154,7 @@
     </select> 
     
     <!-- 게임센터 상품 지원 여부 조회 -->
-    <select id="searchSupportGameCenter" parameterType="supportGameCenterSacReq" resultType="MetaInfo">
+    <select id="searchSupportGameCenter" parameterType="map" resultType="MetaInfo">
 		SELECT /* OpenApiMapper.xml, searchSupportGameCenter, SAC 전시, 2014-03-03 */
 		      P.PROD_ID
 		      ,DAP.AID
@@ -2215,7 +2215,7 @@
 		AND DPD.LANG_CD = #{langCd}
 		<if test="arrayProductId != null">
         AND P.PROD_ID IN
-           <foreach collection="arrayProductId" item="productId" separator="," open="(" close=")">
+           <foreach collection="arrayProductId" item="productId" index="index" open="(" separator="," close=")">
               #{productId}
            </foreach>
         </if>       
@@ -2224,7 +2224,7 @@
 		        
         <if test="arrayProductId != null">  
          ORDER BY INSTR
-             <foreach collection="arrayProductId" item="productId" open="(" separator=" || " close=" ,PROD_ID)"> 
+             <foreach collection="arrayProductId" item="productId" index="index" open="(" separator=" || " close=", PROD_ID)">              
                  #{productId}
              </foreach>
         </if> 		         

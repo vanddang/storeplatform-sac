@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.service;
 
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponRes;
+//import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
+//import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponRes;
 
 /**
  * 쇼핑쿠폰 Service Interface.
@@ -29,6 +29,6 @@ public interface ShoppingAsyncService {
 	 *            couponUseStatusSacParam
 	 * @return CouponUseStatusSacResult
 	 */
-	public BizCouponRes getShoppingAsync(BizCouponReq request);
+	// public BizCouponRes getShoppingAsync(BizCouponReq request);
 
 }
