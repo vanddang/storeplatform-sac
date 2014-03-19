@@ -385,8 +385,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 		Book book = new Book();
 		book = this.ebookComicGenerator.generateBook(metaInfo);
-		if (StringUtils.isNotEmpty(metaInfo.getBookClsfCd())) {
-			if (!(StringUtils.isNotEmpty(metaInfo.getChapter()))) {
+		if (StringUtils.isEmpty(metaInfo.getBookClsfCd())) {
+			if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
 				Chapter chapter = new Chapter();
 				chapter.setText(Integer.parseInt(metaInfo.getChapter()));
 				book.setChapter(chapter);
