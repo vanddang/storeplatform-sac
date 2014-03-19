@@ -354,7 +354,7 @@
 		         <!-- WHERE KA.RNUM <![CDATA[ <= 4 ]]> -->
     </select>      
     
-    <!-- 2.15.1.9 유/무료 다운로드 BEST 리스트 - 최신순,평점순 -->
+    <!-- 2.15.1.9 유/무료 다운로드 BEST 리스트 - 최신순,평점순 AS-IS getProductList -->
     <select id="searchBestDownloadAppListByOrder" parameterType="BestDownloadAppSacReq" resultType="MetaInfo">
         SELECT /* OpenApiMapper.xml, searchBestDownloadAppListByOrder, SAC 전시, 2014-03-03 */
                COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
@@ -1421,7 +1421,7 @@
 		   AND  KC.IMG_CD(+) = #{imageCd}      
     </select>    
     
-    <!-- 2.15.2.1 상품 검색 요청(By 상품명) -->
+    <!-- 2.15.2.1 상품 검색 요청(By 상품명)  AS-IS getProductMMList-->
     <select id="searchProductList" parameterType="SearchAppNameSacReq" resultType="MetaInfo">
         SELECT  /* OpenApiMapper.xml, searchProductList, SAC 전시, 2014-03-03 */
                COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/

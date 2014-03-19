@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -43,7 +45,7 @@ import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 @Service
 public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 
-	// private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -84,6 +86,7 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 		String listId = bestDownloadMMSacReq.getListId();
 		String orderedBy = bestDownloadMMSacReq.getOrderedBy();
 		String topMenuId = bestDownloadMMSacReq.getTopMenuId();
+		String channelId = bestDownloadMMSacReq.getChannelId();
 
 		if (StringUtils.isNotEmpty(listId)) {
 			stdDt = this.commonService.getBatchStandardDateString(tenantHeader.getTenantId(),
@@ -115,7 +118,14 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 		}
 
 		/** OpenApi Best Download 멀티미디어 상품 조회 **/
-		if (StringUtils.isEmpty(orderedBy)) {
+		this.log.debug("---------------------------------------------------------------------");
+		this.log.debug("[BestDownloadMMServiceImpl] topMenuId : {}" + topMenuId);
+		this.log.debug("[BestDownloadMMServiceImpl] listId : {}" + listId);
+		this.log.debug("[BestDownloadMMServiceImpl] orderedBy : {}" + orderedBy);
+		this.log.debug("[BestDownloadMMServiceImpl] channelId : {}" + channelId);
+		this.log.debug("---------------------------------------------------------------------");
+
+		if (StringUtils.isEmpty(orderedBy) && StringUtils.isEmpty(channelId)) {
 			if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)
 					|| DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 					|| DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook ,Comic, Music
@@ -126,13 +136,21 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 				} else {
 					// 유/무료
 					if ("RNK000000006".equals(listId) || "RNK000000003".equals(listId)) {
-
+						this.log.debug("---------------------------------------------------------------------");
+						this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchPayFreeList : {}");
+						this.log.debug("---------------------------------------------------------------------");
 						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchPayFreeList",
 								bestDownloadMMSacReq, MetaInfo.class);
 						// 추천/신규
-					} else if ("ADM000000013".equals(listId) || "TGR000000001".equals(listId)) {
+					} else if ("ADM000000013".equals(listId) || "TGR000000001".equals(listId)
+							|| "ADM000000001".equals(listId)) {
+						this.log.debug("---------------------------------------------------------------------");
+						this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchRecommendNewList : {}");
+						this.log.debug("---------------------------------------------------------------------");
 						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchRecommendNewList",
 								bestDownloadMMSacReq, MetaInfo.class);
+					} else {
+						throw new StorePlatformException("SAC_DSP_0016");
 					}
 				}
 
@@ -142,6 +160,9 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 				bestDownloadMMSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 				// VOD 신규
 				if ("TGR000000002".equals(listId)) {
+					this.log.debug("---------------------------------------------------------------------");
+					this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchNewVodList : {}");
+					this.log.debug("---------------------------------------------------------------------");
 					bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchNewVodList", bestDownloadMMSacReq,
 							MetaInfo.class);
 				} else {
@@ -150,11 +171,17 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 			}
 		} else {
 			if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
-				// 뮤직 최신순 평점순일때
+				this.log.debug("---------------------------------------------------------------------");
+				this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchBestDownloadAppListByOrder : {}");
+				this.log.debug("---------------------------------------------------------------------");
 				bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchBestDownloadAppListByOrder",
 						bestDownloadMMSacReq, MetaInfo.class);
+				// throw new StorePlatformException("SAC_DSP_0016");
 			} else {
 				// 뮤직을 제외한 나머지 Menu 최신순 평점순일때
+				this.log.debug("---------------------------------------------------------------------");
+				this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchProductList : {}");
+				this.log.debug("---------------------------------------------------------------------");
 				bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchProductList", bestDownloadMMSacReq,
 						MetaInfo.class);
 			}
