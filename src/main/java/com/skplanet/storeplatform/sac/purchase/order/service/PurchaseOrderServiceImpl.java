@@ -206,7 +206,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 구매인증 응답 데이터 처리
 
 		// 예약 저장해둔 데이터 추출
-		Map<String, String> reservedDataMap = this.parseReservedData(createPurchaseSc.getPrchsResvInfo());
+		Map<String, String> reservedDataMap = this.parseReservedData(createPurchaseSc.getPrchsResvDesc());
 
 		VerifyOrderSacRes res = new VerifyOrderSacRes();
 		res.setMdn(reservedDataMap.get("deviceId")); // 결제 MDN
@@ -486,7 +486,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------
 		// 구매예약 시, 추가 저장해 두었던 데이터 추출
 
-		Map<String, String> reservedDataMap = this.parseReservedData(createPurchaseSc.getPrchsResvInfo());
+		Map<String, String> reservedDataMap = this.parseReservedData(createPurchaseSc.getPrchsResvDesc());
 
 		// 공통 작업용 세팅
 		for (CreatePurchaseSc createPurchaseInfo : createPurchaseScList) {
@@ -546,7 +546,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
-		createPurchaseSc.setPrchsResvInfo(createPurchaseSc.getPrchsResvInfo() + "&tstoreNotiPublishType="
+		createPurchaseSc.setPrchsResvDesc(createPurchaseSc.getPrchsResvDesc() + "&tstoreNotiPublishType="
 				+ tstoreNotiPublishType);
 
 		// -------------------------------------------------------------------------------------------
@@ -642,7 +642,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		Map<String, String> reservedDataMap = null;
 
 		for (CreatePurchaseSc createPurchaseSc : createPurchaseScList) {
-			reservedDataMap = this.parseReservedData(createPurchaseSc.getPrchsResvInfo());
+			reservedDataMap = this.parseReservedData(createPurchaseSc.getPrchsResvDesc());
 
 			interworking = new Interworking();
 			interworking.setProdId(createPurchaseSc.getProdId());
@@ -675,7 +675,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// Tstore 측으로 알림: 이메일 발송, SMS / MMS 등등 처리
 
 		createPurchaseSc = createPurchaseScList.get(0);
-		reservedDataMap = this.parseReservedData(createPurchaseSc.getPrchsResvInfo());
+		reservedDataMap = this.parseReservedData(createPurchaseSc.getPrchsResvDesc());
 		String tstoreNotiPublishType = reservedDataMap.get("tstoreNotiPublishType");
 
 		TStoreNotiEcReq tStoreNotiEcReq = new TStoreNotiEcReq();
@@ -971,7 +971,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							.append("").append("&sellerMbrNo=").append("").append("&mallCd=").append("")
 							.append("&outsdContentsId=").append("").append("&autoPrchsYn=")
 							.append(product.getAutoPrchsYN());
-					createPurchase.setPrchsResvInfo(sbReserveData.toString());
+					createPurchase.setPrchsResvDesc(sbReserveData.toString());
 				}
 
 				createPurchaseList.add(createPurchase);
