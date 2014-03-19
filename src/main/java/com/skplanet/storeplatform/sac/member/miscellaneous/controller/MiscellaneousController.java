@@ -179,7 +179,7 @@ public class MiscellaneousController {
 
 	/**
 	 * <pre>
-	 * Captcha 문자 인증.
+	 *  Captcha 문자 확인.
 	 * </pre>
 	 * 
 	 * @param request
