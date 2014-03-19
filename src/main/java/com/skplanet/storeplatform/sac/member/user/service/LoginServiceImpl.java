@@ -405,6 +405,8 @@ public class LoginServiceImpl implements LoginService {
 			/* 변동성 여부 조회 */
 			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
 
+			LOGGER.info("### {} SC회원 변동성 여부 : {}", req.getDeviceId(), saveAndSync.getIsSaveAndSyncTarget());
+
 			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "N")) {
 
 				/* 회원 정보가 존재 하지 않습니다. */
@@ -443,6 +445,8 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
+		LOGGER.info("### {} 변동성 체크 성공 여부 : {}", req.getDeviceId(), isVariability);
+
 		if (StringUtil.equals(isVariability, "Y")) {
 
 			/* 휴대기기 정보 수정 (통신사, GMAIL) */
@@ -466,6 +470,8 @@ public class LoginServiceImpl implements LoginService {
 
 			if (StringUtil.isBlank(userAuthMethod.getUserId())
 					&& (StringUtil.isBlank(userAuthMethod.getIsRealName()) || StringUtil.equals(userAuthMethod.getIsRealName(), "N"))) { // 인증수단이 없는경우
+
+				LOGGER.info("### {} 인증 수단 없음", req.getDeviceId());
 
 				/* SC회원탈퇴 */
 				RemoveUserRequest removeUserReq = new RemoveUserRequest();
