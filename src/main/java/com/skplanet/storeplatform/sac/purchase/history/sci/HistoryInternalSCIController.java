@@ -165,18 +165,18 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 			historySacIn.setTid(obj.getTid());
 			historySacIn.setTxId(obj.getTxId());
 			historySacIn.setParentProdId(obj.getParentProdId());
-			historySacIn.setVer(obj.getVer());
-			historySacIn.setSubNm(obj.getSubNm());
-			historySacIn.setRnPid(obj.getRnPid());
-			historySacIn.setIsuAmtAdd(obj.getIsuAmtAdd());
+			historySacIn.setPartChrgVer(obj.getPartChrgVer());
+			historySacIn.setPartChrgProdNm(obj.getPartChrgProdNm());
+			historySacIn.setRnBillCd(obj.getRnBillCd());
+			historySacIn.setInfoUseFee(obj.getInfoUseFee());
 			historySacIn.setCid(obj.getCid());
-			historySacIn.setContentsCls(obj.getContentsCls());
+			historySacIn.setContentsClsf(obj.getContentsClsf());
 			historySacIn.setContentsType(obj.getContentsType());
 			historySacIn.setPrchsType(obj.getPrchsType());
-			historySacIn.setSundCls(obj.getSundCls());
-			historySacIn.setSundSec(obj.getSundSec());
+			historySacIn.setTimbreClsf(obj.getTimbreClsf());
+			historySacIn.setTimbreSctn(obj.getTimbreSctn());
 			historySacIn.setMenuId(obj.getMenuId());
-			historySacIn.setDpCatSubNo(obj.getDpCatSubNo());
+			historySacIn.setGenreClsfCd(obj.getGenreClsfCd());
 
 			historySacInList.add(historySacIn);
 

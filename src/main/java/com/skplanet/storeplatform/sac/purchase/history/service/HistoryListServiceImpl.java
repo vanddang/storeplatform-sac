@@ -216,18 +216,18 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setTid(obj.getTid());
 			historySac.setTxId(obj.getTxId());
 			historySac.setParentProdId(obj.getParentProdId());
-			historySac.setVer(obj.getVer());
-			historySac.setSubNm(obj.getSubNm());
-			historySac.setRnPid(obj.getRnPid());
-			historySac.setIsuAmtAdd(obj.getIsuAmtAdd());
+			historySac.setPartChrgVer(obj.getPartChrgVer());
+			historySac.setPartChrgProdNm(obj.getPartChrgProdNm());
+			historySac.setRnBillCd(obj.getRnBillCd());
+			historySac.setInfoUseFee(obj.getInfoUseFee());
 			historySac.setCid(obj.getCid());
-			historySac.setContentsCls(obj.getContentsCls());
+			historySac.setContentsClsf(obj.getContentsClsf());
 			historySac.setContentsType(obj.getContentsType());
 			historySac.setPrchsType(obj.getPrchsType());
-			historySac.setSundCls(obj.getSundCls());
-			historySac.setSundSec(obj.getSundSec());
+			historySac.setTimbreClsf(obj.getTimbreClsf());
+			historySac.setTimbreSctn(obj.getTimbreSctn());
 			historySac.setMenuId(obj.getMenuId());
-			historySac.setDpCatSubNo(obj.getDpCatSubNo());
+			historySac.setGenreClsfCd(obj.getGenreClsfCd());
 
 			sacHistoryList.add(historySac);
 
@@ -291,55 +291,66 @@ public class HistoryListServiceImpl implements HistoryListService {
 		/*************************************************
 		 * device Info Mapping Start
 		 **************************************************/
-		try {
-			SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
-			SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
+		SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
 
-			this.logger.debug("### searchUserDeviceSacReq  : {}" + searchUserDeviceSacReq.toString());
+		boolean useInfo = true; // 회원정보 조회 안되면 false
+		boolean sendInfo = true; // 회원정보 조회 안되면 false
 
-			if (deviceList.size() > 0) {
-				// member request parameter set
-				searchUserDeviceSacReq.setDeviceKeyList(deviceList);
+		this.logger.debug("### searchUserDeviceSacReq  : {}" + searchUserDeviceSacReq.toString());
+
+		if (deviceList.size() > 0) {
+			// member request parameter set
+			searchUserDeviceSacReq.setDeviceKeyList(deviceList);
+			try {
 				// member InternalSCI Call
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+			} catch (Exception e) {
+				useInfo = false;
+				this.logger.info("---------------------------------------------------");
+				this.logger.info("------Use Device Info null");
+				this.logger.info("---------------------------------------------------");
 			}
+		}
 
-			Map<String, UserDeviceInfoSac> deviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
-
-			if (sendDeviceList.size() > 0) {
-				searchUserDeviceSacReq = new SearchUserDeviceSacReq();
-				searchUserDeviceSacReq.setDeviceKeyList(sendDeviceList);
+		if (sendDeviceList.size() > 0) {
+			searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+			searchUserDeviceSacReq.setDeviceKeyList(sendDeviceList);
+			try {
 				// member InternalSCI Call
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+			} catch (Exception e) {
+				sendInfo = false;
+				this.logger.info("---------------------------------------------------");
+				this.logger.info("------Send Device Info null");
+				this.logger.info("---------------------------------------------------");
 			}
+		}
 
-			Map<String, UserDeviceInfoSac> sendDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
+		UserDeviceInfoSac deviceResult;
+		UserDeviceInfoSac sendDeviceResult;
 
-			UserDeviceInfoSac deviceResult;
-			UserDeviceInfoSac sendDeviceResult;
+		// member response set
+		for (HistorySac obj : sacHistoryList) {
 
-			// member response set
-			for (HistorySac obj : sacHistoryList) {
-
+			if (useInfo) {
+				Map<String, UserDeviceInfoSac> deviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
 				deviceResult = new UserDeviceInfoSac();
 				deviceResult = deviceMap.get(obj.getUseDeviceKey());
-
-				sendDeviceResult = new UserDeviceInfoSac();
-				sendDeviceResult = sendDeviceMap.get(obj.getSendDeviceKey());
-
 				if (deviceResult != null) {
 					obj.setUseDeviceId(deviceResult.getDeviceId());
 				}
+			}
+
+			if (sendInfo) {
+				Map<String, UserDeviceInfoSac> sendDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
+				sendDeviceResult = new UserDeviceInfoSac();
+				sendDeviceResult = sendDeviceMap.get(obj.getSendDeviceKey());
 
 				if (sendDeviceResult != null) {
 					obj.setSendDeviceId(sendDeviceResult.getDeviceId());
 				}
 			}
-		} catch (Exception e) {
-
-			this.logger.info("---------------------------------------------------");
-			this.logger.info("------Device Info null");
-			this.logger.info("---------------------------------------------------");
 		}
 
 		/*************************************************
