@@ -63,6 +63,8 @@ public class EpubDetail extends CommonInfo {
 	private String artist1Nm;
 	/** 아티스트2 */
 	private String artist2Nm;
+	/** 아티스트3 */
+	private String artist3Nm;
 
 	/** 상품 정가 가격 */
 	private Integer prodNetAmt;
@@ -302,6 +304,20 @@ public class EpubDetail extends CommonInfo {
 
 	public void setArtist2Nm(String artist2Nm) {
 		this.artist2Nm = artist2Nm;
+	}
+	
+	/**
+	 * @return the artist3Nm
+	 */
+	public String getArtist3Nm() {
+		return artist3Nm;
+	}
+
+	/**
+	 * @param artist3Nm the artist3Nm to set
+	 */
+	public void setArtist3Nm(String artist3Nm) {
+		this.artist3Nm = artist3Nm;
 	}
 
 	public String getIssueDay() {

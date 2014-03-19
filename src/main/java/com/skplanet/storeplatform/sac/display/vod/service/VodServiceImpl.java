@@ -734,7 +734,7 @@ public class VodServiceImpl implements VodService {
     private String getSalesStatus(VodDetail mapperVO, String userKey, String deviceKey) {
         String salesStatus = null;
         //기구매 체크
-        if (!mapperVO.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
+        if (!StringUtils.equals(mapperVO.getProdStatusCd(), DisplayConstants.DP_SALE_STAT_ING)) {
             // 04, 09, 10의 경우 구매이력이 없으면 상품 없음을 표시한다.
             if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getProdStatusCd()) ||
                     DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getProdStatusCd()) ||

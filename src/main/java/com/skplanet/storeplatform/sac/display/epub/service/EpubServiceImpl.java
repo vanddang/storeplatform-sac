@@ -49,7 +49,6 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
-import com.skplanet.storeplatform.sac.display.vod.vo.VodDetail;
 
 /**
  * EPUB Service
@@ -385,17 +384,12 @@ public class EpubServiceImpl implements EpubService {
     private Contributor mapContributor(EpubDetail mapperVO) {
         Contributor contributor = null;
         Date date;
-        if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(mapperVO.getTopMenuId())) { // 이북
-            contributor = new Contributor();
-            contributor.setName(mapperVO.getArtist1Nm());
-            contributor.setPublisher(mapperVO.getChnlCompNm());
+        contributor = new Contributor();
+        contributor.setName(mapperVO.getArtist1Nm());  		// 글작가
+        contributor.setPainter(mapperVO.getArtist2Nm()); 	// 그림작가
+        contributor.setPublisher(mapperVO.getChnlCompNm()); // 출판사
+        contributor.setTranslator(mapperVO.getArtist3Nm()); // 번역자        
 
-        } else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(mapperVO.getTopMenuId())) { // 코믹
-            contributor = new Contributor();
-            contributor.setName(mapperVO.getArtist1Nm());
-            contributor.setPainter(mapperVO.getArtist2Nm());
-            contributor.setPublisher(mapperVO.getChnlCompNm());
-        }
         
         // 출판일
         if (StringUtils.isNotEmpty(mapperVO.getIssueDay())) {
