@@ -1300,7 +1300,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 * SKT 이용정지회원 여부 setting. (기기 타입이 msisdn 일 경우만 연동 한다.)
 		 */
 		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
-			response.setIsSktPause(this.mcc.getIsSktPause(req.getDeviceId(), req.getDeviceIdType()));
+			response.setIsSktStop(this.mcc.getIsSktPause(req.getDeviceId(), req.getDeviceIdType()));
 		}
 
 		return response;

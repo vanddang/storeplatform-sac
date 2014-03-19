@@ -68,11 +68,16 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		String deviceKey = checkSaveNSyncResponse.getDeviceKey(); // 휴대기기 Key.
 		String userKey = checkSaveNSyncResponse.getUserKey(); // 사용자 Key.
 		String preDeviceId = checkSaveNSyncResponse.getPreDeviceID(); // 이전 MSISDN.
+		String nowDeviceId = checkSaveNSyncResponse.getDeviceID(); // 현재 MSISDN.
 
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
+			/**
+			 * TODO 어떤 deviceId 로 회원 탈퇴를 할지 테스트할때 처리할것.
+			 */
 			LOGGER.info("## >> ★★★  변동성 대상!!!");
-			LOGGER.info("## >> ★★★  preDeviceId : {}", preDeviceId);
+			LOGGER.info("## >> ★★★  nowDeviceId : {}", nowDeviceId);
+			LOGGER.info("## >> ★★★  preDeviceId  : {}", preDeviceId);
 
 			/**
 			 * 변동성 대상 회원의 상태를 확인한다.
