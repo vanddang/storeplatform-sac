@@ -49,7 +49,7 @@ public class PrchsDtlSacParam extends CommonInfo {
 	private String cpnAddInfo;
 	private String cpnBizOrderNo;
 	private String cpnBizProdSeq;
-	private String prchsResvInfo;
+	private String prchsResvDesc;
 
 	/**
 	 * @return the useStartDt
@@ -487,18 +487,18 @@ public class PrchsDtlSacParam extends CommonInfo {
 	}
 
 	/**
-	 * @return the prchsResvInfo
+	 * @return the prchsResvDesc
 	 */
-	public String getPrchsResvInfo() {
-		return this.prchsResvInfo;
+	public String getPrchsResvDesc() {
+		return this.prchsResvDesc;
 	}
 
 	/**
-	 * @param prchsResvInfo
-	 *            the prchsResvInfo to set
+	 * @param prchsResvDesc
+	 *            the prchsResvDesc to set
 	 */
-	public void setPrchsResvInfo(String prchsResvInfo) {
-		this.prchsResvInfo = prchsResvInfo;
+	public void setPrchsResvDesc(String prchsResvDesc) {
+		this.prchsResvDesc = prchsResvDesc;
 	}
 
 }

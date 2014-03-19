@@ -187,7 +187,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		/** 결제가 PayPlanet결제 인지 TStore 결제인지 구분. */
 		PAYMENT_GATEWAY paymentGateway = PAYMENT_GATEWAY.NO_PAYMENT;
 		if (purchaseCancelDetailSacParam.getPaymentSacParamList() != null
-				|| purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0) {
+				&& purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0) {
 
 			paymentGateway = PAYMENT_GATEWAY.PAY_PLANET;
 
@@ -236,12 +236,11 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		/** 구매 DB 취소 처리. */
 		this.purchaseCancelRepository.updatePurchaseCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 
-		/** 전시 상품 구매건수 -1. */
-		try {
-			this.purchaseCancelRepository.updatePurchaseCount(purchaseCancelSacParam, purchaseCancelDetailSacParam);
-		} catch (Exception e) {
-			this.logger.info("구매 상품 개수 업데이트 실패! ========= {}", e);
-		}
+		/**
+		 * 전시 상품 구매건수 -1. try { this.purchaseCancelRepository.updatePurchaseCount(purchaseCancelSacParam,
+		 * purchaseCancelDetailSacParam); } catch (Exception e) { this.logger.info("구매 상품 개수 업데이트 실패! ========= {}", e);
+		 * }
+		 */
 
 		/** RO 삭제 처리. */
 		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
