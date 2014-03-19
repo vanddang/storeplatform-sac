@@ -14,7 +14,7 @@ public class PersonalAutoUpdateReq extends CommonInfo {
 
 	@NotBlank
 	private String packageInfo;
-	private Integer updLimitCnt = 0;
+	private Integer updLimitCnt;
 	@NotBlank
 	private String deviceKey;
 	@NotBlank
