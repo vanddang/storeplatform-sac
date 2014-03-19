@@ -4,7 +4,25 @@
     <!-- Appzine 상세 조회-->
     <select id="selectAppzineDetail" parameterType="AppzineDetailSacReq" resultType="AppzineDetail">
 	    SELECT /* AppzineDetailMapper.xml, selectAppzineDetail, SAC 전시 : 유시혁 , 2014-02-18 */
-	       A.*
+           A.RNUM
+           , A.APPZN_NO
+           , A.APPZN_VOL
+           , A.ISSUDAY
+           , A.TITLE
+           , A.BG_IMG_PATH
+           , A.THEME_HTML
+           , A.EXPO_YN
+           , A.POPULAR_TITL_IMG_480
+           , A.POPULAR_TITL_IMG_800
+           , A.NEW_TITL_IMG_480
+           , A.NEW_TITL_IMG_800
+           , A.EVENT_NM
+           , A.EVENT_URL
+           , A.EVENT_IMG_480
+           , A.EVENT_IMG_800
+           , A.TITLE_IMG
+           , A.THEME_UP_IMG
+           , A.REG_DT
 	    FROM (
 				SELECT
 					ROW_NUMBER () OVER (ORDER BY A.APPZN_NO DESC) AS RNUM

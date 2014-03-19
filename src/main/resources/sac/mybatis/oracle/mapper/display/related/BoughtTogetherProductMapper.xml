@@ -25,7 +25,12 @@
             SELECT 
                 COUNT(1) OVER() TOTAL_COUNT
                 , ROW_NUMBER() OVER(ORDER BY RANK) RNK
-                , A.*
+                , A.RNUM
+                , A.TOP_MENU_ID
+                , A.MENU_ID
+                , A.PROD_ID
+                , A.RANK
+                , A.CONTENTS_TYPE_CD
             FROM (
                 SELECT 
                     ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.REG_DT DESC, A.RANK, B.REG_DT) RNUM
