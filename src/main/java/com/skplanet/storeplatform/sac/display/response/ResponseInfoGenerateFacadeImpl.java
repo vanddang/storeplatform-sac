@@ -14,6 +14,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -24,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
@@ -383,7 +385,15 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 		Book book = new Book();
 		book = this.ebookComicGenerator.generateBook(metaInfo);
+		if (StringUtils.isNotEmpty(metaInfo.getBookClsfCd())) {
+			if (!(StringUtils.isNotEmpty(metaInfo.getChapter()))) {
+				Chapter chapter = new Chapter();
+				chapter.setText(Integer.parseInt(metaInfo.getChapter()));
+				book.setChapter(chapter);
+			}
+		}
 		book.setStatus(metaInfo.getBookStatus());
+
 		// Date 생성
 		// Date date = this.commonGenerator.generateDate(metaInfo);
 		Date date = this.commonGenerator.generateDate(DisplayConstants.DP_DATE_UPT_NM, metaInfo.getUpdDt());
