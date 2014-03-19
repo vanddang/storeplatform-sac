@@ -224,7 +224,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 						reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 						retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 						if (retMetaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+							product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 							productList.add(product);
 						}
 
