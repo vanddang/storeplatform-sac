@@ -649,7 +649,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			interworking.setProdAmt(createPurchaseSc.getProdAmt());
 			interworking.setSellermbrNo(reservedDataMap.get("sellerMbrNo"));
 			interworking.setMallCd(reservedDataMap.get("mallCd"));
-			interworking.setCompContentsId(reservedDataMap.get("outsdContentsId"));
+			interworking.setCompCid(reservedDataMap.get("outsdContentsId"));
 
 			interworkingList.add(interworking);
 		}
