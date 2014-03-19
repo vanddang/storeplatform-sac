@@ -915,6 +915,7 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
+			deviceInfo.setUserKey(mdnDeviceInfo.getUserKey());
 			deviceInfo.setDeviceId(req.getDeviceId());
 			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 			if (StringUtil.isNotBlank(req.getNativeId())) {
@@ -965,6 +966,7 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
+			deviceInfo.setUserKey(createDeviceRes.getUserKey());
 			deviceInfo.setDeviceId(req.getDeviceId());
 			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 			if (StringUtil.isNotBlank(req.getNativeId())) {
