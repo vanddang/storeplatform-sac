@@ -43,8 +43,6 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
@@ -55,7 +53,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
@@ -953,20 +950,10 @@ public class LoginServiceImpl implements LoginService {
 			/* 가가입 상태인 mac 회원정보를 정상상태로 */
 			this.updateLoginStatus(requestHeader, MemberConstants.USER_LOGIN_STATUS_NOMAL, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
-			/* mac -> mdn으로 변경 처리 */
-			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
-			createDeviceReq.setCommonRequest(commonRequest);
-			UserMbrDevice userMbrDevice = new UserMbrDevice();
-			userMbrDevice.setUserKey(macDeviceInfo.getUserKey());
-			userMbrDevice.setDeviceKey(macDeviceInfo.getDeviceKey());
-			userMbrDevice.setDeviceID(req.getDeviceId());
-			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
-			createDeviceReq.setIsNew("N");
-			CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
-
-			/* 휴대기기 정보 수정 */
+			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
-			deviceInfo.setUserKey(createDeviceRes.getUserKey());
+			deviceInfo.setUserKey(macDeviceInfo.getUserKey());
+			deviceInfo.setDeviceKey(macDeviceInfo.getDeviceKey());
 			deviceInfo.setDeviceId(req.getDeviceId());
 			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 			if (StringUtil.isNotBlank(req.getNativeId())) {
@@ -978,8 +965,8 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
-			res.setDeviceKey(createDeviceRes.getDeviceKey());
-			res.setUserKey(createDeviceRes.getUserKey());
+			res.setDeviceKey(macDeviceInfo.getDeviceKey());
+			res.setUserKey(macDeviceInfo.getUserKey());
 			res.setUserAuthKey(this.tempUserAuthKey);
 			res.setIsLoginSuccess("Y");
 
