@@ -72,6 +72,8 @@ public class MenuSacReq extends CommonInfo {
 
 	private String langCd; // language code
 
+	private String mmDeviceModelCd; // 멀티미디어 표준 단말
+
 	/**
 	 * 
 	 * <pre>
@@ -220,5 +222,30 @@ public class MenuSacReq extends CommonInfo {
 	 */
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 멀티미디어 표준 단말.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getMmDeviceModelCd() {
+		return this.mmDeviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 멀티미디어 표준 단말.
+	 * </pre>
+	 * 
+	 * @param mmDeviceModelCd
+	 *            String
+	 */
+	public void setMmDeviceModelCd(String mmDeviceModelCd) {
+		this.mmDeviceModelCd = mmDeviceModelCd;
 	}
 }
