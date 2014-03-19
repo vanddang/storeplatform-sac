@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -29,7 +28,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
  * 
  * Updated on : 2014. 2. 11. Updated by : 홍길동, SK 플래닛.
  */
-@ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class FeedbackServiceTest {

@@ -1,10 +1,13 @@
 package com.skplanet.storeplatform.sac.other.feedback.repository;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -211,40 +214,6 @@ public class FeedbackRepositoryTest {
 
 	/**
 	 * <pre>
-	 * 탈퇴회원 사용후기 카운트 조회.
-	 * </pre>
-	 */
-	@Test
-	public void testGetProdNotiWDCount() {
-		ProdNoti prodNoti = new ProdNoti();
-		prodNoti.setTenantId("S01");
-		prodNoti.setNotiSeq("14262");
-
-		int ret = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
-
-		assertTrue(ret > 0);
-	}
-
-	/**
-	 * <pre>
-	 * 일반회원 사용후기 카운트 조회.
-	 * </pre>
-	 */
-	@Test
-	public void testGetProdNotiWDGoodCount() {
-		ProdNoti prodNoti = new ProdNoti();
-		prodNoti.setTenantId("S01");
-		prodNoti.setNotiSeq("3068");
-		prodNoti.setMbrNo("IF102815948420090820103525");
-		prodNoti.setProdId("H900000017");
-
-		int ret = (Integer) this.feedbackRepository.getProdNotiWDGoodCount(prodNoti);
-
-		assertTrue(ret > 0);
-	}
-
-	/**
-	 * <pre>
 	 * 상품 추천 등록.
 	 * </pre>
 	 */
@@ -257,25 +226,6 @@ public class FeedbackRepositoryTest {
 		prodNotiGood.setRegId("test1");
 
 		int ret = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
-
-		assertTrue(ret > 0);
-	}
-
-	/**
-	 * <pre>
-	 * 탈퇴회원 상품추천  수정.
-	 * </pre>
-	 */
-	@Test
-	public void testUpdateProdNotiWDGood() {
-		ProdNotiGood prodNotiGood = new ProdNotiGood();
-		prodNotiGood.setTenantId("S01");
-		prodNotiGood.setNotiSeq("14262");
-		prodNotiGood.setAction("create");
-		this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
-
-		prodNotiGood.setAction("remove");
-		int ret = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
 
 		assertTrue(ret > 0);
 	}
@@ -390,6 +340,12 @@ public class FeedbackRepositoryTest {
 		this.feedbackRepository.getMyProdNotiList(prodNoti);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 자기가 작성한 사용후기 갯수.
+	 * </pre>
+	 */
 	@Test
 	public void testGetMyProdNotiCount() {
 		// notiSeq
@@ -462,4 +418,67 @@ public class FeedbackRepositoryTest {
 		List<MbrAvgScore> ret = this.feedbackRepository.getScoreList(mbrAvgScore);
 		assertNotNull(ret);
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 채널/에피소드 관계.
+	 * </pre>
+	 */
+	@Test
+	public void testGetChannelEpisodeRelation() {
+		Map<String, String> resultMap = this.feedbackRepository.getChannelEpisodeRelation("H001136297");
+
+		assertThat(resultMap.get("TOP_MENU_ID"), is("DP26"));
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 채널/에피소드 관계시 채널상품 존재 여부 확인.
+	 * </pre>
+	 */
+	@Test
+	public void testGetChannelTenantProdStatsCount() {
+		int count = (Integer) this.feedbackRepository.getChannelTenantProdStatsCount("H000044521");
+
+		assertTrue(count > 1);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 채널/에피소드 관계시 상품통계 채널상품 존재시 전체 에피소드 통계 UPDATE.
+	 * </pre>
+	 */
+	@Test
+	public void testUpdateChannelTenantProdStats() {
+		TenantProdStats tenantProdStats = new TenantProdStats();
+		tenantProdStats.setTenantId("S01");
+		tenantProdStats.setProdId("H000043271");
+		tenantProdStats.setUpdId("test");
+		int affectedRow = (Integer) this.feedbackRepository.updateChannelTenantProdStats(tenantProdStats);
+
+		assertTrue(affectedRow > 0);
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 채널/에피소드 관계시 상품통계 채널상품 미존재시 전체 에피소드 통계 INSERT.
+	 * </pre>
+	 */
+	@Test
+	public void testInsertChannelTenantProdStats() {
+		TenantProdStats tenantProdStats = new TenantProdStats();
+		tenantProdStats.setTenantId("S01");
+		tenantProdStats.setProdId("H000044491");
+		tenantProdStats.setRegId("test");
+		int affectedRow = (Integer) this.feedbackRepository.insertChannelTenantProdStats(tenantProdStats);
+
+		assertTrue(affectedRow > 0);
+
+	}
+
 }
