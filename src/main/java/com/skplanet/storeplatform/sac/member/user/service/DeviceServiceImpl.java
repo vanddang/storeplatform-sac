@@ -157,8 +157,6 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req) {
 
-		LOGGER.info("######################## DeviceServiceImpl createDevice start ############################");
-
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -215,8 +213,6 @@ public class DeviceServiceImpl implements DeviceService {
 		res.setDeviceKey(deviceKey);
 		res.setUserKey(userKey);
 
-		LOGGER.info("######################## DeviceServiceImpl createDevice start ############################");
-
 		return res;
 
 	}
@@ -266,8 +262,6 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	@Override
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req) {
-
-		LOGGER.info("######################## DeviceServiceImpl listDevice start ############################");
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -350,8 +344,6 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
-		LOGGER.info("######################## DeviceServiceImpl listDevice end ############################");
-
 		return res;
 	}
 
@@ -365,8 +357,6 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	@Override
 	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) {
-
-		LOGGER.info("######################## DeviceServiceImpl searchDevice start ############################");
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -410,8 +400,6 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
-		LOGGER.info("######################## DeviceServiceImpl searchDevice end ############################");
-
 		return deviceInfo;
 	}
 
@@ -424,8 +412,6 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	@Override
 	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) {
-
-		LOGGER.info("######################## DeviceServiceImpl insertDeviceInfo start ############################");
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -582,8 +568,6 @@ public class DeviceServiceImpl implements DeviceService {
 		mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
 		this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 
-		LOGGER.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
-
 		return deviceKey;
 
 	}
@@ -599,6 +583,7 @@ public class DeviceServiceImpl implements DeviceService {
 	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
 		LOGGER.info("################ updateDeviceInfo start ##################");
+		LOGGER.info(deviceInfo.toString());
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -777,6 +762,7 @@ public class DeviceServiceImpl implements DeviceService {
 	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, UserMbrDevice userMbrDevice, String version) {
 
 		LOGGER.info("################ updateDeviceInfoForLogin {} start ##################", version);
+		LOGGER.info(deviceInfo.toString());
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
