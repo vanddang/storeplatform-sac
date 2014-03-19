@@ -1316,7 +1316,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 
 		} catch (StorePlatformException ex) {
-
+			ex.printStackTrace();
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				result = IdpConstants.IDP_RESPONSE_NO_DATA;
