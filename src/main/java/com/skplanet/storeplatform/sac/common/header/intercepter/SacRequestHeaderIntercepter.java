@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -151,7 +150,7 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
         }
         catch (Exception e)
         {
-            throw new StorePlatformException("SAC_002",
+            throw new StorePlatformException("SAC_CMN_0101",
                     obj.getClass().getSimpleName(),
                     matcher != null ? matcher.group(1) : null,
                     matcher != null ? matcher.group(2) : null);

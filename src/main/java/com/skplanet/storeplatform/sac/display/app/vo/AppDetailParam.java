@@ -15,6 +15,15 @@ public class AppDetailParam {
     private String deviceModelCd;
     private String userKey;
     private String deviceKey;
+    private String osVersion;
+
+    public String getOsVersion() {
+        return osVersion;
+    }
+
+    public void setOsVersion(String osVersion) {
+        this.osVersion = osVersion;
+    }
 
     public String getUserKey() {
         return userKey;

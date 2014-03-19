@@ -33,31 +33,30 @@
             PD.EXPO_SELLER_TELNO,
             TP.PROD_STATUS_CD,
             PDESC.PROD_BASE_DESC,
-            PDESC.PROD_DTL_DESC
+            PDESC.PROD_DTL_DESC,
+            NVL2(SD.DEVICE_MODEL_CD, 'Y', 'N') AS IS_DEVICE_SUPP
         FROM
-                TB_DP_PROD PD
-                INNER JOIN TB_DP_APP_PROD APP
-                    ON PD.PROD_ID = APP.PROD_ID
-                INNER JOIN TB_DP_PROD_DESC PDESC
-                    ON PDESC.PROD_ID = PD.PROD_ID
-                INNER JOIN TB_DP_SPRT_DEVICE SD
-                    ON SD.PROD_ID = PD.PROD_ID
-                INNER JOIN TB_CM_DEVICE DEV
-                    ON DEV.DEVICE_MODEL_CD = SD.DEVICE_MODEL_CD
-                INNER JOIN TB_DP_SUB_CONTENTS SC
-                    ON SC.PROD_ID = PD.PROD_ID AND SC.SUB_CONTENTS_ID = SD.SUB_CONTENTS_ID
-                INNER JOIN TB_DP_TENANT_PROD TP
-                    ON TP.PROD_ID= PD.PROD_ID
-                LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
-                    ON TS.PROD_ID = PD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
-                INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
-                    ON TPRC.PROD_ID = PD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+            TB_DP_PROD PD
+            INNER JOIN TB_DP_APP_PROD APP
+                ON PD.PROD_ID = APP.PROD_ID
+            INNER JOIN TB_DP_PROD_DESC PDESC
+                ON PDESC.PROD_ID = PD.PROD_ID
+            LEFT OUTER JOIN TB_DP_SPRT_DEVICE SD
+                ON SD.PROD_ID = PD.PROD_ID AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
+            LEFT OUTER JOIN TB_CM_DEVICE DEV
+                ON DEV.DEVICE_MODEL_CD = SD.DEVICE_MODEL_CD AND DEV.USE_YN = 'Y'
+            LEFT OUTER JOIN TB_DP_SUB_CONTENTS SC
+                ON SC.PROD_ID = PD.PROD_ID AND SC.SUB_CONTENTS_ID = SD.SUB_CONTENTS_ID
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID= PD.PROD_ID
+            LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
+                ON TS.PROD_ID = PD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
+            INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+                ON TPRC.PROD_ID = PD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
         WHERE 1 = 1
               AND PD.PROD_ID = #{channelId}
               AND PDESC.LANG_CD = #{langCd}
               AND TP.TENANT_ID = #{tenantId}
-              AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = #{standardModel}) -- 지원단말이 Cachable하게 넘어가면 이부분도 생략 가능
-              AND DEV.USE_YN = 'Y'
               AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
     </select>
 

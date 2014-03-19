@@ -53,6 +53,7 @@ public class AppController {
         request.setLangCd(header.getTenantHeader().getLangCd());
         request.setTenantId(header.getTenantHeader().getTenantId());
         request.setDeviceModelCd(header.getDeviceHeader().getModel());
+        request.setOsVersion(header.getDeviceHeader().getOs());
         request.setUserKey(req.getUserKey());
         request.setDeviceKey(req.getDeviceKey());
 

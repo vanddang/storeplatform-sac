@@ -32,6 +32,15 @@ public class AppDetail extends CommonInfo {
     private String prodStatusCd;
     private String prodBaseDesc;
     private String prodDtlDesc;
+    private String isDeviceSupp;
+
+    public String getIsDeviceSupp() {
+        return isDeviceSupp;
+    }
+
+    public void setIsDeviceSupp(String isDeviceSupp) {
+        this.isDeviceSupp = isDeviceSupp;
+    }
 
     public String getProdBaseDesc() {
         return prodBaseDesc;

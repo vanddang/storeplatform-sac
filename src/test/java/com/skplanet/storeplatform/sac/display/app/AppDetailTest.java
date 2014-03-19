@@ -114,9 +114,9 @@ public class AppDetailTest {
     public void prov02() throws Exception {
         AppDetailReq req = new AppDetailReq();
         req.setChannelId("0000297941");
-//        Map<String, String> headerMap = MvcTestBuilder.getDefaultHeader();
-//        headerMap.put("model", "SHW-M340S");
-        MvcTestBuilder.build2(mvc, true, null, URL, req, false);
+        Map<String, String> headerMap = MvcTestBuilder.getDefaultHeader();
+        headerMap.put("model", "SHW-M340S__");
+        MvcTestBuilder.build2(mvc, true, headerMap, URL, req, true);
     }
 
     @Test
@@ -125,6 +125,30 @@ public class AppDetailTest {
         req.setChannelId("0000065131");
         MvcTestBuilder.build2(mvc, true, null, URL, req, true)
                 .andExpect(MockMvcResultMatchers.jsonPath("$.product.sourceList[0].orientation").value("portrait"));
+    }
+
+    @Test
+    public void test_11_프로비저닝결과를속성으로제공_지원하는경우() throws Exception {
+        AppDetailReq req = new AppDetailReq();
+        req.setChannelId("0000297941");
+        Map<String, String> headerMap = MvcTestBuilder.getDefaultHeader();
+        headerMap.put("x-sac-device-info", "model=\"SHW-M340S\"");
+        MvcTestBuilder.build2(mvc, true, headerMap, URL, req, true)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.product.app.isDeviceSupported").value("Y"));
+    }
+
+    @Test
+    public void test_12_프로비저닝결과를속성으로제공_단말기미지원() throws Exception {
+        AppDetailReq req = new AppDetailReq();
+        req.setChannelId("0000297941");
+        Map<String, String> headerMap = MvcTestBuilder.getDefaultHeader();
+        headerMap.put("x-sac-device-info", "model=\"SHW-M340S!!!\"");
+        MvcTestBuilder.build2(mvc, true, headerMap, URL, req, true)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.product.app.isDeviceSupported").value("N"));
+
+        headerMap.put("x-sac-device-info", "model=\"ANY-PHONE-4APP\"");
+        MvcTestBuilder.build2(mvc, true, headerMap, URL, req, true)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.product.app.isDeviceSupported").value("N"));
     }
 
 

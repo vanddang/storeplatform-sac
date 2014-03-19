@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 앱 상품 상세조회
@@ -40,6 +42,8 @@ public class AppServiceImpl implements AppService {
 
 	private static final Set<String> SOURCE_LIST_SCREENSHOT_ORIGINAL;
 	private static final String[] SOURCE_REQUEST;
+    private static final Pattern PATTERN_OSVER = Pattern.compile("Android/(\\d+\\.\\d+)(?:\\.\\d+)?");
+
 	static {
 		SOURCE_LIST_SCREENSHOT_ORIGINAL = new HashSet<String>(Arrays.asList("DP000103", "DP000104", "DP000105",
 				"DP000106", "DP0001C1", "DP0001C2", "DP0001C3", "DP0001C4"));
@@ -151,6 +155,17 @@ public class AppServiceImpl implements AppService {
 		app.setVersionCode(appDetail.getApkVer());
 		app.setVersion(appDetail.getApkVerNm());
 		app.setSize(appDetail.getFileSize());
+
+        // App - Provisioning
+        String simpleOsVer = "_NOT_";
+        Matcher matcher = PATTERN_OSVER.matcher(request.getOsVersion());
+        if (matcher.matches()) {
+            simpleOsVer = matcher.group(1);
+        }
+        app.setIsDeviceSupported(appDetail.getVmVer() != null &&
+                request.getOsVersion() != null &&
+                appDetail.getVmVer().contains(simpleOsVer != null ? simpleOsVer : "") &&
+                appDetail.getIsDeviceSupp().equals("Y") ? "Y" : "N");
 
 		// Update History
 		History history = new History();
