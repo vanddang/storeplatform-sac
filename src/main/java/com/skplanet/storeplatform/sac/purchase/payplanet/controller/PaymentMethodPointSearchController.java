@@ -50,6 +50,7 @@ public class PaymentMethodPointSearchController {
 	 * </pre>
 	 * 
 	 * @param cultureSacReq
+	 *            요청
 	 * @return CultureSacRes
 	 */
 	@RequestMapping(value = "/culture/point/get/v1", method = RequestMethod.POST)
@@ -65,6 +66,7 @@ public class PaymentMethodPointSearchController {
 	 * </pre>
 	 * 
 	 * @param dotoriSacReq
+	 *            요청
 	 * @return DotoriSacRes
 	 */
 	@RequestMapping(value = "/dotori/count/get/v1", method = RequestMethod.POST)
@@ -80,6 +82,7 @@ public class PaymentMethodPointSearchController {
 	 * </pre>
 	 * 
 	 * @param okCashBagSacReq
+	 *            요청
 	 * @return OkCashBagSacRes
 	 */
 	@RequestMapping(value = "/ocb/point/get/v1", method = RequestMethod.POST)
@@ -95,6 +98,7 @@ public class PaymentMethodPointSearchController {
 	 * </pre>
 	 * 
 	 * @param tMemberShipSacReq
+	 *            요청
 	 * @return TMemberShipSacRes
 	 */
 	@RequestMapping(value = "/tms/point/get/v1", method = RequestMethod.POST)

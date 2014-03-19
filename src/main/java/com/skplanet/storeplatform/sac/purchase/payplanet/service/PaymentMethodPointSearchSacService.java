@@ -32,6 +32,7 @@ public interface PaymentMethodPointSearchSacService {
 	 * </pre>
 	 * 
 	 * @param cultureSacReq
+	 *            요청
 	 * @return CultureSacRes
 	 */
 	public CultureSacRes postCulture(CultureSacReq cultureSacReq);
@@ -43,6 +44,7 @@ public interface PaymentMethodPointSearchSacService {
 	 * </pre>
 	 * 
 	 * @param dotoriSacReq
+	 *            요청
 	 * @return DotoriSacRes
 	 */
 	public DotoriSacRes postDotori(DotoriSacReq dotoriSacReq);
@@ -54,6 +56,7 @@ public interface PaymentMethodPointSearchSacService {
 	 * </pre>
 	 * 
 	 * @param okCashBagSacReq
+	 *            요청
 	 * @return OkCashBagSacRes
 	 */
 	public OkCashBagSacRes postOkCashBag(OkCashBagSacReq okCashBagSacReq);
@@ -65,6 +68,7 @@ public interface PaymentMethodPointSearchSacService {
 	 * </pre>
 	 * 
 	 * @param tMemberShipSacReq
+	 *            요청
 	 * @return TMemberShipSacRes
 	 */
 	public TMemberShipSacRes postTMemberShip(TMemberShipSacReq tMemberShipSacReq);

@@ -47,7 +47,8 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 	 * 문화상품권 조회.
 	 * </pre>
 	 * 
-	 * @param cultureSacReq
+	 * @param request
+	 *            요청
 	 * @return CultureSacRes
 	 */
 	@Override
@@ -76,7 +77,8 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 	 * 도토리 조회.
 	 * </pre>
 	 * 
-	 * @param dotoriSacReq
+	 * @param request
+	 *            요청
 	 * @return DotoriSacRes
 	 */
 	@Override
@@ -105,7 +107,8 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 	 * okcashbag point 조회.
 	 * </pre>
 	 * 
-	 * @param okCashBagSacReq
+	 * @param request
+	 *            요청
 	 * @return OkCashBagSacRes
 	 */
 	@Override
@@ -135,7 +138,8 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 	 * TMemberShip point 조회.
 	 * </pre>
 	 * 
-	 * @param tMemberShipSacReq
+	 * @param request
+	 *            요청
 	 * @return TMemberShipSacRes
 	 */
 	@Override
