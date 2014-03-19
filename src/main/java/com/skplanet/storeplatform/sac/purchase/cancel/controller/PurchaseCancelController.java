@@ -48,6 +48,14 @@ public class PurchaseCancelController {
 	@Autowired
 	private PurchaseCancelService purchaseCancelService;
 
+	@RequestMapping(value = "/test/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public String test(SacRequestHeader sacRequestHeader) {
+
+		return "{\"resultCd\" : \"0000\",\"resultMsg\" : \"SUCCESS\",\"totalCount\" : \"1\",\"sucCount\" : \"1\",\"failCount\" : \"0\",	\"cancelList\":[{		\"prchsId\" : \"PI100000000000629442\",		\"totCancelResultCd\":\"0000\",		\"totCancelResultMsg\":\"SUCCESS\",		\"payCancelList\":[			{			\"payCls\" : \"OR000601\",			\"payCancelResultCd\" : \"0000\",			\"payCancelResultMsg\" : \"SUCCESS\"			},			{			\"payCls\" : \"OR000616\",			\"payCancelResultCd\" : \"0000\",			\"payCancelResultMsg\" : \"SUCCESS\"			}		]	}]}";
+
+	}
+
 	/**
 	 * 
 	 * <pre>
@@ -122,6 +130,7 @@ public class PurchaseCancelController {
 
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByUserSacReq.getCancelReqPathCd());
 		purchaseCancelSacParam.setForceCancelYn("N");
+		purchaseCancelSacParam.setSktLimitUserCancelYn("N");
 		// request user type setting.
 		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_USER);
 
@@ -206,6 +215,8 @@ public class PurchaseCancelController {
 
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByAdminSacReq.getCancelReqPathCd());
 		purchaseCancelSacParam.setForceCancelYn(purchaseCancelByAdminSacReq.getForceCancelYn());
+		purchaseCancelSacParam.setSktLimitUserCancelYn(purchaseCancelByAdminSacReq.getSktLimitUserCancelYn());
+
 		// request admin type setting.
 		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_ADMIN);
 

@@ -17,31 +17,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.arm.sci.ArmSCI;
-import com.skplanet.storeplatform.external.client.arm.vo.RemoveLicenseEcReq;
-import com.skplanet.storeplatform.external.client.arm.vo.RemoveLicenseEcRes;
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
-import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScReq;
-import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScReq;
-import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes;
-import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
-import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdatePurchaseCountSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UpdatePurchaseCountSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInRes;
@@ -50,13 +38,17 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.Coupo
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.repository.PurchaseCancelRepository;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsProdDtl;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacResult;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants.PAYMENT_GATEWAY;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRespository;
 
 /**
  * 구매 취소 Service Implements.
@@ -69,10 +61,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private MultiMessageSourceAccessor multiMessageSourceAccessor;
+	private PurchaseCancelRepository purchaseCancelRepository;
 
 	@Autowired
-	private PurchaseCancelSCI purchaseCancelSCI;
+	private MultiMessageSourceAccessor multiMessageSourceAccessor;
 
 	@Autowired
 	private HistoryInternalSCI historyInternalSCI;
@@ -81,25 +73,16 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	private ShoppingInternalSCI shoppingInternalSCI;
 
 	@Autowired
-	private DeviceSCI deviceSCI;
+	private ShoppingSCI shoppingSCI;
 
 	@Autowired
 	private AutoPaymentCancelSacService autoPaymentCancelSacService;
 
 	@Autowired
-	private ShoppingSCI shoppingSCI;
-
-	@Autowired
-	private PurchaseCancelRepository purchaseCancelRepository;
-
-	@Autowired
-	private ArmSCI armSCI;
-
-	@Autowired
-	private UpdatePurchaseCountSCI updatePurchaseCountSCI;
-
-	@Autowired
 	private PaymentInfoSCI paymentInfoSCI;
+
+	@Autowired
+	private PurchaseUapsRespository purchaseUapsRespository;
 
 	@Override
 	public PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam) {
@@ -127,8 +110,12 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				ErrorInfo errorInfo = e.getErrorInfo();
 
 				purchaseCancelDetailSacResult.setResultCd(errorInfo.getCode());
-				purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage(
-						errorInfo.getCode(), errorInfo.getArgs()));
+				if (StringUtils.isBlank(errorInfo.getMessage())) {
+					purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage(
+							errorInfo.getCode(), errorInfo.getArgs()));
+				} else {
+					purchaseCancelDetailSacResult.setResultMsg(errorInfo.getMessage());
+				}
 
 			} catch (Exception e) {
 
@@ -162,6 +149,15 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	}
 
+	// TODO : TEST MDN 확인. 요건 어케 할지 생각 좀 해봐야 함..
+
+	/*
+	 * 오퍼링 상품은 어케 처리?
+	 * 
+	 * T Store Cash 취소 일 경우 취소할 캐쉬량이 남이 있는지 확인 필요(예약)
+	 * 
+	 * 부분유료화 상품 취소 가능?
+	 */
 	@Override
 	public PurchaseCancelDetailSacResult executePurchaseCancel(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
@@ -169,174 +165,97 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 
 		/** 구매 정보 조회. */
-		PurchaseScReq purchaseScReq = new PurchaseScReq();
+		this.purchaseCancelRepository.setPurchaseDetailInfo(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 
-		// 인입 된 사람의 정보 넣어준다.
-		purchaseScReq.setTenantId(purchaseCancelSacParam.getTenantId());
-		purchaseScReq.setSystemId(purchaseCancelSacParam.getSystemId());
-		purchaseScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-
-		PurchaseScRes purchaseScRes = this.purchaseCancelSCI.getPurchase(purchaseScReq);
-		if (purchaseScRes.getPrchs() == null || StringUtils.isEmpty(purchaseScRes.getPrchs().getPrchsId())
-				|| purchaseScRes.getPrchsDtlList() == null || purchaseScRes.getPrchsDtlList().size() < 1) {
-			// 구매 정보가 존재하지 않을 경우 취소 불가.
-			throw new StorePlatformException("SAC_PUR_8100");
+		/** 구매 정보 체크. */
+		PrchsSacParam prchsSacParam = purchaseCancelDetailSacParam.getPrchsSacParam();
+		if (!StringUtils.equals(PurchaseConstants.PRCHS_STATUS_COMPT, prchsSacParam.getStatusCd())) {
+			// 구매 완료 상태가 아니면 취소 불가.
+			throw new StorePlatformException("SAC_PUR_8101");
+		}
+		if (PurchaseConstants.PRCHS_CANCEL_BY_USER == purchaseCancelSacParam.getPrchsCancelByType()) {
+			// 사용자가 취소하는 경우 권한 체크.
+			if (!StringUtils.equals(purchaseCancelSacParam.getUserKey(), prchsSacParam.getInsdUsermbrNo())) {
+				throw new StorePlatformException("SAC_PUR_8102");
+			}
 		}
 
-		// 구매 정보 가져와서 셋팅.
-		purchaseCancelDetailSacParam.setPrchs(purchaseScRes.getPrchs());
-		purchaseCancelDetailSacParam.setPrchsDtlList(purchaseScRes.getPrchsDtlList());
-		purchaseCancelDetailSacParam.setPaymentList(purchaseScRes.getPaymentList());
+		/** deviceId 조회 및 셋팅. */
+		prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
+				prchsSacParam.getInsdDeviceId()));
 
-		List<PrchsProdDtl> prchsProdDtlList = new ArrayList<PrchsProdDtl>();
-		purchaseCancelDetailSacParam.setPrchsProdDtlList(prchsProdDtlList);
+		/** 결제가 PayPlanet결제 인지 TStore 결제인지 구분. */
+		PAYMENT_GATEWAY paymentGateway = PAYMENT_GATEWAY.NO_PAYMENT;
+		if (purchaseCancelDetailSacParam.getPaymentSacParamList() != null
+				|| purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0) {
 
-		/** 각 상품 별 체크. */
-		for (PrchsDtl prchsDtl : purchaseCancelDetailSacParam.getPrchsDtlList()) {
+			paymentGateway = PAYMENT_GATEWAY.PAY_PLANET;
 
-			if (!StringUtils.equals(PurchaseConstants.PRCHS_STATUS_COMPT, prchsDtl.getStatusCd())) {
-				throw new StorePlatformException("SAC_PUR_8101");
-			}
-
-			if (purchaseCancelSacParam.getPrchsCancelByType() == PurchaseConstants.PRCHS_CANCEL_BY_USER) {
-				// 사용자가 취소하는 경우 권한 체크.
-				if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, prchsDtl.getPrchsCaseCd())) {
-					// 선물이면 보낸사람 정보 확인.
-					if (!StringUtils.equals(purchaseCancelSacParam.getUserKey(), prchsDtl.getSendInsdUsermbrNo())) {
-						throw new StorePlatformException("SAC_PUR_8102");
-					}
-				} else {
-					// 구매이면 이용자 정보 확인.
-					if (!StringUtils.equals(purchaseCancelSacParam.getUserKey(), prchsDtl.getUseInsdUsermbrNo())) {
-						throw new StorePlatformException("SAC_PUR_8102");
-					}
+			for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
+				// PayPlanet 결제 인지 TStore 결제 인지 구분.
+				if (!StringUtils.isBlank(paymentSacParam.getMoid())) {
+					paymentGateway = PAYMENT_GATEWAY.TSTORE;
+					break;
 				}
 			}
+		}
 
-			// 상품 정보 및 상품 이용자 정보 셋팅.
-			PrchsProdDtl prchsProdDtl = new PrchsProdDtl();
+		/** 구매 상품 별 체크. */
+		boolean shoppingYn = false; // 쇼핑상품 구분.
+		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
 
-			prchsProdDtl.setProdId(prchsDtl.getProdId());
-
-			SearchDeviceIdSacReq searchDeviceIdSacReq = new SearchDeviceIdSacReq();
-			searchDeviceIdSacReq.setUserKey(prchsDtl.getUseInsdUsermbrNo());
-			searchDeviceIdSacReq.setDeviceKey(prchsDtl.getUseInsdDeviceId());
-			SearchDeviceIdSacRes searchDeviceIdSacRes = this.deviceSCI.searchDeviceId(searchDeviceIdSacReq);
-
-			prchsProdDtl.setDeviceId(searchDeviceIdSacRes.getDeviceId());
-
-			// 전시 쪽 정보 가져와서 appId 셋팅.
-			// 현재는 상품 정보가 어떻게 더 쓰일지 몰라 앞에 있지만 나중에 RO삭제 시 조회하도록 뒤로 옮겨야 할 듯..
-			if (StringUtils.contains(PurchaseConstants.TENANT_PRODUCT_GROUP_APP, prchsDtl.getTenantProdGrpCd())) {
-				// 전시쪽 정보 가져와서 appId 셋팅.
-				PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
-				paymentInfoSacReq.setTenantId(prchsDtl.getUseTenantId());
-				List<String> prodIdList = new ArrayList<String>();
-				prodIdList.add(prchsDtl.getProdId());
-				paymentInfoSacReq.setProdIdList(prodIdList);
-				paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
-				PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq);
-				if (paymentInfoSacRes != null && paymentInfoSacRes.getPaymentInfoList() != null
-						&& paymentInfoSacRes.getPaymentInfoList().size() == 1) {
-					prchsProdDtl.setAppId(paymentInfoSacRes.getPaymentInfoList().get(0).getAid());
-				}
-
+			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+				// 쇼핑상품이면 true 셋팅.
+				shoppingYn = true;
 			}
 
-			prchsProdDtlList.add(prchsProdDtl);
-
-			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtl.getPrchsProdType())) {
+			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())) {
 				// 정액권 상품 처리.
-				this.updateProdTypeFix(purchaseCancelSacParam, prchsDtl);
-
+				this.updateProdTypeFix(purchaseCancelSacParam, prchsDtlSacParam);
 			}
 
 		}
 
-		// 쇼핑쿠폰 상품일 경우 쇼핑쿠폰 상품 취소.
-		// 쇼핑쿠폰 사용유무 조회.
-		for (PrchsDtl prchsDtl : purchaseCancelDetailSacParam.getPrchsDtlList()) {
-			if (StringUtils.contains(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING, prchsDtl.getTenantProdGrpCd())) {
-				this.updateCancelShoppingCoupon(purchaseCancelSacParam, purchaseCancelDetailSacParam);
-				break;
-			}
+		/** 쇼핑 상품 처리. */
+		if (shoppingYn) {
+			this.executeCancelShoppingCoupon(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 		}
 
-		// 결제 취소.
-		boolean isPayPlanet = true;
-		for (Payment payment : purchaseCancelDetailSacParam.getPaymentList()) {
-			if (!StringUtils.isBlank(payment.getMoid())) {
-				isPayPlanet = false;
-				break;
-			}
-		}
-		if (isPayPlanet) {
-			// TODO : PayPlanet 연동.
-		} else {
-			// TODO : TStore PaymentCancel 연동.
+		/** 결제 취소 처리. */
+		// 결제 건이 있을 경우 결제 취소.
+		if (paymentGateway == PAYMENT_GATEWAY.PAY_PLANET) {
+			purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
+					.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+
+		} else if (paymentGateway == PAYMENT_GATEWAY.TSTORE) {
+			purchaseCancelDetailSacParam.settStorePayCancelResultList(this.purchaseCancelRepository
+					.cancelPaymentToTStore(purchaseCancelSacParam, purchaseCancelDetailSacParam));
 		}
 
-		// 구매 취소.
-		PurchaseCancelScReq purchaseCancelScReq = new PurchaseCancelScReq();
+		/** 구매 DB 취소 처리. */
+		this.purchaseCancelRepository.updatePurchaseCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 
-		// 인입 된 사람의 정보를 넣어준다.
-		purchaseCancelScReq.setTenantId(purchaseCancelSacParam.getTenantId());
-		purchaseCancelScReq.setSystemId(purchaseCancelSacParam.getSystemId());
-		// 구매 취소 정보를 넣어준다.
-		purchaseCancelScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-		purchaseCancelScReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
-		purchaseCancelScReq.setCancelReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
-
-		this.purchaseCancelSCI.updatePurchaseCancel(purchaseCancelScReq);
-
-		// 전시 상품 구매건수 -1
+		/** 전시 상품 구매건수 -1. */
 		try {
-			this.updatePurchaseCount(purchaseCancelSacParam, purchaseCancelDetailSacParam);
+			this.purchaseCancelRepository.updatePurchaseCount(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 		} catch (Exception e) {
 			this.logger.info("구매 상품 개수 업데이트 실패! ========= {}", e);
 		}
 
-		// RO 삭제! 삭제 실패해도 취소처리는 성공!
-		try {
-			this.removeRO(purchaseCancelSacParam, purchaseCancelDetailSacParam);
-		} catch (Exception e) {
-			this.logger.info("RO 삭제 실패! ========= {}", e);
+		/** RO 삭제 처리. */
+		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
+			if (!StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) {
+				// APP 상품이 아니면 통과.
+				continue;
+			}
+			try {
+				this.removeRO(purchaseCancelSacParam, purchaseCancelDetailSacParam, prchsDtlSacParam);
+			} catch (Exception e) {
+				this.logger.info("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
+			}
 		}
-
-		// TODO : TEST MDN 확인. 요건 어케 할지 생각 좀 해봐야 함..
-
-		// TODO : 쇼핑 쿠폰이면 처리 .. 쇼핑 쿠폰 처리 위치가 변경 될 수 있음.. 구 쿠폰의경우 PP 후에 처리 되야 할꺼고..
-		// TODO : 신 쿠폰의 경우 PP에서 한도체크나 다날체크를 하면 쇼핑쿠폰처리가 뒤에 오고..
-		// TODO : PP에서 한도체크나 다날체크 안하고 SAC에서 해야하면 쇼핑쿠폰처리가 앞에 오고..? 쇼핑쿠폰은 실물쿠폰인데 결제취소만 되고 쿠폰은 취소 안되어도 컴플레인이 없나?
-		/*
-		 * 티스토어 쇼핑 구매취소불가. CASE 4 : 결제 방식이 다날결제 이면서 결제월과 취소월이 틀릴 경우 티스토어 쇼핑 구매취소불가. CASE 5 : 결제 방식이 SK 후불 이면서 한도상품 가입자의
-		 * 경우. 티스토어 쇼핑 구매취소불가. CASE 6 : CMS 쿠폰사용조회 오류가 발생할 경우 티스토어 쇼핑 구매취소불가. CASE 7 : CMS 쿠폰사용조회 후 사용된 쿠폰이 존재할 경우.
-		 */
-
-		// RO 삭제 - 코드 DP0002의DP000201면 APP
-		// // 구매 상품이 APP이고 appid가 null이 아닌경우
-
-		// 상품 구매 건수 차감 호출.
-
-		/*
-		 * 
-		 * 선물 한 건지 받은건지 ?
-		 * 
-		 * 이미 이용중인지 확인? 이미 만료 된 건이 있는지 확인? use_expr_dt
-		 * 
-		 * 오퍼링 상품은 어케 처리?
-		 * 
-		 * T Store Cash 취소 일 경우 취소할 캐쉬량이 남이 있는지 확인 필요(예약)
-		 * 
-		 * 쇼핑쿠폰 인지 확인 - 쇼셜쇼핑 TSTORE 쇼핑?
-		 * 
-		 * 
-		 * 부분유료화 상품 취소 가능?
-		 * 
-		 * 
-		 * 
-		 * ro 삭제해야하는 건 있는지 -> RO삭제 실패해도 구매 취소 성공?
-		 */
 
 		purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
@@ -348,25 +267,26 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	}
 
-	private void updateProdTypeFix(PurchaseCancelSacParam purchaseCancelSacParam, PrchsDtl prchsDtl) {
-		// 정액제 상품으로 산 구매내역 조회.
+	private void updateProdTypeFix(PurchaseCancelSacParam purchaseCancelSacParam, PrchsDtlSacParam prchsDtlSacParam) {
+
+		/** 정액권으로 산 상품이 존재하는지 체크. */
 		HistoryCountSacInReq historyCountSacInReq = new HistoryCountSacInReq();
 		// 구매인지 선물인지 구분하여 조회.
-		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsDtl.getPrchsCaseCd())) {
+		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsDtlSacParam.getPrchsCaseCd())) {
 			// 정액권 선물일 경우 취소 불가!! 최상훈차장님 결정!! 2014.02.13
 			throw new StorePlatformException("SAC_PUR_8113");
 		}
 
-		historyCountSacInReq.setTenantId(prchsDtl.getUseTenantId());
-		historyCountSacInReq.setUserKey(prchsDtl.getUseInsdUsermbrNo());
-		historyCountSacInReq.setStartDt(prchsDtl.getUseStartDt());
-		historyCountSacInReq.setEndDt(prchsDtl.getUseExprDt());
-		historyCountSacInReq.setPrchsCaseCd(prchsDtl.getPrchsCaseCd());
+		// 정액제 상품으로 산 구매내역 조회.
+		historyCountSacInReq.setTenantId(prchsDtlSacParam.getUseTenantId());
+		historyCountSacInReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+		historyCountSacInReq.setStartDt(prchsDtlSacParam.getUseStartDt());
+		historyCountSacInReq.setEndDt(prchsDtlSacParam.getUseExprDt());
+		historyCountSacInReq.setPrchsCaseCd(prchsDtlSacParam.getPrchsCaseCd());
 		historyCountSacInReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
-		historyCountSacInReq.setUseFixrateProdId(prchsDtl.getProdId());
+		historyCountSacInReq.setUseFixrateProdId(prchsDtlSacParam.getProdId());
 
 		HistoryCountSacInRes historyCountSacInRes = this.historyInternalSCI.searchHistoryCount(historyCountSacInReq);
-
 		if (historyCountSacInRes.getTotalCnt() > 0) {
 			// 정액권 상품으로 이용한 상품이 존재!
 			throw new StorePlatformException("SAC_PUR_8111");
@@ -374,10 +294,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		// 정액권 자동구매 해지예약 호출.
 		AutoPaymentCancelScReq autoPaymentCancelScReq = new AutoPaymentCancelScReq();
-		autoPaymentCancelScReq.setTenantId(prchsDtl.getUseTenantId());
-		autoPaymentCancelScReq.setUserKey(prchsDtl.getUseInsdUsermbrNo());
-		autoPaymentCancelScReq.setDeviceKey(prchsDtl.getUseInsdDeviceId());
-		autoPaymentCancelScReq.setPrchsId(prchsDtl.getPrchsId());
+		autoPaymentCancelScReq.setTenantId(prchsDtlSacParam.getUseTenantId());
+		autoPaymentCancelScReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+		autoPaymentCancelScReq.setDeviceKey(prchsDtlSacParam.getUseInsdDeviceId());
+		autoPaymentCancelScReq.setPrchsId(prchsDtlSacParam.getPrchsId());
 		autoPaymentCancelScReq.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_STATUS_CLOSE_RESERVATION);
 		autoPaymentCancelScReq.setClosedReasonCd(PurchaseConstants.AUTO_PRCHS_CLOSE_PATH_PURCHASE_CANCEL);
 		autoPaymentCancelScReq.setClosedReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
@@ -391,30 +311,80 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	}
 
-	private void updateCancelShoppingCoupon(PurchaseCancelSacParam purchaseCancelSacParam,
+	/**
+	 * <pre>
+	 * 
+	 * 쇼핑상품 취소 시 체크.
+	 * 
+	 * CASE 1 : 구매내역이 없을 경우. - 공통 
+	 * CASE 2 : 구매상태가 구매완료가 아닌 경우. - 공통
+	 * CASE 3 : 구 쇼핑 상품인 경우 (불가는 아니지만 티스토어 결제취소만 진행). - 공통
+	 * CASE 4 : 결제 방식이 다날결제 이면서 결제월과 취소월이 틀릴 경우. - SHOPPING
+	 * CASE 5 : 결제 방식이 SK 후불 이면서 한도상품 가입자의 경우. - SHOPPING
+	 * CASE 6 : CMS 쿠폰사용조회 오류가 발생할 경우. - SHOPPING
+	 * CASE 7 : CMS 쿠폰사용조회 후 사용된 쿠폰이 존재할 경우. - SHOPPING
+	 * </pre>
+	 * 
+	 * @param purchaseCancelSacParam
+	 *            purchaseCancelSacParam
+	 * @param purchaseCancelDetailSacParam
+	 *            purchaseCancelDetailSacParam
+	 */
+	private void executeCancelShoppingCoupon(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
 
-		CouponUseStatusSacInReq couponUseStatusSacInReq = new CouponUseStatusSacInReq();
+		/** 결제 취소 가능 여부 확인 */
+		List<PaymentSacParam> paymentSacParamList = purchaseCancelDetailSacParam.getPaymentSacParamList();
+		for (PaymentSacParam paymentSacParam : paymentSacParamList) {
+			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_DANAL, paymentSacParam.getPaymentMtdCd())
+					&& !StringUtils.equals(DateUtil.getToday("yyyyMM"), paymentSacParam.getPaymentDt().substring(0, 6))) {
+				// 다날 결제이면서 결제월과 취소월이 다른 경우 취소 불가.
+				throw new StorePlatformException("SAC_PUR_8401");
+			}
 
-		// 사용자의 tenantId, systemId를 알 수 없어서 구매자 또는 운영자의 값을 넣는다.
-		couponUseStatusSacInReq.setTenantId(purchaseCancelSacParam.getTenantId());
-		couponUseStatusSacInReq.setSystemId(purchaseCancelSacParam.getSystemId());
-		couponUseStatusSacInReq.setUserKey(purchaseCancelSacParam.getUserKey());
-		couponUseStatusSacInReq.setDeviceKey(purchaseCancelSacParam.getDeviceKey());
-
-		// prchsId 단위로 처리.
-		couponUseStatusSacInReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-
-		CouponUseStatusSacInRes couponUseStatusSacInRes = this.shoppingInternalSCI
-				.getCouponUseStatus(couponUseStatusSacInReq);
-		for (CouponUseStatusDetailSacInRes couponUseStatusDetailSacInRes : couponUseStatusSacInRes
-				.getCpnUseStatusList()) {
-			if (!StringUtils.equals("0", couponUseStatusDetailSacInRes.getCpnUseStatusCd())) {
-				throw new StorePlatformException("SAC_PUR_8121");
+			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER, paymentSacParam.getPaymentMtdCd())) {
+				// SKT 후불 결제.
+				UserEcRes userEcRes = this.purchaseUapsRespository
+						.searchUapsMappingInfoByMdn(purchaseCancelDetailSacParam.getPrchsSacParam().getDeviceId());
+				String[] serviceCdList = userEcRes.getServiceCD();
+				if (serviceCdList != null) {
+					for (String serviceCd : serviceCdList) {
+						for (String uapsSvcLimitService : PurchaseConstants.UAPS_SVC_LIMIT_SERVICE) {
+							if (StringUtils.equals(serviceCd, uapsSvcLimitService)
+									&& !StringUtils.equals("Y", purchaseCancelSacParam.getSktLimitUserCancelYn())) {
+								// 한도 가입자이면서 한도가입자 취소여부가 Y가 아니면 에러.
+								throw new StorePlatformException("SAC_PUR_8123");
+							}
+						}
+					}
+				}
 			}
 		}
 
-		// 쇼핑쿠폰 취소 요청.
+		/** 강제 취소가 아닐 경우 쿠폰 사용 유무를 조회해온다. */
+		if (!StringUtils.equals("Y", purchaseCancelSacParam.getForceCancelYn())) {
+
+			CouponUseStatusSacInReq couponUseStatusSacInReq = new CouponUseStatusSacInReq();
+			// 사용자의 tenantId, systemId를 알 수 없어서 구매자 또는 운영자의 값을 넣는다.
+			couponUseStatusSacInReq.setTenantId(purchaseCancelSacParam.getTenantId());
+			couponUseStatusSacInReq.setSystemId(purchaseCancelSacParam.getSystemId());
+			couponUseStatusSacInReq.setUserKey(purchaseCancelSacParam.getUserKey());
+			couponUseStatusSacInReq.setDeviceKey(purchaseCancelSacParam.getDeviceKey());
+
+			// prchsId 단위로 처리.
+			couponUseStatusSacInReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+
+			CouponUseStatusSacInRes couponUseStatusSacInRes = this.shoppingInternalSCI
+					.getCouponUseStatus(couponUseStatusSacInReq);
+			for (CouponUseStatusDetailSacInRes couponUseStatusDetailSacInRes : couponUseStatusSacInRes
+					.getCpnUseStatusList()) {
+				if (!StringUtils.equals("0", couponUseStatusDetailSacInRes.getCpnUseStatusCd())) {
+					throw new StorePlatformException("SAC_PUR_8121");
+				}
+			}
+		}
+
+		/** 쇼핑 쿠폰 취소 처리 */
 		CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
 		couponPublishCancelEcReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		couponPublishCancelEcReq.setForceFlag(purchaseCancelSacParam.getForceCancelYn());
@@ -427,9 +397,11 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	}
 
 	/**
-	 * 
 	 * <pre>
-	 * method 설명.
+	 * 
+	 * RO 삭제 - 코드 DP0002의DP000201면 APP.
+	 * 구매 상품이 APP이고 appid가 null이 아닌경우
+	 * 
 	 * </pre>
 	 * 
 	 * @param purchaseCommonParam
@@ -438,57 +410,47 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	 *            purchaseCancelParamDetail
 	 */
 	private void removeRO(PurchaseCancelSacParam purchaseCancelSacParam,
-			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, PrchsDtlSacParam prchsDtlSacParam) {
 
-		for (PrchsProdDtl prchsProdDtl : purchaseCancelDetailSacParam.getPrchsProdDtlList()) {
-			if (StringUtils.isBlank(prchsProdDtl.getAppId())) {
-				// appId가 있는 경우만 ro삭제 진행.
-				continue;
-			}
-			// 각 상품 별 RO 삭제.
-			// AOM Message Push.
-			String resultMsg = "";
-			try {
-				resultMsg = this.purchaseCancelRepository.aomPush(prchsProdDtl);
-
-				this.logger.info("removeRO.AomPush result ===== {}", resultMsg);
-			} catch (Exception e) {
-				this.logger.info("aom push fail! ========= {}", e.toString());
-			}
-
-			// ARM License 삭제 요청.
-			RemoveLicenseEcReq removeLicenseEcReq = new RemoveLicenseEcReq();
-			removeLicenseEcReq.setAppId(prchsProdDtl.getAppId());
-			removeLicenseEcReq.setMdn(prchsProdDtl.getDeviceId());
-			RemoveLicenseEcRes removeLicenseEcRes;
-			try {
-				removeLicenseEcRes = this.armSCI.removeLicense(removeLicenseEcReq);
-
-				this.logger.info("removeRO.ArmPush result ===== {} ====== {}", removeLicenseEcRes.getResultCd(),
-						removeLicenseEcRes.getResultMsg());
-			} catch (Exception e) {
-				this.logger.info("arm license remove fail! ========= {}", e.toString());
-			}
-
+		/** 사용자 deviceId 조회. */
+		String deviceId = this.purchaseCancelRepository.getDeviceId(prchsDtlSacParam.getUseInsdUsermbrNo(),
+				prchsDtlSacParam.getUseInsdDeviceId());
+		/** appId 조회 */
+		String appId = "";
+		PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
+		paymentInfoSacReq.setTenantId(prchsDtlSacParam.getUseTenantId());
+		List<String> prodIdList = new ArrayList<String>();
+		prodIdList.add(prchsDtlSacParam.getProdId());
+		paymentInfoSacReq.setProdIdList(prodIdList);
+		paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
+		PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq);
+		if (paymentInfoSacRes != null && paymentInfoSacRes.getPaymentInfoList() != null
+				&& paymentInfoSacRes.getPaymentInfoList().size() == 1
+				&& StringUtils.isNotBlank(paymentInfoSacRes.getPaymentInfoList().get(0).getAid())) {
+			appId = paymentInfoSacRes.getPaymentInfoList().get(0).getAid();
+		} else {
+			return;
 		}
 
-	}
+		String resultMsg = "";
+		/** AOM PUSH */
+		try {
+			resultMsg = this.purchaseCancelRepository.aomPush(deviceId, appId);
 
-	private void updatePurchaseCount(PurchaseCancelSacParam purchaseCancelSacParam,
-			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
-
-		List<UpdatePurchaseCountSacReq> updatePurchaseCountSacReqList = new ArrayList<UpdatePurchaseCountSacReq>();
-
-		for (PrchsDtl prchsDtl : purchaseCancelDetailSacParam.getPrchsDtlList()) {
-			UpdatePurchaseCountSacReq updatePurchaseCountSacReq = new UpdatePurchaseCountSacReq();
-			updatePurchaseCountSacReq.setTenantId(prchsDtl.getUseTenantId());
-			updatePurchaseCountSacReq.setProductId(prchsDtl.getProdId());
-			updatePurchaseCountSacReq.setPurchaseCount(-prchsDtl.getProdQty());
-
-			updatePurchaseCountSacReqList.add(updatePurchaseCountSacReq);
+			this.logger.info("removeRO.AomPush result ===== {}", resultMsg);
+		} catch (Exception e) {
+			this.logger.info("aom push fail! ========= {}", e.toString());
 		}
 
-		this.updatePurchaseCountSCI.updatePurchaseCount(updatePurchaseCountSacReqList);
+		/** ARM License Remove */
+		try {
+			resultMsg = this.purchaseCancelRepository.armRemoveLicense(deviceId, appId);
+
+			this.logger.info("removeRO.ArmPush result ===== {}", resultMsg);
+		} catch (Exception e) {
+			this.logger.info("arm license remove fail! ========= {}", e.toString());
+		}
+
 	}
 
 }

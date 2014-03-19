@@ -11,10 +11,9 @@ package com.skplanet.storeplatform.sac.purchase.cancel.vo;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.PayCancelResult;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
-import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
-import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 
 /**
  * 구매 취소(사용자) 요청 상세 VO.
@@ -28,18 +27,19 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	private String prchsId;
 
 	/** 구매 내역. */
-	private Prchs prchs;
+	private PrchsSacParam prchsSacParam;
 
 	/** 구매 상세 내역 리스트. */
-	private List<PrchsDtl> prchsDtlList;
-
-	/** 구매 상세 내역 상품 정보. */
-	private List<PrchsProdDtl> prchsProdDtlList;
+	private List<PrchsDtlSacParam> prchsDtlSacParamList;
 
 	/** 결제 내역 리스트. */
-	private List<Payment> paymentList;
+	private List<PaymentSacParam> paymentSacParamList;
 
-	/** PayPlanet 내역 리스트. */
+	/** PayPlanet 취소 결과 리스트. */
+	CancelEcRes payPlanetCancelEcRes;
+
+	/** TStore 결제 취소 결과 리스트. */
+	List<PayCancelResult> tStorePayCancelResultList;
 
 	/** 구매 내역 DB 취소 결과 개수. */
 	private Integer prchsCancelCnt;
@@ -64,63 +64,48 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	}
 
 	/**
-	 * @return the prchs
+	 * @return the prchsSacParam
 	 */
-	public Prchs getPrchs() {
-		return this.prchs;
+	public PrchsSacParam getPrchsSacParam() {
+		return this.prchsSacParam;
 	}
 
 	/**
-	 * @param prchs
-	 *            the prchs to set
+	 * @param prchsSacParam
+	 *            the prchsSacParam to set
 	 */
-	public void setPrchs(Prchs prchs) {
-		this.prchs = prchs;
+	public void setPrchsSacParam(PrchsSacParam prchsSacParam) {
+		this.prchsSacParam = prchsSacParam;
 	}
 
 	/**
-	 * @return the prchsDtlList
+	 * @return the prchsDtlSacParamList
 	 */
-	public List<PrchsDtl> getPrchsDtlList() {
-		return this.prchsDtlList;
+	public List<PrchsDtlSacParam> getPrchsDtlSacParamList() {
+		return this.prchsDtlSacParamList;
 	}
 
 	/**
-	 * @param prchsDtlList
-	 *            the prchsDtlList to set
+	 * @param prchsDtlSacParamList
+	 *            the prchsDtlSacParamList to set
 	 */
-	public void setPrchsDtlList(List<PrchsDtl> prchsDtlList) {
-		this.prchsDtlList = prchsDtlList;
+	public void setPrchsDtlSacParamList(List<PrchsDtlSacParam> prchsDtlSacParamList) {
+		this.prchsDtlSacParamList = prchsDtlSacParamList;
 	}
 
 	/**
-	 * @return the prchsProdDtlList
+	 * @return the paymentSacParamList
 	 */
-	public List<PrchsProdDtl> getPrchsProdDtlList() {
-		return this.prchsProdDtlList;
+	public List<PaymentSacParam> getPaymentSacParamList() {
+		return this.paymentSacParamList;
 	}
 
 	/**
-	 * @param prchsProdDtlList
-	 *            the prchsProdDtlList to set
+	 * @param paymentSacParamList
+	 *            the paymentSacParamList to set
 	 */
-	public void setPrchsProdDtlList(List<PrchsProdDtl> prchsProdDtlList) {
-		this.prchsProdDtlList = prchsProdDtlList;
-	}
-
-	/**
-	 * @return the paymentList
-	 */
-	public List<Payment> getPaymentList() {
-		return this.paymentList;
-	}
-
-	/**
-	 * @param paymentList
-	 *            the paymentList to set
-	 */
-	public void setPaymentList(List<Payment> paymentList) {
-		this.paymentList = paymentList;
+	public void setPaymentSacParamList(List<PaymentSacParam> paymentSacParamList) {
+		this.paymentSacParamList = paymentSacParamList;
 	}
 
 	/**
@@ -166,6 +151,36 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	 */
 	public void setPaymentCancelCnt(Integer paymentCancelCnt) {
 		this.paymentCancelCnt = paymentCancelCnt;
+	}
+
+	/**
+	 * @return the tStorePayCancelResultList
+	 */
+	public List<PayCancelResult> gettStorePayCancelResultList() {
+		return this.tStorePayCancelResultList;
+	}
+
+	/**
+	 * @param tStorePayCancelResultList
+	 *            the tStorePayCancelResultList to set
+	 */
+	public void settStorePayCancelResultList(List<PayCancelResult> tStorePayCancelResultList) {
+		this.tStorePayCancelResultList = tStorePayCancelResultList;
+	}
+
+	/**
+	 * @return the payPlanetCancelEcRes
+	 */
+	public CancelEcRes getPayPlanetCancelEcRes() {
+		return this.payPlanetCancelEcRes;
+	}
+
+	/**
+	 * @param payPlanetCancelEcRes
+	 *            the payPlanetCancelEcRes to set
+	 */
+	public void setPayPlanetCancelEcRes(CancelEcRes payPlanetCancelEcRes) {
+		this.payPlanetCancelEcRes = payPlanetCancelEcRes;
 	}
 
 }

@@ -4,6 +4,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacReq;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,6 +41,11 @@ public class PurchaseCancelControllerTest {
 
 	@Test
 	public void testPurchaseCancel() throws Exception {
+
+		List<PrchsDtlSacParam> list = null;
+		for (PrchsDtlSacParam prchsDtlSacParam : list) {
+
+		}
 
 		PurchaseCancelByUserSacReq purchaseCancelByUserSacReq = new PurchaseCancelByUserSacReq();
 		/*
