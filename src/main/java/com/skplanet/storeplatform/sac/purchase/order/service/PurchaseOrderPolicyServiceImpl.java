@@ -68,46 +68,47 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		TEMPORARY_ALLOW_MVNO_CODE_LIST.add("0");
 
 		TEMPORARY_PAYMETHOD_MAP = new HashMap<String, String>();
-		TEMPORARY_PAYMETHOD_MAP.put("OR006201DP00OR006311", "");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP01", "21::50");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP01OR006311", "21::50");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP03", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP03OR006311", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP04", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP04OR006311", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP08", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP08OR006311", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP12", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP12OR006311", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP07", "21::50");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP07OR006311", "21::50");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP09", "21::50");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP09OR006311", "21::50");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP17OR006311", "21::50");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP17OR006331", "14:0:0;20:0:0;21::50;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP18OR006311", "21::50");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP18OR006331", "14:0:0;20:0:0;21::50;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006213DP05", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006213DP05OR006311", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006213DP16", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006213DP16OR006311", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP06", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP06OR006311", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP13", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP13OR006311", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP13", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP13OR006331", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP14", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP14OR006311", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP14", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP14OR006331", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP26", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP26OR006311", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP29", "21::20");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP29OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP01", "21:MAX:50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP01OR006311", "21:MAX:50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP03", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP03OR006311", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP04", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP04OR006311", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP08", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP08OR006311", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP12", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006211DP12OR006311", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP07", "21:MAX:50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP07OR006311", "21:MAX:50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP09", "21:MAX:50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP09OR006311", "21:MAX:50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP17OR006311", "21:MAX:50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP17OR006331",
+				"14:0:0;20:0:0;21:MAX:50;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP18OR006311", "21:MAX:50");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP18OR006331",
+				"14:0:0;20:0:0;21:MAX:50;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006213DP05", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006213DP05OR006311", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006213DP16", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006213DP16OR006311", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP06", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP06OR006311", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP13", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP13OR006311", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP13", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP13OR006331", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP14", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP14OR006311", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP14", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006212DP14OR006331", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP26", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP26OR006311", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP29", "21:MAX:20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006214DP29OR006311", "21:MAX:20");
 		TEMPORARY_PAYMETHOD_MAP.put("OR006221DP15OR006311", "20:0:0;21:0:0;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0");
 		TEMPORARY_PAYMETHOD_MAP.put("OR006221DP28OR006311", "20:0:0;21:0:0;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0");
-		TEMPORARY_PAYMETHOD_MAP.put("OR006231DP02OR006311", "21::20");
+		TEMPORARY_PAYMETHOD_MAP.put("OR006231DP02OR006311", "21:MAX:20");
 		TEMPORARY_PAYMETHOD_MAP.put("OR006311", "");
 		TEMPORARY_PAYMETHOD_MAP.put("OR006321", "");
 	}
@@ -168,7 +169,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public SktPaymentPolicyCheckResult checkSktPaymentPolicy(SktPaymentPolicyCheckParam policyCheckParam) {
-		this.logger.debug("PRCHS,ORDER,SAC,POLICY,SKT,START,{}", policyCheckParam);
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,START,{}", policyCheckParam);
+
 		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
 				policyCheckParam.getTenantId(), policyCheckParam.getTenantProdGrpCd());
 
@@ -230,7 +232,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyResult.setSktRestAmt(0.0);
 		}
 
-		this.logger.debug("PRCHS,ORDER,SAC,POLICY,SKT,END,{},{}", policyCheckParam.getDeviceKey(), policyResult);
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,END,{},{}", policyCheckParam.getDeviceKey(), policyResult);
 		return policyResult;
 	}
 
@@ -247,6 +249,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public void checkUserPolicy(PurchaseOrderInfo purchaseOrderInfo) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,START,{}", purchaseOrderInfo.getPurchaseUser());
 
 		if (purchaseOrderInfo.getRealTotAmt() == 0.0) {
 			return;
@@ -291,6 +294,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
 				purchaseOrderInfo.getPurchaseUser().getDeviceId(), policyCodeList);
 
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,CHECK,{},{}", policyCodeList, policyResMap);
+
 		if (policyResMap == null) {
 			return;
 		}
@@ -315,6 +320,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 					purchaseOrderInfo.setTestMdn(true);
 					purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_STORE_TEST_DEVICE);
 					purchaseOrderInfo.setRealTotAmt(0.0);
+
+					this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,TESTMDN,{}", purchaseOrderInfo.getPurchaseUser()
+							.getDeviceId());
 					return;
 				}
 
@@ -335,6 +343,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 						&& StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
 					// 구매차단
 					purchaseOrderInfo.setBlockPayment(true);
+
+					this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,BLOCK,{}", purchaseOrderInfo.getPurchaseUser()
+							.getDeviceId());
 					return;
 				}
 
@@ -354,7 +365,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 남은 SKT 후불 결제 가능 금액
 	 */
 	private Double checkSktLimitRest(PurchaseTenantPolicy policy, SktPaymentPolicyCheckParam policyCheckParam) {
-		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
 
 		double checkVal = 0.0;
 
@@ -390,7 +401,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		sciRes = this.purchaseOrderSearchSCI.searchSktAmountDetail(sciReq);
 		checkVal = (Double) sciRes.getVal();
 
-		this.logger.debug("PRCHS,ORDER,SAC,POLICY,END,{},{}", policy.getPolicyId(),
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{},{}", policy.getPolicyId(),
 				(Double.parseDouble(policy.getApplyValue()) - checkVal));
 		return (Double.parseDouble(policy.getApplyValue()) - checkVal);
 	}
@@ -406,7 +417,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 남은 SKT 후불 선물수신 가능 금액
 	 */
 	private Double checkSktRecvLimit(PurchaseTenantPolicy policy, SktPaymentPolicyCheckParam policyCheckParam) {
-		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
 
 		double checkVal = 0.0;
 
@@ -428,7 +439,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		sciRes = this.purchaseOrderSearchSCI.searchSktRecvAmountDetail(sciReq);
 		checkVal = (Double) sciRes.getVal();
 
-		this.logger.debug("PRCHS,ORDER,SAC,POLICY,END,{},{}", policy.getPolicyId(),
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{},{}", policy.getPolicyId(),
 				(Double.parseDouble(policy.getApplyValue()) - checkVal));
 		return (Double.parseDouble(policy.getApplyValue()) - checkVal);
 	}
@@ -446,9 +457,12 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 법인폰 여부: true-법인폰, false-해당 법인폰 아님
 	 */
 	private boolean isCorporationMdn(String corpNum, String mdn) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,START,{},{}", corpNum, mdn);
+
 		try {
 			UserEcRes userEcRes = this.uapsRespository.searchUapsAuthorizeInfoByMdn(corpNum, mdn);
 			if (userEcRes != null) {
+				this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,END,true");
 				return true;
 			}
 		} catch (StorePlatformException e) {
@@ -457,6 +471,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				throw e;
 			} // else는 skip처리가 정상
 		}
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,END,false");
 		return false;
 	}
 
@@ -469,7 +484,13 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return SKT 시험폰 여부: true-SKT 시험폰, false-SKT 시험폰 아님
 	 */
 	private boolean isSktTestMdn(String mdn) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKTTEST,START,{}", mdn);
+
 		UserEcRes userEcRes = this.uapsRespository.searchUapsMappingInfoByMdn(mdn);
+
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKTTEST,END,{},{}", mdn,
+				(StringUtils.equals(userEcRes.getSvcTP(), PurchaseConstants.UAPS_SVC_TP_SKTTEST)));
+
 		return (StringUtils.equals(userEcRes.getSvcTP(), PurchaseConstants.UAPS_SVC_TP_SKTTEST));
 	}
 
@@ -497,7 +518,13 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return SKT 시험폰 여부: true-SKT 시험폰, false-SKT 시험폰 아님
 	 */
 	private boolean isMvno(String allowMvnoCode, String mdn) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,MVNO,START,{},{}", mdn, allowMvnoCode);
+
 		UserEcRes userEcRes = this.uapsRespository.searchUapsMappingInfoByMdn(mdn);
+
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,MVNO,END,{},{},{}", mdn, allowMvnoCode,
+				StringUtils.equals(userEcRes.getMvnoCD(), allowMvnoCode));
+
 		return StringUtils.equals(userEcRes.getMvnoCD(), allowMvnoCode);
 	}
 }

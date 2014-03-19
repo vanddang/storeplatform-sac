@@ -74,8 +74,7 @@ public class PurchaseOrderController {
 	public CreatePurchaseSacRes createPurchase(
 			@RequestBody @Validated(GroupCreatePurchase.class) CreatePurchaseSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
-		this.logger.debug("PRCHS,INFO,CREATE,REQ,{},{}", tenantHeader, req);
+		this.logger.info("PRCHS,ORDER,SAC,CREATE,REQ,{},{}", sacRequestHeader, req);
 
 		// ------------------------------------------------------------------------------
 		// 요청 값 검증
@@ -85,7 +84,7 @@ public class PurchaseOrderController {
 		// ------------------------------------------------------------------------------
 		// 구매진행 정보 세팅
 
-		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, tenantHeader);
+		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
 
 		// ------------------------------------------------------------------------------
 		// 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
@@ -130,7 +129,7 @@ public class PurchaseOrderController {
 			res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
 		}
 
-		this.logger.debug("PRCHS,INFO,CREATE,RES,{}", res);
+		this.logger.info("PRCHS,ORDER,SAC,CREATE,RES,{}", res);
 		return res;
 	}
 
@@ -149,8 +148,7 @@ public class PurchaseOrderController {
 	public CreateFreePurchaseSacRes createFreeChargePurchase(
 			@RequestBody @Validated(GroupCreateFreePurchase.class) CreatePurchaseSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
-		this.logger.debug("PRCHS,INFO,CREATE,REQ,{},{}", tenantHeader, req);
+		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,REQ,{},{}", sacRequestHeader, req);
 
 		// ------------------------------------------------------------------------------
 		// 비과금 구매요청 권한 체크
@@ -161,7 +159,7 @@ public class PurchaseOrderController {
 		// 구매진행 정보 세팅
 
 		req.setTotAmt(0.0);
-		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, tenantHeader);
+		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
 		purchaseOrderInfo.setFreeChargeReq(true); // 비과금 요청
 
 		// ------------------------------------------------------------------------------
@@ -183,7 +181,7 @@ public class PurchaseOrderController {
 		res.setResultType(purchaseOrderInfo.getResultType());
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
 
-		this.logger.debug("PRCHS,INFO,CREATE,RES,{}", res);
+		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,RES,{}", res);
 		return res;
 	}
 
@@ -201,7 +199,7 @@ public class PurchaseOrderController {
 	@ResponseBody
 	public VerifyOrderSacRes verifyOrder(@RequestBody @Validated VerifyOrderSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.debug("PRCHS,INFO,VERIFY,REQ,{},{}", req, sacRequestHeader);
+		this.logger.info("PRCHS,ORDER,SAC,VERIFY,REQ,{},{}", req, sacRequestHeader);
 
 		String tenantId = null;
 		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
@@ -215,7 +213,9 @@ public class PurchaseOrderController {
 		verifyOrderInfo.setTenantId(tenantId);
 		verifyOrderInfo.setPrchsId(req.getPrchsId());
 
-		return this.orderService.verifyPurchaseOrder(verifyOrderInfo);
+		VerifyOrderSacRes res = this.orderService.verifyPurchaseOrder(verifyOrderInfo);
+		this.logger.info("PRCHS,ORDER,SAC,VERIFY,RES,{},{}", res);
+		return res;
 	}
 
 	/**
@@ -232,7 +232,7 @@ public class PurchaseOrderController {
 	@ResponseBody
 	public NotifyPaymentSacRes notifyPayment(@RequestBody @Validated NotifyPaymentSacReq notifyPaymentReq,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.debug("PRCHS,INFO,NOTI_PAY,REQ,{}", notifyPaymentReq);
+		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,REQ,{}", notifyPaymentReq);
 
 		// TAKTODO:: 결제실패 경우 처리 - 구매실패(결제실패) 이력 관리 할건가?
 		if (Integer.parseInt(notifyPaymentReq.getResultCd()) != 0) {
@@ -262,7 +262,10 @@ public class PurchaseOrderController {
 		// ------------------------------------------------------------------------------
 		// 응답
 
-		return new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq.getPaymentInfoList().size());
+		NotifyPaymentSacRes res = new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq
+				.getPaymentInfoList().size());
+		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,RES,{}", res);
+		return res;
 	}
 
 	/*
