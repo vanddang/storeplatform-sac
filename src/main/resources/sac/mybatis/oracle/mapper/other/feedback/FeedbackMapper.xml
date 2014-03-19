@@ -902,7 +902,7 @@
              ) 
            = (
               SELECT  
-                      NVL(SUM(d.tot_evlu_score)/SUM(d.paticpers_cnt), '0.0') AS avg_evlu_score
+                      DECODE(SUM(d.paticpers_cnt), 0, 0, NVL(SUM(d.tot_evlu_score)/SUM(d.paticpers_cnt), '0.0')) AS avg_evlu_score
                     , NVL(SUM(d.tot_evlu_score), '0.0') AS tot_evlu_score
                     , NVL(SUM(d.paticpers_cnt), '0.0') AS paticpers_cnt
                     , #{updId} AS upd_id
