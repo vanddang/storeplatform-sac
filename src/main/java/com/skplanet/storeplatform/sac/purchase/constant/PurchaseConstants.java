@@ -92,6 +92,12 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 
 	/** UAPS */
 	public static final String UAPS_SVC_TP_SKTTEST = "12"; // 회선 타입: 시험폰
+	public static final String[] UAPS_SVC_LIMIT_SERVICE = { "NA00002125" }; // 한도요금 상품
+
+	/** PG사 코드 */
+	public enum PAYMENT_GATEWAY {
+		PAY_PLANET, TSTORE, NO_PAYMENT
+	};
 
 	/** Pay Planet 결제 방법 코드 */
 	public static final String PAYPLANET_PAYMENT_METHOD_SKT_CARRIER = "11"; // SKT 후불
