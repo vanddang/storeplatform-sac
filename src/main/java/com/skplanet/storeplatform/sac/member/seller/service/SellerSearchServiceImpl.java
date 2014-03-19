@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -41,7 +42,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListR
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchSellerKeySCI;
 import com.skplanet.storeplatform.sac.client.member.vo.common.BanksByCountry;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
@@ -158,41 +158,42 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) {
 		LOGGER.debug("[SellerSearchServiceImpl.detailInformation()] START.");
 
+		CommonRequest commonRequest = this.commonComponent.getSCCommonRequest(header);
+
 		SearchSellerRequest schReq = new SearchSellerRequest();
-		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		schReq.setCommonRequest(commonRequest);
 
 		KeySearch keySearch = new KeySearch();
 
-		// TODO 문자열 null/"" 체크 로직 수정 필요.
-		if (!req.getSellerKey().equals("")) {
+		if (StringUtils.isNotBlank(req.getSellerKey())) {
 			keySearch.setKeyString(req.getSellerKey());
 			keySearch.setKeyType("INSD_SELLERMBR_NO");
-		} else if (!req.getSellerId().equals("")) {
+		} else if (StringUtils.isNotBlank(req.getSellerId())) {
 			keySearch.setKeyString(req.getSellerId());
 			keySearch.setKeyType("SELLERMBR_ID");
 		} else {
+			// App ID로 sellerKey 조회
 			keySearch.setKeyString(this.searchSellerKeySCI.searchSellerKeyForAid(req.getAid()));
 			keySearch.setKeyType("INSD_SELLERMBR_NO");
 		}
 
+		// SC 판매자회원 기본정보 조회.
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
 		schReq.setKeySearchList(list);
-
-		// SC 판매자회원 기본정보 조회.
 		SearchSellerResponse schRes = this.sellerSCI.searchSeller(schReq);
 
-		SearchFlurryListRequest schReq2 = new SearchFlurryListRequest();
-		schReq2.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
-		schReq2.setSellerKey(schRes.getSellerKey());
-
 		// SC 판매자회원 Fluury 연동정보 목록조회.
-		SearchFlurryListResponse schRes2 = this.sellerSCI.searchFlurryList(schReq2);
+		SearchFlurryListRequest searchFlurryListRequest = new SearchFlurryListRequest();
+		searchFlurryListRequest.setCommonRequest(commonRequest);
+		searchFlurryListRequest.setSellerKey(schRes.getSellerKey());
+		SearchFlurryListResponse searchFlurryListResponse = this.sellerSCI.searchFlurryList(searchFlurryListRequest);
 
+		// TODO 파라미터 셋팅하는 부분 누락없는지 확인 필요.
 		// 판매자 멀티미디어정보
 		List<ExtraRight> eList = new ArrayList<ExtraRight>();
 		ExtraRight extraRightList = null;
-		if (schRes.getExtraRightList() != null)
+		if (schRes.getExtraRightList() != null) {
 			for (int i = 0; i < schRes.getExtraRightList().size(); i++) {
 				extraRightList = new ExtraRight();
 				// extraRightList.setEndDate(schRes.getExtraRightList().get(i).getEndDate());
@@ -209,6 +210,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 				eList.add(extraRightList);
 			}
+		}
 
 		// 법정대리인정보
 		MbrLglAgent mbrLglAgent = new MbrLglAgent();
@@ -232,24 +234,25 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		// 판매자 탭권한
 		List<TabAuth> tList = new ArrayList<TabAuth>();
 		TabAuth tabAuthList = null;
-		if (schRes.getTabAuthList() != null)
+		if (schRes.getTabAuthList() != null) {
 			for (int i = 0; i < schRes.getTabAuthList().size(); i++) {
 				tabAuthList = new TabAuth();
 				tabAuthList.setTabCode(schRes.getTabAuthList().get(i).getTabCode());
 				tList.add(tabAuthList);
 			}
+		}
 
 		// 판매자 플러리 인증정보
 		List<FlurryAuth> fList = new ArrayList<FlurryAuth>();
 		FlurryAuth flurryAuthList = null;
-		if (schRes2.getFlurryAuthList() != null)
-			for (int i = 0; i < schRes2.getFlurryAuthList().size(); i++) {
+		if (searchFlurryListResponse.getFlurryAuthList() != null)
+			for (int i = 0; i < searchFlurryListResponse.getFlurryAuthList().size(); i++) {
 				flurryAuthList = new FlurryAuth();
-				flurryAuthList.setAccessCode(schRes2.getFlurryAuthList().get(i).getAccessCode());
-				flurryAuthList.setAuthToken(schRes2.getFlurryAuthList().get(i).getAuthToken());
-				flurryAuthList.setRegDate(schRes2.getFlurryAuthList().get(i).getRegDate());
-				flurryAuthList.setSellerKey(schRes2.getFlurryAuthList().get(i).getSellerKey());
-				flurryAuthList.setUpdateDate(schRes2.getFlurryAuthList().get(i).getUpdateDate());
+				flurryAuthList.setAccessCode(searchFlurryListResponse.getFlurryAuthList().get(i).getAccessCode());
+				flurryAuthList.setAuthToken(searchFlurryListResponse.getFlurryAuthList().get(i).getAuthToken());
+				flurryAuthList.setRegDate(searchFlurryListResponse.getFlurryAuthList().get(i).getRegDate());
+				flurryAuthList.setSellerKey(searchFlurryListResponse.getFlurryAuthList().get(i).getSellerKey());
+				flurryAuthList.setUpdateDate(searchFlurryListResponse.getFlurryAuthList().get(i).getUpdateDate());
 				fList.add(flurryAuthList);
 			}
 
@@ -270,7 +273,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * 판매자회원 기본정보조회 App.
+	 * 판매자회원 기본정보조회 App. TODO 로직 확인 필요.
 	 * </pre>
 	 * 
 	 * @param header
@@ -312,13 +315,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			throw new StorePlatformException("SAC_MEM_2101");
 		}
 
-		// TODO 문자열 "".equals 체크 로직 수정 필요.
 		/* 상단 */
 		// 내국인, 개인
-		if (sellerMbrs.get(0).getIsDomestic().equals("Y") && sellerMbrs.get(0).getSellerClass().equals("US010101")) {
+		if ("Y".equals(sellerMbrs.get(0).getIsDomestic())
+				&& MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON
+						.equals(sellerMbrs.get(0).getSellerClass())) {
 			sellerMbrSac = new SellerMbr();
 			sellerMbrSac.setAppStat("Top");
-			if (!StringUtil.nvl(sellerMbrs.get(0).getCharger(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getCharger()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getCharger());
 			else
 				sellerMbrSac.setSellerName("");
@@ -326,11 +330,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 		// 내국인, 개인사업자 or 법인 사업자
 		else if (sellerMbrs.get(0).getIsDomestic().equals("Y")
-				&& (sellerMbrs.get(0).getSellerClass().equals("US010102") || sellerMbrs.get(0).getSellerClass()
-						.equals("US010103"))) {
+				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
+						.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
+						.equals(sellerMbrs.get(0).getSellerClass()))) {
 			sellerMbrSac = new SellerMbr();
 			sellerMbrSac.setAppStat("Top");
-			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerCompany());
 			else
 				sellerMbrSac.setSellerName("");
@@ -338,36 +343,40 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 		// 외국인, 개인 or 개인사업자 or 법인 사업자
 		else if (sellerMbrs.get(0).getIsDomestic().equals("N")
-				&& (sellerMbrs.get(0).getSellerClass().equals("US010101")
-						|| sellerMbrs.get(0).getSellerClass().equals("US010102") || sellerMbrs.get(0).getSellerClass()
-						.equals("US010103"))) {
+				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON.equals(sellerMbrs.get(0)
+						.getSellerClass())
+						|| MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
+								.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
+							.equals(sellerMbrs.get(0).getSellerClass()))) {
 			sellerMbrSac = new SellerMbr();
 			sellerMbrSac.setAppStat("Top");
-			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerCompany());
 			else
 				sellerMbrSac.setSellerName("");
 			sellerMbrSacs.add(sellerMbrSac);
 		}
-		// TODO 문자열 null/"" 체크 로직 수정 필요.
+
 		/* 하단 */
 		// 내국인, 개인
-		if (sellerMbrs.get(0).getIsDomestic().equals("Y") && sellerMbrs.get(0).getSellerClass().equals("US010101")) {
+		if ("Y".equals(sellerMbrs.get(0).getIsDomestic())
+				&& MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON
+						.equals(sellerMbrs.get(0).getSellerClass())) {
 			sellerMbrSac = new SellerMbr();
 			sellerMbrSac.setAppStat("Lower");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerName(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerName());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getCharger(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCharger()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getCharger());
 			else
 				sellerMbrSac.setSellerName("");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
 			else
 				sellerMbrSac.setSellerEmail("");
@@ -375,47 +384,48 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrSacs.add(sellerMbrSac);
 		}
 
-		// TODO 문자열 null/"" 체크 로직 수정 필요.
+		// TODO 문자열 null/"" 체크 로직 수정 필요한지 확인....
 		// 내국인, 개인사업자 OR 법인 사업자
-		else if (sellerMbrs.get(0).getIsDomestic().equals("Y")
-				&& (sellerMbrs.get(0).getSellerClass().equals("US010102") || sellerMbrs.get(0).getSellerClass()
-						.equals("US010103"))) {
+		else if ("Y".equals(sellerMbrs.get(0).getIsDomestic())
+				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
+						.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
+						.equals(sellerMbrs.get(0).getSellerClass()))) {
 			sellerMbrSac = new SellerMbr();
 			sellerMbrSac.setAppStat("Lower");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
 				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
 			else
 				sellerMbrSac.setSellerCompany("");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getCeoName(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getCeoName()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getCeoName());
 			else
 				sellerMbrSac.setSellerName("");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
 			else
 				sellerMbrSac.setSellerEmail("");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getBizRegNumber(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getBizRegNumber()))
 				sellerMbrSac.setBizRegNumber(sellerMbrs.get(0).getBizRegNumber());
 			else
 				sellerMbrSac.setBizRegNumber("");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerAddress(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerAddress()))
 				sellerMbrSac.setSellerAddress(sellerMbrs.get(0).getSellerAddress() + " "
 						+ sellerMbrs.get(0).getSellerDetailAddress());
 			else
 				sellerMbrSac.setSellerAddress("");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getRepPhone(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepPhone()))
 				sellerMbrSac.setSellerPhone(sellerMbrs.get(0).getRepPhone());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerPhone(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerPhone()))
 				sellerMbrSac.setSellerPhone(sellerMbrs.get(0).getCustomerPhone());
 			else
 				sellerMbrSac.setSellerPhone("");
@@ -423,24 +433,26 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrSacs.add(sellerMbrSac);
 		}
 
-		// TODO 문자열 null/"" 체크 로직 수정 필요.
+		// TODO 문자열 null/"" 체크 로직 수정 필요 여부 확인.
 		// 외국인, 개인
-		else if (sellerMbrs.get(0).getIsDomestic().equals("N") && sellerMbrs.get(0).getSellerClass().equals("US010101")) {
+		else if ("N".equals(sellerMbrs.get(0).getIsDomestic())
+				&& MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON
+						.equals(sellerMbrs.get(0).getSellerClass())) {
 			sellerMbrSac = new SellerMbr();
 			sellerMbrSac.setAppStat("Lower");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerName(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerName());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerCompany());
 			else
 				sellerMbrSac.setSellerName("");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
 			else
 				sellerMbrSac.setSellerEmail("");
@@ -448,25 +460,26 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrSacs.add(sellerMbrSac);
 		}
 
-		// TODO 문자열 null/"" 체크 로직 수정 필요.
+		// TODO 문자열 null/"" 체크 로직 수정 필요 여부 확인.
 		// 외국인, 개인사업자or법인사업자
-		else if (sellerMbrs.get(0).getIsDomestic().equals("N")
-				&& (sellerMbrs.get(0).getSellerClass().equals("US010102") || sellerMbrs.get(0).getSellerClass()
-						.equals("US010103"))) {
+		else if ("N".equals(sellerMbrs.get(0).getIsDomestic())
+				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
+						.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
+						.equals(sellerMbrs.get(0).getSellerClass()))) {
 			sellerMbrSac = new SellerMbr();
 			sellerMbrSac.setAppStat("Lower");
-			if (!StringUtil.nvl(sellerMbrs.get(0).getSellerCompany(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
 				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerName(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()))
 				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerName());
 			else
 				sellerMbrSac.setSellerCompany("");
 
-			if (!StringUtil.nvl(sellerMbrs.get(0).getRepEmail(), "").equals(""))
+			if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getCustomerEmail(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
-			else if (!StringUtil.nvl(sellerMbrs.get(0).getSellerEmail(), "").equals(""))
+			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerEmail()))
 				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
 			else
 				sellerMbrSac.setSellerEmail("");
@@ -654,14 +667,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
-		// TODO 문자열 null/"" 체크 로직 수정 필요.
-		if (!req.getSellerBizNumber().isEmpty())
+		if (StringUtils.isNotBlank(req.getSellerBizNumber()))
 			schReq.setSellerBizNumber(req.getSellerBizNumber());
-		if (!req.getSellerCompany().isEmpty())
+		if (StringUtils.isNotBlank(req.getSellerCompany()))
 			schReq.setSellerCompany(req.getSellerCompany());
-		if (!req.getSellerEmail().isEmpty())
+		if (StringUtils.isNotBlank(req.getSellerEmail()))
 			schReq.setSellerEmail(req.getSellerEmail());
-		if (!req.getSellerPhone().isEmpty())
+		if (StringUtils.isNotBlank(req.getSellerPhone()))
 			schReq.setSellerPhone(req.getSellerPhone());
 
 		SearchIDSellerResponse schRes = this.sellerSCI.searchIDSeller(schReq);
