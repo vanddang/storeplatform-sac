@@ -42,9 +42,8 @@ public class BannerController {
 	@ResponseBody
 	public BannerSacRes searchBannerList(SacRequestHeader header, @Validated BannerSacReq bannerReq) {
 		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("searchBannerList started.");
-		this.logger.debug("bannerReq : {}", bannerReq.toString());
-		this.logger.debug("header : {}", header.toString());
+		this.logger.debug("[searchBannerList] SacRequestHeader\n{}", header.toString());
+		this.logger.debug("[searchBannerList] BannerSacReq\n{}", bannerReq.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.bannerService.searchBannerList(header, bannerReq);

@@ -175,7 +175,8 @@ public class BannerServceImpl implements BannerService {
 				bnrType = bannerDefault.getBnrInfoTypeCd();
 
 				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("[searchBannerList] bannerDefault : {}", bannerDefault.toString());
+				this.logger.debug("[searchBannerList] bnrMenuId : {}", bnrMenuId);
+				this.logger.debug("[searchBannerList] bnrType : {}", bnrType);
 				this.logger.debug("----------------------------------------------------------------");
 
 				// 모바일웹 정사각형 배너
@@ -339,6 +340,9 @@ public class BannerServceImpl implements BannerService {
 
 					// 배치완료 기준일시 조회
 					stdDt = this.displayCommonService.getBatchStandardDateString(bannerReq.getTenantId(), recommendId);
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[searchBannerList] stdDt : {}", stdDt);
+					this.logger.debug("----------------------------------------------------------------");
 
 					// 기준일시 체크
 					if (StringUtils.isNotEmpty(stdDt)) {
@@ -406,6 +410,9 @@ public class BannerServceImpl implements BannerService {
 
 					// 배치완료 기준일시 조회
 					stdDt = this.displayCommonService.getBatchStandardDateString(bannerReq.getTenantId(), themeId);
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[searchBannerList] stdDt : {}", stdDt);
+					this.logger.debug("----------------------------------------------------------------");
 
 					// 기준일시 체크
 					if (StringUtils.isNotEmpty(stdDt)) {
@@ -479,23 +486,39 @@ public class BannerServceImpl implements BannerService {
 				|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
 				|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
 				|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[searchBannerList] 메타정보조회 : 앱상품");
+			this.logger.debug("----------------------------------------------------------------");
+
 			paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 			metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
 		}
 		// 이북 및 코믹
 		else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 				|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[searchBannerList] 메타정보조회 : 이북, 코믹");
+			this.logger.debug("----------------------------------------------------------------");
+
 			paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 			metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
 		}
 		// 영화 및 방송
 		else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[searchBannerList] 메타정보조회 : 영화, 방송");
+			this.logger.debug("----------------------------------------------------------------");
+
 			paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 			metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
 		}
 		// Tstore 쇼핑
 		else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[searchBannerList] 메타정보조회 : Tstore 쇼핑");
+			this.logger.debug("----------------------------------------------------------------");
+
 			paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 			metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
 		}
