@@ -19,6 +19,20 @@
     <logger name="jdbc.audit"     level="OFF" additivity="false" /> 
     <logger name="jdbc.sqltiming" level="OFF" additivity="false" />
     
+    <!-- plandas 로그 -->
+    <logger name="com.skplanet.plandasj" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="com.skplanet.spring" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="org.apache.zookeeper" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    
     <!-- rabbit mq BlockingQueue INFO 로그 -->
     <logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" additivity="false">
         <level value="INFO" />
