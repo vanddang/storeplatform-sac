@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -581,7 +580,7 @@ public class LoginServiceImpl implements LoginService {
 						String joinSstNm = null;
 
 						for (Entry<String, String> entry : mapSiteCd.entrySet()) {
-							if (StringUtils.contains(joinSst, entry.getKey())) {
+							if (StringUtil.contains(joinSst, entry.getKey())) {
 								joinSstCd = entry.getKey();
 								joinSstNm = entry.getValue();
 								break;
@@ -589,7 +588,7 @@ public class LoginServiceImpl implements LoginService {
 						}
 						LOGGER.info(":::: {} 가가입 상태 사이트 정보 : {}, {}, {}", chkDupRes.getMbrOneID().getUserID(), joinSst, joinSstCd, joinSstNm);
 
-						if (StringUtils.isEmpty(joinSstCd)) {
+						if (StringUtil.isEmpty(joinSstCd)) {
 							joinSstCd = "90000"; // One ID
 							joinSstNm = mapSiteCd.get(joinSstCd);
 						}
@@ -708,8 +707,7 @@ public class LoginServiceImpl implements LoginService {
 
 			} catch (StorePlatformException ex) {
 				LOGGER.info(ex.getErrorInfo().toString());
-				if (StringUtils
-						.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+				if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
 					LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
@@ -964,32 +962,17 @@ public class LoginServiceImpl implements LoginService {
 
 			JoinForWapEcRes joinForWapEcRes = null;
 			try {
+
 				joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
+
 			} catch (StorePlatformException ex) {
-				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
-					/**
-					 * IDP에 이미 가입되어 있는 회원일 경우 SC 회원 DB 조회해서 정보 존재 하면 Error를 반환
-					 * (데이터는 삭제 하지 않음 - 이유 : IDP 및 회원 DB에도 정상 임) - 에러 : IDP 가가입
-					 * 에러
-					 */
-					try {
+				if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
-						this.commService.getUserBaseInfo("deviceId", req.getDeviceId(), requestHeader);
-
-					} catch (StorePlatformException e) {
-						if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
-								|| StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-
-							/**
-							 * SC회원에 정보가 없는경우 IDP 모바일회원 탈퇴 요청
-							 */
-							SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-							ecReq.setUserMdn(req.getDeviceId());
-							this.idpSCI.secedeForWap(ecReq);
-
-						}
-					}
+					/* IDP 기가입인경우 탈퇴 처리 */
+					SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+					ecReq.setUserMdn(req.getDeviceId());
+					this.idpSCI.secedeForWap(ecReq);
 
 					throw new StorePlatformException("SAC_MEM_1201", ex);
 
