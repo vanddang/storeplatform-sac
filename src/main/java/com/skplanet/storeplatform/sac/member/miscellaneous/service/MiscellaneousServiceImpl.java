@@ -130,6 +130,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Qualifier("sac")
 	private CommonDAO commonDao;
 
+	/**
+	 * <pre>
+	 * OPMD 모회선 번호 조회.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param request
+	 *            GetOpmdReq
+	 * @return GetOpmdRes
+	 */
 	@Override
 	public GetOpmdRes getOpmd(GetOpmdReq req) {
 		String msisdn = req.getMsisdn();
@@ -175,7 +186,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, GetUaCodeReq req) {
 		String deviceModelNo = req.getDeviceModelNo();
 		String msisdn = req.getMsisdn();
-		String userKey = "";
+		String userKey = null;
+		String errorKey = "deviceModelNo";
+		String errorValue = deviceModelNo;
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = this.commonComponent.getSCCommonRequest(requestHeader);
@@ -184,7 +197,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		GetUaCodeRes response = new GetUaCodeRes();
 		/* 파라미터로 MSISDN만 넘어온 경우 */
 		if (StringUtils.isNotBlank(msisdn) && StringUtils.isBlank(deviceModelNo)) {
-
+			errorKey = "msisdn";
+			errorValue = msisdn;
 			SearchUserRequest searchUserRequest = new SearchUserRequest();
 			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 
@@ -219,21 +233,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			/* deviceModelNo 조회 결과 확인 */
 			if (searchDeviceResult != null
 					&& StringUtils.isNotBlank(searchDeviceResult.getUserMbrDevice().getDeviceModelNo())) {
-
-				// DB 접속(TB_CM_DEVICE) - UaCode 조회
-				String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", searchDeviceResult
-						.getUserMbrDevice().getDeviceModelNo(), String.class);
-				if (StringUtils.isNotBlank(uaCode)) {
-					response.setUaCd(uaCode);
-					LOGGER.info("## UA Code : {}", uaCode);
-				} else {
-					throw new StorePlatformException("SAC_MEM_3401", "msisdn", msisdn);
-				}
+				deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
 			} else {
 				throw new StorePlatformException("SAC_MEM_3402", "msisdn", msisdn);
 			}
+		}
 
-		} else if (StringUtils.isNotBlank(deviceModelNo)) { // deviceModelNo 가 파라미터로 들어온 경우
+		if (StringUtils.isNotBlank(deviceModelNo)) { // deviceModelNo 가 파라미터로 들어온 경우
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회
 			String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", deviceModelNo, String.class);
 			if (StringUtils.isNotBlank(uaCode)) {
@@ -435,7 +441,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	/**
 	 * <pre>
-	 * Captcha 문자 인증.
+	 * Captcha 문자 확인.
 	 * </pre>
 	 * 
 	 * @param request
@@ -579,6 +585,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 */
 	@Override
 	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) {
+
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
 
 		LOGGER.info("[MiscellaneousService.createAdditionalService] Request {}", request);
