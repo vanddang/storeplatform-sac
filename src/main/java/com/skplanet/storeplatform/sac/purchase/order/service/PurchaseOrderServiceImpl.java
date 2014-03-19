@@ -236,7 +236,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		try {
 			userPayRes = this.purchaseMemberRepository.searchUserPayplanet(reservedDataMap.get("userKey"),
 					reservedDataMap.get("deviceKey"));
-		} catch (StorePlatformException e) {
+		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7208", e);
 		}
 		res.setFlgTeleBillingAgree(userPayRes.getSkpAgreementYn()); // 통신과금 동의여부
@@ -272,7 +272,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			try {
 				policyResult = this.purchaseOrderPolicyService.checkSktPaymentPolicy(policyCheckParam);
-			} catch (StorePlatformException e) {
+			} catch (Exception e) {
 				throw new StorePlatformException("SAC_PUR_7209", e);
 			}
 
@@ -339,7 +339,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		UserCouponListEcRes tstoreCouponListEcRes = null;
 		try {
 			tstoreCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
-		} catch (StorePlatformException e) {
+		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7210", e);
 		}
 
@@ -378,7 +378,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		TStoreCashEcRes tStoreCashEcRes = null;
 		try {
 			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
-		} catch (StorePlatformException e) {
+		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7211", e);
 		}
 
