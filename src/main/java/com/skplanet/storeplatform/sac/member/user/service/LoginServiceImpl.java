@@ -183,8 +183,8 @@ public class LoginServiceImpl implements LoginService {
 
 			if (chkDupRes.getUserMbr().getImSvcNo() != null) { /* 원아이디인 경우 */
 
+				/* 통신사가 변경되었을 때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
 				if (!StringUtil.equals(req.getDeviceTelecom(), dbDeviceTelecom)) {
-					/* 로그인할때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
 					this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr().getImSvcNo());
 				}
 
@@ -1243,10 +1243,10 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 인증수단정보 조회 */
 		UserAuthMethod userAuthMethod = new UserAuthMethod();
+		userAuthMethod.setUserId(chkDupRes.getUserMbr().getUserID());
 		if (!StringUtil.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 			userAuthMethod.setUserId(chkDupRes.getUserMbr().getUserID());
 		}
-		userAuthMethod.setUserEmail(chkDupRes.getUserMbr().getUserEmail());
 		userAuthMethod.setIsRealName(chkDupRes.getUserMbr().getIsRealName());
 		return userAuthMethod;
 	}
