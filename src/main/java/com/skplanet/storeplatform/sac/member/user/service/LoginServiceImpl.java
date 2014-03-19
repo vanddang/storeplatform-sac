@@ -285,12 +285,12 @@ public class LoginServiceImpl implements LoginService {
 		String dbDeviceTelecom = schDeviceRes.getUserMbrDevice().getDeviceTelecom();
 
 		/* Tcloud 약관동의 노출 여부 체크 */
+		String tcloudAgreeViewYn = "N"; // Tcloud 이용동의 노출 여부
 		ChangedDeviceHistoryReq changedDeviceHistoryReq = new ChangedDeviceHistoryReq();
 		changedDeviceHistoryReq.setUserKey(schDeviceRes.getUserKey());
 		changedDeviceHistoryReq.setDeviceId(req.getDeviceId());
 		ChangedDeviceHistoryRes changedDeviceHistoryRes = this.deviceService.searchChangedDeviceHistory(requestHeader, changedDeviceHistoryReq);
 
-		String tcloudAgreeViewYn = "N"; // Tcloud 이용동의 노출 여부
 		if (StringUtil.equals(changedDeviceHistoryRes.getIsChanged(), "Y")) {
 
 			/*
@@ -303,7 +303,6 @@ public class LoginServiceImpl implements LoginService {
 			if (StringUtil.isBlank(tcloudAgreeYn) || StringUtil.equals(tcloudAgreeYn, "N")) {
 
 				tcloudAgreeViewYn = "Y";
-
 				List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 				if (req.getDeviceExtraInfoList() != null) {
 					deviceExtraInfoList = req.getDeviceExtraInfoList();
@@ -312,8 +311,8 @@ public class LoginServiceImpl implements LoginService {
 				deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN);
 				deviceExtraInfo.setExtraProfileValue("T");
 				deviceExtraInfoList.add(deviceExtraInfo);
-
 				req.setDeviceExtraInfoList(deviceExtraInfoList);
+
 			}
 		}
 
@@ -332,8 +331,8 @@ public class LoginServiceImpl implements LoginService {
 
 			if (chkDupRes.getUserMbr().getImSvcNo() != null) { /* 원아이디인 경우 */
 
+				/* 통신사가 변경되었을 때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
 				if (!StringUtil.equals(req.getDeviceTelecom(), dbDeviceTelecom)) {
-					/* 로그인할때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
 					this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr().getImSvcNo());
 				}
 
@@ -378,7 +377,7 @@ public class LoginServiceImpl implements LoginService {
 		res.setDeviceKey(deviceKey);
 		res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 		if (StringUtil.equals(tcloudAgreeViewYn, "Y")) {
-			res.setTcloudAgreeViewYn("Y");
+			res.setTcloudAgreeViewYn(tcloudAgreeViewYn);
 		}
 		return res;
 	}
