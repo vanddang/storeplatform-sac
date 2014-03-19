@@ -930,13 +930,13 @@ public class DeviceServiceImpl implements DeviceService {
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
 
+		LOGGER.info(":::::::::::::::::: device update field end ::::::::::::::::::");
+
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		/* 휴대기기 변경 이력 코드 */
 		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
-
-		LOGGER.info(":::::::::::::::::: device update field end ::::::::::::::::::");
 
 		/* 기기정보 업데이트 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
