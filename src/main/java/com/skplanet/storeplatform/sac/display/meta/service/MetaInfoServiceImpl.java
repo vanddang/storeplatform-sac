@@ -66,7 +66,10 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             setProperties(menuInfo, me); // MenuInfo
             setProperties(subContent, me); // SubContent
             setProperties(app, me); // App
-            me.setPartParentClsfCd("PD012301".equals(app.getPartParentClsfCd()) ? "Y" : "N");
+
+            if(app.getPartParentClsfCd() != null) {
+                me.setPartParentClsfCd("PD012301".equals(app.getPartParentClsfCd()) ? "Y" : "N");
+            }
             me.setSubContentsId(null);
 
             return me;
