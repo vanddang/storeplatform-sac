@@ -116,6 +116,7 @@ public final class MemberConstants {
 	public static final String DEVICE_EXTRA_OMPSUPPORT_YN = "US011404"; // OMP 지원 단말 여부
 	public static final String DEVICE_EXTRA_OSVERSION = "US011405"; // OS 버전
 	public static final String DEVICE_EXTRA_SCVERSION = "US011406"; // 샵클 버전
+	@Deprecated
 	public static final String DEVICE_EXTRA_APPSTATISTICS_YN = "US011407"; // 앱 사용통계 사용여부
 	public static final String DEVICE_EXTRA_DODORYAUTH_DATE = "US011408"; // 도토리 인증일
 	public static final String DEVICE_EXTRA_DODORYAUTH_YN = "US011409"; // 도토리 인증여부
