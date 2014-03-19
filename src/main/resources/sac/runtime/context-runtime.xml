@@ -18,7 +18,5 @@
 	<context:component-scan base-package="com.skplanet.storeplatform.framework.integration"	name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator" />
 	
 	<context:component-scan base-package="com.skplanet.storeplatform.sac.runtime" name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator" />
-
-	<!-- 아키텍처 위반 사항 체크하는 클래스, Protobuf DTO와 맵핑되는 VO간의 불일치를 잡아낸다. -->
-	<bean class="com.skplanet.storeplatform.framework.core.helper.ArchitectureDefectChecker" />
+ 
 </beans>
