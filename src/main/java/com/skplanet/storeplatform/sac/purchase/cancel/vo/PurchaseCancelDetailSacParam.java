@@ -11,9 +11,9 @@ package com.skplanet.storeplatform.sac.purchase.cancel.vo;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.PayCancelResult;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-//import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
 
 /**
  * 구매 취소(사용자) 요청 상세 VO.
@@ -36,7 +36,7 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	private List<PaymentSacParam> paymentSacParamList;
 
 	/** PayPlanet 취소 결과 리스트. */
-	// CancelEcRes payPlanetCancelEcRes;
+	CancelEcRes payPlanetCancelEcRes;
 
 	/** TStore 결제 취소 결과 리스트. */
 	List<PayCancelResult> tStorePayCancelResultList;
@@ -171,16 +171,16 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	/**
 	 * @return the payPlanetCancelEcRes
 	 */
-	// public CancelEcRes getPayPlanetCancelEcRes() {
-	// return this.payPlanetCancelEcRes;
-	// }
+	public CancelEcRes getPayPlanetCancelEcRes() {
+		return this.payPlanetCancelEcRes;
+	}
 
 	/**
 	 * @param payPlanetCancelEcRes
 	 *            the payPlanetCancelEcRes to set
 	 */
-	// public void setPayPlanetCancelEcRes(CancelEcRes payPlanetCancelEcRes) {
-	// this.payPlanetCancelEcRes = payPlanetCancelEcRes;
-	// }
+	public void setPayPlanetCancelEcRes(CancelEcRes payPlanetCancelEcRes) {
+		this.payPlanetCancelEcRes = payPlanetCancelEcRes;
+	}
 
 }
