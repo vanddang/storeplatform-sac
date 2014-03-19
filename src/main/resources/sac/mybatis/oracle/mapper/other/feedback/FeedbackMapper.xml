@@ -4,7 +4,7 @@
 
 	<!-- 사용후기 기등록 여부 조회  -->
 	<select id="getRegProdNoti" parameterType="ProdNoti" resultType="ProdNoti">
-      SELECT  /* FeedbackMapper.getRegProdNoti, 사용후기 기등록 여부 조회, 김현일/SK플래닛, 2014-02-04 */ 
+      SELECT  /* FeedbackMapper.xml, getRegProdNoti, SAC 기타, 2014-02-04 */ 
               noti_seq   /* 후기 SEQ */
             , noti_dscr  /* 후기 내용 */
         FROM
@@ -50,7 +50,7 @@
       SELECT  sq_dp_prod_noti.NEXTVAL  /* 사용후기 시퀀스 */ 
         FROM  DUAL
       </selectKey>
-      INSERT  /* FeedbackMapper.insertProdNoti, 사용후기 등록, 김현일/SK플래닛, 2014-02-04 */ 
+      INSERT  /* FeedbackMapper.xml, insertProdNoti, SAC 기타, 2014-02-04 */ 
         INTO  tb_dp_prod_noti  /* 상품 후기 */
       ( tenant_id              /* 테넌트 ID */
       , noti_seq               /* 후기 SEQ */
@@ -124,7 +124,7 @@
 	
     <!-- 사용후기 수정 -->
     <update id="updateProdNoti"  parameterType="ProdNoti">
-      UPDATE  /* FeedbackMapper.updateProdNoti, 사용후기 수정, 김현일/SK플래닛 , 2014-02-04 */
+      UPDATE  /* FeedbackMapper.xml, updateProdNoti, SAC 기타, 2014-02-04 */
               tb_dp_prod_noti                     /* 상품 후기 */
          SET  noti_dscr = #{notiDscr}             /* 후기 내용 */
             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
@@ -146,7 +146,7 @@
 	
 	<!-- 사용후기 삭제 -->
 	<update id="deleteProdNoti" parameterType="ProdNoti">
-      UPDATE  /* FeedbackMapper.deleteProdNoti, 사용후기 삭제, 김현일/SK플래닛, 2014-02-04 */
+      UPDATE  /* FeedbackMapper.xml, deleteProdNoti, SAC 기타, 2014-02-04 */
               tb_dp_prod_noti         /* 상품 후기 */
          SET  del_dt = SYSDATE        /* 삭제 일시 */
             , del_yn = 'Y'            /* 삭제 여부 */
@@ -157,7 +157,7 @@
 	 
 	<!-- 사용후기 추천이력 삭제 -->  
 	<delete id="deleteProdNotiGood" parameterType="ProdNotiGood">
-      DELETE  /* FeedbackMapper.deleteProdNotiGood, 사용후기 추천이력 삭제, 김현일/SK플래닛, 2014-02-04 */
+      DELETE  /* FeedbackMapper.xml, deleteProdNotiGood, SAC 기타, 2014-02-04 */
         FROM  tb_dp_prod_notigood     /* 상품 후기 선호 */
        WHERE  tenant_id = #{tenantId} /* 테넌트 ID */
          AND  noti_seq = #{notiSeq}   /* 후기 SEQ */
@@ -168,7 +168,7 @@
 	
 	<!-- 기 평가 평점 조회 -->
 	<select id="getRegMbrAvg" parameterType="MbrAvg" resultType="MbrAvg">
-      SELECT  /* FeedbackMapper.getRegMbrAvg, 기 평가 평점 조회, 김현일/SK플래닛 , 2014-02-04 */
+      SELECT  /* FeedbackMapper.xml, getRegMbrAvg, SAC 기타, 2014-02-04 */
               avg_score               /* 평균 점수 */
         FROM  tb_dp_mbr_avg           /* 상품 평점 */
        WHERE  tenant_id = #{tenantId} /* 테넌트 ID */
@@ -178,7 +178,7 @@
 	
 	<!-- 회원별 평가 저장 -->
 	<insert id="mergeMbrAvg" parameterType="MbrAvg" useGeneratedKeys="false">
-      MERGE  /* FeedbackMapper.mergeMbrAvg, 회원별 평가 저장, 김현일/SK플래닛 , 2014-02-04 */ 
+      MERGE  /* FeedbackMapper.xml, mergeMbrAvg, SAC 기타, 2014-02-04 */ 
        INTO  tb_dp_mbr_avg                 /* 상품 평점 */
       USING  DUAL
          ON  ( 
@@ -215,7 +215,7 @@
 
     <!-- 회원평가정보 삭제 -->
     <delete id="deleteMbrAvg" parameterType="MbrAvg">
-      DELETE  /* FeedbackMapper.deleteMbrAvg, 회원평가정보 삭제, 김현일/SK플래닛, 2014-02-04 */ 
+      DELETE  /* FeedbackMapper.xml, deleteMbrAvg, SAC 기타, 2014-02-04 */ 
         FROM  tb_dp_mbr_avg           /* 상품 평점 */
        WHERE  tenant_id = #{tenantId} /* 테넌트 ID */
          AND  prod_id = #{prodId}     /* 상품 ID */
@@ -225,7 +225,7 @@
 	
 	<!-- 평점저장(기평가평점 수정) -->
 	<update id="updateTenantProdStats" parameterType="TenantProdStats">
-      UPDATE  /* FeedbackMapper.updateTenantProdStats, 평점저장(기평가평점 수정), 김현일/SK플래닛, 2014-02-04 */
+      UPDATE  /* FeedbackMapper.xml, updateTenantProdStats, SAC 기타, 2014-02-04 */
               tb_dp_tenant_prod_stats  /* 테넌트 상품 통계 */
          SET  tot_evlu_score = NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore}  /* 총 평가 점수 */
             , upd_id = #{updId}  /* 수정 ID */
@@ -243,7 +243,7 @@
 	
 	<!-- 평점저장 -->
 	<insert id="mergeTenantProdStats" parameterType="TenantProdStats" useGeneratedKeys="false">
-      MERGE  /* FeedbackMapper.mergeTenantProdStats, 평점저장, 김현일/SK플래닛, 2014-02-04 */
+      MERGE  /* FeedbackMapper.xml, mergeTenantProdStats, SAC 기타, 2014-02-04 */
        INTO  tb_dp_tenant_prod_stats       /* 테넌트 상품 통계 */
       USING  DUAL
          ON  ( 
@@ -283,7 +283,7 @@
 	
 	<!-- 평점 조회 -->
     <select id="getTenantProdStats" parameterType="TenantProdStats" resultType="TenantProdStats">
-      SELECT  /* FeedbackMapper.xml.getTenantProdStats, 평점조회, 김현일/SK플래닛, 2014-02-04 */
+      SELECT  /* FeedbackMapper.xml, getTenantProdStats, SAC 기타, 2014-02-04 */
               avg_evlu_score           /* 평균 평가 점수 */
             , paticpers_cnt            /* 참여자 수 */
         FROM  tb_dp_tenant_prod_stats  /* 테넌트 상품 통계 */
@@ -293,7 +293,7 @@
     
     <!-- 평점 삭제 -->
     <update id="deleteTenantProdStats" parameterType="TenantProdStats">
-      UPDATE  /* FeedbackMapper.deleteTenantProdStats, 평점삭제, 김현일/SK플래닛, 2014-02-04 */
+      UPDATE  /* FeedbackMapper.xml, deleteTenantProdStats, SAC 기타, 2014-02-04 */
               tb_dp_tenant_prod_stats  /* 평균 평가 점수 */
          SET  tot_evlu_score = 0       /* 총 평가 점수 */
             , upd_id = #{updId}        /* 수정 ID */
@@ -304,36 +304,9 @@
          AND  prod_id = #{prodId}      /* 상품 ID */
     </update>
 	
-	 <!-- (탈퇴회원 사용후기) 기 등록 여부 -->
-	<select id="getProdNotiWDCount" parameterType="ProdNoti" resultType="int">
-      SELECT  /* FeedbackMapper.getProdNotiWDCount, 탈퇴회원 사용후기 기등록 여부, 김현일/SK플래닛, 2014-02-04 */
-              COUNT(*)
-        FROM  tb_dp_prod_noti_wd
-       WHERE  tenant_id = #{tenantId}
-         AND  noti_seq = #{notiSeq}
-    </select>
-	
-    <!-- (탈퇴회원 사용후기) 기 추천 여부 -->
-    <select id="getProdNotiWDGoodCount" parameterType="ProdNoti" resultType="int">
-      SELECT  /* FeedbackMapper.getProdNotiWDGoodCount, 탈퇴회원 사용후기 기추천 여부, 김현일/SK플래닛, 2014-02-04 */
-              COUNT(*)
-        FROM  tb_dp_prod_noti_wd a
-            , tb_dp_prod_notigood b
-       WHERE  a.tenant_id = b.tenant_id
-         AND  a.noti_seq = b.noti_seq
-         AND  a.noti_type_cd = 'DP000401'
-         AND  a.del_yn = 'N'
-         AND  a.bad_noti_yn IN ( 'N', 'R' )
-         AND  a.spam_yn = 'N'
-         AND  a.prod_id = #{prodId}
-         AND  b.noti_seq = #{notiSeq}
-         AND  b.mbr_no = #{mbrNo}
-         AND  b.tenant_id = #{tenantId}
-    </select>	
-	
 	<!-- 사용후기 추천 등록 -->
 	<insert id="insertProdNotiGood" parameterType="ProdNotiGood">
-      INSERT  /* FeedbackMapper.insertProdNotiGood, 사용후기 추천 등록, 김현일/SK플래닛, 2014-02-04 */
+      INSERT  /* FeedbackMapper.xml, insertProdNotiGood, SAC 기타, 2014-02-04 */
         INTO  tb_dp_prod_notigood  /* 상품 후기 선호 */
       ( 
         tenant_id                  /* 테넌트 ID */
@@ -350,25 +323,10 @@
       , SYSDATE                    /* 등록 일시 */
       )
 	</insert>
-	
-	<!-- (탈퇴 회원 후기) 추천 수 증감처리 -->
-    <update id="updateProdNotiWDGood" parameterType="ProdNotiGood">
-      UPDATE  /* FeedbackMapper.updateProdNotiWDGood, 탈퇴회원후기 추천수 증감처리, 김현일/SK플래닛, 2014-02-04 */
-              tb_dp_prod_noti_wd
-         <if test="action == 'create'">
-         SET  noti_score = NVL(noti_score, 0) + 1
-         </if>
-         <if test="action == 'remove'">
-         SET  noti_score = NVL(noti_score, 0) - 1
-         </if>
-            , upd_dt = SYSDATE
-       WHERE  tenant_id = #{tenantId} 
-         AND  noti_seq = #{notiSeq}  
-    </update>
-    
+
     <!-- (일반회원 사용후기) 기 추천 여부 -->
     <select id="getProdNotiGoodCount" parameterType="ProdNoti" resultType="int">
-      SELECT  /* FeedbackMapper.getProdNotiGoodCount, 일반회원 사용후기 기추천 여부, 김현일/SK플래닛, 2014-02-04 */
+      SELECT  /* FeedbackMapper.xml, getProdNotiGoodCount, SAC 기타, 2014-02-04 */
               COUNT(*)
         FROM  tb_dp_prod_noti a              /* 상품 후기 */
             , tb_dp_prod_notigood b          /* 상품 후기 선호 */
@@ -386,7 +344,7 @@
     
     <!-- (일반회원 후기) 추천 수 증감처리 -->
     <update id="updateProdNotiGood" parameterType="ProdNotiGood">
-      UPDATE  /* FeedbackMapper.updateProdNotiGood, 일반회원 후기 추천수 증감처리, 김현일/SK플래닛, 2014-02-04 */
+      UPDATE  /* FeedbackMapper.xml, updateProdNotiGood, SAC 기타, 2014-02-04 */
               tb_dp_prod_noti                      /* 상품 후기 */
          <if test="action == 'create'">
          SET  noti_score = NVL(noti_score, 0) + 1  /* 후기 점수(추천) */
@@ -401,7 +359,7 @@
     
     <!-- 사용후기 전체 갯수 조회 -->
     <select id="getProdNotiCount" parameterType="ProdNoti" resultType="int">
-      SELECT  /* FeedbackMapper.getProdNotiCount, 사용후기 전체 갯수 조회, 김현일/SK플래닛, 2014-02-04 */
+      SELECT  /* FeedbackMapper.xml, getProdNotiCount, SAC 기타, 2014-02-04 */
               COUNT(*) AS total_count      /* 상품 후기 갯수 */
         FROM  tb_dp_prod_noti              /* 상품 후기 */
        WHERE  tenant_id = #{tenantId}      /* 테넌트 ID */
@@ -427,7 +385,7 @@
     
     <!-- 사용후기 전체 목록 조회 -->
      <select id="getProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
-      SELECT  /* FeedbackMapper.getProdNotiList, 사용후기 전체 목록 조회, 김현일/SK플래닛, 2014-02-04 */
+      SELECT  /* FeedbackMapper.xml, getProdNotiList, SAC 기타, 2014-02-04 */
               a.noti_seq       /* 후기 SEQ */
             , a.mbr_no         /* 회원 번호 */
             , a.seller_mbr_no  /* 판매자 회원 번호 */
@@ -553,7 +511,7 @@
     
     <!-- 자기가작성한 사용후기.  -->
     <select id="getMyProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
-      SELECT  /* FeedbackMapper.getProdNotiList, 자기가작성한 사용후기, 김현일/SK플래닛, 2014-02-04 */
+      SELECT  /* FeedbackMapper.xml, getProdNotiList, SAC 기타, 2014-02-04 */
               a.noti_seq       /* 후기 SEQ */
             , a.mbr_no         /* 회원 번호 */
             , a.seller_mbr_no  /* 판매자 회원 번호 */
@@ -727,7 +685,7 @@
     
     <!-- 자기가 작성한 사용후기 갯수 -->
     <select id="getMyProdNotiCount" parameterType="ProdNoti" resultType="int">
-      SELECT  /* FeedbackMapper.getMyProdNotiCount, 자기가 작성한 사용후기 갯수, 김현일/SK플래닛, 2014-02-04 */
+      SELECT  /* FeedbackMapper.xml, getMyProdNotiCount, SAC 기타, 2014-02-04 */
               COUNT(*) AS total_count    /* 후기 갯수 */ 
         FROM (
               SELECT  prod_id AS prod_id
@@ -794,7 +752,7 @@
 
     <!-- 판매자 댓글 -->
     <update id="updateSellerResp" parameterType="ProdNoti">
-      UPDATE  /* FeedbackMapper.updateSellerResp, 판매자 댓글, 남궁석호/SK플래닛, 2014-02-10 */
+      UPDATE  /* FeedbackMapper.xml, updateSellerResp, SAC 기타, 2014-02-10 */
               tb_dp_prod_noti                         /* 상품 후기 */
          SET  seller_resp_opin = #{sellerRespOpin}    /* 판매자 응답 의견 */
             , seller_resp_title = #{sellerRespTitle}  /* 판매자 응답 제목 */
@@ -803,20 +761,9 @@
          AND  noti_seq = #{notiSeq}                   /* 후기 SEQ */
     </update>
 
-    <!-- 탈퇴 회원 사용후기 판매자 댓글 -->
-    <update id="updateSellerRespWD" parameterType="ProdNoti">
-      UPDATE  /* FeedbackMapper.updateSellerRespWD, 탈퇴회원 사용후기 판매자 댓글, 남궁석호/SK플래닛, 2014-02-10 */
-              tb_dp_prod_noti_wd
-         SET  seller_resp_opin = #{sellerRespOpin}
-            , seller_resp_title = #{sellerRespTitle}
-            , seller_resp_reg_dt = SYSDATE
-       WHERE  tenant_id = #{tenantId}
-         AND  noti_seq = #{notiSeq}
-    </update>
-
     <!-- 평점, 다운로드 조회 -->
     <select id="getProdEvalInfo" parameterType="TenantProdStats" resultType="TenantProdStats">
-      SELECT  /* FeedbackMapper.getProdEvalInfo, 평점 다운로드 조회, 남궁석호/SK플래닛 , 2014-02-13 */
+      SELECT  /* FeedbackMapper.xml, getProdEvalInfo, SAC 기타, 2014-02-13 */
              (
               SELECT  RTRIM ( XMLAGG ( XMLELEMENT (A, CONCAT (avg_score_pct, ',')).EXTRACT ('//text()')), ',')
                 FROM ( 
@@ -875,7 +822,7 @@
     
     <!-- 참여수 조회 -->
     <select id="getScoreList" parameterType="MbrAvgScore" resultType="MbrAvgScore">
-      SELECT  /* FeedbackMapper.getScoreList, 참여수 조회, 남궁석호/SK플래닛, 2014-02-13 */
+      SELECT  /* FeedbackMapper.xml, getScoreList, SAC 기타, 2014-02-13 */
               avg_score  /* 평균 평점 */
             , NVL (avg_count, 0) AS paticpers_cnt  /* 참여자 수 */
             , NVL (ROUND ( (avg_count / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) * 100, 1), 0) AS avg_score_pct  /* 평균 평점 퍼센트 */
@@ -916,4 +863,110 @@
        ORDER 
           BY  avg_score DESC
     </select>
+    
+    <!-- 채널/에피소드 관계 -->
+    <select id="getChannelEpisodeRelation" parameterType="string" resultType="map">
+      SELECT   /* FeedbackMapper.xml, getChannelEpisodeRelation, SAC 기타, 2014-03-13 */
+              a.prod_id
+            , a.part_prod_id
+            , b.top_menu_id
+        FROM  tb_dp_prod_rshp a
+            , tb_dp_prod b
+       WHERE  a.part_prod_id = b.prod_id    
+         AND  a.part_prod_id = #{partProdId}
+         AND  a.prod_rshp_cd = 'DP010802'
+    </select>
+    
+    <!-- 채널/에피소드 관계시 채널상품 존재 여부 확인 -->
+    <select id="getChannelTenantProdStatsCount" parameterType="string" resultType="int">
+      SELECT  /* FeedbackMapper.xml, getChannelTenantProdStatsCount, SAC 기타, 2014-03-13 */
+              count(*)
+        FROM  tb_dp_tenant_prod_stats a
+            , tb_dp_menu_category_prod_mapg b
+            , tb_dp_prod_rshp c
+       WHERE  a.prod_id = b.prod_id 
+         AND  b.prod_id = c.prod_id
+         AND  c.part_prod_id = #{partProdId}           
+         AND  c.prod_rshp_cd = 'DP010802'    
+    </select>
+    
+    <!-- 채널/에피소드 관계시 상품통계 채널상품 존재시 전체 에피소드 통계 UPDATE -->
+    <update id="updateChannelTenantProdStats" parameterType="TenantProdStats">
+      UPDATE  /* FeedbackMapper.xml, updateChannelTenantProdStats, SAC 기타, 2014-03-13 */
+              tb_dp_tenant_prod_stats a 
+         SET (  avg_evlu_score
+              , tot_evlu_score
+              , paticpers_cnt
+              , upd_id
+              , upd_dt
+             ) 
+           = (
+              SELECT  
+                      NVL(SUM(d.tot_evlu_score)/SUM(d.paticpers_cnt), '0.0') AS avg_evlu_score
+                    , NVL(SUM(d.tot_evlu_score), '0.0') AS tot_evlu_score
+                    , NVL(SUM(d.paticpers_cnt), '0.0') AS paticpers_cnt
+                    , #{updId} AS upd_id
+                    , SYSDATE AS upd_dt
+                FROM  tb_dp_prod_rshp a
+                    , tb_dp_prod b
+                    , tb_dp_tenant_prod c
+                    , tb_dp_tenant_prod_stats d
+                    , tb_dp_menu_category_prod_mapg e
+               WHERE  a.part_prod_id = b.prod_id
+                 AND  a.prod_id != a.part_prod_id
+                 AND  b.prod_id = c.prod_id
+                 AND  b.prod_id = d.prod_id(+)
+                 AND  b.prod_id = e.prod_id
+                 AND  c.tenant_id = d.tenant_id
+                 AND  a.prod_id = #{prodId}
+                 AND  a.prod_rshp_cd = 'DP010802'
+                 AND  c.prod_status_cd = 'PD000403'
+                 AND  c.tenant_id = 'S01'
+                 AND  e.use_yn = 'Y'
+               GROUP 
+                  BY  a.prod_id
+             )
+      WHERE  a.prod_id = #{prodId}
+        AND  a.tenant_id = #{tenantId}    
+    </update>
+    
+    <!-- 채널/에피소드 관계시 상품통계 채널상품 미존재시 전체 에피소드 통계 INSERT -->
+    <update id="insertChannelTenantProdStats" parameterType="TenantProdStats">
+      INSERT  /* FeedbackMapper.xml, insertChannelTenantProdStats, SAC 기타, 2014-03-13 */
+        INTO  tb_dp_tenant_prod_stats 
+      ( tenant_id
+      , prod_id 
+      , avg_evlu_score
+      , tot_evlu_score
+      , paticpers_cnt
+      , reg_id
+      , reg_dt
+      )
+      SELECT 
+              c.tenant_id
+            , a.prod_id
+            , NVL(SUM(d.tot_evlu_score)/SUM(d.paticpers_cnt), '0.0') AS avg_evlu_score
+            , NVL(SUM(d.tot_evlu_score), '0.0') AS tot_evlu_score
+            , NVL(SUM(d.paticpers_cnt), '0.0') AS paticpers_cnt
+            , #{regId} AS reg_id
+            , SYSDATE AS reg_dt
+        FROM  tb_dp_prod_rshp a
+            , tb_dp_prod b
+            , tb_dp_tenant_prod c
+            , tb_dp_tenant_prod_stats d
+            , tb_dp_menu_category_prod_mapg e
+       WHERE  a.part_prod_id = b.prod_id
+         AND  a.prod_id != a.part_prod_id
+         AND  b.prod_id = c.prod_id
+         AND  b.prod_id = d.prod_id(+)
+         AND  b.prod_id = e.prod_id
+         AND  c.tenant_id = d.tenant_id
+         AND  a.prod_id = #{prodId}
+         AND  a.prod_rshp_cd = 'DP010802'
+         AND  c.prod_status_cd = 'PD000403'
+         AND  c.tenant_id = 'S01'
+         AND  e.use_yn = 'Y'
+       GROUP 
+          BY  c.tenant_id, a.prod_id
+    </update>
 </mapper>
