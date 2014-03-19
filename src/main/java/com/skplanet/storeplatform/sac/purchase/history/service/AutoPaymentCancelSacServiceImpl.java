@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreNotiSCI;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcRes;
 import com.skplanet.storeplatform.purchase.client.history.sci.AutoPaymentCancelSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * 기구매 SAC Service 인터페이스 구현체
@@ -59,14 +61,21 @@ public class AutoPaymentCancelSacServiceImpl implements AutoPaymentCancelSacServ
 			tStoreNotiEcReq.setPrchsId(autoPaymentCancelReq.getPrchsId());
 			tStoreNotiEcReq.setPrchsDt(autoPaymentCancelRes.getPrchsDt());
 			// type code = 01:일반결제, 02:자동결제, 03:자동결제해지예약, 04:자동결제 해지완료
-			tStoreNotiEcReq.setType("03");
+			tStoreNotiEcReq.setType(PurchaseConstants.TSTORE_NOTI_TYPE_AUTOPAY_RESERVED);
 			// 2014-03-18 쇼핑의 동기와 비동기 수용을 위해 추가됨
 			// publishType code = (01:동기, 02:비동기, 03:비동기완료)
 			// - 동기 : 쇼핑 상품의 비동기 방식을 제외한 전 상품 구매시 사용, E-Mail/MMS/SMS 발송
 			// - 비동기 : 쇼핑 상품의 비동기 방식을 경우, E-Mail만 발송
 			// - 비동기완료 : 비동기로 응답이 되었을 경우, MMS만 발송
-			tStoreNotiEcReq.setPublishType("01");
-			this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
+			tStoreNotiEcReq.setPublishType(PurchaseConstants.TSTORE_NOTI_PUBLISH_TYPE_SYNC);
+			try {
+				TStoreNotiEcRes tStoreNotiEcRes = this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
+				this.logger.debug("TStoreNotiEcRes Code    : {}", tStoreNotiEcRes.getCode());
+				this.logger.debug("TStoreNotiEcRes Message : {}", tStoreNotiEcRes.getMessage());
+
+			} catch (Exception ex) {
+				this.logger.debug("AutoPaymentCancel {}", ex);
+			}
 		}
 		return autoPaymentCancelRes;
 	}
