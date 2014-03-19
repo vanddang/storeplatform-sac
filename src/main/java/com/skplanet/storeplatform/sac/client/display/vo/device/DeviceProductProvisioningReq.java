@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.device;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -16,6 +18,7 @@ public class DeviceProductProvisioningReq extends CommonInfo {
 	 * 상품 유형.
 	 */
 	@NotBlank
+	@Pattern(regexp = "^normal|^shopping")
 	private String productType;
 	/**
 	 * 상품 Id list.(episode ID만 가능)
