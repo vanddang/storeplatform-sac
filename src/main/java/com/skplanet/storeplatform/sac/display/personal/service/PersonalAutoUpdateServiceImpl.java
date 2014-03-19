@@ -273,9 +273,11 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 
 				Integer restCnt = req.getUpdLimitCnt();
 				// 업데이트 제한 기능이 필요할 경우
-				if (restCnt > 0) {
-					if (listUpdate.size() > restCnt) {
-						listUpdate = listUpdate.subList(0, restCnt);
+				if (restCnt != null) {
+					if (restCnt > 0) {
+						if (listUpdate.size() > restCnt) {
+							listUpdate = listUpdate.subList(0, restCnt);
+						}
 					}
 				}
 
