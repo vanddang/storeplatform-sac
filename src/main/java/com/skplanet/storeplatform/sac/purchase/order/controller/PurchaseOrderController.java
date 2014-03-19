@@ -23,10 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseSc;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateBizPurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateFreePurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateFreePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacRes;
@@ -187,57 +185,57 @@ public class PurchaseOrderController {
 		return res;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * Biz 쿠폰 발행 요청 : 대량의 선물 이력 생성 & biz쿠폰 발급 요청.
-	 * </pre>
-	 * 
-	 * @param req
-	 *            구매요청 정보
-	 * @return 구매요청 처리 결과
-	 */
-	@RequestMapping(value = "/createBiz/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateBizPurchaseSacRes createBizPurchase(
-			@RequestBody @Validated(GroupCreateBizPurchase.class) CreatePurchaseSacReq req,
-			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}", sacRequestHeader, req);
-
-		// ------------------------------------------------------------------------------
-		// TAKTODOD:: Biz 구매요청 권한 체크
-
-		// TAKTODOD:: this.validationService.validateFreeChargeAuth(req.getPrchsReqPathCd());
-
-		// ------------------------------------------------------------------------------
-		// TAKTODOD:: 구매진행 정보 세팅
-
-		// req.setTotAmt(0.0);
-		// PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
-		// purchaseOrderInfo.setFreeChargeReq(true); // 비과금 요청
-
-		// ------------------------------------------------------------------------------
-		// TAKTODOD:: 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
-
-		// this.preCheckBeforeProcessOrder(purchaseOrderInfo);
-
-		// ------------------------------------------------------------------------------
-		// TAKTODOD:: 비과금 구매완료 처리
-
-		// this.orderService.createFreePurchase(purchaseOrderInfo);
-		// purchaseOrderInfo.setResultType("free");
-
-		// ------------------------------------------------------------------------------
-		// 응답 세팅
-
-		CreateBizPurchaseSacRes res = new CreateBizPurchaseSacRes();
-		// res.setPrchsId(purchaseOrderInfo.getPrchsId());
-		res.setPrchsId("0");
-		res.setCount(0);
-
-		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,RES,{}", res);
-		return res;
-	}
+	// /**
+	// *
+	// * <pre>
+	// * Biz 쿠폰 발행 요청 : 대량의 선물 이력 생성 & biz쿠폰 발급 요청.
+	// * </pre>
+	// *
+	// * @param req
+	// * 구매요청 정보
+	// * @return 구매요청 처리 결과
+	// */
+	// @RequestMapping(value = "/createBiz/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public CreateBizPurchaseSacRes createBizPurchase(
+	// @RequestBody @Validated(GroupCreateBizPurchase.class) CreatePurchaseSacReq req,
+	// SacRequestHeader sacRequestHeader) {
+	// this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}", sacRequestHeader, req);
+	//
+	// // ------------------------------------------------------------------------------
+	// // TAKTODOD:: Biz 구매요청 권한 체크
+	//
+	// // TAKTODOD:: this.validationService.validateFreeChargeAuth(req.getPrchsReqPathCd());
+	//
+	// // ------------------------------------------------------------------------------
+	// // TAKTODOD:: 구매진행 정보 세팅
+	//
+	// // req.setTotAmt(0.0);
+	// // PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
+	// // purchaseOrderInfo.setFreeChargeReq(true); // 비과금 요청
+	//
+	// // ------------------------------------------------------------------------------
+	// // TAKTODOD:: 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
+	//
+	// // this.preCheckBeforeProcessOrder(purchaseOrderInfo);
+	//
+	// // ------------------------------------------------------------------------------
+	// // TAKTODOD:: 비과금 구매완료 처리
+	//
+	// // this.orderService.createFreePurchase(purchaseOrderInfo);
+	// // purchaseOrderInfo.setResultType("free");
+	//
+	// // ------------------------------------------------------------------------------
+	// // 응답 세팅
+	//
+	// CreateBizPurchaseSacRes res = new CreateBizPurchaseSacRes();
+	// // res.setPrchsId(purchaseOrderInfo.getPrchsId());
+	// res.setPrchsId("0");
+	// res.setCount(0);
+	//
+	// this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,RES,{}", res);
+	// return res;
+	// }
 
 	/**
 	 * 
