@@ -143,7 +143,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 					historyReq.setUserKey(userKey);
 					historyReq.setDeviceKey(deviceKey);
 					historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-					historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+					// historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
 					historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 					historyReq.setEndDt(sysDate);
 					historyReq.setOffset(1);
@@ -169,7 +169,6 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 
 		Identifier identifier = new Identifier();
 		Product product = null;
-		Purchase purchase = null;
 
 		paramMap.clear();
 		paramMap.put("req", supportGameCenterSacReq);
@@ -230,12 +229,12 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
 							puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 
-							this.log.debug("############# prchsId : " + prchsId + " ### prchsProdId : " + prchsProdId
-									+ " #### prchsCaseCd : " + prchsCaseCd + " #### dwldExprDt : " + dwldExprDt);
+							this.log.debug("#################### prchsId : prchsProdId : prodId : dwldExprDt => ###### "
+									+ prchsId + " : " + prchsProdId + " : " + metaInfo.getProdId() + " : " + dwldExprDt);
 
-							purchase = new Purchase();
 							// 조회한 상품이 구매한 상품인 경우
 							if (prchsProdId.equals(metaInfo.getProdId())) {
+								this.log.debug("######## Payment PROD_ID : " + metaInfo.getProdId());
 								// 구매 및 선물 여부 확인
 								if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
 									prchsState = "payment";
@@ -243,27 +242,32 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 									prchsState = "gift";
 								}
 
+								Purchase purchase = new Purchase();
 								// 다운로드 만료일자가 오늘보다 큰날짜의 상품ID만 가져온다.
 								if (Long.parseLong(sysDate) <= Long.parseLong(dwldExprDt)) {
 									purchase.setState(prchsState);
 									product.setPurchase(purchase);
+									break;
 								} else {
 									purchase.setState("none");
 									product.setPurchase(purchase);
+									break;
 								}
 							} else {
+								Purchase purchase = new Purchase();
 								purchase.setState("none");
 								product.setPurchase(purchase);
 							}
 						}
 					} else {
-						purchase = new Purchase();
+						// 구매내역이 존재하지 않는 경우
+						Purchase purchase = new Purchase();
 						purchase.setState("none");
 						product.setPurchase(purchase);
 					}
 				} else {
-					// 구매내역이 존재하지 않는 경우
-					purchase = new Purchase();
+					// 구매내역이 존재하지 않는 경우 (구매 조회시 에러 또는 구매 내역이 없는 경우)
+					Purchase purchase = new Purchase();
 					purchase.setState("none");
 					product.setPurchase(purchase);
 				}
