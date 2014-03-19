@@ -9,10 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 
 /**
  * 
@@ -23,9 +20,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSac
 public class PurchaseUserKeyInfo extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	@NotBlank(groups = { GroupCreateBizPurchase.class })
 	private String userKey;
-	@NotBlank(groups = { GroupCreateBizPurchase.class })
 	private String deviceKey;
 
 	/**
