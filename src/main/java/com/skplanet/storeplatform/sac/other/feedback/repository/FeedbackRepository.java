@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.other.feedback.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
@@ -200,102 +201,6 @@ public interface FeedbackRepository {
 	/**
 	 * 
 	 * <pre>
-	 * 사용후기 사용자 ID 변경.
-	 * </pre>
-	 * 
-	 * @param prodNoti
-	 *            prodNoti
-	 * @return Object
-	 */
-	public Object changeProdNotiUserId(ProdNoti prodNoti);
-
-	/**
-	 * 
-	 * <pre>
-	 * 사용후기 추천 사용자 ID 변경.
-	 * </pre>
-	 * 
-	 * @param prodNotiGood
-	 *            prodNotiGood
-	 * @return Object
-	 */
-	public Object changeProdNotiGoodUserId(ProdNotiGood prodNotiGood);
-
-	/**
-	 * 
-	 * <pre>
-	 * 평점 사용자 ID 변경.
-	 * </pre>
-	 * 
-	 * @param mbrAvg
-	 *            mbrAvg
-	 * @return Object
-	 */
-	public Object changeMbrAvgUserId(MbrAvg mbrAvg);
-
-	/**
-	 * 
-	 * <pre>
-	 * 사용후기 사용자 Key 변경.
-	 * </pre>
-	 * 
-	 * @param prodNoti
-	 *            prodNoti
-	 * @return Object
-	 */
-	public Object changeProdNotiUserKey(ProdNoti prodNoti);
-
-	/**
-	 * 
-	 * <pre>
-	 * 사용후기 추천 사용자 Key 변경.
-	 * </pre>
-	 * 
-	 * @param prodNotiGood
-	 *            prodNotiGood
-	 * @return Object
-	 */
-	public Object changeProdNotiGoodUserKey(ProdNotiGood prodNotiGood);
-
-	/**
-	 * 
-	 * <pre>
-	 * 평점 사용자 Key 변경.
-	 * </pre>
-	 * 
-	 * @param mbrAvg
-	 *            mbrAvg
-	 * @return Object
-	 */
-	public Object changeMbrAvgUserKey(MbrAvg mbrAvg);
-
-	/**
-	 * 
-	 * <pre>
-	 * (탈퇴회원 사용후기) 등록 여부.
-	 * </pre>
-	 * 
-	 * @param prodNoti
-	 *            prodNoti
-	 * @return Object
-	 */
-	public Object getProdNotiWDCount(ProdNoti prodNoti);
-
-	/**
-	 * 
-	 * <pre>
-	 * (탈퇴회원 사용후기)기 추천 여부.
-	 * </pre>
-	 * 
-	 * @param prodNoti
-	 *            prodNoti
-	 * @return Object
-	 */
-	public Object getProdNotiWDGoodCount(ProdNoti prodNoti);
-
-	/**
-	 * 
-	 * <pre>
 	 * 사용후기 추천 등록.
 	 * </pre>
 	 * 
@@ -304,18 +209,6 @@ public interface FeedbackRepository {
 	 * @return Object
 	 */
 	public Object insertProdNotiGood(ProdNotiGood prodNotiGood);
-
-	/**
-	 * 
-	 * <pre>
-	 * 탈퇴 회원 후기 추천 수 증감처리.
-	 * </pre>
-	 * 
-	 * @param prodNotiGood
-	 *            prodNotiGood
-	 * @return Object
-	 */
-	public Object updateProdNotiWDGood(ProdNotiGood prodNotiGood);
 
 	/**
 	 * 
@@ -437,5 +330,53 @@ public interface FeedbackRepository {
 	 * @return List<MbrAvgScore>
 	 */
 	public List<MbrAvgScore> getScoreList(MbrAvgScore mbrAvgScore);
+
+	/**
+	 * 
+	 * <pre>
+	 * 채널/에피소드 관계 조회.
+	 * </pre>
+	 * 
+	 * @param partProdId
+	 *            partProdId
+	 * @return Map<String, String>
+	 */
+	public Map<String, String> getChannelEpisodeRelation(String partProdId);
+
+	/**
+	 * 
+	 * <pre>
+	 * 채널/에피소드 관계시 채널상품 존재 여부 확인.
+	 * </pre>
+	 * 
+	 * @param partProdId
+	 *            partProdId
+	 * @return Object
+	 */
+	public Object getChannelTenantProdStatsCount(String partProdId);
+
+	/**
+	 * 
+	 * <pre>
+	 * 채널/에피소드 관계시 상품통계 채널상품 존재시 전체 에피소드 통계 UPDATE.
+	 * </pre>
+	 * 
+	 * @param tenantProdStats
+	 *            tenantProdStats
+	 * @return Object
+	 */
+	public Object updateChannelTenantProdStats(TenantProdStats tenantProdStats);
+
+	/**
+	 * 
+	 * <pre>
+	 * 채널/에피소드 관계시 상품통계 채널상품 미존재시 전체 에피소드 통계 INSERT.
+	 * </pre>
+	 * 
+	 * @param tenantProdStats
+	 *            tenantProdStats
+	 * @return Object
+	 */
+	public Object insertChannelTenantProdStats(TenantProdStats tenantProdStats);
 
 }

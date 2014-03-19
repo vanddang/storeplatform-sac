@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -230,6 +231,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 					updateTenantProdStats.setAction("remove");
 					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
 				}
+				// 웹툰일경우 채널ID에 에피소드들의 상품통계 평점을 계산한다.
+				this.setWebtoonChannelMbrAvgTenantStats(removeFeedbackSacReq.getProdId(), sacRequestHeader
+						.getTenantHeader().getTenantId(), removeFeedbackSacReq.getUserId());
 			}
 		}
 
@@ -781,7 +785,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 		String userKey = (String) beanWrapperImpl.getPropertyValue("userKey");
 		String prodId = (String) beanWrapperImpl.getPropertyValue("prodId");
 		String userId = (String) beanWrapperImpl.getPropertyValue("userId");
-		if (StringUtils.isNotEmpty(score) && StringUtils.isEmpty(chnlId)) {
+
+		if (StringUtils.isNotBlank(score) && StringUtils.isBlank(chnlId)) {
 			String avgScore = score;
 			if (NumberUtils.toInt(score, 0) > 5) {
 				avgScore = "5";
@@ -812,6 +817,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 				updateTenantProdStats.setAvgEvluScore(avgScore);
 				this.feedbackRepository.mergeTenantProdStats(updateTenantProdStats);
 			}
+			// 웹툰일경우 채널ID에 에피소드들의 상품통계 평점을 계산한다.
+			this.setWebtoonChannelMbrAvgTenantStats(prodId, sacRequestHeader.getTenantHeader().getTenantId(), userId);
 		}
 	}
 
@@ -841,43 +848,32 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setNotiDscr(prodNoti.getNotiDscr());
 		feedback.setNotiScore(String.valueOf(prodNoti.getNotiScore()));
 
-		String regId = "";
+		// 기본 등록ID.
+		String regId = this.getMaskRegId(prodNoti.getRegId());
+		// 사용자 조회후.
 		if (searchUserSacRes != null) {
 			if (!CollectionUtils.isEmpty(searchUserSacRes.getUserInfo())) {
 				UserInfoSac userInfoSac = searchUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
 				if (userInfoSac != null) {
+					// 사용자가 기기사용자이면.
 					if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)
 							&& StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
-						String telNo = "";
+
+						// 사용후기 이면
 						if (prodNoti.getNotiSeq() != null) {
-							telNo = prodNoti.getMbrTelno();
+							// 사용후기 테이블의 정보 셋팅 후 마스킹 처리.
+							regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
 						} else {
+							// 평점 이면.
 							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) {
-								telNo = userInfoSac.getDeviceIdList().get(0);
-							} else {
-								telNo = userInfoSac.getUserId();
+								// 회원정보 셋팅 후 마스킹 처리.
+								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0),
+										userInfoSac.getUserId());
 							}
 						}
-						StringBuffer stringBuffer = new StringBuffer();
-						stringBuffer.append(StringUtils.substring(telNo, 0, 3));
-						if (telNo.length() < 11) {
-							stringBuffer.append("***");
-						} else {
-							stringBuffer.append("****");
-						}
-						regId = stringBuffer.append(StringUtils.substring(telNo, telNo.length() - 4, telNo.length()))
-								.toString();
-					} else {
-						regId = userInfoSac.getUserId();
 					}
-				} else {
-					regId = prodNoti.getRegId();
 				}
-			} else {
-				regId = prodNoti.getRegId();
 			}
-		} else {
-			regId = prodNoti.getRegId();
 		}
 		feedback.setRegId(regId);
 		feedback.setRegDt(prodNoti.getRegDt());
@@ -890,6 +886,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setWhose(prodNoti.getWhose());
 		feedback.setSelfRecomYn(prodNoti.getNotiYn());
 		feedback.setAvgScore(prodNoti.getAvgScore());
+		// 판매자 정보
 		String nickNm = "";
 		String compNm = "";
 		String sellerNickName = "";
@@ -897,6 +894,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		String sellerClass = "";
 		String charger = "";
 		if (StringUtils.isNotBlank(prodNoti.getSellerMbrNo())) {
+			// DB분리로 인해 회원 DB 조회대상은 SCI 호출로 대체하여 기존 쿼리상 로직을 Biz 로직으로 대체.
 			if (detailInformationSacRes != null
 					&& !CollectionUtils.isEmpty(detailInformationSacRes.getSellerMbrListMap())) {
 
@@ -904,17 +902,19 @@ public class FeedbackServiceImpl implements FeedbackService {
 						prodNoti.getSellerMbrNo());
 
 				if (!CollectionUtils.isEmpty(sellerMbarSacList)) {
+					// 회원 정보
 					SellerMbrSac sellerMbrSac = sellerMbarSacList.get(0);
+					// 회원 닉네임명
 					sellerNickName = sellerMbrSac.getSellerNickName();
+					// 회원 회사명
 					sellerCompany = sellerMbrSac.getSellerCompany();
+					// 회원 타입
 					sellerClass = sellerMbrSac.getSellerClass();
+					// 회원 담당자명
 					charger = sellerMbrSac.getCharger();
 				}
-
 			}
 		}
-		// 테스트 해보기.
-
 		// , NVL2( N.SELLER_NOTI_DSCR
 		// , NVL2( N.EXPOSURE_DEV_NM
 		// , N.EXPOSURE_DEV_NM
@@ -930,7 +930,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 				if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_PRIVATE_PERSON)) {
 					nickNm = charger;
 					// 상품테이블에 판매자 노출명이 없고 법인사업자이면 회사명을 노출
-				} else if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_LEGAL_BUSINESS)) {
+				} else {
+					// else if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_LEGAL_BUSINESS)) {
 					nickNm = sellerCompany;
 					// 기타 추가 될 사항있음으로 기본으로 회사명을 노출
 				}
@@ -950,10 +951,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 			// 쇼핑 상품이면서 개인 판매자이면,
 			if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_PRIVATE_PERSON)) {
 				compNm = charger;
+				// 법인사업자이면.
 			} else if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_LEGAL_BUSINESS)) {
 				compNm = sellerCompany;
 			} else {
-
+				// TStore 쇼핑인경우.
 				if (StringUtils.equals(prodNoti.getSvcGrpCd(), DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD)) {
 					compNm = sellerNickName;
 				} else {
@@ -966,5 +968,101 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setProdId(prodNoti.getProdId());
 
 		return feedback;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Webtoon 상품의 경우 채널-에피소드의 관계에서 에피소드의 평점이 등록/수정이 되면 채널도 에피소드 전체에 대한 통계를 업데이트 한다.
+	 * </pre>
+	 * 
+	 * @param partProdId
+	 *            partProdId
+	 * @param tenantId
+	 *            tenantId
+	 * @param userId
+	 *            userId
+	 */
+	private void setWebtoonChannelMbrAvgTenantStats(String partProdId, String tenantId, String userId) {
+		// 상품ID에 대해서 해당 상품에 채널/에피소드 관계이면서 웹툰일경우에만
+		// 채널ID에 해당되는 상품통계에 대해서 전체 통계를 진행하는 로직.(모바일POC 요청)
+		Map<String, String> chnlEpisodeMap = this.feedbackRepository.getChannelEpisodeRelation(partProdId);
+		if (!CollectionUtils.isEmpty(chnlEpisodeMap)) {
+			String channelId = chnlEpisodeMap.get("PROD_ID");
+			String topMenuId = chnlEpisodeMap.get("TOP_MENU_ID");
+			if (StringUtils.equals(topMenuId, DisplayConstants.DP_WEBTOON_TOP_MENU_ID)) {
+				// 채널 상품 통계 조회.
+				int count = (Integer) this.feedbackRepository.getChannelTenantProdStatsCount(partProdId);
+				TenantProdStats tenantProdStats = new TenantProdStats();
+				tenantProdStats.setTenantId(tenantId);
+				tenantProdStats.setProdId(channelId);
+				tenantProdStats.setRegId(userId);
+				tenantProdStats.setUpdId(userId);
+				if (count > 0) {
+					// 조회결과 있을 경우 전체 에피소드 통계 Update 처리
+					this.feedbackRepository.updateChannelTenantProdStats(tenantProdStats);
+				} else {
+					// 조회결과 없을 경우 전체 에피소드 통계 Insert 처리
+					this.feedbackRepository.insertChannelTenantProdStats(tenantProdStats);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원 TelNo Masking.
+	 * </pre>
+	 * 
+	 * @param telNo
+	 *            telNo
+	 * @param defaultRegId
+	 *            defaultRegId
+	 * @return String
+	 */
+	private String getMaskTelNoOrDefaultRegId(String telNo, String defaultRegId) {
+		// telNo 방어로직 추가.
+		if (StringUtils.isNotBlank(telNo)) {
+			try {
+				StringBuffer stringBuffer = new StringBuffer();
+				stringBuffer.append(StringUtils.substring(telNo, 0, 3));
+				// mdn 마스킹 처리.
+				if (telNo.length() < 11) {
+					stringBuffer.append("***");
+				} else {
+					stringBuffer.append("****");
+				}
+				return stringBuffer.append(StringUtils.substring(telNo, telNo.length() - 4, telNo.length())).toString();
+			} catch (Exception e) {
+				// 휴대폰 번호가 아닌경우.
+				// 회원 ID 마스킹 처리.
+				return this.getMaskRegId(defaultRegId);
+			}
+		}
+		// 휴대폰 번호가 없는경우.
+		// 회원 ID 마스킹 처리.
+		return this.getMaskRegId(defaultRegId);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원 ID의 Masking.
+	 * </pre>
+	 * 
+	 * @param regId
+	 *            regId
+	 * @return String
+	 */
+	private String getMaskRegId(String regId) {
+		if (StringUtils.isNotBlank(regId)) {
+			if (regId.length() > 3) {
+				return new StringBuffer().append(regId.substring(0, 3)).append("*****").toString();
+			} else {
+				return StringUtils.rightPad(regId, 8, "*");
+			}
+		}
+		return StringUtils.EMPTY;
 	}
 }

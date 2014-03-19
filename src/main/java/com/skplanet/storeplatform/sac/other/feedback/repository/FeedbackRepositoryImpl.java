@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.other.feedback.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -118,53 +119,8 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	}
 
 	@Override
-	public Object changeProdNotiUserId(ProdNoti prodNoti) {
-		return this.commonDAO.update("Feedback.changeProdNotiUserId", prodNoti);
-	}
-
-	@Override
-	public Object changeProdNotiGoodUserId(ProdNotiGood prodNotiGood) {
-		return this.commonDAO.update("Feedback.changeProdNotiGoodUserId", prodNotiGood);
-	}
-
-	@Override
-	public Object changeMbrAvgUserId(MbrAvg mbrAvg) {
-		return this.commonDAO.update("Feedback.changeMbrAvgUserId", mbrAvg);
-	}
-
-	@Override
-	public Object changeProdNotiUserKey(ProdNoti prodNoti) {
-		return this.commonDAO.update("Feedback.changeProdNotiUserKey", prodNoti);
-	}
-
-	@Override
-	public Object changeProdNotiGoodUserKey(ProdNotiGood prodNotiGood) {
-		return this.commonDAO.update("Feedback.changeProdNotiGoodUserKey", prodNotiGood);
-	}
-
-	@Override
-	public Object changeMbrAvgUserKey(MbrAvg mbrAvg) {
-		return this.commonDAO.update("Feedback.changeMbrAvgUserKey", mbrAvg);
-	}
-
-	@Override
-	public Object getProdNotiWDCount(ProdNoti prodNoti) {
-		return this.commonDAO.queryForInt("Feedback.getProdNotiWDCount", prodNoti);
-	}
-
-	@Override
-	public Object getProdNotiWDGoodCount(ProdNoti prodNoti) {
-		return this.commonDAO.queryForInt("Feedback.getProdNotiWDGoodCount", prodNoti);
-	}
-
-	@Override
 	public Object insertProdNotiGood(ProdNotiGood prodNotiGood) {
 		return this.commonDAO.insert("Feedback.insertProdNotiGood", prodNotiGood);
-	}
-
-	@Override
-	public Object updateProdNotiWDGood(ProdNotiGood prodNotiGood) {
-		return this.commonDAO.update("Feedback.updateProdNotiWDGood", prodNotiGood);
 	}
 
 	@Override
@@ -216,4 +172,25 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	public List<MbrAvgScore> getScoreList(MbrAvgScore mbrAvgScore) {
 		return this.commonDAO.queryForList("Feedback.getScoreList", mbrAvgScore, MbrAvgScore.class);
 	}
+
+	@Override
+	public Map<String, String> getChannelEpisodeRelation(String partProdId) {
+		return this.commonDAO.queryForObject("Feedback.getChannelEpisodeRelation", partProdId, Map.class);
+	}
+
+	@Override
+	public Object getChannelTenantProdStatsCount(String partProdId) {
+		return this.commonDAO.queryForInt("Feedback.getChannelTenantProdStatsCount", partProdId);
+	}
+
+	@Override
+	public Object updateChannelTenantProdStats(TenantProdStats tenantProdStats) {
+		return this.commonDAO.update("Feedback.updateChannelTenantProdStats", tenantProdStats);
+	}
+
+	@Override
+	public Object insertChannelTenantProdStats(TenantProdStats tenantProdStats) {
+		return this.commonDAO.update("Feedback.insertChannelTenantProdStats", tenantProdStats);
+	}
+
 }
