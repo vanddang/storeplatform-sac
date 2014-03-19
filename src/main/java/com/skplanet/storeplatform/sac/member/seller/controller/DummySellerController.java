@@ -43,7 +43,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifySubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
@@ -781,13 +780,13 @@ public class DummySellerController {
 	 * @return SearchAuthKeyRes
 	 */
 	// @RequestMapping(value = "/searchAuthKey/v1", method = RequestMethod.GET)
-	public @ResponseBody
-	SearchAuthKeyRes searchAuthKey() {
-		SearchAuthKeyRes res = new SearchAuthKeyRes();
-		res.setExpireDate("20141023");
-		res.setSessionKey("IWd12dawda2a23adwd");
-		return res;
-	}
+	// public @ResponseBody
+	// SearchAuthKeyRes searchAuthKey() {
+	// SearchAuthKeyRes res = new SearchAuthKeyRes();
+	// res.setExpireDate("20141023");
+	// res.setSessionKey("IWd12dawda2a23adwd");
+	// return res;
+	// }
 
 	/**
 	 * <pre>

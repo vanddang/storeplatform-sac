@@ -68,7 +68,17 @@ public interface SellerService {
 	 */
 	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req);
 
-	/** 2.2.4. 판매자 회원 단순 인증. */
+	/**
+	 * <pre>
+	 * 2.2.4. 판매자 회원 단순 인증.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeReq
+	 * @return AuthorizeRes
+	 */
 	public AuthorizeRes authorizeSimple(SacRequestHeader header, AuthorizeSimpleReq req);
 
 	/**
@@ -176,10 +186,30 @@ public interface SellerService {
 	 */
 	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, ModifyRealNameSacReq req);
 
-	/** 2.2.24. 판매자 회원 탈퇴. */
+	/**
+	 * <pre>
+	 * 2.2.24. 판매자 회원 탈퇴.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            WithdrawReq
+	 * @return WithdrawRes
+	 */
 	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req);
 
-	/** 2.2.28. 판매자 회원 인증키 폐기. */
+	/**
+	 * <pre>
+	 * 판매자 회원 인증키 폐기.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            AbrogationAuthKeyReq
+	 * @return AbrogationAuthKeyRes
+	 */
 	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req);
 
 	/**

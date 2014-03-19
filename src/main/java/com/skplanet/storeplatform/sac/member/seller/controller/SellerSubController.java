@@ -1,7 +1,6 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,24 +38,21 @@ public class SellerSubController {
 	private SellerSubService sellerSubService;
 
 	/**
-	 * Data Binding.
-	 */
-	ObjectMapper objMapper = new ObjectMapper();
-
-	/**
 	 * <pre>
 	 * 5.2.18.	서브계정 등록.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            CreateSubsellerReq
 	 * @return CreateSubsellerRes
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
 		if (StringUtils.isBlank(req.getSubSellerPW())) {
-			throw new StorePlatformException("SAC_MEM_0001", "memberPW");
+			throw new StorePlatformException("SAC_MEM_0001", "subSellerPW");
 		} else if (StringUtils.isBlank(req.getSubSellerId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerID");
 		}
@@ -69,9 +65,11 @@ public class SellerSubController {
 	 * 5.2.19.	서브계정 수정.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            CreateSubsellerReq
 	 * @return CreateSubsellerRes
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
@@ -88,9 +86,11 @@ public class SellerSubController {
 	 * 5.2.20.	서브계정 삭제.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            RemoveSubsellerReq
 	 * @return RemoveSubsellerRes
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
@@ -103,9 +103,11 @@ public class SellerSubController {
 	 * 5.2.21.	서브계정 목록 조회.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ListSubsellerReq
 	 * @return ListSubsellerRes
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -118,9 +120,11 @@ public class SellerSubController {
 	 * 5.2.22.	서브계정 상세 조회.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            DetailSubsellerReq
 	 * @return DetailSubsellerRes
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody

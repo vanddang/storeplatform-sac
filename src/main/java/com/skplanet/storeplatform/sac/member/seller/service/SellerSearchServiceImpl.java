@@ -67,7 +67,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountry
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
@@ -149,7 +148,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * 판매자회원 기본정보 조회.
 	 * </pre>
 	 * 
-	 * @param DetailInformationReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            DetailInformationReq
 	 * @return DetailInformationRes
 	 */
 	@Override
@@ -161,6 +163,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		KeySearch keySearch = new KeySearch();
 
+		// TODO 문자열 null/"" 체크 로직 수정 필요.
 		if (!req.getSellerKey().equals("")) {
 			keySearch.setKeyString(req.getSellerKey());
 			keySearch.setKeyType("INSD_SELLERMBR_NO");
@@ -251,12 +254,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			}
 
 		DetailInformationRes response = new DetailInformationRes();
-		response.setExtraRightList(eList);// 판매자 멀티미디어정보
-		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
-		response.setSellerKey(schRes.getSellerKey());// 판매자Key
+		response.setExtraRightList(eList); // 판매자 멀티미디어정보
+		response.setMbrLglAgent(mbrLglAgent); // 법정대리인정보
+		response.setSellerKey(schRes.getSellerKey()); // 판매자Key
 		// 실명인증 여부에 따른 판매자 회원정보 Setting.
 		SellerMbr sellerMbr = this.sellerMbr(schRes.getSellerMbr(), schRes.getMbrAuth()); // 실명인증 판매자 정보 & 판매자 정보
-		response.setSellerMbr(sellerMbr);// 판매자 정보
+		response.setSellerMbr(sellerMbr); // 판매자 정보
 		response.setTabAuthList(tList);
 		response.setFlurryAuthList(fList);
 
@@ -267,11 +270,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * 판매자회원 기본정보 조회App.
+	 * 판매자회원 기본정보조회 App.
 	 * </pre>
 	 * 
-	 * @param DetailInformationReq
-	 * @return DetailInformationRes
+	 * @param header
+	 *            SacRequestHeaders
+	 * @param req
+	 *            DetailInformationForProductReq
+	 * @return DetailInformationForProductRes
 	 */
 	@Override
 	public DetailInformationForProductRes detailInformationApp(SacRequestHeader header,
@@ -306,6 +312,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			throw new StorePlatformException("SAC_MEM_2101");
 		}
 
+		// TODO 문자열 "".equals 체크 로직 수정 필요.
 		/* 상단 */
 		// 내국인, 개인
 		if (sellerMbrs.get(0).getIsDomestic().equals("Y") && sellerMbrs.get(0).getSellerClass().equals("US010101")) {
@@ -342,7 +349,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrSac.setSellerName("");
 			sellerMbrSacs.add(sellerMbrSac);
 		}
-
+		// TODO 문자열 null/"" 체크 로직 수정 필요.
 		/* 하단 */
 		// 내국인, 개인
 		if (sellerMbrs.get(0).getIsDomestic().equals("Y") && sellerMbrs.get(0).getSellerClass().equals("US010101")) {
@@ -367,6 +374,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 			sellerMbrSacs.add(sellerMbrSac);
 		}
+
+		// TODO 문자열 null/"" 체크 로직 수정 필요.
 		// 내국인, 개인사업자 OR 법인 사업자
 		else if (sellerMbrs.get(0).getIsDomestic().equals("Y")
 				&& (sellerMbrs.get(0).getSellerClass().equals("US010102") || sellerMbrs.get(0).getSellerClass()
@@ -413,6 +422,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 			sellerMbrSacs.add(sellerMbrSac);
 		}
+
+		// TODO 문자열 null/"" 체크 로직 수정 필요.
 		// 외국인, 개인
 		else if (sellerMbrs.get(0).getIsDomestic().equals("N") && sellerMbrs.get(0).getSellerClass().equals("US010101")) {
 			sellerMbrSac = new SellerMbr();
@@ -436,6 +447,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 			sellerMbrSacs.add(sellerMbrSac);
 		}
+
+		// TODO 문자열 null/"" 체크 로직 수정 필요.
 		// 외국인, 개인사업자or법인사업자
 		else if (sellerMbrs.get(0).getIsDomestic().equals("N")
 				&& (sellerMbrs.get(0).getSellerClass().equals("US010102") || sellerMbrs.get(0).getSellerClass()
@@ -474,10 +487,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * 판매자회원 정산정보 조회.
+	 * 판매자회원 정산정보조회.
 	 * </pre>
 	 * 
-	 * @param DetailAccountInformationReq
+	 * @param header
+	 *            SacRequestHeaders
+	 * @param req
+	 *            DetailAccountInformationReq
 	 * @return DetailAccountInformationRes
 	 */
 	@Override
@@ -597,21 +613,19 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * 탈퇴 사유 목록 조회.
 	 * </pre>
 	 * 
-	 * @param language
+	 * @param header
+	 *            SacRequestHeaders
 	 * @return ListWithdrawalReasonRes
 	 */
 	@Override
-	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language) {
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) {
 
-		ListWithdrawalReasonReq req = new ListWithdrawalReasonReq();
-		req.setKoUsWhether(language);
-
-		List<SecedeReson> sList = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", req,
-				SecedeReson.class);
+		List<SecedeReson> sList = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", header
+				.getTenantHeader().getLangCd(), SecedeReson.class);
 
 		/*
-		 * List<SecedeReson> sList = new ArrayList<SecedeReson>(); SecedeReson secedeReson = null; if (sellerDTO !=
-		 * null) for (int i = 0; i < sellerDTO.size(); i++) { secedeReson = new SecedeReson();
+		 * TODO - 이거 뭐지???? List<SecedeReson> sList = new ArrayList<SecedeReson>(); SecedeReson secedeReson = null; if
+		 * (sellerDTO != null) for (int i = 0; i < sellerDTO.size(); i++) { secedeReson = new SecedeReson();
 		 * secedeReson.setSecedeReasonCode(sellerDTO.get(i).getSecedeReasonCode());
 		 * secedeReson.setSecedeReasonMessage(sellerDTO.get(i).getSecedeReasonMessage()); sList.add(secedeReson); }
 		 */
@@ -625,10 +639,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * 판매자회원 ID 찾기.
+	 * 판매자 ID 찾기.
 	 * </pre>
 	 * 
-	 * @param SearchIdReq
+	 * @param header
+	 *            SacRequestHeaders
+	 * @param req
+	 *            SearchIdReq
 	 * @return SearchIdRes
 	 */
 	@Override
@@ -637,6 +654,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
+		// TODO 문자열 null/"" 체크 로직 수정 필요.
 		if (!req.getSellerBizNumber().isEmpty())
 			schReq.setSellerBizNumber(req.getSellerBizNumber());
 		if (!req.getSellerCompany().isEmpty())
@@ -659,7 +677,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			}
 
 		SearchIdRes response = new SearchIdRes();
-		response.setSellerMbr(sList);// 판매자 정보 리스트
+		response.setSellerMbr(sList); // 판매자 정보 리스트
 
 		return response;
 
@@ -670,7 +688,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * Password 보안 질문 조회.
 	 * </pre>
 	 * 
-	 * @param language
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ListPasswordReminderQuestionReq
 	 * @return ListPasswordReminderQuestionRes
 	 */
 	@Override
@@ -686,13 +707,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		List<SellerMbrPwdHint> sList = new ArrayList<SellerMbrPwdHint>();
 		SellerMbrPwdHint sellerMbrPwdHint = null;
-		if (schRes.getPWReminderList() != null)
+		if (schRes.getPWReminderList() != null) {
 			for (int i = 0; i < schRes.getPWReminderList().size(); i++) {
 				sellerMbrPwdHint = new SellerMbrPwdHint();
 				sellerMbrPwdHint.setQuestionID(schRes.getPWReminderList().get(i).getQuestionID());
 				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderList().get(i).getQuestionName());
 				sList.add(sellerMbrPwdHint);
 			}
+		}
 
 		ListPasswordReminderQuestionRes response = new ListPasswordReminderQuestionRes();
 		response.setSellerMbrPwdHintList(sList);
@@ -703,24 +725,25 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * Password 보안 질문 조회 All. TODO
+	 * Password 보안 질문 조회 All.
 	 * </pre>
 	 * 
-	 * @param language
+	 * @param header
+	 *            SacRequestHeader
 	 * @return ListPasswordReminderQuestionRes
 	 */
 	@Override
-	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header, String language) {
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header) {
 
 		SearchPwdHintListAllRequest schReq = new SearchPwdHintListAllRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
-		schReq.setLanguageCode(language);
+		schReq.setLanguageCode(header.getTenantHeader().getLangCd());
 
 		SearchPwdHintListAllResponse schRes = this.sellerSCI.searchPwdHintListAll(schReq);
 
 		List<SellerMbrPwdHint> sList = new ArrayList<SellerMbrPwdHint>();
 		SellerMbrPwdHint sellerMbrPwdHint = null;
-		if (schRes.getPWReminderAllList() != null)
+		if (schRes.getPWReminderAllList() != null) {
 			for (int i = 0; i < schRes.getPWReminderAllList().size(); i++) {
 				sellerMbrPwdHint = new SellerMbrPwdHint();
 				sellerMbrPwdHint.setQuestionID(schRes.getPWReminderAllList().get(i).getQuestionID());
@@ -728,7 +751,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrPwdHint.setDisplayOrder(schRes.getPWReminderAllList().get(i).getDisplayOrder());
 				sList.add(sellerMbrPwdHint);
 			}
-
+		}
 		ListPasswordReminderQuestionRes response = new ListPasswordReminderQuestionRes();
 		response.setSellerMbrPwdHintList(sList);
 
@@ -738,10 +761,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * Password 보안 질문 확인. TODO
+	 * Password 보안 질문 확인.
 	 * </pre>
 	 * 
-	 * @param language
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CheckPasswordReminderQuestionReq
 	 * @return CheckPasswordReminderQuestionRes
 	 */
 	@Override
@@ -779,10 +805,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * Password 찾기.
+	 * 판매자 Password 찾기.
 	 * </pre>
 	 * 
-	 * @param language
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchPasswordReq
 	 * @return SearchPasswordRes
 	 */
 	@Override
@@ -808,11 +837,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * 판매자 회원 인증키 조회.
+	 * 2.2.27.	판매자 회원 인증키 조회.
 	 * </pre>
 	 * 
-	 * @param language
-	 * @return SearchAuthKeyRes
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchAuthKeyReq
+	 * @return DetailInformationRes
 	 */
 	@Override
 	public DetailInformationRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) {
@@ -884,10 +916,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			mbrLglAgent.setSequence(schRes3.getMbrLglAgent().getSequence());
 		}
 
-		response.setExtraRightList(eList);// 판매자 멀티미디어정보
-		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
-		response.setSellerKey(schRes3.getSellerKey());// 판매자Key
-		response.setSellerMbr(this.sellerMbr(schRes3.getSellerMbr(), schRes3.getMbrAuth()));// 판매자 정보
+		response.setExtraRightList(eList); // 판매자 멀티미디어정보
+		response.setMbrLglAgent(mbrLglAgent); // 법정대리인정보
+		response.setSellerKey(schRes3.getSellerKey()); // 판매자Key
+		response.setSellerMbr(this.sellerMbr(schRes3.getSellerMbr(), schRes3.getMbrAuth())); // 판매자 정보
 
 		return response;
 
@@ -895,10 +927,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * 나라별 해회은행 정보 조회.
+	 * 나라별 해외 은행 정보 조회.
 	 * </pre>
 	 * 
-	 * @param language
+	 * @param header
+	 *            SacRequestHeader
 	 * @return ListBanksByCountryRes
 	 */
 	@Override
@@ -926,10 +959,15 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * 판매자 정보. TODO
+	 * 판매자 정보.
 	 * </pre>
 	 * 
-	 * @return
+	 * @param sellerMbr
+	 *            판매자정보
+	 * @param mbrAuth
+	 *            실명인증 판매자 정보
+	 * 
+	 * @return SellerMbr 실명인증 여부에 따라 셋팅된 판매자 정보
 	 */
 	private SellerMbr sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr,
 			com.skplanet.storeplatform.member.client.common.vo.MbrAuth mbrAuth) {

@@ -114,7 +114,7 @@ public class SellerServiceImpl implements SellerService {
 	private MemberCommonComponent component;
 
 	/**
-	 * Queue Name 설정
+	 * Queue Name 설정.
 	 */
 	@Resource(name = "sellerWithdrawAmqpTemplate")
 	private AmqpTemplate sellerWithdrawAmqpTemplate;
@@ -1069,10 +1069,13 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 판매자회원 탈퇴.
+	 * 2.2.24. 판매자 회원 탈퇴.
 	 * </pre>
 	 * 
-	 * @param WithdrawReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            WithdrawReq
 	 * @return WithdrawRes
 	 */
 	@Override
@@ -1109,7 +1112,10 @@ public class SellerServiceImpl implements SellerService {
 	 * 판매자 회원 인증키 폐기.
 	 * </pre>
 	 * 
-	 * @param AbrogationAuthKeyReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            AbrogationAuthKeyReq
 	 * @return AbrogationAuthKeyRes
 	 */
 	@Override
@@ -1134,11 +1140,13 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 2.2.4. 판매자회원 단순 인증.
+	 * 2.2.4. 판매자 회원 단순 인증.
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            AuthorizeReq
 	 * @return AuthorizeRes
 	 */
 	@Override

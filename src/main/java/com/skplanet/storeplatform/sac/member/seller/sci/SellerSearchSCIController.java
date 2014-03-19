@@ -41,7 +41,7 @@ import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 @RequestMapping(value = "/member/seller/sci")
 public class SellerSearchSCIController implements SellerSearchSCI {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(SellerSearchSCIController.class);
 
 	@Autowired
 	private SellerSearchService sellerSearchService;
@@ -62,6 +62,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 	 * </pre>
 	 * 
 	 * @param req
+	 *            DetailInformationSacReq
 	 * @return DetailInformationRes
 	 */
 	@Override

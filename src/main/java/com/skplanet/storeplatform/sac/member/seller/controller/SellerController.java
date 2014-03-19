@@ -95,8 +95,11 @@ public class SellerController {
 	 * 2.2.4. 판매자 회원 단순 인증.
 	 * </pre>
 	 * 
-	 * @param AuthorizeReq
-	 * @return AuthorizeRes : JSON
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeReq
+	 * @return AuthorizeRes
 	 */
 	@RequestMapping(value = "/authorizeSimple/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -248,8 +251,11 @@ public class SellerController {
 	 * 2.2.24. 판매자 회원 탈퇴.
 	 * </pre>
 	 * 
-	 * @param WithdrawReq
-	 * @return WithdrawRes : JSON
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            WithdrawReq
+	 * @return WithdrawRes
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -263,7 +269,10 @@ public class SellerController {
 	 * </pre>
 	 * 
 	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            AbrogationAuthKeyReq
+	 * @return AbrogationAuthKeyRes
 	 */
 	@RequestMapping(value = "/removeAuthorizationKey/v1", method = RequestMethod.POST)
 	@ResponseBody

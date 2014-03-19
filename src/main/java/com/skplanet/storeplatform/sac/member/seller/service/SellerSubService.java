@@ -17,16 +17,56 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  */
 public interface SellerSubService {
 
-	/** 판매자 서브계정 등록/수정. */
+	/**
+	 * <pre>
+	 * 서브계정 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateSubsellerReq
+	 * @return CreateSubsellerRes
+	 */
 	public CreateSubsellerRes createSubseller(SacRequestHeader header, CreateSubsellerReq req);
 
-	/** 판매자 서브계정 삭제. */
+	/**
+	 * <pre>
+	 * 서브계정 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            RemoveSubsellerReq
+	 * @return RemoveSubsellerRes
+	 */
 	public RemoveSubsellerRes removeSubseller(SacRequestHeader header, RemoveSubsellerReq req);
 
-	/** 서브계정 목록 조회. */
+	/**
+	 * <pre>
+	 * 서브계정 목록 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ListSubsellerReq
+	 * @return ListSubsellerRes
+	 */
 	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req);
 
-	/** 서브계정 상세 조회. */
+	/**
+	 * <pre>
+	 * 서브계정 상세 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            DetailSubsellerReq
+	 * @return DetailSubsellerRes
+	 */
 	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req);
 
 }

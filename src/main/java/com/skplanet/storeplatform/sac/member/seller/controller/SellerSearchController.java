@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
 /**
@@ -78,7 +78,10 @@ public class SellerSearchController {
 	 * 판매자회원 기본정보조회.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeaders
 	 * @param req
+	 *            DetailInformationReq
 	 * @return DetailInformationRes
 	 */
 	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.POST)
@@ -87,6 +90,7 @@ public class SellerSearchController {
 			@RequestBody @Validated DetailInformationReq req) {
 		LOGGER.debug("request param : {}", req.toString());
 
+		// TODO validation check Logic 수정.
 		String sellerId = StringUtil.nvl(req.getSellerId(), "");
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
 		String aid = StringUtil.nvl(req.getAid(), "");
@@ -113,8 +117,11 @@ public class SellerSearchController {
 	 * 판매자회원 기본정보조회 App.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeaders
 	 * @param req
-	 * @return DetailInformationRes
+	 *            DetailInformationForProductReq
+	 * @return DetailInformationForProductRes
 	 */
 	@RequestMapping(value = "/detailInformationForProduct/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -130,7 +137,10 @@ public class SellerSearchController {
 	 * 판매자회원 정산정보조회.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeaders
 	 * @param req
+	 *            DetailAccountInformationReq
 	 * @return DetailAccountInformationRes
 	 */
 	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
@@ -145,15 +155,15 @@ public class SellerSearchController {
 	 * 탈퇴 사유 목록 조회.
 	 * </pre>
 	 * 
-	 * @param req
+	 * @param header
+	 *            SacRequestHeaders
 	 * @return ListWithdrawalReasonRes
 	 */
 	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, SacRequestHeader requestHeader) {
-		TenantHeader theader = requestHeader.getTenantHeader();
-		LOGGER.debug("------------------------------------language : {}", theader.getLangCd());
-		return this.sellerSearchService.listWithdrawalReason(header, theader.getLangCd());
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) {
+		LOGGER.debug("------------------------------------language : {}", header.getTenantHeader().getLangCd());
+		return this.sellerSearchService.listWithdrawalReason(header);
 	}
 
 	/**
@@ -161,28 +171,19 @@ public class SellerSearchController {
 	 * 판매자 ID 찾기.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeaders
 	 * @param req
+	 *            SearchIdReq
 	 * @return SearchIdRes
 	 */
 	@RequestMapping(value = "/searchId/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchIdRes searchId(SacRequestHeader header, @RequestBody @Validated SearchIdReq req) {
 
-		int Stat = 0;
-		req.setSellerBizNumber(StringUtil.nvl(req.getSellerBizNumber(), ""));
-		req.setSellerCompany(StringUtil.nvl(req.getSellerCompany(), ""));
-		req.setSellerEmail(StringUtil.nvl(req.getSellerEmail(), ""));
-		req.setSellerPhone(StringUtil.nvl(req.getSellerPhone(), ""));
-		if (req.getSellerBizNumber().equals(""))
-			Stat++;
-		if (req.getSellerCompany().equals(""))
-			Stat++;
-		if (req.getSellerEmail().equals(""))
-			Stat++;
-		if (req.getSellerPhone().equals(""))
-			Stat++;
-
-		if (Stat == 4) {
+		// sellerBizNumber, sellerCompany, sellerEmail, sellerPhone 중 하나 필수.
+		if (StringUtils.isBlank(req.getSellerBizNumber()) && StringUtils.isBlank(req.getSellerCompany())
+				&& StringUtils.isBlank(req.getSellerEmail()) && StringUtils.isBlank(req.getSellerPhone())) {
 			throw new StorePlatformException("SAC_MEM_0001", "sellerBizNumber, sellerCompany, sellerEmail, sellerPhone");
 		}
 
@@ -194,7 +195,10 @@ public class SellerSearchController {
 	 * Password 보안 질문 조회.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            ListPasswordReminderQuestionReq
 	 * @return ListPasswordReminderQuestionRes
 	 */
 	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
@@ -206,18 +210,17 @@ public class SellerSearchController {
 
 	/**
 	 * <pre>
-	 * Password 보안 질문 조회All.
+	 * Password 보안 질문 조회 All.
 	 * </pre>
 	 * 
-	 * @param req
+	 * @param header
+	 *            SacRequestHeader
 	 * @return ListPasswordReminderQuestionRes
 	 */
 	@RequestMapping(value = "/listPasswordReminderQuestionAll/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header,
-			SacRequestHeader requestHeader) {
-		TenantHeader theader = requestHeader.getTenantHeader();
-		return this.sellerSearchService.listPasswordReminderQuestionAll(header, theader.getLangCd());
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header) {
+		return this.sellerSearchService.listPasswordReminderQuestionAll(header);
 	}
 
 	/**
@@ -225,9 +228,11 @@ public class SellerSearchController {
 	 * Password 보안 질문 확인.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
+	 *            CheckPasswordReminderQuestionReq
 	 * @return CheckPasswordReminderQuestionRes
-	 * @throws Exception
 	 */
 	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -241,8 +246,11 @@ public class SellerSearchController {
 	 * 판매자 Password 찾기.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
-	 * @return SearchIdRes
+	 *            SearchPasswordReq
+	 * @return SearchPasswordRes
 	 */
 	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -255,8 +263,11 @@ public class SellerSearchController {
 	 * 2.2.27.	판매자 회원 인증키 조회.
 	 * </pre>
 	 * 
+	 * @param header
+	 *            SacRequestHeader
 	 * @param req
-	 * @return SearchAuthKeyRes
+	 *            SearchAuthKeyReq
+	 * @return DetailInformationRes
 	 */
 	@RequestMapping(value = "/detailInfomationByAuthorizationKey/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -269,7 +280,8 @@ public class SellerSearchController {
 	 * 나라별 해외 은행 정보 조회.
 	 * </pre>
 	 * 
-	 * @param req
+	 * @param header
+	 *            SacRequestHeader
 	 * @return ListBanksByCountryRes
 	 */
 	@RequestMapping(value = "/listBanksByCountry/v1", method = RequestMethod.GET)

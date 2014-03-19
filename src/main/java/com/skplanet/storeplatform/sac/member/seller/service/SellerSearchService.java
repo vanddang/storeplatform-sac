@@ -41,40 +41,144 @@ public interface SellerSearchService {
 	 */
 	public DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, DuplicateByIdEmailReq req);
 
-	/** 판매자 회원 기본정보조회. */
+	/**
+	 * <pre>
+	 * 판매자회원 기본정보조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeaders
+	 * @param req
+	 *            DetailInformationReq
+	 * @return DetailInformationRes
+	 */
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req);
 
-	/** 판매자 회원 기본정보조회 App. */
+	/**
+	 * <pre>
+	 * 판매자회원 기본정보조회 App.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeaders
+	 * @param req
+	 *            DetailInformationForProductReq
+	 * @return DetailInformationForProductRes
+	 */
 	public DetailInformationForProductRes detailInformationApp(SacRequestHeader header,
 			DetailInformationForProductReq req);
 
-	/** 판매자 회원 정산정보조회. */
+	/**
+	 * <pre>
+	 * 판매자회원 정산정보조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeaders
+	 * @param req
+	 *            DetailAccountInformationReq
+	 * @return DetailAccountInformationRes
+	 */
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req);
 
-	/** 탈퇴 사유 목록 조회. */
-	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language);
+	/**
+	 * <pre>
+	 * 탈퇴 사유 목록 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeaders
+	 * @return ListWithdrawalReasonRes
+	 */
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header);
 
-	/** 판매자 회원 ID 찾기. */
+	/**
+	 * <pre>
+	 * 판매자 ID 찾기.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeaders
+	 * @param req
+	 *            SearchIdReq
+	 * @return SearchIdRes
+	 */
 	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req);
 
-	/** Password 보안 질문 조회. */
+	/**
+	 * <pre>
+	 * Password 보안 질문 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ListPasswordReminderQuestionReq
+	 * @return ListPasswordReminderQuestionRes
+	 */
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
 			ListPasswordReminderQuestionReq req);
 
-	/** Password 보안 질문 조회All. */
-	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header, String language);
+	/**
+	 * <pre>
+	 * Password 보안 질문 조회 All.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @return ListPasswordReminderQuestionRes
+	 */
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header);
 
-	/** Password 보안 질문 확인. */
+	/**
+	 * <pre>
+	 * Password 보안 질문 확인.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CheckPasswordReminderQuestionReq
+	 * @return CheckPasswordReminderQuestionRes
+	 */
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			CheckPasswordReminderQuestionReq req);
 
-	/** 판매자 회원 Password 찾기. */
+	/**
+	 * <pre>
+	 * 판매자 Password 찾기.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchPasswordReq
+	 * @return SearchPasswordRes
+	 */
 	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req);
 
-	/** 판매자 회원 인증키 조회. */
+	/**
+	 * <pre>
+	 * 2.2.27.	판매자 회원 인증키 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchAuthKeyReq
+	 * @return DetailInformationRes
+	 */
 	public DetailInformationRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req);
 
-	/** 나라별 해외은행 정보 조회. */
+	/**
+	 * <pre>
+	 * 나라별 해외 은행 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @return ListBanksByCountryRes
+	 */
 	public ListBanksByCountryRes listBanksByCountry(SacRequestHeader header);
 
 }

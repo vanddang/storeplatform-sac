@@ -50,10 +50,13 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 	/**
 	 * <pre>
-	 * 판매자 서브계정 등록/수정.
+	 * 서브계정 등록/수정.
 	 * </pre>
 	 * 
-	 * @param CreateSubsellerReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateSubsellerReq
 	 * @return CreateSubsellerRes
 	 */
 	@Override
@@ -101,10 +104,13 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 	/**
 	 * <pre>
-	 * 판매자 서브계정 삭제.
+	 * 서브계정 삭제.
 	 * </pre>
 	 * 
-	 * @param RemoveSubsellerReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            RemoveSubsellerReq
 	 * @return RemoveSubsellerRes
 	 */
 	@Override
@@ -133,7 +139,10 @@ public class SellerSubServiceImpl implements SellerSubService {
 	 * 서브계정 목록 조회.
 	 * </pre>
 	 * 
-	 * @param ListSubsellerReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ListSubsellerReq
 	 * @return ListSubsellerRes
 	 */
 	@Override
@@ -156,10 +165,13 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 	/**
 	 * <pre>
-	 * 서브계정 상세 조회. TODO
+	 * 서브계정 상세 조회.
 	 * </pre>
 	 * 
-	 * @param DetailSubsellerReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            DetailSubsellerReq
 	 * @return DetailSubsellerRes
 	 */
 	@Override
@@ -185,10 +197,12 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 	/**
 	 * <pre>
-	 * TODO 판매자 정보.
+	 * 판매자 정보 리스트.
 	 * </pre>
 	 * 
-	 * @return
+	 * @param sellerMbr
+	 *            SellerMbr
+	 * @return List<SellerMbr>
 	 */
 	private List<SellerMbr> sellerMbrList(
 			List<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr> sellerMbr) {
@@ -213,10 +227,12 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 	/**
 	 * <pre>
-	 * TODO 판매자 정보.
+	 * 판매자 정보.
 	 * </pre>
 	 * 
-	 * @return
+	 * @param sellerMbr
+	 *            SellerMbr
+	 * @return SellerMbr
 	 */
 	private SellerMbr sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr) {
 		// 판매자 정보
