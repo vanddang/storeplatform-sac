@@ -61,6 +61,11 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	private String isLoginSuccess;
 
 	/**
+	 * Tcloud 약관동의 노출 여부
+	 */
+	private String tcloudAgreeViewYn;
+
+	/**
 	 * @return userKey
 	 */
 	public String getUserKey() {
@@ -193,6 +198,21 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	 */
 	public void setUserAuthKey(String userAuthKey) {
 		this.userAuthKey = userAuthKey;
+	}
+
+	/**
+	 * @return tcloudAgreeViewYn
+	 */
+	public String getTcloudAgreeViewYn() {
+		return this.tcloudAgreeViewYn;
+	}
+
+	/**
+	 * @param tcloudAgreeViewYn
+	 *            String
+	 */
+	public void setTcloudAgreeViewYn(String tcloudAgreeViewYn) {
+		this.tcloudAgreeViewYn = tcloudAgreeViewYn;
 	}
 
 }
