@@ -142,13 +142,13 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
 			}
 
-			if (StringUtils.isEmpty(deviceKey)) {
-				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
-			}
-
-			if (StringUtils.isEmpty(userKey)) {
-				throw new StorePlatformException("SAC_DSP_0002", "userKey", productId);
-			}
+			// if (StringUtils.isEmpty(deviceKey)) {
+			// throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
+			// }
+			//
+			// if (StringUtils.isEmpty(userKey)) {
+			// throw new StorePlatformException("SAC_DSP_0002", "userKey", productId);
+			// }
 
 			// 조회 유효값 체크
 			if (!"package".equals(filteredBy) && !"id".equals(filteredBy)) {

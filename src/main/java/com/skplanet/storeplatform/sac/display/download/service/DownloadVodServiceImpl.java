@@ -122,12 +122,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			if (StringUtils.isEmpty(productId)) {
 				throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
 			}
-			if (StringUtils.isEmpty(deviceKey)) {
-				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
-			}
-			if (StringUtils.isEmpty(userKey)) {
-				throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-			}
+			// if (StringUtils.isEmpty(deviceKey)) {
+			// throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
+			// }
+			// if (StringUtils.isEmpty(userKey)) {
+			// throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
+			// }
 
 			// ID유형 유효값 체크
 			if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)

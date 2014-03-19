@@ -123,12 +123,12 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			if (StringUtils.isEmpty(productId)) {
 				throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
 			}
-			if (StringUtils.isEmpty(deviceKey)) {
-				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
-			}
-			if (StringUtils.isEmpty(userKey)) {
-				throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-			}
+			// if (StringUtils.isEmpty(deviceKey)) {
+			// throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
+			// }
+			// if (StringUtils.isEmpty(userKey)) {
+			// throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
+			// }
 
 			// 다운로드 Music 상품 조회
 			MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.getDownloadMusicInfo",
