@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
@@ -79,20 +79,20 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		if (req.getSellerMbrSacList() != null) {
 			sellerMbrSacList = new ArrayList<KeySearch>();
 			for (int i = 0; i < req.getSellerMbrSacList().size(); i++) {
-				KeySearch sellerMbrSac = new KeySearch();
+				KeySearch keySearch = new KeySearch();
 
-				if (!StringUtil.nvl(req.getSellerMbrSacList().get(i).getSellerKey(), "").equals("")) {
-					sellerMbrSac.setKeyString(req.getSellerMbrSacList().get(i).getSellerKey());
-					sellerMbrSac.setKeyType("INSD_SELLERMBR_NO");
-					sellerMbrSacList.add(sellerMbrSac);
-				} else if (!StringUtil.nvl(req.getSellerMbrSacList().get(i).getSellerId(), "").equals("")) {
-					sellerMbrSac.setKeyString(req.getSellerMbrSacList().get(i).getSellerId());
-					sellerMbrSac.setKeyType("SELLERMBR_ID");
-					sellerMbrSacList.add(sellerMbrSac);
-				} else if (!StringUtil.nvl(req.getSellerMbrSacList().get(i).getSellerBizNumber(), "").equals("")) {
-					sellerMbrSac.setKeyString(req.getSellerMbrSacList().get(i).getSellerBizNumber());
-					sellerMbrSac.setKeyType("BIZ_REG_NO");
-					sellerMbrSacList.add(sellerMbrSac);
+				if (StringUtils.isNotBlank(req.getSellerMbrSacList().get(i).getSellerKey())) {
+					keySearch.setKeyString(req.getSellerMbrSacList().get(i).getSellerKey());
+					keySearch.setKeyType("INSD_SELLERMBR_NO");
+					sellerMbrSacList.add(keySearch);
+				} else if (StringUtils.isNotBlank(req.getSellerMbrSacList().get(i).getSellerId())) {
+					keySearch.setKeyString(req.getSellerMbrSacList().get(i).getSellerId());
+					keySearch.setKeyType("SELLERMBR_ID");
+					sellerMbrSacList.add(keySearch);
+				} else if (StringUtils.isNotBlank(req.getSellerMbrSacList().get(i).getSellerBizNumber())) {
+					keySearch.setKeyString(req.getSellerMbrSacList().get(i).getSellerBizNumber());
+					keySearch.setKeyType("BIZ_REG_NO");
+					sellerMbrSacList.add(keySearch);
 				}
 			}
 

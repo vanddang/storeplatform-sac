@@ -80,6 +80,10 @@ public class SearchUserSCIController implements SearchUserSCI {
 	@RequestMapping(value = "/searchUserByUserKey", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchUserSacRes searchUserByUserKey(@RequestBody @Validated SearchUserSacReq request) {
+		//
+		// if (request.getUserKeyList() == null) {
+		// throw new StorePlatformException("SAC_MEM_0001", "userKeyList");
+		// }
 
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
