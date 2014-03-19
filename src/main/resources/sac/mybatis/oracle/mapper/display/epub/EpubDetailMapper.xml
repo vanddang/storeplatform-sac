@@ -70,7 +70,7 @@
 					AND D.SVC_GRP_CD = 'DP000203'             	/* DP000203 : 멀티미디어 */
 					AND D.CONTENTS_TYPE_CD = 'PD002501'       	/* PD002501 : 채널타입 */
 					AND D.SVC_TYPE_CD = 'DP001116'				/* 서비스 타입 : 이북/코믹 */
-					AND D.TOP_MENU_ID IN ('DP13', 'DP014')				/* 이북,코믹 */
+					AND D.TOP_MENU_ID IN ('DP13', 'DP14')				/* 이북,코믹 */
 					AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
 					AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */
 					AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
@@ -188,13 +188,13 @@
 			          AND D.SVC_GRP_CD = 'DP000203'             	/* DP000201 : 멀티미디어 */
 			          AND D.CONTENTS_TYPE_CD = 'PD002501'       	/* PD002501 : 채널타입 */
 			          AND D.SVC_TYPE_CD = 'DP001116'				/* 서비스 타입 : 이북/코믹 */
-			          AND D.TOP_MENU_ID IN ('DP13', 'DP014')				/* 이북 */
+			          AND D.TOP_MENU_ID IN ('DP13', 'DP14')				/* 이북 */
 			          AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
 			          AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */ 
 			          AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
 			          AND J.SVC_GRP_CD = 'DP000203'       		/* 서비스그룹코드 : 멀티미디어 */  
 			          AND J.CONTENTS_TYPE_CD = 'PD002502'       /* 컨텐츠 타입코드 : (PD002502:에피소드타입) */
-			          AND J.TOP_MENU_ID IN ('DP13', 'DP014')				/* 이북, 코믹 */
+			          AND J.TOP_MENU_ID IN ('DP13', 'DP14')				/* 이북, 코믹 */
 			          AND M.SALE_YN ='Y'
 			          AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
 			          AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
@@ -225,7 +225,8 @@
 			  WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 			) T4
 			INNER JOIN TB_DP_PROD_IMG PI
-				ON PI.PROD_ID = T4.PROD_ID AND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{imgCd}
+				ON PI.PROD_ID = T4.PROD_ID AND PI.EXPO_ORD = '1' 
+				AND PI.IMG_CD = (CASE WHEN T4.TOP_MENU_ID = 'DP14' THEN #{comicEpisodeRepresentImgCd} ELSE #{imgCd} END)
 	</select>
     
 </mapper>

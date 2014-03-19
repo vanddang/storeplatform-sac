@@ -199,7 +199,9 @@ public class EpubServiceImpl implements EpubService {
 				param.put("paymentProdIdList", paymentProdIdList);
 			}
             
-            
+			//코믹 에피소드 대표이미지
+			param.put("comicEpisodeRepresentImgCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD);
+			
             List<EpubDetail> subProductList = getEpubSeries(param);
             if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)) {
             	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
