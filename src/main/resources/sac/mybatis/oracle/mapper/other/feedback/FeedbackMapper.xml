@@ -231,11 +231,11 @@
             , upd_id = #{updId}  /* 수정 ID */
             , upd_dt = SYSDATE   /* 수정 일시 */
             <if test="action == 'create'">
-            , avg_evlu_score = ( ( NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore} ) / NVL(paticpers_cnt, 0) )  /* 평균 평가 점수 */
+            , avg_evlu_score = ( ( NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore} ) / paticpers_cnt )  /* 평균 평가 점수 */
             </if>
             <if test="action == 'remove'">
             , paticpers_cnt = paticpers_cnt - 1  /* 참여자 수 */
-            , avg_evlu_score = ( ( NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore} ) / (NVL(paticpers_cnt, 0) - 1) )  /* 평균 평가 점수 */
+            , avg_evlu_score = ( ( NVL(tot_evlu_score, 0) + #{avgEvluScore} - #{preAvgScore} ) / (paticpers_cnt - 1) )  /* 평균 평가 점수 */
             </if>
        WHERE  tenant_id = #{tenantId}  /* 테넌트 ID */
          AND  prod_id = #{prodId}      /* 상품 ID */
