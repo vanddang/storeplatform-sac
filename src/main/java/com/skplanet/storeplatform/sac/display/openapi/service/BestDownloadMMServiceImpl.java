@@ -25,7 +25,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadMMSa
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -128,11 +127,11 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 					// 유/무료
 					if ("RNK000000006".equals(listId) || "RNK000000003".equals(listId)) {
 
-						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchPayFreeEbookComicList",
+						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchPayFreeList",
 								bestDownloadMMSacReq, MetaInfo.class);
 						// 추천/신규
 					} else if ("ADM000000013".equals(listId) || "TGR000000001".equals(listId)) {
-						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchRecommendNewEbookComicList",
+						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchRecommendNewList",
 								bestDownloadMMSacReq, MetaInfo.class);
 					}
 				}
@@ -155,7 +154,7 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 				bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchBestDownloadAppListByOrder",
 						bestDownloadMMSacReq, MetaInfo.class);
 			} else {
-				// VOD 최신순 평점순일때
+				// 뮤직을 제외한 나머지 Menu 최신순 평점순일때
 				bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchProductList", bestDownloadMMSacReq,
 						MetaInfo.class);
 			}
@@ -169,8 +168,6 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 
 				MetaInfo metaInfo = iterator.next();
 				List<Identifier> identifierList = new ArrayList<Identifier>();
-				List<Source> sourceList = new ArrayList<Source>();
-
 				product = new Product();
 
 				Identifier identifier = this.commonGenerator.generateIdentifier(
