@@ -85,7 +85,7 @@ public class ModifySubsellerTest {
 
 						// 새로 추가됨
 						// createSubsellerReq.setSubSellerKey("SS201402061427346800000640");
-						createSubsellerReq.setMemberPW("1234567999");
+						createSubsellerReq.setSubSellerPW("1234567999");
 						// createSubsellerReq.setOldPW("1234567999");
 
 						LOGGER.debug("request param : {}", createSubsellerReq.toString());
@@ -126,7 +126,7 @@ public class ModifySubsellerTest {
 
 						// 새로 추가됨
 						req.setSubSellerKey(createSubsellerRes.getSubSellerKey());
-						req.setMemberPW("1234567999");
+						req.setSubSellerPW("1234567999");
 						// req.setOldPW("1234567999");
 
 						LOGGER.debug("request param : {}", req.toString());

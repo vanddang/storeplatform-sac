@@ -78,14 +78,14 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setSellerMbr(sellerMbr);
 		schReq.setIsNew(req.getIsNew());
 
-		if (StringUtils.isNotBlank(req.getMemberPW())) {
+		if (StringUtils.isNotBlank(req.getSubSellerPW())) {
 			MbrPwd mbrPwd = new MbrPwd();
-			mbrPwd.setMemberPW(req.getMemberPW());
+			mbrPwd.setMemberPW(req.getSubSellerPW());
 			schReq.setMbrPwd(mbrPwd);
 		}
 		if ("Y".equals(req.getIsNew())) {
 			MbrPwd mbrPwd = new MbrPwd();
-			mbrPwd.setMemberPW(req.getMemberPW());
+			mbrPwd.setMemberPW(req.getSubSellerPW());
 			schReq.setMbrPwd(mbrPwd);
 		}
 

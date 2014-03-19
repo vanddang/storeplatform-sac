@@ -55,7 +55,7 @@ public class SellerSubController {
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
-		if (StringUtils.isBlank(req.getMemberPW())) {
+		if (StringUtils.isBlank(req.getSubSellerPW())) {
 			throw new StorePlatformException("SAC_MEM_0001", "memberPW");
 		} else if (StringUtils.isBlank(req.getSubSellerId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerID");
