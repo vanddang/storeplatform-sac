@@ -78,9 +78,14 @@
 		     , B.PART_PROD_ID
 		     , B.TOP_MENU_ID
 		     , B.META_CLSF_CD
-		     , 'PD002501' AS CONTENTS_TYPE_CD
+		     , 'PD002502' AS CONTENTS_TYPE_CD
 		     , B.TOTAL_COUNT
-		  FROM (SELECT A.*
+		  FROM (SELECT A.TENANT_ID
+                     , A.MENU_ID
+                     , A.PROD_ID
+                     , A.PART_PROD_ID
+                     , A.TOP_MENU_ID
+                     , A.META_CLSF_CD
 		             , COUNT(*) OVER () AS TOTAL_COUNT
 		             , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
 		          FROM (SELECT A.TENANT_ID

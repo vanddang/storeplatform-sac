@@ -86,7 +86,12 @@
              , B1.TOP_MENU_ID
              , B1.CONTENTS_TYPE_CD
              , B1.TOTAL_COUNT
-          FROM (SELECT A1.*
+          FROM (SELECT A1.TENANT_ID
+                     , A1.MENU_ID
+                     , A1.PROD_ID
+                     , A1.PART_PROD_ID
+                     , A1.TOP_MENU_ID
+                     , A1.CONTENTS_TYPE_CD
                      , COUNT(*) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY A1.EXPO_ORD_ALWAYS_YN DESC, A1.EXPO_ORD, A1.EXPO_ORD_SUB) AS RNUM
                   FROM (SELECT A.TENANT_ID
@@ -99,7 +104,11 @@
                              , A.EXPO_ORD_SUB
                              , F.CONTENTS_TYPE_CD
                              , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS NO
-                          FROM (SELECT LP.*
+                          FROM (SELECT LP.TENANT_ID
+                                     , LP.PROD_ID
+                                     , LP.EXPO_ORD_ALWAYS_YN
+                                     , LP.EXPO_ORD
+                                     , LP.EXPO_ORD_SUB
                                   FROM TB_DP_LIST_PROD LP
                                      , TB_DP_LIST LT
                                  WHERE LT.TENANT_ID = LP.TENANT_ID
