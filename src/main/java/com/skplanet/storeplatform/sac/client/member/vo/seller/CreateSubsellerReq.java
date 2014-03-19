@@ -50,8 +50,8 @@ public class CreateSubsellerReq extends CommonInfo {
 	/** 이전 비밀번호. */
 	private String oldPW; // OldPW
 
-	/** 비밀번호. */
-	private String memberPW; // PWD
+	// /** 비밀번호. */
+	// private String memberPW; // PWD
 
 	public String getOldPW() {
 		return this.oldPW;
@@ -61,13 +61,13 @@ public class CreateSubsellerReq extends CommonInfo {
 		this.oldPW = oldPW;
 	}
 
-	public String getMemberPW() {
-		return this.memberPW;
-	}
-
-	public void setMemberPW(String memberPW) {
-		this.memberPW = memberPW;
-	}
+	// public String getMemberPW() {
+	// return this.memberPW;
+	// }
+	//
+	// public void setMemberPW(String memberPW) {
+	// this.memberPW = memberPW;
+	// }
 
 	public String getSellerKey() {
 		return this.sellerKey;
