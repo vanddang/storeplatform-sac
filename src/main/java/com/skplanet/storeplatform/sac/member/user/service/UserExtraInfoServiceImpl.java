@@ -221,13 +221,10 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		String validProfileCode = "";
 
 		for (UserExtraInfo info : req.getUserExtraInfoList()) {
-			if (info.getExtraProfile().equals(MemberConstants.USER_EXTRA_CERTIFICATION)
-					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_SKTBILLSEPARATION)
-					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKACCESSTOKEN)
+			if (info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKACCESSTOKEN)
 					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKPURCHASE)
 					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKRATING)
-					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKREVIEW)
-					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_MEMBERPOINTJOIN)) {
+					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKREVIEW)) {
 
 				validProfileCode = "Y";
 
