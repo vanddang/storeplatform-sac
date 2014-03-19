@@ -147,7 +147,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 					historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 					historyReq.setEndDt(sysDate);
 					historyReq.setOffset(1);
-					historyReq.setCount(productListSacInList.size());
+					historyReq.setCount(1000);
 					historyReq.setProductList(productListSacInList);
 					historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD); // 구매완료
 
