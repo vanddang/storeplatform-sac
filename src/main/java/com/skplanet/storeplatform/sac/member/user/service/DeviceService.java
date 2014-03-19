@@ -106,9 +106,9 @@ public interface DeviceService {
 	 *            SacRequestHeader
 	 * @param req
 	 *            DeviceInfo
-	 * @return DeviceInfo
+	 * @return deviceKey String
 	 */
-	public DeviceInfo updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
+	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
 
 	/**
 	 * 로그인한 기기정보 update.

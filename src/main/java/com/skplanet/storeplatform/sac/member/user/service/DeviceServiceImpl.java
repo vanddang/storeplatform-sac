@@ -247,11 +247,11 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUserKey(req.getUserKey());
 
 		/* 휴대기기 정보 수정 */
-		DeviceInfo retDeviceInfo = this.updateDeviceInfo(requestHeader, deviceInfo);
+		String DeviceKey = this.updateDeviceInfo(requestHeader, deviceInfo);
 
 		ModifyDeviceRes res = new ModifyDeviceRes();
-		res.setDeviceKey(retDeviceInfo.getDeviceKey());
-		res.setUserKey(retDeviceInfo.getUserKey());
+		res.setDeviceKey(DeviceKey);
+		res.setUserKey(req.getUserKey());
 
 		return res;
 	}
@@ -596,7 +596,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public DeviceInfo updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
+	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
 		LOGGER.info("################ updateDeviceInfo start ##################");
 
@@ -761,8 +761,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info("################ updateDeviceInfo end ##################");
 
-		deviceInfo.setDeviceKey(createDeviceRes.getDeviceKey());
-		return deviceInfo;
+		return createDeviceRes.getDeviceKey();
 
 	}
 

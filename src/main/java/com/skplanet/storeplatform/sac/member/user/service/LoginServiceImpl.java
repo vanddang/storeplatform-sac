@@ -28,6 +28,7 @@ import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
@@ -453,16 +454,37 @@ public class LoginServiceImpl implements LoginService {
 			if (StringUtil.isNotEmpty(req.getDeviceAccount())) {
 				paramDeviceInfo.setDeviceAccount(req.getDeviceAccount());
 			}
-			DeviceInfo retDeviceInfo = this.deviceService.updateDeviceInfo(requestHeader, paramDeviceInfo);
+			String deviceKey = this.deviceService.updateDeviceInfo(requestHeader, paramDeviceInfo);
 
-			res.setDeviceKey(retDeviceInfo.getDeviceKey());
-			res.setUserKey(retDeviceInfo.getUserKey());
+			res.setDeviceKey(deviceKey);
+			res.setUserKey(deviceInfo.getUserKey());
 			res.setIsVariability("Y");
 
 		} else {
 
 			/* 인증수단 조회 */
-			res.setUserAuthMethod(this.searchUserAuthMethod(requestHeader, req.getDeviceId()));
+			UserAuthMethod userAuthMethod = this.searchUserAuthMethod(requestHeader, req.getDeviceId());
+
+			if (StringUtil.isBlank(userAuthMethod.getUserId())
+					&& (StringUtil.isBlank(userAuthMethod.getIsRealName()) || StringUtil.equals(userAuthMethod.getIsRealName(), "N"))) { // 인증수단이 없는경우
+
+				/* SC회원탈퇴 */
+				RemoveUserRequest removeUserReq = new RemoveUserRequest();
+				removeUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+				removeUserReq.setUserKey(deviceInfo.getUserKey());
+				removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+				this.userSCI.remove(removeUserReq);
+
+				/* IDP 탈퇴 */
+				SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+				ecReq.setUserMdn(req.getDeviceId());
+				this.idpSCI.secedeForWap(ecReq);
+
+				/* 회원 정보가 존재 하지 않습니다. */
+				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
+			}
+
+			res.setUserAuthMethod(userAuthMethod);
 			res.setIsVariability("N");
 
 		}
@@ -862,10 +884,6 @@ public class LoginServiceImpl implements LoginService {
 		/* mdn 기가입 여부 확인 */
 		DeviceInfo mdnDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
 
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-
 		String isPurchaseChange = "N";
 		String isJoinMdn = "N";
 
@@ -873,7 +891,7 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 변동성 대상체크 */
 			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
-
+			LOGGER.info("::: mdn 미가입 변동성 대상 여부 : {} :::", saveAndSync.getIsSaveAndSyncTarget());
 			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "Y")) { // 변동성 대상인 경우
 
 				isPurchaseChange = "Y";
@@ -886,9 +904,17 @@ public class LoginServiceImpl implements LoginService {
 
 		} else { // mdn 기가입인 경우
 
+			LOGGER.info("::: mdn 기가입 :::");
 			isPurchaseChange = "Y";
 
 		}
+
+		LOGGER.info("::: 변동성 처리 구매이관 여부 {}", isPurchaseChange);
+		LOGGER.info("::: 변동성 처리 신규가입처리 여부 {}", isJoinMdn);
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 
 		if (StringUtil.equals(isPurchaseChange, "Y")) {
 
@@ -935,7 +961,45 @@ public class LoginServiceImpl implements LoginService {
 			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 			joinForWapEcReq.setUserMdn(req.getDeviceId());
 			joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT);
-			JoinForWapEcRes joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
+
+			JoinForWapEcRes joinForWapEcRes = null;
+			try {
+				joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
+			} catch (StorePlatformException ex) {
+				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
+
+					/**
+					 * IDP에 이미 가입되어 있는 회원일 경우 SC 회원 DB 조회해서 정보 존재 하면 Error를 반환
+					 * (데이터는 삭제 하지 않음 - 이유 : IDP 및 회원 DB에도 정상 임) - 에러 : IDP 가가입
+					 * 에러
+					 */
+					try {
+
+						this.commService.getUserBaseInfo("deviceId", req.getDeviceId(), requestHeader);
+
+					} catch (StorePlatformException e) {
+						if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+								|| StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+
+							/**
+							 * SC회원에 정보가 없는경우 IDP 모바일회원 탈퇴 요청
+							 */
+							SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+							ecReq.setUserMdn(req.getDeviceId());
+							this.idpSCI.secedeForWap(ecReq);
+
+						}
+					}
+
+					throw new StorePlatformException("SAC_MEM_1201", ex);
+
+				} else {
+
+					throw ex;
+
+				}
+			}
+
 			LOGGER.info(joinForWapEcRes.toString());
 
 			/* mbrNo 변경 */
@@ -988,7 +1052,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            사용자키
 	 * @return deviceKey 휴대기기 키
 	 */
-	public String getLoginDeviceKey(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) {
+	private String getLoginDeviceKey(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) {
 
 		String deviceKey = null;
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
@@ -1025,7 +1089,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @return CheckDuplicationResponse
 	 * 
 	 */
-	public CheckDuplicationResponse searchUserInfo(SacRequestHeader requestHeader, String keyType, String keyString) {
+	private CheckDuplicationResponse searchUserInfo(SacRequestHeader requestHeader, String keyType, String keyString) {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
@@ -1067,7 +1131,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            클라이언트 ip
 	 * @return LoginUserResponse
 	 */
-	public LoginUserResponse insertLoginHistory(SacRequestHeader requestHeader, String userId, String userPw, String isSuccess, String isMobile,
+	private LoginUserResponse insertLoginHistory(SacRequestHeader requestHeader, String userId, String userPw, String isSuccess, String isMobile,
 			String ipAddress) {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -1103,7 +1167,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @param keyString
 	 *            조회값
 	 */
-	public void updateLoginStatus(SacRequestHeader requestHeader, String loginStatusCode, String keyType, String keyString) {
+	private void updateLoginStatus(SacRequestHeader requestHeader, String loginStatusCode, String keyType, String keyString) {
 
 		UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
@@ -1137,7 +1201,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return String 약관 동의 여부
 	 */
-	public String isAgreementByAgreementCode(SacRequestHeader requestHeader, String userKey, String agreementCode) {
+	private String isAgreementByAgreementCode(SacRequestHeader requestHeader, String userKey, String agreementCode) {
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -1172,7 +1236,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return UpdateAdditionalInfoEcRes
 	 */
-	public UpdateAdditionalInfoEcRes updateAdditionalInfoForMdnLogin(SacRequestHeader requestHeader, String userKey, String imSvcNo) {
+	private UpdateAdditionalInfoEcRes updateAdditionalInfoForMdnLogin(SacRequestHeader requestHeader, String userKey, String imSvcNo) {
 		/* 휴대기기 목록 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 		listDeviceReq.setIsMainDevice("N");
@@ -1222,17 +1286,9 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return UserAuthMethod
 	 */
-	public UserAuthMethod searchUserAuthMethod(SacRequestHeader requestHeader, String deviceId) {
+	private UserAuthMethod searchUserAuthMethod(SacRequestHeader requestHeader, String deviceId) {
 		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, deviceId);
-
-		if (StringUtil.equals(chkDupRes.getIsRegistered(), "N")) {
-			/* 회원 정보가 존재 하지 않습니다. */
-			throw new StorePlatformException("SAC_MEM_0003", "deviceId", deviceId);
-		}
-
-		/* 인증수단정보 조회 */
 		UserAuthMethod userAuthMethod = new UserAuthMethod();
-		userAuthMethod.setUserId(chkDupRes.getUserMbr().getUserID());
 		if (!StringUtil.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 			userAuthMethod.setUserId(chkDupRes.getUserMbr().getUserID());
 		}
@@ -1251,7 +1307,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return SearchDeviceResponse
 	 */
-	public SearchDeviceResponse searchDeviceInfo(SacRequestHeader requestHeader, String deviceId) {
+	private SearchDeviceResponse searchDeviceInfo(SacRequestHeader requestHeader, String deviceId) {
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
