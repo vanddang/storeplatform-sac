@@ -21,6 +21,10 @@ public class OtherServiceGroup {
 	private String contentsTypeNm;
 	private String topMenuId;
 	private String topMenuNm;
+	private String menuId;
+	private String menuNm;
+	private String svcGrpCd;
+	private String metaClsfCd;
 
 	public String getTopMenuNm() {
 		return this.topMenuNm;
@@ -68,6 +72,66 @@ public class OtherServiceGroup {
 
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
+	}
+
+	/**
+	 * @return the menuId
+	 */
+	public String getMenuId() {
+		return this.menuId;
+	}
+
+	/**
+	 * @param menuId
+	 *            the menuId to set
+	 */
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
+
+	/**
+	 * @return the menuNm
+	 */
+	public String getMenuNm() {
+		return this.menuNm;
+	}
+
+	/**
+	 * @param menuNm
+	 *            the menuNm to set
+	 */
+	public void setMenuNm(String menuNm) {
+		this.menuNm = menuNm;
+	}
+
+	/**
+	 * @return the svcGrpCd
+	 */
+	public String getSvcGrpCd() {
+		return this.svcGrpCd;
+	}
+
+	/**
+	 * @param svcGrpCd
+	 *            the svcGrpCd to set
+	 */
+	public void setSvcGrpCd(String svcGrpCd) {
+		this.svcGrpCd = svcGrpCd;
+	}
+
+	/**
+	 * @return the metaClsfCd
+	 */
+	public String getMetaClsfCd() {
+		return this.metaClsfCd;
+	}
+
+	/**
+	 * @param metaClsfCd
+	 *            the metaClsfCd to set
+	 */
+	public void setMetaClsfCd(String metaClsfCd) {
+		this.metaClsfCd = metaClsfCd;
 	}
 
 }

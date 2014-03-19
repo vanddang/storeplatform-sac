@@ -105,11 +105,24 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 				product.setIdentifierList(identifierList);
 
 				// 메뉴 정보
-				menu = new Menu(); // 메뉴
+				menu = new Menu(); // TOP메뉴
 				menu.setId(otherServiceGroup.getTopMenuId());
 				menu.setName(otherServiceGroup.getTopMenuNm());
 				menu.setType("topClass");
 				menuList.add(menu);
+				menu = new Menu(); // 메뉴
+				menu.setId(otherServiceGroup.getMenuId());
+				menu.setName(otherServiceGroup.getMenuNm());
+				menuList.add(menu);
+				menu = new Menu(); // SVC_GRP_CD
+				menu.setId(otherServiceGroup.getSvcGrpCd());
+				menu.setType("svcGrpCd");
+				menuList.add(menu);
+				menu = new Menu(); // META_CLSF_CD
+				menu.setId(otherServiceGroup.getMetaClsfCd());
+				menu.setType("metaClass");
+				menuList.add(menu);
+
 				product.setMenuList(menuList);
 
 				// 데이터 매핑

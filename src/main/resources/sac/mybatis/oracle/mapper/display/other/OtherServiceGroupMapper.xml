@@ -10,7 +10,11 @@
 		      , DECODE(TDP.CONTENTS_TYPE_CD,'PD002501','채널','PD002502','에피소드') AS CONTENTS_TYPE_NM
 		      , TDP.TOP_MENU_ID
               , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = TDP.TOP_MENU_ID AND LANG_CD = 'ko') TOP_MENU_NM
-		FROM TB_DP_PROD TDP
+              , TDP.SVC_GRP_CD
+              , TDP.META_CLSF_CD
+              , TMC.MENU_ID
+              , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = TMC.MENU_ID AND LANG_CD = 'ko') MENU_NM
+		FROM TB_DP_PROD TDP, TB_DP_MENU_CATEGORY_PROD_MAPG TMC
 		WHERE 1=1
          <if test = "prodIdList !=null">
         AND TDP.PROD_ID IN
@@ -18,6 +22,7 @@
                 #{item}
            </foreach>
       </if>
+      AND TDP.PROD_ID = TMC.PROD_ID
        <if test = "prodIdList != null">  
             ORDER BY instr
             <foreach collection="prodIdList" item="item" index="index" open="(" separator="||" close=",PROD_ID)"> 
