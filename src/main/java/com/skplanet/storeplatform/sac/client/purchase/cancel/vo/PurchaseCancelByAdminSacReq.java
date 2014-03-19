@@ -35,6 +35,10 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	@Pattern(regexp = "^Y|^N")
 	private String forceCancelYn;
 
+	@NotBlank
+	@Pattern(regexp = "^Y|^N")
+	private String sktLimitUserCancelYn;
+
 	@NotEmpty
 	@Valid
 	private List<PurchaseCancelDetailSacReq> prchsCancelList;
@@ -82,6 +86,21 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	 */
 	public void setPrchsCancelList(List<PurchaseCancelDetailSacReq> prchsCancelList) {
 		this.prchsCancelList = prchsCancelList;
+	}
+
+	/**
+	 * @return the sktLimitUserCancelYn
+	 */
+	public String getSktLimitUserCancelYn() {
+		return this.sktLimitUserCancelYn;
+	}
+
+	/**
+	 * @param sktLimitUserCancelYn
+	 *            the sktLimitUserCancelYn to set
+	 */
+	public void setSktLimitUserCancelYn(String sktLimitUserCancelYn) {
+		this.sktLimitUserCancelYn = sktLimitUserCancelYn;
 	}
 
 }
