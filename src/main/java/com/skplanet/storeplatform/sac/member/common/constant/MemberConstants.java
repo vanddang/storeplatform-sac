@@ -122,7 +122,7 @@ public final class MemberConstants {
 	public static final String DEVICE_EXTRA_EMBEDDED_YN = "US011410"; // 임베디드 여부
 	public static final String DEVICE_EXTRA_OMDUACD = "US011411"; // OMD UA코드
 	public static final String DEVICE_EXTRA_ROOTING_YN = "US011412"; // 루팅 여부
-	public static final String DEVICE_EXTRA_TCLOUD_SUPPORT_YN = "US011413"; // T CLOUD 지원여부
+	public static final String DEVICE_EXTRA_TCLOUD_SUPPORT_YN = "US011413"; // Tcloud 약관동의 여부
 
 	/** 기기변경 유형 코드. */
 	public static final String DEVICE_CHANGE_TYPE_USER_SELECT = "US012001"; // 사용자선택

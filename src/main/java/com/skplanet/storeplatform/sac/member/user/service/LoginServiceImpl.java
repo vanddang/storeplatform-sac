@@ -58,6 +58,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserAuthMethod;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
@@ -68,6 +69,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSync
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ChangedDeviceHistoryReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ChangedDeviceHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
@@ -281,6 +284,39 @@ public class LoginServiceImpl implements LoginService {
 		SearchDeviceResponse schDeviceRes = this.searchDeviceInfo(requestHeader, req.getDeviceId());
 		String dbDeviceTelecom = schDeviceRes.getUserMbrDevice().getDeviceTelecom();
 
+		/* Tcloud 약관동의 노출 여부 체크 */
+		ChangedDeviceHistoryReq changedDeviceHistoryReq = new ChangedDeviceHistoryReq();
+		changedDeviceHistoryReq.setUserKey(schDeviceRes.getUserKey());
+		changedDeviceHistoryReq.setDeviceId(req.getDeviceId());
+		ChangedDeviceHistoryRes changedDeviceHistoryRes = this.deviceService.searchChangedDeviceHistory(requestHeader, changedDeviceHistoryReq);
+
+		String tcloudAgreeViewYn = "N"; // Tcloud 이용동의 노출 여부
+		if (StringUtil.equals(changedDeviceHistoryRes.getIsChanged(), "Y")) {
+
+			/*
+			 * 최근 1개월 이내 기기변경이력이 있고 Tcloud 약관동의 되어있지 않은 경우 "T"로 임시 업데이트하여 Tcloud
+			 * 약관동의 최초 한번만 노출되도록 처리
+			 */
+			String tcloudAgreeYn = DeviceUtil.getUserMbrDeviceDetailValue(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN, schDeviceRes
+					.getUserMbrDevice().getUserMbrDeviceDetail()); // Tcloud 약관동의 여부 
+
+			if (StringUtil.isBlank(tcloudAgreeYn) || StringUtil.equals(tcloudAgreeYn, "N")) {
+
+				tcloudAgreeViewYn = "Y";
+
+				List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+				if (req.getDeviceExtraInfoList() != null) {
+					deviceExtraInfoList = req.getDeviceExtraInfoList();
+				}
+				DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+				deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN);
+				deviceExtraInfo.setExtraProfileValue("T");
+				deviceExtraInfoList.add(deviceExtraInfo);
+
+				req.setDeviceExtraInfoList(deviceExtraInfoList);
+			}
+		}
+
 		/* 휴대기기 정보 수정 */
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(chkDupRes.getUserMbr().getUserKey());
@@ -341,7 +377,9 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserAuthKey(this.tempUserAuthKey);
 		res.setDeviceKey(deviceKey);
 		res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
-
+		if (StringUtil.equals(tcloudAgreeViewYn, "Y")) {
+			res.setTcloudAgreeViewYn("Y");
+		}
 		return res;
 	}
 
