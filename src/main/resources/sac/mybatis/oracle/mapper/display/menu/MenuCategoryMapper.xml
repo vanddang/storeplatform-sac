@@ -206,7 +206,7 @@
 		                    )
 		                AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
 		                AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
-		                AND E.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+		                AND (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
 		                GROUP BY A.MENU_ID
 		            ) C
 		    WHERE A.TENANT_MENU_ID = B.MENU_ID
@@ -335,7 +335,7 @@
 		                    
 		                    AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
 		                    AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
-		                    AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = 'android_standard2') /* 단말모델코드 */
+		                    AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
 		                ) A
 		                GROUP BY A.MENU_ID
 		            ) C
@@ -455,7 +455,7 @@
                             AND G.PROD_STATUS_CD = 'PD000403'
                             AND SYSDATE BETWEEN  H.SPRC_APPLY_START_DT AND H.SPRC_APPLY_END_DT
                             AND J.SCL_SHPG_SPRT_YN = 'Y'
-                            AND (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = 'android_standard2') /* 단말모델코드 */
+                            AND (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
                             AND G.TENANT_ID = #{tenantId} /* 테넌트ID */
                             AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
 		                ) A

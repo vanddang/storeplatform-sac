@@ -127,6 +127,7 @@ public class CategoryServiceImpl implements CategoryService {
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
 		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		requestVO.setMmDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		// // 필수 파라미터 체크
 		// this.log.debug("필수 파라미터 체크");
