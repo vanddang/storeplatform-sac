@@ -46,6 +46,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -267,7 +268,7 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * 회원 기본 정보 조회 (기본정보만...조회 - TB_US_USERMBR).
+	 * 회원 정보 조회.
 	 * </pre>
 	 * 
 	 * @param keyType
@@ -279,10 +280,9 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
+		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
+		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
 				.toString());
-		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType,
-				keyValue, sacHeader.getTenantHeader().toString());
 
 		DetailReq req = new DetailReq();
 		if ("userKey".equals(keyType)) {
@@ -295,7 +295,9 @@ public class MemberCommonComponent {
 			req.setDeviceId(keyValue);
 		}
 
-		UserInfo userInfo = this.userSearchService.searchUser(req, sacHeader);
+		DetailRes detailRes = this.userSearchService.searchUser(req, sacHeader);
+		UserInfo userInfo = detailRes.getUserInfo();
+
 		return userInfo;
 	}
 
@@ -343,7 +345,8 @@ public class MemberCommonComponent {
 		SearchAgreementRes res = new SearchAgreementRes();
 		req.setUserKey(userKey);
 
-		res = this.userSearchService.searchUserAgreement(req, sacHeader);
+		DetailRes detailRes = this.userSearchService.searchUser(req, sacHeader);
+		res.setAgreementList(detailRes.getAgreementList());
 
 		return res;
 	}
@@ -449,7 +452,8 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
+			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {

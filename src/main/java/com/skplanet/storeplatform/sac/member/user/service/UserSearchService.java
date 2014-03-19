@@ -12,8 +12,6 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -28,7 +26,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSa
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSac;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
@@ -70,7 +67,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader);
+	//	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -106,7 +103,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserInfo searchUser(DetailReq req, SacRequestHeader sacHeader);
+	public DetailRes searchUser(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -130,7 +127,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader);
+	//	public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -154,7 +151,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader);
+	//	public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * <pre>
