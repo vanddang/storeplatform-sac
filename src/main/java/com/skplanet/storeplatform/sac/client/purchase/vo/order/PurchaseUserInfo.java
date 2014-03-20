@@ -9,7 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 
 /**
  * 
@@ -17,11 +20,15 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
  */
-public class PurchaseUserKeyInfo extends CommonInfo {
+public class PurchaseUserInfo extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank(groups = { GroupCreateBizPurchase.class })
 	private String userKey;
+	@NotBlank(groups = { GroupCreateBizPurchase.class })
 	private String deviceKey;
+	@NotBlank(groups = { GroupCreateBizPurchase.class })
+	private String deviceId;
 
 	/**
 	 * @return the userKey
@@ -51,6 +58,21 @@ public class PurchaseUserKeyInfo extends CommonInfo {
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return the deviceId
+	 */
+	public String getDeviceId() {
+		return this.deviceId;
+	}
+
+	/**
+	 * @param deviceId
+	 *            the deviceId to set
+	 */
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 }
