@@ -146,7 +146,6 @@
 		                           AND A.PROD_ID = E.PROD_ID
 		                           AND A.PROD_ID = F.PROD_ID
 		                           AND A.PROD_ID = G.PROD_ID
---		                           AND H.PROD_ID = A.PROD_ID
 		                           AND A.PROD_ID = I.PROD_ID
 		                           AND E.TENANT_ID = #{tenantId}
 		                           AND E.TENANT_ID = F.TENANT_ID
@@ -586,7 +585,7 @@
                                    AND A.TENANT_ID = I.TENANT_ID
                                    AND A.TENANT_ID = L.TENANT_ID
                                    AND B.PROD_CHRG_YN     = 'Y'
-                                   AND B.SVC_GRP_CD       = 'DP000201'    -- 다운로드 BEST 일반앱일때만 조건 추가
+                                   AND B.SVC_GRP_CD       = 'DP000201'    /* 다운로드 BEST 일반앱일때만 조건 추가 */
                                    AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
@@ -714,7 +713,7 @@
                                    AND A.TENANT_ID = I.TENANT_ID
                                    AND A.TENANT_ID = L.TENANT_ID
                                    AND B.PROD_CHRG_YN     = 'N'
-                                   AND B.SVC_GRP_CD       = 'DP000201'    -- 다운로드 BEST 일반앱일때만 조건 추가
+                                   AND B.SVC_GRP_CD       = 'DP000201'    /* 다운로드 BEST 일반앱일때만 조건 추가 */
                                    AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
@@ -840,7 +839,7 @@
                                    AND A.TENANT_ID = H.TENANT_ID
                                    AND A.TENANT_ID = I.TENANT_ID
                                    AND A.TENANT_ID = L.TENANT_ID
-                                   AND B.SVC_GRP_CD       = 'DP000201'    -- 다운로드 BEST 일반앱일때만 조건 추가
+                                   AND B.SVC_GRP_CD       = 'DP000201'    /* 다운로드 BEST 일반앱일때만 조건 추가 */
                                    AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
