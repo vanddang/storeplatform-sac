@@ -13,7 +13,19 @@
            , B.TOP_MENU_ID
            , B.CONTENTS_TYPE_CD
            , B.TOTAL_COUNT
-        FROM (SELECT A.*
+        FROM (SELECT 
+                     A.TENANT_ID
+                   , A.MENU_ID
+                   , A.PROD_ID
+                   , A.PART_PROD_ID
+                   , A.CATALOG_ID
+                   , A.TOP_MENU_ID
+                   , A.META_CLSF_CD
+                   , A.SVC_GRP_CD
+                   , A.CONTENTS_TYPE_CD
+                   , A.EXPO_ORD_ALWAYS_YN
+                   , A.EXPO_ORD
+                   , A.EXPO_ORD_SUB
                    , COUNT(*) OVER () AS TOTAL_COUNT
                    , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
                FROM (SELECT A.TENANT_ID

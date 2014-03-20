@@ -184,8 +184,15 @@
              , BB.TOTAL_COUNT
             FROM
             (
-             SELECT
-                AA.*
+             SELECT                
+                  AA.PART_PROD_ID
+                , AA.PROD_ID
+                , AA.TOP_MENU_ID
+                , AA.CONTENTS_TYPE_CD
+                , AA.MENU_ID
+                , AA.UPD_DT
+                , AA.CHAPTER
+                , AA.FIRST_PROD_ID
                 , COUNT(*) OVER () AS TOTAL_COUNT
                 , ROWNUM AS RNUM
                 FROM
@@ -252,7 +259,13 @@
             FROM
             (
              SELECT
-	            AA.*
+	              AA.PART_PROD_ID
+                , AA.PROD_ID
+                , AA.TOP_MENU_ID
+                , AA.CONTENTS_TYPE_CD
+                , AA.MENU_ID
+                , AA.UPD_DT
+                , AA.CHAPTER
 	            , COUNT(*) OVER () AS TOTAL_COUNT
 	            , ROWNUM AS RNUM
 	            FROM

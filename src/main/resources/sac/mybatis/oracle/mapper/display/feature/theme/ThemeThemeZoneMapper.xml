@@ -41,7 +41,19 @@
              , B.SVC_GRP_CD
              , B.CONTENTS_TYPE_CD
              , B.TOTAL_COUNT
-          FROM (SELECT A.*
+          FROM (SELECT 
+                       TENANT_ID
+                     , MENU_ID
+                     , PROD_ID
+                     , PART_PROD_ID
+                     , CATALOG_ID
+                     , TOP_MENU_ID
+                     , META_CLSF_CD
+                     , SVC_GRP_CD
+                     , CONTENTS_TYPE_CD
+                     , EXPO_ORD_ALWAYS_YN
+                     , EXPO_ORD
+                     , EXPO_ORD_SUB
                      , COUNT(*) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
                   FROM (SELECT A.TENANT_ID
