@@ -603,6 +603,7 @@
 		                           AND  MP_E.PART_PROD_ID = EP_J.PROD_ID
 		                           AND  EP_I.TENANT_ID = EP_J.TENANT_ID
 		                           AND  MP_E.PART_PROD_ID = EP_K.PROD_ID
+		                           AND  EP_K.DEVICE_MODEL_CD = EP_L.DEVICE_MODEL_CD 
 		                           AND  MP_E.PART_PROD_ID = EP_M.PROD_ID
 		                           AND  CH_A.SVC_GRP_CD = 'DP000203'
 		                           AND  CH_A.CONTENTS_TYPE_CD = 'PD002501'
@@ -618,8 +619,7 @@
 		                           AND  EP_I.TENANT_ID = #{tenantId}
 		                           AND  EP_I.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
 		                           AND  SYSDATE BETWEEN EP_J.APPLY_START_DT AND EP_J.APPLY_END_DT
-		                           AND  (EP_K.DEVICE_MODEL_CD = #{deviceModelCd} OR EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd})
-		                           AND  EP_L.DEVICE_MODEL_CD = #{deviceModelCd}
+		                           AND  EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd}
 		                           AND  DECODE(EP_L.EBOOK_SPRT_YN, 'Y', DECODE(CH_A.META_CLSF_CD, 'CT24', DECODE(EP_L.MAGAZINE_SPRT_YN, 'Y', 1, 0), 'CT26', DECODE(EP_L.MAGAZINE_SPRT_YN, 'Y', 1, 0), 1), 0) = 1
 		                           AND  EP_M.SALE_YN = 'Y'
                                    <if test='idType == "channel"'>
@@ -740,6 +740,7 @@
 		                   AND  MP_E.PART_PROD_ID = EP_J.PROD_ID
 		                   AND  EP_I.TENANT_ID = EP_J.TENANT_ID
 		                   AND  MP_E.PART_PROD_ID = EP_K.PROD_ID
+		                   AND  EP_K.DEVICE_MODEL_CD = EP_L.DEVICE_MODEL_CD
 		                   AND  MP_E.PART_PROD_ID = EP_M.PROD_ID
 		                   AND  CH_A.SVC_GRP_CD = 'DP000203'
 		                   AND  CH_A.CONTENTS_TYPE_CD = 'PD002501'
@@ -755,8 +756,7 @@
 		                   AND  EP_I.TENANT_ID = #{tenantId}
 		                   AND  EP_I.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
 		                   AND  SYSDATE BETWEEN EP_J.APPLY_START_DT AND EP_J.APPLY_END_DT
-		                   AND  (EP_K.DEVICE_MODEL_CD = #{deviceModelCd} OR EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd})
-		                   AND  EP_L.DEVICE_MODEL_CD = #{deviceModelCd}
+		                   AND  EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd}
 		                   AND  EP_L.COMIC_SPRT_YN = 'Y'
 		                   AND  EP_M.SALE_YN = 'Y'
 		                   AND  MP_E.PART_PROD_ID = #{productId}
