@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.ErrorMessageBuilder;
-import com.skplanet.storeplatform.sac.runtime.acl.service.AclService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo;
 import com.skplanet.storeplatform.sac.runtime.flow.exception.AclException;
@@ -40,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private AclService aclService;
+	private AclDbService aclService;
 
 	@Value("#{propertiesForSac['skp.common.service.acl']}")
 	private boolean aclYn;

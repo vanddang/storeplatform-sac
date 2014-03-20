@@ -24,7 +24,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skplanet.storeplatform.framework.core.exception.ErrorMessageBuilder;
 import com.skplanet.storeplatform.sac.runtime.acl.constant.AclConstant;
-import com.skplanet.storeplatform.sac.runtime.acl.service.AclService;
 import com.skplanet.storeplatform.sac.runtime.flow.exception.ValidException;
 import com.skplanet.storeplatform.sac.runtime.flow.exception.code.ValidErrorCode;
 import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderInfo;
@@ -41,7 +40,7 @@ public class ValidationServiceImpl implements ValidationService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private AclService aclService;
+	private AclDbService aclService;
 
 	@Value("#{propertiesForSac['skp.common.service.acl']}")
 	private boolean aclYn;
