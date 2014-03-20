@@ -491,6 +491,7 @@
                 AND D.MENU_ID = F.MENU_ID
                 AND B.CATALOG_ID = G.CATALOG_ID
                 AND G.PROD_ID = H.PROD_ID
+                AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
                 AND H.PART_PROD_ID = I.PROD_ID
                 AND I.PROD_ID = J.PROD_ID
                 AND I.PROD_ID = K.PROD_ID
