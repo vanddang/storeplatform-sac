@@ -43,10 +43,10 @@ public class SellerSubServiceImpl implements SellerSubService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerSubServiceImpl.class);
 
 	@Autowired
-	private SellerSCI sellerSCI;
+	private SellerSCI sellerSCI; // 회원 Component 판매자 기능 Interface.
 
 	@Autowired
-	private MemberCommonComponent commonComponent;
+	private MemberCommonComponent commonComponent; // 회원 공통기능 컴포넌트
 
 	/**
 	 * <pre>

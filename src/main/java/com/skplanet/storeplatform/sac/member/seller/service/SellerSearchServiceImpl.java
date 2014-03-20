@@ -88,17 +88,17 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerSearchServiceImpl.class);
 
 	@Autowired
-	private SellerSCI sellerSCI;
+	private SellerSCI sellerSCI; // 회원 Component 판매자 기능 Interface.
 
 	@Autowired
-	private SearchSellerKeySCI searchSellerKeySCI;
+	private SearchSellerKeySCI searchSellerKeySCI; // 전시 Internal Interface.
 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
 	@Autowired
-	private MemberCommonComponent commonComponent;
+	private MemberCommonComponent commonComponent; // 회원 공통기능 컴포넌트
 
 	/**
 	 * <pre>
