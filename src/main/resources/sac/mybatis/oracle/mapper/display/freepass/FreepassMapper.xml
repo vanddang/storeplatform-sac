@@ -3,8 +3,7 @@
 <mapper namespace="Freepass">
     <!-- 정액제 리스트 조회-->
     <select id="selectFreepassList" parameterType="FreepassListSacReq" resultType="ProductBasicInfo">
-			/* FreepassMapper.xml, selectFreepassList, SAC 전시  , 2014-02-12 */
-			SELECT 
+			SELECT /* FreepassMapper.selectFreepassList, 정액제 리스트 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
 				* 
 			FROM
 			(
@@ -92,7 +91,7 @@
     
     <!-- 정액제 상품 상세 조회 -->
     <select id="selectFreepassDetail" parameterType="FreepassDetailSacReq" resultType="metaInfo">
-	SELECT  /* FreepassMapper.xml, selectFreepassDetail, SAC 전시 , 2014-02-11 */
+	SELECT  /* FreepassMapper.selectFreepassDetail, 정액제 상품 상세 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
 		IV.*
 		, NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
 		, NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
@@ -185,7 +184,7 @@
     
     <!-- 정액제 매핑상품 조회 -->
     <select id="selectFreepassMapProduct" parameterType="FreepassDetailSacReq" resultType="FreepassMapProduct">
-		SELECT  /* FreepassMapper.xml, getFreepassMapProduct, SAC 전시 , 2014-02-17 */
+		SELECT  /* FreepassMapper.selectFreepassMapProduct, 정액제 매핑상품 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
 			*
 		FROM
 		(
@@ -256,8 +255,7 @@
     
     <!-- 특정 상품에 적용할 자유 이용권 조회-->
     <select id="searchFreepassListByChannel" parameterType="FreepassSpecificSacReq" resultType="ProductBasicInfo">
-            /* FreepassMapper.xml, searchFreepassListByChannel, SAC 전시  , 2014-02-12 */
-            SELECT 
+            SELECT /* FreepassMapper.searchFreepassListByChannel, 특정 상품에 적용할 자유 이용권 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
                 * 
             FROM
             (
@@ -340,10 +338,9 @@
             ORDER BY OV.RNUM
     </select>
     
-    <!-- 정액제 리스트 조회-->
+    <!-- 정액제 시리즈 리스트 조회-->
     <select id="selectFreepassSeries" parameterType="FreepassSeriesSacReq" resultType="ProductBasicInfo">
-			/* FreepassMapper.xml, selectFreepassSeries, SAC 전시 : 서영배 , 2014-02-26 */
-			SELECT 
+			SELECT /* FreepassMapper.selectFreepassSeries, 정액제 시리즈 리스트 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
 				* 
 			FROM
 			(
