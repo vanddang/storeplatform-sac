@@ -23,7 +23,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 public class AclServiceTobeImplTest {
 
 	@InjectMocks
-	private AclServiceTobeImpl aclService;
+	private AclService aclService;
 
 	@Mock
 	private VerifyService verifyMock;
