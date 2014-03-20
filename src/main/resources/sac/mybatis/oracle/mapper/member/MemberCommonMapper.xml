@@ -4,7 +4,7 @@
 
     <!-- 필수 약관 동의 목록 조회 -->
     <select id="getMandAgreeList" parameterType="ClauseDTO" resultType="ClauseDTO">
-		SELECT /* MemberCommonMapper.xml, getMandAgreeList, SAC : 심대진 , 2014-01-08 */
+		SELECT /* MemberCommonMapper.getMandAgreeList, 필수약관 동의목록 조회, 심대진/다모아, 2014-01-08 */
 		      A.TENANT_ID         AS tenantId
 			, A.MAND_AGREE_YN     AS mandAgreeYn
 			, A.USE_YN            AS useYn
@@ -62,7 +62,7 @@
 
     <!-- 폰 정보 조회 -->
     <select id="getPhoneInfo" parameterType="DeviceDTO" resultType="DeviceDTO">
-		SELECT /* MemberCommonMapper.xml, getPhoneInfo, SAC : 심대진 , 2014-01-08 */
+		SELECT /* MemberCommonMapper.getPhoneInfo, 폰정보 조회, 심대진/다모아, 2014-01-08 */
             DEVICE_MODEL_CD,
 			MODEL_NM,
 			ENG_MODEL_NM,
@@ -142,7 +142,7 @@
 
     <!-- OMD 단말여부 확인 -->
     <select id="getOmdCount" parameterType="String" resultType="Integer">
-        SELECT /* MemberCommonMapper.xml, getOmdCount, SAC : 심대진 , 2014-01-17 */
+        SELECT /* MemberCommonMapper.getOmdCount, OMD 단말여부 확인, 심대진/다모아, 2014-01-17 */
                COUNT(1)
           FROM TB_CM_OMD_DEVICE
          WHERE UA_CD = #{uacd}
