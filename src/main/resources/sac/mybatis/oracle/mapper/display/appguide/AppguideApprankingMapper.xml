@@ -63,7 +63,7 @@
                           , TB_CM_DEVICE I
                       WHERE A.PROD_ID = B.PROD_ID
                         AND B.PROD_RSHP_CD = 'DP010802'
-                       <if test='menuId != null'>
+                       <if test="menuId != null and menuId != ''">
                         AND A.MENU_ID = #{menuId}
                        </if>
                        <if test='prodCharge != "A"'>
@@ -177,7 +177,7 @@
                        AND D.CATALOG_ID = E.CATALOG_ID
                        AND C.PROD_ID = E.PROD_ID
                        AND D.CATALOG_ID = ESM.CATALOG_ID   
-                       <if test='menuId != null'>
+                       <if test="menuId != null and menuId != ''">
                         AND ESM.MENU_ID = #{menuId}
                        </if>
                        <if test='prodCharge != "A"'>
