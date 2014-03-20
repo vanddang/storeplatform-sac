@@ -273,11 +273,11 @@
 		      , TB_CM_DEVICE      D
 		 WHERE  A.PROD_ID = B.PROD_ID
 		   AND  A.PROD_ID = C.PROD_ID
-		   AND  C.DEVICE_MODEL_CD = D.DEVICE_MODEL_CD
 		   AND  B.PROD_STATUS_CD = 'PD000403'
 		   AND  B.EXPO_YN = 'Y'
 		   AND  B.TENANT_ID = #{tenantId}
 		   AND  (C.DEVICE_MODEL_CD = #{deviceModelCd} OR C.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+		   AND  D.DEVICE_MODEL_CD = #{deviceModelCd}
 		   AND  A.PROD_ID = #{prodId}
          <!-- 이북 상품 -->
          <if test='topMenuId == "DP13"'>
