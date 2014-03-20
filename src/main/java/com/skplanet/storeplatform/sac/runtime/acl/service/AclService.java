@@ -9,41 +9,74 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service;
 
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.annotation.Header;
+import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo;
+import com.skplanet.storeplatform.sac.runtime.acl.service.authentication.AuthenticateService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.authorization.AuthorizeService;
+import com.skplanet.storeplatform.sac.runtime.acl.service.verification.VerifyService;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 /**
- * 
- * Calss 설명
- * 
- * Updated on : 2013. 11. 26. Updated by : 김현일, 인크로스.
+ *
+ * Access Control Layer
+ *
+ * Updated on : 2014. 2. 5.
+ * Updated by : 서대영/임근대/정희원, SK 플래닛
  */
-public interface AclService {
+@Service
+public class AclService {
+
+	@Autowired
+	private VerifyService verifyService;
+
+	@Autowired
+	private AuthenticateService authenticateService;
+
+	@Autowired
+	private AuthorizeService authorizationService;
+
+    private final boolean isEffective = true;
 
 	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param params
-	 *            params
-	 * @return AclAuthKeyVO
+	 * Request를 검증한다. (Interface 및 Timestamp 검사)
 	 */
-	public AclAuthKeyInfo searchAclAuthKey(Map<String, String> params);
+	public boolean validate(@Header("httpHeaders") HttpHeaders headers) {
+		if (!this.isEffective) return true;
+
+		// Step 1) 필수 헤더 검사
+		this.verifyService.verifyHeaders(headers);
+		// Step 2) 요청 시간 검사
+		this.verifyService.verifyTimestamp(headers);
+
+		return true;
+	}
 
 	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param params
-	 *            params
-	 * @return AclAuthVO
+	 * Tenant를 인증한다. (등록된 Tenant인지 확인)
 	 */
-	public AclAuthInfo searchAclAuth(Map<String, String> params);
+	public boolean authenticate(@Header("httpHeaders") HttpHeaders headers) {
+		if (!this.isEffective) return true;
+
+		// Step 1) Tenant 인증
+		this.authenticateService.authenticate(headers);
+
+		return true;
+	}
+
+	/**
+	 * Interface를 인가한다. (호출하는 API에 권한이 있는지 확인)
+	 */
+	public boolean authorize(@Header("httpHeaders") HttpHeaders headers) {
+		if (!this.isEffective) return true;
+
+		// 1. Interface 유효성 확인
+		this.authorizationService.checkInterface(headers);
+    	// 2. Interface, Tenant 간 맵핑 확인
+		this.authorizationService.checkMapping(headers);
+
+		return true;
+	}
 
 }
