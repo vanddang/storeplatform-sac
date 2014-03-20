@@ -85,6 +85,6 @@ public class MusicDetailParam {
     }
 
     public String getStandardModel() {
-        return DisplayConstants.DP_ANDROID_STANDARD2_NM;
+        return DisplayConstants.DP_ANY_PHONE_4MM;
     }
 }
