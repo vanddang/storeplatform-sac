@@ -110,10 +110,10 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 				menu.setName(otherServiceGroup.getTopMenuNm());
 				menu.setType("topClass");
 				menuList.add(menu);
-				menu = new Menu(); // 메뉴
-				menu.setId(otherServiceGroup.getMenuId());
-				menu.setName(otherServiceGroup.getMenuNm());
-				menuList.add(menu);
+				// menu = new Menu(); // 메뉴
+				// menu.setId(otherServiceGroup.getMenuId());
+				// menu.setName(otherServiceGroup.getMenuNm());
+				// menuList.add(menu);
 				menu = new Menu(); // SVC_GRP_CD
 				menu.setId(otherServiceGroup.getSvcGrpCd());
 				menu.setType("svcGrpCd");
