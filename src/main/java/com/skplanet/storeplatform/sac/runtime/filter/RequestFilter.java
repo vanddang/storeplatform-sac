@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.runtime.filter;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.skplanet.storeplatform.framework.integration.filter.AbstractStorePlatformRequestFilter;
 
 /**
@@ -23,6 +25,16 @@ public class RequestFilter extends AbstractStorePlatformRequestFilter {
 	@Override
 	protected String getFdsLoggerName() {
 		return "TLOG_SAC_LOGGER";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.framework.integration.filter.AbstractStorePlatformRequestFilter#getGUID()
+	 */
+	@Override
+	protected String getGUID(HttpServletRequest request) {
+		return null;
 	}
 
 }
