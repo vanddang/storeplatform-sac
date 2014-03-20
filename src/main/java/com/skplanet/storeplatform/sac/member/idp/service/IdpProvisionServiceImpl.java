@@ -21,8 +21,11 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.pdp.sentinel.shuttle.TstoreSentinelShuttle;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
@@ -362,6 +365,23 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
 			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+
+			/* FDS 로그 */
+			final String fdsLogDeviceKey = deviceKey;
+			final String fdsLogBeMdn = beMdn;
+			final String fdsLogMdn = mdn;
+			final String fdsLogSvcMngNum = svcMngNum;
+
+			new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
+				@Override
+				public void customize(TstoreSentinelShuttle shuttle) {
+					shuttle.log_id("TL00034").insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
+							.device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
+
+					LOGGER.info(shuttle.toString());
+				}
+			});
+
 		}
 
 		return result;
@@ -939,7 +959,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			removeUserReq.setCommonRequest(commonRequest);
 			removeUserReq.setUserKey(schUserRes.getUserMbr().getUserKey());
 			removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_JOIN_AGREE_EXPIRED); // 가입승인만료
-			removeUserReq.setSecedeReasonCode("US010409"); // 기타
+			removeUserReq.setSecedeReasonCode("US010408"); // 기타
 			removeUserReq.setSecedeReasonMessage("가입승인만료");
 
 			this.userSCI.remove(removeUserReq);
