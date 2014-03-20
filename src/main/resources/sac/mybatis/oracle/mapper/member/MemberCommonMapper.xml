@@ -31,7 +31,7 @@
     
     <!-- 약관 목록 조회 -->
     <select id="getClauseList" parameterType="ClauseDTO" resultType="ClauseDTO">
-		SELECT    /* MemberCommonMapper.xml, getClauseList, SAC : 강신완 , 2014-02-12 */
+		SELECT    /* MemberCommonMapper.getClauseList, 약관목록조회, 강신완/부르칸, 2014-02-12 */
             clause_id           AS clauseId,
             clause_item_cd      AS clauseItemCd,
             start_day           AS startDay,
