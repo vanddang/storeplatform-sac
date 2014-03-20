@@ -4,15 +4,15 @@
 
 	<!-- UA 코드 정보 조회 -->
 	<select id="getUaCode" parameterType="String" resultType="String">
-		SELECT  /* MiscellaneousMapper.xml, getUaCode, SAC : 김다슬 , 2014-01-09 */
+		SELECT  /* MiscellaneousMapper.getUaCode, UA 코드 정보 조회, 김다슬/인크로스, 2014-01-09 */
 		        UA_CD
 		  FROM  TB_CM_DEVICE
 		 WHERE  DEVICE_MODEL_CD = #{deviceModelNo}
 	</select>
 	
-	<!-- 휴대폰 SMS 인증 코드 및 Signature 일치 여부 및 인증코드 만료시간 확인 -->
+	<!-- 휴대폰 SMS 인증 정보 확인 (인증 코드,Signature,만료시간)-->
 	<select id="searchPhoneAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
-       SELECT  /* MiscellaneousMapper.xml, searchPhoneAuthInfo, SAC : 김다슬 , 2014-01-16 */
+       SELECT  /* MiscellaneousMapper.searchPhoneAuthInfo, 휴대폰 SMS 인증 정보 확인 (인증 코드,Signature,만료시간), 김다슬/인크로스, 2014-01-16 */
                AUTH_SEQ
              , AUTH_SIGN
              , AUTH_VALUE
@@ -29,7 +29,7 @@
 	
 	<!--  휴대폰 SMS & 이메일 인증 여부 업데이트(인증성공) -->
     <update id="updateServiceAuthYn" parameterType="String">
-    /* MiscellaneousMapper.xml, updateServiceAuthYn, SAC : 김다슬 , 2014-01-16 */
+    /* MiscellaneousMapper.updateServiceAuthYn, 휴대폰 SMS & 이메일 인증 여부 업데이트(인증성공), 김다슬/인크로스, 2014-01-16 */
     UPDATE  TB_CM_SVC_AUTH
        SET  AUTH_COMPT_YN = 'Y'
           , UPD_ID = 'admin'
@@ -39,7 +39,7 @@
     
     <!-- 휴대폰 SMS & 이메일 인증 코드 정보 저장 -->
     <insert id="createServiceAuthCode" parameterType="ServiceAuth">
-    /* MiscellaneousMapper.xml, createServiceAuthCode, SAC : 김다슬 , 2014-01-21 */
+    /* MiscellaneousMapper.createServiceAuthCode, 휴대폰 SMS & 이메일 인증 코드 정보 저장, 김다슬/인크로스, 2014-01-21 */
     INSERT INTO TB_CM_SVC_AUTH  
               (
                  AUTH_SEQ
@@ -90,9 +90,9 @@
     </insert>
     
     
-    <!-- 이메일 인증 여부 확인 (기존 인증회원 여부 체크)-->
+    <!-- 미인증 이메일 코드 존재여부 확인 -->
     <select id="searchEmailAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
-    SELECT  /* MiscellaneousMapper.xml, searchEmailAuthYn, SAC : 김다슬 , 2014-01-23 */ 
+    SELECT  /* MiscellaneousMapper.searchEmailAuthYn, 미인증 이메일 코드 존재여부 확인, 김다슬/인크로스, 2014-01-23 */ 
             AUTH_SEQ
           , AUTH_VALUE
       FROM  TB_CM_SVC_AUTH
@@ -101,9 +101,9 @@
        AND  AUTH_COMPT_YN = 'N'
     </select>
     
-    <!-- 기존 이메일 인증코드 인증만료 시간 연장 -->
+    <!-- 기존 이메일 인증코드 만료 시간 연장 -->
     <update id="updateServiceAuthTime" parameterType="String">
-    /* MiscellaneousMapper.xml, updateServiceAuthTime, SAC : 김다슬 , 2014-02-25 */
+    /* MiscellaneousMapper.updateServiceAuthTime, 기존 이메일 인증코드 만료 시간 연장, 김다슬/인크로스, 2014-02-25 */
     UPDATE  TB_CM_SVC_AUTH
        SET  AUTH_VALUE_CREATE_DT = SYSDATE
           , UPD_ID = 'admin'
@@ -113,7 +113,7 @@
     
     <!-- 이메일 인증코드 정보 확인 -->
     <select id="searchEmailAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
-    SELECT  /* MiscellaneousMapper.xml, searchEmailAuthInfo, SAC : 김다슬 , 2014-01-23 */
+    SELECT  /* MiscellaneousMapper.searchEmailAuthInfo, 이메일 인증코드 정보 확인, 김다슬/인크로스, 2014-01-23 */
             AUTH_SEQ
           , MBR_NO
           , AUTH_EMAIL
