@@ -3,7 +3,7 @@
 <mapper namespace="RecommendNewMemberProduct">
     <!-- 신규 가입 회원 추천 상품 조회 -->
     <select id="searchRecommendNewMemberProductList" parameterType="RecommendNewMemberProductReq" resultType="MetaInfo">
-		SELECT /* RecommendNewMemberProductMapper.xml, searchRecommendNewMemberProductList, SAC 전시, 2014-02-25 */
+		SELECT /* searchRecommendNewMemberProductList.getDownloadMusicInfo, 신규 가입 회원 추천 상품 조회 , 이석희/아이에스플러스, 2014-02-25 */
 		       KA.*
 		  FROM
 		       (
