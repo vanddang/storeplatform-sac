@@ -478,7 +478,7 @@ public class LoginServiceImpl implements LoginService {
 				removeUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 				removeUserReq.setUserKey(deviceInfo.getUserKey());
 				removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
-				removeUserReq.setSecedeReasonCode("US010408");
+				removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
 				removeUserReq.setSecedeReasonMessage("변동성인증수단없음");
 				this.userSCI.remove(removeUserReq);
 

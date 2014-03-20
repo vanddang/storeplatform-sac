@@ -959,7 +959,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			removeUserReq.setCommonRequest(commonRequest);
 			removeUserReq.setUserKey(schUserRes.getUserMbr().getUserKey());
 			removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_JOIN_AGREE_EXPIRED); // 가입승인만료
-			removeUserReq.setSecedeReasonCode("US010408"); // 기타
+			removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER); // 기타
 			removeUserReq.setSecedeReasonMessage("가입승인만료");
 
 			this.userSCI.remove(removeUserReq);
