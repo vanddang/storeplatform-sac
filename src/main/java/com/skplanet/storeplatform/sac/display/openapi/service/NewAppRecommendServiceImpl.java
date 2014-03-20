@@ -164,6 +164,8 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 
 				product.setProductExplain(metaInfo.getProdBaseDesc()); // 상품 설명
 
+				product.setDate(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, metaInfo.getRegDt()));
+
 				/*
 				 * 판매자 정보중 회사명 Seller Key는 Null로 Set해서 공개하지 않는다.
 				 */

@@ -125,6 +125,7 @@
 		                              , D.AID
 		                              , D.PKG_NM AS APK_PKG_NM
 		                              , D.SALE_STRT_DT
+		                              , D.REG_DT
 		                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
 		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE   
 		                              , NVL(F.PATICPERS_CNT, 0) AS PATICPERS_CNT             
@@ -223,13 +224,13 @@
 		                              , A.SELLER_MBR_NO
 		                              , A.EXPO_SELLER_NM
 		                              , A.TOP_MENU_ID
-		                              , A.REG_DT
 		                              , C.PROD_NM
 		                              , C.PROD_BASE_DESC
 		                              , C.PROD_DTL_DESC
 		                              , D.AID
 		                              , D.PKG_NM
 		                              , D.SALE_STRT_DT
+		                              , D.REG_DT
 		                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
 		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE              
 		                              , NVL(F.PATICPERS_CNT, 0) AS PATICPERS_CNT              
@@ -1246,7 +1247,6 @@
 		                             AND  MP_G.PART_PROD_ID = EP_I.PROD_ID
 		                             AND  MP_G.PART_PROD_ID = EP_J.PROD_ID
 		                             AND  MP_G.PART_PROD_ID = EP_K.PROD_ID
-		                             AND  EP_K.DEVICE_MODEL_CD = EP_L.DEVICE_MODEL_CD
 		                             AND  MP_G.PART_PROD_ID = EP_M.PROD_ID
 		                             AND  CH_B.USE_YN = 'Y'
 		                             AND  CH_C.LANG_CD = #{langCd}
@@ -1268,8 +1268,8 @@
 		                             AND  EP_I.TENANT_ID = #{tenantId}
 		                             AND  SYSDATE BETWEEN EP_I.APPLY_START_DT AND EP_I.APPLY_END_DT
 		                             AND  EP_J.SALE_YN = 'Y'
-                                     AND  EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd}
-                                     AND  EP_L.DEVICE_MODEL_CD = #{deviceModelCd} 
+                                     AND (EP_K.DEVICE_MODEL_CD = #{deviceModelCd} OR EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                                     AND  EP_L.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */  
 		                             AND  EP_L.REP_DEVICE_YN = 'Y'
                                      <if test ="topMenuId == 'DP13'">   
                                      AND EP_L.EBOOK_SPRT_YN ='Y' /* 이북 조회일때 */
@@ -1377,7 +1377,7 @@
 		                             AND  MP_H.PART_PROD_ID = EP_I.PROD_ID
 		                             AND  MP_H.PART_PROD_ID = EP_J.PROD_ID
 		                             AND  MP_H.PART_PROD_ID = EP_K.PROD_ID
-		                             AND  EP_K.DEVICE_MODEL_CD = EP_L.DEVICE_MODEL_CD
+		                             --AND  EP_K.DEVICE_MODEL_CD = EP_L.DEVICE_MODEL_CD
 		                             AND  MP_H.PART_PROD_ID = EP_M.PROD_ID
 		                             AND  CH_B.USE_YN = 'Y'
 		                             AND  CH_C.LANG_CD = #{langCd}
@@ -1400,7 +1400,8 @@
 		                             AND  EP_I.SVC_GRP_CD = 'DP000203'
 		                             AND  EP_I.CONTENTS_TYPE_CD = 'PD002502'
 		                             AND  EP_J.SALE_YN = 'Y'
-		                             AND  EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd}
+			                         AND (EP_K.DEVICE_MODEL_CD = #{deviceModelCd} OR EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+			                         AND  EP_L.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */      		                             
 		                             AND  EP_L.REP_DEVICE_YN = 'Y'
 		                             AND  (CASE WHEN (NVL(EP_I.DRM_YN, 'N') = 'Y' AND NVL(EP_L.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 ELSE 1 END) = 1
 		                             AND  EP_M.TENANT_ID = #{tenantId}
