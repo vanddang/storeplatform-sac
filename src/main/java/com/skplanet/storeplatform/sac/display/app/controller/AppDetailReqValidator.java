@@ -36,9 +36,9 @@ public class AppDetailReqValidator implements Validator {
 
         if (StringUtils.isEmpty(vo.getDeviceKey()) ^ StringUtils.isEmpty(vo.getUserKey())) {
             if(StringUtils.isEmpty(vo.getDeviceKey()))
-                errors.rejectValue("userKey", "NotEmpty", new Object[]{"userKey"}, "deviceKey, userKey가 함께 지정되어야 합니다.");
-            if(StringUtils.isEmpty(vo.getUserKey()))
                 errors.rejectValue("deviceKey", "NotEmpty", new Object[]{"deviceKey"}, "deviceKey, userKey가 함께 지정되어야 합니다.");
+            if(StringUtils.isEmpty(vo.getUserKey()))
+                errors.rejectValue("userKey", "NotEmpty", new Object[]{"userKey"}, "deviceKey, userKey가 함께 지정되어야 합니다.");
         }
     }
 }
