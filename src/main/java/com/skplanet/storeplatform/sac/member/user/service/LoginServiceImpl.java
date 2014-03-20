@@ -545,7 +545,6 @@ public class LoginServiceImpl implements LoginService {
 					if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_OK)) {
 
 						throw new StorePlatformException("SAC_MEM_1200"); // 원아이디 이용동의 간편가입 대상 정보가 상이합니다.(SC회원 DB 미동의회원, IDP 동의회원)
-						// TODO. FDS 로그 남김???
 
 					} else if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입 상태인 경우 EC에서 성공으로 처리하여 joinSstList를 Response로 받는다.
 
@@ -913,8 +912,8 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
-		LOGGER.info("::: 변동성 처리 구매이관 여부 {}", isPurchaseChange);
-		LOGGER.info("::: 변동성 처리 신규가입처리 여부 {}", isJoinMdn);
+		LOGGER.info("::: 변동성 구매이관 대상여부 {}", isPurchaseChange);
+		LOGGER.info("::: 변동성 신규가입처리 대상여부 {}", isJoinMdn);
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
@@ -1001,7 +1000,7 @@ public class LoginServiceImpl implements LoginService {
 			this.userSCI.updateUser(updateUserRequest);
 
 			/* 가가입 상태인 mac 회원정보를 정상상태로 */
-			this.updateLoginStatus(requestHeader, MemberConstants.USER_LOGIN_STATUS_NOMAL, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+			this.updateMainStatus(requestHeader, MemberConstants.MAIN_STATUS_NORMAL, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress());
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
@@ -1145,7 +1144,7 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
-	 * 회원 상태코드 업데이트.
+	 * 회원 로그인 상태코드 업데이트.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -1172,6 +1171,39 @@ public class LoginServiceImpl implements LoginService {
 		updStatusUserReq.setCommonRequest(commonRequest);
 		updStatusUserReq.setKeySearchList(keySearchList);
 		updStatusUserReq.setLoginStatusCode(loginStatusCode);
+
+		this.userSCI.updateStatus(updStatusUserReq);
+
+	}
+
+	/**
+	 * 회원 메인상태코드 업데이트.
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param mbrStatusMainCd
+	 *            메인 상태코드
+	 * @param keyType
+	 *            조회타입
+	 * @param keyString
+	 *            조회값
+	 */
+	private void updateMainStatus(SacRequestHeader requestHeader, String userMainStatus, String keyType, String keyString) {
+
+		UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(keyType);
+		key.setKeyString(keyString);
+		keySearchList.add(key);
+
+		updStatusUserReq.setCommonRequest(commonRequest);
+		updStatusUserReq.setKeySearchList(keySearchList);
+		updStatusUserReq.setUserMainStatus(userMainStatus);
 
 		this.userSCI.updateStatus(updStatusUserReq);
 
