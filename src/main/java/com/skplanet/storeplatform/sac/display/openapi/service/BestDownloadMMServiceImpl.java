@@ -170,6 +170,10 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 				}
 			}
 		} else {
+			if (StringUtils.isEmpty(orderedBy)) {
+				throw new StorePlatformException("SAC_DSP_0002", "orderedBy", orderedBy);
+			}
+
 			if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
 				this.log.debug("---------------------------------------------------------------------");
 				this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchBestDownloadAppListByOrder : {}");
