@@ -63,7 +63,7 @@
                              AND CM.SCL_SHPG_SPRT_YN = 'Y'
                              AND DV.DEVICE_MODEL_CD = #{deviceModelNo}
                              AND PROD_ID  = H.PART_PROD_ID
-                          ) AS PHONE_SPRT_YN                          
+                          ) AS PROD_SPRT_YN                          
                         ,J.DRM_YN 
                         ,J.USE_PERIOD_UNIT_CD
                         ,J.USE_PERIOD
@@ -224,7 +224,7 @@
                             DV.COMIC_SPRT_YN = ( CASE WHEN PD.TOP_MENU_ID='DP14' 
                                         THEN 'Y' ELSE 'NOT SUPPORT' END)
                            )
-                      ) AS PHONE_SPRT_YN                
+                      ) AS PROD_SPRT_YN                
                     , PD.DRM_YN
                     , PD.USE_PERIOD_UNIT_CD
                     , PD.USE_PERIOD
