@@ -191,7 +191,7 @@ public class AdjustWiredProfileTest {
 			map.put("user_id", "vanddangtest022");
 			map.put("user_sex", "M"); //M/F
 			map.put("user_birthday", "19831210");
-			map.put("user_email", "vanddang@gmail.com");
+			map.put("user_email", "vanddang1111@gmail.com");
 			map.put("is_rname_auth", "Y");
 			map.put("user_name", "테스터");
 			map.put("user_social_number", "8312101");
