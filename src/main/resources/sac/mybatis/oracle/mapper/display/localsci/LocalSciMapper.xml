@@ -3,7 +3,7 @@
 <mapper namespace="LocalSci">
     <!-- Aid로 Seller Key 조회 -->
     <select id="getSellerKey" resultType="String">
-		SELECT /* LocalSciMapper.xml, getSellerKey, SAC 전시, 2014-02-13 */ 
+		SELECT /* LocalSciMapper.getSellerKey, AID로 SELLER KEY 조회 , 이석희/아이에스플러스, 2014-02-13 */
 			   SELLER_MBR_NO
 		  FROM TB_DP_PROD
 		 WHERE PROD_ID = (
@@ -15,7 +15,7 @@
     
     <!-- 상품 구매수 조회 -->
     <select id="getPurchaseCount" parameterType="HashMap" resultType="Integer">
-        SELECT /* LocalSciMapper.xml, "getPurchaseCount", SAC 전시 , 2014-03-07 */ 
+        SELECT /* LocalSciMapper.getPurchaseCount, 상품 구매수 조회 , 이석희/아이에스플러스, 2014-02-13 */
                PRCHS_CNT
           FROM TB_DP_TENANT_PROD_STATS
          WHERE 1=1
@@ -25,6 +25,7 @@
         
     <!-- 상품 구매건수 업데이트 상품이 없을시 Insert-->
     <insert id="insertPurchaseProd" parameterType="HashMap">
+       /* LocalSciMapper.insertPurchaseProd, 상품 구매수 조회시 조회대상 상품이 없을때 상품 Insert , 이석희/아이에스플러스, 2014-02-13 */
         INSERT INTO TB_DP_TENANT_PROD_STATS(
              TENANT_ID
            , PROD_ID
@@ -42,7 +43,7 @@
     
     <!-- 상품 구매건수 업데이트 -->
     <update id="updatePurchaseCount" parameterType="HashMap">
-        /* LocalSciMapper.xml, updatePurchaseCount, SAC 전시, 2014-02-14 */ 
+        /* LocalSciMapper.updatePurchaseCount,상품 구매건수 UPDATE , 이석희/아이에스플러스, 2014-02-14 */
 		UPDATE TB_DP_TENANT_PROD_STATS
 		   SET PRCHS_CNT =  ( SELECT PRCHS_CNT + #{purchaseCount,jdbcType=NUMERIC} 
                                   FROM TB_DP_TENANT_PROD_STATS
@@ -143,7 +144,7 @@
     
     <!-- DCD 상품 조회 -->
     <select id="getDcdSupportProduct" resultType="Map">
-		SELECT /* LocalSciMapper.xml, getDcdSupportProduct, SAC 전시, 2014-02-17 */
+		SELECT /* LocalSciMapper.getDcdSupportProduct, DCD 상품 조회 , 이석희/아이에스플러스, 2014-02-17 */
 		       PROD_ID
 		      ,DCD_SPRT_CD
 		  FROM TB_DP_DCD_APP_PROD
