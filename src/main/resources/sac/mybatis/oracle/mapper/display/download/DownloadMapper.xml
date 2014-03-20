@@ -57,7 +57,8 @@
 	                  , NVL2( KB.APK_VER, KB.APK_VER, KA.PKG_VER_CD ) AS APK_VER   
 	                  , KA.PLAT_CLSF_CD
 	                  , KA.GAME_CENTR_VER_CD
-	                  , NVL(KA.GAME_CENTR_ID, '') AS GAME_CENTR_ID                                                                                                
+	                  , NVL(KA.GAME_CENTR_ID, '') AS GAME_CENTR_ID
+	                  , KA.PROD_AMT                                                                                                
 	                  , NVL2( KB.FILE_SIZE, KB.FILE_SIZE, ( SELECT MAX(FILE_SIZE) FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = KA.PROD_ID ) ) AS APK_FILE_SIZE
 	                  , KB.SUB_CONTENTS_ID
 	                  , (PLAT_CLSF_CD_NM ||' '|| KB.VM_VER) AS SUPPORTED_OS
@@ -94,6 +95,7 @@
 	                           , F.PROD_NM
 	                           , F.PROD_BASE_DESC
 	                           , G.TENANT_ID
+	                           , H.PROD_AMT
 	                           , I.SUB_CONTENTS_ID
 	                       FROM  TB_DP_MENU_CATEGORY           A
 	                           , TB_DP_MENU_CATEGORY_PROD_MAPG B
@@ -798,6 +800,7 @@
 		            AND ROWNUM = 1) AS TOP_MENU_NM         
 		      , TA.META_CLSF_CD
 		      , TA.FILE_PATH
+		      , TA.PROD_AMT
 		      , CONCAT(TB.FILE_PATH, TB.FILE_NM)  AS IMAGE_PATH
 		      , TB.FILE_NM AS IMAGE_NM
 		      , TB.FILE_SIZE AS IMAGE_SIZE
@@ -822,6 +825,7 @@
 		             , MAX(DECODE( M.DP_PG_QULT_CD, 'PD009712', M.FILE_SIZE ) ) AS FILE_SIZE                  
 		             , MAX(Q.PROD_NM) AS PROD_NM
 		             , MAX(R.MUSIC_ID) AS MUSIC_ID
+		             , MAX(O.PROD_AMT) AS PROD_AMT
 		          FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
 		             , TB_DP_MENU_CATEGORY           B
 		             , TB_DP_PROD                    D
@@ -860,7 +864,6 @@
 		           AND J.SVC_GRP_CD = 'DP000203'       /* PD002501 : 에피소드타입 */  
 		           AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드타입 */  
 		           AND J.TOP_MENU_ID = 'DP16'
---		           AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
                    AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
 		           AND L.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */   
 		           AND L.MUSIC_SPRT_YN ='Y'

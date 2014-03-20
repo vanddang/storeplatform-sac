@@ -421,6 +421,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 				product.setPacketFee(metaInfo.getProdClsfCd());
 				product.setPlatClsfCd(metaInfo.getPlatClsfCd());
+				product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품금액 정보
 
 				commonResponse.setTotalCount(1);
 			} else {
