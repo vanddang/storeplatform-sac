@@ -1246,7 +1246,7 @@
 		                             AND  MP_G.PART_PROD_ID = EP_I.PROD_ID
 		                             AND  MP_G.PART_PROD_ID = EP_J.PROD_ID
 		                             AND  MP_G.PART_PROD_ID = EP_K.PROD_ID
-		                             AND  EP_K.DEVICE_MODEL_CD = EP_L.DEVICE_MODEL_CD
+--		                             AND  EP_K.DEVICE_MODEL_CD = EP_L.DEVICE_MODEL_CD
 		                             AND  MP_G.PART_PROD_ID = EP_M.PROD_ID
 		                             AND  CH_B.USE_YN = 'Y'
 		                             AND  CH_C.LANG_CD = #{langCd}
