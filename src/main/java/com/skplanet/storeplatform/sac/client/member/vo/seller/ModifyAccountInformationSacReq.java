@@ -122,6 +122,12 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	/** CEO 생년월일. ex(YYYYMMDD) */
 	private String ceoBirthDay; // CEO_BIRTH
 
+	/** 유선 국가번호(사업장). */
+	private String cordedTelephoneCountry; // WIRE_NATION_NO
+
+	/** 유선 전화번호(사업장). */
+	private String cordedTelephone; // WIRE_TEL_NO 유선전화번호
+
 	/** 서류 관련 리스트. */
 	private List<ExtraDocument> extraDocumentList;
 
@@ -648,6 +654,36 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	 */
 	public void setCeoBirthDay(String ceoBirthDay) {
 		this.ceoBirthDay = ceoBirthDay;
+	}
+
+	/**
+	 * @return the cordedTelephoneCountry
+	 */
+	public String getCordedTelephoneCountry() {
+		return this.cordedTelephoneCountry;
+	}
+
+	/**
+	 * @param cordedTelephoneCountry
+	 *            the cordedTelephoneCountry to set
+	 */
+	public void setCordedTelephoneCountry(String cordedTelephoneCountry) {
+		this.cordedTelephoneCountry = cordedTelephoneCountry;
+	}
+
+	/**
+	 * @return the cordedTelephone
+	 */
+	public String getCordedTelephone() {
+		return this.cordedTelephone;
+	}
+
+	/**
+	 * @param cordedTelephone
+	 *            the cordedTelephone to set
+	 */
+	public void setCordedTelephone(String cordedTelephone) {
+		this.cordedTelephone = cordedTelephone;
 	}
 
 	/**
