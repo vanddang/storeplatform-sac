@@ -33,8 +33,9 @@ public interface PurchaseOrderService {
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
+	 * @return 생성된 구매이력 건수
 	 */
-	public void createFreePurchase(PurchaseOrderInfo purchaseOrderInfo);
+	public int createFreePurchase(PurchaseOrderInfo purchaseOrderInfo);
 
 	/**
 	 * 

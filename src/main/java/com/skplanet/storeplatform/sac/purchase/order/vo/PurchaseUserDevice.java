@@ -53,6 +53,11 @@ public class PurchaseUserDevice extends CommonInfo {
 	private String userId;
 
 	/**
+	 * 사용자 ID.
+	 */
+	private String userName;
+
+	/**
 	 * 연령
 	 */
 	private int age;
@@ -170,6 +175,21 @@ public class PurchaseUserDevice extends CommonInfo {
 	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return this.userName;
+	}
+
+	/**
+	 * @param userName
+	 *            the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	/**

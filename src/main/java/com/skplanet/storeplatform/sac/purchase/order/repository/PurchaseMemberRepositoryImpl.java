@@ -92,6 +92,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		PurchaseUserDevice purchaseUserDevice = new PurchaseUserDevice();
 		purchaseUserDevice.setTenantId(tenantId);
 		purchaseUserDevice.setUserKey(userKey);
+		purchaseUserDevice.setUserName(userDeviceInfoSac.getUserName());
 		// purchaseUserDevice.setUserId(userInfo.getUserId());
 		// purchaseUserDevice.setUserType(userInfo.getUserType());
 		purchaseUserDevice.setUserMainStatus(userDeviceInfoSac.getUserMainStatus());

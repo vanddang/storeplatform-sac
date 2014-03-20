@@ -69,6 +69,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	// 회원 정보
 	private PurchaseUserDevice purchaseUser; // 구매(선물발신) 회원정보
 	private PurchaseUserDevice receiveUser; // 선물수신 회원정보
+	private List<PurchaseUserDevice> receiveUserList; // 선물 수신 회원 목록
 
 	// ------------------------------------------------------------------------
 	// 상품 정보
@@ -577,6 +578,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setReceiveUser(PurchaseUserDevice receiveUser) {
 		this.receiveUser = receiveUser;
+	}
+
+	/**
+	 * @return the receiveUserList
+	 */
+	public List<PurchaseUserDevice> getReceiveUserList() {
+		return this.receiveUserList;
+	}
+
+	/**
+	 * @param receiveUserList
+	 *            the receiveUserList to set
+	 */
+	public void setReceiveUserList(List<PurchaseUserDevice> receiveUserList) {
+		this.receiveUserList = receiveUserList;
 	}
 
 	/**

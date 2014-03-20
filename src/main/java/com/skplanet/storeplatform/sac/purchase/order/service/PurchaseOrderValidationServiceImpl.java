@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,6 +127,22 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	/**
 	 * 
 	 * <pre>
+	 * Biz 쿠폰 발급 요청 권한 체크.
+	 * </pre>
+	 * 
+	 * @param prchsReqPathCd
+	 *            구매 요청 경로 코드
+	 */
+	@Override
+	public void validateBizAuth(String prchsReqPathCd) {
+		if (StringUtils.equals(prchsReqPathCd, PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON) == false) { // OR000432-Biz쿠폰
+			throw new StorePlatformException("SAC_PUR_5201");
+		}
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 회원 적합성 체크.
 	 * </pre>
 	 * 
@@ -150,6 +167,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		purchaseOrderInfo.setPurchaseUser(purchaseUserDevice);
+
+		// Biz 쿠폰 경우 수신자 체크 Skip
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
+			return;
+		}
 
 		// ----------------------------------------------------------------------------------------------
 		// 선물 수신 회원/기기
@@ -188,13 +210,35 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String tenantId = purchaseOrderInfo.getTenantId();
 		// String systemId = purchaseOrderInfo.getSystemId();
 		String langCd = purchaseOrderInfo.getLangCd();
-		String useDeviceModelCd = (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
-				PurchaseConstants.PRCHS_CASE_GIFT_CD) ? purchaseOrderInfo.getReceiveUser().getDeviceModelCd() : purchaseOrderInfo
-				.getPurchaseUser().getDeviceModelCd());
+		String useDeviceModelCd = null;
+		if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+				PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			useDeviceModelCd = purchaseOrderInfo.getPurchaseUser().getDeviceModelCd();
+		} else {
+			useDeviceModelCd = (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
+					PurchaseConstants.PRCHS_CASE_GIFT_CD) ? purchaseOrderInfo.getReceiveUser().getDeviceModelCd() : purchaseOrderInfo
+					.getPurchaseUser().getDeviceModelCd());
+		}
 
+		// 상품 정보 조회
+
+		List<CreatePurchaseSacReqProduct> reqProdList = null;
 		List<String> prodIdList = new ArrayList<String>();
-		for (CreatePurchaseSacReqProduct reqProduct : purchaseOrderInfo.getCreatePurchaseReq().getProductList()) {
-			prodIdList.add(reqProduct.getProdId());
+
+		if (CollectionUtils.isNotEmpty(purchaseOrderInfo.getCreatePurchaseReq().getProductList())) {
+			for (CreatePurchaseSacReqProduct reqProduct : purchaseOrderInfo.getCreatePurchaseReq().getProductList()) {
+				prodIdList.add(reqProduct.getProdId());
+			}
+
+			reqProdList = purchaseOrderInfo.getCreatePurchaseReq().getProductList();
+
+		} else {
+			prodIdList.add(purchaseOrderInfo.getCreatePurchaseReq().getProdId());
+
+			CreatePurchaseSacReqProduct reqProduct = new CreatePurchaseSacReqProduct();
+			reqProduct.setProdId(purchaseOrderInfo.getCreatePurchaseReq().getProdId());
+			reqProdList = new ArrayList<CreatePurchaseSacReqProduct>();
+			reqProdList.add(reqProduct);
 		}
 
 		Map<String, PurchaseProduct> purchaseProductMap = this.purchaseDisplayRepository.searchPurchaseProductList(
@@ -203,11 +247,12 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			throw new StorePlatformException("SAC_PUR_5101");
 		}
 
+		// 상품 체크
+
 		List<PurchaseProduct> purchaseProductList = purchaseOrderInfo.getPurchaseProductList();
 		double totAmt = 0.0, nowPurchaseProdAmt = 0.0;
-		// 상품 정보 조회
 		PurchaseProduct purchaseProduct = null;
-		for (CreatePurchaseSacReqProduct reqProduct : purchaseOrderInfo.getCreatePurchaseReq().getProductList()) {
+		for (CreatePurchaseSacReqProduct reqProduct : reqProdList) {
 			purchaseProduct = purchaseProductMap.get(reqProduct.getProdId());
 
 			// 상품정보 조회 실패
@@ -220,6 +265,14 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 							PurchaseConstants.PRODUCT_STATUS_FIXRATE_SALE) == false) {
 				throw new StorePlatformException("SAC_PUR_5102");
 			}
+
+			// Biz 쿠폰 경우 이하 상품 체크 Skip
+			if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
+				purchaseProduct.setProdQty(1);
+				purchaseProductList.add(purchaseProduct);
+				continue;
+			}
+
 			// 상품 지원 여부 체크
 			// TAKTEST:: 테스트 위해 주석
 			// if (StringUtils.equals(purchaseProduct.getProdSprtYn(), PurchaseConstants.USE_Y) == false) {
@@ -287,6 +340,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			throw new StorePlatformException("SAC_PUR_6103");
 		}
 
+		// Biz 쿠폰 경우 이하 체크 Skip
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
+			return;
+		}
+
 		// 이용자(구매자 + 선물수신자) 조회
 		PurchaseUserDevice useUser = null;
 		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
@@ -322,7 +380,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// (정액권) 배타 상품 체크
-			if (product.getExclusiveFixrateProdIdList() != null && product.getExclusiveFixrateProdIdList().size() > 0) {
+			if (CollectionUtils.isNotEmpty(product.getExclusiveFixrateProdIdList())) {
 
 				tempExistenceProdIdList = new ArrayList<String>();
 				for (String exclusiveProdId : product.getExclusiveFixrateProdIdList()) {
@@ -340,7 +398,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// 이용 가능한 정액권 기구매 확인 처리
-			if (product.getAvailableFixrateProdIdList() != null && product.getAvailableFixrateProdIdList().size() > 0) {
+			if (CollectionUtils.isNotEmpty(product.getAvailableFixrateProdIdList())) {
 
 				tempExistenceProdIdList = new ArrayList<String>();
 				for (String fixrateProdId : product.getAvailableFixrateProdIdList()) {

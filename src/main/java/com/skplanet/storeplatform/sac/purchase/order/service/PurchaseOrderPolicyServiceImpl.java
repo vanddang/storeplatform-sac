@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,8 +130,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public boolean isDeviceBasedPurchaseHistory(String tenantId, String tenantProdGrpCd) {
-		return (this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd,
-				PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, false).size() > 0);
+		return CollectionUtils.isNotEmpty(this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(tenantId,
+				tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, false));
 	}
 
 	/**
@@ -266,7 +267,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(purchaseOrderInfo.getTenantId(),
 				purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.POLICY_PATTERN_STORE_TEST_DEVICE_CD, false);
-		if (policyList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(policyList)) {
 			testMdnPolicyCodeList = new ArrayList<String>();
 			for (PurchaseTenantPolicy policy : policyList) {
 				policyCodeList.add(policy.getApplyValue());
@@ -275,7 +276,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 		policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(purchaseOrderInfo.getTenantId(),
 				purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.POLICY_PATTERN_USER_BLOCK_CD, false);
-		if (policyList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(policyList)) {
 			blockPolicyCodeList = new ArrayList<String>();
 			;
 			for (PurchaseTenantPolicy policy : policyList) {

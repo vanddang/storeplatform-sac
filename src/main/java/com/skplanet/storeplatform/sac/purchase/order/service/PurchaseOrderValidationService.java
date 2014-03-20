@@ -45,6 +45,17 @@ public interface PurchaseOrderValidationService {
 	/**
 	 * 
 	 * <pre>
+	 * Biz 쿠폰 발급 요청 권한 체크.
+	 * </pre>
+	 * 
+	 * @param prchsReqPathCd
+	 *            구매 요청 경로 코드
+	 */
+	public void validateBizAuth(String prchsReqPathCd);
+
+	/**
+	 * 
+	 * <pre>
 	 * 회원 적합성 체크.
 	 * </pre>
 	 * 

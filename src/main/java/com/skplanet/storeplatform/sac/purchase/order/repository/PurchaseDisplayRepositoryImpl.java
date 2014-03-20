@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePa
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 
 /**
@@ -89,7 +90,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setProdStatusCd(displayInfo.getProdStatusCd());
 			purchaseProduct.setProdGrdCd(displayInfo.getProdGrdCd());
 			purchaseProduct.setProdSprtYn(displayInfo.getProdSprtYn());
-			purchaseProduct.setDrmYn(displayInfo.getDrmYn());
+			purchaseProduct.setDrmYn(StringUtils.defaultString(displayInfo.getDrmYn(), PurchaseConstants.USE_N));
 			if (displayInfo.getUsePeriodUnitCd() != null) {
 				purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
 				purchaseProduct

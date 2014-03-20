@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -23,13 +24,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseSc;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateBizPurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateFreePurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateFreePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseUserInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -40,6 +44,7 @@ import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderServic
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderValidationService;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
 
 /**
@@ -185,57 +190,55 @@ public class PurchaseOrderController {
 		return res;
 	}
 
-	// /**
-	// *
-	// * <pre>
-	// * Biz 쿠폰 발행 요청 : 대량의 선물 이력 생성 & biz쿠폰 발급 요청.
-	// * </pre>
-	// *
-	// * @param req
-	// * 구매요청 정보
-	// * @return 구매요청 처리 결과
-	// */
-	// @RequestMapping(value = "/createBiz/v1", method = RequestMethod.POST)
-	// @ResponseBody
-	// public CreateBizPurchaseSacRes createBizPurchase(
-	// @RequestBody @Validated(GroupCreateBizPurchase.class) CreatePurchaseSacReq req,
-	// SacRequestHeader sacRequestHeader) {
-	// this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}", sacRequestHeader, req);
-	//
-	// // ------------------------------------------------------------------------------
-	// // TAKTODOD:: Biz 구매요청 권한 체크
-	//
-	// // TAKTODOD:: this.validationService.validateFreeChargeAuth(req.getPrchsReqPathCd());
-	//
-	// // ------------------------------------------------------------------------------
-	// // TAKTODOD:: 구매진행 정보 세팅
-	//
-	// // req.setTotAmt(0.0);
-	// // PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
-	// // purchaseOrderInfo.setFreeChargeReq(true); // 비과금 요청
-	//
-	// // ------------------------------------------------------------------------------
-	// // TAKTODOD:: 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
-	//
-	// // this.preCheckBeforeProcessOrder(purchaseOrderInfo);
-	//
-	// // ------------------------------------------------------------------------------
-	// // TAKTODOD:: 비과금 구매완료 처리
-	//
-	// // this.orderService.createFreePurchase(purchaseOrderInfo);
-	// // purchaseOrderInfo.setResultType("free");
-	//
-	// // ------------------------------------------------------------------------------
-	// // 응답 세팅
-	//
-	// CreateBizPurchaseSacRes res = new CreateBizPurchaseSacRes();
-	// // res.setPrchsId(purchaseOrderInfo.getPrchsId());
-	// res.setPrchsId("0");
-	// res.setCount(0);
-	//
-	// this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,RES,{}", res);
-	// return res;
-	// }
+	/**
+	 * 
+	 * <pre>
+	 * Biz 쿠폰 발행 요청 : 대량의 선물 이력 생성 & biz쿠폰 발급 요청.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            구매요청 정보
+	 * @return 구매요청 처리 결과
+	 */
+	@RequestMapping(value = "/createBiz/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateBizPurchaseSacRes createBizPurchase(
+			@RequestBody @Validated(GroupCreateBizPurchase.class) CreatePurchaseSacReq req,
+			SacRequestHeader sacRequestHeader) {
+		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}", sacRequestHeader, req);
+
+		// ------------------------------------------------------------------------------
+		// Biz 구매요청 권한 체크
+
+		this.validationService.validateBizAuth(req.getPrchsReqPathCd());
+
+		// ------------------------------------------------------------------------------
+		// 구매진행 정보 세팅
+
+		req.setTotAmt(0.0);
+		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
+		purchaseOrderInfo.setFreeChargeReq(true); // 비과금 요청
+
+		// ------------------------------------------------------------------------------
+		// 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
+
+		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
+
+		// ------------------------------------------------------------------------------
+		// 비과금 구매완료 처리
+
+		int count = this.orderService.createFreePurchase(purchaseOrderInfo);
+
+		// ------------------------------------------------------------------------------
+		// 응답 세팅
+
+		CreateBizPurchaseSacRes res = new CreateBizPurchaseSacRes();
+		res.setPrchsId(purchaseOrderInfo.getPrchsId());
+		res.setCount(count);
+
+		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,RES,{}", res);
+		return res;
+	}
 
 	/**
 	 * 
@@ -347,9 +350,22 @@ public class PurchaseOrderController {
 		purchaseOrderInfo.setPrchsCaseCd(createPurchaseSacReq.getPrchsCaseCd()); // 구매 유형 코드
 		purchaseOrderInfo.setTenantProdGrpCd(createPurchaseSacReq.getTenantProdGrpCd()); // 테넌트 상품 분류 코드
 		if (StringUtils.equals(createPurchaseSacReq.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			purchaseOrderInfo.setRecvTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID
-			purchaseOrderInfo.setRecvUserKey(createPurchaseSacReq.getRecvUserKey()); // 선물수신 내부 회원 번호
-			purchaseOrderInfo.setRecvDeviceKey(createPurchaseSacReq.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
+			if (createPurchaseSacReq.getReceiverList() == null) {
+				purchaseOrderInfo.setRecvTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID
+				purchaseOrderInfo.setRecvUserKey(createPurchaseSacReq.getRecvUserKey()); // 선물수신 내부 회원 번호
+				purchaseOrderInfo.setRecvDeviceKey(createPurchaseSacReq.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
+			} else {
+				List<PurchaseUserDevice> receiveUserList = new ArrayList<PurchaseUserDevice>();
+				PurchaseUserDevice purchaseUserDevice = null;
+				for (PurchaseUserInfo receiver : createPurchaseSacReq.getReceiverList()) {
+					purchaseUserDevice = new PurchaseUserDevice();
+					purchaseUserDevice.setUserKey(receiver.getUserKey());
+					purchaseUserDevice.setDeviceKey(receiver.getDeviceKey());
+					purchaseUserDevice.setDeviceId(receiver.getDeviceId());
+					receiveUserList.add(purchaseUserDevice);
+				}
+				purchaseOrderInfo.setReceiveUserList(receiveUserList);
+			}
 		}
 		purchaseOrderInfo.setImei(createPurchaseSacReq.getImei()); // 단말 식별 번호
 		purchaseOrderInfo.setUacd(createPurchaseSacReq.getUacd()); // 단말 모델 식별 번호
