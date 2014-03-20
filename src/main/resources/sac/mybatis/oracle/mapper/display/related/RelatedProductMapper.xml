@@ -78,6 +78,7 @@
            AND D.USE_YN = 'Y'
            AND K.EXPO_YN = 'Y'
            AND E.PROD_RSHP_CD = 'DP010802'
+           AND I.CONTENTS_TYPE_CD = 'PD002502'
            AND A.TOP_MENU_ID = #{productBasicInfo.topMenuId}
            AND B.LANG_CD = #{tenantHeader.langCd}
            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
