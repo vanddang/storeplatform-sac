@@ -611,6 +611,8 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setIsOfficialAuth(req.getIsOfficialAuth()); // 공인인증여부
 		sellerMbr.setCeoName(req.getCeoName());
 		sellerMbr.setCeoBirthDay(req.getCeoBirthDay());
+		sellerMbr.setCordedTelephoneCountry(req.getCordedTelephoneCountry());
+		sellerMbr.setCordedTelephone(req.getCordedTelephone());
 
 		updateAccountSellerRequest.setSellerMbr(sellerMbr);
 
