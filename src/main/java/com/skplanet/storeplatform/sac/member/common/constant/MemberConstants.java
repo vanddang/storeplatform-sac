@@ -43,18 +43,16 @@ public final class MemberConstants {
 
 	/** 메인상태코드. */
 	public static final String MAIN_STATUS_NORMAL = "US010201"; // 정상
-	public static final String MAIN_STATUS_SECEDE = "US010202"; // 탈퇴(자의탈퇴/직권탈퇴)
+	public static final String MAIN_STATUS_SECEDE = "US010202"; // 탈퇴
 	public static final String MAIN_STATUS_WATING = "US010203"; // 가가입
-	public static final String MAIN_STATUS_PAUSE = "US010204"; // 계정잠금/7일이용정지/30일이용정지/영구이용정지
+	public static final String MAIN_STATUS_PAUSE = "US010204"; // 일시정지
 
 	/** 서브상태 코드. */
 	public static final String SUB_STATUS_NORMAL = "US010301"; // 정상
 	public static final String SUB_STATUS_SECEDE_MOTION = "US010302"; // 탈퇴신청
 	public static final String SUB_STATUS_SECEDE_FINISH = "US010303"; // 탈퇴완료
-	public static final String SUB_STATUS_JOIN_APPLY_ETC = "US010304"; // 가입승인 만료
-	public static final String SUB_STATUS_JOIN_APPLY_WATING = "US010305"; // 가입승인 대기
-	public static final String SUB_STATUS_EMAIL_CERT_WATING = "US010306"; // 이메일변경 승인 대기
-	public static final String SUB_STATUS_LOGIN_PAUSE = "US010307"; // 계정잠금
+	public static final String SUB_STATUS_ACCT_APPLY_WATING = "US010305"; // 정산정보승인대기
+	public static final String SUB_STATUS_JOIN_APPLY_WATING = "US010306"; // 이메일승인대기
 	public static final String SUB_STATUS_SEVEN_PAUSE = "US010308"; // 7일 이용정지
 	public static final String SUB_STATUS_THIRTY_PAUSE = "US010309"; // 30일 이용정지
 	public static final String SUB_STATUS_ETERNAL_PAUSE = "US010310"; // 영구 이용정지
@@ -62,9 +60,15 @@ public final class MemberConstants {
 	public static final String SUB_STATUS_SEVEN_MOTION_AGAIN = "US010312"; // 전환 재신청
 	public static final String SUB_STATUS_TURN_REJECT = "US010313"; // 전환 거절
 	public static final String SUB_STATUS_CHANGE_USER = "US010314"; // 변동처리대상
-	public static final String SUB_STATUS_JOIN_REJECT = "US010315"; // 가입거절
+	public static final String SUB_STATUS_ACCT_JOIN_REJECT = "US010315"; // 정산정보승인거절
 	public static final String SUB_STATUS_SECEDE_REJECT = "US010316"; // 탈퇴거절
 	public static final String SUB_STATUS_ID_REUSE = "US010317"; // ID재사용
+	@Deprecated
+	public static final String SUB_STATUS_JOIN_APPLY_ETC = "US010304"; // 가입승인 만료
+	@Deprecated
+	public static final String SUB_STATUS_EMAIL_CERT_WATING = "US010306"; // 이메일변경 승인 대기
+	@Deprecated
+	public static final String SUB_STATUS_LOGIN_PAUSE = "US010307"; // 계정잠금
 
 	/** 검색 구분자. */
 	public static final String KEY_TYPE_INSD_USERMBR_NO = "INSD_USERMBR_NO"; // 내부 사용자 키
