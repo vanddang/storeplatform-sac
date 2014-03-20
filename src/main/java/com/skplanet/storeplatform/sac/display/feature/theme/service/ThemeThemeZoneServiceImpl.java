@@ -237,7 +237,11 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 							 * product.setContributor(contributor); }
 							 */
 							if (retMetaInfo != null) {
-								product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+									product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+								} else {
+									product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+								}
 								productList.add(product);
 							}
 						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
