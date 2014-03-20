@@ -33,6 +33,11 @@ public class CreateSaveAndSyncReq extends CommonInfo {
 	private String deviceIdType = "";
 
 	/**
+	 * SMS 수신 여부.
+	 */
+	private String isRecvSms = "";
+
+	/**
 	 * 사용자 단말 부가 정보 리스트.
 	 */
 	private List<DeviceExtraInfo> deviceExtraInfoList = null;
@@ -70,6 +75,21 @@ public class CreateSaveAndSyncReq extends CommonInfo {
 	 */
 	public void setDeviceIdType(String deviceIdType) {
 		this.deviceIdType = deviceIdType;
+	}
+
+	/**
+	 * @return String : isRecvSms
+	 */
+	public String getIsRecvSms() {
+		return this.isRecvSms;
+	}
+
+	/**
+	 * @param isRecvSms
+	 *            String : the isRecvSms to set
+	 */
+	public void setIsRecvSms(String isRecvSms) {
+		this.isRecvSms = isRecvSms;
 	}
 
 	/**
