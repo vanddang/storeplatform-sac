@@ -205,11 +205,11 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
-		return this.makeThemeRecommendResult(listThemeRecommend, reason, requestVO.getFilteredBy());
+		return this.makeThemeRecommendResult(listThemeRecommend, reason, requestVO.getFilteredBy(), requestVO.getVer());
 	}
 
 	private ThemeRecommendSacRes makeThemeRecommendResult(List<ThemeRecommend> resultList, String reason,
-			String filteredBy) {
+			String filteredBy, String ver) {
 		ThemeRecommendSacRes response = new ThemeRecommendSacRes();
 
 		CommonResponse commonResponse = new CommonResponse();
@@ -254,10 +254,34 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 			title.setText(mapper.getPkgNm());
 
-			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-			source.setMediaType(DisplayCommonUtil.getMimeType(mapper.getPkgImgPos()));
-			source.setUrl(mapper.getPkgImgPos());
-			sourceList.add(source);
+			if (StringUtils.isNotEmpty(ver) && StringUtils.equalsIgnoreCase(ver, "v2")) {
+				if (StringUtils.isNotEmpty(mapper.getSetImg1())) {
+					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+					source.setMediaType(DisplayCommonUtil.getMimeType(mapper.getSetImg1()));
+					source.setUrl(mapper.getSetImg1());
+					source.setExpoOrd("1");
+					sourceList.add(source);
+				}
+				if (StringUtils.isNotEmpty(mapper.getSetImg2())) {
+					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+					source.setMediaType(DisplayCommonUtil.getMimeType(mapper.getSetImg2()));
+					source.setUrl(mapper.getSetImg2());
+					source.setExpoOrd("2");
+					sourceList.add(source);
+				}
+				if (StringUtils.isNotEmpty(mapper.getSetImg3())) {
+					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+					source.setMediaType(DisplayCommonUtil.getMimeType(mapper.getSetImg3()));
+					source.setUrl(mapper.getSetImg3());
+					source.setExpoOrd("3");
+					sourceList.add(source);
+				}
+			} else {
+				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+				source.setMediaType(DisplayCommonUtil.getMimeType(mapper.getPkgImgPos()));
+				source.setUrl(mapper.getPkgImgPos());
+				sourceList.add(source);
+			}
 
 			packageProduct.setTitle(title);
 			packageProduct.setIdentifierList(identifierList);

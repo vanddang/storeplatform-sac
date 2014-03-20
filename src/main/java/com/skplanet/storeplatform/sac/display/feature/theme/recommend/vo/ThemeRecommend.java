@@ -69,6 +69,10 @@ public class ThemeRecommend {
 	private String partCnt;
 	private String dwldCnt;
 
+	private String setImg1;
+	private String setImg2;
+	private String setImg3;
+
 	/**
 	 * @return the totalCount
 	 */
@@ -1027,6 +1031,51 @@ public class ThemeRecommend {
 	 */
 	public void setDwldCnt(String dwldCnt) {
 		this.dwldCnt = dwldCnt;
+	}
+
+	/**
+	 * @return the setImg1
+	 */
+	public String getSetImg1() {
+		return this.setImg1;
+	}
+
+	/**
+	 * @param setImg1
+	 *            the setImg1 to set
+	 */
+	public void setSetImg1(String setImg1) {
+		this.setImg1 = setImg1;
+	}
+
+	/**
+	 * @return the setImg2
+	 */
+	public String getSetImg2() {
+		return this.setImg2;
+	}
+
+	/**
+	 * @param setImg2
+	 *            the setImg2 to set
+	 */
+	public void setSetImg2(String setImg2) {
+		this.setImg2 = setImg2;
+	}
+
+	/**
+	 * @return the setImg3
+	 */
+	public String getSetImg3() {
+		return this.setImg3;
+	}
+
+	/**
+	 * @param setImg3
+	 *            the setImg3 to set
+	 */
+	public void setSetImg3(String setImg3) {
+		this.setImg3 = setImg3;
 	}
 
 }
