@@ -840,7 +840,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setDeviceAccount(""); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(""); // 기기고유 ID (imei)
-			deviceInfo.setIsRecvSms(""); // SMS 수신 여부
+			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
 			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
