@@ -1268,7 +1268,7 @@
 		                             AND  EP_I.TENANT_ID = #{tenantId}
 		                             AND  SYSDATE BETWEEN EP_I.APPLY_START_DT AND EP_I.APPLY_END_DT
 		                             AND  EP_J.SALE_YN = 'Y'
-                                     AND (EP_K.DEVICE_MODEL_CD = #{deviceModelCd} OR EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                                     AND  EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd}
                                      AND  EP_L.DEVICE_MODEL_CD = #{deviceModelCd} 
 		                             AND  EP_L.REP_DEVICE_YN = 'Y'
                                      <if test ="topMenuId == 'DP13'">   
@@ -1400,7 +1400,7 @@
 		                             AND  EP_I.SVC_GRP_CD = 'DP000203'
 		                             AND  EP_I.CONTENTS_TYPE_CD = 'PD002502'
 		                             AND  EP_J.SALE_YN = 'Y'
-		                             AND  EP_K.DEVICE_MODEL_CD = #{deviceModelCd}
+		                             AND  EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd}
 		                             AND  EP_L.REP_DEVICE_YN = 'Y'
 		                             AND  (CASE WHEN (NVL(EP_I.DRM_YN, 'N') = 'Y' AND NVL(EP_L.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 ELSE 1 END) = 1
 		                             AND  EP_M.TENANT_ID = #{tenantId}
@@ -1630,7 +1630,7 @@
                                       , 'Y'
                                       , 1 )  = 1
                            </if>
-                             <if test="channelId != null">
+                             <if test='channelId != null and channelId != ""'>
                             AND A.PROD_ID = #{channelId}
                              </if>      
                       ) JA
