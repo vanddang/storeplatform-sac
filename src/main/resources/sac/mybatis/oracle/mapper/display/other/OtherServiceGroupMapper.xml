@@ -1,28 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="OtherServiceGroup">
-    <!-- 일반 카테고리 앱 상품 조회 -->
+    <!-- 상품서비스군 조회 -->
     <select id="selectOtherServiceGroupList" parameterType="ServiceGroupReq" resultType="ServiceGroup">
-		SELECT  /* OtherServiceGroupMapper.XML, selectOtherServiceGroupList, SAC 전시, 2014-01-27 */		
-              COUNT(*) OVER () AS TOTAL_COUNT
-              , TDP.PROD_ID
-		      , TDP.CONTENTS_TYPE_CD
-		      , DECODE(TDP.CONTENTS_TYPE_CD,'PD002501','채널','PD002502','에피소드') AS CONTENTS_TYPE_NM
-		      , TDP.TOP_MENU_ID
-              , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = TDP.TOP_MENU_ID AND LANG_CD = 'ko') TOP_MENU_NM
-              , TDP.SVC_GRP_CD
-              , TDP.META_CLSF_CD
-              , TMC.MENU_ID
-              , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = TMC.MENU_ID AND LANG_CD = 'ko') MENU_NM
-		FROM TB_DP_PROD TDP, TB_DP_MENU_CATEGORY_PROD_MAPG TMC
-		WHERE 1=1
-         <if test = "prodIdList !=null">
-        AND TDP.PROD_ID IN
-           <foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")"> 
-                #{item}
-           </foreach>
-      </if>
-      AND TDP.PROD_ID = TMC.PROD_ID
+		SELECT  /* OtherServiceGroupMapper.XML, selectOtherServiceGroupList, SAC 전시, 2014-01-27 */		       
+		     COUNT(*) OVER () AS TOTAL_COUNT
+            , PROD_ID
+            , CONTENTS_TYPE_CD
+            , CONTENTS_TYPE_NM
+            , TOP_MENU_ID
+            , TOP_MENU_NM
+            , SVC_GRP_CD
+            , META_CLSF_CD
+        FROM 
+        (    
+			SELECT
+			       TDP.PROD_ID
+			      , TDP.CONTENTS_TYPE_CD
+			      , DECODE(TDP.CONTENTS_TYPE_CD,'PD002501','채널','PD002502','에피소드') AS CONTENTS_TYPE_NM
+			      , TDP.TOP_MENU_ID
+			      , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = TDP.TOP_MENU_ID AND LANG_CD = 'ko') TOP_MENU_NM
+			      , TDP.SVC_GRP_CD
+			      , TDP.META_CLSF_CD
+			      , ROWNUM
+			FROM TB_DP_PROD TDP
+			WHERE 1=1
+			       <if test = "prodIdList !=null">
+			      AND TDP.PROD_ID IN
+			         <foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")"> 
+			              #{item}
+			         </foreach>
+			      </if>
+		   UNION ALL
+		   SELECT * 
+		       FROM(
+		       SELECT 
+		             A.CATALOG_ID AS PROD_ID
+		             , C.CONTENTS_TYPE_CD
+		             , DECODE(C.CONTENTS_TYPE_CD,'PD002501','채널','PD002502','에피소드') AS CONTENTS_TYPE_NM
+		             , C.TOP_MENU_ID
+		             , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = C.TOP_MENU_ID AND LANG_CD = 'ko') TOP_MENU_NM
+		             , C.SVC_GRP_CD
+		             , C.META_CLSF_CD
+		             , ROW_NUMBER() OVER ( PARTITION BY A.CATALOG_ID ORDER BY B.PROD_ID) AS RNUM
+		        FROM TB_DP_PROD_CATALOG_MAPG A, 
+		             TB_DP_PROD_RSHP B, 
+		             TB_DP_PROD C
+		       WHERE 1=1
+				<if test = "prodIdList !=null">
+				AND A.CATALOG_ID IN
+				   <foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")"> 
+				        #{item}
+				   </foreach>
+				</if>
+		       AND   A.PROD_ID = B.PROD_ID
+		       AND   B.PROD_ID = C.PROD_ID
+		   ) LA
+		     WHERE LA.RNUM = 1   
+	   )
        <if test = "prodIdList != null">  
             ORDER BY instr
             <foreach collection="prodIdList" item="item" index="index" open="(" separator="||" close=",PROD_ID)"> 
