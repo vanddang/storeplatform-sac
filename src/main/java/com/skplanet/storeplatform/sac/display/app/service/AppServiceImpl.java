@@ -155,7 +155,7 @@ public class AppServiceImpl implements AppService {
 		app.setVersionCode(appDetail.getApkVer());
 		app.setVersion(appDetail.getApkVerNm());
 		app.setSize(appDetail.getFileSize());
-        app.setDate(new Date(DisplayConstants.DP_DATE_REG, appDetail.getSaleStrtDt()));
+        app.setDate(new Date(DisplayConstants.DP_DATE_SALE_REG, appDetail.getSaleStrtDt()));
 
         // App - Provisioning
         String simpleOsVer = "_NOT_";
