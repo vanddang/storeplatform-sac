@@ -343,14 +343,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		UserCouponListEcRes tstoreCouponListEcRes = null;
 		try {
-			tstoreCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
-		} catch (Exception e) {
-			// throw new StorePlatformException("SAC_PUR_7210", e);
-
 			// TAKTEST:: 방화벽 문제로 일단 Pass
-			this.logger.debug("PRCHS,ORDER,SAC,VERIFY,TCOUPON,ERROR,{}", e.getMessage());
+			// tstoreCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
 			tstoreCouponListEcRes = new UserCouponListEcRes();
 			tstoreCouponListEcRes.setResultCd("0000");
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7210", e);
 		}
 
 		if (StringUtils.equals(tstoreCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
@@ -387,15 +385,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		TStoreCashEcRes tStoreCashEcRes = null;
 		try {
-			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
-		} catch (Exception e) {
-			// throw new StorePlatformException("SAC_PUR_7211", e);
-
 			// TAKTEST:: 방화벽 문제로 일단 Pass
-			this.logger.debug("PRCHS,ORDER,SAC,VERIFY,TCASH,ERROR,{}", e.getMessage());
+			// tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
+
 			tStoreCashEcRes = new TStoreCashEcRes();
 			tStoreCashEcRes.setResultCd("0000");
 			tStoreCashEcRes.setCashList(new ArrayList<Cash>());
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7211", e);
 		}
 
 		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
