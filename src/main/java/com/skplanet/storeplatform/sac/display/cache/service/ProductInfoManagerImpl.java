@@ -67,7 +67,8 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     public MenuInfo getMenuInfo(String langCd, String menuId, String prodId) {
         Map<String, String> reqMap = new HashMap<String, String>();
         reqMap.put("prodId", prodId);
-        reqMap.put("menuId", menuId);
+        if(menuId != null)
+            reqMap.put("menuId", menuId);
         reqMap.put("langCd", langCd);
         // TODO 몇Depth메뉴인지 판단을 해야 함
         return commonDAO.queryForObject("ProductInfo.getMenuInfo", reqMap, MenuInfo.class);

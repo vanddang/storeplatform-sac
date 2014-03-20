@@ -99,7 +99,9 @@
                 ON TMD.MENU_ID = MC.TOP_MENU_ID AND TMD.LANG_CD = MD.LANG_CD
         WHERE 1=1
               AND MM.PROD_ID = #{prodId}
+        <if test='menuId != null'>
               AND MM.MENU_ID = #{menuId}
+        </if>
               AND MD.LANG_CD = #{langCd}
               AND MM.USE_YN = 'Y'
               AND MC.USE_YN = 'Y'
