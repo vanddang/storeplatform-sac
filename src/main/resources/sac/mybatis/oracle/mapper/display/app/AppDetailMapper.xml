@@ -34,7 +34,8 @@
             TP.PROD_STATUS_CD,
             PDESC.PROD_BASE_DESC,
             PDESC.PROD_DTL_DESC,
-            NVL2(SD.DEVICE_MODEL_CD, 'Y', 'N') AS IS_DEVICE_SUPP
+            NVL2(SD.DEVICE_MODEL_CD, 'Y', 'N') AS IS_DEVICE_SUPP,
+            APP.SALE_STRT_DT
         FROM
             TB_DP_PROD PD
             INNER JOIN TB_DP_APP_PROD APP

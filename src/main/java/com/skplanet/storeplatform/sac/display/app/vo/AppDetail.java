@@ -2,6 +2,8 @@ package com.skplanet.storeplatform.sac.display.app.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+import java.util.Date;
+
 /**
  * AppDetail
  * Updated on : 2014. 01. 23 Updated by : 정희원, SK 플래닛.
@@ -33,6 +35,15 @@ public class AppDetail extends CommonInfo {
     private String prodBaseDesc;
     private String prodDtlDesc;
     private String isDeviceSupp;
+    private Date saleStrtDt;
+
+    public Date getSaleStrtDt() {
+        return saleStrtDt;
+    }
+
+    public void setSaleStrtDt(Date saleStrtDt) {
+        this.saleStrtDt = saleStrtDt;
+    }
 
     public String getIsDeviceSupp() {
         return isDeviceSupp;
