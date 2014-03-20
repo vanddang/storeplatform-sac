@@ -158,6 +158,10 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 					|| DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 					|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) { // VOD
 				bestDownloadMMSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+
+				if (StringUtils.isEmpty(listId)) {
+					throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
+				}
 				// VOD 신규
 				if ("TGR000000002".equals(listId)) {
 					this.log.debug("---------------------------------------------------------------------");
@@ -165,8 +169,6 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 					this.log.debug("---------------------------------------------------------------------");
 					bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchNewVodList", bestDownloadMMSacReq,
 							MetaInfo.class);
-				} else {
-					throw new StorePlatformException("SAC_DSP_0016");
 				}
 			}
 		} else {
