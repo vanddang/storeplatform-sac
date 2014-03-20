@@ -108,7 +108,7 @@ public class PersonalController {
 	 *            req
 	 * @param header
 	 *            header
-	 * @return DeviceProductProvisioningRes
+	 * @return RecommendNewMemberProductRes
 	 */
 	@RequestMapping(value = "/recommendNewMember/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody

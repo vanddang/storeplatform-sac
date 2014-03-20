@@ -23,14 +23,23 @@
 		                      , TB_DP_PROD              D
 		                      , TB_DP_SPRT_DEVICE       E 
 		                      , TB_CM_DEVICE            F
+		                      , TB_DP_TENANT_PROD       G
+		                      , TB_DP_TENANT_PROD       H
 		                  WHERE A.TENANT_ID = #{tenantId} 
 		                    AND A.LIST_ID   = #{listId} 
 		                    AND A.EXPO_YN   = 'Y'
 		                    AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} 
                             AND A.PROD_ID = C.PART_PROD_ID
                             AND B.PROD_ID = C.PROD_ID 
+                            AND B.TOP_MENU_ID != 'DP02'                            
                             AND D.PROD_ID = C.PART_PROD_ID
                             AND D.PROD_ID = E.PROD_ID
+                            AND B.PROD_ID = G.PROD_ID
+                            AND D.PROD_ID = H.PROD_ID
+                            AND G.TENANT_ID = #{tenantId}
+                            AND H.TENANT_ID = #{tenantId}
+                            AND G.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                            AND H.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                             /* 단말 프로비저닝 */
                             AND (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
                             AND F.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
