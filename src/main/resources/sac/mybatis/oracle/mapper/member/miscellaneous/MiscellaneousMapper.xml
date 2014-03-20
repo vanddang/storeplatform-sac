@@ -27,9 +27,9 @@
           AND  AUTH_VALUE = #{authValue}
     </select>
 	
-	<!--  휴대폰 SMS & 이메일 인증 여부 업데이트(인증성공) -->
+	<!--  휴대폰 SMS 및 이메일 인증 여부 업데이트(인증성공) -->
     <update id="updateServiceAuthYn" parameterType="String">
-    /* MiscellaneousMapper.updateServiceAuthYn, 휴대폰 SMS & 이메일 인증 여부 업데이트(인증성공), 김다슬/인크로스, 2014-01-16 */
+    /* MiscellaneousMapper.updateServiceAuthYn, 휴대폰 SMS 및 이메일 인증 여부 업데이트(인증성공), 김다슬/인크로스, 2014-01-16 */
     UPDATE  TB_CM_SVC_AUTH
        SET  AUTH_COMPT_YN = 'Y'
           , UPD_ID = 'admin'
@@ -37,9 +37,9 @@
      WHERE  AUTH_SEQ = #{authSeq}    
     </update>
     
-    <!-- 휴대폰 SMS & 이메일 인증 코드 정보 저장 -->
+    <!-- 휴대폰 SMS 및 이메일 인증 코드 정보 저장 -->
     <insert id="createServiceAuthCode" parameterType="ServiceAuth">
-    /* MiscellaneousMapper.createServiceAuthCode, 휴대폰 SMS & 이메일 인증 코드 정보 저장, 김다슬/인크로스, 2014-01-21 */
+    /* MiscellaneousMapper.createServiceAuthCode, 휴대폰 SMS 및 이메일 인증 코드 정보 저장, 김다슬/인크로스, 2014-01-21 */
     INSERT INTO TB_CM_SVC_AUTH  
               (
                  AUTH_SEQ
