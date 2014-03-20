@@ -789,7 +789,6 @@ public class DeviceServiceImpl implements DeviceService {
 		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
 		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
-		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getDeviceExtraInfoList()); // rooting 여부
 
@@ -902,13 +901,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
-
-		}
-
-		if (StringUtil.isNotBlank(deviceNickName) && !StringUtil.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
-
-			LOGGER.info("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
-			userMbrDevice.setDeviceNickName(deviceNickName);
 
 		}
 
