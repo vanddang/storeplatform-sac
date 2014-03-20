@@ -676,6 +676,7 @@
                            AND F.PROD_ID = G.PROD_ID
                            AND B.TENANT_ID = G.TENANT_ID
                            AND G.EXPO_YN = 'Y'
+                           AND G.PROD_STATUS_CD = 'PD000403'
                            AND C.PART_PROD_ID = H.PROD_ID
                       ) A
                  WHERE RN = 1
@@ -792,6 +793,7 @@
 		           </if>         
 		           AND E.PROD_ID = F.PROD_ID
 		           AND F.EXPO_YN = 'Y'
+		           AND F.PROD_STATUS_CD = 'PD000403'
 		           AND B.TENANT_ID = F.TENANT_ID
 		           AND F.PROD_ID = G.PROD_ID
 		           AND G.PROD_ID = H.PART_PROD_ID
