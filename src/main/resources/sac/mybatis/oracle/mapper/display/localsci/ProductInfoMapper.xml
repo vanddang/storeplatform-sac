@@ -409,7 +409,7 @@
              
     </select>
     <select id="getShoppingMetaInfo" parameterType="Map" resultType="ProductInfo">
-           SELECT  /* ProductInfoMapper.xml, getShoppingMetaInfo, SAC 전시, 2014-01-07 */
+           SELECT  /* ProductInfoMapper.xml, getShoppingMetaInfo,에피소드ID 이용 상품조회(쇼핑) , 김형식/SK플래닛, 2014-01-07 */
                 KK.*
            FROM (
                   SELECT 
@@ -521,7 +521,7 @@
     </select>
     
     <select id="getFreePassMetaInfo" parameterType="Map" resultType="ProductInfo">
-		  SELECT   /* ProductInfoMapper.xml, getFreePassMetaInfo, SAC 전시, 2014-01-07 */
+		  SELECT   /* ProductInfoMapper.xml, getFreePassMetaInfo,에피소드ID 이용 상품조회(정액권) , 김형식/SK플래닛, 2014-01-07 */
 		        IV.* 
 		        ,'freepass' as couponType
 		        ,'thumbnail' AS fileType 
