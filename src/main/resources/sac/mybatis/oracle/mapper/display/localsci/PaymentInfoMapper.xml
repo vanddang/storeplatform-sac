@@ -46,7 +46,7 @@
     </select>
     
     <select id="getShoppingMetaInfo" parameterType="Map" resultType="PaymentInfo">
-          /* PaymentInfoMapper.xml, getShoppingMetaInfo, 김형식/SK플래닛, 2014-02-27 */
+          /* PaymentInfoMapper.xml, getShoppingMetaInfo,결제시 상품 리스트(쇼핑), 김형식/SK플래닛, 2014-02-27 */
            SELECT  
                 KK.*
            FROM (
@@ -160,7 +160,7 @@
     </select>    
     
   <select id="getAvailableFixrateProdIdList" parameterType="Map" resultType="String">
-          /* PaymentInfoMapper.xml, getAvailableFixrateProdIdList, 김형식/SK플래닛, 2014-02-27 */
+          /* PaymentInfoMapper.xml, getAvailableFixrateProdIdList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
             SELECT  
                 IV.*
             FROM (
@@ -193,7 +193,7 @@
     </select>       
     
     <select id="getFreePassMetaInfo" parameterType="Map" resultType="PaymentInfo">
-         /* PaymentInfoMapper.xml, getFreePassMetaInfo, 김형식/SK플래닛, 2014-02-27 */
+         /* PaymentInfoMapper.xml, getFreePassMetaInfo,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
             SELECT  
                 IV.*
             FROM (
@@ -242,7 +242,7 @@
     </select>     
     
     <select id="getExclusiveFixrateProdIdList" parameterType="Map" resultType="String">
-          /* PaymentInfoMapper.xml, getExclusiveFixrateProdIdList, 김형식/SK플래닛, 2014-02-27 */
+          /* PaymentInfoMapper.xml, getExclusiveFixrateProdIdList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
 			SELECT 
 			       DUP_PRCHS_LIMT_PROD_ID 
 			  FROM TB_DP_DUP_PRCHS_LIMT
