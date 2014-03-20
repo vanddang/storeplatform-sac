@@ -126,7 +126,8 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
 
         // Contributor
         Contributor contributor = new Contributor();
-        contributor.setIdentifier(new Identifier("artist", musicDetail.getArtist1Id()));
+        contributor.setIdentifierList(new ArrayList<Identifier>());
+        contributor.getIdentifierList().add(new Identifier("artist", musicDetail.getArtist1Id()));
         contributor.setName(musicDetail.getArtist1Nm());
 
         contributor.setAlbum(musicDetail.getArtist3Nm());
