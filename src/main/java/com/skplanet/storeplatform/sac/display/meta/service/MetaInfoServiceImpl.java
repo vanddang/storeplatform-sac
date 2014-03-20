@@ -57,6 +57,9 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             param.setTenantId(tenantHeader.getTenantId());
 
             AppMetaInfo app = productInfoManager.getAppMetaInfo(param);
+            if(app == null)
+                return null;
+
             SubContent subContent = productInfoManager.getSubContent(basicInfo.getProdId(), deviceHeader.getModel());
             MenuInfo menuInfo = null;
             if(basicInfo.getMenuId() != null)

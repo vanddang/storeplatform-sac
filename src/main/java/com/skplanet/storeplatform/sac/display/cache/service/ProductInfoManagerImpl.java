@@ -25,9 +25,8 @@ import java.util.Map;
 
 /**
  * <p>
- * DESC
+ * ProductInfoManagerImpl
  * </p>
- * TODO VO로 파라메터 들어오는 경우 캐쉬가 어떻게 타는지 확인해요.
  * Updated on : 2014. 03. 05 Updated by : 정희원, SK 플래닛.
  */
 @Service
@@ -38,17 +37,15 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     private CommonDAO commonDAO;
 
     @Override
-    @Cacheable("appMetaInfo")
+    @Cacheable(value = "sac:display:appmeta", key = "#param.getCacheKey()")
     public AppMetaInfo getAppMetaInfo(AppMetaInfoParam param) {
         final String SVC_GRP_CD = "DP000201";
-        final String PROD_STATUS_CD = "PD000403";
         final String IMAGE_CD = "DP000101";
 
         Map<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("channelId", param.getChannelId());
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("tenantId", param.getTenantId());
-        reqMap.put("prodStatusCd", PROD_STATUS_CD);
         reqMap.put("imageCd", IMAGE_CD);
         reqMap.put("svcGrpCd", SVC_GRP_CD);
 
@@ -56,7 +53,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
-    @Cacheable("subContent")
+    @Cacheable("sac:display:subcontent")
     public SubContent getSubContent(String prodId, String deviceModelCd) {
         Map<String, String> reqMap = new HashMap<String, String>();
         reqMap.put("prodId", prodId);
@@ -66,7 +63,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
-    @Cacheable("menuInfo")
+    @Cacheable("sac:display:menuinfo")
     public MenuInfo getMenuInfo(String langCd, String menuId, String prodId) {
         Map<String, String> reqMap = new HashMap<String, String>();
         reqMap.put("prodId", prodId);

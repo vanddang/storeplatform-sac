@@ -48,4 +48,8 @@ public class AppMetaInfoParam extends CommonInfo {
     public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
     }
+
+    public String getCacheKey() {
+        return channelId + "_" + tenantId + "_" + langCd;
+    }
 }
