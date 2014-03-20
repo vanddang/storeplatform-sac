@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -86,7 +87,7 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 		this.log.debug("요청 값 세팅");
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
-		requestVO.setOrderedBy(requestVO.getOrderedBy() != null ? requestVO.getOrderedBy() : "issueDate");
+		requestVO.setOrderedBy(!StringUtils.isEmpty(requestVO.getOrderedBy()) ? requestVO.getOrderedBy() : "issueDate");
 		// requestVO.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
 		ArtistProductSacRes artistProductSacRes = new ArtistProductSacRes();

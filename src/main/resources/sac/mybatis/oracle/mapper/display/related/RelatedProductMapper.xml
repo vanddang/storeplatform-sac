@@ -33,7 +33,7 @@
              , CONCAT(J.FILE_PATH, J.FILE_NM) AS FILE_PATH
              , J.FILE_NM
              , J.FILE_SIZE
-             , I.CONTENTS_TYPE_CD
+             , #{productBasicInfo.contentsTypeCd} as CONTENTS_TYPE_CD
              , K.PROD_STATUS_CD
              , I.REG_DT
              , NVL(L.PATICPERS_CNT, 0) AS PATICPERS_CNT
