@@ -471,13 +471,15 @@ public class LoginServiceImpl implements LoginService {
 			if (StringUtil.isBlank(userAuthMethod.getUserId())
 					&& (StringUtil.isBlank(userAuthMethod.getIsRealName()) || StringUtil.equals(userAuthMethod.getIsRealName(), "N"))) { // 인증수단이 없는경우
 
-				LOGGER.info("### {} 인증 수단 없음", req.getDeviceId());
+				LOGGER.info("### {} 추가인증수단 없음", req.getDeviceId());
 
 				/* SC회원탈퇴 */
 				RemoveUserRequest removeUserReq = new RemoveUserRequest();
 				removeUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 				removeUserReq.setUserKey(deviceInfo.getUserKey());
 				removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+				removeUserReq.setSecedeReasonCode("US010408");
+				removeUserReq.setSecedeReasonMessage("변동성인증수단없음");
 				this.userSCI.remove(removeUserReq);
 
 				/* IDP 탈퇴 */
