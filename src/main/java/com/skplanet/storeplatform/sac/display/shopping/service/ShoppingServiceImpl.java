@@ -2123,7 +2123,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		paramMap.put("tenantId", req.getTenantId());
 		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-		paramMap.put("deviceModelNo", "");
+		paramMap.put("deviceModelCd", req.getDeviceModelCd());
 		PaymentInfo paymentInfo = null;
 		for (int i = 0; i < prodIdList.size(); i++) {
 			paramMap.put("prodId", prodIdList.get(i));
