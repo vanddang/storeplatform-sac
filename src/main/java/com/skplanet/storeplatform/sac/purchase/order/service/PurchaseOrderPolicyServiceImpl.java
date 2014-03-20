@@ -339,8 +339,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 				individualPolicyInfoSac = policyResMap.get(key);
 
-				if (StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)
-						&& StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+				// if (StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)
+				// && StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+				if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
 					// 구매차단
 					purchaseOrderInfo.setBlockPayment(true);
 
