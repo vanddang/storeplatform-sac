@@ -146,112 +146,104 @@
                        ,A.THEME_TYPE
                        ,A.IMG_PATH AS THEME_IMG
                  FROM   (
-                        SELECT   
-                                 A.LIST_ID THEME_ID
-                                ,A.LIST_NM THEME_NM
-                                ,DECODE(A.IMG_PATH,NULL,2,1) THEME_TYPE
-                                ,A.IMG_PATH
-                                ,ROW_NUMBER() OVER( PARTITION BY A.LIST_ID
-                                                         ORDER BY AP.EXPO_ORD, AP.REG_DT DESC ) AS RN
-                                ,P.TOP_MENU_ID
-                                ,P.PROD_ID
-                                ,PHI.EBOOK_SPRT_YN
-                                ,P.META_CLSF_CD
-                                ,PHI.MAGAZINE_SPRT_YN
-                                ,PHI.COMIC_SPRT_YN
-                                ,PHI.SCL_SHPG_SPRT_YN
-                                ,PHI.MUSIC_SPRT_YN
-                                ,PHI.HDV_SPRT_YN
-                                ,PHI.SD_VIDEO_SPRT_YN
-                                ,PHI.VIDEO_DRM_SPRT_YN
-                                ,P.DRM_YN
-                                ,A.EXPO_ORD
-                                ,A.REG_DT
-                          FROM   TB_DP_LIST A
-                                ,TB_DP_LIST_PROD AP
-                                ,TB_DP_PROD_RSHP PR
-                                ,TB_DP_MENU_CATEGORY_PROD_MAPG CP
-                                ,TB_DP_MENU_CATEGORY C
-                                ,TB_DP_PROD P           /* EPSD */
-                                ,TB_DP_TENANT_PROD TP
-                                ,TB_DP_PROD P2          /* CHNL */
-                                ,TB_DP_TENANT_PROD TP2
-                                ,TB_DP_SPRT_DEVICE SH
-                                ,TB_CM_DEVICE PHI
-                         WHERE   SYSDATE BETWEEN NVL( AP.EXPO_START_DT, SYSDATE ) AND    NVL( AP.EXPO_END_DT, SYSDATE )
-                          AND    A.TENANT_ID = AP.TENANT_ID
-                          AND    A.LIST_ID = AP.LIST_ID
-                          AND    PR.PROD_ID = AP.PROD_ID    -- CHNL 
-                          AND    CP.PROD_ID = AP.PROD_ID
-                          AND    P2.PROD_ID = PR.PROD_ID -- CHNL
-                          AND    TP2.TENANT_ID = A.TENANT_ID
-                          AND    TP2.PROD_ID = P2.PROD_ID
-                          AND    P.PROD_ID = PR.PART_PROD_ID -- EPISODE
-                          AND    TP.TENANT_ID = A.TENANT_ID
-                          AND    TP.PROD_ID = P.PROD_ID
-                          AND    C.MENU_ID = CP.MENU_ID
-                          AND    SH.PROD_ID   = PR.PART_PROD_ID
-                          AND    SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
-                          AND    A.LIST_GRP_CD = #{listGrpCd}
-                          AND    A.EXPO_YN = 'Y'
-                          AND    AP.EXPO_YN = 'Y'
-                          AND    A.TENANT_ID = #{tenantHeader.tenantId}
-                          AND    CP.BASE_YN = 'Y'
-                          AND    CP.USE_YN = 'Y'
-                          AND    C.USE_YN = 'Y'
-                          AND    TP.PROD_STATUS_CD = 'PD000403'
-                          AND    TP2.PROD_STATUS_CD = 'PD000403'
-                          AND    P2.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
-                          AND    P.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
-                          AND    PHI.REP_DEVICE_YN = 'Y'
-                          AND   (PHI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
-                          AND    PHI.USE_YN = 'Y'
+                            SELECT   
+									 A.LIST_ID THEME_ID
+									,A.LIST_NM THEME_NM
+									,DECODE(A.IMG_PATH,NULL,2,1) THEME_TYPE
+									,A.IMG_PATH
+									,ROW_NUMBER() OVER( PARTITION BY A.LIST_ID
+									                         ORDER BY AP.EXPO_ORD, AP.REG_DT DESC ) AS RN
+									,A.EXPO_ORD
+									,A.REG_DT
+							FROM   TB_DP_LIST A
+									,TB_DP_LIST_PROD AP
+									,TB_DP_PROD_RSHP PR
+									,TB_DP_MENU_CATEGORY_PROD_MAPG CP
+									,TB_DP_MENU_CATEGORY C
+									,TB_DP_PROD P           /* EPSD */
+									,TB_DP_TENANT_PROD TP
+									,TB_DP_PROD P2          /* CHNL */
+									,TB_DP_TENANT_PROD TP2
+							WHERE   SYSDATE BETWEEN NVL( AP.EXPO_START_DT, SYSDATE ) AND    NVL( AP.EXPO_END_DT, SYSDATE )
+							AND    A.TENANT_ID = AP.TENANT_ID
+							AND    A.LIST_ID = AP.LIST_ID
+							AND    PR.PROD_ID = AP.PROD_ID    -- CHNL 
+							AND    CP.PROD_ID = AP.PROD_ID
+							AND    P2.PROD_ID = PR.PROD_ID -- CHNL
+							AND    TP2.TENANT_ID = A.TENANT_ID
+							AND    TP2.PROD_ID = P2.PROD_ID
+							AND    P.PROD_ID = PR.PART_PROD_ID -- EPISODE
+							AND    TP.TENANT_ID = A.TENANT_ID
+							AND    TP.PROD_ID = P.PROD_ID
+							AND    C.MENU_ID = CP.MENU_ID
+							AND    A.LIST_GRP_CD = #{listGrpCd}
+							AND    A.EXPO_YN = 'Y'
+							AND    AP.EXPO_YN = 'Y'
+							AND    A.TENANT_ID = #{tenantHeader.tenantId}
+							AND    CP.BASE_YN = 'Y'
+							AND    CP.USE_YN = 'Y'
+							AND    C.USE_YN = 'Y'
+							AND    TP.PROD_STATUS_CD = 'PD000403'
+							AND    TP2.PROD_STATUS_CD = 'PD000403'
+							AND    P2.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
+							AND    P.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
+                            AND    EXISTS (
+                                         SELECT    1
+                                           FROM    TB_DP_SPRT_DEVICE SH
+                                                 , TB_CM_DEVICE PHI
+				                          WHERE    SH.PROD_ID   = PR.PART_PROD_ID
+				                            AND    SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
+				                            AND    PHI.REP_DEVICE_YN = 'Y'
+				                            AND   (PHI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
+				                            AND    PHI.USE_YN = 'Y'
+				                            AND  DECODE( P.TOP_MENU_ID
+				                                       , 'DP13'
+				                                       , DECODE( PHI.EBOOK_SPRT_YN
+				                                               , 'Y'
+				                                               , DECODE( P.META_CLSF_CD
+				                                                       , 'CT24'
+				                                                       , DECODE( PHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+				                                                       , 'CT26'
+				                                                       , DECODE( PHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+				                                                       , 1 )
+				                                               , 0 )
+				                                       , 'DP14'
+				                                       , DECODE( PHI.COMIC_SPRT_YN , 'Y', 1 , 0 )
+				                                       , 'DP15'
+				                                       , DECODE( PHI.SCL_SHPG_SPRT_YN, 'Y', 1, 0 )
+				                                       , 'DP16'
+				                                       , DECODE( P.META_CLSF_CD
+				                                                , 'CT25'
+				                                                , DECODE( PHI.MUSIC_SPRT_YN, 'Y', 1, 0)
+				                                                , 1 )
+				                                       , 1 ) = 1
+				                            AND  ( CASE WHEN P.TOP_MENU_ID IN ('DP17','DP18')
+				                                        THEN ( SELECT 1
+				                                                 FROM TB_DP_SUB_CONTENTS SC
+				                                                WHERE SC.PROD_ID = P.PROD_ID
+				                                                  AND SC.SALE_YN = 'Y'
+				                                                  AND DECODE( PHI.HDV_SPRT_YN
+				                                                            , 'PD005201'
+				                                                            , DECODE ( SC.DP_PG_QULT_CD
+				                                                                     , 'PD009701', 1
+				                                                                     , 'PD009702', 1
+				                                                                     , DECODE( PHI.SD_VIDEO_SPRT_YN , 'Y', 1 , 0 ) )
+				                                                            , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+				                                                  AND ROWNUM = 1  )
+				                                        ELSE 1
+				                                    END ) = 1
+				                            AND  ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+				                                        THEN DECODE( PHI.VIDEO_DRM_SPRT_YN
+				                                                   , 'PD005200'
+				                                                   , DECODE( NVL( P.DRM_YN, 'N' ), 'N', 1, 0 )
+				                                                   , 'PD005201'
+				                                                   , 1 )
+				                                        ELSE 1
+				                                    END ) = 1                            
+                            )
+                          
                          ) A
                    WHERE RN = 1
-                    AND  DECODE( A.TOP_MENU_ID
-                               , 'DP13'
-                               , DECODE( A.EBOOK_SPRT_YN
-                                       , 'Y'
-                                       , DECODE( A.META_CLSF_CD
-                                               , 'CT24'
-                                               , DECODE( A.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                               , 'CT26'
-                                               , DECODE( A.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                               , 1 )
-                                       , 0 )
-                               , 'DP14'
-                               , DECODE( A.COMIC_SPRT_YN , 'Y', 1 , 0 )
-                               , 'DP15'
-                               , DECODE( A.SCL_SHPG_SPRT_YN, 'Y', 1, 0 )
-                               , 'DP16'
-                               , DECODE( A.META_CLSF_CD
-                                        , 'CT25'
-                                        , DECODE( A.MUSIC_SPRT_YN, 'Y', 1, 0)
-                                        , 1 )
-                               , 1 ) = 1
-                    AND  ( CASE WHEN A.TOP_MENU_ID IN ('DP17','DP18')
-                                THEN ( SELECT 1
-                                         FROM TB_DP_SUB_CONTENTS SC
-                                        WHERE SC.PROD_ID = A.PROD_ID
-                                          AND SC.SALE_YN = 'Y'
-                                          AND DECODE( A.HDV_SPRT_YN
-                                                    , 'PD005201'
-                                                    , DECODE ( SC.DP_PG_QULT_CD
-                                                             , 'PD009701', 1
-                                                             , 'PD009702', 1
-                                                             , DECODE( A.SD_VIDEO_SPRT_YN , 'Y', 1 , 0 ) )
-                                                    , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
-                                          AND ROWNUM = 1  )
-                                ELSE 1
-                            END ) = 1
-                    AND  ( CASE WHEN A.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-                                THEN DECODE( A.VIDEO_DRM_SPRT_YN
-                                           , 'PD005200'
-                                           , DECODE( NVL( A.DRM_YN, 'N' ), 'N', 1, 0 )
-                                           , 'PD005201'
-                                           , 1 )
-                                ELSE 1
-                            END ) = 1
                     ORDER BY A.EXPO_ORD, A.REG_DT DESC
                ) AA
         WHERE  RNUM BETWEEN #{START_ROW} AND #{END_ROW}
