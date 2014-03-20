@@ -308,11 +308,12 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// 비과금결제 우선 체크
 		if (testMdnPolicyCodeList != null) {
 			for (String key : policyResMap.keySet()) {
-				if (testMdnPolicyCodeList.contains(key) == false) {
-					continue;
-				}
 
 				individualPolicyInfoSac = policyResMap.get(key);
+
+				if (testMdnPolicyCodeList.contains(individualPolicyInfoSac.getPolicyCode()) == false) {
+					continue;
+				}
 
 				if (StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)
 						&& StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
@@ -333,11 +334,11 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// 구매차단 체크
 		if (blockPolicyCodeList != null) {
 			for (String key : policyResMap.keySet()) {
-				if (blockPolicyCodeList.contains(key) == false) {
+				individualPolicyInfoSac = policyResMap.get(key);
+
+				if (blockPolicyCodeList.contains(individualPolicyInfoSac.getPolicyCode()) == false) {
 					continue;
 				}
-
-				individualPolicyInfoSac = policyResMap.get(key);
 
 				// if (StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)
 				// && StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
