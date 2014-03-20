@@ -168,7 +168,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 
 		List<IndividualPolicyInfoSac> individualPolicyInfoSacList = getIndividualPolicySacRes.getPolicyList();
 		for (IndividualPolicyInfoSac individualPolicyInfoSac : individualPolicyInfoSacList) {
-			resMap.put(individualPolicyInfoSac.getKey(), individualPolicyInfoSac);
+			resMap.put(individualPolicyInfoSac.getPolicyCode(), individualPolicyInfoSac);
 		}
 
 		return resMap;
