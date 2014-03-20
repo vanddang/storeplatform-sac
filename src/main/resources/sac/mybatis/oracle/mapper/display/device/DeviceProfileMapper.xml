@@ -27,8 +27,8 @@
     </resultMap>
     <select id="selectDeviceProfile" parameterType="DeviceProfileRequest" resultMap="deviceProfileMap">
 		SELECT /* DeviceProfileMapper.xml, selectDeviceProfile, SAC 전시, 2014-03-15 */
-		        DEVICE_MODEL_CD                                                                 /* 모델 코드 */
-		      , (SELECT CD_NM
+		        DEVICE_MODEL_CD,                                                                 /* 모델 코드 */
+		       (SELECT CD_NM
 		           FROM TB_CM_CD
 		          WHERE CD_ID = MNFT_COMP_CD
 		          AND   LANG_CD = #{tenantHeader.langCd})
