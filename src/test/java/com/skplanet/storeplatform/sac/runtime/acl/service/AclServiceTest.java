@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AclServiceTobeImplTest {
+public class AclServiceTest {
 
 	@InjectMocks
 	private AclService aclService;
