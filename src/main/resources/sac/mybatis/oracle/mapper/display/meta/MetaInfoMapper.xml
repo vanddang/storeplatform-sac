@@ -861,7 +861,7 @@
     
     <!-- 정액제 상품 메타 조회 -->
     <select id="getFreepassMetaInfo" parameterType="Map" resultType="MetaInfo">
-	SELECT  /* MetaInfoMapper.xml, getFreepassMetaInfo, 서영배, 2014-02-11 */
+	SELECT  /* MetaInfoMapper.getFreepassMetaInfo, 정액제 상품 메타 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
 		IV.*
 		, NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
 		, NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
