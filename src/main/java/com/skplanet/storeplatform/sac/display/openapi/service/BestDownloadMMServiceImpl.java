@@ -132,7 +132,8 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 				bestDownloadMMSacReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
 				if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId) && "RNK000000003".equals(listId)) {
-					throw new StorePlatformException("SAC_DSP_0016");
+					commonResponse.setTotalCount(0);
+					// throw new StorePlatformException("SAC_DSP_0016");
 				} else {
 					// 유/무료
 					if ("RNK000000006".equals(listId) || "RNK000000003".equals(listId)) {
@@ -150,7 +151,8 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchRecommendNewList",
 								bestDownloadMMSacReq, MetaInfo.class);
 					} else {
-						throw new StorePlatformException("SAC_DSP_0016");
+						commonResponse.setTotalCount(0);
+
 					}
 				}
 
@@ -182,7 +184,6 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 				this.log.debug("---------------------------------------------------------------------");
 				bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchBestDownloadAppListByOrder",
 						bestDownloadMMSacReq, MetaInfo.class);
-				// throw new StorePlatformException("SAC_DSP_0016");
 			} else {
 				// 뮤직을 제외한 나머지 Menu 최신순 평점순일때
 				this.log.debug("---------------------------------------------------------------------");
@@ -194,7 +195,7 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 
 		}
 
-		if (bestDownloadMMList.size() != 0) {
+		if (bestDownloadMMList != null) {
 
 			Iterator<MetaInfo> iterator = bestDownloadMMList.iterator();
 			while (iterator.hasNext()) {
