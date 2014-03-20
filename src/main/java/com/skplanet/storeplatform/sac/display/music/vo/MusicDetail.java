@@ -37,7 +37,7 @@ public class MusicDetail extends CommonInfo {
     private String prodStatusCd;
     private String issueDay;
     private String prodBaseDesc;
-    private String repSong;
+    private String albumTypeNm;
     private String cid;
 
     public String getCid() {
@@ -48,12 +48,12 @@ public class MusicDetail extends CommonInfo {
         this.cid = cid;
     }
 
-    public String getRepSong() {
-        return repSong;
+    public String getAlbumTypeNm() {
+        return albumTypeNm;
     }
 
-    public void setRepSong(String repSong) {
-        this.repSong = repSong;
+    public void setAlbumTypeNm(String albumTypeNm) {
+        this.albumTypeNm = albumTypeNm;
     }
 
     public String getProdBaseDesc() {
