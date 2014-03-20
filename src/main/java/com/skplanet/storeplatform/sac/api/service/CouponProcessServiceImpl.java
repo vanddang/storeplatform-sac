@@ -237,6 +237,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setTbDpProdInfoValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpProdInfo> tblDpProdList, String cudType) {
+		this.log.info("■■■■■ setTbDpProdInfoValue Start ■■■■■");
 		TbDpProdInfo dp = new TbDpProdInfo();
 		try {
 
@@ -313,7 +314,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// phService.setPhoneListToInfo(cInfo);
 
 			// 세팅 값 확인
-
+			this.log.info("■■■■■ setTbDpProdInfoValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TBL_DP_PROD VO 셋팅 실패", null);
 		} catch (Exception e) {
@@ -338,6 +339,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 	private boolean setTbDpShpgProdListValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpShpgProdInfo> tbDpShpgProdList, String cudType) {
+		this.log.info("■■■■■ setTbDpShpgProdListValue Start ■■■■■");
 		TbDpShpgProdInfo dsp = new TbDpShpgProdInfo();
 		try {
 
@@ -447,6 +449,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// 저장
 			this.couponItemService.insertTbDpShpgProdInfo(tbDpShpgProdList);
+			this.log.info("■■■■■ setTbDpShpgProdListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_SHPG_PROD VO 셋팅 실패", null);
 		} catch (Exception e) {
@@ -470,6 +473,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setTbDpProdDescListValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpProdDescInfo> tbDpProdDescList, String cudType) {
+		this.log.info("■■■■■ setTbDpProdDescListValue Start ■■■■■");
 		TbDpProdDescInfo dpd = new TbDpProdDescInfo();
 		try {
 
@@ -508,7 +512,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// 저장
 			this.couponItemService.insertTbDpProdDescInfo(tbDpProdDescList);
-
+			this.log.info("■■■■■ setTbDpProdDescListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_DESC VO 셋팅 실패", null);
 		} catch (Exception e) {
@@ -532,6 +536,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setTbDpProdRshpValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpProdRshpInfo> tbDpProdRshpList, String cudType) {
+		this.log.info("■■■■■ setTbDpProdRshpValue Start ■■■■■");
 		TbDpProdRshpInfo dps = null;
 		dps = new TbDpProdRshpInfo();
 		try {
@@ -550,7 +555,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 			// 저장
 			this.couponItemService.insertTbDpProdRshpInfo(tbDpProdRshpList);
-
+			this.log.info("■■■■■ setTbDpProdRshpValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_RSHP VO 셋팅 실패", null);
 		} catch (Exception e) {
@@ -574,6 +579,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setTbDpTenantProdListValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpTenantProdInfo> tbDpTenantProdList, String cudType) {
+		this.log.info("■■■■■ setTbDpTenantProdListValue Start ■■■■■");
 		TbDpTenantProdInfo dtpd = new TbDpTenantProdInfo();
 		try {
 
@@ -607,6 +613,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 			// 저장
 			this.couponItemService.insertTbDpTenantProdInfo(tbDpTenantProdList);
+			this.log.info("■■■■■ setTbDpTenantProdListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_TENANT_PROD VO 셋팅 실패", null);
 		} catch (Exception e) {
@@ -630,6 +637,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setTbDpTenantProdPriceListValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList, String cudType) {
+		this.log.info("■■■■■ setTbDpTenantProdPriceListValue Start ■■■■■");
 		TbDpTenantProdPriceInfo dtpp = new TbDpTenantProdPriceInfo();
 		try {
 
@@ -681,6 +689,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 			// 저장
 			this.couponItemService.insertTbDpTenantProdPriceInfo(tbDpTenantProdPriceList);
+			this.log.info("■■■■■ setTbDpTenantProdPriceListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_TENANT_PROD_PRICE VO 셋팅 실패",
 					null);
@@ -706,6 +715,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setTbDpProdCatalogMapgInfoValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapgList, String cudType) {
+		this.log.info("■■■■■ setTbDpProdCatalogMapgInfoValue Start ■■■■■");
 		TbDpProdCatalogMapgInfo dpcm = new TbDpProdCatalogMapgInfo();
 		try {
 			// 상품- 카탈로그 에서는 상품 채널 - 카탈로그만 저장
@@ -722,6 +732,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// ////////////////// Coupon 정보 E////////////////////////////
 
 			this.couponItemService.insertTbDpProdCatalogMapgInfo(tbDpProdCatalogMapgList, couponInfo.getProdId());
+			this.log.info("■■■■■ setTbDpProdCatalogMapgInfoValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), e.getMessage(), null);
 		} catch (Exception e) {
@@ -746,6 +757,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setTbDpProdOptValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpProdOpt> tbDpProdOptList, String cudType) {
+		this.log.info("■■■■■ setTbDpProdOptValue Start ■■■■■");
 		TbDpProdOpt dpo = new TbDpProdOpt();
 		try {
 
@@ -823,7 +835,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 			// 저장
 			this.couponItemService.insertTbDpProdOptInfo(tbDpProdOptList);
-
+			this.log.info("■■■■■ setTbDpProdOptValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_OPT VO 셋팅 실패", null);
 		} catch (Exception e) {
@@ -847,6 +859,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setTbDpSprtDeviceListValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpSprtDeviceInfo> tbDpSprtDeviceList, String cudType) {
+		this.log.info("■■■■■ setTbDpSprtDeviceListValue Start ■■■■■");
 		TbDpSprtDeviceInfo tdsd = new TbDpSprtDeviceInfo();
 		try {
 
@@ -863,7 +876,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 			// 저장
 			this.couponItemService.insertTbDpSprtDeviceInfo(tbDpSprtDeviceList);
-
+			this.log.info("■■■■■ setTbDpSprtDeviceListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_SPRT_DEVICE VO 셋팅 실패", null);
 		} catch (Exception e) {
@@ -884,7 +897,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setTbDpProdTagListValue(DpCouponInfo couponInfo, List<DpCatalogTagInfo> tbDpProdTagList) {
 		try {
-
+			this.log.info("■■■■■ setTbDpProdTagListValue Start ■■■■■");
 			// ////////////////// Coupon 정보 S////////////////////////////
 			ArrayList<DpCatalogTagInfo> tagList = new ArrayList<DpCatalogTagInfo>(); // TBL_DP_TAG_INFO 정보
 			if (StringUtils.isNotEmpty(couponInfo.getTag())) {
@@ -904,6 +917,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				// 저장
 				this.couponItemService.insertTblTagInfo(tagList);
 			}
+			this.log.info("■■■■■ setTbDpProdTagListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TBL_DP_TAG_INFO VO 셋팅 실패", null);
 		} catch (Exception e) {
@@ -927,6 +941,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setCallSpSettRegProd(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<SpRegistProd> spRegistProdList, String cudType) {
+		this.log.info("■■■■■ setCallSpSettRegProd Start ■■■■■");
 		SpRegistProd spRegistProd = new SpRegistProd();
 		try {
 
@@ -957,7 +972,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// 저장
 			// this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
-
+			this.log.info("■■■■■ setCallSpSettRegProd End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), e.getMessage(), null);
 		} catch (Exception e) {
