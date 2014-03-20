@@ -149,11 +149,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			throw new StorePlatformException("SAC_PUR_4102");
 		}
 
-		// 실명인증 체크
-		if (purchaseUserDevice.isRealName() == false) {
-			throw new StorePlatformException("SAC_PUR_4105");
-		}
-
 		purchaseOrderInfo.setPurchaseUser(purchaseUserDevice);
 
 		// ----------------------------------------------------------------------------------------------
@@ -319,6 +314,12 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// 20) {
 			// throw new StorePlatformException("SAC_PUR_5110");
 			// }
+
+			// 실명인증 체크
+			if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19)
+					&& purchaseOrderInfo.getPurchaseUser().isRealName() == false) {
+				throw new StorePlatformException("SAC_PUR_4105");
+			}
 
 			// (정액권) 배타 상품 체크
 			if (product.getExclusiveFixrateProdIdList() != null && product.getExclusiveFixrateProdIdList().size() > 0) {
