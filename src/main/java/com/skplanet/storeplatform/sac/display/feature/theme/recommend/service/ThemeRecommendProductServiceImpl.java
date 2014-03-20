@@ -239,37 +239,28 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		}
 
 		// data 무존재시 운영자 추천으로 대체
-		if (productList.isEmpty()) {
-			this.totalCount = 0;
-			List<MetaInfo> metaInfoList = new ArrayList<MetaInfo>();
-			metaInfoList = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecommendPkgProdList", mapReq,
-					MetaInfo.class);
-			if (metaInfoList.isEmpty()) {
-				throw new StorePlatformException("SAC_DSP_0009");
-			}
-
-			for (MetaInfo metaInfo1 : metaInfoList) {
-				String topMenuId = metaInfo1.getTopMenuId();
-				this.totalCount = metaInfo1.getTotalCount();
-
-				if (topMenuId.equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) {
-					product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo1);
-				} else if (topMenuId.equals(DisplayConstants.DP_TV_TOP_MENU_ID)) {
-					product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo1);
-				} else if (topMenuId.equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) {
-					product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo1);
-				} else if (topMenuId.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) { // 멀티미디어 카테고리 조회
-					product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo1);
-				} else if (topMenuId.equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) { // 뮤직 카테고리 조회
-					product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo1);
-				} else if (topMenuId.equals(DisplayConstants.DP_SHOPPING_TOP_MENU_ID)) { // 쇼핑 카테고리 조회
-					product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo1);
-				} else { // 앱 카테고리 조회
-					product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo1);
-				}
-				productList.add(product);
-			}
-		}
+		/*
+		 * if (productList.isEmpty()) { this.totalCount = 0; List<MetaInfo> metaInfoList = new ArrayList<MetaInfo>();
+		 * metaInfoList = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecommendPkgProdList", mapReq,
+		 * MetaInfo.class); if (metaInfoList.isEmpty()) { throw new StorePlatformException("SAC_DSP_0009"); }
+		 * 
+		 * for (MetaInfo metaInfo1 : metaInfoList) { String topMenuId = metaInfo1.getTopMenuId(); this.totalCount =
+		 * metaInfo1.getTotalCount();
+		 * 
+		 * if (topMenuId.equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) { product =
+		 * this.responseInfoGenerateFacade.generateMovieProduct(metaInfo1); } else if
+		 * (topMenuId.equals(DisplayConstants.DP_TV_TOP_MENU_ID)) { product =
+		 * this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo1); } else if
+		 * (topMenuId.equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) { product =
+		 * this.responseInfoGenerateFacade.generateEbookProduct(metaInfo1); } else if
+		 * (topMenuId.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) { // 멀티미디어 카테고리 조회 product =
+		 * this.responseInfoGenerateFacade.generateComicProduct(metaInfo1); } else if
+		 * (topMenuId.equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) { // 뮤직 카테고리 조회 product =
+		 * this.responseInfoGenerateFacade.generateMusicProduct(metaInfo1); } else if
+		 * (topMenuId.equals(DisplayConstants.DP_SHOPPING_TOP_MENU_ID)) { // 쇼핑 카테고리 조회 product =
+		 * this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo1); } else { // 앱 카테고리 조회 product =
+		 * this.responseInfoGenerateFacade.generateAppProduct(metaInfo1); } productList.add(product); } }
+		 */
 
 		ThemeRecommendSacRes responseVO = new ThemeRecommendSacRes();
 

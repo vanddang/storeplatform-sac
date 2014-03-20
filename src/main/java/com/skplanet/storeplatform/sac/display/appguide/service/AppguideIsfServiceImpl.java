@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.external.client.isf.vo.MultiValueType;
 import com.skplanet.storeplatform.external.client.isf.vo.MultiValuesType;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -193,6 +194,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 				if (this.log.isDebugEnabled()) {
 					this.log.debug("##### parameter cnt : {}", listProdParam.size());
 					this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
+					// productBasicInfoList.clear();
 				}
 				if (!productBasicInfoList.isEmpty()) {
 
@@ -455,31 +457,46 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 				}
 			} else {
 				isExists = false;
+				/*
+				 * ErrorInfo error = new ErrorInfo(); error.setCode("SAC_DSP_0010"); throw new
+				 * StorePlatformException(error);
+				 */
 			}
 		} catch (StorePlatformException se) {
-			isExists = false;
+			// isExists = false;
+			throw se;
 		} catch (Exception e) {
 			e.printStackTrace();
-			isExists = false;
+			// isExists = false;
+			ErrorInfo error = new ErrorInfo();
+			error.setCode("SAC_DSP_0009");
+			error.setMessage(e.getLocalizedMessage());
+			throw new StorePlatformException(error);
 		}
 
 		// ISF 연동 실패나 Data 가 없는 경우( 운영자 추천으로 대체 )
 		if (!isExists) {
-			this.totalCount = 0;
-
-			this.log.info("ISF 연동 실패나 Data 가 없는 경우 - 운영자 추천으로 대체");
-
-			mapReq = new HashMap<String, Object>();
-			mapReq.put("START_ROW", requestVO.getOffset());
-			mapReq.put("END_ROW", (requestVO.getOffset() + requestVO.getCount() - 1));
-
-			mapReq.put("tenantHeader", requestHeader.getTenantHeader());
-			mapReq.put("deviceHeader", requestHeader.getDeviceHeader());
-			mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
-
-			mapReq.put("listId", IsfConstants.recommandListId); // 운영자 추천
-
+			commonResponse.setTotalCount(this.totalCount);
+			responseVO.setCommonResponse(commonResponse);
+			responseVO.setProductList(productList);
 			/*
+			 * ErrorInfo error = new ErrorInfo(); error.setCode("SAC_DSP_0009"); throw new
+			 * StorePlatformException(error);
+			 */
+			/*
+			 * this.totalCount = 0;
+			 * 
+			 * this.log.info("ISF 연동 실패나 Data 가 없는 경우 - 운영자 추천으로 대체");
+			 * 
+			 * mapReq = new HashMap<String, Object>(); mapReq.put("START_ROW", requestVO.getOffset());
+			 * mapReq.put("END_ROW", (requestVO.getOffset() + requestVO.getCount() - 1));
+			 * 
+			 * mapReq.put("tenantHeader", requestHeader.getTenantHeader()); mapReq.put("deviceHeader",
+			 * requestHeader.getDeviceHeader()); mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
+			 * 
+			 * mapReq.put("listId", IsfConstants.recommandListId); // 운영자 추천
+			 * 
+			 * 
 			 * List<String> imageCodeList = new ArrayList<String>();
 			 * imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 			 * imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
@@ -489,136 +506,83 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 			 * imageCodeList);
 			 * 
 			 * if (this.log.isDebugEnabled()) { this.mapPrint(mapReq); }
-			 */
-			/*
+			 * 
+			 * 
 			 * List<Appguide> appguideResultList = this.commonDAO.queryForList("Isf.Appguide.getAdminRecommandProdList",
 			 * mapReq, Appguide.class);
 			 * 
 			 * productList = this.makeResultList(appguideResultList);
+			 * 
+			 * 
+			 * // 상품 기본 정보 List 조회 - 운영자 추천 List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+			 * "Isf.AppCodi.getBasicAdminRecommandProdList", mapReq, ProductBasicInfo.class);
+			 * 
+			 * if (this.log.isDebugEnabled()) { this.log.debug("##### parameter cnt : {}", listProdParam.size());
+			 * this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size()); } if
+			 * (!productBasicInfoList.isEmpty()) {
+			 * 
+			 * Product product = null; MetaInfo metaInfo = null;
+			 * 
+			 * Map<String, Object> paramMap = new HashMap<String, Object>(); paramMap.put("tenantHeader", tenantHeader);
+			 * paramMap.put("deviceHeader", deviceHeader); paramMap.put("prodStatusCd",
+			 * DisplayConstants.DP_SALE_STAT_ING); // 판매중
+			 * 
+			 * // Meta 정보 조회 for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+			 * 
+			 * this.totalCount = productBasicInfo.getTotalCount();
+			 * 
+			 * String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴 String svcGrpCd =
+			 * productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드 paramMap.put("productBasicInfo", productBasicInfo);
+			 * 
+			 * if (this.log.isDebugEnabled()) { this.log.debug("##### Top Menu Id : {}", topMenuId);
+			 * this.log.debug("##### Service Group Cd : {}", svcGrpCd); } // 상품 SVC_GRP_CD 조회 // DP000203 : 멀티미디어 //
+			 * DP000206 : Tstore 쇼핑 // DP000205 : 소셜쇼핑 // DP000204 : 폰꾸미기 // DP000201 : 애플리캐이션 // APP 상품의 경우 if
+			 * (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) { paramMap.put("imageCd",
+			 * DisplayConstants.DP_APP_REPRESENT_IMAGE_CD); if (this.log.isDebugEnabled()) {
+			 * this.log.debug("##### Search for app  meta info product"); } metaInfo =
+			 * this.metaInfoService.getAppMetaInfo(paramMap); if (metaInfo != null) { product =
+			 * this.responseInfoGenerateFacade.generateAppProduct(metaInfo); productList.add(product); }
+			 * 
+			 * } else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우 // 영화/방송
+			 * 상품의 경우 paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD); if
+			 * (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId) ||
+			 * DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) { if (this.log.isDebugEnabled()) {
+			 * this.log.debug("##### Search for Vod  meta info product"); } metaInfo =
+			 * this.metaInfoService.getVODMetaInfo(paramMap); if (metaInfo != null) { if
+			 * (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) { product =
+			 * this.responseInfoGenerateFacade.generateMovieProduct(metaInfo); } else { product =
+			 * this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo); } productList.add(product); } } else
+			 * if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId) ||
+			 * DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 // 경우
+			 * 
+			 * paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+			 * 
+			 * if (this.log.isDebugEnabled()) { this.log.debug("##### Search for EbookComic specific product"); }
+			 * metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap); if (metaInfo != null) { if
+			 * (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) { product =
+			 * this.responseInfoGenerateFacade.generateEbookProduct(metaInfo); } else { product =
+			 * this.responseInfoGenerateFacade.generateComicProduct(metaInfo); } productList.add(product); }
+			 * 
+			 * } else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
+			 * 
+			 * paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD); paramMap.put("contentTypeCd",
+			 * DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+			 * 
+			 * if (this.log.isDebugEnabled()) { this.log.debug("##### Search for music meta info product"); } metaInfo =
+			 * this.metaInfoService.getMusicMetaInfo(paramMap); if (metaInfo != null) { product =
+			 * this.responseInfoGenerateFacade.generateMusicProduct(metaInfo); productList.add(product); } } } else if
+			 * (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
+			 * paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD); paramMap.put("imageCd",
+			 * DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+			 * 
+			 * if (this.log.isDebugEnabled()) { this.log.debug("##### Search for Shopping  meta info product"); }
+			 * metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap); if (metaInfo != null) { product =
+			 * this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo); productList.add(product); } } } }
+			 * 
+			 * if (this.log.isDebugEnabled()) { this.log.debug("product count : {}", productList.size());
+			 * this.log.debug("total count : {}", this.totalCount); } commonResponse.setTotalCount(this.totalCount);
+			 * responseVO.setCommonResponse(commonResponse); responseVO.setProductList(productList);
 			 */
-
-			// 상품 기본 정보 List 조회 - 운영자 추천
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"Isf.AppCodi.getBasicAdminRecommandProdList", mapReq, ProductBasicInfo.class);
-
-			if (this.log.isDebugEnabled()) {
-				this.log.debug("##### parameter cnt : {}", listProdParam.size());
-				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
-			}
-			if (!productBasicInfoList.isEmpty()) {
-
-				Product product = null;
-				MetaInfo metaInfo = null;
-
-				Map<String, Object> paramMap = new HashMap<String, Object>();
-				paramMap.put("tenantHeader", tenantHeader);
-				paramMap.put("deviceHeader", deviceHeader);
-				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 판매중
-
-				// Meta 정보 조회
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-
-					this.totalCount = productBasicInfo.getTotalCount();
-
-					String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
-					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
-					paramMap.put("productBasicInfo", productBasicInfo);
-
-					if (this.log.isDebugEnabled()) {
-						this.log.debug("##### Top Menu Id : {}", topMenuId);
-						this.log.debug("##### Service Group Cd : {}", svcGrpCd);
-					}
-					// 상품 SVC_GRP_CD 조회
-					// DP000203 : 멀티미디어
-					// DP000206 : Tstore 쇼핑
-					// DP000205 : 소셜쇼핑
-					// DP000204 : 폰꾸미기
-					// DP000201 : 애플리캐이션
-					// APP 상품의 경우
-					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						if (this.log.isDebugEnabled()) {
-							this.log.debug("##### Search for app  meta info product");
-						}
-						metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
-						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
-							productList.add(product);
-						}
-
-					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
-						// 영화/방송 상품의 경우
-						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-							if (this.log.isDebugEnabled()) {
-								this.log.debug("##### Search for Vod  meta info product");
-							}
-							metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
-							if (metaInfo != null) {
-								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
-								} else {
-									product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
-								}
-								productList.add(product);
-							}
-						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
-																							  // 경우
-
-							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-
-							if (this.log.isDebugEnabled()) {
-								this.log.debug("##### Search for EbookComic specific product");
-							}
-							metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
-							if (metaInfo != null) {
-								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
-								} else {
-									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
-								}
-								productList.add(product);
-							}
-
-						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-
-							paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-							paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-
-							if (this.log.isDebugEnabled()) {
-								this.log.debug("##### Search for music meta info product");
-							}
-							metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
-							if (metaInfo != null) {
-								product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
-								productList.add(product);
-							}
-						}
-					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
-						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-						paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-
-						if (this.log.isDebugEnabled()) {
-							this.log.debug("##### Search for Shopping  meta info product");
-						}
-						metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
-						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
-							productList.add(product);
-						}
-					}
-				}
-			}
-
-			if (this.log.isDebugEnabled()) {
-				this.log.debug("product count : {}", productList.size());
-				this.log.debug("total count : {}", this.totalCount);
-			}
-			commonResponse.setTotalCount(this.totalCount);
-			responseVO.setCommonResponse(commonResponse);
-			responseVO.setProductList(productList);
 		}
 
 		return responseVO;
@@ -632,7 +596,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 		request.setMbn(requestVO.getUserKey());
 		request.setMdn(requestVO.getDeviceId());
 		request.setChCode("M");
-		//request.setType("appguide");
+		// request.setType("appguide");
 
 		if (this.log.isDebugEnabled()) {
 			this.log.debug(request.toString());
