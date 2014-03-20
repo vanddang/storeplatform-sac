@@ -56,14 +56,11 @@
                         ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
                         ,K.PROD_STATUS_CD
                         ,J.PROD_GRD_CD
-                        ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
-                            FROM  TB_DP_SPRT_DEVICE DV  
-                                 ,TB_CM_DEVICE CM
-                           WHERE DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                             AND CM.SCL_SHPG_SPRT_YN = 'Y'
-                             AND DV.DEVICE_MODEL_CD = #{deviceModelNo}
-                             AND PROD_ID  = H.PART_PROD_ID
-                          ) AS PROD_SPRT_YN                          
+			            ,CASE
+			                   WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = #{prodId} AND DEVICE_MODEL_CD = #{deviceModelCd}) > 0
+			                   THEN 'Y'
+			                   ELSE 'N'
+			              END AS PROD_SPRT_YN                                                  
                         ,J.DRM_YN 
                         ,J.USE_PERIOD_UNIT_CD
                         ,J.USE_PERIOD
@@ -206,25 +203,11 @@
                     , PR.PROD_AMT
                     , TP.PROD_STATUS_CD
                     , PD.PROD_GRD_CD
-                    ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y')
-                         FROM TB_CM_DEVICE DV
-                          WHERE DV.DEVICE_MODEL_CD = #{deviceModelNo}
-                          AND (
-                            /*DV.VOD_FIXISTT_SPRT_YN = ( CASE WHEN CM.CMPX_PROD_CLSF_CD='OR004301' OR CM.CMPX_PROD_CLSF_CD='OR004302' 
-                                        THEN 'Y' ELSE 'NOT SUPPORT' END)
-                            OR
-                            DV.EBOOK_SPRT_YN = ( CASE WHEN CM.CMPX_PROD_CLSF_CD='OR004303' OR CM.CMPX_PROD_CLSF_CD='OR004304' 
-                                        THEN 'Y' ELSE 'NOT SUPPORT' END)*/
-                            DV.VOD_FIXISTT_SPRT_YN = ( CASE WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' 
-                                        THEN 'Y' ELSE 'NOT SUPPORT' END)
-                            OR
-                            DV.EBOOK_SPRT_YN = ( CASE WHEN PD.TOP_MENU_ID='DP13' 
-                                        THEN 'Y' ELSE 'NOT SUPPORT' END)
-                            OR
-                            DV.COMIC_SPRT_YN = ( CASE WHEN PD.TOP_MENU_ID='DP14' 
-                                        THEN 'Y' ELSE 'NOT SUPPORT' END)
-                           )
-                      ) AS PROD_SPRT_YN                
+		            ,CASE
+		                 WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = #{prodId} AND DEVICE_MODEL_CD = #{deviceModelCd}) > 0
+		                 THEN 'Y'
+		                 ELSE 'N'
+		             END AS PROD_SPRT_YN                                    
                     , PD.DRM_YN
                     , PD.USE_PERIOD_UNIT_CD
                     , PD.USE_PERIOD
