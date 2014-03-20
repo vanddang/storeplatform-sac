@@ -397,7 +397,7 @@
                   FROM
                        (
                         SELECT  COUNT(*) OVER() AS TOTAL_CNT       
-                               ,ROW_NUMBER() OVER( ORDER BY DECODE(#{orderedBy},'recent', JA.REG_DT, JA.AVG_EVLU_SCORE ) DESC ) AS RONUM -- 평점순이냐 아니냐에 따라 분기처리
+                               ,ROW_NUMBER() OVER( ORDER BY DECODE(#{orderedBy},'recent', JA.REG_DT, JA.AVG_EVLU_SCORE ) DESC ) AS RONUM /* 평점순이냐 아니냐에 따라 분기처리 */
                                ,JA.*
                           FROM
                                (
