@@ -778,7 +778,7 @@
     </select>
 
     <select id="getDownloadMusicInfo" parameterType="DownloadMusicSacReq" resultType="MetaInfo">
-		SELECT  /* DownloadMapper.getDownloadMusicInfo, 상품정보요청(for download) Music , 이석희/아이에스플러스, 2014-01-23 */
+		SELECT  /* DownloadMapper.getDownloadMusicInfo, 상품정보요청(for download) Music , 이석희/아이에스플러스, 2014-02-07 */
 		        TA.PROD_ID
 		      , TA.MUSIC_ID
 		      , TA.OUTSD_CONTENTS_ID
