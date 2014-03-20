@@ -43,7 +43,7 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	// @Test
 	public void searchAppPaymentInfo() {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();
@@ -80,11 +80,12 @@ public class PaymentInfoSCITest {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();
 			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("S900000735");
-			prodIdList.add("S900000579");
+			prodIdList.add("S930000331");
+			// prodIdList.add("S900000579");
 			req.setProdIdList(prodIdList);
 			req.setTenantId("S01");
 			req.setLangCd("ko");
+			req.setDeviceModelCd("SHW-M100S");
 
 			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
 			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
@@ -105,17 +106,18 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	// @Test
+	@Test
 	public void searchFreePassPaymentInfo() {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();
 			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("H000043061");
-			prodIdList.add("H000043062");
-			prodIdList.add("H000043063");
+			prodIdList.add("F901000639");
+			// prodIdList.add("H000043062");
+			// prodIdList.add("H000043063");
 			req.setProdIdList(prodIdList);
 			req.setTenantId("S01");
 			req.setLangCd("ko");
+			req.setDeviceModelCd("SHW-M100S");
 
 			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
 			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
