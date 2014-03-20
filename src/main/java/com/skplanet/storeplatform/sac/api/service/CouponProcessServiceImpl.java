@@ -956,7 +956,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 
 			// 저장
-			this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
+			// this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
 
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), e.getMessage(), null);
