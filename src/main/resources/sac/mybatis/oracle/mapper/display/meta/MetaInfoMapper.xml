@@ -737,7 +737,7 @@
     </select>
     
     <select id="getShoppingMetaInfo" parameterType="Map" resultType="MetaInfo">
-        SELECT  *  /* MetaInfoMapper.xml, getShoppingMetaInfo, SAC 전시, 2014-01-07 */
+        SELECT  *  /* MetaInfoMapper.xml, getShoppingMetaInfo, 쇼핑 메타 정보 조회, 김형식/SK플래닛, 2014-01-07 */
                    FROM (
                           SELECT 
                                 B.CATALOG_ID 
