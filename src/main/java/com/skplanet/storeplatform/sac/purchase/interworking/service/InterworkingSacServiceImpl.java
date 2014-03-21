@@ -47,8 +47,10 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 	 */
 	@Override
 	public void createInterworking(InterworkingSacReq interworkingSacReq) {
+
 		// 씨네21 판매자 회원번호를 properties에서 가저온다.
 		String[] cine21MbrNo = this.sellerMbrNo.split(",");
+		this.logger.info("PRCHS,InterworkingSacService,SAC,REQ,{}", interworkingSacReq);
 		InterworkingScReq req = new InterworkingScReq();
 		// 조건 셋팅
 		req.setTenantId(interworkingSacReq.getTenantId());
@@ -87,8 +89,6 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 				}
 			}
 		}
-		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-		this.logger.debug("@@@@@@@@@@@@ End updateCount @@@@@@@@@@@@:{}", updateCount);
-		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		this.logger.info("PRCHS,InterworkingSacService,SAC,REQ,{}", updateCount);
 	}
 }

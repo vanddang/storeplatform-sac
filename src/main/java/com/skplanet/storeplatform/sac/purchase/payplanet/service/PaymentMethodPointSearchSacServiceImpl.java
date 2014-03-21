@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.payplanet.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,8 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.payplanet.TMemberShipSa
  */
 @Service
 public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPointSearchSacService {
+
+	private static final Logger logger = LoggerFactory.getLogger(PaymentMethodPointSearchSacServiceImpl.class);
 
 	@Autowired
 	private PaymentMethodPointSearchSCI paymentMethodPointSearchSCI;
@@ -67,7 +71,7 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		res.setCdResult(cultureEcRes.getCdResult());
 		res.setMsgResult(cultureEcRes.getMsgResult());
 		res.setCulturePoint(cultureEcRes.getCulturePoint());
-
+		this.logger.info("PRCHS,CULTURE,SAC,RES,{}", res);
 		return res;
 	}
 
@@ -97,7 +101,7 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		res.setCdResult(dotoriEcRes.getCdResult());
 		res.setMsgResult(dotoriEcRes.getMsgResult());
 		res.setCntDotori(dotoriEcRes.getCntDotori());
-
+		this.logger.info("PRCHS,DOTORI,SAC,RES,{}", res);
 		return res;
 	}
 
@@ -128,7 +132,7 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		res.setCdResult(okCashBagEcRes.getCdResult());
 		res.setMsgResult(okCashBagEcRes.getMsgResult());
 		res.setOcbPoint(okCashBagEcRes.getOcbPoint());
-
+		this.logger.info("PRCHS,OKCASHBAG,SAC,RES,{}", res);
 		return res;
 	}
 
@@ -159,7 +163,7 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		res.setCdResult(tMemberShipEcRes.getCdResult());
 		res.setMsgResult(tMemberShipEcRes.getMsgResult());
 		res.setTmsPoint(tMemberShipEcRes.getTmsPoint());
-
+		this.logger.info("PRCHS,TMEMBERSHIP,SAC,RES,{}", res);
 		return res;
 	}
 

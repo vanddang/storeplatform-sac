@@ -64,7 +64,7 @@ public class PaymentListController {
 	@ResponseBody
 	public Map<String, List<PaymentListSacRes>> searchPaymentList(@RequestBody @Validated PaymentSacReq paymentSacReq,
 			SacRequestHeader requestHeader) {
-
+		this.logger.info("PRCHS,PaymentListController,SAC,REQ,{},{}", paymentSacReq, requestHeader);
 		TenantHeader header = requestHeader.getTenantHeader();
 
 		Map<String, List<PaymentListSacRes>> res = new HashMap<String, List<PaymentListSacRes>>();
@@ -127,7 +127,7 @@ public class PaymentListController {
 
 			resList.add(paymentListSacRes);
 		}
-
+		// this.logger.info("PRCHS,PaymentListController,SAC,RES,{}", resList);
 		return resList;
 	}
 }

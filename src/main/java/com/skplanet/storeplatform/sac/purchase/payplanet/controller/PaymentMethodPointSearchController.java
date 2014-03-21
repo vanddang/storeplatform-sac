@@ -53,9 +53,10 @@ public class PaymentMethodPointSearchController {
 	 *            요청
 	 * @return CultureSacRes
 	 */
-	@RequestMapping(value = "/culture/point/get/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/culture/point/post/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CultureSacRes postCulture(@RequestBody @Validated CultureSacReq cultureSacReq) {
+		this.logger.info("PRCHS,CULTURE,SAC,REQ,{}", cultureSacReq);
 		return this.paymentMethodPointSearchSacService.postCulture(cultureSacReq);
 	}
 
@@ -69,9 +70,10 @@ public class PaymentMethodPointSearchController {
 	 *            요청
 	 * @return DotoriSacRes
 	 */
-	@RequestMapping(value = "/dotori/count/get/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/dotori/count/post/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DotoriSacRes postDotori(@RequestBody @Validated DotoriSacReq dotoriSacReq) {
+		this.logger.info("PRCHS,DOTORI,SAC,REQ,{}", dotoriSacReq);
 		return this.paymentMethodPointSearchSacService.postDotori(dotoriSacReq);
 	}
 
@@ -85,9 +87,10 @@ public class PaymentMethodPointSearchController {
 	 *            요청
 	 * @return OkCashBagSacRes
 	 */
-	@RequestMapping(value = "/ocb/point/get/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/ocb/point/post/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public OkCashBagSacRes postOkCashBag(@RequestBody @Validated OkCashBagSacReq okCashBagSacReq) {
+		this.logger.info("PRCHS,OKCASHBAG,SAC,REQ,{}", okCashBagSacReq);
 		return this.paymentMethodPointSearchSacService.postOkCashBag(okCashBagSacReq);
 	}
 
@@ -101,9 +104,10 @@ public class PaymentMethodPointSearchController {
 	 *            요청
 	 * @return TMemberShipSacRes
 	 */
-	@RequestMapping(value = "/tms/point/get/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/tms/point/post/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public TMemberShipSacRes postTMemberShip(@RequestBody @Validated TMemberShipSacReq tMemberShipSacReq) {
+		this.logger.info("PRCHS,TMEMBERSHIP,SAC,REQ,{}", tMemberShipSacReq);
 		return this.paymentMethodPointSearchSacService.postTMemberShip(tMemberShipSacReq);
 	}
 }

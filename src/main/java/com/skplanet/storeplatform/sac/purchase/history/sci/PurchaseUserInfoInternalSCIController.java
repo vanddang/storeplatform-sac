@@ -29,6 +29,7 @@ public class PurchaseUserInfoInternalSCIController implements PurchaseUserInfoIn
 
 	@Override
 	public UserInfoSacInRes updateUserDevice(UserInfoSacInReq userInfoSacInReq) {
+		this.logger.info("PRCHS,PurchaseUserInfoInternalSCIController,SAC,REQ,{}", userInfoSacInReq);
 		return this.resConvert(this.purchaseUserInfoSacService.updateUserDevice(this.reqConvert(userInfoSacInReq)));
 	}
 
@@ -65,6 +66,7 @@ public class PurchaseUserInfoInternalSCIController implements PurchaseUserInfoIn
 		this.logger.debug("@@@@@@ UserInfoSacInRes resConvert @@@@@@@");
 		UserInfoSacInRes res = new UserInfoSacInRes();
 		res.setCount(userInfoScRes.getCount());
+		this.logger.info("PRCHS,PurchaseUserInfoInternalSCIController,SAC,RES,{}", res);
 		return res;
 	}
 }

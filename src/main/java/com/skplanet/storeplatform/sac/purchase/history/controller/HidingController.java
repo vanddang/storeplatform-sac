@@ -63,7 +63,7 @@ public class HidingController {
 	@ResponseBody
 	public HidingListSacRes updateHiding(@RequestBody @Validated HidingSacReq hidingSacReq,
 			SacRequestHeader requestHeader) {
-
+		this.logger.info("PRCHS,HidingController,SAC,REQ,{},{}", hidingSacReq, requestHeader);
 		TenantHeader header = requestHeader.getTenantHeader();
 
 		HidingListSacRes response = new HidingListSacRes();
@@ -125,6 +125,7 @@ public class HidingController {
 			hidingRes.setResultYn(hidingScRes.getResultYn());
 			res.add(hidingRes);
 		}
+		this.logger.info("PRCHS,HidingController,SAC,RES,{}", res);
 		return res;
 	}
 }

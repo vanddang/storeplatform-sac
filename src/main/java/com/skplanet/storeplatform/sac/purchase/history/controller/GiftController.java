@@ -58,7 +58,7 @@ public class GiftController {
 	@ResponseBody
 	public GiftConfirmSacRes modifyGiftConfirm(@RequestBody @Validated GiftConfirmSacReq giftConfirmSacReq,
 			SacRequestHeader requestHeader) {
-
+		this.logger.info("PRCHS,GiftController,SAC,REQ,{},{}", giftConfirmSacReq, requestHeader);
 		// 헤더 정보
 		TenantHeader header = requestHeader.getTenantHeader();
 
@@ -103,7 +103,7 @@ public class GiftController {
 		res.setPrchsId(giftComfirmScRes.getPrchsId());
 		res.setProdId(giftComfirmScRes.getProdId());
 		res.setResultYn(giftComfirmScRes.getResultYn());
-
+		this.logger.info("PRCHS,GiftController,SAC,RES,{}", res);
 		return res;
 	}
 
