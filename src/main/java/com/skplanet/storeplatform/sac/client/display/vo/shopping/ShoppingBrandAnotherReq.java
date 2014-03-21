@@ -29,8 +29,6 @@ public class ShoppingBrandAnotherReq extends CommonInfo {
 	@NotNull
 	@NotBlank
 	private String brandId; // 브랜드아이디
-	@NotNull
-	@NotBlank
 	private String exceptId; // 제외할 메뉴ID – 지정하면 응답에서 해당 메뉴 제외
 	private String listId; // 리스트아이디
 	private String imageCd; // 이미지코드
