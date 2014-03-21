@@ -959,8 +959,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 * </pre>
 	 * 
 	 * @param parentType
-	 *            실명인증 회원코드 (local : 내국인, foreign : 외국인)
-	 * @return 통합 IDP 코드 (10 : 내국인, 20 : 외국인)
+	 *            법정대리인관계코드 (US011801 : 아버지, US011802 : 어머니, US011803 : 기타)
+	 * @return 통합 IDP 코드 (0 : 아버지, 1 : 어머니, 2 : 기타)
 	 */
 	private String convertParentType(String parentType) {
 		if (StringUtils.equals(parentType, MemberConstants.PARENT_TYPE_FATHER)) {
