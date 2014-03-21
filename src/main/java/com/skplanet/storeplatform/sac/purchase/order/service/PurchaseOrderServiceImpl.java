@@ -749,7 +749,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void setPaymentPageInfo(PurchaseOrderInfo purchaseOrderInfo) {
-		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,START");
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,START,{}", purchaseOrderInfo.getPrchsId());
 
 		// eData(암호화 데이터)
 		PurchaseProduct product = purchaseOrderInfo.getPurchaseProductList().get(0);
@@ -824,7 +824,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		purchaseOrderInfo.setPaymentPageParam(paymentPageParam);
 
-		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,END");
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,END,{}", purchaseOrderInfo.getPrchsId());
 	}
 
 	/*
