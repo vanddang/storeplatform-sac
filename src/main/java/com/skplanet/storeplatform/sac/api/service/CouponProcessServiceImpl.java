@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
@@ -990,7 +992,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean validateBusinessPartner(DpCouponInfo couponInfo) {
 		this.log.info("■■■■■ validateBusinessPartner ■■■■■");
-
+		this.log.info("################ [SAC DP LocalSCI] SAC Member Stat : sellerSearchSCI.detailInformation : "
+				+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.KOREA).format(new Date()));
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 		DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
@@ -1023,6 +1026,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 							couponInfo.getBpId());
 				}
 			}
+			this.log.info("################ [SAC DP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation : "
+					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.KOREA));
 
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", couponInfo.getBpId());
