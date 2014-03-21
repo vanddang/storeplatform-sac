@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Produc
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
@@ -89,8 +90,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 		HistorySac historySac = new HistorySac();
 
 		List<String> prodIdList = new ArrayList<String>();
-		List<String> deviceList = new ArrayList<String>();
-		List<String> sendDeviceList = new ArrayList<String>();
+		List<SearchUserDeviceSac> deviceList = new ArrayList<SearchUserDeviceSac>();
+		SearchUserDeviceSac deviceInfo;
+		List<SearchUserDeviceSac> sendDeviceList = new ArrayList<SearchUserDeviceSac>();
+		SearchUserDeviceSac sendDeviceInfo;
 
 		List<String> mdnCategoryList = new ArrayList<String>();
 
@@ -239,13 +242,20 @@ public class HistoryListServiceImpl implements HistoryListService {
 			}
 
 			// DEVICE INFO 조회를 위한 deviceKey 셋팅
-			if (!StringUtils.isEmpty(historySac.getUseDeviceKey())) {
-				deviceList.add(historySac.getUseDeviceKey());
+			if (!StringUtils.isEmpty(historySac.getUseUserKey()) && !StringUtils.isEmpty(historySac.getUseDeviceKey())) {
+				deviceInfo = new SearchUserDeviceSac();
+				deviceInfo.setUserKey(historySac.getUseUserKey());
+				deviceInfo.setDeviceKey(historySac.getUseDeviceKey());
+				deviceList.add(deviceInfo);
 			}
 
 			// DEVICE INFO 조회를 위한 deviceKey 셋팅
-			if (!StringUtils.isEmpty(historySac.getSendDeviceKey())) {
-				sendDeviceList.add(historySac.getSendDeviceKey());
+			if (!StringUtils.isEmpty(historySac.getSendUserKey())
+					&& !StringUtils.isEmpty(historySac.getSendDeviceKey())) {
+				sendDeviceInfo = new SearchUserDeviceSac();
+				sendDeviceInfo.setUserKey(historySac.getUseUserKey());
+				sendDeviceInfo.setDeviceKey(historySac.getUseDeviceKey());
+				sendDeviceList.add(sendDeviceInfo);
 			}
 
 		}
@@ -309,7 +319,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		if (deviceList.size() > 0) {
 			// member request parameter set
-			searchUserDeviceSacReq.setDeviceKeyList(deviceList);
+			searchUserDeviceSacReq.setSearchUserDeviceReqList(deviceList);
+
 			try {
 				// member InternalSCI Call
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
@@ -323,8 +334,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 		}
 
 		if (sendDeviceList.size() > 0) {
+			// member request parameter set
 			searchUserDeviceSacReq = new SearchUserDeviceSacReq();
-			searchUserDeviceSacReq.setDeviceKeyList(sendDeviceList);
+			searchUserDeviceSacReq.setSearchUserDeviceReqList(sendDeviceList);
+
 			try {
 				// member InternalSCI Call
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
