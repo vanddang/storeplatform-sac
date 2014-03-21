@@ -198,11 +198,9 @@
 			    , TB_DP_PROD_RSHP TBPR
 			    , TB_DP_PROD_DESC TDPD
 			    , TB_DP_TENANT_PROD TDTP
-			    , TB_DP_PROD_IMG TDPI
 			WHERE ONE.PROD_ID = PROD.PROD_ID
 				AND ONE.PROD_ID = TDPD.PROD_ID
 				AND ONE.PROD_ID = TDTP.PROD_ID
-				AND ONE.PROD_ID = TDPI.PROD_ID
 				AND ONE.PROD_ID = TBPR.PART_PROD_ID
                 AND TBPR.PROD_RSHP_CD  = 'DP010802'
 				AND PROD.PROD_ID = TDMM.PROD_ID
@@ -213,12 +211,6 @@
 				AND TDTP.TENANT_ID = #{tenantId}
 				AND ONE.USE_YN = 'Y'
 				AND TDTP.EXPO_YN = 'Y'
-				AND TDPI.IMG_CD = DECODE(PROD.TOP_MENU_ID , 'DP09', 'DP000127'
-				                                     , 'DP13', 'DP000147'
-				                                     , 'DP14', 'DP000147'
-				                                     , 'DP15', 'DP000102'
-				                                     , 'DP16', 'DP000115'
-				                                     , 'DP000125')
                 <if test="menuId != null and menuId != ''">
                 AND TDMM.MENU_ID = #{menuId}
                 </if>
