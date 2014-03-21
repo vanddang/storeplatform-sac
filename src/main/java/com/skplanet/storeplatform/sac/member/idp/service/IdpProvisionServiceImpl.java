@@ -807,17 +807,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_MOVE;
 				gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
 
-				/* 회원상태 업데이트 */
-				UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
-				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-				key.setKeyString(userKey);
-				keySearchList.add(key);
-				updStatusUserReq.setCommonRequest(commonRequest);
-				updStatusUserReq.setKeySearchList(keySearchList);
-				updStatusUserReq.setUserMainStatus(MemberConstants.MAIN_STATUS_SECEDE); // 탈퇴
-				updStatusUserReq.setUserSubStatus(MemberConstants.SUB_STATUS_CHANGE_USER); // 변동성 대상
-				this.userSCI.updateStatus(updStatusUserReq);
-
 				/* 휴대기기 수정 요청 */
 				CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 				UserMbrDevice userMbrDevice = new UserMbrDevice();
@@ -830,8 +819,20 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				createDeviceReq.setUserKey(userKey);
 				createDeviceReq.setIsNew("N");
 				createDeviceReq.setUserMbrDevice(userMbrDevice);
-
+				LOGGER.info("::: createDeviceReq : {}", createDeviceReq.toString());
 				this.deviceSCI.createDevice(createDeviceReq);
+
+				/* 회원상태 업데이트 */
+				UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
+				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+				key.setKeyString(userKey);
+				keySearchList.add(key);
+				updStatusUserReq.setCommonRequest(commonRequest);
+				updStatusUserReq.setKeySearchList(keySearchList);
+				updStatusUserReq.setUserMainStatus(MemberConstants.MAIN_STATUS_SECEDE); // 탈퇴
+				updStatusUserReq.setUserSubStatus(MemberConstants.SUB_STATUS_CHANGE_USER); // 변동성 대상
+				LOGGER.info("::: updStatusUserReq : {}", updStatusUserReq.toString());
+				this.userSCI.updateStatus(updStatusUserReq);
 
 			} else {
 
@@ -1051,7 +1052,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		try {
 
-			if (!StringUtil.equals(imMbrNo, "")) {
+			if (StringUtil.isNotBlank(imMbrNo)) {
 
 				/* 회원 정보 조회 */
 				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -1330,10 +1331,10 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						}
 					}
 				}
-
+				result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
+			} else {
+				result = IdpConstants.IDP_RESPONSE_NO_DATA;
 			}
-
-			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 
 		} catch (StorePlatformException ex) {
 			ex.printStackTrace();
