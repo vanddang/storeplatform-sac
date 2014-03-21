@@ -3,7 +3,7 @@
 <mapper namespace="DeviceProductProvisioning">
 	<select id="searchProductProvisioning" parameterType="Map" resultType="MetaInfo">
 		   <if test = "req.productType=='shopping'">  
-			 SELECT /* DeviceProductProvisioningMapper.xml, searchProductProvisioning, SAC 전시, 2014-02-04 */
+			 SELECT /* DeviceProductProvisioningMapper.searchProductProvisioning, 단말Provisioning조회, 오승민/인크로스, 2014-02-04 */
 		            P.PROD_ID AS PART_PROD_ID
 		          , P.PROD_GRD_CD
 		          , P.CONTENTS_TYPE_CD
@@ -46,7 +46,7 @@
 		       AND PR.PROD_RSHP_CD = #{rshpCd}
 		    </if>     
 		    <if test = "req.productType=='normal'">
-		    SELECT /* DeviceProductProvisioningMapper.xml, searchProductProvisioning, SAC 전시, 2014-02-04 */
+		    SELECT /* DeviceProductProvisioningMapper.searchProductProvisioning, 단말Provisioning조회, 오승민/인크로스, 2014-02-04 */
 			       P.PROD_ID AS PART_PROD_ID,
 			       P.PROD_GRD_CD,
 			       P.CONTENTS_TYPE_CD

@@ -3,7 +3,7 @@
 <mapper namespace="UseableDevice">
 	<!-- 이용가능 단말 조회(서비스 그룹코드 : DP000201)-->
 	<select id="selectUseableDeviceForApp" parameterType="UseableDeviceSacReq" resultType="MetaInfo">
-		SELECT /* UseableDeviceMapper.xml, selectUseableDeviceForApp, SAC 전시, 2014-03-17 */ 
+		SELECT /* UseableDeviceMapper.selectUseableDeviceForApp, 이용가능 단말 조회(서비스 그룹코드 : DP000201), 이석희/IS-Plus, 2014-03-17 */ 
 		      TOTAL_COUNT
 		     , RNUM
 		     , PROD_ID
@@ -69,7 +69,7 @@
     
     <!-- 이용가능 단말 조회(서비스 그룹코드 : DP000205)-->
     <select id="selectUseableDeviceForShopping" parameterType="UseableDeviceSacReq" resultType="MetaInfo">
-		SELECT /* UseableDeviceMapper.xml, selectUseableDeviceForShopping, SAC 전시, 2014-03-17 */
+		SELECT /* UseableDeviceMapper.selectUseableDeviceForShopping, 이용가능 단말 조회(서비스 그룹코드 : DP000205), 이석희/IS-Plus, 2014-03-17 */
 		       TOTAL_COUNT
 		     , RNUM
 		     , PROD_ID
@@ -133,7 +133,7 @@
     
     <!-- 이용가능 단말 조회(서비스 그룹코드 : DP000201, DP000205 제외)-->
     <select id="selectUseableDeviceForOther" parameterType="UseableDeviceSacReq" resultType="MetaInfo">
-		SELECT /* UseableDeviceMapper.xml, selectUseableDeviceForOther, SAC 전시, 2014-03-17 */
+		SELECT /* UseableDeviceMapper.selectUseableDeviceForOther, 이용가능 단말 조회(서비스 그룹코드 : DP000201, DP000205 제외), 이석희/IS-Plus, 2014-03-17 */
 		       TOTAL_COUNT
 		     , RNUM
 		     , PROD_ID
