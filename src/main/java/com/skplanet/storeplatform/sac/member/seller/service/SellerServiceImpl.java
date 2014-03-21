@@ -289,7 +289,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
 		// 법인등록번호
 		sellerMbr.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
-		sellerMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE);
+		sellerMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
 		sellerMbr.setStopStatusCode(MemberConstants.USER_STOP_STATUS_NOMAL);
 		// 담당자 명
 		sellerMbr.setCharger(req.getCharger());
@@ -398,8 +398,6 @@ public class SellerServiceImpl implements SellerService {
 						// FailCount '0' Reset
 						loginFailCount = "0";
 					}
-
-					// logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
 
 					if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
 						/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
@@ -868,7 +866,11 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerClass(searchSellerResponse.getSellerMbr().getSellerClass());
 		sellerMbr.setSellerCategory(searchSellerResponse.getSellerMbr().getSellerCategory());
 		sellerMbr.setSellerMainStatus(searchSellerResponse.getSellerMbr().getSellerMainStatus());
-		sellerMbr.setSellerSubStatus(MemberConstants.SUB_STATUS_TURN_MOTION);
+		if (StringUtils.equals(req.getSellerClassTo(), searchSellerResponse.getSellerMbr().getSellerClass())) {
+			sellerMbr.setSellerSubStatus(MemberConstants.SUB_STATUS_ACCT_APPLY_WATING);
+		} else {
+			sellerMbr.setSellerSubStatus(MemberConstants.SUB_STATUS_TURN_MOTION);
+		}
 		upgradeSellerRequest.setSellerMbr(sellerMbr);
 
 		// 전환 정보
