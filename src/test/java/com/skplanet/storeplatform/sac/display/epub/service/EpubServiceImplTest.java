@@ -15,8 +15,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.util.StopWatch;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
@@ -47,12 +49,47 @@ public class EpubServiceImplTest {
 	private CommonDAO commonDAO;
 
 	@Test(timeout=10000)
+	public void getEpubSeries() {
+//		EpubSeriesReq req = new EpubSeriesReq();
+//		String orderedBy = "nonPayment";
+//		req.setDeviceModel("SHW-M110S");
+//		req.setChannelId("H001553068");
+//		req.setLangCd("ko");
+//		req.setTenantId("S01");
+//		req.setOrderedBy(orderedBy);
+//		req.setOffset(1);
+//		req.setCount(20);
+//		req.setDeviceKey("DE201402201711283140002222");
+//		req.setUserKey("US201402201711282940003170");
+
+		String orderedBy = DisplayConstants.DP_ORDEREDBY_TYPE_RECENT;
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("tenantId", "S01");
+        param.put("channelId", "H001553068");
+        param.put("langCd", "ko");
+        param.put("deviceModel", "SHW-M110S");
+        //param.put("bookTypeCd", req.getBookTypeCd());
+        param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
+        param.put("orderedBy", orderedBy);
+        param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+        param.put("offset", 1);
+        param.put("count", 20);
+		
+		StopWatch stopWatch = new StopWatch(); 
+		stopWatch.start("searchEpubSeries_ebook_이북시리즈_CT20_1");
+		List<EpubDetail> res = epubService.getEpubSeries(param);
+		this.logger.debug("res={}", res);
+		stopWatch.stop();
+		System.out.println(stopWatch.prettyPrint());
+	}
+	
+	@Test(timeout=10000)
 	public void searchEpubSeries() {
 		
 		EpubSeriesReq req = new EpubSeriesReq();
 		String orderedBy = "nonPayment";
 		req.setDeviceModel("SHW-M110S");
-		req.setChannelId("H001254069");
+		req.setChannelId("H001553068");
 		req.setLangCd("ko");
 		req.setTenantId("S01");
 		req.setOrderedBy(orderedBy);
@@ -60,8 +97,13 @@ public class EpubServiceImplTest {
 		req.setCount(20);
 		req.setDeviceKey("DE201402201711283140002222");
 		req.setUserKey("US201402201711282940003170");
+		
+		StopWatch stopWatch = new StopWatch(); 
+    	stopWatch.start("searchEpubSeries_ebook_이북시리즈_CT20_1");
 		EpubSeriesRes res = epubService.searchEpubSeries(req);
 		this.logger.debug("res={}", res);
+		stopWatch.stop();
+    	System.out.println(stopWatch.prettyPrint());
 	}
 
 	

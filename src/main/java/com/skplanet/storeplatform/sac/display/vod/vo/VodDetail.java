@@ -69,6 +69,7 @@ public class VodDetail extends CommonInfo {
 	private String storeProdId;
 	/** 다운로드 상품 가격 */
 	private Integer storeProdAmt;
+	private Integer storeProdNetAmt;
 	/** 다운로드 DRM */
 	private String storeDrmYn;
 
@@ -79,6 +80,7 @@ public class VodDetail extends CommonInfo {
 	private String playProdId;
 	/** 바로보기 상품 가격 */
 	private Integer playProdAmt;
+	private Integer playProdNetAmt;
 	/** 바로보기 DRM */
 	private String playDrmYn;
 
@@ -859,6 +861,34 @@ public class VodDetail extends CommonInfo {
 
 	public void setPlayProdAmt(Integer playProdAmt) {
 		this.playProdAmt = playProdAmt;
+	}
+
+	/**
+	 * @return the storeProdNetAmt
+	 */
+	public Integer getStoreProdNetAmt() {
+		return storeProdNetAmt;
+	}
+
+	/**
+	 * @param storeProdNetAmt the storeProdNetAmt to set
+	 */
+	public void setStoreProdNetAmt(Integer storeProdNetAmt) {
+		this.storeProdNetAmt = storeProdNetAmt;
+	}
+
+	/**
+	 * @return the playProdNetAmt
+	 */
+	public Integer getPlayProdNetAmt() {
+		return playProdNetAmt;
+	}
+
+	/**
+	 * @param playProdNetAmt the playProdNetAmt to set
+	 */
+	public void setPlayProdNetAmt(Integer playProdNetAmt) {
+		this.playProdNetAmt = playProdNetAmt;
 	}
 
 	public String getPlayDrmYn() {

@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.StopWatch;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
@@ -49,6 +50,9 @@ public class VodControllerTest {
 		param.put("count", 20);
 		String json = this.convertMapToJson(param);
 		
+    	StopWatch stopWatch = new StopWatch(); 
+    	stopWatch.start("searchVodDetail_영화_recent1");
+    	
 		this.mvc.perform(post("/display/vod/detail/v1")
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
@@ -60,12 +64,15 @@ public class VodControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				;
+		
+    	stopWatch.stop();
+    	System.out.println(stopWatch.prettyPrint());
 	}
 
 	@Test
 	public void searchVodDetail_방송_recent() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("channelId", "H900537521");	// 왕가네 식구들
+		param.put("channelId", "H001220250");	// 왕가네 식구들
 		param.put("deviceKey", "DE201402201711283140002222");
 		param.put("userKey", "US201402201711282940003170");
 		param.put("orderedBy", "recent");
@@ -73,6 +80,9 @@ public class VodControllerTest {
 		param.put("count", 20);
 		String json = this.convertMapToJson(param);
 
+		StopWatch stopWatch = new StopWatch(); 
+    	stopWatch.start("searchVodDetail_방송_recent");
+    	
 		this.mvc.perform(post("/display/vod/detail/v1")
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 				//TODO: Header 추가
@@ -85,6 +95,9 @@ public class VodControllerTest {
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("application/json;charset=UTF-8"))
 		;
+		
+		stopWatch.stop();
+    	System.out.println(stopWatch.prettyPrint());
 	}
 
 
@@ -106,6 +119,9 @@ public class VodControllerTest {
 
         String json = this.convertMapToJson(param);
 
+		StopWatch stopWatch = new StopWatch(); 
+    	stopWatch.start("searchVodDetail_recent");
+        
 		this.mvc.perform(post("/display/vod/detail/v1")
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 				//TODO: Header 추가
@@ -118,6 +134,9 @@ public class VodControllerTest {
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("application/json;charset=UTF-8"))
 		;
+		
+		stopWatch.stop();
+    	System.out.println(stopWatch.prettyPrint());
 	}
 
 	@Test

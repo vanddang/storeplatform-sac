@@ -66,10 +66,10 @@ public class EpubDetail extends CommonInfo {
 	/** 아티스트3 */
 	private String artist3Nm;
 
-	/** 상품 정가 가격 */
-	private Integer prodNetAmt;
 	/** 상품 가격 */
 	private Integer prodAmt;
+	/** 상품 정가 가격 */
+	private Integer prodNetAmt;
 
 	/** 도서 목차 */
 	private String bookTbctns;
@@ -88,24 +88,25 @@ public class EpubDetail extends CommonInfo {
     private String usePeriodNm;
     
     
-	// 다운로드 상품
-	/** 다운로드 상품ID */
+	// 소장 상품
+	/** 소장 상품ID */
 	private String storeProdId;
-	/** 다운로드 상품 가격 */
+	/** 소장 상품 가격 */
 	private Integer storeProdAmt;
-	/** 다운로드 DRM */
+	private Integer storeProdNetAmt;
+	/** 소장 DRM */
 	private String storeDrmYn;
     private String storeStatusCd;
     private String storeUsePeriodUnitCd;
 
     
-    
-	// 바로보기 상품
-	/** 바로보기 상품ID */
+	// 대여 상품
+	/** 대여 상품ID */
 	private String playProdId;
-	/** 바로보기 상품 가격 */
+	/** 대여 상품 가격 */
 	private Integer playProdAmt;
-	/** 바로보기 DRM */
+	private Integer playProdNetAmt;
+	/** 대여 DRM */
 	private String playDrmYn;
     private String playStatusCd;
     private String playUsePeriodUnitCd;
@@ -118,8 +119,6 @@ public class EpubDetail extends CommonInfo {
     private String usePeriodUnitCd;
 	private String usagePeriod;
 
-	/** 다운로드 지역제한 */
-	// private String dwldAreaLimtYn;
 
 	/** 상품 등급 코드 */
 	private String prodGrdCd;
@@ -588,6 +587,34 @@ public class EpubDetail extends CommonInfo {
 
 	public void setPlayProdAmt(Integer playProdAmt) {
 		this.playProdAmt = playProdAmt;
+	}
+	
+	/**
+	 * @return the storeProdNetAmt
+	 */
+	public Integer getStoreProdNetAmt() {
+		return storeProdNetAmt;
+	}
+
+	/**
+	 * @param storeProdNetAmt the storeProdNetAmt to set
+	 */
+	public void setStoreProdNetAmt(Integer storeProdNetAmt) {
+		this.storeProdNetAmt = storeProdNetAmt;
+	}
+
+	/**
+	 * @return the playProdNetAmt
+	 */
+	public Integer getPlayProdNetAmt() {
+		return playProdNetAmt;
+	}
+
+	/**
+	 * @param playProdNetAmt the playProdNetAmt to set
+	 */
+	public void setPlayProdNetAmt(Integer playProdNetAmt) {
+		this.playProdNetAmt = playProdNetAmt;
 	}
 
 	public String getPlayDrmYn() {

@@ -343,17 +343,11 @@ public class VodServiceImpl implements VodService {
 			// Store.Identifier
 			store.setIdentifier(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getStoreProdId()));
 
-			Support storeSupport = new Support();
-			Price storePrice = new Price();
+			store.setSupport(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
 
-			storeSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-			storeSupport.setText(mapperVO.getStoreDrmYn());
-			store.setSupport(storeSupport);
-
-			storePrice.setText(mapperVO.getStoreProdAmt() == null ? 0 : mapperVO.getStoreProdAmt());
-
-			store.setPrice(storePrice);
-
+			//가격
+			store.setPrice(this.mapPrice(mapperVO.getStoreProdAmt(), mapperVO.getStoreProdNetAmt()));
+			
 			Source source = null;
 			if (StringUtils.isNotEmpty(mapperVO.getFilePath())) {
 				source = new Source();
@@ -388,19 +382,14 @@ public class VodServiceImpl implements VodService {
 		Play play = null;
 		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
 			play = new Play();
-			//Play.Identifier
 			play.setIdentifier(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getPlayProdId()));
 
-			Support playSupport = new Support();
-			Price playPrice = new Price();
-			playSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-			playSupport.setText(mapperVO.getPlayDrmYn());
-			play.setSupport(playSupport);
+			play.setSupport(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
 
             play.setDate(new Date(DisplayConstants.DP_DATE_USAGE_PERIOD, mapperVO.getUsagePeriod(), mapperVO.getUsageUnitName()));
-
-			playPrice.setText(mapperVO.getPlayProdAmt() == null ? 0 : mapperVO.getPlayProdAmt());
-
+            //가격
+			play.setPrice(this.mapPrice(mapperVO.getPlayProdAmt(), mapperVO.getPlayProdNetAmt()));
+			
 			Source source = null;
 			if (StringUtils.isNotEmpty(mapperVO.getFilePath())) {
 				source = new Source();
@@ -408,7 +397,6 @@ public class VodServiceImpl implements VodService {
 				source.setUrl(mapperVO.getFilePath());
 			}
 
-			play.setPrice(playPrice); // 바로보기 상품 금액
 			if (mapperVO.getStrmNetworkCd() != null) {
 				play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 			}
@@ -421,6 +409,41 @@ public class VodServiceImpl implements VodService {
 		}
 		return play;
 	}
+	
+	/**
+	 * Mapping Price
+	 * @param mapperVO
+	 * @return
+	 */
+	private Price mapPrice(Integer prodAmt, Integer prodNetAmt) {
+		Price price = null;
+		
+		if(prodAmt != null || prodNetAmt != null) {
+			price = new Price();
+			price.setText(prodAmt);
+			price.setFixedPrice(prodNetAmt);
+		}
+		return price;
+	}
+
+
+    /**
+     * Mapping Support
+     * @param type
+     * @param text
+     * @return
+     */
+    private Support mapSupport(String type, String text) {
+        Support support = null;
+        
+        if(StringUtils.isNotEmpty(type) || StringUtils.isNotEmpty(type)) {
+        	support = new Support();
+        	support.setType(type);
+        	support.setText(text);
+        }
+        return support;
+    }
+	
 
 	/**
 	 * <pre>

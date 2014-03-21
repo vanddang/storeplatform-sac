@@ -35,59 +35,69 @@
 		        , PI.FILE_PATH AS IMG_PATH, PI.FILE_NM AS IMG_NM, PI.FILE_SIZE AS IMG_SIZE
 		         ]]>
 		        , P.BOOK_CNT, P.BOOK_FREE_CNT, P.SERIAL_FREE_CNT
-                , REGEXP_REPLACE( MP.CHAPTER, '[^[:digit:]]') AS CHAPTER
-                , NVL(REGEXP_REPLACE( MP.CHAPTER, '[[:digit:], ]'), '회') AS CHAPTER_UNIT
+            	, TPP.CHNL_PERIOD_AMT AS PLAY_PROD_AMT, TPP.CHNL_UNLMT_AMT AS STORE_PROD_AMT
+            	, CASE WHEN (TPP.CHNL_PERIOD_AMT >= 0  AND STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
+                    ELSE NVL(TPP.CHNL_UNLMT_AMT, 0) END AS PROD_AMT /* 채널 대표 가격 */
 		      FROM
 		         (
-				SELECT  TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
-			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004301' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS BOOK_CNT
-			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004302' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS SERIAL_CNT
-			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004301' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS BOOK_FREE_CNT
-			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004302' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS SERIAL_FREE_CNT
-				FROM (
-					SELECT G.TENANT_ID, C.LANG_CD
-						, D.PROD_ID AS CHNL_PROD_ID
-						, A.MENU_ID, C.MENU_NM
-						, E.BOOK_CLSF_CD
-						, SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310' ) THEN 1 ELSE 0 END ) AS SALE_CNT
-						, SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310' AND O.PROD_AMT = 0 ) THEN 1 ELSE 0 END ) AS FREE_CNT
-                      FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
-                        INNER JOIN TB_DP_MENU_CATEGORY B		ON A.MENU_ID = B.MENU_ID
-                        INNER JOIN TB_DP_MENU_CATEGORY_DESC C	ON A.MENU_ID = C.MENU_ID
-                        INNER JOIN TB_DP_PROD D 				ON A.PROD_ID = D.PROD_ID
-                        INNER JOIN TB_DP_PROD_RSHP RSHP ON D.PROD_ID = RSHP.PROD_ID
-                        INNER JOIN UV_TB_DP_MULTIMDA_PROD E		ON D.PROD_ID = E.PROD_ID
-                        INNER JOIN TB_DP_TENANT_PROD G			ON D.PROD_ID = G.PROD_ID
-                        INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
-                        INNER JOIN TB_DP_SPRT_DEVICE K			ON RSHP.PART_PROD_ID = K.PROD_ID
-					WHERE 1=1
-					AND G.TENANT_ID = #{tenantId}
-					AND D.PROD_ID = #{channelId}
-					AND C.LANG_CD = #{langCd}
-					AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
-					AND A.BASE_YN = 'Y' AND A.BASE_YN = 'Y'
-					AND B.USE_YN = 'Y'
-					AND D.SVC_GRP_CD = 'DP000203'
-					AND D.CONTENTS_TYPE_CD = 'PD002501'
-					AND D.SVC_TYPE_CD = 'DP001116'
-					AND D.TOP_MENU_ID IN ('DP13', 'DP14')
-					AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
-					AND G.EXPO_YN = 'Y'
-					AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
-					GROUP BY G.TENANT_ID, C.LANG_CD, D.PROD_ID, A.MENU_ID, C.MENU_NM, E.BOOK_CLSF_CD
+	              SELECT  TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
+	                    , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004301' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS BOOK_CNT
+	                    , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004302' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS SERIAL_CNT
+	                    , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004301' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS BOOK_FREE_CNT
+	                    , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004302' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS SERIAL_FREE_CNT
+	              FROM (
+	                  SELECT G.TENANT_ID, C.LANG_CD
+	                      , D.PROD_ID AS CHNL_PROD_ID
+	                      , A.MENU_ID, C.MENU_NM
+	                      , E.BOOK_CLSF_CD
+	                      , SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310' ) THEN 1 ELSE 0 END ) AS SALE_CNT
+	                      , SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310' AND O.PROD_AMT = 0 ) THEN 1 ELSE 0 END ) AS FREE_CNT
+	                  FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
+	                      , TB_DP_MENU_CATEGORY B
+	                      , TB_DP_MENU_CATEGORY_DESC C
+	                      , TB_DP_PROD D
+	                      , UV_TB_DP_MULTIMDA_PROD E
+	                      , TB_DP_TENANT_PROD G
+	                      , TB_DP_TENANT_PROD_PRICE O
+	                      , TB_DP_SPRT_DEVICE K
+	                      , TB_CM_DEVICE CD
+	                  WHERE A.MENU_ID = B.MENU_ID
+	                    AND A.MENU_ID = C.MENU_ID
+	                    AND A.PROD_ID = D.PROD_ID
+	                    AND D.PROD_ID = E.PROD_ID
+	                    AND D.PROD_ID = G.PROD_ID
+	                    AND D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
+	                    AND D.PROD_ID = K.PROD_ID
+	                    AND G.TENANT_ID = #{tenantId}
+	                    AND D.PROD_ID = #{channelId}
+	                    AND C.LANG_CD = #{langCd}
+						AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+						AND CD.DEVICE_MODEL_CD = #{deviceModel} AND CD.USE_YN = 'Y'
+	                    AND A.BASE_YN = 'Y' AND A.BASE_YN = 'Y'
+	                    AND B.USE_YN = 'Y'
+	                    AND D.SVC_GRP_CD = 'DP000203' AND D.CONTENTS_TYPE_CD = 'PD002501' AND D.SVC_TYPE_CD = 'DP001116'
+	                    AND D.TOP_MENU_ID IN ('DP13', 'DP14')
+	                    AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') AND G.EXPO_YN = 'Y'
+	                    AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+	                    GROUP BY G.TENANT_ID, C.LANG_CD, D.PROD_ID, A.MENU_ID, C.MENU_NM, E.BOOK_CLSF_CD
 				)
 		    GROUP BY TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
 			) P
-			INNER JOIN TB_DP_PROD P2 		ON P2.PROD_ID = P.CHNL_PROD_ID
-			INNER JOIN UV_TB_DP_MULTIMDA_PROD MP  ON P2.PROD_ID = MP.PROD_ID
-			INNER JOIN TB_DP_TENANT_PROD TP	ON P2.PROD_ID = TP.PROD_ID AND P.TENANT_ID = TP.TENANT_ID
-			INNER JOIN TB_DP_TENANT_PROD_PRICE TPP ON P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
-			INNER JOIN TB_DP_PROD_DESC PD		ON P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
-			LEFT OUTER JOIN TB_DP_PROD_IMG PI 		ON PI.PROD_ID = P2.PROD_ID AND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{representImgCd}
-			LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS STAT ON STAT.PROD_ID = P2.PROD_ID AND P.TENANT_ID = STAT.TENANT_ID
-		WHERE 1=1
-		 AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
-		 AND ROWNUM = 1
+			, TB_DP_PROD P2 
+			, UV_TB_DP_MULTIMDA_PROD MP
+			, TB_DP_TENANT_PROD TP
+			, TB_DP_TENANT_PROD_PRICE TPP
+			, TB_DP_PROD_DESC PD
+			, TB_DP_PROD_IMG PI
+			, TB_DP_TENANT_PROD_STATS STAT
+		WHERE P2.PROD_ID = P.CHNL_PROD_ID
+	      AND P2.PROD_ID = MP.PROD_ID
+	      AND P2.PROD_ID = TP.PROD_ID AND P.TENANT_ID = TP.TENANT_ID
+		  AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
+	      AND P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
+	      AND P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
+	      AND PI.PROD_ID = P2.PROD_ID AND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{representImgCd}
+	      AND STAT.PROD_ID = P2.PROD_ID(+) AND P.TENANT_ID = STAT.TENANT_ID(+)
     </select>
     
 	
@@ -99,9 +109,10 @@
 			 , PRC.CHNL_PERIOD_AMT
 			 , PRC.DC_AMT
 		  FROM TB_DP_PROD P
-		    INNER JOIN UV_TB_DP_MULTIMDA_PROD EPI       ON P.PROD_ID = EPI.PROD_ID
-		    INNER JOIN TB_DP_TENANT_PROD_PRICE PRC      ON P.PROD_ID = PRC.PROD_ID
-		 WHERE 1=1
+		    	, UV_TB_DP_MULTIMDA_PROD EPI
+		    	, TB_DP_TENANT_PROD_PRICE PRC
+		 WHERE P.PROD_ID = EPI.PROD_ID
+		   AND P.PROD_ID = PRC.PROD_ID
 		   AND PRC.TENANT_ID = #{tenantId}
 		   AND P.PROD_ID = #{channelId}
 		   AND EPI.CHNL_CLSF_CD = 'DP001401'
@@ -110,123 +121,152 @@
 	</select>
 	
     <select id="selectEpubSeries" parameterType="map" resultType="EpubDetail">
-			SELECT /* EpubDetailMapper.xml, selectEpubSeries, SAC : 임근대 , 2014-01-28 */
-			      T4.TOTAL_COUNT
-			      , T4.TENANT_ID, T4.LANG_CD, T4.CID, T4.PROD_STATUS_CD
-			      , T4.MENU_ID, T4.MENU_NM, T4.MENU_DESC, T4.TOP_MENU_ID
-			      , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = T4.TOP_MENU_ID AND LANG_CD = T4.LANG_CD AND ROWNUM = 1) AS TOP_MENU_NM
-			      , T4.META_CLSF_CD
-			      , T4.PROD_ID, T4.CHNL_PROD_ID, T4.REG_ID, T4.REG_DT
-			      , T4.PROD_NM, T4.PROD_BASE_DESC, T4.PROD_DTL_DESC, T4.PROD_INTR_DSCR, T4.ARTIST1_NM, T4.ARTIST2_NM, T4.ARTIST3_NM
-			      , T4.PROD_GRD_CD, T4.BOOK_CLSF_CD
-			      , REGEXP_REPLACE( T4.CHAPTER, '[^[:digit:]]') AS CHAPTER
-			      , NVL(REGEXP_REPLACE( T4.CHAPTER, '[[:digit:], ]'), '회') AS CHAPTER_UNIT
-			      , DECODE( T4.USE_PERIOD, 'PD00310', T4.PROD_ID ) AS STORE_PROD_ID
-			      , DECODE( T4.USE_PERIOD, 'PD00310', NULL, T4.PROD_ID ) AS PLAY_PROD_ID
-			      , DECODE( T4.USE_PERIOD, 'PD00310', T4.PROD_AMT ) AS STORE_PROD_AMT
-			      , DECODE( T4.USE_PERIOD, 'PD00310', NULL, T4.PROD_AMT ) AS PLAY_PROD_AMT
-			      , DECODE( T4.USE_PERIOD, 'PD00310', T4.PROD_NET_AMT ) AS STORE_PROD_NET_AMT
-			      , DECODE( T4.USE_PERIOD, 'PD00310', NULL, T4.PROD_NET_AMT ) AS PLAY_PROD_NET_AMT
-			      , DECODE( T4.USE_PERIOD, 'PD00310', T4.DRM_YN ) AS STORE_DRM_YN
-			      , DECODE( T4.USE_PERIOD, 'PD00310', NULL, T4.DRM_YN ) AS PLAY_DRM_YN
-			      , DECODE( T4.USE_PERIOD, 'PD00310', T4.PROD_STATUS_CD ) AS STORE_PROD_STATUS_CD
-			      , DECODE( T4.USE_PERIOD, 'PD00310', NULL, T4.PROD_STATUS_CD ) AS PLAY_PROD_STATUS_CD
-			      , DECODE( T4.USE_PERIOD, 'PD00310', T4.USE_PERIOD_UNIT_CD ) AS STORE_USE_PERIOD_UNIT_CD
-			      , DECODE( T4.USE_PERIOD, 'PD00310', NULL, T4.USE_PERIOD_UNIT_CD ) AS PLAY_USE_PERIOD_UNIT_CD
-			      , ( CASE WHEN T4.EPSD_CNT > 0 THEN 'Y' ELSE 'N' END ) AS SUPPORT_STORE
-			      , ( CASE WHEN T4.STRM_EPSD_CNT > 0 THEN 'Y' ELSE 'N' END ) AS SUPPORT_PLAY
-			      , ( CASE WHEN T4.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( T4.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
-			      , ( CASE WHEN T4.META_CLSF_CD IN ( 'CT20', 'CT21' ) OR T4.BOOK_CLSF_CD = 'DP004302' THEN 'serial' END ) AS BOOK_TYPE
-			      , ( CASE WHEN T4.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( T4.EPSD_CNT + T4.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
-			      , CASE WHEN T4.USE_PERIOD_UNIT_CD != 'PD00310' THEN CONCAT(USE_PERIOD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = T4.USE_PERIOD_UNIT_CD AND LANG_CD = T4.LANG_CD)) ELSE '' END AS USE_PERIOD_NM
-			      , T4.BOOK_CLSF_CD, T4.PROD_AMT
-			      , T4.USE_PERIOD, T4.USE_PERIOD_UNIT_CD
-			      , T4.SVC_START_DT , NVL( T4.BOOK_PAGE_CNT, 0 ) AS BOOK_PAGE_CNT, T4.DRM_YN, T4.COMPT_YN, T4.ISSUE_DAY
-			      , T4.SUB_CONTENTS_ID, T4.FILE_SIZE, T4.PROD_VER
-			      , PI.FILE_PATH  AS IMG_PATH, PI.FILE_NM AS IMG_NM, PI.FILE_SIZE AS IMG_SIZE
+			SELECT /* EpubDetailMapper.xml, selectEpubSeries, SAC : 임근대 , 2014-03-21 */
+			      T.TOTAL_COUNT
+			    , T.TENANT_ID, T.LANG_CD, T.CID
+			    , T.MENU_ID, MCD.MENU_NM, MCD.MENU_DESC
+			    , T.TOP_MENU_ID , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = T.TOP_MENU_ID AND LANG_CD = T.LANG_CD AND ROWNUM = 1) AS TOP_MENU_NM
+			    , T.META_CLSF_CD
+			    , T.PROD_GRD_CD
+			    , T.CHNL_PROD_ID
+			    , T.PROD_NM, T.PROD_BASE_DESC, T.PROD_DTL_DESC, T.PROD_INTR_DSCR
+			    , T.ARTIST1_NM, T.ARTIST2_NM, T.ARTIST3_NM
+			    , T.BOOK_CLSF_CD, T.CHAPTER, T.CHAPTER_UNIT
+			    , ( CASE WHEN T.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( T.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
+			    , ( CASE WHEN T.META_CLSF_CD IN ( 'CT20', 'CT21' ) OR T.BOOK_CLSF_CD = 'DP004302' THEN 'serial' END ) AS BOOK_TYPE
+			    , T.SVC_START_DT , NVL( T.BOOK_PAGE_CNT, 0 ) AS BOOK_PAGE_CNT, T.COMPT_YN, T.ISSUE_DAY
+			    , T.SUB_CONTENTS_ID, T.FILE_SIZE, T.PROD_VER
+			    , T.REG_ID, T.REG_DT
+			    , STORE_PROD_ID, STORE_PROD_AMT, STORE_PROD_NET_AMT, STORE_DRM_YN, STORE_PROD_STATUS_CD, STORE_USE_PERIOD, STORE_USE_PERIOD_UNIT_CD
+			    , PLAY_PROD_ID, PLAY_PROD_AMT, PLAY_PROD_NET_AMT, PLAY_DRM_YN, PLAY_PROD_STATUS_CD, PLAY_USE_PERIOD, PLAY_USE_PERIOD_UNIT_CD
+			    , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = T.STORE_USE_PERIOD_UNIT_CD AND LANG_CD = T.LANG_CD) AS STORE_USE_PERIOD_UNIT_NM
+			    , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = T.PLAY_USE_PERIOD_UNIT_CD AND LANG_CD = T.LANG_CD) AS PLAY_USE_PERIOD_UNIT_NM
+			    , PI.FILE_PATH  AS IMG_PATH, PI.FILE_NM AS IMG_NM, PI.FILE_SIZE AS IMG_SIZE
 			FROM (
-			  SELECT COUNT(*) OVER () TOTAL_COUNT, T3.*
+			  SELECT T4.* 
 			  FROM (
-			    SELECT T2.*, ROWNUM AS RNUM
-			    FROM 
-			      (SELECT T1.*
-			        FROM 
-			        (SELECT 
-			                G.TENANT_ID, C.LANG_CD, J.CID, G.PROD_STATUS_CD
-				          , A.MENU_ID , C.MENU_NM, C.MENU_DESC, J.TOP_MENU_ID, J.META_CLSF_CD
-				          , J.PROD_ID, D.PROD_ID AS CHNL_PROD_ID, J.REG_ID, J.REG_DT
-				          , Q.PROD_NM, F.PROD_BASE_DESC, F.PROD_DTL_DESC, F.PROD_INTR_DSCR, F.ARTIST1_NM, F.ARTIST2_NM, F.ARTIST3_NM
-				          , J.PROD_GRD_CD
-				          , O.PROD_AMT, O.PROD_NET_AMT
-				          , J.USE_PERIOD, J.USE_PERIOD_UNIT_CD, J.DRM_YN
-				          , E.COMPT_YN, E.EPSD_CNT, E.STRM_EPSD_CNT, P.BOOK_CLSF_CD
-				          , P.SVC_START_DT, P.BOOK_PAGE_CNT, P.ISSUE_DAY, P.CHAPTER
-				          , M.SUB_CONTENTS_ID, M.FILE_SIZE, M.PROD_VER
-				          , ROW_NUMBER() OVER ( PARTITION BY J.PROD_ID ORDER BY M.PROD_VER DESC ) AS RN
-			        FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
-			              INNER JOIN TB_DP_MENU_CATEGORY B		ON A.MENU_ID = B.MENU_ID
-			              INNER JOIN TB_DP_MENU_CATEGORY_DESC C	ON A.MENU_ID = C.MENU_ID
-			              INNER JOIN TB_DP_PROD D 				ON A.PROD_ID = D.PROD_ID
-			              INNER JOIN UV_TB_DP_MULTIMDA_PROD E		ON D.PROD_ID = E.PROD_ID
-			              INNER JOIN TB_DP_PROD_DESC F			ON D.PROD_ID = F.PROD_ID AND F.LANG_CD = C.LANG_CD
-			              INNER JOIN TB_DP_TENANT_PROD G			ON D.PROD_ID = G.PROD_ID
-			              INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
-			              INNER JOIN TB_DP_PROD_RSHP I			ON D.PROD_ID = I.PROD_ID
-			              INNER JOIN TB_DP_PROD J				ON I.PART_PROD_ID = J.PROD_ID
-			              INNER JOIN TB_DP_SUB_CONTENTS M		ON M.PROD_ID = J.PROD_ID
-			              INNER JOIN TB_DP_TENANT_PROD N		ON N.PROD_ID = J.PROD_ID AND N.TENANT_ID = G.TENANT_ID
-			              INNER JOIN TB_DP_TENANT_PROD_PRICE O	 ON O.PROD_ID  = J.PROD_ID AND O.TENANT_ID = G.TENANT_ID
-			              INNER JOIN UV_TB_DP_MULTIMDA_PROD P	ON P.PROD_ID = J.PROD_ID
-			              INNER JOIN TB_DP_PROD_DESC Q			ON Q.PROD_ID = J.PROD_ID AND C.LANG_CD = Q.LANG_CD
-			              INNER JOIN TB_DP_SPRT_DEVICE K		ON I.PART_PROD_ID = K.PROD_ID
-			        WHERE 1=1
-			          AND G.TENANT_ID = #{tenantId}
-			          AND D.PROD_ID = #{channelId}
-			          AND C.LANG_CD = #{langCd}
-			          AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
-			          AND B.USE_YN = 'Y'
-			          AND D.SVC_GRP_CD = 'DP000203'
-			          AND D.CONTENTS_TYPE_CD = 'PD002501'
-			          AND D.SVC_TYPE_CD = 'DP001116'
-			          AND D.TOP_MENU_ID IN ('DP13', 'DP14')
-			          AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404')
-			          AND G.EXPO_YN = 'Y' 
-			          AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
-			          AND J.SVC_GRP_CD = 'DP000203'  
-			          AND J.CONTENTS_TYPE_CD = 'PD002502'
-			          AND J.TOP_MENU_ID IN ('DP13', 'DP14')
-			          AND M.SALE_YN ='Y'
-			          AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-			          AND N.EXPO_YN = 'Y'                                         
-			          AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
-					  <if test="bookTypeCd != null and bookTypeCd !=''">
-					  AND P.BOOK_CLSF_CD = #{bookTypeCd}
-                      </if>
-                      <if test="filteredBy == 'chapter'">
-                      AND TO_NUMBER( REGEXP_REPLACE( NVL( P.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{chapter}
-                      </if>
-					  <if test="orderedBy == 'nonPayment'">
-					  <if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
-					  AND J.PROD_ID NOT IN  
-						<foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
-						#{item}
-						</foreach>
-					  </if>
-					  </if>
-			      ) T1
-				  <if test="orderedBy == 'recent'">
-				  ORDER BY T1.CHAPTER DESC
-                  </if>
-                  <if test="orderedBy == 'regDate'">
-                  ORDER BY T1.CHAPTER ASC
-                  </if>
-			    ) T2
-			  ) T3
-			  WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
-			) T4
-			LEFT OUTER JOIN TB_DP_PROD_IMG PI
-				ON PI.PROD_ID = T4.PROD_ID AND PI.EXPO_ORD = '1' 
-				AND PI.IMG_CD = (CASE WHEN T4.TOP_MENU_ID = 'DP14' THEN #{comicEpisodeRepresentImgCd} ELSE #{representImgCd} END)
+			      SELECT T3.*, ROWNUM AS RNUM
+			      FROM (
+			            SELECT
+			                  COUNT(*) OVER () TOTAL_COUNT
+			                , T2.CHAPTER
+			                , MAX( T2.PROD_ID ) AS PROD_ID
+			                , MAX( T2.CID ) AS CID
+			                , MAX( T2.TENANT_ID ) AS TENANT_ID
+			                , MAX( T2.CHNL_PROD_ID ) AS CHNL_PROD_ID
+			                , MAX( T2.META_CLSF_CD ) AS META_CLSF_CD
+			                , MAX( T2.PROD_GRD_CD ) AS PROD_GRD_CD
+			                , MAX( T2.PROD_NM ) AS PROD_NM
+			                , MAX( T2.LANG_CD ) AS LANG_CD
+			                , MAX( T2.MENU_ID ) AS MENU_ID, MAX( T2.TOP_MENU_ID ) AS TOP_MENU_ID
+			                , MAX( T2.CHAPTER_UNIT ) AS CHAPTER_UNIT
+			                , MAX( T2.COMPT_YN ) AS COMPT_YN, MAX( T2.BOOK_CLSF_CD ) AS BOOK_CLSF_CD
+			                , MAX( T2.SVC_START_DT ) AS SVC_START_DT, MAX( T2.BOOK_PAGE_CNT ) AS BOOK_PAGE_CNT, MAX( T2.ISSUE_DAY ) AS ISSUE_DAY
+			                , MAX( T2.SUB_CONTENTS_ID ) AS SUB_CONTENTS_ID
+			                , MAX( T2.FILE_SIZE ) AS FILE_SIZE, MAX( T2.PROD_VER ) AS PROD_VER
+			                , MAX( T2.PROD_BASE_DESC ) AS PROD_BASE_DESC, MAX( T2.PROD_DTL_DESC ) AS PROD_DTL_DESC, MAX( T2.PROD_INTR_DSCR ) AS PROD_INTR_DSCR
+			                , MAX( T2.ARTIST1_NM ) AS ARTIST1_NM, MAX( T2.ARTIST2_NM ) AS ARTIST2_NM, MAX( T2.ARTIST3_NM ) AS ARTIST3_NM
+			                , MAX( T2.REG_DT ) AS REG_DT, MAX( T2.REG_ID ) AS REG_ID
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.PROD_ID ) ) AS STORE_PROD_ID
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.PROD_ID ) ) AS PLAY_PROD_ID
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.PROD_AMT ) ) AS STORE_PROD_AMT
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.PROD_AMT ) ) AS PLAY_PROD_AMT
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.PROD_NET_AMT ) ) AS STORE_PROD_NET_AMT
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.PROD_NET_AMT ) ) AS PLAY_PROD_NET_AMT
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.DRM_YN ) ) AS STORE_DRM_YN
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.DRM_YN ) ) AS PLAY_DRM_YN
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.PROD_STATUS_CD ) ) AS STORE_PROD_STATUS_CD
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.PROD_STATUS_CD ) ) AS PLAY_PROD_STATUS_CD
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.USE_PERIOD ) ) AS STORE_USE_PERIOD
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.USE_PERIOD ) ) AS PLAY_USE_PERIOD
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
+			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD
+			            FROM (
+			            SELECT T1.*
+			              FROM (
+							SELECT 
+		                        TP.TENANT_ID, DSC.LANG_CD
+		                      , PR.PROD_ID AS CHNL_PROD_ID
+		                      , MC.MENU_ID, MC.TOP_MENU_ID
+		                      , PD.PROD_ID
+		                      , PD.CID
+		                      , PD.META_CLSF_CD
+		                      , PD.PROD_GRD_CD
+		                      , PD.REG_ID
+		                      , PD.REG_DT
+		                      , PD.USE_PERIOD
+		                      , PD.USE_PERIOD_UNIT_CD
+		                      , PD.DRM_YN
+		                      , DSC.PROD_NM
+		                      , DSC.PROD_BASE_DESC, DSC.PROD_DTL_DESC, DSC.PROD_INTR_DSCR
+		                      , DSC.ARTIST1_NM, DSC.ARTIST2_NM, DSC.ARTIST3_NM
+		                      , TP.PROD_STATUS_CD
+		                      , MP.BOOK_CLSF_CD, MP.COMPT_YN
+		                      , MP.SVC_START_DT, MP.BOOK_PAGE_CNT, MP.ISSUE_DAY
+		                      , TO_NUMBER( REGEXP_REPLACE( MP.CHAPTER, '[^[:digit:]]')) AS CHAPTER
+		                      , REGEXP_REPLACE( MP.CHAPTER, '[[:digit:], ]') AS CHAPTER_UNIT
+		                      , PRC.PROD_AMT, PRC.PROD_NET_AMT
+		                      , SC.SUB_CONTENTS_ID, SC.FILE_SIZE, SC.PROD_VER
+		                      , ROW_NUMBER() OVER ( PARTITION BY PD.PROD_ID ORDER BY SC.PROD_VER DESC ) AS RN
+		                    FROM TB_DP_PROD_RSHP PR
+		                      , TB_DP_PROD PD
+		                      , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
+		                      , TB_DP_MENU_CATEGORY MC
+		                      , TB_DP_PROD_DESC DSC
+		                      , TB_DP_SUB_CONTENTS SC
+		                      , TB_DP_TENANT_PROD TP
+		                      , TB_DP_TENANT_PROD_PRICE PRC
+		                      , UV_TB_DP_MULTIMDA_PROD MP
+		                      , TB_DP_SPRT_DEVICE SD
+		                      , TB_CM_DEVICE DV
+		                    WHERE PR.PROD_ID = #{channelId}
+		                      AND PR.PART_PROD_ID = PD.PROD_ID
+		                      AND TP.PROD_ID = PD.PROD_ID
+		                      AND PRC.PROD_ID  = PD.PROD_ID AND PRC.TENANT_ID = TP.TENANT_ID
+		                      AND MP.PROD_ID = PD.PROD_ID
+		                      AND TP.TENANT_ID = #{tenantId} AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') AND TP.EXPO_YN = 'Y'
+		                      AND DSC.PROD_ID = PD.PROD_ID AND DSC.LANG_CD = #{langCd}
+		                      AND PD.PROD_ID = CPM.PROD_ID
+		                      AND CPM.MENU_ID = MC.MENU_ID AND MC.USE_YN = 'Y'
+		                      AND PD.PROD_ID = SD.PROD_ID
+		                      AND (SD.DEVICE_MODEL_CD = #{deviceModel} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+		                      AND DV.DEVICE_MODEL_CD = #{deviceModel} AND DV.USE_YN = 'Y'
+		                      AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
+		                      AND PD.SVC_GRP_CD = 'DP000203'   AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD = 'DP001116' AND PD.TOP_MENU_ID IN ('DP13', 'DP14')
+							  AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
+							  <if test="bookTypeCd != null and bookTypeCd !=''">
+							  AND P.BOOK_CLSF_CD = #{bookTypeCd}
+		                      </if>
+		                      <if test="filteredBy == 'chapter'">
+		                      AND TO_NUMBER( REGEXP_REPLACE( NVL( P.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{chapter}
+		                      </if>
+							  <if test="orderedBy == 'nonPayment'">
+							  <if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
+							  AND J.PROD_ID NOT IN  
+							  	<foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
+								#{item}
+								</foreach>
+							  </if>
+							  </if>
+			              ) T1
+			              WHERE RN = 1
+			          ) T2
+					  GROUP BY T2.CHAPTER
+					  <if test="orderedBy == 'recent'">
+					  ORDER BY T2.CHAPTER DESC
+	                  </if>
+	                  <if test="orderedBy == 'regDate'">
+	                  ORDER BY T2.CHAPTER ASC
+	                  </if>
+			    ) T3
+			  ) T4
+			  WHERE T4.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+			) T
+			, TB_DP_MENU_CATEGORY_DESC MCD
+			, TB_DP_PROD_IMG PI
+			WHERE 1=1
+			  AND T.MENU_ID = MCD.MENU_ID AND MCD.LANG_CD = T.LANG_CD
+			  AND T.PROD_ID = PI.PROD_ID(+) AND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{representImgCd}
 	</select>
     
 </mapper>

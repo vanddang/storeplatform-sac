@@ -9,7 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.epub.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.skplanet.storeplatform.sac.client.display.vo.epub.*;
+import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 
 /**
  * EPUB Controller
@@ -37,4 +41,11 @@ public interface EpubService {
 	 */
 	public EpubSeriesRes searchEpubSeries(EpubSeriesReq req);
 
+	
+    /**
+     * Epub 시리즈 조회
+     * @param param
+     * @return
+     */
+    public List<EpubDetail> getEpubSeries(Map<String, Object> param);
 }
