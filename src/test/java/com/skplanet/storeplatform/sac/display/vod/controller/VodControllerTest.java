@@ -43,7 +43,7 @@ public class VodControllerTest {
 	@Test
 	public void searchVodDetail_영화_recent1() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("channelId", "H001424265");
+		param.put("channelId", "H001593903");
 		param.put("orderedBy", "recent");
 		param.put("offset", 1);
 		param.put("count", 20);
