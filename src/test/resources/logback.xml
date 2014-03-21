@@ -14,12 +14,12 @@
         <appender-ref ref="CONSOLE" />
     </logger>  
     
-    <!-- 기본jdbc 로그 사용 안함 -->
+    <!-- JDBC LOGGER -->
     <logger name="jdbc.resultset" level="OFF" additivity="false" /> 
     <logger name="jdbc.audit"     level="OFF" additivity="false" /> 
     <logger name="jdbc.sqltiming" level="OFF" additivity="false" />
     
-    <!-- plandas 로그 -->
+    <!-- PLANDAS LOGGER -->
     <logger name="com.skplanet.plandasj" additivity="false">
         <level value="INFO" />
         <appender-ref ref="CONSOLE" />
@@ -33,7 +33,7 @@
         <appender-ref ref="CONSOLE" />
     </logger>
     
-    <!-- rabbit mq BlockingQueue INFO 로그 -->
+    <!-- MQ BLOCKINGQUEU LOGGER -->
     <logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" additivity="false">
         <level value="INFO" />
         <appender-ref ref="CONSOLE" />
