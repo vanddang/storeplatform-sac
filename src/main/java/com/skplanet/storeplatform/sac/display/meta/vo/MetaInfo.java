@@ -1,8 +1,8 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-
 import java.util.Map;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Ebook/Comic Meta Info.
@@ -10,7 +10,7 @@ import java.util.Map;
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
 public class MetaInfo extends CommonInfo {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	// ////////////////////////// 공통 변수 ////////////////////////////
 	private String topMenuId;
 	private String topMenuNm;
@@ -170,6 +170,7 @@ public class MetaInfo extends CommonInfo {
 	private String samplUrl;
 	private String scSamplUrl;
 	private String mallCd;
+	private String brdcCompNm;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -3939,6 +3940,21 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setDeviceSupport(String deviceSupport) {
 		this.deviceSupport = deviceSupport;
+	}
+
+	/**
+	 * @return the brdcCompNm
+	 */
+	public String getBrdcCompNm() {
+		return this.brdcCompNm;
+	}
+
+	/**
+	 * @param brdcCompNm
+	 *            the brdcCompNm to set
+	 */
+	public void setBrdcCompNm(String brdcCompNm) {
+		this.brdcCompNm = brdcCompNm;
 	}
 
 }

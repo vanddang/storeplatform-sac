@@ -187,6 +187,7 @@
               , LA.FILE_SIZE
               , LA.PROD_DTL_DESC
               , LA.PROD_STATUS_CD
+              , FC_GET_CM_CD_NM(LA.BRDC_COMP_CD, #{tenantHeader.langCd}) AS BRDC_COMP_NM
           FROM (          
                 SELECT JA.*
                 FROM (SELECT G.TENANT_ID
@@ -231,6 +232,7 @@
                            , O.PROD_AMT
                            , O.PROD_NET_AMT
                            , G.PROD_STATUS_CD
+                           , E.BRDC_COMP_CD
                         FROM TB_DP_MENU_CATEGORY           A
                            , TB_DP_MENU_CATEGORY_PROD_MAPG B
                            , TB_DP_MENU_CATEGORY_DESC      C

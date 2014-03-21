@@ -259,6 +259,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
+		// 방송사명
+		product.setBrdcCompNm(metaInfo.getBrdcCompNm());
 		return product;
 	}
 
