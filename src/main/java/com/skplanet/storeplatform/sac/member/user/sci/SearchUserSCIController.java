@@ -72,7 +72,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 	/**
 	 * <pre>
-	 * userKey 목록을 이용하여 회원정보 목록조회...
+	 * userKey 목록을 이용하여 회원정보 목록조회.
 	 * </pre>
 	 * 
 	 * @param request
@@ -292,12 +292,10 @@ public class SearchUserSCIController implements SearchUserSCI {
 		}
 
 		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
-
 		searchUserDeviceSacRes.setUserDeviceInfo(resMap);
 
 		LOGGER.info("[SearchUserSCIController.searchUserByDeviceKey] ResponseParameter : {}", searchUserDeviceSacRes.toString());
 
 		return searchUserDeviceSacRes;
-
 	}
 }
