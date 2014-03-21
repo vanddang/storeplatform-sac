@@ -26,6 +26,11 @@ public class DetailAccountInformationRes extends CommonInfo {
 	private String sellerKey;
 
 	/**
+	 * 판매자 정산정보.
+	 */
+	private SellerAccount sellerAccount;
+
+	/**
 	 * 판매자 문서정보 목록.
 	 */
 	private List<Document> documentList;
@@ -34,11 +39,6 @@ public class DetailAccountInformationRes extends CommonInfo {
 	 * 판매자 멀티미디어 정보 목록.
 	 */
 	private List<ExtraRight> extraRightList;
-
-	/**
-	 * 판매자 정산정보.
-	 */
-	private SellerAccount sellerAccount;
 
 	/**
 	 * @return the sellerKey
