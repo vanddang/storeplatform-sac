@@ -75,48 +75,67 @@
         </layout>
     </appender>
     
+    <!-- ASUNCAPPENDER 추가 -->
+    <appender name="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </appender>
+    <appender name="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </appender>
+    <appender name="OMC_요건1_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="OMC_요건1_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </appender>
+    <appender name="TLOG_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="TLOG_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </appender>
+    <appender name="SQL_ERROR_LOGGING_ROLLINGFILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SQL_ERROR_LOGGING_ROLLINGFILE" />
+    </appender>
+    <appender name="SQL_LOGGING_ROLLINGFILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SQL_LOGGING_ROLLINGFILE" />
+    </appender>
     
     <!-- 서비스 로그 -->
     <logger name="com.skplanet.storeplatform.sac" additivity="false">
         <level value="INFO" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
-        <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
+        <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
     
     <!-- OMC 로그 -->
     <logger name="OMC_요건1" additivity="false">
         <level value="INFO" />
-        <appender-ref ref="OMC_요건1_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="OMC_요건1_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
     
     <!-- TLOG 로그 -->
     <logger name="TLOG_SAC_LOGGER" additivity="false">
         <level value="INFO" />
-        <appender-ref ref="TLOG_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="TLOG_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
     
     <!-- LOCAL 개발 CONSOL  로그 -->
     <logger name="com.skplanet.storeplatform.sac" additivity="false">
         <level value="DEBUG" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
     <logger name="org.springframework" additivity="false">
         <level value="DEBUG" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
     
     <!-- plandas 로그 -->
     <logger name="com.skplanet.plandasj" additivity="false">
         <level value="debug" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
     <logger name="com.skplanet.spring" additivity="false">
         <level value="debug" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
     <logger name="org.apache.zookeeper" additivity="false">
         <level value="debug" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
     
     <!-- 기본jdbc 로그 --> 
@@ -134,20 +153,20 @@
     </logger> 
     <logger name="jdbc.sqltiming" additivity="false">
         <level value="INFO" /> 
-        <appender-ref ref="SQL_ERROR_LOGGING_ROLLINGFILE" />
-        <appender-ref ref="SQL_LOGGING_ROLLINGFILE" />
+        <appender-ref ref="SQL_ERROR_LOGGING_ROLLINGFILE_ASYNC" />
+        <appender-ref ref="SQL_LOGGING_ROLLINGFILE_ASYNC" />
     </logger>
     
     <!-- rabbit mq BlockingQueue INFO 로그 -->
     <logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" additivity="false">
         <level value="INFO" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
     
     <root>
         <level value="INFO" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
-        <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
+        <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </root>
     
 </included>
