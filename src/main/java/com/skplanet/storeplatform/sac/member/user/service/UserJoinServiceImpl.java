@@ -887,6 +887,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		LOGGER.info("## 세팅 전 deviceExtraInfoList : {}", deviceExtraInfoList);
 
+		/**
+		 * 단말 부가 정보 없을 경우 처리.
+		 */
 		if (deviceExtraInfoList == null) {
 			deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 		}
