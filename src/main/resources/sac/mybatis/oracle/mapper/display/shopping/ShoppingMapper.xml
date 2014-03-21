@@ -923,7 +923,7 @@
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}  /* INPUT 테넌트ID */
-                        AND A.BRAND_ID = #{req.brandId}        /* INPUT 테넌트ID */
+                        AND A.BRAND_ID = #{req.brandId}        /* INPUT 브랜드ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
                         </if>
