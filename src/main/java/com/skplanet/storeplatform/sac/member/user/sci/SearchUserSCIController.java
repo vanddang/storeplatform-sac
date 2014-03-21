@@ -295,11 +295,13 @@ public class SearchUserSCIController implements SearchUserSCI {
 		}
 
 		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
+
 		searchUserDeviceSacRes.setUserDeviceInfo(resMap);
 
 		LOGGER.info("[SearchUserSCIController.searchUserByDeviceKey] ResponseParameter : {}",
 				searchUserDeviceSacRes.toString());
 
 		return searchUserDeviceSacRes;
+
 	}
 }
