@@ -20,7 +20,7 @@
 		        , P2.SVC_GRP_CD, MP.GENRE_CD
 		        , MP.CHNL_COMP_NM
 		        , MP.BOOK_TBCTNS
-		        , MP.CHNL_CLSF_CD
+		        , MP.CHNL_CLSF_CD, MP.BOOK_CLSF_CD
 		        , ( CASE WHEN MP.EPSD_CNT > 0 THEN 'Y' ELSE 'N' END ) AS SUPPORT_STORE
              	, ( CASE WHEN MP.STRM_EPSD_CNT > 0 THEN 'Y' ELSE 'N' END ) AS SUPPORT_PLAY
 			    , ( CASE WHEN P2.META_CLSF_CD IN ( 'CT20', 'CT21' ) OR MP.BOOK_CLSF_CD = 'DP004302' THEN 'serial' END ) AS BOOK_TYPE
@@ -49,8 +49,8 @@
 						, D.PROD_ID AS CHNL_PROD_ID
 						, A.MENU_ID, C.MENU_NM
 						, E.BOOK_CLSF_CD
-						, SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310'/*무제한*/ ) THEN 1 ELSE 0 END ) AS SALE_CNT
-						, SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310'/*무제한*/ AND O.PROD_AMT = 0 ) THEN 1 ELSE 0 END ) AS FREE_CNT
+						, SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310' ) THEN 1 ELSE 0 END ) AS SALE_CNT
+						, SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310' AND O.PROD_AMT = 0 ) THEN 1 ELSE 0 END ) AS FREE_CNT
                       FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
                         INNER JOIN TB_DP_MENU_CATEGORY B		ON A.MENU_ID = B.MENU_ID
                         INNER JOIN TB_DP_MENU_CATEGORY_DESC C	ON A.MENU_ID = C.MENU_ID
@@ -61,18 +61,18 @@
                         INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
                         INNER JOIN TB_DP_SPRT_DEVICE K			ON RSHP.PART_PROD_ID = K.PROD_ID
 					WHERE 1=1
-					AND G.TENANT_ID = #{tenantId}				/* tenant ID */
-					AND D.PROD_ID = #{channelId} 				/* channel ID */
-					AND C.LANG_CD = #{langCd}					/* 언어 */
-					AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo}) 		/* 단말모델코드 */
+					AND G.TENANT_ID = #{tenantId}
+					AND D.PROD_ID = #{channelId}
+					AND C.LANG_CD = #{langCd}
+					AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 					AND A.BASE_YN = 'Y' AND A.BASE_YN = 'Y'
-					AND B.USE_YN = 'Y'                        	/* Y : 사용 (사용여부) */
-					AND D.SVC_GRP_CD = 'DP000203'             	/* DP000203 : 멀티미디어 */
-					AND D.CONTENTS_TYPE_CD = 'PD002501'       	/* PD002501 : 채널타입 */
-					AND D.SVC_TYPE_CD = 'DP001116'				/* 서비스 타입 : 이북/코믹 */
-					AND D.TOP_MENU_ID IN ('DP13', 'DP14')				/* 이북,코믹 */
+					AND B.USE_YN = 'Y'
+					AND D.SVC_GRP_CD = 'DP000203'
+					AND D.CONTENTS_TYPE_CD = 'PD002501'
+					AND D.SVC_TYPE_CD = 'DP001116'
+					AND D.TOP_MENU_ID IN ('DP13', 'DP14')
 					AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
-					AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */
+					AND G.EXPO_YN = 'Y'
 					AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
 					GROUP BY G.TENANT_ID, C.LANG_CD, D.PROD_ID, A.MENU_ID, C.MENU_NM, E.BOOK_CLSF_CD
 				)
@@ -118,7 +118,7 @@
 			      , T4.META_CLSF_CD
 			      , T4.PROD_ID, T4.CHNL_PROD_ID, T4.REG_ID, T4.REG_DT
 			      , T4.PROD_NM, T4.PROD_BASE_DESC, T4.PROD_DTL_DESC, T4.PROD_INTR_DSCR, T4.ARTIST1_NM, T4.ARTIST2_NM, T4.ARTIST3_NM
-			      , T4.PROD_GRD_CD
+			      , T4.PROD_GRD_CD, T4.BOOK_CLSF_CD
 			      , REGEXP_REPLACE( T4.CHAPTER, '[^[:digit:]]') AS CHAPTER
 			      , NVL(REGEXP_REPLACE( T4.CHAPTER, '[[:digit:], ]'), '회') AS CHAPTER_UNIT
 			      , DECODE( T4.USE_PERIOD, 'PD00310', T4.PROD_ID ) AS STORE_PROD_ID
@@ -180,26 +180,26 @@
 			              INNER JOIN TB_DP_PROD_DESC Q			ON Q.PROD_ID = J.PROD_ID AND C.LANG_CD = Q.LANG_CD
 			              INNER JOIN TB_DP_SPRT_DEVICE K		ON I.PART_PROD_ID = K.PROD_ID
 			        WHERE 1=1
-			          AND G.TENANT_ID = #{tenantId}				/* tenant ID */
-			          AND D.PROD_ID = #{channelId} 				/* channel ID */
-			          AND C.LANG_CD = #{langCd}					/* 언어 */
+			          AND G.TENANT_ID = #{tenantId}
+			          AND D.PROD_ID = #{channelId}
+			          AND C.LANG_CD = #{langCd}
 			          AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
-			          AND B.USE_YN = 'Y'                        	/* Y : 사용 (사용여부) */
-			          AND D.SVC_GRP_CD = 'DP000203'             	/* DP000201 : 멀티미디어 */
-			          AND D.CONTENTS_TYPE_CD = 'PD002501'       	/* PD002501 : 채널타입 */
-			          AND D.SVC_TYPE_CD = 'DP001116'				/* 서비스 타입 : 이북/코믹 */
-			          AND D.TOP_MENU_ID IN ('DP13', 'DP14')				/* 이북 */
-			          AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
-			          AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */ 
+			          AND B.USE_YN = 'Y'
+			          AND D.SVC_GRP_CD = 'DP000203'
+			          AND D.CONTENTS_TYPE_CD = 'PD002501'
+			          AND D.SVC_TYPE_CD = 'DP001116'
+			          AND D.TOP_MENU_ID IN ('DP13', 'DP14')
+			          AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404')
+			          AND G.EXPO_YN = 'Y' 
 			          AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
-			          AND J.SVC_GRP_CD = 'DP000203'       		/* 서비스그룹코드 : 멀티미디어 */  
-			          AND J.CONTENTS_TYPE_CD = 'PD002502'       /* 컨텐츠 타입코드 : (PD002502:에피소드타입) */
-			          AND J.TOP_MENU_ID IN ('DP13', 'DP14')				/* 이북, 코믹 */
+			          AND J.SVC_GRP_CD = 'DP000203'  
+			          AND J.CONTENTS_TYPE_CD = 'PD002502'
+			          AND J.TOP_MENU_ID IN ('DP13', 'DP14')
 			          AND M.SALE_YN ='Y'
-			          AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
-			          AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
+			          AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
+			          AND N.EXPO_YN = 'Y'                                         
 			          AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
-					  <if test="bookTypeCd != null and bookTypeCd !=''"><!-- 단행/연재/잡지 -->
+					  <if test="bookTypeCd != null and bookTypeCd !=''">
 					  AND P.BOOK_CLSF_CD = #{bookTypeCd}
                       </if>
                       <if test="filteredBy == 'chapter'">

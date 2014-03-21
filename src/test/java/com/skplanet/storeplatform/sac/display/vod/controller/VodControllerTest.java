@@ -97,12 +97,12 @@ public class VodControllerTest {
 		param.put("offset", 1);
 		param.put("count", 20);
 		*/
-        param.put("channelId", "H900540759");
+        param.put("channelId", "H001220250");
         param.put("deviceKey", "DE201402201711283140002222");
         param.put("userKey", "US201402201711282940003170");
         param.put("orderedBy", "recent");
         param.put("offset", 1);
-        param.put("count", 20);
+        param.put("count", 10);
 
         String json = this.convertMapToJson(param);
 

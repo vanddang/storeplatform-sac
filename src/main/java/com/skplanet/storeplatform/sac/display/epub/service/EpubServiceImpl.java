@@ -50,6 +50,7 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.vod.vo.VodDetail;
 
 /**
@@ -406,6 +407,7 @@ public class EpubServiceImpl implements EpubService {
         return contributor;
     }
 
+    
     /**
      * Mapping Distributor
      * @param mapperVO
@@ -444,6 +446,7 @@ public class EpubServiceImpl implements EpubService {
         book.setBookVersion(mapperVO.getProdVer());
         book.setStatus(mapperVO.getBookStatus());
         book.setType(mapperVO.getBookType());
+        //book.setBookTypeCd(mapperVO.getBookType());
 		book.setSupportList(this.mapSupportList(mapperVO));
 		
 		return book;
