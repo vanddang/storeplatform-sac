@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 
 /**
  * 판매자회원 ID 찾기
@@ -19,13 +19,13 @@ public class SearchIdRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자 정보 Value Object 목록. */
-	private List<SellerMbr> sellerMbr;// 판매자정보
+	private List<SellerMbrSac> sellerMbr;// 판매자정보
 
-	public List<SellerMbr> getSellerMbr() {
+	public List<SellerMbrSac> getSellerMbr() {
 		return this.sellerMbr;
 	}
 
-	public void setSellerMbr(List<SellerMbr> sellerMbr) {
+	public void setSellerMbr(List<SellerMbrSac> sellerMbr) {
 		this.sellerMbr = sellerMbr;
 	}
 

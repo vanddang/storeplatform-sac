@@ -19,25 +19,39 @@ public class AuthorizeSimpleReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/** 판매자 회원 ID */
+	/** 판매자 회원 ID. */
 	@NotBlank
 	private String sellerId;
-	/** 판매자 회원 PW */
+	/** 판매자 회원 PW. */
 	@NotBlank
 	private String sellerPW;
 
+	/**
+	 * @return the sellerId
+	 */
 	public String getSellerId() {
 		return this.sellerId;
 	}
 
+	/**
+	 * @param sellerId
+	 *            the sellerId to set
+	 */
 	public void setSellerId(String sellerId) {
 		this.sellerId = sellerId;
 	}
 
+	/**
+	 * @return the sellerPW
+	 */
 	public String getSellerPW() {
 		return this.sellerPW;
 	}
 
+	/**
+	 * @param sellerPW
+	 *            the sellerPW to set
+	 */
 	public void setSellerPW(String sellerPW) {
 		this.sellerPW = sellerPW;
 	}

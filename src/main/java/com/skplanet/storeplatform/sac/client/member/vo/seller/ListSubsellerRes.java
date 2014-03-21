@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 
 /**
  * 서브계정 목록 조회
@@ -28,7 +28,7 @@ public class ListSubsellerRes extends CommonInfo {
 	private int subAccountCount;
 
 	/** 서브계정 Value Object 목록. */
-	private List<SellerMbr> subSellerList;
+	private List<SellerMbrSac> subSellerList;
 
 	/** 로그인시간. */
 	private String regDate;
@@ -65,11 +65,11 @@ public class ListSubsellerRes extends CommonInfo {
 		this.subAccountCount = subAccountCount;
 	}
 
-	public List<SellerMbr> getSubSellerList() {
+	public List<SellerMbrSac> getSubSellerList() {
 		return this.subSellerList;
 	}
 
-	public void setSubSellerList(List<SellerMbr> subSellerList) {
+	public void setSubSellerList(List<SellerMbrSac> subSellerList) {
 		this.subSellerList = subSellerList;
 	}
 

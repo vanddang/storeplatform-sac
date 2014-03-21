@@ -11,7 +11,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class SellerMbr extends CommonInfo {
+public class SellerMbrSac extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String appStat;

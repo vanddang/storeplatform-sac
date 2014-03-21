@@ -9,18 +9,22 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class AbrogationAuthKeyRes extends CommonInfo {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4626339064209250099L;
 
 	/** 판매자 회원키. */
 	private String sellerKey;
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}

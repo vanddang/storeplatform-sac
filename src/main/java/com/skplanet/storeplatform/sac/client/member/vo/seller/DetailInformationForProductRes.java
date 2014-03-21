@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 
 /**
  * App 상세 판매자회원 기본 정보 조회
@@ -38,13 +38,13 @@ public class DetailInformationForProductRes extends CommonInfo {
 	}
 
 	/** 판매자 정보 Value List. */
-	private List<SellerMbr> sellerMbrList;
+	private List<SellerMbrSac> sellerMbrList;
 
-	public List<SellerMbr> getSellerMbrList() {
+	public List<SellerMbrSac> getSellerMbrList() {
 		return this.sellerMbrList;
 	}
 
-	public void setSellerMbrList(List<SellerMbr> sellerMbrList) {
+	public void setSellerMbrList(List<SellerMbrSac> sellerMbrList) {
 		this.sellerMbrList = sellerMbrList;
 	}
 

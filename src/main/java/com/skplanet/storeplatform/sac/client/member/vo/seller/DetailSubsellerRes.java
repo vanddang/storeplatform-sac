@@ -4,7 +4,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 
 /**
  * 서브계정 상세 조회
@@ -17,13 +17,13 @@ public class DetailSubsellerRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자정보 Value Object. */
-	private SellerMbr subSellerMbr;
+	private SellerMbrSac subSellerMbr;
 
-	public SellerMbr getSubSellerMbr() {
+	public SellerMbrSac getSubSellerMbr() {
 		return this.subSellerMbr;
 	}
 
-	public void setSubSellerMbr(SellerMbr subSellerMbr) {
+	public void setSubSellerMbr(SellerMbrSac subSellerMbr) {
 		this.subSellerMbr = subSellerMbr;
 	}
 

@@ -15,12 +15,22 @@ public class CheckPasswordReminderQuestionRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 보안질문 일치 여부 (Y/N).
+	 */
 	private String isCorrect;
 
+	/**
+	 * @return the isCorrect
+	 */
 	public String getIsCorrect() {
 		return this.isCorrect;
 	}
 
+	/**
+	 * @param isCorrect
+	 *            the isCorrect to set
+	 */
 	public void setIsCorrect(String isCorrect) {
 		this.isCorrect = isCorrect;
 	}

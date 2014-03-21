@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrPwd;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.TabAuth;
 
 /**
@@ -26,128 +26,204 @@ public class DetailInformationRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/** 판매자 키. */
-	private String sellerKey; // INSD_SELLERMBR_NO
+	/** 판매자 Key (INSD_SELLERMBR_NO). */
+	private String sellerKey; //
 
-	/** 판매자 정보 Value Object. */
-	private SellerMbr sellerMbr;
+	/** 판매자 정보. */
+	private SellerMbrSac sellerMbr;
 
-	/** 판매자 정보 Value List. */
-	private List<SellerMbr> sellerMbrList;
+	/** 판매자 정보 목록. */
+	private List<SellerMbrSac> sellerMbrList;
 
 	/** 비밀번호 Value Object. */
-	private MbrPwd mbrPwd; // PW변경일시 ( TB_US_SELLERMBR_PWD 테이블에서 가져오기)
+	private MbrPwd mbrPwd; // PW변경일시 ( TB_US_SELLERMBR_PWD 테이블에서 가져오기) TODO ????
 
-	/** 실명인증 Value Object. */
+	/** 실명인증 판매자 정보. */
 	private MbrAuth mbrAuth;
 
-	/** 법정대리인 Value Object. */
+	/** 법정대리인 정보. */
 	private MbrLglAgent mbrLglAgent;
 
 	/** 약관동의 Value Object 목록. */
 	private List<MbrClauseAgree> mbrClauseAgreeList; // 이용약관 TB_US_SELLERMBR_CLAUSE_AGREE
 
-	/** 판매자 멀티미디어정보 Value Object 목록. */
-	private List<ExtraRight> extraRightList; // US_판매자회원_멀티미디어_권한 TB_US_SELLERMBR_MULTIMDA_AUTH (bp 사인경우만)
+	/**
+	 * 판매자 멀티미디어정보 목록. US_판매자회원_멀티미디어_권한 - TB_US_SELLERMBR_MULTIMDA_AUTH (bp 사인경우만)
+	 */
+	private List<ExtraRight> extraRightList;
 
-	/** 판매자 비밀번호 보안질문 확인 Value Object 목록. */
-	// private List<PWReminder> pWReminderList;
-
-	/** 탭권한 Value Object 목록. */
+	/** 탭권한 목록. */
 	private List<TabAuth> tabAuthList;
 
-	/** Flurry 인증정보 Value Object 목록. */
+	/** Flurry 인증정보 목록. */
 	private List<FlurryAuth> flurryAuthList;
 
-	/** 판매자 정보 리스트 Value Object 목록. */
-	private Map<String, List<SellerMbr>> sellerMbrListMap;
+	/** 판매자 정보 리스트 목록. */
+	private Map<String, List<SellerMbrSac>> sellerMbrListMap;
 
-	public List<SellerMbr> getSellerMbrList() {
-		return this.sellerMbrList;
-	}
-
-	public void setSellerMbrList(List<SellerMbr> sellerMbrList) {
-		this.sellerMbrList = sellerMbrList;
-	}
-
-	public Map<String, List<SellerMbr>> getSellerMbrListMap() {
-		return this.sellerMbrListMap;
-	}
-
-	public void setSellerMbrListMap(Map<String, List<SellerMbr>> sellerMbrListMap) {
-		this.sellerMbrListMap = sellerMbrListMap;
-	}
-
-	public List<FlurryAuth> getFlurryAuthList() {
-		return this.flurryAuthList;
-	}
-
-	public void setFlurryAuthList(List<FlurryAuth> flurryAuthList) {
-		this.flurryAuthList = flurryAuthList;
-	}
-
-	public List<TabAuth> getTabAuthList() {
-		return this.tabAuthList;
-	}
-
-	public void setTabAuthList(List<TabAuth> tabAuthList) {
-		this.tabAuthList = tabAuthList;
-	}
-
-	public List<ExtraRight> getExtraRightList() {
-		return this.extraRightList;
-	}
-
-	public void setExtraRightList(List<ExtraRight> extraRightList) {
-		this.extraRightList = extraRightList;
-	}
-
-	public MbrAuth getMbrAuth() {
-		return this.mbrAuth;
-	}
-
-	public void setMbrAuth(MbrAuth mbrAuth) {
-		this.mbrAuth = mbrAuth;
-	}
-
-	public List<MbrClauseAgree> getMbrClauseAgreeList() {
-		return this.mbrClauseAgreeList;
-	}
-
-	public void setMbrClauseAgreeList(List<MbrClauseAgree> mbrClauseAgreeList) {
-		this.mbrClauseAgreeList = mbrClauseAgreeList;
-	}
-
-	public MbrLglAgent getMbrLglAgent() {
-		return this.mbrLglAgent;
-	}
-
-	public void setMbrLglAgent(MbrLglAgent mbrLglAgent) {
-		this.mbrLglAgent = mbrLglAgent;
-	}
-
-	public MbrPwd getMbrPwd() {
-		return this.mbrPwd;
-	}
-
-	public void setMbrPwd(MbrPwd mbrPwd) {
-		this.mbrPwd = mbrPwd;
-	}
-
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
-	public SellerMbr getSellerMbr() {
+	/**
+	 * @return the sellerMbr
+	 */
+	public SellerMbrSac getSellerMbr() {
 		return this.sellerMbr;
 	}
 
-	public void setSellerMbr(SellerMbr sellerMbr) {
+	/**
+	 * @param sellerMbr
+	 *            the sellerMbr to set
+	 */
+	public void setSellerMbr(SellerMbrSac sellerMbr) {
 		this.sellerMbr = sellerMbr;
+	}
+
+	/**
+	 * @return the sellerMbrList
+	 */
+	public List<SellerMbrSac> getSellerMbrList() {
+		return this.sellerMbrList;
+	}
+
+	/**
+	 * @param sellerMbrList
+	 *            the sellerMbrList to set
+	 */
+	public void setSellerMbrList(List<SellerMbrSac> sellerMbrList) {
+		this.sellerMbrList = sellerMbrList;
+	}
+
+	/**
+	 * @return the mbrPwd
+	 */
+	public MbrPwd getMbrPwd() {
+		return this.mbrPwd;
+	}
+
+	/**
+	 * @param mbrPwd
+	 *            the mbrPwd to set
+	 */
+	public void setMbrPwd(MbrPwd mbrPwd) {
+		this.mbrPwd = mbrPwd;
+	}
+
+	/**
+	 * @return the mbrAuth
+	 */
+	public MbrAuth getMbrAuth() {
+		return this.mbrAuth;
+	}
+
+	/**
+	 * @param mbrAuth
+	 *            the mbrAuth to set
+	 */
+	public void setMbrAuth(MbrAuth mbrAuth) {
+		this.mbrAuth = mbrAuth;
+	}
+
+	/**
+	 * @return the mbrLglAgent
+	 */
+	public MbrLglAgent getMbrLglAgent() {
+		return this.mbrLglAgent;
+	}
+
+	/**
+	 * @param mbrLglAgent
+	 *            the mbrLglAgent to set
+	 */
+	public void setMbrLglAgent(MbrLglAgent mbrLglAgent) {
+		this.mbrLglAgent = mbrLglAgent;
+	}
+
+	/**
+	 * @return the mbrClauseAgreeList
+	 */
+	public List<MbrClauseAgree> getMbrClauseAgreeList() {
+		return this.mbrClauseAgreeList;
+	}
+
+	/**
+	 * @param mbrClauseAgreeList
+	 *            the mbrClauseAgreeList to set
+	 */
+	public void setMbrClauseAgreeList(List<MbrClauseAgree> mbrClauseAgreeList) {
+		this.mbrClauseAgreeList = mbrClauseAgreeList;
+	}
+
+	/**
+	 * @return the extraRightList
+	 */
+	public List<ExtraRight> getExtraRightList() {
+		return this.extraRightList;
+	}
+
+	/**
+	 * @param extraRightList
+	 *            the extraRightList to set
+	 */
+	public void setExtraRightList(List<ExtraRight> extraRightList) {
+		this.extraRightList = extraRightList;
+	}
+
+	/**
+	 * @return the tabAuthList
+	 */
+	public List<TabAuth> getTabAuthList() {
+		return this.tabAuthList;
+	}
+
+	/**
+	 * @param tabAuthList
+	 *            the tabAuthList to set
+	 */
+	public void setTabAuthList(List<TabAuth> tabAuthList) {
+		this.tabAuthList = tabAuthList;
+	}
+
+	/**
+	 * @return the flurryAuthList
+	 */
+	public List<FlurryAuth> getFlurryAuthList() {
+		return this.flurryAuthList;
+	}
+
+	/**
+	 * @param flurryAuthList
+	 *            the flurryAuthList to set
+	 */
+	public void setFlurryAuthList(List<FlurryAuth> flurryAuthList) {
+		this.flurryAuthList = flurryAuthList;
+	}
+
+	/**
+	 * @return the sellerMbrListMap
+	 */
+	public Map<String, List<SellerMbrSac>> getSellerMbrListMap() {
+		return this.sellerMbrListMap;
+	}
+
+	/**
+	 * @param sellerMbrListMap
+	 *            the sellerMbrListMap to set
+	 */
+	public void setSellerMbrListMap(Map<String, List<SellerMbrSac>> sellerMbrListMap) {
+		this.sellerMbrListMap = sellerMbrListMap;
 	}
 
 }

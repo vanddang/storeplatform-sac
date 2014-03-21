@@ -20,10 +20,17 @@ public class ListPasswordReminderQuestionReq extends CommonInfo {
 	@NotBlank
 	private String sellerKey;
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}

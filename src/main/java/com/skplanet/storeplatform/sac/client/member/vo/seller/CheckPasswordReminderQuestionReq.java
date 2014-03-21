@@ -26,18 +26,32 @@ public class CheckPasswordReminderQuestionReq extends CommonInfo {
 	/** 비밀번호 보안질문 Value Object. */
 	private List<PwReminder> pWReminderList;
 
+	/**
+	 * @return the sellerId
+	 */
 	public String getSellerId() {
 		return this.sellerId;
 	}
 
+	/**
+	 * @param sellerId
+	 *            the sellerId to set
+	 */
 	public void setSellerId(String sellerId) {
 		this.sellerId = sellerId;
 	}
 
+	/**
+	 * @return the pWReminderList
+	 */
 	public List<PwReminder> getpWReminderList() {
 		return this.pWReminderList;
 	}
 
+	/**
+	 * @param pWReminderList
+	 *            the pWReminderList to set
+	 */
 	public void setpWReminderList(List<PwReminder> pWReminderList) {
 		this.pWReminderList = pWReminderList;
 	}

@@ -4,7 +4,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 
 /**
  * 2.2.1. 판매자 회원 가입 [RESPONSE]
@@ -17,12 +17,12 @@ public class CreateRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자 회원 정보. */
-	private SellerMbr sellerMbr;
+	private SellerMbrSac sellerMbr;
 
 	/**
 	 * @return the sellerMbr
 	 */
-	public SellerMbr getSellerMbr() {
+	public SellerMbrSac getSellerMbr() {
 		return this.sellerMbr;
 	}
 
@@ -30,7 +30,7 @@ public class CreateRes extends CommonInfo {
 	 * @param sellerMbr
 	 *            the sellerMbr to set
 	 */
-	public void setSellerMbr(SellerMbr sellerMbr) {
+	public void setSellerMbr(SellerMbrSac sellerMbr) {
 		this.sellerMbr = sellerMbr;
 	}
 

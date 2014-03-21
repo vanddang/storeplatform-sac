@@ -1,18 +1,15 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [REQUEST]서브계정 등록.
+ * [REQUEST]서브계정 수정.
  * 
  * Updated on : 2014. 3. 20. Updated by : 김다슬, 인크로스.
  */
-@JsonSerialize(include = Inclusion.NON_NULL)
-public class CreateSubsellerReq extends CommonInfo {
+public class UpdateSubsellerReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,12 +17,11 @@ public class CreateSubsellerReq extends CommonInfo {
 	@NotBlank
 	private String sellerKey;
 
-	/** 서브계정 ID. */
+	/** 서브계정 키. */
 	@NotBlank
-	private String subSellerId;
+	private String subSellerKey;
 
 	/** 서브계정 비밀번호. */
-	@NotBlank
 	private String subSellerPW;
 
 	/** 서브계정 메모. */
@@ -63,18 +59,18 @@ public class CreateSubsellerReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the subSellerId
+	 * @return the subSellerKey
 	 */
-	public String getSubSellerId() {
-		return this.subSellerId;
+	public String getSubSellerKey() {
+		return this.subSellerKey;
 	}
 
 	/**
-	 * @param subSellerId
-	 *            the subSellerId to set
+	 * @param subSellerKey
+	 *            the subSellerKey to set
 	 */
-	public void setSubSellerId(String subSellerId) {
-		this.subSellerId = subSellerId;
+	public void setSubSellerKey(String subSellerKey) {
+		this.subSellerKey = subSellerKey;
 	}
 
 	/**

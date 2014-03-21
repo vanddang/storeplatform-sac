@@ -15,45 +15,58 @@ public class DetailInformationReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	// List<KeySearch> keySearchList;
-	//
-	// public List<KeySearch> getKeySearchList() {
-	// return this.keySearchList;
-	// }
-	//
-	// public void setKeySearchList(List<KeySearch> keySearchList) {
-	// this.keySearchList = keySearchList;
-	// }
-
-	/** 판매자 key */
+	/** 판매자 key. */
 	private String sellerKey;
-	/** App ID */
+
+	/** App ID. */
 	private String aid;
 
 	/** 판매자 ID. */
 	private String sellerId;
 
-	public String getSellerId() {
-		return this.sellerId;
-	}
-
-	public void setSellerId(String sellerId) {
-		this.sellerId = sellerId;
-	}
-
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
+	/**
+	 * @return the aid
+	 */
 	public String getAid() {
 		return this.aid;
 	}
 
+	/**
+	 * @param aid
+	 *            the aid to set
+	 */
 	public void setAid(String aid) {
 		this.aid = aid;
 	}
+
+	/**
+	 * @return the sellerId
+	 */
+	public String getSellerId() {
+		return this.sellerId;
+	}
+
+	/**
+	 * @param sellerId
+	 *            the sellerId to set
+	 */
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
+	}
+
 }
