@@ -213,7 +213,12 @@
 				AND TDTP.TENANT_ID = #{tenantId}
 				AND ONE.USE_YN = 'Y'
 				AND TDTP.EXPO_YN = 'Y'
-				AND TDPI.IMG_CD = 'DP000102'
+				AND TDPI.IMG_CD = DECODE(PROD.TOP_MENU_ID , 'DP09', 'DP000127'
+				                                     , 'DP13', 'DP000147'
+				                                     , 'DP14', 'DP000147'
+				                                     , 'DP15', 'DP000102'
+				                                     , 'DP16', 'DP000115'
+				                                     , 'DP000125')
                 <if test="menuId != null and menuId != ''">
                 AND TDMM.MENU_ID = #{menuId}
                 </if>
