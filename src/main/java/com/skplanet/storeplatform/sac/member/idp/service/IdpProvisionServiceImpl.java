@@ -955,16 +955,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			userKey = schUserRes.getUserKey();
 
-			/* 회원 탈퇴 처리 */
-			RemoveUserRequest removeUserReq = new RemoveUserRequest();
-			removeUserReq.setCommonRequest(commonRequest);
-			removeUserReq.setUserKey(schUserRes.getUserMbr().getUserKey());
-			removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_JOIN_AGREE_EXPIRED); // 가입승인만료
-			removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER); // 기타
-			removeUserReq.setSecedeReasonMessage("가입승인만료");
-
-			this.userSCI.remove(removeUserReq);
-
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 			gameCenterSacReq.setUserKey(schUserRes.getUserKey());
@@ -972,6 +962,15 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			gameCenterSacReq.setTenantId(tenantId);
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
+
+			/* 회원 탈퇴 처리 */
+			RemoveUserRequest removeUserReq = new RemoveUserRequest();
+			removeUserReq.setCommonRequest(commonRequest);
+			removeUserReq.setUserKey(schUserRes.getUserMbr().getUserKey());
+			removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_JOIN_AGREE_EXPIRED); // 가입승인만료
+			removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER); // 기타
+			removeUserReq.setSecedeReasonMessage("가입승인만료");
+			this.userSCI.remove(removeUserReq);
 
 			/* MQ 연동 */
 			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
