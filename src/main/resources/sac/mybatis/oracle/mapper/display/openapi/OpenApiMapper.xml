@@ -2156,7 +2156,8 @@
     <!-- 게임센터 상품 지원 여부 조회 -->
     <select id="searchSupportGameCenter" parameterType="map" resultType="MetaInfo">
 		SELECT /* OpenApiMapper.searchSupportGameCenter, 게임센터 상품 지원 여부 조회, 백승현/인크로스, 2014-03-03 */
-		      P.PROD_ID
+              C.PROD_ID AS CHNL_PROD_ID
+              ,P.PROD_ID AS PROD_ID
 		      ,DAP.AID
 		      ,DPD.PROD_NM
 		      ,DECODE(DTP.PROD_STATUS_CD,'PD000403',NVL(( SELECT 'Y'
