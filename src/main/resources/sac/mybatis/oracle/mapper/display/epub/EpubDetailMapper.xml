@@ -159,9 +159,10 @@
 			               , J.PROD_GRD_CD, P.CHAPTER
 			               , P.BOOK_CLSF_CD, O.PROD_AMT, O.PROD_NET_AMT
 			               , J.USE_PERIOD, J.USE_PERIOD_UNIT_CD
-			               , P.SVC_START_DT, P.BOOK_PAGE_CNT, J.DRM_YN, P.COMPT_YN, P.ISSUE_DAY
+			               , E.COMPT_YN
+			               , P.SVC_START_DT, E.BOOK_PAGE_CNT, J.DRM_YN, P.ISSUE_DAY
 			               , M.SUB_CONTENTS_ID, M.FILE_SIZE, M.PROD_VER, P.CAPTION_YN
-			               , P.EPSD_CNT, P.STRM_EPSD_CNT
+			               , E.EPSD_CNT, E.STRM_EPSD_CNT
 			               , ROW_NUMBER() OVER ( PARTITION BY J.PROD_ID ORDER BY M.PROD_VER DESC ) AS RN
 			        FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
 			              INNER JOIN TB_DP_MENU_CATEGORY B		ON A.MENU_ID = B.MENU_ID
