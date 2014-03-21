@@ -65,13 +65,13 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacR
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
+import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
+import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.service.InterworkingSacService;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSacReq;
-import com.skplanet.storeplatform.sac.purchase.order.MD5Util;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
-import com.skplanet.storeplatform.sac.purchase.order.Seed128Util;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CreatePaymentSacInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
@@ -773,9 +773,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// paymentPageParam.setpType("remove");
 		paymentPageParam.setAid(product.getAid());
 		paymentPageParam.setReturnFormat(PaymentPageParam.PP_RETURN_FORMAT_JSON);
+		paymentPageParam.setFlgMchtAuth(PurchaseConstants.USE_Y);
 		paymentPageParam.setMctSpareParam(purchaseOrderInfo.getTenantId());
 		paymentPageParam.setMdn(purchaseOrderInfo.getPurchaseUser().getDeviceId());
-		paymentPageParam.setNmDevice(purchaseOrderInfo.getDeviceModelCd());
+		paymentPageParam.setNmDevice(purchaseOrderInfo.getPurchaseUser().getDeviceModelCd());
 		paymentPageParam.setImei(purchaseOrderInfo.getImei());
 		paymentPageParam.setUacd(purchaseOrderInfo.getUacd());
 		if (StringUtils.equals(purchaseOrderInfo.getNetworkTypeCd(), PurchaseConstants.NETWORK_TYPE_3G)) {
@@ -802,7 +803,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		String eData = paymentPageParam.makeEncDataFormat();
 		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", eData);
 		try {
-			paymentPageParam.setEData(Seed128Util.encrypt(eData, this.payplanetEncryptKey));
+			paymentPageParam.setEData(PayPlanetUtils.encrypt(eData, this.payplanetEncryptKey));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7201", e);
 		}
@@ -812,7 +813,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		String token = paymentPageParam.makeTokenFormat();
 		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,SRC,{}", token);
 		try {
-			paymentPageParam.setToken(MD5Util.digestInHexFormat(token));
+			paymentPageParam.setToken(MD5Utils.digestInHexFormat(token));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7201", e);
 		}

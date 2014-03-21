@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.vo;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -90,14 +92,17 @@ public class PaymentPageParam extends CommonInfo {
 		// .append(";nmDevice=").append(this.nmDevice).append(";imei=").append(this.imei).append(";uacd=")
 		// .append(this.uacd).append(";typeNetwork=").append(this.typeNetwork).append(";carrier=")
 		// .append(this.carrier).append(";noSim=").append(this.noSim).append(";flgSim=").append(this.flgSim);
-		sb.append("mid=").append(this.mid).append(";orderId=").append(this.orderId).append(";mctTrDate=")
-				.append(this.mctTrDate).append(";amtPurchase=").append(this.amtPurchase).append(";pid=")
-				.append(this.pid).append(";pName=").append(this.pName).append(";aid=").append(this.aid)
-				.append(";returnFormat=").append(this.returnFormat).append(";flgMchtAuth=").append(this.flgMchtAuth)
-				.append(";mctSpareParam=").append(this.mctSpareParam).append(";mdn=").append(this.mdn)
-				.append(";nmDevice=").append(this.nmDevice).append(";imei=").append(this.imei).append(";uacd=")
-				.append(this.uacd).append(";typeNetwork=").append(this.typeNetwork).append(";carrier=")
-				.append(this.carrier).append(";noSim=").append(this.noSim).append(";flgSim=").append(this.flgSim);
+		sb.append("mid=").append(this.mid).append("&orderId=").append(this.orderId).append("&mctTrDate=")
+				.append(this.mctTrDate).append("&amtPurchase=").append(this.amtPurchase).append("&pid=")
+				.append(this.pid).append("&pName=").append(this.pName).append("&aid=")
+				.append(StringUtils.defaultString(this.aid)).append("&returnFormat=").append(this.returnFormat)
+				.append("&flgMchtAuth=").append(this.flgMchtAuth).append("&mctSpareParam=").append(this.mctSpareParam)
+				.append("&mdn=").append(this.mdn).append("&nmDevice=").append(StringUtils.defaultString(this.nmDevice))
+				.append("&imei=").append(StringUtils.defaultString(this.imei)).append("&uacd=")
+				.append(StringUtils.defaultString(this.uacd)).append("&typeNetwork=").append(this.typeNetwork)
+				.append("&carrier=").append(this.carrier).append("&noSim=")
+				.append(StringUtils.defaultString(this.noSim)).append("&flgSim=")
+				.append(StringUtils.defaultString(this.flgSim));
 
 		return sb.toString();
 	}

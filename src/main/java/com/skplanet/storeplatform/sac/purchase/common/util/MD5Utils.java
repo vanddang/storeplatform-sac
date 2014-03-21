@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.purchase.order;
+package com.skplanet.storeplatform.sac.purchase.common.util;
 
 import java.security.MessageDigest;
 
@@ -17,7 +17,7 @@ import java.security.MessageDigest;
  * 
  * Updated on : 2014. 3. 14. Updated by : 이승택, nTels.
  */
-public class MD5Util {
+public class MD5Utils {
 
 	/**
 	 * 
