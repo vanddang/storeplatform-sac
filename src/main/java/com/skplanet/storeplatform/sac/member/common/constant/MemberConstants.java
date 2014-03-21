@@ -187,6 +187,11 @@ public final class MemberConstants {
 	public static final String USER_STOP_STATUS_NOMAL = "80"; // 직권중지 해제
 	public static final String USER_STOP_STATUS_PAUSE = "90"; // 직권중지 설정
 
+	/** 법정대리인 관계 코드. */
+	public static final String PARENT_TYPE_FATHER = "US011801"; // 아버지
+	public static final String PARENT_TYPE_MOTHER = "US011802"; // 어머니
+	public static final String PARENT_TYPE_ECT = "US011803"; // 기타
+
 	/** 탈퇴 사유 코드. */
 	public static final String WITHDRAW_REASON_OTHER = "US010408"; // 기타
 

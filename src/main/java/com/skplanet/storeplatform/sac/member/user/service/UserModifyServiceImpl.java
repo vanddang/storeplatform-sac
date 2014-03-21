@@ -963,10 +963,10 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 * @return 통합 IDP 코드 (10 : 내국인, 20 : 외국인)
 	 */
 	private String convertParentType(String parentType) {
-		if (StringUtils.equals(parentType, "F")) {
-			return "0"; // 부
-		} else if (StringUtils.equals(parentType, "M")) {
-			return "1"; // 모
+		if (StringUtils.equals(parentType, MemberConstants.PARENT_TYPE_FATHER)) {
+			return "0"; // 아버지
+		} else if (StringUtils.equals(parentType, MemberConstants.PARENT_TYPE_MOTHER)) {
+			return "1"; // 어머니
 		} else {
 			return "2"; // 기타
 		}
