@@ -649,7 +649,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info(":::::::::::::::::: device update field start ::::::::::::::::::");
 
-		if (StringUtil.isNotBlank(deviceId)) {
+		if (StringUtil.isNotBlank(deviceId) && !StringUtil.equals(deviceId, userMbrDevice.getDeviceID())) {
+			LOGGER.info("[deviceId] {} -> {}", userMbrDevice.getDeviceID(), deviceId);
 			userMbrDevice.setDeviceID(deviceId);
 		}
 
