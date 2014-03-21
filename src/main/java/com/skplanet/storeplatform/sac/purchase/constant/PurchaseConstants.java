@@ -52,6 +52,9 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 
 	/** T Store Cash */
 	/* 서비스 타입 */
+	public static final String TSTORE_CASH_CLASS_POINT = "01";
+	public static final String TSTORE_CASH_CLASS_CASH = "02";
+
 	public static final String TSTORE_CASH_SVC_TYPE_INQUIRY = "01"; // 조회
 	public static final String TSTORE_CASH_SVC_TYPE_CHARGE = "02"; // 충전
 	public static final String TSTORE_CASH_SVC_TYPE_USE = "03"; // 사용
