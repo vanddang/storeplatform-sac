@@ -3,7 +3,7 @@
 <mapper namespace="OtherParentStatus">
     
     <select id="selectParentProductStatus" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo">
-        SELECT /* ProductStatus.xml, selectParentProductStatus, SAC : 정희원 , 2014-02-17 */
+        SELECT /* OtherParentStatus.selectParentProductStatus, 부모상품 판매 상태 조회, 정희원/SK플래닛 , 2014-02-17 */
             RS.PROD_ID as "parentChannelId",
             TP.PROD_STATUS_CD as "parentStatus",
             PARDESC.PROD_NM as "parentName",

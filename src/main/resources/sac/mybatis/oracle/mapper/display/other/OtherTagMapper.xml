@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="OtherTag">
-	<!-- 특정 단말 정보 조회-->
+	<!-- 상품에 등록된 태그 조회 -->
 	<select id="searchTagList" parameterType="Map" resultType="MetaInfo">
-		SELECT /* OtherTagMapper.xml, searchTagList, SAC 전시, 2014-02-06 */
+		SELECT /* OtherTagMapper.searchTagList, searchTagList, 오승민/인크로스, 2014-02-06 */
             TAG_CD
            ,TAG_NM
            ,TAG_TYPE_CD
