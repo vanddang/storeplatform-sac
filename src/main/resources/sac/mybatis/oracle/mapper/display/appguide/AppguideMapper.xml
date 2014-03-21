@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Appguide">
     <select id="getVersion" parameterType="java.util.Map" resultType="Appguide">
-    SELECT /* AppguideMapper.xml, getVersion, SAC 전시, 윤주영/GTSoft, 2014-02-28 */
+    SELECT /* AppguideMapper.xml, getVersion, 앱가이드 버전정보 조회, 윤주영/SK플래닛  , 2014-02-28 */
            *
     FROM   (
             SELECT  P.*
