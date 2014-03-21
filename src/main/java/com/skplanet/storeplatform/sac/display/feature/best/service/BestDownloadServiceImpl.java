@@ -194,7 +194,9 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						reqMap.put("productBasicInfo", productBasicInfo);
 						MetaInfo retMetaInfo = null;
 						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
-								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) {
+								|| DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(menuIdSubString)
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(menuIdSubString)) {
 							// 이북, 코믹
 							reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 							retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
