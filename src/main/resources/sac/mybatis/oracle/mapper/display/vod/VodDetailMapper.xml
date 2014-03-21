@@ -272,10 +272,10 @@
                               , J.USE_PERIOD, J.USE_PERIOD_UNIT_CD,( SELECT CHAPTER FROM UV_TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID) AS CHAPTER
                               , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', O.PROD_AMT ) AS STORE_PROD_AMT, DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', NULL, O.PROD_AMT ) AS PLAY_PROD_AMT
                               , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', J.DRM_YN ) AS STORE_DRM_YN, DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', NULL, J.DRM_YN ) AS PLAY_DRM_YN
-                              , E.GENRE_CD, E.ISSUE_DAY, E.BRDC_COMP_CD, E.SVC_START_DT, E.CHNL_COMP_NM
-                              , E.HDCP_YN, E.HDV_YN, E.DOLBY_SPRT_YN, L.DOLBY_SPRT_YN AS DOLBY_YN
+                              , P.GENRE_CD, P.ISSUE_DAY, P.BRDC_COMP_CD, P.SVC_START_DT, P.CHNL_COMP_NM
+                              , P.HDCP_YN, P.HDV_YN, P.DOLBY_SPRT_YN, L.DOLBY_SPRT_YN AS DOLBY_YN
                               , M.EPSD_PLAY_TM, J.PROD_GRD_CD
-                              , E.DWLD_AREA_LIMT_YN, E.DWLD_NETWORK_CD, E.STRM_NETWORK_CD
+                              , P.DWLD_AREA_LIMT_YN, P.DWLD_NETWORK_CD, P.STRM_NETWORK_CD
                               , M.FILE_PATH
                               , J.SELLER_MBR_NO, J.EXPO_SELLER_NM, J.EXPO_SELLER_TELNO, J.EXPO_SELLER_EMAIL
                               , P.SAMPL_URL, P.SC_SAMPL_URL
@@ -285,7 +285,7 @@
                               , ( CASE WHEN ( M.AUDIO_TYPE_CD = 'PD002215' AND M.DP_PG_QULT_CD = 'PD009702' ) THEN
                                     M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER
                                   END ) AS SD_SUB_CONTS_DB
-                              , ( CASE WHEN ( E.HDV_YN = 'Y' AND M.AUDIO_TYPE_CD = 'PD002215' AND M.DP_PG_QULT_CD = 'PD009703' ) THEN
+                              , ( CASE WHEN ( P.HDV_YN = 'Y' AND M.AUDIO_TYPE_CD = 'PD002215' AND M.DP_PG_QULT_CD = 'PD009703' ) THEN
                                      M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER
                                   END ) AS HD_SUB_CONTS_DB
                               , ( CASE WHEN ( ( M.AUDIO_TYPE_CD IS NULL OR M.AUDIO_TYPE_CD != 'PD002215' ) AND M.DP_PG_QULT_CD = 'PD009701' ) THEN
@@ -294,7 +294,7 @@
                               , ( CASE WHEN ( ( M.AUDIO_TYPE_CD IS NULL OR M.AUDIO_TYPE_CD != 'PD002215' ) AND M.DP_PG_QULT_CD = 'PD009702' ) THEN
                                     M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER
                                   END ) AS SD_SUB_CONTS
-                              , ( CASE WHEN (  E.HDV_YN = 'Y' AND ( M.AUDIO_TYPE_CD IS NULL OR M.AUDIO_TYPE_CD != 'PD002215' ) AND M.DP_PG_QULT_CD = 'PD009703' ) THEN
+                              , ( CASE WHEN (  P.HDV_YN = 'Y' AND ( M.AUDIO_TYPE_CD IS NULL OR M.AUDIO_TYPE_CD != 'PD002215' ) AND M.DP_PG_QULT_CD = 'PD009703' ) THEN
                                    M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER
                                   END ) AS HD_SUB_CONTS
                               FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
