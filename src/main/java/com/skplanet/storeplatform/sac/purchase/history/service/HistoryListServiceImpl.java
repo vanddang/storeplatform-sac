@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.history.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Produc
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
@@ -292,67 +296,71 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 * device Info Mapping Start
 		 **************************************************/
 		this.logger.info("##### HistoryList DeviceInfo Start");
-		// SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
-		// SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
-		//
-		// boolean useInfo = true; // 회원정보 조회 안되면 false
-		// boolean sendInfo = true; // 회원정보 조회 안되면 false
-		//
-		// this.logger.debug("### searchUserDeviceSacReq  : {}" + searchUserDeviceSacReq.toString());
-		//
-		// if (deviceList.size() > 0) {
-		// // member request parameter set
-		// searchUserDeviceSacReq.setDeviceKeyList(deviceList);
-		// try {
-		// // member InternalSCI Call
-		// searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
-		// } catch (Exception e) {
-		// useInfo = false;
-		// this.logger.info("---------------------------------------------------");
-		// this.logger.info("------Use Device Info null");
-		// this.logger.info("---------------------------------------------------");
-		// }
-		// }
-		//
-		// if (sendDeviceList.size() > 0) {
-		// searchUserDeviceSacReq = new SearchUserDeviceSacReq();
-		// searchUserDeviceSacReq.setDeviceKeyList(sendDeviceList);
-		// try {
-		// // member InternalSCI Call
-		// searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
-		// } catch (Exception e) {
-		// sendInfo = false;
-		// this.logger.info("---------------------------------------------------");
-		// this.logger.info("------Send Device Info null");
-		// this.logger.info("---------------------------------------------------");
-		// }
-		// }
-		//
-		// UserDeviceInfoSac deviceResult;
-		// UserDeviceInfoSac sendDeviceResult;
-		//
-		// // member response set
-		// for (HistorySac obj : sacHistoryList) {
-		//
-		// if (useInfo) {
-		// Map<String, UserDeviceInfoSac> deviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
-		// deviceResult = new UserDeviceInfoSac();
-		// deviceResult = deviceMap.get(obj.getUseDeviceKey());
-		// if (deviceResult != null) {
-		// obj.setUseDeviceId(deviceResult.getDeviceId());
-		// }
-		// }
-		//
-		// if (sendInfo) {
-		// Map<String, UserDeviceInfoSac> sendDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
-		// sendDeviceResult = new UserDeviceInfoSac();
-		// sendDeviceResult = sendDeviceMap.get(obj.getSendDeviceKey());
-		//
-		// if (sendDeviceResult != null) {
-		// obj.setSendDeviceId(sendDeviceResult.getDeviceId());
-		// }
-		// }
-		// }
+		SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
+
+		Map<String, UserDeviceInfoSac> useDeviceMap = new HashMap<String, UserDeviceInfoSac>();
+		Map<String, UserDeviceInfoSac> sendDeviceMap = new HashMap<String, UserDeviceInfoSac>();
+
+		boolean useInfo = true; // 회원정보 조회 안되면 false
+		boolean sendInfo = true; // 회원정보 조회 안되면 false
+
+		this.logger.debug("### searchUserDeviceSacReq  : {}" + searchUserDeviceSacReq.toString());
+
+		if (deviceList.size() > 0) {
+			// member request parameter set
+			searchUserDeviceSacReq.setDeviceKeyList(deviceList);
+			try {
+				// member InternalSCI Call
+				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+				useDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
+			} catch (Exception e) {
+				useInfo = false;
+				this.logger.info("---------------------------------------------------");
+				this.logger.info("------Use Device Info null");
+				this.logger.info("---------------------------------------------------");
+			}
+		}
+
+		if (sendDeviceList.size() > 0) {
+			searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+			searchUserDeviceSacReq.setDeviceKeyList(sendDeviceList);
+			try {
+				// member InternalSCI Call
+				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+				sendDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
+			} catch (Exception e) {
+				sendInfo = false;
+				this.logger.info("---------------------------------------------------");
+				this.logger.info("------Send Device Info null");
+				this.logger.info("---------------------------------------------------");
+			}
+		}
+
+		UserDeviceInfoSac deviceResult;
+		UserDeviceInfoSac sendDeviceResult;
+
+		// member response set
+		for (HistorySac obj : sacHistoryList) {
+
+			if (useInfo) {
+				deviceResult = new UserDeviceInfoSac();
+				deviceResult = useDeviceMap.get(obj.getUseDeviceKey());
+
+				if (deviceResult != null) {
+					obj.setUseDeviceId(deviceResult.getDeviceId());
+				}
+			}
+
+			if (sendInfo) {
+				sendDeviceResult = new UserDeviceInfoSac();
+				sendDeviceResult = sendDeviceMap.get(obj.getSendDeviceKey());
+
+				if (sendDeviceResult != null) {
+					obj.setSendDeviceId(sendDeviceResult.getDeviceId());
+				}
+			}
+		}
 		this.logger.info("##### HistoryList DeviceInfo End");
 		/*************************************************
 		 * device Info Mapping End
