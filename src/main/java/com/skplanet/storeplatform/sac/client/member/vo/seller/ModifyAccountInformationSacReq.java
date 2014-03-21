@@ -128,6 +128,9 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	/** 유선 전화번호(사업장). */
 	private String cordedTelephone; // WIRE_TEL_NO 유선전화번호
 
+	/** 은행BSB . */
+	private String bankBsb; //
+
 	/** 서류 관련 리스트. */
 	private List<ExtraDocument> extraDocumentList;
 
@@ -684,6 +687,21 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	 */
 	public void setCordedTelephone(String cordedTelephone) {
 		this.cordedTelephone = cordedTelephone;
+	}
+
+	/**
+	 * @return the bankBsb
+	 */
+	public String getBankBsb() {
+		return this.bankBsb;
+	}
+
+	/**
+	 * @param bankBsb
+	 *            the bankBsb to set
+	 */
+	public void setBankBsb(String bankBsb) {
+		this.bankBsb = bankBsb;
 	}
 
 	/**

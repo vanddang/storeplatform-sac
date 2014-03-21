@@ -112,7 +112,8 @@ public class ConversionClassSacReq extends CommonInfo {
 	private String marketStatus;
 	/** 계좌인증일시. */
 	private String accountRealDate;
-
+	/** 은행BSB . */
+	private String bankBsb; //
 	/** 서류 리스트. */
 	private List<ExtraDocument> extraDocumentList;
 
@@ -819,6 +820,21 @@ public class ConversionClassSacReq extends CommonInfo {
 	 */
 	public void setExtraDocumentList(List<ExtraDocument> extraDocumentList) {
 		this.extraDocumentList = extraDocumentList;
+	}
+
+	/**
+	 * @return the bankBsb
+	 */
+	public String getBankBsb() {
+		return this.bankBsb;
+	}
+
+	/**
+	 * @param bankBsb
+	 *            the bankBsb to set
+	 */
+	public void setBankBsb(String bankBsb) {
+		this.bankBsb = bankBsb;
 	}
 
 	/**
