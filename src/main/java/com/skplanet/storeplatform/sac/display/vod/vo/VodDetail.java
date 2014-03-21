@@ -95,6 +95,7 @@ public class VodDetail extends CommonInfo {
 
 	/** */
 	private String usagePeriod;
+    private String usageUnitName;
 
 	/** 다운로드 지역제한 */
 	private String dwldAreaLimtYn;
@@ -243,7 +244,15 @@ public class VodDetail extends CommonInfo {
 	private String hdDpPicRatio;
 
 
-	public String getTopMenuId() {
+    public String getUsageUnitName() {
+        return usageUnitName;
+    }
+
+    public void setUsageUnitName(String usageUnitName) {
+        this.usageUnitName = usageUnitName;
+    }
+
+    public String getTopMenuId() {
 		return this.topMenuId;
 	}
 

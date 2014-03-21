@@ -334,8 +334,7 @@ public class VodServiceImpl implements VodService {
 	 * @param mapperVO
 	 * @param req
 	 * @param existenceMap
-	 * @param rights
-	 * @return 
+	 * @return
 	 */
 	private Store mapStore(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
 		Store store = null;
@@ -383,11 +382,9 @@ public class VodServiceImpl implements VodService {
 	 * @param mapperVO
 	 * @param req
 	 * @param existenceMap
-	 * @param rights
-	 * @return 
+	 * @return
 	 */
 	private Play mapPlay(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
-		Date date;
 		Play play = null;
 		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
 			play = new Play();
@@ -400,9 +397,8 @@ public class VodServiceImpl implements VodService {
 			playSupport.setText(mapperVO.getPlayDrmYn());
 			play.setSupport(playSupport);
 
-			date = new Date();
-			date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-			date.setText(mapperVO.getUsagePeriod());
+            play.setDate(new Date(DisplayConstants.DP_DATE_USAGE_PERIOD, mapperVO.getUsagePeriod(), mapperVO.getUsageUnitName()));
+
 			playPrice.setText(mapperVO.getPlayProdAmt() == null ? 0 : mapperVO.getPlayProdAmt());
 
 			Source source = null;
@@ -412,7 +408,6 @@ public class VodServiceImpl implements VodService {
 				source.setUrl(mapperVO.getFilePath());
 			}
 
-			play.setDate(date); // 이용기간
 			play.setPrice(playPrice); // 바로보기 상품 금액
 			if (mapperVO.getStrmNetworkCd() != null) {
 				play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
