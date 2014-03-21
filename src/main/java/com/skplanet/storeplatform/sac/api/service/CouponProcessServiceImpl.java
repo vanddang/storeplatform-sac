@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -32,6 +31,7 @@ import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
 import com.skplanet.storeplatform.sac.api.util.CSVReader;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.SpRegistProd;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
@@ -47,7 +47,6 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
@@ -993,7 +992,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private boolean validateBusinessPartner(DpCouponInfo couponInfo) {
 		this.log.info("■■■■■ validateBusinessPartner ■■■■■");
 		this.log.info("################ [SAC DP LocalSCI] SAC Member Stat : sellerSearchSCI.detailInformation : "
-				+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.KOREA).format(new Date()));
+				+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 		DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
@@ -1027,7 +1026,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				}
 			}
 			this.log.info("################ [SAC DP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation : "
-					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.KOREA));
+					+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", couponInfo.getBpId());
