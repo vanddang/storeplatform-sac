@@ -211,7 +211,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						historyReq.setProductList(productList);
 
 						// 구매내역 조회 실행
+						this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+						long start = System.currentTimeMillis();
 						historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
+						this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
+						long end = System.currentTimeMillis();
+						this.log.debug(
+								"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
+								(end - start));
 
 					} catch (Exception ex) {
 						purchaseFlag = false;
@@ -220,9 +227,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					}
 
 					this.log.debug("---------------------------------------------------------------------");
-					this.log.debug("[DownloadAppServiceImpl]	== historyRes :" + historyRes);
-					this.log.debug("[DownloadAppServiceImpl]	== purchaseFlag :" + purchaseFlag);
-					this.log.debug("[DownloadAppServiceImpl]	== historyRes.getTotalCnt() :" + historyRes.getTotalCnt());
+					this.log.debug("[DownloadAppServiceImpl] historyRes :{}" + historyRes);
+					this.log.debug("[DownloadAppServiceImpl] purchaseFlag :{}" + purchaseFlag);
+					this.log.debug("[DownloadAppServiceImpl] historyRes.getTotalCnt() :{}" + historyRes.getTotalCnt());
 					this.log.debug("---------------------------------------------------------------------");
 					if (purchaseFlag && historyRes != null) {
 
@@ -294,7 +301,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										deviceReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
 
 										// 기기정보 조회
+										this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
+										long start = System.currentTimeMillis();
 										deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
+										this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
+										long end = System.currentTimeMillis();
+										this.log.debug(
+												"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
+												(end - start));
 									} catch (Exception ex) {
 										memberFlag = false;
 										this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
@@ -325,8 +339,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 												uapsEcReq.setType("mdn");
 
 												try {
+													this.log.debug("##### [SAC DSP LocalSCI] SAC EC Start : uapsSCI.getMappingInfo");
+													long start = System.currentTimeMillis();
 													uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
-
+													this.log.debug("##### [SAC DSP LocalSCI] SAC EC End : uapsSCI.getMappingInfo");
+													long end = System.currentTimeMillis();
+													this.log.debug(
+															"##### [SAC DSP LocalSCI] SAC Member uapsSCI.getMappingInfo takes {} ms",
+															(end - start));
 													this.log.debug("#########################################################");
 													for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
 														this.log.debug("[DownloadAppServiceImpl] :	serviceCd	"

@@ -177,6 +177,8 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 				sellerMbrSacList.add(sellerMbrSac);
 				detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
 
+				this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
+				long start = System.currentTimeMillis();
 				try {
 					detailInformationSacRes = this.sellerSearchSCI.detailInformation(detailInformationSacReq);
 					Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
@@ -191,7 +193,10 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 				} catch (Exception e) {
 					company = "";
 				}
-
+				this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation");
+				long end = System.currentTimeMillis();
+				this.log.debug("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformation takes {} ms",
+						(end - start));
 				metaInfo.setSellerMbrNo(null);
 				metaInfo.setCompany(company);
 				product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));

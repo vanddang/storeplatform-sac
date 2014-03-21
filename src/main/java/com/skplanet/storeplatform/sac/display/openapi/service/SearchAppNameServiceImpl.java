@@ -24,7 +24,6 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -56,8 +55,6 @@ public class SearchAppNameServiceImpl implements SearchAppNameService {
 	private CommonMetaInfoGenerator commonGenerator;
 	@Autowired
 	private AppInfoGenerator appInfoGenerator;
-	@Autowired
-	private SellerSearchSCI sellerSearchSCI;
 
 	/*
 	 * (non-Javadoc)

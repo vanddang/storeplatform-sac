@@ -183,7 +183,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						historyReq.setProductList(productList);
 
 						// 구매내역 조회 실행
+						this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+						long start = System.currentTimeMillis();
 						historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
+						this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
+						long end = System.currentTimeMillis();
+						this.log.debug(
+								"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
+								(end - start));
 
 					} catch (Exception ex) {
 						purchaseFlag = false;
@@ -246,7 +253,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								 * 구매 정보에 따른 암호화 시작
 								 ************************************************************************************************/
 								this.log.debug("----------------------------------------------------------------");
-								this.log.debug("[DownloadVodInfo] prchsState	:	" + prchsState);
+								this.log.debug("[DownloadVodInfo] prchsState	:	{}", prchsState);
 								this.log.debug("----------------------------------------------------------------");
 
 								// 구매상태 만료 여부 확인
@@ -264,7 +271,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
 
 										// 기기정보 조회
+										this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
+										long start = System.currentTimeMillis();
 										deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
+										this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
+										long end = System.currentTimeMillis();
+										this.log.debug(
+												"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
+												(end - start));
 										this.log.debug("---------------------------------------------------------------");
 										this.log.debug("[DownloadVodInfo] deviceRes.getDeviceId{} : "
 												+ deviceRes.getDeviceId());
@@ -277,8 +291,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									}
 
 									this.log.debug("----------------------------------------------------------------");
-									this.log.debug("[DownloadVodInfo] memberFlag	:	" + memberFlag);
-									this.log.debug("[DownloadVodInfo] deviceRes	:	" + deviceRes);
+									this.log.debug("[DownloadVodInfo] memberFlag	:	{}", memberFlag);
+									this.log.debug("[DownloadVodInfo] deviceRes	:	{}", deviceRes);
 									this.log.debug("----------------------------------------------------------------");
 
 									if (memberFlag && deviceRes != null) {
@@ -286,13 +300,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										this.log.debug("[DownloadVodInfo] Start Encription");
 
 										deviceId = deviceRes.getDeviceId();
-										this.log.debug("[DownloadVodInfo] deviceId	: {}" + deviceId);
+										this.log.debug("[DownloadVodInfo] deviceId	: {}", deviceId);
 										deviceIdType = this.commonService.getDeviceIdType(deviceId);
-										this.log.debug("[DownloadVodInfo] deviceIdType	:	{}" + deviceIdType);
-										this.log.debug("[DownloadVodInfo] reqExpireDate	:	{}" + reqExpireDate);
-										this.log.debug("[DownloadVodInfo] useExprDt	:	{}" + useExprDt);
-										this.log.debug("[DownloadVodInfo] userKey	:	{}" + userKey);
-										this.log.debug("[DownloadVodInfo] deviceKey	:	{}" + deviceKey);
+										this.log.debug("[DownloadVodInfo] deviceIdType	:	{}", deviceIdType);
+										this.log.debug("[DownloadVodInfo] reqExpireDate	:	{}", reqExpireDate);
+										this.log.debug("[DownloadVodInfo] useExprDt	:	{}", useExprDt);
+										this.log.debug("[DownloadVodInfo] userKey	:	{}", userKey);
+										this.log.debug("[DownloadVodInfo] deviceKey	:	{}", deviceKey);
 
 										metaInfo.setExpiredDate(reqExpireDate);
 										metaInfo.setUseExprDt(useExprDt);
@@ -320,12 +334,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										EncryptionContents contents = this.encryptionGenerator
 												.generateEncryptionContents(metaInfo);
 
-										this.log.debug("[DownloadVodInfo] contents	:	" + contents);
+										this.log.debug("[DownloadVodInfo] contents	:	{}", contents);
 
 										// JSON 파싱
 										MarshallingHelper marshaller = new JacksonMarshallingHelper();
 										byte[] jsonData = marshaller.marshal(contents);
-										this.log.debug("[DownloadVodInfo] jsonData	:	" + jsonData.toString());
+										this.log.debug("[DownloadVodInfo] jsonData	:	{}", jsonData.toString());
 
 										// JSON 암호화
 										byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
@@ -340,10 +354,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 												.getSacRandomNo()));
 										encryption.setToken(encryptString);
 										encryptionList.add(encryption);
-										this.log.debug("[DownloadVodInfo] keyIndex	:	"
-												+ String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
+										this.log.debug("[DownloadVodInfo] keyIndex	:	{}",
+												String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
 
-										this.log.debug("[DownloadVodInfo] Token	:	" + encryptString);
+										this.log.debug("[DownloadVodInfo] Token	:	{}", encryptString);
 
 										// JSON 복호화
 										byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
