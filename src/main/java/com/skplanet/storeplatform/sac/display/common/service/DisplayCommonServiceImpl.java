@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ import com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq;
  */
 @Service
 public class DisplayCommonServiceImpl implements DisplayCommonService {
+
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -91,7 +95,13 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		itemScList.add(itemSc);
 		existenceScReq.setProductList(itemScList);
 
+		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
+		long start = System.currentTimeMillis();
 		List<ExistenceScRes> resList = this.existenceSCI.searchExistenceList(existenceScReq);
+		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : existenceSCI.searchExistenceList");
+		long end = System.currentTimeMillis();
+		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase existenceSCI.searchExistenceList takes {} ms",
+				(end - start));
 		return resList != null && resList.size() > 0;
 	}
 
@@ -111,6 +121,14 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		}
 		existenceScReq.setProductList(itemScList);
 
-		return this.existenceSCI.searchExistenceList(existenceScReq);
+		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
+		long start = System.currentTimeMillis();
+		List<ExistenceScRes> existenceListRes = this.existenceSCI.searchExistenceList(existenceScReq);
+		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : existenceSCI.searchExistenceList");
+		long end = System.currentTimeMillis();
+		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase existenceSCI.searchExistenceList takes {} ms",
+				(end - start));
+
+		return existenceListRes;
 	}
 }
