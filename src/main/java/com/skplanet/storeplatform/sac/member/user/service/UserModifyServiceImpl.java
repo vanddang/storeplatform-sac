@@ -683,6 +683,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrLglAgent.setParentRealNameDate(req.getRealNameDate()); // 법정대리인 실명인증 일시
 			mbrLglAgent.setParentRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 법정대리인 실명인증 사이트 코드
 			mbrLglAgent.setParentRealNameMethod(req.getRealNameMethod()); // 법정대리인 실명인증 수단코드
+			mbrLglAgent.setIsDomestic(this.convertIsDomestic(req.getResident())); // 내외국인 구분 (Y : 내국인, N : 외국인)
 			updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
 
 			/**
