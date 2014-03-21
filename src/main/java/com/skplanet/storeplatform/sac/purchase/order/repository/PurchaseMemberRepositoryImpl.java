@@ -28,6 +28,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.Ge
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
@@ -67,11 +68,16 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	 */
 	@Override
 	public PurchaseUserDevice searchUserDeviceByKey(String tenantId, String userKey, String deviceKey) {
-		List<String> deviceKeyList = new ArrayList<String>();
-		deviceKeyList.add(deviceKey);
+
+		SearchUserDeviceSac searchUserDeviceSac = new SearchUserDeviceSac();
+		searchUserDeviceSac.setUserKey(userKey);
+		searchUserDeviceSac.setDeviceKey(deviceKey);
+
+		List<SearchUserDeviceSac> searchUserDeviceSacList = new ArrayList<SearchUserDeviceSac>();
+		searchUserDeviceSacList.add(searchUserDeviceSac);
 
 		SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
-		searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
+		searchUserDeviceSacReq.setSearchUserDeviceReqList(searchUserDeviceSacList);
 
 		SearchUserDeviceSacRes searchUserDeviceSacRes = null;
 		try {
