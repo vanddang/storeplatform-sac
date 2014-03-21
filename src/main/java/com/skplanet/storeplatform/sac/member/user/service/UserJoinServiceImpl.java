@@ -885,7 +885,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 */
 	private List<DeviceExtraInfo> getDeviceExtra(List<DeviceExtraInfo> deviceExtraInfoList, MajorDeviceInfo majorDeviceInfo) {
 
-		LOGGER.info("## 세팅 전 deviceExtraInfoList : {}", deviceExtraInfoList.toString());
+		LOGGER.info("## 세팅 전 deviceExtraInfoList : {}", deviceExtraInfoList);
+
+		if (deviceExtraInfoList == null) {
+			deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		}
 
 		/**
 		 * UA 코드 추가.
@@ -909,7 +913,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceExtraInfoList.add(omdUacd);
 		}
 
-		LOGGER.info("## 세팅후 deviceExtraInfoList : {}", deviceExtraInfoList.toString());
+		LOGGER.info("## 세팅후 deviceExtraInfoList : {}", deviceExtraInfoList);
 
 		return deviceExtraInfoList;
 
