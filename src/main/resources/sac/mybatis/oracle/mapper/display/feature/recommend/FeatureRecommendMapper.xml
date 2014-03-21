@@ -97,7 +97,6 @@
 		                     , B.EXPO_ORD_ALWAYS_YN
 		                     , B.EXPO_ORD
 		                     , B.EXPO_ORD_SUB
-		                     , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS RN
 		                  FROM TB_DP_LIST A
 		                     , TB_DP_LIST_PROD B
 		                     , TB_DP_PROD_RSHP C
@@ -156,13 +155,15 @@
 		                   <if test='topMenuId == "DP13"'>
 		                   AND F.META_CLSF_CD IN ('CT19', 'CT20')  /* EBOOK */
 		                   </if>
+		                   <if test='topMenuId == "DP14"'>
+                           AND F.META_CLSF_CD = 'CT21'  /* COMIC */
+                           </if>
 		                   AND F.PROD_ID = G.PROD_ID
 		                   AND G.TENANT_ID = #{tenantId}
 		                   AND G.EXPO_YN = 'Y'
 		                   AND G.PROD_STATUS_CD = 'PD000403'
 		                   AND C.PART_PROD_ID = H.PROD_ID
 		              ) A
-		         WHERE RN = 1
 		      ) B
 		 WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 		 ORDER BY RNUM
