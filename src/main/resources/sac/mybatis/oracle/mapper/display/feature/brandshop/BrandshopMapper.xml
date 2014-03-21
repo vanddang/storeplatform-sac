@@ -125,7 +125,7 @@
     
     <!-- 브렌드샵 테마 상품 조회 -->
     <select id="selectBrandshopList" parameterType="BrandshopSacReq" resultType="ProductBasicInfo">
-        SELECT  /* BrandshopMapper.XML, selectBrandshop, SAC 전시, 2014-02-28 */    
+        SELECT  /* BrandshopMapper.XML, selectBrandshopList, SAC 전시, 2014-02-28 */    
             TOTAL_COUNT
             , PROD_ID
             , TOP_MENU_ID
