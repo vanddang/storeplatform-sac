@@ -86,7 +86,7 @@
         </layout>
     </appender>
     
-    <!-- ASUNCAPPENDER 추가 -->
+    <!-- ASYNC APPENDER 추가 -->
     <appender name="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </appender>
