@@ -108,6 +108,12 @@ public class SellerAccount extends CommonInfo {
 	 * 대표 전화번호 (개인 판매자). TODO 정확한 명칭 아직 확인 안됨.
 	 */
 	private String repPhone;
+
+	/**
+	 * 대표 이메일주소 (개인 판매자). TODO 정확한 명칭 아직 확인 안됨.
+	 */
+	private String repEmail;
+
 	/**
 	 * 벤더 코드.
 	 */
@@ -161,7 +167,6 @@ public class SellerAccount extends CommonInfo {
 	// 삭제된 파라미터.
 	// private String repFaxArea;
 	// private String repFax;
-	// private String repEmail;
 
 	/**
 	 * 은행BSB. 3/21 추가
@@ -599,6 +604,21 @@ public class SellerAccount extends CommonInfo {
 	 */
 	public String getVendorCode() {
 		return this.vendorCode;
+	}
+
+	/**
+	 * @return the repEmail
+	 */
+	public String getRepEmail() {
+		return this.repEmail;
+	}
+
+	/**
+	 * @param repEmail
+	 *            the repEmail to set
+	 */
+	public void setRepEmail(String repEmail) {
+		this.repEmail = repEmail;
 	}
 
 	/**
