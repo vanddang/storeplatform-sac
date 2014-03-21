@@ -633,7 +633,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerAccount.setBankLocation(req.getBankLocation()); // FR_BANK_LOC 외국은행 위치
 		sellerAccount.setTpinCode(req.getTpinCode()); // FR_TIN_NO 외국 tpin 번호
 		sellerAccount.setAccountRealDate(req.getAccountRealDate()); // ACCT_AUTH_DT 계좌인증일시
-
+		sellerAccount.setBankBsb(req.getBankBsb());
 		updateAccountSellerRequest.setSellerAccount(sellerAccount);
 
 		List<Document> documentList = null;
@@ -921,6 +921,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setIsRecvSMS(req.getIsRecvSMS());
 		sellerUpgrade.setCharger(req.getCharger());
 		sellerUpgrade.setSellerBizType(req.getSellerBizType());
+		sellerUpgrade.setBankBsb(req.getBankBsb());
 
 		upgradeSellerRequest.setSellerUpgrade(sellerUpgrade);
 
