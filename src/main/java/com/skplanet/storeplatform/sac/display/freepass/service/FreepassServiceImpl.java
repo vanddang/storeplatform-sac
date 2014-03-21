@@ -681,11 +681,11 @@ public class FreepassServiceImpl implements FreepassService {
 
 			// 구매내역 조회 실행
 			//################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : 2014-03-21 13:45:15.000
-			log.debug("################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : " + DateUtil.getToday());
+			log.debug("################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : " + DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 			// historyCountSacRes = this.historyInternalSCI.searchHistoryCount(historyCountSacReq);
 			historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
 			//################ [SAC DP LocalSCI] SAC Purchase End: historyInternalSCI.searchHistoryList : 2014-03-21 13:45:15.600
-			log.debug("################ [SAC DP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList : " + DateUtil.getToday());
+			log.debug("################ [SAC DP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList : " + DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 		} catch (Exception ex) {
 			throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 		}
