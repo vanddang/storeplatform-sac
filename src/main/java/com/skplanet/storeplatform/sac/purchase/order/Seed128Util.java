@@ -47,7 +47,7 @@ public class Seed128Util {
 		// 복호화된 byte 배열 저장할 리스트 선언
 		List<byte[]> decByteList = new ArrayList<byte[]>();
 
-		// IV를 저장하라 변수 선언
+		// IV
 		byte[] byteIV = new byte[16];// DEFAULT_IV.getBytes();
 
 		for (int i = 0; i < encByteList.size(); i++) {
@@ -89,7 +89,7 @@ public class Seed128Util {
 		List<byte[]> byteList = getByteList(strVal, false);
 		List<byte[]> encByteList = new ArrayList<byte[]>();
 
-		// IV를 저장하라 변수 선언
+		// IV
 		byte[] byteIV = new byte[16];// DEFAULT_IV.getBytes();
 		for (int i = 0; i < byteList.size(); i++) {
 			byte[] byteVal = byteList.get(i);
