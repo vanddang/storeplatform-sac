@@ -1023,7 +1023,7 @@
 		     , KA.PROD_AMT
 		     , KA.PRCHS_CNT
 		     , KA.AVG_EVLU_SCORE 
-		     , CONCAT( KC.FILE_PATH, KC.FILE_NM ) AS IMAGE_URL
+		     , CONCAT( KC.FILE_PATH, KC.FILE_NM ) AS IMAGE_PATH
 		  FROM
 		       (
 		        SELECT JA.*
