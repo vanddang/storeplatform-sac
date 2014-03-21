@@ -150,13 +150,14 @@ public class BestDownloadAppServiceImpl implements BestDownloadAppService {
 			while (iterator.hasNext()) {
 
 				MetaInfo metaInfo = iterator.next();
-				List<Identifier> identifierList = new ArrayList<Identifier>();
-
 				product = new Product();
-
-				Identifier identifier = this.commonGenerator.generateIdentifier(
+				List<Identifier> identifierList = new ArrayList<Identifier>();
+				Identifier chnlIdentifier = this.commonGenerator.generateIdentifier(
+						DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
+				identifierList.add(chnlIdentifier);
+				Identifier epsdIdentifier = this.commonGenerator.generateIdentifier(
 						DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
-				identifierList.add(identifier);
+				identifierList.add(epsdIdentifier);
 				product.setIdentifierList(identifierList); // 상품 ID
 				product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
 				product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지
