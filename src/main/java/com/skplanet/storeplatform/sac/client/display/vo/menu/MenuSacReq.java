@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.menu;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -73,6 +75,9 @@ public class MenuSacReq extends CommonInfo {
 	private String langCd; // language code
 
 	private String mmDeviceModelCd; // 멀티미디어 표준 단말
+
+	@Pattern(regexp = "|Y|N", groups = SearchSubMenuList.class)
+	private String featuredExposureYn; // Featured 여부
 
 	/**
 	 * 
@@ -248,4 +253,30 @@ public class MenuSacReq extends CommonInfo {
 	public void setMmDeviceModelCd(String mmDeviceModelCd) {
 		this.mmDeviceModelCd = mmDeviceModelCd;
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Featured 여부.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getFeaturedExposureYn() {
+		return this.featuredExposureYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Featured 여부.
+	 * </pre>
+	 * 
+	 * @param featuredExposureYn
+	 *            String
+	 */
+	public void setFeaturedExposureYn(String featuredExposureYn) {
+		this.featuredExposureYn = featuredExposureYn;
+	}
+
 }
