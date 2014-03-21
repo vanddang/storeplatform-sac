@@ -9,7 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -75,6 +77,10 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 	@Override
 	public CategoryVodBoxSacRes searchVodBoxList(CategoryVodBoxSacReq requestVO, SacRequestHeader requestHeader) {
 
+		// 한달전 날짜(yyyyMMddHHmmss)
+		Calendar currentDate = Calendar.getInstance();
+		currentDate.add(Calendar.MONTH, -1);
+
 		// 헤더 값 세팅
 		this.log.debug("헤더 값 세팅");
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
@@ -88,7 +94,8 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
 		requestVO.setDuration(requestVO.getDuration() != null ? requestVO.getDuration() : 30);
 		requestVO.setChapter(requestVO.getChapter() != null ? requestVO.getChapter() : 0);
-		requestVO.setRegDate(requestVO.getRegDate() != null ? requestVO.getRegDate() : "20000101000000");
+		requestVO.setRegDate(requestVO.getRegDate() != null ? requestVO.getRegDate() : new SimpleDateFormat(
+				"yyyyMMddHHmmss").format(currentDate.getTime()));
 		if (!StringUtils.isEmpty(requestVO.getChannelId())) {
 			requestVO.setArrayChannelId(StringUtils.split(requestVO.getChannelId(), "+"));
 		}
