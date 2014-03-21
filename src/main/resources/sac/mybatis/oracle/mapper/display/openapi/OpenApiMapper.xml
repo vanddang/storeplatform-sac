@@ -1641,9 +1641,9 @@
     </select>        
     
     <select id="searchProductByNameNoProvisioningList" parameterType="NoProvisionSacReq" resultType="MetaInfo">
-
-             SELECT  
+             SELECT  /* OpenApiMapper.searchProductByNameNoProvisioningList, 상품 검색 요청(By 상품명), 백승현/인크로스, 2014-03-21 */
                  TOTAL_COUNT                AS TOTAL_COUNT
+                ,PR.PROD_ID                 AS CHNL_PROD_ID
                 ,PP.PROD_ID                 AS PROD_ID
                 ,PP.PROD_NM                 AS PROD_NM
                 ,PP.PROD_BASE_DESC          AS PROD_BASE_DESC
@@ -1926,6 +1926,7 @@
     <![CDATA[
            SELECT  /* OpenApiMapper.searchProductByProductId, 상품ID로 상품 상세정보 조회, SAC 전시, 2014-03-03 */
                  DP.PROD_ID AS PROD_ID
+                ,DPR.PROD_ID AS CHNL_PROD_ID
                 ,DPD.PROD_NM AS PROD_NM 
                 ,DAP.AID AS AID
                 ,NVL((CASE
@@ -2073,11 +2074,18 @@
                         AND ROWNUM = 1
                     )  AS WEB_URL
               , (#{scUrl} || DP.PROD_ID ) AS TINY_URL
-          FROM TB_DP_PROD DP, TB_DP_APP_PROD DAP, TB_DP_PROD_DESC DPD, TB_DP_TENANT_PROD DTP, TB_DP_TENANT_PROD_PRICE DTPP
-         WHERE DP.PROD_ID = DAP.PROD_ID 
+          FROM TB_DP_PROD DP
+          , TB_DP_APP_PROD DAP
+          , TB_DP_PROD_RSHP DPR
+          , TB_DP_PROD_DESC DPD
+          , TB_DP_TENANT_PROD DTP
+          , TB_DP_TENANT_PROD_PRICE DTPP
+         WHERE DP.PROD_ID = DAP.PROD_ID
+           AND DP.PROD_ID = DPR.PART_PROD_ID                      
            AND DP.PROD_ID = DPD.PROD_ID
            AND DP.PROD_ID = DTP.PROD_ID
            AND DTP.PROD_ID = DTPP.PROD_ID    
+           AND DPR.PROD_RSHP_CD = 'DP010802'
            AND DP.PROD_ID = #{productId}
            AND DPD.LANG_CD = #{langCd}
            AND DTP.TENANT_ID = DTPP.TENANT_ID

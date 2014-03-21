@@ -157,6 +157,10 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 
 				List<Identifier> identifierList = new ArrayList<Identifier>();
 
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+						metaInfo.getChnlProdId());
+				identifierList.add(identifier);
+
 				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
 						metaInfo.getProdId());
 				identifierList.add(identifier);
