@@ -3,7 +3,7 @@
 <mapper namespace="BestApp">
     <!-- BEST 앱 상품 조회(추천, 인기(매출), 인기신규) -->
     <select id="selectBestAppList" parameterType="BestAppSacReq" resultType="ProductBasicInfo">
-		SELECT /* BestAppMapper.xml, selectBestAppList, SAC 전시, 2014-01-08 */
+		SELECT /* BestAppMapper.xml, selectBestAppList, SAC 전시, 2014-03-21 */
                KA.TOTAL_COUNT     /* 조회 건수 */
               ,KA.TOP_MENU_ID     /* 상위 MENU ID */
               ,KA.MENU_ID         /* MENU_ID */
@@ -31,10 +31,11 @@
                                                ,A.MENU_ID
                                                ,A.EXPO_ORD
                                            FROM TB_DP_LIST_PROD A
-                                          WHERE A.TENANT_ID = #{tenantId} /* header param : tenantId */ 
+                                          WHERE A.TENANT_ID = NVL(#{tenantId}, UID) /* header param : tenantId */ 
                                             AND A.LIST_ID = #{listId} /* param : listId */
                                             AND A.EXPO_YN = 'Y' /* 전시여부 */ 
                                             AND A.STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
+                                          ORDER BY A.TENANT_ID
                                        ) A
                                        ,TB_DP_PROD B
                                        ,TB_DP_MENU_CATEGORY_PROD_MAPG E
@@ -53,7 +54,7 @@
                                     AND A.PROD_ID = E.PROD_ID
                                     AND A.MENU_ID = E.MENU_ID                    
                                     AND E.MENU_ID = F.MENU_ID
-                                    AND F.USE_YN ='Y'                    
+                                    AND F.USE_YN  = 'Y'                    
                                     AND A.PROD_ID = H.PROD_ID
                                     AND A.TENANT_ID = I.TENANT_ID
                                     AND A.PROD_ID = I.PROD_ID
