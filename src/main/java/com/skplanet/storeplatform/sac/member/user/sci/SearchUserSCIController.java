@@ -3,6 +3,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
@@ -37,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSa
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDevice;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
@@ -213,11 +216,14 @@ public class SearchUserSCIController implements SearchUserSCI {
 		return payplanetSacRes;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * userKey, deviceKey 목록을 이용하여 회원정보 목록조회.
+	 * </pre>
 	 * 
-	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI
-	 * #searchUserPayplanet(com.skplanet .storeplatform.sac.client.internal.member .user.vo.SearchUserPayplanetSacReq)
+	 * @param request
+	 *            SearchUserDeviceSacReq
+	 * @return SearchUserDeviceSacRes
 	 */
 	@Override
 	@RequestMapping(value = "/searchUserByDeviceKey", method = RequestMethod.POST)
@@ -229,9 +235,24 @@ public class SearchUserSCIController implements SearchUserSCI {
 		LOGGER.info("[SearchUserSCIController.searchUserByDeviceKey] RequestHeader : {}, \nRequestParameter : {}",
 				requestHeader, request);
 
-		List<String> deviceKeyList = request.getDeviceKeyList();
+		// Respone 를 가지고 오기 위한 devceKeyList Setting
+		List<String> deviceKeyList = new ArrayList<String>();
+
+		// Request 를 보내기 위한 세팅
+		List<SearchUserDevice> schUserDeviceList = new ArrayList<SearchUserDevice>();
+
+		for (SearchUserDeviceSac schUserDevice : request.getSearchUserDeviceReqList()) {
+			String deviceKey = schUserDevice.getDeviceKey();
+			SearchUserDevice schUser = new SearchUserDevice();
+			schUser.setDeviceKey(schUserDevice.getDeviceKey());
+			schUser.setUserKey(schUserDevice.getUserKey());
+
+			schUserDeviceList.add(schUser);
+			deviceKeyList.add(deviceKey);
+		}
+
 		SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
-		searchUserDeviceReq.setDeviceKeyList(deviceKeyList);
+		searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
 		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader,
 				searchUserDeviceReq);
