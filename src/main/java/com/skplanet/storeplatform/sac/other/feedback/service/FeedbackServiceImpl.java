@@ -231,10 +231,10 @@ public class FeedbackServiceImpl implements FeedbackService {
 					updateTenantProdStats.setAction("remove");
 					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
 				}
+				// 웹툰일경우 채널ID에 에피소드들의 상품통계 평점을 계산한다.
+				this.setWebtoonChannelMbrAvgTenantStats(removeFeedbackSacReq.getProdId(), sacRequestHeader
+						.getTenantHeader().getTenantId(), removeFeedbackSacReq.getUserId());
 			}
-			// 웹툰일경우 채널ID에 에피소드들의 상품통계 평점을 계산한다.
-			this.setWebtoonChannelMbrAvgTenantStats(removeFeedbackSacReq.getProdId(), sacRequestHeader
-					.getTenantHeader().getTenantId(), removeFeedbackSacReq.getUserId());
 		}
 
 		// 사용후기 삭제, DEL_YN = 'Y'.
