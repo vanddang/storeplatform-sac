@@ -125,10 +125,10 @@ public class PurchaseOrderController {
 		if (StringUtils.equals(purchaseOrderInfo.getResultType(), "payment")) {
 			PaymentPageParam paymentPageParam = purchaseOrderInfo.getPaymentPageParam();
 
-			StringBuffer sbParam = new StringBuffer(paymentPageParam.geteData().length()
+			StringBuffer sbParam = new StringBuffer(paymentPageParam.getEData().length()
 					+ paymentPageParam.getToken().length() + 25);
 			sbParam.append("version=").append(paymentPageParam.getVersion()).append("&token=")
-					.append(paymentPageParam.getToken()).append("&eData=").append(paymentPageParam.geteData());
+					.append(paymentPageParam.getToken()).append("&EData=").append(paymentPageParam.getEData());
 
 			res.setPaymentPageParam(sbParam.toString());
 			res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());

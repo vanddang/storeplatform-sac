@@ -799,7 +799,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 암호화
 		String eData = paymentPageParam.makeEncDataFormat();
 		try {
-			paymentPageParam.seteData(Seed128Util.encrypt(eData, this.payplanetEncryptKey));
+			paymentPageParam.setEData(Seed128Util.encrypt(eData, this.payplanetEncryptKey));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7201", e);
 		}

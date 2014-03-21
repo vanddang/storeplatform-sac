@@ -24,7 +24,7 @@ public class PaymentPageParam extends CommonInfo {
 
 	private String version;
 	private String token; // MD5( AuthKey+OrderID+AmtPurchase+MID )
-	private String eData;
+	private String EData;
 
 	private String authKey; // 가맹점 인증키
 
@@ -137,16 +137,16 @@ public class PaymentPageParam extends CommonInfo {
 	/**
 	 * @return the eData
 	 */
-	public String geteData() {
-		return this.eData;
+	public String getEData() {
+		return this.EData;
 	}
 
 	/**
 	 * @param eData
 	 *            the eData to set
 	 */
-	public void seteData(String eData) {
-		this.eData = eData;
+	public void setEData(String eData) {
+		this.EData = eData;
 	}
 
 	/**
