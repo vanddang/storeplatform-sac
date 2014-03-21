@@ -292,6 +292,11 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private Support support;
 
+	/**
+	 * 방송사명
+	 */
+	private String brdcCompNm;
+
 	public String getSalesStatus() {
 		return this.salesStatus;
 	}
@@ -1173,6 +1178,21 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setSupport(Support support) {
 		this.support = support;
+	}
+
+	/**
+	 * @return the brdcCompNm
+	 */
+	public String getBrdcCompNm() {
+		return this.brdcCompNm;
+	}
+
+	/**
+	 * @param brdcCompNm
+	 *            the brdcCompNm to set
+	 */
+	public void setBrdcCompNm(String brdcCompNm) {
+		this.brdcCompNm = brdcCompNm;
 	}
 
 }
