@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.other.feedback.repository;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -38,6 +40,8 @@ import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 @Component
 public class FeedbackRepositoryImpl implements FeedbackRepository {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(FeedbackRepositoryImpl.class);
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -50,12 +54,19 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 
 	@Override
 	public DetailInformationSacRes detailInformation(DetailInformationSacReq detailInformationSacReq) {
-		return this.sellerSearchSCI.detailInformation(detailInformationSacReq);
+		LOGGER.info("################ [SAC OTH LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
+		DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
+				.detailInformation(detailInformationSacReq);
+		LOGGER.info("################ [SAC OTH LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
+		return detailInformationSacRes;
 	}
 
 	@Override
 	public SearchUserSacRes searchUserByUserKey(SearchUserSacReq searchUserSacReq) {
-		return this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
+		LOGGER.info("################ [SAC OTH LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
+		SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
+		LOGGER.info("################ [SAC OTH LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
+		return searchUserSacRes;
 	}
 
 	@Override
