@@ -100,6 +100,7 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 		Product product = null;
 
 		List<Product> productList = new ArrayList<Product>();
+		MetaInfo metaInfo = null;
 
 		if (req.getDummy() == null) {
 
@@ -169,10 +170,12 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 					reqMap.put("productBasicInfo", productBasicInfo);
 					reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-					MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+					// MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+					metaInfo = this.commonDAO.queryForObject("Webtoon.getWebtoonEpisodeMetaInfo", reqMap,
+							MetaInfo.class);
 
-					if (retMetaInfo != null) {
-						product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
+					if (metaInfo != null) {
+						product = this.responseInfoGenerateFacade.generateWebtoonProduct(metaInfo);
 						productList.add(product);
 					}
 				}
