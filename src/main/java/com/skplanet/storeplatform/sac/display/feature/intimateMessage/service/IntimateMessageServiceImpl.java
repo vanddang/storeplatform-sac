@@ -112,7 +112,14 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 				deviceReq.setDeviceKey(deviceKey);
 
 				// 기기변경 이력 조회
+				this.logger.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchChangedDeviceHistory");
+				long start = System.currentTimeMillis();
 				deviceRes = this.deviceSCI.searchChangedDeviceHistory(deviceReq);
+				this.logger.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchChangedDeviceHistory");
+				long end = System.currentTimeMillis();
+				this.logger.debug(
+						"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchChangedDeviceHistory takes {} ms",
+						(end - start));
 			} catch (Exception ex) {
 				memberPassFlag = "N";
 				this.logger.error("기기변경 이력 조회 연동 중 오류가 발생하였습니다.\n", ex);

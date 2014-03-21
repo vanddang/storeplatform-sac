@@ -152,7 +152,15 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 					historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD); // 구매완료
 
 					// 구매내역 조회 실행
+					this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+					long start = System.currentTimeMillis();
 					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
+					this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
+					long end = System.currentTimeMillis();
+					this.log.debug(
+							"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
+							(end - start));
+
 				} else {
 					purchaseFlag = false;
 				}
@@ -192,6 +200,10 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 				product = new Product();
 
 				List<Identifier> identifierList = new ArrayList<Identifier>();
+
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+						metaInfo.getChnlProdId());
+				identifierList.add(identifier);
 
 				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
 						metaInfo.getProdId());
