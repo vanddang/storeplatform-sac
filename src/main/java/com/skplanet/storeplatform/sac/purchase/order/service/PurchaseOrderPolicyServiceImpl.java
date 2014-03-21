@@ -524,9 +524,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		UserEcRes userEcRes = this.uapsRespository.searchUapsMappingInfoByMdn(mdn);
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,MVNO,END,{},{},{}", mdn, allowMvnoCode,
-				StringUtils.equals(userEcRes.getMvnoCD(), allowMvnoCode));
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,MVNO,END,{},{},{},{}", mdn, userEcRes.getMvnoCD(), allowMvnoCode,
+				(StringUtils.equals(userEcRes.getMvnoCD(), allowMvnoCode) == false));
 
-		return StringUtils.equals(userEcRes.getMvnoCD(), allowMvnoCode);
+		return (StringUtils.equals(userEcRes.getMvnoCD(), allowMvnoCode) == false);
 	}
 }
