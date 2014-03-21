@@ -647,7 +647,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void postPurchase(List<CreatePurchaseSc> createPurchaseScList) {
-		this.logger.info("PRCHS,ORDER,SAC,POST,START");
+		this.logger.info("PRCHS,ORDER,SAC,POST,START,{}", createPurchaseScList.get(0).getPrchsId());
 
 		// ------------------------------------------------------------------------------------
 		// 인터파크 / 씨네21
@@ -683,7 +683,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			this.interworkingSacService.createInterworking(interworkingSacReq);
 		} catch (Exception e) {
 			// 예외 throw 차단
-			this.logger.info("PRCHS,ORDER,SAC,POST,INTER,ERROR,{}", e.getMessage());
+			this.logger.info("PRCHS,ORDER,SAC,POST,INTER,ERROR,{},{}", createPurchaseScList.get(0).getPrchsId(),
+					e.getMessage());
 		}
 
 		// ------------------------------------------------------------------------------------
@@ -703,11 +704,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		try {
 			TStoreNotiEcRes tStoreNotiEcRes = this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
-			this.logger.debug("PRCHS,ORDER,SAC,POST,TSTORENOTI,{},{}", tStoreNotiEcRes.getCode(),
-					tStoreNotiEcRes.getMessage());
+			this.logger.debug("PRCHS,ORDER,SAC,POST,TSTORENOTI,{},{},{}", createPurchaseScList.get(0).getPrchsId(),
+					tStoreNotiEcRes.getCode(), tStoreNotiEcRes.getMessage());
 		} catch (Exception e) {
 			// 예외 throw 차단
-			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,ERROR,{}", e.getMessage());
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,ERROR,{},{}", createPurchaseScList.get(0).getPrchsId(),
+					e.getMessage());
 		}
 
 		// ------------------------------------------------------------------------------------
@@ -735,7 +737,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// }
 		// this.updatePurchaseCountSCI.updatePurchaseCount(updCntList);
 
-		this.logger.info("PRCHS,ORDER,SAC,POST,END");
+		this.logger.info("PRCHS,ORDER,SAC,POST,END,{}", createPurchaseScList.get(0).getPrchsId());
 	}
 
 	/**
