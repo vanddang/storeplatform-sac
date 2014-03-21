@@ -1429,12 +1429,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
-		if (StringUtils.isEmpty(req.getExceptId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "exceptId", req.getExceptId());
-		}
 		if (StringUtils.isEmpty(req.getBrandId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "brandId", req.getBrandId());
 		}
+
+		if (StringUtils.isEmpty(req.getExceptId())) {
+			req.setExceptId(null);
+		}
+
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
 		}

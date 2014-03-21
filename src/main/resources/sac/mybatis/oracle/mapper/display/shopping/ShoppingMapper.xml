@@ -1333,7 +1333,9 @@
                         AND D.MENU_ID = F.MENU_ID
                         AND A.BRAND_ID = #{req.brandId}           /*INPUT 브랜드ID*/
                         AND B.CATALOG_ID = G.CATALOG_ID
+                        <if test="req.exceptId != null">
                         AND C.CATALOG_ID <![CDATA[<>]]> #{req.exceptId}  /*INPUT 제외상품ID*/
+                        </if>
                         AND G.PROD_ID = H.PROD_ID
                         AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
                         AND H.PART_PROD_ID = I.PROD_ID
