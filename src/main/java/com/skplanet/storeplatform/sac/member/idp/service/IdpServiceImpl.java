@@ -744,6 +744,8 @@ public class IdpServiceImpl implements IdpService {
 				mbrLglAgent.setParentType("F");
 			} else if (hashMap.get("parent_type").toString().equals("1")) {// 모
 				mbrLglAgent.setParentType("M");
+			} else { // 기타 : parent_type == 2
+				mbrLglAgent.setParentType("O");
 			}
 
 			// LGL_AGENT_AGREE_DT 동의 일시
@@ -1288,6 +1290,8 @@ public class IdpServiceImpl implements IdpService {
 					mbrLglAgent.setParentType("F");
 				} else if (map.get("parent_type").toString().equals("1")) {// 모
 					mbrLglAgent.setParentType("M");
+				} else { // 기타 : parent_type == 2
+					mbrLglAgent.setParentType("O");
 				}
 
 				// 법정 대리인 실명인증 수단코드
