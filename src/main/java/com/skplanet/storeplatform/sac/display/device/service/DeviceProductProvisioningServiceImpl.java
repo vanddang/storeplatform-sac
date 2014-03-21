@@ -69,6 +69,7 @@ public class DeviceProductProvisioningServiceImpl implements DeviceProductProvis
 		paramMap.put("req", req);
 		paramMap.put("tenantHeader", tenantHeader);
 		paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		paramMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 
 		List<MetaInfo> metaInfoList = this.commonDAO.queryForList(
 				"DeviceProductProvisioning.searchProductProvisioning", paramMap, MetaInfo.class);

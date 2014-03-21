@@ -148,7 +148,6 @@
                    AND  B.PROD_ID = #{productBasicInfo.prodId}        /* 상품ID */
                    AND  D.PROD_ID = RSHP.PART_PROD_ID
                    AND  RSHP.PROD_ID = DESC2.PROD_ID
-                   
        ) TB
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="ProductInfo">
@@ -178,7 +177,7 @@
 		       , E.VOD_TITL_NM
 		       , E.STRM_EPSD_CNT
 		       , E.EPSD_CNT
-		       , TO_CHAR(E.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"') AS ISSUE_DAY
+		       , E.ISSUE_DAY
 		       , E.CHNL_COMP_NM
 		       , E.AGENCY_NM
 		       , E.HDV_YN
@@ -272,7 +271,7 @@
             , PD.ARTIST3_NM   AS ALBUM                     
             , MP.CHNL_COMP_NM AS PUBLISHER
             , MP.AGENCY_NM    AS AGENCY
-            , TO_CHAR(MP.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"') AS ISSUE_DAY
+            , MP.ISSUE_DAY
             , 'Y' AS MP3_SPRT_YN
             , MP.BELL_SPRT_YN
             , MP.COLORRING_SPRT_YN
@@ -311,7 +310,7 @@
           AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
           AND PD.LANG_CD = #{lang}
           AND CD.LANG_CD = #{lang}
-       
+          AND CP.PROD_RSHP_CD = #{rshpCd}
     </select>
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="ProductInfo">
         SELECT /* ProductInfoMapper.xml, getEbookComicMetaInfo, SAC 전시, 2014-03-10 */
@@ -341,7 +340,7 @@
              , E.COMPT_YN
              , E.VOD_TITL_NM
              , E.STRM_EPSD_CNT
-             , TO_CHAR(E.ISSUE_DAY, 'YYYYMMDD"T"HH24MISS"+0900"') AS ISSUE_DAY
+             , E.ISSUE_DAY
              , E.CHNL_COMP_NM as PUBLISHER
              , E.AGENCY_NM
              , E.EPSD_CNT
@@ -406,7 +405,7 @@
           -- INPUT PARAMETER
           ----------------------------------------------------------------------------- 
           AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
-             
+          AND I.PROD_RSHP_CD = #{rshpCd}   
     </select>
     <select id="getShoppingMetaInfo" parameterType="Map" resultType="ProductInfo">
            SELECT  /* ProductInfoMapper.xml, getShoppingMetaInfo,에피소드ID 이용 상품조회(쇼핑) , 김형식/SK플래닛, 2014-01-07 */
