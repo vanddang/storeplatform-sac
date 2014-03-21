@@ -9,9 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.shopping.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -1735,6 +1737,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 							String prchsState = null;
 							int purchseCount = 0;
 							try {
+								this.log.info("################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : "
+										+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.KOREA)
+												.format(new Date()));
 								// 구매내역 조회를 위한 생성자
 								ProductListSacIn productListSacIn = new ProductListSacIn();
 								List<ProductListSacIn> productEpisodeList = new ArrayList<ProductListSacIn>();
@@ -1781,6 +1786,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 										this.log.debug("----------------------------------------------------------------");
 									}
 								}
+
+								this.log.info("################ [SAC DP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList : "
+										+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.KOREA)
+												.format(new Date()));
 							} catch (Exception ex) {
 								purchaseFlag = false;
 								this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
