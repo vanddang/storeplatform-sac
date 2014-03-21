@@ -239,16 +239,20 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 			if (!listPid.isEmpty()) {
 
 				if (memberType.equals("updatedList")) {
-					this.log.debug("##### Tstore user process start!!!!!!!!!");
 					// 회원일 경우 회원 상태 조회
-					this.log.debug("##### check user status");
 					String userKey = req.getUserKey();
 					this.log.debug("##### userKey :: {} " + userKey);
 					SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
 					List<String> userKeyList = new ArrayList<String>();
 					userKeyList.add(userKey);
 					searchUserSacReq.setUserKeyList(userKeyList);
+					this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
+					long start = System.currentTimeMillis();
 					SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
+					this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserByUserKey");
+					long end = System.currentTimeMillis();
+					this.log.debug("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserByUserKey takes {} ms",
+							(end - start));
 					Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
 					UserInfoSac userInfoSac = userInfo.get(userKey);
 					String userMainStatus = userInfoSac.getUserMainStatus();
@@ -279,8 +283,15 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 						historyListSacReq.setProductList(productListSacInList);
 
 						// 구매내역 조회 실행
+						this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+						start = System.currentTimeMillis();
 						HistoryListSacInRes historyListSacRes = this.historyInternalSCI
 								.searchHistoryList(historyListSacReq);
+						this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+						end = System.currentTimeMillis();
+						this.log.debug(
+								"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
+								(end - start));
 						if (historyListSacRes != null) {
 							listPrchs = historyListSacRes.getHistoryList();
 							this.log.debug("##### Purchase check result size : {}", listPrchs.size());

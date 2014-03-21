@@ -204,7 +204,13 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				List<String> userKeyList = new ArrayList<String>();
 				userKeyList.add(userKey);
 				searchUserSacReq.setUserKeyList(userKeyList);
+				this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
+				long start = System.currentTimeMillis();
 				SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
+				this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserByUserKey");
+				long end = System.currentTimeMillis();
+				this.log.debug("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserByUserKey takes {} ms",
+						(end - start));
 				Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
 				UserInfoSac userInfoSac = userInfo.get(userKey);
 				String userMainStatus = userInfoSac.getUserMainStatus();
@@ -235,7 +241,14 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 					existenceReq.setDeviceKey(req.getDeviceKey());
 					existenceReq.setExistenceItem(existenceItemList);
 
+					this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceInternalSacSCI.searchExistenceList");
+					start = System.currentTimeMillis();
 					ExistenceListRes existenceListRes = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
+					this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : existenceInternalSacSCI.searchExistenceList");
+					end = System.currentTimeMillis();
+					this.log.debug(
+							"##### [SAC DSP LocalSCI] SAC Purchase existenceInternalSacSCI.searchExistenceList {} ms",
+							(end - start));
 					listPrchs = existenceListRes.getExistenceListRes();
 					this.log.debug("##### Purchase check result size : {}", listPrchs.size());
 					this.log.debug("##### Purchase check result  : {}", listPrchs);
