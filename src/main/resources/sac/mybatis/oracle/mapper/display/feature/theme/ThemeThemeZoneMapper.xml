@@ -158,7 +158,6 @@
 	                                      <if test='b2bProd != "A"'>
 	                                      AND SP.B2B_PROD_YN = #{b2bProd}
 	                                      </if>
-	                                      AND SP.B2B_PROD_YN = 'Y'
 	                                      AND ROWNUM <![CDATA[ <= ]]> 1  )
 	                            ELSE 1
 	                        END ) = 1
