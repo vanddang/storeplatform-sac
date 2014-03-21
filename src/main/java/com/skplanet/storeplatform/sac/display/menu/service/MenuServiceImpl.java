@@ -92,6 +92,11 @@ public class MenuServiceImpl implements MenuService {
 				menuDetail.setUpMenuId(menu.getUpMenuId());
 				menuDetail.setUseYn(menu.getUseYn());
 				menuDetail.setMenuIdType(menu.getMenuIdType());
+				menuDetail.setLnbFilePath(menu.getLnbFilePath());
+				menuDetail.setLnbFileName(menu.getLnbFileNm());
+				menuDetail.setLnbFileSize(menu.getLnbFileSize());
+				menuDetail.setPreCategoryInfo(menu.getPreCategoryInfo());
+				menuDetail.setCategoryMenuYn(menu.getCategoryMenuYn());
 
 				menuDetailList.add(menuDetail);
 			}
@@ -163,6 +168,11 @@ public class MenuServiceImpl implements MenuService {
 			menuDetail.setUpMenuId(menu.getUpMenuId());
 			menuDetail.setUseYn(menu.getUseYn());
 			menuDetail.setMenuIdType(menu.getMenuIdType());
+			menuDetail.setLnbFilePath(menu.getLnbFilePath());
+			menuDetail.setLnbFileName(menu.getLnbFileNm());
+			menuDetail.setLnbFileSize(menu.getLnbFileSize());
+			menuDetail.setPreCategoryInfo(menu.getPreCategoryInfo());
+			menuDetail.setCategoryMenuYn(menu.getCategoryMenuYn());
 
 			menuDetailSacRes.setMenuDetail(menuDetail);
 			commonResponse.setTotalCount(1);

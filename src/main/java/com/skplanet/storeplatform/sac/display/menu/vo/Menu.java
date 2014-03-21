@@ -42,6 +42,11 @@ public class Menu {
 	private String rankFileNm;
 	private String useYn;
 	private String menuIdType;
+	private String lnbFilePath;
+	private String lnbFileNm;
+	private Integer lnbFileSize;
+	private String preCategoryInfo;
+	private String categoryMenuYn;
 
 	/**
 	 * 
@@ -691,6 +696,131 @@ public class Menu {
 	 */
 	public void setMenuIdType(String menuIdType) {
 		this.menuIdType = menuIdType;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * LNB_파일_경로.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getLnbFilePath() {
+		return this.lnbFilePath;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * LNB_파일_경로.
+	 * </pre>
+	 * 
+	 * @param lnbFilePath
+	 *            String
+	 */
+	public void setLnbFilePath(String lnbFilePath) {
+		this.lnbFilePath = lnbFilePath;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * LNB_파일_명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getLnbFileNm() {
+		return this.lnbFileNm;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * LNB_파일_명.
+	 * </pre>
+	 * 
+	 * @param lnbFileNm
+	 *            String
+	 */
+	public void setLnbFileNm(String lnbFileNm) {
+		this.lnbFileNm = lnbFileNm;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * LNB_파일_크기.
+	 * </pre>
+	 * 
+	 * @return Integer
+	 */
+	public Integer getLnbFileSize() {
+		return this.lnbFileSize;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * LNB_파일_크기.
+	 * </pre>
+	 * 
+	 * @param lnbFileSize
+	 *            Integer
+	 */
+	public void setLnbFileSize(Integer lnbFileSize) {
+		this.lnbFileSize = lnbFileSize;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이전_카테고리_정보.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getPreCategoryInfo() {
+		return this.preCategoryInfo;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이전_카테고리_정보.
+	 * </pre>
+	 * 
+	 * @param preCategoryInfo
+	 *            String
+	 */
+	public void setPreCategoryInfo(String preCategoryInfo) {
+		this.preCategoryInfo = preCategoryInfo;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 카테고리 메뉴 여부.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getCategoryMenuYn() {
+		return this.categoryMenuYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 카테고리 메뉴 여부.
+	 * </pre>
+	 * 
+	 * @param categoryMenuYn
+	 *            String
+	 */
+	public void setCategoryMenuYn(String categoryMenuYn) {
+		this.categoryMenuYn = categoryMenuYn;
 	}
 
 }

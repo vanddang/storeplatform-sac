@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -94,6 +95,11 @@ public class CategoryServiceImpl implements CategoryService {
 				menuDetail.setUpMenuId(menu.getUpMenuId());
 				menuDetail.setUseYn(menu.getUseYn());
 				menuDetail.setMenuIdType(menu.getMenuIdType());
+				menuDetail.setLnbFilePath(menu.getLnbFilePath());
+				menuDetail.setLnbFileName(menu.getLnbFileNm());
+				menuDetail.setLnbFileSize(menu.getLnbFileSize());
+				menuDetail.setPreCategoryInfo(menu.getPreCategoryInfo());
+				menuDetail.setCategoryMenuYn(menu.getCategoryMenuYn());
 
 				menuDetailList.add(menuDetail);
 			}
@@ -129,11 +135,9 @@ public class CategoryServiceImpl implements CategoryService {
 		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
 		requestVO.setMmDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
-		// // 필수 파라미터 체크
-		// this.log.debug("필수 파라미터 체크");
-		// if (StringUtils.isEmpty(requestVO.getTopMenuId())) {
-		// throw new StorePlatformException("SAC_DSP_0002", "topMenuId", requestVO.getTopMenuId());
-		// }
+		// 요청 값 세팅
+		requestVO.setFeaturedExposureYn(!StringUtils.isEmpty(requestVO.getFeaturedExposureYn()) ? requestVO
+				.getFeaturedExposureYn() : "N");
 
 		MenuListSacRes menuListSacRes = new MenuListSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -192,6 +196,11 @@ public class CategoryServiceImpl implements CategoryService {
 					menuDetail2Depth.setUpMenuId(menu.getUpMenuId());
 					menuDetail2Depth.setUseYn(menu.getUseYn());
 					menuDetail2Depth.setMenuIdType(menu.getMenuIdType());
+					menuDetail2Depth.setLnbFilePath(menu.getLnbFilePath());
+					menuDetail2Depth.setLnbFileName(menu.getLnbFileNm());
+					menuDetail2Depth.setLnbFileSize(menu.getLnbFileSize());
+					menuDetail2Depth.setPreCategoryInfo(menu.getPreCategoryInfo());
+					menuDetail2Depth.setCategoryMenuYn(menu.getCategoryMenuYn());
 
 					List<MenuDetail> menuDetail3DepthList = new ArrayList<MenuDetail>();
 
@@ -224,6 +233,11 @@ public class CategoryServiceImpl implements CategoryService {
 							menuDetail3Depth.setUpMenuId(subMenu.getUpMenuId());
 							menuDetail3Depth.setUseYn(subMenu.getUseYn());
 							menuDetail3Depth.setMenuIdType(subMenu.getMenuIdType());
+							menuDetail3Depth.setLnbFilePath(subMenu.getLnbFilePath());
+							menuDetail3Depth.setLnbFileName(subMenu.getLnbFileNm());
+							menuDetail3Depth.setLnbFileSize(subMenu.getLnbFileSize());
+							menuDetail3Depth.setPreCategoryInfo(subMenu.getPreCategoryInfo());
+							menuDetail3Depth.setCategoryMenuYn(subMenu.getCategoryMenuYn());
 
 							menuDetail3DepthList.add(menuDetail3Depth);
 						}

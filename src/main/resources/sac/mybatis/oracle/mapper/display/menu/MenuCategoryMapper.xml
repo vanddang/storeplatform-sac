@@ -31,6 +31,11 @@
             , A.RANK_FILE_NM 
             , A.USE_YN 
             , A.MENU_ID_TYPE
+            , A.LNB_FILE_PATH
+            , A.LNB_FILE_NM
+            , A.LNB_FILE_SIZE
+            , A.PRE_CATEGORY_INFO
+            , A.CATEGORY_MENU_YN
             , A.REG_ID 
             , A.REG_DT 
             , A.UPD_ID 
@@ -62,6 +67,11 @@
 		        , A.RANK_FILE_NM 
 		        , A.USE_YN 
 		        , A.MENU_ID_TYPE
+                , A.LNB_FILE_PATH
+                , A.LNB_FILE_NM
+                , A.LNB_FILE_SIZE
+                , A.PRE_CATEGORY_INFO
+                , A.CATEGORY_MENU_YN
 		        , A.REG_ID 
 		        , A.REG_DT 
 		        , A.UPD_ID 
@@ -101,6 +111,9 @@
 		    AND B.USE_YN = 'Y'
 		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
 		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
+            <if test='featuredExposureYn == "N"'>
+            AND NVL(A.CATEGORY_MENU_YN, 'Y') = 'Y'
+            </if> 
 		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
 		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
 		    ORDER SIBLINGS BY EXPO_ORD
@@ -136,6 +149,11 @@
             , A.RANK_FILE_NM 
             , A.USE_YN 
             , A.MENU_ID_TYPE
+            , A.LNB_FILE_PATH
+            , A.LNB_FILE_NM
+            , A.LNB_FILE_SIZE
+            , A.PRE_CATEGORY_INFO
+            , A.CATEGORY_MENU_YN
             , A.REG_ID 
             , A.REG_DT 
             , A.UPD_ID 
@@ -167,6 +185,11 @@
 		        , A.RANK_FILE_NM 
 		        , A.USE_YN 
 		        , A.MENU_ID_TYPE
+                , A.LNB_FILE_PATH
+                , A.LNB_FILE_NM
+                , A.LNB_FILE_SIZE
+                , A.PRE_CATEGORY_INFO
+                , A.CATEGORY_MENU_YN
 		        , A.REG_ID 
 		        , A.REG_DT 
 		        , A.UPD_ID 
@@ -215,6 +238,9 @@
 		    AND B.USE_YN = 'Y'
 		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
 		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
+            <if test='featuredExposureYn == "N"'>
+            AND NVL(A.CATEGORY_MENU_YN, 'Y') = 'Y'
+            </if> 
 		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
 		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
 		    ORDER SIBLINGS BY EXPO_ORD
@@ -250,6 +276,11 @@
             , A.RANK_FILE_NM 
             , A.USE_YN 
             , A.MENU_ID_TYPE
+            , A.LNB_FILE_PATH
+            , A.LNB_FILE_NM
+            , A.LNB_FILE_SIZE
+            , A.PRE_CATEGORY_INFO
+            , A.CATEGORY_MENU_YN
             , A.REG_ID 
             , A.REG_DT 
             , A.UPD_ID 
@@ -281,6 +312,11 @@
 		        , A.RANK_FILE_NM 
 		        , A.USE_YN 
 		        , A.MENU_ID_TYPE
+                , A.LNB_FILE_PATH
+                , A.LNB_FILE_NM
+                , A.LNB_FILE_SIZE
+                , A.PRE_CATEGORY_INFO
+                , A.CATEGORY_MENU_YN
 		        , A.REG_ID 
 		        , A.REG_DT 
 		        , A.UPD_ID 
@@ -345,6 +381,9 @@
 		    AND B.USE_YN = 'Y'
 		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
 		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
+            <if test='featuredExposureYn == "N"'>
+            AND NVL(A.CATEGORY_MENU_YN, 'Y') = 'Y'
+            </if> 
 		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
 		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
 		    ORDER SIBLINGS BY EXPO_ORD
@@ -380,6 +419,11 @@
             , A.RANK_FILE_NM 
             , A.USE_YN 
             , A.MENU_ID_TYPE
+            , A.LNB_FILE_PATH
+            , A.LNB_FILE_NM
+            , A.LNB_FILE_SIZE
+            , A.PRE_CATEGORY_INFO
+            , A.CATEGORY_MENU_YN
             , A.REG_ID 
             , A.REG_DT 
             , A.UPD_ID 
@@ -411,6 +455,11 @@
 		        , A.RANK_FILE_NM 
 		        , A.USE_YN 
 		        , A.MENU_ID_TYPE
+                , A.LNB_FILE_PATH
+                , A.LNB_FILE_NM
+                , A.LNB_FILE_SIZE
+                , A.PRE_CATEGORY_INFO
+                , A.CATEGORY_MENU_YN
 		        , A.REG_ID 
 		        , A.REG_DT 
 		        , A.UPD_ID 
@@ -467,6 +516,9 @@
 		    AND B.USE_YN = 'Y'
 		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
 		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
+            <if test='featuredExposureYn == "N"'>
+            AND NVL(A.CATEGORY_MENU_YN, 'Y') = 'Y'
+            </if> 
 		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
 		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
 		    ORDER SIBLINGS BY EXPO_ORD
