@@ -50,8 +50,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.FlurryAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.TabAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
@@ -576,6 +576,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			// sellerAccount.setStartDate(schRes.getSellerAccount().getStartDate());
 			sellerAccount.setSwiftCode(schRes.getSellerAccount().getSwiftCode());
 			sellerAccount.setTpinCode(schRes.getSellerAccount().getTpinCode());
+
+			// 은행 BSD 3/21 추가
+			sellerAccount.setBankBsb(schRes.getSellerAccount().getBankBsb());
 
 			sellerAccount.setSellerBizAddress(schRes.getSellerMbr().getSellerBizAddress());
 			sellerAccount.setSellerBizDetailAddress(schRes.getSellerMbr().getSellerBizDetailAddress());
