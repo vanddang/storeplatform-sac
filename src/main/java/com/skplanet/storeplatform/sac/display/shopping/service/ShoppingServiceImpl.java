@@ -9,11 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.shopping.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandAnotherReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
@@ -1738,8 +1737,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							int purchseCount = 0;
 							try {
 								this.log.info("################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : "
-										+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.KOREA)
-												.format(new Date()));
+										+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 								// 구매내역 조회를 위한 생성자
 								ProductListSacIn productListSacIn = new ProductListSacIn();
 								List<ProductListSacIn> productEpisodeList = new ArrayList<ProductListSacIn>();
@@ -1788,8 +1786,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 								}
 
 								this.log.info("################ [SAC DP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList : "
-										+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.KOREA)
-												.format(new Date()));
+										+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 							} catch (Exception ex) {
 								purchaseFlag = false;
 								this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
