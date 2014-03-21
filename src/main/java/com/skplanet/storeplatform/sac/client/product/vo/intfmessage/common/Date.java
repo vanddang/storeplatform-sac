@@ -43,6 +43,8 @@ public class Date extends CommonInfo implements Serializable {
 	 */
 	private String text;
 
+    private String unitName;    // 단위 이름 (GRP: PD0031)
+
 	public Date() {
 	}
 
@@ -51,6 +53,13 @@ public class Date extends CommonInfo implements Serializable {
 		this.type = type;
 		this.text = text;
 	}
+
+    public Date(String type, String text, String unitName) {
+        super();
+        this.type = type;
+        this.text = text;
+        this.unitName = unitName;
+    }
 
 	/**
 	 * 특정 일시를 표현하는 생성자. ISO8601Basic으로 변환함.
@@ -130,4 +139,12 @@ public class Date extends CommonInfo implements Serializable {
 
 		this.text = sb.toString();
 	}
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
 }
