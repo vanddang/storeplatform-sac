@@ -1,6 +1,5 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +23,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionAllRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
@@ -48,11 +49,6 @@ public class SellerSearchController {
 
 	@Autowired
 	private SellerSearchService sellerSearchService;
-
-	/**
-	 * Data Binding.
-	 */
-	ObjectMapper objMapper = new ObjectMapper();
 
 	/**
 	 * <pre>
@@ -204,7 +200,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/listPasswordReminderQuestionAll/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header) {
+	public ListPasswordReminderQuestionAllRes listPasswordReminderQuestionAll(SacRequestHeader header) {
 		return this.sellerSearchService.listPasswordReminderQuestionAll(header);
 	}
 
@@ -256,7 +252,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailInfomationByAuthorizationKey/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailInformationRes searchAuthKey(SacRequestHeader header, @Validated SearchAuthKeyReq req) {
+	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, @Validated SearchAuthKeyReq req) {
 		return this.sellerSearchService.searchAuthKey(header, req);
 	}
 

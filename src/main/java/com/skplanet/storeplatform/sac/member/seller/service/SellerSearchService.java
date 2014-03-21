@@ -11,10 +11,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionAllRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
@@ -128,7 +130,7 @@ public interface SellerSearchService {
 	 *            SacRequestHeader
 	 * @return ListPasswordReminderQuestionRes
 	 */
-	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header);
+	public ListPasswordReminderQuestionAllRes listPasswordReminderQuestionAll(SacRequestHeader header);
 
 	/**
 	 * <pre>
@@ -166,9 +168,9 @@ public interface SellerSearchService {
 	 *            SacRequestHeader
 	 * @param req
 	 *            SearchAuthKeyReq
-	 * @return DetailInformationRes
+	 * @return SearchAuthKeyRes
 	 */
-	public DetailInformationRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req);
+	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req);
 
 	/**
 	 * <pre>

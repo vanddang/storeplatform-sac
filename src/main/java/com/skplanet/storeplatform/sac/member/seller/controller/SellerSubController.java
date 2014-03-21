@@ -20,6 +20,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.UpdateSubsellerReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.UpdateSubsellerRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSubService;
 
@@ -54,9 +56,8 @@ public class SellerSubController {
 		if (StringUtils.isBlank(req.getSubSellerPW())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerPW");
 		} else if (StringUtils.isBlank(req.getSubSellerId())) {
-			throw new StorePlatformException("SAC_MEM_0001", "subSellerID");
+			throw new StorePlatformException("SAC_MEM_0001", "subSellerId");
 		}
-		req.setIsNew("Y");
 		return this.sellerSubService.createSubseller(header, req);
 	}
 
@@ -73,12 +74,11 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateSubsellerRes modifySubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
+	UpdateSubsellerRes modifySubseller(SacRequestHeader header, @RequestBody @Validated UpdateSubsellerReq req) {
 		if (StringUtils.isBlank(req.getSubSellerKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerKey");
 		}
-		req.setIsNew("N");
-		return this.sellerSubService.createSubseller(header, req);
+		return this.sellerSubService.updateSubseller(header, req);
 	}
 
 	/**

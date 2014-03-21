@@ -8,6 +8,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.UpdateSubsellerReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.UpdateSubsellerRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -19,7 +21,7 @@ public interface SellerSubService {
 
 	/**
 	 * <pre>
-	 * 서브계정 등록/수정.
+	 * 서브계정 등록.
 	 * </pre>
 	 * 
 	 * @param header
@@ -29,6 +31,19 @@ public interface SellerSubService {
 	 * @return CreateSubsellerRes
 	 */
 	public CreateSubsellerRes createSubseller(SacRequestHeader header, CreateSubsellerReq req);
+
+	/**
+	 * <pre>
+	 * 서브계정 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            UpdateSubsellerReq
+	 * @return UpdateSubsellerRes
+	 */
+	public UpdateSubsellerRes updateSubseller(SacRequestHeader header, UpdateSubsellerReq req);
 
 	/**
 	 * <pre>

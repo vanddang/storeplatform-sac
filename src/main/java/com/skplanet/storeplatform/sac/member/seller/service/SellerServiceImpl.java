@@ -54,6 +54,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerRespon
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpgradeSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpgradeSellerResponse;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
@@ -311,7 +312,7 @@ public class SellerServiceImpl implements SellerService {
 
 		/** 3. 가입 결과 [RESPONSE] 생성 및 주입. */
 		CreateRes res = new CreateRes();
-		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr resMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
+		SellerMbrSac resMbr = new SellerMbrSac();
 		resMbr.setSellerId(createSellerResponse.getSellerID());
 		resMbr.setSellerKey(createSellerResponse.getSellerKey());
 		resMbr.setSellerMainStatus(createSellerResponse.getSellerMainStatus());
@@ -356,10 +357,10 @@ public class SellerServiceImpl implements SellerService {
 
 		/** 2. SAC-[Response] 생성 및 주입. */
 		AuthorizeRes res = new AuthorizeRes();
-		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr sellerMbr = null;
+		SellerMbrSac sellerMbr = null;
 
 		if (logInSellerResponse != null) {
-			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
+			sellerMbr = new SellerMbrSac();
 			String loginStatusCode = logInSellerResponse.getLoginStatusCode();
 			String isLoginSuccess = logInSellerResponse.getIsLoginSuccess();
 			String loginFailCount = String.valueOf(logInSellerResponse.getLoginFailCount());

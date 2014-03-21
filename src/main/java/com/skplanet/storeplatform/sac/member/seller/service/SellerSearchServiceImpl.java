@@ -50,7 +50,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.FlurryAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
 import com.skplanet.storeplatform.sac.client.member.vo.common.TabAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
@@ -65,10 +65,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmail
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionAllRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
@@ -260,7 +262,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		response.setMbrLglAgent(mbrLglAgent); // 법정대리인정보
 		response.setSellerKey(schRes.getSellerKey()); // 판매자Key
 		// 실명인증 여부에 따른 판매자 회원정보 Setting.
-		SellerMbr sellerMbr = this.sellerMbr(schRes.getSellerMbr(), schRes.getMbrAuth()); // 실명인증 판매자 정보 & 판매자 정보
+		SellerMbrSac sellerMbr = this.sellerMbr(schRes.getSellerMbr(), schRes.getMbrAuth()); // 실명인증 판매자 정보 & 판매자 정보
 		response.setSellerMbr(sellerMbr); // 판매자 정보
 		response.setTabAuthList(tList);
 		response.setFlurryAuthList(fList);
@@ -302,11 +304,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		Iterator<String> it = schRes.getSellerMbrListMap().keySet().iterator();
 		List<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr> sellerMbrs = new ArrayList<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr>();
 
-		List<SellerMbr> sellerMbrSacs = null;
-		SellerMbr sellerMbrSac = null;
+		List<SellerMbrSac> sellerMbrSacs = null;
+		SellerMbrSac sellerMbrSac = null;
 
 		String key = it.next();
-		sellerMbrSacs = new ArrayList<SellerMbr>();
+		sellerMbrSacs = new ArrayList<SellerMbrSac>();
 		sellerMbrs = (List<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr>) schRes
 				.getSellerMbrListMap().get(key);
 
@@ -319,7 +321,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		if ("Y".equals(sellerMbrs.get(0).getIsDomestic())
 				&& MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON
 						.equals(sellerMbrs.get(0).getSellerClass())) {
-			sellerMbrSac = new SellerMbr();
+			sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setAppStat("Top");
 			if (StringUtils.isNotBlank(sellerMbrs.get(0).getCharger()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getCharger());
@@ -332,7 +334,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
 						.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
 						.equals(sellerMbrs.get(0).getSellerClass()))) {
-			sellerMbrSac = new SellerMbr();
+			sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setAppStat("Top");
 			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerCompany());
@@ -347,7 +349,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 						|| MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
 								.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
 							.equals(sellerMbrs.get(0).getSellerClass()))) {
-			sellerMbrSac = new SellerMbr();
+			sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setAppStat("Top");
 			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
 				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerCompany());
@@ -361,7 +363,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		if ("Y".equals(sellerMbrs.get(0).getIsDomestic())
 				&& MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON
 						.equals(sellerMbrs.get(0).getSellerClass())) {
-			sellerMbrSac = new SellerMbr();
+			sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setAppStat("Lower");
 
 			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()))
@@ -388,7 +390,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
 						.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
 						.equals(sellerMbrs.get(0).getSellerClass()))) {
-			sellerMbrSac = new SellerMbr();
+			sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setAppStat("Lower");
 
 			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
@@ -435,7 +437,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		else if ("N".equals(sellerMbrs.get(0).getIsDomestic())
 				&& MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON
 						.equals(sellerMbrs.get(0).getSellerClass())) {
-			sellerMbrSac = new SellerMbr();
+			sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setAppStat("Lower");
 
 			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()))
@@ -462,7 +464,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
 						.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
 						.equals(sellerMbrs.get(0).getSellerClass()))) {
-			sellerMbrSac = new SellerMbr();
+			sellerMbrSac = new SellerMbrSac();
 			sellerMbrSac.setAppStat("Lower");
 			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
 				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
@@ -586,7 +588,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerAccount.setRepPhoneArea(schRes.getSellerMbr().getRepPhoneArea()); // ("대표전화번호 국가코드");
 																					// REP_TEL_NATION_NO
 			sellerAccount.setRepPhone(schRes.getSellerMbr().getRepPhone()); // ("대표전화번호"); REP_TEL_NO
-			sellerAccount.setRepEmail(schRes.getSellerMbr().getRepEmail()); // ("대표 이메일"); REP_EMAIL
+			// sellerAccount.setRepEmail(schRes.getSellerMbr().getRepEmail()); // ("대표 이메일"); REP_EMAIL
 			sellerAccount.setVendorCode(schRes.getSellerMbr().getVendorCode()); // ("벤더 코드"); VENDOR_CD
 			sellerAccount.setIsBizRegistered(schRes.getSellerMbr().getIsBizRegistered()); // ("통신판매업 신고여부");
 																						  // MSALBIZ_DECL_YN
@@ -667,11 +669,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchIDSellerResponse schRes = this.sellerSCI.searchIDSeller(schReq);
 
-		List<SellerMbr> sList = new ArrayList<SellerMbr>();
-		SellerMbr sellerMbrRes = null;
+		List<SellerMbrSac> sList = new ArrayList<SellerMbrSac>();
+		SellerMbrSac sellerMbrRes = null;
 		if (schRes.getSellerMbr() != null)
 			for (int i = 0; i < schRes.getSellerMbr().size(); i++) {
-				sellerMbrRes = new SellerMbr();
+				sellerMbrRes = new SellerMbrSac();
 				sellerMbrRes.setSellerId(schRes.getSellerMbr().get(i).getSellerID());
 				sellerMbrRes.setRegDate(schRes.getSellerMbr().get(i).getRegDate());
 				sList.add(sellerMbrRes);
@@ -731,10 +733,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * 
 	 * @param header
 	 *            SacRequestHeader
-	 * @return ListPasswordReminderQuestionRes
+	 * @return ListPasswordReminderQuestionAllRes
 	 */
 	@Override
-	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header) {
+	public ListPasswordReminderQuestionAllRes listPasswordReminderQuestionAll(SacRequestHeader header) {
 
 		SearchPwdHintListAllRequest schReq = new SearchPwdHintListAllRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
@@ -753,7 +755,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sList.add(sellerMbrPwdHint);
 			}
 		}
-		ListPasswordReminderQuestionRes response = new ListPasswordReminderQuestionRes();
+		ListPasswordReminderQuestionAllRes response = new ListPasswordReminderQuestionAllRes();
 		response.setSellerMbrPwdHintList(sList);
 
 		return response;
@@ -848,7 +850,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return DetailInformationRes
 	 */
 	@Override
-	public DetailInformationRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) {
+	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) {
 
 		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
@@ -869,7 +871,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchSellerRequest schReq3 = new SearchSellerRequest();
 		schReq3.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType("INSD_SELLERMBR_NO");
+		keySearch.setKeyType("INSD_SELLERMBR_NO"); // TODO member상수로 변경
 		keySearch.setKeyString(schRes.getLoginInfo().getSellerKey());
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
@@ -877,7 +879,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchSellerResponse schRes3 = this.sellerSCI.searchSeller(schReq3);
 
-		DetailInformationRes response = new DetailInformationRes();
+		SearchAuthKeyRes response = new SearchAuthKeyRes();
 
 		// 판매자 멀티미디어정보
 		List<ExtraRight> eList = new ArrayList<ExtraRight>();
@@ -970,10 +972,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * 
 	 * @return SellerMbr 실명인증 여부에 따라 셋팅된 판매자 정보
 	 */
-	private SellerMbr sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr,
+	private SellerMbrSac sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr,
 			com.skplanet.storeplatform.member.client.common.vo.MbrAuth mbrAuth) {
 		// 판매자 정보
-		SellerMbr sellerMbrRes = new SellerMbr();
+		SellerMbrSac sellerMbrRes = new SellerMbrSac();
 
 		if (sellerMbr != null) {
 			sellerMbrRes.setApproveDate(sellerMbr.getApproveDate());

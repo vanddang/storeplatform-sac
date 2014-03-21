@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
@@ -78,7 +78,7 @@ public class DummySellerController {
 	public CreateRes create() {
 
 		CreateRes responseVO = new CreateRes();
-		SellerMbr sellerInfo = new SellerMbr();
+		SellerMbrSac sellerInfo = new SellerMbrSac();
 
 		sellerInfo.setSellerId("user1");
 		sellerInfo.setSellerKey("IF1023599819420120111013407");
@@ -116,7 +116,7 @@ public class DummySellerController {
 	public AuthorizeRes authorize() {
 
 		AuthorizeRes responseVO = new AuthorizeRes();
-		SellerMbr sellerInfo = new SellerMbr();
+		SellerMbrSac sellerInfo = new SellerMbrSac();
 
 		sellerInfo.setSellerKey("IF1023599819420120111013407");
 		sellerInfo.setSellerClass("US010101");
@@ -140,10 +140,10 @@ public class DummySellerController {
 	public SearchIdRes searchId() {
 
 		SearchIdRes responseVO = new SearchIdRes();
-		List<SellerMbr> sList = new ArrayList<SellerMbr>();
-		SellerMbr sellerMbrRes = null;
+		List<SellerMbrSac> sList = new ArrayList<SellerMbrSac>();
+		SellerMbrSac sellerMbrRes = null;
 		for (int i = 0; i < 1; i++) {
-			sellerMbrRes = new SellerMbr();
+			sellerMbrRes = new SellerMbrSac();
 			sellerMbrRes.setSellerId("signtest");
 			sList.add(sellerMbrRes);
 		}
@@ -247,7 +247,7 @@ public class DummySellerController {
 		MbrLglAgent mbrLglAgent = new MbrLglAgent();
 
 		// 판매자 정보
-		SellerMbr sellerMbr = new SellerMbr();
+		SellerMbrSac sellerMbr = new SellerMbrSac();
 		sellerMbr.setApproveDate("20120820");
 		sellerMbr.setBizGrade("ggg");
 		sellerMbr.setBizKindCd("US000901");
@@ -380,7 +380,7 @@ public class DummySellerController {
 		sellerAccount.setTpinCode("");
 
 		// 판매자 정보
-		SellerMbr sellerMbr = new SellerMbr();
+		SellerMbrSac sellerMbr = new SellerMbrSac();
 		sellerMbr.setApproveDate("20120820");
 		sellerMbr.setBizGrade("ggg");
 		sellerMbr.setBizKindCd("US000901");
@@ -451,7 +451,7 @@ public class DummySellerController {
 		responseVO.setExtraRightList(eList);
 		responseVO.setSellerAccount(sellerAccount);
 		responseVO.setSellerKey("IF102158942020090723111912");
-		responseVO.setSellerMbr(sellerMbr);
+		// responseVO.setSellerMbr(sellerMbr);
 
 		return responseVO;
 	}
@@ -655,11 +655,11 @@ public class DummySellerController {
 		responseVO.setSellerKey("IF1023511101420120615164319");
 		responseVO.setSubAccountCount(1);
 
-		SellerMbr subSellerList = null;
-		List<SellerMbr> myList = new ArrayList<SellerMbr>();
+		SellerMbrSac subSellerList = null;
+		List<SellerMbrSac> myList = new ArrayList<SellerMbrSac>();
 
 		for (int i = 0; i < 1; i++) {
-			subSellerList = new SellerMbr();
+			subSellerList = new SellerMbrSac();
 			subSellerList.setSellerKey("IF1023511101420120615162000");
 			subSellerList.setSellerId("signtest_subid01");
 			subSellerList.setSellerEmail("signtest_subid01@yopmail.com");
@@ -685,7 +685,7 @@ public class DummySellerController {
 	public DetailSubsellerRes detailSubseller() {
 
 		DetailSubsellerRes responseVO = new DetailSubsellerRes();
-		SellerMbr sellerInfo = new SellerMbr();
+		SellerMbrSac sellerInfo = new SellerMbrSac();
 
 		sellerInfo.setSellerId("user1");
 		sellerInfo.setSellerKey("IF1023599819420120111013407");

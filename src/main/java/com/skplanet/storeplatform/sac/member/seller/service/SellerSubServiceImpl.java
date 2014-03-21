@@ -20,7 +20,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerLis
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerListResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerResponse;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
@@ -29,8 +30,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.UpdateSubsellerReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.UpdateSubsellerRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 /**
  * 판매자 회원 서브계정 등록/수정/삭제/조회 기능 항목들.
@@ -50,7 +54,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 	/**
 	 * <pre>
-	 * 서브계정 등록/수정.
+	 * 서브계정 등록.
 	 * </pre>
 	 * 
 	 * @param header
@@ -67,11 +71,57 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr = new com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr();
-		sellerMbr.setParentSellerKey(req.getSellerKey()); // US201401231325534800000164
-														  // IF1023501437920130904104346
-		if ("Y".equals(req.getIsNew())) {
-			sellerMbr.setSellerID(req.getSubSellerId());
+		sellerMbr.setParentSellerKey(req.getSellerKey());
+
+		sellerMbr.setSellerID(req.getSubSellerId());
+		sellerMbr.setSubSellerMemo(req.getSubSellerMemo());
+		sellerMbr.setSellerEmail(req.getSubSellerEmail());
+		sellerMbr.setRightProfileList(req.getSubSellerCateList());
+		sellerMbr.setSellerPhone(req.getSubSellerPhone());
+		sellerMbr.setSellerPhoneCountry(req.getSubSellerPhoneCountry());
+		schReq.setSellerMbr(sellerMbr);
+		schReq.setIsNew(MemberConstants.USE_Y);
+
+		if (StringUtils.isNotBlank(req.getSubSellerPW())) {
+			MbrPwd mbrPwd = new MbrPwd();
+			mbrPwd.setMemberPW(req.getSubSellerPW());
+			schReq.setMbrPwd(mbrPwd);
 		}
+
+		MbrPwd mbrPwd = new MbrPwd();
+		mbrPwd.setMemberPW(req.getSubSellerPW());
+		schReq.setMbrPwd(mbrPwd);
+
+		CreateSubSellerResponse schRes = this.sellerSCI.createSubSeller(schReq);
+
+		LOGGER.info("---------" + schRes.getSellerKey());
+		CreateSubsellerRes response = new CreateSubsellerRes();
+
+		response.setSubSellerKey(schRes.getSellerKey());
+
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * 서브계정 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            UpdateSubsellerReq
+	 * @return UpdateSubsellerRes
+	 */
+	@Override
+	public UpdateSubsellerRes updateSubseller(SacRequestHeader header, UpdateSubsellerReq req) {
+
+		CreateSubSellerRequest schReq = new CreateSubSellerRequest();
+
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+
+		SellerMbr sellerMbr = new SellerMbr();
+		sellerMbr.setParentSellerKey(req.getSellerKey());
 		sellerMbr.setSellerKey(req.getSubSellerKey());
 		sellerMbr.setSubSellerMemo(req.getSubSellerMemo());
 		sellerMbr.setSellerEmail(req.getSubSellerEmail());
@@ -79,14 +129,9 @@ public class SellerSubServiceImpl implements SellerSubService {
 		sellerMbr.setSellerPhone(req.getSubSellerPhone());
 		sellerMbr.setSellerPhoneCountry(req.getSubSellerPhoneCountry());
 		schReq.setSellerMbr(sellerMbr);
-		schReq.setIsNew(req.getIsNew());
+		schReq.setIsNew(MemberConstants.USE_N);
 
 		if (StringUtils.isNotBlank(req.getSubSellerPW())) {
-			MbrPwd mbrPwd = new MbrPwd();
-			mbrPwd.setMemberPW(req.getSubSellerPW());
-			schReq.setMbrPwd(mbrPwd);
-		}
-		if ("Y".equals(req.getIsNew())) {
 			MbrPwd mbrPwd = new MbrPwd();
 			mbrPwd.setMemberPW(req.getSubSellerPW());
 			schReq.setMbrPwd(mbrPwd);
@@ -95,7 +140,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		CreateSubSellerResponse schRes = this.sellerSCI.createSubSeller(schReq);
 
 		LOGGER.info("---------" + schRes.getSellerKey());
-		CreateSubsellerRes response = new CreateSubsellerRes();
+		UpdateSubsellerRes response = new UpdateSubsellerRes();
 
 		response.setSubSellerKey(schRes.getSellerKey());
 
@@ -204,14 +249,14 @@ public class SellerSubServiceImpl implements SellerSubService {
 	 *            SellerMbr
 	 * @return List<SellerMbr>
 	 */
-	private List<SellerMbr> sellerMbrList(
+	private List<SellerMbrSac> sellerMbrList(
 			List<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr> sellerMbr) {
 
-		List<SellerMbr> sList = new ArrayList<SellerMbr>();
-		SellerMbr sellerMbrRes = null;
+		List<SellerMbrSac> sList = new ArrayList<SellerMbrSac>();
+		SellerMbrSac sellerMbrRes = null;
 		if (sellerMbr != null)
 			for (int i = 0; i < sellerMbr.size(); i++) {
-				sellerMbrRes = new SellerMbr();
+				sellerMbrRes = new SellerMbrSac();
 				sellerMbrRes.setSubSellerKey(sellerMbr.get(i).getSellerKey());
 				sellerMbrRes.setSubSellerId(sellerMbr.get(i).getSellerID());
 				sellerMbrRes.setSubSellerEmail(sellerMbr.get(i).getSellerEmail());
@@ -234,9 +279,9 @@ public class SellerSubServiceImpl implements SellerSubService {
 	 *            SellerMbr
 	 * @return SellerMbr
 	 */
-	private SellerMbr sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr) {
+	private SellerMbrSac sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr) {
 		// 판매자 정보
-		SellerMbr sellerMbrRes = new SellerMbr();
+		SellerMbrSac sellerMbrRes = new SellerMbrSac();
 		if (sellerMbr != null) {
 			sellerMbrRes.setSubSellerId(sellerMbr.getSellerID());
 			sellerMbrRes.setSubRegDate(sellerMbr.getRegDate());
