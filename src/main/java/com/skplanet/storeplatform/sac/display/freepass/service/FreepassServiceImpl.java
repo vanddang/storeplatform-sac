@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
@@ -679,8 +680,12 @@ public class FreepassServiceImpl implements FreepassService {
 			historyListSacReq.setProductList(productList);
 
 			// 구매내역 조회 실행
+			//################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : 2014-03-21 13:45:15.000
+			log.debug("################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : " + DateUtil.getToday());
 			// historyCountSacRes = this.historyInternalSCI.searchHistoryCount(historyCountSacReq);
 			historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
+			//################ [SAC DP LocalSCI] SAC Purchase End: historyInternalSCI.searchHistoryList : 2014-03-21 13:45:15.600
+			log.debug("################ [SAC DP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList : " + DateUtil.getToday());
 		} catch (Exception ex) {
 			throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 		}
