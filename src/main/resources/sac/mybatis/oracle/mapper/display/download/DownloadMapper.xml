@@ -461,7 +461,7 @@
     
     <!-- for download 현재일시 및 요청만료일시 조회 -->
     <select id="selectDownloadSystemDate" resultType="MetaInfo">
-		SELECT  /* DownloadMapper.xml, selectDownloadSystemDate, SAC 전시, 2014-03-17 */
+		SELECT  /* DownloadMapper.selectDownloadSystemDate, for download 현재일시 및 요청만료일시 조회, 이태희/부르칸, 2014-03-17 */
 		        TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
 		     ,  TO_CHAR(SYSDATE + 1 / 24, 'YYYYMMDDHH24MISS') AS EXPIRED_DATE
 		  FROM  DUAL
@@ -469,7 +469,7 @@
     
     <!-- ebook 상품 정보 조회(for download) -->
     <select id="selectDownloadEbookInfo" parameterType="DownloadEbookSacReq" resultType="MetaInfo">
-		SELECT  /* DownloadMapper.xml, selectDownloadEbookInfo, SAC 전시, 2014-03-17 */
+		SELECT  /* DownloadMapper.selectDownloadEbookInfo, eBook 상품 정보 조회, 이태희/부르칸, 2014-03-17 */
 		        KA.*
 		      , DECODE(KA.META_CLSF_CD, 'CT26', NVL(KA.MALL_CD, 'MM001308'), KA.MALL_CD) AS MALL_CD
 		      , FC_GET_IMAGE(DECODE(KA.META_CLSF_CD, 'CT19', KA.PROD_ID, KA.PART_PROD_ID), #{imageCd}) AS DLM_IMAGE_PATH
@@ -650,14 +650,14 @@
     
     <!-- for download 대여 상품 구매상태 조회 -->
     <select id="getDownloadPurchaseState" parameterType="DownloadEbookSacReq" resultType="java.lang.String">
-        SELECT /* DownloadMapper.xml, getEbookPurchaseState, SAC 전시, 2014-03-17 */
+        SELECT /* DownloadMapper.getDownloadPurchaseState, for download 대여 상품 구매상태 조회, 이태희/부르칸, 2014-03-17 */
                CASE WHEN TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') BETWEEN #{prchsDt} AND #{dwldExprDt} THEN 'payment' ELSE 'expired' END AS PURCHASE_STATE
           FROM DUAL
     </select>
     
     <!-- Comic 상품 정보 조회(for download) -->
     <select id="selectDownloadComicInfo" parameterType="DownloadComicSacReq" resultType="MetaInfo">
-		SELECT  /* DownloadMapper.xml, selectDownloadComicInfo, SAC 전시, 2014-03-17 */
+		SELECT  /* DownloadMapper.selectDownloadComicInfo, Comic 상품 정보 조회, 이태희/부르칸, 2014-03-17 */
 		        JA.*
 		      , DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free') AS PROD_CHRG
 		      , FC_GET_IMAGE(JA.PART_PROD_ID, 'DP000194') AS DLM_IMAGE_PATH

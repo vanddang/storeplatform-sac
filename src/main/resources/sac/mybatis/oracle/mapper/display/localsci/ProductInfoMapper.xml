@@ -23,7 +23,7 @@
     </resultMap>
     
 	<select id="selectProductInfoList" resultType="ProductBasicInfo">
-		SELECT /* ProductInfoMapper.xml, selectProductInfoList, SAC 전시, 2014-03-10 */
+		SELECT /* ProductInfoMapper.selectProductInfoList, 상품별 서비스 그룹코드 조회, 오승민/인크로스, 2014-03-10 */
            PROD_ID,SVC_GRP_CD,SVC_TYPE_CD,CONTENTS_TYPE_CD,META_CLSF_CD,TOP_MENU_ID,PROD_ID AS PART_PROD_ID
       FROM TB_DP_PROD
       <if test = "list !=null">
@@ -41,7 +41,7 @@
     </select>
     
     <select id="getAppMetaInfo" parameterType="Map" resultType="ProductInfo">
-        SELECT /* ProductInfoMapper.xml, getAppMetaInfo, SAC 전시, 2014-03-10 */
+        SELECT /* ProductInfoMapper.getAppMetaInfo, APP상품 메타조회, 오승민/인크로스, 2014-03-10 */
                 TB.TOP_MENU_ID
               , TB.UP_MENU_ID
               , TB.MENU_ID
@@ -151,7 +151,7 @@
        ) TB
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="ProductInfo">
-        SELECT  /* ProductInfoMapper.xml, getVODMetaInfo, SAC 전시, 2014-03-10 */
+        SELECT  /* ProductInfoMapper.getVODMetaInfo, VOD상품메타조회, 오승민/인크로스, 2014-03-10 */
 		         A.MENU_ID
 		       , A.UP_MENU_ID
 		       , A.TOP_MENU_ID
@@ -242,7 +242,7 @@
     </select>
     
     <select id="getMusicMetaInfo" parameterType="Map" resultType="ProductInfo">
-       SELECT /* ProductInfoMapper.xml, getMusicMetaInfo, SAC 전시, 2014-03-10 */
+       SELECT /* ProductInfoMapper.getMusicMetaInfo, Music상품 메타조회, 오승민/인크로스, 2014-03-10 */
              CP.PROD_ID 
             , CP.PART_PROD_ID
             , C.MENU_ID
@@ -313,7 +313,7 @@
           AND CP.PROD_RSHP_CD = #{rshpCd}
     </select>
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="ProductInfo">
-        SELECT /* ProductInfoMapper.xml, getEbookComicMetaInfo, SAC 전시, 2014-03-10 */
+        SELECT /* ProductInfoMapper.getEbookComicMetaInfo, ebook/Comic 상품메타 조회, 오승민/인크로스, 2014-03-10 */
                A.UP_MENU_ID
              , A.TOP_MENU_ID   
              , (SELECT MENU_NM

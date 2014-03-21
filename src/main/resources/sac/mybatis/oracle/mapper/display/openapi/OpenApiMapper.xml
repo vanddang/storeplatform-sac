@@ -1736,7 +1736,7 @@
     
     <!-- APP 목록 요청-->
     <select id="getAppList" parameterType="map" resultType="MetaInfo">
-       SELECT  /* OpenApiMapper.xml, getAppList, SAC 전시, 2014-03-03 */
+       SELECT  /* OpenApiMapper.getAppList, APP 목록 요청, 오승민/인크로스, 2014-03-03 */
                 NVL(APPPROD.AID, '') AS AID
 		       ,PRODDESC.PROD_NM
 		       ,PROD.REG_DT
@@ -1765,7 +1765,7 @@
     
     <!-- APP 상세 요청-->
     <select id="getAppDetail" parameterType="map" resultType="MetaInfo">
-       SELECT  /* OpenApiMapper.xml, getAppDetail, SAC 전시, 2014-03-03 */
+       SELECT  /* OpenApiMapper.getAppDetail, APP 상세 요청, 오승민/인크로스, 2014-03-03 */
                PRODDESC.PROD_NM
               ,PROD.EXPO_SELLER_NM
 		      ,PRODDESC.PROD_BASE_DESC
@@ -1804,7 +1804,7 @@
     
      <!-- 개발APP 목록 요청-->
     <select id="getPDAppList" parameterType="map" resultType="MetaInfo">
-       SELECT  /* OpenApiMapper.xml, getPDAppList, SAC 전시, 2014-03-03 */
+       SELECT  /* OpenApiMapper.getPDAppList, 개발APP 목록 요청, 이태희/부르칸, 2014-03-03 */
                 NVL(APPPROD.AID, '') AS AID
                ,PRODDESC.PROD_NM
                ,PROD.REG_DT
@@ -1831,7 +1831,7 @@
     
     <!-- PKG Name 기반 상품 리스트 조회 -->
     <select id="searchSalesAppList" parameterType="SalesAppSacReq" resultType="MetaInfo">
-		SELECT  /* OpenApiMapper.xml, searchSalesAppList, SAC 전시, 2014-03-17 */
+		SELECT  /* OpenApiMapper.searchSalesAppList, PKG Name 기반 상품 리스트 조회, 이태희/부르칸, 2014-03-17 */
 		        COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
 		      , IA.* 
 		  FROM (SELECT  ROW_NUMBER() OVER(PARTITION BY A.PROD_ID, F.VM_VER ORDER BY C.PROD_STATUS_CD, A.REG_DT) AS RNUM
@@ -1869,7 +1869,7 @@
     
     <!-- PKG Name 기반 상품 정보 조회 -->
     <select id="getSalesAppInfo" parameterType="SalesAppInfoSacReq" resultType="MetaInfo">
-		SELECT  /* OpenApiMapper.xml, getSalesAppInfo, SAC 전시, 2014-03-17 */
+		SELECT  /* OpenApiMapper.getSalesAppInfo, PKG Name 기반 상품 정보 조회, 이태희/부르칸, 2014-03-17 */
 		        A.PROD_ID
 		      , A.AID
 		  FROM  TB_DP_APP_PROD     A
@@ -1881,7 +1881,7 @@
     
     <!-- PackageName으로 상품ID 조회 -->
     <select id="searchProductIdByPackageName" parameterType="map" resultType="MetaInfo">     
-        SELECT /* OpenApiMapper.xml, searchProductIdByPackageName, SAC 전시, 2014-03-03 */
+        SELECT /* OpenApiMapper.searchProductIdByPackageName, PackageName으로 상품ID 조회, 백승현/인크로스, 2014-03-03 */
                T1.PROD_ID
           FROM (
                     SELECT 
@@ -1924,7 +1924,7 @@
     <!-- 상품ID로 상품 상세정보 조회 -->
     <select id="searchProductByProductId" parameterType="map" resultType="MetaInfo">
     <![CDATA[
-           SELECT  /* OpenApiMapper.xml, searchProductByProductId, SAC 전시, 2014-03-03 */
+           SELECT  /* OpenApiMapper.searchProductByProductId, 상품ID로 상품 상세정보 조회, SAC 전시, 2014-03-03 */
                  DP.PROD_ID AS PROD_ID
                 ,DPD.PROD_NM AS PROD_NM 
                 ,DAP.AID AS AID
@@ -2087,7 +2087,7 @@
     
     <!-- 타켓 단말 리스트 (By PackageName)-->
     <select id="searchSupportDeviceListByPkgNm" parameterType="map" resultType="SupportDeviceInfo">
-		 SELECT  /* OpenApiMapper.xml, searchSupportDeviceListByPkgNm, SAC 전시, 2014-03-03 */
+		 SELECT  /* OpenApiMapper.searchSupportDeviceListByPkgNm, 타켓 단말 리스트 (By PackageName), 백승현/인크로스, 2014-03-03 */
 		        DSC.APK_VER AS VERSION_CODE
 		      , CD.DEVICE_MODEL_CD AS DEVICE_MODEL_CD
 		      , CD.MODEL_NM AS DEVICE_MODEL_NM
@@ -2107,7 +2107,7 @@
 
     <!-- 타켓 단말 리스트 (By ProductId)-->
     <select id="searchSupportDeviceListByProdId" parameterType="map" resultType="MetaInfo">    
-        SELECT /* OpenApiMapper.xml, searchSupportDeviceListByProdId, SAC 전시, 2014-03-03 */
+        SELECT /* OpenApiMapper.searchSupportDeviceListByProdId, 타켓 단말 리스트 (By ProductId), 백승현/인크로스, 2014-03-03 */
                CD.DEVICE_MODEL_CD AS DEVICE_MODEL_CD
               ,CD.MODEL_NM AS DEVICE_MODEL_NM
         FROM   TB_DP_SPRT_DEVICE DSD
@@ -2118,7 +2118,7 @@
     
     <!-- 상품 ID 리스트 (BY AID)-->
     <select id="getProductIdByAid" parameterType="map" resultType="Map">    
-        SELECT /* OpenApiMapper.xml, getProductIdByAid, SAC 전시, 2014-03-03 */
+        SELECT /* OpenApiMapper.getProductIdByAid, 상품 ID 리스트 (By AID), 백승현/인크로스, 2014-03-03 */
               P.PROD_ID AS PROD_ID
               ,DAP.AID AS AID
         FROM   TB_DP_PROD P
@@ -2155,7 +2155,7 @@
     
     <!-- 게임센터 상품 지원 여부 조회 -->
     <select id="searchSupportGameCenter" parameterType="map" resultType="MetaInfo">
-		SELECT /* OpenApiMapper.xml, searchSupportGameCenter, SAC 전시, 2014-03-03 */
+		SELECT /* OpenApiMapper.searchSupportGameCenter, 게임센터 상품 지원 여부 조회, 백승현/인크로스, 2014-03-03 */
 		      P.PROD_ID
 		      ,DAP.AID
 		      ,DPD.PROD_NM

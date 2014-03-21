@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="IntimateMessage">
     <select id="selectIntimateMessageList" parameterType="IntimateMessageSacReq" resultType="IntimateMessageDefault">
-		SELECT /* IntimateMessageMapper.xml, selectIntimateMessageList, SAC 전시, 2014-03-17 */
+		SELECT /* IntimateMessageMapper.selectIntimateMessageList, Intimate Message조회, 이태희/부르칸, 2014-03-17 */
 		       KA.*
 		  FROM (SELECT  COUNT(JA.MSG_ID) OVER() AS TOTAL_COUNT
 		              , ROW_NUMBER() OVER(ORDER BY JA.MSG_TYPE_CD DESC, JA.MSG_ID DESC) AS RNUM
