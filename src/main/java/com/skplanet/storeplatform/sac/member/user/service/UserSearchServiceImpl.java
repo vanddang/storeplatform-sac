@@ -1785,6 +1785,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		SearchMbrDeviceRequest searchMbrDeviceRequest = new SearchMbrDeviceRequest();
+
 		searchMbrDeviceRequest.setDeviceKeyList(userDeviceKeyList);
 		searchMbrDeviceRequest.setCommonRequest(commonRequest);
 
