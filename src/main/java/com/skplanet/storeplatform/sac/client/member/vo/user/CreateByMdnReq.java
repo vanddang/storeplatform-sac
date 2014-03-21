@@ -135,7 +135,7 @@ public class CreateByMdnReq extends CommonInfo {
 	private String parentRealNameSite = "";
 
 	/**
-	 * 내외국인 여부 Y or N
+	 * 내국인 여부 Y or N
 	 */
 	private String parentIsDomestic = "";
 
