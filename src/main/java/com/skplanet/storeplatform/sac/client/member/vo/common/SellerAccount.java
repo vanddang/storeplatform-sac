@@ -163,8 +163,12 @@ public class SellerAccount extends CommonInfo {
 	// private String repFax;
 	// private String repEmail;
 
-	// 2014.03.20 추가
+	/**
+	 * 은행BSB. 3/21 추가
+	 */
+	private String bankBsb;
 
+	// 2014.03.20 추가 TODO getter & setter 아직 미생성.
 	/**
 	 * 판매자 연락처 (개인/법인 사업자). TODO 정확한 명칭 아직 확인 안됨.
 	 */
@@ -184,6 +188,21 @@ public class SellerAccount extends CommonInfo {
 	 * CEO명.
 	 */
 	private String ceoName;
+
+	/**
+	 * @return the bankBsb
+	 */
+	public String getBankBsb() {
+		return this.bankBsb;
+	}
+
+	/**
+	 * @param bankBsb
+	 *            the bankBsb to set
+	 */
+	public void setBankBsb(String bankBsb) {
+		this.bankBsb = bankBsb;
+	}
 
 	/**
 	 * @return the abaCode
