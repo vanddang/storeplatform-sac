@@ -135,6 +135,11 @@ public class CreateByMdnReq extends CommonInfo {
 	private String parentRealNameSite = "";
 
 	/**
+	 * 내외국인 여부 Y or N
+	 */
+	private String parentIsDomestic = "";
+
+	/**
 	 * @return String : deviceId
 	 */
 	public String getDeviceId() {
@@ -462,6 +467,21 @@ public class CreateByMdnReq extends CommonInfo {
 	 */
 	public void setParentRealNameSite(String parentRealNameSite) {
 		this.parentRealNameSite = parentRealNameSite;
+	}
+
+	/**
+	 * @return String : parentIsDomestic
+	 */
+	public String getParentIsDomestic() {
+		return this.parentIsDomestic;
+	}
+
+	/**
+	 * @param parentIsDomestic
+	 *            String : the parentIsDomestic to set
+	 */
+	public void setParentIsDomestic(String parentIsDomestic) {
+		this.parentIsDomestic = parentIsDomestic;
 	}
 
 }
