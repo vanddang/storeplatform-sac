@@ -67,6 +67,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailReque
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
@@ -100,6 +101,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDevice;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
@@ -1766,10 +1768,24 @@ public class UserSearchServiceImpl implements UserSearchService {
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
-		List<String> deviceKeyList = request.getDeviceKeyList();
+		// deviceKey List 추출
+		List<String> deviceKeyList = new ArrayList<String>();
+		// Request 를 보내기 위한 세팅
+		List<UserDeviceKey> userDeviceKeyList = new ArrayList<UserDeviceKey>();
+
+		for (SearchUserDevice schUserDevice : request.getSearchUserDeviceReqList()) {
+			String deviceKey = schUserDevice.getDeviceKey();
+
+			UserDeviceKey userDeviceKey = new UserDeviceKey();
+			userDeviceKey.setDeviceKey(schUserDevice.getDeviceKey());
+			userDeviceKey.setUserKey(schUserDevice.getUserKey());
+
+			userDeviceKeyList.add(userDeviceKey);
+			deviceKeyList.add(deviceKey);
+		}
 
 		SearchMbrDeviceRequest searchMbrDeviceRequest = new SearchMbrDeviceRequest();
-		searchMbrDeviceRequest.setDeviceKeyList(deviceKeyList);
+		searchMbrDeviceRequest.setDeviceKeyList(userDeviceKeyList);
 		searchMbrDeviceRequest.setCommonRequest(commonRequest);
 
 		logger.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC UserSCI.searchMbrDevice() 호출.");
