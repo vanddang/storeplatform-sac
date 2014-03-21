@@ -168,10 +168,10 @@ public class ChangeMobileNumberTest {
 			map.put("systemID", "W");
 			map.put("tenantID", "S01");
 
-			map.put("mdn", "01099991007");
+			map.put("mdn", "01037448304");
 			map.put("svc_mng_num", "1422819401");
 			map.put("model_id", "SSNT");
-			map.put("be_mdn", "01037448304");
+			map.put("be_mdn", "01099991007");
 
 			this.idpService.executeChangeMobileNumber(map);
 

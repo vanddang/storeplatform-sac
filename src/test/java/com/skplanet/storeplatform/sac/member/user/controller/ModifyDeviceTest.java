@@ -309,7 +309,6 @@ public class ModifyDeviceTest {
 	 * 정상케이스 서비스 호출.
 	 * </pre>
 	 */
-	@Deprecated
 	public void shouldModifyDeviceService() {
 
 		TenantHeader tenantHeader = new TenantHeader();
@@ -326,10 +325,10 @@ public class ModifyDeviceTest {
 		requestHeader.setTenantHeader(tenantHeader);
 
 		ModifyDeviceReq req = new ModifyDeviceReq();
-		req.setUserKey("US201402170712090930002827");
+		req.setUserKey("US201401231758478870000470");
 
 		DeviceInfo deviceInfo = new DeviceInfo();
-		//deviceInfo.setDeviceKey("DE201402140234115260001735");
+		deviceInfo.setDeviceKey("DE201401240240079500000271");
 		deviceInfo.setDeviceId("01099999996");
 		deviceInfo.setDeviceIdType("msisdn ");
 		deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);

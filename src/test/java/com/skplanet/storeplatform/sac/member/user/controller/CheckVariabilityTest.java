@@ -142,10 +142,10 @@ public class CheckVariabilityTest {
 						public Object requestBody() {
 
 							CheckVariabilityReq req = new CheckVariabilityReq();
-							req.setDeviceId("01066786221");
-							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
-							req.setDeviceAccount("aaaabbb@gmail.com");
-							req.setNativeId("A0000031648EE9");
+							req.setDeviceId("01048088874");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+							//req.setDeviceAccount("aaaabbb@gmail.com");
+							//req.setNativeId("A0000031648EE9");
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
 								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
