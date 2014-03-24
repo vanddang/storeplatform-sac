@@ -123,7 +123,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			} catch (Exception e) {
 
-				this.logger.info("SAC_PUR_9999 : {}", e);
+				this.logger.debug("SAC_PUR_9999 : {}", e);
 
 				purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 				purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
@@ -248,8 +248,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/**
 		 * 전시 상품 구매건수 -1. try { this.purchaseCancelRepository.updatePurchaseCount(purchaseCancelSacParam,
-		 * purchaseCancelDetailSacParam); } catch (Exception e) { this.logger.info("구매 상품 개수 업데이트 실패! ========= {}", e);
-		 * }
+		 * purchaseCancelDetailSacParam); } catch (Exception e) { this.logger.debug("구매 상품 개수 업데이트 실패! ========= {}",
+		 * e); }
 		 */
 
 		/** RO 삭제 처리. */
@@ -262,7 +262,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			try {
 				this.removeRO(purchaseCancelSacParam, purchaseCancelDetailSacParam, prchsDtlSacParam);
 			} catch (Exception e) {
-				this.logger.info("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
+				this.logger.debug("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
 			}
 		}
 
@@ -368,8 +368,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/**
 		 * 전시 상품 구매건수 -1. try { this.purchaseCancelRepository.updatePurchaseCount(purchaseCancelSacParam,
-		 * purchaseCancelDetailSacParam); } catch (Exception e) { this.logger.info("구매 상품 개수 업데이트 실패! ========= {}", e);
-		 * }
+		 * purchaseCancelDetailSacParam); } catch (Exception e) { this.logger.debug("구매 상품 개수 업데이트 실패! ========= {}",
+		 * e); }
 		 */
 
 		/** RO 삭제 처리. */
@@ -377,7 +377,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		 * for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) { if
 		 * (!StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_APP))
 		 * { // APP 상품이 아니면 통과. continue; } try { this.removeRO(purchaseCancelSacParam, purchaseCancelDetailSacParam,
-		 * prchsDtlSacParam); } catch (Exception e) { this.logger.info("RO 삭제 실패! ========= {}, {}",
+		 * prchsDtlSacParam); } catch (Exception e) { this.logger.debug("RO 삭제 실패! ========= {}, {}",
 		 * prchsDtlSacParam.getProdId(), e); } }
 		 */
 
@@ -561,18 +561,18 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		try {
 			resultMsg = this.purchaseCancelRepository.aomPush(deviceId, appId);
 
-			this.logger.info("removeRO.AomPush result ===== {}", resultMsg);
+			this.logger.debug("removeRO.AomPush result ===== {}", resultMsg);
 		} catch (Exception e) {
-			this.logger.info("aom push fail! ========= {}", e.toString());
+			this.logger.debug("aom push fail! ========= {}", e.toString());
 		}
 
 		/** ARM License Remove */
 		try {
 			resultMsg = this.purchaseCancelRepository.armRemoveLicense(deviceId, appId);
 
-			this.logger.info("removeRO.ArmPush result ===== {}", resultMsg);
+			this.logger.debug("removeRO.ArmPush result ===== {}", resultMsg);
 		} catch (Exception e) {
-			this.logger.info("arm license remove fail! ========= {}", e.toString());
+			this.logger.debug("arm license remove fail! ========= {}", e.toString());
 		}
 
 	}
