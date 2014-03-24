@@ -276,6 +276,6 @@
                    , B.REG_DT DESC
         </if>
         ) C
-        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+        WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>
 </mapper>
