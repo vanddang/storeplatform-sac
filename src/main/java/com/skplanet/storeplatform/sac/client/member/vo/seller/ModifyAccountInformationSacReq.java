@@ -123,10 +123,10 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	private String ceoBirthDay; // CEO_BIRTH
 
 	/** 유선 국가번호(사업장). */
-	private String cordedTelephoneCountry; // WIRE_NATION_NO
+	private String sellerBizPhoneCountry;
 
 	/** 유선 전화번호(사업장). */
-	private String cordedTelephone; // WIRE_TEL_NO 유선전화번호
+	private String sellerBizPhone;
 
 	/** 은행BSB . */
 	private String bankBsb; //
@@ -660,33 +660,33 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the cordedTelephoneCountry
+	 * @return the sellerBizPhoneCountry
 	 */
-	public String getCordedTelephoneCountry() {
-		return this.cordedTelephoneCountry;
+	public String getSellerBizPhoneCountry() {
+		return this.sellerBizPhoneCountry;
 	}
 
 	/**
-	 * @param cordedTelephoneCountry
-	 *            the cordedTelephoneCountry to set
+	 * @param sellerBizPhoneCountry
+	 *            the sellerBizPhoneCountry to set
 	 */
-	public void setCordedTelephoneCountry(String cordedTelephoneCountry) {
-		this.cordedTelephoneCountry = cordedTelephoneCountry;
+	public void setSellerBizPhoneCountry(String sellerBizPhoneCountry) {
+		this.sellerBizPhoneCountry = sellerBizPhoneCountry;
 	}
 
 	/**
-	 * @return the cordedTelephone
+	 * @return the sellerBizPhone
 	 */
-	public String getCordedTelephone() {
-		return this.cordedTelephone;
+	public String getSellerBizPhone() {
+		return this.sellerBizPhone;
 	}
 
 	/**
-	 * @param cordedTelephone
-	 *            the cordedTelephone to set
+	 * @param sellerBizPhone
+	 *            the sellerBizPhone to set
 	 */
-	public void setCordedTelephone(String cordedTelephone) {
-		this.cordedTelephone = cordedTelephone;
+	public void setSellerBizPhone(String sellerBizPhone) {
+		this.sellerBizPhone = sellerBizPhone;
 	}
 
 	/**

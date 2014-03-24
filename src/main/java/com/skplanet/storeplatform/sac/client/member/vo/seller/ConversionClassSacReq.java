@@ -33,10 +33,18 @@ public class ConversionClassSacReq extends CommonInfo {
 	private String charger;
 	/** 대표 Email. */
 	private String repEmail;
+	/** 무선전화 국가번호. */
+	private String sellerPhoneCountry;
+	/** 무선전화 번호. */
+	private String sellerPhone;
+	/** 유선 전화 국가번호. */
+	private String cordedTelephoneCountry;
 	/** 유선 전화번호. */
 	private String cordedTelephone;
-	/** 담당자 무선 전화번호. */
-	private String chargerPhone;
+	/** 사업장 전화 국가번호. */
+	private String sellerBizPhoneCountry;
+	/** 사업장 전화번호. */
+	private String sellerBizPhone;
 	/** SMS 수신여부. */
 	private String isRecvSMS;
 	/** 공인인증여부. */
@@ -58,10 +66,6 @@ public class ConversionClassSacReq extends CommonInfo {
 	private String sellerBizCategory;
 	/** 업종명. */
 	private String sellerBizType;
-	/** 대표전화 국가번호. */
-	private String repPhoneArea;
-	/** 대표전화번호. */
-	private String repPhone;
 	/** 우편번호. */
 	private String sellerBizZip;
 	/** 주소. */
@@ -238,18 +242,78 @@ public class ConversionClassSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the chargerPhone
+	 * @return the sellerPhoneCountry
 	 */
-	public String getChargerPhone() {
-		return this.chargerPhone;
+	public String getSellerPhoneCountry() {
+		return this.sellerPhoneCountry;
 	}
 
 	/**
-	 * @param chargerPhone
-	 *            the chargerPhone to set
+	 * @param sellerPhoneCountry
+	 *            the sellerPhoneCountry to set
 	 */
-	public void setChargerPhone(String chargerPhone) {
-		this.chargerPhone = chargerPhone;
+	public void setSellerPhoneCountry(String sellerPhoneCountry) {
+		this.sellerPhoneCountry = sellerPhoneCountry;
+	}
+
+	/**
+	 * @return the sellerPhone
+	 */
+	public String getSellerPhone() {
+		return this.sellerPhone;
+	}
+
+	/**
+	 * @param sellerPhone
+	 *            the sellerPhone to set
+	 */
+	public void setSellerPhone(String sellerPhone) {
+		this.sellerPhone = sellerPhone;
+	}
+
+	/**
+	 * @return the cordedTelephoneCountry
+	 */
+	public String getCordedTelephoneCountry() {
+		return this.cordedTelephoneCountry;
+	}
+
+	/**
+	 * @param cordedTelephoneCountry
+	 *            the cordedTelephoneCountry to set
+	 */
+	public void setCordedTelephoneCountry(String cordedTelephoneCountry) {
+		this.cordedTelephoneCountry = cordedTelephoneCountry;
+	}
+
+	/**
+	 * @return the sellerBizPhoneCountry
+	 */
+	public String getSellerBizPhoneCountry() {
+		return this.sellerBizPhoneCountry;
+	}
+
+	/**
+	 * @param sellerBizPhoneCountry
+	 *            the sellerBizPhoneCountry to set
+	 */
+	public void setSellerBizPhoneCountry(String sellerBizPhoneCountry) {
+		this.sellerBizPhoneCountry = sellerBizPhoneCountry;
+	}
+
+	/**
+	 * @return the sellerBizPhone
+	 */
+	public String getSellerBizPhone() {
+		return this.sellerBizPhone;
+	}
+
+	/**
+	 * @param sellerBizPhone
+	 *            the sellerBizPhone to set
+	 */
+	public void setSellerBizPhone(String sellerBizPhone) {
+		this.sellerBizPhone = sellerBizPhone;
 	}
 
 	/**
@@ -400,36 +464,6 @@ public class ConversionClassSacReq extends CommonInfo {
 	 */
 	public void setSellerBizType(String sellerBizType) {
 		this.sellerBizType = sellerBizType;
-	}
-
-	/**
-	 * @return the repPhoneArea
-	 */
-	public String getRepPhoneArea() {
-		return this.repPhoneArea;
-	}
-
-	/**
-	 * @param repPhoneArea
-	 *            the repPhoneArea to set
-	 */
-	public void setRepPhoneArea(String repPhoneArea) {
-		this.repPhoneArea = repPhoneArea;
-	}
-
-	/**
-	 * @return the repPhone
-	 */
-	public String getRepPhone() {
-		return this.repPhone;
-	}
-
-	/**
-	 * @param repPhone
-	 *            the repPhone to set
-	 */
-	public void setRepPhone(String repPhone) {
-		this.repPhone = repPhone;
 	}
 
 	/**

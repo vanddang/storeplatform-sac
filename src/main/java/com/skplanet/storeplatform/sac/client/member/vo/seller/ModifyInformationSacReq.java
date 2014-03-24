@@ -67,16 +67,10 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String sellerCompany;
 	/** 사업자 등록번호. */
 	private String sellerBizNumber;
-	/** 담당자 유선 전화번호 국가코드. */
-	private String customerPhoneCountry;
-	/** 담당자 유선 전화번호. */
-	private String customerPhone;
 	/** 담당자 이메일. */
 	private String customerEmail;
 	/** 담당자 명. */
 	private String charger;
-	/** 담당자 무선 전화번호. */
-	private String chargerPhone;
 	/** 유선 국가번호. */
 	private String cordedTelephoneCountry;
 	/** 유선 전화번호. */
@@ -394,36 +388,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the customerPhoneCountry
-	 */
-	public String getCustomerPhoneCountry() {
-		return this.customerPhoneCountry;
-	}
-
-	/**
-	 * @param customerPhoneCountry
-	 *            the customerPhoneCountry to set
-	 */
-	public void setCustomerPhoneCountry(String customerPhoneCountry) {
-		this.customerPhoneCountry = customerPhoneCountry;
-	}
-
-	/**
-	 * @return the customerPhone
-	 */
-	public String getCustomerPhone() {
-		return this.customerPhone;
-	}
-
-	/**
-	 * @param customerPhone
-	 *            the customerPhone to set
-	 */
-	public void setCustomerPhone(String customerPhone) {
-		this.customerPhone = customerPhone;
-	}
-
-	/**
 	 * @return the customerEmail
 	 */
 	public String getCustomerEmail() {
@@ -451,21 +415,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 	 */
 	public void setCharger(String charger) {
 		this.charger = charger;
-	}
-
-	/**
-	 * @return the chargerPhone
-	 */
-	public String getChargerPhone() {
-		return this.chargerPhone;
-	}
-
-	/**
-	 * @param chargerPhone
-	 *            the chargerPhone to set
-	 */
-	public void setChargerPhone(String chargerPhone) {
-		this.chargerPhone = chargerPhone;
 	}
 
 	/**
