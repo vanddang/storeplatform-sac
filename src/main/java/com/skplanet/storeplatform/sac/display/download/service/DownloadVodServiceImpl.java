@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -111,6 +112,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		List<Support> supportList = null;
 
+		List<Identifier> identifierList = null;
 		Product product = new Product();
 
 		if (downloadVodSacReq.getDummy() == null) {
@@ -395,8 +397,32 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				 * 상품 정보
 				 ************************************************************************************************/
 
-				metaInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-				product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+				identifierList = new ArrayList<Identifier>();
+				Identifier identifier = new Identifier();
+
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+						metaInfo.getProdId());
+				identifierList.add(identifier);
+
+				if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)) {
+					// 채널로 요청한 경우
+					metaInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+				} else {
+					// 에피소드로 요청한 경우
+					metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+
+					identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+							metaInfo.getEspdProdId());
+					identifierList.add(identifier);
+				}
+
+				// CID
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD,
+						metaInfo.getCid());
+				identifierList.add(identifier);
+
+				product.setIdentifierList(identifierList); // 상품 ID
+				// product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 				supportList = new ArrayList<Support>();
 				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM,
 						metaInfo.getHdcpYn()));

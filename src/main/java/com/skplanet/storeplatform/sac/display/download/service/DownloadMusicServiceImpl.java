@@ -332,8 +332,19 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 				// 상품ID 정보
 				// metaInfo.setPartProdId(metaInfo.getProdId());
-				metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-				product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+				// metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+				// product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+
+				Identifier identifier = new Identifier();
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+						metaInfo.getChnlProdId());
+				identifierList.add(identifier);
+
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+						metaInfo.getProdId());
+				identifierList.add(identifier);
+
+				product.setIdentifierList(identifierList); // 상품 ID
 
 				// 상품명 정보
 				product.setTitle(this.commonGenerator.generateTitle(metaInfo));

@@ -76,6 +76,7 @@ public class MetaInfo extends CommonInfo {
 	private Integer curCount;
 	private String svcGrpCd;
 	private String svcGrpNm;
+	private String espdProdId;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -3955,6 +3956,21 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setBrdcCompNm(String brdcCompNm) {
 		this.brdcCompNm = brdcCompNm;
+	}
+
+	/**
+	 * @return the espdProdId
+	 */
+	public String getEspdProdId() {
+		return this.espdProdId;
+	}
+
+	/**
+	 * @param espdProdId
+	 *            the espdProdId to set
+	 */
+	public void setEspdProdId(String espdProdId) {
+		this.espdProdId = espdProdId;
 	}
 
 }
