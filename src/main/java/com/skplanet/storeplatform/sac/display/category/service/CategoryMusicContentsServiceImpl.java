@@ -122,6 +122,12 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 			if (null == orderedBy || "".equals(orderedBy)) {
 				requestVO.setOrderedBy("popular");
 			}
+		} else if (filteredBy.equals("bell")) { // 벨소리
+			requestVO.setChartClsfCd("DP004903");
+			requestVO.setBatchId("MELON_DP004903");
+		} else if (filteredBy.equals("ring")) { // 컬러링
+			requestVO.setChartClsfCd("DP004902");
+			requestVO.setBatchId("MELON_DP004902");
 		}
 
 		// 배치완료 기준일시 조회

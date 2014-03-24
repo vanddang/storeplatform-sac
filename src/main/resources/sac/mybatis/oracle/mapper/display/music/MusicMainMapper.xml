@@ -21,29 +21,33 @@
                      , D.META_CLSF_CD
                      , D.CONTENTS_TYPE_CD
                      , COUNT(*) OVER () AS TOTAL_COUNT
-                     <!-- TOP Music -->
                      <if test='filteredBy == "top"'>
+                     /* TOP Music */
                      , ROW_NUMBER() OVER(ORDER BY A.NOW_RANK ASC, E.PROD_NM) AS RNUM
                      </if>
-                     <!-- 최신음악, 장르별 -->
                      <if test='filteredBy == "recent" || filteredBy == "genre"'>
-                         <!-- 인기도 -->
+                     /* 최신음악, 장르별 */
+                         /* 인기도 */
                          <if test='orderedBy == "popular"'>
                      , ROW_NUMBER() OVER(ORDER BY A.NOW_RANK ASC, G.ISSUE_DAY, E.PROD_NM) AS RNUM
                          </if>
-                         <!-- 아티스트명 -->
+                         /* 아티스트명 */
                          <if test='orderedBy == "artist"'>
                      , ROW_NUMBER() OVER(ORDER BY E.ARTIST1_NM, E.PROD_NM) AS RNUM
                          </if>
-                         <!-- 곡명 -->
+                         /* 곡명 */
                          <if test='orderedBy == "title"'>
                      , ROW_NUMBER() OVER(ORDER BY E.PROD_NM, E.ARTIST1_NM) AS RNUM
                          </if>
-                         <!-- Default 인기순 -->
+                         /* Default */
                          <if test='orderedBy == null || orderedBy == ""'>
                      , ROW_NUMBER() OVER(ORDER BY A.NOW_RANK ASC, G.ISSUE_DAY, E.PROD_NM) AS RNUM
                          </if>
-                     </if> 
+                     </if>
+                     <if test='filteredBy == "ring" || filteredBy == "bell"'>
+                     /* 컬러링, 벨소리 */
+                     , ROW_NUMBER() OVER(ORDER BY A.RANK_CHG_CNT ASC) AS RNUM
+                     </if>
                   FROM TB_DP_MUSIC_CHART A  /* 에피소드 */
                      , TB_DP_MENU_CATEGORY_PROD_MAPG B
                      , TB_DP_MENU_CATEGORY C
