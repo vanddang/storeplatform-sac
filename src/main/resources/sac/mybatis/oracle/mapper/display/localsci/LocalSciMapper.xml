@@ -186,4 +186,53 @@
 		 WHERE (DCD_SPRT_CD ='PD005201' OR  DCD_SPRT_CD ='Y')    
     </select>
     
+    <!-- 특가 상품 존재 유무 조회 -->
+    <select id="selectSpecialProdCount" parameterType="HashMap" resultType="Integer">
+        SELECT /* LocalSciMapper.selectSpecialProdCount, 특가 상품 존재 유무 조회 , 김형식/지티소프트, 2014-03-24 */
+               NVL(COUNT(*),0) AS COUNT
+          FROM TB_DP_SPRC_PROD_PRCHS_MANG
+         WHERE 1=1
+           AND PROD_ID = #{productId}
+    </select>      
+
+    <!--특가 상품 구매수 조회 -->
+    <select id="getSpecialPurchaseCount" parameterType="HashMap" resultType="Integer">
+        SELECT /* LocalSciMapper.getSpecialPurchaseCount, 특가 상품 구매수 조회 , 김형식/지티소프트, 2014-02-13 */
+               PRCHS_CNT
+          FROM TB_DP_SPRC_PROD_PRCHS_MANG
+         WHERE 1=1
+           AND PROD_ID = #{productId}
+    </select>        
+    <!--특가 상품 구매건수 업데이트 상품이 없을시 Insert-->
+    <insert id="insertSpecialPurchaseProd" parameterType="HashMap">
+       /* LocalSciMapper.insertSpecialPurchaseProd,특가 상품 구매수 조회시 조회대상 상품이 없을때 상품 Insert , 김형식/지티소프트, 2014-02-13 */
+        INSERT INTO TB_DP_SPRC_PROD_PRCHS_MANG(
+             PRCHS_DT
+           , PROD_ID
+           , PRCHS_CNT
+           , REG_DT
+           , UPD_DT
+        )VALUES(
+            #{purchaseDate}
+           ,#{productId}
+           ,#{purchaseCount,jdbcType=NUMERIC}
+           , SYSDATE
+           , SYSDATE
+        )
+    </insert>    
+    
+    <!-- 특가 상품 구매건수 업데이트 -->
+    <update id="updateSpecialPurchaseCount" parameterType="HashMap">
+        /* LocalSciMapper.updateSpecialPurchaseCount,특가 상품 구매건수 UPDATE ,  김형식/지티소프트, 2014-02-14 */
+        UPDATE TB_DP_SPRC_PROD_PRCHS_MANG
+           SET PRCHS_CNT =  ( SELECT PRCHS_CNT + #{purchaseCount,jdbcType=NUMERIC} 
+                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG
+                                 WHERE 1=1
+                                   AND PROD_ID = #{productId}
+                              )
+                ,UPD_DT = SYSDATE            
+         WHERE 1=1 
+           AND PROD_ID= #{productId}
+    </update>    
+    
 </mapper>
