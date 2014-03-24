@@ -1640,10 +1640,10 @@
          WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>        
     
-    <select id="searchProductByNameNoProvisioningList" parameterType="NoProvisionSacReq" resultType="MetaInfo">
+    <select id="searchProductByNameNoProvisioningList" parameterType="map" resultType="MetaInfo">
              SELECT  /* OpenApiMapper.searchProductByNameNoProvisioningList, 상품 검색 요청(By 상품명), 백승현/인크로스, 2014-03-21 */
                  TOTAL_COUNT                AS TOTAL_COUNT
-                ,PR.PROD_ID                 AS CHNL_PROD_ID
+                ,PP.PROD_ID                 AS CHNL_PROD_ID
                 ,PP.PROD_ID                 AS PROD_ID
                 ,PP.PROD_NM                 AS PROD_NM
                 ,PP.PROD_BASE_DESC          AS PROD_BASE_DESC
@@ -1678,6 +1678,7 @@
                       SELECT  
                               ROW_NUMBER( ) OVER( PARTITION BY PR.PROD_ID ORDER BY P.REG_DT DESC ) AS RNUM
                              ,P.PROD_ID
+                             ,PR.PROD_ID AS CHNL_PROD_ID
                              ,PD.PROD_NM
                              ,PD.PROD_BASE_DESC
                              ,P.TOP_MENU_ID                    
@@ -1708,14 +1709,14 @@
                          AND TP.TENANT_ID = TPP.TENANT_ID
                          AND TP.TENANT_ID = TV.TENANT_ID                         
                          AND P.PROD_ID = TV.PROD_ID(+)
-                         AND PR.PROD_RSHP_CD = 'DP010802'
+                         AND PR.PROD_RSHP_CD = #{rshpCd}
                          AND TP.PROD_STATUS_CD = 'PD000403'
                          AND P.SVC_GRP_CD = 'DP000201'
                          AND PD.LANG_CD = #{langCd}
                          AND P.TOP_MENU_ID != 'DP02'
                        <if test="arrayTopMenuId != null">
                          AND P.TOP_MENU_ID IN
-                          <foreach collection="arrayTopMenuId" item="topMenuId" separator="," open="(" close=")">
+                          <foreach collection="arrayTopMenuId" item="topMenuId" index="index" separator="," open="(" close=")">
                              #{topMenuId}
                           </foreach>
                           <!-- 'DP01','DP03','DP04','DP08' -->
@@ -2212,7 +2213,7 @@
 		AND CP.MENU_ID = DMCD.MENU_ID
 		AND P.PROD_ID = DTP.PROD_ID
 		AND DTP.PROD_ID = DTPP.PROD_ID
-		AND C.PROD_RSHP_CD = 'DP010802'
+		AND C.PROD_RSHP_CD = #{rshpCd}
 		AND PA.TENANT_ID = #{tenantId}
 		AND DTP.TENANT_ID = #{tenantId}
 		AND DTP.TENANT_ID = DTPP.TENANT_ID

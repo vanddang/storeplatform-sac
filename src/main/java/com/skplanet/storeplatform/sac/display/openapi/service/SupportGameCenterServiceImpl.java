@@ -73,6 +73,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 
 		String tenantId = tenantHeader.getTenantId();
 		String langCd = tenantHeader.getLangCd();
+		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
@@ -85,6 +86,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		// Request Parameter
 		this.log.debug("####### tenantId : " + tenantId);
 		this.log.debug("####### langCd : " + langCd);
+		this.log.debug("####### rshpCd : " + rshpCd);
 		this.log.debug("####### deviceModelNo : " + deviceModelNo);
 		this.log.debug("####### userKey : " + userKey);
 		this.log.debug("####### deviceKey : " + deviceKey);
@@ -107,6 +109,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		paramMap.put("req", supportGameCenterSacReq);
 		paramMap.put("tenantId", tenantId);
 		paramMap.put("langCd", langCd);
+		paramMap.put("rshpCd", rshpCd);
 		paramMap.put("deviceModelNo", deviceModelNo);
 		paramMap.put("arrayAId", arrayAid);
 

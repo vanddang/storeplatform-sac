@@ -4,8 +4,10 @@
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,16 +59,17 @@ public class NoProvisionServiceImpl implements NoProvisionService {
 	@Override
 	public NoProvisionSacRes searchProductByNameNoProvisioningList(NoProvisionSacReq noProvisionSacReq,
 			SacRequestHeader requestheader) {
+
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
 
-		noProvisionSacReq.setTenantId(tenantHeader.getTenantId());
-		noProvisionSacReq.setLangCd(tenantHeader.getLangCd());
-		noProvisionSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
+		String tenantId = tenantHeader.getTenantId();
+		String langCd = tenantHeader.getLangCd();
+		String imageCd = DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD;
+		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
 
 		NoProvisionSacRes response = new NoProvisionSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		int index = 0;
 		int offset = 1; // default
 		int count = 20; // default
 
@@ -93,12 +96,27 @@ public class NoProvisionServiceImpl implements NoProvisionService {
 		String[] arrayTopMenuId = noProvisionSacReq.getTopMenuIdList().split("\\+");
 		noProvisionSacReq.setArrayTopMenuId(arrayTopMenuId);
 
-		this.log.debug("####### topMenuIdList : " + noProvisionSacReq.getTopMenuIdList());
+		// Request Parameter
+		this.log.debug("####### tenantId : " + tenantId);
+		this.log.debug("####### langCd : " + langCd);
+		this.log.debug("####### imageCd : " + imageCd);
 		this.log.debug("####### arrayTopMenuId : " + arrayTopMenuId);
 		this.log.debug("####### searchKeyword : " + noProvisionSacReq.getSearchKeyword());
 		this.log.debug("####### orderedBy : " + noProvisionSacReq.getOrderedBy());
 		this.log.debug("####### offset : " + noProvisionSacReq.getOffset());
 		this.log.debug("####### count : " + noProvisionSacReq.getCount());
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("req", noProvisionSacReq);
+		paramMap.put("tenantId", tenantId);
+		paramMap.put("langCd", langCd);
+		paramMap.put("imageCd", imageCd);
+		paramMap.put("rshpCd", rshpCd);
+		paramMap.put("arrayTopMenuId", arrayTopMenuId);
+		paramMap.put("searchKeyword", noProvisionSacReq.getSearchKeyword());
+		paramMap.put("orderedBy", noProvisionSacReq.getOrderedBy());
+		paramMap.put("offset", noProvisionSacReq.getOffset());
+		paramMap.put("count", noProvisionSacReq.getCount());
 
 		Identifier identifier = new Identifier();
 		List<Product> productList = new ArrayList<Product>();
@@ -108,8 +126,8 @@ public class NoProvisionServiceImpl implements NoProvisionService {
 		List<MetaInfo> noProvisioning = null;
 		// OpenApi 상품 검색 요청(BY 상품명) - No Provisioning
 
-		noProvisioning = this.commonDAO.queryForList("OpenApi.searchProductByNameNoProvisioningList",
-				noProvisionSacReq, MetaInfo.class);
+		noProvisioning = this.commonDAO.queryForList("OpenApi.searchProductByNameNoProvisioningList", paramMap,
+				MetaInfo.class);
 
 		if (noProvisioning.size() != 0) {
 
