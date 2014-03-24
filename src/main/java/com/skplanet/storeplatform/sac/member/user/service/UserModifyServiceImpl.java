@@ -123,10 +123,18 @@ public class UserModifyServiceImpl implements UserModifyService {
 				updateUserInfoEcReq.setUserType("1"); // 가입자 유형코드 (1:개인)
 				updateUserInfoEcReq.setIsBizAuth(MemberConstants.USE_N);
 				updateUserInfoEcReq.setUdtTypeCd("4"); // 업데이트 구분 코드 (1:TN, 2:EM, 3:TN+EM, 4:부가정보)
-				updateUserInfoEcReq.setUserCalendar(req.getUserCalendar()); // 양력1, 음력2
-				updateUserInfoEcReq.setUserZipcode(req.getUserZip()); // 우편번호
-				updateUserInfoEcReq.setUserAddress(req.getUserAddress()); // 주소
-				updateUserInfoEcReq.setUserAddress2(req.getUserDetailAddress()); // 상세주소
+				if (!StringUtils.equals(req.getUserCalendar(), "")) {
+					updateUserInfoEcReq.setUserCalendar(req.getUserCalendar()); // 양력1, 음력2
+				}
+				if (!StringUtils.equals(req.getUserZip(), "")) {
+					updateUserInfoEcReq.setUserZipcode(req.getUserZip()); // 우편번호
+				}
+				if (!StringUtils.equals(req.getUserAddress(), "")) {
+					updateUserInfoEcReq.setUserAddress(req.getUserAddress()); // 주소
+				}
+				if (!StringUtils.equals(req.getUserDetailAddress(), "")) {
+					updateUserInfoEcReq.setUserAddress2(req.getUserDetailAddress()); // 상세주소
+				}
 				this.imIdpSCI.updateUserInfo(updateUserInfoEcReq);
 
 				/**
@@ -162,13 +170,27 @@ public class UserModifyServiceImpl implements UserModifyService {
 				modifyProfileEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 인증키
 				modifyProfileEcReq.setKeyType("2");
 				modifyProfileEcReq.setKey(userInfo.getImMbrNo()); // MBR_NO
-				modifyProfileEcReq.setUserSex(req.getUserSex()); // 성별
-				modifyProfileEcReq.setUserBirthday(req.getUserBirthDay()); // 생년월일
-				modifyProfileEcReq.setUserCalendar(req.getUserCalendar()); // 양력1, 음력2
-				modifyProfileEcReq.setUserZipcode(req.getUserZip()); // 우편번호
-				modifyProfileEcReq.setUserAddress(req.getUserAddress()); // 주소
-				modifyProfileEcReq.setUserAddress2(req.getUserDetailAddress()); // 상세주소
-				modifyProfileEcReq.setUserTel(req.getUserPhone()); // 사용자 연락처
+				if (!StringUtils.equals(req.getUserSex(), "")) {
+					modifyProfileEcReq.setUserSex(req.getUserSex()); // 성별
+				}
+				if (!StringUtils.equals(req.getUserBirthDay(), "")) {
+					modifyProfileEcReq.setUserBirthday(req.getUserBirthDay()); // 생년월일
+				}
+				if (!StringUtils.equals(req.getUserCalendar(), "")) {
+					modifyProfileEcReq.setUserCalendar(req.getUserCalendar()); // 양력1, 음력2
+				}
+				if (!StringUtils.equals(req.getUserZip(), "")) {
+					modifyProfileEcReq.setUserZipcode(req.getUserZip()); // 우편번호
+				}
+				if (!StringUtils.equals(req.getUserAddress(), "")) {
+					modifyProfileEcReq.setUserAddress(req.getUserAddress()); // 주소
+				}
+				if (!StringUtils.equals(req.getUserDetailAddress(), "")) {
+					modifyProfileEcReq.setUserAddress2(req.getUserDetailAddress()); // 상세주소
+				}
+				if (!StringUtils.equals(req.getUserPhone(), "")) {
+					modifyProfileEcReq.setUserTel(req.getUserPhone()); // 사용자 연락처
+				}
 				this.idpSCI.modifyProfile(modifyProfileEcReq);
 
 				/**

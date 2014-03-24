@@ -500,7 +500,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 				req.getDeviceId(), req.getDeviceIdType());
 
 		/**
-		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
+		 * IDP 연동을 위한.... Phone 정보 세팅.
 		 */
 		StringBuffer sbUserPhone = new StringBuffer();
 		sbUserPhone.append(req.getDeviceId());
