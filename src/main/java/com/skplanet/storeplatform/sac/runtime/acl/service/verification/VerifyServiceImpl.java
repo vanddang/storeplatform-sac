@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
-import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
+import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 /**
@@ -47,7 +47,8 @@ public class VerifyServiceImpl implements VerifyService {
 	@Override
 	public void verifyTimestamp(HttpHeaders header) {
 		String requestTimestamp = header.getTimestamp();
-		if (!AclUtils.isTimeOut(requestTimestamp)) {
+		String nonce = header.getNonce();
+		if (!SacAuthUtil.isValidTimestampAndNonce(requestTimestamp, nonce)) {
 			throw new StorePlatformException("SAC_CMN_0002");
 		}
 	}
