@@ -135,4 +135,20 @@ public class ThemeController {
 		return this.themeThemeZoneService.searchThemeThemeZoneList(req, header);
 
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 테마존 테마 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param themeZoneReq
+	 *            themeZoneReq
+	 * @return ThemeZoneRes
+	 */
+	@RequestMapping(value = "/display/feature/theme/themeZone/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ThemeThemeZoneSacRes searchThemeThemeZone(ThemeThemeZoneSacReq req, SacRequestHeader header) {
+		return this.themeThemeZoneService.searchThemeThemeZone(req, header);
+	}
 }

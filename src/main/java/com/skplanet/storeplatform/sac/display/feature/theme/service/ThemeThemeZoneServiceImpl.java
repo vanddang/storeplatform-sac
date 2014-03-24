@@ -154,7 +154,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 			List<ThemeThemeZoneInfo> themeThemeZoneInfoMeta = null;
 			// 테마 조회
-			themeThemeZoneInfoMeta = this.commonDAO.queryForList("ThemeThemeZone.selectThemeThemeZone", req,
+			themeThemeZoneInfoMeta = this.commonDAO.queryForList("ThemeThemeZone.selectThemeThemeZoneInfo", req,
 					ThemeThemeZoneInfo.class);
 
 			// Rights rights = null;
@@ -320,6 +320,105 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				// 조회 결과 없음
 				commonResponse.setTotalCount(0);
 				res.setLayOut(layout);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			}
+			return res;
+		} else {
+			return this.generateDummy();
+		}
+	}
+
+	@Override
+	public ThemeThemeZoneSacRes searchThemeThemeZone(ThemeThemeZoneSacReq req, SacRequestHeader header) {
+
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setDeviceModelCd(deviceHeader.getModel());
+
+		ThemeThemeZoneSacRes res = new ThemeThemeZoneSacRes();
+
+		if (req.getDummy() == null) {
+
+			// 필수 파라미터 체크 channelId
+			int offset = 1; // default
+			int count = 20; // default
+
+			if (req.getOffset() != null) {
+				offset = req.getOffset();
+			}
+			req.setOffset(offset);
+
+			if (req.getCount() != null) {
+				count = req.getCount();
+			}
+			count = offset + count - 1;
+			req.setCount(count);
+
+			CommonResponse commonResponse = new CommonResponse();
+			List<Product> productList = new ArrayList<Product>();
+			// 테마존 테마 조회
+			List<ThemeThemeZoneInfo> ThemeThemeZoneList = this.commonDAO.queryForList(
+					"ThemeThemeZone.selectThemeThemeZone", req, ThemeThemeZoneInfo.class);
+
+			if (!ThemeThemeZoneList.isEmpty()) {
+
+				Product product = null;
+
+				// Identifier 설정
+				Identifier identifier = null;
+				List<Identifier> identifierList = null;
+				Title title = null;
+
+				List<Source> sourceList = null;
+				Source source = null;
+
+				ThemeThemeZoneInfo ThemeThemeZoneInfo = null;
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+
+				for (int i = 0; i < ThemeThemeZoneList.size(); i++) {
+					ThemeThemeZoneInfo = ThemeThemeZoneList.get(i);
+
+					product = new Product(); // 결과물
+
+					// identifier 정보
+					identifier = new Identifier();
+					identifierList = new ArrayList<Identifier>();
+
+					identifier.setType("theme");
+					identifier.setText(ThemeThemeZoneInfo.getListId());
+					identifierList.add(identifier);
+					product.setIdentifierList(identifierList);
+
+					// title 정보
+					title = new Title();
+					title.setText(ThemeThemeZoneInfo.getListNm());
+					product.setTitle(title);
+
+					// source 정보
+					source = new Source();
+					sourceList = new ArrayList<Source>();
+					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+					source.setUrl(ThemeThemeZoneInfo.getImgPath());
+					sourceList.add(source);
+					product.setSourceList(sourceList);
+
+					// 데이터 매핑
+					productList.add(i, product);
+
+				}
+				commonResponse.setTotalCount(ThemeThemeZoneList.get(0).getTotalCount());
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
 				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			}

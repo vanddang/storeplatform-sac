@@ -28,6 +28,8 @@ public class ThemeThemeZoneInfo {
 	private String menuId;
 	private String bnrTitle;
 	private String bnrMenuNm;
+	private String listId;
+	private String listNm;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -131,6 +133,36 @@ public class ThemeThemeZoneInfo {
 
 	public void setBnrMenuNm(String bnrMenuNm) {
 		this.bnrMenuNm = bnrMenuNm;
+	}
+
+	/**
+	 * @return the listId
+	 */
+	public String getListId() {
+		return this.listId;
+	}
+
+	/**
+	 * @param listId
+	 *            the listId to set
+	 */
+	public void setListId(String listId) {
+		this.listId = listId;
+	}
+
+	/**
+	 * @return the listNm
+	 */
+	public String getListNm() {
+		return this.listNm;
+	}
+
+	/**
+	 * @param listNm
+	 *            the listNm to set
+	 */
+	public void setListNm(String listNm) {
+		this.listNm = listNm;
 	}
 
 }

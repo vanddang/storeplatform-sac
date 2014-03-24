@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ThemeThemeZone">
-    <!-- 테마 조회 -->
-    <select id="selectThemeThemeZone" parameterType="ThemeThemeZoneSacReq" resultType="ThemeThemeZone">
-        SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZone, SAC 전시, 2014-02-21 */ 
+    <!-- 테마 정보 조회 -->
+    <select id="selectThemeThemeZoneInfo" parameterType="ThemeThemeZoneSacReq" resultType="ThemeThemeZone">
+        SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZoneInfo, SAC 전시, 2014-02-21 */ 
               BNR_MENU_NM
 			, BNR_MENU_ID
             , BNR_NM
@@ -236,7 +236,97 @@
                       ) A
                  WHERE RN = 1
               ) B
-        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+        WHERE RNUM BETWEEN #{offset} AND #{count}
         ORDER BY RNUM
+    </select>
+    
+    <!-- 테마존 테마 리스트 -->
+    <select id="selectThemeThemeZone" parameterType="ThemeThemeZoneSacReq" resultType="ThemeThemeZone">
+	   SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZone, SAC 전시, 2014-03-24 */ 
+          AA.LIST_ID
+          , AA.LIST_NM 
+          , AA.IMG_PATH
+          , AA.TOTAL_COUNT
+	      FROM
+	      (
+	        SELECT 
+	        TDL.LIST_ID
+            , TDL.LIST_NM 
+            , TDL.IMG_PATH
+            , COUNT(*) OVER () AS TOTAL_COUNT
+            , ROW_NUMBER() OVER(ORDER BY TDL.EXPO_ORD, TDL.EXPO_ORD_SUB) AS RNUM
+	        FROM TB_DP_LIST TDL
+	        WHERE TDL.LIST_GRP_CD = 'TAR'
+	        AND TDL.EXPO_YN = 'Y'
+	        AND EXISTS (
+	            SELECT  
+	              1
+	              FROM TB_DP_LIST_PROD TDLP
+	                  , TB_DP_PROD_RSHP A
+	                  , TB_DP_MENU_CATEGORY_PROD_MAPG B
+	                  , TB_DP_MENU_CATEGORY C
+	                  , TB_DP_PROD D  
+	                  , TB_DP_TENANT_PROD E
+	                  , TB_CM_DEVICE F
+	                  , TB_DP_SPRT_DEVICE G
+	            WHERE TDL.LIST_ID = TDLP.LIST_ID
+	            AND TDLP.EXPO_YN = 'Y'
+	              AND TDLP.PROD_ID = D.PROD_ID
+	              AND A.PART_PROD_ID = D.PROD_ID    
+	              AND A.PROD_RSHP_CD = 'DP010802'
+	              AND A.PROD_ID = B.PROD_ID
+	              AND B.USE_YN = 'Y'
+	              AND B.MENU_ID = C.MENU_ID
+	              AND C.USE_YN = 'Y'
+	              AND D.PROD_ID = E.PROD_ID
+	              AND F.DEVICE_MODEL_CD = 'SHW-M110S'
+	              AND G.DEVICE_MODEL_CD = 'SHW-M110S'
+	              AND F.USE_YN = 'Y'
+	              AND A.PART_PROD_ID = G.PROD_ID
+	            AND DECODE( D.TOP_MENU_ID
+	                          , 'DP13'
+	                          , DECODE( F.EBOOK_SPRT_YN
+	                                  , 'Y'
+	                                  , DECODE( D.META_CLSF_CD
+	                                          , 'CT24'
+	                                          , DECODE( F.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+	                                          , 'CT26'
+	                                          , DECODE( F.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+	                                          , 1 )
+	                                  , 0 )
+	                          , 'DP14'
+	                          , DECODE( F.COMIC_SPRT_YN , 'Y', 1 , 0 )
+	                          , 'DP16'
+	                          , DECODE( D.META_CLSF_CD
+	                                  , 'CT25'
+	                                  , DECODE( F.MUSIC_SPRT_YN, 'Y', 1, 0)
+	                                  , 1 )
+	                          , 1 ) = 1
+	                AND ( CASE WHEN D.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+	                           THEN ( SELECT 1
+	                                    FROM TB_DP_SUB_CONTENTS SC
+	                                   WHERE SC.PROD_ID = A.PART_PROD_ID
+	                                     AND SC.SALE_YN = 'Y'
+	                                     AND DECODE( F.HDV_SPRT_YN
+	                                               , 'PD005201'
+	                                               , DECODE ( SC.DP_PG_QULT_CD
+	                                                        , 'PD009701', 1
+	                                                        , 'PD009702', 1
+	                                                        , 0)
+	                                               , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+                                          AND ROWNUM <![CDATA[ <= ]]> 1  )
+	                           ELSE 1
+	                       END ) = 1
+	                AND ( CASE WHEN D.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+	                           THEN DECODE( F.VIDEO_DRM_SPRT_YN
+	                                      , 'N'
+	                                      , DECODE( NVL( D.DRM_YN, 'N' ), 'N', 1, 0 )
+	                                      , 'Y'
+	                                      , 1 )
+	                           ELSE 1
+	                       END ) = 1
+	                  )
+        ) AA
+        WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>
 </mapper>

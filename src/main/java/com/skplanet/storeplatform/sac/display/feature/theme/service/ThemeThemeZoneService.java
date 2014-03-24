@@ -22,4 +22,16 @@ public interface ThemeThemeZoneService {
 	 * @return BrandShopThemeRes
 	 */
 	ThemeThemeZoneSacRes searchThemeThemeZoneList(ThemeThemeZoneSacReq req, SacRequestHeader header);
+
+	/**
+	 * 
+	 * <pre>
+	 * 테마존 테마 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param ThemeThemeZoneSacReq
+	 *            ThemeThemeZoneSacReq
+	 * @return BrandShopThemeRes
+	 */
+	ThemeThemeZoneSacRes searchThemeThemeZone(ThemeThemeZoneSacReq req, SacRequestHeader header);
 }
