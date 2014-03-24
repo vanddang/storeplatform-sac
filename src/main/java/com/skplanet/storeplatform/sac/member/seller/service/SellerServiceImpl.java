@@ -399,7 +399,9 @@ public class SellerServiceImpl implements SellerService {
 						loginFailCount = "0";
 					}
 
-					if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
+					if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)
+							& StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL,
+									logInSellerResponse.getSellerMainStatus())) {
 						/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
 						UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
 
@@ -430,8 +432,6 @@ public class SellerServiceImpl implements SellerService {
 							// Return Tenant
 							res.setSubSellerKey(logInSellerResponse.getSubSellerKey());
 						}
-					} else {
-						isLoginSuccess = MemberConstants.USE_N;
 					}
 				}
 				/** 2-1. [RESPONSE] 회원 상태 및 로그인 상태 주입. */
