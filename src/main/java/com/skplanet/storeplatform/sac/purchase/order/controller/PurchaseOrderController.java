@@ -80,7 +80,7 @@ public class PurchaseOrderController {
 	public CreatePurchaseSacRes createPurchase(
 			@RequestBody @Validated(GroupCreatePurchase.class) CreatePurchaseSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,CREATE,REQ,{},{}", sacRequestHeader, req);
+		this.logger.debug("PRCHS,ORDER,SAC,CREATE,REQ,{},{}", sacRequestHeader, req);
 
 		// ------------------------------------------------------------------------------
 		// 요청 값 검증
@@ -135,7 +135,7 @@ public class PurchaseOrderController {
 			res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,CREATE,RES,{}", res);
+		this.logger.debug("PRCHS,ORDER,SAC,CREATE,RES,{}", res);
 		return res;
 	}
 
@@ -154,7 +154,7 @@ public class PurchaseOrderController {
 	public CreateFreePurchaseSacRes createFreeChargePurchase(
 			@RequestBody @Validated(GroupCreateFreePurchase.class) CreatePurchaseSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,REQ,{},{}", sacRequestHeader, req);
+		this.logger.debug("PRCHS,ORDER,SAC,CREATEFREE,REQ,{},{}", sacRequestHeader, req);
 
 		// ------------------------------------------------------------------------------
 		// 비과금 구매요청 권한 체크
@@ -187,7 +187,7 @@ public class PurchaseOrderController {
 		res.setResultType(purchaseOrderInfo.getResultType());
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
 
-		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,RES,{}", res);
+		this.logger.debug("PRCHS,ORDER,SAC,CREATEFREE,RES,{}", res);
 		return res;
 	}
 
@@ -206,7 +206,7 @@ public class PurchaseOrderController {
 	public CreateBizPurchaseSacRes createBizPurchase(
 			@RequestBody @Validated(GroupCreateBizPurchase.class) CreatePurchaseSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}", sacRequestHeader, req);
+		this.logger.debug("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}", sacRequestHeader, req);
 
 		// ------------------------------------------------------------------------------
 		// Biz 구매요청 권한 체크
@@ -237,7 +237,7 @@ public class PurchaseOrderController {
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
 		res.setCount(count);
 
-		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,RES,{}", res);
+		this.logger.debug("PRCHS,ORDER,SAC,CREATEBIZ,RES,{}", res);
 		return res;
 	}
 
@@ -255,7 +255,7 @@ public class PurchaseOrderController {
 	@ResponseBody
 	public VerifyOrderSacRes verifyOrder(@RequestBody @Validated VerifyOrderSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,VERIFY,REQ,{},{}", req, sacRequestHeader);
+		this.logger.debug("PRCHS,ORDER,SAC,VERIFY,REQ,{},{}", req, sacRequestHeader);
 
 		String tenantId = null;
 		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
@@ -270,7 +270,7 @@ public class PurchaseOrderController {
 		verifyOrderInfo.setPrchsId(req.getPrchsId());
 
 		VerifyOrderSacRes res = this.orderService.verifyPurchaseOrder(verifyOrderInfo);
-		this.logger.info("PRCHS,ORDER,SAC,VERIFY,RES,{},{}", res);
+		this.logger.debug("PRCHS,ORDER,SAC,VERIFY,RES,{},{}", res);
 		return res;
 	}
 
@@ -288,7 +288,7 @@ public class PurchaseOrderController {
 	@ResponseBody
 	public NotifyPaymentSacRes notifyPayment(@RequestBody @Validated NotifyPaymentSacReq notifyPaymentReq,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,REQ,{}", notifyPaymentReq);
+		this.logger.debug("PRCHS,ORDER,SAC,NOTIFYPAY,REQ,{}", notifyPaymentReq);
 
 		// TAKTODO:: 결제실패 경우 처리 - 구매실패(결제실패) 이력 관리 할건가?
 		if (Integer.parseInt(notifyPaymentReq.getResultCd()) != 0) {
@@ -330,7 +330,7 @@ public class PurchaseOrderController {
 
 		NotifyPaymentSacRes res = new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq
 				.getPaymentInfoList().size());
-		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,RES,{}", res);
+		this.logger.debug("PRCHS,ORDER,SAC,NOTIFYPAY,RES,{}", res);
 		return res;
 	}
 

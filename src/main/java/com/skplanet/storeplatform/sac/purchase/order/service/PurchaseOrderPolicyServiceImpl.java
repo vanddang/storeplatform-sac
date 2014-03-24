@@ -143,7 +143,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public void checkUserPolicy(PurchaseOrderInfo purchaseOrderInfo) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,START,{}", purchaseOrderInfo.getPurchaseUser());
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,USER,START,{}", purchaseOrderInfo.getPurchaseUser());
 
 		if (purchaseOrderInfo.getRealTotAmt() == 0.0) {
 			return;
@@ -188,7 +188,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
 				purchaseOrderInfo.getPurchaseUser().getDeviceId(), policyCodeList);
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,CHECK,{},{}", policyCodeList, policyResMap);
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,USER,CHECK,{},{}", policyCodeList, policyResMap);
 
 		if (policyResMap == null) {
 			return;
@@ -215,7 +215,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 					purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_STORE_TEST_DEVICE);
 					purchaseOrderInfo.setRealTotAmt(0.0);
 
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,TESTMDN,{}", purchaseOrderInfo.getPurchaseUser()
+					this.logger.debug("PRCHS,ORDER,SAC,POLICY,USER,TESTMDN,{}", purchaseOrderInfo.getPurchaseUser()
 							.getDeviceId());
 					return;
 				}
@@ -239,7 +239,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 					// 구매차단
 					purchaseOrderInfo.setBlockPayment(true);
 
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,BLOCK,{}", purchaseOrderInfo.getPurchaseUser()
+					this.logger.debug("PRCHS,ORDER,SAC,POLICY,USER,BLOCK,{}", purchaseOrderInfo.getPurchaseUser()
 							.getDeviceId());
 					return;
 				}
@@ -291,7 +291,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		/* TAKTODO:: 정책 처리 -- 어떤 것이든 처리패턴에 의한 처리에서 특정 처리패턴의 순차 처리로 변경. */
 		/* 추후 정책 구조 변경을 보며, 처리 방법 변경 고려 */
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,START,{}", policyCheckParam);
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,SKT,START,{}", policyCheckParam);
 
 		SktPaymentPolicyCheckResult policyResult = new SktPaymentPolicyCheckResult();
 
@@ -502,7 +502,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			}
 		}
 
-		// this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,END,{},{}", policyCheckParam.getDeviceKey(), policyResult);
+		// this.logger.debug("PRCHS,ORDER,SAC,POLICY,SKT,END,{},{}", policyCheckParam.getDeviceKey(), policyResult);
 		return policyResult;
 	}
 
@@ -520,7 +520,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	private Double checkSktShoppingUserLimitRest(PurchaseTenantPolicy policy,
 			SktPaymentPolicyCheckParam policyCheckParam) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,START,{}", policy.getPolicyId());
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,USERLIMIT,START,{}", policy.getPolicyId());
 
 		// ----------------------------------------------------------------
 		// 회원Part 사용자 정책 조회
@@ -543,7 +543,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			return null;
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,END,{},{}", policy.getPolicyId(),
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,USERLIMIT,END,{},{}", policy.getPolicyId(),
 				Double.parseDouble(individualPolicyInfoSac.getLimitAmount()) - policyCheckParam.getPaymentTotAmt());
 		return Double.parseDouble(individualPolicyInfoSac.getLimitAmount()) - policyCheckParam.getPaymentTotAmt();
 
@@ -560,7 +560,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 남은 SKT 후불 결제 가능 금액
 	 */
 	private Double checkSktLimitRest(PurchaseTenantPolicy policy, SktPaymentPolicyCheckParam policyCheckParam) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
 
 		double checkVal = 0.0;
 
@@ -596,7 +596,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		sciRes = this.purchaseOrderSearchSCI.searchSktAmountDetail(sciReq);
 		checkVal = (Double) sciRes.getVal();
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{},{}", policy.getPolicyId(),
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,END,{},{}", policy.getPolicyId(),
 				(Double.parseDouble(policy.getApplyValue()) - checkVal));
 		return (Double.parseDouble(policy.getApplyValue()) - checkVal);
 	}
@@ -612,7 +612,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 남은 SKT 후불 선물수신 가능 금액
 	 */
 	private Double checkSktRecvLimit(PurchaseTenantPolicy policy, SktPaymentPolicyCheckParam policyCheckParam) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,START,{}", policy.getPolicyId());
 
 		double checkVal = 0.0;
 
@@ -634,7 +634,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		sciRes = this.purchaseOrderSearchSCI.searchSktRecvAmountDetail(sciReq);
 		checkVal = (Double) sciRes.getVal();
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{},{}", policy.getPolicyId(),
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,END,{},{}", policy.getPolicyId(),
 				(Double.parseDouble(policy.getApplyValue()) - checkVal));
 		return (Double.parseDouble(policy.getApplyValue()) - checkVal);
 	}
@@ -652,12 +652,12 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 법인폰 여부: true-법인폰, false-해당 법인폰 아님
 	 */
 	private boolean isCorporationMdn(String corpNum, String deviceId) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,START,{},{}", corpNum, deviceId);
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,CORP,START,{},{}", corpNum, deviceId);
 
 		try {
 			UserEcRes userEcRes = this.uapsRespository.searchUapsAuthorizeInfoByMdn(corpNum, deviceId);
 			if (userEcRes != null) {
-				this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,END,true");
+				this.logger.debug("PRCHS,ORDER,SAC,POLICY,CORP,END,true");
 				return true;
 			}
 		} catch (StorePlatformException e) {
@@ -666,7 +666,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				throw e;
 			} // else는 skip처리가 정상
 		}
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,END,false");
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,CORP,END,false");
 		return false;
 	}
 
@@ -681,13 +681,13 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return SKT 시험폰 여부: true-SKT 시험폰, false-SKT 시험폰 아님
 	 */
 	private boolean isSktTestMdn(UserEcRes uapsUserMappingInfo, String deviceId) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKTTEST,START,{}", deviceId);
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,SKTTEST,START,{}", deviceId);
 
 		if (uapsUserMappingInfo == null) {
 			uapsUserMappingInfo = this.uapsRespository.searchUapsMappingInfoByMdn(deviceId);
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKTTEST,END,{},{}", deviceId,
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,SKTTEST,END,{},{}", deviceId,
 				(StringUtils.equals(uapsUserMappingInfo.getSvcTP(), PurchaseConstants.UAPS_SVC_TP_SKTTEST)));
 
 		return (StringUtils.equals(uapsUserMappingInfo.getSvcTP(), PurchaseConstants.UAPS_SVC_TP_SKTTEST));
@@ -734,13 +734,13 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 결제차단 MVNO 회선 여부: true-결제 차단, false-결제 허용
 	 */
 	private boolean isMvno(UserEcRes uapsUserMappingInfo, String allowMvnoCode, String deviceId) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,MVNO,START,{},{}", deviceId, allowMvnoCode);
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,MVNO,START,{},{}", deviceId, allowMvnoCode);
 
 		if (uapsUserMappingInfo == null) {
 			uapsUserMappingInfo = this.uapsRespository.searchUapsMappingInfoByMdn(deviceId);
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,MVNO,END,{},{},{},{}", deviceId, uapsUserMappingInfo.getMvnoCD(),
+		this.logger.debug("PRCHS,ORDER,SAC,POLICY,MVNO,END,{},{},{},{}", deviceId, uapsUserMappingInfo.getMvnoCD(),
 				allowMvnoCode, (StringUtils.equals(uapsUserMappingInfo.getMvnoCD(), allowMvnoCode) == false));
 
 		return (StringUtils.equals(uapsUserMappingInfo.getMvnoCD(), allowMvnoCode) == false);
