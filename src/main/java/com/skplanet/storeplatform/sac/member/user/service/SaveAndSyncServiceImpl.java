@@ -20,10 +20,13 @@ import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -41,6 +44,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 	@Autowired
 	private DeviceSCI deviceSCI;
+
+	@Autowired
+	private UserSCI userSCI;
 
 	@Autowired
 	private IdpSCI idpSCI;
@@ -89,12 +95,24 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				 */
 				this.secedeForWap(nowDeviceId);
 
-			}
+				/**
+				 * IDP 무선회원 가입
+				 */
+				String mbrNo = this.joinForWap(deviceId);
 
-			/**
-			 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
-			 */
-			this.reviveUser(sacHeader, userKey, deviceId);
+				/**
+				 * 회원 MBR_NO 업데이트
+				 */
+				this.modifyMbrNo(sacHeader, userKey, mbrNo);
+
+			} else {
+
+				/**
+				 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
+				 */
+				this.reviveUser(sacHeader, userKey, deviceId);
+
+			}
 
 		} else {
 
@@ -209,6 +227,41 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		reviveUserRequest.setUserKey(userKey);
 		ReviveUserResponse reviveUserResponse = this.deviceSCI.reviveUser(reviveUserRequest);
 		LOGGER.info("## >> reviveUserResponse : {}", reviveUserResponse);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 MbrNo만 업데이트.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param userKey
+	 *            사용자 Key
+	 */
+	private void modifyMbrNo(SacRequestHeader sacHeader, String userKey, String mbrNo) {
+
+		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+
+		/**
+		 * 공통 정보 setting.
+		 */
+		updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+		/**
+		 * 사용자 기본정보 setting.
+		 */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserKey(userKey);
+		userMbr.setImMbrNo(mbrNo); // MBR_NO
+
+		updateUserRequest.setUserMbr(userMbr);
+
+		/**
+		 * SC 사용자 회원 기본정보 수정 요청.
+		 */
+		this.userSCI.updateUser(updateUserRequest);
 
 	}
 }
