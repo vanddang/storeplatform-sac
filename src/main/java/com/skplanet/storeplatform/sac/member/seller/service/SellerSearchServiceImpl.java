@@ -585,10 +585,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerAccount.setSellerBizCategory(schRes.getSellerMbr().getSellerBizCategory()); // COND_NM 업태명 업태 업태
 			sellerAccount.setSellerBizCorpNumber(schRes.getSellerMbr().getSellerBizCorpNumber()); // ("법인등록번호");
 																								  // CORP_REG_NO
-			sellerAccount.setRepPhoneArea(schRes.getSellerMbr().getRepPhoneArea()); // ("대표전화번호 국가코드");
-																					// REP_TEL_NATION_NO
-			sellerAccount.setRepPhone(schRes.getSellerMbr().getRepPhone()); // ("대표전화번호"); REP_TEL_NO
-			sellerAccount.setRepEmail(schRes.getSellerMbr().getRepEmail()); // ("대표 이메일"); REP_EMAIL
+			// sellerAccount.setRepPhoneArea(schRes.getSellerMbr().getRepPhoneArea()); // ("대표전화번호 국가코드");
+			// REP_TEL_NATION_NO
+			// sellerAccount.setRepPhone(schRes.getSellerMbr().getRepPhone()); // ("대표전화번호"); REP_TEL_NO
+			// sellerAccount.setRepEmail(schRes.getSellerMbr().getRepEmail()); // ("대표 이메일"); REP_EMAIL
 			sellerAccount.setVendorCode(schRes.getSellerMbr().getVendorCode()); // ("벤더 코드"); VENDOR_CD
 			sellerAccount.setIsBizRegistered(schRes.getSellerMbr().getIsBizRegistered()); // ("통신판매업 신고여부");
 																						  // MSALBIZ_DECL_YN
@@ -608,6 +608,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			// 컬럼
 			sellerAccount.setIsOfficialAuth(schRes.getSellerMbr().getIsOfficialAuth());
 
+			// 2014-03-24
+			sellerAccount.setSellerBizPhoneCountry(schRes.getSellerMbr().getCustomerPhoneCountry());
+			sellerAccount.setSellerBizPhone(schRes.getSellerMbr().getCustomerPhone());
+			sellerAccount.setCeoBirthDay(schRes.getSellerMbr().getCeoBirthDay());
+			sellerAccount.setCeoName(schRes.getSellerMbr().getCeoName());
 		}
 		DetailAccountInformationRes response = new DetailAccountInformationRes();
 		response.setDocumentList(dList);
@@ -979,15 +984,15 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setBizKindCd(sellerMbr.getBizKindCd());
 			sellerMbrRes.setBizRegNumber(sellerMbr.getBizRegNumber());
 			sellerMbrRes.setBizUnregReason(sellerMbr.getBizUnregReason());
-			sellerMbrRes.setCeoName(sellerMbr.getCeoName());
-			sellerMbrRes.setCeoBirthDay(sellerMbr.getCeoBirthDay());
+			// sellerMbrRes.setCeoName(sellerMbr.getCeoName());
+			// sellerMbrRes.setCeoBirthDay(sellerMbr.getCeoBirthDay());
 			sellerMbrRes.setCharger(sellerMbr.getCharger());
 			sellerMbrRes.setCordedTelephone(sellerMbr.getCordedTelephone());
 			sellerMbrRes.setCordedTelephoneCountry(sellerMbr.getCordedTelephoneCountry());
 			sellerMbrRes.setCustomerEmail(sellerMbr.getCustomerEmail());
-			sellerMbrRes.setCustomerPhone(sellerMbr.getCustomerPhone());
-			sellerMbrRes.setChargerPhone(sellerMbr.getChargerPhone());
-			sellerMbrRes.setCustomerPhoneCountry(sellerMbr.getCustomerPhoneCountry());
+			// sellerMbrRes.setCustomerPhone(sellerMbr.getCustomerPhone());
+			// sellerMbrRes.setChargerPhone(sellerMbr.getChargerPhone());
+			// sellerMbrRes.setCustomerPhoneCountry(sellerMbr.getCustomerPhoneCountry());
 			sellerMbrRes.setIsAccountReal(sellerMbr.getIsAccountReal());
 			sellerMbrRes.setIsBizRegistered(sellerMbr.getIsBizRegistered());
 			sellerMbrRes.setIsBizTaxable(sellerMbr.getIsBizTaxable());
@@ -1002,8 +1007,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setParentSellerKey(sellerMbr.getParentSellerKey());
 			sellerMbrRes.setRegDate(sellerMbr.getRegDate());
 			sellerMbrRes.setRepEmail(sellerMbr.getRepEmail());
-			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
-			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
+			// sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
+			// sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
 			sellerMbrRes.setRightProfile(sellerMbr.getRightProfileList());
 			sellerMbrRes.setSellerAddress(sellerMbr.getSellerAddress());
 			sellerMbrRes.setSellerBizCategory(sellerMbr.getSellerBizCategory());
