@@ -303,7 +303,7 @@
                     </if>
 	             ) AA
 	        ) BB 
-         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+         WHERE RNUM BETWEEN #{offset} AND #{count}
          ORDER BY RNUM
     </select>    
     
