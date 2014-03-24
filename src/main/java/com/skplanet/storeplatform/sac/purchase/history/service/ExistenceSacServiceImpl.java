@@ -64,7 +64,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 
 		for (ExistenceScRes existenceScRes : resultList) {
 			String flag = "";
-			this.logger.info("existenceScRes.getStatusCd() : {}", existenceScRes.getStatusCd());
+			this.logger.debug("existenceScRes.getStatusCd() : {}", existenceScRes.getStatusCd());
 
 			if (existenceScRes.getStatusCd() != null
 					&& existenceScRes.getStatusCd().equals(PurchaseConstants.PRCHS_STATUS_COMPT)) {
@@ -72,7 +72,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 				// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
 				if (existenceScRes.getTenantProdGrpCd() != null) {
 					flag = this.checkMdn(existenceScReq, existenceScRes, purchaseTenantPolicyList, flag);
-					this.logger.info("리턴 FLAG : {}", flag);
+					this.logger.debug("리턴 FLAG : {}", flag);
 					// flag가 ID 이거나 MDN일 경우에만 기구매셋팅
 					if (flag.equals("ID") || flag.equals("MDN")) {
 						existenceListScRes.add(existenceScRes);

@@ -51,7 +51,7 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 	@Override
 	@ResponseBody
 	public ExistenceListRes searchExistenceList(ExistenceReq existenceReq) {
-		this.logger.info("PRCHS,ExistenceInternalSCIController,SAC,REQ,{}", existenceReq);
+		this.logger.debug("PRCHS,ExistenceInternalSCIController,SAC,REQ,{}", existenceReq);
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		this.logger.debug("@@@@@@ Start Internal searchExistenceList @@@@@@");
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -127,7 +127,7 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 
 			res.add(existenceRes);
 		}
-		// this.logger.info("PRCHS,ExistenceInternalSCIController,SAC,RES,{}", res);
+		// this.logger.debug("PRCHS,ExistenceInternalSCIController,SAC,RES,{}", res);
 		return res;
 	}
 

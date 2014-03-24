@@ -62,7 +62,7 @@ public class ExistenceController {
 	@ResponseBody
 	public ExistenceListSacRes searchExistenceList(@RequestBody @Validated ExistenceSacReq existenceSacReq,
 			SacRequestHeader requestHeader) {
-		this.logger.info("PRCHS,ExistenceController,SAC,REQ,{},{}", existenceSacReq, requestHeader);
+		this.logger.debug("PRCHS,ExistenceController,SAC,REQ,{},{}", existenceSacReq, requestHeader);
 		TenantHeader header = requestHeader.getTenantHeader();
 
 		ExistenceListSacRes existenceListSacRes = new ExistenceListSacRes();
@@ -130,7 +130,7 @@ public class ExistenceController {
 
 			res.add(existenceSacRes);
 		}
-		// this.logger.info("PRCHS,ExistenceController,SAC,RES,{}", res);
+		// this.logger.debug("PRCHS,ExistenceController,SAC,RES,{}", res);
 		return res;
 	}
 

@@ -59,7 +59,7 @@ public class AutoUpdateAlarmController {
 	@ResponseBody
 	public AutoUpdateAlarmSacRes updateAlarm(@RequestBody @Validated AutoUpdateAlarmSacReq autoUpdateAlarmSacReq,
 			SacRequestHeader requestHeader) {
-		this.logger.info("PRCHS,AutoUpdateAlarmController,SAC,REQ,{},{}", autoUpdateAlarmSacReq, requestHeader);
+		this.logger.debug("PRCHS,AutoUpdateAlarmController,SAC,REQ,{},{}", autoUpdateAlarmSacReq, requestHeader);
 		TenantHeader header = requestHeader.getTenantHeader();
 
 		return this.resConvert(this.autoUpdateAlarmSacService.updateAlarm(this
@@ -108,7 +108,7 @@ public class AutoUpdateAlarmController {
 		this.logger.debug("@@@@@@ AutoPaymentCancelSac resConvert @@@@@@@");
 		AutoUpdateAlarmSacRes res = new AutoUpdateAlarmSacRes();
 		res.setResultYn(autoUpdateAlarmScRes.getResultYn());
-		this.logger.info("PRCHS,AutoUpdateAlarmController,SAC,RES,{}", res);
+		this.logger.debug("PRCHS,AutoUpdateAlarmController,SAC,RES,{}", res);
 		return res;
 	}
 }

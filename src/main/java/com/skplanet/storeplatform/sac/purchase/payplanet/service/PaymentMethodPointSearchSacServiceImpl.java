@@ -71,7 +71,7 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		res.setCdResult(cultureEcRes.getCdResult());
 		res.setMsgResult(cultureEcRes.getMsgResult());
 		res.setCulturePoint(cultureEcRes.getCulturePoint());
-		this.logger.info("PRCHS,CULTURE,SAC,RES,{}", res);
+		this.logger.debug("PRCHS,CULTURE,SAC,RES,{}", res);
 		return res;
 	}
 
@@ -101,7 +101,7 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		res.setCdResult(dotoriEcRes.getCdResult());
 		res.setMsgResult(dotoriEcRes.getMsgResult());
 		res.setCntDotori(dotoriEcRes.getCntDotori());
-		this.logger.info("PRCHS,DOTORI,SAC,RES,{}", res);
+		this.logger.debug("PRCHS,DOTORI,SAC,RES,{}", res);
 		return res;
 	}
 
@@ -132,7 +132,7 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		res.setCdResult(okCashBagEcRes.getCdResult());
 		res.setMsgResult(okCashBagEcRes.getMsgResult());
 		res.setOcbPoint(okCashBagEcRes.getOcbPoint());
-		this.logger.info("PRCHS,OKCASHBAG,SAC,RES,{}", res);
+		this.logger.debug("PRCHS,OKCASHBAG,SAC,RES,{}", res);
 		return res;
 	}
 
@@ -163,7 +163,7 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		res.setCdResult(tMemberShipEcRes.getCdResult());
 		res.setMsgResult(tMemberShipEcRes.getMsgResult());
 		res.setTmsPoint(tMemberShipEcRes.getTmsPoint());
-		this.logger.info("PRCHS,TMEMBERSHIP,SAC,RES,{}", res);
+		this.logger.debug("PRCHS,TMEMBERSHIP,SAC,RES,{}", res);
 		return res;
 	}
 

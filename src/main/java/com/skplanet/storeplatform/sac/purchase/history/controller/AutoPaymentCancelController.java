@@ -54,7 +54,7 @@ public class AutoPaymentCancelController {
 	public @ResponseBody
 	AutoPaymentCancelSacRes updateReservation(@RequestBody @Validated AutoPaymentCancelSacReq autoPaymentCancelSacReq,
 			SacRequestHeader requestHeader) {
-		this.logger.info("PRCHS,AutoPaymentCancelController,SAC,REQ,{},{}", autoPaymentCancelSacReq, requestHeader);
+		this.logger.debug("PRCHS,AutoPaymentCancelController,SAC,REQ,{},{}", autoPaymentCancelSacReq, requestHeader);
 		TenantHeader header = requestHeader.getTenantHeader();
 
 		return this.resConvert(this.autoPaymentCancelSacService.updateReservation(this.reqConvert(
@@ -99,7 +99,7 @@ public class AutoPaymentCancelController {
 		AutoPaymentCancelSacRes res = new AutoPaymentCancelSacRes();
 		res.setPrchsId(autoPaymentCancelScRes.getPrchsId());
 		res.setResultYn(autoPaymentCancelScRes.getResultYn());
-		this.logger.info("PRCHS,AutoPaymentCancelController,SAC,RES,{}", res);
+		this.logger.debug("PRCHS,AutoPaymentCancelController,SAC,RES,{}", res);
 		return res;
 	}
 
