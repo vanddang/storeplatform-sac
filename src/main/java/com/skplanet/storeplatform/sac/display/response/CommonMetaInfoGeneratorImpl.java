@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -45,6 +47,9 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 @Component
 public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private DisplayCommonService commonService;
 
 	/*
 	 * (non-Javadoc)
@@ -228,13 +233,13 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			sourceList = new ArrayList<Source>();
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
-			source.setUrl(metaInfo.getScSamplUrl());
+			source.setUrl(commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
 			sourceList.add(source);
 
 			source = new Source();
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
 			source.setType(DisplayConstants.DP_PREVIEW_HQ);
-			source.setUrl(metaInfo.getSamplUrl());
+			source.setUrl(commonService.makePreviewUrl(metaInfo.getSamplUrl()));
 			sourceList.add(source);
 		}
 
@@ -273,7 +278,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			source = new Source();
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
-			source.setUrl(metaInfo.getScSamplUrl());
+			source.setUrl(commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
 			sourceList.add(source);
 		}
 
@@ -281,7 +286,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			source = new Source();
 			source.setType(DisplayConstants.DP_PREVIEW_HQ);
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
-			source.setUrl(metaInfo.getSamplUrl());
+			source.setUrl(commonService.makePreviewUrl(metaInfo.getSamplUrl()));
 			sourceList.add(source);
 		}
 

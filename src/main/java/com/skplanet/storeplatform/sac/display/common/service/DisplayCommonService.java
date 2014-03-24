@@ -72,4 +72,11 @@ public interface DisplayCommonService {
      */
     public List<ExistenceScRes> checkPurchaseList(String tenantId, String userKey, String deviceKey, List<String> episodeIdList);
 
+    /**
+     * 미리보기 URL을 작성한다.
+     * @param phyPath 파일의 물리 경로
+     * @return
+     */
+    public String makePreviewUrl(String phyPath);
+
 }

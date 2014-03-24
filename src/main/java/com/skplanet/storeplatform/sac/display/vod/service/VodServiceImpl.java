@@ -460,13 +460,13 @@ public class VodServiceImpl implements VodService {
 		if (StringUtils.isNotEmpty(mapperVO.getScSamplUrl())) {
             Source source = new Source();
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
-			source.setUrl(mapperVO.getScSamplUrl());
+			source.setUrl(commonService.makePreviewUrl(mapperVO.getScSamplUrl()));
 			sourceList.add(source);
 		}
 		if (StringUtils.isNotEmpty(mapperVO.getSamplUrl())) {
             Source source = new Source();
 			source.setType(DisplayConstants.DP_PREVIEW_HQ);
-			source.setUrl(mapperVO.getSamplUrl());
+            source.setUrl(commonService.makePreviewUrl(mapperVO.getSamplUrl()));
 			sourceList.add(source);
         }
 		preview.setSourceList(sourceList);

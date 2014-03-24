@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -38,6 +39,9 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 	@Autowired
 	private ExistenceSCI existenceSCI;
+
+    @Value("#{propertiesForSac['display.previewUrlPrefix']}")
+    private String previewPrefix = "";
 
 	@Override
 	public String getBatchStandardDateString(String tenantId, String listId) {
@@ -138,4 +142,12 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 		return existenceListRes;
 	}
+
+    @Override
+    public String makePreviewUrl(String phyPath) {
+        if(StringUtils.isNotEmpty(phyPath))
+            return previewPrefix + phyPath;
+        else
+            return "";
+    }
 }

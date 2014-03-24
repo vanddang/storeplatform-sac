@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 
 	@Autowired
 	CommonMetaInfoGeneratorImpl commonMetaInfo;
+
+    @Autowired
+    private DisplayCommonService commonService;
 
 	/**
 	 * <pre>
@@ -186,9 +190,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				preview = new Preview();
 				sourceList = new ArrayList<Source>();
 				sourceList.add(this.commonMetaInfo.generateSource(DisplayConstants.DP_PREVIEW_HQ,
-						categoryVodBox.getSamplUrl())); // 고화질
+                        commonService.makePreviewUrl(categoryVodBox.getSamplUrl()))); // 고화질
 				sourceList.add(this.commonMetaInfo.generateSource(DisplayConstants.DP_PREVIEW_LQ,
-						categoryVodBox.getScSamplUrl())); // 저화질
+                        commonService.makePreviewUrl(categoryVodBox.getScSamplUrl()))); // 저화질
 				preview.setSourceList(sourceList);
 				rights.setPreview(preview);
 
