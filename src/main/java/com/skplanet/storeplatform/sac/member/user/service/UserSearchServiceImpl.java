@@ -163,7 +163,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		if (req.getDeviceId() != null) {
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
-			logger.info("============================================ getOpmdMdnInfo: {}", opmdMdn);
+			logger.debug("============================================ getOpmdMdnInfo: {}", opmdMdn);
 		}
 
 		String userKey = StringUtil.setTrim(req.getUserKey());
@@ -184,7 +184,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		// 회원정보 세팅
 		DetailRes detailRes = this.searchUser(detailReq, sacHeader);
 
-		logger.info("============================================ userInfo Request : {}", detailReq.toString());
+		logger.debug("============================================ userInfo Request : {}", detailReq.toString());
 
 		result.setUserKey(StringUtil.setTrim(detailRes.getUserInfo().getUserKey()));
 		result.setUserType(StringUtil.setTrim(detailRes.getUserInfo().getUserType()));
@@ -214,7 +214,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		if (req.getDeviceId() != null) {
 			String opmdMdnInfo = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdnInfo);
-			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdnInfo);
+			logger.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdnInfo);
 		}
 
 		/* 회원 기본 정보 */
@@ -235,7 +235,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					if (listDeviceRes.getDeviceInfoList() != null) {
 						res.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
 					} else {
-						logger.info("=========== DeviceInfoList No Data ===========");
+						logger.debug("=========== DeviceInfoList No Data ===========");
 						List<DeviceInfo> getDeviceInfoList = new ArrayList<DeviceInfo>();
 						res.setDeviceInfoList(getDeviceInfoList);
 					}
@@ -354,7 +354,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		res.setIsRealName(StringUtil.setTrimYn(scRes.getMbrOneID().getIsRealName()));
 		res.setIsMemberPoint(StringUtil.setTrimYn(scRes.getMbrOneID().getIsMemberPoint()));
 
-		logger.info("MbrOneidSacRes : ", res.toString());
+		logger.debug("MbrOneidSacRes : ", res.toString());
 
 		return res;
 	}

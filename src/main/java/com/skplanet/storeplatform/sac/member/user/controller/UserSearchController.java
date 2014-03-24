@@ -58,20 +58,20 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/exist/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ExistRes exist(@RequestBody ExistReq req, SacRequestHeader sacHeader) {
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
-		LOGGER.info("####################################################");
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
+		LOGGER.debug("####################################################");
 
 		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")
 				&& StringUtil.nvl(req.getUserId(), "").equals("") && StringUtil.nvl(req.getUserKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
+		LOGGER.info("Request : {}", req);
+
 		ExistRes res = this.svc.exist(sacHeader, req);
 
-		LOGGER.info("============================================ ExistReq : {}", req.toString());
-
-		LOGGER.info("Final Response : {}", res.toString());
+		LOGGER.info("Response : {}", res);
 
 		return res;
 	}
@@ -101,19 +101,19 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailRes detail(@RequestBody DetailReq req, SacRequestHeader sacHeader) {
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.9. 회원 정보 조회 #####");
-		LOGGER.info("####################################################");
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 5.1.9. 회원 정보 조회 #####");
+		LOGGER.debug("####################################################");
 
 		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")
 				&& StringUtil.nvl(req.getUserId(), "").equals("") && StringUtil.nvl(req.getUserKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
-		LOGGER.info("============================================ DetailReq : {}", req.toString());
+		LOGGER.info("Request : {}", req);
 
 		DetailRes res = this.svc.detail(sacHeader, req);
-		LOGGER.info("Final Response : {}", res.toString());
+		LOGGER.info("Response : {}", res);
 
 		return res;
 	}
@@ -158,11 +158,11 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/searchOneIdInfo/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public MbrOneidSacRes searchOneIdInfo(SacRequestHeader sacHeader, MbrOneidSacReq req) {
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 2.1.35. OneID 정보조회 #####");
-		LOGGER.info("####################################################");
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 2.1.35. OneID 정보조회 #####");
+		LOGGER.debug("####################################################");
 
-		LOGGER.info("============================================ MbrOneidSacReq : {}", req.toString());
+		LOGGER.info("Request : {}", req);
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
@@ -173,7 +173,7 @@ public class UserSearchController {
 		req.setUserKey(userKey);
 
 		MbrOneidSacRes res = this.svc.searchUserOneId(sacHeader, req);
-		LOGGER.info("Final MbrOneidSacRes Response : {}", res.toString());
+		LOGGER.info("Response : {}", res);
 
 		return res;
 	}
