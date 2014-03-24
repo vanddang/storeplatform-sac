@@ -99,6 +99,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		purchaseUserDevice.setTenantId(tenantId);
 		purchaseUserDevice.setUserKey(userKey);
 		purchaseUserDevice.setUserName(userDeviceInfoSac.getUserName());
+		purchaseUserDevice.setUserId("test"); // TAKTODO:: 회원Part에 응답값으로 추가
 		// purchaseUserDevice.setUserId(userInfo.getUserId());
 		// purchaseUserDevice.setUserType(userInfo.getUserType());
 		purchaseUserDevice.setUserMainStatus(userDeviceInfoSac.getUserMainStatus());

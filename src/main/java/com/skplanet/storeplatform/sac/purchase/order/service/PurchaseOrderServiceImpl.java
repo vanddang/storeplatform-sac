@@ -27,6 +27,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
+import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishDetailEcReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemDetailEcRes;
@@ -132,6 +135,34 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	public int createFreePurchase(PurchaseOrderInfo purchaseOrderInfo) {
 		// 구매 내역 저장
 		int count = this.createPurchaseByType(purchaseOrderInfo, PurchaseConstants.CREATE_PURCHASE_TYPE_COMPLETED);
+
+		// Biz 쿠폰 발급 요청
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
+			List<BizCouponPublishDetailEcReq> bizCouponPublishDetailEcList = new ArrayList<BizCouponPublishDetailEcReq>();
+
+			BizCouponPublishDetailEcReq bizCouponPublishDetailEcReq = null;
+			String prchsId = purchaseOrderInfo.getPrchsId();
+			for (PurchaseUserDevice receiver : purchaseOrderInfo.getReceiveUserList()) {
+				bizCouponPublishDetailEcReq = new BizCouponPublishDetailEcReq();
+				bizCouponPublishDetailEcReq.setPrchsId(prchsId);
+				bizCouponPublishDetailEcReq.setMdn(receiver.getDeviceId());
+				bizCouponPublishDetailEcList.add(bizCouponPublishDetailEcReq);
+			}
+
+			BizCouponPublishEcReq bizCouponPublishEcReq = new BizCouponPublishEcReq();
+			bizCouponPublishEcReq.setAdminId(purchaseOrderInfo.getPurchaseUser().getUserId());
+			bizCouponPublishEcReq.setMdn(purchaseOrderInfo.getPurchaseUser().getDeviceId());
+			bizCouponPublishEcReq.setCouponCode(purchaseOrderInfo.getPurchaseProductList().get(0).getCouponCode());
+			bizCouponPublishEcReq.setBizCouponPublishDetailList(bizCouponPublishDetailEcList);
+
+			this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
+
+			try {
+				this.shoppingSCI.createBizCouponPublish(bizCouponPublishEcReq);
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_PUR_7212", e);
+			}
+		}
 
 		// 결제 내역 저장
 		if (StringUtils.isNotBlank(purchaseOrderInfo.getFreePaymentMtdCd())) {
@@ -312,7 +343,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchaseSc.getTenantId(), createPurchaseSc.getTenantProdGrpCd());
 		if (paymentAdjustInfo != null) {
 			sbPaymentMtdAmtRate.append(";").append(
-					paymentAdjustInfo.replaceAll("MAX", String.valueOf(createPurchaseSc.getTotAmt())));
+					paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(createPurchaseSc.getTotAmt())));
 		}
 		res.setCdMaxAmtRate(sbPaymentMtdAmtRate.toString());
 
@@ -743,6 +774,32 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	/**
 	 * 
 	 * <pre>
+	 * 구매 확정 취소 작업.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 *            구매 ID
+	 */
+	@Override
+	public void revertToPreConfirm(String prchsId) {
+
+		// -------------------------------------------------------------------------------------
+		// 쇼핑 쿠폰 발급 취소
+
+		CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
+		couponPublishCancelEcReq.setPrchsId(prchsId);
+		try {
+			this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);
+		} catch (Exception e) {
+			// TAKTODO:: 이 때 발생하는 예외처리는 어떻게? 로깅만?
+			this.logger.info("PRCHS,ORDER,SAC,REVERT,COUPON,ERROR,{}", e.getMessage());
+		}
+
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 유료구매 - 결제Page 준비작업.
 	 * </pre>
 	 * 
@@ -1037,7 +1094,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 생성된 구매이력 건수
 	 */
 	private int createPurchaseByType(PurchaseOrderInfo purchaseOrderInfo, int type) {
-		this.logger.info("PRCHS,ORDER,SAC,CREATE,START,{},{}", type);
+		this.logger.info("PRCHS,ORDER,SAC,CREATE,START,{},{}", purchaseOrderInfo.getPrchsId(), type);
 
 		// 구매ID 생성
 		if (StringUtils.isBlank(purchaseOrderInfo.getPrchsId())) {
@@ -1062,7 +1119,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			break;
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,CREATE,END,{},{}", type, res.getCount());
+		this.logger.info("PRCHS,ORDER,SAC,CREATE,END,{},{},{}", purchaseOrderInfo.getPrchsId(), type, res.getCount());
 
 		if (CollectionUtils.isNotEmpty(purchaseOrderInfo.getReceiveUserList())) {
 			if (res.getCount() < 1 || res.getCount() != purchaseOrderInfo.getReceiveUserList().size()) {

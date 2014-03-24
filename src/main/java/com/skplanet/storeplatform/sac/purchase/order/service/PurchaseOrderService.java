@@ -84,6 +84,17 @@ public interface PurchaseOrderService {
 	/**
 	 * 
 	 * <pre>
+	 * 구매 확정 취소 작업.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 *            구매 ID
+	 */
+	public void revertToPreConfirm(String prchsId);
+
+	/**
+	 * 
+	 * <pre>
 	 * 유료구매 - 결제Page 준비작업.
 	 * </pre>
 	 * 

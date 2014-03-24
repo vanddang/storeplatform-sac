@@ -9,7 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.purchase.common.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,6 +34,37 @@ public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyServ
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDao;
+
+	/**
+	 * 
+	 * <pre>
+	 * 해당 테넌트의 구매Part 정책목록을 정책ID를 Key로 갖는 Map 형태로 조회한다.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            정책을 조회할 대상 테넌트 ID
+	 * @param tenantProdGrpCd
+	 *            정책 기준이 되는 테넌트 상품 그룹 코드
+	 * @return 해당 테넌트의 구매Part 정책 목록 (정책ID를 Key로, 관련 정책 목록을 Value로 갖는 Map형태)
+	 */
+	@Override
+	public Map<String, List<PurchaseTenantPolicy>> searchPurchaseTenantPolicyListByMap(String tenantId,
+			String tenantProdGrpCd) {
+		List<PurchaseTenantPolicy> policyList = this.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd);
+
+		Map<String, List<PurchaseTenantPolicy>> policyListMap = new HashMap<String, List<PurchaseTenantPolicy>>();
+		List<PurchaseTenantPolicy> valuePolicyList = null;
+
+		for (PurchaseTenantPolicy policy : policyList) {
+			valuePolicyList = policyListMap.containsKey(policy.getPolicyId()) ? policyListMap.get(policy.getPolicyId()) : new ArrayList<PurchaseTenantPolicy>();
+
+			valuePolicyList.add(policy);
+
+			policyListMap.put(policy.getPolicyId(), valuePolicyList);
+		}
+
+		return policyListMap;
+	}
 
 	/**
 	 * 

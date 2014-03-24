@@ -340,6 +340,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			throw new StorePlatformException("SAC_PUR_6103");
 		}
 
+		if (purchaseOrderInfo.getPurchaseProductList().size() <= 0) {
+			throw new StorePlatformException("SAC_PUR_9999");
+		}
+
 		// Biz 쿠폰 경우 이하 체크 Skip
 		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
 			return;

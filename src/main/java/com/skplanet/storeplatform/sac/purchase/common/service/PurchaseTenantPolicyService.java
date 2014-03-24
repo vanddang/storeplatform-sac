@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.common.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
 
@@ -21,6 +22,21 @@ import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
  * Updated on : 2014. 2. 5. Updated by : 이승택, nTels.
  */
 public interface PurchaseTenantPolicyService {
+
+	/**
+	 * 
+	 * <pre>
+	 * 해당 테넌트의 구매Part 정책목록을 정책ID를 Key로 갖는 Map 형태로 조회한다.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            정책을 조회할 대상 테넌트 ID
+	 * @param tenantProdGrpCd
+	 *            정책 기준이 되는 테넌트 상품 그룹 코드
+	 * @return 해당 테넌트의 구매Part 정책 목록 (정책ID를 Key로, 관련 정책 목록을 Value로 갖는 Map형태)
+	 */
+	public Map<String, List<PurchaseTenantPolicy>> searchPurchaseTenantPolicyListByMap(String tenantId,
+			String tenantProdGrpCd);
 
 	/**
 	 * 

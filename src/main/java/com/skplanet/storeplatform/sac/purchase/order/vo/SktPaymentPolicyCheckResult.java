@@ -20,12 +20,29 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SktPaymentPolicyCheckResult extends CommonInfo {
 	private static final long serialVersionUID = 201401221L;
 
+	private String sktLimitType; // 제한에 걸린 유형
+
 	private boolean sktTestMdn; // SKT 시험폰 여부
 	private boolean sktTestMdnWhiteList; // SKT 시험폰 White List 등록 여부
 	private boolean corporation; // SKT/SKP 법인폰 여부
 	private boolean skpCorporation; // SKP 법인폰 여부 (SKP후불 OCB적립 제한으로, 법인 구분 필요)
 	private boolean mvno; // MVNO 회선 여부
 	private double sktRestAmt; // SKT 후불 잔여 금액
+
+	/**
+	 * @return the sktLimitType
+	 */
+	public String getSktLimitType() {
+		return this.sktLimitType;
+	}
+
+	/**
+	 * @param sktLimitType
+	 *            the sktLimitType to set
+	 */
+	public void setSktLimitType(String sktLimitType) {
+		this.sktLimitType = sktLimitType;
+	}
 
 	/**
 	 * @return the sktTestMdn
