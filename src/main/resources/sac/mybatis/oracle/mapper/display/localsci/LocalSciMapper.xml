@@ -193,6 +193,7 @@
           FROM TB_DP_SPRC_PROD_PRCHS_MANG
          WHERE 1=1
            AND PROD_ID = #{productId}
+           AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
     </select>      
 
     <!--특가 상품 구매수 조회 -->
@@ -202,6 +203,7 @@
           FROM TB_DP_SPRC_PROD_PRCHS_MANG
          WHERE 1=1
            AND PROD_ID = #{productId}
+           AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
     </select>        
     <!--특가 상품 구매건수 업데이트 상품이 없을시 Insert-->
     <insert id="insertSpecialPurchaseProd" parameterType="HashMap">
@@ -229,10 +231,12 @@
                                   FROM TB_DP_SPRC_PROD_PRCHS_MANG
                                  WHERE 1=1
                                    AND PROD_ID = #{productId}
+                                   AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
                               )
                 ,UPD_DT = SYSDATE            
          WHERE 1=1 
            AND PROD_ID= #{productId}
+           AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
     </update>    
     
 </mapper>
