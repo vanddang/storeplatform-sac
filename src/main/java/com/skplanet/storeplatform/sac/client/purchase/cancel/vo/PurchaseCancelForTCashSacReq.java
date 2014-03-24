@@ -19,11 +19,11 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSacReq;
 
 /**
- * 구매 취소(사용자) 요청 VO.
+ * Class 설명
  * 
- * Updated on : 2014. 2. 12. Updated by : nTels_cswoo81, nTels.
+ * Updated on : 2014. 3. 20. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelByUserSacReq extends PurchaseCommonSacReq {
+public class PurchaseCancelForTCashSacReq extends PurchaseCommonSacReq {
 
 	private static final long serialVersionUID = 1L;
 
