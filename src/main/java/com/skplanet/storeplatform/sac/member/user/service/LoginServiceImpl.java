@@ -48,8 +48,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
@@ -57,6 +55,7 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.Purch
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserAuthMethod;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
@@ -161,8 +160,8 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 휴대기기 정보 조회 */
-		SearchDeviceResponse schDeviceRes = this.searchDeviceInfo(requestHeader, req.getDeviceId());
-		String dbDeviceTelecom = schDeviceRes.getUserMbrDevice().getDeviceTelecom();
+		DeviceInfo dbDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), chkDupRes
+				.getUserMbr().getUserKey());
 
 		/* 휴대기기 정보 수정 */
 		DeviceInfo deviceInfo = new DeviceInfo();
@@ -174,14 +173,14 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setNativeId(req.getNativeId()); // IMEI
 		deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth()); // IMEI 비교여부
 		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
-		String deviceKey = this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo, schDeviceRes.getUserMbrDevice(), "v1");
+		String deviceKey = this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo, "v1");
 
 		try {
 
 			if (chkDupRes.getUserMbr().getImSvcNo() != null) { /* 원아이디인 경우 */
 
 				/* 통신사가 변경되었을 때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
-				if (!StringUtil.equals(req.getDeviceTelecom(), dbDeviceTelecom)) {
+				if (!StringUtil.equals(req.getDeviceTelecom(), dbDeviceInfo.getDeviceTelecom())) {
 					this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr().getImSvcNo());
 				}
 
@@ -278,13 +277,13 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 휴대기기 정보 조회 */
-		SearchDeviceResponse schDeviceRes = this.searchDeviceInfo(requestHeader, req.getDeviceId());
-		String dbDeviceTelecom = schDeviceRes.getUserMbrDevice().getDeviceTelecom();
+		DeviceInfo dbDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), chkDupRes
+				.getUserMbr().getUserKey());
 
 		/* Tcloud 약관동의 노출 여부 체크 */
 		String tcloudAgreeViewYn = "N"; // Tcloud 이용동의 노출 여부
 		ChangedDeviceHistoryReq changedDeviceHistoryReq = new ChangedDeviceHistoryReq();
-		changedDeviceHistoryReq.setUserKey(schDeviceRes.getUserKey());
+		changedDeviceHistoryReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		changedDeviceHistoryReq.setDeviceId(req.getDeviceId());
 		ChangedDeviceHistoryRes changedDeviceHistoryRes = this.deviceService.searchChangedDeviceHistory(requestHeader, changedDeviceHistoryReq);
 
@@ -294,8 +293,8 @@ public class LoginServiceImpl implements LoginService {
 			 * 최근 1개월 이내 기기변경이력이 있고 Tcloud 약관동의 되어있지 않은 경우 "T"로 임시 업데이트하여 Tcloud
 			 * 약관동의 최초 한번만 노출되도록 처리
 			 */
-			String tcloudAgreeYn = DeviceUtil.getUserMbrDeviceDetailValue(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN, schDeviceRes
-					.getUserMbrDevice().getUserMbrDeviceDetail()); // Tcloud 약관동의 여부 
+			String tcloudAgreeYn = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN,
+					dbDeviceInfo.getDeviceExtraInfoList()); // Tcloud 약관동의 여부 
 
 			if (StringUtil.isBlank(tcloudAgreeYn) || StringUtil.equals(tcloudAgreeYn, "N")) {
 
@@ -322,14 +321,14 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
 		deviceInfo.setNativeId(req.getNativeId()); // IMEI
 		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
-		String deviceKey = this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo, schDeviceRes.getUserMbrDevice(), "v2");
+		String deviceKey = this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo, "v2");
 
 		try {
 
 			if (chkDupRes.getUserMbr().getImSvcNo() != null) { /* 원아이디인 경우 */
 
 				/* 통신사가 변경되었을 때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
-				if (!StringUtil.equals(req.getDeviceTelecom(), dbDeviceTelecom)) {
+				if (!StringUtil.equals(req.getDeviceTelecom(), dbDeviceInfo.getDeviceTelecom())) {
 					this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr().getImSvcNo());
 				}
 
@@ -953,6 +952,18 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			}
 			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
+
+			/* 휴대기기 헤더 정보 셋팅 */
+			deviceInfo = this.deviceService.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+
+			/* 휴대기기 주요정보 조회 */
+			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
+					req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN);
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
+					majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
+					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
+
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 			res.setDeviceKey(mdnDeviceInfo.getDeviceKey());
@@ -1002,13 +1013,15 @@ public class LoginServiceImpl implements LoginService {
 			this.userSCI.updateUser(updateUserRequest);
 
 			/* 가가입 상태인 mac 회원정보를 정상상태로 */
-			this.updateMainStatus(requestHeader, MemberConstants.MAIN_STATUS_NORMAL, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress());
+			this.updateStatus(requestHeader, MemberConstants.MAIN_STATUS_NORMAL, MemberConstants.SUB_STATUS_NORMAL,
+					MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress());
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setUserKey(macDeviceInfo.getUserKey());
 			deviceInfo.setDeviceKey(macDeviceInfo.getDeviceKey());
 			deviceInfo.setDeviceId(req.getDeviceId());
+			deviceInfo.setSvcMangNum(joinForWapEcRes.getSvcMngNum());
 			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 			if (StringUtil.isNotBlank(req.getNativeId())) {
 				deviceInfo.setNativeId(req.getNativeId());
@@ -1017,6 +1030,18 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			}
 			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
+
+			/* 휴대기기 헤더 정보 셋팅 */
+			deviceInfo = this.deviceService.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+
+			/* 휴대기기 주요정보 조회 */
+			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
+					req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN);
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
+					majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
+					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
+
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 			res.setDeviceKey(macDeviceInfo.getDeviceKey());
@@ -1185,12 +1210,14 @@ public class LoginServiceImpl implements LoginService {
 	 *            SacRequestHeader
 	 * @param userMainStatus
 	 *            메인 상태코드
+	 * @param userSubStatus
+	 *            서브 상태코드
 	 * @param keyType
 	 *            조회타입
 	 * @param keyString
 	 *            조회값
 	 */
-	private void updateMainStatus(SacRequestHeader requestHeader, String userMainStatus, String keyType, String keyString) {
+	private void updateStatus(SacRequestHeader requestHeader, String userMainStatus, String userSubStatus, String keyType, String keyString) {
 
 		UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
@@ -1206,7 +1233,7 @@ public class LoginServiceImpl implements LoginService {
 		updStatusUserReq.setCommonRequest(commonRequest);
 		updStatusUserReq.setKeySearchList(keySearchList);
 		updStatusUserReq.setUserMainStatus(userMainStatus);
-
+		updStatusUserReq.setUserSubStatus(userSubStatus);
 		this.userSCI.updateStatus(updStatusUserReq);
 
 	}
@@ -1317,46 +1344,6 @@ public class LoginServiceImpl implements LoginService {
 		}
 		userAuthMethod.setIsRealName(chkDupRes.getUserMbr().getIsRealName());
 		return userAuthMethod;
-	}
-
-	/**
-	 * <pre>
-	 * 로그인한 MDN의 휴대기기 정보 조회.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param deviceId
-	 *            String
-	 * @return SearchDeviceResponse
-	 */
-	private SearchDeviceResponse searchDeviceInfo(SacRequestHeader requestHeader, String deviceId) {
-
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
-		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-		key.setKeyString(deviceId);
-		keySearchList.add(key);
-		schDeviceReq.setCommonRequest(commonRequest);
-		schDeviceReq.setKeySearchList(keySearchList);
-
-		try {
-
-			return this.deviceSCI.searchDevice(schDeviceReq);
-
-		} catch (StorePlatformException ex) {
-			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
-			} else {
-				throw ex;
-			}
-		}
-
 	}
 
 }

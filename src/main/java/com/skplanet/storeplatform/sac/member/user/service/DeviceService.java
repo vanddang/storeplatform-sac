@@ -5,7 +5,6 @@ import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ChangedDeviceHistoryReq;
@@ -26,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -117,13 +117,11 @@ public interface DeviceService {
 	 *            SacRequestHeader
 	 * @param req
 	 *            파라메터 휴대기기 정보
-	 * @param userMbrDevice
-	 *            db 휴대기기 정보
 	 * @param version
 	 *            MDN 로그인 버젼
 	 * @return deviceKey String
 	 */
-	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo req, UserMbrDevice userMbrDevice, String version);
+	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo req, String version);
 
 	/**
 	 * 휴대기기 대표단말 설정.
@@ -232,5 +230,18 @@ public interface DeviceService {
 	 * @return boolean
 	 */
 	public boolean isEqualsLoginDevice(String deviceId, String reqVal, String dbVal, String equalsType);
+
+	/**
+	 * <pre>
+	 * 휴대기기 관련 헤더 정보 셋팅.
+	 * </pre>
+	 * 
+	 * @param deviceheader
+	 *            DeviceHeader
+	 * @param deviceInfo
+	 *            DeviceInfo
+	 * @return DeviceInfo
+	 */
+	public DeviceInfo setDeviceHeader(DeviceHeader deviceheader, DeviceInfo deviceInfo);
 
 }
