@@ -512,7 +512,7 @@ public class DeviceServiceImpl implements DeviceService {
 					updRealNameReq.setIsRealName("N");
 					updRealNameReq.setUserKey(userKey);
 					this.userSCI.updateRealName(updRealNameReq);
-					LOGGER.info("::: realName init : {}", userKey);
+					LOGGER.info("::: realName init : {}", deviceInfo.getDeviceId());
 				}
 
 			}
