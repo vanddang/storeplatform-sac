@@ -130,4 +130,18 @@ public interface PurchaseCancelRepository {
 	 */
 	String armRemoveLicense(String deviceId, String appId);
 
+	/**
+	 * 
+	 * <pre>
+	 * T Cash 취소를 호출한다.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelSacParam
+	 *            purchaseCancelSacParam
+	 * @param purchaseCancelDetailSacParam
+	 *            purchaseCancelDetailSacParam
+	 */
+	void cancelTCash(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
+
 }

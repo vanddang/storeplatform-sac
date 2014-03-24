@@ -24,13 +24,16 @@ import com.skplanet.storeplatform.external.client.message.vo.AomSendEcRes;
 import com.skplanet.storeplatform.external.client.payplanet.sci.CancelSCI;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcReq;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStorePaymentSCI;
+import com.skplanet.storeplatform.external.client.tstore.vo.CashCancelDetail;
 import com.skplanet.storeplatform.external.client.tstore.vo.Pay;
 import com.skplanet.storeplatform.external.client.tstore.vo.PayCancelResult;
 import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancel;
 import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelResult;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashCancelEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
@@ -84,6 +87,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	@Autowired
 	private UpdatePurchaseCountSCI updatePurchaseCountSCI;
 
+	@Autowired
+	private TStoreCashSCI tStoreCashSCI;
+
 	@Override
 	public PurchaseCancelDetailSacParam setPurchaseDetailInfo(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
@@ -99,8 +105,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		PurchaseScRes purchaseScRes = this.purchaseCancelSCI.getPurchase(purchaseScReq);
 		if (purchaseScRes == null || purchaseScRes.getPrchs() == null
-				|| StringUtils.isEmpty(purchaseScRes.getPrchs().getPrchsId())
-				|| purchaseScRes.getPrchsDtlList() == null || purchaseScRes.getPrchsDtlList().size() < 1) {
+				|| StringUtils.isEmpty(purchaseScRes.getPrchs().getPrchsId())) {
 			// 구매 정보가 존재하지 않을 경우 취소 불가.
 			throw new StorePlatformException("SAC_PUR_8100");
 		}
@@ -111,11 +116,13 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		// 구매 상세 정보.
 		List<PrchsDtlSacParam> prchsDtlSacParamList = new ArrayList<PrchsDtlSacParam>();
-		for (PrchsDtl prchsDtl : purchaseScRes.getPrchsDtlList()) {
-			PrchsDtlSacParam prchsDtlSacParam = this.converResForPrchsDtlSacParam(prchsDtl);
-			prchsDtlSacParamList.add(prchsDtlSacParam);
+		if (purchaseScRes.getPrchsDtlList() != null) {
+			for (PrchsDtl prchsDtl : purchaseScRes.getPrchsDtlList()) {
+				PrchsDtlSacParam prchsDtlSacParam = this.converResForPrchsDtlSacParam(prchsDtl);
+				prchsDtlSacParamList.add(prchsDtlSacParam);
+			}
+			purchaseCancelDetailSacParam.setPrchsDtlSacParamList(prchsDtlSacParamList);
 		}
-		purchaseCancelDetailSacParam.setPrchsDtlSacParamList(prchsDtlSacParamList);
 
 		// 결제 상세 정보.
 		List<PaymentSacParam> paymentSacParamList = new ArrayList<PaymentSacParam>();
@@ -420,6 +427,34 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		paymentSacParam.setMoid(payment.getMoid());
 
 		return paymentSacParam;
+
+	}
+
+	@Override
+	public void cancelTCash(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
+
+		if (purchaseCancelDetailSacParam.getPaymentSacParamList() == null
+				|| purchaseCancelDetailSacParam.getPaymentSacParamList().size() < 1) {
+			return;
+		}
+		PaymentSacParam paymentSacParam = purchaseCancelDetailSacParam.getPaymentSacParamList().get(0);
+
+		TStoreCashCancelEcReq tStoreCashCancelEcReq = new TStoreCashCancelEcReq();
+		List<CashCancelDetail> cancelList = new ArrayList<CashCancelDetail>();
+		CashCancelDetail cashCancelDetail = new CashCancelDetail();
+
+		cashCancelDetail.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
+		cashCancelDetail.setOrderNo(paymentSacParam.getPrchsId());
+		cancelList.add(cashCancelDetail);
+
+		tStoreCashCancelEcReq.setType(PurchaseConstants.TSTORE_CASH_SVC_TYPE_CHARGE);
+		tStoreCashCancelEcReq.setDetailType(PurchaseConstants.TSTORE_CASH_SVC_DETAIL_TYPE_CANCEL);
+		tStoreCashCancelEcReq.setChannel(PurchaseConstants.TSTORE_CASH_SVC_CHANNEL_SAC);
+		tStoreCashCancelEcReq.setUserKey(paymentSacParam.getInsdUsermbrNo());
+		tStoreCashCancelEcReq.setCashList(cancelList);
+
+		this.tStoreCashSCI.cancelCash(tStoreCashCancelEcReq);
 
 	}
 

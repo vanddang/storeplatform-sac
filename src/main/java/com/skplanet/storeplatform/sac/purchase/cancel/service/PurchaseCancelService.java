@@ -30,7 +30,7 @@ public interface PurchaseCancelService {
 	 *            purchaseCancelSacParam
 	 * @return PurchaseCancelSacResult
 	 */
-	public PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam);
+	PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam);
 
 	/**
 	 * <pre>
@@ -44,7 +44,22 @@ public interface PurchaseCancelService {
 	 *            purchaseCancelDetailSacParam
 	 * @return PurchaseCancelDetailSacResult
 	 */
-	public PurchaseCancelDetailSacResult executePurchaseCancel(PurchaseCancelSacParam purchaseCancelSacParam,
+	PurchaseCancelDetailSacResult executePurchaseCancel(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
+
+	/**
+	 * <pre>
+	 * T CASH 구매 취소.
+	 * Transaction을 위해 함수명 execute* 적용.
+	 * </pre>
+	 * 
+	 * @param purchaseCommonSacParam
+	 *            purchaseCommonSacParam
+	 * @param purchaseCancelDetailSacParam
+	 *            purchaseCancelDetailSacParam
+	 * @return PurchaseCancelDetailSacResult
+	 */
+	PurchaseCancelDetailSacResult executePurchaseCancelForTCash(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
 
 }

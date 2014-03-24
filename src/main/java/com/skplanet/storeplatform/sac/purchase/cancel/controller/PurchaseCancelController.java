@@ -27,6 +27,8 @@ import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelBy
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelDetailSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelDetailSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForTCashSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForTCashSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.cancel.service.PurchaseCancelService;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
@@ -102,6 +104,32 @@ public class PurchaseCancelController {
 				.cancelPurchaseList(purchaseCancelSacParam);
 
 		return this.convertResForCancelPurchaseByAdmin(purchaseCancelSacResult);
+
+	}
+
+	/**
+	 * <pre>
+	 * T Cash 충전 취소.
+	 * </pre>
+	 * 
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @param purchaseCancelForTCashSacRes
+	 *            purchaseCancelForTCashSacRes
+	 * @return PurchaseCancelForTCashSacRes
+	 */
+	@RequestMapping(value = "/tcash/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public PurchaseCancelForTCashSacRes cancelPurchaseForTcash(SacRequestHeader sacRequestHeader,
+			@RequestBody @Validated PurchaseCancelForTCashSacReq purchaseCancelForTCashSacRes) {
+
+		PurchaseCancelSacParam purchaseCancelSacParam = this.convertReqForCancelPurchaseForTcash(sacRequestHeader,
+				purchaseCancelForTCashSacRes);
+
+		PurchaseCancelSacResult purchaseCancelSacResult = this.purchaseCancelService
+				.cancelPurchaseList(purchaseCancelSacParam);
+
+		return this.convertResForCancelPurchaseForTcash(purchaseCancelSacResult);
 
 	}
 
@@ -274,6 +302,93 @@ public class PurchaseCancelController {
 		purchaseCancelByAdminSacRes.setPrchsCancelList(prchsCancelList);
 
 		return purchaseCancelByAdminSacRes;
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * convertReqForCancelPurchaseByUser
+	 * </pre>
+	 * 
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @param purchaseCancelByUserSacReq
+	 *            purchaseCancelByUserSacReq
+	 * @return PurchaseCancelSacParam
+	 */
+	private PurchaseCancelSacParam convertReqForCancelPurchaseForTcash(SacRequestHeader sacRequestHeader,
+			PurchaseCancelForTCashSacReq purchaseCancelForTCashSacReq) {
+
+		PurchaseCancelSacParam purchaseCancelSacParam = new PurchaseCancelSacParam();
+
+		// common parameter setting.
+		if (!ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelForTCashSacReq,
+				purchaseCancelSacParam)) {
+			throw new StorePlatformException("SAC_PUR_9901");
+		}
+
+		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelForTCashSacReq.getCancelReqPathCd());
+		purchaseCancelSacParam.setForceCancelYn("N");
+		purchaseCancelSacParam.setSktLimitUserCancelYn("N");
+		// request user type setting.
+		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_ADMIN);
+		purchaseCancelSacParam.setPrchsCancelServiceType(PurchaseConstants.PRCHS_CANCEL_SERVICE_TCASH);
+
+		// parameter setting.
+		List<PurchaseCancelDetailSacParam> prchsCancelList = new ArrayList<PurchaseCancelDetailSacParam>();
+		for (PurchaseCancelDetailSacReq purchaseCancelDetailSacReq : purchaseCancelForTCashSacReq.getPrchsCancelList()) {
+
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
+
+			purchaseCancelDetailSacParam.setPrchsId(purchaseCancelDetailSacReq.getPrchsId());
+
+			prchsCancelList.add(purchaseCancelDetailSacParam);
+
+		}
+
+		purchaseCancelSacParam.setPrchsCancelList(prchsCancelList);
+
+		return purchaseCancelSacParam;
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * convertResForCancelPurchaseByUser.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelByUserSacResult
+	 *            purchaseCancelByUserSacResult
+	 * @return PurchaseCancelByUserSacRes
+	 */
+	private PurchaseCancelForTCashSacRes convertResForCancelPurchaseForTcash(
+			PurchaseCancelSacResult purchaseCancelSacResult) {
+
+		PurchaseCancelForTCashSacRes purchaseCancelForTCashSacRes = new PurchaseCancelForTCashSacRes();
+
+		// response setting.
+		purchaseCancelForTCashSacRes.setTotCnt(purchaseCancelSacResult.getTotCnt());
+		purchaseCancelForTCashSacRes.setSuccessCnt(purchaseCancelSacResult.getSuccessCnt());
+		purchaseCancelForTCashSacRes.setFailCnt(purchaseCancelSacResult.getFailCnt());
+
+		List<PurchaseCancelDetailSacRes> prchsCancelList = new ArrayList<PurchaseCancelDetailSacRes>();
+		for (PurchaseCancelDetailSacResult purchaseCancelDetailSacResult : purchaseCancelSacResult.getPrchsCancelList()) {
+
+			PurchaseCancelDetailSacRes purchaseCancelDetailSacRes = new PurchaseCancelDetailSacRes();
+
+			purchaseCancelDetailSacRes.setPrchsId(purchaseCancelDetailSacResult.getPrchsId());
+			purchaseCancelDetailSacRes.setResultCd(purchaseCancelDetailSacResult.getResultCd());
+			purchaseCancelDetailSacRes.setResultMsg(purchaseCancelDetailSacResult.getResultMsg());
+
+			prchsCancelList.add(purchaseCancelDetailSacRes);
+
+		}
+
+		purchaseCancelForTCashSacRes.setPrchsCancelList(prchsCancelList);
+
+		return purchaseCancelForTCashSacRes;
 
 	}
 
