@@ -138,10 +138,10 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 	 * 
 	 * @param map
 	 *            map
-	 * @param reqPrrchsCnt
-	 *            reqPrrchsCnt
+	 * @param reqPurchsCnt
+	 *            reqPurchsCnt
 	 */
-	public void updatePurchaseCount(Map<String, String> map, int reqPrrchsCnt) {
+	public void updatePurchaseCount(Map<String, String> map, int reqPurchsCnt) {
 		int prodCnt = 0;
 		int prchsCnt = 0;
 		// TB_DP_TENANT_PROD_STATS 상품 존재 유무 확인
@@ -153,12 +153,12 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 			this.commonDAO.update("LocalSci.insertPurchaseProd", map);
 		}
 
-		map.put("purchaseCount", Integer.toString(reqPrrchsCnt));
+		map.put("purchaseCount", Integer.toString(reqPurchsCnt));
 
 		prchsCnt = (Integer) this.commonDAO.queryForObject("LocalSci.getPurchaseCount", map);
 
 		// 해당상품의 구매수 + 업데이트 구매수가 0보다 작으면 현재 상품의 구매 수만큼 -해서 상품구매수를 0으로 되게 SET
-		if (prchsCnt + reqPrrchsCnt < 0) {
+		if (prchsCnt + reqPurchsCnt < 0) {
 			Integer resetCount = 0 - prchsCnt; // 상품의 현재 구매수만큼 -해주기 위한 변수
 			map.put("purchaseCount", resetCount.toString());
 		}
@@ -172,10 +172,10 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 	 * 
 	 * @param map
 	 *            map
-	 * @param reqPrrchsCnt
-	 *            reqPrrchsCnt
+	 * @param reqPurchsCnt
+	 *            reqPurchsCnt
 	 */
-	private void updateSpecialPurchaseCount(Map<String, String> map, int reqPrrchsCnt) {
+	private void updateSpecialPurchaseCount(Map<String, String> map, int reqPurchsCnt) {
 		int prodCnt = 0;
 		int prchsCnt = 0;
 		// TB_DP_TENANT_PROD_STATS 상품 존재 유무 확인
@@ -187,12 +187,12 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 			this.commonDAO.update("LocalSci.insertSpecialPurchaseProd", map);
 		}
 
-		map.put("purchaseCount", Integer.toString(reqPrrchsCnt));
+		map.put("purchaseCount", Integer.toString(reqPurchsCnt));
 
 		prchsCnt = (Integer) this.commonDAO.queryForObject("LocalSci.getSpecialPurchaseCount", map);
 
 		// 해당상품의 구매수 + 업데이트 구매수가 0보다 작으면 현재 상품의 구매 수만큼 -해서 상품구매수를 0으로 되게 SET
-		if (prchsCnt + reqPrrchsCnt < 0) {
+		if (prchsCnt + reqPurchsCnt < 0) {
 			Integer resetCount = 0 - prchsCnt; // 상품의 현재 구매수만큼 -해주기 위한 변수
 			map.put("purchaseCount", resetCount.toString());
 		}
