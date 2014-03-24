@@ -308,8 +308,8 @@ public class SearchUserSCIControllerTest {
 				schUserDevice.setUserKey("US201401271926064310001061");
 
 				SearchUserDeviceSac schUserDevice1 = new SearchUserDeviceSac();
-				schUserDevice1.setDeviceKey("DE201402131645572670001658");
-				schUserDevice1.setUserKey("US201402131645569940002421");
+				schUserDevice1.setDeviceKey("DE20140213164557267000165811");
+				schUserDevice1.setUserKey("US20140213164556994000242111");
 
 				userDeviceList.add(schUserDevice);
 				userDeviceList.add(schUserDevice1);
@@ -327,29 +327,35 @@ public class SearchUserSCIControllerTest {
 		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
-	//
-	//	@Test
-	//	public void B_TEST_정상_DeviceKeyList_검색_실명인증() throws Exception {
-	//		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-	//			@Override
-	//			public Object requestBody() {
-	//				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
-	//				List<String> deviceKeyList = new ArrayList<String>();
-	//				deviceKeyList.add("01034669429");
-	//				deviceKeyList.add("01063438946");
-	//
-	//				searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
-	//				return searchUserDeviceSacReq;
-	//			}
-	//		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
-	//			@Override
-	//			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-	//				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
-	//				LOGGER.info("response param : {}", res.toString());
-	//			}
-	//		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-	//
-	//	}
+
+	@Test
+	public void B_TEST_정상_DeviceKeyList_검색_실명인증() throws Exception {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+
+				List<SearchUserDeviceSac> userDeviceList = new ArrayList<SearchUserDeviceSac>();
+
+				SearchUserDeviceSac schUserDevice = new SearchUserDeviceSac();
+				schUserDevice.setDeviceKey("01034669429");
+				schUserDevice.setUserKey("IW1425162260520130327171813");
+
+				userDeviceList.add(schUserDevice);
+
+				searchUserDeviceSacReq.setSearchUserDeviceReqList(userDeviceList);
+
+				return searchUserDeviceSacReq;
+			}
+		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
+				LOGGER.info("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
 	//
 	//	@Test(expected = StorePlatformException.class)
 	//	public void C_TEST_오류_DeviceKeyList_검색_검색결과없음() throws Exception {
