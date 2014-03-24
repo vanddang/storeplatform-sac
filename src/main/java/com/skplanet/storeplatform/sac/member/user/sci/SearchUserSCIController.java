@@ -32,13 +32,10 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceI
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDevice;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
@@ -46,7 +43,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByUserKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
-import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.user.service.UserOcbService;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
@@ -66,9 +62,6 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 	@Autowired
 	private UserOcbService userOcbService;
-
-	@Autowired
-	private MemberCommonComponent mcc;
 
 	/**
 	 * <pre>
@@ -140,25 +133,21 @@ public class SearchUserSCIController implements SearchUserSCI {
 		String deviceKey = StringUtil.nvl(request.getDeviceKey(), "");
 		String userKey = StringUtil.nvl(request.getUserKey(), "");
 
-		// 회원기본정보조회 deviceKey로 userKey세팅
-		UserInfo info = new UserInfo();
+		// 회원정보조회 deviceKey로 userKey세팅
+		DetailReq detailReq = new DetailReq();
 		if (!userKey.equals("")) {
-			info = this.mcc.getUserBaseInfo("userKey", request.getUserKey(), requestHeader);
+			detailReq.setUserKey(request.getUserKey());
 		} else if (!deviceKey.equals("")) {
-			info = this.mcc.getUserBaseInfo("deviceKey", request.getDeviceKey(), requestHeader);
+			detailReq.setDeviceKey(request.getDeviceKey());
 		}
+		DetailRes detailRes = this.userSearchService.searchUser(detailReq, requestHeader);
 
-		request.setUserKey(info.getUserKey());
+		request.setUserKey(detailRes.getUserKey());
 
 		// Store 약관동의목록 조회 US010609 = POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE
-		ListTermsAgreementSacReq agreementReq = new ListTermsAgreementSacReq();
-		agreementReq.setUserKey(request.getUserKey());
-
 		String skpAgreementYn = "N";
 		try {
-			ListTermsAgreementSacRes agreementRes = this.userSearchService.listTermsAgreement(requestHeader, agreementReq);
-
-			for (Agreement agree : agreementRes.getAgreementList()) {
+			for (Agreement agree : detailRes.getAgreementList()) {
 				if (agree.getExtraAgreementId().equals(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE)) {
 					if (agree.getIsExtraAgreement().equals("Y")) {
 						skpAgreementYn = "Y";
@@ -171,6 +160,19 @@ public class SearchUserSCIController implements SearchUserSCI {
 			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				skpAgreementYn = "N";
 			}
+		}
+
+		// OCB이용약관 동의여부 searchOneId
+		String ocbAgreementYn = "N";
+		try {
+			ocbAgreementYn = StringUtil.setTrimYn(detailRes.getUserInfo().getIsMemberPoint());
+		} catch (StorePlatformException ex) {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				ocbAgreementYn = "N";
+			} else if (ex.getErrorInfo().getCode().equals(MemberConstants.SAC_ERROR_NO_ONEID)) {
+				ocbAgreementYn = "N";
+			}
+			LOGGER.info("====== OneId Response : {}", ex.getCode());
 		}
 
 		// OCB 카드번호
@@ -190,26 +192,9 @@ public class SearchUserSCIController implements SearchUserSCI {
 			}
 		}
 
-		// OCB이용약관 동의여부 searchOneId
-		MbrOneidSacReq oneIdReq = new MbrOneidSacReq();
-		oneIdReq.setUserKey(request.getUserKey());
-
-		String ocbAgreementYn = "N";
-		try {
-			MbrOneidSacRes oneIdRes = this.userSearchService.searchUserOneId(requestHeader, oneIdReq);
-			ocbAgreementYn = oneIdRes.getIsMemberPoint();
-		} catch (StorePlatformException ex) {
-			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				ocbAgreementYn = "N";
-			} else if (ex.getErrorInfo().getCode().equals(MemberConstants.SAC_ERROR_NO_ONEID)) {
-				ocbAgreementYn = "N";
-			}
-			LOGGER.info("====== OneId Response : {}", ex.getCode());
-		}
-
 		SearchUserPayplanetSacRes payplanetSacRes = new SearchUserPayplanetSacRes();
 		payplanetSacRes.setSkpAgreementYn(skpAgreementYn);
-		payplanetSacRes.setOcbCardNumber(ocbCardNumber);
+		payplanetSacRes.setOcbCardNumber(StringUtil.setTrim(ocbCardNumber));
 		payplanetSacRes.setOcbAgreementYn(ocbAgreementYn);
 
 		return payplanetSacRes;
