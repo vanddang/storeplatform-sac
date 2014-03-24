@@ -844,105 +844,105 @@
     <!-- 채널/에피소드 관계 -->
     <select id="getChannelEpisodeRelation" parameterType="string" resultType="map">
       SELECT   /* FeedbackMapper.xml, getChannelEpisodeRelation, SAC 기타, 2014-03-13 */
-              a.prod_id
-            , a.part_prod_id
-            , b.top_menu_id
-        FROM  tb_dp_prod_rshp a
-            , tb_dp_prod b
-       WHERE  a.part_prod_id = b.prod_id    
-         AND  a.part_prod_id = #{partProdId}
-         AND  a.prod_rshp_cd = 'DP010802'
+              a.prod_id         /* 상품 ID(채널) */
+            , a.part_prod_id    /* 에피소드 ID */
+            , b.top_menu_id     /* 탑 메뉴 ID */
+        FROM  tb_dp_prod_rshp a     /* 상품 관계 */
+            , tb_dp_prod b          /* 상품 */
+       WHERE  a.part_prod_id = b.prod_id        /* 에피소드 ID */
+         AND  a.part_prod_id = #{partProdId}    /* 에피소드 ID */
+         AND  a.prod_rshp_cd = 'DP010802'       /* 상품 관계 코드(채널/에피소드 관계) */
     </select>
     
     <!-- 채널/에피소드 관계시 채널상품 존재 여부 확인 -->
     <select id="getChannelTenantProdStatsCount" parameterType="string" resultType="int">
       SELECT  /* FeedbackMapper.xml, getChannelTenantProdStatsCount, SAC 기타, 2014-03-13 */
-              count(*)
-        FROM  tb_dp_tenant_prod_stats a
-            , tb_dp_menu_category_prod_mapg b
-            , tb_dp_prod_rshp c
-       WHERE  a.prod_id = b.prod_id 
-         AND  b.prod_id = c.prod_id
-         AND  c.part_prod_id = #{partProdId}           
-         AND  c.prod_rshp_cd = 'DP010802'    
+              COUNT(*)                          /* 채널 상품 갯수 */
+        FROM  tb_dp_tenant_prod_stats a         /* 테넌트 상품 통계 */
+            , tb_dp_menu_category_prod_mapg b   /* 메뉴 카테고리 상품 매핑 */
+            , tb_dp_prod_rshp c                 /* 상품 관계 */
+       WHERE  a.prod_id = b.prod_id             /* 상품 ID */
+         AND  b.prod_id = c.prod_id             /* 상품 ID */
+         AND  c.part_prod_id = #{partProdId}    /* 에피소드 ID */
+         AND  c.prod_rshp_cd = 'DP010802'       /* 상품 관계 코드(채널/에피소드 관계) */
     </select>
     
     <!-- 채널/에피소드 관계시 상품통계 채널상품 존재시 전체 에피소드 통계 UPDATE -->
     <update id="updateChannelTenantProdStats" parameterType="TenantProdStats">
       UPDATE  /* FeedbackMapper.xml, updateChannelTenantProdStats, SAC 기타, 2014-03-13 */
-              tb_dp_tenant_prod_stats a 
-         SET (  avg_evlu_score
-              , tot_evlu_score
-              , paticpers_cnt
-              , upd_id
-              , upd_dt
+              tb_dp_tenant_prod_stats a     /* 테넌트 상품 통계 */
+         SET (  avg_evlu_score      /* 평균 평가 점수 */
+              , tot_evlu_score      /* 총 평가 점수 */
+              , paticpers_cnt       /* 참여자 수 */
+              , upd_id              /* 수정 ID */
+              , upd_dt              /* 수정 일시 */
              ) 
            = (
               SELECT  
-                      DECODE(SUM(d.paticpers_cnt), 0, 0, NVL(SUM(d.tot_evlu_score)/SUM(d.paticpers_cnt), '0.0')) AS avg_evlu_score
-                    , NVL(SUM(d.tot_evlu_score), '0.0') AS tot_evlu_score
-                    , NVL(SUM(d.paticpers_cnt), '0.0') AS paticpers_cnt
-                    , #{updId} AS upd_id
-                    , SYSDATE AS upd_dt
-                FROM  tb_dp_prod_rshp a
-                    , tb_dp_prod b
-                    , tb_dp_tenant_prod c
-                    , tb_dp_tenant_prod_stats d
-                    , tb_dp_menu_category_prod_mapg e
-               WHERE  a.part_prod_id = b.prod_id
-                 AND  a.prod_id != a.part_prod_id
-                 AND  b.prod_id = c.prod_id
-                 AND  b.prod_id = d.prod_id(+)
-                 AND  b.prod_id = e.prod_id
-                 AND  c.tenant_id = d.tenant_id
-                 AND  a.prod_id = #{prodId}
-                 AND  a.prod_rshp_cd = 'DP010802'
-                 AND  c.prod_status_cd = 'PD000403'
-                 AND  c.tenant_id = 'S01'
-                 AND  e.use_yn = 'Y'
+                      DECODE(SUM(d.paticpers_cnt), 0, 0, NVL(SUM(d.tot_evlu_score)/SUM(d.paticpers_cnt), '0.0')) AS avg_evlu_score  /* 평균 평가 점수 */
+                    , NVL(SUM(d.tot_evlu_score), '0.0') AS tot_evlu_score                                                           /* 총 평가 점수 */
+                    , NVL(SUM(d.paticpers_cnt), '0.0') AS paticpers_cnt                                                             /* 참여자 수 */
+                    , #{updId} AS upd_id                                                                                            /* 수정 ID */
+                    , SYSDATE AS upd_dt                                                                                             /* 수정 일시 */
+                FROM  tb_dp_prod_rshp a                 /* 상품 관계 */
+                    , tb_dp_prod b                      /* 상품 */
+                    , tb_dp_tenant_prod c               /* 테넌트 상품 */
+                    , tb_dp_tenant_prod_stats d         /* 테넌트 상품 통계 */
+                    , tb_dp_menu_category_prod_mapg e   /* 메뉴 카테고리 상품 매핑 */
+               WHERE  a.part_prod_id = b.prod_id        /* 에피소드 ID */
+                 AND  a.prod_id != a.part_prod_id       /* 상품 ID(채널) */
+                 AND  b.prod_id = c.prod_id             /* 상품 ID */
+                 AND  b.prod_id = d.prod_id(+)          /* 상품 ID */
+                 AND  b.prod_id = e.prod_id             /* 상품 ID */
+                 AND  c.tenant_id = d.tenant_id         /* 테넌트 ID */
+                 AND  a.prod_id = #{prodId}             /* 상품 ID */
+                 AND  a.prod_rshp_cd = 'DP010802'       /* 상품 관계 코드(채널/에피소드 관계) */
+                 AND  c.prod_status_cd = 'PD000403'     /* 상품 상태 코드(판매중) */
+                 AND  c.tenant_id = 'S01'               /* 테넌트 ID */
+                 AND  e.use_yn = 'Y'                    /* 사용 여부 */
                GROUP 
                   BY  a.prod_id
              )
-      WHERE  a.prod_id = #{prodId}
-        AND  a.tenant_id = #{tenantId}    
+      WHERE  a.prod_id = #{prodId}                      /* 상품 ID */
+        AND  a.tenant_id = #{tenantId}                  /* 테넌트 ID */
     </update>
     
     <!-- 채널/에피소드 관계시 상품통계 채널상품 미존재시 전체 에피소드 통계 INSERT -->
     <update id="insertChannelTenantProdStats" parameterType="TenantProdStats">
       INSERT  /* FeedbackMapper.xml, insertChannelTenantProdStats, SAC 기타, 2014-03-13 */
-        INTO  tb_dp_tenant_prod_stats 
-      ( tenant_id
-      , prod_id 
-      , avg_evlu_score
-      , tot_evlu_score
-      , paticpers_cnt
-      , reg_id
-      , reg_dt
+        INTO  tb_dp_tenant_prod_stats       /* 테넌트 상품 통계 */
+      ( tenant_id       /* 테넌트 ID */
+      , prod_id         /* 상품 ID */
+      , avg_evlu_score  /* 평균 평가 점수 */
+      , tot_evlu_score  /* 총 평가 점수 */
+      , paticpers_cnt   /* 참여자 수 */
+      , reg_id          /* 등록 ID */
+      , reg_dt          /* 등록 일시 */
       )
       SELECT 
-              c.tenant_id
-            , a.prod_id
-            , NVL(SUM(d.tot_evlu_score)/SUM(d.paticpers_cnt), '0.0') AS avg_evlu_score
-            , NVL(SUM(d.tot_evlu_score), '0.0') AS tot_evlu_score
-            , NVL(SUM(d.paticpers_cnt), '0.0') AS paticpers_cnt
-            , #{regId} AS reg_id
-            , SYSDATE AS reg_dt
-        FROM  tb_dp_prod_rshp a
-            , tb_dp_prod b
-            , tb_dp_tenant_prod c
-            , tb_dp_tenant_prod_stats d
-            , tb_dp_menu_category_prod_mapg e
-       WHERE  a.part_prod_id = b.prod_id
-         AND  a.prod_id != a.part_prod_id
-         AND  b.prod_id = c.prod_id
-         AND  b.prod_id = d.prod_id(+)
-         AND  b.prod_id = e.prod_id
-         AND  c.tenant_id = d.tenant_id
-         AND  a.prod_id = #{prodId}
-         AND  a.prod_rshp_cd = 'DP010802'
-         AND  c.prod_status_cd = 'PD000403'
-         AND  c.tenant_id = 'S01'
-         AND  e.use_yn = 'Y'
+              c.tenant_id                                                               /* 테넌트 ID */
+            , a.prod_id                                                                 /* 상품 ID */
+            , NVL(SUM(d.tot_evlu_score)/SUM(d.paticpers_cnt), '0.0') AS avg_evlu_score  /* 평균 평가 점수 */
+            , NVL(SUM(d.tot_evlu_score), '0.0') AS tot_evlu_score                       /* 총 평가 점수 */
+            , NVL(SUM(d.paticpers_cnt), '0.0') AS paticpers_cnt                         /* 참여자 수 */
+            , #{regId} AS reg_id                                                        /* 등록 ID */
+            , SYSDATE AS reg_dt                                                         /* 등록 일시 */
+        FROM  tb_dp_prod_rshp a                 /* 상품 관계 */
+            , tb_dp_prod b                      /* 상품 */
+            , tb_dp_tenant_prod c               /* 테넌트 상품 */
+            , tb_dp_tenant_prod_stats d         /* 테넌트 상품 통계 */
+            , tb_dp_menu_category_prod_mapg e   /* 메뉴 카테고리 상품 매핑 */
+       WHERE  a.part_prod_id = b.prod_id        /* 에피소드 ID */
+         AND  a.prod_id != a.part_prod_id       /* 상품 ID(채널) */
+         AND  b.prod_id = c.prod_id             /* 상품 ID */
+         AND  b.prod_id = d.prod_id(+)          /* 상품 ID */
+         AND  b.prod_id = e.prod_id             /* 상품 ID */
+         AND  c.tenant_id = d.tenant_id         /* 테넌트 ID */
+         AND  a.prod_id = #{prodId}             /* 상품 ID */
+         AND  a.prod_rshp_cd = 'DP010802'       /* 상품 관계 코드(채널/에피소드 관계) */
+         AND  c.prod_status_cd = 'PD000403'     /* 상품 상태 코드(판매중) */
+         AND  c.tenant_id = 'S01'               /* 테넌트 ID */
+         AND  e.use_yn = 'Y'                    /* 사용 여부 */
        GROUP 
           BY  c.tenant_id, a.prod_id
     </update>
