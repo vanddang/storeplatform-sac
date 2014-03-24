@@ -765,7 +765,7 @@
     <select id="getProdEvalInfo" parameterType="TenantProdStats" resultType="TenantProdStats">
       SELECT  /* FeedbackMapper.xml, getProdEvalInfo, SAC 기타, 2014-02-13 */
              (
-              SELECT  RTRIM ( XMLAGG ( XMLELEMENT (A, CONCAT (avg_score_pct, ',')).EXTRACT ('//text()')), ',')
+              SELECT LISTAGG (avg_score_pct, ',') WITHIN GROUP (ORDER BY avg_score DESC)
                 FROM ( 
                       SELECT  avg_score  /* 평균 점수 */  
                             , NVL (avg_count, 0) AS paticpers_cnt  /* 참여자 수 */
@@ -788,18 +788,9 @@
                                                      BY  avg_score
                                                 ) ia
                                               , (
-                                                SELECT  avg_score /* 평균 점수 Dummy(조인조건) */
-                                                  FROM (
-                                                        SELECT  '1' AS avg_score FROM DUAL
-                                                         UNION  ALL
-                                                        SELECT  '2' AS avg_score FROM DUAL
-                                                         UNION  ALL
-                                                        SELECT  '3' AS avg_score FROM DUAL
-                                                         UNION  ALL
-                                                        SELECT  '4' AS avg_score FROM DUAL
-                                                         UNION  ALL
-                                                        SELECT  '5' AS avg_score FROM DUAL
-                                                        )
+                                                SELECT  LEVEL AS avg_score /* 평균 점수 Dummy(조인조건) */
+                                                  FROM  DUAL
+                                            CONNECT BY  LEVEL < 6
                                                 ) ib
                                          WHERE  ia.avg_score(+) = ib.avg_score
                                        )
@@ -845,18 +836,9 @@
                            BY  avg_score
                       ) ia
                     , (
-                       SELECT  avg_score  /* 평균 점수 Dummy(조인조건) */
-                         FROM  (
-                                SELECT  '1' AS avg_score FROM DUAL
-                                 UNION  ALL
-                                SELECT  '2' AS avg_score FROM DUAL
-                                 UNION  ALL
-                                SELECT  '3' AS avg_score FROM DUAL
-                                 UNION  ALL
-                                SELECT  '4' AS avg_score FROM DUAL
-                                 UNION  ALL
-                                SELECT  '5' AS avg_score FROM DUAL
-                               )
+                       SELECT  LEVEL AS avg_score /* 평균 점수 Dummy(조인조건) */
+                         FROM  DUAL
+                   CONNECT BY  LEVEL < 6
                       ) ib
                WHERE  ia.avg_score(+) = ib.avg_score
              )
