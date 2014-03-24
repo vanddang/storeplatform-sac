@@ -790,7 +790,7 @@
                                               , (
                                                 SELECT  LEVEL AS avg_score /* 평균 점수 Dummy(조인조건) */
                                                   FROM  DUAL
-                                            CONNECT BY  LEVEL < 6
+                                            CONNECT BY  LEVEL <![CDATA[<]]> 6
                                                 ) ib
                                          WHERE  ia.avg_score(+) = ib.avg_score
                                        )
@@ -838,7 +838,7 @@
                     , (
                        SELECT  LEVEL AS avg_score /* 평균 점수 Dummy(조인조건) */
                          FROM  DUAL
-                   CONNECT BY  LEVEL < 6
+                   CONNECT BY  LEVEL <![CDATA[<]]> 6
                       ) ib
                WHERE  ia.avg_score(+) = ib.avg_score
              )
