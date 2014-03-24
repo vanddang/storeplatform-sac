@@ -779,7 +779,8 @@
 
     <select id="getDownloadMusicInfo" parameterType="DownloadMusicSacReq" resultType="MetaInfo">
 		SELECT  /* DownloadMapper.getDownloadMusicInfo, 상품정보요청(for download) Music , 이석희/아이에스플러스, 2014-02-07 */
-		        TA.PROD_ID
+		       TA.CHNL_PROD_ID AS PROD_ID
+		      , TA.PROD_ID AS PART_PROD_ID
 		      , TA.MUSIC_ID
 		      , TA.OUTSD_CONTENTS_ID
 		      , TA.PROD_NM
@@ -788,8 +789,7 @@
 		      , TA.ARTIST2_NM
 		      , TA.ARTIST3_NM
 		      , TA.FILE_SIZE_H
-		      , TA.FILE_SIZE
-		      , TA.CHNL_PROD_ID
+		      , TA.FILE_SIZE		      
 		      , TA.MENU_ID
 		      , TA.MENU_NM
 		      , TA.TOP_MENU_ID
