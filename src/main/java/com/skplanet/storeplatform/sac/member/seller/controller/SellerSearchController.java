@@ -173,6 +173,41 @@ public class SellerSearchController {
 
 	/**
 	 * <pre>
+	 * 판매자 Password 찾기.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchPasswordReq
+	 * @return SearchPasswordRes
+	 */
+	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchPasswordRes searchPassword(SacRequestHeader header, @RequestBody @Validated SearchPasswordReq req) {
+		return this.sellerSearchService.searchPassword(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * Password 보안 질문 확인.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CheckPasswordReminderQuestionReq
+	 * @return CheckPasswordReminderQuestionRes
+	 */
+	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
+			@RequestBody @Validated CheckPasswordReminderQuestionReq req) {
+		return this.sellerSearchService.checkPasswordReminderQuestion(header, req);
+	}
+
+	/**
+	 * <pre>
 	 * Password 보안 질문 조회.
 	 * </pre>
 	 * 
@@ -202,41 +237,6 @@ public class SellerSearchController {
 	@ResponseBody
 	public ListPasswordReminderQuestionAllRes listPasswordReminderQuestionAll(SacRequestHeader header) {
 		return this.sellerSearchService.listPasswordReminderQuestionAll(header);
-	}
-
-	/**
-	 * <pre>
-	 * Password 보안 질문 확인.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            CheckPasswordReminderQuestionReq
-	 * @return CheckPasswordReminderQuestionRes
-	 */
-	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
-			@RequestBody @Validated CheckPasswordReminderQuestionReq req) {
-		return this.sellerSearchService.checkPasswordReminderQuestion(header, req);
-	}
-
-	/**
-	 * <pre>
-	 * 판매자 Password 찾기.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            SearchPasswordReq
-	 * @return SearchPasswordRes
-	 */
-	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public SearchPasswordRes searchPassword(SacRequestHeader header, @RequestBody @Validated SearchPasswordReq req) {
-		return this.sellerSearchService.searchPassword(header, req);
 	}
 
 	/**
