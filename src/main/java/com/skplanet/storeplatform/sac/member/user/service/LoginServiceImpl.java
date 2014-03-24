@@ -24,14 +24,12 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcRes;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
@@ -189,13 +187,12 @@ public class LoginServiceImpl implements LoginService {
 				/* 무선회원 인증 */
 				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
 				authForWapEcReq.setUserMdn(req.getDeviceId());
-				AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);
-				LOGGER.info(authForWapEcRes.toString());
+				this.idpSCI.authForWap(authForWapEcReq);
 
 			}
 
 		} catch (StorePlatformException ex) {
-			LOGGER.info(ex.getErrorInfo().toString());
+
 			if ((StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 					+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN))
 					|| (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
@@ -337,13 +334,12 @@ public class LoginServiceImpl implements LoginService {
 				/* 무선회원 인증 */
 				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
 				authForWapEcReq.setUserMdn(req.getDeviceId());
-				AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);
-				LOGGER.info(authForWapEcRes.toString());
+				this.idpSCI.authForWap(authForWapEcReq);
 
 			}
 
 		} catch (StorePlatformException ex) {
-			LOGGER.info(ex.getErrorInfo().toString());
+
 			if ((StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 					+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN))
 					|| (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
@@ -541,7 +537,6 @@ public class LoginServiceImpl implements LoginService {
 					authForIdEcReq.setKey(userId);
 					authForIdEcReq.setUserPasswd(userPw);
 					AuthForIdEcRes authForIdEcRes = this.imIdpSCI.authForId(authForIdEcReq);
-					LOGGER.info(authForIdEcRes.toString());
 
 					if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_OK)) {
 
@@ -608,8 +603,6 @@ public class LoginServiceImpl implements LoginService {
 					}
 
 				} catch (StorePlatformException ex) {
-
-					LOGGER.info(ex.getErrorInfo().toString());
 
 					if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER)) { // 서비스 간편가입 대상
@@ -690,8 +683,7 @@ public class LoginServiceImpl implements LoginService {
 					SetLoginStatusEcReq setLoginStatusEcReq = new SetLoginStatusEcReq();
 					setLoginStatusEcReq.setKey(userId);
 					setLoginStatusEcReq.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
-					SetLoginStatusEcRes setLoginStatusEcRes = this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
-					LOGGER.info(setLoginStatusEcRes.toString());
+					this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
 
 					/* 로그인 상태코드 정상처리 */
 					this.updateLoginStatus(requestHeader, MemberConstants.USER_LOGIN_STATUS_NOMAL, MemberConstants.KEY_TYPE_MBR_ID, userId);
@@ -704,7 +696,6 @@ public class LoginServiceImpl implements LoginService {
 				authForIdEcReq.setKey(userId);
 				authForIdEcReq.setUserPasswd(userPw);
 				AuthForIdEcRes authForIdEcRes = this.imIdpSCI.authForId(authForIdEcReq);
-				LOGGER.info(authForIdEcRes.toString());
 
 				userAuthKey = authForIdEcRes.getUserAuthKey();
 
@@ -712,7 +703,7 @@ public class LoginServiceImpl implements LoginService {
 				// this.updateDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 			} catch (StorePlatformException ex) {
-				LOGGER.info(ex.getErrorInfo().toString());
+
 				if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
@@ -752,7 +743,6 @@ public class LoginServiceImpl implements LoginService {
 				authForIdEcReq.setUserId(userId);
 				authForIdEcReq.setUserPasswd(userPw);
 				com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcRes authForIdEcRes = this.idpSCI.authForId(authForIdEcReq);
-				LOGGER.info(authForIdEcRes.toString());
 
 				userAuthKey = authForIdEcRes.getUserAuthKey();
 
@@ -760,8 +750,6 @@ public class LoginServiceImpl implements LoginService {
 				// this.updateDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 			} catch (StorePlatformException ex) {
-
-				LOGGER.info(ex.getErrorInfo().toString());
 
 				if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
@@ -891,6 +879,9 @@ public class LoginServiceImpl implements LoginService {
 		String isPurchaseChange = "N";
 		String isJoinMdn = "N";
 
+		String newDeviceKey = null;
+		String newUserKey = null;
+
 		if (mdnDeviceInfo == null) { // mdn 미가입인 경우
 
 			/* 변동성 대상체크 */
@@ -899,6 +890,8 @@ public class LoginServiceImpl implements LoginService {
 			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "Y")) { // 변동성 대상인 경우
 
 				isPurchaseChange = "Y";
+				newDeviceKey = saveAndSync.getDeviceKey();
+				newUserKey = saveAndSync.getUserKey();
 
 			} else { // 변동성 대상이 아닌 경우
 
@@ -911,6 +904,8 @@ public class LoginServiceImpl implements LoginService {
 			LOGGER.info("::: mdn 기가입 :::");
 			isPurchaseChange = "Y";
 
+			newDeviceKey = mdnDeviceInfo.getDeviceKey();
+			newUserKey = mdnDeviceInfo.getUserKey();
 		}
 
 		LOGGER.info("::: 변동성 구매이관 대상여부 {}", isPurchaseChange);
@@ -928,8 +923,8 @@ public class LoginServiceImpl implements LoginService {
 			userInfoSacInReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			userInfoSacInReq.setDeviceKey(macDeviceInfo.getDeviceKey());
 			userInfoSacInReq.setUserKey(macDeviceInfo.getUserKey());
-			userInfoSacInReq.setNewDeviceKey(mdnDeviceInfo.getDeviceKey());
-			userInfoSacInReq.setNewUserKey(mdnDeviceInfo.getUserKey());
+			userInfoSacInReq.setNewDeviceKey(newDeviceKey);
+			userInfoSacInReq.setNewUserKey(newUserKey);
 			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
 
 			/* mac 정보 탈퇴처리 */
@@ -942,7 +937,7 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
-			deviceInfo.setUserKey(mdnDeviceInfo.getUserKey());
+			deviceInfo.setUserKey(newUserKey);
 			deviceInfo.setDeviceId(req.getDeviceId());
 			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 			if (StringUtil.isNotBlank(req.getNativeId())) {
@@ -966,8 +961,8 @@ public class LoginServiceImpl implements LoginService {
 
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
-			res.setDeviceKey(mdnDeviceInfo.getDeviceKey());
-			res.setUserKey(mdnDeviceInfo.getUserKey());
+			res.setDeviceKey(newDeviceKey);
+			res.setUserKey(newUserKey);
 			res.setUserAuthKey(this.tempUserAuthKey);
 			res.setIsLoginSuccess("Y");
 
@@ -1000,8 +995,6 @@ public class LoginServiceImpl implements LoginService {
 
 				}
 			}
-
-			LOGGER.info(joinForWapEcRes.toString());
 
 			/* mbrNo 변경 */
 			UserMbr userMbr = new UserMbr();
@@ -1320,7 +1313,6 @@ public class LoginServiceImpl implements LoginService {
 		req.setKey(imSvcNo);
 		req.setUserMdn(userPhoneStr);
 		UpdateAdditionalInfoEcRes updAddInfoRes = this.imIdpSCI.updateAdditionalInfo(req);
-		LOGGER.info(":::: UpdateAdditionalInfoEcRes : {}", updAddInfoRes.toString());
 
 		return updAddInfoRes;
 	}
