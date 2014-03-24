@@ -741,11 +741,11 @@ public class IdpServiceImpl implements IdpService {
 
 			// 법정대리인 관계 코드
 			if (hashMap.get("parent_type").toString().equals("0")) {// 부
-				mbrLglAgent.setParentType("F");
+				mbrLglAgent.setParentType(MemberConstants.PARENT_TYPE_FATHER);
 			} else if (hashMap.get("parent_type").toString().equals("1")) {// 모
-				mbrLglAgent.setParentType("M");
+				mbrLglAgent.setParentType(MemberConstants.PARENT_TYPE_MOTHER);
 			} else { // 기타 : parent_type == 2
-				mbrLglAgent.setParentType("O");
+				mbrLglAgent.setParentType(MemberConstants.PARENT_TYPE_ECT);
 			}
 
 			// LGL_AGENT_AGREE_DT 동의 일시
@@ -1287,11 +1287,11 @@ public class IdpServiceImpl implements IdpService {
 
 				// 법정대리인 관계 코드
 				if (map.get("parent_type").toString().equals("0")) {// 부
-					mbrLglAgent.setParentType("F");
+					mbrLglAgent.setParentType(MemberConstants.PARENT_TYPE_FATHER);
 				} else if (map.get("parent_type").toString().equals("1")) {// 모
-					mbrLglAgent.setParentType("M");
+					mbrLglAgent.setParentType(MemberConstants.PARENT_TYPE_MOTHER);
 				} else { // 기타 : parent_type == 2
-					mbrLglAgent.setParentType("O");
+					mbrLglAgent.setParentType(MemberConstants.PARENT_TYPE_ECT);
 				}
 
 				// 법정 대리인 실명인증 수단코드
