@@ -83,6 +83,7 @@ public final class MemberConstants {
 	public static final String KEY_TYPE_EMAIL = "EMAIL"; // 판매자 이메일
 	public static final String KEY_TYPE_TEL_NO = "TEL_NO"; // 사용자 연락처
 	public static final String KEY_TYPE_WILS_TEL_NO = "WILS_TEL_NO"; // 판매자 연락처
+	public static final String KEY_TYPE_SELLERMBR_BIZ_NO = "BIZ_REG_NO"; // 사업자 등록번호
 
 	/** 통신사 코드. */
 	public static final String DEVICE_TELECOM_SKT = "US001201"; // SKT

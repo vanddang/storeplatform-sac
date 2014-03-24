@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbr
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
 /**
@@ -83,15 +84,15 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 
 				if (StringUtils.isNotBlank(req.getSellerMbrSacList().get(i).getSellerKey())) {
 					keySearch.setKeyString(req.getSellerMbrSacList().get(i).getSellerKey());
-					keySearch.setKeyType("INSD_SELLERMBR_NO");
+					keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
 					sellerMbrSacList.add(keySearch);
 				} else if (StringUtils.isNotBlank(req.getSellerMbrSacList().get(i).getSellerId())) {
 					keySearch.setKeyString(req.getSellerMbrSacList().get(i).getSellerId());
-					keySearch.setKeyType("SELLERMBR_ID");
+					keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_ID);
 					sellerMbrSacList.add(keySearch);
 				} else if (StringUtils.isNotBlank(req.getSellerMbrSacList().get(i).getSellerBizNumber())) {
 					keySearch.setKeyString(req.getSellerMbrSacList().get(i).getSellerBizNumber());
-					keySearch.setKeyType("BIZ_REG_NO");
+					keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_BIZ_NO); // 사업자 등록번호.
 					sellerMbrSacList.add(keySearch);
 				}
 			}
