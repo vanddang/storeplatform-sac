@@ -523,9 +523,9 @@ public class LoginServiceImpl implements LoginService {
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
 		/* 모번호 조회 */
-		if (req.getDeviceId() != null) {
-			req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
-		}
+		//		if (req.getDeviceId() != null) {
+		//			req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
+		//		}
 
 		/* 회원정보 조회 */
 		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId);
