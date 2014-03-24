@@ -151,9 +151,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 		/**
 		 * Purchase SC Call
 		 */
-		this.logger.info("##### HistoryList SC Call Start");
+		this.logger.debug("##### HistoryList SC Call Start");
 		scResponse = this.historySci.searchHistoryList(scRequest);
-		this.logger.info("##### HistoryList SC Call End");
+		this.logger.debug("##### HistoryList SC Call End");
 
 		/*************************************************
 		 * SC -> SAC Response Setting Start
@@ -266,7 +266,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		/*************************************************
 		 * productInfo Mapping Start - SAC내부호출일 경우에는 상품정보를 조회하지 않는다.
 		 **************************************************/
-		this.logger.info("##### HistoryList ProductInfo Start");
+		this.logger.debug("##### HistoryList ProductInfo Start");
 		if (!PurchaseConstants.USE_Y.equals(request.getInternalYn())) {
 			if (prodIdList.size() > 0) {
 
@@ -297,7 +297,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				}
 			}
 		}
-		this.logger.info("##### HistoryList ProductInfo End");
+		this.logger.debug("##### HistoryList ProductInfo End");
 		/*************************************************
 		 * productInfo Mapping End
 		 **************************************************/
@@ -305,7 +305,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		/*************************************************
 		 * device Info Mapping Start
 		 **************************************************/
-		this.logger.info("##### HistoryList DeviceInfo Start");
+		this.logger.debug("##### HistoryList DeviceInfo Start");
 		SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
 		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
 
@@ -327,9 +327,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 				useDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
 			} catch (Exception e) {
 				useInfo = false;
-				this.logger.info("---------------------------------------------------");
-				this.logger.info("------Use Device Info null");
-				this.logger.info("---------------------------------------------------");
+				this.logger.debug("---------------------------------------------------");
+				this.logger.debug("------Use Device Info null");
+				this.logger.debug("---------------------------------------------------");
 			}
 		}
 
@@ -344,9 +344,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 				sendDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
 			} catch (Exception e) {
 				sendInfo = false;
-				this.logger.info("---------------------------------------------------");
-				this.logger.info("------Send Device Info null");
-				this.logger.info("---------------------------------------------------");
+				this.logger.debug("---------------------------------------------------");
+				this.logger.debug("------Send Device Info null");
+				this.logger.debug("---------------------------------------------------");
 			}
 		}
 
@@ -374,7 +374,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				}
 			}
 		}
-		this.logger.info("##### HistoryList DeviceInfo End");
+		this.logger.debug("##### HistoryList DeviceInfo End");
 		/*************************************************
 		 * device Info Mapping End
 		 **************************************************/
