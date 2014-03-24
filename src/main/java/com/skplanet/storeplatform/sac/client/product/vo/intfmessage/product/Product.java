@@ -296,6 +296,18 @@ public class Product extends CommonInfo implements Serializable {
 	 * 방송사명
 	 */
 	private String brdcCompNm;
+	
+	/**
+	 * 서비스 그룹 코드
+	 * <ul>
+	 * <li>DP000201 애플리케이션</li>
+	 * <li>DP000203 멀티미디어</li>
+	 * <li>DP000204 폰꾸미기</li>
+	 * <li>DP000205 소셜쇼핑</li>
+	 * <li>DP000206 T store Shopping</li>
+	 * </ul>         
+	 */
+	private String svcGrpCd;
 
 	public String getSalesStatus() {
 		return this.salesStatus;
@@ -1194,5 +1206,20 @@ public class Product extends CommonInfo implements Serializable {
 	public void setBrdcCompNm(String brdcCompNm) {
 		this.brdcCompNm = brdcCompNm;
 	}
+
+	/**
+	 * @return the svcGrpCd
+	 */
+	public String getSvcGrpCd() {
+		return svcGrpCd;
+	}
+
+	/**
+	 * @param svcGrpCd the svcGrpCd to set
+	 */
+	public void setSvcGrpCd(String svcGrpCd) {
+		this.svcGrpCd = svcGrpCd;
+	}
+
 
 }
