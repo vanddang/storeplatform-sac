@@ -49,9 +49,6 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 	@Override
 	public void updatePurchaseCount(List<UpdatePurchaseCountSacReq> reqList) {
 		Map<String, String> map = null;
-		List<Map> productList = null;
-		int prchsCnt = 0;
-		int prodCnt = 0;
 
 		for (int i = 0; i < reqList.size(); i++) {
 			map = new HashMap<String, String>();
@@ -76,64 +73,50 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 				this.log.debug("----------------------------------------------------------");
 
 				map.put("productId", productBasicInfo.getPartProdId());
-
-				// TB_DP_TENANT_PROD_STATS 상품 존재 유무 확인
-				prodCnt = (Integer) this.commonDAO.queryForObject("LocalSci.selectTenantProdStats", map);
-
-				if (prodCnt < 1) {
-					// 대상 상품이 없으면 해당 상품 insert 실행 Insert 시 구매수는 Default 0으로 Set
-					map.put("purchaseCount", "0");
-					this.commonDAO.update("LocalSci.insertPurchaseProd", map);
-				}
-
-				map.put("purchaseCount", reqList.get(i).getPurchaseCount().toString());
-
-				prchsCnt = (Integer) this.commonDAO.queryForObject("LocalSci.getPurchaseCount", map);
-
-				// 해당상품의 구매수 + 업데이트 구매수가 0보다 작으면 현재 상품의 구매 수만큼 -해서 상품구매수를 0으로 되게 SET
-				if (prchsCnt + reqList.get(i).getPurchaseCount() < 0) {
-					Integer resetCount = 0 - prchsCnt; // 상품의 현재 구매수만큼 -해주기 위한 변수
-					map.put("purchaseCount", resetCount.toString());
-				}
-
-				// episode 상품에 대한 update 실행
-				this.commonDAO.update("LocalSci.updatePurchaseCount", map);
+				this.updatePurchaseCount(map, reqList.get(i).getPurchaseCount()); // Episode에 대한 Update 로직 실행
 
 				// APP 상품은 Episode 한번만 update
 				if (!DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals((productBasicInfo.getSvcGrpCd()))) {
 					if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals((productBasicInfo.getSvcGrpCd()))) {
 						map.put("productId", productBasicInfo.getProdId()); // 멀티미디어 상품일 때 채널 ID를 SET
+						this.updatePurchaseCount(map, reqList.get(i).getPurchaseCount()); // 채널에 대한 Update 로직 실행
 					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals((productBasicInfo
 							.getSvcGrpCd()))) {
+						map.put("productId", productBasicInfo.getProdId()); // 쇼핑 상품 일때 Channel ID를 SET
+						this.updatePurchaseCount(map, reqList.get(i).getPurchaseCount()); // 채널에 대한 Update 로직 실행
 						map.put("productId", productBasicInfo.getCatalogId());// 쇼핑 상품 일때 카탈로그 ID를 SET
+						this.updatePurchaseCount(map, reqList.get(i).getPurchaseCount()); // 카탈로그에 대한 Update 로직 실행
 					}
-
-					// TB_DP_TENANT_PROD_STATS 상품 존재 유무 확인
-					prodCnt = (Integer) this.commonDAO.queryForObject("LocalSci.selectTenantProdStats", map);
-
-					if (prodCnt < 1) {
-						// 대상 상품이 없으면 해당 상품 insert 실행 Insert 시 구매수는 Default 0으로 Set
-						map.put("purchaseCount", "0");
-						this.commonDAO.update("LocalSci.insertPurchaseProd", map);
-					}
-
-					map.put("purchaseCount", reqList.get(i).getPurchaseCount().toString());
-
-					prchsCnt = (Integer) this.commonDAO.queryForObject("LocalSci.getPurchaseCount", map);
-
-					// 해당상품의 구매수 + 업데이트 구매수가 0보다 작으면 현재 상품의 구매 수만큼 -해서 상품구매수를 0으로 되게 SET
-					if (prchsCnt + reqList.get(i).getPurchaseCount() < 0) {
-						Integer resetCount = 0 - prchsCnt; // 상품의 현재 구매수만큼 -해주기 위한 변수
-						map.put("purchaseCount", resetCount.toString());
-					}
-
-					// channel 및 catalog Id에 대한 update 실행
-					this.commonDAO.update("LocalSci.updatePurchaseCount", map);
-
 				}
 
 			}
 
 		}
+	}
+
+	public void updatePurchaseCount(Map<String, String> map, int reqPrrchsCnt) {
+		int prodCnt = 0;
+		int prchsCnt = 0;
+		// TB_DP_TENANT_PROD_STATS 상품 존재 유무 확인
+		prodCnt = (Integer) this.commonDAO.queryForObject("LocalSci.selectTenantProdStats", map);
+
+		if (prodCnt < 1) {
+			// 대상 상품이 없으면 해당 상품 insert 실행 Insert 시 구매수는 Default 0으로 Set
+			map.put("purchaseCount", "0");
+			this.commonDAO.update("LocalSci.insertPurchaseProd", map);
+		}
+
+		map.put("purchaseCount", Integer.toString(reqPrrchsCnt));
+
+		prchsCnt = (Integer) this.commonDAO.queryForObject("LocalSci.getPurchaseCount", map);
+
+		// 해당상품의 구매수 + 업데이트 구매수가 0보다 작으면 현재 상품의 구매 수만큼 -해서 상품구매수를 0으로 되게 SET
+		if (prchsCnt + reqPrrchsCnt < 0) {
+			Integer resetCount = 0 - prchsCnt; // 상품의 현재 구매수만큼 -해주기 위한 변수
+			map.put("purchaseCount", resetCount.toString());
+		}
+
+		// channel 및 catalog Id에 대한 update 실행
+		this.commonDAO.update("LocalSci.updatePurchaseCount", map);
 	}
 }
