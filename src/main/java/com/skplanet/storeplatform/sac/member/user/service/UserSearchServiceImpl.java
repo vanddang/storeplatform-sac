@@ -379,7 +379,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* 회원 정보 조회 */
-		//		this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+		// this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 		/* 약관동의 목록 조회 */
 		List<Agreement> agreementList = new ArrayList<Agreement>();
@@ -624,225 +624,225 @@ public class UserSearchServiceImpl implements UserSearchService {
 	}
 
 	// 사용자 인증정보 세팅
-	//	public MbrAuth 	(DetailReq req, SacRequestHeader sacHeader) {
+	// public MbrAuth (DetailReq req, SacRequestHeader sacHeader) {
 	//
-	//		SearchUserRequest searchUserRequest = new SearchUserRequest();
-	//		CommonRequest commonRequest = new CommonRequest();
-	//		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-	//		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-	//		searchUserRequest.setCommonRequest(commonRequest);
+	// SearchUserRequest searchUserRequest = new SearchUserRequest();
+	// CommonRequest commonRequest = new CommonRequest();
+	// commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+	// commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+	// searchUserRequest.setCommonRequest(commonRequest);
 	//
-	//		String userId = StringUtil.nvl(req.getUserId(), "");
-	//		String userKey = StringUtil.nvl(req.getUserKey(), "");
-	//		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-	//		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+	// String userId = StringUtil.nvl(req.getUserId(), "");
+	// String userKey = StringUtil.nvl(req.getUserKey(), "");
+	// String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+	// String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 	//
-	//		String keyType = "";
-	//		String keyValue = "";
-	//		if (!userKey.equals("")) {
-	//			keyType = "userKey";
-	//			keyValue = userKey;
-	//		} else if (!userId.equals("")) {
-	//			keyType = "userId";
-	//			keyValue = userId;
-	//		} else if (!deviceKey.equals("")) {
-	//			keyType = "deviceKey";
-	//			keyValue = deviceKey;
-	//		} else if (!deviceId.equals("")) {
-	//			keyType = "deviceId";
-	//			keyValue = deviceId;
-	//		}
+	// String keyType = "";
+	// String keyValue = "";
+	// if (!userKey.equals("")) {
+	// keyType = "userKey";
+	// keyValue = userKey;
+	// } else if (!userId.equals("")) {
+	// keyType = "userId";
+	// keyValue = userId;
+	// } else if (!deviceKey.equals("")) {
+	// keyType = "deviceKey";
+	// keyValue = deviceKey;
+	// } else if (!deviceId.equals("")) {
+	// keyType = "deviceId";
+	// keyValue = deviceId;
+	// }
 	//
-	//		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
-	//		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-	//		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
-	//		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-	//		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
+	// Map<String, Object> keyTypeMap = new HashMap<String, Object>();
+	// keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+	// keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
+	// keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+	// keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
 	//
-	//		/**
-	//		 * 검색 조건 setting
-	//		 */
-	//		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-	//		KeySearch keySchUserKey = new KeySearch();
-	//		keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
-	//		keySchUserKey.setKeyString(keyValue);
-	//		keySearchList.add(keySchUserKey);
-	//		searchUserRequest.setKeySearchList(keySearchList);
+	// /**
+	// * 검색 조건 setting
+	// */
+	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+	// KeySearch keySchUserKey = new KeySearch();
+	// keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
+	// keySchUserKey.setKeyString(keyValue);
+	// keySearchList.add(keySchUserKey);
+	// searchUserRequest.setKeySearchList(keySearchList);
 	//
-	//		// SC
-	//		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
-	//		MbrAuth mbrAuth = new MbrAuth();
+	// // SC
+	// SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
+	// MbrAuth mbrAuth = new MbrAuth();
 	//
-	//		logger.info("###### schUserRes.getMbrAuth : " + schUserRes.getCommonResponse().getResultCode());
-	//		logger.info("###### schUserRes.getMbrAuth : " + schUserRes.getCommonResponse().getResultMessage());
+	// logger.info("###### schUserRes.getMbrAuth : " + schUserRes.getCommonResponse().getResultCode());
+	// logger.info("###### schUserRes.getMbrAuth : " + schUserRes.getCommonResponse().getResultMessage());
 	//
-	//		mbrAuth.setBirthDay(StringUtil.setTrim(schUserRes.getMbrAuth().getBirthDay()));
-	//		mbrAuth.setCi(StringUtil.setTrim(schUserRes.getMbrAuth().getCi()));
-	//		mbrAuth.setDi(StringUtil.setTrim(schUserRes.getMbrAuth().getDi()));
-	//		mbrAuth.setIsDomestic(StringUtil.setTrim(schUserRes.getMbrAuth().getIsDomestic()));
-	//		mbrAuth.setIsRealName(StringUtil.setTrim(schUserRes.getMbrAuth().getIsRealName()));
-	//		mbrAuth.setMemberCategory(StringUtil.setTrim(schUserRes.getMbrAuth().getMemberCategory()));
-	//		mbrAuth.setMemberKey(StringUtil.setTrim(schUserRes.getMbrAuth().getMemberKey()));
-	//		mbrAuth.setName(StringUtil.setTrim(schUserRes.getMbrAuth().getName()));
-	//		mbrAuth.setPhone(StringUtil.setTrim(schUserRes.getMbrAuth().getPhone()));
-	//		mbrAuth.setRealNameDate(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameDate()));
-	//		mbrAuth.setRealNameMethod(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameMethod()));
-	//		mbrAuth.setRealNameSite(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameSite()));
-	//		mbrAuth.setSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
-	//		mbrAuth.setTelecom(StringUtil.setTrim(schUserRes.getMbrAuth().getTelecom()));
+	// mbrAuth.setBirthDay(StringUtil.setTrim(schUserRes.getMbrAuth().getBirthDay()));
+	// mbrAuth.setCi(StringUtil.setTrim(schUserRes.getMbrAuth().getCi()));
+	// mbrAuth.setDi(StringUtil.setTrim(schUserRes.getMbrAuth().getDi()));
+	// mbrAuth.setIsDomestic(StringUtil.setTrim(schUserRes.getMbrAuth().getIsDomestic()));
+	// mbrAuth.setIsRealName(StringUtil.setTrim(schUserRes.getMbrAuth().getIsRealName()));
+	// mbrAuth.setMemberCategory(StringUtil.setTrim(schUserRes.getMbrAuth().getMemberCategory()));
+	// mbrAuth.setMemberKey(StringUtil.setTrim(schUserRes.getMbrAuth().getMemberKey()));
+	// mbrAuth.setName(StringUtil.setTrim(schUserRes.getMbrAuth().getName()));
+	// mbrAuth.setPhone(StringUtil.setTrim(schUserRes.getMbrAuth().getPhone()));
+	// mbrAuth.setRealNameDate(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameDate()));
+	// mbrAuth.setRealNameMethod(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameMethod()));
+	// mbrAuth.setRealNameSite(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameSite()));
+	// mbrAuth.setSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
+	// mbrAuth.setTelecom(StringUtil.setTrim(schUserRes.getMbrAuth().getTelecom()));
 	//
-	//		return mbrAuth;
-	//	}
+	// return mbrAuth;
+	// }
 
 	// 법정 대리인정보 세팅
-	//	public MbrLglAgent searchUsermbrLglAgent(DetailReq req, SacRequestHeader sacHeader) {
+	// public MbrLglAgent searchUsermbrLglAgent(DetailReq req, SacRequestHeader sacHeader) {
 	//
-	//		SearchUserRequest searchUserRequest = new SearchUserRequest();
-	//		CommonRequest commonRequest = new CommonRequest();
-	//		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-	//		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-	//		searchUserRequest.setCommonRequest(commonRequest);
+	// SearchUserRequest searchUserRequest = new SearchUserRequest();
+	// CommonRequest commonRequest = new CommonRequest();
+	// commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+	// commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+	// searchUserRequest.setCommonRequest(commonRequest);
 	//
-	//		String userId = StringUtil.nvl(req.getUserId(), "");
-	//		String userKey = StringUtil.nvl(req.getUserKey(), "");
-	//		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-	//		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+	// String userId = StringUtil.nvl(req.getUserId(), "");
+	// String userKey = StringUtil.nvl(req.getUserKey(), "");
+	// String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+	// String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 	//
-	//		String keyType = "";
-	//		String keyValue = "";
-	//		if (!userKey.equals("")) {
-	//			keyType = "userKey";
-	//			keyValue = userKey;
-	//		} else if (!userId.equals("")) {
-	//			keyType = "userId";
-	//			keyValue = userId;
-	//		} else if (!deviceKey.equals("")) {
-	//			keyType = "deviceKey";
-	//			keyValue = deviceKey;
-	//		} else if (!deviceId.equals("")) {
-	//			keyType = "deviceId";
-	//			keyValue = deviceId;
-	//		}
+	// String keyType = "";
+	// String keyValue = "";
+	// if (!userKey.equals("")) {
+	// keyType = "userKey";
+	// keyValue = userKey;
+	// } else if (!userId.equals("")) {
+	// keyType = "userId";
+	// keyValue = userId;
+	// } else if (!deviceKey.equals("")) {
+	// keyType = "deviceKey";
+	// keyValue = deviceKey;
+	// } else if (!deviceId.equals("")) {
+	// keyType = "deviceId";
+	// keyValue = deviceId;
+	// }
 	//
-	//		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
-	//		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-	//		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
-	//		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-	//		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
+	// Map<String, Object> keyTypeMap = new HashMap<String, Object>();
+	// keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+	// keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
+	// keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+	// keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
 	//
-	//		/**
-	//		 * 검색 조건 setting
-	//		 */
-	//		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-	//		KeySearch keySchUserKey = new KeySearch();
-	//		keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
-	//		keySchUserKey.setKeyString(keyValue);
-	//		keySearchList.add(keySchUserKey);
-	//		searchUserRequest.setKeySearchList(keySearchList);
+	// /**
+	// * 검색 조건 setting
+	// */
+	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+	// KeySearch keySchUserKey = new KeySearch();
+	// keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
+	// keySchUserKey.setKeyString(keyValue);
+	// keySearchList.add(keySchUserKey);
+	// searchUserRequest.setKeySearchList(keySearchList);
 	//
-	//		/**
-	//		 * SC 사용자 회원 법정대리인정보 조회
-	//		 */
-	//		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
-	//		MbrLglAgent mbrLglAgent = new MbrLglAgent();
+	// /**
+	// * SC 사용자 회원 법정대리인정보 조회
+	// */
+	// SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
+	// MbrLglAgent mbrLglAgent = new MbrLglAgent();
 	//
-	//		mbrLglAgent.setIsParent(StringUtil.setTrim(schUserRes.getMbrLglAgent().getIsParent()));
-	//		mbrLglAgent.setMemberKey(StringUtil.setTrim(schUserRes.getMbrLglAgent().getMemberKey()));
-	//		mbrLglAgent.setParentBirthDay(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentBirthDay()));
-	//		mbrLglAgent.setParentCI(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentCI()));
-	//		mbrLglAgent.setParentDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentDate()));
-	//		mbrLglAgent.setParentEmail(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentEmail()));
-	//		mbrLglAgent.setParentMDN(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentMDN()));
-	//		mbrLglAgent.setParentName(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentName()));
-	//		mbrLglAgent.setParentRealNameDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameDate()));
-	//		mbrLglAgent.setParentRealNameMethod(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameMethod()));
-	//		mbrLglAgent.setParentRealNameSite(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameSite()));
-	//		mbrLglAgent.setParentTelecom(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentTelecom()));
-	//		mbrLglAgent.setParentType(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentType()));
-	//		mbrLglAgent.setIsDomestic(StringUtil.setTrim(schUserRes.getMbrLglAgent().getIsDomestic()));
+	// mbrLglAgent.setIsParent(StringUtil.setTrim(schUserRes.getMbrLglAgent().getIsParent()));
+	// mbrLglAgent.setMemberKey(StringUtil.setTrim(schUserRes.getMbrLglAgent().getMemberKey()));
+	// mbrLglAgent.setParentBirthDay(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentBirthDay()));
+	// mbrLglAgent.setParentCI(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentCI()));
+	// mbrLglAgent.setParentDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentDate()));
+	// mbrLglAgent.setParentEmail(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentEmail()));
+	// mbrLglAgent.setParentMDN(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentMDN()));
+	// mbrLglAgent.setParentName(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentName()));
+	// mbrLglAgent.setParentRealNameDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameDate()));
+	// mbrLglAgent.setParentRealNameMethod(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameMethod()));
+	// mbrLglAgent.setParentRealNameSite(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameSite()));
+	// mbrLglAgent.setParentTelecom(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentTelecom()));
+	// mbrLglAgent.setParentType(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentType()));
+	// mbrLglAgent.setIsDomestic(StringUtil.setTrim(schUserRes.getMbrLglAgent().getIsDomestic()));
 	//
-	//		logger.debug("###### schUserRes.getMbrLglAgent Code : " + schUserRes.getCommonResponse().getResultCode());
-	//		logger.debug("###### schUserRes.getMbrLglAgent Message : " + schUserRes.getCommonResponse().getResultMessage());
-	//		logger.debug("###### schUserRes.getMbrLglAgent Req : " + searchUserRequest.toString());
-	//		logger.debug("###### schUserRes.getMbrLglAgent Res : " + schUserRes.getMbrLglAgent().toString());
+	// logger.debug("###### schUserRes.getMbrLglAgent Code : " + schUserRes.getCommonResponse().getResultCode());
+	// logger.debug("###### schUserRes.getMbrLglAgent Message : " + schUserRes.getCommonResponse().getResultMessage());
+	// logger.debug("###### schUserRes.getMbrLglAgent Req : " + searchUserRequest.toString());
+	// logger.debug("###### schUserRes.getMbrLglAgent Res : " + schUserRes.getMbrLglAgent().toString());
 	//
-	//		return mbrLglAgent;
-	//	}
+	// return mbrLglAgent;
+	// }
 
 	/* SC API 회원 징계정보 조회 */
-	//	@Override
-	//	public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader) {
+	// @Override
+	// public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader) {
 	//
-	//		String userId = StringUtil.nvl(req.getUserId(), "");
-	//		String userKey = StringUtil.nvl(req.getUserKey(), "");
-	//		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-	//		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+	// String userId = StringUtil.nvl(req.getUserId(), "");
+	// String userKey = StringUtil.nvl(req.getUserKey(), "");
+	// String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+	// String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 	//
-	//		String keyType = "";
-	//		String keyValue = "";
-	//		if (!userKey.equals("")) {
-	//			keyType = "userKey";
-	//			keyValue = userKey;
-	//		} else if (!userId.equals("")) {
-	//			keyType = "userId";
-	//			keyValue = userId;
-	//		} else if (!deviceKey.equals("")) {
-	//			keyType = "deviceKey";
-	//			keyValue = deviceKey;
-	//		} else if (!deviceId.equals("")) {
-	//			keyType = "deviceId";
-	//			keyValue = deviceId;
-	//		}
+	// String keyType = "";
+	// String keyValue = "";
+	// if (!userKey.equals("")) {
+	// keyType = "userKey";
+	// keyValue = userKey;
+	// } else if (!userId.equals("")) {
+	// keyType = "userId";
+	// keyValue = userId;
+	// } else if (!deviceKey.equals("")) {
+	// keyType = "deviceKey";
+	// keyValue = deviceKey;
+	// } else if (!deviceId.equals("")) {
+	// keyType = "deviceId";
+	// keyValue = deviceId;
+	// }
 	//
-	//		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
-	//		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-	//		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
-	//		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-	//		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
+	// Map<String, Object> keyTypeMap = new HashMap<String, Object>();
+	// keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+	// keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
+	// keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+	// keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
 	//
-	//		/**
-	//		 * 검색 조건 setting
-	//		 */
-	//		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-	//		KeySearch keySchUserKey = new KeySearch();
-	//		keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
-	//		keySchUserKey.setKeyString(keyValue);
-	//		keySearchList.add(keySchUserKey);
+	// /**
+	// * 검색 조건 setting
+	// */
+	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+	// KeySearch keySchUserKey = new KeySearch();
+	// keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
+	// keySchUserKey.setKeyString(keyValue);
+	// keySearchList.add(keySchUserKey);
 	//
-	//		/**
-	//		 * SearchUserRequest setting
-	//		 */
-	//		SearchUserRequest searchUserRequest = new SearchUserRequest();
-	//		CommonRequest commonRequest = new CommonRequest();
-	//		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-	//		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-	//		searchUserRequest.setCommonRequest(commonRequest);
-	//		searchUserRequest.setKeySearchList(keySearchList);
+	// /**
+	// * SearchUserRequest setting
+	// */
+	// SearchUserRequest searchUserRequest = new SearchUserRequest();
+	// CommonRequest commonRequest = new CommonRequest();
+	// commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+	// commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+	// searchUserRequest.setCommonRequest(commonRequest);
+	// searchUserRequest.setKeySearchList(keySearchList);
 	//
-	//		/**
-	//		 * SC 사용자 회원 징계정보 조회
-	//		 */
-	//		UserMbrPnsh res = new UserMbrPnsh();
-	//		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
+	// /**
+	// * SC 사용자 회원 징계정보 조회
+	// */
+	// UserMbrPnsh res = new UserMbrPnsh();
+	// SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 	//
-	//		logger.debug("사용자 징계정보 조회 {}", schUserRes.getUserMbrPnsh().toString());
+	// logger.debug("사용자 징계정보 조회 {}", schUserRes.getUserMbrPnsh().toString());
 	//
-	//		res.setIsRestricted(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getIsRestricted()));
-	//		res.setRestrictCount(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictCount()));
-	//		res.setRestrictEndDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictEndDate()));
-	//		res.setRestrictId(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictID()));
-	//		res.setRestrictOwner(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictOwner()));
-	//		res.setRestrictRegisterDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictRegisterDate()));
-	//		res.setRestrictStartDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictStartDate()));
-	//		res.setTenantId(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getTenantID()));
-	//		res.setUserKey(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getUserKey()));
+	// res.setIsRestricted(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getIsRestricted()));
+	// res.setRestrictCount(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictCount()));
+	// res.setRestrictEndDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictEndDate()));
+	// res.setRestrictId(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictID()));
+	// res.setRestrictOwner(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictOwner()));
+	// res.setRestrictRegisterDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictRegisterDate()));
+	// res.setRestrictStartDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictStartDate()));
+	// res.setTenantId(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getTenantID()));
+	// res.setUserKey(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getUserKey()));
 	//
-	//		logger.debug("###### 회원징계정보조회 Req - keyType : {}, keyValue : {}", keyType, keyValue);
-	//		logger.debug("###### 회원징계정보조회 Res : {}", res.toString());
+	// logger.debug("###### 회원징계정보조회 Req - keyType : {}, keyValue : {}", keyType, keyValue);
+	// logger.debug("###### 회원징계정보조회 Res : {}", res.toString());
 	//
-	//		return res;
+	// return res;
 	//
-	//	}
+	// }
 
 	/* 각 단말의 OS별 누적 가입자 수 조회 */
 	@Override
@@ -890,74 +890,74 @@ public class UserSearchServiceImpl implements UserSearchService {
 	}
 
 	/* SC API 회원 기본정보 조회 */
-	//	@Override
-	//	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader) {
+	// @Override
+	// public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader) {
 	//
-	//		String userId = StringUtil.nvl(req.getUserId(), "");
-	//		String userKey = StringUtil.nvl(req.getUserKey(), "");
-	//		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-	//		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+	// String userId = StringUtil.nvl(req.getUserId(), "");
+	// String userKey = StringUtil.nvl(req.getUserKey(), "");
+	// String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+	// String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 	//
-	//		String keyType = "";
-	//		String keyValue = "";
+	// String keyType = "";
+	// String keyValue = "";
 	//
-	//		if (!userKey.equals("")) {
-	//			keyType = "userKey";
-	//			keyValue = userKey;
-	//		} else if (!userId.equals("")) {
-	//			keyType = "userId";
-	//			keyValue = userId;
-	//		} else if (!deviceKey.equals("")) {
-	//			keyType = "deviceKey";
-	//			keyValue = deviceKey;
-	//		} else if (!deviceId.equals("")) {
-	//			keyType = "deviceId";
-	//			keyValue = deviceId;
-	//		}
+	// if (!userKey.equals("")) {
+	// keyType = "userKey";
+	// keyValue = userKey;
+	// } else if (!userId.equals("")) {
+	// keyType = "userId";
+	// keyValue = userId;
+	// } else if (!deviceKey.equals("")) {
+	// keyType = "deviceKey";
+	// keyValue = deviceKey;
+	// } else if (!deviceId.equals("")) {
+	// keyType = "deviceId";
+	// keyValue = deviceId;
+	// }
 	//
-	//		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
-	//		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-	//		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
-	//		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-	//		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
+	// Map<String, Object> keyTypeMap = new HashMap<String, Object>();
+	// keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+	// keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
+	// keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+	// keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
 	//
-	//		/**
-	//		 * 검색 조건 setting
-	//		 */
-	//		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-	//		KeySearch keySchUserKey = new KeySearch();
-	//		keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
-	//		keySchUserKey.setKeyString(keyValue);
-	//		keySearchList.add(keySchUserKey);
+	// /**
+	// * 검색 조건 setting
+	// */
+	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+	// KeySearch keySchUserKey = new KeySearch();
+	// keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
+	// keySchUserKey.setKeyString(keyValue);
+	// keySearchList.add(keySchUserKey);
 	//
-	//		/**
-	//		 * SearchUserRequest setting
-	//		 */
-	//		SearchUserRequest searchUserRequest = new SearchUserRequest();
-	//		CommonRequest commonRequest = new CommonRequest();
-	//		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-	//		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-	//		searchUserRequest.setCommonRequest(commonRequest);
-	//		searchUserRequest.setKeySearchList(keySearchList);
+	// /**
+	// * SearchUserRequest setting
+	// */
+	// SearchUserRequest searchUserRequest = new SearchUserRequest();
+	// CommonRequest commonRequest = new CommonRequest();
+	// commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+	// commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+	// searchUserRequest.setCommonRequest(commonRequest);
+	// searchUserRequest.setKeySearchList(keySearchList);
 	//
-	//		/**
-	//		 * SC 사용자 회원 기본정보를 조회
-	//		 */
-	//		DetailRes res = new DetailRes();
-	//		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
+	// /**
+	// * SC 사용자 회원 기본정보를 조회
+	// */
+	// DetailRes res = new DetailRes();
+	// SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 	//
-	//		logger.debug("사용자 기본정보 조회 {}", schUserRes.toString());
+	// logger.debug("사용자 기본정보 조회 {}", schUserRes.toString());
 	//
-	//		res.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
-	//		res.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
-	//		res.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
+	// res.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
+	// res.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
+	// res.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
 	//
-	//		logger.debug("###### 회원기본정보조회 Req - keyType : {}, keyValue : {}", keyType, keyValue);
-	//		logger.debug("###### 회원기본정보조회 Res : {}", res.toString());
+	// logger.debug("###### 회원기본정보조회 Req - keyType : {}, keyValue : {}", keyType, keyValue);
+	// logger.debug("###### 회원기본정보조회 Res : {}", res.toString());
 	//
-	//		return res;
+	// return res;
 	//
-	//	}
+	// }
 
 	/* SC API 회원정보 조회 */
 	@Override
@@ -1232,8 +1232,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 			List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
 			for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-				logger.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
-				logger.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
+				logger.debug("============================================ UserExtraInfo CODE : {}",
+						ptcr.getExtraProfile());
+				logger.debug("============================================ UserExtraInfo VALUE : {}",
+						ptcr.getExtraProfileValue());
 
 				UserExtraInfo extra = new UserExtraInfo();
 				extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -1341,79 +1343,79 @@ public class UserSearchServiceImpl implements UserSearchService {
 	}
 
 	/* SC API 약관동의 목록 조회 */
-	//	@Override
-	//	public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader) {
+	// @Override
+	// public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader) {
 	//
-	//		SearchUserRequest searchUserRequest = new SearchUserRequest();
-	//		CommonRequest commonRequest = new CommonRequest();
-	//		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-	//		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-	//		searchUserRequest.setCommonRequest(commonRequest);
+	// SearchUserRequest searchUserRequest = new SearchUserRequest();
+	// CommonRequest commonRequest = new CommonRequest();
+	// commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+	// commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+	// searchUserRequest.setCommonRequest(commonRequest);
 	//
-	//		String userId = StringUtil.nvl(req.getUserId(), "");
-	//		String userKey = StringUtil.nvl(req.getUserKey(), "");
-	//		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-	//		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+	// String userId = StringUtil.nvl(req.getUserId(), "");
+	// String userKey = StringUtil.nvl(req.getUserKey(), "");
+	// String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+	// String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 	//
-	//		String keyType = "";
-	//		String keyValue = "";
-	//		if (!userKey.equals("")) {
-	//			keyType = "userKey";
-	//			keyValue = userKey;
-	//		} else if (!userId.equals("")) {
-	//			keyType = "userId";
-	//			keyValue = userId;
-	//		} else if (!deviceKey.equals("")) {
-	//			keyType = "deviceKey";
-	//			keyValue = deviceKey;
-	//		} else if (!deviceId.equals("")) {
-	//			keyType = "deviceId";
-	//			keyValue = deviceId;
-	//		}
+	// String keyType = "";
+	// String keyValue = "";
+	// if (!userKey.equals("")) {
+	// keyType = "userKey";
+	// keyValue = userKey;
+	// } else if (!userId.equals("")) {
+	// keyType = "userId";
+	// keyValue = userId;
+	// } else if (!deviceKey.equals("")) {
+	// keyType = "deviceKey";
+	// keyValue = deviceKey;
+	// } else if (!deviceId.equals("")) {
+	// keyType = "deviceId";
+	// keyValue = deviceId;
+	// }
 	//
-	//		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
-	//		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-	//		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
-	//		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-	//		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
+	// Map<String, Object> keyTypeMap = new HashMap<String, Object>();
+	// keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+	// keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
+	// keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+	// keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
 	//
-	//		/**
-	//		 * 검색 조건 setting
-	//		 */
-	//		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-	//		KeySearch keySchUserKey = new KeySearch();
-	//		keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
-	//		keySchUserKey.setKeyString(keyValue);
-	//		keySearchList.add(keySchUserKey);
-	//		searchUserRequest.setKeySearchList(keySearchList);
+	// /**
+	// * 검색 조건 setting
+	// */
+	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+	// KeySearch keySchUserKey = new KeySearch();
+	// keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
+	// keySchUserKey.setKeyString(keyValue);
+	// keySearchList.add(keySchUserKey);
+	// searchUserRequest.setKeySearchList(keySearchList);
 	//
-	//		/**
-	//		 * SC 사용자 약관동의 목록 조회
-	//		 */
-	//		SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
-	//		SearchAgreementRes searchAgreementRes = new SearchAgreementRes();
-	//		List<Agreement> listAgreement = new ArrayList<Agreement>();
+	// /**
+	// * SC 사용자 약관동의 목록 조회
+	// */
+	// SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
+	// SearchAgreementRes searchAgreementRes = new SearchAgreementRes();
+	// List<Agreement> listAgreement = new ArrayList<Agreement>();
 	//
-	//		logger.debug("############ 약관동의 리스트 Size : {}", searchUserResponse.getMbrClauseAgreeList().size());
+	// logger.debug("############ 약관동의 리스트 Size : {}", searchUserResponse.getMbrClauseAgreeList().size());
 	//
-	//		/* 유저키 세팅 */
-	//		searchAgreementRes.setUserKey(searchUserResponse.getUserKey());
-	//		/* 약관동의 세팅 */
-	//		for (MbrClauseAgree mbrAgree : searchUserResponse.getMbrClauseAgreeList()) {
+	// /* 유저키 세팅 */
+	// searchAgreementRes.setUserKey(searchUserResponse.getUserKey());
+	// /* 약관동의 세팅 */
+	// for (MbrClauseAgree mbrAgree : searchUserResponse.getMbrClauseAgreeList()) {
 	//
-	//			Agreement agree = new Agreement();
-	//			agree.setExtraAgreementId(StringUtil.setTrim(mbrAgree.getExtraAgreementID()));
-	//			agree.setExtraAgreementVersion(StringUtil.setTrim(mbrAgree.getExtraAgreementVersion()));
-	//			agree.setIsExtraAgreement(StringUtil.setTrim(mbrAgree.getIsExtraAgreement()));
+	// Agreement agree = new Agreement();
+	// agree.setExtraAgreementId(StringUtil.setTrim(mbrAgree.getExtraAgreementID()));
+	// agree.setExtraAgreementVersion(StringUtil.setTrim(mbrAgree.getExtraAgreementVersion()));
+	// agree.setIsExtraAgreement(StringUtil.setTrim(mbrAgree.getIsExtraAgreement()));
 	//
-	//			listAgreement.add(agree);
-	//		}
+	// listAgreement.add(agree);
+	// }
 	//
-	//		searchAgreementRes.setAgreementList(listAgreement);
+	// searchAgreementRes.setAgreementList(listAgreement);
 	//
-	//		return searchAgreementRes;
+	// return searchAgreementRes;
 	//
-	//	}
+	// }
 
 	@Override
 	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req) {
@@ -1529,13 +1531,20 @@ public class UserSearchServiceImpl implements UserSearchService {
 					policyInfos = new ArrayList<IndividualPolicyInfo>();
 					for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
 						policyInfo = new IndividualPolicyInfo();
-						policyInfo.setKey(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey()));
-						policyInfo.setPolicyCode(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode()));
-						policyInfo.setValue(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue()));
-						policyInfo.setLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitAmount()));
-						policyInfo.setPreLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPreLimitAmount()));
-						policyInfo.setPermissionType(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPermissionType()));
-						policyInfo.setIsUsed(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getIsUsed()));
+						policyInfo.setKey(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getLimitPolicyKey()));
+						policyInfo.setPolicyCode(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getLimitPolicyCode()));
+						policyInfo.setValue(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getPolicyApplyValue()));
+						policyInfo.setLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getLimitAmount()));
+						policyInfo.setPreLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getPreLimitAmount()));
+						policyInfo.setPermissionType(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getPermissionType()));
+						policyInfo.setIsUsed(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getIsUsed()));
 						policyInfos.add(policyInfo);
 					}
 				}
@@ -1581,7 +1590,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @param response
 	 * @return DetailByDeviceIdSacRes
 	 */
-	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req, DetailByDeviceIdSacRes response) {
+	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req,
+			DetailByDeviceIdSacRes response) {
 
 		/**
 		 * 검색조건 정보 setting.
@@ -1651,7 +1661,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
 		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
-		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo()).getGiftSprtYn());
+		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo())
+				.getGiftSprtYn());
 
 		return response;
 
@@ -1716,14 +1727,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC UserSCI.searchMbrUser() 호출.");
 		SearchMbrUserResponse searchMbrUserResponse = this.userSCI.searchMbrUser(searchMbrUserRequest);
 
-		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse.getCommonResponse().getResultCode());
+		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse
+				.getCommonResponse().getResultCode());
 
 		Map<String, UserMbrStatus> userInfoMap = searchMbrUserResponse.getUserMbrStatusMap();
 
 		Map<String, UserInfoByUserKey> resMap = new HashMap<String, UserInfoByUserKey>();
 		UserInfoByUserKey userInfoByUserKey;
 
-		if (userInfoMap != null && !"".equals(userInfoMap)) {
+		if (userInfoMap != null) {
 			for (int i = 0; i < userKeyList.size(); i++) {
 				if (userInfoMap.get(userKeyList.get(i)) != null) {
 					userInfoByUserKey = new UserInfoByUserKey();
@@ -1737,17 +1749,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 					resMap.put(userKeyList.get(i), userInfoByUserKey);
 				}
-				// userKey에해당하는 회원정보 없을 경우, Map에 안내려줌.
-				// else {
-				// // userKey에해당하는 회원정보 없을 경우, userKey에 null 맵핑해서 전달.
-				// resMap.put(userKeyList.get(i), new UserInfoByUserKey());
-				// }
 			}
 			logger.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserInfo Response : {}", resMap);
 
-		} else {
-			throw new StorePlatformException("SAC_MEM_0003", "userKey", "");
 		}
+		// 회원정보 없는 경우 SC 회원에서 Exception 처리함.
 
 		return resMap;
 	}
@@ -1755,13 +1761,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
-	 * searchUserByDeviceKey(com.skplanet.storeplatform
-	 * .sac.client.member.vo.user.SearchUserDeviceReq)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByDeviceKey(com.skplanet.storeplatform .sac.client.member.vo.user.SearchUserDeviceReq)
 	 */
 	@Override
-	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceReq request) {
+	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader,
+			SearchUserDeviceReq request) {
 
 		// 공통파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();
@@ -1793,7 +1798,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		SearchMbrDeviceResponse searchMbrDeviceResponse = this.userSCI.searchMbrDevice(searchMbrDeviceRequest);
 
-		logger.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse.getCommonResponse().getResultCode());
+		logger.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse
+				.getCommonResponse().getResultCode());
 
 		Map<String, DeviceMbrStatus> userDeviceInfoMap = searchMbrDeviceResponse.getDeviceMbrStatusMap();
 
@@ -1805,15 +1811,24 @@ public class UserSearchServiceImpl implements UserSearchService {
 				if (userDeviceInfoMap.get(deviceKeyList.get(i)) != null) {
 					userInfoByDeviceKey = new UserInfoByDeviceKey();
 					userInfoByDeviceKey.setDeviceId(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceID());
-					userInfoByDeviceKey.setDeviceModelNo(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
-					userInfoByDeviceKey.setDeviceTelecom(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
-					userInfoByDeviceKey.setUserBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthBirthDay()));
-					userInfoByDeviceKey.setUserName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthName()));
-					userInfoByDeviceKey.setIsRealName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getIsRealName()));
-					userInfoByDeviceKey.setUserMainStatus(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getUserMainStatus()));
-					userInfoByDeviceKey.setUserSubStatus(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getUserSubStatus()));
-					userInfoByDeviceKey.setAuthBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthBirthDay()));
-					userInfoByDeviceKey.setAuthName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthName()));
+					userInfoByDeviceKey
+							.setDeviceModelNo(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
+					userInfoByDeviceKey
+							.setDeviceTelecom(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
+					userInfoByDeviceKey.setUserBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getAuthBirthDay()));
+					userInfoByDeviceKey.setUserName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getAuthName()));
+					userInfoByDeviceKey.setIsRealName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getIsRealName()));
+					userInfoByDeviceKey.setUserMainStatus(StringUtil.setTrim(userDeviceInfoMap
+							.get(deviceKeyList.get(i)).getUserMainStatus()));
+					userInfoByDeviceKey.setUserSubStatus(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getUserSubStatus()));
+					userInfoByDeviceKey.setAuthBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getAuthBirthDay()));
+					userInfoByDeviceKey.setAuthName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i))
+							.getAuthName()));
 
 					resMap.put(deviceKeyList.get(i), userInfoByDeviceKey);
 				}
