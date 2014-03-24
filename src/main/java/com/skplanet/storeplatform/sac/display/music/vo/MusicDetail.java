@@ -39,6 +39,15 @@ public class MusicDetail extends CommonInfo {
     private String prodBaseDesc;
     private String albumTypeNm;
     private String cid;
+    private String deviceModelCd;
+
+    public String getDeviceModelCd() {
+        return deviceModelCd;
+    }
+
+    public void setDeviceModelCd(String deviceModelCd) {
+        this.deviceModelCd = deviceModelCd;
+    }
 
     public String getCid() {
         return cid;

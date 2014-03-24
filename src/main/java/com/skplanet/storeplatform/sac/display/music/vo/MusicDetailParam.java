@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.music.vo;
 
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,6 +28,10 @@ public class MusicDetailParam {
     private String userKey;
     private String deviceKey;
     private List<String> prodStatusCdList;
+
+    public List<String> getDeviceModelCds() {
+        return Arrays.asList(deviceModelCd, DisplayConstants.DP_ANY_PHONE_4MM);
+    }
 
     public String getUserKey() {
         return userKey;
@@ -82,9 +87,5 @@ public class MusicDetailParam {
 
     public void setChannelId(String channelId) {
         this.channelId = channelId;
-    }
-
-    public String getStandardModel() {
-        return DisplayConstants.DP_ANY_PHONE_4MM;
     }
 }

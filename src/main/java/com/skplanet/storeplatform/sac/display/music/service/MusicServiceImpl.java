@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.display.music.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,9 @@ public class MusicServiceImpl implements MusicService {
 		MusicDetail musicDetail = this.commonDAO.queryForObject("MusicDetail.getMusicDetail", param, MusicDetail.class);
 		if (musicDetail == null)
 			return null;
+
+        if(musicDetail.getDeviceModelCd() == null)
+            throw new StorePlatformException("SAC_DSP_0012", param.getDeviceModelCd());
 
         // 메뉴 목록 조회
 		List<MenuItem> menuList = this.commonService.getMenuItemList(param.getChannelId(), param.getLangCd());
