@@ -69,6 +69,7 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 		String imageCd = DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD;
 		String webPocUrl = DisplayConstants.DP_OPENAPI_APP_URL;
 		String scUrl = DisplayConstants.DP_OPENAPI_SC_URL;
+		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
 
 		// appDetailByProductIdSacReq.setTenantId(tenantHeader.getTenantId());
 		// appDetailByProductIdSacReq.setLangCd(tenantHeader.getLangCd());
@@ -87,6 +88,7 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 		this.log.debug("####### webPocUrl : " + webPocUrl);
 		this.log.debug("####### scUrl : " + scUrl);
 		this.log.debug("####### productId : " + appDetailByProductIdSacReq.getProductId());
+		this.log.debug("####### rshpCd : " + rshpCd);
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("req", appDetailByProductIdSacReq);
@@ -96,6 +98,7 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 		paramMap.put("webPocUrl", webPocUrl);
 		paramMap.put("scUrl", scUrl);
 		paramMap.put("productId", appDetailByProductIdSacReq.getProductId());
+		paramMap.put("rshpCd", rshpCd);
 
 		Identifier identifier = new Identifier();
 		Product product = null;

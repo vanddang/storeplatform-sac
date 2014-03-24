@@ -74,6 +74,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		String tenantId = tenantHeader.getTenantId();
 		String langCd = tenantHeader.getLangCd();
 		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
+		String partParentClsfCd = DisplayConstants.DP_PART_CHILD_CLSF_CD;
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
@@ -90,6 +91,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		this.log.debug("####### deviceModelNo : " + deviceModelNo);
 		this.log.debug("####### userKey : " + userKey);
 		this.log.debug("####### deviceKey : " + deviceKey);
+		this.log.debug("####### partParentClsfCd : " + partParentClsfCd);
 
 		SupportGameCenterSacRes response = new SupportGameCenterSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -112,6 +114,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		paramMap.put("rshpCd", rshpCd);
 		paramMap.put("deviceModelNo", deviceModelNo);
 		paramMap.put("arrayAId", arrayAid);
+		paramMap.put("partParentClsfCd", partParentClsfCd);
 
 		/*
 		 * AID로 상품ID 가져오기
@@ -187,6 +190,8 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		paramMap.put("langCd", langCd);
 		paramMap.put("deviceModelNo", deviceModelNo);
 		paramMap.put("arrayProductId", listProductId);
+		paramMap.put("rshpCd", rshpCd);
+		paramMap.put("partParentClsfCd", partParentClsfCd);
 
 		List<MetaInfo> productMetaInfoList = null;
 		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchSupportGameCenter", paramMap, MetaInfo.class);

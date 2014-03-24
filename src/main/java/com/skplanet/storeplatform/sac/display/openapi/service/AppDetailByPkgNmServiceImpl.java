@@ -71,6 +71,7 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		String imageCd = DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD;
 		String webPocUrl = DisplayConstants.DP_OPENAPI_APP_URL;
 		String scUrl = DisplayConstants.DP_OPENAPI_SC_URL;
+		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
 
 		// appDetailByPackageNameSacReq.setTenantId(tenantHeader.getTenantId());
 		// appDetailByPackageNameSacReq.setLangCd(tenantHeader.getLangCd());
@@ -93,12 +94,14 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		this.log.debug("####### webPocUrl : " + webPocUrl);
 		this.log.debug("####### scUrl : " + scUrl);
 		this.log.debug("####### packageName : " + packageName);
+		this.log.debug("####### rshpCd : " + rshpCd);
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("req", appDetailByPackageNameSacReq);
 		paramMap.put("tenantId", tenantId);
 		paramMap.put("langCd", langCd);
 		paramMap.put("packageName", packageName);
+		paramMap.put("rshpCd", rshpCd);
 
 		// 상품ID
 		String productId = "";
@@ -133,6 +136,7 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		paramMap.put("webPocUrl", webPocUrl);
 		paramMap.put("scUrl", scUrl);
 		paramMap.put("productId", productId);
+		paramMap.put("rshpCd", rshpCd);
 
 		List<MetaInfo> productMetaInfoList = null;
 		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchProductByProductId", paramMap, MetaInfo.class);
@@ -141,6 +145,7 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 
 			paramMap.clear();
 			paramMap.put("productId", productId);
+			paramMap.put("rshpCd", rshpCd);
 			// 지원 단말 리스트 조회
 			List<Device> supportDeviceList = null;
 			supportDeviceList = this.commonDAO.queryForList("OpenApi.searchSupportDeviceListByPkgNm", paramMap,

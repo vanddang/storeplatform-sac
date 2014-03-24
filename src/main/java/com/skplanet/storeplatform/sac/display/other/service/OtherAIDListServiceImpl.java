@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
@@ -65,11 +66,15 @@ public class OtherAIDListServiceImpl implements OtherAIDListService {
 		String tenantId = tenantHeader.getTenantId();
 		String langCd = tenantHeader.getLangCd();
 		String deviceModelNo = req.getDeviceModelNo();
+		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
+		String partParentClsfCd = DisplayConstants.DP_PART_CHILD_CLSF_CD;
 
 		this.log.debug("########### tenantId : " + tenantId);
 		this.log.debug("########### langCd : " + langCd);
 		this.log.debug("########### aIdList : " + aIdList);
 		this.log.debug("########### deviceModelNo : " + deviceModelNo);
+		this.log.debug("########### rshpCd : " + rshpCd);
+		this.log.debug("########### partParentClsfCd : " + partParentClsfCd);
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("req", req);
@@ -77,6 +82,8 @@ public class OtherAIDListServiceImpl implements OtherAIDListService {
 		paramMap.put("langCd", langCd);
 		paramMap.put("deviceModelNo", deviceModelNo);
 		paramMap.put("arrayAId", aIdList);
+		paramMap.put("rshpCd", rshpCd);
+		paramMap.put("partParentClsfCd", partParentClsfCd);
 
 		List<MetaInfo> appList = this.commonDAO.queryForList("OtherPackageList.searchProdListByAid", paramMap,
 				MetaInfo.class);

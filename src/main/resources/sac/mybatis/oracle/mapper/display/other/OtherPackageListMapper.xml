@@ -54,7 +54,7 @@
         AND CP.MENU_ID = DMC.MENU_ID
         AND CP.MENU_ID = DMCD.MENU_ID
         AND P.PROD_ID = DTP.PROD_ID
-        AND C.PROD_RSHP_CD = 'DP010802'
+        AND C.PROD_RSHP_CD = #{rshpCd}
         AND PA.TENANT_ID = #{tenantId}
         AND DTP.TENANT_ID = #{tenantId}
         AND PA.PROD_ID(+) = P.PROD_ID
@@ -68,6 +68,6 @@
               #{aId}
            </foreach>
         </if> 
-        AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> 'PD012302' OR DAP.PART_PARENT_CLSF_CD IS NULL )
+        AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> #{partParentClsfCd} OR DAP.PART_PARENT_CLSF_CD IS NULL )
     </select> 
 </mapper>

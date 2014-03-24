@@ -1910,7 +1910,7 @@
                        AND TP.PROD_STATUS_CD = 'PD000403'
                        AND TDAP.PLAT_CLSF_CD = 'PD005606'
                        AND TDP.SVC_GRP_CD = 'DP000201'
-                       AND TCP.PROD_RSHP_CD = 'DP010802'
+                       AND TCP.PROD_RSHP_CD = #{rshpCd}
                        AND TSC.SALE_YN = 'Y'
                        AND TPI.REP_DEVICE_YN = 'Y'
                        AND TPI.USE_YN = 'Y'
@@ -1965,7 +1965,7 @@
                    AND DMC.MENU_ID = DMCPM.MENU_ID
                    AND DMC.MENU_ID = DMCD.MENU_ID
                    AND DMCPM.PROD_ID = DPR.PROD_ID
-                   AND DPR.PROD_RSHP_CD = 'DP010802' 
+                   AND DPR.PROD_RSHP_CD = #{rshpCd} 
                    AND DMCD.LANG_CD = #{langCd}
                      AND DMCPM.BASE_YN = 'Y'
                      AND DMCPM.USE_YN = 'Y'
@@ -1986,7 +1986,7 @@
                    AND DMC.MENU_ID = DMCPM.MENU_ID
                    AND DMC.MENU_ID = DMCD.MENU_ID
                    AND DMCPM.PROD_ID = DPR.PROD_ID
-                   AND DPR.PROD_RSHP_CD = 'DP010802' 
+                   AND DPR.PROD_RSHP_CD = #{rshpCd} 
                    AND DMCD.LANG_CD = #{langCd}
                      AND DMCPM.BASE_YN = 'Y'
                      AND DMCPM.USE_YN = 'Y'
@@ -2002,7 +2002,7 @@
                    AND DMC.MENU_ID = DMCPM.MENU_ID
                    AND DMC.MENU_ID = DMCD.MENU_ID
                    AND DMCPM.PROD_ID = DPR.PROD_ID
-                   AND DPR.PROD_RSHP_CD = 'DP010802' 
+                   AND DPR.PROD_RSHP_CD = #{rshpCd} 
                    AND DMCD.LANG_CD = #{langCd}
                      AND DMCPM.BASE_YN = 'Y'
                      AND DMCPM.USE_YN = 'Y'
@@ -2071,7 +2071,7 @@
                         DP.PROD_ID = DPR.PART_PROD_ID
                         AND DP.PROD_ID = MCPM.PROD_ID
                         AND DPR.PROD_ID = MCPM.PROD_ID
-                        AND DPR.PROD_RSHP_CD = 'DP010802'
+                        AND DPR.PROD_RSHP_CD = #{rshpCd}
                         AND ROWNUM = 1
                     )  AS WEB_URL
               , (#{scUrl} || DP.PROD_ID ) AS TINY_URL
@@ -2086,7 +2086,7 @@
            AND DP.PROD_ID = DPD.PROD_ID
            AND DP.PROD_ID = DTP.PROD_ID
            AND DTP.PROD_ID = DTPP.PROD_ID    
-           AND DPR.PROD_RSHP_CD = 'DP010802'
+           AND DPR.PROD_RSHP_CD = #{rshpCd}
            AND DP.PROD_ID = #{productId}
            AND DPD.LANG_CD = #{langCd}
            AND DTP.TENANT_ID = DTPP.TENANT_ID
@@ -2110,7 +2110,7 @@
 		   AND DSC.PROD_ID = DP.PROD_ID
 		   AND DSC.SUB_CONTENTS_ID = DSD.SUB_CONTENTS_ID
 		   AND DP.PROD_ID = DPR.PART_PROD_ID
-		   AND DPR.PROD_RSHP_CD = 'DP010802'
+		   AND DPR.PROD_RSHP_CD = #{rshpCd}
 		   AND DP.PROD_ID = #{productId}        
     </select>   
 
@@ -2145,7 +2145,7 @@
         AND CP.MENU_ID = DMC.MENU_ID
         AND CP.MENU_ID = DMCD.MENU_ID
         AND P.PROD_ID = DTP.PROD_ID
-        AND C.PROD_RSHP_CD = 'DP010802'
+        AND C.PROD_RSHP_CD = #{rshpCd}
         AND PA.TENANT_ID = #{tenantId}
         AND DTP.TENANT_ID = #{tenantId}
         AND PA.PROD_ID(+) = P.PROD_ID
@@ -2159,7 +2159,7 @@
               #{aId}
            </foreach>
         </if> 
-        AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> 'PD012302' OR DAP.PART_PARENT_CLSF_CD  IS NULL )
+        AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> #{partParentClsfCd} OR DAP.PART_PARENT_CLSF_CD  IS NULL )
     </select> 
     
     <!-- 게임센터 상품 지원 여부 조회 -->
@@ -2229,9 +2229,7 @@
               #{productId}
            </foreach>
         </if>       
-		AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> 'PD012302'  /* 부분유료화 모상품만 */
-		        OR DAP.PART_PARENT_CLSF_CD IS NULL ) 
-		        
+		AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> #{partParentClsfCd} OR DAP.PART_PARENT_CLSF_CD IS NULL ) /* 부분유료화 모상품만 */
         <if test="arrayProductId != null">  
          ORDER BY INSTR
              <foreach collection="arrayProductId" item="productId" index="index" open="(" separator=" || " close=", PROD_ID)">              

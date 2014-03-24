@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,20 +68,26 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Override
 	public String getDeviceIdType(String deviceId) {
 
-		String repDeviceId = deviceId.replaceAll("-", "");
-		String subStrDeviceId = repDeviceId.substring(0, 2);
-		Boolean isNum = deviceId.matches("^[0-9]+$");
-		String deviceType = "";
+		if (!StringUtils.isEmpty(deviceId)) {
 
-		if (repDeviceId.length() < 12 && (subStrDeviceId.equals("01") || subStrDeviceId.equals("98"))) {
-			deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN;
-		} else if (!isNum && deviceId.length() == 12) {
-			deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_MAC;
+			String repDeviceId = deviceId.replaceAll("-", "");
+			String subStrDeviceId = repDeviceId.substring(0, 2);
+			Boolean isNum = deviceId.matches("^[0-9]+$");
+			String deviceType = "";
+
+			if (repDeviceId.length() < 12 && (subStrDeviceId.equals("01") || subStrDeviceId.equals("98"))) {
+				deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN;
+			} else if (!isNum && deviceId.length() == 12) {
+				deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_MAC;
+			} else {
+				deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_UUID;
+			}
+
+			return deviceType;
 		} else {
-			deviceType = DisplayConstants.DP_DEVICE_ID_TYPE_UUID;
+			return "";
 		}
 
-		return deviceType;
 	}
 
 	@Override
