@@ -1175,7 +1175,7 @@ public class IdpServiceImpl implements IdpService {
 				updateRealNameRequest.setUserMbrAuth(mbrAuth);
 
 				UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-				LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
+				LOGGER.debug("response param : {}", updateRealNameResponse.getUserKey());
 
 				// oneID 테이블 업데이트
 				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
@@ -1309,7 +1309,7 @@ public class IdpServiceImpl implements IdpService {
 				updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
 
 				UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-				LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
+				LOGGER.debug("response param : {}", updateRealNameResponse.getUserKey());
 				if (updateRealNameResponse.getCommonResponse().getResultCode()
 						.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) {
 					idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
