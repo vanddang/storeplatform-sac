@@ -42,6 +42,17 @@ public class VodDetail extends CommonInfo {
 	private String espdProdId;
 	/** 상품 상태 코드 */
 	private String prodStatusCd;
+	/**
+	 * 서비스 그룹 코드
+	 * <ul>
+	 * <li>DP000201 애플리케이션</li>
+	 * <li>DP000203 멀티미디어</li>
+	 * <li>DP000204 폰꾸미기</li>
+	 * <li>DP000205 소셜쇼핑</li>
+	 * <li>DP000206 T store Shopping</li>
+	 * </ul>         
+	 */
+	private String svcGrpCd;
 
 
 	/** 등록일시 */
@@ -1246,6 +1257,21 @@ public class VodDetail extends CommonInfo {
 		this.filePath = filePath;
 	}
 
+	/**
+	 * @return the svcGrpCd
+	 */
+	public String getSvcGrpCd() {
+		return svcGrpCd;
+	}
+
+	/**
+	 * @param svcGrpCd the svcGrpCd to set
+	 */
+	public void setSvcGrpCd(String svcGrpCd) {
+		this.svcGrpCd = svcGrpCd;
+	}
+
+	
 	
 	
 	//public String getPlayTm() { return this.playTm; }
@@ -1254,4 +1280,6 @@ public class VodDetail extends CommonInfo {
 
 	//public String getDrmYn() { return this.drmYn; }
 	//public void setDrmYn(String drmYn) { this.drmYn = drmYn; }
+	
+	
 }

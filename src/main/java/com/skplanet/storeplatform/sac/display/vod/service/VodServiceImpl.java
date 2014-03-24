@@ -85,6 +85,9 @@ public class VodServiceImpl implements VodService {
 
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 
+		String userKey = StringUtils.defaultString(req.getUserKey());
+		String deviceKey = StringUtils.defaultString(req.getDeviceKey());
+		
 		// 1. Channel 정보 조회
 		final String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
         Map<String, Object> param = new HashMap<String, Object>();
@@ -107,7 +110,7 @@ public class VodServiceImpl implements VodService {
 
 			List<ExistenceScRes> existenceScResList = null;
 			//orderedBy='nonPayment'
-			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)) {
+			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
 				List<String> episodeIdList = getEpisodeIdList(param);
 				existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
 				
@@ -123,7 +126,7 @@ public class VodServiceImpl implements VodService {
             List<VodDetail> subProductList = getSubProjectList(param);
 
             
-            if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)) {
+            if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
             	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
             	existenceScResList = getExistenceScReses(req, subProductList);
             }
@@ -191,7 +194,7 @@ public class VodServiceImpl implements VodService {
     	}
     	
         List<ExistenceScRes> existenceScResList = null;
-        if(subProductList != null && subProductList.size() > 0) {
+        if(subProductList != null && subProductList.size() > 0 && StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
             //기구매 체크
             List<String> episodeIdList = new ArrayList<String>();
             for(VodDetail subProduct : subProductList) {
@@ -233,6 +236,8 @@ public class VodServiceImpl implements VodService {
 		product.setProductDetailExplain(mapperVO.getProdDtlDesc());
 		product.setProductIntroduction(mapperVO.getProdIntrDscr());
 
+		// SvcGrpCd
+		product.setSvcGrpCd(mapperVO.getSvcGrpCd());
 
 		// SupportList
 		List<Support> supportList = this.mapSupportList(mapperVO);
@@ -360,7 +365,7 @@ public class VodServiceImpl implements VodService {
 				store.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 			}
 
-            if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId())) {
+            if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
                 String salesStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
                 if(salesStatus != null)  store.setSalesStatus(salesStatus);
             }
@@ -401,7 +406,7 @@ public class VodServiceImpl implements VodService {
 				play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 			}
 
-            if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId())) {
+            if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId()) && StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
                 String salesStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
                 if(salesStatus != null)  play.setSalesStatus(salesStatus);
             }

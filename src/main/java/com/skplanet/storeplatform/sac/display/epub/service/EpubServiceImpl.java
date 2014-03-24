@@ -80,6 +80,9 @@ public class EpubServiceImpl implements EpubService {
 		EpubChannelRes res = new EpubChannelRes();
 		Product product = new Product();
 
+		String userKey = StringUtils.defaultString(req.getUserKey());
+		String deviceKey = StringUtils.defaultString(req.getDeviceKey());
+		
 		// --------------------------------------------------------
 		// 1. Channel 정보 조회
 		// --------------------------------------------------------
@@ -89,9 +92,11 @@ public class EpubServiceImpl implements EpubService {
         param.put("langCd", req.getLangCd());
         param.put("deviceModel", req.getDeviceModel());
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
+        param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+        
+        
 		EpubDetail epubDetail = this.getEpubChannel(param);
 		//logger.debug("epubDetail={}", epubDetail);
-        param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 		
 
         if(epubDetail != null) {
@@ -135,7 +140,7 @@ public class EpubServiceImpl implements EpubService {
                 
 				List<EpubDetail> subProductList = getEpubSeries(param);
 
-                List<ExistenceScRes> existenceScResList = getExistenceScReses(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), subProductList);
+                List<ExistenceScRes> existenceScResList = getExistenceScReses(req.getTenantId(), userKey, deviceKey, subProductList);
 				this.mapSubProductList(param, product, subProductList, existenceScResList);
 			}
             res.setProduct(product);
@@ -160,12 +165,16 @@ public class EpubServiceImpl implements EpubService {
 		Product product = new Product();
 		// 1. Channel 정보 조회
 		String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
+		String userKey = StringUtils.defaultString(req.getUserKey());
+		String deviceKey = StringUtils.defaultString(req.getDeviceKey());
+		
+		
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("tenantId", req.getTenantId());
         param.put("channelId", req.getChannelId());
         param.put("langCd", req.getLangCd());
-        param.put("deviceModel", req.getDeviceModel());
-        param.put("bookTypeCd", req.getBookTypeCd());
+        param.put("deviceModel", StringUtils.defaultString(req.getDeviceModel()));
+        param.put("bookTypeCd", StringUtils.defaultString(req.getBookTypeCd()));
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
         param.put("orderedBy", orderedBy);
         param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
@@ -186,9 +195,9 @@ public class EpubServiceImpl implements EpubService {
 
             //orderedBy=noPayment 기구매 체크.
             List<ExistenceScRes> existenceScResList = null;
-			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)) {
+			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
 				List<String> episodeIdList = getEpisodeIdList(param);
-				existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
+				existenceScResList = commonService.checkPurchaseList(req.getTenantId(), userKey, deviceKey, episodeIdList);
 				
 				List<String> paymentProdIdList = new ArrayList<String>();
 				for(ExistenceScRes existenceScRes : existenceScResList) {
@@ -201,9 +210,9 @@ public class EpubServiceImpl implements EpubService {
             if(StringUtils.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID, epubDetail.getTopMenuId()))
             	param.put("representImgCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD); //코믹 에피소드 대표이미지
             List<EpubDetail> subProductList = getEpubSeries(param);
-            if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)) {
+            if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
             	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
-            	existenceScResList = getExistenceScReses(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), subProductList);
+            	existenceScResList = getExistenceScReses(req.getTenantId(), userKey, deviceKey, subProductList);
             }
             this.mapSubProductList(param, product, subProductList, existenceScResList);
             
@@ -240,6 +249,7 @@ public class EpubServiceImpl implements EpubService {
      * @return
      */
     private EpubDetail getEpubChannel(Map<String, Object> param) {
+    	logger.debug("param={}", param);
         return this.commonDAO.queryForObject("EpubDetail.selectEpubChannel", param, EpubDetail.class);
     }
 
@@ -249,6 +259,7 @@ public class EpubServiceImpl implements EpubService {
      * @return
      */
     public List<EpubDetail> getEpubSeries(Map<String, Object> param) {
+    	logger.debug("param={}", param);
         return this.commonDAO.queryForList("EpubDetail.selectEpubSeries", param, EpubDetail.class);
     }
 
@@ -312,6 +323,9 @@ public class EpubServiceImpl implements EpubService {
 		//productIntroduction (상품 소개 내용)
 		product.setProductIntroduction(mapperVO.getProdIntrDscr());
 
+		// SvcGrpCd
+		product.setSvcGrpCd(mapperVO.getSvcGrpCd());
+		
 		//tableOfContents (목차 정보)
 		product.setTableOfContents(mapperVO.getBookTbctns());
 
@@ -565,7 +579,7 @@ public class EpubServiceImpl implements EpubService {
 		}
 		
         //Sales Status
-        if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId())) {
+        if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && param.containsKey("userKey")  && param.containsKey("deviceKey")) {
             String salesStatus = getSalesStatus(mapperVO, (String) param.get("userKey"), (String) param.get("deviceKey"));
             if(salesStatus != null)  play.setSalesStatus(salesStatus);
         }
@@ -600,7 +614,7 @@ public class EpubServiceImpl implements EpubService {
 		}
 
         //Sales Status
-        if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId())) {
+        if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && param.containsKey("userKey")  && param.containsKey("deviceKey")) {
             String salesStatus = getSalesStatus(mapperVO, (String) param.get("userKey"), (String) param.get("deviceKey"));
             if(salesStatus != null)  store.setSalesStatus(salesStatus);
         }
