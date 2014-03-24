@@ -1183,7 +1183,7 @@ public class LoginServiceImpl implements LoginService {
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @param mbrStatusMainCd
+	 * @param userMainStatus
 	 *            메인 상태코드
 	 * @param keyType
 	 *            조회타입

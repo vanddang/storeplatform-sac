@@ -243,10 +243,10 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUserKey(req.getUserKey());
 
 		/* 휴대기기 정보 수정 */
-		String DeviceKey = this.updateDeviceInfo(requestHeader, deviceInfo);
+		String deviceKey = this.updateDeviceInfo(requestHeader, deviceInfo);
 
 		ModifyDeviceRes res = new ModifyDeviceRes();
-		res.setDeviceKey(DeviceKey);
+		res.setDeviceKey(deviceKey);
 		res.setUserKey(req.getUserKey());
 
 		return res;
@@ -999,7 +999,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	public DeviceInfo setDeviceHeader(DeviceHeader deviceheader, DeviceInfo deviceInfo) {
 
-		String model = deviceheader.getModel();// 단말모델코드
+		String model = deviceheader.getModel(); // 단말모델코드
 		String osVersion = deviceheader.getOs(); // OS버젼
 		String svcVersion = deviceheader.getSvc(); // SC버젼
 
