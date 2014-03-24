@@ -887,7 +887,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setBankAcctName(req.getBankAcctName());
 		sellerUpgrade.setIsAccountReal(req.getIsAccountReal());
 		sellerUpgrade.setIsBizTaxable(req.getIsBizTaxable());
-		sellerUpgrade.setRepPhone(req.getRepPhone());
+		// sellerUpgrade.setRepPhone(req.getRepPhone()); // TODO ERROR로 임시 주석처리.
 		sellerUpgrade.setIsBizRegistered(req.getIsBizRegistered());
 		sellerUpgrade.setBizRegNumber(req.getBizRegNumber());
 		sellerUpgrade.setBizUnregReason(req.getBizUnregReason());
@@ -919,7 +919,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setSellerBizNumber(req.getSellerBizNumber());
 		sellerUpgrade.setIsOfficialAuth(req.getIsOfficialAuth());
 		sellerUpgrade.setCordedTelephone(req.getCordedTelephone());
-		sellerUpgrade.setChargerPhone(req.getChargerPhone());
+		// sellerUpgrade.setChargerPhone(req.getChargerPhone()); // TODO ERROR로 임시 주석처리.
 		sellerUpgrade.setIsRecvSMS(req.getIsRecvSMS());
 		sellerUpgrade.setCharger(req.getCharger());
 		sellerUpgrade.setSellerBizType(req.getSellerBizType());
