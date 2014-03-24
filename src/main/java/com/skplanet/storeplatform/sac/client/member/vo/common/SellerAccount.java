@@ -101,18 +101,13 @@ public class SellerAccount extends CommonInfo {
 	 */
 	private String sellerBizCorpNumber;
 	/**
-	 * 대표 전화 국가번호 (개인 판매자). TODO 정확한 명칭 아직 확인 안됨.
+	 * 사업장 전화 국가번호.
 	 */
-	private String repPhoneArea;
+	private String sellerBizPhoneCountry;
 	/**
-	 * 대표 전화번호 (개인 판매자). TODO 정확한 명칭 아직 확인 안됨.
+	 * 사업장 전화 번호.
 	 */
-	private String repPhone;
-
-	/**
-	 * 대표 이메일주소 (개인 판매자). TODO 정확한 명칭 아직 확인 안됨.
-	 */
-	private String repEmail;
+	private String sellerBizPhone;
 
 	/**
 	 * 벤더 코드.
@@ -172,17 +167,6 @@ public class SellerAccount extends CommonInfo {
 	 * 은행BSB. 3/21 추가
 	 */
 	private String bankBsb;
-
-	// 2014.03.20 추가 TODO getter & setter 아직 미생성.
-	/**
-	 * 판매자 연락처 (개인/법인 사업자). TODO 정확한 명칭 아직 확인 안됨.
-	 */
-	private String cordedTelephone;
-
-	/**
-	 * 판매자 연락처 (개인/법인 사업자). TODO 정확한 명칭 아직 확인 안됨.
-	 */
-	private String cordedTelephoneCountry;
 
 	/**
 	 * CEO 생년월일.
@@ -570,55 +554,10 @@ public class SellerAccount extends CommonInfo {
 	}
 
 	/**
-	 * @return the repPhoneArea
-	 */
-	public String getRepPhoneArea() {
-		return this.repPhoneArea;
-	}
-
-	/**
-	 * @param repPhoneArea
-	 *            the repPhoneArea to set
-	 */
-	public void setRepPhoneArea(String repPhoneArea) {
-		this.repPhoneArea = repPhoneArea;
-	}
-
-	/**
-	 * @return the repPhone
-	 */
-	public String getRepPhone() {
-		return this.repPhone;
-	}
-
-	/**
-	 * @param repPhone
-	 *            the repPhone to set
-	 */
-	public void setRepPhone(String repPhone) {
-		this.repPhone = repPhone;
-	}
-
-	/**
 	 * @return the vendorCode
 	 */
 	public String getVendorCode() {
 		return this.vendorCode;
-	}
-
-	/**
-	 * @return the repEmail
-	 */
-	public String getRepEmail() {
-		return this.repEmail;
-	}
-
-	/**
-	 * @param repEmail
-	 *            the repEmail to set
-	 */
-	public void setRepEmail(String repEmail) {
-		this.repEmail = repEmail;
 	}
 
 	/**
@@ -777,6 +716,66 @@ public class SellerAccount extends CommonInfo {
 	 */
 	public void setIsOfficialAuth(String isOfficialAuth) {
 		this.isOfficialAuth = isOfficialAuth;
+	}
+
+	/**
+	 * @return the sellerBizPhoneCountry
+	 */
+	public String getSellerBizPhoneCountry() {
+		return this.sellerBizPhoneCountry;
+	}
+
+	/**
+	 * @param sellerBizPhoneCountry
+	 *            the sellerBizPhoneCountry to set
+	 */
+	public void setSellerBizPhoneCountry(String sellerBizPhoneCountry) {
+		this.sellerBizPhoneCountry = sellerBizPhoneCountry;
+	}
+
+	/**
+	 * @return the sellerBizPhone
+	 */
+	public String getSellerBizPhone() {
+		return this.sellerBizPhone;
+	}
+
+	/**
+	 * @param sellerBizPhone
+	 *            the sellerBizPhone to set
+	 */
+	public void setSellerBizPhone(String sellerBizPhone) {
+		this.sellerBizPhone = sellerBizPhone;
+	}
+
+	/**
+	 * @return the ceoBirthDay
+	 */
+	public String getCeoBirthDay() {
+		return this.ceoBirthDay;
+	}
+
+	/**
+	 * @param ceoBirthDay
+	 *            the ceoBirthDay to set
+	 */
+	public void setCeoBirthDay(String ceoBirthDay) {
+		this.ceoBirthDay = ceoBirthDay;
+	}
+
+	/**
+	 * @return the ceoName
+	 */
+	public String getCeoName() {
+		return this.ceoName;
+	}
+
+	/**
+	 * @param ceoName
+	 *            the ceoName to set
+	 */
+	public void setCeoName(String ceoName) {
+		this.ceoName = ceoName;
 	}
 
 }
