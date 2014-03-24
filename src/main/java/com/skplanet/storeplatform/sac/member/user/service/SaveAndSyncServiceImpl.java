@@ -87,7 +87,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * 기존 IDP 모바일 회원 탈퇴.
 				 */
-				this.secedeForWap(preDeviceId);
+				this.secedeForWap(nowDeviceId);
 
 			}
 
