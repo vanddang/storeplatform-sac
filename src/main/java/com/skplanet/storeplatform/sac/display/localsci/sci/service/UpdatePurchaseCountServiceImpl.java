@@ -120,11 +120,11 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 
 					for (int kk = 0; kk < specialProdSize; kk++) {
 						if (kk == 0) {
-							map.put("productId", productBasicInfo.getPartProdId());
+							map.put("productId", productBasicInfo.getPartProdId()); // 특가 상품 에피소드
 						} else if (kk == 1) {
-							map.put("productId", productBasicInfo.getProdId());
+							map.put("productId", productBasicInfo.getProdId()); // 특가 상품 채널
 						} else if (kk == 2) {
-							map.put("productId", productBasicInfo.getCatalogId());
+							map.put("productId", productBasicInfo.getCatalogId()); // 특가 상품 카탈로그
 						}
 						this.updateSpecialPurchaseCount(map, reqList.get(i).getPurchaseCount()); // 특가상품 Update 로직 실행
 					}
