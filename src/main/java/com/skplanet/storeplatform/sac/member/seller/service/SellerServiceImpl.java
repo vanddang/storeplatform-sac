@@ -293,8 +293,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setStopStatusCode(MemberConstants.USER_STOP_STATUS_NOMAL);
 		// 담당자 명
 		sellerMbr.setCharger(req.getCharger());
-		// 담당자 무선 전화 번호
-		sellerMbr.setChargerPhone(req.getChargerPhone());
 		sellerMbr.setWebsite(req.getWebsite());
 
 		createSellerRequest.setSellerMbr(sellerMbr);
@@ -484,6 +482,8 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerTelecom(req.getSellerTelecom());
 		sellerMbr.setSellerPhoneCountry(req.getSellerPhoneCountry());
 		sellerMbr.setSellerPhone(req.getSellerPhone());
+		sellerMbr.setCordedTelephone(req.getCordedTelephone());
+		sellerMbr.setCordedTelephoneCountry(req.getCordedTelephoneCountry());
 		sellerMbr.setIsRecvSMS(req.getIsRecvSMS());
 		sellerMbr.setIsRecvEmail(req.getIsRecvEmail());
 		sellerMbr.setSellerName(req.getSellerName());
@@ -499,13 +499,8 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setIsDomestic(req.getIsDomestic());
 		sellerMbr.setSellerCompany(req.getSellerCompany());
 		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
-		sellerMbr.setCustomerPhoneCountry(req.getCustomerPhoneCountry());
-		sellerMbr.setCustomerPhone(req.getCustomerPhone());
 		sellerMbr.setCustomerEmail(req.getCustomerEmail());
 		sellerMbr.setCharger(req.getCharger());
-		sellerMbr.setChargerPhone(req.getChargerPhone());
-		sellerMbr.setCordedTelephone(req.getCordedTelephone());
-		sellerMbr.setCordedTelephoneCountry(req.getCordedTelephoneCountry());
 		sellerMbr.setRepEmail(req.getRepEmail());
 		sellerMbr.setRepPhone(req.getRepPhone());
 		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
@@ -610,8 +605,8 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setIsOfficialAuth(req.getIsOfficialAuth()); // 공인인증여부
 		sellerMbr.setCeoName(req.getCeoName());
 		sellerMbr.setCeoBirthDay(req.getCeoBirthDay());
-		sellerMbr.setCordedTelephoneCountry(req.getCordedTelephoneCountry());
-		sellerMbr.setCordedTelephone(req.getCordedTelephone());
+		sellerMbr.setCustomerPhoneCountry(req.getSellerBizPhoneCountry());
+		sellerMbr.setCustomerPhone(req.getSellerBizPhone());
 
 		updateAccountSellerRequest.setSellerMbr(sellerMbr);
 
@@ -887,7 +882,10 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setBankAcctName(req.getBankAcctName());
 		sellerUpgrade.setIsAccountReal(req.getIsAccountReal());
 		sellerUpgrade.setIsBizTaxable(req.getIsBizTaxable());
-		// sellerUpgrade.setRepPhone(req.getRepPhone()); // TODO ERROR로 임시 주석처리.
+		// 사업장 전화 국가번호
+		sellerUpgrade.setRepPhoneArea(req.getSellerBizPhoneCountry());
+		// 사업장 전화 번호
+		sellerUpgrade.setCustomerPhone(req.getSellerBizPhone());
 		sellerUpgrade.setIsBizRegistered(req.getIsBizRegistered());
 		sellerUpgrade.setBizRegNumber(req.getBizRegNumber());
 		sellerUpgrade.setBizUnregReason(req.getBizUnregReason());
@@ -901,7 +899,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setBankLocation(req.getBankLocation());
 		sellerUpgrade.setTpinCode(req.getTpinCode());
 		sellerUpgrade.setVendorCode(req.getVendorCode());
-		sellerUpgrade.setRepPhoneArea(req.getRepPhoneArea());
 		sellerUpgrade.setBizGrade(req.getBizGrade());
 		sellerUpgrade.setIsDeductible(req.getIsDeductible());
 		sellerUpgrade.setMarketCode(req.getMarketCode());
@@ -919,7 +916,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setSellerBizNumber(req.getSellerBizNumber());
 		sellerUpgrade.setIsOfficialAuth(req.getIsOfficialAuth());
 		sellerUpgrade.setCordedTelephone(req.getCordedTelephone());
-		// sellerUpgrade.setChargerPhone(req.getChargerPhone()); // TODO ERROR로 임시 주석처리.
+		sellerUpgrade.setSellerPhone(req.getSellerPhone());
 		sellerUpgrade.setIsRecvSMS(req.getIsRecvSMS());
 		sellerUpgrade.setCharger(req.getCharger());
 		sellerUpgrade.setSellerBizType(req.getSellerBizType());

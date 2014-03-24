@@ -155,7 +155,7 @@ public class ConversionClassTest {
 						req.setBankAcctName("홍길동"); // DEPSTR_NM 예금자명
 						req.setIsAccountReal("Y"); // ACCT_AUTH_YN 계좌인증여부
 						req.setIsBizTaxable("N"); // EASY_TXNPERS_YN 간이과세여부
-						req.setRepPhone("0262575958"); // REP_TEL_NO 대표전화번호
+						req.setSellerBizPhone("0262575958"); // REP_TEL_NO 대표전화번호
 						req.setIsBizRegistered("Y"); // CMNT_SALBIZ_DECL_YN 통신판매업 신고여부
 						req.setBizRegNumber("11223344"); // CMNT_SALBIZ_DECL_NO 통신판매업 신고번호
 						req.setBizUnregReason("554411"); // CMNT_SALBIZ_UNDECL_REASON_CD 통신판매업 미신고사유
@@ -169,7 +169,7 @@ public class ConversionClassTest {
 						req.setBankLocation("XXXX"); // FR_BANK_LOC 외국은행 위치
 						req.setTpinCode("XXXX"); // FR_TIN_NO 외국 tpin 번호
 						req.setVendorCode("XXXX"); // VENDOR_CD 벤더코드
-						req.setRepPhoneArea("XXXX"); // REP_TEL_NATION_NO 대표전화 국가 번호
+						req.setSellerBizPhoneCountry("XXXX"); // REP_TEL_NATION_NO 대표전화 국가 번호
 						req.setBizGrade("XXXX"); // DELIB_GRD_CD 심의등급코드 TB_US_SELLERMBR 에만 있음 테이블에 추가됨
 						req.setIsDeductible("Y"); // AUTO_DED_POSB_TARGET_YN 자동차감가능대상여부 TB_US_SELLERMBR 에만
 						req.setMarketCode("XXXX"); // LNCHG_MALL_CD 입점 상점코드 ##### 전환 쪽에서 사용
@@ -184,7 +184,6 @@ public class ConversionClassTest {
 						req.setCeoName("심봉사"); //
 						req.setSellerCompany("호랑"); // COMP_NM 회사명 >> api 추가 하지말고 판매자 테이블에서 가져온다.
 						req.setCordedTelephone("1231231");
-						req.setChargerPhone("12312312");
 						req.setIsRecvSMS("N");
 						req.setCharger("일순");
 
