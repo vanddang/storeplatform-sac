@@ -879,6 +879,8 @@ public class LoginServiceImpl implements LoginService {
 		String isPurchaseChange = "N";
 		String isJoinMdn = "N";
 
+		String oldDeviceKey = macDeviceInfo.getDeviceKey();
+		String oldUserKey = macDeviceInfo.getUserKey();
 		String newDeviceKey = null;
 		String newUserKey = null;
 
@@ -921,8 +923,8 @@ public class LoginServiceImpl implements LoginService {
 			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
 			userInfoSacInReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
 			userInfoSacInReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-			userInfoSacInReq.setDeviceKey(macDeviceInfo.getDeviceKey());
-			userInfoSacInReq.setUserKey(macDeviceInfo.getUserKey());
+			userInfoSacInReq.setDeviceKey(oldDeviceKey);
+			userInfoSacInReq.setUserKey(oldUserKey);
 			userInfoSacInReq.setNewDeviceKey(newDeviceKey);
 			userInfoSacInReq.setNewUserKey(newUserKey);
 			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
@@ -930,7 +932,7 @@ public class LoginServiceImpl implements LoginService {
 			/* mac 정보 탈퇴처리 */
 			RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 			removeUserRequest.setCommonRequest(commonRequest);
-			removeUserRequest.setUserKey(macDeviceInfo.getUserKey());
+			removeUserRequest.setUserKey(oldUserKey);
 			removeUserRequest.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_DEVICE);
 			removeUserRequest.setSecedeReasonMessage("");
 			this.userSCI.remove(removeUserRequest);
@@ -998,7 +1000,7 @@ public class LoginServiceImpl implements LoginService {
 
 			/* mbrNo 변경 */
 			UserMbr userMbr = new UserMbr();
-			userMbr.setUserKey(macDeviceInfo.getUserKey());
+			userMbr.setUserKey(oldUserKey);
 			userMbr.setImMbrNo(joinForWapEcRes.getUserKey());
 			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 			updateUserRequest.setCommonRequest(commonRequest);
@@ -1011,8 +1013,8 @@ public class LoginServiceImpl implements LoginService {
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
-			deviceInfo.setUserKey(macDeviceInfo.getUserKey());
-			deviceInfo.setDeviceKey(macDeviceInfo.getDeviceKey());
+			deviceInfo.setUserKey(oldUserKey);
+			deviceInfo.setDeviceKey(oldDeviceKey);
 			deviceInfo.setDeviceId(req.getDeviceId());
 			deviceInfo.setSvcMangNum(joinForWapEcRes.getSvcMngNum());
 			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
@@ -1037,8 +1039,8 @@ public class LoginServiceImpl implements LoginService {
 
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
-			res.setDeviceKey(macDeviceInfo.getDeviceKey());
-			res.setUserKey(macDeviceInfo.getUserKey());
+			res.setDeviceKey(oldDeviceKey);
+			res.setUserKey(oldUserKey);
 			res.setUserAuthKey(this.tempUserAuthKey);
 			res.setIsLoginSuccess("Y");
 
