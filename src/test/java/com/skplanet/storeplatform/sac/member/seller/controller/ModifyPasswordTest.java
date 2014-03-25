@@ -137,8 +137,8 @@ public class ModifyPasswordTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						req.setNewPW("12345");
-						req.setOldPW("1234");
+						req.setNewPw("12345");
+						req.setOldPw("1234");
 						// Debug
 						LOGGER.debug("[REQUEST (SAC)-회원기본정보 수정] : \n{}",
 								TestConvertMapperUtils.convertObjectToJson(req));

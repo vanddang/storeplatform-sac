@@ -739,8 +739,8 @@ public class SellerServiceImpl implements SellerService {
 
 		MbrPwd mbrPwd = new MbrPwd();
 		mbrPwd.setMemberID(searchSellerResponse.getSellerMbr().getSellerID());
-		mbrPwd.setOldPW(req.getOldPW());
-		mbrPwd.setMemberPW(req.getNewPW());
+		mbrPwd.setOldPW(req.getOldPw());
+		mbrPwd.setMemberPW(req.getNewPw());
 		updatePasswordSellerRequest.setMbrPwd(mbrPwd);
 
 		updatePasswordSellerRequest.setCommonRequest(commonRequest);
