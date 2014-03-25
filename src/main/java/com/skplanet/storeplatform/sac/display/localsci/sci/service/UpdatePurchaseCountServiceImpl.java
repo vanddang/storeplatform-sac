@@ -184,7 +184,7 @@ public class UpdatePurchaseCountServiceImpl implements UpdatePurchaseCountServic
 		if (prodCnt < 1) {
 			// 대상 상품이 없으면 해당 상품 insert 실행 Insert 시 구매수는 Default 0으로 Set
 			map.put("purchaseCount", "0");
-			this.commonDAO.update("LocalSci.insertSpecialPurchaseProd", map);
+			this.commonDAO.update("LocalSci.createSpecialPurchaseProd", map);
 		}
 
 		map.put("purchaseCount", Integer.toString(reqPurchsCnt));
