@@ -165,10 +165,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		} else {
 			/** 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 */
 			res.setMsisdn(msisdn);
-			LOGGER.info("[MiscellaneousService.getOpmd] Non OPMD Number");
+			LOGGER.debug("[MiscellaneousService.getOpmd] Non OPMD Number");
 		}
 
-		LOGGER.info("[MiscellaneousService.getOpmd] Request : {}", res);
+		LOGGER.info("[MiscellaneousService.getOpmd] Response : {}", res);
 
 		return res;
 	}
