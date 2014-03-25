@@ -580,8 +580,6 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
-		LOGGER.debug("################ updateDeviceInfo start ##################");
-
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -642,16 +640,16 @@ public class DeviceServiceImpl implements DeviceService {
 		String isRecvSms = deviceInfo.getIsRecvSms(); // sms 수신여부
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
 
-		LOGGER.debug(":::::::::::::::::: {} device update field start ::::::::::::::::::", deviceInfo.getDeviceId());
+		LOGGER.info(":::::::::::::::::: {} device update field start ::::::::::::::::::", deviceInfo.getDeviceId());
 
 		if (StringUtil.isNotBlank(deviceInfo.getDeviceId()) && !StringUtil.equals(deviceInfo.getDeviceId(), userMbrDevice.getDeviceID())) {
-			LOGGER.debug("[deviceId] {} -> {}", userMbrDevice.getDeviceID(), deviceInfo.getDeviceId());
+			LOGGER.info("[deviceId] {} -> {}", userMbrDevice.getDeviceID(), deviceInfo.getDeviceId());
 			userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
 		}
 
 		if (StringUtil.isNotBlank(deviceModelNo)) {
 
-			LOGGER.debug("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
+			LOGGER.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
 
 			/* 단말모델이 변경된 경우 게임센터 연동 */
@@ -661,48 +659,48 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (StringUtil.isNotBlank(nativeId)) {
 
-			LOGGER.debug("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
+			LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 			userMbrDevice.setNativeID(nativeId);
 
 		}
 
 		if (StringUtil.isNotBlank(deviceAccount)) {
 
-			LOGGER.debug("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
+			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
 			userMbrDevice.setDeviceAccount(deviceAccount);
 
 		}
 
 		if (StringUtil.isNotBlank(deviceTelecom)) {
 
-			LOGGER.debug("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
+			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 
 		}
 
 		if (StringUtil.isNotBlank(deviceNickName)) {
 
-			LOGGER.debug("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
+			LOGGER.info("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
 			userMbrDevice.setDeviceNickName(deviceNickName);
 
 		}
 
 		if (StringUtil.isNotBlank(isPrimary)) {
 
-			LOGGER.debug("[isPrimary] {} -> {}", userMbrDevice.getIsPrimary(), isPrimary);
+			LOGGER.info("[isPrimary] {} -> {}", userMbrDevice.getIsPrimary(), isPrimary);
 			userMbrDevice.setIsPrimary(isPrimary);
 
 		}
 
 		if (StringUtil.isNotBlank(isRecvSms)) {
 
-			LOGGER.debug("[isRecvSms] {} -> {}", userMbrDevice.getIsRecvSMS(), isRecvSms);
+			LOGGER.info("[isRecvSms] {} -> {}", userMbrDevice.getIsRecvSMS(), isRecvSms);
 			userMbrDevice.setIsRecvSMS(isRecvSms);
 
 		}
 
 		if (StringUtil.isNotBlank(svcMangNum)) {
-			LOGGER.debug("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
+			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
 
@@ -712,7 +710,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 휴대기기 변경 이력 코드 */
 		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
 
-		LOGGER.debug(":::::::::::::::::: device update field end ::::::::::::::::::");
+		LOGGER.info(":::::::::::::::::: {} device update field end ::::::::::::::::::", deviceInfo.getDeviceId());
 
 		/* 기기정보 업데이트 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
@@ -741,8 +739,6 @@ public class DeviceServiceImpl implements DeviceService {
 			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
 			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 		}
-
-		LOGGER.debug("################ updateDeviceInfo end ##################");
 
 		return createDeviceRes.getDeviceKey();
 
