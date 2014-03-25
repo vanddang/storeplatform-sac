@@ -65,7 +65,7 @@
     
     <!-- 일반 카테고리 이북/코믹 상품 조회 -->
     <select id="selectCategoryEbookComicList" parameterType="CategoryEbookComicSacReq" resultType="ProductBasicInfo">
-        SELECT  /* CategoryMapper.xml, selectCategoryEbookComicList, SAC 전시, 2014-03-24 */
+        SELECT  /* CategoryMapper.xml, selectCategoryEbookComicList, SAC 전시, 2014-03-25 */
                 LA.TOTAL_COUNT
               , LA.RNUM
               , LA.TOP_MENU_ID
@@ -76,14 +76,11 @@
               , LA.CONTENTS_TYPE_CD
           FROM (
                 SELECT KA.*
-                  FROM 
-                       (
+                  FROM (
                         SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.UPD_DT DESC, JA.PROD_NM) AS RNUM
-                          FROM 
-                               (
+                          FROM (
                                 SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-                                  FROM 
-                                       (
+                                  FROM (
                                         SELECT ROW_NUMBER( ) OVER ( PARTITION BY D.PROD_ID
                                                                         ORDER BY  DECODE( K.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
                                                                                 , TO_NUMBER( REGEXP_REPLACE( K.CHAPTER, '[^[:digit:]]') ) DESC
@@ -131,23 +128,20 @@
                                            AND M.USE_YN = 'Y'                        /* Y : 노출 (노출여부) */
                                            AND A.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
                                            AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
-                                           AND B.MENU_ID = #{menuId}                 /* 메뉴ID */
-                                           AND E.PROD_ID = B.PROD_ID 
-                                           AND F.PROD_ID = B.PROD_ID 
-                                           AND G.PROD_ID = B.PROD_ID 
-                                           AND I.PROD_ID = B.PROD_ID 
-                                           AND (M.DEVICE_MODEL_CD = #{deviceModelCd} OR M.DEVICE_MODEL_CD = 'ANY-PHONE-4MM') /* header param : 단말모델코드 */
                                          <if test="arrayProdGradeCd != null">
                                            AND D.PROD_GRD_CD IN
                                            <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
                                              #{prodGradeCd}
                                            </foreach>
-                                         </if>
+                                         </if>  
                                          <if test='filteredBy == "recent+complete"'>
                                            AND E.COMPT_YN = 'Y'
                                          </if>
+                                           AND B.MENU_ID = #{menuId}                 /* 메뉴ID */
+                                           AND E.PROD_ID = B.PROD_ID 
+                                           AND (M.DEVICE_MODEL_CD = #{deviceModelCd} OR M.DEVICE_MODEL_CD = 'ANY-PHONE-4MM') /* header param : 단말모델코드 */
                                          ORDER BY D.SELLER_MBR_NO
-                               ) IA
+                                       ) IA
                                  WHERE IA.RN = 1
                                ) JA
                        ) KA
