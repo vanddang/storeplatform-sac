@@ -174,7 +174,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 					} catch (Exception ex) {
 						purchaseFlag = false;
-						this.log.error("Purchase History Search Exception.( 구매내역 조회 연동 중 오류가 발생하였습니다.) \n{}", ex);
+						this.log.debug("[DownloadMusicServiceImpl] Purchase History Search Exception : {}");
+						this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 						// throw new StorePlatformException("SAC_DSP_2001", ex);
 					}
 
@@ -219,13 +220,13 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 								}
 
 								this.log.debug("----------------------------------------------------------------");
-								this.log.debug("[getDownloadMusickInfo] prchsId : {}", prchsId);
-								this.log.debug("[getDownloadMusickInfo] prchsDt : {}", prchsDt);
-								this.log.debug("[getDownloadMusickInfo] useExprDt : {}", useExprDt);
-								this.log.debug("[getDownloadMusickInfo] dwldExprDt : {}", dwldExprDt);
-								this.log.debug("[getDownloadMusickInfo] prchsCaseCd : {}", prchsCaseCd);
-								this.log.debug("[getDownloadMusickInfo] prchsState : {}", prchsState);
-								this.log.debug("[getDownloadMusickInfo] prchsProdId : {}", prchsProdId);
+								this.log.debug("[DownloadMusicInfo] prchsId : {}", prchsId);
+								this.log.debug("[DownloadMusicInfo] prchsDt : {}", prchsDt);
+								this.log.debug("[DownloadMusicInfo] useExprDt : {}", useExprDt);
+								this.log.debug("[DownloadMusicInfo] dwldExprDt : {}", dwldExprDt);
+								this.log.debug("[DownloadMusicInfo] prchsCaseCd : {}", prchsCaseCd);
+								this.log.debug("[DownloadMusicInfo] prchsState : {}", prchsState);
+								this.log.debug("[DownloadMusicInfo] prchsProdId : {}", prchsProdId);
 								this.log.debug("----------------------------------------------------------------");
 
 								metaInfo.setPurchaseId(prchsId);
@@ -265,8 +266,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 												(end - start));
 									} catch (Exception ex) {
 										memberFlag = false;
-										this.log.error("SearchDevice Id Exception.( 단말정보 조회 연동 중 오류가 발생하였습니다.) \n{}",
-												ex);
+										this.log.debug("[DownloadMusicServiceImpl] Device Search Exception : {}");
+										this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 										// throw new StorePlatformException("SAC_DSP_1001", ex);
 									}
 
