@@ -105,7 +105,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		PurchaseScRes purchaseScRes = this.purchaseCancelSCI.getPurchase(purchaseScReq);
 		if (purchaseScRes == null || purchaseScRes.getPrchs() == null
-				|| StringUtils.isEmpty(purchaseScRes.getPrchs().getPrchsId())) {
+				|| StringUtils.isBlank(purchaseScRes.getPrchs().getPrchsId())) {
 			// 구매 정보가 존재하지 않을 경우 취소 불가.
 			throw new StorePlatformException("SAC_PUR_8100");
 		}
