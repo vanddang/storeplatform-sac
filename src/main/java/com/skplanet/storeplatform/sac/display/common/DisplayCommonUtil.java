@@ -46,6 +46,7 @@ public class DisplayCommonUtil {
 	 * </pre>
 	 * 
 	 * @param osVer
+	 *            osVer
 	 * @return String
 	 */
 	public static String getOsVer(String osVer) {

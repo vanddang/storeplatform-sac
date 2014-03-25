@@ -91,11 +91,6 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getVODMetaInfo", paramMap,
 								ProductInfo.class);
 						if (product != null) {
-							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-								// TODO osm1021 특별한 처리가 필요할 경우 처리 필요
-							} else {
-								// TODO osm1021 특별한 처리가 필요할 경우 처리 필요
-							}
 							productList.add(product);
 						}
 					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
@@ -106,11 +101,6 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getEbookComicMetaInfo",
 								paramMap, ProductInfo.class);
 						if (product != null) {
-							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-								// TODO osm1021 특별한 처리가 필요할 경우 처리 필요
-							} else {
-								// TODO osm1021 특별한 처리가 필요할 경우 처리 필요
-							}
 							productList.add(product);
 						}
 					} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우

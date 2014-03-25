@@ -69,7 +69,7 @@ public class PersonalUpdateAlarmServiceImpl implements PersonalUpdateAlarmServic
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
 
-		String sAction = ObjectUtils.toString(mapReq.get("action"));
+		// String sAction = ObjectUtils.toString(mapReq.get("action"));
 		// String sAlarms = ObjectUtils.toString(mapReq.get("ALARM_LIST"));
 
 		String sType = req.getType();
@@ -121,42 +121,6 @@ public class PersonalUpdateAlarmServiceImpl implements PersonalUpdateAlarmServic
 		} else if (sType.equals("pid")) {
 			listPid.addAll(listProds);
 		}
-
-		if (!listPid.isEmpty()) {
-			// 기구매 체크
-			// ExistenceScReq existenceScReq = new ExistenceScReq();
-			// List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
-			// for (String prodId : listPid) {
-			// ExistenceItemSc existenceItemSc = new ExistenceItemSc();
-			// existenceItemSc.setProdId(prodId);
-			// existenceItemScList.add(existenceItemSc);
-			// }
-			// existenceScReq.setTenantId(tenantHeader.getTenantId());
-			// existenceScReq.setUserKey(req.getUserKey());
-			// existenceScReq.setDeviceKey(req.getDeviceKey());
-			// // existenceScReq.setExistenceItemSc(existenceItemScList);
-			// existenceScReq.setProductList(existenceItemScList);
-			// List<ExistenceScRes> listPrchs = this.existenceSacService.searchExistenceList(existenceScReq, false);
-			//
-			// if (!listPrchs.isEmpty()) {
-			// mapReq.put("PRCHS_LIST", listPrchs);
-			// // int iUpdateCnt = this.commonDAO.update("", mapReq);
-			// int iUpdateCnt = 10;
-			// if (sAction.equals("upgradeAlarmOn")) {
-			// this.log.info("## Alarm on success cnt : {}", iUpdateCnt);
-			// this.log.info("## Alarm on success prod: {}", listPrchs);
-			// } else {
-			// this.log.info("## Alarm off success cnt : {}", iUpdateCnt);
-			// this.log.info("## Alarm off success prod: {}", listPrchs);
-			// }
-			// } else {
-			// this.log.info("## No Alarm data");
-			// }
-
-		} else {
-			this.log.info("## No Alarm data");
-		}
-
 		res.setCommonResponse(commonResponse);
 		return res;
 	}
