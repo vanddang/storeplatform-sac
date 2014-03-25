@@ -40,9 +40,9 @@ public class ClauseController {
 	@RequestMapping(value = "/member/user/listClause/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListClauseSacRes listClause() {
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 2.1.32. 약관목록 조회 #####");
-		LOGGER.info("####################################################");
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 2.1.32. 약관목록 조회 #####");
+		LOGGER.debug("####################################################");
 
 		ListClauseSacRes res = this.svc.listClause();
 
@@ -54,9 +54,9 @@ public class ClauseController {
 	@RequestMapping(value = "/member/user/detailClause/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailClauseSacRes detailClause(DetailClauseSacReq req) {
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 2.1.33. 약관목록 상세조회 #####");
-		LOGGER.info("####################################################");
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 2.1.33. 약관목록 상세조회 #####");
+		LOGGER.debug("####################################################");
 
 		String itemCd = StringUtil.nvl(req.getClauseItemCd(), "");
 

@@ -67,9 +67,6 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 			codeList.add(code);
 		}
 
-		System.out.println("================ codeList : " + codeList.toString());
-		System.out.println("================ key : " + req.getKey());
-
 		GetIndividualPolicyReq getIndividualPolicyReq = new GetIndividualPolicyReq();
 		getIndividualPolicyReq.setKey(req.getKey());
 		getIndividualPolicyReq.setPolicyCodeList(codeList);
