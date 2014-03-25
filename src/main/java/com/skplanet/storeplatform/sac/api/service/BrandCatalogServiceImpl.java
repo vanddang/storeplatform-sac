@@ -374,25 +374,4 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 		}
 	}
 
-	//
-	// /**
-	// * 브랜드 카탈로그 REPOSITORY_PATH SELECT
-	// */
-	// public String getLabelForQuery(Object[] params) {
-	// HashMap<String, Object> paramMap = new HashMap<String, Object>();
-	//
-	// try {
-	// if (params != null) {
-	// for (int i = 0; i < params.length; i++) {
-	// paramMap.put("PARAM" + i, params[i]);
-	// }
-	// }
-	// return (String) queryForObject("BrandCatalog.SELECT_REPOSITORY_PATH", paramMap);
-	// } catch (DaoException de) {
-	// log.error("■■■■■    getLabelForQuery() ■■■■■");
-	// log.error(de.getMessage());
-	// throw new InfraException("getLabelForQuery()", "select Fail", de);
-	// }
-	// }
-
 }
