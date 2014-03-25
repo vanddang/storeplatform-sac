@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.client.display.vo.related;
 import java.io.Serializable;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -39,6 +40,7 @@ public class SimilarProductSacReq extends CommonInfo implements Serializable {
 	private String langCd; // 언어코드
 	private String testYn; // 테스트 여부
 	private String mmDeviceModelCd; // 가상 프로비저닝 모델명 (멀티미디어).
+	@Pattern(regexp = "|^DP[0-9][0-9]")
 	private String topMenuId; // 탑메뉴ID
 
 	/**
