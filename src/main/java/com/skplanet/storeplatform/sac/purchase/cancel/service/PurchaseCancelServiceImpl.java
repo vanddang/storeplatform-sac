@@ -170,8 +170,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 구매 정보 조회. */
 		this.purchaseCancelRepository.setPurchaseDetailInfo(purchaseCancelSacParam, purchaseCancelDetailSacParam);
-		if (purchaseCancelDetailSacParam.getPaymentSacParamList() == null
-				|| purchaseCancelDetailSacParam.getPaymentSacParamList().size() < 1) {
+		if (purchaseCancelDetailSacParam.getPrchsDtlSacParamList() == null
+				|| purchaseCancelDetailSacParam.getPrchsDtlSacParamList().size() < 1) {
 			// 구매 상세 정보가 없으면 구매 취소 불가.
 			throw new StorePlatformException("SAC_PUR_8100");
 		}
