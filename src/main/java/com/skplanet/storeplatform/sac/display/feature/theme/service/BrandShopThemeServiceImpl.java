@@ -57,8 +57,8 @@ public class BrandShopThemeServiceImpl implements BrandShopThemeService {
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
 
-		Product product = new Product();
-		Identifier identifier = new Identifier();
+		Product product = null;
+		Identifier identifier = null;
 		Title title = new Title();
 		Layout layout = new Layout();
 		Price price = new Price();
