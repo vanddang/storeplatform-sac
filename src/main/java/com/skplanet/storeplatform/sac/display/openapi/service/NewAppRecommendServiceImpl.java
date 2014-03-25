@@ -96,7 +96,6 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 		count = offset + count - 1;
 		newAppRecommendSacReq.setCount(count); // set count
 
-		Identifier identifier = new Identifier();
 		List<Product> productList = new ArrayList<Product>();
 
 		Product product = null;
@@ -132,8 +131,8 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 				product = new Product();
 				identifierList = new ArrayList<Identifier>();
 
-				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-						metaInfo.getProdId());
+				Identifier identifier = this.commonGenerator.generateIdentifier(
+						DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
 				identifierList.add(identifier);
 
 				product.setIdentifierList(identifierList); // 상품 Id
@@ -169,24 +168,23 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 				/*
 				 * 판매자 정보중 회사명 Seller Key는 Null로 Set해서 공개하지 않는다.
 				 */
-				DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-				DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
-				List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
-				SellerMbrSac sellerMbrSac = new SellerMbrSac();
-				sellerMbrSac.setSellerKey(metaInfo.getSellerMbrNo());
-				sellerMbrSacList.add(sellerMbrSac);
-				detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
 
 				this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
 				long start = System.currentTimeMillis();
 				try {
-					detailInformationSacRes = this.sellerSearchSCI.detailInformation(detailInformationSacReq);
+					DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+					List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+					SellerMbrSac sellerMbrSac = new SellerMbrSac();
+					sellerMbrSac.setSellerKey(metaInfo.getSellerMbrNo());
+					sellerMbrSacList.add(sellerMbrSac);
+					detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+					DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
+							.detailInformation(detailInformationSacReq);
 					Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
-					List<SellerMbrSac> sellerMbrs = new ArrayList<SellerMbrSac>();
-					sellerMbrSac = new SellerMbrSac();
+					// sellerMbrSac = new SellerMbrSac();
 					while (it.hasNext()) {
 						String key = it.next();
-						sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
+						List<SellerMbrSac> sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
 						company = sellerMbrs.get(0).getSellerCompany();
 					}
 
@@ -212,16 +210,14 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 				 * 미리보기 정보 조회 (신규 앱 출시 1일이내 조회시 정보 노출)
 				 */
 				if (!DisplayConstants.DP_OPENAPI_RELEASETYPE_WEEK.equals(releaseType)) {
-					List<MetaInfo> previewList = new ArrayList<MetaInfo>();
-					previewList = this.commonDAO.queryForList("OpenApi.getPreviewImageList", newAppRecommendSacReq,
-							MetaInfo.class);
+					List<MetaInfo> previewList = this.commonDAO.queryForList("OpenApi.getPreviewImageList",
+							newAppRecommendSacReq, MetaInfo.class);
 
 					Iterator<MetaInfo> previewIterator = previewList.iterator();
 					List<Source> preveiwSourceList = new ArrayList<Source>();
-					Source source = new Source();
 					while (previewIterator.hasNext()) {
 						MetaInfo previewMetaInfo = previewIterator.next();
-						source = this.commonGenerator.generatePreviewSourceList(previewMetaInfo);
+						Source source = this.commonGenerator.generatePreviewSourceList(previewMetaInfo);
 						source.setImageCode(previewMetaInfo.getImageCode());
 						preveiwSourceList.add(source);
 					}

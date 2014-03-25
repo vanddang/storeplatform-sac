@@ -227,8 +227,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					}
 
 					this.log.debug("---------------------------------------------------------------------");
-					this.log.debug("[DownloadAppServiceImpl] historyRes :{}" + historyRes);
-					this.log.debug("[DownloadAppServiceImpl] purchaseFlag :{}" + purchaseFlag);
+					this.log.debug("[DownloadAppServiceImpl] purchaseFlag :{}", purchaseFlag);
 					this.log.debug("---------------------------------------------------------------------");
 					if (purchaseFlag && historyRes != null) {
 
@@ -337,10 +336,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 													UapsEcReq uapsEcReq = new UapsEcReq();
 													uapsEcReq.setDeviceId(deviceId);
 													uapsEcReq.setType("mdn");
-													UserEcRes uapsEcRes = new UserEcRes();
 													this.log.debug("##### [SAC DSP LocalSCI] SAC EC Start : uapsSCI.getMappingInfo");
 													long start = System.currentTimeMillis();
-													uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
+													UserEcRes uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
 													this.log.debug("##### [SAC DSP LocalSCI] SAC EC End : uapsSCI.getMappingInfo");
 													long end = System.currentTimeMillis();
 													this.log.debug(
@@ -348,8 +346,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 															(end - start));
 													this.log.debug("#########################################################");
 													for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-														this.log.debug("[DownloadAppServiceImpl] :	serviceCd	"
-																+ uapsEcRes.getServiceCD()[k]);
+														this.log.debug("[DownloadAppServiceImpl] serviceCd	:{}",
+																uapsEcRes.getServiceCD()[k]);
 														if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING
 																.equals(uapsEcRes.getServiceCD()[k])) {
 															metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);

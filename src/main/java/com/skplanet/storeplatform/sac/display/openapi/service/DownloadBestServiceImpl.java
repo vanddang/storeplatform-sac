@@ -147,11 +147,10 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 							.detailInformation(detailInformationSacReq);
 
 					Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
-					List<SellerMbrSac> sellerMbrs = new ArrayList<SellerMbrSac>();
-					sellerMbrSac = new SellerMbrSac();
+					// sellerMbrSac = new SellerMbrSac();
 					while (it.hasNext()) {
 						String key = it.next();
-						sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
+						List<SellerMbrSac> sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
 						arraySellerKey = new String[sellerMbrs.size()];
 						for (int i = 0; i < sellerMbrs.size(); i++) {
 							arraySellerKey[i] = sellerMbrs.get(i).getSellerKey();

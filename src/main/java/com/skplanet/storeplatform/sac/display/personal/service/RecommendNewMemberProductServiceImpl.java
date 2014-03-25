@@ -90,14 +90,13 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 		String stdDt = this.commonService.getBatchStandardDateString(tenantHeader.getTenantId(), req.getListId());
 		req.setStdDt(stdDt);
 
-		List<MetaInfo> productIdList = new ArrayList<MetaInfo>();
-		productIdList = this.commonDAO.queryForList("RecommendNewMemberProduct.searchRecommendNewMemberProductList",
-				req, MetaInfo.class);
-
+		List<MetaInfo> productIdList = this.commonDAO.queryForList(
+				"RecommendNewMemberProduct.searchRecommendNewMemberProductList", req, MetaInfo.class);
+		Iterator<MetaInfo> iterator = null;
 		if (productIdList != null) {
 			commonResponse.setTotalCount(productIdList.get(0).getTotalCount());
+			iterator = productIdList.iterator();
 		}
-		Iterator<MetaInfo> iterator = productIdList.iterator();
 		// List<Source> preveiwSourceList = new ArrayList<Source>();
 		String topMenuId = "";
 		String prodId = "";
