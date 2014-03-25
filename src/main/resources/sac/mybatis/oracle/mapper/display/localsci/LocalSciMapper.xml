@@ -59,8 +59,8 @@
     </select>    
         
     <!-- 상품 구매건수 업데이트 상품이 없을시 Insert-->
-    <insert id="insertPurchaseProd" parameterType="HashMap">
-       /* LocalSciMapper.insertPurchaseProd, 상품 구매수 조회시 조회대상 상품이 없을때 상품 Insert , 이석희/아이에스플러스, 2014-02-13 */
+    <insert id="createPurchaseProd" parameterType="HashMap">
+       /* LocalSciMapper.createPurchaseProd, 상품 구매수 조회시 조회대상 상품이 없을때 상품 Insert , 이석희/아이에스플러스, 2014-02-13 */
         INSERT INTO TB_DP_TENANT_PROD_STATS(
              TENANT_ID
            , PROD_ID
