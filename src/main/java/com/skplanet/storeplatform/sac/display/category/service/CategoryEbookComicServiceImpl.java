@@ -102,10 +102,6 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
 
-		String topMenuId = req.getTopMenuId();
-		String menuId = req.getMenuId();
-		String filteredBy = req.getFilteredBy();
-
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
