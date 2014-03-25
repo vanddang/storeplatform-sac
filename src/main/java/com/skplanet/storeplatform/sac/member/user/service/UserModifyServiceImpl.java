@@ -101,13 +101,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 		/**
 		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
 		 */
-		LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
-		LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
+		LOGGER.debug("## 사용자 타입  : {}", userInfo.getUserType());
+		LOGGER.debug("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
 		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
 
-			LOGGER.info("## ====================================================");
-			LOGGER.info("## One ID 통합회원 [{}]", userInfo.getUserName());
-			LOGGER.info("## ====================================================");
+			LOGGER.debug("## ====================================================");
+			LOGGER.debug("## One ID 통합회원 [{}]", userInfo.getUserName());
+			LOGGER.debug("## ====================================================");
 
 			/**
 			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
@@ -154,9 +154,9 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		} else {
 
-			LOGGER.info("## ====================================================");
-			LOGGER.info("## 기존 IDP 회원 [{}]", userInfo.getUserName());
-			LOGGER.info("## ====================================================");
+			LOGGER.debug("## ====================================================");
+			LOGGER.debug("## 기존 IDP 회원 [{}]", userInfo.getUserName());
+			LOGGER.debug("## ====================================================");
 
 			/**
 			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
@@ -225,13 +225,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 		/**
 		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
 		 */
-		LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
-		LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
+		LOGGER.debug("## 사용자 타입  : {}", userInfo.getUserType());
+		LOGGER.debug("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
 		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
 
-			LOGGER.info("## ====================================================");
-			LOGGER.info("## One ID 통합회원 [{}]", userInfo.getUserName());
-			LOGGER.info("## ====================================================");
+			LOGGER.debug("## ====================================================");
+			LOGGER.debug("## One ID 통합회원 [{}]", userInfo.getUserName());
+			LOGGER.debug("## ====================================================");
 
 			/**
 			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
@@ -246,8 +246,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 				checkIdPwdAuthEcReq.setUserPasswd(req.getOldPassword());
 				this.imIdpSCI.checkIdPwdAuth(checkIdPwdAuthEcReq);
 
-				LOGGER.info("## 통합 >> ========================= 패스워드 확인 연동 성공.");
-
 				/**
 				 * 통합IDP 비밀번호 변경 연동(cmd - TXUpdateUserPwdIDP)
 				 */
@@ -259,15 +257,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 				modifyPwdEcReq.setUserPasswdModifyDate(DateUtil.getToday()); // 비밀번호변경일자 (YYYYMMDD)
 				this.imIdpSCI.modifyPwd(modifyPwdEcReq);
 
-				LOGGER.info("## 통합 >> ========================= 비밀번호 변경 연동 성공.");
-
 			}
 
 		} else {
 
-			LOGGER.info("## ====================================================");
-			LOGGER.info("## 기존 IDP 회원 [{}]", userInfo.getUserName());
-			LOGGER.info("## ====================================================");
+			LOGGER.debug("## ====================================================");
+			LOGGER.debug("## 기존 IDP 회원 [{}]", userInfo.getUserName());
+			LOGGER.debug("## ====================================================");
 
 			/**
 			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
@@ -282,8 +278,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 				authForIdEcReq.setUserPasswd(req.getOldPassword());
 				this.idpSCI.authForId(authForIdEcReq);
 
-				LOGGER.info("## IDP >> ========================= 패스워드 확인 연동 성공.");
-
 				/**
 				 * IDP 비밀번호 변경 연동 (cmd - modifyAuthInfo)
 				 */
@@ -294,8 +288,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 				modifyAuthInfoEcReq.setPreKey(req.getOldPassword()); // 기존 패스워드
 				modifyAuthInfoEcReq.setKey(req.getNewPassword()); // 신규 패스워드
 				this.idpSCI.modifyAuthInfo(modifyAuthInfoEcReq);
-
-				LOGGER.info("## IDP >> ========================= 비밀번호 변경 연동 성공.");
 
 			}
 
@@ -405,13 +397,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 * 
 			 * 통합회원일경우만 처리한다.
 			 */
-			LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
-			LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
+			LOGGER.debug("## 사용자 타입  : {}", userInfo.getUserType());
+			LOGGER.debug("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
 			if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
 
-				LOGGER.info("## ====================================================");
-				LOGGER.info("## One ID 통합회원일 경우만 통합 IDP 연동을 한다.");
-				LOGGER.info("## ====================================================");
+				LOGGER.debug("## ====================================================");
+				LOGGER.debug("## One ID 통합회원일 경우만 통합 IDP 연동을 한다.");
+				LOGGER.debug("## ====================================================");
 
 				/**
 				 * 실명인증 대상 여부에 따라 분기 처리. (OWN=본인, PARENT=법정대리인)
@@ -488,9 +480,9 @@ public class UserModifyServiceImpl implements UserModifyService {
 							 * 
 							 * 2014.02.21 임재호K 협의. (IDP의 실명인증과 SAC의 실명인증은 별개로 본다.)
 							 */
-							LOGGER.info("## >> Skip 처리 한다.");
-							LOGGER.info("## >> Error Code : {}", spe.getErrorInfo().getCode());
-							LOGGER.info("## >> Error Msg  : {}", spe.getErrorInfo().getMessage());
+							LOGGER.debug("## >> Skip 처리 한다.");
+							LOGGER.debug("## >> Error Code : {}", spe.getErrorInfo().getCode());
+							LOGGER.debug("## >> Error Msg  : {}", spe.getErrorInfo().getMessage());
 
 						} else {
 
@@ -505,7 +497,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 					/**
 					 * 법인 단말일 경우 Skip.
 					 */
-					LOGGER.info("## >> 법인 단말일 경우는 Skip.");
+					LOGGER.debug("## >> 법인 단말일 경우는 Skip.");
 
 				}
 
@@ -616,7 +608,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			userMbr.setUserBirthDay(req.getUserBirthDay());
 		}
 
-		LOGGER.info("## SC Request 사용자 기본정보 : {}", userMbr.toString());
+		LOGGER.debug("## SC Request 사용자 기본정보 : {}", userMbr);
 
 		return userMbr;
 	}
@@ -776,8 +768,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 */
 		if (StringUtils.equals(idpResult.getIsRnameAuth(), MemberConstants.USE_Y)) {
 
-			LOGGER.info("####### IDP 실명인증 CI    : {}", idpResult.getUserCi());
-			LOGGER.info("####### IDP 실명인증 Birth : {}", req.getUserBirthDay());
+			LOGGER.debug("####### IDP 실명인증 CI    : {}", idpResult.getUserCi());
+			LOGGER.debug("####### IDP 실명인증 Birth : {}", req.getUserBirthDay());
 
 			// One ID CI, birthday 비교
 			if (StringUtils.isNotEmpty(idpResult.getUserCi())) { // 기 등록 된 CI가 존재하는 경우는 CI + 생년월일(social_date) 비교
@@ -796,7 +788,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 					oneIdRealNameType = "E";
 				}
 			} else { // 개명
-				LOGGER.info("## 개명..........");
+				LOGGER.debug("## 개명..........");
 				oneIdRealNameType = "R";
 			}
 
@@ -824,8 +816,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 * 인증 정보가 존재하면....
 			 */
 			if (schUserRes.getMbrAuth().getSequence() != null || StringUtils.equals(schUserRes.getMbrAuth().getSequence(), "")) {
-				LOGGER.info("####### DB 실명인증 CI    : {}", schUserRes.getMbrAuth().getCi());
-				LOGGER.info("####### DB 실명인증 Birth : {}", schUserRes.getMbrAuth().getBirthDay());
+				LOGGER.debug("####### DB 실명인증 CI    : {}", schUserRes.getMbrAuth().getCi());
+				LOGGER.debug("####### DB 실명인증 Birth : {}", schUserRes.getMbrAuth().getBirthDay());
 
 				// One ID CI, birthday 비교
 				if (StringUtils.isNotEmpty(schUserRes.getMbrAuth().getCi())) { // 기 등록 된 CI가 존재하는 경우는 CI +
@@ -846,7 +838,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		}
 
-		LOGGER.info("### oneIdRealNameType : {}", oneIdRealNameType);
+		LOGGER.debug("### oneIdRealNameType : {}", oneIdRealNameType);
 
 		/**
 		 * 타사이트에서 실명인증을 하고 t-Store 에서 개명 신청을 시도할 경우.

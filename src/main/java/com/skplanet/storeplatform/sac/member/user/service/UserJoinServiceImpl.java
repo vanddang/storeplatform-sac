@@ -726,7 +726,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrLglAgent.setParentCI(req.getParentCi()); // 법정대리인 CI
 			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
 			mbrLglAgent.setParentRealNameSite(req.getParentRealNameSite()); // 법정대리인 실명인증사이트 코드
-			mbrLglAgent.setIsDomestic(req.getParentIsDomestic()); // 내외국인 여부
+			if (StringUtils.equals(req.getParentIsDomestic(), "")) {
+				mbrLglAgent.setIsDomestic(MemberConstants.USE_Y); // 내외국인 여부
+			} else {
+				mbrLglAgent.setIsDomestic(req.getParentIsDomestic()); // 내외국인 여부
+			}
 			LOGGER.debug("## SC Request 법정대리인 정보 : {}", mbrLglAgent);
 
 		} else {
