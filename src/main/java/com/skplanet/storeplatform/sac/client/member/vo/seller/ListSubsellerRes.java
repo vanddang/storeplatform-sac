@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SubSellerMbrSac;
 
 /**
  * 서브계정 목록 조회
@@ -19,58 +19,93 @@ public class ListSubsellerRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자 ID. */
-	private String sellerID;
+	private String sellerId;
 
 	/** 판매자 키. */
-	private String sellerKey; // INSD_SELLERMBR_NO
+	private String sellerKey;
 
 	/** 서브계정 카운트. */
 	private int subAccountCount;
 
 	/** 서브계정 Value Object 목록. */
-	private List<SellerMbrSac> subSellerList;
+	private List<SubSellerMbrSac> subSellerList;
 
 	/** 로그인시간. */
 	private String regDate;
 
-	public String getRegDate() {
-		return this.regDate;
+	/**
+	 * @return the sellerId
+	 */
+	public String getSellerId() {
+		return this.sellerId;
 	}
 
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
+	/**
+	 * @param sellerId
+	 *            the sellerId to set
+	 */
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
 	}
 
-	public String getSellerID() {
-		return this.sellerID;
-	}
-
-	public void setSellerID(String sellerID) {
-		this.sellerID = sellerID;
-	}
-
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
+	/**
+	 * @return the subAccountCount
+	 */
 	public int getSubAccountCount() {
 		return this.subAccountCount;
 	}
 
+	/**
+	 * @param subAccountCount
+	 *            the subAccountCount to set
+	 */
 	public void setSubAccountCount(int subAccountCount) {
 		this.subAccountCount = subAccountCount;
 	}
 
-	public List<SellerMbrSac> getSubSellerList() {
+	/**
+	 * @return the subSellerList
+	 */
+	public List<SubSellerMbrSac> getSubSellerList() {
 		return this.subSellerList;
 	}
 
-	public void setSubSellerList(List<SellerMbrSac> subSellerList) {
+	/**
+	 * @param subSellerList
+	 *            the subSellerList to set
+	 */
+	public void setSubSellerList(List<SubSellerMbrSac> subSellerList) {
 		this.subSellerList = subSellerList;
+	}
+
+	/**
+	 * @return the regDate
+	 */
+	public String getRegDate() {
+		return this.regDate;
+	}
+
+	/**
+	 * @param regDate
+	 *            the regDate to set
+	 */
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
 	}
 
 }

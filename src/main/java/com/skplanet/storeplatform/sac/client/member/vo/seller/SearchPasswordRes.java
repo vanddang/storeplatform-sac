@@ -15,12 +15,20 @@ public class SearchPasswordRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 초기화된 패스워드. */
 	private String newPassword;
 
+	/**
+	 * @return the newPassword
+	 */
 	public String getNewPassword() {
 		return this.newPassword;
 	}
 
+	/**
+	 * @param newPassword
+	 *            the newPassword to set
+	 */
 	public void setNewPassword(String newPassword) {
 		this.newPassword = newPassword;
 	}

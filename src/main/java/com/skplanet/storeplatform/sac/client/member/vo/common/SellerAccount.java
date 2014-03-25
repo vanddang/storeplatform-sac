@@ -14,80 +14,10 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SellerAccount extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
-
 	/**
-	 * ABA 코드.
+	 * 판매자 Key.
 	 */
-	private String abaCode;
-	/**
-	 * 계좌인증일시.
-	 */
-	private String accountRealDate;
-	/**
-	 * 계좌번호.
-	 */
-	private String bankAccount;
-	/**
-	 * 예금자명.
-	 */
-	private String bankAcctName;
-	/**
-	 * 은행 주소.
-	 */
-	private String bankAddress;
-	/**
-	 * 은행 지점명.
-	 */
-	private String bankBranch;
-	/**
-	 * 은행 지점 코드.
-	 */
-	private String bankBranchCode;
-	/**
-	 * 은행 코드.
-	 */
-	private String bankCode;
-	/**
-	 * 은행 위치.
-	 */
-	private String bankLocation;
-	/**
-	 * 은행명.
-	 */
-	private String bankName;
-	/**
-	 * IBAN 코드.
-	 */
-	private String ibanCode;
-	/**
-	 * 사용여부(Y/N).
-	 */
-	private String isUsed;
-	/**
-	 * 사유.
-	 */
-	private String reason;
-	/**
-	 * Swift 코드.
-	 */
-	private String swiftCode;
-	/**
-	 * T I-PIN 코드.
-	 */
-	private String tpinCode;
-	/**
-	 * 판매자 법인 우편번호.
-	 */
-	private String sellerBizZip;
-	/**
-	 * 판매자 법인 주소.
-	 */
-	private String sellerBizAddress;
-	/**
-	 * 판매자 법인 상세 주소.
-	 */
-	private String sellerBizDetailAddress;
-
+	private String sellerKey;
 	/**
 	 * 판매자 법인 업종명.
 	 */
@@ -101,6 +31,26 @@ public class SellerAccount extends CommonInfo {
 	 */
 	private String sellerBizCorpNumber;
 	/**
+	 * CEO 생년월일.
+	 */
+	private String ceoBirthDay;
+	/**
+	 * CEO명.
+	 */
+	private String ceoName;
+	/**
+	 * 판매자 법인 우편번호.
+	 */
+	private String sellerBizZip;
+	/**
+	 * 판매자 법인 주소.
+	 */
+	private String sellerBizAddress;
+	/**
+	 * 판매자 법인 상세 주소.
+	 */
+	private String sellerBizDetailAddress;
+	/**
 	 * 사업장 전화 국가번호.
 	 */
 	private String sellerBizPhoneCountry;
@@ -108,7 +58,6 @@ public class SellerAccount extends CommonInfo {
 	 * 사업장 전화 번호.
 	 */
 	private String sellerBizPhone;
-
 	/**
 	 * 벤더 코드.
 	 */
@@ -146,52 +95,73 @@ public class SellerAccount extends CommonInfo {
 	 */
 	private String marketStatus;
 	/**
-	 * 계좌 인증 여부.
+	 * 은행 코드.
 	 */
-	private String isAccountReal;
+	private String bankCode;
+	/**
+	 * 은행명.
+	 */
+	private String bankName;
+	/**
+	 * 은행 지점명.
+	 */
+	private String bankBranch;
+	/**
+	 * 은행 지점 코드.
+	 */
+	private String bankBranchCode;
+	/**
+	 * 은행 주소.
+	 */
+	private String bankAddress;
+	/**
+	 * 은행 위치.
+	 */
+	private String bankLocation;
+	/**
+	 * 해외 bsb.
+	 */
+	private String bankBsb;
+	/**
+	 * 계좌번호.
+	 */
+	private String bankAccount;
+	/**
+	 * 예금자명.
+	 */
+	private String bankAcctName;
 	/**
 	 * 공인 인증 여부.
 	 */
 	private String isOfficialAuth;
-
-	// 사용여부 미확인 startDate, endDate, sellerKey TODO
-	private String startDate;
-	private String endDate;
-	private String sellerKey;
-
-	// 삭제된 파라미터.
-	// private String repFaxArea;
-	// private String repFax;
-
 	/**
-	 * 은행BSB. 3/21 추가
+	 * 계좌 인증 여부.
 	 */
-	private String bankBsb;
-
+	private String isAccountReal;
 	/**
-	 * CEO 생년월일.
+	 * 계좌인증일시.
 	 */
-	private String ceoBirthDay;
-
+	private String accountRealDate;
 	/**
-	 * CEO명.
+	 * ABA 코드.
 	 */
-	private String ceoName;
-
+	private String abaCode;
 	/**
-	 * @return the bankBsb
+	 * IBAN 코드.
 	 */
-	public String getBankBsb() {
-		return this.bankBsb;
-	}
-
+	private String ibanCode;
 	/**
-	 * @param bankBsb
-	 *            the bankBsb to set
+	 * Swift 코드.
 	 */
-	public void setBankBsb(String bankBsb) {
-		this.bankBsb = bankBsb;
-	}
+	private String swiftCode;
+	/**
+	 * T I-PIN 코드.
+	 */
+	private String tpinCode;
+	/**
+	 * 사용여부(Y/N).
+	 */
+	private String isUsed;
 
 	/**
 	 * @return the abaCode
@@ -344,21 +314,6 @@ public class SellerAccount extends CommonInfo {
 	}
 
 	/**
-	 * @return the endDate
-	 */
-	public String getEndDate() {
-		return this.endDate;
-	}
-
-	/**
-	 * @param endDate
-	 *            the endDate to set
-	 */
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
-
-	/**
 	 * @return the ibanCode
 	 */
 	public String getIbanCode() {
@@ -386,51 +341,6 @@ public class SellerAccount extends CommonInfo {
 	 */
 	public void setIsUsed(String isUsed) {
 		this.isUsed = isUsed;
-	}
-
-	/**
-	 * @return the reason
-	 */
-	public String getReason() {
-		return this.reason;
-	}
-
-	/**
-	 * @param reason
-	 *            the reason to set
-	 */
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-
-	/**
-	 * @return the sellerKey
-	 */
-	public String getSellerKey() {
-		return this.sellerKey;
-	}
-
-	/**
-	 * @param sellerKey
-	 *            the sellerKey to set
-	 */
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
-	}
-
-	/**
-	 * @return the startDate
-	 */
-	public String getStartDate() {
-		return this.startDate;
-	}
-
-	/**
-	 * @param startDate
-	 *            the startDate to set
-	 */
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
 	}
 
 	/**
@@ -551,6 +461,36 @@ public class SellerAccount extends CommonInfo {
 	 */
 	public void setSellerBizCorpNumber(String sellerBizCorpNumber) {
 		this.sellerBizCorpNumber = sellerBizCorpNumber;
+	}
+
+	/**
+	 * @return the sellerBizPhoneCountry
+	 */
+	public String getSellerBizPhoneCountry() {
+		return this.sellerBizPhoneCountry;
+	}
+
+	/**
+	 * @param sellerBizPhoneCountry
+	 *            the sellerBizPhoneCountry to set
+	 */
+	public void setSellerBizPhoneCountry(String sellerBizPhoneCountry) {
+		this.sellerBizPhoneCountry = sellerBizPhoneCountry;
+	}
+
+	/**
+	 * @return the sellerBizPhone
+	 */
+	public String getSellerBizPhone() {
+		return this.sellerBizPhone;
+	}
+
+	/**
+	 * @param sellerBizPhone
+	 *            the sellerBizPhone to set
+	 */
+	public void setSellerBizPhone(String sellerBizPhone) {
+		this.sellerBizPhone = sellerBizPhone;
 	}
 
 	/**
@@ -719,33 +659,33 @@ public class SellerAccount extends CommonInfo {
 	}
 
 	/**
-	 * @return the sellerBizPhoneCountry
+	 * @return the sellerKey
 	 */
-	public String getSellerBizPhoneCountry() {
-		return this.sellerBizPhoneCountry;
+	public String getSellerKey() {
+		return this.sellerKey;
 	}
 
 	/**
-	 * @param sellerBizPhoneCountry
-	 *            the sellerBizPhoneCountry to set
+	 * @param sellerKey
+	 *            the sellerKey to set
 	 */
-	public void setSellerBizPhoneCountry(String sellerBizPhoneCountry) {
-		this.sellerBizPhoneCountry = sellerBizPhoneCountry;
+	public void setSellerKey(String sellerKey) {
+		this.sellerKey = sellerKey;
 	}
 
 	/**
-	 * @return the sellerBizPhone
+	 * @return the bankBsb
 	 */
-	public String getSellerBizPhone() {
-		return this.sellerBizPhone;
+	public String getBankBsb() {
+		return this.bankBsb;
 	}
 
 	/**
-	 * @param sellerBizPhone
-	 *            the sellerBizPhone to set
+	 * @param bankBsb
+	 *            the bankBsb to set
 	 */
-	public void setSellerBizPhone(String sellerBizPhone) {
-		this.sellerBizPhone = sellerBizPhone;
+	public void setBankBsb(String bankBsb) {
+		this.bankBsb = bankBsb;
 	}
 
 	/**
@@ -777,5 +717,4 @@ public class SellerAccount extends CommonInfo {
 	public void setCeoName(String ceoName) {
 		this.ceoName = ceoName;
 	}
-
 }

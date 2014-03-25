@@ -18,12 +18,20 @@ public class ListWithdrawalReasonRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	List<SecedeReson> secedeResonList;
+	/** 탈퇴 사유 정보. */
+	private List<SecedeReson> secedeResonList;
 
+	/**
+	 * @return the secedeResonList
+	 */
 	public List<SecedeReson> getSecedeResonList() {
 		return this.secedeResonList;
 	}
 
+	/**
+	 * @param secedeResonList
+	 *            the secedeResonList to set
+	 */
 	public void setSecedeResonList(List<SecedeReson> secedeResonList) {
 		this.secedeResonList = secedeResonList;
 	}

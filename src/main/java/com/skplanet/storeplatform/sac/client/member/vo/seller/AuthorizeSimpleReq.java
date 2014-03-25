@@ -24,7 +24,7 @@ public class AuthorizeSimpleReq extends CommonInfo {
 	private String sellerId;
 	/** 판매자 회원 PW. */
 	@NotBlank
-	private String sellerPW;
+	private String sellerPw;
 
 	/**
 	 * @return the sellerId
@@ -42,18 +42,18 @@ public class AuthorizeSimpleReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the sellerPW
+	 * @return the sellerPw
 	 */
-	public String getSellerPW() {
-		return this.sellerPW;
+	public String getSellerPw() {
+		return this.sellerPw;
 	}
 
 	/**
-	 * @param sellerPW
-	 *            the sellerPW to set
+	 * @param sellerPw
+	 *            the sellerPw to set
 	 */
-	public void setSellerPW(String sellerPW) {
-		this.sellerPW = sellerPW;
+	public void setSellerPw(String sellerPw) {
+		this.sellerPw = sellerPw;
 	}
 
 }

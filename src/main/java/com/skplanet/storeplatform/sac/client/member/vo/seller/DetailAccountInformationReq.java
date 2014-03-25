@@ -16,13 +16,21 @@ public class DetailAccountInformationReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 판매자 회원 키. */
 	@NotBlank
 	private String sellerKey;
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}

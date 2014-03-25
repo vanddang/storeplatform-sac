@@ -83,6 +83,8 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String repEmail;
 	/** 웹사이트. */
 	private String website;
+	/** 닉네임. */
+	private String sellerNickName;
 
 	/** 보안질문 정보들. */
 	private List<PwReminder> pwReminderList;
@@ -508,6 +510,21 @@ public class ModifyInformationSacReq extends CommonInfo {
 	}
 
 	/**
+	 * @return the sellerNickName
+	 */
+	public String getSellerNickName() {
+		return this.sellerNickName;
+	}
+
+	/**
+	 * @param sellerNickName
+	 *            the sellerNickName to set
+	 */
+	public void setSellerNickName(String sellerNickName) {
+		this.sellerNickName = sellerNickName;
+	}
+
+	/**
 	 * @return the pwReminderList
 	 */
 	public List<PwReminder> getPwReminderList() {
@@ -532,7 +549,7 @@ public class ModifyInformationSacReq extends CommonInfo {
 		private String answerString;
 
 		/** 보안질문 ID. */
-		private String questionID;
+		private String questionId;
 
 		/** 보안질문 직접입력 값. */
 		private String questionMessage;
@@ -553,18 +570,18 @@ public class ModifyInformationSacReq extends CommonInfo {
 		}
 
 		/**
-		 * @return the questionID
+		 * @return the questionId
 		 */
-		public String getQuestionID() {
-			return this.questionID;
+		public String getQuestionId() {
+			return this.questionId;
 		}
 
 		/**
-		 * @param questionID
-		 *            the questionID to set
+		 * @param questionId
+		 *            the questionId to set
 		 */
-		public void setQuestionID(String questionID) {
-			this.questionID = questionID;
+		public void setQuestionId(String questionId) {
+			this.questionId = questionId;
 		}
 
 		/**

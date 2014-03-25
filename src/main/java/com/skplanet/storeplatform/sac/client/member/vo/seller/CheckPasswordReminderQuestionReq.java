@@ -7,7 +7,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 
 /**
  * Password 보안 질문 확인
@@ -24,7 +23,7 @@ public class CheckPasswordReminderQuestionReq extends CommonInfo {
 	private String sellerId; // SELLERMBR_ID 판매자회원 id
 
 	/** 비밀번호 보안질문 Value Object. */
-	private List<PwReminder> pWReminderList;
+	private List<PwReminder> pwReminderList;
 
 	/**
 	 * @return the sellerId
@@ -42,18 +41,63 @@ public class CheckPasswordReminderQuestionReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the pWReminderList
+	 * @return the pwReminderList
 	 */
-	public List<PwReminder> getpWReminderList() {
-		return this.pWReminderList;
+	public List<PwReminder> getPwReminderList() {
+		return this.pwReminderList;
 	}
 
 	/**
-	 * @param pWReminderList
-	 *            the pWReminderList to set
+	 * @param pwReminderList
+	 *            the pwReminderList to set
 	 */
-	public void setpWReminderList(List<PwReminder> pWReminderList) {
-		this.pWReminderList = pWReminderList;
+	public void setPwReminderList(List<PwReminder> pwReminderList) {
+		this.pwReminderList = pwReminderList;
 	}
 
+	/**
+	 * 보안질문 정보
+	 * 
+	 * Updated on : 2014. 3. 24. Updated by : Rejoice, Burkhan
+	 */
+	public static class PwReminder {
+		/** 보안질문 답변. */
+		@NotBlank
+		private String answerString;
+
+		/** 보안질문 ID. */
+		@NotBlank
+		private String questionId;
+
+		/**
+		 * @return the answerString
+		 */
+		public String getAnswerString() {
+			return this.answerString;
+		}
+
+		/**
+		 * @param answerString
+		 *            the answerString to set
+		 */
+		public void setAnswerString(String answerString) {
+			this.answerString = answerString;
+		}
+
+		/**
+		 * @return the questionId
+		 */
+		public String getQuestionId() {
+			return this.questionId;
+		}
+
+		/**
+		 * @param questionId
+		 *            the questionId to set
+		 */
+		public void setQuestionId(String questionId) {
+			this.questionId = questionId;
+		}
+
+	}
 }

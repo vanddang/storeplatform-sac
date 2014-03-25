@@ -33,4 +33,5 @@ public class ListPasswordReminderQuestionAllRes extends CommonInfo {
 	public void setSellerMbrPwdHintList(List<SellerMbrPwdHint> sellerMbrPwdHintList) {
 		this.sellerMbrPwdHintList = sellerMbrPwdHintList;
 	}
+
 }

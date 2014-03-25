@@ -16,13 +16,21 @@ public class SearchPasswordReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 판매자 아이디. */
 	@NotBlank
 	private String sellerId;
 
+	/**
+	 * @return the sellerId
+	 */
 	public String getSellerId() {
 		return this.sellerId;
 	}
 
+	/**
+	 * @param sellerId
+	 *            the sellerId to set
+	 */
 	public void setSellerId(String sellerId) {
 		this.sellerId = sellerId;
 	}

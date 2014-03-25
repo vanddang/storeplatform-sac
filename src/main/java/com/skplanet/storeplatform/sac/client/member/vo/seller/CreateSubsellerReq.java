@@ -26,7 +26,7 @@ public class CreateSubsellerReq extends CommonInfo {
 
 	/** 서브계정 비밀번호. */
 	@NotBlank
-	private String subSellerPW;
+	private String subSellerPw;
 
 	/** 서브계정 메모. */
 	private String subSellerMemo;
@@ -78,18 +78,18 @@ public class CreateSubsellerReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the subSellerPW
+	 * @return the subSellerPw
 	 */
-	public String getSubSellerPW() {
-		return this.subSellerPW;
+	public String getSubSellerPw() {
+		return this.subSellerPw;
 	}
 
 	/**
-	 * @param subSellerPW
-	 *            the subSellerPW to set
+	 * @param subSellerPw
+	 *            the subSellerPw to set
 	 */
-	public void setSubSellerPW(String subSellerPW) {
-		this.subSellerPW = subSellerPW;
+	public void setSubSellerPw(String subSellerPw) {
+		this.subSellerPw = subSellerPw;
 	}
 
 	/**

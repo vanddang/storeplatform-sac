@@ -30,7 +30,7 @@ public class CreateReq extends CommonInfo {
 	private String sellerId;
 	/** 판매자 PW. */
 	@NotBlank
-	private String sellerPW;
+	private String sellerPw;
 	/** 이동통신사. */
 	private String sellerTelecom;
 	/** 무선 전화번호 국가코드. */
@@ -101,8 +101,6 @@ public class CreateReq extends CommonInfo {
 	private String customerEmail;
 	/** 담당자 명. */
 	private String charger;
-	/** 법인등록번호. */
-	private String sellerBizCorpNumber;
 	/** 대표전화 국가번호. */
 	private String repPhoneArea;
 	/** 대표전화번호. */
@@ -146,18 +144,18 @@ public class CreateReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the sellerPW
+	 * @return the sellerPw
 	 */
-	public String getSellerPW() {
-		return this.sellerPW;
+	public String getSellerPw() {
+		return this.sellerPw;
 	}
 
 	/**
-	 * @param sellerPW
-	 *            the sellerPW to set
+	 * @param sellerPw
+	 *            the sellerPw to set
 	 */
-	public void setSellerPW(String sellerPW) {
-		this.sellerPW = sellerPW;
+	public void setSellerPw(String sellerPw) {
+		this.sellerPw = sellerPw;
 	}
 
 	/**
@@ -623,21 +621,6 @@ public class CreateReq extends CommonInfo {
 	 */
 	public void setCharger(String charger) {
 		this.charger = charger;
-	}
-
-	/**
-	 * @return the sellerBizCorpNumber
-	 */
-	public String getSellerBizCorpNumber() {
-		return this.sellerBizCorpNumber;
-	}
-
-	/**
-	 * @param sellerBizCorpNumber
-	 *            the sellerBizCorpNumber to set
-	 */
-	public void setSellerBizCorpNumber(String sellerBizCorpNumber) {
-		this.sellerBizCorpNumber = sellerBizCorpNumber;
 	}
 
 	/**

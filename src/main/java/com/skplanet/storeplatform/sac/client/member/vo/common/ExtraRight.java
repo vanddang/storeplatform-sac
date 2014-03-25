@@ -45,42 +45,6 @@ public class ExtraRight extends CommonInfo {
 	 */
 	private String updateID;
 
-	private String sellerKey;
-	private String sellerRate;
-	private String regDate;
-	private String startDate;
-	private String endDate;
-
-	/**
-	 * @return the endDate
-	 */
-	public String getEndDate() {
-		return this.endDate;
-	}
-
-	/**
-	 * @param endDate
-	 *            the endDate to set
-	 */
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
-
-	/**
-	 * @return the regDate
-	 */
-	public String getRegDate() {
-		return this.regDate;
-	}
-
-	/**
-	 * @param regDate
-	 *            the regDate to set
-	 */
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
-	}
-
 	/**
 	 * @return the regID
 	 */
@@ -109,51 +73,6 @@ public class ExtraRight extends CommonInfo {
 	 */
 	public void setRightProfileCode(String rightProfileCode) {
 		this.rightProfileCode = rightProfileCode;
-	}
-
-	/**
-	 * @return the sellerKey
-	 */
-	public String getSellerKey() {
-		return this.sellerKey;
-	}
-
-	/**
-	 * @param sellerKey
-	 *            the sellerKey to set
-	 */
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
-	}
-
-	/**
-	 * @return the sellerRate
-	 */
-	public String getSellerRate() {
-		return this.sellerRate;
-	}
-
-	/**
-	 * @param sellerRate
-	 *            the sellerRate to set
-	 */
-	public void setSellerRate(String sellerRate) {
-		this.sellerRate = sellerRate;
-	}
-
-	/**
-	 * @return the startDate
-	 */
-	public String getStartDate() {
-		return this.startDate;
-	}
-
-	/**
-	 * @param startDate
-	 *            the startDate to set
-	 */
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
 	}
 
 	/**

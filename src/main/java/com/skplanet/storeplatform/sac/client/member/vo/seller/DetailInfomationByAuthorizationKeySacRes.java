@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
+import com.skplanet.storeplatform.sac.client.member.vo.common.FlurryAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 
@@ -16,14 +17,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
  * Updated on : 2014. 3. 20. Updated by : 김다슬, 인크로스.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class SearchAuthKeyRes extends CommonInfo {
+public class DetailInfomationByAuthorizationKeySacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 판매자 Key (INSD_SELLERMBR_NO).
-	 */
-	private String sellerKey;
 
 	/**
 	 * 판매자 정보.
@@ -41,19 +37,9 @@ public class SearchAuthKeyRes extends CommonInfo {
 	private List<ExtraRight> extraRightList;
 
 	/**
-	 * @return the sellerKey
+	 * Flurry 정보.
 	 */
-	public String getSellerKey() {
-		return this.sellerKey;
-	}
-
-	/**
-	 * @param sellerKey
-	 *            the sellerKey to set
-	 */
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
-	}
+	private List<FlurryAuth> flurryAuthList;
 
 	/**
 	 * @return the sellerMbr
@@ -98,6 +84,21 @@ public class SearchAuthKeyRes extends CommonInfo {
 	 */
 	public void setExtraRightList(List<ExtraRight> extraRightList) {
 		this.extraRightList = extraRightList;
+	}
+
+	/**
+	 * @return the flurryAuthList
+	 */
+	public List<FlurryAuth> getFlurryAuthList() {
+		return this.flurryAuthList;
+	}
+
+	/**
+	 * @param flurryAuthList
+	 *            the flurryAuthList to set
+	 */
+	public void setFlurryAuthList(List<FlurryAuth> flurryAuthList) {
+		this.flurryAuthList = flurryAuthList;
 	}
 
 }

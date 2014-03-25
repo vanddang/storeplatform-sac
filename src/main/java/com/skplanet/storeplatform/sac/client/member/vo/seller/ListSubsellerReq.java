@@ -16,25 +16,40 @@ public class ListSubsellerReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 판매자 키. */
 	@NotBlank
 	private String sellerKey;
-
+	/** 정렬 구분. */
 	private String loginSort;
 
-	public String getLoginSort() {
-		return this.loginSort;
-	}
-
-	public void setLoginSort(String loginSort) {
-		this.loginSort = loginSort;
-	}
-
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
+	}
+
+	/**
+	 * @return the loginSort
+	 */
+	public String getLoginSort() {
+		return this.loginSort;
+	}
+
+	/**
+	 * @param loginSort
+	 *            the loginSort to set
+	 */
+	public void setLoginSort(String loginSort) {
+		this.loginSort = loginSort;
 	}
 
 }

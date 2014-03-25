@@ -23,21 +23,34 @@ public class RemoveSubsellerReq extends CommonInfo {
 	private String sellerKey;
 
 	/** 삭제할 서브계정 키 목록. */
-
 	private List<String> subSellerKey;
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
+	/**
+	 * @return the subSellerKey
+	 */
 	public List<String> getSubSellerKey() {
 		return this.subSellerKey;
 	}
 
+	/**
+	 * @param subSellerKey
+	 *            the subSellerKey to set
+	 */
 	public void setSubSellerKey(List<String> subSellerKey) {
 		this.subSellerKey = subSellerKey;
 	}

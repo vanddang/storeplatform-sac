@@ -15,26 +15,37 @@ public class BanksByCountry extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String nationCode;
-	private String nationName;
-	private String alphaCode;
 	private String numericCode;
-	private String bankNo;
-	private String nationTelNo;
 	private String taxtrtCnclsYn;
 	private String bizIncmTxnYn;
 	private String rmtPosbYn;
-	private String ibanUseYn;
 	private String swiftUseYn;
-	private String abaUseYn;
-	private String sortUseYn;
-	private String bsbUseYn;
 	private String useYn;
-	private String nationDesc;
 	private String regId;
 	private String regDt;
 	private String updId;
 	private String updDt;
+
+	/** 나라코드 . */
+	private String nationCode;
+	/** 나라이름 . */
+	private String nationName;
+	/** 나라단축코드 . */
+	private String alphaCode;
+	/** 은행번호 . */
+	private String bankNo;
+	/** 나라별 전화번호 . */
+	private String nationTelNo;
+	/** 나라한글명 . */
+	private String nationDesc;
+	/** ibanUseYn . */
+	private String ibanUseYn;
+	/** abaUseYn . */
+	private String abaUseYn;
+	/** sortUseYn . */
+	private String sortUseYn;
+	/** bsbUseYn . */
+	private String bsbUseYn;
 
 	public String getNationCode() {
 		return this.nationCode;

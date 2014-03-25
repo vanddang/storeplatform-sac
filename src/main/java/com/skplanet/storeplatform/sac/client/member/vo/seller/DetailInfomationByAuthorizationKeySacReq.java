@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -9,7 +11,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 21. Updated by : 김경복, 부르칸.
  */
-public class SearchAuthKeyReq extends CommonInfo {
+public class DetailInfomationByAuthorizationKeySacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 7071714845900743242L;
 
@@ -17,8 +19,10 @@ public class SearchAuthKeyReq extends CommonInfo {
 	@NotBlank
 	private String sessionKey;
 
+	/** 만료일시. */
 	@NotBlank
-	private String extraDate;
+	@Pattern(regexp = "^\\d*")
+	private String expireDate;
 
 	/**
 	 * @return the sessionKey
@@ -36,18 +40,18 @@ public class SearchAuthKeyReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the extraDate
+	 * @return the expireDate
 	 */
-	public String getExtraDate() {
-		return this.extraDate;
+	public String getExpireDate() {
+		return this.expireDate;
 	}
 
 	/**
-	 * @param extraDate
-	 *            the extraDate to set
+	 * @param expireDate
+	 *            the expireDate to set
 	 */
-	public void setExtraDate(String extraDate) {
-		this.extraDate = extraDate;
+	public void setExpireDate(String expireDate) {
+		this.expireDate = expireDate;
 	}
 
 }

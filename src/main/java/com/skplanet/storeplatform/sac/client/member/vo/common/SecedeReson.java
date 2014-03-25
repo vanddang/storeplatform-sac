@@ -15,21 +15,37 @@ public class SecedeReson extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 탈퇴 사유 코드. */
 	private String secedeReasonCode;
+	/** 탈퇴 사유 메세지. */
 	private String secedeReasonMessage;
 
+	/**
+	 * @return the secedeReasonCode
+	 */
 	public String getSecedeReasonCode() {
 		return this.secedeReasonCode;
 	}
 
+	/**
+	 * @param secedeReasonCode
+	 *            the secedeReasonCode to set
+	 */
 	public void setSecedeReasonCode(String secedeReasonCode) {
 		this.secedeReasonCode = secedeReasonCode;
 	}
 
+	/**
+	 * @return the secedeReasonMessage
+	 */
 	public String getSecedeReasonMessage() {
 		return this.secedeReasonMessage;
 	}
 
+	/**
+	 * @param secedeReasonMessage
+	 *            the secedeReasonMessage to set
+	 */
 	public void setSecedeReasonMessage(String secedeReasonMessage) {
 		this.secedeReasonMessage = secedeReasonMessage;
 	}

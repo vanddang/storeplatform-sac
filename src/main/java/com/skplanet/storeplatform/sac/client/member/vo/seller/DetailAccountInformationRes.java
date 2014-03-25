@@ -21,11 +21,6 @@ public class DetailAccountInformationRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 판매자 Key.
-	 */
-	private String sellerKey;
-
-	/**
 	 * 판매자 정산정보.
 	 */
 	private SellerAccount sellerAccount;
@@ -39,13 +34,6 @@ public class DetailAccountInformationRes extends CommonInfo {
 	 * 판매자 멀티미디어 정보 목록.
 	 */
 	private List<ExtraRight> extraRightList;
-
-	/**
-	 * @return the sellerKey
-	 */
-	public String getSellerKey() {
-		return this.sellerKey;
-	}
 
 	/**
 	 * @return the documentList
@@ -91,13 +79,4 @@ public class DetailAccountInformationRes extends CommonInfo {
 	public void setSellerAccount(SellerAccount sellerAccount) {
 		this.sellerAccount = sellerAccount;
 	}
-
-	/**
-	 * @param sellerKey
-	 *            the sellerKey to set
-	 */
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
-	}
-
 }
