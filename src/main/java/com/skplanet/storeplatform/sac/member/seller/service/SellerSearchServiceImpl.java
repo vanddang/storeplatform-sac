@@ -520,19 +520,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				dList.add(document);
 			}
 
-		// 판매자 멀티미디어 정보
-		List<ExtraRight> eList = new ArrayList<ExtraRight>();
-		ExtraRight extraRightList = null;
-		if (schRes.getExtraRight() != null)
-			for (int i = 0; i < schRes.getExtraRight().size(); i++) {
-				extraRightList = new ExtraRight();
-				extraRightList.setRightProfileCode(schRes.getExtraRight().get(i).getRightProfileCode());
-				eList.add(extraRightList);
-			}
-
 		// 판매자 정산정보
 		SellerAccount sellerAccount = new SellerAccount();
 		if (schRes.getSellerAccount() != null) {
+			sellerAccount.setSellerKey(schRes.getSellerAccount().getSellerKey());
 			sellerAccount.setAbaCode(schRes.getSellerAccount().getAbaCode());
 			sellerAccount.setAccountRealDate(schRes.getSellerAccount().getAccountRealDate());
 			sellerAccount.setBankAccount(schRes.getSellerAccount().getBankAccount());
@@ -572,7 +563,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 		DetailAccountInformationRes response = new DetailAccountInformationRes();
 		response.setDocumentList(dList);
-		response.setExtraRightList(eList);
 		response.setSellerAccount(sellerAccount);
 		return response;
 
