@@ -94,6 +94,7 @@ public class CreateSaveAndSyncTest {
 						// 단말 정보
 						reqJson.setDeviceId("01:23:45:67:89:ab"); // 기기 ID
 						reqJson.setDeviceIdType("macaddress"); // 기기 타입
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
 
 						// 단말 부가 정보 리스트
 						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
@@ -158,6 +159,7 @@ public class CreateSaveAndSyncTest {
 						// 단말 정보
 						reqJson.setDeviceId("01020284280"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입 (MDN or MAC 만...)
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
 
 						// 단말 부가 정보 리스트
 						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
@@ -221,8 +223,9 @@ public class CreateSaveAndSyncTest {
 						CreateSaveAndSyncReq reqJson = new CreateSaveAndSyncReq();
 
 						// 단말 정보
-						reqJson.setDeviceId("01500001121"); // 기기 ID
+						reqJson.setDeviceId("01089913467"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입 (MDN or MAC 만...)
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
 
 						// 단말 부가 정보 리스트
 						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
