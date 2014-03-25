@@ -1646,8 +1646,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 					MetaInfo shopping = resultChannelList.get(i);
 
 					product = new Product();
-					// 쿠폰코드 입력
-					product.setCouponCode(shopping.getSrcContentId());
 
 					// 상품 정보 (상품ID)
 					product.setIdentifierList(this.commonGenerator.generateIdentifierList(shopping));
@@ -1705,8 +1703,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 							MetaInfo episodeShopping = resultEpisodeList.get(kk);
 
 							episodeProduct = new Product();
+							// 쿠폰코드 입력
+							episodeProduct.setCouponCode(episodeShopping.getCouponCode());
+
 							// 아이템코드 입력
-							episodeProduct.setItemCode(episodeShopping.getSrcContentId());
+							episodeProduct.setItemCode(episodeShopping.getItemCode());
 
 							// 특가 상품일 경우
 							episodeProduct.setSpecialProdYn(episodeShopping.getSpecialSale());

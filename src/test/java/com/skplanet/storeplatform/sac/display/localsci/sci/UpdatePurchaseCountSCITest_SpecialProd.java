@@ -51,7 +51,7 @@ public class UpdatePurchaseCountSCITest_SpecialProd {
 		List<UpdatePurchaseCountSacReq> listReq = new ArrayList<UpdatePurchaseCountSacReq>();
 
 		UpdatePurchaseCountSacReq updatePurchaseCountSacReq = new UpdatePurchaseCountSacReq();
-		updatePurchaseCountSacReq.setProductId("S900000716"); // SH
+		updatePurchaseCountSacReq.setProductId("S900000717"); // SH
 		updatePurchaseCountSacReq.setPurchaseCount(1);
 		updatePurchaseCountSacReq.setSpcYn("Y");
 		updatePurchaseCountSacReq.setPurchaseDate("20140324");
