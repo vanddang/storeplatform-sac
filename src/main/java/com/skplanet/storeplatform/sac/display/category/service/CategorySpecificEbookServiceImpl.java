@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -80,7 +79,6 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
 	 */
 	@Override
-	@Cacheable("specificEbookList")
 	public CategorySpecificSacRes getSpecificEbookList(CategorySpecificSacReq req, SacRequestHeader header) {
 
 		CategorySpecificSacRes res = new CategorySpecificSacRes();
