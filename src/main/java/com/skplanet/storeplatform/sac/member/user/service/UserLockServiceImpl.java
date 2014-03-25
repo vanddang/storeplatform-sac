@@ -62,12 +62,12 @@ public class UserLockServiceImpl implements UserLockService {
 		/**
 		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
 		 */
-		LOGGER.info("## 사용자 타입  : {}", chkDupRes.getUserMbr().getUserType());
+		LOGGER.debug("## 사용자 타입  : {}", chkDupRes.getUserMbr().getUserType());
 		if (StringUtils.isNotEmpty(chkDupRes.getUserMbr().getImSvcNo())) {
 
-			LOGGER.info("## ====================================================");
-			LOGGER.info("## One ID 통합회원 [{}]", req.getUserId());
-			LOGGER.info("## ====================================================");
+			LOGGER.debug("## ====================================================");
+			LOGGER.debug("## One ID 통합회원 [{}]", req.getUserId());
+			LOGGER.debug("## ====================================================");
 
 			/**
 			 * 통합IDP 로그인 상태 정보 변경 연동 (cmd = TXSetLoginConditionIDP)
@@ -84,9 +84,9 @@ public class UserLockServiceImpl implements UserLockService {
 
 		} else {
 
-			LOGGER.info("## ====================================================");
-			LOGGER.info("## 기존 IDP 회원 [{}]", req.getUserId());
-			LOGGER.info("## ====================================================");
+			LOGGER.debug("## ====================================================");
+			LOGGER.debug("## 기존 IDP 회원 [{}]", req.getUserId());
+			LOGGER.debug("## ====================================================");
 
 			/**
 			 * 회원 계정 잠금
@@ -184,7 +184,7 @@ public class UserLockServiceImpl implements UserLockService {
 		updStatusUserReq.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE);
 
 		this.userSCI.updateStatus(updStatusUserReq);
-		LOGGER.info("## 회원 계정 잠금 DB 설정 완료!!");
+		LOGGER.debug("## 회원 계정 잠금 DB 설정 완료!!");
 
 	}
 

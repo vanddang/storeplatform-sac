@@ -110,8 +110,8 @@ public class UserOcbServiceImpl implements UserOcbService {
 		 * 유효한 카드번호를 삭제 하는것인지 체크 한다.
 		 */
 		for (MemberPoint dbOcbInfo : searchMemberPointResponse.getMemberPointList()) {
-			LOGGER.info("### >> 비교 DB  cardNumber : {}", dbOcbInfo.getCardNumber());
-			LOGGER.info("### >> 비교 REQ cardNumber : {}", req.getCardNumber());
+			LOGGER.debug("### >> 비교 DB  cardNumber : {}", dbOcbInfo.getCardNumber());
+			LOGGER.debug("### >> 비교 REQ cardNumber : {}", req.getCardNumber());
 			if (!StringUtils.equals(dbOcbInfo.getCardNumber(), req.getCardNumber())) {
 				throw new StorePlatformException("SAC_MEM_1700", req.getCardNumber());
 			}
@@ -193,7 +193,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 		 * OCB 조회 요청.
 		 */
 		SearchMemberPointResponse searchMemberPointResponse = this.userSCI.searchMemberPointList(searchMemberPointRequest);
-		LOGGER.info("### searchMemberPointResponse : {}", searchMemberPointResponse.getMemberPointList());
+		LOGGER.debug("### searchMemberPointResponse : {}", searchMemberPointResponse.getMemberPointList());
 
 		return searchMemberPointResponse;
 

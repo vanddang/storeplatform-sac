@@ -53,16 +53,11 @@ public class UserLockController {
 	@ResponseBody
 	public LockAccountSacRes lockAccount(SacRequestHeader sacHeader, @Validated @RequestBody LockAccountSacReq req) {
 
-		LOGGER.info("################################");
-		LOGGER.info("##### 2.1.36. 회원 계정 잠금 #####");
-		LOGGER.info("################################");
+		LOGGER.debug("################################");
+		LOGGER.debug("##### 2.1.36. 회원 계정 잠금 #####");
+		LOGGER.debug("################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		/**
-		 * Header 정보
-		 */
-		LOGGER.info("Headers : {}", sacHeader.toString());
 
 		/**
 		 * 회원 계정 잠금 Biz

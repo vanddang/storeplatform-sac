@@ -57,16 +57,11 @@ public class UserOcbController {
 	@ResponseBody
 	public CreateOcbInformationRes createOcbInformation(SacRequestHeader sacHeader, @Validated @RequestBody CreateOcbInformationReq req) {
 
-		LOGGER.info("########################################");
-		LOGGER.info("##### 2.1.29 회원 OCB 정보 등록/수정 #####");
-		LOGGER.info("########################################");
+		LOGGER.debug("########################################");
+		LOGGER.debug("##### 2.1.29 회원 OCB 정보 등록/수정 #####");
+		LOGGER.debug("########################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		/**
-		 * Header 정보
-		 */
-		LOGGER.info("Headers : {}", sacHeader.toString());
 
 		/**
 		 * 회원 OCB 정보 등록/수정 Biz
@@ -94,16 +89,11 @@ public class UserOcbController {
 	@ResponseBody
 	public RemoveOcbInformationRes removeOcbInformation(SacRequestHeader sacHeader, @Validated @RequestBody RemoveOcbInformationReq req) {
 
-		LOGGER.info("###################################");
-		LOGGER.info("##### 2.1.29 회원 OCB 정보 삭제 #####");
-		LOGGER.info("###################################");
+		LOGGER.debug("###################################");
+		LOGGER.debug("##### 2.1.29 회원 OCB 정보 삭제 #####");
+		LOGGER.debug("###################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		/**
-		 * Header 정보
-		 */
-		LOGGER.info("Headers : {}", sacHeader.toString());
 
 		/**
 		 * 회원 OCB 정보 삭제 Biz
@@ -131,16 +121,11 @@ public class UserOcbController {
 	@ResponseBody
 	public GetOcbInformationRes getOcbInformation(SacRequestHeader sacHeader, @Validated GetOcbInformationReq req) {
 
-		LOGGER.info("###################################");
-		LOGGER.info("##### 2.1.29 회원 OCB 정보 조회 #####");
-		LOGGER.info("###################################");
+		LOGGER.debug("###################################");
+		LOGGER.debug("##### 2.1.29 회원 OCB 정보 조회 #####");
+		LOGGER.debug("###################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		/**
-		 * Header 정보
-		 */
-		LOGGER.info("Headers : {}", sacHeader.toString());
 
 		/**
 		 * 회원 OCB 정보 조회 Biz
