@@ -47,7 +47,6 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	/**
 	 * 기기 고유 번호 비교여부.
 	 */
-	@Deprecated
 	private String isNativeIdAuth;
 
 	/**
