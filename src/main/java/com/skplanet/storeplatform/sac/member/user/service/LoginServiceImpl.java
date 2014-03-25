@@ -874,7 +874,11 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* mdn 기가입 여부 확인 */
-		DeviceInfo mdnDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		DeviceInfo mdnDeviceInfo = null;
+		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
+			mdnDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+		}
 
 		String isPurchaseChange = "N";
 		String isJoinMdn = "N";
@@ -940,7 +944,7 @@ public class LoginServiceImpl implements LoginService {
 			/* 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setUserKey(newUserKey);
-			deviceInfo.setDeviceId(newDeviceKey);
+			deviceInfo.setDeviceKey(newDeviceKey);
 			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 			if (StringUtil.isNotBlank(req.getNativeId())) {
 				deviceInfo.setNativeId(req.getNativeId());
