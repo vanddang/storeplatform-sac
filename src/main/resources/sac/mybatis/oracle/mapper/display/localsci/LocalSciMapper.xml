@@ -206,8 +206,8 @@
            AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
     </select>        
     <!--특가 상품 구매건수 업데이트 상품이 없을시 Insert-->
-    <insert id="insertSpecialPurchaseProd" parameterType="HashMap">
-       /* LocalSciMapper.insertSpecialPurchaseProd,특가 상품 구매수 조회시 조회대상 상품이 없을때 상품 Insert , 김형식/지티소프트, 2014-02-13 */
+    <insert id="createSpecialPurchaseProd" parameterType="HashMap">
+       /* LocalSciMapper.createSpecialPurchaseProd,특가 상품 구매수 조회시 조회대상 상품이 없을때 상품 Insert , 김형식/지티소프트, 2014-02-13 */
         INSERT INTO TB_DP_SPRC_PROD_PRCHS_MANG(
              PRCHS_DT
            , PROD_ID
