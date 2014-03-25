@@ -50,9 +50,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 				prodIdList, ProductBasicInfo.class);
 
 		this.log.debug("##### parameter cnt : {}", prodIdList.size());
-		this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
 
 		if (productBasicInfoList != null) {
+			this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
 			Map<String, Object> paramMap = new HashMap<String, Object>();
 			paramMap.put("lang", req.getLang());
 			paramMap.put("deviceModelNo", req.getDeviceModelNo());
