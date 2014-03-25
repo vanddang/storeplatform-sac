@@ -238,7 +238,8 @@ public class MetaInfo extends CommonInfo {
 	private String opt2Nm; // 옵션 기준점
 	private String optPdNm; // 옵션 값
 	private String subYn; // 옵션 하위 여부
-	private String srcContentId; // 쿠폰코드,아이템코드
+	private String couponCode; // 쿠폰코드
+	private String itemCode; // 아이템코드
 
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
@@ -3389,18 +3390,33 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the srcContentId
+	 * @return the couponCode
 	 */
-	public String getSrcContentId() {
-		return this.srcContentId;
+	public String getCouponCode() {
+		return this.couponCode;
 	}
 
 	/**
-	 * @param srcContentId
-	 *            the srcContentId to set
+	 * @param couponCode
+	 *            the couponCode to set
 	 */
-	public void setSrcContentId(String srcContentId) {
-		this.srcContentId = srcContentId;
+	public void setCouponCode(String couponCode) {
+		this.couponCode = couponCode;
+	}
+
+	/**
+	 * @return the itemCode
+	 */
+	public String getItemCode() {
+		return this.itemCode;
+	}
+
+	/**
+	 * @param itemCode
+	 *            the itemCode to set
+	 */
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
 	}
 
 	/**
