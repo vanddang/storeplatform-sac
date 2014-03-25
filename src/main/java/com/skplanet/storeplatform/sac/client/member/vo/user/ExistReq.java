@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [REQUEST] 회원가입 여부 조회 (ID/MDN 기반)
+ * [REQUEST] 회원가입 여부 조회 (ID/MSISDN 기반)
  * 
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */
@@ -16,7 +16,7 @@ public class ExistReq extends CommonInfo {
 
 	/* 사용자ID, Value : hkd */
 	private String userId;
-	/* 기기 ID(MDN, UUID, MacAddress), Value : 01011112222 */
+	/* 기기 ID(MSISDN, UUID, MacAddress), Value : 01011112222 */
 	private String deviceId;
 	/* 사용자 Key, Value : IW102158844420091030165015 */
 	private String userKey;

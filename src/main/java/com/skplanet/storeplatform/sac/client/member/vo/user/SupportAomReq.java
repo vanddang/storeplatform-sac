@@ -14,7 +14,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SupportAomReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	/* 기기 ID(MDN, UUID, MacAddress), Value : 01011112222 */
+	/* 기기 ID(MSISDN, UUID, MacAddress), Value : 01011112222 */
 	private String deviceId;
 	/* 사용자 Key, Value : IW102158844420091030165015 */
 	private String userKey;

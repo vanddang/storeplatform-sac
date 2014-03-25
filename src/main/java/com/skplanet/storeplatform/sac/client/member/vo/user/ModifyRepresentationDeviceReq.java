@@ -17,7 +17,7 @@ public class ModifyRepresentationDeviceReq extends CommonInfo {
 
 	/* 사용자 권한 Key */
 	private String userAuthKey;
-	/* 기기 ID(Mdn, uuId, macAddress) */
+	/* 기기 ID(MSISDN, uuId, macAddress) */
 	private String deviceId;
 	/* 기기 Key */
 	private String deviceKey;

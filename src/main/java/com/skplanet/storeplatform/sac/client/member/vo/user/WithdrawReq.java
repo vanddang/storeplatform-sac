@@ -11,7 +11,7 @@ public class WithdrawReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/* 기기 ID(mdn, uuId) */
+	/* 기기 ID(MSISDN, uuId) */
 	private String deviceId;
 	/* 사용자 아이디 */
 	private String userId;

@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [RESPONSE] 회원가입 여부 조회 (ID/MDN 기반)
+ * [RESPONSE] 회원가입 여부 조회 (ID/MSISDN 기반)
  * 
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */
