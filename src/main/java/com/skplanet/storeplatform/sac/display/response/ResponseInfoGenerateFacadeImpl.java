@@ -581,8 +581,20 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
+		// previewSourceList 생성
+		List<Source> previewSourceList = this.commonGenerator.generateVodSourceList(metaInfo);
+		// 방송용 Vod 설정
+		Vod vod = this.vodGenerator.generateVod(metaInfo);
+		product.setPreviewSourceList(previewSourceList);
+		product.setVod(vod);
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
+		// Broadcast 상품상세설명
+		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
+		// 상품 유/무료 구분
+		product.setProdChrgYn(metaInfo.getProdChrg());
+		// 방송사명
+		product.setBrdcCompNm(metaInfo.getBrdcCompNm());
 		return product;
 	}
 
