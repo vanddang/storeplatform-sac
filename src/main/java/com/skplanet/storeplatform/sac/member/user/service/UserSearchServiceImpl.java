@@ -826,7 +826,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		mbrLglAgent.setParentCI(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentCI()));
 		mbrLglAgent.setParentDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentDate()));
 		mbrLglAgent.setParentEmail(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentEmail()));
-		mbrLglAgent.setParentMDN(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentMDN()));
+		mbrLglAgent.setParentMsisdn(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentMDN()));
 		mbrLglAgent.setParentName(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentName()));
 		mbrLglAgent.setParentRealNameDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameDate()));
 		mbrLglAgent.setParentRealNameMethod(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameMethod()));
@@ -1428,7 +1428,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		Map<String, UserInfoByDeviceKey> resMap = new HashMap<String, UserInfoByDeviceKey>();
 		UserInfoByDeviceKey userInfoByDeviceKey;
 
-		if (userDeviceInfoMap != null && !"".equals(userDeviceInfoMap)) {
+		if (userDeviceInfoMap != null) {
 			for (int i = 0; i < deviceKeyList.size(); i++) {
 				if (userDeviceInfoMap.get(deviceKeyList.get(i)) != null) {
 					userInfoByDeviceKey = new UserInfoByDeviceKey();
