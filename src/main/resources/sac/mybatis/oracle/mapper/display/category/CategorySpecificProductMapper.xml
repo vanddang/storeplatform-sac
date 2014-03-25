@@ -525,11 +525,9 @@
           AND CD2.MENU_ID = C.TOP_MENU_ID
           AND CD2.LANG_CD = CD.LANG_CD
           AND P2.PROD_ID = CP.PROD_ID -- CHANNEL PROD ID
-          AND P2.META_CLSF_CD = P.META_CLSF_CD
+          --AND P2.META_CLSF_CD = P.META_CLSF_CD
           AND TP2.PROD_ID = P2.PROD_ID
           AND TP2.TENANT_ID = TP.TENANT_ID
-          AND TP2.PROD_STATUS_CD = TP.PROD_STATUS_CD
-          AND TP2.EXPO_YN = TP.EXPO_YN
           AND MP2.PROD_ID = P2.PROD_ID
           AND TP.PROD_ID = P.PROD_ID
           AND TPP.PROD_ID = TP.PROD_ID
@@ -537,9 +535,11 @@
           AND PD.PROD_ID = P.PROD_ID
           AND PI.PROD_ID = CP.PROD_ID
           <if test="prodStatusCd != null and prodStatusCd != ''">
-          AND TP.PROD_STATUS_CD = #{prodStatusCd}   -- 판매중
+          AND TP.PROD_STATUS_CD = #{prodStatusCd}  
+          AND TP2.PROD_STATUS_CD = #{prodStatusCd} 
           </if>
           AND TP.EXPO_YN = 'Y'                 -- 노출 여부
+          AND TP2.EXPO_YN = 'Y'                -- 노출 여부
           AND P2.CONTENTS_TYPE_CD = 'PD002501' -- 채널
           AND P.CONTENTS_TYPE_CD = 'PD002502'  -- 에피소드
           AND CPM.USE_YN = 'Y'
