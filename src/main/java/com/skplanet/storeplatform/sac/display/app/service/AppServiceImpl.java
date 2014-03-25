@@ -110,6 +110,8 @@ public class AppServiceImpl implements AppService {
             menu.setName(mi.getMenuNm());
             if(mi.isInfrMenu())
                 menu.setType("topClass");
+            else
+                menu.setDesc(mi.getMenuDesc());
 
 			product.getMenuList().add(menu);
 		}
