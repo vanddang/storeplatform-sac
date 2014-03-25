@@ -113,11 +113,14 @@ public class VodServiceImpl implements VodService {
 			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
 				List<String> episodeIdList = getEpisodeIdList(param);
 				existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
+				if(existenceScResList == null) {
+					existenceScResList = new ArrayList<ExistenceScRes>(); 
+				}
 				
 				List<String> paymentProdIdList = new ArrayList<String>();
-				for(ExistenceScRes existenceScRes : existenceScResList) {
-					paymentProdIdList.add(existenceScRes.getProdId());
-				}
+					for(ExistenceScRes existenceScRes : existenceScResList) {
+						paymentProdIdList.add(existenceScRes.getProdId());
+					}
 				param.put("paymentProdIdList", paymentProdIdList);
 			}
 			
@@ -646,10 +649,12 @@ public class VodServiceImpl implements VodService {
 
             //기구매 체크
             Map<String, ExistenceScRes> existenceMap = new HashMap<String, ExistenceScRes>();
-            for(ExistenceScRes existenceScRes : existenceScResList) {
-                existenceMap.put(existenceScRes.getProdId(), existenceScRes);
+            if(existenceScResList != null) {
+	            for(ExistenceScRes existenceScRes : existenceScResList) {
+	                existenceMap.put(existenceScRes.getProdId(), existenceScRes);
+	            }
             }
-
+            
 			for(VodDetail mapperVO : vodDetailList) {
 				Product subProduct = new Product();
 				
