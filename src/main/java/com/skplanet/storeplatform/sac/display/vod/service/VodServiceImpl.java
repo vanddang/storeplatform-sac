@@ -228,7 +228,11 @@ public class VodServiceImpl implements VodService {
 	private void mapProduct(VodDetailReq req, Product product, VodDetail mapperVO, List<ProductImage> screenshotList) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
-		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
+		
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifierList.add(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
+		product.setIdentifierList(identifierList);
+		
 		product.setTitle(mapTitle(mapperVO));
 
 		List<Source> sourceList = this.mapSourceList(mapperVO, screenshotList);
@@ -349,7 +353,9 @@ public class VodServiceImpl implements VodService {
 		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
 			store = new Store();
 			// Store.Identifier
-			store.setIdentifier(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getStoreProdId()));
+			List<Identifier> identifierList = new ArrayList<Identifier>();
+			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getStoreProdId()));
+			store.setIdentifierList(identifierList);
 
 			store.setSupport(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
 
@@ -390,7 +396,9 @@ public class VodServiceImpl implements VodService {
 		Play play = null;
 		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
 			play = new Play();
-			play.setIdentifier(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getPlayProdId()));
+			List<Identifier> identifierList = new ArrayList<Identifier>();
+			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getPlayProdId()));
+			play.setIdentifierList(identifierList);
 
 			play.setSupport(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
 
@@ -629,7 +637,6 @@ public class VodServiceImpl implements VodService {
 
 	/**
 	 * SubProduct Mapping
-     * TODO : existenceScResList
      * @param req  요청 정보
      * @param product   Channel 정보
      * @param vodDetailList VOD Episode List

@@ -312,7 +312,9 @@ public class EpubServiceImpl implements EpubService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 		
 		// 상품ID
-		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifierList.add(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
+		product.setIdentifierList(identifierList);
 
 		// 상품 정보 (상품명)
 		product.setTitle(new Title(mapperVO.getProdNm()));
@@ -558,7 +560,9 @@ public class EpubServiceImpl implements EpubService {
 	private Play mapPlay(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceScRes> existenceMap) {
 		Play play = new Play();
 
-		play.setIdentifier(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getPlayProdId()));
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getPlayProdId()));
+		play.setIdentifierList(identifierList);
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
 		supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
@@ -599,7 +603,9 @@ public class EpubServiceImpl implements EpubService {
 	private Store mapStore(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceScRes> existenceMap) {
 		Store store = new Store();
 
-		store.setIdentifier(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getStoreProdId()));
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getStoreProdId()));
+		store.setIdentifierList(identifierList);
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
 		supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
@@ -669,7 +675,6 @@ public class EpubServiceImpl implements EpubService {
 
                 List<Identifier> identifierList = new ArrayList<Identifier>();
 
-                identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getProdId()));
                 identifierList.add(new Identifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, mapperVO.getCid()));
                 subProduct.setIdentifierList(identifierList);
 

@@ -235,7 +235,7 @@
 		                      AND PD.SVC_GRP_CD = 'DP000203'   AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD = 'DP001116' AND PD.TOP_MENU_ID IN ('DP13', 'DP14')
 							  AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
 							  <if test="bookTypeCd != null and bookTypeCd !=''">
-							  AND P.BOOK_CLSF_CD = #{bookTypeCd}
+							  AND MP.BOOK_CLSF_CD = #{bookTypeCd}
 		                      </if>
 		                      <if test="filteredBy == 'chapter'">
 		                      AND TO_NUMBER( REGEXP_REPLACE( NVL( P.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{chapter}
