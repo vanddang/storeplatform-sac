@@ -80,6 +80,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	@Autowired
 	private DeviceSCI deviceSCI;
 
+	// @Autowired
+	// private UpdatePurchaseCountSCI updatePurchaseCountSCI;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -90,6 +93,24 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	public DownloadVodSacRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodSacReq downloadVodSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+
+		// List<UpdatePurchaseCountSacReq> listReq = new ArrayList<UpdatePurchaseCountSacReq>();
+		// UpdatePurchaseCountSacReq updatePurchaseCountSacReq = new UpdatePurchaseCountSacReq();
+		// updatePurchaseCountSacReq.setProductId("0000059181"); // APP
+		// updatePurchaseCountSacReq.setPurchaseCount(1);
+		// updatePurchaseCountSacReq.setTenantId("S01");
+		// listReq.add(updatePurchaseCountSacReq);
+		// updatePurchaseCountSacReq = new UpdatePurchaseCountSacReq();
+		// updatePurchaseCountSacReq.setProductId("H900051963"); // MM
+		// updatePurchaseCountSacReq.setPurchaseCount(-2);
+		// updatePurchaseCountSacReq.setTenantId("S01");
+		// listReq.add(updatePurchaseCountSacReq);
+		// updatePurchaseCountSacReq = new UpdatePurchaseCountSacReq();
+		// updatePurchaseCountSacReq.setProductId("S900000914"); // SH
+		// updatePurchaseCountSacReq.setPurchaseCount(1);
+		// updatePurchaseCountSacReq.setTenantId("S01");
+		// listReq.add(updatePurchaseCountSacReq);
+		// this.updatePurchaseCountSCI.updatePurchaseCount(listReq);
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
@@ -341,7 +362,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										// JSON 파싱
 										MarshallingHelper marshaller = new JacksonMarshallingHelper();
 										byte[] jsonData = marshaller.marshal(contents);
-										this.log.debug("[DownloadVodInfo] jsonData	:	{}", jsonData.toString());
 
 										// JSON 암호화
 										byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);

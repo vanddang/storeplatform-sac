@@ -229,7 +229,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					this.log.debug("---------------------------------------------------------------------");
 					this.log.debug("[DownloadAppServiceImpl] historyRes :{}" + historyRes);
 					this.log.debug("[DownloadAppServiceImpl] purchaseFlag :{}" + purchaseFlag);
-					this.log.debug("[DownloadAppServiceImpl] historyRes.getTotalCnt() :{}" + historyRes.getTotalCnt());
 					this.log.debug("---------------------------------------------------------------------");
 					if (purchaseFlag && historyRes != null) {
 
@@ -333,12 +332,12 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 											if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID
 													.equals(metaInfo.getTopMenuId())
 													&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
-												UapsEcReq uapsEcReq = new UapsEcReq();
-												UserEcRes uapsEcRes = new UserEcRes();
-												uapsEcReq.setDeviceId(deviceId);
-												uapsEcReq.setType("mdn");
 
 												try {
+													UapsEcReq uapsEcReq = new UapsEcReq();
+													uapsEcReq.setDeviceId(deviceId);
+													uapsEcReq.setType("mdn");
+													UserEcRes uapsEcRes = new UserEcRes();
 													this.log.debug("##### [SAC DSP LocalSCI] SAC EC Start : uapsSCI.getMappingInfo");
 													long start = System.currentTimeMillis();
 													uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
