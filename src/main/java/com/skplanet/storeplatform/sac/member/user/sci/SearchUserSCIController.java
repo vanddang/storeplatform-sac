@@ -108,18 +108,18 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserSacRes searchUserSacRes = new SearchUserSacRes();
 		searchUserSacRes.setUserInfo(resMap);
 
-		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] ResponseParameter : {}", searchUserSacRes);
+		LOGGER.debug("[SearchUserSCIController.searchUserByUserKey] ResponseParameter : {}", searchUserSacRes);
 		return searchUserSacRes;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * <pre>
+	 * 결제페이지 노출 정보 조회.
+	 * </pre>
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI
-	 * #searchUserPayplanet(com.skplanet
-	 * .storeplatform.sac.client.internal.member
-	 * .user.vo.SearchUserPayplanetSacReq)
+	 * @param request
+	 *            SearchUserPayplanetSacReq
+	 * @return SearchUserPayplanetSacRes
 	 */
 	@Override
 	@RequestMapping(value = "/searchUserPayplanet", method = RequestMethod.POST)
@@ -172,7 +172,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 			} else if (ex.getErrorInfo().getCode().equals(MemberConstants.SAC_ERROR_NO_ONEID)) {
 				ocbAgreementYn = "N";
 			}
-			LOGGER.info("====== OneId Response : {}", ex.getCode());
+			LOGGER.debug("====== OneId Response : {}", ex.getCode());
 		}
 
 		// OCB 카드번호
@@ -279,7 +279,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
 		searchUserDeviceSacRes.setUserDeviceInfo(resMap);
 
-		LOGGER.info("[SearchUserSCIController.searchUserByDeviceKey] ResponseParameter : {}", searchUserDeviceSacRes.toString());
+		LOGGER.debug("[SearchUserSCIController.searchUserByDeviceKey] ResponseParameter : {}", searchUserDeviceSacRes.toString());
 
 		return searchUserDeviceSacRes;
 	}

@@ -79,9 +79,9 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/getProvisioningHistory/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetProvisioningHistoryRes getProvisioningHistory(@RequestBody GetProvisioningHistoryReq req, SacRequestHeader sacHeader) {
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.12. 회원 프로비저닝 이력 조회 #####");
-		LOGGER.info("####################################################");
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 5.1.12. 회원 프로비저닝 이력 조회 #####");
+		LOGGER.debug("####################################################");
 
 		LOGGER.info("============================================ GetProvisioningHistoryReq : {}", req.toString());
 
@@ -133,9 +133,9 @@ public class UserSearchController {
 	@ResponseBody
 	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, @Validated @RequestBody DetailByDeviceIdSacReq req) {
 
-		LOGGER.info("##################################################");
-		LOGGER.info("##### 2.1.34 DeviceId를 이용하여 회원 정보 조회 #####");
-		LOGGER.info("##################################################");
+		LOGGER.debug("##################################################");
+		LOGGER.debug("##### 2.1.34 DeviceId를 이용하여 회원 정보 조회 #####");
+		LOGGER.debug("##################################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
@@ -181,9 +181,9 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/searchId/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchIdSacRes searchId(SacRequestHeader sacHeader, @RequestBody SearchIdSacReq req) {
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 2.1.7. ID 찾기 #####");
-		LOGGER.info("####################################################");
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 2.1.7. ID 찾기 #####");
+		LOGGER.debug("####################################################");
 
 		LOGGER.info("============================================ SearchIdSacReq : {}", req.toString());
 
@@ -207,9 +207,9 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchPasswordSacRes searchId(SacRequestHeader sacHeader, @RequestBody SearchPasswordSacReq req) {
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 2.1.8. PASSWORD 찾기 #####");
-		LOGGER.info("####################################################");
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 2.1.8. PASSWORD 찾기 #####");
+		LOGGER.debug("####################################################");
 
 		LOGGER.info("============================================ SearchPasswordSacReq : {}", req.toString());
 
@@ -235,9 +235,9 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/listTermsAgreement/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListTermsAgreementSacRes listTermsAgreement(ListTermsAgreementSacReq req, SacRequestHeader sacHeader) {
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 2.1.10. Store 약관 동의 목록 조회 #####");
-		LOGGER.info("####################################################");
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 2.1.10. Store 약관 동의 목록 조회 #####");
+		LOGGER.debug("####################################################");
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
@@ -253,9 +253,9 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/listDailyPhoneOs/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListDailyPhoneOsSacRes listDailyPhoneOs(SacRequestHeader sacHeader) {
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 2.1.37. 각 단말의 OS별 누적 가입자 수 조회 #####");
-		LOGGER.info("####################################################");
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 2.1.37. 각 단말의 OS별 누적 가입자 수 조회 #####");
+		LOGGER.debug("####################################################");
 
 		ListDailyPhoneOsSacRes dailyPhoneOsList = this.svc.listDailyPhoneOs(sacHeader);
 
