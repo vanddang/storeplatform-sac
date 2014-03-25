@@ -230,7 +230,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 			} else {
 				validProfileCode = "N";
-				LOGGER.debug("###### inValid Profile : {}", info.getExtraProfile());
 				throw new StorePlatformException("SAC_MEM_0002", info.getExtraProfile());
 			}
 		}

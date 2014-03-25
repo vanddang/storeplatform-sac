@@ -119,7 +119,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		if (!deviceId.equals("")) {
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
-			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+			logger.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 		}
 
 		/* SC 회원 존재 여부 */

@@ -67,11 +67,11 @@ public class UserSearchController {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
-		LOGGER.info("Request : {}", req);
+		LOGGER.info("회원가입여부조회 Start Request : {}", req);
 
 		ExistRes res = this.svc.exist(sacHeader, req);
 
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("회원가입여부조회 Fianl Response : {}", res);
 
 		return res;
 	}
@@ -91,9 +91,9 @@ public class UserSearchController {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
 
+		LOGGER.info("회원 프로비저닝 이력조회 Startl Request : {}", req.toString());
 		GetProvisioningHistoryRes res = this.svc.getProvisioningHistory(sacHeader, req);
-
-		LOGGER.info("Final Response : {}", res.toString());
+		LOGGER.info("회원 프로비저닝 이력조회 Final Response : {}", res.toString());
 
 		return res;
 	}
@@ -110,10 +110,9 @@ public class UserSearchController {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
-		LOGGER.info("Request : {}", req);
-
+		LOGGER.info("회원정보조회 Start Request : {}", req.toString());
 		DetailRes res = this.svc.detail(sacHeader, req);
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("회원정보조회 Final Response : {}", res.getUserKey());
 
 		return res;
 	}
@@ -157,8 +156,6 @@ public class UserSearchController {
 		LOGGER.debug("##### 2.1.35. OneID 정보조회 #####");
 		LOGGER.debug("####################################################");
 
-		LOGGER.info("Request : {}", req);
-
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
 		if ("".equals(userKey)) {
@@ -167,8 +164,9 @@ public class UserSearchController {
 
 		req.setUserKey(userKey);
 
+		LOGGER.info("OneID 정보조회 Start Request : {}", req.toString());
 		MbrOneidSacRes res = this.svc.searchUserOneId(sacHeader, req);
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("OneID 정보조회 Final Response : {}", res.toString());
 
 		return res;
 	}
@@ -192,9 +190,9 @@ public class UserSearchController {
 		req.setDeviceId(deviceId);
 		req.setUserEmail(userEmail);
 
+		LOGGER.info("ID찾기 Start Response : {}", req.toString());
 		SearchIdSacRes res = this.svc.searchId(sacHeader, req);
-
-		LOGGER.info("Final SearchIdSacRes Response : {}", res.toString());
+		LOGGER.info("ID찾기 Final Response : {}", res.toString());
 
 		return res;
 	}
@@ -205,8 +203,6 @@ public class UserSearchController {
 		LOGGER.debug("####################################################");
 		LOGGER.debug("##### 2.1.8. PASSWORD 찾기 #####");
 		LOGGER.debug("####################################################");
-
-		LOGGER.info("============================================ SearchPasswordSacReq : {}", req.toString());
 
 		String userId = StringUtil.nvl(req.getUserId(), "");
 		String userEmail = StringUtil.nvl(req.getUserEmail(), "");
@@ -220,9 +216,9 @@ public class UserSearchController {
 		req.setUserEmail(userEmail);
 		req.setUserPhone(userPhone);
 
+		LOGGER.info("패스워드찾기 Start Request : {}", req.toString());
 		SearchPasswordSacRes res = this.svc.searchPassword(sacHeader, req);
-
-		LOGGER.info("Final SearchPasswordSacRes Response : {}", res.toString());
+		LOGGER.info("패스워드찾기 Final Response : {}", res.toString());
 
 		return res;
 	}
@@ -240,7 +236,9 @@ public class UserSearchController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
+		LOGGER.info("Store약관동의목록조회 Start Request : {}", req.toString());
 		ListTermsAgreementSacRes res = this.svc.listTermsAgreement(sacHeader, req);
+		LOGGER.info("Store약관동의목록조회 Final Request : {}", res.getUserKey());
 
 		return res;
 	}
@@ -252,7 +250,9 @@ public class UserSearchController {
 		LOGGER.debug("##### 2.1.37. 각 단말의 OS별 누적 가입자 수 조회 #####");
 		LOGGER.debug("####################################################");
 
+		LOGGER.info("각 단말의 OS별 누적 가입자수 조회 Start");
 		ListDailyPhoneOsSacRes dailyPhoneOsList = this.svc.listDailyPhoneOs(sacHeader);
+		LOGGER.info("각 단말의 OS별 누적 가입자수 조회 Final");
 
 		return dailyPhoneOsList;
 	}

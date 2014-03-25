@@ -46,7 +46,7 @@ public class ClauseServiceImpl implements ClauseService {
 	public ListClauseSacRes listClause() {
 		List<Clause> clauseList = this.commService.getListClause();
 
-		LOGGER.info("ListClauseSacRes : ", clauseList.toString());
+		LOGGER.debug("ListClauseSacRes : ", clauseList.toString());
 
 		List<ClauseSacRes> clauseSacResList = new ArrayList<ClauseSacRes>();
 		for (Clause clause : clauseList) {
@@ -76,7 +76,7 @@ public class ClauseServiceImpl implements ClauseService {
 		String clauseItemCd = req.getClauseItemCd();
 		List<Clause> clauseList = this.commService.getDetailClauseList(clauseItemCd);
 
-		LOGGER.info("ListClauseSacRes : ", clauseList.toString());
+		LOGGER.debug("ListClauseSacRes : ", clauseList.toString());
 
 		if (clauseList.size() == 0) {
 			throw new StorePlatformException("SAC_MEM_0002", req.getClauseItemCd());

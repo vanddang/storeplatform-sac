@@ -45,19 +45,18 @@ public class UserWithdrawController {
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public WithdrawRes exist(@RequestBody WithdrawReq req, SacRequestHeader sacHeader) {
-		logger.info("####################################################");
-		logger.info("##### 5.1.24. 회원 탈퇴 (ID/MDN 기반) #####");
-		logger.info("####################################################");
-
-		logger.info("###### Start UserWithdraw Request : {}", req.toString());
+		logger.debug("####################################################");
+		logger.debug("##### 5.1.24. 회원 탈퇴 (ID/MDN 기반) #####");
+		logger.debug("####################################################");
 
 		if (StringUtil.nvl(req.getUserAuthKey(), "").equals("") && StringUtil.nvl(req.getUserId(), "").equals("")
 				&& StringUtil.nvl(req.getDeviceId(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId or userAuthKey && userId");
 		}
 
+		logger.info("###### 회원탈퇴 Start Request : {}", req.toString());
 		WithdrawRes res = this.svc.executeWithdraw(sacHeader, req);
-		logger.info("####### Final UserWithdraw Response : {}", res.toString());
+		logger.info("####### 회원탈퇴 Final Response : {}", res.toString());
 
 		return res;
 	}

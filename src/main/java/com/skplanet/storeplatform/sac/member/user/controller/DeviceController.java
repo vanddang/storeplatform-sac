@@ -194,7 +194,7 @@ public class DeviceController {
 	@ResponseBody
 	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req) {
 
-		LOGGER.info("###### modifyRepresentationDevice Request : {}", req.toString());
+		LOGGER.info("###### 대표단말설정 Start Request : {}", req.toString());
 
 		if (StringUtil.nvl(req.getUserKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
@@ -206,7 +206,7 @@ public class DeviceController {
 
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
 
-		LOGGER.info("###### Final modifyRepresentationDevice Respone : {}", res.toString());
+		LOGGER.info("###### 대표단말설정 Final Respone : {}", res.getDeviceKey());
 
 		return res;
 	}
@@ -224,7 +224,7 @@ public class DeviceController {
 	@ResponseBody
 	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @RequestBody DetailRepresentationDeviceReq req) {
 
-		LOGGER.info("###### Start detailRepresentationDevice Request 가공전 : {}", req.toString());
+		LOGGER.info("###### 대표단말조회 Start Request : {}", req.toString());
 
 		if (StringUtil.nvl(req.getUserKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
@@ -232,7 +232,7 @@ public class DeviceController {
 
 		DetailRepresentationDeviceRes res = this.deviceService.detailRepresentationDeviceRes(requestHeader, req);
 
-		LOGGER.info("###### Fianl detailRepresentationDevice Respone : {}", res.toString());
+		LOGGER.info("###### 대표단말조회 Fianl Respone : {}", res.getDeviceInfo());
 		return res;
 	}
 
@@ -259,7 +259,7 @@ public class DeviceController {
 			}
 		}
 
-		LOGGER.info("============================================ Start removeDevice Request : {}", req.toString());
+		LOGGER.info("휴대기기 단말 삭제 Start Request : {}", req.toString());
 
 		if (userAuthKey.equals("") || userKey.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userAuthKey && userKey");
@@ -275,7 +275,7 @@ public class DeviceController {
 		/* IDP 회원정보 수정 */
 		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
-		LOGGER.info("============================================ Final removeDevice Response : {}", res.toString());
+		LOGGER.info("휴대기기삭제 Final Response : {}", res.getDeviceKeyList().toString());
 		return res;
 	}
 
@@ -292,7 +292,7 @@ public class DeviceController {
 	@ResponseBody
 	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, @RequestBody SupportAomReq req) {
 
-		LOGGER.info("============================================ Start getSupportAom Request : {}", req.toString());
+		LOGGER.info("단말 AOM 지원여부확인 Start Request : {}", req.toString());
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
@@ -302,7 +302,7 @@ public class DeviceController {
 		}
 		SupportAomRes res = this.deviceService.getSupportAom(requestHeader, req);
 
-		LOGGER.info("============================================ Final getSupportAom Response : {}", res.toString());
+		LOGGER.info("단말 AOM 지원여부확인 Final Response : {}", res.getIsAomSupport());
 		return res;
 	}
 }

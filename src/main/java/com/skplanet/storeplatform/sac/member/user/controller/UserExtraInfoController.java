@@ -68,7 +68,9 @@ public class UserExtraInfoController {
 
 		}
 
+		logger.info("회원 부가 정보 등록/수정 Start Request : {}", req.toString());
 		UserExtraInfoRes res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
+		logger.info("회원 부가 정보 등록/수정 Final Response: {}", res.getUserKey());
 
 		return res;
 	}
@@ -98,7 +100,9 @@ public class UserExtraInfoController {
 			}
 		}
 
+		logger.info("회원 부가 정보 삭제 Start Request : {}", req.toString());
 		UserExtraInfoRes res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
+		logger.info("회원 부가 정보 삭제 Final Request : {}", res.getUserKey());
 
 		return res;
 	}
@@ -116,7 +120,9 @@ public class UserExtraInfoController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
+		logger.info("회원 부가 정보 조회 Start Request : {}", req.toString());
 		UserExtraInfoRes res = this.userExtraService.listAdditionalInformation(req, sacHeader);
+		logger.info("회원 부가 정보 조회 Final Response : {}", res.getUserKey());
 
 		return res;
 	}

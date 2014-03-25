@@ -1150,9 +1150,9 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
 
-		LOGGER.info("###### Start detailRepresentationDevice Request : {}", req.toString());
-		LOGGER.info("###### Fianl detailRepresentationDevice Response : {}", listRes.getDeviceInfoList().toString());
-		LOGGER.info("###### Fianl detailRepresentationDevice Response Size : {}", listRes.getDeviceInfoList().size());
+		LOGGER.debug("###### Start detailRepresentationDevice Request : {}", req.toString());
+		LOGGER.debug("###### Fianl detailRepresentationDevice Response : {}", listRes.getDeviceInfoList().toString());
+		LOGGER.debug("###### Fianl detailRepresentationDevice Response Size : {}", listRes.getDeviceInfoList().size());
 
 		return res;
 	}
@@ -1177,7 +1177,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (req.getDeviceId() != null) {
 			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
-			LOGGER.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
 			ExistReq existReq = new ExistReq();
 			existReq.setDeviceId(req.getDeviceId());
@@ -1214,8 +1214,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		LOGGER.info("###### 2. exist Request : {}", existReq.toString());
-		LOGGER.info("###### 2. exist Respone : {}", existRes.toString());
+		LOGGER.debug("###### 2. exist Request : {}", existReq.toString());
+		LOGGER.debug("###### 2. exist Respone : {}", existRes.toString());
 
 		if (existRes.getUserKey() != null) {
 			setMainDeviceRequest.setDeviceKey(req.getDeviceKey());
@@ -1254,7 +1254,7 @@ public class DeviceServiceImpl implements DeviceService {
 			List<RemoveDeviceListSacReq> deviceIdList = new ArrayList<RemoveDeviceListSacReq>();
 			for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
 				String opmdMdn = this.commService.getOpmdMdnInfo(id.getDeviceId());
-				LOGGER.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+				LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
 				RemoveDeviceListSacReq deviceId = new RemoveDeviceListSacReq();
 				deviceId.setDeviceId(opmdMdn);
@@ -1305,7 +1305,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* MQ 연동 : SC휴대기기 삭제를 하면 정보조회 할수 없어서 미리 처리함. */
 		for (String key : removeKeyList) {
-			LOGGER.info("======== 휴대기기 삭제 MQ 연동 deviceKey : {}", key);
 
 			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, key, req.getUserKey());
 			if (deviceInfo == null) {
@@ -1355,10 +1354,10 @@ public class DeviceServiceImpl implements DeviceService {
 		removeDeviceRes.setDeviceKeyList(resDeviceKeyList);
 		removeDeviceRes.setRemoveDeviceCount(String.valueOf(removeDeviceResponse.getDelDeviceCount()));
 
-		LOGGER.info("######################## 결과 : " + removeDeviceRes.toString());
-		LOGGER.info("######################## DeviceServiceImpl 휴대기기 삭제 End ############################");
+		LOGGER.debug("######################## 결과 : " + removeDeviceRes.toString());
+		LOGGER.debug("######################## DeviceServiceImpl 휴대기기 삭제 End ############################");
 
-		return removeDeviceRes; // 테스트용도로 deviceInfoList 추후 deviceKey Return 으로 변경
+		return removeDeviceRes;
 	}
 
 	/**
@@ -1384,7 +1383,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (!req.getDeviceId().equals("")) {
 			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
-			LOGGER.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
 			UserInfo deviceIdUser = this.commService.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
 
@@ -1393,11 +1392,11 @@ public class DeviceServiceImpl implements DeviceService {
 			listDeviceReq.setDeviceId(req.getDeviceId());
 			listDeviceReq.setIsMainDevice("N");
 
-			LOGGER.info("============================================ listDeviceReq {}", listDeviceReq.toString());
+			LOGGER.debug("============================================ listDeviceReq {}", listDeviceReq.toString());
 
 			listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
 
-			LOGGER.info("============================================ listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());
+			LOGGER.debug("============================================ listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());
 		}
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
