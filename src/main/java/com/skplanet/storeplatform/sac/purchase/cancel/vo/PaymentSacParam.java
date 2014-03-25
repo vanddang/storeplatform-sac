@@ -47,6 +47,39 @@ public class PaymentSacParam extends CommonInfo {
 	private String cpnId;
 	private String moid;
 
+	private String mid;
+	private String authKey;
+
+	/**
+	 * @return the mid
+	 */
+	public String getMid() {
+		return this.mid;
+	}
+
+	/**
+	 * @param mid
+	 *            the mid to set
+	 */
+	public void setMid(String mid) {
+		this.mid = mid;
+	}
+
+	/**
+	 * @return the authKey
+	 */
+	public String getAuthKey() {
+		return this.authKey;
+	}
+
+	/**
+	 * @param authKey
+	 *            the authKey to set
+	 */
+	public void setAuthKey(String authKey) {
+		this.authKey = authKey;
+	}
+
 	/**
 	 * @return the tenantId
 	 */

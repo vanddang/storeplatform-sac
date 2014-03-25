@@ -45,8 +45,9 @@ import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSac
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacResult;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
+import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants.PAYMENT_GATEWAY;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRespository;
 
@@ -83,6 +84,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	@Autowired
 	private PurchaseUapsRespository purchaseUapsRespository;
+
+	@Autowired
+	private PayPlanetShopService payPlanetShopService;
 
 	@Override
 	public PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam) {
@@ -194,21 +198,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
 				prchsSacParam.getInsdDeviceId()));
 
-		/** 결제가 PayPlanet결제 인지 TStore 결제인지 구분. */
-		PAYMENT_GATEWAY paymentGateway = PAYMENT_GATEWAY.NO_PAYMENT;
-		if (purchaseCancelDetailSacParam.getPaymentSacParamList() != null
-				&& purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0) {
-
-			paymentGateway = PAYMENT_GATEWAY.PAY_PLANET;
-
-			for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
-				// PayPlanet 결제 인지 TStore 결제 인지 구분.
-				if (!StringUtils.isBlank(paymentSacParam.getMoid())) {
-					paymentGateway = PAYMENT_GATEWAY.TSTORE;
-					break;
-				}
-			}
-		}
+		/** 결제가 PayPlanet결제 인지 TStore 결제인지 구분하고 PayPlanet결제이면 authKey, mid 셋팅. */
+		this.setPaymentShopInfo(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 
 		/** 구매 상품 별 체크. */
 		boolean shoppingYn = false; // 쇼핑상품 구분.
@@ -234,13 +225,17 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 결제 취소 처리. */
 		// 결제 건이 있을 경우 결제 취소.
-		if (paymentGateway == PAYMENT_GATEWAY.PAY_PLANET) {
-			purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
-					.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
-
-		} else if (paymentGateway == PAYMENT_GATEWAY.TSTORE) {
-			purchaseCancelDetailSacParam.settStorePayCancelResultList(this.purchaseCancelRepository
-					.cancelPaymentToTStore(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+		if (purchaseCancelDetailSacParam.getPaymentSacParamList() != null
+				&& purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0) {
+			if (StringUtils.isBlank(purchaseCancelDetailSacParam.getPaymentSacParamList().get(0).getMid())) {
+				// T Store 결제.
+				purchaseCancelDetailSacParam.settStorePayCancelResultList(this.purchaseCancelRepository
+						.cancelPaymentToTStore(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+			} else {
+				// PayPlanet 결제.
+				purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
+						.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+			}
 		}
 
 		/** 구매 DB 취소 처리. */
@@ -310,25 +305,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
 				prchsSacParam.getInsdDeviceId()));
 
-		/**
-		 * 
-		 * 결제가 PayPlanet결제 인지 TStore 결제인지 구분. T CASH는 현재는 TSTORE 만 들어온다.
-		 * 
-		 * */
-		PAYMENT_GATEWAY paymentGateway = PAYMENT_GATEWAY.NO_PAYMENT;
-		if (purchaseCancelDetailSacParam.getPaymentSacParamList() != null
-				&& purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0) {
-
-			paymentGateway = PAYMENT_GATEWAY.PAY_PLANET;
-
-			for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
-				// PayPlanet 결제 인지 TStore 결제 인지 구분.
-				if (!StringUtils.isBlank(paymentSacParam.getMoid())) {
-					paymentGateway = PAYMENT_GATEWAY.TSTORE;
-					break;
-				}
-			}
-		}
+		/** 결제가 PayPlanet결제 인지 TStore 결제인지 구분하고 PayPlanet결제이면 authKey, mid 셋팅. */
+		this.setPaymentShopInfo(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 
 		/** 구매 상품 별 체크. T CASH는 구매 상품이 TCASH 이므로 상세가 없다. */
 		/*
@@ -354,13 +332,17 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 결제 취소 처리. */
 		// 결제 건이 있을 경우 결제 취소.
-		if (paymentGateway == PAYMENT_GATEWAY.PAY_PLANET) {
-			purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
-					.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
-
-		} else if (paymentGateway == PAYMENT_GATEWAY.TSTORE) {
-			purchaseCancelDetailSacParam.settStorePayCancelResultList(this.purchaseCancelRepository
-					.cancelPaymentToTStore(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+		if (purchaseCancelDetailSacParam.getPaymentSacParamList() != null
+				&& purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0) {
+			if (StringUtils.isBlank(purchaseCancelDetailSacParam.getPaymentSacParamList().get(0).getMid())) {
+				// T Store 결제.
+				purchaseCancelDetailSacParam.settStorePayCancelResultList(this.purchaseCancelRepository
+						.cancelPaymentToTStore(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+			} else {
+				// PayPlanet 결제.
+				purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
+						.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+			}
 		}
 
 		/** 구매 DB 취소 처리. */
@@ -574,6 +556,40 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		} catch (Exception e) {
 			this.logger.debug("arm license remove fail! ========= {}", e.toString());
 		}
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 결제가 PayPlanet결제 인지 TStore 결제인지 구분하고 PayPlanet결제이면 authKey, mid 셋팅.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelSacParam
+	 *            purchaseCancelSacParam
+	 * @param purchaseCancelDetailSacParam
+	 *            purchaseCancelDetailSacParam
+	 */
+	private void setPaymentShopInfo(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
+
+		if (purchaseCancelDetailSacParam.getPaymentSacParamList() == null
+				|| purchaseCancelDetailSacParam.getPaymentSacParamList().size() < 1) {
+			return;
+		}
+
+		PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(purchaseCancelDetailSacParam
+				.getPrchsSacParam().getTenantId());
+
+		for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
+			// PayPlanet 결제이면 authKey, mid 셋팅.
+			if (StringUtils.equals(payPlanetShop.getMid(), paymentSacParam.getMoid())) {
+				paymentSacParam.setAuthKey(payPlanetShop.getAuthKey());
+				paymentSacParam.setMid(payPlanetShop.getMid());
+			}
+		}
+
+		return;
 
 	}
 

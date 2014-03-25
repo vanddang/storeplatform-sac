@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.purchase.cancel.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants.PAYMENT_GATEWAY;
 
 /**
  * Class 설명
@@ -32,7 +31,6 @@ public class PrchsSacParam extends CommonInfo {
 	private String cancelDt;
 
 	private String deviceId;
-	private PAYMENT_GATEWAY paymentGateway;
 
 	/**
 	 * @return the deviceId
@@ -182,21 +180,6 @@ public class PrchsSacParam extends CommonInfo {
 	 */
 	public void setCancelDt(String cancelDt) {
 		this.cancelDt = cancelDt;
-	}
-
-	/**
-	 * @return the paymentGateway
-	 */
-	public PAYMENT_GATEWAY getPaymentGateway() {
-		return this.paymentGateway;
-	}
-
-	/**
-	 * @param paymentGateway
-	 *            the paymentGateway to set
-	 */
-	public void setPaymentGateway(PAYMENT_GATEWAY paymentGateway) {
-		this.paymentGateway = paymentGateway;
 	}
 
 }
