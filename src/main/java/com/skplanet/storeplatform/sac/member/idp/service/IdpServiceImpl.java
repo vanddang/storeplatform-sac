@@ -1512,8 +1512,10 @@ public class IdpServiceImpl implements IdpService {
 
 		try {
 			searchUserResponse = this.userSCI.searchUser(searchUserRequest);
-			prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo();
-			userKey = searchUserResponse.getUserKey();
+			if (searchUserResponse != null) {
+				prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo();
+				userKey = searchUserResponse.getUserKey();
+			}
 		} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
 			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
@@ -2711,22 +2713,25 @@ public class IdpServiceImpl implements IdpService {
 
 								searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 							}
-							prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
 
-							updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
-									searchUserResponse));
-							LOGGER.debug("전환가입 정보 입력 완료");
-							userKey = updateUserResponse.getUserKey();
+							if (searchUserResponse != null) {
+								prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
 
-							GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-							gameCenterSacReq.setUserKey(userKey);
-							gameCenterSacReq.setPreUserKey(userKey);
-							gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
-							gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
-							gameCenterSacReq.setSystemId(systemID);
-							gameCenterSacReq.setTenantId(tenantID);
-							gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
-							this.deviceService.insertGameCenterIF(gameCenterSacReq);
+								updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
+										searchUserResponse));
+								LOGGER.debug("전환가입 정보 입력 완료");
+								userKey = updateUserResponse.getUserKey();
+
+								GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+								gameCenterSacReq.setUserKey(userKey);
+								gameCenterSacReq.setPreUserKey(userKey);
+								gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
+								gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
+								gameCenterSacReq.setSystemId(systemID);
+								gameCenterSacReq.setTenantId(tenantID);
+								gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
+								this.deviceService.insertGameCenterIF(gameCenterSacReq);
+							}
 
 						} catch (StorePlatformException spe) {
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
@@ -2760,22 +2765,23 @@ public class IdpServiceImpl implements IdpService {
 								searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 							}
 
-							prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
+							if (searchUserResponse != null) {
+								prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
 
-							updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
-									searchUserResponse));
+								updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
+										searchUserResponse));
 
-							userKey = updateUserResponse.getUserKey();
-							LOGGER.debug("변경가입,변경전환 정보 입력 완료");
+								userKey = updateUserResponse.getUserKey();
+								LOGGER.debug("변경가입,변경전환 정보 입력 완료");
 
-							// 공통_기타 회원ID 변경 시작
-							ChangeDisplayUserSacReq changeDisplayUserSacReqByUserID = new ChangeDisplayUserSacReq();
-							changeDisplayUserSacReqByUserID.setNewUserId(userId);
-							changeDisplayUserSacReqByUserID.setOldUserId(oldId);
-							changeDisplayUserSacReqByUserID.setTenantId(tenantID);
-							this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReqByUserID);
-							// 공통_기타 회원ID 변경 끝
-
+								// 공통_기타 회원ID 변경 시작
+								ChangeDisplayUserSacReq changeDisplayUserSacReqByUserID = new ChangeDisplayUserSacReq();
+								changeDisplayUserSacReqByUserID.setNewUserId(userId);
+								changeDisplayUserSacReqByUserID.setOldUserId(oldId);
+								changeDisplayUserSacReqByUserID.setTenantId(tenantID);
+								this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReqByUserID);
+								// 공통_기타 회원ID 변경 끝
+							}
 						} catch (StorePlatformException spe) {
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
