@@ -133,8 +133,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 가가입일 경우 처리.
 			 */
-			LOGGER.info("## errorCode : {}", spe.getErrorInfo().getCode());
-			LOGGER.info("## errorMsg  : {}", spe.getErrorInfo().getMessage());
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 				/**
@@ -338,7 +336,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		sbUserPhone.append(ObjectUtils.toString(majorDeviceInfo.getUacd()));
 		sbUserPhone.append(",");
 		sbUserPhone.append(this.mcc.convertDeviceTelecom(majorDeviceInfo.getDeviceTelecom()));
-		LOGGER.info("## sbUserPhone : {}", sbUserPhone.toString());
+		LOGGER.debug("## sbUserPhone : {}", sbUserPhone.toString());
 
 		/**
 		 * (통합 IDP) 이용동의 가입 요청 (cmd = TXAgreeUserIDP)
@@ -510,7 +508,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		sbUserPhone.append(majorDeviceInfo.getUacd());
 		sbUserPhone.append(",");
 		sbUserPhone.append(this.mcc.convertDeviceTelecom(majorDeviceInfo.getDeviceTelecom()));
-		LOGGER.info("## sbUserPhone : {}", sbUserPhone.toString());
+		LOGGER.debug("## sbUserPhone : {}", sbUserPhone.toString());
 
 		/**
 		 * IDP 간편회원 가입 연동 (cmd = simpleJoinApply)
@@ -614,7 +612,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		List<Clause> dbAgreementList = this.mcc.getMandAgreeList(tenantId);
 		if (dbAgreementList.size() == 0) {
-			LOGGER.info("## 체크할 필수 약관이 존재 하지 않습니다.");
+			LOGGER.debug("## 체크할 필수 약관이 존재 하지 않습니다.");
 			return false;
 		}
 		Comparator<Clause> dbComparator = new Comparator<Clause>() {
@@ -630,7 +628,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		for (Clause sortInfo : dbAgreementList) {
 			sortDbAgreeInfo.append(sortInfo.getClauseItemCd());
 		}
-		LOGGER.info("## 필수약관목록 : {}", sortDbAgreeInfo);
+		LOGGER.debug("## 필수약관목록 : {}", sortDbAgreeInfo);
 
 		/**
 		 * 요청 약관 목록 조회 sorting
@@ -663,7 +661,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 			}
 		}
-		LOGGER.info("## 요청약관목록 : {}", sortAgreeInfo);
+		LOGGER.debug("## 요청약관목록 : {}", sortAgreeInfo);
 
 		/**
 		 * 정렬된 DB 약관 목록과 요청 약관 목록을 비교한다.
@@ -697,7 +695,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrClauseAgreeList.add(mbrClauseAgree);
 		}
 
-		LOGGER.info("## SC Request 이용약관 정보 : {}", mbrClauseAgreeList.toString());
+		LOGGER.debug("## SC Request 이용약관 정보 : {}", mbrClauseAgreeList);
 
 		return mbrClauseAgreeList;
 	}
@@ -729,11 +727,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
 			mbrLglAgent.setParentRealNameSite(req.getParentRealNameSite()); // 법정대리인 실명인증사이트 코드
 			mbrLglAgent.setIsDomestic(req.getParentIsDomestic()); // 내외국인 여부
-			LOGGER.info("## SC Request 법정대리인 정보 : {}", mbrLglAgent.toString());
+			LOGGER.debug("## SC Request 법정대리인 정보 : {}", mbrLglAgent);
 
 		} else {
 
-			LOGGER.info("## SC Request 법정대리인 정보 없음 처리.");
+			LOGGER.debug("## SC Request 법정대리인 정보 없음 처리.");
 			mbrLglAgent = null;
 
 		}
@@ -770,7 +768,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 모바일 전용 회원 가입
 			 */
-			LOGGER.info("======================= ## CreateByMdnReq");
+			LOGGER.debug("======================= ## CreateByMdnReq");
 			CreateByMdnReq req = (CreateByMdnReq) obj;
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
@@ -791,7 +789,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 약관동의 가입
 			 */
-			LOGGER.info("======================= ## CreateByAgreementReq");
+			LOGGER.debug("======================= ## CreateByAgreementReq");
 			CreateByAgreementReq req = (CreateByAgreementReq) obj;
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
@@ -811,7 +809,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 간편 가입
 			 */
-			LOGGER.info("======================= ## CreateBySimpleReq");
+			LOGGER.debug("======================= ## CreateBySimpleReq");
 			CreateBySimpleReq req = (CreateBySimpleReq) obj;
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
@@ -831,7 +829,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * Save & Sync 가입
 			 */
-			LOGGER.info("======================= ## CreateSaveAndSyncReq");
+			LOGGER.debug("======================= ## CreateSaveAndSyncReq");
 			CreateSaveAndSyncReq req = (CreateSaveAndSyncReq) obj;
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
@@ -848,7 +846,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		} else {
 
-			LOGGER.info("======================= ## Not Found Request VO Type");
+			LOGGER.debug("======================= ## Not Found Request VO Type");
 
 		}
 
@@ -857,7 +855,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 휴대기기 등록 모듈 호출.
 			 */
-			LOGGER.info("## 휴대기기 등록 정보 : {}", deviceInfo.toString());
+			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
 			String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(),
 					userKey, deviceInfo);
 			if (deviceKey == null || StringUtils.equals(deviceKey, "")) {
@@ -885,7 +883,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 */
 	private List<DeviceExtraInfo> getDeviceExtra(List<DeviceExtraInfo> deviceExtraInfoList, MajorDeviceInfo majorDeviceInfo) {
 
-		LOGGER.info("## 세팅 전 deviceExtraInfoList : {}", deviceExtraInfoList);
+		LOGGER.debug("## 세팅 전 deviceExtraInfoList : {}", deviceExtraInfoList);
 
 		/**
 		 * 단말 부가 정보 없을 경우 처리.
@@ -898,7 +896,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * UA 코드 추가.
 		 */
 		if (!StringUtils.equals(ObjectUtils.toString(majorDeviceInfo.getUacd()), "")) {
-			LOGGER.info("## UA 코드 추가.");
+			LOGGER.debug("## UA 코드 추가.");
 			DeviceExtraInfo uacd = new DeviceExtraInfo();
 			uacd.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
 			uacd.setExtraProfileValue(majorDeviceInfo.getUacd());
@@ -909,14 +907,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * OMD UA 코드 추가.
 		 */
 		if (!StringUtils.equals(ObjectUtils.toString(majorDeviceInfo.getOmdUacd()), "")) {
-			LOGGER.info("## OMD UA 코드 추가.");
+			LOGGER.debug("## OMD UA 코드 추가.");
 			DeviceExtraInfo omdUacd = new DeviceExtraInfo();
 			omdUacd.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMDUACD);
 			omdUacd.setExtraProfileValue(majorDeviceInfo.getOmdUacd());
 			deviceExtraInfoList.add(omdUacd);
 		}
 
-		LOGGER.info("## 세팅후 deviceExtraInfoList : {}", deviceExtraInfoList);
+		LOGGER.debug("## 세팅후 deviceExtraInfoList : {}", deviceExtraInfoList);
 
 		return deviceExtraInfoList;
 
@@ -956,7 +954,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			if (!StringUtils.equals(req.getNativeId(), "")) {
 
-				LOGGER.info("## >> IMEI ICAS 와 비교.....");
+				LOGGER.debug("## >> IMEI ICAS 와 비교.....");
 
 				String icasImei = null;
 				if (!StringUtils.equals(this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getMvnoCD(), "0")) { // MVNO
@@ -971,14 +969,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 				}
 
-				LOGGER.info(">> ## ICAS 연동 :::: icasImei : {}", icasImei);
+				LOGGER.debug(">> ## ICAS 연동 :::: icasImei : {}", icasImei);
 				if (!StringUtils.equals(icasImei, req.getNativeId())) {
 					throw new StorePlatformException("SAC_MEM_1503");
 				}
 
 			} else {
 
-				LOGGER.info("## >> IMEI 존재 하지 않아 ICAS 와 비교 Skip.....");
+				LOGGER.debug("## >> IMEI 존재 하지 않아 ICAS 와 비교 Skip.....");
 
 			}
 
@@ -987,7 +985,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 타사(KTF,LGT)일경우. (ROOTING 단말 체크)
 			 */
-			LOGGER.info("## >> 타사(KTF, LGT)일 경우는 [ROOTING 단말 체크-테넌트 로직으로 넘어감] Skip........");
+			LOGGER.debug("## >> 타사(KTF, LGT)일 경우는 [ROOTING 단말 체크-테넌트 로직으로 넘어감] Skip........");
 
 		}
 
@@ -1007,8 +1005,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		try {
 			UserInfo userInfo = this.mcc.getUserBaseInfo("deviceId", deviceId, sacHeader);
-			LOGGER.info("## 메인 상태 : {}", userInfo.getUserMainStatus());
-			LOGGER.info("## 서브 상태 : {}", userInfo.getUserSubStatus());
+			LOGGER.debug("## 메인 상태 : {}", userInfo.getUserMainStatus());
+			LOGGER.debug("## 서브 상태 : {}", userInfo.getUserSubStatus());
 			throw new StorePlatformException("SAC_MEM_1104");
 		} catch (StorePlatformException spe) {
 
@@ -1018,9 +1016,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 
-				LOGGER.info("## 회원 조회시 [ 검색결과 없음 OR 사용자키 또는 회원키 없음 ] 일 경우 Skip.....");
-				LOGGER.info("## Error Code : {}", spe.getErrorInfo().getCode());
-				LOGGER.info("## Error Msg  : {}", spe.getErrorInfo().getMessage());
+				LOGGER.debug("## 회원 조회시 [ 검색결과 없음 OR 사용자키 또는 회원키 없음 ] 일 경우 Skip.....");
+				LOGGER.debug("## Error Code : {}", spe.getErrorInfo().getCode());
+				LOGGER.debug("## Error Msg  : {}", spe.getErrorInfo().getMessage());
 
 			} else {
 
@@ -1060,9 +1058,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MACADDRESS)) {
 
-			LOGGER.info("=========================================");
-			LOGGER.info("## >> SAVE & SYNC MAC 가가입 START ======");
-			LOGGER.info("=========================================");
+			LOGGER.debug("=========================================");
+			LOGGER.debug("## >> SAVE & SYNC MAC 가가입 START ======");
+			LOGGER.debug("=========================================");
 
 			/**
 			 * MAC IDP 연동없이 DB 만 가입처리.
@@ -1076,9 +1074,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		} else {
 
-			LOGGER.info("==========================================");
-			LOGGER.info("## >> SAVE & SYNC MSISDN 가입 START ======");
-			LOGGER.info("==========================================");
+			LOGGER.debug("==========================================");
+			LOGGER.debug("## >> SAVE & SYNC MSISDN 가입 START ======");
+			LOGGER.debug("==========================================");
 
 			/**
 			 * 변동성 대상 체크
