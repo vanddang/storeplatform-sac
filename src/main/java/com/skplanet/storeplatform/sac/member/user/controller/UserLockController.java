@@ -64,7 +64,7 @@ public class UserLockController {
 		 */
 		LockAccountSacRes res = this.svc.lockAccount(sacHeader, req);
 
-		LOGGER.info("Response : {}", res.toString());
+		LOGGER.info("Response : {}", res);
 
 		return res;
 
