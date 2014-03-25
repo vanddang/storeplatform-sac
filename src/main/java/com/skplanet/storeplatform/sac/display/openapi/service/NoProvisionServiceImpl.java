@@ -100,7 +100,7 @@ public class NoProvisionServiceImpl implements NoProvisionService {
 		this.log.debug("####### tenantId : " + tenantId);
 		this.log.debug("####### langCd : " + langCd);
 		this.log.debug("####### imageCd : " + imageCd);
-		this.log.debug("####### arrayTopMenuId : " + arrayTopMenuId);
+		this.log.debug("####### arrayTopMenuId : " + arrayTopMenuId.toString());
 		this.log.debug("####### searchKeyword : " + noProvisionSacReq.getSearchKeyword());
 		this.log.debug("####### orderedBy : " + noProvisionSacReq.getOrderedBy());
 		this.log.debug("####### offset : " + noProvisionSacReq.getOffset());
@@ -118,14 +118,13 @@ public class NoProvisionServiceImpl implements NoProvisionService {
 		paramMap.put("offset", noProvisionSacReq.getOffset());
 		paramMap.put("count", noProvisionSacReq.getCount());
 
-		Identifier identifier = new Identifier();
+		Identifier identifier = null;
 		List<Product> productList = new ArrayList<Product>();
 
 		Product product = null;
-
 		List<MetaInfo> noProvisioning = null;
-		// OpenApi 상품 검색 요청(BY 상품명) - No Provisioning
 
+		// OpenApi 상품 검색 요청(BY 상품명) - No Provisioning
 		noProvisioning = this.commonDAO.queryForList("OpenApi.searchProductByNameNoProvisioningList", paramMap,
 				MetaInfo.class);
 
@@ -134,7 +133,6 @@ public class NoProvisionServiceImpl implements NoProvisionService {
 			Iterator<MetaInfo> iterator = noProvisioning.iterator();
 			List<Identifier> identifierList = null;
 
-			String[] arrayProdudctId = new String[noProvisioning.size()];
 			while (iterator.hasNext()) {
 
 				MetaInfo metaInfo = iterator.next();

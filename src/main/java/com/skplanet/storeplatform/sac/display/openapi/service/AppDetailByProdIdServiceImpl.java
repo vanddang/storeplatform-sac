@@ -100,7 +100,7 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 		paramMap.put("productId", appDetailByProductIdSacReq.getProductId());
 		paramMap.put("rshpCd", rshpCd);
 
-		Identifier identifier = new Identifier();
+		Identifier identifier = null;
 		Product product = null;
 
 		List<MetaInfo> productMetaInfoList = null;
@@ -185,7 +185,8 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 				String[] previewUrls = metaInfo.getPreviewUrl().split(";");
 				List<Source> preveiwSourceList = new ArrayList<Source>();
 				if (previewUrls.length > 0) {
-					Source source = new Source();
+					Source source = null;
+
 					for (int i = 0; i < previewUrls.length; i++) {
 						source = this.commonGenerator.generatePreviewSourceList(metaInfo);
 						source.setUrl(previewUrls[i]);

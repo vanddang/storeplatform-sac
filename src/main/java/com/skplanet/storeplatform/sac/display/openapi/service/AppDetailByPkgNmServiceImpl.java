@@ -204,7 +204,8 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 				String[] previewUrls = metaInfo.getPreviewUrl().split(";");
 				List<Source> preveiwSourceList = new ArrayList<Source>();
 				if (previewUrls.length > 0) {
-					Source source = new Source();
+					Source source = null;
+
 					for (int i = 0; i < previewUrls.length; i++) {
 						source = this.commonGenerator.generatePreviewSourceList(metaInfo);
 						source.setUrl(previewUrls[i]);

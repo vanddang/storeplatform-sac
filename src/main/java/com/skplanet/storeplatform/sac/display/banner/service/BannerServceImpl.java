@@ -73,7 +73,6 @@ public class BannerServceImpl implements BannerService {
 	 */
 	@Override
 	public BannerSacRes searchBannerList(SacRequestHeader header, BannerSacReq bannerReq) {
-		BannerSacRes bannerRes = new BannerSacRes();
 		String reqBnrMenuId = bannerReq.getBnrMenuId();
 		String reqMobileWebExpoYn = bannerReq.getMobileWebExpoYn();
 		String reqBnrExpoMenuId = bannerReq.getBnrExpoMenuId();
@@ -448,8 +447,7 @@ public class BannerServceImpl implements BannerService {
 		}
 
 		// Response 생성
-		bannerRes = this.generateResponse(resultList);
-		return bannerRes;
+		return this.generateResponse(resultList);
 	}
 
 	/**
