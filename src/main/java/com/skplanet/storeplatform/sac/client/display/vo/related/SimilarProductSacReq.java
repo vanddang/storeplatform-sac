@@ -39,6 +39,7 @@ public class SimilarProductSacReq extends CommonInfo implements Serializable {
 	private String langCd; // 언어코드
 	private String testYn; // 테스트 여부
 	private String mmDeviceModelCd; // 가상 프로비저닝 모델명 (멀티미디어).
+	private String topMenuId; // 탑메뉴ID
 
 	/**
 	 * 
@@ -313,5 +314,30 @@ public class SimilarProductSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setMmDeviceModelCd(String mmDeviceModelCd) {
 		this.mmDeviceModelCd = mmDeviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 탑 메뉴 ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 탑 메뉴 ID.
+	 * </pre>
+	 * 
+	 * @param topMenuId
+	 *            String
+	 */
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 }
