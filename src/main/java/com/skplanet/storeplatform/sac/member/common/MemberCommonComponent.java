@@ -132,14 +132,14 @@ public class MemberCommonComponent {
 		try {
 
 			UserEcRes userRes = this.getMappingInfo(deviceId, "mdn");
-			LOGGER.info("## >> UAPS Info : {}", userRes);
+			LOGGER.debug("## >> UAPS Info : {}", userRes);
 			return userRes.getPauseYN();
 
 		} catch (StorePlatformException spe) {
 
-			LOGGER.info("## >> SKT 이용정지 여부 조회 실패로 이용정지여부 Skip....... ");
-			LOGGER.info("## Error Code : {}", spe.getErrorInfo().getCode());
-			LOGGER.info("## Error Msg  : {}", spe.getErrorInfo().getMessage());
+			LOGGER.debug("## >> SKT 이용정지 여부 조회 실패로 이용정지여부 Skip....... ");
+			LOGGER.debug("## Error Code : {}", spe.getErrorInfo().getCode());
+			LOGGER.debug("## Error Msg  : {}", spe.getErrorInfo().getMessage());
 			return "";
 
 		}
@@ -430,7 +430,7 @@ public class MemberCommonComponent {
 			/**
 			 * 미지원 단말 setting
 			 */
-			LOGGER.info("## 미지원 단말 세팅.");
+			LOGGER.debug("## 미지원 단말 세팅.");
 			majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
 			majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
 			majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
@@ -452,8 +452,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -476,8 +475,8 @@ public class MemberCommonComponent {
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
 
 				UserEcRes userRes = this.getMappingInfo(deviceId, "mdn");
-				LOGGER.info("## UAPS 연동 결과 toString() : {}", userRes);
-				LOGGER.info("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
+				LOGGER.debug("## UAPS 연동 결과 toString() : {}", userRes);
+				LOGGER.debug("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
 				majorDeviceInfo.setSvcMangNum(userRes.getSvcMngNum());
 
 			}
@@ -487,14 +486,14 @@ public class MemberCommonComponent {
 			 */
 			if (this.repository.searchOmdCount(model) > 0) {
 
-				LOGGER.info("## OMD 단말 setting.");
+				LOGGER.debug("## OMD 단말 setting.");
 				majorDeviceInfo.setOmdUacd(model);
 
 			}
 
 		}
 
-		LOGGER.info("## 단말 주요정보 : {}", majorDeviceInfo);
+		LOGGER.debug("## 단말 주요정보 : {}", majorDeviceInfo);
 
 		return majorDeviceInfo;
 
@@ -668,7 +667,7 @@ public class MemberCommonComponent {
 	public boolean isIdpConnect(String userAuthkey) {
 
 		if (StringUtils.equals(userAuthkey, this.fixedMobileUserAuthKey)) {
-			LOGGER.info(">> userAuthKey 가 Fixed 값과 같으면 IDP 연동 하지 않는다.");
+			LOGGER.debug("## >> userAuthKey 가 Fixed 값과 같으면 IDP 연동 하지 않는다.");
 			return false;
 		} else {
 			return true;
