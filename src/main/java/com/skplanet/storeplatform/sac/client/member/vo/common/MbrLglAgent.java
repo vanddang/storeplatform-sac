@@ -42,7 +42,7 @@ public class MbrLglAgent extends CommonInfo {
 	private String parentTelecom; // MNO_CD, API : userTelecom
 
 	/** The 법정대리인 전화번호. */
-	private String parentMDN; // LGL_AGENT_HP_NO, API : userPhone
+	private String parentMsisdn; // LGL_AGENT_HP_NO, API : userPhone
 
 	/** The 법정대리인 ci. */
 	private String parentCI; // CI, API : userCI
@@ -62,130 +62,242 @@ public class MbrLglAgent extends CommonInfo {
 	/** The 테넌트 ID */
 	private String tenantId;
 
-	public String getIsParent() {
-		return this.isParent;
-	}
-
-	public void setIsParent(String isParent) {
-		this.isParent = isParent;
-	}
-
-	public String getMemberKey() {
-		return this.memberKey;
-	}
-
-	public void setMemberKey(String memberKey) {
-		this.memberKey = memberKey;
-	}
-
-	public String getParentBirthDay() {
-		return this.parentBirthDay;
-	}
-
-	public void setParentBirthDay(String parentBirthDay) {
-		this.parentBirthDay = parentBirthDay;
-	}
-
-	public String getParentCI() {
-		return this.parentCI;
-	}
-
-	public void setParentCI(String parentCI) {
-		this.parentCI = parentCI;
-	}
-
-	public String getParentDate() {
-		return this.parentDate;
-	}
-
-	public void setParentDate(String parentDate) {
-		this.parentDate = parentDate;
-	}
-
-	public String getParentEmail() {
-		return this.parentEmail;
-	}
-
-	public void setParentEmail(String parentEmail) {
-		this.parentEmail = parentEmail;
-	}
-
-	public String getParentMDN() {
-		return this.parentMDN;
-	}
-
-	public void setParentMDN(String parentMDN) {
-		this.parentMDN = parentMDN;
-	}
-
-	public String getParentName() {
-		return this.parentName;
-	}
-
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
-	}
-
-	public String getParentRealNameDate() {
-		return this.parentRealNameDate;
-	}
-
-	public void setParentRealNameDate(String parentRealNameDate) {
-		this.parentRealNameDate = parentRealNameDate;
-	}
-
-	public String getParentRealNameMethod() {
-		return this.parentRealNameMethod;
-	}
-
-	public void setParentRealNameMethod(String parentRealNameMethod) {
-		this.parentRealNameMethod = parentRealNameMethod;
-	}
-
-	public String getParentRealNameSite() {
-		return this.parentRealNameSite;
-	}
-
-	public void setParentRealNameSite(String parentRealNameSite) {
-		this.parentRealNameSite = parentRealNameSite;
-	}
-
-	public String getParentTelecom() {
-		return this.parentTelecom;
-	}
-
-	public void setParentTelecom(String parentTelecom) {
-		this.parentTelecom = parentTelecom;
-	}
-
-	public String getParentType() {
-		return this.parentType;
-	}
-
-	public void setParentType(String parentType) {
-		this.parentType = parentType;
-	}
-
+	/**
+	 * @return the sequence
+	 */
 	public String getSequence() {
 		return this.sequence;
 	}
 
+	/**
+	 * @param sequence
+	 *            the sequence to set
+	 */
 	public void setSequence(String sequence) {
 		this.sequence = sequence;
 	}
 
+	/**
+	 * @return the isParent
+	 */
+	public String getIsParent() {
+		return this.isParent;
+	}
+
+	/**
+	 * @param isParent
+	 *            the isParent to set
+	 */
+	public void setIsParent(String isParent) {
+		this.isParent = isParent;
+	}
+
+	/**
+	 * @return the parentRealNameMethod
+	 */
+	public String getParentRealNameMethod() {
+		return this.parentRealNameMethod;
+	}
+
+	/**
+	 * @param parentRealNameMethod
+	 *            the parentRealNameMethod to set
+	 */
+	public void setParentRealNameMethod(String parentRealNameMethod) {
+		this.parentRealNameMethod = parentRealNameMethod;
+	}
+
+	/**
+	 * @return the parentName
+	 */
+	public String getParentName() {
+		return this.parentName;
+	}
+
+	/**
+	 * @param parentName
+	 *            the parentName to set
+	 */
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+	/**
+	 * @return the parentType
+	 */
+	public String getParentType() {
+		return this.parentType;
+	}
+
+	/**
+	 * @param parentType
+	 *            the parentType to set
+	 */
+	public void setParentType(String parentType) {
+		this.parentType = parentType;
+	}
+
+	/**
+	 * @return the parentDate
+	 */
+	public String getParentDate() {
+		return this.parentDate;
+	}
+
+	/**
+	 * @param parentDate
+	 *            the parentDate to set
+	 */
+	public void setParentDate(String parentDate) {
+		this.parentDate = parentDate;
+	}
+
+	/**
+	 * @return the parentEmail
+	 */
+	public String getParentEmail() {
+		return this.parentEmail;
+	}
+
+	/**
+	 * @param parentEmail
+	 *            the parentEmail to set
+	 */
+	public void setParentEmail(String parentEmail) {
+		this.parentEmail = parentEmail;
+	}
+
+	/**
+	 * @return the parentBirthDay
+	 */
+	public String getParentBirthDay() {
+		return this.parentBirthDay;
+	}
+
+	/**
+	 * @param parentBirthDay
+	 *            the parentBirthDay to set
+	 */
+	public void setParentBirthDay(String parentBirthDay) {
+		this.parentBirthDay = parentBirthDay;
+	}
+
+	/**
+	 * @return the parentTelecom
+	 */
+	public String getParentTelecom() {
+		return this.parentTelecom;
+	}
+
+	/**
+	 * @param parentTelecom
+	 *            the parentTelecom to set
+	 */
+	public void setParentTelecom(String parentTelecom) {
+		this.parentTelecom = parentTelecom;
+	}
+
+	/**
+	 * @return the parentMsisdn
+	 */
+	public String getParentMsisdn() {
+		return this.parentMsisdn;
+	}
+
+	/**
+	 * @param parentMsisdn
+	 *            the parentMsisdn to set
+	 */
+	public void setParentMsisdn(String parentMsisdn) {
+		this.parentMsisdn = parentMsisdn;
+	}
+
+	/**
+	 * @return the parentCI
+	 */
+	public String getParentCI() {
+		return this.parentCI;
+	}
+
+	/**
+	 * @param parentCI
+	 *            the parentCI to set
+	 */
+	public void setParentCI(String parentCI) {
+		this.parentCI = parentCI;
+	}
+
+	/**
+	 * @return the parentRealNameDate
+	 */
+	public String getParentRealNameDate() {
+		return this.parentRealNameDate;
+	}
+
+	/**
+	 * @param parentRealNameDate
+	 *            the parentRealNameDate to set
+	 */
+	public void setParentRealNameDate(String parentRealNameDate) {
+		this.parentRealNameDate = parentRealNameDate;
+	}
+
+	/**
+	 * @return the parentRealNameSite
+	 */
+	public String getParentRealNameSite() {
+		return this.parentRealNameSite;
+	}
+
+	/**
+	 * @param parentRealNameSite
+	 *            the parentRealNameSite to set
+	 */
+	public void setParentRealNameSite(String parentRealNameSite) {
+		this.parentRealNameSite = parentRealNameSite;
+	}
+
+	/**
+	 * @return the memberKey
+	 */
+	public String getMemberKey() {
+		return this.memberKey;
+	}
+
+	/**
+	 * @param memberKey
+	 *            the memberKey to set
+	 */
+	public void setMemberKey(String memberKey) {
+		this.memberKey = memberKey;
+	}
+
+	/**
+	 * @return the isDomestic
+	 */
 	public String getIsDomestic() {
 		return this.isDomestic;
 	}
 
+	/**
+	 * @param isDomestic
+	 *            the isDomestic to set
+	 */
 	public void setIsDomestic(String isDomestic) {
 		this.isDomestic = isDomestic;
 	}
 
+	/**
+	 * @return the tenantId
+	 */
 	public String getTenantId() {
 		return this.tenantId;
 	}
 
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
