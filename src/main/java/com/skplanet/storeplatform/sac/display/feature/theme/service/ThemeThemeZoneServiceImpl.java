@@ -226,9 +226,9 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
 						// 영화/방송 상품의 경우
-						reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+							reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 							retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
 							// 영화용 Contributor 설정
 							/*
@@ -247,6 +247,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
 																							  // 경우
+							reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 							retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
 							// Ebook용 Contributor 설정
 							/*
@@ -263,6 +264,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 								}
 							}
 						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
+							reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 							retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
 							// Music용 Contributor 설정
 							/*
@@ -276,6 +278,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 								productList.add(product);
 							}
 						} else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // WEBTOON 상품의 경우
+							reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
 							retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
 							// Comic용 Contributor 설정
 							/*
@@ -288,6 +291,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 							}
 						}
 					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
+						reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 						retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);// shopping용 Contributor 설정
 						/*
 						 * if (retMetaInfo != null) { Contributor contributor =

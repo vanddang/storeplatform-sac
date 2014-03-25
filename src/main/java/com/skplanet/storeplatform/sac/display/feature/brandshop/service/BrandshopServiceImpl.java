@@ -351,7 +351,7 @@ public class BrandshopServiceImpl implements BrandshopService {
 		List<Source> sourceList = null;
 
 		sourceList = new ArrayList<Source>();
-		List<Product> productList = new ArrayList<Product>();
+		List<Product> productList = null;
 		CommonResponse commonResponse = new CommonResponse();
 		BrandshopSacRes res = new BrandshopSacRes();
 
