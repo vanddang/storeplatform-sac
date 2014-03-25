@@ -129,7 +129,7 @@ public class RemoveSubsellerTest {
 						List<String> removeKeyList;
 						removeKeyList = new ArrayList<String>();
 						removeKeyList.add(createSubsellerRes.getSubSellerKey());
-						req.setSubSellerKey(removeKeyList);
+						// req.setSubSellerKey(removeKeyList);
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
