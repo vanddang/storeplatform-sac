@@ -140,11 +140,6 @@ public class UserSearchController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
-		 * Header 정보
-		 */
-		LOGGER.info("Headers : {}", sacHeader.toString());
-
-		/**
 		 * DeviceId를 이용하여 회원 정보 조회 Biz
 		 */
 		DetailByDeviceIdSacRes res = this.svc.detailByDeviceId(sacHeader, req);
