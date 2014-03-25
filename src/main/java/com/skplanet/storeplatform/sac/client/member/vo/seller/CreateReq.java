@@ -38,7 +38,7 @@ public class CreateReq extends CommonInfo {
 	/** 무선 전화번호. */
 	private String sellerPhone;
 	/** SMS 수신 여부. */
-	private String isRecvSMS;
+	private String isRecvSms;
 	/** 판매자 이메일. */
 	@NotBlank
 	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
@@ -204,18 +204,18 @@ public class CreateReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the isRecvSMS
+	 * @return the isRecvSms
 	 */
-	public String getIsRecvSMS() {
-		return this.isRecvSMS;
+	public String getIsRecvSms() {
+		return this.isRecvSms;
 	}
 
 	/**
-	 * @param isRecvSMS
-	 *            the isRecvSMS to set
+	 * @param isRecvSms
+	 *            the isRecvSms to set
 	 */
-	public void setIsRecvSMS(String isRecvSMS) {
-		this.isRecvSMS = isRecvSMS;
+	public void setIsRecvSms(String isRecvSms) {
+		this.isRecvSms = isRecvSms;
 	}
 
 	/**

@@ -1,7 +1,16 @@
 package com.skplanet.storeplatform.sac.client.member.vo.common;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+/**
+ * 서브 계정 정보.
+ * 
+ * Updated on : 2014. 3. 25. Updated by : Rejoice, Burkhan
+ */
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class SubSellerMbrSac extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 

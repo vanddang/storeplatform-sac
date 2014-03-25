@@ -158,10 +158,6 @@ public class SellerAccount extends CommonInfo {
 	 * T I-PIN 코드.
 	 */
 	private String tpinCode;
-	/**
-	 * 사용여부(Y/N).
-	 */
-	private String isUsed;
 
 	/**
 	 * @return the abaCode
@@ -326,21 +322,6 @@ public class SellerAccount extends CommonInfo {
 	 */
 	public void setIbanCode(String ibanCode) {
 		this.ibanCode = ibanCode;
-	}
-
-	/**
-	 * @return the isUsed
-	 */
-	public String getIsUsed() {
-		return this.isUsed;
-	}
-
-	/**
-	 * @param isUsed
-	 *            the isUsed to set
-	 */
-	public void setIsUsed(String isUsed) {
-		this.isUsed = isUsed;
 	}
 
 	/**

@@ -24,10 +24,10 @@ public class ModifyPasswordSacReq extends CommonInfo {
 	private String sellerKey;
 	/** 이전 비밀번호. */
 	@NotBlank
-	private String oldPW;
+	private String oldPw;
 	/** 새 비밀번호. */
 	@NotBlank
-	private String newPW;
+	private String newPw;
 
 	/**
 	 * @return the sessionKey
@@ -60,33 +60,33 @@ public class ModifyPasswordSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the oldPW
+	 * @return the oldPw
 	 */
-	public String getOldPW() {
-		return this.oldPW;
+	public String getOldPw() {
+		return this.oldPw;
 	}
 
 	/**
-	 * @param oldPW
-	 *            the oldPW to set
+	 * @param oldPw
+	 *            the oldPw to set
 	 */
-	public void setOldPW(String oldPW) {
-		this.oldPW = oldPW;
+	public void setOldPw(String oldPw) {
+		this.oldPw = oldPw;
 	}
 
 	/**
-	 * @return the newPW
+	 * @return the newPw
 	 */
-	public String getNewPW() {
-		return this.newPW;
+	public String getNewPw() {
+		return this.newPw;
 	}
 
 	/**
-	 * @param newPW
-	 *            the newPW to set
+	 * @param newPw
+	 *            the newPw to set
 	 */
-	public void setNewPW(String newPW) {
-		this.newPW = newPW;
+	public void setNewPw(String newPw) {
+		this.newPw = newPw;
 	}
 
 }

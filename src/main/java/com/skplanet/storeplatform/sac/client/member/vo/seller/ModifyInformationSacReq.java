@@ -33,7 +33,7 @@ public class ModifyInformationSacReq extends CommonInfo {
 	/** 전화번호. */
 	private String sellerPhone;
 	/** SMS 수신 여부. */
-	private String isRecvSMS;
+	private String isRecvSms;
 	/** 이메일수신 여부. */
 	private String isRecvEmail;
 	/** 판매자 이름. */
@@ -165,18 +165,18 @@ public class ModifyInformationSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the isRecvSMS
+	 * @return the isRecvSms
 	 */
-	public String getIsRecvSMS() {
-		return this.isRecvSMS;
+	public String getIsRecvSms() {
+		return this.isRecvSms;
 	}
 
 	/**
-	 * @param isRecvSMS
-	 *            the isRecvSMS to set
+	 * @param isRecvSms
+	 *            the isRecvSms to set
 	 */
-	public void setIsRecvSMS(String isRecvSMS) {
-		this.isRecvSMS = isRecvSMS;
+	public void setIsRecvSms(String isRecvSms) {
+		this.isRecvSms = isRecvSms;
 	}
 
 	/**

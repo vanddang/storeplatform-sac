@@ -46,7 +46,7 @@ public class ConversionClassSacReq extends CommonInfo {
 	/** 사업장 전화번호. */
 	private String sellerBizPhone;
 	/** SMS 수신여부. */
-	private String isRecvSMS;
+	private String isRecvSms;
 	/** 공인인증여부. */
 	private String isOfficialAuth;
 	/** 계좌번호. (필수). */
@@ -317,18 +317,18 @@ public class ConversionClassSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the isRecvSMS
+	 * @return the isRecvSms
 	 */
-	public String getIsRecvSMS() {
-		return this.isRecvSMS;
+	public String getIsRecvSms() {
+		return this.isRecvSms;
 	}
 
 	/**
-	 * @param isRecvSMS
-	 *            the isRecvSMS to set
+	 * @param isRecvSms
+	 *            the isRecvSms to set
 	 */
-	public void setIsRecvSMS(String isRecvSMS) {
-		this.isRecvSMS = isRecvSMS;
+	public void setIsRecvSms(String isRecvSms) {
+		this.isRecvSms = isRecvSms;
 	}
 
 	/**
