@@ -634,4 +634,8 @@ public class DisplayConstants {
 	public static final String DP_EXTERNAL_PORTAL = "externalPotal";
 
 	public static final String DP_EXTERNAL = "external";
+
+    public static final String DP_PURSTAT_AVAILABLE = "available";
+
+    public static final String DP_PURSTAT_RESTRICTED = "restricted";
 }
