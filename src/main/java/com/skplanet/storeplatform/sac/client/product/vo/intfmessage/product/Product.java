@@ -309,7 +309,24 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private String svcGrpCd;
 
-	public String getSalesStatus() {
+    /**
+     * 사용자 구매 가능 상태
+     * <ul>
+     *     <li>available 구매 가능</li>
+     *     <li>restricted 구매 제한</li>
+     * </ul>
+     */
+    private String userPurStat;
+
+    public String getUserPurStat() {
+        return userPurStat;
+    }
+
+    public void setUserPurStat(String userPurStat) {
+        this.userPurStat = userPurStat;
+    }
+
+    public String getSalesStatus() {
 		return this.salesStatus;
 	}
 
