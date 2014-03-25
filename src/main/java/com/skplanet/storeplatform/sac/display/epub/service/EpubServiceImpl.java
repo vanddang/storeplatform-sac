@@ -658,8 +658,10 @@ public class EpubServiceImpl implements EpubService {
 
             //기구매 체크
             Map<String, ExistenceScRes> existenceMap = new HashMap<String, ExistenceScRes>();
-            for(ExistenceScRes existenceScRes : existenceScResList) {
-                existenceMap.put(existenceScRes.getProdId(), existenceScRes);
+            if(existenceScResList != null) {
+	            for(ExistenceScRes existenceScRes : existenceScResList) {
+	                existenceMap.put(existenceScRes.getProdId(), existenceScRes);
+	            }
             }
 
             for(EpubDetail mapperVO : epubSeriesList) {
