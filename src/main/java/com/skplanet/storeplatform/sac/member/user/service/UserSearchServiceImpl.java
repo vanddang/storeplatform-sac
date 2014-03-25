@@ -119,7 +119,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 @Service
 public class UserSearchServiceImpl implements UserSearchService {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserSearchServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserSearchServiceImpl.class);
 
 	@Autowired
 	private MemberCommonComponent mcc;
@@ -163,7 +163,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		if (req.getDeviceId() != null) {
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
-			logger.debug("============================================ getOpmdMdnInfo: {}", opmdMdn);
+			LOGGER.debug("============================================ getOpmdMdnInfo: {}", opmdMdn);
 		}
 
 		String userKey = StringUtil.setTrim(req.getUserKey());
@@ -184,7 +184,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		// 회원정보 세팅
 		DetailRes detailRes = this.searchUser(detailReq, sacHeader);
 
-		logger.debug("============================================ userInfo Request : {}", detailReq.toString());
+		LOGGER.debug("============================================ userInfo Request : {}", detailReq.toString());
 
 		result.setUserKey(StringUtil.setTrim(detailRes.getUserInfo().getUserKey()));
 		result.setUserType(StringUtil.setTrim(detailRes.getUserInfo().getUserType()));
@@ -214,7 +214,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		if (req.getDeviceId() != null) {
 			String opmdMdnInfo = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdnInfo);
-			logger.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdnInfo);
+			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdnInfo);
 		}
 
 		/* 회원 기본 정보 */
@@ -235,7 +235,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					if (listDeviceRes.getDeviceInfoList() != null) {
 						res.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
 					} else {
-						logger.debug("=========== DeviceInfoList No Data ===========");
+						LOGGER.debug("=========== DeviceInfoList No Data ===========");
 						List<DeviceInfo> getDeviceInfoList = new ArrayList<DeviceInfo>();
 						res.setDeviceInfoList(getDeviceInfoList);
 					}
@@ -291,7 +291,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		if (req.getDeviceId() != null) {
 			String opmdMdnInfo = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdnInfo);
-			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdnInfo);
+			LOGGER.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdnInfo);
 		}
 
 		/* 회원 기본 정보 */
@@ -304,7 +304,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
 		}
 
-		logger.info("SearchGameCenterRequest : {}", scReq.toString());
+		LOGGER.info("SearchGameCenterRequest : {}", scReq.toString());
 
 		SearchGameCenterResponse scRes = this.userSCI.searchGameCenter(scReq);
 		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
@@ -354,7 +354,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		res.setIsRealName(StringUtil.setTrimYn(scRes.getMbrOneID().getIsRealName()));
 		res.setIsMemberPoint(StringUtil.setTrimYn(scRes.getMbrOneID().getIsMemberPoint()));
 
-		logger.debug("MbrOneidSacRes : ", res.toString());
+		LOGGER.debug("MbrOneidSacRes : ", res.toString());
 
 		return res;
 	}
@@ -405,7 +405,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		res.setAgreementList(agreementList);
 
-		logger.info("ListTermsAgreementSacReq : ", res.toString());
+		LOGGER.info("ListTermsAgreementSacReq : ", res.toString());
 
 		return res;
 	}
@@ -433,7 +433,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
-			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+			LOGGER.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
 			UserInfo info = this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
 			SearchIdSac sac = new SearchIdSac();
@@ -455,7 +455,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchIdSacRes res = new SearchIdSacRes();
 		res.setSearchIdList(sacList);
 
-		logger.info("SearchIdSacRes : ", res.toString());
+		LOGGER.info("SearchIdSacRes : ", res.toString());
 
 		return res;
 	}
@@ -525,8 +525,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 				FindPasswdEcRes ecResFindpass = this.idpSCI.findPasswd(ecReqFindpass);
 
-				logger.info("## IDP Request FindPasswd : {}", ecReqFindpass.toString());
-				logger.info("## IDP Response FindPasswd : {}", ecResFindpass.getCommonRes().getResultText());
+				LOGGER.info("## IDP Request FindPasswd : {}", ecReqFindpass.toString());
+				LOGGER.info("## IDP Response FindPasswd : {}", ecResFindpass.getCommonRes().getResultText());
 
 				res.setUserPw(ecResFindpass.getTempPasswd());
 
@@ -548,8 +548,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 			ecReqUserInfo.setKeyType("1");
 			UserInfoIdpSearchServerEcRes ecResUserInfo = this.imIdpSCI.userInfoIdpSearchServer(ecReqUserInfo);
 
-			logger.info("## ImIDP Request UserSearch : {}", ecReqUserInfo.toString());
-			logger.info("## ImIDP Response UserSearch{}", ecResUserInfo.toString());
+			LOGGER.info("## ImIDP Request UserSearch : {}", ecReqUserInfo.toString());
+			LOGGER.info("## ImIDP Response UserSearch{}", ecResUserInfo.toString());
 
 			// 통합ID회원 패스워드 리셋
 			ResetUserPwdIdpEcReq ecReqResetUserPwd = new ResetUserPwdIdpEcReq();
@@ -574,18 +574,18 @@ public class UserSearchServiceImpl implements UserSearchService {
 				ecReqResetUserPwd.setIsUserTnAuth("N");
 			}
 
-			logger.info("## ImIDP Request ResetUserPWD : {}", ecReqResetUserPwd.toString());
+			LOGGER.info("## ImIDP Request ResetUserPWD : {}", ecReqResetUserPwd.toString());
 
 			ResetUserPwdIdpEcRes ecResResetUserPwd = this.imIdpSCI.resetUserPwdIdp(ecReqResetUserPwd);
 
-			logger.info("## ImIDP Response ResetUserPWD : {}", ecResResetUserPwd.getCommonRes().getResultText());
+			LOGGER.info("## ImIDP Response ResetUserPWD : {}", ecResResetUserPwd.getCommonRes().getResultText());
 
 			res.setSendInfo("");
 			res.setUserPw("");
 			res.setSendMean("03");
 		}
 
-		logger.info("SearchIdSacRes : ", res.toString());
+		LOGGER.info("SearchIdSacRes : ", res.toString());
 
 		return res;
 	}
@@ -1232,9 +1232,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 			List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
 			for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-				logger.debug("============================================ UserExtraInfo CODE : {}",
+				LOGGER.debug("============================================ UserExtraInfo CODE : {}",
 						ptcr.getExtraProfile());
-				logger.debug("============================================ UserExtraInfo VALUE : {}",
+				LOGGER.debug("============================================ UserExtraInfo VALUE : {}",
 						ptcr.getExtraProfileValue());
 
 				UserExtraInfo extra = new UserExtraInfo();
@@ -1272,15 +1272,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		SearchManagementListResponse schUserExtraRes = this.userSCI.searchManagementList(searchUserExtraRequest);
 
-		logger.debug("############ 부가정보 리스트 Size : {}", schUserExtraRes.getMbrMangItemPtcrList().size());
+		LOGGER.debug("############ 부가정보 리스트 Size : {}", schUserExtraRes.getMbrMangItemPtcrList().size());
 
 		/* 유저키 세팅 */
 		extraRes.setUserKey(schUserExtraRes.getUserKey());
 		/* 부가정보 값 세팅 */
 		for (MbrMangItemPtcr ptcr : schUserExtraRes.getMbrMangItemPtcrList()) {
 
-			logger.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
-			logger.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
+			LOGGER.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
+			LOGGER.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
 
 			UserExtraInfo extra = new UserExtraInfo();
 			extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -1510,7 +1510,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 * SC 공통 정보 setting.
 		 */
 		policyRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
-		logger.info("## policyRequest : {}", policyRequest);
+		LOGGER.debug("## policyRequest : {}", policyRequest);
 
 		List<IndividualPolicyInfo> policyInfos = null;
 
@@ -1557,7 +1557,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			 * 조회된 데이타가 없을경우 Skip.
 			 */
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-				logger.info("## 조회된 사용자 정책이 없습니다. [{}]", spe.getErrorInfo().getCode());
+				LOGGER.debug("## 조회된 사용자 정책이 없습니다. [{}]", spe.getErrorInfo().getCode());
 				/**
 				 * Data가 없을 경우 Element 는 생성하는걸로...
 				 */
@@ -1611,7 +1611,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
 
-			logger.info("## 회원 정보가 존재 하지 않습니다. userKey, deviceKey, deviceTelecom 정보 없이 내려줌.");
+			LOGGER.debug("## 회원 정보가 존재 하지 않습니다. userKey, deviceKey, deviceTelecom 정보 없이 내려줌.");
 			return response;
 
 		}
@@ -1724,10 +1724,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchMbrUserRequest searchMbrUserRequest = new SearchMbrUserRequest();
 		searchMbrUserRequest.setUserKeyList(userKeyList);
 		searchMbrUserRequest.setCommonRequest(commonRequest);
-		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC UserSCI.searchMbrUser() 호출.");
+		LOGGER.info("[UserSearchServiceImpl.searchUserByUserKey] SC UserSCI.searchMbrUser() 호출.");
 		SearchMbrUserResponse searchMbrUserResponse = this.userSCI.searchMbrUser(searchMbrUserRequest);
 
-		logger.info("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse
+		LOGGER.info("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse
 				.getCommonResponse().getResultCode());
 
 		Map<String, UserMbrStatus> userInfoMap = searchMbrUserResponse.getUserMbrStatusMap();
@@ -1750,7 +1750,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					resMap.put(userKeyList.get(i), userInfoByUserKey);
 				}
 			}
-			logger.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserInfo Response : {}", resMap);
+			LOGGER.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserInfo Response : {}", resMap);
 
 		}
 		// 회원정보 없는 경우 SC 회원에서 Exception 처리함.
@@ -1794,11 +1794,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 		searchMbrDeviceRequest.setDeviceKeyList(userDeviceKeyList);
 		searchMbrDeviceRequest.setCommonRequest(commonRequest);
 
-		logger.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC UserSCI.searchMbrDevice() 호출.");
+		LOGGER.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC UserSCI.searchMbrDevice() 호출.");
 
 		SearchMbrDeviceResponse searchMbrDeviceResponse = this.userSCI.searchMbrDevice(searchMbrDeviceRequest);
 
-		logger.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse
+		LOGGER.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse
 				.getCommonResponse().getResultCode());
 
 		Map<String, DeviceMbrStatus> userDeviceInfoMap = searchMbrDeviceResponse.getDeviceMbrStatusMap();
@@ -1833,7 +1833,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					resMap.put(deviceKeyList.get(i), userInfoByDeviceKey);
 				}
 			}
-			logger.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserDeviceInfo Response : {}", resMap);
+			LOGGER.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserDeviceInfo Response : {}", resMap);
 
 		}
 
