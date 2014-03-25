@@ -99,7 +99,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<String> userKeyList = new ArrayList<String>();
 		userKeyList.add(createFeedbackSacReq.getUserKey());
 		searchUserSacReq.setUserKeyList(userKeyList);
-		this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+
+		try {
+			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		} catch (StorePlatformException e) {
+			throw new StorePlatformException("SAC_OTH_9002", e);
+		}
 
 		// 평점 저장.
 		this.setMbrAvgTenantProdStats(createFeedbackSacReq, sacRequestHeader);
@@ -128,13 +133,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 				// 등록.
 				int affectedRow = (Integer) this.feedbackRepository.insertProdNoti(prodNoti);
 				if (affectedRow <= 0)
-					throw new StorePlatformException("SAC_OTH_1001");
+					throw new StorePlatformException("SAC_OTH_9102");
 			} else {
 				// 에러.
-				throw new StorePlatformException("SAC_OTH_1001");
+				throw new StorePlatformException("SAC_OTH_9101");
 			}
 			notiSeq = prodNoti.getNotiSeq();
-
 		}
 		CreateFeedbackSacRes createFeedbackSacRes = new CreateFeedbackSacRes();
 		createFeedbackSacRes.setProdId(createFeedbackSacReq.getProdId());
@@ -150,7 +154,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<String> userKeyList = new ArrayList<String>();
 		userKeyList.add(modifyFeedbackSacReq.getUserKey());
 		searchUserSacReq.setUserKeyList(userKeyList);
-		this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		try {
+			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		} catch (StorePlatformException e) {
+			throw new StorePlatformException("SAC_OTH_9002", e);
+		}
 
 		// 평점 저장.
 		this.setMbrAvgTenantProdStats(modifyFeedbackSacReq, sacRequestHeader);
@@ -178,7 +186,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 				prodNotiGood.setNotiSeq(modifyFeedbackSacReq.getNotiSeq());
 				this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
 			} else {
-				throw new StorePlatformException("SAC_OTH_1002");
+				throw new StorePlatformException("SAC_OTH_9103");
 			}
 			notiSeq = modifyFeedbackSacReq.getNotiSeq();
 		}
@@ -198,7 +206,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<String> userKeyList = new ArrayList<String>();
 		userKeyList.add(removeFeedbackSacReq.getUserKey());
 		searchUserSacReq.setUserKeyList(userKeyList);
-		this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		try {
+			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		} catch (StorePlatformException e) {
+			throw new StorePlatformException("SAC_OTH_9002", e);
+		}
 
 		// 기 평가여부 조회
 		MbrAvg mbrAvg = new MbrAvg();
@@ -244,7 +256,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setMbrNo(removeFeedbackSacReq.getUserKey());
 		int affectedRow = (Integer) this.feedbackRepository.deleteProdNoti(prodNoti);
 		if (affectedRow <= 0) {
-			throw new StorePlatformException("SAC_OTH_1002");
+			throw new StorePlatformException("SAC_OTH_9104");
 		}
 
 		RemoveFeedbackSacRes removeFeedbackSacRes = new RemoveFeedbackSacRes();
@@ -263,7 +275,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<String> userKeyList = new ArrayList<String>();
 		userKeyList.add(createRecommendFeedbackReq.getUserKey());
 		searchUserSacReq.setUserKeyList(userKeyList);
-		this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		try {
+			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		} catch (StorePlatformException e) {
+			throw new StorePlatformException("SAC_OTH_9002", e);
+		}
 
 		// 기 추천여부 조회.
 		ProdNoti prodNoti = new ProdNoti();
@@ -275,7 +291,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		int count = (Integer) this.feedbackRepository.getProdNotiGoodCount(prodNoti);
 
 		if (count > 0) {
-			throw new StorePlatformException("SAC_OTH_1001");
+			throw new StorePlatformException("SAC_OTH_9201");
 		}
 
 		// 사용후기 추천 등록.
@@ -287,7 +303,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
 
 		if (affectedRow <= 0) {
-			throw new StorePlatformException("SAC_OTH_1001");
+			throw new StorePlatformException("SAC_OTH_9202");
 		}
 
 		// 사용후기 추천 업데이트.
@@ -295,7 +311,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
 
 		if (affectedRow <= 0) {
-			throw new StorePlatformException("SAC_OTH_1002");
+			throw new StorePlatformException("SAC_OTH_9202");
 		}
 
 		prodNoti.setStartRow("1");
@@ -304,7 +320,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		ProdNoti res = this.feedbackRepository.getProdNoti(prodNoti);
 
 		if (res == null) {
-			throw new StorePlatformException("SAC_OTH_9001");
+			throw new StorePlatformException("SAC_OTH_9205");
 		}
 
 		// 판매자 요청 리스트.
@@ -355,7 +371,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<String> userKeyList = new ArrayList<String>();
 		userKeyList.add(removeRecommendFeedbackSacReq.getUserKey());
 		searchUserSacReq.setUserKeyList(userKeyList);
-		this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		try {
+			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		} catch (StorePlatformException e) {
+			throw new StorePlatformException("SAC_OTH_9002", e);
+		}
 
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
@@ -368,10 +388,17 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNotiGood.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		prodNotiGood.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
 		prodNotiGood.setMbrNo(removeRecommendFeedbackSacReq.getUserKey());
+
+		int count = (Integer) this.feedbackRepository.getProdNotiGoodCount(prodNoti);
+
+		if (count <= 0) {
+			throw new StorePlatformException("SAC_OTH_9203");
+		}
+
 		int affectedRow = (Integer) this.feedbackRepository.deleteProdNotiGood(prodNotiGood);
 
 		if (affectedRow <= 0) {
-			throw new StorePlatformException("SAC_OTH_1003");
+			throw new StorePlatformException("SAC_OTH_9204");
 		}
 
 		// 사용후기 추천 업데이트.
@@ -379,7 +406,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
 
 		if (affectedRow <= 0) {
-			throw new StorePlatformException("SAC_OTH_1002");
+			throw new StorePlatformException("SAC_OTH_9204");
 		}
 
 		prodNoti.setStartRow("1");
@@ -389,7 +416,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		ProdNoti res = this.feedbackRepository.getProdNoti(prodNoti);
 
 		if (res == null) {
-			throw new StorePlatformException("SAC_OTH_9001");
+			throw new StorePlatformException("SAC_OTH_9205");
 		}
 
 		// 판매자 요청 리스트.
@@ -637,11 +664,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 		sellerMbrSacList.add(sellerMbrSac);
 		memberReq.setSellerMbrSacList(sellerMbrSacList);
 
-		this.feedbackRepository.detailInformation(memberReq);
+		try {
+			this.feedbackRepository.detailInformation(memberReq);
+		} catch (StorePlatformException e) {
+			throw new StorePlatformException("SAC_OTH_9003", e);
+		}
 
 		int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
 		if (affectedRow <= 0)
-			throw new StorePlatformException("SAC_OTH_1001");
+			throw new StorePlatformException("SAC_OTH_9301");
 
 		CreateSellerFeedbackSacRes createSellerFeedbackRes = new CreateSellerFeedbackSacRes();
 		createSellerFeedbackRes.setNotiSeq(prodNoti.getNotiSeq());
@@ -667,9 +698,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 		sellerMbrSacList.add(sellerMbrSac);
 		memberReq.setSellerMbrSacList(sellerMbrSacList);
 
+		try {
+			this.feedbackRepository.detailInformation(memberReq);
+		} catch (StorePlatformException e) {
+			throw new StorePlatformException("SAC_OTH_9003", e);
+		}
+
 		int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
 		if (affectedRow <= 0)
-			throw new StorePlatformException("SAC_OTH_1001");
+			throw new StorePlatformException("SAC_OTH_9302");
 
 		ModifySellerFeedbackSacRes modifySellerFeedbackRes = new ModifySellerFeedbackSacRes();
 		modifySellerFeedbackRes.setNotiSeq(prodNoti.getNotiSeq());
@@ -695,11 +732,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 		sellerMbrSacList.add(sellerMbrSac);
 		memberReq.setSellerMbrSacList(sellerMbrSacList);
 
-		this.feedbackRepository.detailInformation(memberReq);
+		try {
+			this.feedbackRepository.detailInformation(memberReq);
+		} catch (StorePlatformException e) {
+			throw new StorePlatformException("SAC_OTH_9003", e);
+		}
 
 		int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
 		if (affectedRow <= 0)
-			throw new StorePlatformException("SAC_OTH_1001");
+			throw new StorePlatformException("SAC_OTH_9303");
 
 		RemoveSellerFeedbackSacRes removeSellerFeedbackRes = new RemoveSellerFeedbackSacRes();
 		removeSellerFeedbackRes.setNotiSeq(prodNoti.getNotiSeq());
