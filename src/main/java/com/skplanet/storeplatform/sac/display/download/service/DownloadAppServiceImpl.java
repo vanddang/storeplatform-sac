@@ -391,7 +391,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										try {
 											String decData = new String(decrypt, "UTF-8");
 											this.log.debug("----------------------------------------------------------------");
-											this.log.debug("[getDownloadVodInfo] decData : {}", decData);
+											this.log.debug("[DownloadAppServiceImpl] decData : {}", decData);
 											this.log.debug("----------------------------------------------------------------");
 										} catch (UnsupportedEncodingException e) {
 											e.printStackTrace();

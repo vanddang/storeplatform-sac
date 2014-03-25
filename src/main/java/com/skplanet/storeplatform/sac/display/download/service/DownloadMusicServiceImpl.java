@@ -131,7 +131,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			// }
 
 			// 다운로드 Music 상품 조회
-			MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.getDownloadMusicInfo",
+			MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.getDownloadMusicServiceImpl",
 					downloadMusicSacReq);
 			if (metaInfo != null) {
 
@@ -220,13 +220,13 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 								}
 
 								this.log.debug("----------------------------------------------------------------");
-								this.log.debug("[DownloadMusicInfo] prchsId : {}", prchsId);
-								this.log.debug("[DownloadMusicInfo] prchsDt : {}", prchsDt);
-								this.log.debug("[DownloadMusicInfo] useExprDt : {}", useExprDt);
-								this.log.debug("[DownloadMusicInfo] dwldExprDt : {}", dwldExprDt);
-								this.log.debug("[DownloadMusicInfo] prchsCaseCd : {}", prchsCaseCd);
-								this.log.debug("[DownloadMusicInfo] prchsState : {}", prchsState);
-								this.log.debug("[DownloadMusicInfo] prchsProdId : {}", prchsProdId);
+								this.log.debug("[DownloadMusicServiceImpl] prchsId : {}", prchsId);
+								this.log.debug("[DownloadMusicServiceImpl] prchsDt : {}", prchsDt);
+								this.log.debug("[DownloadMusicServiceImpl] useExprDt : {}", useExprDt);
+								this.log.debug("[DownloadMusicServiceImpl] dwldExprDt : {}", dwldExprDt);
+								this.log.debug("[DownloadMusicServiceImpl] prchsCaseCd : {}", prchsCaseCd);
+								this.log.debug("[DownloadMusicServiceImpl] prchsState : {}", prchsState);
+								this.log.debug("[DownloadMusicServiceImpl] prchsProdId : {}", prchsProdId);
 								this.log.debug("----------------------------------------------------------------");
 
 								metaInfo.setPurchaseId(prchsId);
@@ -310,7 +310,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 										try {
 											String decData = new String(decrypt, "UTF-8");
 											this.log.debug("----------------------------------------------------------------");
-											this.log.debug("[getDownloadVodInfo] decData : {}", decData);
+											this.log.debug("[DownloadMusicServiceImpl] decData : {}", decData);
 											this.log.debug("----------------------------------------------------------------");
 										} catch (UnsupportedEncodingException e) {
 											e.printStackTrace();
