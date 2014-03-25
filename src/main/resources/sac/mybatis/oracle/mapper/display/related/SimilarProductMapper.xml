@@ -68,6 +68,9 @@
                         #{exceptId}
                     </foreach>
                 </if> 
+                <if test='topMenuId != null and topMenuId != ""'>
+                AND D.TOP_MENU_ID = #{topMenuId}
+                </if>
                 UNION ALL
                 SELECT 
                     ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
@@ -114,6 +117,9 @@
                         #{exceptId}
                     </foreach>
                 </if> 
+                <if test='topMenuId != null and topMenuId != ""'>
+                AND D.TOP_MENU_ID = #{topMenuId}
+                </if>
             ) A
             WHERE RNUM = 1
         ) A
