@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishDetailEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemDetailEcRes;
@@ -783,17 +782,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	@Override
 	public void revertToPreConfirm(String prchsId) {
 
-		// -------------------------------------------------------------------------------------
-		// 쇼핑 쿠폰 발급 취소
-
-		CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
-		couponPublishCancelEcReq.setPrchsId(prchsId);
-		try {
-			this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);
-		} catch (Exception e) {
-			// TAKTODO:: 이 때 발생하는 예외처리는 어떻게? 로깅만?
-			this.logger.debug("PRCHS,ORDER,SAC,REVERT,COUPON,ERROR,{}", e.getMessage());
-		}
+		// // -------------------------------------------------------------------------------------
+		// // 쇼핑 쿠폰 발급 취소
+		//
+		// CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
+		// couponPublishCancelEcReq.setPrchsId(prchsId);
+		// try {
+		// this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);
+		// } catch (Exception e) {
+		// // TAKTODO:: 이 때 발생하는 예외처리는 어떻게? 로깅만?
+		// this.logger.debug("PRCHS,ORDER,SAC,REVERT,COUPON,ERROR,{}", e.getMessage());
+		// }
 
 	}
 
