@@ -519,7 +519,7 @@
             , TB_DP_PROD_IMG PI
         WHERE MP.PROD_ID = CP.PART_PROD_ID
           AND P.PROD_ID = CP.PART_PROD_ID
-          AND CPM.PROD_ID = CP.PART_PROD_ID
+          AND CPM.PROD_ID = CP.PROD_ID
           AND C.MENU_ID = CPM.MENU_ID
           AND CD.MENU_ID = C.MENU_ID
           AND CD2.MENU_ID = C.TOP_MENU_ID
