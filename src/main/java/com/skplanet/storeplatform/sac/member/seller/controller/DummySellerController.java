@@ -447,7 +447,7 @@ public class DummySellerController {
 		// sellerMbr.setVendorCode("");
 
 		responseVO.setDocumentList(dList);
-		responseVO.setExtraRightList(eList);
+		// responseVO.setExtraRightList(eList);
 		responseVO.setSellerAccount(sellerAccount);
 		// responseVO.setSellerKey("IF102158942020090723111912");
 		// responseVO.setSellerMbr(sellerMbr);
