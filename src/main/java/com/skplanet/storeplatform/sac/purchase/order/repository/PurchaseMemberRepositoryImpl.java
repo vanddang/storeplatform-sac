@@ -10,13 +10,11 @@
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -190,9 +188,9 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	 * 
 	 * @return 나이
 	 */
-	private int getCurrDayAge(String birthday) {
-		String currday = DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyyyMMdd");
-		int baseAge = Integer.parseInt(currday.substring(0, 4)) - Integer.parseInt(birthday.substring(0, 4)) + 1;
-		return (currday.substring(4, 8).compareTo(birthday.substring(4, 8)) > 0 ? baseAge - 1 : baseAge);
-	}
+	// private int getCurrDayAge(String birthday) {
+	// String currday = DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyyyMMdd");
+	// int baseAge = Integer.parseInt(currday.substring(0, 4)) - Integer.parseInt(birthday.substring(0, 4)) + 1;
+	// return (currday.substring(4, 8).compareTo(birthday.substring(4, 8)) > 0 ? baseAge - 1 : baseAge);
+	// }
 }

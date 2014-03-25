@@ -282,6 +282,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// throw new StorePlatformException("SAC_PUR_5103");
 			// }
 			// }
+
+			// TAKTODO:: 링&벨은 일단 상품 가격을 요청가격으로
+			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
+				purchaseProduct.setProdAmt(reqProduct.getProdAmt());
+			}
+
 			// 상품 가격 체크
 			nowPurchaseProdAmt = StringUtils.isBlank(purchaseProduct.getSpecialSaleCouponId()) ? purchaseProduct
 					.getProdAmt() : purchaseProduct.getSpecialSaleAmt();

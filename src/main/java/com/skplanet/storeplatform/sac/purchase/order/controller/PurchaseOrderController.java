@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseSc;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateBizPurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateFreePurchaseSacRes;
@@ -307,18 +306,8 @@ public class PurchaseOrderController {
 		// 쇼핑상품 쿠폰 발급요청
 		// 구매 확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장
 
-		List<CreatePurchaseSc> createPurchaseScList = null;
-		try {
-			createPurchaseScList = this.orderService.executeConfirmPurchase(notifyPaymentReq, tenantId);
-		} catch (Exception e) {
-			this.orderService.revertToPreConfirm(notifyPaymentReq.getPrchsId());
-
-			if (e instanceof StorePlatformException) {
-				throw new StorePlatformException(((StorePlatformException) e).getErrorInfo());
-			} else {
-				throw new StorePlatformException("SAC_PUR_7202", e);
-			}
-		}
+		List<CreatePurchaseSc> createPurchaseScList = this.orderService.executeConfirmPurchase(notifyPaymentReq,
+				tenantId);
 
 		// ------------------------------------------------------------------------------
 		// 구매 후 처리 - 씨네21/인터파크, 구매건수 증가 등등

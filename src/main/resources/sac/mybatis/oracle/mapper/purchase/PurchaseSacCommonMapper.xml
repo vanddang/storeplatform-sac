@@ -32,4 +32,16 @@
       ORDER BY  policy_prior, policy_id, policy_seq
     </select>
     
+    <!-- Pay Planet 가맹점 정보 조회 -->
+    <select id="searchPayPlanetShopInfoDetail" parameterType="java.lang.String" resultType="PayPlanetShop">
+        SELECT /* PurchaseSacCommonMapper.searchPayPlanetShopInfoDetail, Pay Planet 가맹점 정보 조회, 이승택/nTels, 2014-03-25 */
+                cd_nm AS mid
+              , add_field_01 AS authKey
+              , add_field_02 AS encKey
+              , cd_desc AS paymentUrl
+          FROM  tb_cm_cd
+         WHERE  cd_id = #{cd_id}
+           AND  use_yn = 'Y'
+    </select>
+    
 </mapper>
