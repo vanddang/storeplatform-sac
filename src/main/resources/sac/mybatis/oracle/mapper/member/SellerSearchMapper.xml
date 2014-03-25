@@ -15,20 +15,21 @@
     </select>
     
     <!-- 나라별 해외은행 정보 조회 -->
-    <select id="listBanksByCountry" parameterType="ListBanksByCountryReq" resultType="BanksByCountry">
-        SELECT /* SellerSearchMapper.listBanksByCountry, 나라별 해외은행 정보 조회, 김다슬/인크로스, 2014-03-19 */
-		        NATION_CD     AS nationCode
-		      , NATION_NM     AS nationName
-		      , ALPHA2_CD     AS alphaCode
-		      , BANK_NO       AS bankNo
-		      , NATION_TEL_NO AS nationTelNo
-		      , NATION_DESC   AS nationDesc
-              , IBAN_USE_YN   AS ibanUseYn
-              , ABA_USE_YN    AS abaUseYn
-              , SORT_USE_YN   AS sortUseYn
-              , BSB_USE_YN    AS bsbUseYn
-		  FROM  TB_CM_NATION
-		 WHERE  USE_YN = #{useYn} 
+    <select id="listBanksByCountry" resultType="BanksByCountry">
+		SELECT /* SellerSearchMapper.listBanksByCountry, 나라별 해외은행 정보 조회, 김다슬/인크로스, 2014-03-19 */
+		      NATION_CD AS nationCode,
+		       NATION_NM AS nationName,
+		       ALPHA2_CD AS alphaCode,
+		       BANK_NO AS bankNo,
+		       NATION_TEL_NO AS nationTelNo,
+		       NATION_DESC AS nationDesc,
+		       IBAN_USE_YN AS ibanUseYn,
+		       ABA_USE_YN AS abaUseYn,
+		       SORT_USE_YN AS sortUseYn,
+		       BSB_USE_YN AS bsbUseYn,
+		       SWIFT_USE_YN AS swiftUseYn
+		  FROM TB_CM_NATION
+		 WHERE USE_YN = 'Y'
     </select>
     
 </mapper>

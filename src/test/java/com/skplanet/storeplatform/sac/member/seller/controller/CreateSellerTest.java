@@ -156,7 +156,7 @@ public class CreateSellerTest {
 						req.setSellerId("sellerTest0005");
 						req.setSellerPw("1234");
 						req.setSellerTelecom("US001201");
-						req.setIsRecvSMS("Y");
+						req.setIsRecvSms("Y");
 						req.setSellerEmail("abc@acd001.com");
 						req.setIsRecvEmail("N");
 						req.setSellerSex("F");
@@ -208,7 +208,7 @@ public class CreateSellerTest {
 						req.setSellerId("sellerPersonPay01");
 						req.setSellerPw("1234");
 						req.setSellerTelecom("US001201");
-						req.setIsRecvSMS("Y");
+						req.setIsRecvSms("Y");
 						req.setSellerEmail("abc@acd.com");
 						req.setIsRecvEmail("N");
 						req.setSellerSex("F");
@@ -259,7 +259,7 @@ public class CreateSellerTest {
 						req.setSellerId("sellerBusinessNoPay01");
 						req.setSellerPw("1234");
 						req.setSellerTelecom("US001201");
-						req.setIsRecvSMS("Y");
+						req.setIsRecvSms("Y");
 						req.setSellerEmail("abc@acd.com");
 						req.setIsRecvEmail("N");
 						req.setSellerSex("F");
@@ -310,7 +310,7 @@ public class CreateSellerTest {
 						req.setSellerId("sellerBusinessPay01");
 						// req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
-						req.setIsRecvSMS("Y");
+						req.setIsRecvSms("Y");
 						req.setSellerEmail("abc@acd.com");
 						req.setIsRecvEmail("N");
 						req.setSellerSex("F");
@@ -361,7 +361,7 @@ public class CreateSellerTest {
 						req.setSellerId("sellerLegalBusinessNoPay01");
 						// req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
-						req.setIsRecvSMS("Y");
+						req.setIsRecvSms("Y");
 						req.setSellerEmail("abc@acd.com");
 						req.setIsRecvEmail("N");
 						req.setSellerSex("F");
@@ -412,7 +412,7 @@ public class CreateSellerTest {
 						req.setSellerId("sellerLegalBusinessPay01");
 						// req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
-						req.setIsRecvSMS("Y");
+						req.setIsRecvSms("Y");
 						req.setSellerEmail("abc@acd.com");
 						req.setIsRecvEmail("N");
 						req.setSellerSex("F");
@@ -463,7 +463,7 @@ public class CreateSellerTest {
 						req.setSellerId("sellerLegalBusinessBP01");
 						// req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
-						req.setIsRecvSMS("Y");
+						req.setIsRecvSms("Y");
 						req.setSellerEmail("abc@acd.com");
 						req.setIsRecvEmail("N");
 						req.setSellerSex("F");

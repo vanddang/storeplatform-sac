@@ -61,7 +61,6 @@
         <typeAlias alias="SecedeReson"      type="com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson" />
             
         <!-- 회원-판매자 나라별 해외은행 정보 조회 -->
-        <typeAlias alias="ListBanksByCountryReq"      type="com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryReq" />
         <typeAlias alias="BanksByCountry"      type="com.skplanet.storeplatform.sac.client.member.vo.common.BanksByCountry" />
             
         <!-- 휴대폰 SMS 인증 / 이메일 인증  -->

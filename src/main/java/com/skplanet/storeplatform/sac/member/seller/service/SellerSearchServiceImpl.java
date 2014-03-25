@@ -67,7 +67,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes.TabAuthSac;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionAllRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionReq;
@@ -535,7 +534,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerAccount.setBankLocation(schRes.getSellerAccount().getBankLocation());
 			sellerAccount.setBankName(schRes.getSellerAccount().getBankName());
 			sellerAccount.setIbanCode(schRes.getSellerAccount().getIbanCode());
-			sellerAccount.setIsUsed(schRes.getSellerAccount().getIsUsed());
 			sellerAccount.setSwiftCode(schRes.getSellerAccount().getSwiftCode());
 			sellerAccount.setTpinCode(schRes.getSellerAccount().getTpinCode());
 			sellerAccount.setBankBsb(schRes.getSellerAccount().getBankBsb());
@@ -894,17 +892,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 *            SacRequestHeader
 	 * @return ListBanksByCountryRes
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public ListBanksByCountryRes listBanksByCountry(SacRequestHeader header) {
 
-		ListBanksByCountryReq req = new ListBanksByCountryReq();
-		req.setUseYn(MemberConstants.USE_Y);
-
-		List<BanksByCountry> sList = this.commonDAO.queryForList("SellerSearch.listBanksByCountry", req,
-				BanksByCountry.class);
-
 		ListBanksByCountryRes response = new ListBanksByCountryRes();
-		response.setBanksByCountry(sList);
+		response.setBanksByCountry((List<BanksByCountry>) this.commonDAO.queryForList(
+				"SellerSearch.listBanksByCountry", BanksByCountry.class));
 
 		return response;
 

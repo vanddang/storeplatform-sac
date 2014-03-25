@@ -161,7 +161,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		schReq.setParentSellerKey(req.getSellerKey());
-		schReq.setSellerKeyList(req.getSubSellerKey());
+		schReq.setSellerKeyList(req.getSubSellerKeyList());
 
 		RemoveSubSellerResponse schRes = this.sellerSCI.removeSubSeller(schReq);
 
@@ -280,6 +280,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 			sellerMbrRes.setSubSellerEmail(sellerMbr.getSellerEmail());
 			sellerMbrRes.setSubSellerCateList(sellerMbr.getRightProfileList());
 			sellerMbrRes.setSubSellerMemo(sellerMbr.getSubSellerMemo());
+			sellerMbrRes.setSubSellerPhoneCountry(sellerMbr.getSellerPhoneCountry());
 			sellerMbrRes.setSubSellerPhone(sellerMbr.getSellerPhone());
 			sellerMbrRes.setSubSellerKey(sellerMbr.getSellerKey());
 			sellerMbrRes.setSubSellerLoginDttm(sellerMbr.getLoginDate());

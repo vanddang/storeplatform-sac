@@ -371,7 +371,7 @@ public class DummySellerController {
 		sellerAccount.setBankName("222");
 		// sellerAccount.setEndDate("29991231");
 		sellerAccount.setIbanCode("");
-		sellerAccount.setIsUsed("Y");
+		// sellerAccount.setIsUsed("Y");
 		// sellerAccount.setReason("");
 		sellerAccount.setSellerKey("IF102158942020090723111912");
 		// sellerAccount.setStartDate("20130904");

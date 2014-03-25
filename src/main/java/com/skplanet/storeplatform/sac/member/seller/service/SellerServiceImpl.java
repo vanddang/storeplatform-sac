@@ -241,7 +241,7 @@ public class SellerServiceImpl implements SellerService {
 		// 유선 전화번호
 		sellerMbr.setCordedTelephone(req.getCordedTelephone());
 		// SMS 수신여부
-		sellerMbr.setIsRecvSMS(req.getIsRecvSMS());
+		sellerMbr.setIsRecvSMS(req.getIsRecvSms());
 		// 판매자 이메일
 		sellerMbr.setSellerEmail(req.getSellerEmail());
 		// 이메일 수신여부
@@ -483,7 +483,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerPhone(req.getSellerPhone());
 		sellerMbr.setCordedTelephone(req.getCordedTelephone());
 		sellerMbr.setCordedTelephoneCountry(req.getCordedTelephoneCountry());
-		sellerMbr.setIsRecvSMS(req.getIsRecvSMS());
+		sellerMbr.setIsRecvSMS(req.getIsRecvSms());
 		sellerMbr.setIsRecvEmail(req.getIsRecvEmail());
 		sellerMbr.setSellerName(req.getSellerName());
 		sellerMbr.setSellerSex(req.getSellerSex());
@@ -917,7 +917,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setIsOfficialAuth(req.getIsOfficialAuth());
 		sellerUpgrade.setCordedTelephone(req.getCordedTelephone());
 		sellerUpgrade.setSellerPhone(req.getSellerPhone());
-		sellerUpgrade.setIsRecvSMS(req.getIsRecvSMS());
+		sellerUpgrade.setIsRecvSMS(req.getIsRecvSms());
 		sellerUpgrade.setCharger(req.getCharger());
 		sellerUpgrade.setSellerBizType(req.getSellerBizType());
 		sellerUpgrade.setBankBsb(req.getBankBsb());

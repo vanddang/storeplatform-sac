@@ -149,7 +149,7 @@ public class ModifyInformationTest {
 						req.setSellerSex("M");
 						req.setSellerName("국내개인무료사용자2");
 						req.setSellerCompany("Supernatural");
-						req.setIsRecvSMS("Y");
+						req.setIsRecvSms("Y");
 						req.setIsRecvEmail("Y");
 						req.setRepEmail("");
 						req.setRepPhone("");

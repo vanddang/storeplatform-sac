@@ -184,7 +184,7 @@ public class ConversionClassTest {
 						req.setCeoName("심봉사"); //
 						req.setSellerCompany("호랑"); // COMP_NM 회사명 >> api 추가 하지말고 판매자 테이블에서 가져온다.
 						req.setCordedTelephone("1231231");
-						req.setIsRecvSMS("N");
+						req.setIsRecvSms("N");
 						req.setCharger("일순");
 
 						ExtraDocument extraDocument = new ExtraDocument();
