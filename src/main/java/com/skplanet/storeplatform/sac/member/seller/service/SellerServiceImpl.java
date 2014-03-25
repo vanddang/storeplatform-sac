@@ -55,8 +55,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSeller
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpgradeSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpgradeSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
@@ -84,6 +82,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
@@ -200,7 +200,7 @@ public class SellerServiceImpl implements SellerService {
 			for (int i = 0; i < req.getPwReminderList().size(); i++) {
 				PWReminder pwReminder = new PWReminder();
 				pwReminder.setAnswerString(req.getPwReminderList().get(i).getAnswerString());
-				pwReminder.setQuestionID(req.getPwReminderList().get(i).getQuestionID());
+				pwReminder.setQuestionID(req.getPwReminderList().get(i).getQuestionId());
 				pwReminder.setQuestionMessage(req.getPwReminderList().get(i).getQuestionMessage());
 				pWReminderList.add(pwReminder);
 				LOGGER.debug("==>>[SC] CreateSellerRequest.PWReminder[{}].toString() : {}", i, pwReminder.toString());
@@ -213,7 +213,7 @@ public class SellerServiceImpl implements SellerService {
 		/** 2-2. 판매자 회원 비밀번호 생성 및 주입. */
 		// 판매자 회원 PW
 		MbrPwd mbrPwd = new MbrPwd();
-		mbrPwd.setMemberPW(req.getSellerPW());
+		mbrPwd.setMemberPW(req.getSellerPw());
 		createSellerRequest.setMbrPwd(mbrPwd);
 
 		LOGGER.debug("==>>[SC] CreateSellerRequest.MbrPwd.toString() : {}", mbrPwd.toString());
@@ -288,7 +288,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setRepPhone(req.getRepPhone());
 		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
 		// 법인등록번호
-		sellerMbr.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
 		sellerMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
 		sellerMbr.setStopStatusCode(MemberConstants.USER_STOP_STATUS_NOMAL);
 		// 담당자 명
@@ -505,6 +504,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setRepPhone(req.getRepPhone());
 		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
 		sellerMbr.setWebsite(req.getWebsite());
+		sellerMbr.setSellerNickName(req.getSellerNickName());
 		updateSellerRequest.setSellerMbr(sellerMbr);
 
 		/** 보안질문 리스트 주입 - [시작]. */
@@ -514,7 +514,7 @@ public class SellerServiceImpl implements SellerService {
 			for (int i = 0; i < req.getPwReminderList().size(); i++) {
 				PWReminder pwReminder = new PWReminder();
 				pwReminder.setAnswerString(req.getPwReminderList().get(i).getAnswerString());
-				pwReminder.setQuestionID(req.getPwReminderList().get(i).getQuestionID());
+				pwReminder.setQuestionID(req.getPwReminderList().get(i).getQuestionId());
 				pwReminder.setQuestionMessage(req.getPwReminderList().get(i).getQuestionMessage());
 				pWReminderList.add(pwReminder);
 			}
@@ -1122,7 +1122,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return AbrogationAuthKeyRes
 	 */
 	@Override
-	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req) {
+	public RemoveAuthorizationKeySacRes removeAuthorizationKey(SacRequestHeader header, RemoveAuthorizationKeySacReq req) {
 
 		RemoveLoginInfoRequest schReq = new RemoveLoginInfoRequest();
 
@@ -1134,7 +1134,7 @@ public class SellerServiceImpl implements SellerService {
 
 		this.sellerSCI.removeLoginInfo(schReq);
 
-		AbrogationAuthKeyRes response = new AbrogationAuthKeyRes();
+		RemoveAuthorizationKeySacRes response = new RemoveAuthorizationKeySacRes();
 
 		response.setSellerKey(loginInfo.getSellerKey());
 
@@ -1161,7 +1161,7 @@ public class SellerServiceImpl implements SellerService {
 		/** 1. SC회원 Req 생성 및 주입. */
 		LoginSellerRequest loginSellerRequest = new LoginSellerRequest();
 		loginSellerRequest.setSellerID(req.getSellerId());
-		loginSellerRequest.setSellerPW(req.getSellerPW());
+		loginSellerRequest.setSellerPW(req.getSellerPw());
 
 		LOGGER.debug("==>>[SC] LoginSellerRequest.toString() : {}", loginSellerRequest.toString());
 

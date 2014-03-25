@@ -18,7 +18,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
@@ -205,7 +204,7 @@ public class DummySellerController {
 		List<SellerMbrPwdHint> myList = new ArrayList<SellerMbrPwdHint>();
 		for (int i = 0; i < 1; i++) {
 			sellerMbrPwdHint = new SellerMbrPwdHint();
-			sellerMbrPwdHint.setQuestionID("0001");
+			// sellerMbrPwdHint.setQuestionID("0001");
 			myList.add(sellerMbrPwdHint);
 		}
 		responseVO.setSellerMbrPwdHintList(myList);
@@ -248,11 +247,11 @@ public class DummySellerController {
 
 		// 판매자 정보
 		SellerMbrSac sellerMbr = new SellerMbrSac();
-		sellerMbr.setApproveDate("20120820");
-		sellerMbr.setBizGrade("ggg");
-		sellerMbr.setBizKindCd("US000901");
-		sellerMbr.setBizRegNumber("2");
-		sellerMbr.setBizUnregReason("US000603");
+		// sellerMbr.setApproveDate("20120820");
+		// sellerMbr.setBizGrade("ggg");
+		// sellerMbr.setBizKindCd("US000901");
+		// sellerMbr.setBizRegNumber("2");
+		// sellerMbr.setBizUnregReason("US000603");
 		// sellerMbr.setCeoBirthDay("19270304");
 		// sellerMbr.setCeoName("테스트");
 		sellerMbr.setCharger("김덕중");
@@ -261,35 +260,35 @@ public class DummySellerController {
 		sellerMbr.setCustomerEmail("sel@nate.com");
 		// sellerMbr.setCustomerPhone("022224444");
 		// sellerMbr.setCustomerPhoneCountry("dd");
-		sellerMbr.setIsAccountReal("Y");
-		sellerMbr.setIsBizRegistered("N");
-		sellerMbr.setIsBizTaxable("Y");
-		sellerMbr.setIsDeductible("");
-		sellerMbr.setIsDomestic("Y");
-		sellerMbr.setIsParent("");
-		sellerMbr.setIsRealName("Y");
-		sellerMbr.setIsRecvEmail("Y");
-		sellerMbr.setIsRecvSMS("N");
-		sellerMbr.setMarketCode("US001202");
-		sellerMbr.setMarketStatus("");
-		sellerMbr.setParentSellerKey("");
-		sellerMbr.setRegDate("20120820");
-		sellerMbr.setRepEmail("signtest@yopmail.com");
+		// sellerMbr.setIsAccountReal("Y");
+		// sellerMbr.setIsBizRegistered("N");
+		// sellerMbr.setIsBizTaxable("Y");
+		// sellerMbr.setIsDeductible("");
+		// sellerMbr.setIsDomestic("Y");
+		// sellerMbr.setIsParent("");
+		// sellerMbr.setIsRealName("Y");
+		// sellerMbr.setIsRecvEmail("Y");
+		// sellerMbr.setIsRecvSMS("N");
+		// sellerMbr.setMarketCode("US001202");
+		// sellerMbr.setMarketStatus("");
+		// sellerMbr.setParentSellerKey("");
+		// sellerMbr.setRegDate("20120820");
+		// sellerMbr.setRepEmail("signtest@yopmail.com");
 		// sellerMbr.setRepFax("0211112222");
 		// sellerMbr.setRepFaxArea("");
 		// sellerMbr.setRepPhone("0211112222");
 		// sellerMbr.setRepPhoneArea("");
-		sellerMbr.setRightProfile("");
-		sellerMbr.setSecedeDate("");
-		sellerMbr.setSecedePathCd("");
-		sellerMbr.setSecedeReasonCode("");
-		sellerMbr.setSecedeReasonMessage("");
-		sellerMbr.setSellerAddress("123123");
-		sellerMbr.setSellerBirthDay("19781101");
-		sellerMbr.setSellerBizCategory("test");
-		sellerMbr.setSellerBizCorpNumber("7887845121");
-		sellerMbr.setSellerBizNumber("");
-		sellerMbr.setSellerBizType("test");
+		// sellerMbr.setRightProfile("");
+		// sellerMbr.setSecedeDate("");
+		// sellerMbr.setSecedePathCd("");
+		// sellerMbr.setSecedeReasonCode("");
+		// sellerMbr.setSecedeReasonMessage("");
+		// sellerMbr.setSellerAddress("123123");
+		// sellerMbr.setSellerBirthDay("19781101");
+		// sellerMbr.setSellerBizCategory("test");
+		// sellerMbr.setSellerBizCorpNumber("7887845121");
+		// sellerMbr.setSellerBizNumber("");
+		// sellerMbr.setSellerBizType("test");
 		sellerMbr.setSellerCategory("US011302");
 		sellerMbr.setSellerCity("123123");
 		sellerMbr.setSellerClass("US010101");
@@ -311,14 +310,14 @@ public class DummySellerController {
 		sellerMbr.setSellerSubStatus("US010314");
 		sellerMbr.setSellerTelecom("US001202");
 		sellerMbr.setSellerZip("120830");
-		sellerMbr.setTenantID("");
-		sellerMbr.setVendorCode("");
-
-		responseVO.setExtraRightList(eList);
-		responseVO.setMbrClauseAgreeList(mList);
-		responseVO.setMbrLglAgent(mbrLglAgent);
-		responseVO.setSellerKey("IF102158942020090723111912");
-		responseVO.setSellerMbr(sellerMbr);
+		// sellerMbr.setTenantID("");
+		// sellerMbr.setVendorCode("");
+		//
+		// responseVO.setExtraRightList(eList);
+		// responseVO.setMbrClauseAgreeList(mList);
+		// responseVO.setMbrLglAgent(mbrLglAgent);
+		// responseVO.setSellerKey("IF102158942020090723111912");
+		// responseVO.setSellerMbr(sellerMbr);
 
 		return responseVO;
 
@@ -370,22 +369,22 @@ public class DummySellerController {
 		sellerAccount.setBankCode("20");
 		sellerAccount.setBankLocation("555");
 		sellerAccount.setBankName("222");
-		sellerAccount.setEndDate("29991231");
+		// sellerAccount.setEndDate("29991231");
 		sellerAccount.setIbanCode("");
 		sellerAccount.setIsUsed("Y");
-		sellerAccount.setReason("");
+		// sellerAccount.setReason("");
 		sellerAccount.setSellerKey("IF102158942020090723111912");
-		sellerAccount.setStartDate("20130904");
+		// sellerAccount.setStartDate("20130904");
 		sellerAccount.setSwiftCode("666");
 		sellerAccount.setTpinCode("");
 
 		// 판매자 정보
 		SellerMbrSac sellerMbr = new SellerMbrSac();
-		sellerMbr.setApproveDate("20120820");
-		sellerMbr.setBizGrade("ggg");
-		sellerMbr.setBizKindCd("US000901");
-		sellerMbr.setBizRegNumber("2");
-		sellerMbr.setBizUnregReason("US000603");
+		// sellerMbr.setApproveDate("20120820");
+		// sellerMbr.setBizGrade("ggg");
+		// sellerMbr.setBizKindCd("US000901");
+		// sellerMbr.setBizRegNumber("2");
+		// sellerMbr.setBizUnregReason("US000603");
 		// sellerMbr.setCeoBirthDay("19270304");
 		// sellerMbr.setCeoName("테스트");
 		sellerMbr.setCharger("김덕중");
@@ -394,35 +393,35 @@ public class DummySellerController {
 		sellerMbr.setCustomerEmail("sel@nate.com");
 		// sellerMbr.setCustomerPhone("022224444");
 		// sellerMbr.setCustomerPhoneCountry("dd");
-		sellerMbr.setIsAccountReal("Y");
-		sellerMbr.setIsBizRegistered("N");
-		sellerMbr.setIsBizTaxable("Y");
-		sellerMbr.setIsDeductible("");
-		sellerMbr.setIsDomestic("Y");
-		sellerMbr.setIsParent("");
-		sellerMbr.setIsRealName("Y");
-		sellerMbr.setIsRecvEmail("Y");
-		sellerMbr.setIsRecvSMS("N");
-		sellerMbr.setMarketCode("US001202");
-		sellerMbr.setMarketStatus("");
-		sellerMbr.setParentSellerKey("");
+		// sellerMbr.setIsAccountReal("Y");
+		// sellerMbr.setIsBizRegistered("N");
+		// sellerMbr.setIsBizTaxable("Y");
+		// sellerMbr.setIsDeductible("");
+		// sellerMbr.setIsDomestic("Y");
+		// sellerMbr.setIsParent("");
+		// sellerMbr.setIsRealName("Y");
+		// sellerMbr.setIsRecvEmail("Y");
+		// sellerMbr.setIsRecvSMS("N");
+		// sellerMbr.setMarketCode("US001202");
+		// sellerMbr.setMarketStatus("");
+		// sellerMbr.setParentSellerKey("");
 		sellerMbr.setRegDate("20120820");
 		sellerMbr.setRepEmail("signtest@yopmail.com");
 		// sellerMbr.setRepFax("0211112222");
 		// sellerMbr.setRepFaxArea("");
 		// sellerMbr.setRepPhone("0211112222");
 		// sellerMbr.setRepPhoneArea("");
-		sellerMbr.setRightProfile("");
-		sellerMbr.setSecedeDate("");
-		sellerMbr.setSecedePathCd("");
-		sellerMbr.setSecedeReasonCode("");
-		sellerMbr.setSecedeReasonMessage("");
+		// sellerMbr.setRightProfile("");
+		// sellerMbr.setSecedeDate("");
+		// sellerMbr.setSecedePathCd("");
+		// sellerMbr.setSecedeReasonCode("");
+		// sellerMbr.setSecedeReasonMessage("");
 		sellerMbr.setSellerAddress("123123");
 		sellerMbr.setSellerBirthDay("19781101");
-		sellerMbr.setSellerBizCategory("test");
-		sellerMbr.setSellerBizCorpNumber("7887845121");
+		// sellerMbr.setSellerBizCategory("test");
+		// sellerMbr.setSellerBizCorpNumber("7887845121");
 		sellerMbr.setSellerBizNumber("");
-		sellerMbr.setSellerBizType("test");
+		// sellerMbr.setSellerBizType("test");
 		sellerMbr.setSellerCategory("US011302");
 		sellerMbr.setSellerCity("123123");
 		sellerMbr.setSellerClass("US010101");
@@ -444,13 +443,13 @@ public class DummySellerController {
 		sellerMbr.setSellerSubStatus("US010314");
 		sellerMbr.setSellerTelecom("US001202");
 		sellerMbr.setSellerZip("120830");
-		sellerMbr.setTenantID("");
-		sellerMbr.setVendorCode("");
+		// sellerMbr.setTenantID("");
+		// sellerMbr.setVendorCode("");
 
 		responseVO.setDocumentList(dList);
 		responseVO.setExtraRightList(eList);
 		responseVO.setSellerAccount(sellerAccount);
-		responseVO.setSellerKey("IF102158942020090723111912");
+		// responseVO.setSellerKey("IF102158942020090723111912");
 		// responseVO.setSellerMbr(sellerMbr);
 
 		return responseVO;
@@ -668,7 +667,7 @@ public class DummySellerController {
 			myList.add(subSellerList);
 
 		}
-		responseVO.setSubSellerList(myList);
+		// responseVO.setSubSellerList(myList);
 
 		return responseVO;
 	}
@@ -691,7 +690,7 @@ public class DummySellerController {
 		sellerInfo.setSellerKey("IF1023599819420120111013407");
 		sellerInfo.setSellerMainStatus("US010704");
 		sellerInfo.setSellerSubStatus("US010301");
-		responseVO.setSubSellerMbr(sellerInfo);
+		// responseVO.setSubSellerMbr(sellerInfo);
 
 		return responseVO;
 	}
@@ -796,11 +795,11 @@ public class DummySellerController {
 	 * @return AbrogationAuthKeyRes
 	 */
 	// @RequestMapping(value = "/abrogationAuthKey/v1", method = RequestMethod.GET)
-	public @ResponseBody
-	AbrogationAuthKeyRes abrogationAuthKey() {
-		AbrogationAuthKeyRes res = new AbrogationAuthKeyRes();
-		return res;
-	}
+	// public @ResponseBody
+	// AbrogationAuthKeyRes abrogationAuthKey() {
+	// AbrogationAuthKeyRes res = new AbrogationAuthKeyRes();
+	// return res;
+	// }
 
 	/**
 	 * <pre>

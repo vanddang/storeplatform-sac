@@ -27,8 +27,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
@@ -111,17 +111,17 @@ public class AbrogationAuthKeyTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AbrogationAuthKeyReq req = new AbrogationAuthKeyReq();
+						RemoveAuthorizationKeySacReq req = new RemoveAuthorizationKeySacReq();
 
 						req.setSellerKey("SE201403071355064490001517");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
-				}).success(AbrogationAuthKeyRes.class, new SuccessCallback() {
+				}).success(RemoveAuthorizationKeySacRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AbrogationAuthKeyRes res = (AbrogationAuthKeyRes) result;
+						RemoveAuthorizationKeySacRes res = (RemoveAuthorizationKeySacRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
 						LOGGER.debug("response param : {}", res.toString());
 					}

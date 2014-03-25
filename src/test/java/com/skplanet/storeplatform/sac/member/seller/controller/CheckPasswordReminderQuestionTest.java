@@ -28,8 +28,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq.PwReminder;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
@@ -79,10 +79,9 @@ public class CheckPasswordReminderQuestionTest {
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
 						pwReminder.setAnswerString("Seoul - Korea");
-						pwReminder.setQuestionID("QUESTION4");
-						pwReminder.setSellerId("seller_test");
+						pwReminder.setQuestionId("QUESTION4");
 						pwReminders.add(pwReminder);
-						req.setpWReminderList(pwReminders);
+						req.setPwReminderList(pwReminders);
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;

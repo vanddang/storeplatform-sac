@@ -16,6 +16,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordRemin
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInfomationByAuthorizationKeySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInfomationByAuthorizationKeySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
@@ -27,8 +29,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordRemind
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
@@ -106,11 +106,11 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailInformationForProduct/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailInformationForProductRes detailInformationApp(SacRequestHeader header,
+	public DetailInformationForProductRes detailInformationForProduct(SacRequestHeader header,
 			@Validated DetailInformationForProductReq req) {
 		LOGGER.debug("request param : {}", req.toString());
 
-		return this.sellerSearchService.detailInformationApp(header, req);
+		return this.sellerSearchService.detailInformationForProduct(header, req);
 	}
 
 	/**
@@ -252,8 +252,9 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailInfomationByAuthorizationKey/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, @Validated SearchAuthKeyReq req) {
-		return this.sellerSearchService.searchAuthKey(header, req);
+	public DetailInfomationByAuthorizationKeySacRes detailInfomationByAuthorizationKey(SacRequestHeader header,
+			@Validated DetailInfomationByAuthorizationKeySacReq req) {
+		return this.sellerSearchService.detailInfomationByAuthorizationKey(header, req);
 	}
 
 	/**

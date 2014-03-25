@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerLis
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SubSellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
@@ -69,10 +69,10 @@ public class SellerSubServiceImpl implements SellerSubService {
 		CreateSubSellerRequest schReq = new CreateSubSellerRequest();
 
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		schReq.setIsNew(MemberConstants.USE_Y);
 
-		com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr = new com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr();
+		SellerMbr sellerMbr = new SellerMbr();
 		sellerMbr.setParentSellerKey(req.getSellerKey());
-
 		sellerMbr.setSellerID(req.getSubSellerId());
 		sellerMbr.setSubSellerMemo(req.getSubSellerMemo());
 		sellerMbr.setSellerEmail(req.getSubSellerEmail());
@@ -80,21 +80,14 @@ public class SellerSubServiceImpl implements SellerSubService {
 		sellerMbr.setSellerPhone(req.getSubSellerPhone());
 		sellerMbr.setSellerPhoneCountry(req.getSubSellerPhoneCountry());
 		schReq.setSellerMbr(sellerMbr);
-		schReq.setIsNew(MemberConstants.USE_Y);
-
-		if (StringUtils.isNotBlank(req.getSubSellerPW())) {
-			MbrPwd mbrPwd = new MbrPwd();
-			mbrPwd.setMemberPW(req.getSubSellerPW());
-			schReq.setMbrPwd(mbrPwd);
-		}
 
 		MbrPwd mbrPwd = new MbrPwd();
-		mbrPwd.setMemberPW(req.getSubSellerPW());
+		mbrPwd.setMemberPW(req.getSubSellerPw());
 		schReq.setMbrPwd(mbrPwd);
 
 		CreateSubSellerResponse schRes = this.sellerSCI.createSubSeller(schReq);
 
-		LOGGER.info("---------" + schRes.getSellerKey());
+		LOGGER.info(schRes.getSellerKey());
 		CreateSubsellerRes response = new CreateSubsellerRes();
 
 		response.setSubSellerKey(schRes.getSellerKey());
@@ -129,17 +122,19 @@ public class SellerSubServiceImpl implements SellerSubService {
 		sellerMbr.setSellerPhone(req.getSubSellerPhone());
 		sellerMbr.setSellerPhoneCountry(req.getSubSellerPhoneCountry());
 		schReq.setSellerMbr(sellerMbr);
-		schReq.setIsNew(MemberConstants.USE_N);
 
-		if (StringUtils.isNotBlank(req.getSubSellerPW())) {
-			MbrPwd mbrPwd = new MbrPwd();
-			mbrPwd.setMemberPW(req.getSubSellerPW());
-			schReq.setMbrPwd(mbrPwd);
+		MbrPwd mbrPwd = null;
+		if (StringUtils.isNotBlank(req.getSubSellerPw())) {
+			mbrPwd = new MbrPwd();
+			mbrPwd.setMemberPW(req.getSubSellerPw());
 		}
+
+		schReq.setMbrPwd(mbrPwd);
+		schReq.setIsNew(MemberConstants.USE_N);
 
 		CreateSubSellerResponse schRes = this.sellerSCI.createSubSeller(schReq);
 
-		LOGGER.info("---------" + schRes.getSellerKey());
+		LOGGER.info(schRes.getSellerKey());
 		UpdateSubsellerRes response = new UpdateSubsellerRes();
 
 		response.setSubSellerKey(schRes.getSellerKey());
@@ -166,14 +161,11 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		schReq.setParentSellerKey(req.getSellerKey());
-		// 최종 vo 에 값 셋팅
-		List<String> removeKeyList = req.getSubSellerKey();
-		schReq.setSellerKeyList(removeKeyList);
+		schReq.setSellerKeyList(req.getSubSellerKey());
 
 		RemoveSubSellerResponse schRes = this.sellerSCI.removeSubSeller(schReq);
 
 		RemoveSubsellerRes response = new RemoveSubsellerRes();
-
 		response.setRemoveCnt(schRes.getDeletedNumber());
 
 		return response;
@@ -198,13 +190,14 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq.setParentSellerKey(req.getSellerKey());
 		schReq.setLoginSort(req.getLoginSort());
+
 		SearchSubSellerListResponse schRes = this.sellerSCI.searchSubSellerList(schReq);
 
 		ListSubsellerRes response = new ListSubsellerRes();
-		response.setSellerID(schRes.getSellerID());
+		response.setSellerId(schRes.getSellerID());
 		response.setSellerKey(schRes.getSellerKey());
 		response.setSubAccountCount(schRes.getSubAccountCount());
-		response.setSubSellerList(this.sellerMbrList(schRes.getSubSellerList()));// 판매자 정보 리스트
+		response.setSubSellerList(this.sellerMbrList(schRes.getSubSellerList()));
 		return response;
 	}
 
@@ -249,22 +242,21 @@ public class SellerSubServiceImpl implements SellerSubService {
 	 *            SellerMbr
 	 * @return List<SellerMbr>
 	 */
-	private List<SellerMbrSac> sellerMbrList(
-			List<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr> sellerMbr) {
+	private List<SubSellerMbrSac> sellerMbrList(List<SellerMbr> sellerMbr) {
 
-		List<SellerMbrSac> sList = new ArrayList<SellerMbrSac>();
-		SellerMbrSac sellerMbrRes = null;
+		List<SubSellerMbrSac> sList = new ArrayList<SubSellerMbrSac>();
+		SubSellerMbrSac subSellerMbrSac = null;
 		if (sellerMbr != null)
 			for (int i = 0; i < sellerMbr.size(); i++) {
-				sellerMbrRes = new SellerMbrSac();
-				sellerMbrRes.setSubSellerKey(sellerMbr.get(i).getSellerKey());
-				sellerMbrRes.setSubSellerId(sellerMbr.get(i).getSellerID());
-				sellerMbrRes.setSubSellerEmail(sellerMbr.get(i).getSellerEmail());
-				sellerMbrRes.setSubSellerPhone(sellerMbr.get(i).getSellerPhone());
-				sellerMbrRes.setSubSellerPhoneCountry(sellerMbr.get(i).getSellerPhoneCountry());
-				sellerMbrRes.setSubSellerCateList(sellerMbr.get(i).getRightProfileList());
-				sellerMbrRes.setSubSellerLoginDttm(sellerMbr.get(i).getLoginDate());
-				sList.add(sellerMbrRes);
+				subSellerMbrSac = new SubSellerMbrSac();
+				subSellerMbrSac.setSubSellerKey(sellerMbr.get(i).getSellerKey());
+				subSellerMbrSac.setSubSellerId(sellerMbr.get(i).getSellerID());
+				subSellerMbrSac.setSubSellerEmail(sellerMbr.get(i).getSellerEmail());
+				subSellerMbrSac.setSubSellerPhone(sellerMbr.get(i).getSellerPhone());
+				subSellerMbrSac.setSubSellerPhoneCountry(sellerMbr.get(i).getSellerPhoneCountry());
+				subSellerMbrSac.setSubSellerCateList(sellerMbr.get(i).getRightProfileList());
+				subSellerMbrSac.setSubSellerLoginDttm(sellerMbr.get(i).getLoginDate());
+				sList.add(subSellerMbrSac);
 			}
 
 		return sList;
@@ -279,15 +271,14 @@ public class SellerSubServiceImpl implements SellerSubService {
 	 *            SellerMbr
 	 * @return SellerMbr
 	 */
-	private SellerMbrSac sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr) {
+	private SubSellerMbrSac sellerMbr(SellerMbr sellerMbr) {
 		// 판매자 정보
-		SellerMbrSac sellerMbrRes = new SellerMbrSac();
+		SubSellerMbrSac sellerMbrRes = new SubSellerMbrSac();
 		if (sellerMbr != null) {
 			sellerMbrRes.setSubSellerId(sellerMbr.getSellerID());
 			sellerMbrRes.setSubRegDate(sellerMbr.getRegDate());
 			sellerMbrRes.setSubSellerEmail(sellerMbr.getSellerEmail());
 			sellerMbrRes.setSubSellerCateList(sellerMbr.getRightProfileList());
-
 			sellerMbrRes.setSubSellerMemo(sellerMbr.getSubSellerMemo());
 			sellerMbrRes.setSubSellerPhone(sellerMbr.getSellerPhone());
 			sellerMbrRes.setSubSellerKey(sellerMbr.getSellerKey());

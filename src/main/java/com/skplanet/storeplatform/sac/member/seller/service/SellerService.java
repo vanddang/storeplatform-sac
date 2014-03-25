@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
@@ -29,6 +27,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
@@ -210,7 +210,7 @@ public interface SellerService {
 	 *            AbrogationAuthKeyReq
 	 * @return AbrogationAuthKeyRes
 	 */
-	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req);
+	public RemoveAuthorizationKeySacRes removeAuthorizationKey(SacRequestHeader header, RemoveAuthorizationKeySacReq req);
 
 	/**
 	 * <pre>

@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
@@ -37,6 +35,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
@@ -276,9 +276,9 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/removeAuthorizationKey/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header,
-			@RequestBody @Validated AbrogationAuthKeyReq req) {
-		return this.sellerService.abrogationAuthKey(header, req);
+	public RemoveAuthorizationKeySacRes removeAuthorizationKey(SacRequestHeader header,
+			@RequestBody @Validated RemoveAuthorizationKeySacReq req) {
+		return this.sellerService.removeAuthorizationKey(header, req);
 	}
 
 	/**

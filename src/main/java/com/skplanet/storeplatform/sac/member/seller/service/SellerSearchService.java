@@ -4,6 +4,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordRemin
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInfomationByAuthorizationKeySacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInfomationByAuthorizationKeySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationForProductRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
@@ -15,8 +17,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordRemind
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
@@ -67,7 +67,7 @@ public interface SellerSearchService {
 	 *            DetailInformationForProductReq
 	 * @return DetailInformationForProductRes
 	 */
-	public DetailInformationForProductRes detailInformationApp(SacRequestHeader header,
+	public DetailInformationForProductRes detailInformationForProduct(SacRequestHeader header,
 			DetailInformationForProductReq req);
 
 	/**
@@ -170,7 +170,8 @@ public interface SellerSearchService {
 	 *            SearchAuthKeyReq
 	 * @return SearchAuthKeyRes
 	 */
-	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req);
+	public DetailInfomationByAuthorizationKeySacRes detailInfomationByAuthorizationKey(SacRequestHeader header,
+			DetailInfomationByAuthorizationKeySacReq req);
 
 	/**
 	 * <pre>

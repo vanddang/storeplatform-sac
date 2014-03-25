@@ -262,5 +262,8 @@ public final class MemberConstants {
 
 		public static final String SELLER_REASON_CHANGE = "change"; // 변경
 		public static final String SELLER_REASON_NEW = "new"; // 신규
+
+		public static final String SELLER_APP_DISPLAY_TOP = "Top";
+		public static final String SELLER_APP_DISPLAY_LOWER = "Lower";
 	}
 }

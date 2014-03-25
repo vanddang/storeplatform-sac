@@ -154,7 +154,7 @@ public class CreateSellerTest {
 						req.setSellerClass("US010101");
 						// req.setSellerId("sellerPersonNoPay34");
 						req.setSellerId("sellerTest0005");
-						req.setSellerPW("1234");
+						req.setSellerPw("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
 						req.setSellerEmail("abc@acd001.com");
@@ -173,7 +173,7 @@ public class CreateSellerTest {
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
 						pwReminder.setAnswerString("temp");
-						pwReminder.setQuestionID("Q123");
+						pwReminder.setQuestionId("Q123");
 						pwReminder.setQuestionMessage("qwdwd");
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
@@ -206,7 +206,7 @@ public class CreateSellerTest {
 					public Object requestBody() {
 						req.setSellerClass("US010101");
 						req.setSellerId("sellerPersonPay01");
-						req.setSellerPW("1234");
+						req.setSellerPw("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
 						req.setSellerEmail("abc@acd.com");
@@ -223,7 +223,7 @@ public class CreateSellerTest {
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
 						pwReminder.setAnswerString("temp");
-						pwReminder.setQuestionID("Q123");
+						pwReminder.setQuestionId("Q123");
 						pwReminder.setQuestionMessage("qwdwd");
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
@@ -257,7 +257,7 @@ public class CreateSellerTest {
 					public Object requestBody() {
 						req.setSellerClass("US010102");
 						req.setSellerId("sellerBusinessNoPay01");
-						req.setSellerPW("1234");
+						req.setSellerPw("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
 						req.setSellerEmail("abc@acd.com");
@@ -274,7 +274,7 @@ public class CreateSellerTest {
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
 						pwReminder.setAnswerString("temp");
-						pwReminder.setQuestionID("Q123");
+						pwReminder.setQuestionId("Q123");
 						pwReminder.setQuestionMessage("qwdwd");
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
@@ -308,7 +308,7 @@ public class CreateSellerTest {
 					public Object requestBody() {
 						req.setSellerClass("US010102");
 						req.setSellerId("sellerBusinessPay01");
-						req.setSellerPW("1234");
+						// req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
 						req.setSellerEmail("abc@acd.com");
@@ -325,7 +325,7 @@ public class CreateSellerTest {
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
 						pwReminder.setAnswerString("temp");
-						pwReminder.setQuestionID("Q123");
+						// pwReminder.setQuestionID("Q123");
 						pwReminder.setQuestionMessage("qwdwd");
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
@@ -359,7 +359,7 @@ public class CreateSellerTest {
 					public Object requestBody() {
 						req.setSellerClass("US010103");
 						req.setSellerId("sellerLegalBusinessNoPay01");
-						req.setSellerPW("1234");
+						// req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
 						req.setSellerEmail("abc@acd.com");
@@ -376,7 +376,7 @@ public class CreateSellerTest {
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
 						pwReminder.setAnswerString("temp");
-						pwReminder.setQuestionID("Q123");
+						// pwReminder.setQuestionID("Q123");
 						pwReminder.setQuestionMessage("qwdwd");
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
@@ -410,7 +410,7 @@ public class CreateSellerTest {
 					public Object requestBody() {
 						req.setSellerClass("US010103");
 						req.setSellerId("sellerLegalBusinessPay01");
-						req.setSellerPW("1234");
+						// req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
 						req.setSellerEmail("abc@acd.com");
@@ -427,7 +427,7 @@ public class CreateSellerTest {
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
 						pwReminder.setAnswerString("temp");
-						pwReminder.setQuestionID("Q123");
+						// pwReminder.setQuestionID("Q123");
 						pwReminder.setQuestionMessage("qwdwd");
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
@@ -461,7 +461,7 @@ public class CreateSellerTest {
 					public Object requestBody() {
 						req.setSellerClass("US010103");
 						req.setSellerId("sellerLegalBusinessBP01");
-						req.setSellerPW("1234");
+						// req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
 						req.setSellerEmail("abc@acd.com");
@@ -478,7 +478,7 @@ public class CreateSellerTest {
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
 						pwReminder.setAnswerString("temp");
-						pwReminder.setQuestionID("Q123");
+						// pwReminder.setQuestionID("Q123");
 						pwReminder.setQuestionMessage("qwdwd");
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);

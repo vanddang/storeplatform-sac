@@ -93,7 +93,7 @@ public class RemoveSubsellerTest {
 
 						// 새로 추가됨
 						// createSubsellerReq.setSubSellerKey("SS201402061427346800000640");
-						createSubsellerReq.setSubSellerPW("1234567999");
+						createSubsellerReq.setSubSellerPw("1234567999");
 						// createSubsellerReq.setOldPW("1234567999");
 
 						LOGGER.debug("request param : {}", createSubsellerReq.toString());
