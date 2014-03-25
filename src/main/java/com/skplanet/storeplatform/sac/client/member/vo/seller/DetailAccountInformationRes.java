@@ -7,7 +7,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
-import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
 
 /**
@@ -31,11 +30,6 @@ public class DetailAccountInformationRes extends CommonInfo {
 	private List<Document> documentList;
 
 	/**
-	 * 판매자 멀티미디어 정보 목록.
-	 */
-	private List<ExtraRight> extraRightList;
-
-	/**
 	 * @return the documentList
 	 */
 	public List<Document> getDocumentList() {
@@ -48,21 +42,6 @@ public class DetailAccountInformationRes extends CommonInfo {
 	 */
 	public void setDocumentList(List<Document> documentList) {
 		this.documentList = documentList;
-	}
-
-	/**
-	 * @return the extraRightList
-	 */
-	public List<ExtraRight> getExtraRightList() {
-		return this.extraRightList;
-	}
-
-	/**
-	 * @param extraRightList
-	 *            the extraRightList to set
-	 */
-	public void setExtraRightList(List<ExtraRight> extraRightList) {
-		this.extraRightList = extraRightList;
 	}
 
 	/**
