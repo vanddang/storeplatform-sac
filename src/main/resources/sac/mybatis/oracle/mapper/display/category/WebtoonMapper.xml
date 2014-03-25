@@ -496,7 +496,8 @@
                       , UV_TB_DP_MULTIMDA_PROD        L /* 에피소드 상품 */
                       , TB_DP_PROD_DESC               F /* 에피소드 상품 설명 */
                       , TB_DP_TENANT_PROD             G /* 채널 Tenant 상품 */
-                      , TB_DP_TENANT_PROD_STATS       N /* 채널 Tenant 상품 통계 건수 */
+                      , TB_DP_TENANT_PROD             G1 /* 에피소드 Tenant 상품 */
+                      , TB_DP_TENANT_PROD_STATS       N /* 에피소드 Tenant 상품 통계 건수 */
                       , TB_DP_TENANT_PROD_PRICE       O /* 에피소드 Tenant 상품 가격 */
                  WHERE A.MENU_ID = B.MENU_ID
                    AND A.MENU_ID = C.MENU_ID
@@ -505,10 +506,11 @@
                    AND B.PROD_ID = G.PROD_ID
                    AND B.PROD_ID = H.PROD_ID
                    AND B.PROD_ID = I.PROD_ID
-                   AND G.TENANT_ID = H.TENANT_ID                      
-                   AND G.TENANT_ID = N.TENANT_ID(+)
-                   AND G.TENANT_ID = O.TENANT_ID
-                   AND G.PROD_ID = N.PROD_ID(+)           
+                   AND G.TENANT_ID = H.TENANT_ID     
+                   AND G.TENANT_ID = O.TENANT_ID           
+                   AND G1.TENANT_ID = N.TENANT_ID(+)
+                   AND G1.PROD_ID = N.PROD_ID(+)              
+                   AND I.PART_PROD_ID = G1.PROD_ID           
                    AND I.PART_PROD_ID = J.PROD_ID
                    AND I.PART_PROD_ID = L.PROD_ID
                    AND I.PART_PROD_ID = O.PROD_ID
