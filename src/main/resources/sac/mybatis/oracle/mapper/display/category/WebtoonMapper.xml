@@ -336,6 +336,7 @@
              , A.SELLER_MBR_NO
              , E.MENU_DESC
              , A.META_CLSF_CD
+             , A.SVC_GRP_CD
              , COUNT(*) OVER() AS TOTAL_COUNT
           FROM TB_DP_PROD A
              , TB_DP_PROD_DESC B

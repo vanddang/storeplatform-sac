@@ -106,6 +106,9 @@ public class WebtoonServiceImpl implements WebtoonService {
 				nextPartId = (String) this.commonDAO.queryForObject("Webtoon.getWebtoonPreNext", req);
 			}
 
+			// 서비스그룹코드
+			product.setSvcGrpCd(webtoonDetail.getSvcGrpCd());
+
 			// 채널상품ID
 			identifier = new Identifier();
 			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);

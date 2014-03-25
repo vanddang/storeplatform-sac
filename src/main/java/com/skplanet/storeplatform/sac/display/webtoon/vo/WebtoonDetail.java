@@ -34,6 +34,7 @@ public class WebtoonDetail extends CommonInfo {
 	private String sellerMbrNo; // 회원번호
 	private String menuDesc; // 메뉴상세
 	private String metaClsfCd; // 메타정보
+	private String svcGrpCd; // 서비스그룹코드
 	private int totalCount;
 
 	/**
@@ -551,6 +552,29 @@ public class WebtoonDetail extends CommonInfo {
 	 */
 	public void setMetaClsfCd(String metaClsfCd) {
 		this.metaClsfCd = metaClsfCd;
+	}
+
+	/**
+	 * <pre>
+	 * 서비스그룹코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getSvcGrpCd() {
+		return this.svcGrpCd;
+	}
+
+	/**
+	 * <pre>
+	 * 서비스그룹코드.
+	 * </pre>
+	 * 
+	 * @param svcGrpCd
+	 *            svcGrpCd
+	 */
+	public void setSvcGrpCd(String svcGrpCd) {
+		this.svcGrpCd = svcGrpCd;
 	}
 
 }
