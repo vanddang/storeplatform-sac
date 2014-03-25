@@ -103,7 +103,6 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		SearchMbrSellerResponse schRes = this.sellerSCI.searchMbrSeller(schReq);
 
 		Iterator<String> it = schRes.getSellerMbrListMap().keySet().iterator();
-		// List<SellerMbr> sellerMbrs = new ArrayList<SellerMbr>();
 
 		List<SellerMbrSac> sellerMbrSacs = null;
 		SellerMbrSac sellerMbrSac = null;
