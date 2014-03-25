@@ -99,6 +99,8 @@ public class AppServiceImpl implements AppService {
         product.setProductExplain(appDetail.getProdBaseDesc());
         product.setProductDetailExplain(appDetail.getProdDtlDesc());
 
+        product.setSvcGrpCd(appDetail.getSvcGrpCd());
+
         // Menu
         List<MenuItem> menuList = commonService.getMenuItemList(request.getChannelId(), request.getLangCd());
         product.setMenuList(new ArrayList<Menu>());

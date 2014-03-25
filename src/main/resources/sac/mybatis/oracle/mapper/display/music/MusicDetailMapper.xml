@@ -30,7 +30,8 @@
             PDESC.PROD_BASE_DESC,
             EPD.CID,
             MM.ALBUM_TYPE_NM,
-            SD.DEVICE_MODEL_CD
+            SD.DEVICE_MODEL_CD,
+            CPD.SVC_GRP_CD
         FROM TB_DP_PROD CPD
             INNER JOIN TB_DP_PROD_RSHP RS
                 ON RS.PROD_ID = CPD.PROD_ID

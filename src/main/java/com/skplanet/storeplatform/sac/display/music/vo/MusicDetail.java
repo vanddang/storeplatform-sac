@@ -40,6 +40,15 @@ public class MusicDetail extends CommonInfo {
     private String albumTypeNm;
     private String cid;
     private String deviceModelCd;
+    private String svcGrpCd;
+
+    public String getSvcGrpCd() {
+        return svcGrpCd;
+    }
+
+    public void setSvcGrpCd(String svcGrpCd) {
+        this.svcGrpCd = svcGrpCd;
+    }
 
     public String getDeviceModelCd() {
         return deviceModelCd;

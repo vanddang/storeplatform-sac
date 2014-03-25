@@ -35,7 +35,8 @@
             PDESC.PROD_BASE_DESC,
             PDESC.PROD_DTL_DESC,
             NVL2(SD.DEVICE_MODEL_CD, 'Y', 'N') AS IS_DEVICE_SUPP,
-            APP.SALE_STRT_DT
+            APP.SALE_STRT_DT,
+            PD.SVC_GRP_CD
         FROM
             TB_DP_PROD PD
             INNER JOIN TB_DP_APP_PROD APP
@@ -62,8 +63,8 @@
     </select>
 
     <select id="getSourceList" parameterType="com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.ImageSource">
-        /* AppDetailMapper.xml, getSourceList, SAC : 정희원 , 2014-01-24 */
-        SELECT FILE_PATH, FILE_NM, IMG_CD, WIDTH, HEIGHT
+        SELECT /* AppDetailMapper.xml, getSourceList, SAC : 정희원 , 2014-01-24 */
+          FILE_PATH, FILE_NM, IMG_CD, WIDTH, HEIGHT
         FROM TB_DP_PROD_IMG
         WHERE PROD_ID = #{channelId}
         AND IMG_CD IN
@@ -73,8 +74,7 @@
     </select>
 
     <select id="getUpdateHistoryList" parameterType="com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam" resultType="com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory">
-        /* AppDetailMapper.xml, getUpdateHistoryList, SAC : 정희원 , 2014-01-24 */
-        SELECT
+        SELECT /* AppDetailMapper.xml, getUpdateHistoryList, SAC : 정희원 , 2014-01-24 */
             PROD_UPD_DT,
             UPDT_TEXT
         FROM TB_DP_PROD_UPDT_HIS
