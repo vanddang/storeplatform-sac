@@ -174,7 +174,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 					} catch (Exception ex) {
 						purchaseFlag = false;
-						this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+						this.log.error("Purchase History Search Exception.( 구매내역 조회 연동 중 오류가 발생하였습니다.) \n{}", ex);
 						// throw new StorePlatformException("SAC_DSP_2001", ex);
 					}
 
@@ -265,7 +265,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 												(end - start));
 									} catch (Exception ex) {
 										memberFlag = false;
-										this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+										this.log.error("SearchDevice Id Exception.( 단말정보 조회 연동 중 오류가 발생하였습니다.) \n{}",
+												ex);
 										// throw new StorePlatformException("SAC_DSP_1001", ex);
 									}
 
