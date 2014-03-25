@@ -68,7 +68,7 @@ public class UserOcbController {
 		 */
 		CreateOcbInformationRes res = this.svc.createOcbInformation(sacHeader, req);
 
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -100,7 +100,7 @@ public class UserOcbController {
 		 */
 		RemoveOcbInformationRes res = this.svc.removeOcbInformation(sacHeader, req);
 
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -132,7 +132,7 @@ public class UserOcbController {
 		 */
 		GetOcbInformationRes res = this.svc.getOcbInformation(sacHeader, req);
 
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 

@@ -77,7 +77,7 @@ public class UserJoinController {
 		 */
 		CreateByMdnRes res = this.svc.createByMdn(sacHeader, req);
 
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -131,7 +131,7 @@ public class UserJoinController {
 
 		}
 
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -185,7 +185,7 @@ public class UserJoinController {
 
 		}
 
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -217,7 +217,7 @@ public class UserJoinController {
 
 		CreateBySimpleRes res = this.svc.createBySimpleId(sacHeader, req);
 
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -253,7 +253,7 @@ public class UserJoinController {
 		 */
 		CreateSaveAndSyncRes res = this.svc.createSaveAndSync(sacHeader, req);
 
-		LOGGER.info("Response : {}", res);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
