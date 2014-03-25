@@ -222,11 +222,6 @@ public class AuthorizeByMdnTest {
 							deviceExtraInfoList.add(deviceExtraInfo);
 
 							deviceExtraInfo = new DeviceExtraInfo();
-							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN);
-							deviceExtraInfo.setExtraProfileValue("Y");
-							deviceExtraInfoList.add(deviceExtraInfo);
-
-							deviceExtraInfo = new DeviceExtraInfo();
 							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
 							deviceExtraInfo.setExtraProfileValue("Y");
 							deviceExtraInfoList.add(deviceExtraInfo);

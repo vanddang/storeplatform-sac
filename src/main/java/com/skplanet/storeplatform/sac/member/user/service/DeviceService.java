@@ -115,13 +115,15 @@ public interface DeviceService {
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @param req
+	 * @param deviceInfo
 	 *            파라메터 휴대기기 정보
+	 * @param dbDeviceInfo
+	 *            SC회원에서 조회한 휴대기기 정보
 	 * @param version
 	 *            MDN 로그인 버젼
 	 * @return deviceKey String
 	 */
-	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo req, String version);
+	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, DeviceInfo dbDeviceInfo, String version);
 
 	/**
 	 * 휴대기기 대표단말 설정.

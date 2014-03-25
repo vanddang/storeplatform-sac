@@ -125,9 +125,10 @@ public class SecedeMobileNumberTest {
 			map.put("systemID", "W");
 			map.put("tenantID", "S01");
 
-			map.put("mdn", "01010007002");
-			map.put("svc_mng_num", "9050006513");
-			map.put("min", "1010007002");
+			map.put("mdn", "01048088874");
+			map.put("svc_mng_num", "1242345410");
+			map.put("min", "1048088874");
+			map.put("svc_rsn_cd", "Z222");
 
 			this.idpService.executeSecedeMobileNumber(map);
 

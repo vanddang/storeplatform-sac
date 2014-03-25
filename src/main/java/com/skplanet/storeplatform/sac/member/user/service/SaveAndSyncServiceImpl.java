@@ -23,10 +23,12 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -90,6 +92,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			 */
 			if (StringUtils.equals(isActive, MemberConstants.USE_Y)) { // 정상 회원
 
+				// 번호 변경만.....
+
 				/**
 				 * 기존 IDP 모바일 회원 탈퇴.
 				 */
@@ -103,9 +107,11 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * 회원 MBR_NO 업데이트
 				 */
-				this.modifyMbrNo(sacHeader, userKey, mbrNo);
+				this.modifyMbrNo(sacHeader, userKey, deviceKey, deviceId, mbrNo);
 
 			} else {
+
+				// 번호 이동만.....
 
 				/**
 				 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
@@ -239,8 +245,12 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 *            공통 헤더
 	 * @param userKey
 	 *            사용자 Key
+	 * @param deviceKey
+	 *            휴대기기 Key
+	 * @param mbrNo
+	 *            IDP Key
 	 */
-	private void modifyMbrNo(SacRequestHeader sacHeader, String userKey, String mbrNo) {
+	private void modifyMbrNo(SacRequestHeader sacHeader, String userKey, String deviceKey, String deviceId, String mbrNo) {
 
 		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 
@@ -262,6 +272,23 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		 * SC 사용자 회원 기본정보 수정 요청.
 		 */
 		this.userSCI.updateUser(updateUserRequest);
+
+		CreateDeviceRequest createDeviceRequest = new CreateDeviceRequest();
+		createDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+		createDeviceRequest.setIsNew(MemberConstants.USE_N);
+		createDeviceRequest.setUserKey(userKey);
+
+		/**
+		 * 단말 Device 업데이트.
+		 */
+		UserMbrDevice userMbrDevice = new UserMbrDevice();
+		userMbrDevice.setUserKey(userKey);
+		userMbrDevice.setDeviceKey(deviceKey);
+		userMbrDevice.setDeviceID(deviceId); // 수정할 DeviceId
+
+		createDeviceRequest.setUserMbrDevice(userMbrDevice);
+		this.deviceSCI.createDevice(createDeviceRequest);
 
 	}
 }
