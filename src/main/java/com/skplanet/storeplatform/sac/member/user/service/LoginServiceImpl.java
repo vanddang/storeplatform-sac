@@ -473,11 +473,6 @@ public class LoginServiceImpl implements LoginService {
 
 				LOGGER.info("### {} 추가인증수단 없음, IDP/SC회원 탈퇴처리", req.getDeviceId());
 
-				/* IDP 탈퇴 */
-				SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-				ecReq.setUserMdn(req.getDeviceId());
-				this.idpSCI.secedeForWap(ecReq);
-
 				/* SC회원탈퇴 */
 				RemoveUserRequest removeUserReq = new RemoveUserRequest();
 				removeUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
@@ -486,6 +481,11 @@ public class LoginServiceImpl implements LoginService {
 				removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
 				removeUserReq.setSecedeReasonMessage("변동성인증수단없음");
 				this.userSCI.remove(removeUserReq);
+
+				/* IDP 탈퇴 */
+				SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+				ecReq.setUserMdn(req.getDeviceId());
+				this.idpSCI.secedeForWap(ecReq);
 
 				/* 회원 정보가 존재 하지 않습니다. */
 				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
