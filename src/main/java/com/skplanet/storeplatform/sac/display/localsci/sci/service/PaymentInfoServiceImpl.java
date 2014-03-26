@@ -71,7 +71,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 			throw new StorePlatformException("SAC_DSP_0002", "langCd", langCd);
 		}
 		if (StringUtils.isEmpty(deviceModelCd)) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceModelCd", deviceModelCd);
+			req.setDeviceModelCd("NULL");
 		}
 
 		// 파라미터 유효 값 체크
