@@ -96,7 +96,7 @@ public class EpubDetail extends CommonInfo {
 	private Integer storeProdNetAmt;
 	/** 소장 DRM */
 	private String storeDrmYn;
-    private String storeStatusCd;
+    private String storeProdStatusCd;
     private String storeUsePeriodUnitCd;
 
     
@@ -108,7 +108,7 @@ public class EpubDetail extends CommonInfo {
 	private Integer playProdNetAmt;
 	/** 대여 DRM */
 	private String playDrmYn;
-    private String playStatusCd;
+    private String playProdStatusCd;
     private String playUsePeriodUnitCd;
 
 	/** 챕터 */
@@ -858,22 +858,6 @@ public class EpubDetail extends CommonInfo {
         this.prodVer = prodVer;
     }
 
-    public String getStoreStatusCd() {
-        return this.storeStatusCd;
-    }
-
-    public void setStoreStatusCd(String storeStatusCd) {
-        this.storeStatusCd = storeStatusCd;
-    }
-
-    public String getPlayStatusCd() {
-        return this.playStatusCd;
-    }
-
-    public void setPlayStatusCd(String playStatusCd) {
-        this.playStatusCd = playStatusCd;
-    }
-
     public String getUsePeriod() {
         return this.usePeriod;
     }
@@ -945,8 +929,35 @@ public class EpubDetail extends CommonInfo {
 	public void setPlayUsePeriodUnitCd(String playUsePeriodUnitCd) {
 		this.playUsePeriodUnitCd = playUsePeriodUnitCd;
 	}
+
+	/**
+	 * @return the storeProdStatusCd
+	 */
+	public String getStoreProdStatusCd() {
+		return storeProdStatusCd;
+	}
+
+	/**
+	 * @param storeProdStatusCd the storeProdStatusCd to set
+	 */
+	public void setStoreProdStatusCd(String storeProdStatusCd) {
+		this.storeProdStatusCd = storeProdStatusCd;
+	}
+
+	/**
+	 * @return the playProdStatusCd
+	 */
+	public String getPlayProdStatusCd() {
+		return playProdStatusCd;
+	}
+
+	/**
+	 * @param playProdStatusCd the playProdStatusCd to set
+	 */
+	public void setPlayProdStatusCd(String playProdStatusCd) {
+		this.playProdStatusCd = playProdStatusCd;
+	}
  
-	
 	
 	
 }

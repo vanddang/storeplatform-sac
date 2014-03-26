@@ -328,6 +328,9 @@ public class EpubServiceImpl implements EpubService {
 		// SvcGrpCd
 		product.setSvcGrpCd(mapperVO.getSvcGrpCd());
 		
+		//판매상태
+		product.setSalesStatus(mapperVO.getProdStatusCd());
+		
 		//tableOfContents (목차 정보)
 		product.setTableOfContents(mapperVO.getBookTbctns());
 
@@ -443,7 +446,7 @@ public class EpubServiceImpl implements EpubService {
 
 		Book book = new Book();
 
-    	if (StringUtils.equals(mapperVO.getMetaClsfCd(), DisplayConstants.DP_SERIAL_META_CLASS_CD) && StringUtils.isNotEmpty(mapperVO.getChapter())) {
+    	if (StringUtils.isNotEmpty(mapperVO.getChapter())) {
             Chapter chapter = new Chapter();
             chapter.setUnit(mapperVO.getChapterUnit());
             if(StringUtils.isNumeric(mapperVO.getChapter()))
@@ -582,12 +585,14 @@ public class EpubServiceImpl implements EpubService {
 			play.setUsePeriodUnitCd(mapperVO.getPlayUsePeriodUnitCd());
 		}
 		
-        //Sales Status
+		// 판매상태
+		play.setSalesStatus(mapperVO.getPlayProdStatusCd());
+		
+        // 사용자 구매 가능 상태
         if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && param.containsKey("userKey")  && param.containsKey("deviceKey")) {
-            String salesStatus = getSalesStatus(mapperVO, (String) param.get("userKey"), (String) param.get("deviceKey"));
-            if(salesStatus != null)  play.setSalesStatus(salesStatus);
+            String userPurStatus = getSalesStatus(mapperVO, (String) param.get("userKey"), (String) param.get("deviceKey"));
+            if(userPurStatus != null)  play.setUserPurStatus(userPurStatus);
         }
-
 
 		return play;
 	}
@@ -618,12 +623,16 @@ public class EpubServiceImpl implements EpubService {
 		if (StringUtils.isNotEmpty(mapperVO.getStoreUsePeriodUnitCd())) {
 			store.setUsePeriodUnitCd(mapperVO.getStoreUsePeriodUnitCd());
 		}
-
-        //Sales Status
+		
+		// 판매상태
+		store.setSalesStatus(mapperVO.getStoreProdStatusCd());
+		
+        // 사용자 구매 가능 상태
         if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && param.containsKey("userKey")  && param.containsKey("deviceKey")) {
-            String salesStatus = getSalesStatus(mapperVO, (String) param.get("userKey"), (String) param.get("deviceKey"));
-            if(salesStatus != null)  store.setSalesStatus(salesStatus);
+            String userPurStatus = getSalesStatus(mapperVO, (String) param.get("userKey"), (String) param.get("deviceKey"));
+            if(userPurStatus != null)  store.setUserPurStatus(userPurStatus);
         }
+        
 
 		return store;
 	}

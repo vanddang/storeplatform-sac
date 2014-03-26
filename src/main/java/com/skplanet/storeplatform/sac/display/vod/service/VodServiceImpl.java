@@ -242,7 +242,10 @@ public class VodServiceImpl implements VodService {
 		product.setProductExplain(mapperVO.getProdBaseDesc());
 		product.setProductDetailExplain(mapperVO.getProdDtlDesc());
 		product.setProductIntroduction(mapperVO.getProdIntrDscr());
-
+		
+		//판매상태
+		product.setSalesStatus(mapperVO.getProdStatusCd());
+		
 		// SvcGrpCd
 		product.setSvcGrpCd(mapperVO.getSvcGrpCd());
 
@@ -373,10 +376,14 @@ public class VodServiceImpl implements VodService {
 			if (mapperVO.getDwldNetworkCd() != null) {
 				store.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 			}
-
+			
+			// 판매상태
+			store.setSalesStatus(mapperVO.getStoreProdStatusCd());
+			
+			// 사용자 구매 가능 상태
             if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
-                String salesStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
-                if(salesStatus != null)  store.setSalesStatus(salesStatus);
+                String userPurStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
+                if(userPurStatus != null)  store.setUserPurStatus(userPurStatus);
             }
 
 		}
@@ -417,11 +424,15 @@ public class VodServiceImpl implements VodService {
 				play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 			}
 
-            if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId()) && StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
-                String salesStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
-                if(salesStatus != null)  play.setSalesStatus(salesStatus);
-            }
-
+			// 판매상태
+			play.setSalesStatus(mapperVO.getPlayProdStatusCd());
+			
+			// 사용자 구매 가능 상태
+			if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId()) && StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
+				String userPurStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
+				if(userPurStatus != null)  play.setUserPurStatus(userPurStatus);
+			}
+            
 		}
 		return play;
 	}

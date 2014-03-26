@@ -83,6 +83,8 @@ public class VodDetail extends CommonInfo {
 	private Integer storeProdNetAmt;
 	/** 다운로드 DRM */
 	private String storeDrmYn;
+	/** 다운로드 상품 상태 */
+	private String storeProdStatusCd;
 
 	// ---------------------------------------------------
 	// 바로보기 상품
@@ -94,6 +96,8 @@ public class VodDetail extends CommonInfo {
 	private Integer playProdNetAmt;
 	/** 바로보기 DRM */
 	private String playDrmYn;
+	/** 바로보기 상품 상태 */
+	private String playProdStatusCd;
 
 	/** 챕터 */
 	private String chapter;
@@ -1269,6 +1273,34 @@ public class VodDetail extends CommonInfo {
 	 */
 	public void setSvcGrpCd(String svcGrpCd) {
 		this.svcGrpCd = svcGrpCd;
+	}
+
+	/**
+	 * @return the storeProdStatusCd
+	 */
+	public String getStoreProdStatusCd() {
+		return storeProdStatusCd;
+	}
+
+	/**
+	 * @param storeProdStatusCd the storeProdStatusCd to set
+	 */
+	public void setStoreProdStatusCd(String storeProdStatusCd) {
+		this.storeProdStatusCd = storeProdStatusCd;
+	}
+
+	/**
+	 * @return the playProdStatusCd
+	 */
+	public String getPlayProdStatusCd() {
+		return playProdStatusCd;
+	}
+
+	/**
+	 * @param playProdStatusCd the playProdStatusCd to set
+	 */
+	public void setPlayProdStatusCd(String playProdStatusCd) {
+		this.playProdStatusCd = playProdStatusCd;
 	}
 
 	
