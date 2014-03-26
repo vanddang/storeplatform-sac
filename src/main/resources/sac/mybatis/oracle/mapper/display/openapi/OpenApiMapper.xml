@@ -1296,7 +1296,7 @@
     
     <!-- 2.15.1.10 멀티미디어 상품 목록 조회(VOD 신규) -->
     <select id="searchNewVodList" parameterType="BestDownloadMMSacReq" resultType="MetaInfo">
-		SELECT  /* OpenApiMapper.searchNewVodList, 멀티미디어 상품 목록 조회(VOD 신규) , 이석희/아이에스플러스, 2014-03-17 */
+		SELECT  /* OpenApiMapper.searchNewVodList, 멀티미디어 상품 목록 조회(VOD 신규) , 이태희/부르칸, 2014-03-17 */
 		        KA.TOTAL_COUNT
 		      , KA.PROD_ID
 		      , KA.PART_PROD_ID
@@ -1377,7 +1377,6 @@
 		                             AND  MP_H.PART_PROD_ID = EP_I.PROD_ID
 		                             AND  MP_H.PART_PROD_ID = EP_J.PROD_ID
 		                             AND  MP_H.PART_PROD_ID = EP_K.PROD_ID
-		                             --AND  EP_K.DEVICE_MODEL_CD = EP_L.DEVICE_MODEL_CD
 		                             AND  MP_H.PART_PROD_ID = EP_M.PROD_ID
 		                             AND  CH_B.USE_YN = 'Y'
 		                             AND  CH_C.LANG_CD = #{langCd}
