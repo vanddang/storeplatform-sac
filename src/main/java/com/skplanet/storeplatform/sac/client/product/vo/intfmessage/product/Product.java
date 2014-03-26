@@ -253,6 +253,11 @@ public class Product extends CommonInfo implements Serializable {
 	private String specialProdYn;
 
 	/**
+	 * 특가상품 쿠폰 ID
+	 */
+	private String specialCouponId;
+
+	/**
 	 * 부분 유료화 앱 여부
 	 */
 	private String partChrgmonyAppYn;
@@ -296,7 +301,7 @@ public class Product extends CommonInfo implements Serializable {
 	 * 방송사명
 	 */
 	private String brdcCompNm;
-	
+
 	/**
 	 * 서비스 그룹 코드
 	 * <ul>
@@ -305,7 +310,7 @@ public class Product extends CommonInfo implements Serializable {
 	 * <li>DP000204 폰꾸미기</li>
 	 * <li>DP000205 소셜쇼핑</li>
 	 * <li>DP000206 T store Shopping</li>
-	 * </ul>         
+	 * </ul>
 	 */
 	private String svcGrpCd;
 
@@ -1090,6 +1095,21 @@ public class Product extends CommonInfo implements Serializable {
 	}
 
 	/**
+	 * @return the specialCouponId
+	 */
+	public String getSpecialCouponId() {
+		return this.specialCouponId;
+	}
+
+	/**
+	 * @param specialCouponId
+	 *            the specialCouponId to set
+	 */
+	public void setSpecialCouponId(String specialCouponId) {
+		this.specialCouponId = specialCouponId;
+	}
+
+	/**
 	 * @return the themeType
 	 */
 	public String getThemeType() {
@@ -1228,15 +1248,15 @@ public class Product extends CommonInfo implements Serializable {
 	 * @return the svcGrpCd
 	 */
 	public String getSvcGrpCd() {
-		return svcGrpCd;
+		return this.svcGrpCd;
 	}
 
 	/**
-	 * @param svcGrpCd the svcGrpCd to set
+	 * @param svcGrpCd
+	 *            the svcGrpCd to set
 	 */
 	public void setSvcGrpCd(String svcGrpCd) {
 		this.svcGrpCd = svcGrpCd;
 	}
-
 
 }
