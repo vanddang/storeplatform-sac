@@ -463,7 +463,6 @@ public class LoginServiceImpl implements LoginService {
 
 			res.setDeviceKey(deviceKey);
 			res.setUserKey(userKey);
-			res.setIsVariability("Y");
 
 		} else {
 
@@ -494,10 +493,10 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			res.setUserAuthMethod(userAuthMethod);
-			res.setIsVariability("N");
 
 		}
 
+		res.setIsVariability(isVariability);
 		return res;
 
 	}
