@@ -886,11 +886,12 @@ public class LoginServiceImpl implements LoginService {
 		String newDeviceKey = null;
 		String newUserKey = null;
 
+		LOGGER.info("::: mdn 회원 유무 {} ", chkDupRes.getIsRegistered());
+
 		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) { // 회원인 경우
 
 			DeviceInfo mdnDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
 
-			LOGGER.info("::: mdn 기가입 :::");
 			isPurchaseChange = "Y";
 
 			newDeviceKey = mdnDeviceInfo.getDeviceKey();
@@ -900,7 +901,7 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 변동성 대상체크 */
 			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
-			LOGGER.info("::: mdn 미가입 변동성 대상 여부 : {} :::", saveAndSync.getIsSaveAndSyncTarget());
+			LOGGER.info("::: checkVariability : {} :::", saveAndSync.getIsSaveAndSyncTarget());
 			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "Y")) { // 변동성 대상인 경우
 
 				isPurchaseChange = "Y";
