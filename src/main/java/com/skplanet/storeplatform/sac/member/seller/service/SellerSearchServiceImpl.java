@@ -921,6 +921,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SellerMbrSac sellerMbrRes = new SellerMbrSac();
 
 		if (sellerMbr != null) {
+			sellerMbrRes.setSellerId(sellerMbr.getSellerID());
 			sellerMbrRes.setCharger(sellerMbr.getCharger());
 			sellerMbrRes.setCordedTelephone(sellerMbr.getCordedTelephone());
 			sellerMbrRes.setCordedTelephoneCountry(sellerMbr.getCordedTelephoneCountry());
