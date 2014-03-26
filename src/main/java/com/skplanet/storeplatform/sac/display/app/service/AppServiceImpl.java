@@ -88,7 +88,8 @@ public class AppServiceImpl implements AppService {
         }
 
         // Product Basic info
-        product.setIdentifier(new Identifier("channel", request.getChannelId()));
+        product.setIdentifierList(new ArrayList<Identifier>());
+        product.getIdentifierList().add(new Identifier("channel", request.getChannelId()));
         product.setPacketFee(appDetail.getProdGbn());
 
 		product.setTitle(new Title(appDetail.getProdNm()));
