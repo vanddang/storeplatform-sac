@@ -45,8 +45,6 @@ public class Date extends CommonInfo implements Serializable {
 	 */
 	private String text;
 
-	private String unitName; // 단위 이름 (GRP: PD0031)
-
 	public Date() {
 	}
 
@@ -54,13 +52,6 @@ public class Date extends CommonInfo implements Serializable {
 		super();
 		this.type = type;
 		this.text = text;
-	}
-
-	public Date(String type, String text, String unitName) {
-		super();
-		this.type = type;
-		this.text = text;
-		this.unitName = unitName;
 	}
 
 	/**
@@ -157,11 +148,4 @@ public class Date extends CommonInfo implements Serializable {
 		this.text = sb.toString();
 	}
 
-	public String getUnitName() {
-		return this.unitName;
-	}
-
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
-	}
 }
