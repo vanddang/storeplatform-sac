@@ -30,8 +30,6 @@ import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.DeviceCompareEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.DeviceCompareEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -782,6 +780,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getDeviceExtraInfoList()); // rooting 여부
+		String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
 
 		LOGGER.info(":::::::::::::::::: {} device update field start ::::::::::::::::::", deviceInfo.getDeviceId());
 
@@ -790,32 +789,37 @@ public class DeviceServiceImpl implements DeviceService {
 			if (StringUtil.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
 				// 폰정보 조회 (deviceModelNo)
-				Device device = this.commService.getPhoneInfo(deviceModelNo);
+				//				Device device = this.commService.getPhoneInfo(deviceModelNo);
+				//
+				//				if (device != null) {
+				//					// OMD 단말이 아닐 경우만
+				//					if (!StringUtil.equals(MemberConstants.DEVICE_TELECOM_OMD, device.getCmntCompCd())) {
+				//
+				//						DeviceCompareEcReq deviceCompareEcReq = new DeviceCompareEcReq();
+				//						deviceCompareEcReq.setUserMdn(deviceInfo.getDeviceId());
+				//						DeviceCompareEcRes deviceCompareEcRes = this.idpSCI.deviceCompare(deviceCompareEcReq);
+				//
+				//						String idpModelId = deviceCompareEcRes.getModelId();
+				//
+				//						// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
+				//						if (StringUtil.equals(uacd, "SSNU")) { // SHW-M200K->SHW-M200S
+				//							uacd = "SSNL";
+				//						} else if (StringUtil.equals(uacd, "SP05")) { // SHW-M420K->SHW-M420S
+				//							uacd = "SSO0";
+				//						}
+				//
+				//						// uacd 부가속성 추가
+				//						deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, uacd, deviceInfo));
+				//
+				//					}
+				//				}
 
-				if (device != null) {
-					// OMD 단말이 아닐 경우만
-					if (!StringUtil.equals(MemberConstants.DEVICE_TELECOM_OMD, device.getCmntCompCd())) {
-
-						DeviceCompareEcReq deviceCompareEcReq = new DeviceCompareEcReq();
-						deviceCompareEcReq.setUserMdn(deviceInfo.getDeviceId());
-						DeviceCompareEcRes deviceCompareEcRes = this.idpSCI.deviceCompare(deviceCompareEcReq);
-
-						String idpModelId = deviceCompareEcRes.getModelId();
-
-						// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
-						if (StringUtil.equals(idpModelId, "SSNU")) { // SHW-M200K->SHW-M200S
-							idpModelId = "SSNL";
-						} else if (StringUtil.equals(idpModelId, "SP05")) { // SHW-M420K->SHW-M420S
-							idpModelId = "SSO0";
-						}
-
-						// uacd 부가속성 추가
-						deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId, deviceInfo));
-
-						LOGGER.info("[change uacd] {}", idpModelId);
-					}
+				if (StringUtil.equals(uacd, "SSNU")) { // SHW-M200K->SHW-M200S
+					uacd = "SSNL";
+				} else if (StringUtil.equals(uacd, "SP05")) { // SHW-M420K->SHW-M420S
+					uacd = "SSO0";
 				}
-
+				LOGGER.info("[uacd] {}", uacd);
 			}
 			LOGGER.info("[deviceModelNo] {} -> {}", dbDeviceInfo.getDeviceModelNo(), deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);

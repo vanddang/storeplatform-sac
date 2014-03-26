@@ -93,23 +93,24 @@ public class DeviceUtil {
 
 		List<DeviceExtraInfo> deviceExtraInfoList = deviceInfo.getDeviceExtraInfoList();
 
-		if (deviceExtraInfoList != null) {
-
-			for (DeviceExtraInfo info : deviceExtraInfoList) {
-				if (info.getExtraProfile().equals(extraProfile)) {
-					deviceExtraInfoList.remove(info);
-					break;
-				}
-			}
-
-			DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-			deviceExtraInfo.setExtraProfile(extraProfile);
-			deviceExtraInfo.setExtraProfileValue(extraProfileValue);
-			deviceExtraInfo.setTenentId(deviceInfo.getTenantId());
-			deviceExtraInfo.setDeviceKey(deviceInfo.getDeviceKey());
-			deviceExtraInfo.setUserKey(deviceInfo.getUserKey());
-			deviceExtraInfoList.add(deviceExtraInfo);
+		if (deviceExtraInfoList == null) {
+			deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 		}
+
+		for (DeviceExtraInfo info : deviceExtraInfoList) {
+			if (info.getExtraProfile().equals(extraProfile)) {
+				deviceExtraInfoList.remove(info);
+				break;
+			}
+		}
+
+		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(extraProfile);
+		deviceExtraInfo.setExtraProfileValue(extraProfileValue);
+		deviceExtraInfo.setTenentId(deviceInfo.getTenantId());
+		deviceExtraInfo.setDeviceKey(deviceInfo.getDeviceKey());
+		deviceExtraInfo.setUserKey(deviceInfo.getUserKey());
+		deviceExtraInfoList.add(deviceExtraInfo);
 
 		return deviceExtraInfoList;
 	}
