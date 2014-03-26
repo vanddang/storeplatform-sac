@@ -69,7 +69,7 @@ public class AuthorizeSimpleTest {
 						AuthorizeReq req = new AuthorizeReq();
 
 						req.setSellerId("01w22st21q12d1");
-						req.setSellerPW("xJLjBXD4");
+						// req.setSellerPW("xJLjBXD4");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}

@@ -90,7 +90,7 @@ public class ConversionClassTest {
 
 		// 로그인 데이터 주입
 		authorizeReq.setSellerId("rejoiceTest05");
-		authorizeReq.setSellerPW("1234");
+		// authorizeReq.setSellerPW("1234");
 		authorizeReq.setExpireDate("100");
 
 		// 로그인 콜
