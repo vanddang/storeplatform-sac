@@ -45,7 +45,9 @@
      </choose>
          )
          PKG
+      <if test="recommendId  == null">
      WHERE ROWNUM BETWEEN #{START_ROW} AND #{END_ROW}
+      </if>
     </select>
 
     <!-- 테마추천 v2 노출갯수 -->
