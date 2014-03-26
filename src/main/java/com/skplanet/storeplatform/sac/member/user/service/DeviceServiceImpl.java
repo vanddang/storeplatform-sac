@@ -788,7 +788,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			if (StringUtil.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
-				// 폰정보 조회 (deviceModelNo)
+				//				// 폰정보 조회 (deviceModelNo)
 				//				Device device = this.commService.getPhoneInfo(deviceModelNo);
 				//
 				//				if (device != null) {
@@ -802,15 +802,16 @@ public class DeviceServiceImpl implements DeviceService {
 				//						String idpModelId = deviceCompareEcRes.getModelId();
 				//
 				//						// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
-				//						if (StringUtil.equals(uacd, "SSNU")) { // SHW-M200K->SHW-M200S
-				//							uacd = "SSNL";
-				//						} else if (StringUtil.equals(uacd, "SP05")) { // SHW-M420K->SHW-M420S
-				//							uacd = "SSO0";
+				//						if (StringUtil.equals(idpModelId, "SSNU")) { // SHW-M200K->SHW-M200S
+				//							idpModelId = "SSNL";
+				//						} else if (StringUtil.equals(idpModelId, "SP05")) { // SHW-M420K->SHW-M420S
+				//							idpModelId = "SSO0";
 				//						}
 				//
 				//						// uacd 부가속성 추가
-				//						deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, uacd, deviceInfo));
+				//						deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId, deviceInfo));
 				//
+				//						LOGGER.info("[change uacd] {}", idpModelId);
 				//					}
 				//				}
 
