@@ -19,7 +19,6 @@ public class BanksByCountry extends CommonInfo {
 	private String taxtrtCnclsYn;
 	private String bizIncmTxnYn;
 	private String rmtPosbYn;
-	private String swiftUseYn;
 	private String useYn;
 	private String regId;
 	private String regDt;
@@ -46,6 +45,8 @@ public class BanksByCountry extends CommonInfo {
 	private String sortUseYn;
 	/** bsbUseYn . */
 	private String bsbUseYn;
+	/** swiftUseYn */
+	private String swiftUseYn;
 
 	public String getNationCode() {
 		return this.nationCode;

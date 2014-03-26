@@ -26,6 +26,8 @@ public class SellerMbrSac extends CommonInfo {
 	private String sellerBirthDay;
 	/** 주민번호. */
 	private String sellerSSNumber;
+	/** 실명인증 여부 */
+	private String isRealName;
 	/** 판매자 Email. */
 	private String sellerEmail;
 	/** 담당자 명 . */
@@ -86,6 +88,14 @@ public class SellerMbrSac extends CommonInfo {
 	private String website;
 	/** 등록일시. */
 	private String regDate;
+
+	// 구매 요청으로 통신판매업 관련 파라미터 3개 추가. 2014.03.26
+	/** 통신판매업 신고여부. */
+	private String isBizRegistered;
+	/** 통신판매업 신고번호. */
+	private String bizRegNumber;
+	/** 통신판매업 미신고사유 코드. */
+	private String bizUnregReason;
 
 	/**
 	 * @return the sellerKey
@@ -625,6 +635,66 @@ public class SellerMbrSac extends CommonInfo {
 	 */
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
+	}
+
+	/**
+	 * @return the isRealName
+	 */
+	public String getIsRealName() {
+		return this.isRealName;
+	}
+
+	/**
+	 * @param isRealName
+	 *            the isRealName to set
+	 */
+	public void setIsRealName(String isRealName) {
+		this.isRealName = isRealName;
+	}
+
+	/**
+	 * @return the isBizRegistered
+	 */
+	public String getIsBizRegistered() {
+		return this.isBizRegistered;
+	}
+
+	/**
+	 * @param isBizRegistered
+	 *            the isBizRegistered to set
+	 */
+	public void setIsBizRegistered(String isBizRegistered) {
+		this.isBizRegistered = isBizRegistered;
+	}
+
+	/**
+	 * @return the bizRegNumber
+	 */
+	public String getBizRegNumber() {
+		return this.bizRegNumber;
+	}
+
+	/**
+	 * @param bizRegNumber
+	 *            the bizRegNumber to set
+	 */
+	public void setBizRegNumber(String bizRegNumber) {
+		this.bizRegNumber = bizRegNumber;
+	}
+
+	/**
+	 * @return the bizUnregReason
+	 */
+	public String getBizUnregReason() {
+		return this.bizUnregReason;
+	}
+
+	/**
+	 * @param bizUnregReason
+	 *            the bizUnregReason to set
+	 */
+	public void setBizUnregReason(String bizUnregReason) {
+		this.bizUnregReason = bizUnregReason;
 	}
 
 }
