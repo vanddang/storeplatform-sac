@@ -787,7 +787,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (StringUtil.isNotBlank(deviceModelNo) && !StringUtil.equals(deviceModelNo, dbDeviceInfo.getDeviceModelNo())) {
 
-			if (StringUtil.isNotBlank(deviceTelecom) && StringUtil.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			if (StringUtil.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
 				// 폰정보 조회 (deviceModelNo)
 				Device device = this.commService.getPhoneInfo(deviceModelNo);
@@ -825,14 +825,15 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
+		//		if (StringUtil.isBlank(reqVal) || (StringUtil.isNotBlank(dbVal) && StringUtil.equals(reqVal, dbVal))) {
+		//			isEquals = true;
+		//		}
+
 		if (StringUtil.equals(version, "v1")) {
 
 			if (StringUtil.isNotBlank(nativeId)) {
 
-				// nativeId 비교 여부
-				String isNativeIdAuth = deviceInfo.getIsNativeIdAuth();
-
-				if (StringUtil.isNotBlank(deviceTelecom) && StringUtil.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+				if (StringUtil.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
 					// OPMD 여부
 					boolean isOpmd = StringUtils.substring(deviceInfo.getDeviceId(), 0, 3).equals("989");
@@ -850,6 +851,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 					}
 				} else { // 타사
+
+					// nativeId 비교 여부
+					String isNativeIdAuth = deviceInfo.getIsNativeIdAuth();
 
 					if (StringUtil.isBlank(dbDeviceInfo.getNativeId())) { // DB에 없는 경우만 최초 수집
 
@@ -875,14 +879,19 @@ public class DeviceServiceImpl implements DeviceService {
 
 				if (StringUtil.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
-					/* ICAS IMEI 비교 */
-					if (this.isEqualsImei(deviceInfo.getDeviceId(), nativeId)) {
+					// OPMD 여부
+					boolean isOpmd = StringUtils.substring(deviceInfo.getDeviceId(), 0, 3).equals("989");
 
-						LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
-						userMbrDevice.setNativeID(nativeId);
+					if (!isOpmd) {
+						/* ICAS IMEI 비교 */
+						if (this.isEqualsImei(deviceInfo.getDeviceId(), nativeId)) {
 
-					} else {
-						throw new StorePlatformException("SAC_MEM_1503");
+							LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
+							userMbrDevice.setNativeID(nativeId);
+
+						} else {
+							throw new StorePlatformException("SAC_MEM_1503");
+						}
 					}
 
 				} else { // 타사는 IMEI가 다르면 에러
@@ -1555,9 +1564,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		} else if (StringUtil.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
-			if (StringUtil.isBlank(dbVal) || StringUtil.equals(reqVal, dbVal)) {
-				// if (StringUtil.isBlank(reqVal) || (StringUtil.isNotBlank(dbVal) && StringUtil.equals(reqVal, dbVal)))
-				// {
+			if (StringUtil.isBlank(reqVal) || (StringUtil.isNotBlank(dbVal) && StringUtil.equals(reqVal, dbVal))) {
 				isEquals = true;
 			}
 
