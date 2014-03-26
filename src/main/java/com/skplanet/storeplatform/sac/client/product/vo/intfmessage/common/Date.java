@@ -30,6 +30,8 @@ public class Date extends CommonInfo implements Serializable {
 	 */
 	protected static final SimpleDateFormat DATE_FORMAT_ISO8601BASIC = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 
+	protected static final SimpleDateFormat DATE_FORMAT_ISO8601UTC = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
+
 	/*
 	 * 날짜타입 (date/reg : 등록일, date/saleReg : 판매등록 날짜, date/purchase : 구매날짜, date/update : 변경날짜, duration/usagePeriod :
 	 * 이용기간, uint/usagePeriod : 이용기간, date/auth : 인증 날짜, duration/salePeriod : 판매기간, date/access : 접속일자, date/cancel :
@@ -43,7 +45,7 @@ public class Date extends CommonInfo implements Serializable {
 	 */
 	private String text;
 
-    private String unitName;    // 단위 이름 (GRP: PD0031)
+	private String unitName; // 단위 이름 (GRP: PD0031)
 
 	public Date() {
 	}
@@ -54,12 +56,12 @@ public class Date extends CommonInfo implements Serializable {
 		this.text = text;
 	}
 
-    public Date(String type, String text, String unitName) {
-        super();
-        this.type = type;
-        this.text = text;
-        this.unitName = unitName;
-    }
+	public Date(String type, String text, String unitName) {
+		super();
+		this.type = type;
+		this.text = text;
+		this.unitName = unitName;
+	}
 
 	/**
 	 * 특정 일시를 표현하는 생성자. ISO8601Basic으로 변환함.
@@ -122,6 +124,21 @@ public class Date extends CommonInfo implements Serializable {
 	}
 
 	/**
+	 * <pre>
+	 * ISO8601 UTC 형태의 일시를 지정.
+	 * </pre>
+	 * 
+	 * @param dt
+	 */
+	public void setTextUtc(java.util.Date dt) {
+		if (dt != null) {
+			this.text = DATE_FORMAT_ISO8601UTC.format(dt);
+		} else {
+			this.text = null;
+		}
+	}
+
+	/**
 	 * ISO8601 Basic형태의 기간 일시를 지정합니다.
 	 * 
 	 * @param fromDt
@@ -140,11 +157,11 @@ public class Date extends CommonInfo implements Serializable {
 		this.text = sb.toString();
 	}
 
-    public String getUnitName() {
-        return unitName;
-    }
+	public String getUnitName() {
+		return this.unitName;
+	}
 
-    public void setUnitName(String unitName) {
-        this.unitName = unitName;
-    }
+	public void setUnitName(String unitName) {
+		this.unitName = unitName;
+	}
 }
