@@ -41,7 +41,6 @@ public class ModifyInformationSacReq extends CommonInfo {
 	/** 판매자 성별. */
 	private String sellerSex;
 	/** 판매자 생년월일. */
-	// @Size(max = 8)
 	private String sellerBirthDay;
 	/** 우편번호. */
 	private String sellerZip;

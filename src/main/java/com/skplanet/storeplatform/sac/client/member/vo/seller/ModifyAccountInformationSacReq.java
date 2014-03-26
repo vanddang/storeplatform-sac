@@ -117,10 +117,10 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	private String tpinCode;
 
 	/** CEO명. */
-	private String ceoName; // CEO_NM
+	private String ceoName;
 
-	/** CEO 생년월일. ex(YYYYMMDD) */
-	private String ceoBirthDay; // CEO_BIRTH
+	/** CEO 생년월일. ex(YYYYMMDD). */
+	private String ceoBirthDay;
 
 	/** 유선 국가번호(사업장). */
 	private String sellerBizPhoneCountry;

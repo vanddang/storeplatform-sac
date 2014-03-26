@@ -26,7 +26,7 @@ public class AuthorizeReq extends CommonInfo {
 	private String sellerId;
 	/** 판매자 회원 PW. */
 	@NotBlank
-	private String sellerPW;
+	private String sellerPw;
 	/** 계정 잠금 해제 요청 ('Y'/'N'). */
 	private String releaseLock;
 	/** 만료일시. */
@@ -52,18 +52,18 @@ public class AuthorizeReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the sellerPW
+	 * @return the sellerPw
 	 */
-	public String getSellerPW() {
-		return this.sellerPW;
+	public String getSellerPw() {
+		return this.sellerPw;
 	}
 
 	/**
-	 * @param sellerPW
-	 *            the sellerPW to set
+	 * @param sellerPw
+	 *            the sellerPw to set
 	 */
-	public void setSellerPW(String sellerPW) {
-		this.sellerPW = sellerPW;
+	public void setSellerPw(String sellerPw) {
+		this.sellerPw = sellerPw;
 	}
 
 	/**
