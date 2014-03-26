@@ -113,4 +113,8 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYPLANET_PAYMENT_METHOD_CULTURE = "24"; // 문화상품권
 	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_CASH = "25"; // T store 캐쉬
 	public static final String PAYPLANET_PAYMENT_METHOD_COUPON = "26"; // 쿠폰
+
+	/** T Store 결제 성공 코드 */
+	public static final String TSTORE_PAYMENT_SUCCESS = "0000";
+
 }
