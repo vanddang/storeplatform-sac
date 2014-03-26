@@ -80,7 +80,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		// 상품 추가/수정 작업을 호출한다.
 		DpCouponInfo couponInfo = null; // 쿠폰 정보
 		couponInfo = new DpCouponInfo(); // 쿠폰 정보
-		if (couponReq.getDpCouponInfo() != null) {
+		if (couponReq != null) {
 			couponInfo = couponReq.getDpCouponInfo();
 		}
 

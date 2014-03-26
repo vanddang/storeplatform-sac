@@ -130,7 +130,6 @@ public class FileUtil {
 			}
 
 		} catch (IOException ioe) {
-			bufferedReader.close();
 			throw new Exception(ioe);
 		} finally {
 			bufferedReader.close();

@@ -14,7 +14,6 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.File;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -91,11 +90,7 @@ public class ImageResizing {
 			int pixels[] = new int[destWidth * destHeight];
 			PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, destWidth, destHeight, pixels, 0, destWidth);
 			this.log.info("log8886");
-			try {
-				pg.grabPixels();
-			} catch (InterruptedException e) {
-				throw new IOException(e.getMessage());
-			}
+			pg.grabPixels();
 			this.log.info("log8887");
 			BufferedImage destImg = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
 			destImg.setRGB(0, 0, destWidth, destHeight, pixels, 0, destWidth);

@@ -283,12 +283,15 @@ public class ShoppingCouponSacController {
 			if (ex.getErrCode() != null) {
 				map.put("ERROR_CODE", ex.getErrCode());
 			}
-			if (map.get("ERROR_CODE") == null || map.get("ERROR_CODE").equals(""))
-				map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR);
-			map.put("ERROR_MSG", ex.getMessage());
-			map.put("ERROR_VALUE", ex.getErrValue());
-			this.sendResponseData(couponReq, map, couponRes, null);
-			result = false;
+
+			if (map != null) {
+				if (map.get("ERROR_CODE") == null || map.get("ERROR_CODE").equals(""))
+					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR);
+				map.put("ERROR_MSG", ex.getMessage());
+				map.put("ERROR_VALUE", ex.getErrValue());
+				this.sendResponseData(couponReq, map, couponRes, null);
+				result = false;
+			}
 
 		} catch (Exception e) {
 			// Exception 처리.
@@ -658,10 +661,11 @@ public class ShoppingCouponSacController {
 
 			// Response 는 무조건 처리 .Response 처리도 DB 화 한다.
 			String xmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
-			StringBuffer xmlSb = new StringBuffer();
+			StringBuffer xmlSb = null;
+			xmlSb = new StringBuffer();
 			xmlSb.append(xmlHeader);
 			xmlSb.append("<cms>");
-			// xmlSb.append("<rCode><![CDATA[" + map.get("ERROR_CODE") + "]]></rCode>");
+			xmlSb.append("<rCode><![CDATA[" + map.get("ERROR_CODE") + "]]></rCode>");
 			xmlSb.append("<rMsg><![CDATA["
 					+ CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
 			if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals(""))
