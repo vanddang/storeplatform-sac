@@ -1481,6 +1481,7 @@
                 SELECT  COUNT(*) OVER() AS TOTAL_COUNT
                       , ROW_NUMBER() OVER( ORDER BY DECODE(#{orderedBy},'recent', JA.REG_DT, JA.AVG_EVLU_SCORE ) DESC ) AS RNUM
                       , JA.PROD_ID
+                      , JA.EPSD_PROD_ID AS PART_PROD_ID
                       , JA.META_CLSF_CD
                       , JA.PROD_NM
                       , JA.PROD_BASE_DESC
@@ -1494,13 +1495,13 @@
                       , JA.PROD_GRD_CD
                       , NVL(JA.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE
                       , NVL(JA.PRCHS_CNT, 0) AS PRCHS_CNT
-                      , JA.CHNL_PROD_ID
+--                      , JA.CHNL_PROD_ID
                       , JA.EPSD_PROD_ID
                   FROM
                       (
                         <if test="channelId == null">
                         SELECT  ROW_NUMBER( ) OVER( PARTITION BY E.PROD_ID ORDER BY L.REG_DT DESC ) AS RNUM
-                              , A.PROD_ID AS PROD_ID
+--                              , A.PROD_ID AS PROD_ID
                               , A.META_CLSF_CD AS META_CLSF_CD
                               , B.PROD_NM AS PROD_NM
                               , B.PROD_BASE_DESC AS PROD_BASE_DESC
@@ -1515,13 +1516,13 @@
                               , TO_CHAR(A.REG_DT, 'YYYYMMDD') AS REG_DT
                               , (SELECT AVG_EVLU_SCORE FROM TB_DP_TENANT_PROD_STATS WHERE TENANT_ID = #{tenantId} AND PROD_ID = A.PROD_ID ) AS AVG_EVLU_SCORE
                               , (SELECT PRCHS_CNT FROM TB_DP_TENANT_PROD_STATS WHERE TENANT_ID = #{tenantId} AND PROD_ID = A.PROD_ID ) AS PRCHS_CNT
-                              , E.PROD_ID AS CHNL_PROD_ID
+                              , E.PROD_ID AS PROD_ID
                               , E.PART_PROD_ID AS EPSD_PROD_ID
                               , L.SUB_CONTENTS_ID
                         </if>
                         <if test="channelId != null">
                         SELECT  ROW_NUMBER( ) OVER( PARTITION BY E.PROD_ID, E.PART_PROD_ID ORDER BY L.REG_DT DESC ) AS RNUM
-                              , H.PROD_ID AS PROD_ID
+--                              , H.PROD_ID AS PROD_ID
                               , H.META_CLSF_CD AS META_CLSF_CD
                               , I.PROD_NM AS PROD_NM
                               , I.PROD_BASE_DESC AS PROD_BASE_DESC
@@ -1536,7 +1537,7 @@
                               , TO_CHAR(H.REG_DT, 'YYYYMMDD') AS REG_DT
                               , (SELECT AVG_EVLU_SCORE FROM TB_DP_TENANT_PROD_STATS WHERE TENANT_ID = #{tenantId} AND PROD_ID = A.PROD_ID ) AS AVG_EVLU_SCORE
                               , (SELECT PRCHS_CNT FROM TB_DP_TENANT_PROD_STATS WHERE TENANT_ID = #{tenantId} AND PROD_ID = A.PROD_ID ) AS PRCHS_CNT
-                              , E.PROD_ID AS CHNL_PROD_ID
+                              , E.PROD_ID AS PROD_ID
                               , E.PART_PROD_ID AS EPSD_PROD_ID
                               , L.SUB_CONTENTS_ID
                         </if>      
