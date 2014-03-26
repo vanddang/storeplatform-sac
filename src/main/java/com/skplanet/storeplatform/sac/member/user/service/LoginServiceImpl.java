@@ -897,20 +897,26 @@ public class LoginServiceImpl implements LoginService {
 			newDeviceKey = mdnDeviceInfo.getDeviceKey();
 			newUserKey = mdnDeviceInfo.getUserKey();
 
+			LOGGER.info("::: {} 기가입된 MDN, 구매이관 대상", req.getDeviceId());
+
 		} else {
 
 			/* 변동성 대상체크 */
 			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
-			LOGGER.info("::: checkVariability : {} :::", saveAndSync.getIsSaveAndSyncTarget());
+			LOGGER.info("::: {} 변동성 대상 여부  : {} :::", req.getDeviceId(), saveAndSync.getIsSaveAndSyncTarget());
+
 			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "Y")) { // 변동성 대상인 경우
 
 				isPurchaseChange = "Y";
 				newDeviceKey = saveAndSync.getDeviceKey();
 				newUserKey = saveAndSync.getUserKey();
 
+				LOGGER.info("::: {} 구매이관 대상", req.getDeviceId());
+
 			} else { // 변동성 대상이 아닌 경우
 
 				isJoinMdn = "Y";
+				LOGGER.info("::: {} 신규가입처리대상", req.getDeviceId());
 
 			}
 
@@ -947,6 +953,7 @@ public class LoginServiceImpl implements LoginService {
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setUserKey(newUserKey);
 			deviceInfo.setDeviceKey(newDeviceKey);
+			deviceInfo.setDeviceId(req.getDeviceId());
 			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 			if (StringUtil.isNotBlank(req.getNativeId())) {
 				deviceInfo.setNativeId(req.getNativeId());
