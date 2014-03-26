@@ -821,6 +821,7 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserAuthKey(this.tempUserAuthKey);
 			res.setUserKey(deviceInfo.getUserKey());
 			res.setDeviceKey(deviceInfo.getDeviceKey());
+			res.setIsLoginSuccess("Y");
 
 			/* 로그인 히스토리 저장 */
 			CommonRequest commonRequest = new CommonRequest();
