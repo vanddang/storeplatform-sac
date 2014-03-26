@@ -447,7 +447,7 @@ public class LoginServiceImpl implements LoginService {
 			userKey = saveAndSync.getUserKey();
 		}
 
-		LOGGER.info("### {} 변동성 체크 성공 여부 : {}", req.getDeviceId(), isVariability);
+		LOGGER.info("### {} isVariability : {}", req.getDeviceId(), isVariability);
 
 		if (StringUtil.equals(isVariability, "Y")) {
 
@@ -886,8 +886,6 @@ public class LoginServiceImpl implements LoginService {
 		String newDeviceKey = null;
 		String newUserKey = null;
 
-		LOGGER.info("::: mdn 회원 유무 {} ", chkDupRes.getIsRegistered());
-
 		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) { // 회원인 경우
 
 			DeviceInfo mdnDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
@@ -899,11 +897,9 @@ public class LoginServiceImpl implements LoginService {
 
 			LOGGER.info("::: {} 기가입된 MDN, 구매이관 대상", req.getDeviceId());
 
-		} else {
+		} else { // 회원이 아닌경우 변동성 대상체크 
 
-			/* 변동성 대상체크 */
 			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
-			LOGGER.info("::: {} 변동성 대상 여부  : {} :::", req.getDeviceId(), saveAndSync.getIsSaveAndSyncTarget());
 
 			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "Y")) { // 변동성 대상인 경우
 
@@ -911,7 +907,7 @@ public class LoginServiceImpl implements LoginService {
 				newDeviceKey = saveAndSync.getDeviceKey();
 				newUserKey = saveAndSync.getUserKey();
 
-				LOGGER.info("::: {} 구매이관 대상", req.getDeviceId());
+				LOGGER.info("::: {} 변동성 대상 MDN, 구매이관 대상", req.getDeviceId());
 
 			} else { // 변동성 대상이 아닌 경우
 
@@ -921,9 +917,6 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 		}
-
-		LOGGER.info("::: 변동성 구매이관 대상여부 {}", isPurchaseChange);
-		LOGGER.info("::: 변동성 신규가입처리 대상여부 {}", isJoinMdn);
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
