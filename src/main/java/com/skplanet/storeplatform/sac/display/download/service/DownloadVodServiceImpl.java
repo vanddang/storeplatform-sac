@@ -159,7 +159,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			}
 
 			// 다운로드 Vod 상품 조회
-			MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodServiceImpl", downloadVodSacReq,
+			MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq,
 					MetaInfo.class);
 
 			product = new Product();

@@ -131,7 +131,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			// }
 
 			// 다운로드 Music 상품 조회
-			MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.getDownloadMusicServiceImpl",
+			MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.getDownloadMusicInfo",
 					downloadMusicSacReq);
 			if (metaInfo != null) {
 
