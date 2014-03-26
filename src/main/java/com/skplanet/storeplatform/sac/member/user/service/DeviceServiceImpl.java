@@ -839,19 +839,29 @@ public class DeviceServiceImpl implements DeviceService {
 
 					if (!StringUtil.equals(nativeId, dbDeviceInfo.getNativeId()) && !isOpmd) {
 
-						if (!this.isEqualsImei(deviceInfo.getDeviceId(), nativeId)) {
+						if (this.isEqualsImei(deviceInfo.getDeviceId(), nativeId)) {
+
+							LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
+							userMbrDevice.setNativeID(nativeId);
+
+						} else {
 							throw new StorePlatformException("SAC_MEM_1503");
 						}
 
 					}
 				} else { // 타사
 
-					// isNativeIdAuth="Y"인경우 루팅여부 관계없이 비교
-					if (StringUtil.isNotBlank(dbDeviceInfo.getNativeId())
-							&& (StringUtil.equals(rooting, "Y") || StringUtil.equals(isNativeIdAuth, "Y"))) {
+					if (StringUtil.isBlank(dbDeviceInfo.getNativeId())) { // DB에 없는 경우만 최초 수집
+
+						LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
+						userMbrDevice.setNativeID(nativeId);
+
+					} else if (StringUtil.equals(rooting, "Y") || StringUtil.equals(isNativeIdAuth, "Y")) { // isNativeIdAuth="Y"인경우 루팅여부 관계없이 비교
+
 						if (!nativeId.equals(dbDeviceInfo.getNativeId())) {
 							throw new StorePlatformException("SAC_MEM_1504");
 						}
+
 					}
 				}
 
@@ -865,21 +875,29 @@ public class DeviceServiceImpl implements DeviceService {
 
 				if (StringUtil.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
-					/* ICAS IMEI와 틀린경우 */
-					if (!this.isEqualsImei(deviceInfo.getDeviceId(), nativeId)) {
+					/* ICAS IMEI 비교 */
+					if (this.isEqualsImei(deviceInfo.getDeviceId(), nativeId)) {
+
+						LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
+						userMbrDevice.setNativeID(nativeId);
+
+					} else {
 						throw new StorePlatformException("SAC_MEM_1503");
 					}
 
 				} else { // 타사는 IMEI가 다르면 에러
-					throw new StorePlatformException("SAC_MEM_1504");
+					if (StringUtil.isBlank(dbDeviceInfo.getNativeId())) { // DB에 없는 경우만 최초 수집
+
+						LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
+						userMbrDevice.setNativeID(nativeId);
+
+					} else {
+						throw new StorePlatformException("SAC_MEM_1504");
+					}
+
 				}
 			}
 
-		}
-
-		if (StringUtil.isNotBlank(nativeId) && !StringUtil.equals(nativeId, dbDeviceInfo.getNativeId())) {
-			LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
-			userMbrDevice.setNativeID(nativeId);
 		}
 
 		if (StringUtil.isNotBlank(deviceAccount) && !StringUtil.equals(deviceAccount, dbDeviceInfo.getDeviceAccount())) {
