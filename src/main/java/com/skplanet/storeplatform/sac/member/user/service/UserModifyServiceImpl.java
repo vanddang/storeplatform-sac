@@ -1006,8 +1006,12 @@ public class UserModifyServiceImpl implements UserModifyService {
 		MbrPwd mbrPwd = new MbrPwd();
 		mbrPwd.setMemberID(userId); // 사용자 아이디
 		mbrPwd.setMemberKey(req.getUserKey()); // 사용자 Key
+		/**
+		 * 신규번호만 있을시에는 업데이트, 신규번호 + 기존번호 둘다 존재시에는 SC 에서 패스워드 비교를 한다.
+		 * 
+		 * IDP 에서 이미 패스워드 검증을 하기 때문에 신규번호만 넣고 업데이트함.
+		 */
 		mbrPwd.setMemberPW(req.getNewPassword()); // 신규 비밀번호
-		mbrPwd.setOldPW(req.getOldPassword()); // 기존 비밀번호
 		mbrPwd.setPwRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 비밀번호 변경 일시
 		updatePasswordUserRequest.setMbrPwd(mbrPwd);
 
