@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeature
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSpcialSaleRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSubReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
@@ -116,11 +117,11 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/specialPriceProduct/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingRes getSpecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getSubProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
-		return this.shoppingService.getSecialPriceProductList(header, req);
+		return this.shoppingService.getSpecialPriceProductList(header, req);
 
 	}
 
@@ -137,7 +138,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/specialSales/specialSalesList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingSpcialSaleRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getSpecialSalesList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");

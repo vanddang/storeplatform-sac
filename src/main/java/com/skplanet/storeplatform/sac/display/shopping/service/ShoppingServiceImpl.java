@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeature
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSpcialSaleRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSubReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
@@ -455,7 +456,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes
 	 */
 	@Override
-	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingRes getSpecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
 		ShoppingRes res = new ShoppingRes();
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
@@ -479,7 +480,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		this.commonOffsetCount(req);
 
 		Integer totalCount = 0;
-		resultList = this.commonDAO.queryForList("Shopping.getSecialPriceProductList", req, MetaInfo.class);
+		resultList = this.commonDAO.queryForList("Shopping.getSpecialPriceProductList", req, MetaInfo.class);
 
 		if (resultList != null) {
 			shopping = new MetaInfo();
@@ -549,9 +550,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingThemeRes
 	 */
 	@Override
-	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingSpcialSaleRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
-		ShoppingThemeRes res = null;
+		ShoppingSpcialSaleRes res = null;
 		CommonResponse commonResponse = new CommonResponse();
 		Integer totalCount = 0;
 		List<MetaInfo> resultList = null;
@@ -616,18 +617,16 @@ public class ShoppingServiceImpl implements ShoppingService {
 				totalCount = shopping.getTotalCount();
 			}
 
-			res = new ShoppingThemeRes();
+			res = new ShoppingSpcialSaleRes();
 			res.setPromotionList(promotionList);
 
 			commonResponse.setTotalCount(totalCount);
 			res.setCommonResponse(commonResponse);
 		} else {
 			// 조회 결과 없음
-			res = new ShoppingThemeRes();
+			res = new ShoppingSpcialSaleRes();
 			List<Promotion> promotionList = new ArrayList<Promotion>();
 			res.setPromotionList(promotionList);
-			List<Product> productList = new ArrayList<Product>();
-			res.setProductList(productList);
 			commonResponse.setTotalCount(0);
 			res.setCommonResponse(commonResponse);
 		}

@@ -12,6 +12,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeature
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSpcialSaleRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSubReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
@@ -70,7 +71,7 @@ public interface ShoppingService {
 	 *            req
 	 * @return ShoppingRes
 	 */
-	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingRes getSpecialPriceProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * 기획전 상품 조회.
@@ -79,9 +80,9 @@ public interface ShoppingService {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingRes
+	 * @return ShoppingSpcialSaleRes
 	 */
-	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingSpcialSaleRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * 특정 기획전에 대한 상품 리스트 조회.
