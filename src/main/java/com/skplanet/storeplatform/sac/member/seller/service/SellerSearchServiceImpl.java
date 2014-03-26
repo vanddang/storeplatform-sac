@@ -964,7 +964,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
 			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
 			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
-			sellerMbrRes.setBizRegNumber(sellerMbr.getBizRegNumber());
 		}
 		return sellerMbrRes;
 	}
