@@ -81,11 +81,17 @@ public class AppServiceImpl implements AppService {
                     return null;
                 }
                 else
-                    res.getProduct().setSalesStatus("restricted");
+                    res.getProduct().setSalesStatus(DisplayConstants.DP_PURSTAT_RESTRICTED);
             }
             else
-                res.getProduct().setSalesStatus("restricted");
+                res.getProduct().setUserPurStatus(DisplayConstants.DP_PURSTAT_RESTRICTED);
         }
+
+        if (!StringUtils.isEmpty(request.getUserKey()) && !StringUtils.isEmpty(request.getDeviceKey())) {
+            res.getProduct().setUserPurStatus(DisplayConstants.DP_PURSTAT_AVAILABLE);
+        }
+
+        res.getProduct().setSalesStatus(appDetail.getProdStatusCd());
 
         // Product Basic info
         product.setIdentifierList(new ArrayList<Identifier>());
