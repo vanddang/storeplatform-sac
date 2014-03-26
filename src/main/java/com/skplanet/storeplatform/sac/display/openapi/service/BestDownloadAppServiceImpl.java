@@ -122,6 +122,10 @@ public class BestDownloadAppServiceImpl implements BestDownloadAppService {
 
 		List<MetaInfo> bestDownloadAppList = null;
 
+		if (StringUtils.isEmpty(listId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "orderedBy", orderedBy);
+		}
+
 		if (StringUtils.isNotEmpty(orderedBy)) {
 			if (!DisplayConstants.DP_ORDEREDBY_TYPE_RECENT.equals(orderedBy)
 					&& !DisplayConstants.DP_ORDEREDBY_TYPE_POPULAR.equals(orderedBy)) {
