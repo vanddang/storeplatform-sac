@@ -342,7 +342,7 @@ public class SellerServiceImpl implements SellerService {
 		/** 1. SC회원 Req 생성 및 주입. */
 		LoginSellerRequest loginSellerRequest = new LoginSellerRequest();
 		loginSellerRequest.setSellerID(req.getSellerId());
-		loginSellerRequest.setSellerPW(req.getSellerPW());
+		loginSellerRequest.setSellerPW(req.getSellerPw());
 
 		LOGGER.debug("==>>[SC] LoginSellerRequest.toString() : {}", loginSellerRequest.toString());
 
