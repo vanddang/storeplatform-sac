@@ -92,122 +92,122 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 
 		List<MetaInfo> productIdList = this.commonDAO.queryForList(
 				"RecommendNewMemberProduct.searchRecommendNewMemberProductList", req, MetaInfo.class);
-		Iterator<MetaInfo> iterator = null;
 		if (productIdList != null) {
 			commonResponse.setTotalCount(productIdList.get(0).getTotalCount());
-			iterator = productIdList.iterator();
-		}
-		// List<Source> preveiwSourceList = new ArrayList<Source>();
-		String topMenuId = "";
-		String prodId = "";
-		while (iterator.hasNext()) {
-			MetaInfo productBaseInfo = iterator.next();
-			topMenuId = productBaseInfo.getTopMenuId();
-			prodId = productBaseInfo.getProdId();
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+			Iterator<MetaInfo> iterator = productIdList.iterator();
 
-			ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-			// APP 게임, FUN , 생활/위치 , 어학/교육
-			if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
-					|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
-					|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
-					|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
+			// List<Source> preveiwSourceList = new ArrayList<Source>();
+			String topMenuId = "";
+			String prodId = "";
+			while (iterator.hasNext()) {
+				MetaInfo productBaseInfo = iterator.next();
+				topMenuId = productBaseInfo.getTopMenuId();
+				prodId = productBaseInfo.getProdId();
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-				productBasicInfo.setSvcGrpCd(DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
-				productBasicInfo.setProdId(productBaseInfo.getProdId());
-				reqMap.put("productBasicInfo", productBasicInfo);
-				reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-				MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+				ProductBasicInfo productBasicInfo = new ProductBasicInfo();
+				// APP 게임, FUN , 생활/위치 , 어학/교육
+				if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
+						|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
+						|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
+						|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
 
-				if (retMetaInfo != null) {
-					Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
-					productList.add(product);
-				}
+					productBasicInfo.setSvcGrpCd(DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
+					productBasicInfo.setProdId(productBaseInfo.getProdId());
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+					MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 
-			} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-					|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // 이북/코믹
-
-				// 채널 ID로 상품 조회
-				productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
-				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-				reqMap.put("productBasicInfo", productBasicInfo);
-
-				reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-				MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-
-				if (retMetaInfo != null) {
-					if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 이북일때
-						Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
-						productList.add(product);
-					} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 코믹일때
-						Product product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+					if (retMetaInfo != null) {
+						Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 						productList.add(product);
 					}
-				}
 
-			} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 뮤직
+				} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+						|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // 이북/코믹
 
-				// 음원 상품의 경우
-				if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
-					// 배치완료 기준일시 조회
-					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-					reqMap.put("stdDt", req.getStdDt().substring(0, 8)); // 배치 완료 기준일시 현재 데이터 미일치로 아래 하드코딩
-					// reqMap.put("stdDt", "20131007");
-
+					// 채널 ID로 상품 조회
 					productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
 					productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-					productBasicInfo.setTopMenuId(topMenuId);
 					reqMap.put("productBasicInfo", productBasicInfo);
 
-					MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+					MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+
 					if (retMetaInfo != null) {
-						Product product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 이북일때
+							Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+							productList.add(product);
+						} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 코믹일때
+							Product product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+							productList.add(product);
+						}
+					}
+
+				} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 뮤직
+
+					// 음원 상품의 경우
+					if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
+						// 배치완료 기준일시 조회
+						reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+						reqMap.put("stdDt", req.getStdDt().substring(0, 8)); // 배치 완료 기준일시 현재 데이터 미일치로 아래 하드코딩
+						// reqMap.put("stdDt", "20131007");
+
+						productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
+						productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+						productBasicInfo.setTopMenuId(topMenuId);
+						reqMap.put("productBasicInfo", productBasicInfo);
+
+						MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+						if (retMetaInfo != null) {
+							Product product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+							productList.add(product);
+						}
+					}
+
+				} else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+						|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) { // 영화/방송
+
+					// 채널 ID로 상품 조회
+					productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
+					productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+					MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+
+					if (retMetaInfo != null) {
+						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 영화일때
+							Product product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+							productList.add(product);
+						} else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 방송일때
+							Product product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+							productList.add(product);
+						}
+					}
+
+				} else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) { // 쇼핑
+
+					// 채널 ID로 상품 조회
+					productBasicInfo.setCatalogId(productBaseInfo.getChnlProdId());
+					productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+					reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+					// 쇼핑 Meta 정보 조회
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					if (retMetaInfo != null) {
+						// 쇼핑 Response Generate
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);
 					}
 				}
 
-			} else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-					|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) { // 영화/방송
-
-				// 채널 ID로 상품 조회
-				productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
-				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-				reqMap.put("productBasicInfo", productBasicInfo);
-				reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-				MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-
-				if (retMetaInfo != null) {
-					if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 영화일때
-						Product product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
-						productList.add(product);
-					} else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 방송일때
-						Product product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
-						productList.add(product);
-					}
-				}
-
-			} else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) { // 쇼핑
-
-				// 채널 ID로 상품 조회
-				productBasicInfo.setCatalogId(productBaseInfo.getChnlProdId());
-				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-				reqMap.put("productBasicInfo", productBasicInfo);
-				reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-				reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-				// 쇼핑 Meta 정보 조회
-				MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
-				if (retMetaInfo != null) {
-					// 쇼핑 Response Generate
-					Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
-					productList.add(product);
-				}
+				res.setCommonResponse(commonResponse);
+				res.setProductList(productList);
 			}
-
-			res.setCommonResponse(commonResponse);
-			res.setProductList(productList);
 		}
 		return res;
 	}
