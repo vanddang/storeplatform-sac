@@ -37,9 +37,9 @@ public class MD5Utils {
 		String hex = null;
 		for (int i = 0; i < mdbytes.length; i++) {
 			hex = Integer.toHexString(0xFF & mdbytes[i]);
-			if (hex.length() < 2) {
-				sb.append('0');
-			}
+			// if (hex.length() < 2) {
+			// sb.append('0');
+			// }
 			sb.append(hex);
 		}
 
