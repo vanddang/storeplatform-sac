@@ -31,6 +31,8 @@ public class SelectOption extends CommonInfo implements Serializable {
 	private String index; // 선택옵션 번호
 	private Title title; // 선택옵션 제목
 	private Price price; // 선택옵션 가격
+	private String itemCode; // 아이템 코드
+	private String salesStatus; // 판매 상태
 	private List<SubSelectOption> subSelectOptionList; // 두번째 옵션 리스트
 
 	/**
@@ -91,6 +93,36 @@ public class SelectOption extends CommonInfo implements Serializable {
 	 */
 	public void setPrice(Price price) {
 		this.price = price;
+	}
+
+	/**
+	 * @return the itemCode
+	 */
+	public String getItemCode() {
+		return this.itemCode;
+	}
+
+	/**
+	 * @param itemCode
+	 *            the itemCode to set
+	 */
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
+
+	/**
+	 * @return the salesStatus
+	 */
+	public String getSalesStatus() {
+		return this.salesStatus;
+	}
+
+	/**
+	 * @param salesStatus
+	 *            the salesStatus to set
+	 */
+	public void setSalesStatus(String salesStatus) {
+		this.salesStatus = salesStatus;
 	}
 
 	/**

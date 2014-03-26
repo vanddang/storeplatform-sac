@@ -29,6 +29,8 @@ public class SubSelectOption extends CommonInfo implements Serializable {
 	private String subId; // 두번째 콤보에 들어갈 옵션 ID
 	private Title subTitle; // 두번째 콤보에 들어갈 제목
 	private Price subPrice; // 두번째 콤보에 들어갈 가격
+	private String itemCode; // 아이템 코드
+	private String salesStatus; // 판매상태
 
 	/**
 	 * @return the id
@@ -88,6 +90,36 @@ public class SubSelectOption extends CommonInfo implements Serializable {
 	 */
 	public void setSubPrice(Price subPrice) {
 		this.subPrice = subPrice;
+	}
+
+	/**
+	 * @return the itemCode
+	 */
+	public String getItemCode() {
+		return this.itemCode;
+	}
+
+	/**
+	 * @param itemCode
+	 *            the itemCode to set
+	 */
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
+
+	/**
+	 * @return the salesStatus
+	 */
+	public String getSalesStatus() {
+		return this.salesStatus;
+	}
+
+	/**
+	 * @param salesStatus
+	 *            the salesStatus to set
+	 */
+	public void setSalesStatus(String salesStatus) {
+		this.salesStatus = salesStatus;
 	}
 
 }
