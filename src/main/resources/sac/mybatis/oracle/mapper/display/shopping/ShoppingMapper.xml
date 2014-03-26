@@ -1587,7 +1587,10 @@
                            WHERE prod_id=H.PROD_ID 
                          ) AS couponCode                        
                         ,I.SRC_CONTENT_ID AS itemCode
-                        ,(CASE WHEN (SELECT EPSD_CNT FROM TB_DP_SHPG_PROD WHERE PROD_ID = H.PROD_ID)>0 THEN K.PROD_STATUS_CD ELSE 'PD000404' END) PROD_STATUS_CD
+                        ,(CASE WHEN (SELECT EPSD_CNT FROM TB_DP_SHPG_PROD WHERE PROD_ID = H.PROD_ID)>0 
+                                THEN (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE TENANT_ID=#{tenantHeader.tenantId} AND PROD_ID=H.PROD_ID) 
+                          ELSE 'PD000404' END
+                          ) PROD_STATUS_CD
                         ,O.PROD_NM as catalogNm
                   FROM 
                           TB_DP_SHPG_BRAND A
