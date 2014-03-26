@@ -1133,15 +1133,16 @@ public class DeviceServiceImpl implements DeviceService {
 			req.setDeviceId(opmdMdn);
 			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
-			ExistReq existReq = new ExistReq();
-			existReq.setDeviceId(req.getDeviceId());
-			this.userSearchService.exist(requestHeader, existReq);
-		}
+			ListDeviceReq deviceReq = new ListDeviceReq();
+			deviceReq.setUserKey(req.getUserKey());
+			deviceReq.setDeviceId(req.getDeviceId());
+			ListDeviceRes deviceRes = this.listDevice(requestHeader, deviceReq);
 
-		if (req.getDeviceKey() != null) {
-			ExistReq existReq = new ExistReq();
-			existReq.setDeviceKey(req.getDeviceKey());
-			this.userSearchService.exist(requestHeader, existReq);
+			if (deviceRes.getDeviceInfoList() != null) {
+				LOGGER.info("대표단말설정 deviceKey : {}", deviceRes.getDeviceInfoList().get(0).getDeviceKey());
+				String deviceKey = deviceRes.getDeviceInfoList().get(0).getDeviceKey();
+				req.setDeviceKey(deviceKey);
+			}
 		}
 
 		/* 헤더 정보 셋팅 */
@@ -1154,19 +1155,6 @@ public class DeviceServiceImpl implements DeviceService {
 		ExistReq existReq = new ExistReq();
 		existReq.setUserKey(req.getUserKey());
 		ExistRes existRes = this.userSearchService.exist(requestHeader, existReq);
-
-		/* userKey, deviceId 로 디바이스 리스트 조회 -> getDeviceKey */
-		if (req.getDeviceId() != null) {
-			ListDeviceReq deviceReq = new ListDeviceReq();
-			deviceReq.setUserKey(req.getUserKey());
-			deviceReq.setDeviceId(req.getDeviceId());
-			ListDeviceRes deviceRes = this.listDevice(requestHeader, deviceReq);
-			if (deviceRes.getDeviceInfoList() != null) {
-				String deviceKey = deviceRes.getDeviceInfoList().get(0).getDeviceKey();
-				req.setDeviceKey(deviceKey);
-			}
-
-		}
 
 		LOGGER.debug("###### 2. exist Request : {}", existReq.toString());
 		LOGGER.debug("###### 2. exist Respone : {}", existRes.toString());
