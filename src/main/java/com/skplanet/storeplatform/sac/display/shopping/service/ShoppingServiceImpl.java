@@ -1706,8 +1706,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 							// 쿠폰코드 입력
 							episodeProduct.setCouponCode(episodeShopping.getCouponCode());
 
-							// 아이템코드 입력
-							episodeProduct.setItemCode(episodeShopping.getItemCode());
+							if (!deliveryValue.equals("delivery")) {
+								// 아이템코드 입력
+								episodeProduct.setItemCode(episodeShopping.getItemCode());
+							}
+							// 채널, 에피소드 상품 판매 상태 코드
+							episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
 
 							// 특가 상품일 경우
 							episodeProduct.setSpecialProdYn(episodeShopping.getSpecialSale());
@@ -1816,8 +1820,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeRights.setGrade(episodeShopping.getProdGrdCd());
 							episodeRights.setDateList(episodeDateList);
 							episodeProduct.setRights(episodeRights);
-							// 에피소드 상품 판매 상태 코드
-							episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
+
 							// saleOption 셋팅
 							episodeSaleOption = new SalesOption();
 							episodeSaleOption.setBtob(episodeShopping.getB2bProdYn()); // B2B_상품_여부
@@ -1865,6 +1868,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 											// 옵션1 상품 가격정보
 											Price option1Price = this.shoppingGenerator.generatePrice(optionShopping);
 											selectOption.setPrice(option1Price);
+											selectOption.setItemCode(optionShopping.getItemCode());
+											selectOption.setSalesStatus(optionShopping.getProdStatusCd());
 										}
 										if (optionShopping.getSubYn().equals("N")) { // 옵션 2 인 경우
 											subSelectOption = new SubSelectOption();
@@ -1879,11 +1884,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 											// 옵션2 상품 가격정보
 											Price option2Price = this.shoppingGenerator.generatePrice(optionShopping);
 											subSelectOption.setSubPrice(option2Price);
-
+											subSelectOption.setItemCode(optionShopping.getItemCode());
+											subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
 											subSelectOptionList.add(subSelectOption);
 										}
 										if (mm < resultOptionList.size() - 1) {
 											if (resultOptionList.get(mm + 1).getSubYn().equals("Y")) { // 다음건이 Y 이면 값을
+
 												nextFlag = true;
 											} else {
 												nextFlag = false;
@@ -1920,7 +1927,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 데이터 매핑
 					// 채널 상품 판매 상태 코드
 					product.setProductExplain(shopping.getProdDtlDesc());
-					product.setSalesStatus(shopping.getProdStatusCd());
 					product.setMenuList(menuList);
 					product.setTitle(title);
 					product.setSourceList(sourceList);

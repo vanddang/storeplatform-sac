@@ -1577,7 +1577,7 @@
                            WHERE prod_id=H.PROD_ID 
                          ) AS couponCode                        
                         ,I.SRC_CONTENT_ID AS itemCode
-                        ,K.PROD_STATUS_CD
+                        ,(CASE WHEN (SELECT EPSD_CNT FROM TB_DP_SHPG_PROD WHERE PROD_ID = H.PROD_ID)>0 THEN K.PROD_STATUS_CD ELSE 'PD000404' END) PROD_STATUS_CD
                         ,O.PROD_NM as catalogNm
                   FROM 
                           TB_DP_SHPG_BRAND A
@@ -1701,7 +1701,9 @@
                     ), NVL(D.DC_AMT,0)) AS DC_AMT                       
                ,D.PROD_NET_AMT
                ,D.DC_AFT_PROD_AMT
-               ,B.FIRST_MAX_PRCHS_QTY     
+               ,B.FIRST_MAX_PRCHS_QTY 
+               ,DECODE(C.CONTENTS_TYPE_CD,'PD002502',E.PROD_STATUS_CD,'') AS PROD_STATUS_CD
+               ,DECODE(C.CONTENTS_TYPE_CD,'PD002502',B.SRC_CONTENT_ID,'')  AS itemCode    
 		FROM  TB_DP_PROD_OPT A
 		     ,TB_DP_SHPG_PROD B 
 		     ,TB_DP_PROD C
