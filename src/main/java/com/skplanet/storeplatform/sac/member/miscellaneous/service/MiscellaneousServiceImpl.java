@@ -97,9 +97,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MiscellaneousServiceImpl.class);
 
 	@Autowired
-	private MemberCommonComponent commService; // 회원 공통 서비스
-
-	@Autowired
 	private UapsSCI uapsSCI; // UAPS 연동 Interface.
 
 	@Autowired
@@ -147,13 +144,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		GetOpmdRes res = new GetOpmdRes();
 		res.setMsisdn(msisdn);
-		LOGGER.info("[MiscellaneousService.getOpmd] Request : {}", req);
+		LOGGER.info("## Request : {}", req);
 
 		/** 1. OPMD번호(989)여부 검사 */
 		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
 			UapsEcReq uapsReq = new UapsEcReq();
 			uapsReq.setDeviceId(msisdn);
-			LOGGER.debug("[MiscellaneousService.getOpmd] SAC->UPAS Request : {}", uapsReq);
 			OpmdEcRes opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
 			if (opmdRes != null) {
 				res.setMsisdn(opmdRes.getMobileMdn());
@@ -168,7 +164,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			LOGGER.debug("[MiscellaneousService.getOpmd] Non OPMD Number");
 		}
 
-		LOGGER.info("[MiscellaneousService.getOpmd] Response : {}", res);
+		LOGGER.info("## Response : {}", res);
 
 		return res;
 	}
@@ -189,18 +185,14 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String deviceModelNo = req.getDeviceModelNo();
 		String msisdn = req.getMsisdn();
 		String userKey = null;
-		String errorKey = "deviceModelNo";
-		String errorValue = deviceModelNo;
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = this.commonComponent.getSCCommonRequest(requestHeader);
-		LOGGER.debug("[MiscellaneousService.getUaCode] Request {}", req);
+		LOGGER.info("## Request {}", req);
 
 		GetUaCodeRes response = new GetUaCodeRes();
 		/* 파라미터로 MSISDN만 넘어온 경우 */
 		if (StringUtils.isNotBlank(msisdn) && StringUtils.isBlank(deviceModelNo)) {
-			errorKey = "msisdn";
-			errorValue = msisdn;
 			SearchUserRequest searchUserRequest = new SearchUserRequest();
 			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 
@@ -250,7 +242,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				throw new StorePlatformException("SAC_MEM_3401", "deviceModelNo", deviceModelNo);
 			}
 		}
-
+		LOGGER.info("## Response {}", response);
 		return response;
 	}
 
@@ -270,7 +262,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			GetPhoneAuthorizationCodeReq request) {
 		// 헤더는 controller 에서 SacRequestHeader 셋팅된걸 사용한다. (tennatId, systemId 사용시에만 선언)
 
-		LOGGER.info("[MiscellaneousService.getPhoneAuthorizationCode] Request : {}", request);
+		LOGGER.info("## Request : {}", request);
 		String authCode = "";
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
@@ -328,14 +320,14 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			smsReq.setCarrier(request.getCarrier());
 		}
 
-		LOGGER.info("[MiscellaneousService.getPhoneAuthorizationCode] SAC->SMS 발송 Request : {}", smsReq);
+		LOGGER.debug("[MiscellaneousService.getPhoneAuthorizationCode] SAC->SMS 발송 Request : {}", smsReq);
 		this.messageSCI.smsSend(smsReq);
 
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
 
 		response.setPhoneSign(authSign);
 
-		LOGGER.info("[MiscellaneousService.getPhoneAuthorizationCode] Response : {}", response);
+		LOGGER.info("## Response : {}", response);
 		return response;
 	}
 
@@ -353,7 +345,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request) {
 
-		LOGGER.info("[MiscellaneousService.confirmPhoneAutorizationCode] Request : {}", request);
+		LOGGER.info("## Request : {}", request);
 		ConfirmPhoneAuthorizationCodeRes res = new ConfirmPhoneAuthorizationCodeRes();
 		String authCode = request.getPhoneAuthCode();
 		String authSign = request.getPhoneSign();
@@ -387,7 +379,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
 		}
 		res.setUserPhone(userPhone);
-		LOGGER.info("[MiscellaneousService.confirmPhoneAutorizationCode] Response : {}", res);
+		LOGGER.info("## Response : {}", res);
 		return res;
 	}
 
@@ -408,7 +400,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
 
-		LOGGER.info("[MiscellaneousService.getCaptcha] SAC->IDP Request.");
+		LOGGER.info("## SAC->IDP Request.");
 		WaterMarkAuthImageEcRes waterMarkAuthImageEcRes = this.idpSCI.warterMarkImageUrl();
 
 		if (waterMarkAuthImageEcRes != null && StringUtils.isNotBlank(waterMarkAuthImageEcRes.getImageUrl())) {
@@ -416,7 +408,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			waterMarkImageSign = waterMarkAuthImageEcRes.getImageSign();
 			signData = waterMarkAuthImageEcRes.getSignData();
 
-			LOGGER.info("[MiscellaneousService.getCaptcha] SAC<-IDP Response : {}", waterMarkAuthImageEcRes);
+			LOGGER.debug("[MiscellaneousService.getCaptcha] SAC<-IDP Response : {}", waterMarkAuthImageEcRes);
 
 			String urlPath = waterMarkImageUrl.substring(waterMarkImageUrl.indexOf("/watermark"));
 
@@ -427,7 +419,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			if (imageRes != null && StringUtils.isNotBlank(imageRes.getImgData())) {
 				waterMarkImageString = imageRes.getImgData();
-				LOGGER.info("[MiscellaneousService.getCaptcha] Captcha 문자 발급 성공. : {}", imageRes);
+				LOGGER.info("## Captcha 문자 발급 성공. : {}", imageRes);
 			}
 		}
 
@@ -438,6 +430,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		response.setImageSign(waterMarkImageSign);
 		response.setSignData(signData);
 
+		LOGGER.info("## Response {}", response);
 		return response;
 	}
 
@@ -453,7 +446,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) {
 
-		LOGGER.info("[MiscellaneousService.confirmCaptcha] SAC->IDP Request.");
+		LOGGER.info("## SAC->IDP Request.");
 
 		WaterMarkAuthEcReq waterMarkAuthEcReq = new WaterMarkAuthEcReq();
 		waterMarkAuthEcReq.setUserCode(request.getAuthCode());
@@ -461,7 +454,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		waterMarkAuthEcReq.setSignData(request.getSignData());
 
 		this.idpSCI.waterMarkAuth(waterMarkAuthEcReq);
-		LOGGER.info("[MiscellaneousService.confirmCaptcha] Captcha 문자 확인 성공.");
+		LOGGER.info("## Captcha 문자 확인 성공.");
 
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 		return response;
@@ -482,7 +475,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(SacRequestHeader sacRequestHeader,
 			GetEmailAuthorizationCodeReq request) {
 
-		LOGGER.info("[MiscellaneousService.getEmailAuthorizationCode] SAC 이메일 인증 코드 생성 Request : {}", request);
+		LOGGER.info("## SAC 이메일 인증 코드 생성 Request : {}", request);
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 		ServiceAuth serviceAuthReq = new ServiceAuth();
 		serviceAuthReq.setAuthEmail(request.getUserEmail());
@@ -522,8 +515,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		// 4. 인증코드 Response
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
 		response.setEmailAuthCode(authCode);
-		LOGGER.info("[MiscellaneousService.getEmailAuthorizationCode] SAC 이메일 인증 코드생성 response : {}",
-				response.getEmailAuthCode());
+		LOGGER.info("## SAC 이메일 인증 코드생성 response : {}", response.getEmailAuthCode());
 
 		return response;
 	}
@@ -541,7 +533,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request) {
 
 		// 1. 인증 코드로 DB 확인하여 , 회원 key, 회원 email 조회
-		LOGGER.info("[MiscellaneousService.confirmEmailAuthorizationCode] Request : {}", request);
+		LOGGER.info("## Request : {}", request);
 		String authValue = request.getEmailAuthCode();
 		String timeToLive = request.getTimeToLive();
 
@@ -566,7 +558,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			String authSeq = serviceAuthInfo.getAuthSeq();
 			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
-			LOGGER.info("[MiscellaneousService.confirmEmailAuthorizationCode] 인증 완료.");
+			LOGGER.info("## 인증 완료.");
 		} else {
 			throw new StorePlatformException("SAC_MEM_3003"); // 해당 인증코드가 DB Table에 존재하지 않음.
 		}
@@ -574,7 +566,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		response.setUserEmail(serviceAuthInfo.getAuthEmail());
 		response.setUserKey(serviceAuthInfo.getMbrNo());
 
-		LOGGER.info("[MiscellaneousService.confirmEmailAuthorizationCode] Response : {}", serviceAuthInfo);
+		LOGGER.info("## Response : {}", response);
 		return response;
 	}
 
@@ -592,18 +584,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
 
-		LOGGER.info("[MiscellaneousService.createAdditionalService] Request {}", request);
+		LOGGER.info("## Request {}", request);
 		JoinSupServiceRequestEcReq joinSupServiceEcReq = new JoinSupServiceRequestEcReq();
 		joinSupServiceEcReq.setSvcCode(request.getSvcCode());
 		joinSupServiceEcReq.setUserMdn(request.getMsisdn());
 		joinSupServiceEcReq.setUserSvcMngNum(request.getSvcMngNum());
 
 		JoinSupServiceRequestEcRes joinSupServiceEcRes = this.idpSCI.joinSupServiceRequest(joinSupServiceEcReq);
-		LOGGER.info("[MiscellaneousService.createAdditionalService] SAC<-IDP Response {}", joinSupServiceEcRes);
+		LOGGER.debug("[MiscellaneousService.createAdditionalService] SAC<-IDP Response {}", joinSupServiceEcRes);
 
 		response.setSvcCode(joinSupServiceEcRes.getSvcCode()); // 부가서비스 코드
 		response.setMsisdn(joinSupServiceEcRes.getUserMdn()); // 사용자 휴대폰번호
-		LOGGER.info("[MiscellaneousService.createAdditionalService] Response {}", response);
+		LOGGER.info("## Response {}", response);
 
 		return response;
 	}
@@ -620,20 +612,20 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) {
 
-		LOGGER.info("[MiscellaneousService.getAdditionalService] Request {}", request);
+		LOGGER.info("## Request {}", request);
 		ServiceSubscriptionCheckEcReq serviceSubscriptionCheckEcReq = new ServiceSubscriptionCheckEcReq();
 		serviceSubscriptionCheckEcReq.setUserMdn(request.getMsisdn());
 		serviceSubscriptionCheckEcReq.setSvcCode(request.getSvcCode());
 		ServiceSubscriptionCheckEcRes serviceSubscriptionCheckEcRes = this.idpSCI
 				.serviceSubscriptionCheck(serviceSubscriptionCheckEcReq);
 
-		LOGGER.info("[MiscellaneousService.getAdditionalService] SAC<-IDP Response {}", serviceSubscriptionCheckEcRes);
+		LOGGER.debug("[MiscellaneousService.getAdditionalService] SAC<-IDP Response {}", serviceSubscriptionCheckEcRes);
 
 		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
 		response.setMsisdn(serviceSubscriptionCheckEcRes.getUserMdn());
 		response.setSvcCode(serviceSubscriptionCheckEcRes.getSvcCode());
 		response.setSvcJoinResult(serviceSubscriptionCheckEcRes.getSvcResult());
-		LOGGER.info("[MiscellaneousService.getAdditionalService] Response {}", response);
+		LOGGER.info("## Response {}", response);
 
 		return response;
 	}
@@ -649,7 +641,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 */
 	@Override
 	public GetModelCodeRes getModelCode(GetModelCodeReq request) {
-		LOGGER.info("[MiscellaneousService.getModelCode] Request : {}", request);
+		LOGGER.info("## Request : {}", request);
 		GetModelCodeRes response = new GetModelCodeRes();
 		String uaCd = request.getUaCd();
 		String msisdn = request.getMsisdn();
@@ -664,13 +656,14 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			uapsReq.setType("mdn");
 
 			UafmapEcRes uapsRes = this.uapsSCI.getDeviceInfo(uapsReq);
-			if (uapsRes != null && StringUtils.isNotBlank(uapsRes.getDeviceModel())) {
-				LOGGER.info("[MiscellaneousService.getModelCode] SAC<-UAPS Response {}", uapsRes);
-				uaCd = uapsRes.getDeviceModel();
-			} else if (StringUtils.isBlank(uapsRes.getDeviceModel())) {
-				// else uaCd가 존재하지 않을 경우 9999로 셋팅. - 비정상 데이터.
-				LOGGER.info("[MiscellaneousService.getModelCode] uaCd is not exists, Set uaCd=\"9999\"");
-				uaCd = "9999";
+			if (uapsRes != null) {
+				if (StringUtils.isNotBlank(uapsRes.getDeviceModel())) {
+					uaCd = uapsRes.getDeviceModel();
+				} else {
+					// else uaCd가 존재하지 않을 경우 9999로 셋팅. - 비정상 데이터.
+					LOGGER.info("## uaCd is not exists, Set uaCd=\"9999\"");
+					uaCd = "9999";
+				}
 			}
 
 		}
@@ -683,7 +676,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		} else {
 			throw new StorePlatformException("SAC_MEM_3402", errorKey, errorValue);
 		}
-		LOGGER.info("[MiscellaneousService.getModelCode] Response : {}", response);
+		LOGGER.info("## Response : {}", response);
 
 		return response;
 	}
@@ -700,7 +693,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public AuthorizeAccountRes authorizeAccount(AuthorizeAccountReq request) {
 
-		LOGGER.info("[Miscellaneous.authorizeAccount] Request : {}", request);
+		LOGGER.info("## Request : {}", request);
 		// 1. EC (Inicis 연동) 파라미터 전달, 결제계좌 정보 인증 요청
 		InicisAuthAccountEcReq inicisAuthAccountEcReq = new InicisAuthAccountEcReq();
 		inicisAuthAccountEcReq.setAcctNm(request.getBankAcctName());
@@ -708,8 +701,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		inicisAuthAccountEcReq.setAcctNo(request.getBankAccount());
 
 		InicisAuthAccountEcRes inicisAuthAccountEcRes = this.inicisSCI.authAccount(inicisAuthAccountEcReq);
-		LOGGER.info("[Miscellaneous.authorizeAccount] 계좌인증 성공. Inicis ResultCode : {}",
-				inicisAuthAccountEcRes.getResultCode());
+		LOGGER.info("## 계좌인증 성공. Inicis ResultCode : {}", inicisAuthAccountEcRes.getResultCode());
 
 		return new AuthorizeAccountRes();
 
