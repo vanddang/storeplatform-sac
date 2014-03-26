@@ -69,6 +69,7 @@ public class DetailInformationForProductRes extends CommonInfo {
 		this.sellerMbrList = sellerMbrList;
 	}
 
+	@JsonSerialize(include = Inclusion.NON_NULL)
 	public static class SellerMbrAppSac {
 		/** 상하구분 . */
 		public String appStat;
