@@ -313,10 +313,9 @@ public class MemberCommonComponent {
 	public UserExtraInfoRes getUserExtraInfo(String userKey, SacRequestHeader sacHeader) {
 
 		DetailReq req = new DetailReq();
-		UserExtraInfoRes res = new UserExtraInfoRes();
 		req.setUserKey(userKey);
 
-		res = this.userSearchService.listUserExtra(req, sacHeader);
+		UserExtraInfoRes res = this.userSearchService.listUserExtra(req, sacHeader);
 
 		return res;
 	}
