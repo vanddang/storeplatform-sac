@@ -927,17 +927,19 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setSellerCategory(sellerMbr.getSellerCategory());
 			sellerMbrRes.setSellerMainStatus(sellerMbr.getSellerMainStatus());
 			sellerMbrRes.setSellerSubStatus(sellerMbr.getSellerSubStatus());
+			sellerMbrRes.setIsRealName(sellerMbr.getIsRealName()); // 실명인증 여부
+
+			/* 개인회원의 경우, 생년월일 하나만도 수정 가능. */
+			sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
 			if (mbrAuth != null && StringUtils.isNotBlank(sellerMbr.getIsRealName())
 					&& StringUtils.equals(MemberConstants.USE_Y, sellerMbr.getIsRealName())) {
 				// 실명인증 판매자 정보 셋팅.
 				sellerMbrRes.setSellerName(mbrAuth.getName());
 				sellerMbrRes.setSellerSex(mbrAuth.getSex());
-				sellerMbrRes.setSellerBirthDay(mbrAuth.getBirthDay());
 			} else {
 				// 판매자 정보 셋팅.
 				sellerMbrRes.setSellerName(sellerMbr.getSellerName());
 				sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
-				sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
 			}
 			sellerMbrRes.setSellerSSNumber(sellerMbr.getSellerSSNumber());
 			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
@@ -964,6 +966,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
 			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
 			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
+
+			// 구매 요청으로 통신판매업 관련 파라미터 3개 추가. 2014.03.26
+			sellerMbrRes.setIsBizRegistered(sellerMbr.getIsBizRegistered());
+			sellerMbrRes.setBizRegNumber(sellerMbr.getBizRegNumber());
+			sellerMbrRes.setBizUnregReason(sellerMbr.getBizUnregReason());
+
 		}
 		return sellerMbrRes;
 	}
