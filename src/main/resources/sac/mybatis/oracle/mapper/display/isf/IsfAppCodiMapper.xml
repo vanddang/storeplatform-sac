@@ -382,7 +382,8 @@
 		        FROM            
 		            (
 		            SELECT 
-		                  P.PROD_ID
+		                  ROWNUM AS RNN 
+                        , P.PROD_ID
 		                , P.SVC_GRP_CD
 		                , P.SVC_TYPE_CD
 		                , P.CONTENTS_TYPE_CD
@@ -470,6 +471,6 @@
 		           ) S
 		       WHERE S.RN = 1
 		     ) A
-         WHERE ROWNUM BETWEEN #{START_ROW} AND #{END_ROW}
+         WHERE RNN BETWEEN #{START_ROW} AND #{END_ROW}
     </select>    
 </mapper>

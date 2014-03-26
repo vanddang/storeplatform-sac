@@ -27,7 +27,8 @@
                 , A.RN
            FROM   (
                    SELECT 
-                            P2.PROD_ID
+                            ROWNUM AS RNN
+                          , P2.PROD_ID
                           , P2.SVC_GRP_CD
                           , P2.SVC_TYPE_CD
                           , P2.CONTENTS_TYPE_CD
@@ -132,7 +133,7 @@
                                   , 1 )
                         ELSE 1
                     END ) = 1
-            AND   ROWNUM BETWEEN #{START_ROW} AND #{END_ROW}                    
+            AND   RNN BETWEEN #{START_ROW} AND #{END_ROW}                    
     </select>
 
     <select id="getThemeRecommendList" parameterType="java.util.Map" resultType="Appguide">
