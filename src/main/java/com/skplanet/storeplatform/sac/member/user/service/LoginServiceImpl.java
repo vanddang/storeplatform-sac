@@ -390,29 +390,16 @@ public class LoginServiceImpl implements LoginService {
 		/* 모번호 조회 */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
-		/* 휴대기기 정보 조회 */
-		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+		/* mdn 회원유무 조회 */
+		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		String isVariability = "Y"; // 변동성 체크 성공 유무
 		String userKey = null;
 
-		if (deviceInfo == null) { // 회원아님
+		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
 
-			/* 변동성 여부 조회 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
-
-			LOGGER.info("### {} 변동성 여부 : {}", req.getDeviceId(), saveAndSync.getIsSaveAndSyncTarget());
-
-			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "N")) {
-
-				/* 회원 정보가 존재 하지 않습니다. */
-				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
-
-			}
-
-			userKey = saveAndSync.getUserKey();
-
-		} else {
+			/* 휴대기기 정보 조회 */
+			DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
 
 			userKey = deviceInfo.getUserKey();
 
@@ -443,6 +430,21 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 
+		} else {
+
+			/* 변동성 여부 조회 */
+			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
+
+			LOGGER.info("### {} 변동성 여부 : {}", req.getDeviceId(), saveAndSync.getIsSaveAndSyncTarget());
+
+			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "N")) {
+
+				/* 회원 정보가 존재 하지 않습니다. */
+				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
+
+			}
+
+			userKey = saveAndSync.getUserKey();
 		}
 
 		LOGGER.info("### {} 변동성 체크 성공 여부 : {}", req.getDeviceId(), isVariability);
@@ -873,12 +875,8 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_0003", "macAddress", req.getMacAddress());
 		}
 
-		/* mdn 기가입 여부 확인 */
+		/* mdn 회원유무 조회 */
 		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
-		DeviceInfo mdnDeviceInfo = null;
-		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
-			mdnDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
-		}
 
 		String isPurchaseChange = "N";
 		String isJoinMdn = "N";
@@ -888,7 +886,17 @@ public class LoginServiceImpl implements LoginService {
 		String newDeviceKey = null;
 		String newUserKey = null;
 
-		if (mdnDeviceInfo == null) { // mdn 미가입인 경우
+		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) { // 회원인 경우
+
+			DeviceInfo mdnDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+
+			LOGGER.info("::: mdn 기가입 :::");
+			isPurchaseChange = "Y";
+
+			newDeviceKey = mdnDeviceInfo.getDeviceKey();
+			newUserKey = mdnDeviceInfo.getUserKey();
+
+		} else {
 
 			/* 변동성 대상체크 */
 			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
@@ -905,13 +913,6 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 
-		} else { // mdn 기가입인 경우
-
-			LOGGER.info("::: mdn 기가입 :::");
-			isPurchaseChange = "Y";
-
-			newDeviceKey = mdnDeviceInfo.getDeviceKey();
-			newUserKey = mdnDeviceInfo.getUserKey();
 		}
 
 		LOGGER.info("::: 변동성 구매이관 대상여부 {}", isPurchaseChange);
