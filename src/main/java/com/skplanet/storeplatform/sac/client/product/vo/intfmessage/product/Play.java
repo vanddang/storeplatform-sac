@@ -43,7 +43,14 @@ public class Play extends CommonInfo implements Serializable {
 	private String usePeriodUnitCd; // 이용기간단위
 	private String salesStatus; // 판매 상태(restrict)
 	private List<Source> sourceList;
-
+    /**
+     * 사용자 구매 가능 상태
+     * <ul>
+     *     <li>available 구매 가능</li>
+     *     <li>restricted 구매 제한</li>
+     * </ul>
+     */
+    private String userPurStatus;
 	/**
 	 * Play().
 	 */
@@ -275,4 +282,19 @@ public class Play extends CommonInfo implements Serializable {
 		this.sourceList = sourceList;
 	}
 
+	/**
+	 * @return the userPurStatus
+	 */
+	public String getUserPurStatus() {
+		return userPurStatus;
+	}
+
+	/**
+	 * @param userPurStatus the userPurStatus to set
+	 */
+	public void setUserPurStatus(String userPurStatus) {
+		this.userPurStatus = userPurStatus;
+	}
+
+	
 }
