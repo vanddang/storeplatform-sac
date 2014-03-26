@@ -975,7 +975,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			/* MQ 연동 */
 			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
 			mqInfo.setUserId(schUserRes.getUserMbr().getUserID());
-			mqInfo.setUserKey(schUserRes.getUserMbr().getImMbrNo());
+			mqInfo.setUserKey(userKey);
 			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
