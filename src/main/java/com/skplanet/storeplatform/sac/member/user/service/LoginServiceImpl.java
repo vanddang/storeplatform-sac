@@ -395,6 +395,7 @@ public class LoginServiceImpl implements LoginService {
 
 		String isVariability = "Y"; // 변동성 체크 성공 유무
 		String userKey = null;
+		String isSaveAndSyncTarget = null; //변동성 mdn 유무
 
 		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
 
@@ -434,10 +435,9 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 변동성 여부 조회 */
 			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
+			isSaveAndSyncTarget = saveAndSync.getIsSaveAndSyncTarget();
 
-			LOGGER.info("### {} 변동성 여부 : {}", req.getDeviceId(), saveAndSync.getIsSaveAndSyncTarget());
-
-			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "N")) {
+			if (StringUtil.equals(isSaveAndSyncTarget, "N")) {
 
 				/* 회원 정보가 존재 하지 않습니다. */
 				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
@@ -446,8 +446,8 @@ public class LoginServiceImpl implements LoginService {
 
 			userKey = saveAndSync.getUserKey();
 		}
-
-		LOGGER.info("### {} isVariability : {}", req.getDeviceId(), isVariability);
+		LOGGER.info("### {} 변동성 여부 : {}", req.getDeviceId(), isSaveAndSyncTarget);
+		LOGGER.info("### {} 변동성 체크 성공 여부 : {}", req.getDeviceId(), isVariability);
 
 		if (StringUtil.equals(isVariability, "Y")) {
 
