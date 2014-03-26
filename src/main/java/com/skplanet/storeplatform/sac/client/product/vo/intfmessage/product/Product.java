@@ -321,14 +321,14 @@ public class Product extends CommonInfo implements Serializable {
      *     <li>restricted 구매 제한</li>
      * </ul>
      */
-    private String userPurStat;
+    private String userPurStatus;
 
-    public String getUserPurStat() {
-        return userPurStat;
+    public String getUserPurStatus() {
+        return userPurStatus;
     }
 
-    public void setUserPurStat(String userPurStat) {
-        this.userPurStat = userPurStat;
+    public void setUserPurStatus(String userPurStatus) {
+        this.userPurStatus = userPurStatus;
     }
 
     public String getSalesStatus() {
