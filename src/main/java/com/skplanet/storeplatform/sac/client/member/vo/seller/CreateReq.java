@@ -37,6 +37,10 @@ public class CreateReq extends CommonInfo {
 	private String sellerPhoneCountry;
 	/** 무선 전화번호. */
 	private String sellerPhone;
+	/** 유선 국가번호. */
+	private String cordedTelephoneCountry;
+	/** 유선 전화번호. */
+	private String cordedTelephone;
 	/** SMS 수신 여부. */
 	private String isRecvSms;
 	/** 판매자 이메일. */
@@ -47,10 +51,6 @@ public class CreateReq extends CommonInfo {
 	private String isRecvEmail;
 	/** 판매자 이름. */
 	private String sellerName;
-	/** 유선 국가번호. */
-	private String cordedTelephoneCountry;
-	/** 유선 전화번호. */
-	private String cordedTelephone;
 	/** 노출 이름. */
 	private String sellerNickName;
 	/** 판매자 성별. */
@@ -93,10 +93,6 @@ public class CreateReq extends CommonInfo {
 	private String sellerCompany;
 	/** 사업자 등록번호. */
 	private String sellerBizNumber;
-	/** 담당자 유선전화번호 국가코드. */
-	private String customerPhoneCountry;
-	/** 담당자 유선전화번호. */
-	private String customerPhone;
 	/** 담당자 이메일. */
 	private String customerEmail;
 	/** 담당자 명. */
@@ -561,36 +557,6 @@ public class CreateReq extends CommonInfo {
 	 */
 	public void setSellerBizNumber(String sellerBizNumber) {
 		this.sellerBizNumber = sellerBizNumber;
-	}
-
-	/**
-	 * @return the customerPhoneCountry
-	 */
-	public String getCustomerPhoneCountry() {
-		return this.customerPhoneCountry;
-	}
-
-	/**
-	 * @param customerPhoneCountry
-	 *            the customerPhoneCountry to set
-	 */
-	public void setCustomerPhoneCountry(String customerPhoneCountry) {
-		this.customerPhoneCountry = customerPhoneCountry;
-	}
-
-	/**
-	 * @return the customerPhone
-	 */
-	public String getCustomerPhone() {
-		return this.customerPhone;
-	}
-
-	/**
-	 * @param customerPhone
-	 *            the customerPhone to set
-	 */
-	public void setCustomerPhone(String customerPhone) {
-		this.customerPhone = customerPhone;
 	}
 
 	/**
