@@ -825,10 +825,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		//		if (StringUtil.isBlank(reqVal) || (StringUtil.isNotBlank(dbVal) && StringUtil.equals(reqVal, dbVal))) {
-		//			isEquals = true;
-		//		}
-
 		if (StringUtil.equals(version, "v1")) {
 
 			if (StringUtil.isNotBlank(nativeId)) {
@@ -873,7 +869,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		} else {
 
-			/* IMEI가 다른경우 */
+			/* DB에 IMEI가 있으면 비교 */
 			if (!this.isEqualsLoginDevice(deviceInfo.getDeviceId(), nativeId, dbDeviceInfo.getNativeId(),
 					MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
@@ -895,14 +891,8 @@ public class DeviceServiceImpl implements DeviceService {
 					}
 
 				} else { // 타사는 IMEI가 다르면 에러
-					if (StringUtil.isBlank(dbDeviceInfo.getNativeId())) { // DB에 없는 경우만 최초 수집
 
-						LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
-						userMbrDevice.setNativeID(nativeId);
-
-					} else {
-						throw new StorePlatformException("SAC_MEM_1504");
-					}
+					throw new StorePlatformException("SAC_MEM_1504");
 
 				}
 			}
@@ -1564,7 +1554,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		} else if (StringUtil.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
-			if (StringUtil.isBlank(reqVal) || (StringUtil.isNotBlank(dbVal) && StringUtil.equals(reqVal, dbVal))) {
+			if (StringUtil.isBlank(dbVal) || StringUtil.equals(reqVal, dbVal)) {
 				isEquals = true;
 			}
 
