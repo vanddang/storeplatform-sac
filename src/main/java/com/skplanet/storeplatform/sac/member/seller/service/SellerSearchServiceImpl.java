@@ -921,39 +921,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SellerMbrSac sellerMbrRes = new SellerMbrSac();
 
 		if (sellerMbr != null) {
-			sellerMbrRes.setSellerId(sellerMbr.getSellerID());
-			sellerMbrRes.setCharger(sellerMbr.getCharger());
-			sellerMbrRes.setCordedTelephone(sellerMbr.getCordedTelephone());
-			sellerMbrRes.setCordedTelephoneCountry(sellerMbr.getCordedTelephoneCountry());
-			sellerMbrRes.setCustomerEmail(sellerMbr.getCustomerEmail());
-			sellerMbrRes.setIsDomestic(sellerMbr.getIsDomestic());
-			sellerMbrRes.setIsRecvEmail(sellerMbr.getIsRecvEmail());
-			sellerMbrRes.setIsRecvSMS(sellerMbr.getIsRecvSMS());
-			sellerMbrRes.setRepEmail(sellerMbr.getRepEmail());
-			sellerMbrRes.setSellerAddress(sellerMbr.getSellerAddress());
-			sellerMbrRes.setSellerBizNumber(sellerMbr.getSellerBizNumber());
-			sellerMbrRes.setSellerCategory(sellerMbr.getSellerCategory());
-			sellerMbrRes.setSellerCity(sellerMbr.getSellerCity());
-			sellerMbrRes.setSellerClass(sellerMbr.getSellerClass());
-			sellerMbrRes.setSellerCompany(sellerMbr.getSellerCompany());
-			sellerMbrRes.setSellerCountry(sellerMbr.getSellerCountry());
-			sellerMbrRes.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
-			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
 			sellerMbrRes.setSellerKey(sellerMbr.getSellerKey());
-			sellerMbrRes.setSellerLanguage(sellerMbr.getSellerLanguage());
+			sellerMbrRes.setSellerId(sellerMbr.getSellerID());
+			sellerMbrRes.setSellerClass(sellerMbr.getSellerClass());
+			sellerMbrRes.setSellerCategory(sellerMbr.getSellerCategory());
 			sellerMbrRes.setSellerMainStatus(sellerMbr.getSellerMainStatus());
-			sellerMbrRes.setSellerNickName(sellerMbr.getSellerNickName());
-			sellerMbrRes.setSellerPhone(sellerMbr.getSellerPhone());
-			sellerMbrRes.setSellerPhoneCountry(sellerMbr.getSellerPhoneCountry());
-			sellerMbrRes.setSellerSSNumber(sellerMbr.getSellerSSNumber());
-			sellerMbrRes.setSellerState(sellerMbr.getSellerState());
 			sellerMbrRes.setSellerSubStatus(sellerMbr.getSellerSubStatus());
-			sellerMbrRes.setSellerTelecom(sellerMbr.getSellerTelecom());
-			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
-
-			// TODO 판매자 회원은 가입 자체가 실명인증인데???
-			// TODO 처음부터 인증테이블에 데이터가 있을텐데???
-			// TODO 비교해야 하나???
 			if (mbrAuth != null && StringUtils.isNotBlank(sellerMbr.getIsRealName())
 					&& StringUtils.equals(MemberConstants.USE_Y, sellerMbr.getIsRealName())) {
 				// 실명인증 판매자 정보 셋팅.
@@ -966,6 +939,32 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
 				sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
 			}
+			sellerMbrRes.setSellerSSNumber(sellerMbr.getSellerSSNumber());
+			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
+			sellerMbrRes.setCharger(sellerMbr.getCharger());
+			sellerMbrRes.setCustomerEmail(sellerMbr.getCustomerEmail());
+			sellerMbrRes.setSellerPhone(sellerMbr.getSellerPhone());
+			sellerMbrRes.setSellerPhoneCountry(sellerMbr.getSellerPhoneCountry());
+			sellerMbrRes.setCordedTelephone(sellerMbr.getCordedTelephone());
+			sellerMbrRes.setCordedTelephoneCountry(sellerMbr.getCordedTelephoneCountry());
+			sellerMbrRes.setIsDomestic(sellerMbr.getIsDomestic());
+			sellerMbrRes.setIsRecvEmail(sellerMbr.getIsRecvEmail());
+			sellerMbrRes.setIsRecvSMS(sellerMbr.getIsRecvSMS());
+			sellerMbrRes.setRepEmail(sellerMbr.getRepEmail());
+			sellerMbrRes.setSellerAddress(sellerMbr.getSellerAddress());
+			sellerMbrRes.setSellerBizNumber(sellerMbr.getSellerBizNumber());
+			sellerMbrRes.setSellerCity(sellerMbr.getSellerCity());
+			sellerMbrRes.setSellerCompany(sellerMbr.getSellerCompany());
+			sellerMbrRes.setSellerCountry(sellerMbr.getSellerCountry());
+			sellerMbrRes.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
+			sellerMbrRes.setSellerLanguage(sellerMbr.getSellerLanguage());
+			sellerMbrRes.setSellerNickName(sellerMbr.getSellerNickName());
+			sellerMbrRes.setSellerState(sellerMbr.getSellerState());
+			sellerMbrRes.setSellerTelecom(sellerMbr.getSellerTelecom());
+			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
+			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
+			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
+			sellerMbrRes.setBizRegNumber(sellerMbr.getBizRegNumber());
 		}
 		return sellerMbrRes;
 	}

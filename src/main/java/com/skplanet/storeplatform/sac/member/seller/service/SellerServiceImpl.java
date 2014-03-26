@@ -280,10 +280,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
 		// 담당자 이메일
 		sellerMbr.setCustomerEmail(req.getCustomerEmail());
-		// 담당자 유선 전화 국가번호
-		sellerMbr.setCustomerPhoneCountry(req.getCustomerPhoneCountry());
-		// 담당자 유선 전화번호
-		sellerMbr.setCustomerPhone(req.getCustomerPhone());
 		sellerMbr.setRepEmail(req.getRepEmail());
 		sellerMbr.setRepPhone(req.getRepPhone());
 		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
@@ -436,9 +432,9 @@ public class SellerServiceImpl implements SellerService {
 				sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
 				sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
 				res.setLoginFailCount(loginFailCount);
-				res.setIsSubSeller(logInSellerResponse.getIsSubSeller());
 				res.setIsLoginSuccess(isLoginSuccess);
 				res.setLoginStatusCode(loginStatusCode);
+				res.setIsSubSeller(logInSellerResponse.getIsSubSeller());
 			}
 			/** 2-2. [RESPONSE] 회원 정보 주입. */
 			res.setSellerMbr(sellerMbr);
