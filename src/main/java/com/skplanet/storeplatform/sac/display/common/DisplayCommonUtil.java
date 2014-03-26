@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.common;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import org.apache.commons.lang3.StringUtils;
 
 public class DisplayCommonUtil {
@@ -60,4 +62,44 @@ public class DisplayCommonUtil {
 		}
 		return osVersion;
 	}
+
+    public static Date makeDateUsagePeriod(String tp, Integer period) {
+        if(tp == null || tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) {
+            return null;
+        }
+
+        String unitName;
+
+        if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MINUTE)) {
+            unitName = "minute";
+        }
+        else if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) {
+            unitName = "hour";
+        }
+        else if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) {
+            unitName = "day";
+        }
+        else if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) {
+            unitName = "month";
+        }
+        else if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) {
+            unitName = "year";
+        }
+        else if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) {
+            unitName = "limit/day";
+        }
+        else if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) {
+            unitName = "limit/month";
+        }
+        else if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) {
+            unitName = "limit/year";
+        }
+        else if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) {
+            unitName = "calendar";
+        }
+        else
+            return null;
+
+        return new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, unitName + "/" + period);
+    }
 }

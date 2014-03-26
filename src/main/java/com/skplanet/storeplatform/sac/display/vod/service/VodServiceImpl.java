@@ -409,7 +409,8 @@ public class VodServiceImpl implements VodService {
 
 			play.setSupport(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
 
-            play.setDate(new Date(DisplayConstants.DP_DATE_USAGE_PERIOD, mapperVO.getUsagePeriod(), mapperVO.getUsageUnitName()));
+            play.setDate(DisplayCommonUtil.makeDateUsagePeriod(mapperVO.getUsePeriodUnitCd(), mapperVO.getUsePeriod()));
+
             //가격
 			play.setPrice(this.mapPrice(mapperVO.getPlayProdAmt(), mapperVO.getPlayProdNetAmt()));
 			
