@@ -86,8 +86,6 @@ public class SellerMbrSac extends CommonInfo {
 	private String website;
 	/** 등록일시. */
 	private String regDate;
-	/** 통신판매업 신고번호. */
-	private String bizRegNumber;
 
 	/**
 	 * @return the sellerKey
@@ -627,21 +625,6 @@ public class SellerMbrSac extends CommonInfo {
 	 */
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
-	}
-
-	/**
-	 * @return the bizRegNumber
-	 */
-	public String getBizRegNumber() {
-		return this.bizRegNumber;
-	}
-
-	/**
-	 * @param bizRegNumber
-	 *            the bizRegNumber to set
-	 */
-	public void setBizRegNumber(String bizRegNumber) {
-		this.bizRegNumber = bizRegNumber;
 	}
 
 }
