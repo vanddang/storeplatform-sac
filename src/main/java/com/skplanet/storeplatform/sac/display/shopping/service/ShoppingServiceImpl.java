@@ -1340,7 +1340,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
-			req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
+			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
 		}
 		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
@@ -1475,8 +1475,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
 		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
 
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			req.setArrayProdGradeCd(arrayProdGradeCd);
+		}
+
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
-			req.setOrderedBy(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION);
+			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
 		}
 
 		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
