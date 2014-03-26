@@ -4,8 +4,8 @@
 
     <!--배치 완료 일시 조회-->
     <select id="getBatchStandardDate" parameterType="com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest" resultType="String">
-       /* CommonMapper.xml, getBatchStandardDate, SAC : 정희원 , 2014-01-07 */
         SELECT
+          /* CommonMapper.xml, getBatchStandardDate, SAC : 정희원 , 2014-01-07 */
           to_char(STD_DT, 'yyyyMMddHH24miss')
         FROM TB_DP_BATCH_COMPT
         WHERE TENANT_ID=#{tenantId}
@@ -14,8 +14,8 @@
 
     <!-- 메뉴 목록 조회 -->
     <select id="getMenuItemList" parameterType="com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq" resultType="com.skplanet.storeplatform.sac.display.common.vo.MenuItem">
-        /* CommonMapper.xml, getMenuItemList, SAC : 정희원 , 2014-01-24 */
         select
+            /* CommonMapper.xml, getMenuItemList, SAC : 정희원 , 2014-01-24 */
             MC.MENU_ID,
             MC.MENU_DEPTH,
             decode(MC.INFR_MENU_YN, 'Y', 1, 0) as IS_INFR_MENU,
