@@ -27,10 +27,26 @@ public class PrchsSacParam extends CommonInfo {
 	private String prchsDt;
 	private String statusCd;
 	private Double totAmt;
+	private String prchsReqPathCd;
 	private String cancelReqPathCd;
 	private String cancelDt;
 
 	private String deviceId;
+
+	/**
+	 * @return the prchsReqPathCd
+	 */
+	public String getPrchsReqPathCd() {
+		return this.prchsReqPathCd;
+	}
+
+	/**
+	 * @param prchsReqPathCd
+	 *            the prchsReqPathCd to set
+	 */
+	public void setPrchsReqPathCd(String prchsReqPathCd) {
+		this.prchsReqPathCd = prchsReqPathCd;
+	}
 
 	/**
 	 * @return the deviceId

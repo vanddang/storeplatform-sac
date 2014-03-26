@@ -174,6 +174,35 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		PrchsSacParam prchsSacParam = purchaseCancelDetailSacParam.getPrchsSacParam();
 
+		String prodIdList = "";
+		String prchsProdType = "";
+
+		StringBuilder sb = new StringBuilder();
+		if (purchaseCancelDetailSacParam.getPrchsDtlSacParamList() != null
+				&& purchaseCancelDetailSacParam.getPrchsDtlSacParamList().size() > 0) {
+
+			for (int i = 0; i < purchaseCancelDetailSacParam.getPrchsDtlSacParamList().size(); i++) {
+				PrchsDtlSacParam prchsDtlSacParam = purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(i);
+				if (i == 0) {
+					sb.append(prchsDtlSacParam.getProdId());
+					// 구매 상품 타입 조회. 단위, 권한 상품.
+					if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())) {
+						// 권한 상품이면 02
+						prchsProdType = "02";
+					} else {
+						// 그 외에(현재는 단위상품뿐이 없음.
+						prchsProdType = "01";
+					}
+
+				} else {
+					sb.append(",").append(prchsDtlSacParam.getProdId());
+				}
+			}
+
+		}
+
+		prodIdList = sb.toString();
+
 		PaymentCancelEcReq paymentCancelEcReq = new PaymentCancelEcReq();
 		List<PaymentCancel> cancelList = new ArrayList<PaymentCancel>();
 		PaymentCancel paymentCancel = new PaymentCancel();
@@ -194,8 +223,47 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			pay.setApplyNum(paymentSacParam.getApprNo());
 			pay.setApplyDate(paymentSacParam.getPaymentDt().substring(0, 8));
 			pay.setApplyTime(paymentSacParam.getPaymentDt().substring(8));
+			pay.setProdId(prodIdList);
+
+			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_OCB, paymentSacParam.getPaymentMtdCd())) {
+				// OCB 결제이면
+				pay.setPaymentTypeCd(paymentSacParam.getResvCol02());
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER,
+					paymentSacParam.getPaymentMtdCd())) {
+				// SKT 후불결제이면
+				pay.setApplyNum(prchsProdType);
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_TSTORE_CASH,
+					paymentSacParam.getPaymentMtdCd())
+					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_TSTORE_POINT,
+							paymentSacParam.getPaymentMtdCd())) {
+				// T CASH 결제이면 충전/사용 취소 구분 - 01 : 충전 취소, 02 : 사용 취소. 결제 테이블에는 사용 취소만 있다.
+				pay.setApplyNum("02");
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_CULTURE, paymentSacParam.getPaymentMtdCd())) {
+				// 문화상품권 결제이면
+				if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_WEB, prchsSacParam.getPrchsReqPathCd())) {
+					pay.setApplyNum("01");
+				} else if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_MOBILE_CLIENT,
+						prchsSacParam.getPrchsReqPathCd())) {
+					pay.setApplyNum("02");
+				} else {
+					pay.setApplyNum("00");
+				}
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_TMEMBERSHIP,
+					paymentSacParam.getPaymentMtdCd())) {
+				// T Membership 결제이면 하드코딩 - 최상훈 2014.03.26
+				if (paymentSacParam.getPaymentAmt() / paymentSacParam.getTotAmt() * 100 == 50) {
+					// 50퍼 할인율 고정.
+					pay.setPaymentTypeCd("1002");
+				} else {
+					// 20퍼 할인율 고정.
+					pay.setPaymentTypeCd("1001");
+				}
+			} else {
+
+			}
 
 			payList.add(pay);
+
 		}
 
 		paymentCancel.setPayList(payList);
@@ -206,6 +274,19 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		PaymentCancelEcRes paymentCancelEcRes = this.tStorePaymentSCI.cancelPayment(paymentCancelEcReq);
 
 		PaymentCancelResult paymentCancelResult = paymentCancelEcRes.getCancelList().get(0);
+
+		/** 결제 취소가 하나라도 성공이 있으면 구매 취소 진행한다. 없으면 에러. */
+		boolean rstFlag = false;
+		for (PayCancelResult payCancelResult : paymentCancelResult.getPayCancelList()) {
+			if (StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
+					payCancelResult.getPayCancelResultCd())) {
+				rstFlag = true;
+				break;
+			}
+		}
+		if (!rstFlag) {
+			throw new StorePlatformException("SAC_PUR_8131");
+		}
 
 		return paymentCancelResult.getPayCancelList();
 
@@ -224,25 +305,25 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			purchaseCancelPaymentDetailScReq.setSystemId(purchaseCancelSacParam.getSystemId());
 			purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 			purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
-			if (purchaseCancelDetailSacParam.getPayPlanetCancelEcRes() != null
-					&& StringUtils.equals(paymentSacParam.getTid(), purchaseCancelDetailSacParam
-							.getPayPlanetCancelEcRes().getTid())) {
-				purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
-			} else if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
+			purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+			if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
 					&& purchaseCancelDetailSacParam.gettStorePayCancelResultList().size() > 0) {
-				boolean resultFlag = false;
 				for (PayCancelResult payCancelResult : purchaseCancelDetailSacParam.gettStorePayCancelResultList()) {
 					if (StringUtils.equals(payCancelResult.getPayCls(), paymentSacParam.getPaymentMtdCd())) {
-						purchaseCancelPaymentDetailScReq.setPaymentStatusCd(payCancelResult.getPayCancelResultCd());
-						resultFlag = true;
+						if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
+								payCancelResult.getPayCancelResultCd())) {
+							// T Store 결제 취소 실패이면
+							purchaseCancelPaymentDetailScReq
+									.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
+						}
+						purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(payCancelResult
+								.getPayCancelResultCd());
 					}
-				}
-				if (!resultFlag) {
-					throw new StorePlatformException("SAC_PUR_8403");
 				}
 			}
 
 			purchaseCancelPaymentDetailScReqList.add(purchaseCancelPaymentDetailScReq);
+
 		}
 
 		// 인입 된 사람의 정보를 넣어준다.
@@ -334,6 +415,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		prchsSacParam.setPrchsDt(prchs.getPrchsDt());
 		prchsSacParam.setStatusCd(prchs.getStatusCd());
 		prchsSacParam.setTotAmt(prchs.getTotAmt());
+		prchsSacParam.setPrchsReqPathCd(prchs.getPrchsReqPathCd());
 		prchsSacParam.setCancelReqPathCd(prchs.getCancelReqPathCd());
 		prchsSacParam.setCancelDt(prchs.getCancelDt());
 
