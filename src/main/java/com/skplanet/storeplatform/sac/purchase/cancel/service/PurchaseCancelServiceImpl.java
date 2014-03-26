@@ -578,8 +578,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			return;
 		}
 
-		PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(purchaseCancelDetailSacParam
-				.getPrchsSacParam().getTenantId());
+		PayPlanetShop payPlanetShop = new PayPlanetShop(); // this.payPlanetShopService.getPayPlanetShopInfo(purchaseCancelDetailSacParam.getPrchsSacParam().getTenantId());
+		payPlanetShop.setTenantId("S01");
+		payPlanetShop.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
+		payPlanetShop.setMid("SKTstore01");
 
 		for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
 			// PayPlanet 결제이면 authKey, mid 셋팅.
