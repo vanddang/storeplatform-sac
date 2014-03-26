@@ -949,7 +949,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setCordedTelephoneCountry(sellerMbr.getCordedTelephoneCountry());
 			sellerMbrRes.setIsDomestic(sellerMbr.getIsDomestic());
 			sellerMbrRes.setIsRecvEmail(sellerMbr.getIsRecvEmail());
-			sellerMbrRes.setIsRecvSMS(sellerMbr.getIsRecvSMS());
+			sellerMbrRes.setIsRecvSms(sellerMbr.getIsRecvSMS());
 			sellerMbrRes.setRepEmail(sellerMbr.getRepEmail());
 			sellerMbrRes.setSellerAddress(sellerMbr.getSellerAddress());
 			sellerMbrRes.setSellerBizNumber(sellerMbr.getSellerBizNumber());
