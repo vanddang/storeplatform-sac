@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdatePurchaseCountSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UpdatePurchaseCountSacReq;
 
@@ -52,7 +53,7 @@ public class UpdatePurchaseCountSCITest_SpecialProd {
 		updatePurchaseCountSacReq.setProductId("S900000717"); // SH
 		updatePurchaseCountSacReq.setPurchaseCount(1);
 		updatePurchaseCountSacReq.setSpcYn("Y");
-		updatePurchaseCountSacReq.setPurchaseDate("20140324");
+		updatePurchaseCountSacReq.setPurchaseDate(DateUtil.getToday("yyyyMMdd"));
 		updatePurchaseCountSacReq.setTenantId("S01");
 		listReq.add(updatePurchaseCountSacReq);
 		this.updatePurchaseCountSCI.updatePurchaseCount(listReq);
