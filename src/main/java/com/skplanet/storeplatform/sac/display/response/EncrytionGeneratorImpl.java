@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -22,18 +21,16 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionDeviceKey;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionSubContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionUsagePolicy;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
- * App 상품 전용 정보 Generator 구현체.
+ * for download 전용 상품 암호화 정보 Generator 구현체.
  * 
- * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
+ * Updated on : 2014. 03. 26. Updated by : 이태희
  */
 @Component
 public class EncrytionGeneratorImpl implements EncryptionGenerator {
-	@Autowired
-	CommonMetaInfoGenerator commonMetaInfoGenerator;
-
 	@Override
 	public EncryptionContents generateEncryptionContents(MetaInfo metaInfo) {
 		EncryptionContents contents = new EncryptionContents();
@@ -46,7 +43,8 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		List<EncryptionSubContents> subContentsList = new ArrayList<EncryptionSubContents>();
 
 		// 요청 만료 정보
-		contents.setExpired(metaInfo.getExpiredDate());
+		date.setTextUtc(DateUtils.parseDate(metaInfo.getExpiredDate()));
+		contents.setExpired(date.getText());
 
 		// 상품 및 구매 정보
 		data.setTitle(metaInfo.getProdNm());
@@ -59,9 +57,8 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		data.setUserKey(metaInfo.getUserKey());
 		data.setPurchasePrice(metaInfo.getPurchasePrice());
 
-		// Delta 파일 관련 추가 -- 현재 관련 로직 미구현으로 공백처리
-
-		date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getPurchaseDt());
+		date = new Date();
+		date.setTextUtc(DateUtils.parseDate(metaInfo.getPurchaseDt()));
 		data.setPurchaseDate(date.getText());
 
 		// 서브 컨텐츠 정보
@@ -99,7 +96,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		usagePolicy.setApplyDrm(metaInfo.getDrmYn());
 		if (StringUtils.isNotEmpty(metaInfo.getUseExprDt())) {
 			date = new Date();
-			date = this.commonMetaInfoGenerator.generateDate("", metaInfo.getUseExprDt());
+			date.setTextUtc(DateUtils.parseDate(metaInfo.getUseExprDt()));
 			usagePolicy.setExpirationDate(date.getText());
 		} else {
 			usagePolicy.setExpirationDate("");
