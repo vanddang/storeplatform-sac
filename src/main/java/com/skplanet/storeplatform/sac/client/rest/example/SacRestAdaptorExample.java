@@ -25,12 +25,17 @@ public class SacRestAdaptorExample {
 	     ################################################
 		 */
 		String host = "devspweb1.sungsu.skplanet.com/sp_sac";
-		// 인증키는 생성 모듈은 현재 개발 중이어서 아무 값이나 넣어둠
-		String authKey = "25f9aabf90acf38aa2e6d0da49e9eee75";
+		// 테스트키 (유효기간 : 2014-03-24 ~ 2014-04-23)
+		String authKey = "S010c629d2e2fb303ce5664c1ab3bc40a2e";
+		// 인증키 (유효 기간 : 2014-03-24 ~ 2015-03-23)
+		// String authKey = "S01464ce656b142258a5f7441c133fed9ca";
+		// 비밀키
+		// String secret = "c3b578a3d086e45dec6bb1d1cf970e45";
 		// 시스템 아이디 참조 (https://project.itopping.co.kr:82/projects/api_center/wiki/TenantSystem)
 		String systemId = "S01-06001";
 		// 호스트 및 인증 정보 입력하여 템플릿 생성
 		this.restClient= new SacRestClientApache(host, authKey, systemId);
+		// this.restClient= new SacRestClientApache(host, authKey, secret, systemId);
 	}
 
 	public <T> T get(String interfaceId, String path, Class<T> responseType, Object param) throws SacRestClientException {

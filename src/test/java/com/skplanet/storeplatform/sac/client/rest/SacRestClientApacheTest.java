@@ -24,7 +24,7 @@ public class SacRestClientApacheTest {
 	@Before
 	public void setUp() {
 		String host = "devspweb1.sungsu.skplanet.com/sp_sac";
-		String authKey = "25f9aabf90acf38aa2e6d0da49e9eee75";
+		String authKey = "S010c629d2e2fb303ce5664c1ab3bc40a2e"; // TestKey (2014-03-24 ~ 2014-04-23)
 		String systemId = "S01-06001";
 		this.client = new SacRestClientApache(host, authKey, systemId);
 	}

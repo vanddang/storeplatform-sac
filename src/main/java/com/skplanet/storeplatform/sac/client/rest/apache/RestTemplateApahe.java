@@ -13,11 +13,34 @@ public class RestTemplateApahe {
 
 	private final String authKey;
 
+	private final String secret;
+
 	private final String systemId;
 
+	/**
+	 * 상용키용 생성자
+	 * @param host
+	 * @param authKey
+	 * @param secret
+	 * @param systemId
+	 */
+	public RestTemplateApahe(String host, String authKey, String secret, String systemId) {
+		this.host = host;
+		this.authKey = authKey;
+		this.secret = secret;
+		this.systemId = systemId;
+	}
+
+	/**
+	 * 테스트키용 생성자
+	 * @param host
+	 * @param authKey
+	 * @param systemId
+	 */
 	public RestTemplateApahe(String host, String authKey, String systemId) {
 		this.host = host;
 		this.authKey = authKey;
+		this.secret = null;
 		this.systemId = systemId;
 	}
 

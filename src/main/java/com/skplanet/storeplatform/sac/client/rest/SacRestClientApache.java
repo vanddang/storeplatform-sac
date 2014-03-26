@@ -31,6 +31,10 @@ public class SacRestClientApache implements SacRestClient {
 	 * @param systemId
 	 * 		시스템 색별자 (참조https://project.itopping.co.kr:82/projects/api_center/wiki/TenantSystem)
 	 */
+	public SacRestClientApache(String host, String authKey, String secret, String systemId) {
+		this.processor = new RestTemplateApahe(host, authKey, secret, systemId);
+	}
+
 	public SacRestClientApache(String host, String authKey, String systemId) {
 		this.processor = new RestTemplateApahe(host, authKey, systemId);
 	}
