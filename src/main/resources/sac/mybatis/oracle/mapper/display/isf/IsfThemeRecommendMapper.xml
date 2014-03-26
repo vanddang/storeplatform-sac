@@ -512,12 +512,13 @@
       FROM
             (
              SELECT
-		           COUNT(S.PROD_ID) OVER() AS TOTAL_COUNT
+                   COUNT(S.PROD_ID) OVER() AS TOTAL_COUNT
 		         , S.*
 		      FROM
 		          (
 		          SELECT 
-		                 P2.PROD_ID
+		                 ROWNUM AS RNN 
+                       , P2.PROD_ID
 		               , P2.SVC_GRP_CD
 		               , P2.SVC_TYPE_CD
 		               , P2.CONTENTS_TYPE_CD
@@ -605,6 +606,6 @@
 		           ) S
 		        WHERE S.RN = 1
 		   ) A
-        WHERE ROWNUM BETWEEN #{START_ROW} AND #{END_ROW}
+        WHERE RNN BETWEEN #{START_ROW} AND #{END_ROW}
     </select>    
 </mapper>
