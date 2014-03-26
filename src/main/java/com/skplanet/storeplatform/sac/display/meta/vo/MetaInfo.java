@@ -240,6 +240,7 @@ public class MetaInfo extends CommonInfo {
 	private String subYn; // 옵션 하위 여부
 	private String couponCode; // 쿠폰코드
 	private String itemCode; // 아이템코드
+	private String specialCouponId; // 특가 쿠폰 ID
 
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
@@ -3417,6 +3418,21 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setItemCode(String itemCode) {
 		this.itemCode = itemCode;
+	}
+
+	/**
+	 * @return the specialCouponId
+	 */
+	public String getSpecialCouponId() {
+		return this.specialCouponId;
+	}
+
+	/**
+	 * @param specialCouponId
+	 *            the specialCouponId to set
+	 */
+	public void setSpecialCouponId(String specialCouponId) {
+		this.specialCouponId = specialCouponId;
 	}
 
 	/**
