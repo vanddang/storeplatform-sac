@@ -100,7 +100,6 @@ public class NoProvisionServiceImpl implements NoProvisionService {
 		this.log.debug("####### tenantId : " + tenantId);
 		this.log.debug("####### langCd : " + langCd);
 		this.log.debug("####### imageCd : " + imageCd);
-		this.log.debug("####### arrayTopMenuId : " + arrayTopMenuId.toString());
 		this.log.debug("####### searchKeyword : " + noProvisionSacReq.getSearchKeyword());
 		this.log.debug("####### orderedBy : " + noProvisionSacReq.getOrderedBy());
 		this.log.debug("####### offset : " + noProvisionSacReq.getOffset());
