@@ -798,6 +798,7 @@
              , TB.ISSUE_DAY
              , TB.CHNL_COMP_NM
              , TB.AGENCY_NM
+             , TB.COMPT_YN
              , DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) AS BOOK_STATUS                          
            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
              , CASE WHEN (TB.CHNL_PERIOD_AMT >= 0  AND STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT

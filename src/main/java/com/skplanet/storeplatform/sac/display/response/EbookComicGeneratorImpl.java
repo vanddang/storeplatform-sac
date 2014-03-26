@@ -112,7 +112,8 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		}
 		book.setTotalCount(metaInfo.getBookCount());
 
-		if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+		if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
+				|| DisplayConstants.DP_INTERACTIVE_WEBTOON_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
 			// eBook 연재물인 경우에만 Type과 status를 적용한다.
 			book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
 			if ("Y".equals(metaInfo.getComptYn())) {

@@ -282,6 +282,8 @@ public class DisplayConstants {
 	public static final String DP_MAGAZINE_META_CLASS_CD = "CT24";
 	/** 인터렉티브 잡지 */
 	public static final String DP_INTERACTIVE_MAGAZINE_META_CLASS_CD = "CT26";
+	/** webtoon */
+	public static final String DP_INTERACTIVE_WEBTOON_META_CLASS_CD = "CT27";
 
 	public static final String DP_EBOOK_STORE_SUPPORT_NM = "store";
 
