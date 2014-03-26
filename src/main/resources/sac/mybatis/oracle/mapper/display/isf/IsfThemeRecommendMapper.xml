@@ -8,7 +8,9 @@
          , COUNT(*) OVER () AS TOTAL_COUNT
       FROM
          (
-         SELECT PKG_ID
+         SELECT
+                ROWNUM AS RNN
+              , PKG_ID
               , PKG_NM
 	     <choose>
 	        <!-- New 테마추천 -->
@@ -46,7 +48,7 @@
          )
          PKG
       <if test="recommendId  == null">
-     WHERE ROWNUM BETWEEN #{START_ROW} AND #{END_ROW}
+     WHERE RNN BETWEEN #{START_ROW} AND #{END_ROW}
       </if>
     </select>
 
