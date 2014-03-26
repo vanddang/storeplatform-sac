@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.openapi;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -24,6 +26,7 @@ public class SellerIdAppListReq extends CommonInfo {
 	 * 검색조건
 	 */
 	@NotBlank
+	@Pattern(regexp = "^APP|^AID")
 	private String searchType;
 	/**
 	 * 검색할 값

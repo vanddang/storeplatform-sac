@@ -33,6 +33,7 @@ public class SellerAppListReq extends CommonInfo {
 	 * 검색조건
 	 */
 	@NotBlank
+	@Pattern(regexp = "^APP|^AID")
 	private String searchType;
 	/**
 	 * 검색할 값
