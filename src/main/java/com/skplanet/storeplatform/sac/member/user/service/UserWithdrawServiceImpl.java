@@ -42,7 +42,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.idp.service.IdpService;
 
 /**
  * 회원탈퇴 관련 인터페이스 구현체
@@ -61,9 +60,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	}
 
 	@Autowired
-	MemberCommonComponent commService; // 회원 공통 서비스
-
-	@Autowired
 	private UserSCI userSCI; // 회원 콤포넌트 사용자 기능 인터페이스
 
 	@Autowired
@@ -71,9 +67,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 	@Autowired
 	private DeviceService deviceService;
-
-	@Autowired
-	private IdpService idpService; // IDP 연동 클래스
 
 	@Autowired
 	private UapsSCI uapsSCI;
