@@ -200,7 +200,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 			if (requestVO.getOffset() > 0) {
 				start = requestVO.getOffset();
 			}
-			if (requestVO.getOffset() > 0 && (requestVO.getOffset() + requestVO.getCount() - 1) >= start) {
+			if (requestVO.getCount() > 0 && (requestVO.getOffset() + requestVO.getCount() - 1) >= start) {
 				end = requestVO.getOffset() + requestVO.getCount() - 1;
 			}
 			mapReq.put("START_ROW", start);
