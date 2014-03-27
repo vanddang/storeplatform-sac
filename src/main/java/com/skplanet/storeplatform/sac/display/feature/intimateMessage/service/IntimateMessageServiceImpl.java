@@ -367,6 +367,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 
 		// 메타정보 조회를 위한 파라미터 세팅
 		productInfo.setProdId(prodId);
+		productInfo.setTopMenuId(topMenuId);
 		productInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("tenantHeader", header.getTenantHeader());
