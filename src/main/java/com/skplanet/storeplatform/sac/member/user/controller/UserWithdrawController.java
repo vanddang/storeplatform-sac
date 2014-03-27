@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -48,11 +46,6 @@ public class UserWithdrawController {
 		logger.debug("####################################################");
 		logger.debug("##### 5.1.24. 회원 탈퇴 (ID/MDN 기반) #####");
 		logger.debug("####################################################");
-
-		if (StringUtil.nvl(req.getUserAuthKey(), "").equals("") || StringUtil.nvl(req.getUserId(), "").equals("")
-				&& StringUtil.nvl(req.getDeviceId(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceId or userAuthKey && userId");
-		}
 
 		logger.info("###### 회원탈퇴 Start Request : {}", req.toString());
 		WithdrawRes res = this.svc.executeWithdraw(sacHeader, req);
