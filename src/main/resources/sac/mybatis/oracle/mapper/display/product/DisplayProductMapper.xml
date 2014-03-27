@@ -35,14 +35,14 @@
 			AND DPTENANT.TENANT_ID = #{tenantId}
     </select>     
 
-    <update id="Display_Product.insertNewFreeData" parameterType="ProductVo">
+    <update id="Display_Product.insertNewFreeData" parameterType="map">
 		INSERT INTO TB_DP_LIST_PROD (
 			SELECT 
 				TP.TENANT_ID
 				, 'ADM000000001' AS LIST_ID
 				, MCP.MENU_ID
 				, P.PROD_ID
-				, TO_DATE( TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'), 'YYYYMMDDHH24MISS') AS STD_DT
+				, TO_DATE( #{stdDt}, 'YYYYMMDDHH24MISS') AS STD_DT
                 , NULL AS EXPO_ORD_ALWAYS_YN
 				, (SELECT MIN(EXPO_ORD)-1 FROM TB_DP_LIST_PROD WHERE LIST_ID = 'ADM000000001')AS EXPO_ORD
                 , NULL AS EXPO_ORD_SUB

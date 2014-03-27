@@ -3,6 +3,8 @@ package com.skplanet.storeplatform.sac.display.product.inf;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,6 +97,9 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 	
 	@Autowired
 	private ProductService prodService;
+
+    @Autowired
+    private DisplayCommonService displayCommonService;
 
 	@Override
 	public void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList) throws StorePlatformException {
@@ -438,7 +443,9 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 										// 신규 상품 등록
 										// 트리거 확인 후 작업
 										log.info("CMS New Free Data Insert");
-										this.prodService.insertNewFreeData(pv);
+
+                                        String stdDt = displayCommonService.getBatchStandardDateString(pv.getTenantId(), DisplayConstants.DP_LIST_NEWFREE);
+                                        this.prodService.insertNewFreeData(pv, stdDt);
 										
 										// 판매중인 상품의 카테고리 대분류가 변경될시 운영자추천상품 - SUB 상품 삭제
 										log.info("CMS 운영자 추천 상품 삭제 여부 Check | " + oldProdStatCd);

@@ -641,4 +641,6 @@ public class DisplayConstants {
     public static final String DP_PURSTAT_AVAILABLE = "available";
 
     public static final String DP_PURSTAT_RESTRICTED = "restricted";
+
+    public static final String DP_LIST_NEWFREE = "ADM000000001";
 }

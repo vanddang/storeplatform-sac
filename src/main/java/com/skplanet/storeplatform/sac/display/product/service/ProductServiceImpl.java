@@ -37,12 +37,18 @@ public class ProductServiceImpl implements ProductService {
 	};
 
 	@Override
-	public void insertNewFreeData(ProductVo vo) throws StorePlatformException {
+	public void insertNewFreeData(ProductVo vo, String stdDt) throws StorePlatformException {
 		long newFreeCnt = selectNewFreeDataCnt(vo);
 		log.info("newFreeCnt = " + newFreeCnt);
 		if (0 == newFreeCnt) {
 			log.info("newFree Insert = " + vo.getProdId());
-			this.commonDAO.insert("Display_Product.insertNewFreeData", vo);
+
+            Map<String, String> req = new HashMap<String, String>();
+            req.put("tenantId", vo.getTenantId());
+            req.put("prodId", vo.getProdId());
+            req.put("stdDt", stdDt);
+
+            this.commonDAO.insert("Display_Product.insertNewFreeData", req);
 		}
 	}
 

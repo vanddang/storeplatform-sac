@@ -13,7 +13,7 @@ public interface ProductService {
 	
 	public long selectNewFreeDataCnt(ProductVo vo) throws StorePlatformException;
 	
-	public void insertNewFreeData(ProductVo vo) throws StorePlatformException;
+	public void insertNewFreeData(ProductVo vo, String stdDt) throws StorePlatformException;
 	
 	public ProductVo selectMemberInfo(ProductVo vo) throws StorePlatformException;
 	
