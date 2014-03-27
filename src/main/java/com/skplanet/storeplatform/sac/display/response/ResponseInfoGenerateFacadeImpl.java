@@ -504,7 +504,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setAccrual(accrual);
 		product.setRights(rights);
 		product.setContributor(contributor);
-		product.setProductExplain(metaInfo.getProdBaseDesc());
+		// 이북 상품은 상세 설명 정보를 내려줌
+		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 		return product;
 	}
 
