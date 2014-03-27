@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -48,8 +48,8 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private DisplayCommonService commonService;
+	@Autowired
+	private DisplayCommonService commonService;
 
 	/*
 	 * (non-Javadoc)
@@ -194,6 +194,32 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSource(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public Source generateSource(String type, String url, Integer size) {
+		Source source = new Source();
+
+		if (StringUtils.isNotEmpty(url)) {
+			source.setMediaType(DisplayCommonUtil.getMimeType(url));
+			source.setUrl(url);
+		}
+
+		if (StringUtils.isNotEmpty(type)) {
+			source.setType(type);
+		}
+
+		if (StringUtils.isNotEmpty(size.toString())) {
+			source.setSize(size);
+		}
+
+		return source;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSource(java.lang.String,
 	 * java.lang.Integer)
 	 */
 	@Override
@@ -233,13 +259,13 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			sourceList = new ArrayList<Source>();
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
-			source.setUrl(commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
+			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
 			sourceList.add(source);
 
 			source = new Source();
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
 			source.setType(DisplayConstants.DP_PREVIEW_HQ);
-			source.setUrl(commonService.makePreviewUrl(metaInfo.getSamplUrl()));
+			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getSamplUrl()));
 			sourceList.add(source);
 		}
 
@@ -278,7 +304,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			source = new Source();
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
-			source.setUrl(commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
+			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
 			sourceList.add(source);
 		}
 
@@ -286,7 +312,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			source = new Source();
 			source.setType(DisplayConstants.DP_PREVIEW_HQ);
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
-			source.setUrl(commonService.makePreviewUrl(metaInfo.getSamplUrl()));
+			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getSamplUrl()));
 			sourceList.add(source);
 		}
 
