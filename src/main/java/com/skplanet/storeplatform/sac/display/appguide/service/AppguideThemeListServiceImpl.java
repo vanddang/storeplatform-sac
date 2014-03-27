@@ -86,8 +86,18 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 		imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 		imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		mapReq.put("imageCdList", imageCodeList);
-		mapReq.put("START_ROW", requestVO.getOffset());
-		mapReq.put("END_ROW", (requestVO.getOffset() + requestVO.getCount() - 1));
+
+		int start = 1;
+		int end = 100;
+
+		if (requestVO.getOffset() > 0) {
+			start = requestVO.getOffset();
+		}
+		if (requestVO.getOffset() > 0 && (requestVO.getOffset() + requestVO.getCount() - 1) >= start) {
+			end = requestVO.getOffset() + requestVO.getCount() - 1;
+		}
+		mapReq.put("START_ROW", start);
+		mapReq.put("END_ROW", end);
 
 		List<Appguide> themeList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
 				Appguide.class);

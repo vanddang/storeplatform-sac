@@ -88,8 +88,17 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 
 		mapReq.put("themeId", requestVO.getThemeId()); // 앱가이드 테마추천ID
 
-		mapReq.put("START_ROW", requestVO.getOffset());
-		mapReq.put("END_ROW", (requestVO.getOffset() + requestVO.getCount() - 1));
+		int start = 1;
+		int end = 100;
+
+		if (requestVO.getOffset() > 0) {
+			start = requestVO.getOffset();
+		}
+		if (requestVO.getOffset() > 0 && (requestVO.getOffset() + requestVO.getCount() - 1) >= start) {
+			end = requestVO.getOffset() + requestVO.getCount() - 1;
+		}
+		mapReq.put("START_ROW", start);
+		mapReq.put("END_ROW", end);
 
 		Appguide theme = this.commonDAO.queryForObject("Appguide.Theme.getThemeRecommendInfo", mapReq, Appguide.class);
 		if (theme == null) {
