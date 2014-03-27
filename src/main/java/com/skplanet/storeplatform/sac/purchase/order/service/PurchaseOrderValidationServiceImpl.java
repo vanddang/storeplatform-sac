@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,8 +31,6 @@ import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecial
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
-import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
@@ -63,8 +59,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	@Autowired
 	private PurchaseOrderPolicyService purchaseOrderPolicyService;
 	@Autowired
-	private PayPlanetShopService payPlanetShopService;
-	@Autowired
 	private ExistenceSacService existenceSacService;
 	@Autowired
 	private PurchaseMemberRepository purchaseMemberRepository;
@@ -83,13 +77,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_B2B_NON_BALANCE); // OR000422-B2B Gateway(비정산)
 		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM); // OR000420-T freemium(DRM)
 		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT); // OR000413-T혜택 이벤트
-	}
-
-	@PostConstruct
-	public void test() {
-		// TAKTEST
-		PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo("S01");
-		this.logger.info("TAKTEST,{}", payPlanetShop);
 	}
 
 	/**

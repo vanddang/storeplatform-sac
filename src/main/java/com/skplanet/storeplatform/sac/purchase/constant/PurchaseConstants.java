@@ -6,6 +6,11 @@ package com.skplanet.storeplatform.sac.purchase.constant;
  * Updated on : 2014. 1. 9. Updated by : 양주원, 엔텔스.
  */
 public final class PurchaseConstants extends com.skplanet.storeplatform.purchase.constant.PurchaseConstants {
+	/** 서비스 서버 단계 환경변수 */
+	public static final String ENV_SERVER_LEVEL_REAL = "real"; // System 설정 서버 단계 property: 상용
+	public static final String ENV_SERVER_LEVEL_QA = "qa"; // System 설정 서버 단계 property: QA
+	public static final String ENV_SERVER_LEVEL_DEV = "dev"; // System 설정 서버 단계 property: 개발기
+	public static final String ENV_SERVER_LEVEL_LOCAL = "local"; // System 설정 서버 단계 property: 로컬
 
 	/** 회원Part 조회 결과 에러 코드 */
 	public static final String SACINNER_MEMBER_RESULT_NOTFOUND = "SC_MEM_9982";

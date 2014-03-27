@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * 
@@ -33,23 +34,21 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 	private static final String SERVER_LEVEL_DEV = "DV"; // 조회대상 서버 단계: 개발기
 	private static final String SERVER_LEVEL_QA = "QA"; // 조회대상 서버 단계: QA
 	private static final String SERVER_LEVEL_REAL = "LV"; // 조회대상 서버 단계: 상용
-	private static final String ENV_SERVER_LEVEL_REAL = "real"; // System 설정 서버 단계 property: 상용
-	private static final String ENV_SERVER_LEVEL_QA = "qa"; // System 설정 서버 단계 property: QA
 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDao;
 
 	@Value("#{systemProperties['spring.profiles.active']}")
-	private String envLevel;
+	private String envServerLevel;
 
 	private String serverLevel;
 
 	@PostConstruct
 	public void initServerLevel() {
-		if (StringUtils.equalsIgnoreCase(this.envLevel, ENV_SERVER_LEVEL_REAL)) {
+		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
 			this.serverLevel = SERVER_LEVEL_REAL;
-		} else if (StringUtils.equals(this.envLevel, ENV_SERVER_LEVEL_QA)) {
+		} else if (StringUtils.equals(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_QA)) {
 			this.serverLevel = SERVER_LEVEL_QA;
 		} else {
 			this.serverLevel = SERVER_LEVEL_DEV;
