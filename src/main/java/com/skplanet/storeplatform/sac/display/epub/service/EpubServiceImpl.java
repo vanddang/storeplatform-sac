@@ -48,6 +48,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
 import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
 
@@ -99,23 +100,6 @@ public class EpubServiceImpl implements EpubService {
 		//logger.debug("epubDetail={}", epubDetail);
 		
 
-        if(epubDetail != null) {
-
-            String sMetaClsCd = epubDetail.getMetaClsfCd();
-
-            MgzinSubscription mzinSubscription = null;
-            // 잡지인 경우 정기구독 정보 제공
-            if (sMetaClsCd.equals(DisplayConstants.DP_MAGAZINE_META_CLASS_CD) || sMetaClsCd.equals(DisplayConstants.DP_INTERACTIVE_MAGAZINE_META_CLASS_CD)) {
-                mzinSubscription = getMgzinSubscription(param);
-            }
-
-            this.mapProduct(param, product, epubDetail, mzinSubscription);
-
-
-            res.setProduct(product);
-        } else {
-            throw new StorePlatformException("SAC_DSP_0009");
-        }
 		if(epubDetail != null) {
 			String sMetaClsCd = epubDetail.getMetaClsfCd();
 
@@ -124,8 +108,14 @@ public class EpubServiceImpl implements EpubService {
 			if (sMetaClsCd.equals(DisplayConstants.DP_MAGAZINE_META_CLASS_CD) || sMetaClsCd.equals(DisplayConstants.DP_INTERACTIVE_MAGAZINE_META_CLASS_CD)) {
 				mzinSubscription = getMgzinSubscription(param);
 			}
-
-			this.mapProduct(param, product, epubDetail, mzinSubscription);
+			
+            //코믹의 경우 ScreenShot 제공
+            List<ProductImage> screenshotList = null;
+            if(epubDetail != null && StringUtils.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID, epubDetail.getTopMenuId())) {
+            	screenshotList = getScreenshotList(req.getChannelId(), req.getLangCd());
+            }
+            
+			this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
 
 			// 단행인 경우 시리즈 정보를 제공
 			if(StringUtils.equals(sMetaClsCd, DisplayConstants.DP_BOOK_META_CLASS_CD)) {
@@ -190,8 +180,14 @@ public class EpubServiceImpl implements EpubService {
             if (sMetaClsCd.equals(DisplayConstants.DP_MAGAZINE_META_CLASS_CD) || sMetaClsCd.equals(DisplayConstants.DP_INTERACTIVE_MAGAZINE_META_CLASS_CD)) {
                 mzinSubscription = getMgzinSubscription(param);
             }
-
-            this.mapProduct(param, product, epubDetail, mzinSubscription);
+            
+            //코믹의 경우 ScreenShot 제공
+            List<ProductImage> screenshotList = null;
+            if(epubDetail != null && StringUtils.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID, epubDetail.getTopMenuId())) {
+            	screenshotList = getScreenshotList(req.getChannelId(), req.getLangCd());
+            }
+            
+            this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
 
             //orderedBy=noPayment 기구매 체크.
             List<ExistenceScRes> existenceScResList = null;
@@ -225,6 +221,20 @@ public class EpubServiceImpl implements EpubService {
 		return res;
 	}
 
+	/**
+	 * Mapping Screenshot
+	 * @param param
+	 * @return
+	 */
+	private List<ProductImage> getScreenshotList(String channelId, String langCd) {
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("channelId", channelId);
+		param.put("langCd", langCd);
+		List<ProductImage> screenshotList = this.commonDAO.queryForList("EpubDetail.selectSourceList", param, ProductImage.class);
+		return screenshotList;
+	}
+
+	
 	/**
 	 * EpisodeId List
 	 * @param param
@@ -308,7 +318,7 @@ public class EpubServiceImpl implements EpubService {
 *          DB 조회 결과
      * @param mzinSubscription
      */
-	private void mapProduct(Map<String, Object> param, Product product, EpubDetail mapperVO, MgzinSubscription mzinSubscription) {
+	private void mapProduct(Map<String, Object> param, Product product, EpubDetail mapperVO, MgzinSubscription mzinSubscription, List<ProductImage> screenshotList) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 		
 		// 상품ID
@@ -353,7 +363,7 @@ public class EpubServiceImpl implements EpubService {
 		product.setAccrual(this.mapAccurual(mapperVO));
 
 		// 이미지 정보
-		product.setSourceList(this.mapSourceList(mapperVO));
+		product.setSourceList(this.mapSourceList(mapperVO, screenshotList));
 
         // Book
 		product.setBook(this.mapBook(mapperVO));
@@ -366,7 +376,7 @@ public class EpubServiceImpl implements EpubService {
      * @param mapperVO
      * @return
      */
-    private List<Source> mapSourceList(EpubDetail mapperVO) {
+    private List<Source> mapSourceList(EpubDetail mapperVO, List<ProductImage> screenshotList) {
         Source source;
         List<Source> sourceList;
         sourceList = new ArrayList<Source>();
@@ -378,6 +388,17 @@ public class EpubServiceImpl implements EpubService {
             source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
             source.setUrl(imagePath);
             sourceList.add(source);
+        }
+        
+		// screenshot
+        if(screenshotList != null) {
+			for (ProductImage screenshotImage : screenshotList) {
+				Source screenshotSource = new Source();
+				screenshotSource.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
+				screenshotSource.setSize(screenshotImage.getFileSize());
+				screenshotSource.setUrl(screenshotImage.getFilePath() + screenshotImage.getFileNm());
+				sourceList.add(screenshotSource);
+			}
         }
         
         return sourceList;

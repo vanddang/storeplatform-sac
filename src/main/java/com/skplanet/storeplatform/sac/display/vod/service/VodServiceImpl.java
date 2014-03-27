@@ -613,10 +613,12 @@ public class VodServiceImpl implements VodService {
 		menuList.add(menu);
 
 		//Genre
-		menu = new Menu();
-		menu.setType(DisplayConstants.DP_MENU_TYPE_GENRE);
-		menu.setId(mapperVO.getGenreCd());
-		menuList.add(menu);
+		if(StringUtils.isNotEmpty(mapperVO.getGenreCd())) {
+			menu = new Menu();
+			menu.setType(DisplayConstants.DP_MENU_TYPE_GENRE);
+			menu.setId(mapperVO.getGenreCd());
+			menuList.add(menu);
+		}
 		return menuList;
 	}
 
