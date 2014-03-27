@@ -53,7 +53,7 @@
 		      , PI.FILE_NM AS IMG_NM
 		      , PI.FILE_SIZE AS IMG_SIZE
 		      , NVL(STAT.PATICPERS_CNT, 0) AS PATICPERS_CNT 
-		      , NVL(STAT.PRCHS_CNT, 0) AS PRCHS_CN
+		      , NVL(STAT.PRCHS_CNT, 0) AS PRCHS_CNT
 			  , STORE_PROD_ID 
 		      , PLAY_PROD_ID
 		      <![CDATA[
@@ -96,8 +96,7 @@
 		            AND D.PROD_ID = G.PROD_ID AND G.TENANT_ID = #{tenantId}
 		            AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404')  AND G.EXPO_YN = 'Y'
 		            AND D.PROD_ID = SC.PROD_ID AND SC.SALE_YN = 'Y'
-		            AND D.PROD_ID = K.PROD_ID
-		            AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+		            AND D.PROD_ID = K.PROD_ID AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 				   	AND L.DEVICE_MODEL_CD = #{deviceModel} AND L.USE_YN = 'Y'
 		          GROUP BY RSHP.PROD_ID, G.TENANT_ID, C.LANG_CD) P 
 		       , TB_DP_PROD P2 
@@ -108,7 +107,7 @@
 		       , TB_DP_PROD_IMG PI 
 		       , TB_DP_TENANT_PROD_STATS STAT 
 		WHERE P.CHNL_PROD_ID = P2.PROD_ID
-			AND P.PROD_ID = MP.PROD_ID
+			AND P2.PROD_ID = MP.PROD_ID
 			AND P2.PROD_ID = TP.PROD_ID AND P.TENANT_ID = TP.TENANT_ID
 			AND P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
 			AND P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
