@@ -316,6 +316,8 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 
 				for (int i = 0; i < prodList.size(); i++) {
 					metaInfo = prodList.get(i);
+
+					// 상품 메타 정보 조회
 					metaInfo = this.getMetaInfo(header, metaInfo.getProdId(), metaInfo.getTopMenuId());
 
 					if (metaInfo != null) {
