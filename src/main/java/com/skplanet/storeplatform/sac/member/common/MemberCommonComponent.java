@@ -51,7 +51,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
@@ -70,7 +69,6 @@ import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepos
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
-import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
 /**
  * 공통 기능을 임시로 정의해서 사용한다.
@@ -96,9 +94,6 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private IcasSCI icasSCI;
-
-	@Autowired
-	private DeviceService deviceService;
 
 	@Autowired
 	private SellerSCI sellerSCI;
@@ -255,26 +250,6 @@ public class MemberCommonComponent {
 		uapsReq.setDeviceId(pReqParam);
 		uapsReq.setType(type);
 		return this.uapsSCI.getMappingInfo(uapsReq);
-	}
-
-	/**
-	 * <pre>
-	 * 휴대기기 등록 서브 모듈.
-	 * SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인 경우 IDP에 무선회원 해지 요청.
-	 * </pre>
-	 * 
-	 * @param systemId
-	 *            String
-	 * @param tenantId
-	 *            String
-	 * @param userKey
-	 *            String
-	 * @param deviceInfo
-	 *            DeviceInfo
-	 * @return deviceKey
-	 */
-	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) {
-		return this.deviceService.insertDeviceInfo(systemId, tenantId, userKey, deviceInfo);
 	}
 
 	/**
