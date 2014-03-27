@@ -867,7 +867,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 휴대기기 등록 모듈 호출.
 			 */
 			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
-			String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader
+			String deviceKey = this.deviceService.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader
 					.getTenantHeader().getTenantId(), userKey, deviceInfo);
 
 			if (deviceKey == null || StringUtils.equals(deviceKey, "")) {
