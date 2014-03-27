@@ -351,11 +351,12 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// --------------------------------------------------------------------------------------------------
 		// SKT 시험폰 체크
 
-		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE)) {
-			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
+		if (this.isSktTestMdn(userEcRes, policyCheckParam.getDeviceId())) {
+			policyResult.setSktTestMdn(true);
 
-			if (this.isSktTestMdn(userEcRes, policyCheckParam.getDeviceId())) { // CM011604: SKT 시험폰 제한
-				policyResult.setSktTestMdn(true);
+			// CM011604: 서비스 허용 SKT 시험폰
+			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE)) {
+				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
 
 				if (this.isSktTestMdnWhiteList(policyCheckParam.getTenantId(), policyCheckParam.getDeviceId())) {
 					policyResult.setSktTestMdnWhiteList(true);
@@ -368,8 +369,6 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 				return policyResult;
 			}
-
-			policyListMap.remove(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
 		}
 
 		// --------------------------------------------------------------------------------------------------
