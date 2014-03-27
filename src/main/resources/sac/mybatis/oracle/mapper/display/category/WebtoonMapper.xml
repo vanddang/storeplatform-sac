@@ -347,7 +347,10 @@
              , UV_TB_DP_MULTIMDA_PROD G
              , TB_DP_PROD_RSHP H
              , TB_DP_SUB_CONTENTS I
-             , TB_DP_TENANT_PROD_STATS J
+             , (SELECT PROD_ID, AVG_EVLU_SCORE, PATICPERS_CNT
+                  FROM TB_DP_TENANT_PROD_STATS
+                 WHERE TENANT_ID = #{tenantId}
+               ) J
              , TB_DP_PROD_DESC K
          WHERE A.PROD_ID = #{prodId}
            AND A.PROD_ID = B.PROD_ID
@@ -363,8 +366,7 @@
            AND C.PROD_ID = G.PROD_ID
            AND G.PROD_ID = H.PART_PROD_ID
            AND H.PART_PROD_ID = I.PROD_ID(+)
-           AND H.PART_PROD_ID = J.PROD_ID
-           AND J.TENANT_ID = #{tenantId}
+           AND H.PART_PROD_ID = J.PROD_ID(+)
            AND H.PROD_ID = K.PROD_ID
            AND K.LANG_CD = #{langCd}
            AND ROWNUM = 1
