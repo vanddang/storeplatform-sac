@@ -88,6 +88,8 @@ public class SellerMbrSac extends CommonInfo {
 	private String website;
 	/** 등록일시. */
 	private String regDate;
+	/** 수정일시. */
+	private String updateDate;
 
 	// 구매 요청으로 통신판매업 관련 파라미터 3개 추가. 2014.03.26
 	/** 통신판매업 신고여부. */
@@ -695,6 +697,21 @@ public class SellerMbrSac extends CommonInfo {
 	 */
 	public void setBizUnregReason(String bizUnregReason) {
 		this.bizUnregReason = bizUnregReason;
+	}
+
+	/**
+	 * @return the updateDate
+	 */
+	public String getUpdateDate() {
+		return this.updateDate;
+	}
+
+	/**
+	 * @param updateDate
+	 *            the updateDate to set
+	 */
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
 	}
 
 }
