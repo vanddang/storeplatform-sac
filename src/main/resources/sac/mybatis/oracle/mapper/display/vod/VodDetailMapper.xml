@@ -100,7 +100,7 @@
 				   	AND L.DEVICE_MODEL_CD = #{deviceModel} AND L.USE_YN = 'Y'
 		          GROUP BY RSHP.PROD_ID, G.TENANT_ID, C.LANG_CD) P 
 		       , TB_DP_PROD P2 
-		       , UV_TB_DP_MULTIMDA_PROD MP 
+		       , TB_DP_VOD_PROD MP 
 		       , TB_DP_TENANT_PROD TP 
 		       , TB_DP_TENANT_PROD_PRICE TPP 
 		       , TB_DP_PROD_DESC PD 
@@ -323,7 +323,7 @@
 		                    , TB_DP_SUB_CONTENTS SC
 		                    , TB_DP_TENANT_PROD TP
 		                    , TB_DP_TENANT_PROD_PRICE PRC
-		                    , UV_TB_DP_MULTIMDA_PROD MP
+		                    , TB_DP_VOD_PROD MP
 		                    , TB_DP_SPRT_DEVICE SD
 		                    , TB_CM_DEVICE DV
 		                  WHERE PR.PROD_ID = #{channelId}
