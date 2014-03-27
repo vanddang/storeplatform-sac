@@ -53,7 +53,7 @@ public class PaymentMethodPointSearchController {
 	 *            요청
 	 * @return CultureSacRes
 	 */
-	@RequestMapping(value = "/culture/point/post/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/culture/point/get/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CultureSacRes postCulture(@RequestBody @Validated CultureSacReq cultureSacReq) {
 		this.logger.debug("PRCHS,CULTURE,SAC,REQ,{}", cultureSacReq);
@@ -70,7 +70,7 @@ public class PaymentMethodPointSearchController {
 	 *            요청
 	 * @return DotoriSacRes
 	 */
-	@RequestMapping(value = "/dotori/count/post/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/dotori/count/get/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DotoriSacRes postDotori(@RequestBody @Validated DotoriSacReq dotoriSacReq) {
 		this.logger.debug("PRCHS,DOTORI,SAC,REQ,{}", dotoriSacReq);
@@ -87,9 +87,9 @@ public class PaymentMethodPointSearchController {
 	 *            요청
 	 * @return OkCashBagSacRes
 	 */
-	@RequestMapping(value = "/ocb/point/post/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/ocb/point/get/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public OkCashBagSacRes postOkCashBag(@RequestBody @Validated OkCashBagSacReq okCashBagSacReq) {
+	public OkCashBagSacRes getOkCashBag(@RequestBody @Validated OkCashBagSacReq okCashBagSacReq) {
 		this.logger.debug("PRCHS,OKCASHBAG,SAC,REQ,{}", okCashBagSacReq);
 		return this.paymentMethodPointSearchSacService.postOkCashBag(okCashBagSacReq);
 	}
@@ -104,7 +104,7 @@ public class PaymentMethodPointSearchController {
 	 *            요청
 	 * @return TMemberShipSacRes
 	 */
-	@RequestMapping(value = "/tms/point/post/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/tms/point/get/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public TMemberShipSacRes postTMemberShip(@RequestBody @Validated TMemberShipSacReq tMemberShipSacReq) {
 		this.logger.debug("PRCHS,TMEMBERSHIP,SAC,REQ,{}", tMemberShipSacReq);
