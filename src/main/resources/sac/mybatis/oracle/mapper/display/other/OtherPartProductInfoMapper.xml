@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OtherPartProduct">
+	<select id="getPartProductList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.other.vo.PartProduct">
+       SELECT /* OtherPartProductMapper.getPartProductList, IAP상품 정보 조회, 정희원/SKP, 2014-03-25 */
+           PTPROD.PROD_ID,
+           CDESC.PROD_NM,
+           TPRC.PROD_AMT,
+           APROD.PROD_CASE,
+           APROD.PROD_KIND,
+           PRPROD.PROD_ID AS PARENT_PROD_ID
+       FROM
+           TB_DP_PROD PTPROD
+           INNER JOIN TB_DP_APP_PROD APROD
+               ON APROD.PROD_ID = PTPROD.PROD_ID AND APROD.PART_PARENT_CLSF_CD = 'PD012302'
+           INNER JOIN TB_DP_PROD_DESC CDESC
+               ON CDESC.PROD_ID = PTPROD.PROD_ID
+           INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+               ON TPRC.PROD_ID = PTPROD.PROD_ID
+           INNER JOIN TB_DP_PROD_RSHP RSHP
+               ON RSHP.PART_PROD_ID = PTPROD.PROD_ID AND RSHP.PROD_RSHP_CD = 'DP010801'
+           INNER JOIN TB_DP_PROD PRPROD
+               ON PRPROD.PROD_ID = RSHP.PROD_ID
+       WHERE 1=1
+             AND APROD.AID = #{aid}
+             AND CDESC.LANG_CD = #{langCd}
+             AND TPRC.TENANT_ID = #{tenantId}
+             AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
+  </select>
+</mapper>
