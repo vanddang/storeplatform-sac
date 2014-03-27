@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcReq;
 import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
+import com.skplanet.storeplatform.external.client.uaps.vo.OpmdEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -57,7 +58,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
@@ -112,11 +112,26 @@ public class MemberCommonComponent {
 	 *            msisdn
 	 * @return String
 	 */
-	public String getOpmdMdnInfo(String msisdn) { // 2014. 01. 09. 김다슬, 인크로스. 수정
+	public String getOpmdMdnInfo(String msisdn) { // 2014.03.27. 김다슬, 인크로스. 수정
 
-		GetOpmdReq req = new GetOpmdReq();
-		req.setMsisdn(msisdn);
-		return this.miscellaneousService.getOpmd(req).getMsisdn();
+		// GetOpmdRes res = new GetOpmdRes();
+		String resMsisdn = msisdn;
+		// 1. OPMD번호(989)여부 검사
+		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
+			UapsEcReq uapsReq = new UapsEcReq();
+			uapsReq.setDeviceId(msisdn);
+			OpmdEcRes opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
+			if (opmdRes != null) {
+				// res.setMsisdn(opmdRes.getMobileMdn());
+				resMsisdn = opmdRes.getOpmdMdn();
+				// res.setMobileSvcMngNum(opmdRes.getMobileSvcMngNum());
+				// res.setPauseYN(opmdRes.getPauseYN());
+				LOGGER.debug("[MiscellaneousService.getOpmd] SAC<-UPAS Connection Response : {}", opmdRes);
+			}
+		}
+		// 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환
+
+		return resMsisdn;
 	}
 
 	/**
@@ -579,8 +594,10 @@ public class MemberCommonComponent {
 			List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
 			for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-				LOGGER.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
-				LOGGER.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
+				LOGGER.debug("============================================ UserExtraInfo CODE : {}",
+						ptcr.getExtraProfile());
+				LOGGER.debug("============================================ UserExtraInfo VALUE : {}",
+						ptcr.getExtraProfileValue());
 
 				UserExtraInfo extra = new UserExtraInfo();
 				extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -787,8 +804,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
