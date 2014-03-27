@@ -34,8 +34,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String userKey; // 내부 회원 번호
 	private String deviceKey; // 내부 디바이스 ID
 	private String prchsReqPathCd; // 구매 요청 경로 코드
-	private String mid; // 가맹점 ID
-	private String authKey; // 가맹점 인증키
 	private String currencyCd; // 통화 코드
 	private double totAmt; // 총 결제 금액
 	private String clientIp; // 클라이언트 IP
@@ -75,8 +73,11 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private List<PurchaseProduct> purchaseProductList = new ArrayList<PurchaseProduct>(); // 구매할 상품 정보 리스트
 
 	// ------------------------------------------------------------------------
-	// 결제Page 정보
+	// Pay Planet 결제Page 정보
 	private String resultType; // 결과 타입: payment-결제Page 요청진행, free-무료구매 완료
+	private String mid; // 가맹점 ID
+	private String authKey; // 가맹점 인증키
+	private String encKey; // Pay Planet 암호화
 	private String paymentPageUrl; // 결제Page_URL
 	private PaymentPageParam paymentPageParam; // 결제Page_요청_파라미터
 
@@ -495,6 +496,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setResultType(String resultType) {
 		this.resultType = resultType;
+	}
+
+	/**
+	 * @return the encKey
+	 */
+	public String getEncKey() {
+		return this.encKey;
+	}
+
+	/**
+	 * @param encKey
+	 *            the encKey to set
+	 */
+	public void setEncKey(String encKey) {
+		this.encKey = encKey;
 	}
 
 	/**

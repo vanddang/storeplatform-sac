@@ -73,6 +73,7 @@ import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseCountServi
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
 import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.service.InterworkingSacService;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
@@ -100,10 +101,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	@Value("#{systemProperties['spring.profiles.active']}")
 	private String envServerLevel;
-	@Value("#{propertiesForSac['purchase.payplanet.paymentPage.url']}")
-	private String payplanetPaymentPageUrl;
-	@Value("#{propertiesForSac['purchase.payplanet.encrypt.key']}")
-	private String payplanetEncryptKey;
 
 	@Autowired
 	private PurchaseOrderSCI purchaseOrderSCI;
@@ -218,6 +215,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void createReservedPurchase(PurchaseOrderInfo purchaseOrderInfo) {
+		// PayPlanet 가맹점 정보 조회
+		PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(purchaseOrderInfo.getTenantId());
+		purchaseOrderInfo.setMid(payPlanetShop.getMid());
+		purchaseOrderInfo.setAuthKey(payPlanetShop.getAuthKey());
+		purchaseOrderInfo.setEncKey(payPlanetShop.getEncKey());
+		purchaseOrderInfo.setPaymentPageUrl(payPlanetShop.getPaymentUrl());
+
 		this.createPurchaseByType(purchaseOrderInfo, PurchaseConstants.CREATE_PURCHASE_TYPE_RESERVED);
 	}
 
@@ -879,7 +883,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		String eData = paymentPageParam.makeEncDataFormat();
 		this.logger.debug("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", eData);
 		try {
-			paymentPageParam.setEData(PayPlanetUtils.encrypt(eData, this.payplanetEncryptKey));
+			paymentPageParam.setEData(PayPlanetUtils.encrypt(eData, purchaseOrderInfo.getEncKey()));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7201", e);
 		}
@@ -899,7 +903,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		paymentPageParam.setVersion("1.0");
 
 		// 결제Page 요청 URL
-		purchaseOrderInfo.setPaymentPageUrl(this.payplanetPaymentPageUrl);
+		purchaseOrderInfo.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
 
 		purchaseOrderInfo.setPaymentPageParam(paymentPageParam);
 
