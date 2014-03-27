@@ -675,7 +675,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dtpp.setApplyEndDt(couponInfo.getIssueEDate());
 				dtpp.setProdAmt(Long.parseLong(itemInfo.getItemPrice()));
 				dtpp.setChnlUnlmtAmt(0); // ??
-				dtpp.setChnlPeriodAmt(0); // ??
+				dtpp.setChnlPeriodAmt(Long.parseLong(itemInfo.getSalePrice()));
 				dtpp.setProdNetAmt(Long.parseLong(itemInfo.getOrgPrice()));
 				dtpp.setDcRate(Long.parseLong(itemInfo.getDcRate()));
 				if (Long.parseLong(itemInfo.getOrgPrice()) - Long.parseLong(itemInfo.getSalePrice()) > 0) { // 금액이 >0 보다
