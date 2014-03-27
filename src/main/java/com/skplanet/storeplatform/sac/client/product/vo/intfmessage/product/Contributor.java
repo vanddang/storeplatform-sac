@@ -100,8 +100,9 @@ public class Contributor extends CommonInfo implements Serializable {
 	 * 이미지url.
 	 */
 	private Source source;
+
 	/**
-	 * 앨범 출시 일 등 날짜를 기입할 경우 사용한다.
+	 * 출시일, 개봉일, 웹툰 등록일 등 날짜를 기입할 경우 사용한다.(데이터가 날짜 형식은 경우 사용)
 	 */
 	private Date date;
 
@@ -351,21 +352,6 @@ public class Contributor extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return Date
-	 */
-	public Date getDate() {
-		return this.date;
-	}
-
-	/**
-	 * @param date
-	 *            date
-	 */
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	/**
 	 * 
 	 * <pre>
 	 * identifierList.
@@ -413,5 +399,20 @@ public class Contributor extends CommonInfo implements Serializable {
 	 */
 	public void setSourceList(List<Source> sourceList) {
 		this.sourceList = sourceList;
+	}
+
+	/**
+	 * @return the date
+	 */
+	public Date getDate() {
+		return this.date;
+	}
+
+	/**
+	 * @param date
+	 *            the date to set
+	 */
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }
