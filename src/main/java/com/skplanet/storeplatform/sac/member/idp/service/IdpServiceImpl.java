@@ -832,11 +832,13 @@ public class IdpServiceImpl implements IdpService {
 
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
+		UserMbr getUserMbr = null;
 		try {
 			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
 			// 회원 수정 정보 세팅
-			UserMbr getUserMbr = searchUserRespnse.getUserMbr();
+			if (searchUserRespnse != null)
+				getUserMbr = searchUserRespnse.getUserMbr();
 
 			if (getUserMbr != null) {
 				getUserMbr.setUserPhone(getUserTn);
@@ -980,7 +982,7 @@ public class IdpServiceImpl implements IdpService {
 		} catch (StorePlatformException spe) {
 
 			// 회원 존재 여부 확인
-			// 회원이 존재 하지 않을때 one id 데이블에 추가
+			// 회원이 존재 하지 않을때 one id 테이블에 추가
 			if (spe.getErrorInfo().getCode().endsWith(MemberConstants.RESULT_NOT_FOUND_USER_KEY)) {
 				// one id 가입 정보 등록
 				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
@@ -1000,10 +1002,12 @@ public class IdpServiceImpl implements IdpService {
 
 				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-				if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) { // SC반환값이
-					idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
-					idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+				if (updateMbrOneIDResponse != null) {
+					if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
+							.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) { // SC반환값이
+						idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+						idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+					}
 				}
 			}
 
@@ -1067,12 +1071,13 @@ public class IdpServiceImpl implements IdpService {
 
 		try {
 			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-			if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
-					.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) { // SC반환값이
-				// 성공이면
-				idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
-				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+			if (updateMbrOneIDResponse != null) {
+				if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
+						.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) { // SC반환값이
+					// 성공이면
+					idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+					idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+				}
 			}
 		} catch (StorePlatformException spe) {
 			idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
@@ -1217,13 +1222,14 @@ public class IdpServiceImpl implements IdpService {
 				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
 				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-				if (updateRealNameResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)
-						&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
-								.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) {
-					idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
-					idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+				if (updateMbrOneIDResponse != null) {
+					if (updateRealNameResponse.getCommonResponse().getResultCode()
+							.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)
+							&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
+									.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) {
+						idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+						idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+					}
 				}
 			}
 		} catch (StorePlatformException spe) {
@@ -1328,11 +1334,13 @@ public class IdpServiceImpl implements IdpService {
 				updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
 
 				UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-				LOGGER.debug("response param : {}", updateRealNameResponse.getUserKey());
-				if (updateRealNameResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) {
-					idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
-					idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+				if (updateRealNameResponse != null) {
+					LOGGER.debug("response param : {}", updateRealNameResponse.getUserKey());
+					if (updateRealNameResponse.getCommonResponse().getResultCode()
+							.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) {
+						idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+						idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+					}
 				}
 			}
 		} catch (StorePlatformException spe) {
@@ -1523,19 +1531,21 @@ public class IdpServiceImpl implements IdpService {
 		}
 
 		try {
-			RemoveUserRequest removeUserRequest = new RemoveUserRequest();
-			removeUserRequest.setCommonRequest(commonRequest);
-			removeUserRequest.setUserKey(searchUserResponse.getUserKey());
-			removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
-			removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
-			removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
-			this.userSCI.remove(removeUserRequest);
 
-			RemoveMbrOneIDRequest removeMbrOneIDRequest = new RemoveMbrOneIDRequest();
-			removeMbrOneIDRequest.setCommonRequest(commonRequest);
-			removeMbrOneIDRequest.setImSvcNo(imIntSvcNo);
-			this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
+			if (searchUserResponse != null) {
+				RemoveUserRequest removeUserRequest = new RemoveUserRequest();
+				removeUserRequest.setCommonRequest(commonRequest);
+				removeUserRequest.setUserKey(searchUserResponse.getUserKey());
+				removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
+				removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
+				removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
+				this.userSCI.remove(removeUserRequest);
 
+				RemoveMbrOneIDRequest removeMbrOneIDRequest = new RemoveMbrOneIDRequest();
+				removeMbrOneIDRequest.setCommonRequest(commonRequest);
+				removeMbrOneIDRequest.setImSvcNo(imIntSvcNo);
+				this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
+			}
 		} catch (StorePlatformException spe) {
 
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
@@ -1611,11 +1621,12 @@ public class IdpServiceImpl implements IdpService {
 		String idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		String delYN = "N";
-
+		UserMbr getUserMbr = null;
 		try {
 			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-			UserMbr getUserMbr = searchUserRespnse.getUserMbr();
+			if (searchUserRespnse != null)
+				getUserMbr = searchUserRespnse.getUserMbr();
 
 			// 회원 정보 존재
 			if (getUserMbr != null) {
@@ -1689,11 +1700,12 @@ public class IdpServiceImpl implements IdpService {
 		String idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		String delYN = "N";
-
+		UserMbr getUserMbr = null;
 		try {
 			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-			UserMbr getUserMbr = searchUserRespnse.getUserMbr();
+			if (searchUserRespnse != null)
+				getUserMbr = searchUserRespnse.getUserMbr();
 
 			// 회원 정보 존재
 			if (getUserMbr != null) {
@@ -1764,11 +1776,12 @@ public class IdpServiceImpl implements IdpService {
 
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
+		UserMbr getUserMbr = null;
 		try {
 			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-			// 회원 수정 정보 세팅
-			UserMbr getUserMbr = searchUserRespnse.getUserMbr();
+			if (searchUserRespnse != null) // 회원 수정 정보 세팅
+				getUserMbr = searchUserRespnse.getUserMbr();
 
 			if (getUserMbr != null) {
 				UserMbr userMbr = new UserMbr();
