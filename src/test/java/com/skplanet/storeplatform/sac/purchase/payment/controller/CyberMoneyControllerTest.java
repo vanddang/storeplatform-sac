@@ -4,9 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -43,40 +41,16 @@ public class CyberMoneyControllerTest {
 	public void testGetBalance() throws Exception {
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		Map<String, Object> map2 = new HashMap<String, Object>();
-		Map<String, Object> map3 = new HashMap<String, Object>();
-
-		map1.put("testList1", "1");
-		map1.put("testList2", "2");
-		map1.put("testList3", "3");
-		map2.put("testList1", "1");
-		map2.put("testList2", "2");
-		map2.put("testList3", "3");
-		map3.put("testList1", "1");
-		map3.put("testList2", "2");
-		map3.put("testList3", "3");
-
-		list.add(map1);
-		list.add(map2);
-		list.add(map3);
-
-		map.put("testVal1", "1");
-		map.put("testVal2", "2");
-		map.put("testVal3", "3");
-
-		map.put("list", list);
+		map.put("perCount", 10);
 
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(map);
 
 		this.mvc.perform(
-				post("/purchase/payment/cyberMoney/get/v1?name=testName&id=123&pw=456")
+				post("/purchase/product/count/execute/v1")
 						.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-						.contentType(MediaType.parseMediaType("application/json;charset=UTF-8")).content(json))
-				.andDo(print()).andExpect(status().isOk());
+						.contentType(MediaType.parseMediaType("application/json;charset=UTF-8"))
+						.header("x-sac-guid", "1234").content(json)).andDo(print()).andExpect(status().isOk());
 		/*
 		 * .andExpect(content().contentType("application/json;charset=UTF-8")) .andExpect(jsonPath("$.id").value("#17"))
 		 */

@@ -9,12 +9,19 @@
  */
 package com.skplanet.storeplatform.sac.purchase.product.count.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.GetPrchsProdCntScReq;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.GetPrchsProdCntScRes;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.UpdatePrchsProdCntProcStatusScReq;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.UpdatePrchsProdCntProcStatusScRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UpdatePurchaseCountSacReq;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.product.count.repository.PurchaseProductCountRepository;
 import com.skplanet.storeplatform.sac.purchase.product.count.vo.PurchaseProductCountSacParam;
@@ -25,6 +32,7 @@ import com.skplanet.storeplatform.sac.purchase.product.count.vo.PurchaseProductC
  * 
  * Updated on : 2014. 3. 27. Updated by : nTels_cswoo81, nTels.
  */
+@Service
 public class PurchaseProductCountServiceImpl implements PurchaseProductCountService {
 
 	@Autowired
@@ -34,25 +42,30 @@ public class PurchaseProductCountServiceImpl implements PurchaseProductCountServ
 	public PurchaseProductCountSacResult executePurchaseProductCount(
 			PurchaseProductCountSacParam purchaseProductCountSacParam) {
 
+		// 총 처리 결과 값 저장 VO.
 		PurchaseProductCountSacResult purchaseProductCountSacResult = new PurchaseProductCountSacResult();
-
-		/** 호출 시 처리 할 구매 상품 건수 처리 상태 'R'로 변경. */
+		// PrchsProdCntProcStatus 상태 변경 요청값 셋팅.
 		UpdatePrchsProdCntProcStatusScReq updatePrchsProdCntProcStatusScReq = new UpdatePrchsProdCntProcStatusScReq();
 		updatePrchsProdCntProcStatusScReq.setGuid(purchaseProductCountSacParam.getGuid());
+		// PrchsProdCntProcStatus 상태 변경 응답값.
+		UpdatePrchsProdCntProcStatusScRes updatePrchsProdCntProcStatusScRes = null;
+
+		/** 호출 시 처리 할 구매 상품 건수 처리 상태 'R'로 변경. */
 		updatePrchsProdCntProcStatusScReq.setCurrProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_NO);
 		updatePrchsProdCntProcStatusScReq
 				.setNewProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_RESERVE);
-		UpdatePrchsProdCntProcStatusScRes updatePrchsProdCntProcStatusScRes = this.purchaseProductCountRepository
+		updatePrchsProdCntProcStatusScRes = this.purchaseProductCountRepository
 				.updatePrchsProdCntProcStatus(updatePrchsProdCntProcStatusScReq);
 		// R로 변경한 건수 결과 totCnt에 셋팅.
 		purchaseProductCountSacResult.setTotCnt(updatePrchsProdCntProcStatusScRes.getResultCnt());
 
 		while (true) {
 
-			/** 처리 할 구매 상품 건수 guid가 일치하면서 상태가 'R'인 놈 처리할 건수만큼 조회. */
+			/** 처리 할 구매 상품 건수 guid가 일치하면서 상태가 'R'인 놈 처리할 건수만큼 조회 후 처리 상태 UPDATE로 변경. */
 			GetPrchsProdCntScReq getPrchsProdCntScReq = new GetPrchsProdCntScReq();
 			getPrchsProdCntScReq.setGuid(purchaseProductCountSacParam.getGuid());
-			getPrchsProdCntScReq.setProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_RESERVE);
+			getPrchsProdCntScReq.setCurrProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_RESERVE);
+			getPrchsProdCntScReq.setNewProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_UPDATE);
 			getPrchsProdCntScReq.setPurCnt(purchaseProductCountSacParam.getPerCount());
 
 			GetPrchsProdCntScRes getPrchsProdCntScRes = this.purchaseProductCountRepository
@@ -63,9 +76,42 @@ public class PurchaseProductCountServiceImpl implements PurchaseProductCountServ
 			}
 
 			/** 전시에 상품 건수 업데이트 요청. */
+			boolean apiRtn = false;
+			List<UpdatePurchaseCountSacReq> reqList = new ArrayList<UpdatePurchaseCountSacReq>();
+			for (PrchsProdCnt prchsProdCnt : getPrchsProdCntScRes.getPrchsProdCntList()) {
+				UpdatePurchaseCountSacReq updatePurchaseCountSacReq = new UpdatePurchaseCountSacReq();
+				updatePurchaseCountSacReq.setTenantId(prchsProdCnt.getTenantId());
+				updatePurchaseCountSacReq.setProductId(prchsProdCnt.getProdId());
+				if (StringUtils.equals(PurchaseConstants.PRCHS_STATUS_COMPT, prchsProdCnt.getStatusCd())) {
+					updatePurchaseCountSacReq.setPurchaseCount(prchsProdCnt.getProdQty());
+				} else {
+					updatePurchaseCountSacReq.setPurchaseCount(-prchsProdCnt.getProdQty());
+				}
+				updatePurchaseCountSacReq.setSpcYn(prchsProdCnt.getSprcProdYn());
+				updatePurchaseCountSacReq.setPurchaseDate(prchsProdCnt.getPrchsDt());
+
+				reqList.add(updatePurchaseCountSacReq);
+			}
+
+			try {
+				this.purchaseProductCountRepository.updatePurchaseCount(reqList);
+				apiRtn = true;
+			} catch (Exception e) {
+				apiRtn = false;
+			}
 
 			/** 전시 처리 후 구매 상품 건수 처리 상태 'S'로 변경. */
-
+			updatePrchsProdCntProcStatusScReq
+					.setCurrProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_UPDATE);
+			if (apiRtn) {
+				updatePrchsProdCntProcStatusScReq
+						.setNewProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_SUCCESS);
+			} else {
+				updatePrchsProdCntProcStatusScReq
+						.setNewProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_FAIL);
+			}
+			updatePrchsProdCntProcStatusScRes = this.purchaseProductCountRepository
+					.updatePrchsProdCntProcStatus(updatePrchsProdCntProcStatusScReq);
 		}
 
 		return purchaseProductCountSacResult;

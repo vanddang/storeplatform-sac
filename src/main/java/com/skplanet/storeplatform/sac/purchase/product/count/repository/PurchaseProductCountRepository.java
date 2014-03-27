@@ -9,10 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.purchase.product.count.repository;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.purchase.client.product.count.vo.GetPrchsProdCntScReq;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.GetPrchsProdCntScRes;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.UpdatePrchsProdCntProcStatusScReq;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.UpdatePrchsProdCntProcStatusScRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UpdatePurchaseCountSacReq;
 
 /**
  * Class 설명
@@ -45,5 +48,16 @@ public interface PurchaseProductCountRepository {
 	 * @return GetPrchsProdCntScRes
 	 */
 	GetPrchsProdCntScRes getPrchsProdCnt(GetPrchsProdCntScReq getPrchsProdCntScReq);
+
+	/**
+	 * 
+	 * <pre>
+	 * updatePurchaseCount.
+	 * </pre>
+	 * 
+	 * @param reqList
+	 *            reqList
+	 */
+	void updatePurchaseCount(List<UpdatePurchaseCountSacReq> reqList);
 
 }

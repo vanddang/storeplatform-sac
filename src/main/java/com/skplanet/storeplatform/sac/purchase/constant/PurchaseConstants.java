@@ -125,6 +125,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 구매 상품 건수 업데이트 처리 상태 코드 */
 	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_NO = "N";
 	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_RESERVE = "R";
+	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_UPDATE = "U";
 	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_SUCCESS = "S";
 	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_FAIL = "F";
 
