@@ -50,9 +50,6 @@ public class InternalSCITestController {
 
 		Object sciClassObj = this.appContext.getBean(classPath + className);
 
-		/* 요거로 하면 autowired한 부분 Spring에서 가져오지 못하고 null. */
-		// Class cls = Class.forName(classPath + className); // 클래스 접근
-		// Object classInstance = cls.newInstance(); // 객체 생성
 		Class reqVoCls = Class.forName(reqVoName); // Request VO
 		Object reqVo = reqVoCls.newInstance(); // 객체 생성
 
