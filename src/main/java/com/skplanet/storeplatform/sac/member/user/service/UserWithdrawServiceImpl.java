@@ -220,8 +220,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
-		logger.info("###### SearchUser.deviceId req : {}", schUserReq.toString());
-
 		return schUserRes;
 
 	}
