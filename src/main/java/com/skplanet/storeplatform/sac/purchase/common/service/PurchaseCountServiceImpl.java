@@ -16,11 +16,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseSc;
 import com.skplanet.storeplatform.purchase.client.product.count.sci.PurchaseCountSCI;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.InsertPurchaseProductCountScReq;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.InsertPurchaseProductCountScRes;
-import com.skplanet.storeplatform.purchase.client.product.count.vo.PurchaseProductCount;
 import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 
 /**
@@ -51,8 +51,8 @@ public class PurchaseCountServiceImpl implements PurchaseCountService {
 	public int insertPurchaseProductCount(List<CreatePurchaseSc> createPurchaseScList, String prchsStatusCd) {
 		List<String> procProdIdList = new ArrayList<String>();
 
-		List<PurchaseProductCount> purchaseProductCountList = new ArrayList<PurchaseProductCount>();
-		PurchaseProductCount purchaseProductCount = null;
+		List<PrchsProdCnt> prchsProdCntList = new ArrayList<PrchsProdCnt>();
+		PrchsProdCnt prchsProdCnt = null;
 
 		String tenantProdGrpCd = null;
 		int multipleVal = StringUtils.equals(prchsStatusCd, PurchaseConstants.PRCHS_STATUS_COMPT) ? 1 : -1;
@@ -63,40 +63,40 @@ public class PurchaseCountServiceImpl implements PurchaseCountService {
 			}
 			procProdIdList.add(createPurchaseSc.getProdId());
 
-			purchaseProductCount = new PurchaseProductCount();
+			prchsProdCnt = new PrchsProdCnt();
 
-			purchaseProductCount.setTenantId(createPurchaseSc.getTenantId());
-			purchaseProductCount.setUseUserKey(createPurchaseSc.getUseInsdUsermbrNo());
-			purchaseProductCount.setUseDeviceKey(createPurchaseSc.getUseInsdDeviceId());
-			purchaseProductCount.setRegId(createPurchaseSc.getSystemId());
-			purchaseProductCount.setUpdId(createPurchaseSc.getSystemId());
+			prchsProdCnt.setTenantId(createPurchaseSc.getTenantId());
+			prchsProdCnt.setUseUserKey(createPurchaseSc.getUseInsdUsermbrNo());
+			prchsProdCnt.setUseDeviceKey(createPurchaseSc.getUseInsdDeviceId());
+			prchsProdCnt.setRegId(createPurchaseSc.getSystemId());
+			prchsProdCnt.setUpdId(createPurchaseSc.getSystemId());
 
-			purchaseProductCount.setPrchsId(createPurchaseSc.getPrchsId());
-			purchaseProductCount.setPrchsDt(createPurchaseSc.getPrchsDt());
-			purchaseProductCount.setStatusCd(prchsStatusCd);
+			prchsProdCnt.setPrchsId(createPurchaseSc.getPrchsId());
+			prchsProdCnt.setPrchsDt(createPurchaseSc.getPrchsDt());
+			prchsProdCnt.setStatusCd(prchsStatusCd);
 
-			purchaseProductCount.setProdId(createPurchaseSc.getProdId());
-			purchaseProductCount.setProdQty(createPurchaseSc.getProdQty() * multipleVal);
-			purchaseProductCount.setSprcProdYn(StringUtils.defaultString(createPurchaseSc.getSprcProdYn(),
+			prchsProdCnt.setProdId(createPurchaseSc.getProdId());
+			prchsProdCnt.setProdQty(createPurchaseSc.getProdQty() * multipleVal);
+			prchsProdCnt.setSprcProdYn(StringUtils.defaultString(createPurchaseSc.getSprcProdYn(),
 					PurchaseConstants.USE_N));
 
 			// 중복 구매 가능한 쇼핑상품 / 부분유료화 상품 처리
 			tenantProdGrpCd = createPurchaseSc.getTenantProdGrpCd();
 			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
 					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				purchaseProductCount.setProdGrpCd(createPurchaseSc.getTenantProdGrpCd().substring(0, 12)
+				prchsProdCnt.setProdGrpCd(createPurchaseSc.getTenantProdGrpCd().substring(0, 12)
 						+ createPurchaseSc.getPrchsId());
 			} else {
-				purchaseProductCount.setProdGrpCd(createPurchaseSc.getTenantProdGrpCd().substring(0, 12));
+				prchsProdCnt.setProdGrpCd(createPurchaseSc.getTenantProdGrpCd().substring(0, 12));
 			}
 
-			purchaseProductCount.setCntProcStatus(PurchaseConstants.USE_N);
+			prchsProdCnt.setCntProcStatus(PurchaseConstants.USE_N);
 
-			purchaseProductCountList.add(purchaseProductCount);
+			prchsProdCntList.add(prchsProdCnt);
 		}
 
 		InsertPurchaseProductCountScRes res = this.purchaseCountSCI
-				.insertPurchaseProductCount(new InsertPurchaseProductCountScReq(purchaseProductCountList));
+				.insertPurchaseProductCount(new InsertPurchaseProductCountScReq(prchsProdCntList));
 		return res.getCount();
 	}
 }
