@@ -122,7 +122,7 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 					MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 
 					if (retMetaInfo != null) {
-						Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateAppProductShort(retMetaInfo);
 						productList.add(product);
 					}
 
@@ -139,10 +139,10 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 
 					if (retMetaInfo != null) {
 						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 이북일때
-							Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+							Product product = this.responseInfoGenerateFacade.generateEbookProductShort(retMetaInfo);
 							productList.add(product);
 						} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 코믹일때
-							Product product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+							Product product = this.responseInfoGenerateFacade.generateComicProductShort(retMetaInfo);
 							productList.add(product);
 						}
 					}
@@ -163,7 +163,7 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 
 						MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
 						if (retMetaInfo != null) {
-							Product product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+							Product product = this.responseInfoGenerateFacade.generateMusicProductShort(retMetaInfo);
 							productList.add(product);
 						}
 					}
@@ -180,10 +180,11 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 
 					if (retMetaInfo != null) {
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 영화일때
-							Product product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+							Product product = this.responseInfoGenerateFacade.generateMovieProductShort(retMetaInfo);
 							productList.add(product);
 						} else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 방송일때
-							Product product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+							Product product = this.responseInfoGenerateFacade
+									.generateBroadcastProductShort(retMetaInfo);
 							productList.add(product);
 						}
 					}
@@ -200,7 +201,7 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateShoppingProductShort(retMetaInfo);
 						productList.add(product);
 					}
 				}

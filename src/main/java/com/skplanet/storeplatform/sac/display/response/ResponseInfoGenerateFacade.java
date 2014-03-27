@@ -34,6 +34,18 @@ public interface ResponseInfoGenerateFacade {
 
 	/**
 	 * <pre>
+	 * App 상품 Product 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * 
+	 * @return Product
+	 */
+	public Product generateAppProductShort(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
 	 * Music 상품 Product 생성.
 	 * </pre>
 	 * 
@@ -43,6 +55,18 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Product
 	 */
 	public Product generateMusicProduct(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * Music 상품 Product 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * 
+	 * @return Product
+	 */
+	public Product generateMusicProductShort(MetaInfo metaInfo);
 
 	/**
 	 * <pre>
@@ -57,6 +81,17 @@ public interface ResponseInfoGenerateFacade {
 
 	/**
 	 * <pre>
+	 * Movie 상품 Product 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Product
+	 */
+	public Product generateMovieProductShort(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
 	 * 방송 상품 Product 생성.
 	 * </pre>
 	 * 
@@ -65,6 +100,17 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Product
 	 */
 	public Product generateBroadcastProduct(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 방송 상품 Product 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Product
+	 */
+	public Product generateBroadcastProductShort(MetaInfo metaInfo);
 
 	/**
 	 * <pre>
@@ -79,6 +125,17 @@ public interface ResponseInfoGenerateFacade {
 
 	/**
 	 * <pre>
+	 * Ebook 상품 Product 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Product
+	 */
+	public Product generateEbookProductShort(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
 	 *  Comic 상품 Product 생성.
 	 * </pre>
 	 * 
@@ -87,6 +144,17 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Product
 	 */
 	public Product generateComicProduct(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 *  Comic 상품 Product 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Product
+	 */
+	public Product generateComicProductShort(MetaInfo metaInfo);
 
 	/**
 	 * <pre>
@@ -109,6 +177,17 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Product
 	 */
 	public Product generateShoppingProduct(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * Shopping 상품 Product 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Product
+	 */
+	public Product generateShoppingProductShort(MetaInfo metaInfo);
 
 	/**
 	 * <pre>
@@ -197,7 +276,7 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Product
 	 */
 	public Product generateSpecificShoppingProduct(MetaInfo metaInfo);
-	
+
 	/**
 	 * <pre>
 	 * 정액제 상품 Coupon 객체생성.

@@ -49,8 +49,13 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		List<Support> supportList = new ArrayList<Support>();
 		Support support = this.commonGenerator.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getDrmYn());
 		supportList.add(support);
-		support = this.commonGenerator.generateSupport(DisplayConstants.DP_IN_APP_SUPPORT_NM,
-				metaInfo.getPartParentClsfCd());
+
+		if (StringUtils.isNotEmpty(metaInfo.getPartParentClsfCd())) {
+			support = this.commonGenerator.generateSupport(DisplayConstants.DP_IN_APP_SUPPORT_NM,
+					metaInfo.getPartParentClsfCd());
+		} else {
+			support = this.commonGenerator.generateSupport(DisplayConstants.DP_IN_APP_SUPPORT_NM, "N");
+		}
 		supportList.add(support);
 		return supportList;
 	}

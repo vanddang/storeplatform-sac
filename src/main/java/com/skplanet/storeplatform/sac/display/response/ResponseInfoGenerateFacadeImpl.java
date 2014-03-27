@@ -121,6 +121,48 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateAppProductShort(com.skplanet.
+	 * storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Product generateAppProductShort(MetaInfo metaInfo) {
+		Product product = new Product();
+		product.setIdentifierList(this.appGenerator.generateIdentifierList(metaInfo));
+		;
+		// App용 SupportList 설정
+		List<Support> supportList = this.appGenerator.generateSupportList(metaInfo);
+		// Title 설정
+		Title title = this.commonGenerator.generateTitle(metaInfo);
+		// App 설정
+		App app = this.appGenerator.generateApp(metaInfo);
+		// Price 설정
+		Price price = this.commonGenerator.generatePrice(metaInfo);
+		// Accrual 설정
+		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
+		// SourceList 생성
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// Rights 설정
+		Rights rights = this.commonGenerator.generateRights(metaInfo);
+		// App용 MenuList 설정
+		List<Menu> menuList = this.appGenerator.generateMenuList(metaInfo);
+
+		product.setSupportList(supportList);
+		product.setTitle(title);
+		product.setApp(app);
+		product.setPrice(price);
+		product.setAccrual(accrual);
+		product.setSourceList(sourceList);
+		product.setRights(rights);
+		product.setMenuList(menuList);
+		product.setProductExplain(metaInfo.getProdBaseDesc());
+
+		return product;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateMusicProduct(com.skplanet.
 	 * storeplatform.sac.display.meta.vo.MetaInfo)
 	 */
@@ -161,6 +203,50 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
+		return product;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateMusicProductShort(com.skplanet
+	 * . storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Product generateMusicProductShort(MetaInfo metaInfo) {
+		Product product = new Product();
+		// Identifier 설정
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+		// Title 설정
+		Title title = this.commonGenerator.generateTitle(metaInfo);
+		// Price 설정
+		Price price = this.commonGenerator.generatePrice(metaInfo);
+		// MenuList 생성
+		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
+		// SourceList 생성
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// Music용 Accrual 설정
+		Accrual accrual = this.musicGenerator.generateAccrual(metaInfo);
+		// Rights 설정
+		Rights rights = this.commonGenerator.generateRights(metaInfo);
+		// Music용 Contributor 설정
+		Contributor contributor = this.musicGenerator.generateContributor(metaInfo);
+		// Music 생성
+		Music music = this.musicGenerator.generateMusic(metaInfo);
+		// Date 생성
+		Date date = this.commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, metaInfo.getRegDt());
+
+		product.setTitle(title);
+		product.setPrice(price);
+		product.setMenuList(menuList);
+		product.setSourceList(sourceList);
+		product.setAccrual(accrual);
+		product.setRights(rights);
+		product.setContributor(contributor);
+		product.setMusic(music);
+		product.setDate(date);
+		product.setProductExplain(metaInfo.getProdBaseDesc());
 		return product;
 	}
 
@@ -209,6 +295,45 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
+		return product;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateMovieProductShort(com.skplanet
+	 * . storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Product generateMovieProductShort(MetaInfo metaInfo) {
+		Product product = new Product();
+		// Identifier 설정
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+		// Title 생성
+		Title title = this.commonGenerator.generateTitle(metaInfo);
+		// Price 생성
+		Price price = this.commonGenerator.generatePrice(metaInfo);
+		// MenuList 생성
+		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
+		// SourceList 생성
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// Accrual 생성
+		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
+		// Rights 설정
+		Rights rights = this.commonGenerator.generateRights(metaInfo);
+		// 영화용 Contributor 설정
+		Contributor contributor = this.vodGenerator.generateMovieContributor(metaInfo);
+
+		product.setTitle(title);
+		product.setPrice(price);
+		product.setMenuList(menuList);
+		product.setSourceList(sourceList);
+		product.setAccrual(accrual);
+		product.setRights(rights);
+		product.setContributor(contributor);
+		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
+		product.setProductExplain(metaInfo.getProdBaseDesc());
 		return product;
 	}
 
@@ -268,6 +393,44 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateBroadcastProductShort(com.
+	 * skplanet .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Product generateBroadcastProductShort(MetaInfo metaInfo) {
+		Product product = new Product();
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+		// Title 생성
+		Title title = this.commonGenerator.generateTitle(metaInfo);
+		// Price 생성
+		Price price = this.commonGenerator.generatePrice(metaInfo);
+		// MenuList 생성
+		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
+		// SourceList 생성
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// Accrual 생성
+		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
+		// Rights 설정
+		Rights rights = this.commonGenerator.generateRights(metaInfo);
+		// 방송용 Contributor 설정
+		Contributor contributor = this.vodGenerator.generateBroadcastContributor(metaInfo);
+
+		product.setTitle(title);
+		product.setPrice(price);
+		product.setMenuList(menuList);
+		product.setSourceList(sourceList);
+		product.setAccrual(accrual);
+		product.setRights(rights);
+		product.setContributor(contributor);
+		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
+		product.setProductExplain(metaInfo.getProdBaseDesc());
+		return product;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateEbookProduct(com.skplanet.
 	 * storeplatform.sac.display.meta.vo.MetaInfo)
 	 */
@@ -315,6 +478,43 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateEbookProductShort(com.skplanet
+	 * . storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Product generateEbookProductShort(MetaInfo metaInfo) {
+		Product product = new Product();
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+		// Title 생성
+		Title title = this.commonGenerator.generateTitle(metaInfo);
+		// Price 생성
+		Price price = this.commonGenerator.generatePrice(metaInfo);
+		// MenuList 생성
+		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
+		// SourceList 생성
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// Accrual 생성
+		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
+		// Rights 설정
+		Rights rights = this.commonGenerator.generateRights(metaInfo);
+		// Ebook용 Contributor 설정
+		Contributor contributor = this.ebookComicGenerator.generateEbookContributor(metaInfo);
+
+		product.setTitle(title);
+		product.setPrice(price);
+		product.setMenuList(menuList);
+		product.setSourceList(sourceList);
+		product.setAccrual(accrual);
+		product.setRights(rights);
+		product.setContributor(contributor);
+		product.setProductExplain(metaInfo.getProdBaseDesc());
+		return product;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateComicProduct(com.skplanet.
 	 * storeplatform.sac.display.meta.vo.MetaInfo)
 	 */
@@ -355,6 +555,44 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
+		return product;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateComicProductShort(com.skplanet
+	 * . storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Product generateComicProductShort(MetaInfo metaInfo) {
+		Product product = new Product();
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+		// Title 생성
+		Title title = this.commonGenerator.generateTitle(metaInfo);
+		// Price 생성
+		Price price = this.commonGenerator.generatePrice(metaInfo);
+		// MenuList 생성
+		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
+		// SourceList 생성
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// Accrual 생성
+		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
+		// Rights 설정
+		Rights rights = this.commonGenerator.generateRights(metaInfo);
+		// Comic용 Contributor 설정
+		Contributor contributor = this.ebookComicGenerator.generateComicContributor(metaInfo);
+
+		product.setTitle(title);
+		product.setPrice(price);
+		product.setMenuList(menuList);
+		product.setSourceList(sourceList);
+		product.setAccrual(accrual);
+		product.setRights(rights);
+		product.setContributor(contributor);
+		product.setProductExplain(metaInfo.getProdBaseDesc());
+
 		return product;
 	}
 
@@ -455,6 +693,47 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSalesOption(salesOption);
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
+		return product;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateShoppingProductShort(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Product generateShoppingProductShort(MetaInfo metaInfo) {
+		Product product = new Product();
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+
+		// Title 생성
+		Title title = this.commonGenerator.generateTitle(metaInfo);
+		// Price 생성
+		Price price = this.shoppingGenerator.generatePrice(metaInfo);
+		// MenuList 생성
+		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
+		// SourceList 생성
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// Accrual 생성
+		Accrual accrual = this.shoppingGenerator.generateAccrual(metaInfo);
+		// Rights 생성
+		Rights rights = this.shoppingGenerator.generateRights(metaInfo);
+		// Shopping용 Contributor 생성
+		Contributor contributor = this.shoppingGenerator.generateContributor(metaInfo);
+		// SalesOption 생성
+		SalesOption salesOption = this.shoppingGenerator.generateSalesOption(metaInfo);
+
+		product.setTitle(title);
+		product.setPrice(price);
+		product.setMenuList(menuList);
+		product.setSourceList(sourceList);
+		product.setAccrual(accrual);
+		product.setRights(rights);
+		product.setContributor(contributor);
+		product.setSalesOption(salesOption);
+
 		return product;
 	}
 

@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
@@ -50,9 +49,10 @@ public class VodGeneratorImpl implements VodGenerator {
 	public Contributor generateBroadcastContributor(MetaInfo metaInfo) {
 		Contributor contributor = new Contributor();
 		contributor.setArtist(metaInfo.getArtist1Nm()); // 출연자
-		Date date = new Date();
-		date.setText(metaInfo.getIssueDay());
-		contributor.setDate(date);
+		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
+			contributor.setDate(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_RELEASE,
+					metaInfo.getIssueDay()));
+		}
 		return contributor;
 	}
 
@@ -68,9 +68,10 @@ public class VodGeneratorImpl implements VodGenerator {
 		Contributor contributor = new Contributor();
 		contributor.setDirector(metaInfo.getArtist2Nm()); // 제작자
 		contributor.setArtist(metaInfo.getArtist1Nm()); // 출연자
-		Date date = new Date();
-		date.setText(metaInfo.getIssueDay());
-		contributor.setDate(date);
+		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
+			contributor.setDate(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_RELEASE,
+					metaInfo.getIssueDay()));
+		}
 		return contributor;
 	}
 
