@@ -1316,18 +1316,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 추가한 상품 갯수
 	 */
 	private int insertPurchaseProductCount(List<CreatePurchaseSc> createPurchaseScList, String prchsStatusCd) {
+		// TAKTEST:: 테스트 진행을 위한 처리
+		if (createPurchaseScList.size() > 0) {
+			return 0;
+		}
+
 		try {
-			// TAKTEST:: 테스트 진행을 위한 중복 구매 허용 위해 주석처리
-			// return this.purchaseCountService.insertPurchaseProductCount(createPurchaseScList, prchsStatusCd);
-			return this.purchaseCountService.dummyPurchaseProductCount(createPurchaseScList, prchsStatusCd);
+			return this.purchaseCountService.insertPurchaseProductCount(createPurchaseScList, prchsStatusCd);
 		} catch (StorePlatformException e) {
 			Throwable cause = e;
 			while (cause != null) {
 				if (cause instanceof DuplicateKeyException) {
 					this.logger.info("PRCHS,ORDER,SAC,CREATE,COUNT,DUPLE,{}", createPurchaseScList.get(0).getPrchsId());
-					// TAKTEST:: 테스트 진행을 위한 중복 구매 허용 위해 주석처리
-					// throw new StorePlatformException("SAC_PUR_6110"); // 중복된 구매요청
-					return 0;
+					throw new StorePlatformException("SAC_PUR_6110"); // 중복된 구매요청
 				}
 				cause = cause.getCause();
 			}

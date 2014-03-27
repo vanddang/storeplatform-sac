@@ -34,17 +34,4 @@ public interface PurchaseCountService {
 	 */
 	public int insertPurchaseProductCount(List<CreatePurchaseSc> createPurchaseScList, String prchsStatusCd);
 
-	/**
-	 * 
-	 * <pre>
-	 * [DUMMY] 비트랜잭션 테스트 진행.. 상품 건수 저장.
-	 * </pre>
-	 * 
-	 * @param createPurchaseScList
-	 *            구매 정보 목록
-	 * @param prchsStatusCd
-	 *            구매상태
-	 * @return 추가한 상품 갯수
-	 */
-	public int dummyPurchaseProductCount(List<CreatePurchaseSc> createPurchaseScList, String prchsStatusCd);
 }
