@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeUserEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcReq;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
@@ -134,6 +135,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 		} else {
 			if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+				if (req.getDeviceId().equals("")) {
+					throw new StorePlatformException("SAC_MEM_0002", "deviceId");
+				}
 
 				this.idpMobileUser(requestHeader, schUserRes, req);
 
@@ -142,6 +146,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			}
 			/* IDP 아이디 회원 */
 			else if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
+				if (req.getUserId().equals("")) {
+					throw new StorePlatformException("SAC_MEM_0002", "userId");
+				}
 
 				this.idpIdUser(requestHeader, schUserRes, req);
 

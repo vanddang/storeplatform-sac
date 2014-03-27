@@ -49,7 +49,7 @@ public class UserWithdrawController {
 		logger.debug("##### 5.1.24. 회원 탈퇴 (ID/MDN 기반) #####");
 		logger.debug("####################################################");
 
-		if (StringUtil.nvl(req.getUserAuthKey(), "").equals("") && StringUtil.nvl(req.getUserId(), "").equals("")
+		if (StringUtil.nvl(req.getUserAuthKey(), "").equals("") || StringUtil.nvl(req.getUserId(), "").equals("")
 				&& StringUtil.nvl(req.getDeviceId(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId or userAuthKey && userId");
 		}
