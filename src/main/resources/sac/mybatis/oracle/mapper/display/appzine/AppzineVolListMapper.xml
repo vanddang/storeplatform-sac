@@ -12,7 +12,7 @@
         FROM (
             SELECT
                 ROW_NUMBER () OVER (ORDER BY A.ISSUDAY DESC, A.APPZN_NO DESC) AS RNUM
-                , COUNT (1) OVER () AS TOTAL_COUNT
+                , COUNT(A.APPZN_NO) OVER() AS TOTAL_COUNT
 				, A.APPZN_NO
 				, A.APPZN_VOL
 				, A.ISSUDAY

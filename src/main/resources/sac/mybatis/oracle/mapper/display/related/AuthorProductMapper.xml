@@ -27,9 +27,15 @@
             , A.CONTENTS_TYPE_CD
         FROM (
             SELECT 
-                COUNT(1) OVER() TOTAL_COUNT
+                COUNT(A.PROD_ID) OVER() TOTAL_COUNT
                 , ROW_NUMBER() OVER(ORDER BY A.UPD_DT DESC, A.PROD_NM) RNK
-                , A.*
+                , A.RNUM
+                , A.TOP_MENU_ID
+                , A.MENU_ID
+                , A.PROD_ID
+                , A.PROD_NM
+                , A.UPD_DT
+                , A.CONTENTS_TYPE_CD
             FROM (
                 SELECT /*+ ORDERED */ 
                     ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY E.ROWID) RNUM

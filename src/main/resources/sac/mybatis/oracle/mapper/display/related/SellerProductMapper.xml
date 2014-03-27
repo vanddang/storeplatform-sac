@@ -11,7 +11,7 @@
             , A.CONTENTS_TYPE_CD
         FROM (
             SELECT 
-                COUNT(1) OVER() TOTAL_COUNT
+                COUNT(A.PROD_ID) OVER() TOTAL_COUNT
                 , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, G.PROD_NM) RNK
                 , C.TOP_MENU_ID
                 , C.MENU_ID

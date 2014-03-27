@@ -5,7 +5,7 @@
     <!-- 세부 카테고리정보 조회 - 앱 -->
     <select id="selectAppSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT /* MenuCategoryMapper.xml, selectAppSubCategoryList, SAC 전시 , 2014-03-07 */
-		    COUNT(1) OVER() AS TOTAL_COUNT
+		    COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
 		    , A.MENU_PROD_CNT
             , A.TENANT_ID 
             , A.MENU_ID 
@@ -82,7 +82,7 @@
 		        , (
 		            SELECT 
 		                A.MENU_ID
-		                , COUNT(1) MENU_PROD_CNT
+		                , COUNT(A.MENU_ID) MENU_PROD_CNT
 		            FROM
 		                TB_DP_MENU_CATEGORY A
 		                , TB_DP_MENU_CATEGORY_PROD_MAPG B
@@ -123,7 +123,7 @@
     <!-- 세부 카테고리정보 조회 - 뮤직 -->
     <select id="selectMusicSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT /* MenuCategoryMapper.xml, selectMusicSubCategoryList, SAC 전시 , 2014-03-07 */
-		    COUNT(1) OVER() AS TOTAL_COUNT
+		    COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
             , A.MENU_PROD_CNT
             , A.TENANT_ID 
             , A.MENU_ID 
@@ -200,7 +200,7 @@
 		        , (
 		                SELECT 
 		                    A.MENU_ID
-		                    , COUNT(1) MENU_PROD_CNT
+		                    , COUNT(A.MENU_ID) MENU_PROD_CNT
 		                FROM
 		                    TB_DP_MENU_CATEGORY A
 		                    , TB_DP_MENU_CATEGORY_PROD_MAPG B
@@ -250,7 +250,7 @@
     <!-- 세부 카테고리정보 조회 - 멀티미디어 -->
     <select id="selectMultiSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT /* MenuCategoryMapper.xml, selectMultiSubCategoryList, SAC 전시 , 2014-03-07 */
-		    COUNT(1) OVER() AS TOTAL_COUNT
+		    COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
             , A.MENU_PROD_CNT
             , A.TENANT_ID 
             , A.MENU_ID 
@@ -327,7 +327,7 @@
 		        , (
 		                SELECT 
 		                    A.MENU_ID
-		                    , COUNT(1) MENU_PROD_CNT
+		                    , COUNT(A.MENU_ID) MENU_PROD_CNT
 		                FROM (
 		                    SELECT
 		                        DISTINCT A.MENU_ID, B.PROD_ID
@@ -393,7 +393,7 @@
     <!-- 세부 카테고리정보 조회 - 쇼핑 -->
     <select id="selectShoppingSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT /* MenuCategoryMapper.xml, selectShoppingSubCategoryList, SAC 전시 , 2014-03-07 */
-		    COUNT(1) OVER() AS TOTAL_COUNT
+		    COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
             , A.MENU_PROD_CNT
             , A.TENANT_ID 
             , A.MENU_ID 
@@ -470,7 +470,7 @@
 		        , (
 		                SELECT 
 		                    A.MENU_ID
-		                    , COUNT(1) MENU_PROD_CNT
+		                    , COUNT(A.MENU_ID) MENU_PROD_CNT
 		                FROM (
                             SELECT
                                 DISTINCT A.MENU_ID, B.CATALOG_ID

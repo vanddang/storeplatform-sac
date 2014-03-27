@@ -61,7 +61,7 @@
 		    , A.FILE_PATH
 		FROM (
 		    SELECT 
-			    COUNT(1) OVER () AS TOTAL_COUNT
+			    COUNT(A.CID) OVER () AS TOTAL_COUNT
 			    , ROW_NUMBER() OVER(ORDER BY A.CHNL_REG_DT, TO_NUMBER(REGEXP_REPLACE(CHAPTER, '[^[:digit:]]')) ASC, A.UPD_DT DESC) RNK
 	            , A.RNUM
 	            , A.CHNL_PROD_ID

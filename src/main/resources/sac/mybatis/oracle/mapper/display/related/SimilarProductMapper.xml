@@ -22,7 +22,7 @@
             , A.CONTENTS_TYPE_CD
         FROM (
             SELECT 
-                COUNT(1) OVER() TOTAL_COUNT
+                COUNT(A.PROD_ID) OVER() TOTAL_COUNT
                 , ROW_NUMBER() OVER(ORDER BY SCORE DESC) RNK
                 , A.RNUM
                 , A.TOP_MENU_ID

@@ -26,7 +26,7 @@
             , A.CONTENTS_TYPE_CD
         FROM (
             SELECT /*+ USE_HASH(B,C,D) */
-                COUNT(1) OVER() TOTAL_COUNT
+                COUNT(A.PROD_ID) OVER() TOTAL_COUNT
                 <if test="orderedBy == 'issueDate'">
                 , ROW_NUMBER() OVER(ORDER BY I.ISSUE_DAY DESC, D.PROD_NM) RNK
                 </if>
