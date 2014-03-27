@@ -83,7 +83,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		if (StringUtils.isNotEmpty(metaInfo.getSubContentsId())) {
 			subContents = new EncryptionSubContents();
 			if (StringUtils.isNotEmpty(metaInfo.getAid())) {
-				subContents.setType("delta");
+				subContents.setType("");
 				subContents.setDeltaPath("");
 			}
 			subContents.setScid(metaInfo.getSubContentsId());
