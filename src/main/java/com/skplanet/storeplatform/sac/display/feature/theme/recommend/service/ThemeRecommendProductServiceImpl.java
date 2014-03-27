@@ -101,8 +101,17 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		mapReq.put("imageCdList", imageCodeList);
 		mapReq.put("recommendId", requestVO.getRecommendId());
 
-		mapReq.put("START_ROW", requestVO.getOffset());
-		mapReq.put("END_ROW", requestVO.getOffset() + requestVO.getCount() - 1);
+		int start = 1;
+		int end = 20;
+
+		if (requestVO.getOffset() > 0) {
+			start = requestVO.getOffset();
+		}
+		if (requestVO.getOffset() > 0 && (requestVO.getOffset() + requestVO.getCount() - 1) >= start) {
+			end = requestVO.getOffset() + requestVO.getCount() - 1;
+		}
+		mapReq.put("START_ROW", start);
+		mapReq.put("END_ROW", end);
 
 		/*
 		 * if (this.log.isDebugEnabled()) { this.mapPrint(mapReq); }

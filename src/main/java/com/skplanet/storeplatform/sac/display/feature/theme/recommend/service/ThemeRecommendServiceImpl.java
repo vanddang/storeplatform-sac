@@ -194,8 +194,17 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 		} else if (StringUtils.equalsIgnoreCase(requestVO.getFilteredBy(), "long")) {
 
-			mapReq.put("START_ROW", requestVO.getOffset());
-			mapReq.put("END_ROW", requestVO.getOffset() + requestVO.getCount() - 1);
+			int start = 1;
+			int end = 20;
+
+			if (requestVO.getOffset() > 0) {
+				start = requestVO.getOffset();
+			}
+			if (requestVO.getOffset() > 0 && (requestVO.getOffset() + requestVO.getCount() - 1) >= start) {
+				end = requestVO.getOffset() + requestVO.getCount() - 1;
+			}
+			mapReq.put("START_ROW", start);
+			mapReq.put("END_ROW", end);
 
 			listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgList", mapReq,
 					ThemeRecommend.class);
