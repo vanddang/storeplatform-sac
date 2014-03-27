@@ -673,7 +673,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dtpp.setApplyStartDt(couponInfo.getIssueSDate());
 				dtpp.setSeq(1);
 				dtpp.setApplyEndDt(couponInfo.getIssueEDate());
-				dtpp.setProdAmt(Long.parseLong(itemInfo.getSalePrice()));
+				dtpp.setProdAmt(Long.parseLong(itemInfo.getItemPrice()));
 				dtpp.setChnlUnlmtAmt(0); // ??
 				dtpp.setChnlPeriodAmt(0); // ??
 				dtpp.setProdNetAmt(Long.parseLong(itemInfo.getOrgPrice()));
