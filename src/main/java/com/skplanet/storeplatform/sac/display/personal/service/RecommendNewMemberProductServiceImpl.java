@@ -153,7 +153,7 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 					if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
 						// 배치완료 기준일시 조회
 						reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-						reqMap.put("stdDt", req.getStdDt().substring(0, 8)); // 배치 완료 기준일시 현재 데이터 미일치로 아래 하드코딩
+						// reqMap.put("stdDt", req.getStdDt().substring(0, 8)); // 배치 완료 기준일시 현재 데이터 미일치로 아래 하드코딩
 						// reqMap.put("stdDt", "20131007");
 
 						productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
