@@ -6,10 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 public class VerifyServiceImplTest {
+
+	private static final long timestampWindow = 5 * 60; // 5 mins
 
 	private VerifyServiceImpl validateService;
 
@@ -50,22 +51,29 @@ public class VerifyServiceImplTest {
 		this.validateService.verifyHeaders(headers);
 	}
 
-	@Test(expected=StorePlatformException.class)
+	@Test
 	public void testValidateTimestampForException() throws InterruptedException {
-
 		HttpHeaders headers = new HttpHeaders();
-		String timestamp = AclUtils.getTimestamp() + "";
+		long timestamp = this.getTimestamp();
 		System.out.println("# Timestamp : " + timestamp);
-		headers.setTimestamp(timestamp);
+		long validTimestamp = timestamp - timestampWindow + 10;
+
+		headers.setTimestamp(String.valueOf(validTimestamp));
 		this.validateService.verifyTimestamp(headers); // Success
 
-		Thread.sleep(11000); // Wait 11 sec (Timeout = 10 sec)
+		long invalidTimestamp =  timestamp - timestampWindow - 10; // Exceeds the timeout.
+		headers.setTimestamp(String.valueOf(invalidTimestamp));
 		try {
 			this.validateService.verifyTimestamp(headers);
 		} catch (StorePlatformException e) {
 			assertEquals("SAC_CMN_0002", e.getErrorInfo().getCode());
-			throw e;
 		}
 	}
+
+	private long getTimestamp() {
+		return Math.round(System.currentTimeMillis() / 1000.0);
+	}
+
+
 
 }

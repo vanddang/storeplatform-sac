@@ -57,8 +57,8 @@ public class AclDataAccessServiceBatisTest {
         System.out.println("authKey : " + authKey);
         assertEquals("S01", authKey.getTenantId());
 	}
-	
-	
+
+
 	@Test
 	public void selectTenant() {
 		String pAuthKey = "S01";
@@ -68,7 +68,7 @@ public class AclDataAccessServiceBatisTest {
 		System.out.println("status="+tenant.getStatus());
 		assertNotNull(tenant.getStatus());
 	}
-	
+
 	@Test
 	public void selectSystem() {
 		String param = "S01-01002";
@@ -81,6 +81,7 @@ public class AclDataAccessServiceBatisTest {
 	@Test
 	public void selectSystemByIp() {
 		com.skplanet.storeplatform.sac.runtime.acl.vo.System param = new com.skplanet.storeplatform.sac.runtime.acl.vo.System();
+		param.setSystemId("S01-01002");
 		param.setIp("1.1.1.1");
 		com.skplanet.storeplatform.sac.runtime.acl.vo.System system = this.service.selectSystemByIp(param);
 		System.out.println("system : " + system);

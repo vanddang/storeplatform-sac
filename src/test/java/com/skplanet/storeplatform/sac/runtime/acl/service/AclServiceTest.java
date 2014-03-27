@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.sac.runtime.acl.service.authentication.AuthenticateService;
 import com.skplanet.storeplatform.sac.runtime.acl.service.authorization.AuthorizeService;
 import com.skplanet.storeplatform.sac.runtime.acl.service.verification.VerifyService;
-import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
+import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -43,7 +43,7 @@ public class AclServiceTest {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setInterfaceId("I01000001");
 		headers.setRequestUrl("/member/user/createByMdn/v1");
-		headers.setTimestamp(AclUtils.getTimestamp() + "");
+		headers.setTimestamp(SacAuthUtil.getTimestamp());
 
 		doThrow(new StorePlatformException("SAC_CMN_0001")).when(this.verifyMock).verifyHeaders(headers);
 		try {
