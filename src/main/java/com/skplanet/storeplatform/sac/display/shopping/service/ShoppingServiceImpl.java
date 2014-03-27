@@ -1683,7 +1683,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 										DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT, resultImgDetailList.get(pp)
 												.getFilePath());
 							}
-							source.setUrl(resultImgDetailList.get(pp).getFilePath());
 							sourceList.add(source);
 						}
 					}
