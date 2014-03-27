@@ -90,6 +90,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Autowired
 	private SaveAndSyncService saveAndSyncService;
 
+	@Autowired
+	private DeviceService deviceService;
+
 	@Override
 	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
 
@@ -136,8 +139,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 				/**
-				 * IDP에 이미 가입되어 있는 회원일 경우 SC 회원 DB 조회해서 정보 존재 하면 Error를 반환 (데이터는 삭제 하지 않음 - 이유 : IDP 및 회원 DB에도 정상 임) -
-				 * 에러 : IDP 가가입 에러
+				 * IDP에 이미 가입되어 있는 회원일 경우 SC 회원 DB 조회해서 정보 존재 하면 Error를 반환 (데이터는
+				 * 삭제 하지 않음 - 이유 : IDP 및 회원 DB에도 정상 임) - 에러 : IDP 가가입 에러
 				 */
 				try {
 
@@ -259,7 +262,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
+		 * findCommonProfileForServerIDP)
 		 */
 		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
@@ -365,7 +369,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
+		 * findCommonProfileForServerIDP)
 		 */
 		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
@@ -860,8 +865,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 휴대기기 등록 모듈 호출.
 			 */
 			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
-			String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(),
-					userKey, deviceInfo);
+			String deviceKey = this.deviceService.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader()
+					.getTenantId(), userKey, deviceInfo);
 			if (deviceKey == null || StringUtils.equals(deviceKey, "")) {
 				throw new StorePlatformException("SAC_MEM_0002", "deviceKey");
 			}
@@ -1054,8 +1059,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), deviceTelecom,
-				req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), deviceTelecom, req.getDeviceId(),
+				req.getDeviceIdType());
 
 		/**
 		 * MSISDN 가입자와 MAC 가입자를 분기하여 처리한다.
@@ -1199,7 +1204,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		UserMbr userMbr = new UserMbr();
 		/**
-		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.) [MAC-yyyyMMdd] MBR_NO (26)
+		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.)
+		 * [MAC-yyyyMMdd] MBR_NO (26)
 		 */
 		userMbr.setImMbrNo(this.getFixMbrNo()); // 고정된 MBR_NO 세팅함.
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
