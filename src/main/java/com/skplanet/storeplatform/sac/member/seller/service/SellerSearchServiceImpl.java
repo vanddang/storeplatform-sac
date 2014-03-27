@@ -931,8 +931,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 			/* 개인회원의 경우, 생년월일 하나만도 수정 가능. */
 			sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
-			if (mbrAuth != null && StringUtils.isNotBlank(sellerMbr.getIsRealName())
-					&& StringUtils.equals(MemberConstants.USE_Y, sellerMbr.getIsRealName())) {
+			if (mbrAuth != null && StringUtils.equals(MemberConstants.USE_Y, sellerMbr.getIsRealName())) {
 				// 실명인증 판매자 정보 셋팅.
 				sellerMbrRes.setSellerName(mbrAuth.getName());
 				sellerMbrRes.setSellerSex(mbrAuth.getSex());
