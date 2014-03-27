@@ -20,7 +20,7 @@
     <appender name="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${catalina.home}/logs/sac/svc/service_storeplatform-sac.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${catalina.home}/logs/sac/svc/%d{yyyyMMdd, AUX}/service_storeplatform-sac_%d{yyyyMMdd_HH}.log</FileNamePattern>            
+            <FileNamePattern>${catalina.home}/logs/sac/svc/service_storeplatform-sac_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
@@ -30,7 +30,7 @@
     <appender name="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${catalina.home}/logs/sac/err/error_storeplatform-sac.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${catalina.home}/logs/sac/err/%d{yyyyMMdd, AUX}/error_storeplatform-sac_%d{yyyyMMdd_HH}.log</FileNamePattern>            
+            <FileNamePattern>${catalina.home}/logs/sac/err/error_storeplatform-sac_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
@@ -45,7 +45,7 @@
     <appender name="OMC_REQ1_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${catalina.home}/logs/sac/omc/omc_요건1.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${catalina.home}/logs/sac/omc/%d{yyyyMMdd, AUX}/omc_요건1_%d{yyyyMMdd_HH}.log</FileNamePattern>            
+            <FileNamePattern>${catalina.home}/logs/sac/omc/omc_요건1_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
@@ -55,7 +55,7 @@
     <appender name="TLOG_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${catalina.home}/logs/sac/tlog/tlog.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${catalina.home}/logs/sac/tlog/%d{yyyyMMdd, AUX}/tlog_%d{yyyyMMdd_HH}.log</FileNamePattern>            
+            <FileNamePattern>${catalina.home}/logs/sac/tlog/tlog_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>%msg%n</pattern>            
@@ -66,7 +66,7 @@
     <appender name="SQL_ERROR_LOGGING_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${catalina.home}/logs/sql/err/sql_err.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${catalina.home}/logs/sql/err/%d{yyyyMMdd, AUX}/sql_err_%d{yyyyMMdd_HH}.log</FileNamePattern>            
+            <FileNamePattern>${catalina.home}/logs/sql/err/sql_err_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
@@ -79,7 +79,7 @@
     <appender name="SQL_LOGGING_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${catalina.home}/logs/sql/sql.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${catalina.home}/logs/sql/%d{yyyyMMdd, AUX}/sql_%d{yyyyMMdd_HH}.log</FileNamePattern>            
+            <FileNamePattern>${catalina.home}/logs/sql/sql_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
