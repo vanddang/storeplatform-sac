@@ -18,6 +18,22 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** SKP 법인번호 */
 	public static final String SKP_CORPORATION_NO = "1101114699794";
 
+	/** (다날) 컨텐츠 타입 */
+	public static final String DANAL_CONTENT_TYPE_DIGITAL = "0"; // 디지털 상품
+	public static final String DANAL_CONTENT_TYPE_REAL = "1"; // 실물 상품
+
+	/** SKT후불 결제수단 재정의 원인 타입 */
+	public static final String SKT_ADJUST_REASON_NO_LIMIT = "L00"; // 제한없음 / 타통신사
+	public static final String SKT_ADJUST_REASON_MVNO = "L01"; // MVNO
+	public static final String SKT_ADJUST_REASON_CORP = "L02"; // 법인폰
+	public static final String SKT_ADJUST_REASON_SKTTEST_ALLOW = "L03"; // 허용 SKT시험폰
+	public static final String SKT_ADJUST_REASON_SKTTEST_NOT_ALLOW = "L04"; // 비허용 SKT시험폰
+	public static final String SKT_ADJUST_REASON_SHOPPING_USERPART_LIMIT = "L05"; // SKT후불 쇼핑상품 회원 별 강제적용 한도금액
+	public static final String SKT_ADJUST_REASON_SHOPPING_LIMIT = "L06"; // SKT후불 쇼핑상품 한도금액
+	public static final String SKT_ADJUST_REASON_SHOPPING_RECV_LIMIT = "L07"; // SKT후불 쇼핑상품 선물수신 한도금액
+	public static final String SKT_ADJUST_REASON_LIMIT = "L08"; // SKT후불 한도금액
+	public static final String SKT_ADJUST_REASON_RECV_LIMIT = "L09"; // SKT후불 선물수신 한도금액
+
 	/** 구매 이력 생성 타입 */
 	public static final int CREATE_PURCHASE_TYPE_COMPLETED = 1;
 	public static final int CREATE_PURCHASE_TYPE_RESERVED = 2;
