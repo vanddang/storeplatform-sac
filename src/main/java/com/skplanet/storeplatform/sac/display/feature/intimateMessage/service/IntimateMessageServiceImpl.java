@@ -10,7 +10,9 @@
 package com.skplanet.storeplatform.sac.display.feature.intimateMessage.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageAppCodiSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageAppCodiSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
@@ -33,11 +37,17 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.IntimateMessage;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.intimateMessage.vo.IntimateMessageDefault;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * DownloadComic Service 인터페이스(CoreStoreBusiness) 구현체
@@ -54,6 +64,17 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 
 	@Autowired
 	private DeviceSCI deviceSCI;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	MetaInfoService metaInfoService;
+
+	@Autowired
+	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
+	private final String appCodiBatchId = "MSG0000001";
 
 	/*
 	 * (non-Javadoc)
@@ -144,7 +165,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 
 		// Intimate Message 조회
 		List<IntimateMessageDefault> resultList = this.commonDAO.queryForList(
-				"IntimateMessage.selectIntimateMessageList", messageReq, IntimateMessageDefault.class);
+				"IntimateMessage.searchIntimateMessageList", messageReq, IntimateMessageDefault.class);
 
 		if (resultList != null && !resultList.isEmpty()) {
 			IntimateMessageDefault messageDefault = new IntimateMessageDefault();
@@ -245,5 +266,191 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		}
 
 		return intimateMessageRes;
+	}
+
+	@Override
+	public IntimateMessageAppCodiSacRes searchIntimateMessageAppCodiList(SacRequestHeader header,
+			IntimateMessageAppCodiSacReq messageReq) {
+
+		IntimateMessageAppCodiSacRes appCodiRes = new IntimateMessageAppCodiSacRes();
+		CommonResponse commonResponse = new CommonResponse();
+
+		String daCode = messageReq.getDaCode();
+
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("[searchIntimateMessageAppCodiList] daCode : {}", daCode);
+		this.logger.debug("----------------------------------------------------------------");
+
+		// offset Default 값 세팅
+		if (messageReq.getOffset() == null) {
+			messageReq.setOffset(1);
+		}
+		// count Default 값 세팅
+		if (messageReq.getCount() == null) {
+			messageReq.setCount(20);
+		}
+
+		// 페이징 계산
+		messageReq.setCount(messageReq.getOffset() + messageReq.getCount() - 1);
+
+		// 헤더정보 세팅
+		messageReq.setTenantId(header.getTenantHeader().getTenantId());
+		messageReq.setLangCd(header.getTenantHeader().getLangCd());
+		messageReq.setDeviceModelCd(header.getDeviceHeader().getModel());
+		messageReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+
+		// 배치완료 기준일시 조회
+		String stdDt = this.displayCommonService.getBatchStandardDateString(messageReq.getTenantId(),
+				this.appCodiBatchId);
+
+		if (StringUtils.isNotEmpty(stdDt)) {
+			messageReq.setStdDt(stdDt);
+
+			// 앱코디 상품 리스트 조회
+			List<MetaInfo> prodList = this.commonDAO.queryForList("IntimateMessage.searchIntimateMessageAppCodiList",
+					messageReq, MetaInfo.class);
+
+			if (prodList != null && !prodList.isEmpty()) {
+				MetaInfo metaInfo = null;
+				List<Product> productList = new ArrayList<Product>();
+
+				for (int i = 0; i < prodList.size(); i++) {
+					metaInfo = prodList.get(i);
+					metaInfo = this.getMetaInfo(header, metaInfo.getProdId(), metaInfo.getTopMenuId());
+
+					if (metaInfo != null) {
+						productList.add(this.generateProductVO(metaInfo));
+					}
+				}
+
+				appCodiRes.setProductList(productList);
+				commonResponse.setTotalCount(productList.size());
+			} else {
+				commonResponse.setTotalCount(0);
+			}
+		} else {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[searchIntimateMessageAppCodiList] stdDt is empty!");
+			this.logger.debug("----------------------------------------------------------------");
+		}
+
+		appCodiRes.setCommonResponse(commonResponse);
+		return appCodiRes;
+	}
+
+	/**
+	 * <pre>
+	 * Intimate Message 앱코디 상품 메타정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param prodId
+	 *            prodId
+	 * @param topMenuId
+	 *            topMenuId
+	 * @return MetaInfo
+	 */
+	private MetaInfo getMetaInfo(SacRequestHeader header, String prodId, String topMenuId) {
+		MetaInfo metaInfo = null; // 메타정보 VO
+		ProductBasicInfo productInfo = new ProductBasicInfo(); // 메타정보 조회용 상품 파라미터
+		Map<String, Object> paramMap = new HashMap<String, Object>(); // 메타정보 조회용 파라미터
+
+		// 메타정보 조회를 위한 파라미터 세팅
+		productInfo.setProdId(prodId);
+		productInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		paramMap.put("tenantHeader", header.getTenantHeader());
+		paramMap.put("deviceHeader", header.getDeviceHeader());
+		paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		paramMap.put("productBasicInfo", productInfo);
+
+		// APP
+		if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[searchIntimateMessageAppCodiList] 메타정보조회 : 앱상품");
+			this.logger.debug("----------------------------------------------------------------");
+
+			paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+			metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+		}
+		// 이북 및 코믹
+		else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[searchIntimateMessageAppCodiList] 메타정보조회 : 이북, 코믹");
+			this.logger.debug("----------------------------------------------------------------");
+
+			paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+			metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
+		}
+		// 영화 및 방송
+		else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[searchIntimateMessageAppCodiList] 메타정보조회 : 영화, 방송");
+			this.logger.debug("----------------------------------------------------------------");
+
+			paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+			metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+		}
+		// 통합뮤직
+		else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[searchIntimateMessageAppCodiList] 메타정보조회 : 통합뮤직");
+			this.logger.debug("----------------------------------------------------------------");
+
+			paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+			metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
+		}
+
+		return metaInfo;
+	}
+
+	/**
+	 * <pre>
+	 * Intimate Message 앱코디 상품 VO 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Products
+	 */
+	private Product generateProductVO(MetaInfo metaInfo) {
+		Product product = null;
+		String topMenuId = metaInfo.getTopMenuId();
+
+		// APP
+		if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
+				|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
+			product = this.responseInfoGenerateFacade.generateAppProductShort(metaInfo);
+		}
+		// 이북
+		else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+			product = this.responseInfoGenerateFacade.generateEbookProductShort(metaInfo);
+		}
+		// 코믹
+		else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
+			product = this.responseInfoGenerateFacade.generateComicProductShort(metaInfo);
+		}
+		// 영화
+		else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+			product = this.responseInfoGenerateFacade.generateMovieProductShort(metaInfo);
+		}
+		// 방송
+		else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+			product = this.responseInfoGenerateFacade.generateBroadcastProductShort(metaInfo);
+		}
+		// 통합뮤직
+		else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
+			product = this.responseInfoGenerateFacade.generateMusicProductShort(metaInfo);
+		}
+
+		return product;
 	}
 }

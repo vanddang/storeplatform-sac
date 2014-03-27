@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageAppCodiSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageAppCodiSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -49,5 +51,28 @@ public class IntimateMessageController {
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.intimateMessageService.searchIntimateMessageList(header, messageReq);
+	}
+
+	/**
+	 * <pre>
+	 * Intimate Message 앱코디 상품 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param messageReq
+	 *            messageReq
+	 * @return
+	 */
+	@RequestMapping(value = "/intimateMessage/appCodi/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public IntimateMessageAppCodiSacRes searchIntimateMessageAppCodiList(SacRequestHeader header,
+			@Validated IntimateMessageAppCodiSacReq messageReq) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("[searchIntimateMessageAppCodiList] SacRequestHeader\n{}", header.toString());
+		this.logger.debug("[searchIntimateMessageAppCodiList] IntimateMessageAppCodiSacReq\n{}", messageReq.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.intimateMessageService.searchIntimateMessageAppCodiList(header, messageReq);
 	}
 }

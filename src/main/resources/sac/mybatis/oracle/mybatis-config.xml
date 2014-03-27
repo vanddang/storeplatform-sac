@@ -209,6 +209,9 @@
         <typeAlias alias="IntimateMessageSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacReq" />
         <typeAlias alias="IntimateMessageDefault"  type="com.skplanet.storeplatform.sac.display.feature.intimateMessage.vo.IntimateMessageDefault" />
         
+        <!-- Intimate Message 앱코디 상품 리스트 조회 -->
+        <typeAlias alias="IntimateMessageAppCodiSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageAppCodiSacReq" />
+        
         <!-- Appzine 회차별 정보 조회 -->
         <typeAlias alias="AppzineVolListSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineVolListSacReq" />
         <typeAlias alias="AppzineVolList"  type="com.skplanet.storeplatform.sac.display.appzine.vo.AppzineVolList" />

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="IntimateMessage">
-    <select id="selectIntimateMessageList" parameterType="IntimateMessageSacReq" resultType="IntimateMessageDefault">
-		SELECT /* IntimateMessageMapper.selectIntimateMessageList, Intimate Message조회, 이태희/부르칸, 2014-03-17 */
+    <select id="searchIntimateMessageList" parameterType="IntimateMessageSacReq" resultType="IntimateMessageDefault">
+		SELECT /* IntimateMessageMapper.searchIntimateMessageList, Intimate Message조회, 이태희/부르칸, 2014-03-17 */
 		       KA.*
 		  FROM (SELECT  COUNT(JA.MSG_ID) OVER() AS TOTAL_COUNT
 		              , ROW_NUMBER() OVER(ORDER BY JA.MSG_TYPE_CD DESC, JA.MSG_ID DESC) AS RNUM
@@ -130,5 +130,50 @@
 		               ) JA
 		       ) KA
 		 WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select>
+    
+    <!-- Intimate Message 앱코디 상품 리스트 조회 -->
+    <select id="searchIntimateMessageAppCodiList" parameterType="IntimateMessageAppCodiSacReq" resultType="MetaInfo">
+		SELECT /* IntimateMessageMapper.searchIntimateMessageAppCodiList, Intimate Message 앱코디 상품 리스트 조회, 이태희/부르칸, 2014-03-27 */
+		       IA.*
+		  FROM (SELECT  ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY D.REG_DT DESC) AS RNUM
+		              , A.RANK
+		              , B.TOP_MENU_ID
+		              , B.DRM_YN
+		              , C.PROD_ID
+		              , C.PART_PROD_ID
+		              , D.REG_DT
+		              , D.UPD_DT
+		          FROM  TB_DP_MSG_PROD    A
+		              , TB_DP_PROD        B
+		              , TB_DP_PROD_RSHP   C
+		              , TB_DP_PROD        D
+		              , TB_DP_SPRT_DEVICE E
+		              , TB_CM_DEVICE      F
+		         WHERE  A.PROD_ID = B.PROD_ID
+		           AND  A.PROD_ID = C.PROD_ID
+		           AND  C.PART_PROD_ID = D.PROD_ID
+		           AND  C.PART_PROD_ID = E.PROD_ID
+		           AND  A.TENANT_ID = #{tenantId}
+		           AND  A.MANIA_CD = #{daCode}
+		           AND  A.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+		           AND  C.PROD_RSHP_CD = 'DP010802'
+		           AND  (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+		           AND  F.DEVICE_MODEL_CD = #{deviceModelCd}
+		           AND  (CASE WHEN B.TOP_MENU_ID IN ('DP17', 'DP18') THEN (CASE WHEN (NVL(B.DRM_YN, 'N') = 'Y' AND NVL(F.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 ELSE 1 END)
+		                      ELSE 1 END) = 1
+		           AND  DECODE(B.TOP_MENU_ID
+		                      , 'DP13'
+		                      , DECODE(F.EBOOK_SPRT_YN, 'Y', 1, 0)
+		                      , 'DP14'
+		                      , DECODE(F.COMIC_SPRT_YN, 'Y', 1, 0)
+		                      , 'DP15'
+		                      , 0
+		                      , 'DP16'
+		                      , DECODE(B.META_CLSF_CD, 'CT25', DECODE(F.MUSIC_SPRT_YN, 'Y', 1, 0), 1)
+		                      , 1) = 1
+		       ) IA
+		 WHERE RNUM = 1
+		 ORDER BY IA.RANK, IA.UPD_DT DESC
     </select>
 </mapper>
