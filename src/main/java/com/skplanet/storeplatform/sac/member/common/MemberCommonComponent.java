@@ -316,16 +316,7 @@ public class MemberCommonComponent {
 		// 사용자 정보 세팅
 		UserInfo userInfo = this.userInfo(schUserRes);
 
-		/* 기본정보 세팅 */
-		DetailRes detailRes = new DetailRes();
-		detailRes.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
-		detailRes.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
-		detailRes.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
-
-		/* 회원정보 세팅 */
-		detailRes.setUserInfo(userInfo);
-
-		LOGGER.info("###### MCC 회원기본정보조회 Fianl : {}", detailRes.getUserKey());
+		LOGGER.info("###### MCC 회원기본정보조회 Fianl : {}", userInfo.toString());
 
 		return userInfo;
 	}
@@ -594,10 +585,8 @@ public class MemberCommonComponent {
 			List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
 			for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-				LOGGER.debug("============================================ UserExtraInfo CODE : {}",
-						ptcr.getExtraProfile());
-				LOGGER.debug("============================================ UserExtraInfo VALUE : {}",
-						ptcr.getExtraProfileValue());
+				LOGGER.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
+				LOGGER.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
 
 				UserExtraInfo extra = new UserExtraInfo();
 				extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -804,7 +793,8 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
+			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
