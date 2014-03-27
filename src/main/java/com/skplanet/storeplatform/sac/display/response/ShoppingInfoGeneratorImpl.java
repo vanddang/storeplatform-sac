@@ -48,9 +48,11 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	public Contributor generateContributor(MetaInfo metaInfo) {
 		Contributor contributor = new Contributor();
 		Identifier identifier = new Identifier();
+		List<Identifier> identifierList = new ArrayList<Identifier>();
 		identifier.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
 		identifier.setText(metaInfo.getBrandId());
-		contributor.setIdentifier(identifier);
+		identifierList.add(identifier);
+		contributor.setIdentifierList(identifierList);
 		contributor.setName(metaInfo.getBrandNm()); // 브랜드명
 		return contributor;
 	}
@@ -68,9 +70,9 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 		salesOption.setType(metaInfo.getProdCaseCd());
 		if (StringUtils.isNotEmpty(metaInfo.getSoldOut())) {
 			if (metaInfo.getSoldOut().equals("Y")) {
-				salesOption.setSatus(DisplayConstants.DP_SOLDOUT);
+				salesOption.setStatus(DisplayConstants.DP_SOLDOUT);
 			} else {
-				salesOption.setSatus(DisplayConstants.DP_CONTINUE);
+				salesOption.setStatus(DisplayConstants.DP_CONTINUE);
 			}
 		}
 		return salesOption;

@@ -1662,7 +1662,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 					Title title = this.commonGenerator.generateTitle(shopping);
 
 					// SourceList 생성
-					List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
+					List<Source> sourceList = null;
+
+					sourceList = new ArrayList<Source>();
 					// 이미지 정보
 					String detailImgCd = "";
 					// 이미지 정보 (상세 이미지 가져오기)
@@ -1680,7 +1682,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							source.setMediaType(DisplayCommonUtil
 									.getMimeType(resultImgDetailList.get(pp).getFilePath()));
 							if (qq == 0) {
-								source.setType(DisplayConstants.DP_SOURCE_TYPE_ORIGINAL);
+								source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 							} else {
 								source.setExpoOrd(resultImgDetailList.get(pp).getExpoOrd());
 								source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
@@ -1834,9 +1836,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeSaleOption.setType(shopping.getProdCaseCd());
 
 							if (episodeShopping.getSoldOut().equals("Y")) {
-								episodeSaleOption.setSatus(DisplayConstants.DP_SOLDOUT);
+								episodeSaleOption.setStatus(DisplayConstants.DP_SOLDOUT);
 							} else {
-								episodeSaleOption.setSatus(DisplayConstants.DP_CONTINUE);
+								episodeSaleOption.setStatus(DisplayConstants.DP_CONTINUE);
 							}
 							episodeSaleOption.setMaxCount(Integer.parseInt(episodeShopping.getSaleCnt()));
 							episodeSaleOption.setMaxMonthlySale(Integer.parseInt(episodeShopping.getMthMaxCnt())); // 월_최대_판매_수량
