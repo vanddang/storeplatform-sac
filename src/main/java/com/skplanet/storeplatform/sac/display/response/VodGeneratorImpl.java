@@ -69,7 +69,6 @@ public class VodGeneratorImpl implements VodGenerator {
 		contributor.setDirector(metaInfo.getArtist2Nm()); // 제작자
 		contributor.setArtist(metaInfo.getArtist1Nm()); // 출연자
 		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
-
 			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE,
 					metaInfo.getIssueDay()));
 		}

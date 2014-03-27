@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.response;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -107,11 +108,12 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 	@Override
 	public Contributor generateContributor(MetaInfo metaInfo) {
 		Contributor contributor = new Contributor();
-		List<Identifier> identifierList = new ArrayList<Identifier>();
-		identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_ARTIST_IDENTIFIER_CD,
-				metaInfo.getArtistId()));
-
-		contributor.setIdentifierList(identifierList); // 아티스트ID
+		if (StringUtils.isNotEmpty(metaInfo.getArtistId())) {
+			List<Identifier> identifierList = new ArrayList<Identifier>();
+			identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_ARTIST_IDENTIFIER_CD,
+					metaInfo.getArtistId()));
+			contributor.setIdentifierList(identifierList); // 아티스트ID
+		}
 		contributor.setName(metaInfo.getArtist1Nm()); // 가수
 		contributor.setAlbum(metaInfo.getArtist3Nm()); // 앨범명
 		contributor.setPublisher(metaInfo.getChnlCompNm()); // 발행인
