@@ -73,7 +73,6 @@ import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseCountServi
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
 import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.service.InterworkingSacService;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
@@ -234,8 +233,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	@Override
 	public VerifyOrderSacRes verifyPurchaseOrder(VerifyOrderInfo verifyOrderInfo) {
 		// TAKTEST
-		PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo("S01");
-		this.logger.info("TAKTEST,{}", payPlanetShop);
+		this.logger.info("TAKTEST,{}", this.envServerLevel);
 
 		// ------------------------------------------------------------------------------------------------
 		// 예약된 구매정보 조회
