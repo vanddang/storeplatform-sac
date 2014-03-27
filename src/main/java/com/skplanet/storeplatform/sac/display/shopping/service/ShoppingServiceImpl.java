@@ -65,7 +65,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -1676,14 +1675,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 						List<MetaInfo> resultImgDetailList = this.commonDAO.queryForList(
 								"Shopping.getShoppingImgDetailList", reqMap, MetaInfo.class);
 						for (int pp = 0; pp < resultImgDetailList.size(); pp++) {
-							source = new Source();
-							source.setMediaType(DisplayCommonUtil
-									.getMimeType(resultImgDetailList.get(pp).getFilePath()));
 							if (qq == 0) {
-								source.setType(DisplayConstants.DP_SOURCE_TYPE_ORIGINAL);
+								source = this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_ORIGINAL,
+										resultImgDetailList.get(pp).getFilePath());
 							} else {
-								source.setExpoOrd(resultImgDetailList.get(pp).getExpoOrd());
-								source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
+								source = this.commonGenerator.generateSource(
+										DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT, resultImgDetailList.get(pp)
+												.getFilePath());
 							}
 							source.setUrl(resultImgDetailList.get(pp).getFilePath());
 							sourceList.add(source);
