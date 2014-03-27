@@ -113,8 +113,9 @@
 			AND P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
 			AND P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
 			AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT  
-			AND P.CHNL_PROD_ID = PI.PROD_ID(+) AND P.LANG_CD = PI.LANG_CD(+) AND PI.EXPO_ORD = 1 AND PI.IMG_CD = #{representImgCd}
+			AND P.CHNL_PROD_ID = PI.PROD_ID(+) AND P.LANG_CD = PI.LANG_CD(+) AND PI.EXPO_ORD(+) = 1 AND PI.IMG_CD(+) = #{representImgCd}
 			AND P.CHNL_PROD_ID = STAT.PROD_ID(+) AND P.TENANT_ID = STAT.TENANT_ID(+)
+			AND ROWNUM = 1
     </select>
     
     <select id="selectSourceList" parameterType="map" resultType="ProductImage">

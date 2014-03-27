@@ -61,7 +61,8 @@
 	                      , TB_DP_TENANT_PROD_PRICE O
 	                      , TB_DP_SPRT_DEVICE K
 	                      , TB_CM_DEVICE CD
-	                  WHERE A.MENU_ID = B.MENU_ID
+	                  WHERE A.BASE_YN = 'Y' AND A.BASE_YN = 'Y'
+	                    AND A.MENU_ID = B.MENU_ID AND B.USE_YN = 'Y'
 	                    AND A.MENU_ID = C.MENU_ID
 	                    AND A.PROD_ID = D.PROD_ID
 	                    AND D.PROD_ID = E.PROD_ID
@@ -73,8 +74,6 @@
 	                    AND C.LANG_CD = #{langCd}
 						AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 						AND CD.DEVICE_MODEL_CD = #{deviceModel} AND CD.USE_YN = 'Y'
-	                    AND A.BASE_YN = 'Y' AND A.BASE_YN = 'Y'
-	                    AND B.USE_YN = 'Y'
 	                    AND D.SVC_GRP_CD = 'DP000203' AND D.CONTENTS_TYPE_CD = 'PD002501' AND D.SVC_TYPE_CD = 'DP001116'
 	                    AND D.TOP_MENU_ID IN ('DP13', 'DP14')
 	                    AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') AND G.EXPO_YN = 'Y'
@@ -96,8 +95,9 @@
 		  AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
 	      AND P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
 	      AND P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
-	      AND PI.PROD_ID = P2.PROD_ID AND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{representImgCd}
-	      AND STAT.PROD_ID = P2.PROD_ID(+) AND P.TENANT_ID = STAT.TENANT_ID(+)
+	      AND P.CHNL_PROD_ID = PI.PROD_ID(+) AND P.LANG_CD = PI.LANG_CD(+) AND PI.EXPO_ORD(+) = 1 AND PI.IMG_CD(+) = #{representImgCd}
+	      AND P.CHNL_PROD_ID = STAT.PROD_ID(+) AND P.TENANT_ID = STAT.TENANT_ID(+)
+	      AND ROWNUM = 1
     </select>
     
 	
@@ -266,7 +266,7 @@
 			, TB_DP_PROD_IMG PI
 			WHERE 1=1
 			  AND T.MENU_ID = MCD.MENU_ID AND MCD.LANG_CD = T.LANG_CD
-			  AND T.PROD_ID = PI.PROD_ID(+) AND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{representImgCd}
+			  AND T.PROD_ID = PI.PROD_ID(+) AND T.LANG_CD = PI.LANG_CD(+) AND PI.EXPO_ORD(+) = 1 AND PI.IMG_CD(+) = #{representImgCd}
 	</select>
     
 </mapper>
