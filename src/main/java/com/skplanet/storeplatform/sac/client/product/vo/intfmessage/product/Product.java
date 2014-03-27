@@ -273,7 +273,7 @@ public class Product extends CommonInfo implements Serializable {
 	private Integer freeItemAmt;
 
 	/**
-	 * 상품 실재 금액.
+	 * 상품 실제 금액.
 	 */
 	private Integer prodRealreAmt;
 
@@ -322,6 +322,19 @@ public class Product extends CommonInfo implements Serializable {
      * </ul>
      */
     private String userPurStatus;
+
+    /**
+     * 상품 유형 (부분 유료화 상품의 속성 표기)
+     */
+    private String partProductType;
+
+    public String getPartProductType() {
+        return partProductType;
+    }
+
+    public void setPartProductType(String partProductType) {
+        this.partProductType = partProductType;
+    }
 
     public String getUserPurStatus() {
         return userPurStatus;
