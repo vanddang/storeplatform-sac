@@ -69,6 +69,8 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		String innerRequestURI = StringUtils.removeStart(requestURI, requestContextPath);
 		// 요청 Method
 		String requestMethod = request.getMethod();
+		//
+		int localPort = request.getLocalPort();
 
 		// External Component는 SAC에서 Bypass 대상이나 우선 프로퍼티로 해당 기능이 가능하게 구현.
 		// 1. 해당 인터페이스의 bypass유무가 'Y' 인 대상.
@@ -83,7 +85,7 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
 		} else {
 			// 그외는 내부 서블릿 URL 호출.
-			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).path(requestContextPath)
+			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).port(localPort).path(requestContextPath)
 					.path(this.innerServletPath).path(innerRequestURI);
 		}
 		if (requestMethod.equals("GET")) {
