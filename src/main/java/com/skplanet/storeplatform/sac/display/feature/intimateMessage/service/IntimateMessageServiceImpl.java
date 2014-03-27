@@ -268,6 +268,13 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		return intimateMessageRes;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.feature.intimateMessage.service.IntimateMessageService#
+	 * searchIntimateMessageAppCodiList(com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageAppCodiSacReq)
+	 */
 	@Override
 	public IntimateMessageAppCodiSacRes searchIntimateMessageAppCodiList(SacRequestHeader header,
 			IntimateMessageAppCodiSacReq messageReq) {
@@ -326,7 +333,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 				}
 
 				appCodiRes.setProductList(productList);
-				commonResponse.setTotalCount(productList.size());
+				commonResponse.setTotalCount(prodList.get(0).getTotalCount());
 			} else {
 				commonResponse.setTotalCount(0);
 			}
