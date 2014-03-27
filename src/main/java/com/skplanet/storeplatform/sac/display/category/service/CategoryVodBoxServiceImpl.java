@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,6 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -45,6 +43,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategoryVodBox;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
 
 /**
@@ -64,8 +63,8 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 	@Autowired
 	CommonMetaInfoGeneratorImpl commonMetaInfo;
 
-    @Autowired
-    private DisplayCommonService commonService;
+	@Autowired
+	private DisplayCommonService commonService;
 
 	/**
 	 * <pre>
@@ -190,9 +189,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				preview = new Preview();
 				sourceList = new ArrayList<Source>();
 				sourceList.add(this.commonMetaInfo.generateSource(DisplayConstants.DP_PREVIEW_HQ,
-                        commonService.makePreviewUrl(categoryVodBox.getSamplUrl()))); // 고화질
+						this.commonService.makePreviewUrl(categoryVodBox.getSamplUrl()))); // 고화질
 				sourceList.add(this.commonMetaInfo.generateSource(DisplayConstants.DP_PREVIEW_LQ,
-                        commonService.makePreviewUrl(categoryVodBox.getScSamplUrl()))); // 저화질
+						this.commonService.makePreviewUrl(categoryVodBox.getScSamplUrl()))); // 저화질
 				preview.setSourceList(sourceList);
 				rights.setPreview(preview);
 
@@ -202,8 +201,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					supportList.add(this.commonMetaInfo.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
 							categoryVodBox.getDrmYn()));
 					play.setSupportList(supportList);
-					play.setDate(new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_UNIT_NM, categoryVodBox
-							.getUsePeriod() + categoryVodBox.getUsePeriodUnitNm()));
+					play.setDate(this.commonMetaInfo.generateDateString(
+							DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_UNIT_NM, categoryVodBox.getUsePeriod()
+									+ categoryVodBox.getUsePeriodUnitNm()));
 					play.setPrice(this.commonMetaInfo.generatePrice(categoryVodBox.getProdAmt(),
 							categoryVodBox.getProdNetAmt()));
 					identifierList = new ArrayList<Identifier>();
