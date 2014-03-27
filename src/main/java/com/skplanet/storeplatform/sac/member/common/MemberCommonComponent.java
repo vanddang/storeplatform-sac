@@ -58,7 +58,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
@@ -68,7 +67,6 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
-import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 
 /**
  * 공통 기능을 임시로 정의해서 사용한다.
@@ -82,9 +80,6 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private MemberCommonRepository repository;
-
-	@Autowired
-	private MiscellaneousService miscellaneousService;
 
 	@Autowired
 	private UapsSCI uapsSCI;
@@ -165,26 +160,6 @@ public class MemberCommonComponent {
 
 		}
 
-	}
-
-	/**
-	 * <pre>
-	 * deviceModelNo로 UA 코드 정보 조회.
-	 * </pre>
-	 * 
-	 * @param deviceModelNo
-	 *            String
-	 * @return String
-	 * @throws Exception
-	 *             Exception
-	 */
-	public String getUaCode(String tenantId, String deviceModelNo) { // 2014. 01. 14. 김다슬, 인크로스. 추가
-		GetUaCodeReq request = new GetUaCodeReq();
-		request.setDeviceModelNo(deviceModelNo);
-
-		SacRequestHeader requestHeader = new SacRequestHeader();
-		requestHeader.getTenantHeader().setTenantId(tenantId);
-		return this.miscellaneousService.getUaCode(requestHeader, request).getUaCd();
 	}
 
 	/**
@@ -585,8 +560,10 @@ public class MemberCommonComponent {
 			List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
 			for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-				LOGGER.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
-				LOGGER.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
+				LOGGER.debug("============================================ UserExtraInfo CODE : {}",
+						ptcr.getExtraProfile());
+				LOGGER.debug("============================================ UserExtraInfo VALUE : {}",
+						ptcr.getExtraProfileValue());
 
 				UserExtraInfo extra = new UserExtraInfo();
 				extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -793,8 +770,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
