@@ -122,4 +122,10 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** T Store 결제 성공 코드 */
 	public static final String TSTORE_PAYMENT_CANCEL_SUCCESS = "0000";
 
+	/** 구매 상품 건수 업데이트 처리 상태 코드 */
+	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_NO = "N";
+	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_READY = "R";
+	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_SUCCESS = "S";
+	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_FAIL = "F";
+
 }
