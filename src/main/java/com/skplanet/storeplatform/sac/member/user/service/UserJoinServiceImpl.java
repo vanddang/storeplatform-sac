@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -109,8 +108,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
-				req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(),
+				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 필수 약관 동의여부 체크
@@ -136,11 +135,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 가가입일 경우 처리.
 			 */
-			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
+			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+					+ IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 				/**
-				 * IDP에 이미 가입되어 있는 회원일 경우 SC 회원 DB 조회해서 정보 존재 하면 Error를 반환 (데이터는
-				 * 삭제 하지 않음 - 이유 : IDP 및 회원 DB에도 정상 임) - 에러 : IDP 가가입 에러
+				 * IDP에 이미 가입되어 있는 회원일 경우 SC 회원 DB 조회해서 정보 존재 하면 Error를 반환 (데이터는 삭제 하지 않음 - 이유 : IDP 및 회원 DB에도 정상 임) -
+				 * 에러 : IDP 가가입 에러
 				 */
 				try {
 
@@ -242,8 +242,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		AgreeUserEcReq agreeUserEcReq = new AgreeUserEcReq();
 		agreeUserEcReq.setKey(req.getUserId());
 		agreeUserEcReq.setKeyType("2"); // 1=IM통합서비스번호, 2=IM통합ID
-		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + ","
-				+ DateUtil.getTime());
+		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005,"
+				+ DateUtil.getToday() + "," + DateUtil.getTime());
 		agreeUserEcReq.setOcbJoinCode(MemberConstants.USE_N); // 통합포인트 가입 여부 Y=가입, N=미가입
 		agreeUserEcReq.setModifyReqDate(DateUtil.getToday("yyyyMMdd"));
 		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
@@ -262,12 +262,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
-		 * findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
 		 */
 		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
-		UserInfoIdpSearchServerEcRes userInfoIdpSearchServerEcRes = this.imIdpSCI.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
+		UserInfoIdpSearchServerEcRes userInfoIdpSearchServerEcRes = this.imIdpSCI
+				.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
 
 		/**
 		 * SC 사용자 기본정보 setting
@@ -319,8 +319,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
-				req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(),
+				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 필수 약관 동의여부 체크
@@ -349,8 +349,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		agreeUserEcReq.setKey(req.getUserId());
 		agreeUserEcReq.setKeyType("2"); // 1=IM통합서비스번호, 2=IM통합ID
 		agreeUserEcReq.setUserMdn(sbUserPhone.toString());
-		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + ","
-				+ DateUtil.getTime());
+		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005,"
+				+ DateUtil.getToday() + "," + DateUtil.getTime());
 		agreeUserEcReq.setOcbJoinCode(MemberConstants.USE_N); // 통합포인트 가입 여부 Y=가입, N=미가입
 		agreeUserEcReq.setModifyReqDate(DateUtil.getToday("yyyyMMdd"));
 		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
@@ -369,12 +369,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd =
-		 * findCommonProfileForServerIDP)
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
 		 */
 		UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 		userInfoIdpSearchServerEcReq.setKey(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리번호
-		UserInfoIdpSearchServerEcRes userInfoIdpSearchServerEcRes = this.imIdpSCI.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
+		UserInfoIdpSearchServerEcRes userInfoIdpSearchServerEcRes = this.imIdpSCI
+				.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
 
 		/**
 		 * SC 사용자 기본정보 setting
@@ -428,16 +428,17 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * IDP 중복 아이디 체크. (cmd = duplicateIDCheck)
 		 */
 		CheckDupIdEcReq checkDupIdEcReq = new CheckDupIdEcReq();
-		checkDupIdEcReq.setUserId(this.getUrlEncode(req.getUserId()));
+		checkDupIdEcReq.setUserId(req.getUserId());
 		this.idpSCI.checkDupId(checkDupIdEcReq);
 
 		/**
 		 * IDP 간편회원 가입 연동 (cmd = simpleJoinApply)
 		 */
 		SimpleJoinEcReq simpleJoinEcReq = new SimpleJoinEcReq();
-		simpleJoinEcReq.setUserId(this.getUrlEncode(req.getUserId())); // 사용자 아이디
-		simpleJoinEcReq.setUserPasswd(this.getUrlEncode(req.getUserPw())); // 사용자 패스워드
-		simpleJoinEcReq.setUserEmail(this.getUrlEncode(req.getUserEmail())); // 사용자 이메일
+		simpleJoinEcReq.setUserId(req.getUserId()); // 사용자 아이디
+		simpleJoinEcReq.setUserPasswd(req.getUserPw()); // 사용자 패스워드
+		simpleJoinEcReq.setUserEmail(req.getUserEmail()); // 사용자 이메일
+
 		SimpleJoinEcRes simpleJoinEcRes = this.idpSCI.simpleJoin(simpleJoinEcReq);
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
@@ -488,7 +489,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * IDP 중복 아이디 체크. (cmd = duplicateIDCheck)
 		 */
 		CheckDupIdEcReq checkDupIdEcReq = new CheckDupIdEcReq();
-		checkDupIdEcReq.setUserId(this.getUrlEncode(req.getUserId()));
+		checkDupIdEcReq.setUserId(req.getUserId());
 		this.idpSCI.checkDupId(checkDupIdEcReq);
 
 		/**
@@ -499,8 +500,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
-				req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(),
+				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * IDP 연동을 위한.... Phone 정보 세팅.
@@ -519,9 +520,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * IDP 간편회원 가입 연동 (cmd = simpleJoinApply)
 		 */
 		SimpleJoinEcReq simpleJoinEcReq = new SimpleJoinEcReq();
-		simpleJoinEcReq.setUserId(this.getUrlEncode(req.getUserId())); // 사용자 아이디
-		simpleJoinEcReq.setUserPasswd(this.getUrlEncode(req.getUserPw())); // 사용자 패스워드
-		simpleJoinEcReq.setUserEmail(this.getUrlEncode(req.getUserEmail())); // 사용자 이메일
+		simpleJoinEcReq.setUserId(req.getUserId()); // 사용자 아이디
+		simpleJoinEcReq.setUserPasswd(req.getUserPw()); // 사용자 패스워드
+		simpleJoinEcReq.setUserEmail(req.getUserEmail()); // 사용자 이메일
 		simpleJoinEcReq.setUserPhone(sbUserPhone.toString());
 		SimpleJoinEcRes simpleJoinEcRes = this.idpSCI.simpleJoin(simpleJoinEcReq);
 
@@ -765,7 +766,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            단말 주요 정보
 	 * @return Device Key
 	 */
-	private String createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey, MajorDeviceInfo majorDeviceInfo) {
+	private String createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey,
+			MajorDeviceInfo majorDeviceInfo) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 
@@ -865,8 +867,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 휴대기기 등록 모듈 호출.
 			 */
 			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
-			String deviceKey = this.deviceService.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader()
-					.getTenantId(), userKey, deviceInfo);
+			String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader
+					.getTenantHeader().getTenantId(), userKey, deviceInfo);
+
 			if (deviceKey == null || StringUtils.equals(deviceKey, "")) {
 				throw new StorePlatformException("SAC_MEM_0002", "deviceKey");
 			}
@@ -890,7 +893,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            MajorDeviceInfo
 	 * @return List<DeviceExtraInfo>
 	 */
-	private List<DeviceExtraInfo> getDeviceExtra(List<DeviceExtraInfo> deviceExtraInfoList, MajorDeviceInfo majorDeviceInfo) {
+	private List<DeviceExtraInfo> getDeviceExtra(List<DeviceExtraInfo> deviceExtraInfoList,
+			MajorDeviceInfo majorDeviceInfo) {
 
 		LOGGER.debug("## 세팅 전 deviceExtraInfoList : {}", deviceExtraInfoList);
 
@@ -927,23 +931,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		return deviceExtraInfoList;
 
-	}
-
-	/**
-	 * <pre>
-	 * URL Encode.
-	 * </pre>
-	 * 
-	 * @param value
-	 *            String
-	 * @return String
-	 */
-	private String getUrlEncode(String value) {
-		try {
-			return URLEncoder.encode(value, "UTF-8");
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_MEM_0004", e);
-		}
 	}
 
 	/**
@@ -1059,8 +1046,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), deviceTelecom, req.getDeviceId(),
-				req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(),
+				deviceTelecom, req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * MSISDN 가입자와 MAC 가입자를 분기하여 처리한다.
@@ -1204,8 +1191,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		UserMbr userMbr = new UserMbr();
 		/**
-		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.)
-		 * [MAC-yyyyMMdd] MBR_NO (26)
+		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.) [MAC-yyyyMMdd] MBR_NO (26)
 		 */
 		userMbr.setImMbrNo(this.getFixMbrNo()); // 고정된 MBR_NO 세팅함.
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
