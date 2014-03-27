@@ -48,12 +48,6 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String recvDeviceKey; // (선물 경우 필수) 수신자 내부 디바이스 ID
 	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String prchsReqPathCd; // 구매 요청 경로 코드
-	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
-	private String mid; // 가맹점 ID
-	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
-	private String authKey; // 가맹점 인증키
-	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
-	private String returnUrl; // 결과처리 URL
 	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String currencyCd; // 통화 코드
 	@NotNull(groups = { GroupCreatePurchase.class })
@@ -67,6 +61,10 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String prchsCaseCd; // 구매 유형 코드
 	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String tenantProdGrpCd; // 테넌트 상품 분류 코드
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String deviceModelCd; // 디바이스 모델 코드
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String telecomCd; // 통신사: US001201-SKT, US001202-KT, US001203-LG U+
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String imei; // 단말 식별 번호
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
@@ -166,51 +164,6 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the mid
-	 */
-	public String getMid() {
-		return this.mid;
-	}
-
-	/**
-	 * @param mid
-	 *            the mid to set
-	 */
-	public void setMid(String mid) {
-		this.mid = mid;
-	}
-
-	/**
-	 * @return the authKey
-	 */
-	public String getAuthKey() {
-		return this.authKey;
-	}
-
-	/**
-	 * @param authKey
-	 *            the authKey to set
-	 */
-	public void setAuthKey(String authKey) {
-		this.authKey = authKey;
-	}
-
-	/**
-	 * @return the returnUrl
-	 */
-	public String getReturnUrl() {
-		return this.returnUrl;
-	}
-
-	/**
-	 * @param returnUrl
-	 *            the returnUrl to set
-	 */
-	public void setReturnUrl(String returnUrl) {
-		this.returnUrl = returnUrl;
-	}
-
-	/**
 	 * @return the currencyCd
 	 */
 	public String getCurrencyCd() {
@@ -298,6 +251,36 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	 */
 	public void setTenantProdGrpCd(String tenantProdGrpCd) {
 		this.tenantProdGrpCd = tenantProdGrpCd;
+	}
+
+	/**
+	 * @return the deviceModelCd
+	 */
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	/**
+	 * @param deviceModelCd
+	 *            the deviceModelCd to set
+	 */
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
+	}
+
+	/**
+	 * @return the telecomCd
+	 */
+	public String getTelecomCd() {
+		return this.telecomCd;
+	}
+
+	/**
+	 * @param telecomCd
+	 *            the telecomCd to set
+	 */
+	public void setTelecomCd(String telecomCd) {
+		this.telecomCd = telecomCd;
 	}
 
 	/**

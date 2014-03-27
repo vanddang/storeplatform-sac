@@ -33,6 +33,20 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	private Double prodAmt; // 상품 가격
 	@NotNull(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private int prodQty; // 상품 수량
+	@Null(groups = { GroupCreateFreePurchase.class })
+	private String tid; // 부분유료화 개발사 구매Key
+	@Null(groups = { GroupCreateFreePurchase.class })
+	private String txId; // 부분유료화 전자영수증 번호
+	@Null(groups = { GroupCreateFreePurchase.class })
+	private String partChrgVer; // 부분유료화 라이브러리 버전
+	@Null(groups = { GroupCreateFreePurchase.class })
+	private String partChrgProdNm; // 부분유료화 상세 상품명
+	@Null(groups = { GroupCreateFreePurchase.class })
+	private String infoUseFee; // 정보 이용 요금
+	@Null(groups = { GroupCreateFreePurchase.class })
+	private String timbreClsf; // 음질 구분
+	@Null(groups = { GroupCreateFreePurchase.class })
+	private String timbreSctn; // 음질 구간
 	@Null(groups = { GroupCreatePurchase.class })
 	private String useExprDt; // 이용종료일
 	private String resvCol01; // 예비컬럼01
@@ -72,7 +86,7 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	/**
 	 * @return the prodAmt
 	 */
-	public double getProdAmt() {
+	public Double getProdAmt() {
 		return this.prodAmt;
 	}
 
@@ -80,7 +94,7 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	 * @param prodAmt
 	 *            the prodAmt to set
 	 */
-	public void setProdAmt(double prodAmt) {
+	public void setProdAmt(Double prodAmt) {
 		this.prodAmt = prodAmt;
 	}
 
@@ -97,6 +111,111 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	 */
 	public void setProdQty(int prodQty) {
 		this.prodQty = prodQty;
+	}
+
+	/**
+	 * @return the tid
+	 */
+	public String getTid() {
+		return this.tid;
+	}
+
+	/**
+	 * @param tid
+	 *            the tid to set
+	 */
+	public void setTid(String tid) {
+		this.tid = tid;
+	}
+
+	/**
+	 * @return the txId
+	 */
+	public String getTxId() {
+		return this.txId;
+	}
+
+	/**
+	 * @param txId
+	 *            the txId to set
+	 */
+	public void setTxId(String txId) {
+		this.txId = txId;
+	}
+
+	/**
+	 * @return the partChrgVer
+	 */
+	public String getPartChrgVer() {
+		return this.partChrgVer;
+	}
+
+	/**
+	 * @param partChrgVer
+	 *            the partChrgVer to set
+	 */
+	public void setPartChrgVer(String partChrgVer) {
+		this.partChrgVer = partChrgVer;
+	}
+
+	/**
+	 * @return the partChrgProdNm
+	 */
+	public String getPartChrgProdNm() {
+		return this.partChrgProdNm;
+	}
+
+	/**
+	 * @param partChrgProdNm
+	 *            the partChrgProdNm to set
+	 */
+	public void setPartChrgProdNm(String partChrgProdNm) {
+		this.partChrgProdNm = partChrgProdNm;
+	}
+
+	/**
+	 * @return the infoUseFee
+	 */
+	public String getInfoUseFee() {
+		return this.infoUseFee;
+	}
+
+	/**
+	 * @param infoUseFee
+	 *            the infoUseFee to set
+	 */
+	public void setInfoUseFee(String infoUseFee) {
+		this.infoUseFee = infoUseFee;
+	}
+
+	/**
+	 * @return the timbreClsf
+	 */
+	public String getTimbreClsf() {
+		return this.timbreClsf;
+	}
+
+	/**
+	 * @param timbreClsf
+	 *            the timbreClsf to set
+	 */
+	public void setTimbreClsf(String timbreClsf) {
+		this.timbreClsf = timbreClsf;
+	}
+
+	/**
+	 * @return the timbreSctn
+	 */
+	public String getTimbreSctn() {
+		return this.timbreSctn;
+	}
+
+	/**
+	 * @param timbreSctn
+	 *            the timbreSctn to set
+	 */
+	public void setTimbreSctn(String timbreSctn) {
+		this.timbreSctn = timbreSctn;
 	}
 
 	/**

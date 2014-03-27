@@ -21,17 +21,19 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private static final long serialVersionUID = 201420261L;
 
 	private String mdn; // 결제 단말 번호
-	private String flgMbrStatus; // 회원상태 (0-비정상, 1-정상)
-	private String flgProductStatus; // 상품상태 (0-구매불가상품, 1-구매가능상품)
-	private String flgTeleBillingAgree; // 통신과금 동의여부 (Y/N)
-	private String flgOcbUseAgree; // OCB 이용약관 동의여부 (Y/N)
+	private String flgMbrStatus; // 회원상태: 0-비정상, 1-정상
+	private String flgProductStatus; // 상품상태: 0-구매불가상품, 1-구매가능상품
+	private String flgTeleBillingAgree; // 통신과금 동의여부: Y/N
+	private String flgOcbUseAgree; // OCB 이용약관 동의여부: Y/N
+	private String typeDanalContent; // (다날) 컨텐츠 타입: 0-디지털, 1-실물
+	private String typeSktLimit; // SKT후불 결제수단 재정의 원인: L00~L09
 	private String cdMaxAmtRate; // 결제수단 별 가능 거래금액/비율 조정 정보
 	private String cdPriority; // 결제수단 정렬 재조정
 	private String cdOcbSaveInfo; // OCB 적립코드
 	private String noOcbCard; // OCB 카드번호
 	private String noCouponList; // 쿠폰 List
 	private Double tstoreCashAmt; // T store Cash 잔액
-	private String typeTestMdn; // 법인 및 일반 시험폰 처리 타입 (T01, T02, T03)
+	private String typeTestMdn; // 법인 및 일반 시험폰 처리 타입: T01, T02, T03
 	private String cdPaymentTemplate; // 결제Page 템플릿 코드: TC01-일반, TC02-정액제(게임캐쉬), TC03-대여/소장, TC04-자동결제, TC05-쇼핑, TC06-선물
 	private String bonusCashPoint; // 보너스 캐쉬 지급 Point
 	private String bonusCashUsableDayCnt; // 보너스 캐쉬 유효기간(일)
@@ -121,6 +123,36 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setFlgOcbUseAgree(String flgOcbUseAgree) {
 		this.flgOcbUseAgree = flgOcbUseAgree;
+	}
+
+	/**
+	 * @return the typeDanalContent
+	 */
+	public String getTypeDanalContent() {
+		return this.typeDanalContent;
+	}
+
+	/**
+	 * @param typeDanalContent
+	 *            the typeDanalContent to set
+	 */
+	public void setTypeDanalContent(String typeDanalContent) {
+		this.typeDanalContent = typeDanalContent;
+	}
+
+	/**
+	 * @return the typeSktLimit
+	 */
+	public String getTypeSktLimit() {
+		return this.typeSktLimit;
+	}
+
+	/**
+	 * @param typeSktLimit
+	 *            the typeSktLimit to set
+	 */
+	public void setTypeSktLimit(String typeSktLimit) {
+		this.typeSktLimit = typeSktLimit;
 	}
 
 	/**
