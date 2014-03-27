@@ -1662,9 +1662,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					Title title = this.commonGenerator.generateTitle(shopping);
 
 					// SourceList 생성
-					List<Source> sourceList = null;
-
-					sourceList = new ArrayList<Source>();
+					List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
 					// 이미지 정보
 					String detailImgCd = "";
 					// 이미지 정보 (상세 이미지 가져오기)
@@ -1682,7 +1680,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							source.setMediaType(DisplayCommonUtil
 									.getMimeType(resultImgDetailList.get(pp).getFilePath()));
 							if (qq == 0) {
-								source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+								source.setType(DisplayConstants.DP_SOURCE_TYPE_ORIGINAL);
 							} else {
 								source.setExpoOrd(resultImgDetailList.get(pp).getExpoOrd());
 								source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
