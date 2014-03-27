@@ -28,7 +28,7 @@ public class SalesOption extends CommonInfo implements Serializable {
 	 * 상품권 종류 (giftcard : 상품권, exchange : 교환권, delivery : 배송상품)
 	 */
 	private String type;
-	private String satus; // 상품 상태 (soldout : 매진상품)
+	private String status; // 상품 상태 (soldout : 매진상품)
 	private String btob; // B2B 상품 여부(Y/N)
 	private Integer maxCount; // 최대 판매가능 수량
 	private Integer maxMonthlySale; // 월간 최대 판매가능 수량
@@ -57,18 +57,18 @@ public class SalesOption extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return String
+	 * @return the status
 	 */
-	public String getSatus() {
-		return this.satus;
+	public String getStatus() {
+		return this.status;
 	}
 
 	/**
-	 * @param satus
-	 *            satus
+	 * @param status
+	 *            the status to set
 	 */
-	public void setSatus(String satus) {
-		this.satus = satus;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	/**
