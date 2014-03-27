@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.runtime.acl.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.Header;
 import org.springframework.stereotype.Service;
 
@@ -37,13 +38,14 @@ public class AclService {
 	@Autowired
 	private AuthorizeService authorizationService;
 
-    private final boolean isEffective = true;
+	@Value("#{propertiesForSac['skp.common.service.acl']}")
+	private boolean aclYn;
 
 	/**
 	 * Request를 검증한다. (Interface 및 Timestamp 검사)
 	 */
 	public boolean validate(@Header("httpHeaders") HttpHeaders headers) {
-		if (!this.isEffective) return true;
+		if (!this.aclYn) return true;
 
 		// Step 1) 필수 헤더 검사
 		this.verifyService.verifyHeaders(headers);
@@ -57,7 +59,7 @@ public class AclService {
 	 * Tenant를 인증한다. (등록된 Tenant인지 확인)
 	 */
 	public boolean authenticate(@Header("httpHeaders") HttpHeaders headers) {
-		if (!this.isEffective) return true;
+		if (!this.aclYn) return true;
 
 		// Step 1) Tenant 인증
 		this.authenticateService.authenticate(headers);
@@ -69,7 +71,7 @@ public class AclService {
 	 * Interface를 인가한다. (호출하는 API에 권한이 있는지 확인)
 	 */
 	public boolean authorize(@Header("httpHeaders") HttpHeaders headers) {
-		if (!this.isEffective) return true;
+		if (!this.aclYn) return true;
 
 		// 1. Interface 유효성 확인
 		this.authorizationService.checkInterface(headers);

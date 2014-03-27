@@ -13,8 +13,9 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:runtime/context-runtime.xml, 
-            classpath:sac/runtime/context-runtime.xml, 
-            classpath:sac/runtime/context-runtime-amqp.xml, 
+            classpath:sac/runtime/context-runtime.xml,  
+            classpath:sac/runtime/context-runtime-amqp.xml,
+            classpath:sac/runtime/context-runtime-preprocess.xml,
             classpath*:sac/spring/context-*.xml 
         </param-value>
     </context-param>
