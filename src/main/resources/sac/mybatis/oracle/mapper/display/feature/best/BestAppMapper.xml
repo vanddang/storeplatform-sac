@@ -3,7 +3,7 @@
 <mapper namespace="BestApp">
     <!-- BEST 앱 상품 조회(추천, 인기(매출), 인기신규) -->
     <select id="selectBestAppList" parameterType="BestAppSacReq" resultType="ProductBasicInfo">
-		SELECT /* BestAppMapper.xml, selectBestAppList, SAC 전시, 2014-03-24 */
+		SELECT /* BestAppMapper.xml, selectBestAppList, SAC 전시, 2014-03-27 */
                KA.TOTAL_COUNT     /* 조회 건수 */
               ,KA.TOP_MENU_ID     /* 상위 MENU ID */
               ,KA.MENU_ID         /* MENU_ID */
@@ -18,7 +18,7 @@
                           FROM 
                                (  
                                  SELECT /*+ USE_NL(K,I,H,F) ORDERED */
-                                        COUNT(*) OVER () AS TOTAL_COUNT
+                                        COUNT(B.PROD_ID) OVER () AS TOTAL_COUNT
                                        ,A.EXPO_ORD
                                        ,A.TENANT_ID
                                        ,A.PROD_ID 
@@ -73,7 +73,7 @@
     
     <!-- BEST 앱 상품 조회(신규) -->
     <select id="selectNewBestAppList" parameterType="BestAppSacReq" resultType="ProductBasicInfo">
-		  SELECT /* BestAppMapper.xml, selectNewBestAppList, SAC 전시, 2014-01-08 */
+		  SELECT /* BestAppMapper.xml, selectNewBestAppList, SAC 전시, 2014-03-27 */
 		         KA.TOTAL_COUNT     /* 조회 건수 */ 
                 ,KA.TOP_MENU_ID     /* 상위 MENU ID */
                 ,KA.MENU_ID         /* MENU_ID */
@@ -83,7 +83,7 @@
                    SELECT TA.*
                      FROM
                          (
-                          SELECT COUNT(*) OVER () AS TOTAL_COUNT /* 조회건수 */
+                          SELECT COUNT(JA.PROD_ID) OVER () AS TOTAL_COUNT /* 조회건수 */
                                 ,ROWNUM AS RNUM                        
                                 ,JA.*
                             FROM

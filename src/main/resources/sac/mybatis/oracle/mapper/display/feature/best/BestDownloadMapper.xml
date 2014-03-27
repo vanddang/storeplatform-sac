@@ -4,7 +4,7 @@
     
     <!-- BEST 다운로드 앱 상품 조회(BEST앱, 게임, FUN, 생활/위치, 어학/교육) -->
     <select id="selectBestDownloadAppList" parameterType="bestDownloadSacReq" resultType="ProductBasicInfo">
-		SELECT /* BestDownloadMapper.xml, selectBestDownloadAppList, SAC 전시, 2014-01-25 */
+		SELECT /* BestDownloadMapper.xml, selectBestDownloadAppList, SAC 전시, 2014-03-27 */
                KA.TOTAL_COUNT     /* 조회 건수 */
               ,KA.TOP_MENU_ID     /* TOP MENU ID */
               ,KA.MENU_ID         /* MENU_ID */
@@ -18,7 +18,7 @@
                               ,IA.*
                           FROM 
                                (  
-                                 SELECT COUNT(*) OVER () AS TOTAL_COUNT
+                                 SELECT COUNT(B.PROD_ID) OVER () AS TOTAL_COUNT
                                        ,A.EXPO_ORD
                                        ,A.TENANT_ID
                                        ,A.PROD_ID 
@@ -83,7 +83,7 @@
     
     <!-- BEST 다운로드 멀티미디어 상품 조회 -->
     <select id="selectBestDownloadMMList" parameterType="bestDownloadSacReq" resultType="ProductBasicInfo">
-        SELECT  /* BestDownloadMapper.xml, selectBestDownloadMMList, SAC 전시, 2014-01-25 */
+        SELECT  /* BestDownloadMapper.xml, selectBestDownloadMMList, SAC 전시, 2014-03-27 */
                 LA.TOTAL_COUNT
               , LA.RNUM
               , LA.TOP_MENU_ID
@@ -100,7 +100,7 @@
                         SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD) AS RNUM
                           FROM 
                                (
-                                    SELECT COUNT(A.PROD_ID) OVER() AS TOTAL_COUNT
+                                    SELECT COUNT(D.PROD_ID) OVER() AS TOTAL_COUNT
                                          , B.TOP_MENU_ID
                                          , A.MENU_ID
                                          , A.PROD_ID
