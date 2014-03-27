@@ -428,8 +428,8 @@
                    ,PROD_NM AS catalogNm
                    ,PRCHS_CNT 
                    ,PROD_GRD_CD as prodGrdCd
-                   ,SPRC_APPLY_START_DT as applyStartDt   
-                   ,SPRC_APPLY_END_DT as applyEndDt 
+                   ,TO_CHAR(SPRC_APPLY_START_DT,'YYYYMMDDHH24MISS') as applyStartDt   
+                   ,TO_CHAR(SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS') as applyEndDt 
                    ,DECODE(PROD_CASE_CD
                      , 'DP006301', 'giftcard'
                      , 'DP006302', 'exchange'
@@ -586,8 +586,8 @@
                       ,PLAN_NM as prodNm
                       ,SUB_TITL_NM
                       ,LINK_URL
-                      ,PLAN_START_DT
-                      ,PLAN_END_DT
+                      ,TO_CHAR(PLAN_START_DT,'YYYYMMDDHH24MISS') AS PLAN_START_DT
+                      ,TO_CHAR(PLAN_END_DT,'YYYYMMDDHH24MISS') AS PLAN_END_DT
                       ,PRZWNER_ANNO_DT
                       ,PLAN_GIFT_NM
 					  ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
@@ -1542,8 +1542,8 @@
                               , 'DP006301', 'giftcard'
                               , 'DP006302', 'exchange'
                               , 'DP006303', 'delivery' ) PROD_CASE_CD
-                        ,NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT  ) AS APPLY_START_DT
-                        ,NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ) AS APPLY_END_DT                              
+                        ,TO_CHAR(NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT),'YYYYMMDDHH24MISS') AS APPLY_START_DT
+                        ,TO_CHAR(NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ),'YYYYMMDDHH24MISS') AS APPLY_END_DT      
                         ,I.SALE_CNT 
                         ,NVL(N.MM_PROD_MAX_SALE_QTY, I.MM_MAX_SALE_QTY ) AS MTH_MAX_CNT     /* 월_최대_판매_수량 */
                         ,NVL(N.DLY_PROD_MAX_SALE_QTY, I.DAY_MAX_SALE_QTY ) AS DLY_MAX_CNT   /* 일_최대_판매_수량 */
