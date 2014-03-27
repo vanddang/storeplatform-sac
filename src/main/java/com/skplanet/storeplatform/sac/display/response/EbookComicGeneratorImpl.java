@@ -80,7 +80,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		contributor.setPublisher(metaInfo.getChnlCompNm()); // 출판사
 
 		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
-			contributor.setDate(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_PUBLISH,
+			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_PUBLISH,
 					metaInfo.getIssueDay()));
 		}
 		return contributor;
@@ -95,7 +95,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		contributor.setPublisher(metaInfo.getChnlCompNm()); // 출판사
 
 		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
-			contributor.setDate(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_PUBLISH,
+			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_PUBLISH,
 					metaInfo.getIssueDay()));
 		}
 		return contributor;

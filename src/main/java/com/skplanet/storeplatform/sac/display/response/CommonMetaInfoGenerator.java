@@ -297,6 +297,19 @@ public interface CommonMetaInfoGenerator {
 
 	/**
 	 * <pre>
+	 * VOD, 이북, 코믹 상품 Contributor Date객체 생성.
+	 * </pre>
+	 * 
+	 * @param type
+	 *            type
+	 * @param text
+	 *            text
+	 * @return Date
+	 */
+	public Date generateDateString(String type, String text);
+
+	/**
+	 * <pre>
 	 * 소장 상품 Store 객체 생성.
 	 * </pre>
 	 * 

@@ -531,6 +531,14 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	}
 
 	@Override
+	public Date generateDateString(String type, String text) {
+		Date date = new Date();
+		date.setType(type);
+		date.setText(text);
+		return date;
+	}
+
+	@Override
 	public Store generateStore(MetaInfo metaInfo) {
 		Store store = new Store();
 
