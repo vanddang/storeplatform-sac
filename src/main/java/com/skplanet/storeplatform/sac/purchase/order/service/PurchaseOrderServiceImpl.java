@@ -472,7 +472,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING) == false) {
 			if (policyResult != null) {
 				// 시험폰, SKP법인폰 결제 제외
-				if (policyResult.isSktTestMdn() == false && policyResult.isSkpCorporation() == false) {
+				if (policyResult.isSktTestMdn() || policyResult.isSkpCorporation()) {
+					sbOcbAccum.append("11:0.0;");
+				} else {
 					sbOcbAccum.append("11:4.0;");
 				}
 			}
