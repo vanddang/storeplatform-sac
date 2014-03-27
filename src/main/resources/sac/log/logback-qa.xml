@@ -32,9 +32,9 @@
     </appender>
     
     <appender name="OMC_REQ1_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${catalina.home}/logs/sac/omc/omc_요건1.log</File>
+        <File>${catalina.home}/logs/sac/omc/omc_req1.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${catalina.home}/logs/sac/omc/omc_요건1_%d{yyyyMMdd_HH}.log</FileNamePattern>            
+            <FileNamePattern>${catalina.home}/logs/sac/omc/omc_req1_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
