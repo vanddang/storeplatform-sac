@@ -723,7 +723,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 */
 		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 
-		// 사용자 정보 세팅
+		/* 사용자 정보 세팅 */
 		UserInfo userInfo = this.userInfo(schUserRes);
 
 		/* 실명인증 세팅 */

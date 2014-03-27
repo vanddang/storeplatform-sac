@@ -6,7 +6,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ChangedDeviceHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ChangedDeviceHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
@@ -146,17 +145,6 @@ public interface DeviceService {
 	 * @return List<DeviceInfo>
 	 */
 	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req);
-
-	/**
-	 * 사용자 정보 조회.
-	 * 
-	 * @param sacHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            RemoveDeviceReq
-	 * @return List<DeviceInfo>
-	 */
-	public UserInfo searchUser(RemoveDeviceReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 대표단말 조회.

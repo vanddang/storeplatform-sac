@@ -77,6 +77,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
@@ -1193,13 +1195,8 @@ public class DeviceServiceImpl implements DeviceService {
 		return setMainDeviceRes;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#removeDevice
-	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq)
+	/**
+	 * 휴대기기 삭제
 	 */
 	@Override
 	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req) {
@@ -1235,7 +1232,11 @@ public class DeviceServiceImpl implements DeviceService {
 			RemoveDeviceReq removeDeviceReq = new RemoveDeviceReq();
 			removeDeviceReq.setUserKey(req.getUserKey());
 			removeDeviceReq.setDeviceId(id.getDeviceId());
-			UserInfo userInfo = this.searchUser(removeDeviceReq, requestHeader);
+
+			DetailReq detailReq = new DetailReq();
+			detailReq.setDeviceId(req.getDeviceId());
+			DetailRes detailRes = this.userSearchService.searchUser(detailReq, requestHeader);
+			UserInfo userInfo = detailRes.getUserInfo();
 
 			/* 휴대기기 조회 */
 			DeviceInfo deviceInfo = null;
@@ -1349,7 +1350,10 @@ public class DeviceServiceImpl implements DeviceService {
 			req.setDeviceId(opmdMdn);
 			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
-			UserInfo deviceIdUser = this.commService.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
+			DetailReq detailReq = new DetailReq();
+			detailReq.setDeviceId(req.getDeviceId());
+			DetailRes detailRes = this.userSearchService.searchUser(detailReq, sacHeader);
+			UserInfo deviceIdUser = detailRes.getUserInfo();
 
 			ListDeviceReq listDeviceReq = new ListDeviceReq();
 			listDeviceReq.setUserKey(deviceIdUser.getUserKey());
@@ -1366,7 +1370,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
 		else if (!req.getUserKey().equals("")) {
 			this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
-
+			
 			// 대표단말 조회
 			DetailRepresentationDeviceReq detailRepresentationDeviceReq = new DetailRepresentationDeviceReq();
 			detailRepresentationDeviceReq.setUserKey(req.getUserKey());
@@ -1396,22 +1400,6 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		return res;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#searchUser
-	 * (com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq,
-	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
-	 */
-	@Override
-	public UserInfo searchUser(RemoveDeviceReq req, SacRequestHeader sacHeader) {
-
-		UserInfo userInfo = this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
-
-		return userInfo;
 	}
 
 	/*
