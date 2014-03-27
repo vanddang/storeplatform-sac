@@ -36,7 +36,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String prchsReqPathCd; // 구매 요청 경로 코드
 	private String mid; // 가맹점 ID
 	private String authKey; // 가맹점 인증키
-	private String returnUrl; // 테넌트 결과처리 URL
 	private String currencyCd; // 통화 코드
 	private double totAmt; // 총 결제 금액
 	private String clientIp; // 클라이언트 IP
@@ -46,12 +45,12 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String recvUserKey; // 수신자 내부 회원 번호
 	private String recvDeviceKey; // 수신자 내부 디바이스 ID
 	private String tenantProdGrpCd; // 테넌트 상품 분류 코드
+	private String deviceModelCd; // 디바이스 모델 코드
+	private String telecomCd; // 통신사: US001201-SKT, US001202-KT, US001203-LG U+
 	private String imei; // 단말 식별 번호
 	private String uacd; // 단말 모델 식별 번호
 	private String simNo; // SIM Serial Number
 	private String simYn; // SIM 조회 가능 여부
-
-	private String deviceModelCd; // 요청 단말 모델 코드
 
 	// ------------------------------------------------------------------------
 	// 추가 구매 진행 정보
@@ -211,21 +210,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setAuthKey(String authKey) {
 		this.authKey = authKey;
-	}
-
-	/**
-	 * @return the returnUrl
-	 */
-	public String getReturnUrl() {
-		return this.returnUrl;
-	}
-
-	/**
-	 * @param returnUrl
-	 *            the returnUrl to set
-	 */
-	public void setReturnUrl(String returnUrl) {
-		this.returnUrl = returnUrl;
 	}
 
 	/**
@@ -421,6 +405,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setTenantProdGrpCd(String tenantProdGrpCd) {
 		this.tenantProdGrpCd = tenantProdGrpCd;
+	}
+
+	/**
+	 * @return the telecomCd
+	 */
+	public String getTelecomCd() {
+		return this.telecomCd;
+	}
+
+	/**
+	 * @param telecomCd
+	 *            the telecomCd to set
+	 */
+	public void setTelecomCd(String telecomCd) {
+		this.telecomCd = telecomCd;
 	}
 
 	/**

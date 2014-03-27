@@ -341,14 +341,13 @@ public class PurchaseOrderController {
 		purchaseOrderInfo.setUserKey(createPurchaseSacReq.getUserKey()); // 구매(선물발신) 내부 회원 번호
 		purchaseOrderInfo.setDeviceKey(createPurchaseSacReq.getDeviceKey()); // 구매(선물발신) 내부 디바이스 ID
 		purchaseOrderInfo.setPrchsReqPathCd(createPurchaseSacReq.getPrchsReqPathCd()); // 구매 요청 경로 코드
-		purchaseOrderInfo.setMid(createPurchaseSacReq.getMid()); // 가맹점 ID
-		purchaseOrderInfo.setAuthKey(createPurchaseSacReq.getAuthKey()); // 가맹점 인증키
-		purchaseOrderInfo.setReturnUrl(createPurchaseSacReq.getReturnUrl()); // 결과처리 URL
 		purchaseOrderInfo.setCurrencyCd(createPurchaseSacReq.getCurrencyCd()); // 통화 코드
 		purchaseOrderInfo.setClientIp(createPurchaseSacReq.getClientIp()); // 클라이언트 IP
 		purchaseOrderInfo.setNetworkTypeCd(createPurchaseSacReq.getNetworkTypeCd()); // 네트워크 타입 코드
 		purchaseOrderInfo.setPrchsCaseCd(createPurchaseSacReq.getPrchsCaseCd()); // 구매 유형 코드
 		purchaseOrderInfo.setTenantProdGrpCd(createPurchaseSacReq.getTenantProdGrpCd()); // 테넌트 상품 분류 코드
+		purchaseOrderInfo.setDeviceModelCd(createPurchaseSacReq.getDeviceModelCd()); // 디바이스 모델 코드
+		purchaseOrderInfo.setTelecomCd(createPurchaseSacReq.getTelecomCd()); // 통신사
 		if (StringUtils.equals(createPurchaseSacReq.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			if (createPurchaseSacReq.getReceiverList() == null) {
 				purchaseOrderInfo.setRecvTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID

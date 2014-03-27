@@ -38,6 +38,23 @@ public class PurchaseProduct extends PaymentInfo {
 	private String resvCol05;
 	private String useExprDt; // [비과금 구매요청 시 사용]
 	private String useFixrateProdId; // 이용한 정액제 상품ID
+	/* IAP */
+	private String tid; // 부분유료화 개발사 구매Key
+	private String txId; // 부분유료화 전자영수증 번호
+	private String parentProdId; // 부모_상품_ID
+	private String partChrgVer; // 부분_유료_버전
+	private String partChrgProdNm; // 부분_유료_상품_명
+	/* Ring & Bell */
+	private String rnBillCd; // RN_과금_코드
+	private String infoUseFee; // 정보_이용_요금 (ISU_AMT_ADD)
+	private String cid; // 컨텐츠ID
+	private String contentsClsf; // 컨텐츠_구분
+	private String contentsType; // 컨텐츠_타입
+	private String prchsType; // 구매_타입
+	private String timbreClsf; // 음질_구분
+	private String timbreSctn; // 음질_구간
+	private String menuId; // 메뉴_ID
+	private String genreClsfCd; // 장르_구분_코드
 
 	/**
 	 * @return the bonusCashPoint
@@ -292,6 +309,231 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setUseFixrateProdId(String useFixrateProdId) {
 		this.useFixrateProdId = useFixrateProdId;
+	}
+
+	/**
+	 * @return the tid
+	 */
+	public String getTid() {
+		return this.tid;
+	}
+
+	/**
+	 * @param tid
+	 *            the tid to set
+	 */
+	public void setTid(String tid) {
+		this.tid = tid;
+	}
+
+	/**
+	 * @return the txId
+	 */
+	public String getTxId() {
+		return this.txId;
+	}
+
+	/**
+	 * @param txId
+	 *            the txId to set
+	 */
+	public void setTxId(String txId) {
+		this.txId = txId;
+	}
+
+	/**
+	 * @return the parentProdId
+	 */
+	public String getParentProdId() {
+		return this.parentProdId;
+	}
+
+	/**
+	 * @param parentProdId
+	 *            the parentProdId to set
+	 */
+	public void setParentProdId(String parentProdId) {
+		this.parentProdId = parentProdId;
+	}
+
+	/**
+	 * @return the partChrgVer
+	 */
+	public String getPartChrgVer() {
+		return this.partChrgVer;
+	}
+
+	/**
+	 * @param partChrgVer
+	 *            the partChrgVer to set
+	 */
+	public void setPartChrgVer(String partChrgVer) {
+		this.partChrgVer = partChrgVer;
+	}
+
+	/**
+	 * @return the partChrgProdNm
+	 */
+	public String getPartChrgProdNm() {
+		return this.partChrgProdNm;
+	}
+
+	/**
+	 * @param partChrgProdNm
+	 *            the partChrgProdNm to set
+	 */
+	public void setPartChrgProdNm(String partChrgProdNm) {
+		this.partChrgProdNm = partChrgProdNm;
+	}
+
+	/**
+	 * @return the rnBillCd
+	 */
+	public String getRnBillCd() {
+		return this.rnBillCd;
+	}
+
+	/**
+	 * @param rnBillCd
+	 *            the rnBillCd to set
+	 */
+	public void setRnBillCd(String rnBillCd) {
+		this.rnBillCd = rnBillCd;
+	}
+
+	/**
+	 * @return the infoUseFee
+	 */
+	public String getInfoUseFee() {
+		return this.infoUseFee;
+	}
+
+	/**
+	 * @param infoUseFee
+	 *            the infoUseFee to set
+	 */
+	public void setInfoUseFee(String infoUseFee) {
+		this.infoUseFee = infoUseFee;
+	}
+
+	/**
+	 * @return the cid
+	 */
+	public String getCid() {
+		return this.cid;
+	}
+
+	/**
+	 * @param cid
+	 *            the cid to set
+	 */
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	/**
+	 * @return the contentsClsf
+	 */
+	public String getContentsClsf() {
+		return this.contentsClsf;
+	}
+
+	/**
+	 * @param contentsClsf
+	 *            the contentsClsf to set
+	 */
+	public void setContentsClsf(String contentsClsf) {
+		this.contentsClsf = contentsClsf;
+	}
+
+	/**
+	 * @return the contentsType
+	 */
+	public String getContentsType() {
+		return this.contentsType;
+	}
+
+	/**
+	 * @param contentsType
+	 *            the contentsType to set
+	 */
+	public void setContentsType(String contentsType) {
+		this.contentsType = contentsType;
+	}
+
+	/**
+	 * @return the prchsType
+	 */
+	public String getPrchsType() {
+		return this.prchsType;
+	}
+
+	/**
+	 * @param prchsType
+	 *            the prchsType to set
+	 */
+	public void setPrchsType(String prchsType) {
+		this.prchsType = prchsType;
+	}
+
+	/**
+	 * @return the timbreClsf
+	 */
+	public String getTimbreClsf() {
+		return this.timbreClsf;
+	}
+
+	/**
+	 * @param timbreClsf
+	 *            the timbreClsf to set
+	 */
+	public void setTimbreClsf(String timbreClsf) {
+		this.timbreClsf = timbreClsf;
+	}
+
+	/**
+	 * @return the timbreSctn
+	 */
+	public String getTimbreSctn() {
+		return this.timbreSctn;
+	}
+
+	/**
+	 * @param timbreSctn
+	 *            the timbreSctn to set
+	 */
+	public void setTimbreSctn(String timbreSctn) {
+		this.timbreSctn = timbreSctn;
+	}
+
+	/**
+	 * @return the menuId
+	 */
+	public String getMenuId() {
+		return this.menuId;
+	}
+
+	/**
+	 * @param menuId
+	 *            the menuId to set
+	 */
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
+
+	/**
+	 * @return the genreClsfCd
+	 */
+	public String getGenreClsfCd() {
+		return this.genreClsfCd;
+	}
+
+	/**
+	 * @param genreClsfCd
+	 *            the genreClsfCd to set
+	 */
+	public void setGenreClsfCd(String genreClsfCd) {
+		this.genreClsfCd = genreClsfCd;
 	}
 
 }

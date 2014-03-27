@@ -324,6 +324,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				throw new StorePlatformException("SAC_PUR_7209", e);
 			}
 
+			// SKT후불 결제정보 재정의 원인
+			res.setTypeSktLimit(policyResult.getSktLimitType());
+
 			// SKT 결제 처리 타입
 			if (policyResult.isSktTestMdn()) {
 				testMdnType = policyResult.isSktTestMdnWhiteList() ? PurchaseConstants.SKT_PAYMENT_TYPE_TESTDEVICE : PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE;
@@ -333,9 +336,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			// SKT 결제 금액
 			sktAvailableAmt = policyResult.getSktRestAmt();
-			if (sktAvailableAmt > createPurchaseSc.getTotAmt()) {
-				sktAvailableAmt = createPurchaseSc.getTotAmt();
-			}
 
 			// SKT 후불 재조정
 			if (StringUtils.equals(testMdnType, PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE)) {
@@ -510,6 +510,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
+		// ------------------------------------------------------------------------------------------------
+		// (다날) 컨텐츠 종류: 실물 / 디지털 : 쇼핑상품만 실물로 처리
+
+		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			res.setTypeDanalContent(PurchaseConstants.DANAL_CONTENT_TYPE_REAL);
+		} else {
+			res.setTypeDanalContent(PurchaseConstants.DANAL_CONTENT_TYPE_DIGITAL);
+		}
+
 		return res;
 	}
 
@@ -558,9 +567,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		Map<String, String> reservedDataMap = this.parseReservedData(createPurchaseSc.getPrchsResvDesc());
 
-		String sprcProdYn = StringUtils.isNotBlank(reservedDataMap.get("specialCouponId")) ? PurchaseConstants.USE_Y : PurchaseConstants.USE_N; // 특가
-																																				// 상품
-																																				// 여부
+		// 특가 상품 여부
+		String sprcProdYn = StringUtils.isNotBlank(reservedDataMap.get("specialCouponId")) ? PurchaseConstants.USE_Y : PurchaseConstants.USE_N;
 
 		// 공통 작업용 세팅
 		for (CreatePurchaseSc createPurchaseInfo : createPurchaseScList) {
@@ -1085,6 +1093,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchase.setDrmYn(product.getDrmYn());
 				createPurchase.setAlarmYn(PurchaseConstants.USE_Y);
 				createPurchase.setCurrencyCd(purchaseOrderInfo.getCurrencyCd());
+				/* IAP */
+				createPurchase.setTid(product.getTid()); // 부분유료화 개발사 구매Key
+				createPurchase.setTxId(product.getTxId()); // 부분유료화 전자영수증 번호
+				createPurchase.setParentProdId(product.getParentProdId()); // 부모_상품_ID
+				createPurchase.setPartChrgVer(product.getPartChrgVer()); // 부분_유료_버전
+				createPurchase.setPartChrgProdNm(product.getPartChrgProdNm()); // 부분_유료_상품_명
+				/* Ring & Bell */
+				createPurchase.setRnBillCd(product.getRnBillCd()); // RN_과금_코드
+				createPurchase.setInfoUseFee(product.getInfoUseFee()); // 정보_이용_요금 (ISU_AMT_ADD)
+				createPurchase.setCid(product.getCid()); // 컨텐츠ID
+				createPurchase.setContentsClsf(product.getContentsClsf()); // 컨텐츠_구분
+				createPurchase.setContentsType(product.getContentsType()); // 컨텐츠_타입
+				createPurchase.setPrchsType(product.getPrchsType()); // 구매_타입
+				createPurchase.setTimbreClsf(product.getTimbreClsf()); // 음질_구분
+				createPurchase.setTimbreSctn(product.getTimbreSctn()); // 음질_구간
+				createPurchase.setMenuId(product.getMenuId()); // 메뉴_ID
+				createPurchase.setGenreClsfCd(product.getGenreClsfCd()); // 장르_구분_코드
 
 				// 구매예약 시 저장할 데이터 (상품별)
 				if (bCharge) {
@@ -1292,7 +1317,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	private int insertPurchaseProductCount(List<CreatePurchaseSc> createPurchaseScList, String prchsStatusCd) {
 		try {
-			return this.purchaseCountService.insertPurchaseProductCount(createPurchaseScList, prchsStatusCd);
+			// TAKTEST:: 테스트 진행을 위한 중복 구매 허용 위해 주석처리
+			// return this.purchaseCountService.insertPurchaseProductCount(createPurchaseScList, prchsStatusCd);
+			return this.purchaseCountService.dummyPurchaseProductCount(createPurchaseScList, prchsStatusCd);
 		} catch (StorePlatformException e) {
 			Throwable cause = e;
 			while (cause != null) {
@@ -1300,6 +1327,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					this.logger.info("PRCHS,ORDER,SAC,CREATE,COUNT,DUPLE,{}", createPurchaseScList.get(0).getPrchsId());
 					// TAKTEST:: 테스트 진행을 위한 중복 구매 허용 위해 주석처리
 					// throw new StorePlatformException("SAC_PUR_6110"); // 중복된 구매요청
+					return 0;
 				}
 				cause = cause.getCause();
 			}

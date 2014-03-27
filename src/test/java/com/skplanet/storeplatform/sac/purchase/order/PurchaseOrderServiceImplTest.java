@@ -65,9 +65,6 @@ public class PurchaseOrderServiceImplTest {
 		this.createPurchaseReq.setTotAmt(0.0);
 		this.createPurchaseReq.setClientIp("127.0.0.1"); // 클라이언트 IP
 		this.createPurchaseReq.setNetworkTypeCd("DP004401"); // 네트워크 타입 코드
-		this.createPurchaseReq.setMid("SKTstore01");
-		this.createPurchaseReq.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
-		this.createPurchaseReq.setReturnUrl("http://localhost:8080/tenant/completePurchase");
 		this.createPurchaseReq.setTenantProdGrpCd("OR006211DP01");
 
 		List<CreatePurchaseSacReqProduct> productList = new ArrayList<CreatePurchaseSacReqProduct>();
@@ -84,9 +81,6 @@ public class PurchaseOrderServiceImplTest {
 		this.purchaseInfo.setRecvUserKey(this.createPurchaseReq.getRecvUserKey()); // 선물수신 내부 회원 번호
 		this.purchaseInfo.setRecvDeviceKey(this.createPurchaseReq.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
 		this.purchaseInfo.setPrchsReqPathCd(this.createPurchaseReq.getPrchsReqPathCd()); // 구매 요청 경로 코드
-		this.purchaseInfo.setMid(this.createPurchaseReq.getMid()); // 가맹점 ID
-		this.purchaseInfo.setAuthKey(this.createPurchaseReq.getAuthKey()); // 가맹점 인증키
-		this.purchaseInfo.setReturnUrl(this.createPurchaseReq.getReturnUrl()); // 결과처리 URL
 		this.purchaseInfo.setCurrencyCd(this.createPurchaseReq.getCurrencyCd()); // 통화 코드
 		this.purchaseInfo.setTotAmt(this.createPurchaseReq.getTotAmt()); // 총 결제 금액
 		this.purchaseInfo.setClientIp(this.createPurchaseReq.getClientIp()); // 클라이언트 IP

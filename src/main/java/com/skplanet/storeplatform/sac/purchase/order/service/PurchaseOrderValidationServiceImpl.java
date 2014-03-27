@@ -90,22 +90,32 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 */
 	@Override
 	public void validatePurchaseRequestParameter(CreatePurchaseSacReq req) {
-		// 유료결제 요청: 가맹점ID 와 인증키 필수
-		if (req.getTotAmt() > 0.0 && (StringUtils.isBlank(req.getMid()) || StringUtils.isBlank(req.getAuthKey()))) {
-			throw new StorePlatformException("SAC_PUR_5100");
-		}
-
-		// Tstore Client 요청: IMEI와 UACD 필수
-		if (StringUtils.equals(req.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_MOBILE_CLIENT)
-				&& (StringUtils.isBlank(req.getImei()) || StringUtils.isBlank(req.getUacd()))) {
-			throw new StorePlatformException("SAC_PUR_5100");
-		}
 
 		// 선물 요청: 수신자 정보 필수
 		if (StringUtils.equals(req.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)
 				&& (StringUtils.isBlank(req.getRecvUserKey()) || StringUtils.isBlank(req.getRecvDeviceKey()))) {
 			throw new StorePlatformException("SAC_PUR_5100");
 		}
+
+		// 부분유료화 정보
+		if (StringUtils.startsWith(req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+			for (CreatePurchaseSacReqProduct product : req.getProductList()) {
+				if (StringUtils.isBlank(product.getTid()) || StringUtils.isBlank(product.getTxId())
+						|| StringUtils.isBlank(product.getPartChrgVer())
+						|| StringUtils.isBlank(product.getPartChrgProdNm())) {
+					throw new StorePlatformException("SAC_PUR_5100");
+				}
+			}
+		}
+
+		// TAKTODO:: 링&벨
+		// if( StringUtils.startsWith(req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
+		// for(CreatePurchaseSacReqProduct product : req.getProductList()) {
+		// if( StringUtils.isBlank(product.getTimbreClsf()) ) {
+		// throw new StorePlatformException("SAC_PUR_5100");
+		// }
+		// }
+		// }
 	}
 
 	/**
@@ -164,6 +174,14 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 회원상태 체크
 		if (StringUtils.equals(purchaseUserDevice.getUserMainStatus(), PurchaseConstants.USER_STATUS_NORMAL) == false) {
 			throw new StorePlatformException("SAC_PUR_4102");
+		}
+
+		// 디바이스 모델 코드, 통신사 코드 : 요청 값이 있는 경우에는 요청 값으로 사용
+		if (StringUtils.isNotBlank(purchaseOrderInfo.getDeviceModelCd())) {
+			purchaseUserDevice.setDeviceModelCd(purchaseOrderInfo.getDeviceModelCd());
+		}
+		if (StringUtils.isNotBlank(purchaseOrderInfo.getTelecomCd())) {
+			purchaseUserDevice.setTelecom(purchaseOrderInfo.getTelecomCd());
 		}
 
 		purchaseOrderInfo.setPurchaseUser(purchaseUserDevice);
@@ -304,6 +322,24 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			purchaseProduct.setResvCol03(reqProduct.getResvCol03());
 			purchaseProduct.setResvCol04(reqProduct.getResvCol04());
 			purchaseProduct.setResvCol05(reqProduct.getResvCol05());
+
+			// 요청 시 받은 상품 정보 세팅
+			// rnBillCd // RN_과금_코드
+			// cid // 컨텐츠ID
+			// contentsClsf // 컨텐츠_구분
+			// contentsType // 컨텐츠_타입
+			// prchsType // 구매_타입
+			// menuId // 메뉴_ID
+			// genreClsfCd // 장르_구분_코드
+			/* IAP */
+			purchaseProduct.setTid(reqProduct.getTid()); // 부분유료화 개발사 구매Key
+			purchaseProduct.setTxId(reqProduct.getTxId()); // 부분유료화 전자영수증 번호
+			purchaseProduct.setPartChrgVer(reqProduct.getPartChrgVer()); // 부분_유료_버전
+			purchaseProduct.setPartChrgProdNm(reqProduct.getPartChrgProdNm()); // 부분_유료_상품_명
+			/* Ring & Bell */
+			purchaseProduct.setInfoUseFee(reqProduct.getInfoUseFee()); // 정보_이용_요금 (ISU_AMT_ADD)
+			purchaseProduct.setTimbreClsf(reqProduct.getTimbreClsf()); // 음질_구분
+			purchaseProduct.setTimbreSctn(reqProduct.getTimbreSctn()); // 음질_구간
 
 			// 비과금 구매요청 경우, 이용종료일시 세팅
 			if (purchaseOrderInfo.isFreeChargeReq()) {

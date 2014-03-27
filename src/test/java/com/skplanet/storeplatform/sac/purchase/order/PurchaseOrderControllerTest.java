@@ -78,9 +78,6 @@ public class PurchaseOrderControllerTest {
 		req.setTotAmt(0.0);
 		req.setClientIp("127.0.0.1"); // 클라이언트 IP
 		req.setNetworkTypeCd("DP004401"); // 네트워크 타입 코드
-		req.setMid("MID01");
-		req.setAuthKey("MID01_KEY01");
-		req.setReturnUrl("http://localhost:8080/tenant/completePurchase");
 		req.setTenantProdGrpCd("DP010101");
 
 		List<CreatePurchaseSacReqProduct> productList = new ArrayList<CreatePurchaseSacReqProduct>();
