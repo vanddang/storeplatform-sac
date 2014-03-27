@@ -772,10 +772,10 @@
                                ,I.DLV_PROD_YN
                                ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT 
                                ,J.PROD_GRD_CD
-		                       ,NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT  ) AS APPLY_START_DT
-		                       ,NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ) AS APPLY_END_DT      
-                               ,N.SPRC_APPLY_START_DT
-                               ,N.SPRC_APPLY_END_DT   
+		                       ,TO_CHAR(NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT),'YYYYMMDDHH24MISS') AS APPLY_START_DT
+		                       ,TO_CHAR(NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ),'YYYYMMDDHH24MISS') AS APPLY_END_DT      
+                               ,TO_CHAR(N.SPRC_APPLY_START_DT,'YYYYMMDDHH24MISS')
+                               ,TO_CHAR(N.SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS')   
                                ,DECODE(I.PROD_CASE_CD
                                      , 'DP006301', 'giftcard'
                                      , 'DP006302', 'exchange'
