@@ -108,7 +108,9 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 		List<MetaInfo> bestDownloadMMList = null;
 
 		if (StringUtils.isEmpty(listId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "orderedBy", orderedBy);
+			if (StringUtils.isEmpty(orderedBy)) {
+				throw new StorePlatformException("SAC_DSP_0002", "orderedBy", orderedBy);
+			}
 		}
 
 		if (StringUtils.isNotEmpty(orderedBy)) {
