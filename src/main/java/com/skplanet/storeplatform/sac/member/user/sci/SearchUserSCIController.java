@@ -29,7 +29,6 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserP
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -38,9 +37,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDevice;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
-import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByUserKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -79,36 +76,11 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[SearchUserSCIController.searchUserByUserKey] RequestHeader : {}, \nRequestParameter : {}", requestHeader, request);
+		LOGGER.info("nRequestParameter : {}", requestHeader, request);
 
-		List<String> userKeyList = request.getUserKeyList();
-		SearchUserReq searchUserReq = new SearchUserReq();
-		searchUserReq.setUserKeyList(userKeyList);
+		SearchUserSacRes searchUserSacRes = this.userSearchService.searchUserByUserKey(requestHeader, request);
 
-		Map<String, UserInfoByUserKey> userInfoMap = this.userSearchService.searchUserByUserKey(requestHeader, searchUserReq);
-
-		Map<String, UserInfoSac> resMap = new HashMap<String, UserInfoSac>();
-		UserInfoSac userInfoSac;
-
-		for (int i = 0; i < userKeyList.size(); i++) {
-			if (userInfoMap.get(userKeyList.get(i)) != null) {
-				userInfoSac = new UserInfoSac();
-				// userInfoSac.setUserKey(userInfoMap.get(userKeyList.get(i)).getUserKey());
-				userInfoSac.setUserId(userInfoMap.get(userKeyList.get(i)).getUserId());
-				userInfoSac.setUserMainStatus(userInfoMap.get(userKeyList.get(i)).getUserMainStatus());
-				userInfoSac.setUserSubStatus(userInfoMap.get(userKeyList.get(i)).getUserSubStatus());
-				userInfoSac.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
-				// 등록기기(deviceIdList) 없는경우, SC 회원에서 size=0인 List로 내려주기로함.
-				userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIdList());
-
-				resMap.put(userKeyList.get(i), userInfoSac);
-			}
-		}
-
-		SearchUserSacRes searchUserSacRes = new SearchUserSacRes();
-		searchUserSacRes.setUserInfo(resMap);
-
-		LOGGER.debug("[SearchUserSCIController.searchUserByUserKey] ResponseParameter : {}", searchUserSacRes);
+		LOGGER.info("ResponseParameter : {}", searchUserSacRes);
 		return searchUserSacRes;
 	}
 
@@ -128,7 +100,8 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[SearchUserSCIController.searchUserPayplanet] RequestHeader : {}, \nRequestParameter : {}", requestHeader, request);
+		LOGGER.info("[SearchUserSCIController.searchUserPayplanet] RequestHeader : {}, \nRequestParameter : {}",
+				requestHeader, request);
 
 		String deviceKey = StringUtil.nvl(request.getDeviceKey(), "");
 		String userKey = StringUtil.nvl(request.getUserKey(), "");
@@ -216,7 +189,8 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[SearchUserSCIController.searchUserByDeviceKey] RequestHeader : {}, \nRequestParameter : {}", requestHeader, request);
+		LOGGER.info("[SearchUserSCIController.searchUserByDeviceKey] RequestHeader : {}, \nRequestParameter : {}",
+				requestHeader, request);
 
 		// Respone 를 가지고 오기 위한 devceKeyList Setting
 		List<String> deviceKeyList = new ArrayList<String>();
@@ -237,7 +211,8 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
 		searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
-		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader, searchUserDeviceReq);
+		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader,
+				searchUserDeviceReq);
 
 		Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
 		UserDeviceInfoSac userDeviceInfoSac;
@@ -279,7 +254,8 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
 		searchUserDeviceSacRes.setUserDeviceInfo(resMap);
 
-		LOGGER.debug("[SearchUserSCIController.searchUserByDeviceKey] ResponseParameter : {}", searchUserDeviceSacRes.toString());
+		LOGGER.debug("[SearchUserSCIController.searchUserByDeviceKey] ResponseParameter : {}",
+				searchUserDeviceSacRes.toString());
 
 		return searchUserDeviceSacRes;
 	}

@@ -18,8 +18,6 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDevi
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ChangedDeviceHistoryReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ChangedDeviceHistoryRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -54,13 +52,10 @@ public class DeviceSCIController implements DeviceSCI {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		LOGGER.info("[DeviceSCIController.searchDeviceId] RequestHeader : {}, \nRequestParameter : {}", requestHeader,
-				requestVO);
+		LOGGER.info("RequestParameter : {}", requestHeader, requestVO);
 
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				requestVO.getDeviceKey(), requestVO.getUserKey());
-
-		LOGGER.info("[DeviceSCIController.searchDeviceId] SearchDevice Info : {}", deviceInfo);
 
 		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
 		if (deviceInfo != null && StringUtils.isNotBlank(deviceInfo.getDeviceId())) {
@@ -70,7 +65,7 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
 
-		LOGGER.info("[DeviceSCIController.searchDeviceId] ResponseParameter : {}", responseVO);
+		LOGGER.info("ResponseParameter : {}", responseVO);
 		return responseVO;
 	}
 
@@ -97,20 +92,24 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId 또는 deviceKey");
 		}
 
-		ChangedDeviceHistoryReq historyRequest = new ChangedDeviceHistoryReq();
-		historyRequest.setUserKey(request.getUserKey());
-		historyRequest.setDeviceId(request.getDeviceId());
-		historyRequest.setDeviceKey(request.getDeviceKey());
+		// ChangedDeviceHistoryReq historyRequest = new ChangedDeviceHistoryReq();
+		// historyRequest.setUserKey(request.getUserKey());
+		// historyRequest.setDeviceId(request.getDeviceId());
+		// historyRequest.setDeviceKey(request.getDeviceKey());
 
-		ChangedDeviceHistoryRes changedDeviceHistoryRes = this.deviceService.searchChangedDeviceHistory(requestHeader,
-				historyRequest);
+		// ChangedDeviceHistoryRes changedDeviceHistoryRes =
+		// this.deviceService.searchChangedDeviceHistory(requestHeader,
+		// historyRequest);
 
-		ChangedDeviceHistorySacRes response = new ChangedDeviceHistorySacRes();
-		response.setDeviceKey(changedDeviceHistoryRes.getDeviceKey());
-		response.setIsChanged(changedDeviceHistoryRes.getIsChanged());
+		// ChangedDeviceHistorySacRes response = new ChangedDeviceHistorySacRes();
+		// response.setDeviceKey(changedDeviceHistoryRes.getDeviceKey());
+		// response.setIsChanged(changedDeviceHistoryRes.getIsChanged());
 
-		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] ResponseParameter : {}", response);
-		return response;
+		ChangedDeviceHistorySacRes changedDeviceHistoryRes = this.deviceService.searchChangedDeviceHistory(
+				requestHeader, request);
+
+		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] ResponseParameter : {}", changedDeviceHistoryRes);
+		return changedDeviceHistoryRes;
 
 	}
 }
