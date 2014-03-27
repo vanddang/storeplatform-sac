@@ -226,16 +226,14 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
 		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
-		// Music용 Accrual 설정
-		Accrual accrual = this.musicGenerator.generateAccrual(metaInfo);
+		// Accrual 설정
+		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
 		// Rights 설정
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
 		// Music용 Contributor 설정
 		Contributor contributor = this.musicGenerator.generateContributor(metaInfo);
 		// Music 생성
 		Music music = this.musicGenerator.generateMusic(metaInfo);
-		// Date 생성
-		Date date = this.commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, metaInfo.getRegDt());
 
 		product.setTitle(title);
 		product.setPrice(price);
@@ -245,7 +243,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(rights);
 		product.setContributor(contributor);
 		product.setMusic(music);
-		product.setDate(date);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		return product;
 	}
