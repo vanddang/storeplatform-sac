@@ -965,12 +965,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
 			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
 			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
+			sellerMbrRes.setWebsite(sellerMbr.getWebsite());
 
 			// 구매 요청으로 통신판매업 관련 파라미터 3개 추가. 2014.03.26
 			sellerMbrRes.setIsBizRegistered(sellerMbr.getIsBizRegistered());
 			sellerMbrRes.setBizRegNumber(sellerMbr.getBizRegNumber());
 			sellerMbrRes.setBizUnregReason(sellerMbr.getBizUnregReason());
-
 		}
 		return sellerMbrRes;
 	}
