@@ -189,8 +189,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 				Product product = null;
 				// Identifier 설정
-				Identifier identifier = null;
-				List<Identifier> identifierList = null;
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 					String topMenuId = productBasicInfo.getTopMenuId();
 					String svcGrpCd = productBasicInfo.getSvcGrpCd();
@@ -204,16 +202,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 					product = new Product(); // 결과물
 
-					// identifier 정보
-					identifier = new Identifier();
-					identifierList = new ArrayList<Identifier>();
-
-					identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-					identifier.setText(productBasicInfo.getPartProdId());
-					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-					identifier.setText(productBasicInfo.getProdId());
-					identifierList.add(identifier);
-					product.setIdentifierList(identifierList);
 					MetaInfo retMetaInfo = null;
 					// APP 상품의 경우
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
