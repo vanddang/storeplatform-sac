@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -32,10 +34,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
-import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByUserKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -67,7 +67,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	//	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader);
+	// public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -127,7 +127,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	//	public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader);
+	// public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -151,7 +151,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	//	public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader);
+	// public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * <pre>
@@ -244,7 +244,7 @@ public interface UserSearchService {
 	 *            SearchUserReq
 	 * @return
 	 */
-	public Map<String, UserInfoByUserKey> searchUserByUserKey(SacRequestHeader sacHeader, SearchUserReq request);
+	public SearchUserSacRes searchUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request);
 
 	/**
 	 * <pre>
@@ -255,5 +255,6 @@ public interface UserSearchService {
 	 *            SearchUserDeviceReq
 	 * @return
 	 */
-	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceReq request);
+	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader,
+			SearchUserDeviceReq request);
 }
