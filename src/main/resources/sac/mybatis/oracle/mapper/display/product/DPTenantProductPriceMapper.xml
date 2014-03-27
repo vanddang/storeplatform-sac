@@ -65,7 +65,7 @@
 			,#{chnlUnlmtAmt, jdbcType=INTEGER}
 			,#{chnlPeriodAmt, jdbcType=INTEGER}
 			,#{prodNetAmt, jdbcType=INTEGER}
-			,SYSDATE
+			,TO_DATE(#{applyStartDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
 			,TO_DATE(#{applyEndDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
 			,#{seq, jdbcType=INTEGER}
 			,#{dcRate, jdbcType=INTEGER}
