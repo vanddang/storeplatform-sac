@@ -109,7 +109,6 @@ public class MemberCommonComponent {
 	 */
 	public String getOpmdMdnInfo(String msisdn) { // 2014.03.27. 김다슬, 인크로스. 수정
 
-		// GetOpmdRes res = new GetOpmdRes();
 		String resMsisdn = msisdn;
 		// 1. OPMD번호(989)여부 검사
 		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
@@ -117,10 +116,7 @@ public class MemberCommonComponent {
 			uapsReq.setDeviceId(msisdn);
 			OpmdEcRes opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
 			if (opmdRes != null) {
-				// res.setMsisdn(opmdRes.getMobileMdn());
 				resMsisdn = opmdRes.getOpmdMdn();
-				// res.setMobileSvcMngNum(opmdRes.getMobileSvcMngNum());
-				// res.setPauseYN(opmdRes.getPauseYN());
 				LOGGER.debug("[MiscellaneousService.getOpmd] SAC<-UPAS Connection Response : {}", opmdRes);
 			}
 		}

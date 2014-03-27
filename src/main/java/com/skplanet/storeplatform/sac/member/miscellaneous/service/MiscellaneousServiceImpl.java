@@ -29,7 +29,6 @@ import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcR
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
-import com.skplanet.storeplatform.external.client.uaps.vo.OpmdEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UafmapEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -97,31 +96,26 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MiscellaneousServiceImpl.class);
 
 	@Autowired
-	private UapsSCI uapsSCI; // UAPS 연동 Interface.
+	private MemberCommonComponent commonComponent; // 회원 공통기능 컴포넌트
 
 	@Autowired
 	private UserSCI userSCI; // 회원 Component 사용자 기능 Interface.
-
 	@Autowired
 	private DeviceSCI deviceSCI; // 회원 Component 휴대기기 기능 Interface.
 
 	@Autowired
 	private IdpSCI idpSCI; // IDP 연동 Interface.
-
 	@Autowired
-	private MessageSCI messageSCI; // 기타 Component 메시지전송 기능 Interface.
-
+	private UapsSCI uapsSCI; // UAPS 연동 Interface.
+	@Autowired
+	private MessageSCI messageSCI; // 메시지전송 기능 Interface.
 	@Autowired
 	private ImageSCI imageSCI; // 이미지를 String으로 변환 Interface.
+	@Autowired
+	private InicisSCI inicisSCI; // 이니시스 연동 Interface.
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor; // Message Properties
-
-	@Autowired
-	private MemberCommonComponent commonComponent; // 회원 공통기능 컴포넌트
-
-	@Autowired
-	private InicisSCI inicisSCI; // 이니시스 연동 Interface.
 
 	@Autowired
 	@Qualifier("sac")
@@ -140,32 +134,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 */
 	@Override
 	public GetOpmdRes getOpmd(GetOpmdReq req) {
-		String msisdn = req.getMsisdn();
-
-		GetOpmdRes res = new GetOpmdRes();
-		res.setMsisdn(msisdn);
 		LOGGER.info("## Request : {}", req);
-
-		/** 1. OPMD번호(989)여부 검사 */
-		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
-			UapsEcReq uapsReq = new UapsEcReq();
-			uapsReq.setDeviceId(msisdn);
-			OpmdEcRes opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
-			if (opmdRes != null) {
-				res.setMsisdn(opmdRes.getMobileMdn());
-				res.setOpmdMdn(opmdRes.getOpmdMdn());
-				res.setMobileSvcMngNum(opmdRes.getMobileSvcMngNum());
-				res.setPauseYN(opmdRes.getPauseYN());
-				LOGGER.debug("[MiscellaneousService.getOpmd] SAC<-UPAS Connection Response : {}", opmdRes);
-			}
-		} else {
-			/** 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 */
-			res.setMsisdn(msisdn);
-			LOGGER.debug("[MiscellaneousService.getOpmd] Non OPMD Number");
-		}
-
+		GetOpmdRes res = new GetOpmdRes();
+		res.setMsisdn(this.commonComponent.getOpmdMdnInfo(req.getMsisdn()));
 		LOGGER.info("## Response : {}", res);
-
 		return res;
 	}
 
@@ -366,7 +338,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			throw new StorePlatformException("SAC_MEM_3003");
 		}
 
-		if ("Y".equals(resultInfo.getAuthComptYn())) {
+		if (MemberConstants.USE_Y.equals(resultInfo.getAuthComptYn())) {
 			throw new StorePlatformException("SAC_MEM_3001");
 		}
 
@@ -486,7 +458,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				ServiceAuth.class);
 
 		String authCode = null;
-		if (authYnInfo == null || "N".equals(authYnInfo.getAuthComptYn())) {
+		if (authYnInfo == null || MemberConstants.USE_N.equals(authYnInfo.getAuthComptYn())) {
 
 			// 2. 이메일 인증 코드 생성 - GUID 수준의 난수
 			authCode = UUID.randomUUID().toString().replace("-", "");
@@ -546,7 +518,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 2. 인증코드 정보가 존재할 경우, 인증 처리 */
 		if (serviceAuthInfo != null) {
 
-			if ("Y".equals(serviceAuthInfo.getAuthComptYn())) { // 기존 인증된 코드일 경우
+			if (MemberConstants.USE_Y.equals(serviceAuthInfo.getAuthComptYn())) { // 기존 인증된 코드일 경우
 				throw new StorePlatformException("SAC_MEM_3001");
 			}
 
@@ -665,7 +637,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 					uaCd = "9999";
 				}
 			}
-
 		}
 
 		// uaCd로 PhoneInfo 테이블 조회.

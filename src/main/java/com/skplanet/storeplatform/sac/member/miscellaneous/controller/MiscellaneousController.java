@@ -108,8 +108,7 @@ public class MiscellaneousController {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
 
-		GetOpmdRes response = new GetOpmdRes();
-		response.setMsisdn(this.service.getOpmd(request).getMsisdn());
+		GetOpmdRes response = this.service.getOpmd(request);
 		return response;
 	}
 
