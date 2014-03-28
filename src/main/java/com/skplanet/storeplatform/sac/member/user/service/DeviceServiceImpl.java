@@ -556,7 +556,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 9. MQ 연동 */
 		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
 		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-		if (previousUserKey != null && previousDeviceKey != null) {
+		if (StringUtil.isNotBlank(previousUserKey) && StringUtil.isNotBlank(previousDeviceKey)) {
 			mqInfo.setOldUserKey(previousUserKey);
 			mqInfo.setOldDeviceKey(previousDeviceKey);
 		}
