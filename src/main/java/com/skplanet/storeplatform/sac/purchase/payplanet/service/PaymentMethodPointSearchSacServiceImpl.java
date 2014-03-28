@@ -48,60 +48,31 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 	/**
 	 * 
 	 * <pre>
-	 * 문화상품권 조회.
+	 * TMemberShip point 조회.
 	 * </pre>
 	 * 
 	 * @param request
 	 *            요청
-	 * @return CultureSacRes
+	 * @return TMemberShipSacRes
 	 */
 	@Override
-	public CultureSacRes postCulture(CultureSacReq request) {
-		CultureEcReq req = new CultureEcReq();
+	public TMemberShipSacRes postTMemberShip(TMemberShipSacReq request) {
+
+		TMemberShipEcReq req = new TMemberShipEcReq();
 
 		req.setToken(request.getToken());
 		req.setTimeReq(request.getTimeReq());
 		req.setMid(request.getMid());
-		req.setCultureId(request.getCultureId());
-		req.setCulturePwd(request.getCulturePwd());
+		req.setNoTmsCard(request.getNoTmsCard());
+		req.setDtBirth(request.getDtBirth());
 
-		CultureEcRes cultureEcRes = this.paymentMethodPointSearchSCI.postCulture(req);
+		TMemberShipEcRes tMemberShipEcRes = this.paymentMethodPointSearchSCI.postTMemberShip(req);
 
-		CultureSacRes res = new CultureSacRes();
-		res.setCdResult(cultureEcRes.getCdResult());
-		res.setMsgResult(cultureEcRes.getMsgResult());
-		res.setCulturePoint(cultureEcRes.getCulturePoint());
-		this.logger.debug("PRCHS,CULTURE,SAC,RES,{}", res);
-		return res;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 도토리 조회.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            요청
-	 * @return DotoriSacRes
-	 */
-	@Override
-	public DotoriSacRes postDotori(DotoriSacReq request) {
-
-		DotoriEcReq req = new DotoriEcReq();
-
-		req.setToken(request.getToken());
-		req.setTimeReq(request.getTimeReq());
-		req.setMid(request.getMid());
-		req.setMdn(request.getMdn());
-
-		DotoriEcRes dotoriEcRes = this.paymentMethodPointSearchSCI.postDotori(req);
-
-		DotoriSacRes res = new DotoriSacRes();
-		res.setCdResult(dotoriEcRes.getCdResult());
-		res.setMsgResult(dotoriEcRes.getMsgResult());
-		res.setCntDotori(dotoriEcRes.getCntDotori());
-		this.logger.debug("PRCHS,DOTORI,SAC,RES,{}", res);
+		TMemberShipSacRes res = new TMemberShipSacRes();
+		res.setCdResult(tMemberShipEcRes.getCdResult());
+		res.setMsgResult(tMemberShipEcRes.getMsgResult());
+		res.setTmsPoint(tMemberShipEcRes.getTmsPoint());
+		this.logger.debug("PRCHS,TMEMBERSHIP,SAC,RES,{}", res);
 		return res;
 	}
 
@@ -139,48 +110,61 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 	/**
 	 * 
 	 * <pre>
-	 * TMemberShip point 조회.
+	 * 도토리 조회.
 	 * </pre>
 	 * 
 	 * @param request
 	 *            요청
-	 * @return TMemberShipSacRes
+	 * @return DotoriSacRes
 	 */
 	@Override
-	public TMemberShipSacRes postTMemberShip(TMemberShipSacReq request) {
+	public DotoriSacRes postDotori(DotoriSacReq request) {
 
-		TMemberShipEcReq req = new TMemberShipEcReq();
+		DotoriEcReq req = new DotoriEcReq();
 
 		req.setToken(request.getToken());
 		req.setTimeReq(request.getTimeReq());
 		req.setMid(request.getMid());
-		req.setNoTmsCard(request.getNoTmsCard());
-		req.setDtBirth(request.getDtBirth());
+		req.setMdn(request.getMdn());
 
-		TMemberShipEcRes tMemberShipEcRes = this.paymentMethodPointSearchSCI.postTMemberShip(req);
+		DotoriEcRes dotoriEcRes = this.paymentMethodPointSearchSCI.postDotori(req);
 
-		TMemberShipSacRes res = new TMemberShipSacRes();
-		res.setCdResult(tMemberShipEcRes.getCdResult());
-		res.setMsgResult(tMemberShipEcRes.getMsgResult());
-		res.setTmsPoint(tMemberShipEcRes.getTmsPoint());
-		this.logger.debug("PRCHS,TMEMBERSHIP,SAC,RES,{}", res);
+		DotoriSacRes res = new DotoriSacRes();
+		res.setCdResult(dotoriEcRes.getCdResult());
+		res.setMsgResult(dotoriEcRes.getMsgResult());
+		res.setCntDotori(dotoriEcRes.getCntDotori());
+		this.logger.debug("PRCHS,DOTORI,SAC,RES,{}", res);
 		return res;
 	}
 
-	// /**
-	// *
-	// * <pre>
-	// * Token 데이터 구성: authKey+timeReq+MID.
-	// * </pre>
-	// *
-	// * @return Token 데이터
-	// */
-	// private String makeTokenFormat(String authKey, String timeReq, String mid) {
-	// StringBuffer sb = new StringBuffer(128);
-	//
-	// sb.append(authKey).append(timeReq).append(mid);
-	//
-	// return sb.toString();
-	// }
+	/**
+	 * 
+	 * <pre>
+	 * 문화상품권 조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            요청
+	 * @return CultureSacRes
+	 */
+	@Override
+	public CultureSacRes postCulture(CultureSacReq request) {
+		CultureEcReq req = new CultureEcReq();
+
+		req.setToken(request.getToken());
+		req.setTimeReq(request.getTimeReq());
+		req.setMid(request.getMid());
+		req.setCultureId(request.getCultureId());
+		req.setCulturePwd(request.getCulturePwd());
+
+		CultureEcRes cultureEcRes = this.paymentMethodPointSearchSCI.postCulture(req);
+
+		CultureSacRes res = new CultureSacRes();
+		res.setCdResult(cultureEcRes.getCdResult());
+		res.setMsgResult(cultureEcRes.getMsgResult());
+		res.setCulturePoint(cultureEcRes.getCulturePoint());
+		this.logger.debug("PRCHS,CULTURE,SAC,RES,{}", res);
+		return res;
+	}
 
 }

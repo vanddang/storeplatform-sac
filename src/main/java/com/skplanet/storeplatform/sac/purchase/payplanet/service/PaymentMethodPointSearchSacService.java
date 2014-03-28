@@ -28,26 +28,14 @@ public interface PaymentMethodPointSearchSacService {
 	/**
 	 * 
 	 * <pre>
-	 * 문화상품권 조회.
+	 * TMemberShip point 조회.
 	 * </pre>
 	 * 
-	 * @param cultureSacReq
+	 * @param tMemberShipSacReq
 	 *            요청
-	 * @return CultureSacRes
+	 * @return TMemberShipSacRes
 	 */
-	public CultureSacRes postCulture(CultureSacReq cultureSacReq);
-
-	/**
-	 * 
-	 * <pre>
-	 * 도토리 조회.
-	 * </pre>
-	 * 
-	 * @param dotoriSacReq
-	 *            요청
-	 * @return DotoriSacRes
-	 */
-	public DotoriSacRes postDotori(DotoriSacReq dotoriSacReq);
+	public TMemberShipSacRes postTMemberShip(TMemberShipSacReq tMemberShipSacReq);
 
 	/**
 	 * 
@@ -64,12 +52,24 @@ public interface PaymentMethodPointSearchSacService {
 	/**
 	 * 
 	 * <pre>
-	 * TMemberShip point 조회.
+	 * 도토리 조회.
 	 * </pre>
 	 * 
-	 * @param tMemberShipSacReq
+	 * @param dotoriSacReq
 	 *            요청
-	 * @return TMemberShipSacRes
+	 * @return DotoriSacRes
 	 */
-	public TMemberShipSacRes postTMemberShip(TMemberShipSacReq tMemberShipSacReq);
+	public DotoriSacRes postDotori(DotoriSacReq dotoriSacReq);
+
+	/**
+	 * 
+	 * <pre>
+	 * 문화상품권 조회.
+	 * </pre>
+	 * 
+	 * @param cultureSacReq
+	 *            요청
+	 * @return CultureSacRes
+	 */
+	public CultureSacRes postCulture(CultureSacReq cultureSacReq);
 }

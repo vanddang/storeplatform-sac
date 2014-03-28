@@ -46,35 +46,18 @@ public class PaymentMethodPointSearchController {
 	/**
 	 * 
 	 * <pre>
-	 * 문화상품권 조회.
+	 * TMemberShip point 조회.
 	 * </pre>
 	 * 
-	 * @param cultureSacReq
+	 * @param tMemberShipSacReq
 	 *            요청
-	 * @return CultureSacRes
+	 * @return TMemberShipSacRes
 	 */
-	@RequestMapping(value = "/culture/point/get/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/tms/point/get/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CultureSacRes postCulture(@RequestBody @Validated CultureSacReq cultureSacReq) {
-		this.logger.debug("PRCHS,CULTURE,SAC,REQ,{}", cultureSacReq);
-		return this.paymentMethodPointSearchSacService.postCulture(cultureSacReq);
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 도토리 조회.
-	 * </pre>
-	 * 
-	 * @param dotoriSacReq
-	 *            요청
-	 * @return DotoriSacRes
-	 */
-	@RequestMapping(value = "/dotori/count/get/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public DotoriSacRes postDotori(@RequestBody @Validated DotoriSacReq dotoriSacReq) {
-		this.logger.debug("PRCHS,DOTORI,SAC,REQ,{}", dotoriSacReq);
-		return this.paymentMethodPointSearchSacService.postDotori(dotoriSacReq);
+	public TMemberShipSacRes postTMemberShip(@RequestBody @Validated TMemberShipSacReq tMemberShipSacReq) {
+		this.logger.debug("PRCHS,TMEMBERSHIP,SAC,REQ,{}", tMemberShipSacReq);
+		return this.paymentMethodPointSearchSacService.postTMemberShip(tMemberShipSacReq);
 	}
 
 	/**
@@ -97,17 +80,34 @@ public class PaymentMethodPointSearchController {
 	/**
 	 * 
 	 * <pre>
-	 * TMemberShip point 조회.
+	 * 도토리 조회.
 	 * </pre>
 	 * 
-	 * @param tMemberShipSacReq
+	 * @param dotoriSacReq
 	 *            요청
-	 * @return TMemberShipSacRes
+	 * @return DotoriSacRes
 	 */
-	@RequestMapping(value = "/tms/point/get/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/dotori/count/get/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public TMemberShipSacRes postTMemberShip(@RequestBody @Validated TMemberShipSacReq tMemberShipSacReq) {
-		this.logger.debug("PRCHS,TMEMBERSHIP,SAC,REQ,{}", tMemberShipSacReq);
-		return this.paymentMethodPointSearchSacService.postTMemberShip(tMemberShipSacReq);
+	public DotoriSacRes postDotori(@RequestBody @Validated DotoriSacReq dotoriSacReq) {
+		this.logger.debug("PRCHS,DOTORI,SAC,REQ,{}", dotoriSacReq);
+		return this.paymentMethodPointSearchSacService.postDotori(dotoriSacReq);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 문화상품권 조회.
+	 * </pre>
+	 * 
+	 * @param cultureSacReq
+	 *            요청
+	 * @return CultureSacRes
+	 */
+	@RequestMapping(value = "/culture/point/get/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CultureSacRes postCulture(@RequestBody @Validated CultureSacReq cultureSacReq) {
+		this.logger.debug("PRCHS,CULTURE,SAC,REQ,{}", cultureSacReq);
+		return this.paymentMethodPointSearchSacService.postCulture(cultureSacReq);
 	}
 }
