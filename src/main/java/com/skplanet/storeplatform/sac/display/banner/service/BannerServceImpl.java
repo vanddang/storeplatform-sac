@@ -88,21 +88,16 @@ public class BannerServceImpl implements BannerService {
 		int imgCount = 0;
 		String imgSizeList[] = null;
 
-		try {
-			// 이미지 사이즈 코드 유효값 확인
-			imgSizeList = reqImgSizeCd.split("\\+");
+		// 이미지 사이즈 코드 유효값 확인
+		imgSizeList = reqImgSizeCd.split("\\+");
 
-			if (imgSizeList == null || imgSizeList.length == 0) {
-				// 실행에 필요한 파라미터가 유효하지 않습니다.
-				throw new StorePlatformException("SAC_DSP_0003", "imgSizeCd", reqImgSizeCd);
-			} else {
-				for (int v = 0; v < imgSizeList.length; v++) {
-					imgCount += Integer.parseInt(imgSizeList[v].split("\\/")[1]);
-				}
-			}
-		} catch (Exception e) {
+		if (imgSizeList == null || imgSizeList.length == 0) {
 			// 실행에 필요한 파라미터가 유효하지 않습니다.
 			throw new StorePlatformException("SAC_DSP_0003", "imgSizeCd", reqImgSizeCd);
+		} else {
+			for (int v = 0; v < imgSizeList.length; v++) {
+				imgCount += Integer.parseInt(imgSizeList[v].split("\\/")[1]);
+			}
 		}
 
 		if (imgCount > this.BANNER_MAX_COUNT) {
