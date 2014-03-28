@@ -12,7 +12,7 @@
 		 FROM (SELECT A.TENANT_ID
 		            , B.MENU_ID
 		            , B.PROD_ID
-		            , COUNT(*) OVER () AS TOTAL_COUNT
+		            , COUNT(B.PROD_ID) OVER () AS TOTAL_COUNT
                     , ROW_NUMBER() OVER(ORDER BY B.EXPO_ORD_ALWAYS_YN DESC, B.EXPO_ORD, B.EXPO_ORD_SUB) AS RNUM
 		         FROM TB_DP_LIST A
 		            , TB_DP_LIST_PROD B
@@ -87,7 +87,7 @@
                      , A.TOP_MENU_ID
                      , A.META_CLSF_CD
                      , A.CONTENTS_TYPE_CD
-		             , COUNT(*) OVER () AS TOTAL_COUNT
+		             , COUNT(A.PART_PROD_ID) OVER () AS TOTAL_COUNT
 		             , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
 		          FROM (SELECT A.TENANT_ID
 		                     , E.MENU_ID

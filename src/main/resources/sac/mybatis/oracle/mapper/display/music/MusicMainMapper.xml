@@ -20,7 +20,7 @@
                      , C.TOP_MENU_ID
                      , D.META_CLSF_CD
                      , D.CONTENTS_TYPE_CD
-                     , COUNT(*) OVER () AS TOTAL_COUNT
+                     , COUNT(I.PART_PROD_ID) OVER () AS TOTAL_COUNT
                      <if test='filteredBy == "top"'>
                      /* TOP Music */
                      , ROW_NUMBER() OVER(ORDER BY A.NOW_RANK ASC, E.PROD_NM) AS RNUM
