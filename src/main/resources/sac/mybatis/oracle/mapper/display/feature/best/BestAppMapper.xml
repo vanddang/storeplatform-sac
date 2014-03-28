@@ -139,8 +139,8 @@
                                               AND K.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
                                               AND K.USE_YN = 'Y'
                                               AND I.EXPO_YN = 'Y' /* 노출여부 */
-                                            ORDER BY A.EXPO_ORD
                                          ) IA
+                                         ORDER BY IA.EXPO_ORD
                                  ) JA          
                             WHERE JA.RN <![CDATA[ <= ]]> 2 
                          ) TA
