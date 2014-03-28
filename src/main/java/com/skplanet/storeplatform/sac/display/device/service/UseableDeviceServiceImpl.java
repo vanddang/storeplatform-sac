@@ -128,8 +128,7 @@ public class UseableDeviceServiceImpl implements UseableDeviceService {
 		}
 
 		List<Device> deviceList = new ArrayList<Device>();
-		if (usableDeviceList.size() != 0) {
-
+		if (usableDeviceList != null) {
 			Iterator<MetaInfo> iterator = usableDeviceList.iterator();
 			while (iterator.hasNext()) {
 				MetaInfo metaInfo = iterator.next();
