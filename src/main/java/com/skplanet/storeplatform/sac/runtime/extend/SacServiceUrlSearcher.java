@@ -17,6 +17,8 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -35,6 +37,8 @@ import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearc
  */
 @Component
 public class SacServiceUrlSearcher implements ServiceUrlSearcher {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SacServiceUrlSearcher.class);
 
 	/**
 	 * 내부 요청 서블릿 Host.
@@ -70,7 +74,11 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		// 요청 Method
 		String requestMethod = request.getMethod();
 		//
-		int localPort = request.getLocalPort();
+		int localPort = request.getServerPort();
+
+		LOGGER.info("localPort : {} " + request.getLocalPort());
+		LOGGER.info("serverPort : {} " + request.getServerPort());
+		LOGGER.info("remotePort : {}" + request.getRemotePort());
 
 		// External Component는 SAC에서 Bypass 대상이나 우선 프로퍼티로 해당 기능이 가능하게 구현.
 		// 1. 해당 인터페이스의 bypass유무가 'Y' 인 대상.
@@ -85,7 +93,7 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
 		} else {
 			// 그외는 내부 서블릿 URL 호출.
-			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).port(localPort).path(requestContextPath)
+			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).path(requestContextPath)
 					.path(this.innerServletPath).path(innerRequestURI);
 		}
 		if (requestMethod.equals("GET")) {
