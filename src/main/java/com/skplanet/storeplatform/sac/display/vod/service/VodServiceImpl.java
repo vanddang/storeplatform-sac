@@ -546,7 +546,7 @@ public class VodServiceImpl implements VodService {
 		List<Source> sourceList = new ArrayList<Source>();
 		if(StringUtils.isNotEmpty(mapperVO.getImgPath())) {
 			Source source = new Source();
-			source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+			source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgNm()));
 			source.setSize(mapperVO.getImgSize());
 			source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 			source.setUrl(mapperVO.getImgPath()+mapperVO.getImgNm());
