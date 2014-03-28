@@ -1828,7 +1828,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							// saleOption 셋팅
 							episodeSaleOption = new SalesOption();
 							episodeSaleOption.setBtob(episodeShopping.getB2bProdYn()); // B2B_상품_여부
-							episodeSaleOption.setType(shopping.getProdCaseCd());
+							episodeSaleOption.setType(episodeShopping.getProdCaseCd());
 
 							if (episodeShopping.getSoldOut().equals("Y")) {
 								episodeSaleOption.setStatus(DisplayConstants.DP_SOLDOUT);
