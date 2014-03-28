@@ -160,6 +160,11 @@ public class SellerAccount extends CommonInfo {
 	private String tpinCode;
 
 	/**
+	 * 전환 유형코드.
+	 */
+	private String changedCd; // 2014.03.28추가
+
+	/**
 	 * @return the abaCode
 	 */
 	public String getAbaCode() {
@@ -698,4 +703,20 @@ public class SellerAccount extends CommonInfo {
 	public void setCeoName(String ceoName) {
 		this.ceoName = ceoName;
 	}
+
+	/**
+	 * @return the changedCd
+	 */
+	public String getChangedCd() {
+		return this.changedCd;
+	}
+
+	/**
+	 * @param changedCd
+	 *            the changedCd to set
+	 */
+	public void setChangedCd(String changedCd) {
+		this.changedCd = changedCd;
+	}
+
 }
