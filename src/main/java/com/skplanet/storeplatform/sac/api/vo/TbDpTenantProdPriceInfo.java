@@ -31,6 +31,7 @@ public class TbDpTenantProdPriceInfo extends CommonInfo {
 	private long prodNetAmt; // 상품_정찰_금액
 	private long dcRate; // 할인_율
 	private long dcAmt; // 할인_금액
+	private long dcAftProdAmt; // 할인_후_상품_금액
 	private String taxClsf; // 세금_구분
 	private String regId; // 등록_ID
 	private String regDt; // 등록_일시
@@ -201,6 +202,21 @@ public class TbDpTenantProdPriceInfo extends CommonInfo {
 	 */
 	public void setDcAmt(long dcAmt) {
 		this.dcAmt = dcAmt;
+	}
+
+	/**
+	 * @return the dcAftProdAmt
+	 */
+	public long getDcAftProdAmt() {
+		return this.dcAftProdAmt;
+	}
+
+	/**
+	 * @param dcAftProdAmt
+	 *            the dcAftProdAmt to set
+	 */
+	public void setDcAftProdAmt(long dcAftProdAmt) {
+		this.dcAftProdAmt = dcAftProdAmt;
 	}
 
 	/**
