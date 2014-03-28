@@ -255,9 +255,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				continue;
 			}
 			try {
-				this.removeRO(purchaseCancelSacParam, purchaseCancelDetailSacParam, prchsDtlSacParam);
+				this.cancelRO(purchaseCancelSacParam, purchaseCancelDetailSacParam, prchsDtlSacParam);
 			} catch (Exception e) {
-				this.logger.debug("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
+				this.logger.info("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
 			}
 		}
 
@@ -515,7 +515,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	 * @param purchaseCancelParamDetail
 	 *            purchaseCancelParamDetail
 	 */
-	private void removeRO(PurchaseCancelSacParam purchaseCancelSacParam,
+	private void cancelRO(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, PrchsDtlSacParam prchsDtlSacParam) {
 
 		/** 사용자 deviceId 조회. */
@@ -523,6 +523,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				prchsDtlSacParam.getUseInsdDeviceId());
 		/** appId 조회 */
 		String appId = "";
+
 		PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
 		paymentInfoSacReq.setTenantId(prchsDtlSacParam.getUseTenantId());
 		List<String> prodIdList = new ArrayList<String>();
