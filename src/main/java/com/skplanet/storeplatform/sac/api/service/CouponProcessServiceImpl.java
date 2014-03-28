@@ -656,6 +656,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dtpp.setProdNetAmt(0); // 상품_정찰_금액
 			dtpp.setDcRate(0); // 할인_율
 			dtpp.setDcAmt(0); // 할인_금액
+			dtpp.setDcAftProdAmt(0); // 할인_후_상품_금액
 			dtpp.setTaxClsf(couponInfo.getTaxType()); // 세금_구분
 			dtpp.setRegId(couponInfo.getBpId());
 			dtpp.setUpdId(couponInfo.getBpId());
@@ -675,7 +676,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dtpp.setApplyEndDt(couponInfo.getIssueEDate());
 				dtpp.setProdAmt(Long.parseLong(itemInfo.getItemPrice()));
 				dtpp.setChnlUnlmtAmt(0); // ??
-				dtpp.setChnlPeriodAmt(Long.parseLong(itemInfo.getSalePrice()));
+				dtpp.setChnlPeriodAmt(0); // ??
 				dtpp.setProdNetAmt(Long.parseLong(itemInfo.getOrgPrice()));
 				dtpp.setDcRate(Long.parseLong(itemInfo.getDcRate()));
 				if (Long.parseLong(itemInfo.getOrgPrice()) - Long.parseLong(itemInfo.getSalePrice()) > 0) { // 금액이 >0 보다
@@ -683,6 +684,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				} else {
 					dtpp.setDcAmt(0);
 				}
+				dtpp.setDcAftProdAmt(Long.parseLong(itemInfo.getSalePrice()));
 				dtpp.setTaxClsf(couponInfo.getTaxType()); // 세금_구분
 				dtpp.setRegId(couponInfo.getBpId());
 				dtpp.setUpdId(couponInfo.getBpId());

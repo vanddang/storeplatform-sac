@@ -413,6 +413,7 @@
             ,PROD_NET_AMT        /* 상품_정찰_금액 */
             ,DC_RATE             /* 할인_율 */
             ,DC_AMT              /* 할인_금액 */
+            ,DC_AFT_PROD_AMT     /* 할인_후_상품_금액*/
             ,TAX_CLSF            /* 세금_구분 */
             ,REG_ID              /* 등록_ID */
             ,REG_DT              /* 등록_일시 */
@@ -430,6 +431,7 @@
             ,#{prodNetAmt}
             ,#{dcRate}
             ,#{dcAmt}
+            ,#{dcAftProdAmt}
             ,#{taxClsf}
             ,#{regId}
             ,sysdate
