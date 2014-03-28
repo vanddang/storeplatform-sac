@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.client.purchase.product.count.vo;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -23,7 +22,6 @@ public class PurchaseProductCountSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	@NotNull
 	@Min(1)
 	private Integer perCount; // 전시에 한번 요청할 카운트.
 
