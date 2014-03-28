@@ -393,11 +393,12 @@ public class EpubServiceImpl implements EpubService {
 		// screenshot
         if(screenshotList != null) {
 			for (ProductImage screenshotImage : screenshotList) {
+				String imagePath = screenshotImage.getFilePath() + screenshotImage.getFileNm();
 				Source screenshotSource = new Source();
 				screenshotSource.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
 				screenshotSource.setSize(screenshotImage.getFileSize());
-				screenshotSource.setMediaType(DisplayCommonUtil.getMimeType(screenshotImage.getFileNm()));
-				screenshotSource.setUrl(screenshotImage.getFilePath() + screenshotImage.getFileNm());
+				screenshotSource.setMediaType(DisplayCommonUtil.getMimeType(imagePath));
+				screenshotSource.setUrl(imagePath);
 				sourceList.add(screenshotSource);
 			}
         }
