@@ -1299,6 +1299,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrOneID.setIntgMbrCaseCode(agreeUserEcRes.getImMemTypeCd()); // 통합회원 유형 코드 100: 국내회원 900: 글로벌회원
 			mbrOneID.setEntryDate(agreeUserEcRes.getJoinDate() + agreeUserEcRes.getJoinTime()); // 가입일시
 			mbrOneID.setMemberCaseCode(agreeUserEcRes.getUserType()); // 가입자 유형코드
+			mbrOneID.setIntgSiteCode(agreeUserEcRes.getJoinSstCode()); // 가입 서비스 사이트 코드
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
