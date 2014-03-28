@@ -558,6 +558,7 @@ public class VodServiceImpl implements VodService {
 			Source screenshotSource = new Source();
 			screenshotSource.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
 			screenshotSource.setSize(screenshotImage.getFileSize());
+			screenshotSource.setMediaType(DisplayCommonUtil.getMimeType(screenshotImage.getFileNm()));
 			screenshotSource.setUrl(screenshotImage.getFilePath() + screenshotImage.getFileNm());
 			sourceList.add(screenshotSource);
 		}
