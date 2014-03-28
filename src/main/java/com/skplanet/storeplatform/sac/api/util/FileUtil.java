@@ -11,12 +11,10 @@ package com.skplanet.storeplatform.sac.api.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -105,36 +103,6 @@ public class FileUtil {
 		} catch (IOException ioe) {
 			throw new Exception(ioe);
 		}
-	}
-
-	/**
-	 * 지정된 fname에서 데이터를 읽어 string으로 반환한다.
-	 * 
-	 * @param fname
-	 *            읽을 파일
-	 * @return 파일 내용
-	 * @throws Exception
-	 *             Exception
-	 */
-	public static String read(File fname) throws Exception {
-		BufferedReader bufferedReader = null;
-		StringBuffer result = new StringBuffer();
-
-		try {
-			bufferedReader = new BufferedReader(new FileReader(fname));
-			int rsize = 0;
-			char[] buff = new char[BUFFER_SIZE];
-
-			while (-1 != (rsize = bufferedReader.read(buff, 0, BUFFER_SIZE))) {
-				result.append(buff, 0, rsize);
-			}
-
-		} catch (IOException ioe) {
-			throw new Exception(ioe);
-		} finally {
-			bufferedReader.close();
-		}
-		return result.toString();
 	}
 
 	/**
