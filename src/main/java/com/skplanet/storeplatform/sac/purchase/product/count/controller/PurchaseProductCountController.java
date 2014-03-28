@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.purchase.product.count.vo.PurchaseP
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.product.count.service.PurchaseProductCountService;
 import com.skplanet.storeplatform.sac.purchase.product.count.vo.PurchaseProductCountSacParam;
+import com.skplanet.storeplatform.sac.purchase.product.count.vo.PurchaseProductCountSacResult;
 
 /**
  * 구매 상품 건수 처리 Controller.
@@ -39,12 +40,16 @@ public class PurchaseProductCountController {
 	/**
 	 * 
 	 * <pre>
-	 * 구매 취소(사용자) 요청.
+	 * 구매 상품 건수 업데이트를 실행한다.
 	 * </pre>
 	 * 
 	 * @param sacRequestHeader
-	 * @param purchaseCancelReq
-	 * @return
+	 *            sacRequestHeader
+	 * @param purchaseProductCountSacReq
+	 *            purchaseProductCountSacReq
+	 * @param guid
+	 *            guid
+	 * @return PurchaseProductCountSacRes
 	 */
 	@RequestMapping(value = "/execute/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -56,9 +61,13 @@ public class PurchaseProductCountController {
 		purchaseProductCountSacParam.setGuid(guid);
 		purchaseProductCountSacParam.setPerCount(purchaseProductCountSacReq.getPerCount());
 
-		this.purchaseProductCountService.executePurchaseProductCount(purchaseProductCountSacParam);
+		PurchaseProductCountSacResult purchaseProductCountSacResult = this.purchaseProductCountService
+				.executePurchaseProductCount(purchaseProductCountSacParam);
 
 		PurchaseProductCountSacRes purchaseProductCountSacRes = new PurchaseProductCountSacRes();
+		purchaseProductCountSacRes.setTotCnt(purchaseProductCountSacResult.getTotCnt());
+		purchaseProductCountSacRes.setSuccessCnt(purchaseProductCountSacResult.getSuccessCnt());
+		purchaseProductCountSacRes.setFailCnt(purchaseProductCountSacResult.getFailCnt());
 
 		return purchaseProductCountSacRes;
 
