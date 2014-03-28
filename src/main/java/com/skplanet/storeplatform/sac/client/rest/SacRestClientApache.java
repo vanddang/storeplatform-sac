@@ -38,9 +38,9 @@ public class SacRestClientApache implements SacRestClient {
 	/**
 	 * 테스트키용 생성자
 	 *
-	 * ##### SAC 환경별 Host 정보 (2014-03-07 기준) #####
-	 * DEV => devspweb1.sungsu.skplanet.com/sp_sac
-	 * QA => qa-store.sungsu.store.skplanet.com/sp_sac
+	 * ##### SAC 환경별 Host 정보 (2014-03-28 기준) #####
+	 * DEV => devspweb1.sungsu.skplanet.com
+	 * QA => qa-store.sungsu.store.skplanet.com
 	 * REAL => store.sungsu.store.skplanet.com
 	 * ################################################
 	 *
