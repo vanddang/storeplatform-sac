@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.runtime.extend;
 
+import com.skplanet.storeplatform.sac.runtime.acl.constant.AclConstant;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.integration.router.PreProcessChainChannelSearcher;
@@ -15,8 +16,12 @@ public class SacPreProcessChainChannelSearcher implements PreProcessChainChannel
 
 	@Override
 	public String search(String interfaceId) {
-
-		return DEFAULT_PRE_PROCESS_CHANNEL;
+        if (AclConstant.IID_FORCE_BIZ.equals(interfaceId)) {
+            return "messageRouteChannel";
+        }
+        else {
+            return DEFAULT_PRE_PROCESS_CHANNEL;
+        }
 	}
 
 }

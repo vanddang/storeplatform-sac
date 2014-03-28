@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.runtime.extend;
 
+import com.skplanet.storeplatform.sac.runtime.acl.constant.AclConstant;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.integration.router.ServiceActivatorChannelSearcher;
@@ -21,11 +22,9 @@ import com.skplanet.storeplatform.framework.integration.router.ServiceActivatorC
 @Component
 public class SacServiceActivatorChannelSearcher implements ServiceActivatorChannelSearcher {
 
-    private static final String IID_FORCE_BIZ = "_IF_BIZCH"; // 9자
-
 	@Override
 	public String search(String interfaceId) {
-        if (IID_FORCE_BIZ.equals(interfaceId)) {
+        if (AclConstant.IID_FORCE_BIZ.equals(interfaceId)) {
             return "bizChannel";
         }
         else {

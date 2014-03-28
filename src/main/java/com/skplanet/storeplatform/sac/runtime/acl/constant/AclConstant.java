@@ -21,6 +21,8 @@ public class AclConstant {
 	public static final String HEADER_AUTHKEY = "authKey";
 	public static final String HEADER_HTTP_REQUEST_URL = "http_requestUrl";
 
+    // MQ에 할당된 가상 InterfaceId
+    public static final String IID_FORCE_BIZ = "_IF_BIZCH";
 
 
 }
