@@ -65,7 +65,7 @@
 	                              </if>
 	                              AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
 	                              AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
-	                              AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
+	                              AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
 	                              AND LP.TENANT_ID = LT.TENANT_ID
 	                              AND LP.LIST_ID = LT.LIST_ID
 	                              AND LT.EXPO_YN = 'Y'
@@ -173,7 +173,7 @@
                                   <if test='listId != "TGR000000002"'>
                                   AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
                                   </if>
-                                  AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
+                                  AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
                                   AND LP.TENANT_ID = LT.TENANT_ID
                                   AND LP.LIST_ID = LT.LIST_ID
                                   AND LT.EXPO_YN = 'Y'
@@ -277,7 +277,7 @@
                                   <if test='listId != "TGR000000002"'>
                                   AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
                                   </if>
-                                  AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
+                                  AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
                                   AND LP.TENANT_ID = LT.TENANT_ID
                                   AND LP.LIST_ID = LT.LIST_ID
                                   AND LT.EXPO_YN = 'Y'
@@ -293,7 +293,7 @@
                                                                       AND LP.ETC_CD IN ('DP004803', 'DP004804', 'DP004805', 'DP004806', 'DP004811', 'DP004812')
                                                                       AND LP.EXPO_YN = 'Y'  /* Y : 노출 (노출여부) */
                                                                       AND LP.STD_DT = TO_DATE(#{subStdDt}, 'YYYYMMDDHH24MISS')
-                                                                      AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
+                                                                      AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
                                                                       AND LP.TENANT_ID = LT.TENANT_ID
                                                                       AND LP.LIST_ID = LT.LIST_ID
                                                                       AND LT.EXPO_YN = 'Y'
