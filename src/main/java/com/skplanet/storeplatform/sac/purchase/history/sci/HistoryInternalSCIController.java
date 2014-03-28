@@ -59,7 +59,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		this.LOGGER.debug(">>>> >>> HistoryListSacInRes: {}", request);
 
 		HistoryListSacReq sacReq = new HistoryListSacReq();
-		HistoryListSacRes sacRes = new HistoryListSacRes();
+		HistoryListSacRes sacRes = null;
 
 		// Request Header Info
 		sacReq.setTenantId(request.getTenantId());
@@ -76,7 +76,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		sacReq.setPrchsReqPathCd(request.getPrchsReqPathCd());
 		sacReq.setTenantProdGrpCd(request.getTenantProdGrpCd());
 
-		ProductListSac product = new ProductListSac();
+		ProductListSac product;
 		List<ProductListSac> productList = new ArrayList<ProductListSac>();
 
 		if (request.getProductList() != null && request.getProductList().size() > 0) {
@@ -104,7 +104,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		 ********************************************/
 		HistoryListSacInRes response = new HistoryListSacInRes();
 		List<HistorySacIn> historySacInList = new ArrayList<HistorySacIn>();
-		HistorySacIn historySacIn = new HistorySacIn();
+		HistorySacIn historySacIn;
 
 		for (HistorySac obj : sacRes.getHistoryList()) {
 
@@ -204,7 +204,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		// logger.debug("### historyListRequest : {}", request);
 
 		HistoryCountSacReq sacReq = new HistoryCountSacReq();
-		HistoryCountSacRes sacRes = new HistoryCountSacRes();
+		HistoryCountSacRes sacRes = null;
 
 		// Request Header Info
 		sacReq.setTenantId(request.getTenantId());
@@ -221,7 +221,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		sacReq.setPrchsReqPathCd(request.getPrchsReqPathCd());
 		sacReq.setTenantProdGrpCd(request.getTenantProdGrpCd());
 
-		ProductListSac product = new ProductListSac();
+		ProductListSac product;
 		List<ProductListSac> productList = new ArrayList<ProductListSac>();
 
 		if (request.getProductList() != null && request.getProductList().size() > 0) {
@@ -242,7 +242,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 		/********************************************
 		 * Response Mapping Start
 		 ********************************************/
-		ProductCountSacIn productCountSacIn = new ProductCountSacIn();
+		ProductCountSacIn productCountSacIn;
 		List<ProductCountSacIn> sacInProdList = new ArrayList<ProductCountSacIn>();
 		HistoryCountSacInRes response = new HistoryCountSacInRes();
 
