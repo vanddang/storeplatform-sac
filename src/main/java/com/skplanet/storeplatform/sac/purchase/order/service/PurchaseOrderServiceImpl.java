@@ -236,9 +236,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public VerifyOrderSacRes verifyPurchaseOrder(VerifyOrderInfo verifyOrderInfo) {
-		// TAKTEST
-		this.logger.info("TAKTEST,{}", this.envServerLevel);
-
 		// ------------------------------------------------------------------------------------------------
 		// 예약된 구매정보 조회
 
