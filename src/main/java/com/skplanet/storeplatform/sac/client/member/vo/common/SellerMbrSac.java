@@ -12,6 +12,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SellerMbrSac extends CommonInfo {
+
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자 key . */
