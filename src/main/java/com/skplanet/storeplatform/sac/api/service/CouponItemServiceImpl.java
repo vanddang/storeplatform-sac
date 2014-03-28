@@ -506,9 +506,9 @@ public class CouponItemServiceImpl implements CouponItemService {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateDPcouponCNT 실패",
 						null);
 			}
-			// if (!StringUtils.equalsIgnoreCase(upType, "1")) {
-			this.commonDAO.update("Coupon.updateDPYNStatus", map);
-			// }
+			if (!StringUtils.equalsIgnoreCase(upType, "0")) {
+				this.commonDAO.update("Coupon.updateDPYNStatus", map);
+			}
 		} catch (CouponException e) {
 			throw e;
 		} catch (Exception e) {
