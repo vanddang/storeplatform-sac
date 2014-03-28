@@ -21,6 +21,7 @@ public class UseableDeviceSacReq extends CommonInfo {
 	private String deviceModelNm;
 	private Integer offset;
 	private Integer count;
+	private String topMenuId;
 
 	/**
 	 * @return the langCd
@@ -125,6 +126,21 @@ public class UseableDeviceSacReq extends CommonInfo {
 	 */
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	/**
+	 * @return the topMenuId
+	 */
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	/**
+	 * @param topMenuId
+	 *            the topMenuId to set
+	 */
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 }
