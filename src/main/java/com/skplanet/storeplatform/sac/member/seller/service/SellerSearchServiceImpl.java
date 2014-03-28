@@ -51,6 +51,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.FlurryAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerBpSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
@@ -505,7 +506,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchAccountSellerResponse schRes = this.sellerSCI.searchAccountSeller(schReq);
 
 		// 판매자 문서정보
-		List<Document> dList = new ArrayList<Document>();
+		List<Document> documentList = new ArrayList<Document>();
 		Document document = null;
 		if (schRes.getDocument() != null)
 			for (int i = 0; i < schRes.getDocument().size(); i++) {
@@ -516,7 +517,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				document.setDocumentPath(schRes.getDocument().get(i).getDocumentPath());
 				document.setDocumentSize(schRes.getDocument().get(i).getDocumentSize());
 				document.setIsUsed(schRes.getDocument().get(i).getIsUsed());
-				dList.add(document);
+				documentList.add(document);
 			}
 
 		// 판매자 정산정보
@@ -558,10 +559,20 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerAccount.setSellerBizPhone(schRes.getSellerMbr().getCustomerPhone());
 			sellerAccount.setCeoBirthDay(schRes.getSellerMbr().getCeoBirthDay());
 			sellerAccount.setCeoName(schRes.getSellerMbr().getCeoName());
+			sellerAccount.setChangedCd(schRes.getSellerAccount().getChangedCd()); // 전환 유형코드
 		}
+
+		// 판매자 BP 정보.
+		SellerBpSac sellerBpSac = new SellerBpSac();
+		if (schRes.getSellerBp() != null) {
+			sellerBpSac.setBpFileName(schRes.getSellerBp().getBpFileName());
+			sellerBpSac.setBpFilePath(schRes.getSellerBp().getBpFilePath());
+		}
+
 		DetailAccountInformationRes response = new DetailAccountInformationRes();
-		response.setDocumentList(dList);
+		response.setDocumentList(documentList);
 		response.setSellerAccount(sellerAccount);
+		response.setSellerBp(sellerBpSac);
 		return response;
 
 	}
