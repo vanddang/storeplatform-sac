@@ -24,6 +24,11 @@ public class UserInfo extends CommonInfo {
 	private String deviceCount;
 
 	/*
+	 * 사용자 휴대기기 전체 등록 대수
+	 */
+	private String totalDeviceCount;
+
+	/*
 	 * 외부(IDP)에서 할당된 사용자 Key.
 	 */
 	private String imMbrNo;
@@ -503,6 +508,14 @@ public class UserInfo extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getTotalDeviceCount() {
+		return this.totalDeviceCount;
+	}
+
+	public void setTotalDeviceCount(String totalDeviceCount) {
+		this.totalDeviceCount = totalDeviceCount;
 	}
 
 }
