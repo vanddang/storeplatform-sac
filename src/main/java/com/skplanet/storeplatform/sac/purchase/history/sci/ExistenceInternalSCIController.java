@@ -60,10 +60,8 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
 		}
 
-		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
-
 		ExistenceScReq req = this.reqConvert(existenceReq);
-		res = this.resConvert(this.existenceSacService.searchExistenceList(req));
+		List<ExistenceRes> res = this.resConvert(this.existenceSacService.searchExistenceList(req));
 
 		ExistenceListRes existenceListRes = new ExistenceListRes();
 		existenceListRes.setExistenceListRes(res);

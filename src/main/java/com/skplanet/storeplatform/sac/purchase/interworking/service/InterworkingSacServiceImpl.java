@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.interworking.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 			req.setProdAmt(interworkingSac.getProdAmt());
 			req.setCompCid(interworkingSac.getCompCid());
 			// 인터파크 상품인지 확인후 전송테이블에 저장
-			if (interworkingSac.equals(this.mallCd)) {
+			if (StringUtils.equals(this.mallCd, interworkingSac.getMallCd())) {
 				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 				this.logger.debug("@@@@@@@@@@@@ interpark Start @@@@@@@@@@@@");
 				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -77,7 +78,7 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 			}
 			// cine21 상품인지 확인(구매상품이의 판매자회원번호가 cine21이면 전송테이블에 저장)
 			for (int i = 0; i < cine21MbrNo.length; i++) {
-				if (interworkingSac.getSellermbrNo().equals(cine21MbrNo[i])) {
+				if (StringUtils.equals(cine21MbrNo[i], interworkingSac.getSellermbrNo())) {
 					this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 					this.logger.debug("@@@@@@@@@@@@ cine21 Start @@@@@@@@@@@@");
 					this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
