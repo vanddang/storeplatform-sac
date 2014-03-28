@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.client.rest;
 
 import com.skplanet.storeplatform.sac.client.rest.error.SacRestClientException;
 
+// @Component
 public class SacRestClientSpring implements SacRestClient {
 
 	@Override

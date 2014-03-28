@@ -43,12 +43,12 @@ public class RequestComposer {
 		request.addHeader("Accept", "application/json;charset=UTF-8");
 
 		String guid = guidGenerator.getId();
-		// String timestamp = SacAuthUtil.getTimestamp();
+		String timestamp = SacAuthUtil.getTimestamp();
 		// String nonce = SacAuthUtil.getNonce();
 		// String signature = this.getSignature(baseUrl, authKey, timestamp, nonce, secret);
 
-		request.addHeader("x-sac-auth-guid", guid);
-		// request.addHeader("x-sac-auth-timestamp", timestamp);
+		request.addHeader("x-sac-guid", guid);
+		request.addHeader("x-sac-auth-timestamp", timestamp);
 		// request.addHeader("x-sac-auth-nonce", nonce);
 		// request.addHeader("x-sac-auth-signature", signature);
 
