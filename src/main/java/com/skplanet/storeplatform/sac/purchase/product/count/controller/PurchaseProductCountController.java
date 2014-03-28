@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.product.count.controller;
 
+import java.text.SimpleDateFormat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -55,12 +57,18 @@ public class PurchaseProductCountController {
 			@RequestHeader("x-sac-guid") String guid,
 			@RequestParam(value = "perCnt", required = false, defaultValue = "10") Integer perCnt) {
 
+		StringBuilder sb = new StringBuilder();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", java.util.Locale.KOREA);
+		String currTime = formatter.format(System.currentTimeMillis());
+		sb.append(currTime).append("|").append(guid);
+		String updId = sb.substring(0, 50);
+
 		PurchaseProductCountSacParam purchaseProductCountSacParam = new PurchaseProductCountSacParam();
-		purchaseProductCountSacParam.setGuid(guid);
+		purchaseProductCountSacParam.setUpdId(updId);
 		purchaseProductCountSacParam.setPerCount(perCnt);
 
 		PurchaseProductCountSacResult purchaseProductCountSacResult = this.purchaseProductCountService
-				.executePurchaseProductCount(purchaseProductCountSacParam);
+				.execPurchaseProductCount(purchaseProductCountSacParam);
 
 		PurchaseProductCountSacRes purchaseProductCountSacRes = new PurchaseProductCountSacRes();
 		purchaseProductCountSacRes.setTotCnt(purchaseProductCountSacResult.getTotCnt());

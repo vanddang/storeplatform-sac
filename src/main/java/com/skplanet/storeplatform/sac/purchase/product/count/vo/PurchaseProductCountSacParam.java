@@ -20,7 +20,7 @@ public class PurchaseProductCountSacParam extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String guid;
+	private String updId;
 	private Integer perCount; // 전시에 한번 요청할 카운트.
 
 	/**
@@ -39,18 +39,18 @@ public class PurchaseProductCountSacParam extends CommonInfo {
 	}
 
 	/**
-	 * @return the guid
+	 * @return the updId
 	 */
-	public String getGuid() {
-		return this.guid;
+	public String getUpdId() {
+		return this.updId;
 	}
 
 	/**
-	 * @param guid
-	 *            the guid to set
+	 * @param updId
+	 *            the updId to set
 	 */
-	public void setGuid(String guid) {
-		this.guid = guid;
+	public void setUpdId(String updId) {
+		this.updId = updId;
 	}
 
 }

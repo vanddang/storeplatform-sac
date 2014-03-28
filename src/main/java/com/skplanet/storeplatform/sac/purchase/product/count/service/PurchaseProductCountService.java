@@ -29,6 +29,6 @@ public interface PurchaseProductCountService {
 	 *            purchaseProductCountSacParam
 	 * @return PurchaseProductCountSacResult
 	 */
-	PurchaseProductCountSacResult executePurchaseProductCount(PurchaseProductCountSacParam purchaseProductCountSacParam);
+	PurchaseProductCountSacResult execPurchaseProductCount(PurchaseProductCountSacParam purchaseProductCountSacParam);
 
 }
