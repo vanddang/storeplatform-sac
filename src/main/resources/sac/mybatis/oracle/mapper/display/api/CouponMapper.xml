@@ -454,6 +454,7 @@
             ,PROD_NET_AMT   = NVL(#{prodNetAmt},PROD_NET_AMT)         /* 상품_정찰_금액 */
             ,DC_RATE        = NVL(#{dcRate},DC_RATE)                  /* 할인_율 */
             ,DC_AMT         = NVL(#{dcAmt},DC_AMT)                    /* 할인_금액 */
+            ,DC_AFT_PROD_AMT = NVL(#{dcAftProdAmt},DC_AFT_PROD_AMT)   /* 할인_후_상품_금액 */
             ,TAX_CLSF       = NVL(#{taxClsf},TAX_CLSF)                /* 세금_구분 */
             ,UPD_ID         = NVL(#{updId},UPD_ID)                    /* 수정_ID */
             ,UPD_DT         = sysdate                                 /* 수정_일시 */
