@@ -290,16 +290,19 @@ public class ShoppingCouponSacController {
 				map.put("ERROR_MSG", ex.getMessage());
 				map.put("ERROR_VALUE", ex.getErrValue());
 				this.sendResponseData(couponReq, map, couponRes, null);
-				result = false;
 			}
+			result = false;
 
 		} catch (Exception e) {
 			// Exception 처리.
-			map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-			map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_SERVICE_STOP);
-			map.put("ERROR_MSG", e.getMessage());
-			this.sendResponseData(couponReq, map, couponRes, null);
+			if (map != null) {
+				map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+				map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_SERVICE_STOP);
+				map.put("ERROR_MSG", e.getMessage());
+				this.sendResponseData(couponReq, map, couponRes, null);
+			}
 			result = false;
+
 		}
 
 		return result;
@@ -665,16 +668,17 @@ public class ShoppingCouponSacController {
 			xmlSb = new StringBuffer();
 			xmlSb.append(xmlHeader);
 			xmlSb.append("<cms>");
-			xmlSb.append("<rCode><![CDATA[" + map.get("ERROR_CODE") + "]]></rCode>");
-			xmlSb.append("<rMsg><![CDATA["
-					+ CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
-			if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals(""))
-				xmlSb.append("[" + map.get("ERROR_VALUE") + "]");
-			xmlSb.append("]]></rMsg>");
-			xmlSb.append("<txId><![CDATA[" + couponReq.getTxId() + "]]></txId>");
-
-			this.log.debug("-------------------jade 추가 S---------------------------------------------");
 			if (map != null) {
+				xmlSb.append("<rCode><![CDATA[" + map.get("ERROR_CODE") + "]]></rCode>");
+				xmlSb.append("<rMsg><![CDATA["
+						+ CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
+				if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals(""))
+					xmlSb.append("[" + map.get("ERROR_VALUE") + "]");
+				xmlSb.append("]]></rMsg>");
+				xmlSb.append("<txId><![CDATA[" + couponReq.getTxId() + "]]></txId>");
+
+				this.log.debug("-------------------jade 추가 S---------------------------------------------");
+
 				couponRes.setRCode(map.get("ERROR_CODE"));
 				couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
 				if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals("")) {
@@ -692,23 +696,29 @@ public class ShoppingCouponSacController {
 					xmlSb.append("<rData>");
 					xmlSb.append("<brandCode><![CDATA[" + couponReq.getBrandCode() + "]]></brandCode>");
 					xmlSb.append("</rData>");
-					map.put("COMMON_CODE", couponReq.getBrandCode());
+					if (map != null) {
+						map.put("COMMON_CODE", couponReq.getBrandCode());
+					}
 					break;
 				case CT:
 					xmlSb.append("<rData>");
 					xmlSb.append("<catalogCode><![CDATA[" + couponReq.getCatalogCode() + "]]></catalogCode>");
 					xmlSb.append("</rData>");
-					map.put("COMMON_CODE", couponReq.getCatalogCode());
+					if (map != null) {
+						map.put("COMMON_CODE", couponReq.getCatalogCode());
+					}
 					break;
 				case CP:
 					xmlSb.append("<rData>");
 					xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponReq.getCouponCode(), "")
 							+ "]]></couponCode>");
 					xmlSb.append("</rData>");
-					map.put("COMMON_CODE", StringUtil.nvl(couponReq.getCouponCode(), "")); // 상품추가/수정시에는 xml
-																						   // 전문에 couponcode
-																						   // 가포함되어 마지막에 , put
-																						   // 해준다.
+					if (map != null) {
+						map.put("COMMON_CODE", StringUtil.nvl(couponReq.getCouponCode(), "")); // 상품추가/수정시에는 xml
+																							   // 전문에 couponcode
+																							   // 가포함되어 마지막에 , put
+																							   // 해준다.
+					}
 					this.log.debug("-------------------jade 추가 S---------------------------------------------");
 					StringBuffer couponBuff = new StringBuffer();
 					couponBuff.append(couponReq.getDpCouponInfo().getProdId());
