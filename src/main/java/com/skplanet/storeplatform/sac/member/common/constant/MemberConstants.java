@@ -167,6 +167,7 @@ public final class MemberConstants {
 
 	/** 통합회원. */
 	public static final String SSO_SST_CD_TSTORE = "41100";
+	public static final String SSO_SST_CD_OCB_WEB = "42100"; // OCB 서비스 사이트코드
 
 	/** 실명인증 사이트 코드 (realNameSite). */
 	public static final String AUTH_CHNL_WEB = "US011201"; // 웹
