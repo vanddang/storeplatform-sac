@@ -256,30 +256,31 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 					// Exception 무시
 					this.log.error("Exception has occured using existence purchase!!!!!!!!!!!", e);
 				}
-				if (!listPrchs.isEmpty()) {
-					String sPid = "";
-					Map<String, Object> mapUpdate = null;
-					for (int i = 0; i < listProd.size(); i++) {
-						mapUpdate = listProd.get(i);
-						sPid = ObjectUtils.toString(mapUpdate.get("PROD_ID"));
-						// Map<String, String> mapPrchs = null;
+				if (listPrchs != null) {
+					if (!listPrchs.isEmpty()) {
+						String sPid = "";
+						Map<String, Object> mapUpdate = null;
+						for (int i = 0; i < listProd.size(); i++) {
+							mapUpdate = listProd.get(i);
+							sPid = ObjectUtils.toString(mapUpdate.get("PROD_ID"));
+							// Map<String, String> mapPrchs = null;
 
-						// 구매내역이 존재하는 경우만
-						for (ExistenceRes prchInfo : listPrchs) {
-							// for (int j = 0; j < listPrchs.size(); j++) {
-							if (sPid.equals(prchInfo.getProdId())) {
-								sPkgNm = ObjectUtils.toString(mapUpdate.get("APK_PKG_NM"));
-								this.log.debug(
-										"#####  Exist purchase history of {}! Hence add purchase id to update target!!!!!!!!!",
-										sPkgNm);
-								mapUpdate.put("PRCHS_ID", prchInfo.getPrchsId());
-								listUpdate.add(mapUpdate);
-								break;
+							// 구매내역이 존재하는 경우만
+							for (ExistenceRes prchInfo : listPrchs) {
+								// for (int j = 0; j < listPrchs.size(); j++) {
+								if (sPid.equals(prchInfo.getProdId())) {
+									sPkgNm = ObjectUtils.toString(mapUpdate.get("APK_PKG_NM"));
+									this.log.debug(
+											"#####  Exist purchase history of {}! Hence add purchase id to update target!!!!!!!!!",
+											sPkgNm);
+									mapUpdate.put("PRCHS_ID", prchInfo.getPrchsId());
+									listUpdate.add(mapUpdate);
+									break;
+								}
 							}
 						}
 					}
 				}
-
 				if (listUpdate.isEmpty()) {
 					throw new StorePlatformException("SAC_DSP_0006");
 				}
