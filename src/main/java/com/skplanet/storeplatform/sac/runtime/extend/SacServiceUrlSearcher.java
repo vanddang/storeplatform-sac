@@ -10,12 +10,17 @@
 package com.skplanet.storeplatform.sac.runtime.extend;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
 import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.management.MBeanServer;
+import javax.management.ObjectInstance;
+import javax.management.ObjectName;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -31,9 +36,9 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearcher;
 
 /**
- *
+ * 
  * ServiceUrlSearcher 구현체
- *
+ * 
  * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
  */
 @Component
@@ -59,7 +64,6 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
 	@Resource(name = "propertiesForSac")
 	private Properties properties;
-
 
 	private Integer innerServletPort;
 
@@ -94,11 +98,11 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
 		// Bypass 이면.
 		if (StringUtils.isNotEmpty(bypassPath)) {
-			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).port(8010).path(bypassPath);
+			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).port(this.innerServletPort).path(bypassPath);
 		} else {
 			// 그외는 내부 서블릿 URL 호출.
-			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).port(8010).path(requestContextPath)
-					.path(this.innerServletPath).path(innerRequestURI);
+			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).port(this.innerServletPort)
+					.path(requestContextPath).path(this.innerServletPath).path(innerRequestURI);
 		}
 		if (requestMethod.equals("GET")) {
 			// 쿼리 Decoding 후 Controller로 전달.
@@ -111,13 +115,60 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 				}
 			}
 		}
-		return to.build().toUriString();
+
+		String serviceUrl = to.build().toUriString();
+
+		LOGGER.warn("####SAC-PORT-TEST#### 서비스URL : " + serviceUrl);
+
+		return serviceUrl;
 	}
-
-
 
 	@PostConstruct
 	public void init() {
-		this.innerServletPort = 8010;
+		this.innerServletPort = this.getHttpConnectorPort();
+
 	}
+
+	private Integer getHttpConnectorPort() {
+		Integer port = null;
+
+		Exception ex = null;
+
+		try {
+			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+
+			Set<ObjectInstance> connectors = mBeanServer.queryMBeans(new ObjectName("Catalina:type=Connector,port=*"),
+					null);
+
+			for (ObjectInstance objectInstance : connectors) {
+				if (StringUtils.equals("HTTP/1.1",
+						(String) mBeanServer.getAttribute(objectInstance.getObjectName(), "protocol"))) {
+					port = (Integer) mBeanServer.getAttribute(objectInstance.getObjectName(), "port");
+				}
+			}
+
+		} catch (Exception e) {
+			ex = e;
+		}
+
+		if (ex != null) {
+			LOGGER.warn("####SAC-PORT-TEST#### 비정상 > 예외발생 : " + ex.getMessage());
+			return 8010;
+		}
+
+		if (port == null) {
+			LOGGER.warn("####SAC-PORT-TEST#### 비정상 > PORT가 존재하지 않음");
+			return 8010;
+		}
+
+		if (port == 8010 || port == 8020) {
+			LOGGER.warn("####SAC-PORT-TEST#### 정상 > 포트 : " + port);
+			return port;
+		} else {
+			LOGGER.warn("####SAC-PORT-TEST#### 비정상 > 포트 : " + port + " 예상포트(8010, 8020)가 아님");
+			return 8010;
+		}
+
+	}
+
 }
