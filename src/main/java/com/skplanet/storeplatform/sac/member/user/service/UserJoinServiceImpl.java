@@ -290,6 +290,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
+		userMbr.setIsMemberPoint(this.ocbJoinCodeYn(agreeUserEcRes)); // 통합포인트 사용 여부
 		createUserRequest.setUserMbr(userMbr);
 
 		/**
@@ -402,6 +403,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
+		userMbr.setIsMemberPoint(this.ocbJoinCodeYn(agreeUserEcRes)); // 통합포인트 사용 여부
 		createUserRequest.setUserMbr(userMbr);
 
 		/**
@@ -1261,32 +1263,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		try {
 
-			String ocbJoinCodeYn = MemberConstants.USE_N;
-
-			/**
-			 * Ok Cashbeg 코드 확인한다.
-			 * 
-			 * ec) 41100,null,20130923,212917,tstore000001741|90300,null,20130917,113426,null
-			 */
-			LOGGER.info("## >> joinSstList : {}", agreeUserEcRes.getJoinSstList());
-			String[] joinSstList = agreeUserEcRes.getJoinSstList().replaceAll(" ", "").split("\\|");
-			for (String joinInfo : joinSstList) {
-
-				/**
-				 * 이용동의 사이트 코드만 추출.
-				 */
-				String joinSstCode = joinInfo.split(",")[0];
-				LOGGER.info("## >> 이용동의 사이트 코드 : {}", joinSstCode);
-				if (StringUtils.equals(joinSstCode, MemberConstants.SSO_SST_CD_OCB_WEB)) {
-					ocbJoinCodeYn = MemberConstants.USE_Y;
-				}
-
-			}
-
 			/**
 			 * 미동의 회원 정보 업데이트.
 			 */
-			LOGGER.info("미동의 회원 정보 업데이트!!!!!!!!!!");
 			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
 			updateMbrOneIDRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 			MbrOneID mbrOneID = new MbrOneID();
@@ -1295,7 +1274,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrOneID.setLoginStatusCode(agreeUserEcRes.getUserStatusCode()); // 가입자상태코드 (10=정상, 11=가인증)
 			mbrOneID.setEntryStatusCode(agreeUserEcRes.getUserStatusCode()); // 가입자 상태코드 (10=정상, 11=가인증)
 			mbrOneID.setStopStatusCode(MemberConstants.USER_STOP_STATUS_NOMAL); // 직권중지해제 기본셋팅
-			mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
+			mbrOneID.setIsMemberPoint(this.ocbJoinCodeYn(agreeUserEcRes)); // 통합포인트 여부
 			mbrOneID.setIntgMbrCaseCode(agreeUserEcRes.getImMemTypeCd()); // 통합회원 유형 코드 100: 국내회원 900: 글로벌회원
 			mbrOneID.setEntryDate(agreeUserEcRes.getJoinDate() + agreeUserEcRes.getJoinTime()); // 가입일시
 			mbrOneID.setMemberCaseCode(agreeUserEcRes.getUserType()); // 가입자 유형코드
@@ -1308,6 +1287,43 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
 			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
 		}
+
+	}
+
+	/**
+	 * <pre>
+	 * 이용동의 사이트 코드 여부.
+	 * </pre>
+	 * 
+	 * @param agreeUserEcRes
+	 *            이용동의가입 응답 Object
+	 * @return
+	 */
+	private String ocbJoinCodeYn(AgreeUserEcRes agreeUserEcRes) {
+
+		String ocbJoinCodeYn = MemberConstants.USE_N;
+
+		/**
+		 * Ok Cashbeg 코드 확인한다.
+		 * 
+		 * ec) 41100,null,20130923,212917,tstore000001741|90300,null,20130917,113426,null
+		 */
+		LOGGER.info("## >> joinSstList : {}", agreeUserEcRes.getJoinSstList());
+		String[] joinSstList = agreeUserEcRes.getJoinSstList().replaceAll(" ", "").split("\\|");
+		for (String joinInfo : joinSstList) {
+
+			/**
+			 * 이용동의 사이트 코드만 추출.
+			 */
+			String joinSstCode = joinInfo.split(",")[0];
+			LOGGER.info("## >> 이용동의 사이트 코드 : {}", joinSstCode);
+			if (StringUtils.equals(joinSstCode, MemberConstants.SSO_SST_CD_OCB_WEB)) {
+				ocbJoinCodeYn = MemberConstants.USE_Y;
+			}
+
+		}
+
+		return ocbJoinCodeYn;
 
 	}
 
