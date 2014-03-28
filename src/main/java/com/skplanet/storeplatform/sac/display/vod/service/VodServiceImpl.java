@@ -618,6 +618,7 @@ public class VodServiceImpl implements VodService {
 			menu = new Menu();
 			menu.setType(DisplayConstants.DP_MENU_TYPE_GENRE);
 			menu.setId(mapperVO.getGenreCd());
+			menu.setName(mapperVO.getGenreCdNm());
 			menuList.add(menu);
 		}
 		return menuList;

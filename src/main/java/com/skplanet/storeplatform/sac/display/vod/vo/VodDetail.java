@@ -123,6 +123,7 @@ public class VodDetail extends CommonInfo {
 	private String prodGrdCd;
 	/** 장르코드 */
 	private String genreCd;
+	private String genreCdNm;
 	/** 발매일 */
 	private String issueDay;
 
@@ -1303,15 +1304,19 @@ public class VodDetail extends CommonInfo {
 		this.playProdStatusCd = playProdStatusCd;
 	}
 
-	
-	
-	
-	//public String getPlayTm() { return this.playTm; }
-	//public void setPlayTm(String playTm) { this.playTm = playTm; }
+	/**
+	 * @return the genreCdNm
+	 */
+	public String getGenreCdNm() {
+		return genreCdNm;
+	}
 
+	/**
+	 * @param genreCdNm the genreCdNm to set
+	 */
+	public void setGenreCdNm(String genreCdNm) {
+		this.genreCdNm = genreCdNm;
+	}
 
-	//public String getDrmYn() { return this.drmYn; }
-	//public void setDrmYn(String drmYn) { this.drmYn = drmYn; }
-	
 	
 }
