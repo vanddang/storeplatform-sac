@@ -71,11 +71,9 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 
 		String filteredBy; // 차트 구분 코드
 		String orderedBy;
-		String menuId;
 
 		filteredBy = requestVO.getFilteredBy(); // 차트 구분 코드
 		orderedBy = requestVO.getOrderedBy();
-		menuId = requestVO.getMenuId();
 
 		// 헤더값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
