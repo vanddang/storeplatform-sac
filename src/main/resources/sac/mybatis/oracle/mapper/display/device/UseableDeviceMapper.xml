@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="UseableDevice">
+    <!-- 이용가능 단말 조회(서비스 그룹코드 : DP000201)-->
+    <select id="searchProductBasicInfo" parameterType="Map" resultType="ProductBasicInfo">
+		SELECT /* UseableDevice.searchProductBasicInfo, 상품 기본정보(서비스 그룹) 조회 , 이석희/아이에스플러스, 2014-03-28 */
+		        A.PROD_ID
+		      , A.SVC_GRP_CD
+		      , A.SVC_TYPE_CD
+		      , A.CONTENTS_TYPE_CD
+		      , A.META_CLSF_CD
+		      , A.TOP_MENU_ID       
+		  FROM TB_DP_PROD A
+		 WHERE 1=1 
+		   AND A.PROD_ID = #{productId}
+   </select>
+
 	<!-- 이용가능 단말 조회(서비스 그룹코드 : DP000201)-->
 	<select id="selectUseableDeviceForApp" parameterType="UseableDeviceSacReq" resultType="MetaInfo">
 		SELECT /* UseableDeviceMapper.selectUseableDeviceForApp, 이용가능 단말 조회(서비스 그룹코드 : DP000201), 이석희/IS-Plus, 2014-03-17 */ 
@@ -178,15 +192,21 @@
 		             , REPLACE( REPLACE( REPLACE( NVL(A.LIST_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS LIST_IMAGE_PATH
 		             , REPLACE( REPLACE( REPLACE( NVL(A.DTL_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS DTL_IMAGE_PATH
 		             , A.SOUND_3D_SPRT_YN
-		          FROM TB_CM_DEVICE       A
-		            ,  (SELECT DISTINCT SP.DEVICE_MODEL_CD
-		                  FROM TB_DP_SPRT_DEVICE SP
-		                      ,TB_DP_PROD_RSHP   RS
-		                 WHERE RS.PROD_ID = #{productId}
-		                   AND SP.PROD_ID = RS.PART_PROD_ID
-		                   AND SP.PROD_ID != #{productId}) B          
+		          FROM TB_CM_DEVICE       A     
 		         WHERE 1=1
-		           AND A.DEVICE_MODEL_CD = B.DEVICE_MODEL_CD
+		         <if test='topMenuId == "DP09" or topMenuId == "DP17" or topMenuId == "DP18"'>
+		           AND A.VIDEO_DRM_SPRT_YN ='Y'
+		           AND (A.SD_VIDEO_SPRT_YN ='Y' OR A.HDV_SPRT_YN ='Y')
+		         </if>
+                 <if test='topMenuId == "DP16"'>
+                   AND A.MUSIC_SPRT_YN ='Y'
+                 </if>
+                 <if test='topMenuId == "DP13"'>
+                   AND A.EBOOK_SPRT_YN ='Y'
+                 </if>
+                 <if test='topMenuId == "DP14"'>
+                   AND A.COMIC_SPRT_YN ='Y'
+                 </if>		         
 		           AND NVL(A.VERIFY_DVC_YN, 'N') = 'N'
 		           AND A.USE_YN = 'Y' 
 		           AND A.REP_DEVICE_YN = 'Y'

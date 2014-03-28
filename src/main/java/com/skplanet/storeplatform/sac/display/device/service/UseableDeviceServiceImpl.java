@@ -11,8 +11,10 @@ package com.skplanet.storeplatform.sac.display.device.service;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,6 +34,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 /**
@@ -108,9 +111,22 @@ public class UseableDeviceServiceImpl implements UseableDeviceService {
 				throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
 			}
 
-			usableDeviceList = this.commonDAO.queryForList("UseableDevice.selectUseableDeviceForOther", req,
-					MetaInfo.class);
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("productId", req.getProductId());
+
+			ProductBasicInfo productBasicInfo = this.commonDAO.queryForObject("UseableDevice.searchProductBasicInfo",
+					map, ProductBasicInfo.class);
+
+			if (productBasicInfo != null) {
+				String topMenuId = productBasicInfo.getTopMenuId();
+				req.setTopMenuId(topMenuId);
+				usableDeviceList = this.commonDAO.queryForList("UseableDevice.selectUseableDeviceForOther", req,
+						MetaInfo.class);
+			} else {
+				commonResponse.setTotalCount(0);
+			}
 		}
+
 		List<Device> deviceList = new ArrayList<Device>();
 		if (usableDeviceList.size() != 0) {
 
@@ -131,6 +147,8 @@ public class UseableDeviceServiceImpl implements UseableDeviceService {
 				device.setSvcGrpCd(req.getSvcGrpCd());
 				deviceList.add(device);
 			}
+		} else {
+			commonResponse.setTotalCount(0);
 		}
 		res.setDeviceList(deviceList);
 		res.setCommonResponse(commonResponse);
