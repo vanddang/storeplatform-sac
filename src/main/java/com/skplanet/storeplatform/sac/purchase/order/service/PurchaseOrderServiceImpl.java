@@ -1320,11 +1320,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 추가한 상품 갯수
 	 */
 	private int insertPurchaseProductCount(List<CreatePurchaseSc> createPurchaseScList, String prchsStatusCd) {
-		// TAKTEST:: 테스트 진행을 위한 처리
-		if (createPurchaseScList.size() > 0) {
-			return 0;
-		}
-
 		try {
 			return this.purchaseCountService.insertPurchaseProductCount(createPurchaseScList, prchsStatusCd);
 		} catch (StorePlatformException e) {

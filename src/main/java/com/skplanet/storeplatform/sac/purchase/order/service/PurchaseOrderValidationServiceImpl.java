@@ -552,7 +552,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		// 기구매 체크
-		if (existenceProdIdList.size() > 100) {
+		if (existenceProdIdList.size() > 0) {
 
 			List<ExistenceScRes> checkPurchaseResultList = this.searchExistence(existTenantId, existUserKey,
 					existDeviceKey, existenceProdIdList);
