@@ -98,7 +98,7 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
 		// Bypass 이면.
 		if (StringUtils.isNotEmpty(bypassPath)) {
-			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).port(this.innerServletPort).path(bypassPath);
+			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
 		} else {
 			// 그외는 내부 서블릿 URL 호출.
 			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).port(this.innerServletPort)
