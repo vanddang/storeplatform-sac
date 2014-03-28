@@ -15,7 +15,7 @@
                      , A.PROD_ID
                      , A.TOP_MENU_ID
                      , A.CONTENTS_TYPE_CD
-	                 , COUNT(*) OVER () AS TOTAL_COUNT
+	                 , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB, A.PROD_NM) AS RNUM
 	             FROM (SELECT A.TENANT_ID
 	                        , D.MENU_ID
@@ -131,7 +131,7 @@
                      , A.PROD_ID
                      , A.TOP_MENU_ID
                      , A.CONTENTS_TYPE_CD
-                     , COUNT(*) OVER () AS TOTAL_COUNT
+                     , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
                      --,ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
                      <if test='orderedBy == "recent"'>
                      , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 최신순 */
@@ -246,7 +246,7 @@
                      , A.PROD_ID
                      , A.TOP_MENU_ID
                      , A.CONTENTS_TYPE_CD
-                     , COUNT(*) OVER () AS TOTAL_COUNT
+                     , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
                      --,ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
                      , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 최신순 */
                   FROM (SELECT A.TENANT_ID
@@ -276,7 +276,7 @@
                                   AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
                                   </if>
                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
-                                  AND LP.MENU_ID LIKE 'DP18%'
+                                  AND 'DP18' = SUBSTR(LP.MENU_ID, 0, 4)
                                   AND LP.TENANT_ID = LT.TENANT_ID
                                   AND LP.LIST_ID = LT.LIST_ID
                                   AND LT.EXPO_YN = 'Y'
@@ -374,7 +374,7 @@
           FROM (SELECT A.TENANT_ID
                     , A.MENU_ID
                     , A.PROD_ID
-                    , COUNT(*) OVER () AS TOTAL_COUNT
+                    , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
                     , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
                  FROM (SELECT A.TENANT_ID
                              , B.MENU_ID
@@ -451,7 +451,7 @@
           FROM (SELECT A.TENANT_ID
                      , B.MENU_ID
                      , B.PROD_ID
-                     , COUNT(*) OVER () AS TOTAL_COUNT
+                     , COUNT(B.PROD_ID) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY B.EXPO_ORD_ALWAYS_YN DESC, B.EXPO_ORD, B.EXPO_ORD_SUB) AS RNUM
                   FROM TB_DP_LIST A
                      , TB_DP_LIST_PROD B
@@ -519,7 +519,7 @@
           FROM (SELECT A.TENANT_ID
                      , B.MENU_ID
                      , B.PROD_ID
-                     , COUNT(*) OVER () AS TOTAL_COUNT
+                     , COUNT(B.PROD_ID) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY B.EXPO_ORD_ALWAYS_YN DESC, B.EXPO_ORD, B.EXPO_ORD_SUB) AS RNUM
                   FROM TB_DP_LIST A
                      , TB_DP_LIST_PROD B
@@ -592,7 +592,7 @@
                      , A.PROD_ID
                      , A.TOP_MENU_ID
                      , A.META_CLSF_CD
-                     , COUNT(*) OVER () AS TOTAL_COUNT
+                     , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
                   FROM (SELECT A.TENANT_ID
                              , E.MENU_ID
@@ -701,7 +701,7 @@
 		             , H.PART_PROD_ID
 		             , D.TOP_MENU_ID
 		             , E.CONTENTS_TYPE_CD
-		             , COUNT(*) OVER () AS TOTAL_COUNT
+		             , COUNT(H.PART_PROD_ID) OVER () AS TOTAL_COUNT
 		             , ROW_NUMBER() OVER(ORDER BY B.EXPO_ORD_ALWAYS_YN DESC, B.EXPO_ORD, B.EXPO_ORD_SUB) AS RNUM
 		          FROM TB_DP_LIST A
 		             , TB_DP_LIST_PROD B
