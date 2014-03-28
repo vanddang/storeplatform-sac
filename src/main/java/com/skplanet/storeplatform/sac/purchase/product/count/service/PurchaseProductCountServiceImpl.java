@@ -50,6 +50,10 @@ public class PurchaseProductCountServiceImpl implements PurchaseProductCountServ
 		// PrchsProdCntProcStatus 상태 변경 응답값.
 		UpdatePrchsProdCntProcStatusScRes updatePrchsProdCntProcStatusScRes = null;
 
+		int totCnt = 0;
+		int successCnt = 0;
+		int failCnt = 0;
+
 		/** 호출 시 처리 할 구매 상품 건수 처리 상태 'R'로 변경. */
 		updatePrchsProdCntProcStatusScReq.setCurrProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_NO);
 		updatePrchsProdCntProcStatusScReq
@@ -57,7 +61,7 @@ public class PurchaseProductCountServiceImpl implements PurchaseProductCountServ
 		updatePrchsProdCntProcStatusScRes = this.purchaseProductCountRepository
 				.updatePrchsProdCntProcStatus(updatePrchsProdCntProcStatusScReq);
 		// R로 변경한 건수 결과 totCnt에 셋팅.
-		purchaseProductCountSacResult.setTotCnt(updatePrchsProdCntProcStatusScRes.getResultCnt());
+		totCnt = updatePrchsProdCntProcStatusScRes.getResultCnt();
 
 		while (true) {
 
@@ -112,7 +116,18 @@ public class PurchaseProductCountServiceImpl implements PurchaseProductCountServ
 			}
 			updatePrchsProdCntProcStatusScRes = this.purchaseProductCountRepository
 					.updatePrchsProdCntProcStatus(updatePrchsProdCntProcStatusScReq);
+
+			if (apiRtn) {
+				successCnt = successCnt + updatePrchsProdCntProcStatusScRes.getResultCnt();
+			} else {
+				failCnt = failCnt + updatePrchsProdCntProcStatusScRes.getResultCnt();
+			}
+
 		}
+
+		purchaseProductCountSacResult.setTotCnt(totCnt);
+		purchaseProductCountSacResult.setSuccessCnt(successCnt);
+		purchaseProductCountSacResult.setFailCnt(failCnt);
 
 		return purchaseProductCountSacResult;
 

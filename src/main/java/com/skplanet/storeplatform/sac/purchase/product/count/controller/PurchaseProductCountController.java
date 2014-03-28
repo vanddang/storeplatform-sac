@@ -11,14 +11,12 @@ package com.skplanet.storeplatform.sac.purchase.product.count.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.purchase.product.count.vo.PurchaseProductCountSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.product.count.vo.PurchaseProductCountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.product.count.service.PurchaseProductCountService;
@@ -44,22 +42,19 @@ public class PurchaseProductCountController {
 	 * </pre>
 	 * 
 	 * @param sacRequestHeader
-	 *            sacRequestHeader
-	 * @param purchaseProductCountSacReq
-	 *            purchaseProductCountSacReq
+	 * @param perCnt
 	 * @param guid
-	 *            guid
-	 * @return PurchaseProductCountSacRes
+	 * @return
 	 */
-	@RequestMapping(value = "/execute/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/execute/v1", method = { RequestMethod.GET })
 	@ResponseBody
 	public PurchaseProductCountSacRes executePurchaseProductCount(SacRequestHeader sacRequestHeader,
-			@RequestBody @Validated PurchaseProductCountSacReq purchaseProductCountSacReq,
-			@RequestHeader("x-sac-guid") String guid) {
+			@RequestHeader("x-sac-guid") String guid,
+			@RequestParam(value = "perCnt", required = false, defaultValue = "10") Integer perCnt) {
 
 		PurchaseProductCountSacParam purchaseProductCountSacParam = new PurchaseProductCountSacParam();
 		purchaseProductCountSacParam.setGuid(guid);
-		purchaseProductCountSacParam.setPerCount(purchaseProductCountSacReq.getPerCount());
+		purchaseProductCountSacParam.setPerCount(perCnt);
 
 		PurchaseProductCountSacResult purchaseProductCountSacResult = this.purchaseProductCountService
 				.executePurchaseProductCount(purchaseProductCountSacParam);
