@@ -83,7 +83,8 @@ public interface DeviceService {
 	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey);
 
 	/**
-	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인 경우 IDP에 무선회원 해지 요청.
+	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인
+	 * 경우 IDP에 무선회원 해지 요청.
 	 * 
 	 * @param systemId
 	 *            String
@@ -121,8 +122,7 @@ public interface DeviceService {
 	 *            MDN 로그인 버젼
 	 * @return deviceKey String
 	 */
-	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo,
-			DeviceInfo dbDeviceInfo, String version);
+	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, DeviceInfo dbDeviceInfo, String version);
 
 	/**
 	 * 휴대기기 대표단말 설정.
@@ -155,8 +155,7 @@ public interface DeviceService {
 	 *            DetailRepresentationDeviceReq
 	 * @return DetailRepresentationDeviceRes
 	 */
-	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader,
-			DetailRepresentationDeviceReq req);
+	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader, DetailRepresentationDeviceReq req);
 
 	/**
 	 * 단말 AOM 확인.
@@ -194,16 +193,14 @@ public interface DeviceService {
 
 	/**
 	 * <pre>
-	 * ICAS 연동하여 imei 일치여부 판단..
+	 * ICAS 연동하여 imei 조회.
 	 * </pre>
 	 * 
 	 * @param deviceId
 	 *            String
-	 * @param imei
-	 *            String
-	 * @return boolean
+	 * @return String
 	 */
-	public boolean isEqualsImei(String deviceId, String imei);
+	public String getIcasImei(String deviceId);
 
 	/**
 	 * <pre>

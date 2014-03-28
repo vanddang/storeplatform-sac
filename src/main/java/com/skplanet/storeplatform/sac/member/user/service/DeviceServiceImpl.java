@@ -843,8 +843,8 @@ public class DeviceServiceImpl implements DeviceService {
 					boolean isOpmd = StringUtils.substring(deviceInfo.getDeviceId(), 0, 3).equals("989");
 
 					if (!StringUtil.equals(nativeId, dbDeviceInfo.getNativeId()) && !isOpmd) {
-
-						if (this.isEqualsImei(deviceInfo.getDeviceId(), nativeId)) {
+						/* ICAS IMEI 비교 */
+						if (StringUtil.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
 
 							LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
 							userMbrDevice.setNativeID(nativeId);
@@ -864,9 +864,7 @@ public class DeviceServiceImpl implements DeviceService {
 						LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
 						userMbrDevice.setNativeID(nativeId);
 
-					} else if (StringUtil.equals(rooting, "Y") || StringUtil.equals(isNativeIdAuth, "Y")) { // isNativeIdAuth="Y"인경우
-																											// 루팅여부 관계없이
-																											// 비교
+					} else if (StringUtil.equals(rooting, "Y") || StringUtil.equals(isNativeIdAuth, "Y")) { // isNativeIdAuth="Y"인경우 루팅여부 관계없이 비교
 
 						if (!nativeId.equals(dbDeviceInfo.getNativeId())) {
 							throw new StorePlatformException("SAC_MEM_1504");
@@ -877,7 +875,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			}
 
-		} else {
+		} else { // v2
 
 			/* DB에 IMEI가 있으면 비교 */
 			if (!this.isEqualsLoginDevice(deviceInfo.getDeviceId(), nativeId, dbDeviceInfo.getNativeId(),
@@ -890,19 +888,38 @@ public class DeviceServiceImpl implements DeviceService {
 
 					if (!isOpmd) {
 						/* ICAS IMEI 비교 */
-						if (this.isEqualsImei(deviceInfo.getDeviceId(), nativeId)) {
-
-							LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
-							userMbrDevice.setNativeID(nativeId);
-
-						} else {
+						if (!StringUtil.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
 							throw new StorePlatformException("SAC_MEM_1503");
+
 						}
 					}
 
 				} else { // 타사는 IMEI가 다르면 에러
 
 					throw new StorePlatformException("SAC_MEM_1504");
+
+				}
+
+			} else if (StringUtil.isBlank(dbDeviceInfo.getNativeId())) { // DB에 IMEI가 없은경우 최초 수집
+
+				if (StringUtil.isNotBlank(nativeId)) {
+
+					if (StringUtil.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+
+						String icasImei = this.getIcasImei(deviceInfo.getDeviceId());
+						if (StringUtil.equals(nativeId, icasImei)) {
+							LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), icasImei);
+							userMbrDevice.setNativeID(icasImei);
+						} else {
+							throw new StorePlatformException("SAC_MEM_1503");
+						}
+
+					} else {
+
+						LOGGER.info("[nativeId] {} -> {}", dbDeviceInfo.getNativeId(), nativeId);
+						userMbrDevice.setNativeID(nativeId);
+
+					}
 
 				}
 			}
@@ -1495,11 +1512,11 @@ public class DeviceServiceImpl implements DeviceService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#isEqualsImei
-	 * (java.lang.String, java.lang.String)
+	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#getIcasImei
+	 * (java.lang.String)
 	 */
 	@Override
-	public boolean isEqualsImei(String deviceId, String imei) {
+	public String getIcasImei(String deviceId) {
 
 		String icasImei = null;
 
@@ -1517,11 +1534,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info("::::  {} ICAS 연동 :::: icasImei : {}", deviceId, icasImei);
 
-		if (StringUtil.equals(imei, icasImei)) {
-			return true;
-		}
-
-		return false;
+		return icasImei;
 	}
 
 	/*
