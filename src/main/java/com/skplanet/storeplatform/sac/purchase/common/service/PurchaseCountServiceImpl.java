@@ -55,7 +55,6 @@ public class PurchaseCountServiceImpl implements PurchaseCountService {
 		PrchsProdCnt prchsProdCnt = null;
 
 		String tenantProdGrpCd = null;
-		int multipleVal = StringUtils.equals(prchsStatusCd, PurchaseConstants.PRCHS_STATUS_COMPT) ? 1 : -1;
 
 		for (CreatePurchaseSc createPurchaseSc : createPurchaseScList) {
 			if (procProdIdList.contains(createPurchaseSc.getProdId())) {
@@ -76,7 +75,7 @@ public class PurchaseCountServiceImpl implements PurchaseCountService {
 			prchsProdCnt.setStatusCd(prchsStatusCd);
 
 			prchsProdCnt.setProdId(createPurchaseSc.getProdId());
-			prchsProdCnt.setProdQty(createPurchaseSc.getProdQty() * multipleVal);
+			prchsProdCnt.setProdQty(createPurchaseSc.getProdQty());
 			prchsProdCnt.setSprcProdYn(StringUtils.defaultString(createPurchaseSc.getSprcProdYn(),
 					PurchaseConstants.USE_N));
 

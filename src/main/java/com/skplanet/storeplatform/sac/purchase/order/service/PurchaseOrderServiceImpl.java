@@ -1005,9 +1005,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					.append("&useDeviceId=").append(useUser.getDeviceId()).append("&useDeviceModelCd=")
 					.append(useUser.getDeviceModelCd()).append("&networkTypeCd=")
 					.append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
-					.append(purchaseOrderInfo.getCurrencyCd()).append("&specialCouponId=")
-					.append(StringUtils.defaultString(purchaseOrderInfo.getSpecialCouponId()))
-					.append("&specialCouponAmt=").append(purchaseOrderInfo.getSpecialCouponAmt());
+					.append(purchaseOrderInfo.getCurrencyCd());
 			if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 				sbReserveData.append("&receiveNames=").append(StringUtils.defaultString(useUser.getUserName()))
 						.append("&receiveMdns=").append(useUser.getDeviceId()); // 선물수신자 성명, 선물수신자 MDN
@@ -1136,7 +1134,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							.append("&mallCd=").append(StringUtils.defaultString(product.getMallCd()))
 							.append("&outsdContentsId=")
 							.append(StringUtils.defaultString(product.getOutsdContentsId())).append("&autoPrchsYn=")
-							.append(StringUtils.defaultString(product.getAutoPrchsYN()));
+							.append(StringUtils.defaultString(product.getAutoPrchsYN())).append("&specialCouponId=")
+							.append(StringUtils.defaultString(product.getSpecialSaleCouponId()))
+							.append("&specialCouponAmt=").append(product.getSpecialCouponAmt());
 					createPurchase.setPrchsResvDesc(sbReserveData.toString());
 				}
 

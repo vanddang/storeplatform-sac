@@ -351,6 +351,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				purchaseOrderInfo.setSpecialCouponId(purchaseProduct.getSpecialSaleCouponId());
 				purchaseOrderInfo.setSpecialCouponAmt(purchaseProduct.getProdAmt()
 						- purchaseProduct.getSpecialSaleAmt());
+
+				purchaseProduct.setSpecialCouponAmt(purchaseOrderInfo.getSpecialCouponAmt());
 			}
 
 			purchaseProductList.add(purchaseProduct);

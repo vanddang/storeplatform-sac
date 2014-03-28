@@ -30,6 +30,7 @@ public class PurchaseProduct extends PaymentInfo {
 	private String ownPid; // 소장하기 상품 ID
 	private String ownAmt; // 소장하기 상품 금액
 
+	private double specialCouponAmt;
 	private int prodQty;
 	private String resvCol01;
 	private String resvCol02;
@@ -189,6 +190,21 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setOwnAmt(String ownAmt) {
 		this.ownAmt = ownAmt;
+	}
+
+	/**
+	 * @return the specialCouponAmt
+	 */
+	public double getSpecialCouponAmt() {
+		return this.specialCouponAmt;
+	}
+
+	/**
+	 * @param specialCouponAmt
+	 *            the specialCouponAmt to set
+	 */
+	public void setSpecialCouponAmt(double specialCouponAmt) {
+		this.specialCouponAmt = specialCouponAmt;
 	}
 
 	/**
