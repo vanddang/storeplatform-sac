@@ -4,9 +4,9 @@
     <!-- 테마 정보 조회 -->
     <select id="selectThemeThemeZoneInfo" parameterType="ThemeThemeZoneSacReq" resultType="ThemeThemeZone">
         SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZoneInfo, SAC 전시, 2014-02-21 */ 
-              BNR_MENU_NM
-			, BNR_MENU_ID
-            , BNR_NM
+              A.BNR_MENU_NM
+			, A.BNR_MENU_ID
+            , A.BNR_NM
 	   FROM
                ( SELECT 
                      TDL.LIST_NM AS BNR_MENU_NM
@@ -31,31 +31,31 @@
     <!-- 테마 상품 조회 -->
     <select id="selectThemeThemeZoneList" parameterType="ThemeThemeZoneSacReq" resultType="ProductBasicInfo">
 		SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZoneList, SAC 전시, 2014-02-17 */     
-              B.TENANT_ID
-             , B.MENU_ID
-             , B.PROD_ID
-             , B.PART_PROD_ID
-             , B.CATALOG_ID
-             , B.TOP_MENU_ID
-             , B.META_CLSF_CD
-             , B.SVC_GRP_CD
-             , B.CONTENTS_TYPE_CD
-             , B.TOTAL_COUNT
+              Z2.TENANT_ID
+             , Z2.MENU_ID
+             , Z2.PROD_ID
+             , Z2.PART_PROD_ID
+             , Z2.CATALOG_ID
+             , Z2.TOP_MENU_ID
+             , Z2.META_CLSF_CD
+             , Z2.SVC_GRP_CD
+             , Z2.CONTENTS_TYPE_CD
+             , Z2.TOTAL_COUNT
           FROM (SELECT 
-                       TENANT_ID
-                     , MENU_ID
-                     , PROD_ID
-                     , PART_PROD_ID
-                     , CATALOG_ID
-                     , TOP_MENU_ID
-                     , META_CLSF_CD
-                     , SVC_GRP_CD
-                     , CONTENTS_TYPE_CD
-                     , EXPO_ORD_ALWAYS_YN
-                     , EXPO_ORD
-                     , EXPO_ORD_SUB
-                     , COUNT(*) OVER () AS TOTAL_COUNT
-                     , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
+                       Z1.TENANT_ID
+                     , Z1.MENU_ID
+                     , Z1.PROD_ID
+                     , Z1.PART_PROD_ID
+                     , Z1.CATALOG_ID
+                     , Z1.TOP_MENU_ID
+                     , Z1.META_CLSF_CD
+                     , Z1.SVC_GRP_CD
+                     , Z1.CONTENTS_TYPE_CD
+                     , Z1.EXPO_ORD_ALWAYS_YN
+                     , Z1.EXPO_ORD
+                     , Z1.EXPO_ORD_SUB
+                     , COUNT(Z1.PROD_ID) OVER () AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(ORDER BY Z1.EXPO_ORD_ALWAYS_YN DESC, Z1.EXPO_ORD, Z1.EXPO_ORD_SUB) AS RNUM
                   FROM (SELECT A.TENANT_ID
                              , E.MENU_ID
                              , C.PROD_ID
@@ -233,9 +233,9 @@
                                           AND ROWNUM <![CDATA[ <= ]]> 1  )
                                 ELSE 1
                             END ) = 1
-                      ) A
+                      ) Z1
                  WHERE RN = 1
-              ) B
+              ) Z2
         WHERE RNUM BETWEEN #{offset} AND #{count}
         ORDER BY RNUM
     </select>
@@ -253,7 +253,7 @@
 	        TDL.LIST_ID
             , TDL.LIST_NM 
             , TDL.IMG_PATH
-            , COUNT(*) OVER () AS TOTAL_COUNT
+            , COUNT(TDL.LIST_ID) OVER () AS TOTAL_COUNT
             , ROW_NUMBER() OVER(ORDER BY TDL.EXPO_ORD, TDL.EXPO_ORD_SUB) AS RNUM
 	        FROM TB_DP_LIST TDL
             WHERE TDL.LIST_ID like 'TAR%'

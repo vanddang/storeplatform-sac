@@ -4,26 +4,26 @@
 	<!-- 상품별 서비스 그룹 코드 조회-->
 	<select id="selectProductInfoList" resultType="ProductBasicInfo">
 		SELECT /* CategorySpecificProductMapper.xml, selectProductInfoList, SAC 전시, 2014-03-03*/		
-             PROD_ID,
-             SVC_GRP_CD,
-             SVC_TYPE_CD,
-             CONTENTS_TYPE_CD,
-             META_CLSF_CD,
-             TOP_MENU_ID,
-             PROD_ID AS PART_PROD_ID,
+             JA.PROD_ID,
+             JA.SVC_GRP_CD,
+             JA.SVC_TYPE_CD,
+             JA.CONTENTS_TYPE_CD,
+             JA.META_CLSF_CD,
+             JA.TOP_MENU_ID,
+             JA.PROD_ID AS PART_PROD_ID,
              ROWNUM
 		FROM 
 		( 	 
 			 SELECT 
-			       PROD_ID,
-			       SVC_GRP_CD,
-			       SVC_TYPE_CD,
-			       CONTENTS_TYPE_CD,
-			       META_CLSF_CD,
-			       TOP_MENU_ID,
-			       PROD_ID AS PART_PROD_ID,
+			       TDP.PROD_ID,
+			       TDP.SVC_GRP_CD,
+			       TDP.SVC_TYPE_CD,
+			       TDP.CONTENTS_TYPE_CD,
+			       TDP.META_CLSF_CD,
+			       TDP.TOP_MENU_ID,
+			       TDP.PROD_ID AS PART_PROD_ID,
 			       ROWNUM
-		      FROM TB_DP_PROD
+		      FROM TB_DP_PROD TDP
 		      WHERE PROD_ID IN  
 		           <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
 		                #{item}
@@ -50,7 +50,7 @@
 			     AND   B.PROD_ID = C.PROD_ID
 			  ) LA
                 WHERE LA.RNUM = 1   
-		 )
+		 ) JA
 	    <if test = "list != null">  
 	     ORDER BY INSTR
 		     <foreach collection="list" item="item" index="index" open="(" separator="||" close=",PROD_ID)"> 
@@ -62,14 +62,14 @@
     <!-- 상품별 서비스 그룹 코드 조회-->
     <select id="selectProductSongInfoList" resultType="ProductBasicInfo">
         SELECT /* CategorySpecificProductMapper.xml, selectProductSongInfoList, SAC 전시, 2014-03-03*/
-            PROD_ID,
-            SVC_GRP_CD,
-            SVC_TYPE_CD,
-            CONTENTS_TYPE_CD,
-            META_CLSF_CD,
-            TOP_MENU_ID,
-            PROD_ID AS PART_PROD_ID,
-            OUTSD_CONTENTS_ID,
+            Z.PROD_ID,
+            Z.SVC_GRP_CD,
+            Z.SVC_TYPE_CD,
+            Z.CONTENTS_TYPE_CD,
+            Z.META_CLSF_CD,
+            Z.TOP_MENU_ID,
+            Z.PROD_ID AS PART_PROD_ID,
+            Z.OUTSD_CONTENTS_ID,
             ROWNUM
         FROM 
         (    
@@ -81,8 +81,7 @@
 			     A.META_CLSF_CD,
 			     A.TOP_MENU_ID,
 			     A.PROD_ID AS PART_PROD_ID,
-			     B.OUTSD_CONTENTS_ID,
-			     ROWNUM
+			     B.OUTSD_CONTENTS_ID
 			FROM TB_DP_PROD A
 			     , UV_TB_DP_MULTIMDA_PROD B   
               WHERE 1=1
@@ -93,7 +92,7 @@
             AND B.PROD_ID = A.PROD_ID 
             AND A.META_CLSF_CD = 'CT25'
             AND A.CONTENTS_TYPE_CD = 'PD002502'       
-         )
+         ) Z
         <if test = "list != null">  
          ORDER BY INSTR
              <foreach collection="list" item="item" index="index" open="(" separator="||" close=",OUTSD_CONTENTS_ID)"> 
@@ -394,8 +393,13 @@
                            , O.PROD_AMT
                            , O.PROD_NET_AMT
                            , G.PROD_STATUS_CD
-                           , D.SELLER_MBR_NO
-                           , D.CID
+                           , D.SELLER_MBR_NO 
+                         <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+                           , D.CID     -- 채널 상품 ID 조회       
+                         </if>
+                         <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                           , J.CID   -- 에피소드 상품 ID 조회
+                         </if>                           
                            , D.SVC_GRP_CD                    
                            , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM   
                            , E.BRDC_COMP_CD    
@@ -500,7 +504,12 @@
             , TP.PROD_STATUS_CD
             , P.REG_DT
             , P.SELLER_MBR_NO
-            , P.CID
+         <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+            , P2.CID     -- 채널 상품 ID 조회       
+         </if>
+         <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+            , P.CID   -- 에피소드 상품 ID 조회
+         </if>         
             , P.SVC_GRP_CD      
             , FC_GET_CM_CD_NM(P.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM    
             , P.EXPO_SELLER_NM
@@ -697,7 +706,12 @@
                       , O.PROD_NET_AMT 
                       , G.PROD_STATUS_CD
                       , D.SELLER_MBR_NO
-                      , D.CID
+			         <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+			          , D.CID     -- 채널 상품 ID 조회       
+			         </if>
+			         <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+			          , J.CID   -- 에피소드 상품 ID 조회
+			         </if>      
                       , L.OUTSD_CONTENTS_ID
                       , D.SVC_GRP_CD      
                       , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM  
@@ -871,7 +885,12 @@
                       , O.PROD_NET_AMT 
                       , G.PROD_STATUS_CD
                       , D.SELLER_MBR_NO
-                      , D.CID
+                     <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+                      , D.CID     -- 채널 상품 ID 조회       
+                     </if>
+                     <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                      , J.CID   -- 에피소드 상품 ID 조회
+                     </if>      
                       , D.SVC_GRP_CD          
                       , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM       
                       , D.EXPO_SELLER_NM

@@ -4,14 +4,14 @@
     <!-- 상품서비스군 조회 -->
     <select id="selectOtherServiceGroupList" parameterType="ServiceGroupReq" resultType="ServiceGroup">
 		SELECT  /* OtherServiceGroupMapper.XML, selectOtherServiceGroupList, SAC 전시, 2014-01-27 */		       
-		     COUNT(*) OVER () AS TOTAL_COUNT
-            , PROD_ID
-            , CONTENTS_TYPE_CD
-            , CONTENTS_TYPE_NM
-            , TOP_MENU_ID
-            , TOP_MENU_NM
-            , SVC_GRP_CD
-            , META_CLSF_CD
+		     COUNT(JA.PROD_ID) OVER () AS TOTAL_COUNT
+            , JA.PROD_ID
+            , JA.CONTENTS_TYPE_CD
+            , JA.CONTENTS_TYPE_NM
+            , JA.TOP_MENU_ID
+            , JA.TOP_MENU_NM
+            , JA.SVC_GRP_CD
+            , JA.META_CLSF_CD
         FROM 
         (    
 			SELECT
@@ -57,7 +57,7 @@
 		       AND   B.PROD_ID = C.PROD_ID
 		   ) LA
 		     WHERE LA.RNUM = 1   
-	   )
+	   ) JA
        <if test = "prodIdList != null">  
             ORDER BY instr
             <foreach collection="prodIdList" item="item" index="index" open="(" separator="||" close=",PROD_ID)"> 

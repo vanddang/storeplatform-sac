@@ -193,7 +193,7 @@
                 , AA.UPD_DT
                 , AA.CHAPTER
                 , AA.FIRST_PROD_ID
-                , COUNT(*) OVER () AS TOTAL_COUNT
+                , COUNT(AA.PROD_ID) OVER () AS TOTAL_COUNT
                 , ROWNUM AS RNUM
                 FROM
                 (
@@ -266,7 +266,7 @@
                 , AA.MENU_ID
                 , AA.UPD_DT
                 , AA.CHAPTER
-	            , COUNT(*) OVER () AS TOTAL_COUNT
+	            , COUNT(AA.PROD_ID) OVER () AS TOTAL_COUNT
 	            , ROWNUM AS RNUM
 	            FROM
 	            (
