@@ -14,6 +14,7 @@ import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,9 +31,9 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearcher;
 
 /**
- * 
+ *
  * ServiceUrlSearcher 구현체
- * 
+ *
  * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
  */
 @Component
@@ -58,6 +59,9 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
 	@Resource(name = "propertiesForSac")
 	private Properties properties;
+
+
+	private Integer innerServletPort;
 
 	@Override
 	public String search(Map<String, Object> headerMap) {
@@ -90,10 +94,10 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
 		// Bypass 이면.
 		if (StringUtils.isNotEmpty(bypassPath)) {
-			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
+			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).port(8010).path(bypassPath);
 		} else {
 			// 그외는 내부 서블릿 URL 호출.
-			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).path(requestContextPath)
+			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).port(8010).path(requestContextPath)
 					.path(this.innerServletPath).path(innerRequestURI);
 		}
 		if (requestMethod.equals("GET")) {
@@ -108,5 +112,12 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 			}
 		}
 		return to.build().toUriString();
+	}
+
+
+
+	@PostConstruct
+	public void init() {
+		this.innerServletPort = 8010;
 	}
 }
