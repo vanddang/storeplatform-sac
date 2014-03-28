@@ -42,9 +42,12 @@ public class PurchaseProductCountController {
 	 * </pre>
 	 * 
 	 * @param sacRequestHeader
-	 * @param perCnt
+	 *            sacRequestHeader
 	 * @param guid
-	 * @return
+	 *            guid
+	 * @param perCnt
+	 *            perCnt
+	 * @return PurchaseProductCountSacRes
 	 */
 	@RequestMapping(value = "/execute/v1", method = { RequestMethod.GET })
 	@ResponseBody
