@@ -70,7 +70,12 @@
                    AND B.USE_YN = 'Y'
                    AND B.MENU_ID = C.MENU_ID
                    AND C.USE_YN = 'Y'
-                   AND C.MENU_ID LIKE CONCAT(#{menuId}, '%')
+                   <if test='menuId != null and menuId != ""'>
+                   AND C.MENU_ID = #{menuId}
+                   </if>
+                   <if test='menuId == null or menuId == ""'>
+                   AND C.TOP_MENU_ID = 'DP16'
+                   </if>
                    AND B.PROD_ID = D.PROD_ID
                    AND D.CONTENTS_TYPE_CD = 'PD002502'
                    AND D.META_CLSF_CD = 'CT25'

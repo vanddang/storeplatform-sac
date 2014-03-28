@@ -105,10 +105,6 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		// throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
 		// }
 
-		if (null == menuId || "".equals(menuId)) {
-			requestVO.setMenuId(DisplayConstants.DP_MUSIC_TOP_MENU_ID);
-		}
-
 		// 챠트구분, 배치ID 세팅
 		if (filteredBy.equals("top")) { // TOP 뮤직
 			requestVO.setChartClsfCd("DP004901");
