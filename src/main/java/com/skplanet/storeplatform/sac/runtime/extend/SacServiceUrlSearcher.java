@@ -74,7 +74,7 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		// 요청 Method
 		String requestMethod = request.getMethod();
 		//
-		int localPort = request.getServerPort();
+		int localPort = request.getLocalPort();
 
 		LOGGER.info("localPort : {} " + request.getLocalPort());
 		LOGGER.info("serverPort : {} " + request.getServerPort());
