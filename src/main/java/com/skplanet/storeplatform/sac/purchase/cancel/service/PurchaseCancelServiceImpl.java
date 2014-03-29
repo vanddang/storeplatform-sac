@@ -163,7 +163,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	// TODO : 테넌트 정책 반영 어떻게 함?
 
 	/*
-	 * 오퍼링 상품은 어케 처리?
+	 * 오퍼링 상품은 어케 처리? --
 	 * 
 	 * T Store Cash 취소 일 경우 취소할 캐쉬량이 남이 있는지 확인 필요(예약)
 	 * 
