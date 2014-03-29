@@ -51,6 +51,39 @@ public class PrchsDtlSacParam extends CommonInfo {
 	private String cpnBizProdSeq;
 	private String prchsResvDesc;
 
+	private String appId;
+	private String specialSaleCouponId;
+
+	/**
+	 * @return the appId
+	 */
+	public String getAppId() {
+		return this.appId;
+	}
+
+	/**
+	 * @param appId
+	 *            the appId to set
+	 */
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+
+	/**
+	 * @return the specialSaleCouponId
+	 */
+	public String getSpecialSaleCouponId() {
+		return this.specialSaleCouponId;
+	}
+
+	/**
+	 * @param specialSaleCouponId
+	 *            the specialSaleCouponId to set
+	 */
+	public void setSpecialSaleCouponId(String specialSaleCouponId) {
+		this.specialSaleCouponId = specialSaleCouponId;
+	}
+
 	/**
 	 * @return the useStartDt
 	 */

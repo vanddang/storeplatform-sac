@@ -45,6 +45,9 @@ import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
+import com.skplanet.storeplatform.purchase.client.product.count.sci.PurchaseCountSCI;
+import com.skplanet.storeplatform.purchase.client.product.count.vo.InsertPurchaseProductCountScReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdatePurchaseCountSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UpdatePurchaseCountSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
@@ -89,6 +92,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 	@Autowired
 	private TStoreCashSCI tStoreCashSCI;
+
+	@Autowired
+	private PurchaseCountSCI purchaseCountSCI;
 
 	@Override
 	public PurchaseCancelDetailSacParam setPurchaseDetailInfo(PurchaseCancelSacParam purchaseCancelSacParam,
@@ -340,6 +346,42 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelDetailSacParam.setPaymentCancelCnt(purchaseCancelScRes.getPaymentCancelCnt());
 		purchaseCancelDetailSacParam.setPrchsDtlCancelCnt(purchaseCancelScRes.getPrchsDtlCancelCnt());
 		purchaseCancelDetailSacParam.setPrchsCancelCnt(purchaseCancelScRes.getPrchsCancelCnt());
+
+		// 상품 구매수 차감 처리 해준다.
+		InsertPurchaseProductCountScReq insertPurchaseProductCountScReq = new InsertPurchaseProductCountScReq();
+		List<PrchsProdCnt> prchsProdCntList = new ArrayList<PrchsProdCnt>();
+		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
+			PrchsProdCnt prchsProdCnt = new PrchsProdCnt();
+			prchsProdCnt.setTenantId(prchsDtlSacParam.getTenantId());
+			prchsProdCnt.setUseUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+			prchsProdCnt.setUseDeviceKey(prchsDtlSacParam.getUseInsdDeviceId());
+
+			// 중복 구매 가능한 쇼핑상품 / 부분유료화 상품 처리
+			String tenantProdGrpCd = prchsDtlSacParam.getTenantProdGrpCd();
+			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+				prchsProdCnt.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd().substring(0, 12)
+						+ prchsDtlSacParam.getPrchsId());
+			} else {
+				prchsProdCnt.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd().substring(0, 12));
+			}
+
+			prchsProdCnt.setProdGrpCd(tenantProdGrpCd);
+			prchsProdCnt.setProdId(prchsDtlSacParam.getProdId());
+			prchsProdCnt.setProdQty(prchsDtlSacParam.getProdQty());
+			prchsProdCnt.setStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+			prchsProdCnt.setPrchsDt(prchsDtlSacParam.getPrchsDt().substring(0, 8));
+			prchsProdCnt
+					.setSprcProdYn(StringUtils.isBlank(prchsDtlSacParam.getSpecialSaleCouponId()) ? PurchaseConstants.USE_N : PurchaseConstants.USE_Y);
+
+			prchsProdCnt.setRegId(purchaseCancelSacParam.getSystemId());
+			prchsProdCnt.setUpdId(purchaseCancelSacParam.getSystemId());
+			prchsProdCntList.add(prchsProdCnt);
+
+		}
+
+		insertPurchaseProductCountScReq.setPrchsProdCntList(prchsProdCntList);
+		this.purchaseCountSCI.insertPurchaseProductCount(insertPurchaseProductCountScReq);
 
 		return purchaseCancelDetailSacParam;
 
