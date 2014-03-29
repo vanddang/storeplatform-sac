@@ -65,8 +65,8 @@ public class DetailInformationTest {
 						DetailInformationReq req = new DetailInformationReq();
 
 						req.setAid("OM00044497");
-						// req.setSellerId("qatest123");
-						// req.setSellerKey("SE201403031918523990001408");
+						req.setSellerId("qatest123");
+						req.setSellerKey("SE201403031918523990001408");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
