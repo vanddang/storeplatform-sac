@@ -264,7 +264,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * 판매자회원 기본정보조회 App.
+	 * App 상세 화면에 노출 되는 판매자 정보.
 	 * </pre>
 	 * 
 	 * @param header
@@ -278,8 +278,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	public DetailInformationForProductRes detailInformationForProduct(SacRequestHeader header,
 			DetailInformationForProductReq req) {
 
-		SearchMbrSellerRequest schReq = new SearchMbrSellerRequest();
-		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		SearchMbrSellerRequest searchSellerReq = new SearchMbrSellerRequest();
+		searchSellerReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		KeySearch keySearch = new KeySearch();
 
@@ -288,18 +288,17 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
-		schReq.setKeySearchList(list);
+		searchSellerReq.setKeySearchList(list);
 
-		SearchMbrSellerResponse schRes = this.sellerSCI.searchMbrSeller(schReq);
+		SearchMbrSellerResponse searchSellerRes = this.sellerSCI.searchMbrSeller(searchSellerReq);
 
-		List<SellerMbrAppSac> sellerMbrList = null;
 		SellerMbrAppSac sellerMbrSac = null;
+		List<SellerMbrAppSac> sellerMbrList = new ArrayList<SellerMbrAppSac>();
 
 		List<SellerMbr> sellerMbrs = new ArrayList<SellerMbr>();
-		sellerMbrList = new ArrayList<SellerMbrAppSac>();
 
-		sellerMbrs = (List<SellerMbr>) schRes.getSellerMbrListMap().get(
-				schRes.getSellerMbrListMap().keySet().iterator().next());
+		sellerMbrs = (List<SellerMbr>) searchSellerRes.getSellerMbrListMap().get(
+				searchSellerRes.getSellerMbrListMap().keySet().iterator().next());
 
 		if (sellerMbrs.get(0).getIsDomestic() == null || sellerMbrs.get(0).getSellerClass() == null) {
 			throw new StorePlatformException("SAC_MEM_2101");
@@ -622,22 +621,22 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		schReq.setSellerEmail(req.getSellerEmail());
 		schReq.setSellerPhone(req.getSellerPhone());
 
-		SearchIDSellerResponse schRes = this.sellerSCI.searchIDSeller(schReq);
+		SearchIDSellerResponse searchIdSellerRes = this.sellerSCI.searchIDSeller(schReq);
 
-		List<SellerMbrSac> sList = null;
-		if (schRes.getSellerMbr() != null) {
-			sList = new ArrayList<SellerMbrSac>();
-			SellerMbrSac sellerMbrRes = null;
-			for (int i = 0; i < schRes.getSellerMbr().size(); i++) {
-				sellerMbrRes = new SellerMbrSac();
-				sellerMbrRes.setSellerId(schRes.getSellerMbr().get(i).getSellerID());
-				sellerMbrRes.setRegDate(schRes.getSellerMbr().get(i).getRegDate());
-				sList.add(sellerMbrRes);
+		List<SellerMbrSac> sellerList = null;
+		if (searchIdSellerRes.getSellerMbr() != null) {
+			sellerList = new ArrayList<SellerMbrSac>();
+			SellerMbrSac sellerMbr = null;
+			for (int i = 0; i < searchIdSellerRes.getSellerMbr().size(); i++) {
+				sellerMbr = new SellerMbrSac();
+				sellerMbr.setSellerId(searchIdSellerRes.getSellerMbr().get(i).getSellerID());
+				sellerMbr.setRegDate(searchIdSellerRes.getSellerMbr().get(i).getRegDate());
+				sellerList.add(sellerMbr);
 			}
 		}
 
 		SearchIdRes response = new SearchIdRes();
-		response.setSellerMbr(sList); // 판매자 정보 리스트
+		response.setSellerMbr(sellerList); // 판매자 정보 리스트
 
 		return response;
 
@@ -688,9 +687,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			CheckPasswordReminderQuestionReq req) {
 
-		CheckPasswordReminderSellerRequest schReq = new CheckPasswordReminderSellerRequest();
+		CheckPasswordReminderSellerRequest passwordReminderReq = new CheckPasswordReminderSellerRequest();
 
-		schReq.setSellerID(req.getSellerId());
+		passwordReminderReq.setSellerID(req.getSellerId());
 
 		/** 보안질문 리스트 주입 - [시작]. */
 		List<PWReminder> pwReminderList = null;
@@ -702,15 +701,16 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				pwReminder.setQuestionID(req.getPwReminderList().get(i).getQuestionId());
 				pwReminderList.add(pwReminder);
 			}
-			schReq.setPWReminderList(pwReminderList);
+			passwordReminderReq.setPWReminderList(pwReminderList);
 		}
 		/** 보안질문 리스트 주입 - [끝]. */
 
-		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
-		CheckPasswordReminderSellerResponse schRes = this.sellerSCI.checkPasswordReminderSeller(schReq);
+		passwordReminderReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		CheckPasswordReminderSellerResponse passwordReminderRes = this.sellerSCI
+				.checkPasswordReminderSeller(passwordReminderReq);
 
 		CheckPasswordReminderQuestionRes response = new CheckPasswordReminderQuestionRes();
-		response.setIsCorrect(schRes.getIsCorrect());
+		response.setIsCorrect(passwordReminderRes.getIsCorrect());
 		return response;
 
 	}
@@ -730,27 +730,27 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
 			ListPasswordReminderQuestionReq req) {
 
-		SearchPwdHintListRequest schReq = new SearchPwdHintListRequest();
-		schReq.setSellerKey(req.getSellerKey());
-		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
-		schReq.setLanguageCode(header.getTenantHeader().getLangCd()); // Header에서 LangCd 추출하여 Setting.
+		SearchPwdHintListRequest sellerPwdHintReq = new SearchPwdHintListRequest();
+		sellerPwdHintReq.setSellerKey(req.getSellerKey());
+		sellerPwdHintReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		sellerPwdHintReq.setLanguageCode(header.getTenantHeader().getLangCd()); // Header에서 LangCd 추출하여 Setting.
 
-		SearchPwdHintListResponse schRes = this.sellerSCI.searchPwdHintList(schReq);
+		SearchPwdHintListResponse sellerPwdHintRes = this.sellerSCI.searchPwdHintList(sellerPwdHintReq);
 
-		List<SellerMbrPwdHint> sList = null;
-		SellerMbrPwdHint sellerMbrPwdHint = null;
-		if (schRes.getPWReminderList() != null) {
-			sList = new ArrayList<SellerMbrPwdHint>();
-			for (int i = 0; i < schRes.getPWReminderList().size(); i++) {
-				sellerMbrPwdHint = new SellerMbrPwdHint();
-				sellerMbrPwdHint.setQuestionId(schRes.getPWReminderList().get(i).getQuestionID());
-				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderList().get(i).getQuestionName());
-				sList.add(sellerMbrPwdHint);
+		List<SellerMbrPwdHint> sellerPwdHintList = null;
+		SellerMbrPwdHint sellerPwdHint = null;
+		if (sellerPwdHintRes.getPWReminderList() != null) {
+			sellerPwdHintList = new ArrayList<SellerMbrPwdHint>();
+			for (int i = 0; i < sellerPwdHintRes.getPWReminderList().size(); i++) {
+				sellerPwdHint = new SellerMbrPwdHint();
+				sellerPwdHint.setQuestionId(sellerPwdHintRes.getPWReminderList().get(i).getQuestionID());
+				sellerPwdHint.setQuestionMessage(sellerPwdHintRes.getPWReminderList().get(i).getQuestionName());
+				sellerPwdHintList.add(sellerPwdHint);
 			}
 		}
 
 		ListPasswordReminderQuestionRes response = new ListPasswordReminderQuestionRes();
-		response.setSellerMbrPwdHintList(sList);
+		response.setSellerMbrPwdHintList(sellerPwdHintList);
 
 		return response;
 
@@ -772,21 +772,21 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq.setLanguageCode(header.getTenantHeader().getLangCd());
 
-		SearchPwdHintListAllResponse schRes = this.sellerSCI.searchPwdHintListAll(schReq);
+		SearchPwdHintListAllResponse pwdHintListAllRes = this.sellerSCI.searchPwdHintListAll(schReq);
 
-		List<SellerMbrPwdHint> sList = new ArrayList<SellerMbrPwdHint>();
-		SellerMbrPwdHint sellerMbrPwdHint = null;
-		if (schRes.getPWReminderAllList() != null) {
-			for (int i = 0; i < schRes.getPWReminderAllList().size(); i++) {
-				sellerMbrPwdHint = new SellerMbrPwdHint();
-				sellerMbrPwdHint.setQuestionId(schRes.getPWReminderAllList().get(i).getQuestionID());
-				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderAllList().get(i).getQuestionName());
-				sellerMbrPwdHint.setDisplayOrder(schRes.getPWReminderAllList().get(i).getDisplayOrder());
-				sList.add(sellerMbrPwdHint);
+		List<SellerMbrPwdHint> sellerPwdHintList = new ArrayList<SellerMbrPwdHint>();
+		SellerMbrPwdHint sellerPwdHint = null;
+		if (pwdHintListAllRes.getPWReminderAllList() != null) {
+			for (int i = 0; i < pwdHintListAllRes.getPWReminderAllList().size(); i++) {
+				sellerPwdHint = new SellerMbrPwdHint();
+				sellerPwdHint.setQuestionId(pwdHintListAllRes.getPWReminderAllList().get(i).getQuestionID());
+				sellerPwdHint.setQuestionMessage(pwdHintListAllRes.getPWReminderAllList().get(i).getQuestionName());
+				sellerPwdHint.setDisplayOrder(pwdHintListAllRes.getPWReminderAllList().get(i).getDisplayOrder());
+				sellerPwdHintList.add(sellerPwdHint);
 			}
 		}
 		ListPasswordReminderQuestionAllRes response = new ListPasswordReminderQuestionAllRes();
-		response.setSellerMbrPwdHintList(sList);
+		response.setSellerMbrPwdHintList(sellerPwdHintList);
 
 		return response;
 
@@ -800,76 +800,76 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @param header
 	 *            SacRequestHeader
 	 * @param req
-	 *            SearchAuthKeyReq
-	 * @return DetailInformationRes
+	 *            DetailInfomationByAuthorizationKeySacReq
+	 * @return DetailInfomationByAuthorizationKeySacRes
 	 */
 	@Override
 	public DetailInfomationByAuthorizationKeySacRes detailInfomationByAuthorizationKey(SacRequestHeader header,
 			DetailInfomationByAuthorizationKeySacReq req) {
 
-		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
+		SearchLoginInfoRequest searchLoginInReq = new SearchLoginInfoRequest();
 		CommonRequest commonRequest = this.commonComponent.getSCCommonRequest(header);
 
-		schReq.setCommonRequest(commonRequest);
-		schReq.setSessionKey(req.getSessionKey());
-		SearchLoginInfoResponse schRes = this.sellerSCI.searchLoginInfo(schReq);
+		searchLoginInReq.setCommonRequest(commonRequest);
+		searchLoginInReq.setSessionKey(req.getSessionKey());
+		SearchLoginInfoResponse searchLoginInRes = this.sellerSCI.searchLoginInfo(searchLoginInReq);
 
 		// 세션키 업데이트
-		UpdateLoginInfoRequest schReq2 = new UpdateLoginInfoRequest();
-		schReq2.setCommonRequest(commonRequest);
+		UpdateLoginInfoRequest updateLoginInfoReq = new UpdateLoginInfoRequest();
+		updateLoginInfoReq.setCommonRequest(commonRequest);
 		LoginInfo loginInfo = new LoginInfo();
-		loginInfo.setSellerKey(schRes.getLoginInfo().getSellerKey());
+		loginInfo.setSellerKey(searchLoginInRes.getLoginInfo().getSellerKey());
 		loginInfo.setSessionKey(req.getSessionKey());
 		loginInfo.setExpireDate(this.commonComponent.getExpirationTime(Integer.parseInt(req.getExpireDate())));
-		schReq2.setLoginInfo(loginInfo);
-		this.sellerSCI.updateLoginInfo(schReq2);
+		updateLoginInfoReq.setLoginInfo(loginInfo);
+		this.sellerSCI.updateLoginInfo(updateLoginInfoReq);
 
-		SearchSellerRequest schReq3 = new SearchSellerRequest();
-		schReq3.setCommonRequest(commonRequest);
+		SearchSellerRequest searchSellerReq = new SearchSellerRequest();
+		searchSellerReq.setCommonRequest(commonRequest);
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
-		keySearch.setKeyString(schRes.getLoginInfo().getSellerKey());
+		keySearch.setKeyString(searchLoginInRes.getLoginInfo().getSellerKey());
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
-		schReq3.setKeySearchList(list);
+		searchSellerReq.setKeySearchList(list);
 
-		SearchSellerResponse schRes3 = this.sellerSCI.searchSeller(schReq3);
+		SearchSellerResponse searchSellerRes = this.sellerSCI.searchSeller(searchSellerReq);
 
 		DetailInfomationByAuthorizationKeySacRes response = new DetailInfomationByAuthorizationKeySacRes();
 
 		// 판매자 멀티미디어정보
-		List<ExtraRight> eList = new ArrayList<ExtraRight>();
-		ExtraRight extraRightList = null;
-		if (schRes3.getExtraRightList() != null)
-			for (int i = 0; i < schRes3.getExtraRightList().size(); i++) {
-				extraRightList = new ExtraRight();
-				extraRightList.setRightProfileCode(schRes3.getExtraRightList().get(i).getRightProfileCode());
-				eList.add(extraRightList);
+		List<ExtraRight> extraRightList = new ArrayList<ExtraRight>();
+		ExtraRight extraRight = null;
+		if (searchSellerRes.getExtraRightList() != null)
+			for (int i = 0; i < searchSellerRes.getExtraRightList().size(); i++) {
+				extraRight = new ExtraRight();
+				extraRight.setRightProfileCode(searchSellerRes.getExtraRightList().get(i).getRightProfileCode());
+				extraRightList.add(extraRight);
 			}
 
 		// 법정대리인정보
 		MbrLglAgent mbrLglAgent = new MbrLglAgent();
-		if (schRes3.getMbrLglAgent() != null) {
-			mbrLglAgent.setMemberKey(schRes3.getMbrLglAgent().getMemberKey());
-			mbrLglAgent.setParentBirthDay(schRes3.getMbrLglAgent().getParentBirthDay());
-			mbrLglAgent.setParentCI(schRes3.getMbrLglAgent().getParentCI());
-			mbrLglAgent.setParentDate(schRes3.getMbrLglAgent().getParentDate());
-			mbrLglAgent.setParentEmail(schRes3.getMbrLglAgent().getParentEmail());
-			mbrLglAgent.setParentMsisdn(schRes3.getMbrLglAgent().getParentMDN());
-			mbrLglAgent.setParentName(schRes3.getMbrLglAgent().getParentName());
-			mbrLglAgent.setParentRealNameDate(schRes3.getMbrLglAgent().getParentRealNameDate());
-			mbrLglAgent.setParentRealNameMethod(schRes3.getMbrLglAgent().getParentRealNameMethod());
-			mbrLglAgent.setParentRealNameSite(schRes3.getMbrLglAgent().getParentRealNameSite());
-			mbrLglAgent.setParentTelecom(schRes3.getMbrLglAgent().getParentTelecom());
-			mbrLglAgent.setParentType(schRes3.getMbrLglAgent().getParentType());
-			mbrLglAgent.setSequence(schRes3.getMbrLglAgent().getSequence());
+		if (searchSellerRes.getMbrLglAgent() != null) {
+			mbrLglAgent.setMemberKey(searchSellerRes.getMbrLglAgent().getMemberKey());
+			mbrLglAgent.setParentBirthDay(searchSellerRes.getMbrLglAgent().getParentBirthDay());
+			mbrLglAgent.setParentCI(searchSellerRes.getMbrLglAgent().getParentCI());
+			mbrLglAgent.setParentDate(searchSellerRes.getMbrLglAgent().getParentDate());
+			mbrLglAgent.setParentEmail(searchSellerRes.getMbrLglAgent().getParentEmail());
+			mbrLglAgent.setParentMsisdn(searchSellerRes.getMbrLglAgent().getParentMDN());
+			mbrLglAgent.setParentName(searchSellerRes.getMbrLglAgent().getParentName());
+			mbrLglAgent.setParentRealNameDate(searchSellerRes.getMbrLglAgent().getParentRealNameDate());
+			mbrLglAgent.setParentRealNameMethod(searchSellerRes.getMbrLglAgent().getParentRealNameMethod());
+			mbrLglAgent.setParentRealNameSite(searchSellerRes.getMbrLglAgent().getParentRealNameSite());
+			mbrLglAgent.setParentTelecom(searchSellerRes.getMbrLglAgent().getParentTelecom());
+			mbrLglAgent.setParentType(searchSellerRes.getMbrLglAgent().getParentType());
+			mbrLglAgent.setSequence(searchSellerRes.getMbrLglAgent().getSequence());
 		}
 
 		// SC 판매자회원 Fluury 연동정보 목록조회.
-		SearchFlurryListRequest searchFlurryListRequest = new SearchFlurryListRequest();
-		searchFlurryListRequest.setCommonRequest(commonRequest);
-		searchFlurryListRequest.setSellerKey(schRes3.getSellerKey());
-		SearchFlurryListResponse searchFlurryListResponse = this.sellerSCI.searchFlurryList(searchFlurryListRequest);
+		SearchFlurryListRequest searchFlurryListReq = new SearchFlurryListRequest();
+		searchFlurryListReq.setCommonRequest(commonRequest);
+		searchFlurryListReq.setSellerKey(searchSellerRes.getSellerKey());
+		SearchFlurryListResponse searchFlurryListResponse = this.sellerSCI.searchFlurryList(searchFlurryListReq);
 
 		// 판매자 플러리 인증정보
 		List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
@@ -885,10 +885,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			}
 		}
 
-		response.setExtraRightList(eList); // 판매자 멀티미디어정보
+		response.setExtraRightList(extraRightList); // 판매자 멀티미디어정보
 		response.setMbrLglAgent(mbrLglAgent); // 법정대리인정보
 		response.setFlurryAuthList(flurryAuthList);
-		response.setSellerMbr(this.sellerMbr(schRes3.getSellerMbr(), schRes3.getMbrAuth())); // 판매자 정보
+		response.setSellerMbr(this.sellerMbr(searchSellerRes.getSellerMbr(), searchSellerRes.getMbrAuth())); // 판매자 정보
 
 		return response;
 
