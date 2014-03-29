@@ -159,6 +159,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	}
 
 	// TODO : TEST MDN 확인. 요건 어케 할지 생각 좀 해봐야 함..
+	// TODO : 쿠폰 처리 어떻게 함? T Store 결제일 때..
+	// TODO : 테넌트 정책 반영 어떻게 함?
 
 	/*
 	 * 오퍼링 상품은 어케 처리?
