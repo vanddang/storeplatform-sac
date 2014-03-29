@@ -521,6 +521,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		/** 사용자 deviceId 조회. */
 		String deviceId = this.purchaseCancelRepository.getDeviceId(prchsDtlSacParam.getUseInsdUsermbrNo(),
 				prchsDtlSacParam.getUseInsdDeviceId());
+
 		/** appId 조회 */
 		String appId = "";
 
