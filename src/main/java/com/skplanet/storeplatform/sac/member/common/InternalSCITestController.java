@@ -33,18 +33,18 @@ public class InternalSCITestController {
 	@Autowired
 	private ApplicationContext appContext;
 
-	@RequestMapping(value = "/{className}/{methodName}/{voName}/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/{type}/{className}/{methodName}/{voName}/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public Object internalSCITest(@RequestBody Object request, @PathVariable("className") String className,
-			@PathVariable("methodName") String methodName, @PathVariable("voName") String voName)
-			throws StorePlatformException, Exception {
+			@PathVariable("methodName") String methodName, @PathVariable("voName") String voName,
+			@PathVariable("type") String type) throws StorePlatformException, Exception {
 
 		LOGGER.debug("\n[InternalSCITestController.internalSCITest] Request : {}", request);
 		LOGGER.debug("\n[InternalSCITestController.internalSCITest] className:{}, methodName:{}, voName:{}", className,
 				methodName, voName);
 
-		String classPath = "com.skplanet.storeplatform.sac.member.user.sci."; // SCIController PackageName
-		String voPath = "com.skplanet.storeplatform.sac.client.internal.member.user.vo."; // VO PackageName
+		String classPath = "com.skplanet.storeplatform.sac.member." + type + ".sci."; // SCIController PackageName
+		String voPath = "com.skplanet.storeplatform.sac.client.internal.member." + type + ".vo."; // VO PackageName
 		String reqVoName = voPath + voName + "Req";
 		String resVoName = voPath + voName + "Res";
 

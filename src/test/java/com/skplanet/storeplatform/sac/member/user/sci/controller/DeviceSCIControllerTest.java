@@ -80,26 +80,33 @@ public class DeviceSCIControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testSearchDeviceId() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchDeviceId").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						SearchDeviceIdSacReq searchDeviceIdSacReq = new SearchDeviceIdSacReq();
-						searchDeviceIdSacReq.setUserKey("US201402110557052730002230");
-						searchDeviceIdSacReq.setDeviceKey("DE201402120409541480001552");
-						LOGGER.debug("[DeviceSCI-REQUEST] : \n{}",
-								TestConvertMapperUtils.convertObjectToJson(searchDeviceIdSacReq));
-						return searchDeviceIdSacReq;
-					}
-				}).success(SearchDeviceIdSacRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						SearchDeviceIdSacRes res = (SearchDeviceIdSacRes) result;
-						LOGGER.info("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	public void testSearchDeviceId() {
+		try {
+			new TestCaseTemplate(this.mvc)
 
+			.url("/member/internalSci/test/DeviceSCIController/searchDeviceId/searchDeviceIdSac/v1")
+					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+							SearchDeviceIdSacReq searchDeviceIdSacReq = new SearchDeviceIdSacReq();
+							// searchDeviceIdSacReq.setUserKey("US201402110557052730002230");
+							// searchDeviceIdSacReq.setDeviceKey("DE201402120409541480001552");
+							searchDeviceIdSacReq.setUserKey("US201402281808328020000001");
+							searchDeviceIdSacReq.setDeviceKey("DE201402281808329680000001");
+							LOGGER.debug("[DeviceSCI-REQUEST] : \n{}",
+									TestConvertMapperUtils.convertObjectToJson(searchDeviceIdSacReq));
+							return searchDeviceIdSacReq;
+						}
+					}).success(SearchDeviceIdSacRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							SearchDeviceIdSacRes res = (SearchDeviceIdSacRes) result;
+							LOGGER.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		} catch (Exception e) {
+			LOGGER.info("\n>>error : {}", e.getMessage());
+		}
 	}
 
 	/**

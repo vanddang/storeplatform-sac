@@ -108,7 +108,8 @@ public class GetUaCodeTest {
 
 					@Override
 					public Object requestBody() {
-						request.setDeviceModelNo("SCH-B750");
+						// request.setDeviceModelNo("SCH-B750");
+						request.setDeviceModelNo("ANY-PHONE-4MM");
 						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}

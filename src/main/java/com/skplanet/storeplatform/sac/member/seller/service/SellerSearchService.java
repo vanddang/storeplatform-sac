@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
@@ -58,7 +60,7 @@ public interface SellerSearchService {
 
 	/**
 	 * <pre>
-	 * 판매자회원 기본정보조회 App.
+	 * App 상세 화면에 노출되는 판매자 정보.
 	 * </pre>
 	 * 
 	 * @param header
@@ -183,5 +185,18 @@ public interface SellerSearchService {
 	 * @return ListBanksByCountryRes
 	 */
 	public ListBanksByCountryRes listBanksByCountry(SacRequestHeader header);
+
+	/**
+	 * <pre>
+	 * 판매자 회원 정보 조회 - 내부메서드.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            DetailInformationSacReq
+	 * @return DetailInformationSacRes
+	 */
+	public DetailInformationSacRes detailInformationList(SacRequestHeader header, DetailInformationSacReq req);
 
 }
