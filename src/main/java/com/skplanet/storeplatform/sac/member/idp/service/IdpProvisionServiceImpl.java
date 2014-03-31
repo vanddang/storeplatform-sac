@@ -174,6 +174,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
 				if (device == null) {
+					LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", mdn, uacd, svcMngNum);
 					uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 					modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 				} else {
@@ -233,7 +234,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
 				if (device == null) {
-
+					LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", mdn, uacd, svcMngNum);
 					uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 					modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 
@@ -259,7 +260,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						}
 
 						if (!StringUtil.equals(isTestModel, "Y")) { // 일반 사용자인 경우 - 미지원 휴대폰으로
-							uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+							LOGGER.info(
+									"<changeMobileNumber> NOT SUPPORT DEVICE.(타겟단말이고 단말테스터가 아닌경우- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+									mdn, modelCd, uacd, svcMngNum);
+							uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
+							modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 						}
 
 					}
@@ -586,7 +591,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			if (device == null) {
 				LOGGER.info(
-						"<idpChangeMobile> NOT SUPPORT DEVICE.(기기변경 대상 단말이 존재하지 않음- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						"<changeMobileID> NOT SUPPORT DEVICE.(기기변경 대상 단말이 존재하지 않음- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
 						mdn, null, uacd, svcMngNum);
 				uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 				modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
@@ -621,13 +626,15 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					}
 
 					if (StringUtil.equals(isTestModel, "Y")) {
-						LOGGER.info("<idpChangeMobile> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd,
+						LOGGER.info("<changeMobileID> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd,
 								svcMngNum);
 					} else {
 						LOGGER.info(
-								"<idpChangeMobile> NOT SUPPORT DEVICE.(기기변경 대상 단말이 존재하지 않음- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+								"<changeMobileID> NOT SUPPORT DEVICE.(타겟단말이고 단말테스터가 아닌경우- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
 								mdn, modelCd, uacd, svcMngNum);
-						uacd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD; // 일반 사용자인 경우 - 미지원 휴대폰으로
+						// 일반 사용자인 경우 - 미지원 휴대폰으로
+						uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
+						modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 						v4SprtYn = "N"; // V4 무조건 해지
 					}
 
@@ -673,26 +680,26 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			/* DCD 연동 */
 			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<idpChangeMobile> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
+				LOGGER.info("<changeMobileID> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
 
 				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<idpChangeMobile> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
+				LOGGER.info("<changeMobileID> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
 
 				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_CHANGE_MODEL);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<idpChangeMobile> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
+				LOGGER.info("<changeMobileID> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
 
 				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_JOIN);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<idpChangeMobile> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn,
-						modelCd, uacd, svcMngNum);
+				LOGGER.info("<changeMobileID> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd,
+						uacd, svcMngNum);
 
 				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
 
@@ -1153,6 +1160,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							Device device = this.mcc.getPhoneInfoByUacd(uaCd);
 							String deviceModelNo = null;
 							if (device == null) {
+								LOGGER.info("<executeAdjustWiredProfile> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", deviceId, uaCd,
+										svcMangNum);
 								deviceModelNo = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 								uaCd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 							} else {
