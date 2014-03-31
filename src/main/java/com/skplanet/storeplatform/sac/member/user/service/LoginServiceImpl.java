@@ -162,16 +162,7 @@ public class LoginServiceImpl implements LoginService {
 				.getUserMbr().getUserKey());
 
 		/* 휴대기기 정보 수정 */
-		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setUserKey(chkDupRes.getUserMbr().getUserKey());
-		deviceInfo.setDeviceId(req.getDeviceId()); // MDN
-		deviceInfo.setDeviceIdType(req.getDeviceIdType()); // MDN Type
-		deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
-		deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
-		deviceInfo.setNativeId(req.getNativeId()); // IMEI
-		deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth()); // IMEI 비교여부
-		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
-		String deviceKey = this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo, dbDeviceInfo, "v1");
+		String deviceKey = this.updateDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req, dbDeviceInfo, "v1");
 
 		try {
 
@@ -310,15 +301,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 휴대기기 정보 수정 */
-		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setUserKey(chkDupRes.getUserMbr().getUserKey());
-		deviceInfo.setDeviceId(req.getDeviceId()); // MDN
-		deviceInfo.setDeviceIdType(req.getDeviceIdType()); // MDN Type
-		deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
-		deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
-		deviceInfo.setNativeId(req.getNativeId()); // IMEI
-		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
-		String deviceKey = this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo, dbDeviceInfo, "v2");
+		String deviceKey = this.updateDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req, dbDeviceInfo, "v2");
 
 		try {
 
@@ -689,7 +672,7 @@ public class LoginServiceImpl implements LoginService {
 					this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
 
 					/* 로그인 상태코드 정상처리 */
-					this.updateLoginStatus(requestHeader, MemberConstants.USER_LOGIN_STATUS_NOMAL, MemberConstants.KEY_TYPE_MBR_ID, userId);
+					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null);
 
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
@@ -737,7 +720,7 @@ public class LoginServiceImpl implements LoginService {
 				/* 잠금해지 요청인 경우 */
 				if (StringUtil.equals(req.getReleaseLock(), "Y") && StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 					/* 로그인 상태코드 정상처리 */
-					this.updateLoginStatus(requestHeader, MemberConstants.USER_LOGIN_STATUS_NOMAL, MemberConstants.KEY_TYPE_MBR_ID, userId);
+					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
@@ -1017,8 +1000,8 @@ public class LoginServiceImpl implements LoginService {
 			this.userSCI.updateUser(updateUserRequest);
 
 			/* 가가입 상태인 mac 회원정보를 정상상태로 */
-			this.updateStatus(requestHeader, MemberConstants.MAIN_STATUS_NORMAL, MemberConstants.SUB_STATUS_NORMAL,
-					MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress());
+			this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null, MemberConstants.MAIN_STATUS_NORMAL,
+					MemberConstants.SUB_STATUS_NORMAL);
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
@@ -1175,7 +1158,7 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
-	 * 회원 로그인 상태코드 업데이트.
+	 * 회원 상태코드 업데이트.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -1186,42 +1169,26 @@ public class LoginServiceImpl implements LoginService {
 	 * @param keyString
 	 *            조회값
 	 */
-	private void updateLoginStatus(SacRequestHeader requestHeader, String loginStatusCode, String keyType, String keyString) {
-
-		UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(keyType);
-		key.setKeyString(keyString);
-		keySearchList.add(key);
-
-		updStatusUserReq.setCommonRequest(commonRequest);
-		updStatusUserReq.setKeySearchList(keySearchList);
-		updStatusUserReq.setLoginStatusCode(loginStatusCode);
-
-		this.userSCI.updateStatus(updStatusUserReq);
-
-	}
-
 	/**
-	 * 회원 메인상태코드 업데이트.
+	 * <pre>
+	 * 회원 상태코드 업데이트.
+	 * </pre>
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
+	 * @param keyType
+	 *            String
+	 * @param keyString
+	 *            String
+	 * @param loginStatusCode
+	 *            로그인 상태코드
 	 * @param userMainStatus
 	 *            메인 상태코드
 	 * @param userSubStatus
-	 *            서브 상태코드
-	 * @param keyType
-	 *            조회타입
-	 * @param keyString
-	 *            조회값
+	 *            서브메인 상태코드
 	 */
-	private void updateStatus(SacRequestHeader requestHeader, String userMainStatus, String userSubStatus, String keyType, String keyString) {
+	private void updateStatus(SacRequestHeader requestHeader, String keyType, String keyString, String loginStatusCode, String userMainStatus,
+			String userSubStatus) {
 
 		UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
@@ -1236,8 +1203,16 @@ public class LoginServiceImpl implements LoginService {
 
 		updStatusUserReq.setCommonRequest(commonRequest);
 		updStatusUserReq.setKeySearchList(keySearchList);
-		updStatusUserReq.setUserMainStatus(userMainStatus);
-		updStatusUserReq.setUserSubStatus(userSubStatus);
+		if (StringUtil.isNotBlank(loginStatusCode)) {
+			updStatusUserReq.setLoginStatusCode(loginStatusCode);
+		}
+		if (StringUtil.isNotBlank(userMainStatus)) {
+			updStatusUserReq.setUserMainStatus(userMainStatus);
+		}
+		if (StringUtil.isNotBlank(userSubStatus)) {
+			updStatusUserReq.setUserSubStatus(userSubStatus);
+		}
+
 		this.userSCI.updateStatus(updStatusUserReq);
 
 	}
@@ -1349,4 +1324,60 @@ public class LoginServiceImpl implements LoginService {
 		return userAuthMethod;
 	}
 
+	/**
+	 * <pre>
+	 * 휴대기기정보 update.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userKey
+	 *            String
+	 * @param obj
+	 *            Object
+	 * @param dbDeviceInfo
+	 *            DeviceInfo
+	 * @param version
+	 *            String
+	 * @return deviceKey String
+	 */
+	private String updateDeviceInfoForLogin(SacRequestHeader requestHeader, String userKey, Object obj, DeviceInfo dbDeviceInfo, String version) {
+
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setUserKey(userKey);
+
+		if (obj instanceof AuthorizeByMdnReq) { // mdn인증
+
+			AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+			req = (AuthorizeByMdnReq) obj;
+
+			deviceInfo.setDeviceId(req.getDeviceId()); // MDN
+			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // MDN Type
+			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
+			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
+			deviceInfo.setNativeId(req.getNativeId()); // IMEI
+			deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth()); // IMEI 비교여부
+			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
+
+		} else if (obj instanceof AuthorizeByIdReq) { // id인증
+
+			AuthorizeByIdReq req = new AuthorizeByIdReq();
+			req = (AuthorizeByIdReq) obj;
+
+			if (StringUtil.isNotBlank(req.getDeviceId())) { // deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 update 요청
+
+				deviceInfo.setDeviceId(req.getDeviceId()); // MDN
+				deviceInfo.setDeviceIdType(req.getDeviceIdType()); // MDN Type
+				deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
+				deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
+				deviceInfo.setNativeId(req.getNativeId()); // IMEI
+				deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth()); // IMEI 비교여부
+				deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
+
+			}
+
+		}
+
+		return this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo, dbDeviceInfo, version);
+	}
 }
