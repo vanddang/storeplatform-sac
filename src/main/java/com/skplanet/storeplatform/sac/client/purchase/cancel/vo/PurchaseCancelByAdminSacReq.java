@@ -29,11 +29,6 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	private static final long serialVersionUID = 1L;
 
 	@NotBlank
-	private String userKey;
-	@NotBlank
-	private String deviceKey;
-
-	@NotBlank
 	private String cancelReqPathCd;
 
 	@NotBlank
@@ -47,40 +42,6 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	@NotEmpty
 	@Valid
 	private List<PurchaseCancelDetailSacReq> prchsCancelList;
-
-	/**
-	 * @return the userKey
-	 */
-	@Override
-	public String getUserKey() {
-		return this.userKey;
-	}
-
-	/**
-	 * @param userKey
-	 *            the userKey to set
-	 */
-	@Override
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
-	}
-
-	/**
-	 * @return the deviceKey
-	 */
-	@Override
-	public String getDeviceKey() {
-		return this.deviceKey;
-	}
-
-	/**
-	 * @param deviceKey
-	 *            the deviceKey to set
-	 */
-	@Override
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
-	}
 
 	/**
 	 * @return the cancelReqPathCd
