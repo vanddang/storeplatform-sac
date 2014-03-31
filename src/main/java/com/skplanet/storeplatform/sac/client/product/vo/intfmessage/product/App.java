@@ -35,19 +35,19 @@ public class App extends CommonInfo implements Serializable {
 	private History history; // update history
 	private Install install; // Install 정보
 	private String filePath; // 파일경로
-	private String scId; // sub contents Id
+	private String scid; // sub contents Id
 	private List<Device> supportDeviceList;
-    private String isDeviceSupported;   // 현재 단말기 지원 여부
+	private String isDeviceSupported; // 현재 단말기 지원 여부
 
-    public String getIsDeviceSupported() {
-        return isDeviceSupported;
-    }
+	public String getIsDeviceSupported() {
+		return this.isDeviceSupported;
+	}
 
-    public void setIsDeviceSupported(String isDeviceSupported) {
-        this.isDeviceSupported = isDeviceSupported;
-    }
+	public void setIsDeviceSupported(String isDeviceSupported) {
+		this.isDeviceSupported = isDeviceSupported;
+	}
 
-    /**
+	/**
 	 * 
 	 * <pre>
 	 * Applicaton ID.
@@ -298,18 +298,18 @@ public class App extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the scId
+	 * @return the scid
 	 */
-	public String getScId() {
-		return this.scId;
+	public String getScid() {
+		return this.scid;
 	}
 
 	/**
-	 * @param scId
-	 *            the scId to set
+	 * @param scid
+	 *            the scid to set
 	 */
-	public void setScId(String scId) {
-		this.scId = scId;
+	public void setScid(String scid) {
+		this.scid = scid;
 	}
 
 	/**
