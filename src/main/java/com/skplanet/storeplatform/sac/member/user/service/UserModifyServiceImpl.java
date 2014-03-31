@@ -36,7 +36,9 @@ import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
+import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
+import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
@@ -447,30 +449,42 @@ public class UserModifyServiceImpl implements UserModifyService {
 						updateUserNameEcReq.setUserDi(req.getUserDi());
 						updateUserNameEcReq.setRnameAuthDate(req.getRealNameDate());
 						this.imIdpSCI.updateUserName(updateUserNameEcReq);
+
+						/**
+						 * OneID 실명인증 정보 업데이트.
+						 */
+						this.updateOneIdInfo(sacHeader, userInfo.getImSvcNo());
 					}
 
-				} else if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_OWN)) { // 법정대리인
-
-					/**
-					 * 통합IDP 실명인증 법정대리인 연동 (cmd = TXUpdateGuardianInfoIDP)
-					 */
-					UpdateGuardianEcReq updateGuardianEcReq = new UpdateGuardianEcReq();
-					updateGuardianEcReq.setKey(userInfo.getImSvcNo());
-					updateGuardianEcReq.setUserAuthKey(req.getUserAuthKey());
-					// 법정대리인관계코드 (0:부, 1:모, 2:기타)
-					updateGuardianEcReq.setParentType(this.convertParentType(req.getParentType()));
-					updateGuardianEcReq.setParentRnameAuthKey(req.getUserCi()); // 법정대리인 실명인증 값 (CI) [외국인은 null 로....]
-					// 법정대리인실명인증수단코드 1:휴대폰 본인인증, , 3:IPIN, 6:이메일 (외국인 법정대리인 인증)
-					updateGuardianEcReq.setParentRnameAuthType(this.convertRealNameMethod(req.getRealNameMethod(), req.getIsOwn()));
-					// 법정대리인동의여부 Y=동의, N=미동의 (Y만 가능)
-					updateGuardianEcReq.setIsParentApprove(MemberConstants.USE_Y);
-					updateGuardianEcReq.setParentName(req.getUserName());
-					updateGuardianEcReq.setParentBirthday(req.getUserBirthDay());
-					updateGuardianEcReq.setParentEmail(req.getParentEmail());
-					updateGuardianEcReq.setParentApproveDate(req.getRealNameDate()); // 법정대리인동의일자 (YYYYMMDD)
+				} else if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_PARENT)) { // 법정대리인
 
 					try {
+
+						/**
+						 * 통합IDP 실명인증 법정대리인 연동 (cmd = TXUpdateGuardianInfoIDP)
+						 */
+						UpdateGuardianEcReq updateGuardianEcReq = new UpdateGuardianEcReq();
+						updateGuardianEcReq.setKey(userInfo.getImSvcNo());
+						updateGuardianEcReq.setUserAuthKey(req.getUserAuthKey());
+						// 법정대리인관계코드 (0:부, 1:모, 2:기타)
+						updateGuardianEcReq.setParentType(this.convertParentType(req.getParentType()));
+						updateGuardianEcReq.setParentRnameAuthKey(req.getUserCi()); // 법정대리인 실명인증 값 (CI) [외국인은 null
+																					// 로....]
+						// 법정대리인실명인증수단코드 1:휴대폰 본인인증, , 3:IPIN, 6:이메일 (외국인 법정대리인 인증)
+						updateGuardianEcReq.setParentRnameAuthType(this.convertRealNameMethod(req.getRealNameMethod(), req.getIsOwn()));
+						// 법정대리인동의여부 Y=동의, N=미동의 (Y만 가능)
+						updateGuardianEcReq.setIsParentApprove(MemberConstants.USE_Y);
+						updateGuardianEcReq.setParentName(req.getUserName());
+						updateGuardianEcReq.setParentBirthday(req.getUserBirthDay());
+						updateGuardianEcReq.setParentEmail(req.getParentEmail());
+						updateGuardianEcReq.setParentApproveDate(req.getRealNameDate()); // 법정대리인동의일자 (YYYYMMDD)
 						this.imIdpSCI.updateGuardian(updateGuardianEcReq);
+
+						/**
+						 * OneID 실명인증 정보 업데이트.
+						 */
+						this.updateOneIdInfo(sacHeader, userInfo.getImSvcNo());
+
 					} catch (StorePlatformException spe) {
 
 						if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + "2402X000")) {
@@ -694,7 +708,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrLglAgent.setParentName(req.getUserName()); // 법정대리인 이름
 			mbrLglAgent.setParentType(req.getParentType()); // 법정대리인 관계코드
 			mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 이메일
-			mbrLglAgent.setParentRealNameDate(req.getRealNameDate()); // 법정대리인 실명인증 일시
+			mbrLglAgent.setParentDate(req.getRealNameDate()); // 법정대리인 실명인증 일시
 			mbrLglAgent.setParentRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 법정대리인 실명인증 사이트 코드
 			mbrLglAgent.setParentRealNameMethod(req.getRealNameMethod()); // 법정대리인 실명인증 수단코드
 			mbrLglAgent.setIsDomestic(this.convertIsDomestic(req.getResident())); // 내외국인 구분 (Y : 내국인, N : 외국인)
@@ -1019,6 +1033,41 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 * SC 회원 비밀번호 변경 요청.
 		 */
 		this.userSCI.updatePasswordUser(updatePasswordUserRequest);
+
+	}
+
+	/**
+	 * <pre>
+	 * T-store 미동의 회원 정보 업데이트.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param imSvcNo
+	 *            OneID 통합서비스 관리번호
+	 */
+	private void updateOneIdInfo(SacRequestHeader sacHeader, String imSvcNo) {
+
+		try {
+
+			/**
+			 * 미동의 회원 정보 업데이트.
+			 */
+			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+			updateMbrOneIDRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+			MbrOneID mbrOneID = new MbrOneID();
+			mbrOneID.setIntgSvcNumber(imSvcNo); // OneID 통합서비스 관리번호
+			mbrOneID.setIsRealName(MemberConstants.USE_Y); // 실명인증 여부
+			mbrOneID.setIsCi(MemberConstants.USE_Y); // CI 존재 여부(Y/N)
+
+			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+		} catch (StorePlatformException spe) {
+			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
+			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
+			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
+		}
 
 	}
 }
