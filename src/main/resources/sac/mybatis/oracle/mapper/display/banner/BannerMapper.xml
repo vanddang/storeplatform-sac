@@ -75,8 +75,8 @@
 		                  FROM  TB_DP_BNR      A
 		                      , TB_DP_BNR_EXPO B
 		                      , TB_DP_BNR_IMG  C
-                    <!-- 모바일웹 직사각형, 모바일웹 상/하단, T플레이, 유료앱이무료 배너 프로비저닝 제외 -->
-                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010906"'>
+                    <!-- 모바일웹 직사각형, 모바일웹 상/하단, T플레이, 유료앱이무료, WEB POC 배너 프로비저닝 제외 -->
+                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010906" and bnrMenuId != "DP010927"'>
 		                      , TB_DP_BNR_DVC  D
 		                      , TB_CM_DEVICE   E
                     </if>
@@ -86,8 +86,8 @@
 		                   AND  A.TENANT_ID = C.TENANT_ID
 		                   AND  A.BNR_MENU_ID = C.BNR_MENU_ID
 		                   AND  A.BNR_SEQ = C.BNR_SEQ
-                    <!-- 모바일웹 직사각형, 모바일웹 상/하단, T플레이, 유료앱이무료 배너 프로비저닝 제외 -->
-                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010906"'>
+                    <!-- 모바일웹 직사각형, 모바일웹 상/하단, T플레이, 유료앱이무료, WEB POC 배너 프로비저닝 제외 -->
+                    <if test='bnrMenuId != "DP010926" and bnrMenuId != "DP010907" and bnrMenuId != "DP010908" and bnrMenuId != "DP010909" and bnrMenuId != "DP010906" and bnrMenuId != "DP010927"'>
 		                   AND  A.TENANT_ID = D.TENANT_ID
 		                   AND  A.BNR_MENU_ID = D.BNR_MENU_ID
 		                   AND  A.BNR_SEQ = D.BNR_SEQ
