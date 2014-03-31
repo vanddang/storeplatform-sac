@@ -26,7 +26,9 @@ public class Point extends CommonInfo implements Serializable {
 
 	/** 할인율 명 (ex. tmembership) */
 	private String name;
-
+	/** 할인율 유형 (normal/freepass) */
+	private String type;
+	
 	/** 할인율 (% 생략) */
 	private Integer discountRate;
 	/** 할인가 */
@@ -76,5 +78,21 @@ public class Point extends CommonInfo implements Serializable {
 	public void setDiscountPrice(Integer discountPrice) {
 		this.discountPrice = discountPrice;
 	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	
 
 }

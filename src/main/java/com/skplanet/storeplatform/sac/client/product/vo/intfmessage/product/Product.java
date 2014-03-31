@@ -314,44 +314,46 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private String svcGrpCd;
 
-	/**
-	 * 사용자 구매 가능 상태
-	 * <ul>
-	 * <li>available 구매 가능</li>
-	 * <li>restricted 구매 제한</li>
-	 * </ul>
-	 */
-	private String userPurStatus;
+    /**
+     * 사용자 구매 가능 상태
+     * <ul>
+     *     <li>available 구매 가능</li>
+     *     <li>restricted 구매 제한</li>
+     * </ul>
+     */
+    private String userPurStatus;
 
-	/**
-	 * 상품 유형 (부분 유료화 상품의 속성 표기)
-	 */
-	private String partProductType;
+    /**
+     * 상품 유형 (부분 유료화 상품의 속성 표기)
+     */
+    private String partProductType;
 
-	private Point point;
+    private Point point;
+    
+    /**
+     * 할인율 정보
+     * (tmembership)
+     */
+    private List<Point> pointList;
+    
+    
+    public String getPartProductType() {
+        return partProductType;
+    }
 
-	/**
-	 * Point 정보
-	 */
-	private List<Point> pointList;
+    public void setPartProductType(String partProductType) {
+        this.partProductType = partProductType;
+    }
 
-	public String getPartProductType() {
-		return this.partProductType;
-	}
+    public String getUserPurStatus() {
+        return userPurStatus;
+    }
 
-	public void setPartProductType(String partProductType) {
-		this.partProductType = partProductType;
-	}
+    public void setUserPurStatus(String userPurStatus) {
+        this.userPurStatus = userPurStatus;
+    }
 
-	public String getUserPurStatus() {
-		return this.userPurStatus;
-	}
-
-	public void setUserPurStatus(String userPurStatus) {
-		this.userPurStatus = userPurStatus;
-	}
-
-	public String getSalesStatus() {
+    public String getSalesStatus() {
 		return this.salesStatus;
 	}
 
@@ -1280,33 +1282,18 @@ public class Product extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the point
-	 */
-	public Point getPoint() {
-		return this.point;
-	}
-
-	/**
-	 * @param point
-	 *            the point to set
-	 */
-	public void setPoint(Point point) {
-		this.point = point;
-	}
-
-	/**
 	 * @return the pointList
 	 */
 	public List<Point> getPointList() {
-		return this.pointList;
+		return pointList;
 	}
 
 	/**
-	 * @param pointList
-	 *            the pointList to set
+	 * @param pointList the pointList to set
 	 */
 	public void setPointList(List<Point> pointList) {
 		this.pointList = pointList;
 	}
 
+	
 }
