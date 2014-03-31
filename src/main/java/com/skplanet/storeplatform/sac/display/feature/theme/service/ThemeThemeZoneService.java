@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.feature.theme.service;
 
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneListSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -21,7 +23,7 @@ public interface ThemeThemeZoneService {
 	 *            ThemeThemeZoneSacReq
 	 * @return BrandShopThemeRes
 	 */
-	ThemeThemeZoneSacRes searchThemeThemeZoneList(ThemeThemeZoneSacReq req, SacRequestHeader header);
+	ThemeThemeZoneListSacRes searchThemeThemeZoneList(ThemeThemeZoneListSacReq req, SacRequestHeader header);
 
 	/**
 	 * 

@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneListSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -86,7 +88,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 	 * .storeplatform.sac.client.product.vo.EbookComicThemeRequestVO)
 	 */
 	@Override
-	public ThemeThemeZoneSacRes searchThemeThemeZoneList(ThemeThemeZoneSacReq req, SacRequestHeader header) {
+	public ThemeThemeZoneListSacRes searchThemeThemeZoneList(ThemeThemeZoneListSacReq req, SacRequestHeader header) {
 
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
@@ -95,7 +97,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setDeviceModelCd(deviceHeader.getModel());
 
-		ThemeThemeZoneSacRes res = new ThemeThemeZoneSacRes();
+		ThemeThemeZoneListSacRes res = new ThemeThemeZoneListSacRes();
 
 		if (req.getDummy() == null) {
 
@@ -331,92 +333,60 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setDeviceModelCd(deviceHeader.getModel());
 
-		ThemeThemeZoneSacRes res = new ThemeThemeZoneSacRes();
+		// ThemeThemeZoneSacRes res = new ThemeThemeZoneSacRes();
 
 		if (req.getDummy() == null) {
-
-			// 필수 파라미터 체크 channelId
-			int offset = 1; // default
-			int count = 20; // default
-
-			if (req.getOffset() != null) {
-				offset = req.getOffset();
-			}
-			req.setOffset(offset);
-
-			if (req.getCount() != null) {
-				count = req.getCount();
-			}
-			count = offset + count - 1;
-			req.setCount(count);
-
-			CommonResponse commonResponse = new CommonResponse();
-			List<Product> productList = new ArrayList<Product>();
-			// 테마존 테마 조회
-			List<ThemeThemeZoneInfo> ThemeThemeZoneList = this.commonDAO.queryForList(
-					"ThemeThemeZone.selectThemeThemeZone", req, ThemeThemeZoneInfo.class);
-
-			if (!ThemeThemeZoneList.isEmpty()) {
-
-				Product product = null;
-
-				// Identifier 설정
-				Identifier identifier = null;
-				List<Identifier> identifierList = null;
-				Title title = null;
-
-				List<Source> sourceList = null;
-				Source source = null;
-
-				ThemeThemeZoneInfo ThemeThemeZoneInfo = null;
-				Map<String, Object> reqMap = new HashMap<String, Object>();
-				reqMap.put("tenantHeader", tenantHeader);
-				reqMap.put("deviceHeader", deviceHeader);
-				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-
-				for (int i = 0; i < ThemeThemeZoneList.size(); i++) {
-					ThemeThemeZoneInfo = ThemeThemeZoneList.get(i);
-
-					product = new Product(); // 결과물
-
-					// identifier 정보
-					identifier = new Identifier();
-					identifierList = new ArrayList<Identifier>();
-
-					identifier.setType("theme");
-					identifier.setText(ThemeThemeZoneInfo.getListId());
-					identifierList.add(identifier);
-					product.setIdentifierList(identifierList);
-
-					// title 정보
-					title = new Title();
-					title.setText(ThemeThemeZoneInfo.getListNm());
-					product.setTitle(title);
-
-					// source 정보
-					source = new Source();
-					sourceList = new ArrayList<Source>();
-					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(ThemeThemeZoneInfo.getImgPath());
-					sourceList.add(source);
-					product.setSourceList(sourceList);
-
-					// 데이터 매핑
-					productList.add(i, product);
-
-				}
-				commonResponse.setTotalCount(ThemeThemeZoneList.get(0).getTotalCount());
-				res.setProductList(productList);
-				res.setCommonResponse(commonResponse);
-			} else {
-				// 조회 결과 없음
-				commonResponse.setTotalCount(0);
-				res.setProductList(productList);
-				res.setCommonResponse(commonResponse);
-			}
-			return res;
+			return this.generateDummy1();
+			/*
+			 * // 필수 파라미터 체크 channelId int offset = 1; // default int count = 20; // default
+			 * 
+			 * if (req.getOffset() != null) { offset = req.getOffset(); } req.setOffset(offset);
+			 * 
+			 * if (req.getCount() != null) { count = req.getCount(); } count = offset + count - 1; req.setCount(count);
+			 * 
+			 * CommonResponse commonResponse = new CommonResponse(); List<Product> productList = new
+			 * ArrayList<Product>(); // 테마존 테마 조회 List<ThemeThemeZoneInfo> ThemeThemeZoneList =
+			 * this.commonDAO.queryForList( "ThemeThemeZone.selectThemeThemeZone", req, ThemeThemeZoneInfo.class);
+			 * 
+			 * if (!ThemeThemeZoneList.isEmpty()) {
+			 * 
+			 * Product product = null;
+			 * 
+			 * // Identifier 설정 Identifier identifier = null; List<Identifier> identifierList = null; Title title =
+			 * null;
+			 * 
+			 * List<Source> sourceList = null; Source source = null;
+			 * 
+			 * ThemeThemeZoneInfo ThemeThemeZoneInfo = null; Map<String, Object> reqMap = new HashMap<String, Object>();
+			 * reqMap.put("tenantHeader", tenantHeader); reqMap.put("deviceHeader", deviceHeader);
+			 * reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+			 * 
+			 * for (int i = 0; i < ThemeThemeZoneList.size(); i++) { ThemeThemeZoneInfo = ThemeThemeZoneList.get(i);
+			 * 
+			 * product = new Product(); // 결과물
+			 * 
+			 * // identifier 정보 identifier = new Identifier(); identifierList = new ArrayList<Identifier>();
+			 * 
+			 * identifier.setType("theme"); identifier.setText(ThemeThemeZoneInfo.getListId());
+			 * identifierList.add(identifier); product.setIdentifierList(identifierList);
+			 * 
+			 * // title 정보 title = new Title(); title.setText(ThemeThemeZoneInfo.getListNm()); product.setTitle(title);
+			 * 
+			 * // source 정보 source = new Source(); sourceList = new ArrayList<Source>();
+			 * source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+			 * source.setUrl(ThemeThemeZoneInfo.getImgPath()); sourceList.add(source);
+			 * product.setSourceList(sourceList);
+			 * 
+			 * // 데이터 매핑 productList.add(i, product);
+			 * 
+			 * } commonResponse.setTotalCount(ThemeThemeZoneList.get(0).getTotalCount());
+			 * res.setProductList(productList); res.setCommonResponse(commonResponse); } else { // 조회 결과 없음
+			 * commonResponse.setTotalCount(0); res.setProductList(productList); res.setCommonResponse(commonResponse);
+			 * }
+			 */
+			// return res;
 		} else {
-			return this.generateDummy();
+			return this.generateDummy1();
 		}
 	}
 
@@ -427,7 +397,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 	 * 
 	 * @return CategorySpecificSacRes
 	 */
-	private ThemeThemeZoneSacRes generateDummy() {
+	private ThemeThemeZoneListSacRes generateDummy() {
 		Identifier identifier = null;
 		List<Identifier> identifierList;
 		Title title = null;
@@ -447,7 +417,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		sourceList = new ArrayList<Source>();
 		List<Product> productList = new ArrayList<Product>();
 		CommonResponse commonResponse = new CommonResponse();
-		ThemeThemeZoneSacRes res = new ThemeThemeZoneSacRes();
+		ThemeThemeZoneListSacRes res = new ThemeThemeZoneListSacRes();
 
 		menuList = new ArrayList<Menu>();
 
@@ -526,6 +496,81 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		commonResponse.setTotalCount(productList.size());
 		res.setCommonResponse(commonResponse);
 		res.setLayOut(layOut);
+		res.setProductList(productList);
+
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 더미 데이터 생성.
+	 * </pre>
+	 * 
+	 * @return CategorySpecificSacRes
+	 */
+	private ThemeThemeZoneSacRes generateDummy1() {
+		Identifier identifier = null;
+		List<Identifier> identifierList;
+		Title title = null;
+		Source source = null;
+		List<Source> sourceList = null;
+		Product product = null;
+
+		List<Product> productList = new ArrayList<Product>();
+		CommonResponse commonResponse = new CommonResponse();
+		ThemeThemeZoneSacRes res = new ThemeThemeZoneSacRes();
+
+		// Identifier 설정
+		identifierList = new ArrayList<Identifier>();
+		identifier = new Identifier();
+		identifier.setType("theme");
+		identifier.setText("TAR000000198");
+		identifierList.add(identifier);
+
+		// title 설정
+		title = new Title();
+		title.setText("T 아카데미 추천 app");
+
+		// source 설정
+		sourceList = new ArrayList<Source>();
+		source = new Source();
+		source.setMediaType("image/jpeg");
+		source.setType("thumbnail");
+		source.setSize(659069);
+		source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
+		sourceList.add(source);
+
+		product = new Product();
+		product.setIdentifierList(identifierList);
+		product.setTitle(title);
+		product.setSourceList(sourceList);
+		productList.add(product);
+
+		// Identifier 설정
+		identifierList = new ArrayList<Identifier>();
+		identifier = new Identifier();
+		identifier.setType("theme");
+		identifier.setText("TAR000000738");
+		identifierList.add(identifier);
+
+		// title 설정
+		title = new Title();
+		title.setText("T store팀 추천");
+
+		// source 설정
+		sourceList = new ArrayList<Source>();
+		source.setMediaType("image/jpeg");
+		source.setType("thumbnail");
+		source.setSize(659069);
+		source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
+		sourceList.add(source);
+
+		product.setIdentifierList(identifierList);
+		product.setTitle(title);
+		product.setSourceList(sourceList);
+		productList.add(product);
+		commonResponse.setTotalCount(productList.size());
+		res.setCommonResponse(commonResponse);
 		res.setProductList(productList);
 
 		return res;

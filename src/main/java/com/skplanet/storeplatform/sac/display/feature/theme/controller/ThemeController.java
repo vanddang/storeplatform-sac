@@ -15,6 +15,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.theme.EbookComicThemeReq
 import com.skplanet.storeplatform.sac.client.display.vo.theme.EbookComicThemeRes;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneListSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeThemeZoneSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeZoneReq;
@@ -131,7 +133,8 @@ public class ThemeController {
 	 */
 	@RequestMapping(value = "/display/feature/theme/themeZone/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ThemeThemeZoneSacRes searchThemeThemeZoneList(@Validated ThemeThemeZoneSacReq req, SacRequestHeader header) {
+	public ThemeThemeZoneListSacRes searchThemeThemeZoneList(@Validated ThemeThemeZoneListSacReq req,
+			SacRequestHeader header) {
 		return this.themeThemeZoneService.searchThemeThemeZoneList(req, header);
 
 	}
@@ -146,9 +149,9 @@ public class ThemeController {
 	 *            themeZoneReq
 	 * @return ThemeZoneRes
 	 */
-	// @RequestMapping(value = "/display/feature/theme/themeZone/v1", method = RequestMethod.GET)
-	// @ResponseBody
-	// public ThemeThemeZoneSacRes searchThemeThemeZone(ThemeThemeZoneSacReq req, SacRequestHeader header) {
-	// return this.themeThemeZoneService.searchThemeThemeZone(req, header);
-	// }
+	@RequestMapping(value = "/display/feature/theme/themeZone/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ThemeThemeZoneSacRes searchThemeThemeZone(ThemeThemeZoneSacReq req, SacRequestHeader header) {
+		return this.themeThemeZoneService.searchThemeThemeZone(req, header);
+	}
 }
