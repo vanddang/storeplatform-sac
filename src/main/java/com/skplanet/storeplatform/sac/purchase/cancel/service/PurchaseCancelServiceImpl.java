@@ -490,7 +490,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		if (!StringUtils.equals("Y", purchaseCancelSacParam.getForceCancelYn())) {
 
 			CouponUseStatusSacInReq couponUseStatusSacInReq = new CouponUseStatusSacInReq();
-			// 사용자의 tenantId, systemId를 알 수 없어서 구매자 또는 운영자의 값을 넣는다.
+			// 아래 값이 실제 쓰이지 않음. 그냥 넣어줌;;
 			couponUseStatusSacInReq.setTenantId(purchaseCancelSacParam.getTenantId());
 			couponUseStatusSacInReq.setSystemId(purchaseCancelSacParam.getSystemId());
 			couponUseStatusSacInReq.setUserKey(purchaseCancelSacParam.getUserKey());
