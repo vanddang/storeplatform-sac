@@ -423,7 +423,7 @@ public class DisplayConstants {
 	public static final String DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR = "PD00317"; // 사용기간 단위 코드(당년 )
 	public static final String DP_USE_PERIOD_UNIT_CD_MINUTE = "PD00318"; // 사용기간 단위 코드(분 )
 	public static final String DP_USE_PERIOD_UNIT_CD_CALENDAR = "PD00319"; // 사용기간 단위 코드(기간선택)
-    public static final String DP_DATE_TYPE_USE_PERIOD = "unit/usagePeriod";
+	public static final String DP_DATE_TYPE_USE_PERIOD = "unit/usagePeriod";
 
 	public static final String DP_FORDOWNLOAD_ENCRYPT_DIGEST = "HexString"; // for download 암호화 digest
 
@@ -638,9 +638,11 @@ public class DisplayConstants {
 
 	public static final String DP_EXTERNAL = "external";
 
-    public static final String DP_PURSTAT_AVAILABLE = "available";
+	public static final String DP_PURSTAT_AVAILABLE = "available";
 
-    public static final String DP_PURSTAT_RESTRICTED = "restricted";
+	public static final String DP_PURSTAT_RESTRICTED = "restricted";
 
-    public static final String DP_LIST_NEWFREE = "ADM000000001";
+	public static final String DP_LIST_NEWFREE = "ADM000000001";
+
+	public static final String DP_LIST_SHOPPING_POPULAR = "RNK000000006";
 }
