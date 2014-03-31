@@ -472,7 +472,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			for (ProductInfo prodDcdInfo : dcdSupportProductRes.getProductList()) {
 				existenceItem = new ExistenceItem();
 				existenceItem.setProdId(prodDcdInfo.getProdId());
-				//existenceItem.setTenantProdGrpCd(commonRequest.getTenantID()); //.TODO 어떤 값인지 확인필요!!
 				existenceItemList.add(existenceItem);
 			}
 
