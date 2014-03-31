@@ -5,8 +5,6 @@ import com.skplanet.icms.refactoring.deploy.DPTenantProductVO;
 import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSac;
 import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSacResult;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.display.product.inf.DisplayProductBuilder;
-import com.skplanet.storeplatform.sac.display.product.inf.DisplayProductInitializer;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import com.skplanet.storeplatform.sac.display.product.vo.CmsVo;
 import org.apache.commons.lang3.StringUtils;
@@ -89,12 +87,12 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
                     /*
                      * 이전에 배포된 전시 상품 데이터 삭제
                      */
-                    this.initializer.deleteProdInfo(message);
+                    this.initializer.deleteProdInfo(message);       // FIXME
 
                     /*
                      * 데이터 재구성
                      */
-                    this.builder.insertProdInfo(message, tempList);
+                    this.builder.insertProdInfo(message, tempList); // FIXME
 
                     // 결과 설정
                     cv.setResultCd(IFConstants.CMS_RST_CODE_SUCCESS);

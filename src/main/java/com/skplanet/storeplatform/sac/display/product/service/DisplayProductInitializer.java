@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.display.product.inf;
+package com.skplanet.storeplatform.sac.display.product.service;
 
 import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSac;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;

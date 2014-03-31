@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.display.product.inf;
+package com.skplanet.storeplatform.sac.display.product.service;
 
 import java.util.List;
 import java.util.Map;
