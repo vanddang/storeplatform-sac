@@ -51,7 +51,7 @@
     <!-- 상품 구매수 조회 -->
     <select id="getPurchaseCount" parameterType="HashMap" resultType="Integer">
         SELECT /* LocalSciMapper.getPurchaseCount, 상품 구매수 조회 , 이석희/아이에스플러스, 2014-02-13 */
-               PRCHS_CNT
+               NVL(PRCHS_CNT, 0) AS PRCHS_CNT
           FROM TB_DP_TENANT_PROD_STATS
          WHERE 1=1
            AND TENANT_ID = #{tenantId}
@@ -199,7 +199,7 @@
     <!--특가 상품 구매수 조회 -->
     <select id="getSpecialPurchaseCount" parameterType="HashMap" resultType="Integer">
         SELECT /* LocalSciMapper.getSpecialPurchaseCount, 특가 상품 구매수 조회 , 김형식/지티소프트, 2014-02-13 */
-               PRCHS_CNT
+               NVL(PRCHS_CNT, 0) AS PRCHS_CNT
           FROM TB_DP_SPRC_PROD_PRCHS_MANG
          WHERE 1=1
            AND PROD_ID = #{productId}
