@@ -1063,8 +1063,8 @@ public class DeviceServiceImpl implements DeviceService {
 		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), deviceInfo.getDeviceTelecom(),
 				deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType());
 
-		// deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
-		// deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
+		deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
+		deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
 
 		/* 닉네임 미입력시에만 디폴트로 기기명 저장 */
 		// if (deviceInfo.getDeviceNickName() == null) {
