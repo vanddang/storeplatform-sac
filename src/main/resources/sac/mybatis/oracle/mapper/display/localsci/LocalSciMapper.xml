@@ -80,7 +80,7 @@
     <update id="updatePurchaseCount" parameterType="HashMap">
         /* LocalSciMapper.updatePurchaseCount,상품 구매건수 UPDATE , 이석희/아이에스플러스, 2014-02-14 */
 		UPDATE TB_DP_TENANT_PROD_STATS
-		   SET PRCHS_CNT =  ( SELECT PRCHS_CNT + #{purchaseCount,jdbcType=NUMERIC} 
+		   SET PRCHS_CNT =  ( SELECT NVL(PRCHS_CNT, 0) + #{purchaseCount,jdbcType=NUMERIC} 
                                   FROM TB_DP_TENANT_PROD_STATS
                                  WHERE TENANT_ID =#{tenantId}
                                    AND PROD_ID = #{productId}
@@ -227,7 +227,7 @@
     <update id="updateSpecialPurchaseCount" parameterType="HashMap">
         /* LocalSciMapper.updateSpecialPurchaseCount,특가 상품 구매건수 UPDATE ,  김형식/지티소프트, 2014-02-14 */
         UPDATE TB_DP_SPRC_PROD_PRCHS_MANG
-           SET PRCHS_CNT =  ( SELECT PRCHS_CNT + #{purchaseCount,jdbcType=NUMERIC} 
+           SET PRCHS_CNT =  ( SELECT NVL(PRCHS_CNT, 0) + #{purchaseCount,jdbcType=NUMERIC} 
                                   FROM TB_DP_SPRC_PROD_PRCHS_MANG
                                  WHERE 1=1
                                    AND PROD_ID = #{productId}
