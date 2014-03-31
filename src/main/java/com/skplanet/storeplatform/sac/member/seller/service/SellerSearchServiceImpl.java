@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -33,8 +32,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequ
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListRequest;
@@ -273,215 +270,111 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 *            DetailInformationForProductReq
 	 * @return DetailInformationForProductRes
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public DetailInformationForProductRes detailInformationForProduct(SacRequestHeader header,
 			DetailInformationForProductReq req) {
+		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
 
-		SearchMbrSellerRequest searchSellerReq = new SearchMbrSellerRequest();
-		searchSellerReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		// Header 셋팅
+		searchSellerRequest.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
+		// 검색 조회 셋팅
 		KeySearch keySearch = new KeySearch();
-
 		keySearch.setKeyString(req.getSellerKey());
 		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
-
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
-		searchSellerReq.setKeySearchList(list);
+		searchSellerRequest.setKeySearchList(list);
 
-		SearchMbrSellerResponse searchSellerRes = this.sellerSCI.searchMbrSeller(searchSellerReq);
+		// SC-회원 기본 정보 조회
+		SearchSellerResponse searchSellerResponse = this.sellerSCI.searchSeller(searchSellerRequest);
 
-		SellerMbrAppSac sellerMbrSac = null;
-		List<SellerMbrAppSac> sellerMbrList = new ArrayList<SellerMbrAppSac>();
+		// 상단
+		String nameTop = null;
+		// 하단
+		String nameLower = null;
+		String comNmLower = null;
+		String emailLower = null;
+		String bizNoLower = null;
+		String addrLower = null;
+		String phoneLower = null;
 
-		List<SellerMbr> sellerMbrs = new ArrayList<SellerMbr>();
+		// Top + Lower
+		// 내국인
+		if (StringUtils.equals(MemberConstants.USE_Y, searchSellerResponse.getSellerMbr().getIsDomestic())) {
+			// 개인
+			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
+					.getSellerMbr().getSellerClass())) {
+				nameTop = searchSellerResponse.getSellerMbr().getCharger();
+				nameLower = StringUtils.isBlank(searchSellerResponse.getSellerMbr().getSellerName()) ? searchSellerResponse
+						.getSellerMbr().getCharger() : searchSellerResponse.getSellerMbr().getSellerName();
+			}
+			// 개인, 법인 사업자
+			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, searchSellerResponse
+					.getSellerMbr().getSellerClass())
+					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS,
+							searchSellerResponse.getSellerMbr().getSellerClass())) {
+				nameTop = searchSellerResponse.getSellerMbr().getSellerCompany();
+				nameLower = searchSellerResponse.getSellerMbr().getCeoName();
+				comNmLower = searchSellerResponse.getSellerMbr().getSellerCompany();
+				phoneLower = searchSellerResponse.getSellerMbr().getRepPhone();
+				addrLower = searchSellerResponse.getSellerMbr().getSellerAddress() + " "
+						+ searchSellerResponse.getSellerMbr().getSellerDetailAddress();
+			}
 
-		sellerMbrs = (List<SellerMbr>) searchSellerRes.getSellerMbrListMap().get(
-				searchSellerRes.getSellerMbrListMap().keySet().iterator().next());
+		} else { // 외국인
+			nameTop = searchSellerResponse.getSellerMbr().getSellerCompany();
+			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
+					.getSellerMbr().getSellerClass())) {
 
-		if (sellerMbrs.get(0).getIsDomestic() == null || sellerMbrs.get(0).getSellerClass() == null) {
-			throw new StorePlatformException("SAC_MEM_2101");
+				nameLower = StringUtils.isBlank(searchSellerResponse.getSellerMbr().getSellerName()) ? searchSellerResponse
+						.getSellerMbr().getSellerCompany() : searchSellerResponse.getSellerMbr().getSellerName();
+			}
+			// 개인, 법인 사업자
+			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, searchSellerResponse
+					.getSellerMbr().getSellerClass())
+					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS,
+							searchSellerResponse.getSellerMbr().getSellerClass())) {
+
+				comNmLower = StringUtils.isBlank(searchSellerResponse.getSellerMbr().getSellerCompany()) ? searchSellerResponse
+						.getSellerMbr().getSellerName() : searchSellerResponse.getSellerMbr().getSellerCompany();
+			}
 		}
 
-		/* 상단 */
-		// 내국인, 개인
-		if (MemberConstants.USE_Y.equals(sellerMbrs.get(0).getIsDomestic())
-				&& MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON
-						.equals(sellerMbrs.get(0).getSellerClass())) {
-			sellerMbrSac = new SellerMbrAppSac();
-			sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_TOP);
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getCharger()))
-				sellerMbrSac.setSellerName(sellerMbrs.get(0).getCharger());
-			else
-				sellerMbrSac.setSellerName("");
-			sellerMbrList.add(sellerMbrSac);
-		}
-		// 내국인, 개인사업자 or 법인 사업자
-		else if (StringUtils.equals(MemberConstants.USE_Y, sellerMbrs.get(0).getIsDomestic())
-				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
-						.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
-						.equals(sellerMbrs.get(0).getSellerClass()))) {
-			sellerMbrSac = new SellerMbrAppSac();
-			sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_TOP);
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
-				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerCompany());
-			else
-				sellerMbrSac.setSellerName("");
-			sellerMbrList.add(sellerMbrSac);
-		}
-		// 외국인, 개인 or 개인사업자 or 법인 사업자
-		else if (sellerMbrs.get(0).getIsDomestic().equals(MemberConstants.USE_N)
-				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON.equals(sellerMbrs.get(0)
-						.getSellerClass())
-						|| MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
-								.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
-							.equals(sellerMbrs.get(0).getSellerClass()))) {
-			sellerMbrSac = new SellerMbrAppSac();
-			sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_TOP);
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
-				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerCompany());
-			else
-				sellerMbrSac.setSellerName("");
-			sellerMbrList.add(sellerMbrSac);
+		if (StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getRepEmail())) {
+			emailLower = searchSellerResponse.getSellerMbr().getRepEmail();
+		} else if (StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getCustomerEmail())) {
+			emailLower = searchSellerResponse.getSellerMbr().getCustomerEmail();
+		} else if (StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerEmail())) {
+			emailLower = searchSellerResponse.getSellerMbr().getSellerEmail();
 		}
 
-		/* 하단 */
-		// 내국인, 개인
-		if (MemberConstants.USE_Y.equals(sellerMbrs.get(0).getIsDomestic())
-				&& MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON
-						.equals(sellerMbrs.get(0).getSellerClass())) {
-			sellerMbrSac = new SellerMbrAppSac();
-			sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_LOWER);
+		SellerMbrAppSac sellerMbrSac = new SellerMbrAppSac();
+		List<SellerMbrAppSac> resList = new ArrayList<DetailInformationForProductRes.SellerMbrAppSac>();
 
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()))
-				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerName());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCharger()))
-				sellerMbrSac.setSellerName(sellerMbrs.get(0).getCharger());
-			else
-				sellerMbrSac.setSellerName("");
+		// 상단 셋팅
+		sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_TOP);
+		sellerMbrSac.setSellerName(nameTop);
+		resList.add(0, sellerMbrSac);
 
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
-			else
-				sellerMbrSac.setSellerEmail("");
+		sellerMbrSac = new SellerMbrAppSac();
+		// 하단 셋팅
+		sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_LOWER);
+		resList.add(1, sellerMbrSac);
+		sellerMbrSac.setSellerName(nameLower);
+		sellerMbrSac.setSellerCompany(comNmLower);
+		sellerMbrSac.setSellerEmail(emailLower);
+		sellerMbrSac.setBizRegNumbe(bizNoLower);
+		sellerMbrSac.setSellerAddress(addrLower);
+		sellerMbrSac.setSellerPhone(phoneLower);
 
-			sellerMbrList.add(sellerMbrSac);
-		}
-
-		// 내국인, 개인사업자 OR 법인 사업자
-		else if (MemberConstants.USE_Y.equals(sellerMbrs.get(0).getIsDomestic())
-				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
-						.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
-						.equals(sellerMbrs.get(0).getSellerClass()))) {
-			sellerMbrSac = new SellerMbrAppSac();
-			sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_LOWER);
-
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
-				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
-			else
-				sellerMbrSac.setSellerCompany("");
-
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getCeoName()))
-				sellerMbrSac.setSellerName(sellerMbrs.get(0).getCeoName());
-			else
-				sellerMbrSac.setSellerName("");
-
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
-			else
-				sellerMbrSac.setSellerEmail("");
-
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getBizRegNumber()))
-				// sellerMbrSac.setBizRegNumber(sellerMbrs.get(0).getBizRegNumber());
-				// else
-				// sellerMbrSac.setBizRegNumber("");
-
-				if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerAddress()))
-					sellerMbrSac.setSellerAddress(sellerMbrs.get(0).getSellerAddress() + " "
-							+ sellerMbrs.get(0).getSellerDetailAddress());
-				else
-					sellerMbrSac.setSellerAddress("");
-
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepPhone()))
-				sellerMbrSac.setSellerPhone(sellerMbrs.get(0).getRepPhone());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerPhone()))
-				sellerMbrSac.setSellerPhone(sellerMbrs.get(0).getCustomerPhone());
-			else
-				sellerMbrSac.setSellerPhone("");
-
-			sellerMbrList.add(sellerMbrSac);
-		}
-
-		// 외국인, 개인
-		else if (MemberConstants.USE_N.equals(sellerMbrs.get(0).getIsDomestic())
-				&& MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON
-						.equals(sellerMbrs.get(0).getSellerClass())) {
-			sellerMbrSac = new SellerMbrAppSac();
-			sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_LOWER);
-
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()))
-				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerName());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
-				sellerMbrSac.setSellerName(sellerMbrs.get(0).getSellerCompany());
-			else
-				sellerMbrSac.setSellerName("");
-
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
-			else
-				sellerMbrSac.setSellerEmail("");
-
-			sellerMbrList.add(sellerMbrSac);
-		}
-
-		// 외국인, 개인사업자or법인사업자
-		else if (MemberConstants.USE_N.equals(sellerMbrs.get(0).getIsDomestic())
-				&& (MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS.equals(sellerMbrs.get(0)
-						.getSellerClass()) || MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS
-						.equals(sellerMbrs.get(0).getSellerClass()))) {
-			sellerMbrSac = new SellerMbrAppSac();
-			sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_LOWER);
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()))
-				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerCompany());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()))
-				sellerMbrSac.setSellerCompany(sellerMbrs.get(0).getSellerName());
-			else
-				sellerMbrSac.setSellerCompany("");
-
-			if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getRepEmail());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getCustomerEmail());
-			else if (StringUtils.isNotBlank(sellerMbrs.get(0).getSellerEmail()))
-				sellerMbrSac.setSellerEmail(sellerMbrs.get(0).getSellerEmail());
-			else
-				sellerMbrSac.setSellerEmail("");
-
-			sellerMbrList.add(sellerMbrSac);
-		}
-
+		// RESPONSE
 		DetailInformationForProductRes response = new DetailInformationForProductRes();
-
-		response.setIsDomestic(sellerMbrs.get(0).getIsDomestic());
-		response.setSellerClass(sellerMbrs.get(0).getSellerClass());
-
-		response.setSellerMbrList(sellerMbrList);
+		response.setIsDomestic(searchSellerResponse.getSellerMbr().getIsDomestic());
+		response.setSellerClass(searchSellerResponse.getSellerMbr().getSellerClass());
+		response.setSellerMbrList(resList);
 
 		return response;
-
 	}
 
 	/**
