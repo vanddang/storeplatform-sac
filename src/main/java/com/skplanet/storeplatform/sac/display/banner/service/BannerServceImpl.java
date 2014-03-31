@@ -49,7 +49,7 @@ public class BannerServceImpl implements BannerService {
 	private final int EDU_BANNER_COUNT = 2; // 어학/교육 배너 2개 (모바일웹 정사각형 배너)
 
 	private final int APPGUIDE_BANNER_COUNT = 2; // 앱가이드 배너 2개 (앱가이드 배너)
-	private final int BESTAPP_BANNER_COUNT = 4; // BEST 앱 배너 2개 (앱가이드 배너)
+	private final int BESTAPP_BANNER_COUNT = 4; // BEST 앱 배너 4개 (앱가이드 배너)
 
 	@Autowired
 	@Qualifier("sac")
