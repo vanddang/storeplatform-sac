@@ -527,9 +527,9 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		// source 설정
 		sourceList = new ArrayList<Source>();
 		source = new Source();
-		source.setMediaType("image/jpeg");
+		// source.setMediaType("image/jpeg");
 		source.setType("thumbnail");
-		source.setSize(659069);
+		// source.setSize(659069);
 		// source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
 		sourceList.add(source);
 
@@ -552,9 +552,9 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 		// source 설정
 		sourceList = new ArrayList<Source>();
-		source.setMediaType("image/jpeg");
+		// source.setMediaType("image/jpeg");
 		source.setType("thumbnail");
-		source.setSize(659069);
+		// source.setSize(659069);
 		// source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
 		sourceList.add(source);
 
