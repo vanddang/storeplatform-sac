@@ -292,6 +292,7 @@
 	                AND C.PART_PROD_ID = D.PROD_ID
 	                AND C.PART_PROD_ID = F.PROD_ID
 	                AND D.CONTENTS_TYPE_CD = 'PD002502'
+                    AND E.TENANT_ID = #{tenantId}
 	                AND D.SVC_GRP_CD = 'DP000203'
 	                AND C.PART_PROD_ID = E.PROD_ID
 	                AND E.EXPO_YN = 'Y'
