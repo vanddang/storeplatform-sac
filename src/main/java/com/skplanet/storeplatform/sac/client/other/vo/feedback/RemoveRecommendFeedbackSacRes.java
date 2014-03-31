@@ -9,12 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 /**
  * 
  * RemoveRecommendFeedbackRes Value Object
  * 
  * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스.
  */
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class RemoveRecommendFeedbackSacRes extends Feedback {
 
 	/**

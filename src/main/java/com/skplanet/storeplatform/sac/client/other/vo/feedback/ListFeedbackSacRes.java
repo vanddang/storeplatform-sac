@@ -11,6 +11,9 @@ package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
 import java.util.List;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -19,6 +22,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스.
  */
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class ListFeedbackSacRes extends CommonInfo {
 	/**
 	 *
