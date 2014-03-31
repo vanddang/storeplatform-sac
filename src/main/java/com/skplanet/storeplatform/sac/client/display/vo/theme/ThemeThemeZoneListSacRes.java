@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
@@ -21,11 +22,20 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2014. 2. 6. Updated by : 이승훈, 엔텔스.
  */
-public class ThemeThemeZoneSacRes extends CommonInfo {
+public class ThemeThemeZoneListSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private CommonResponse commonResponse;
 	private List<Product> productList;
+	private Layout layOut;
+
+	public Layout getLayOut() {
+		return this.layOut;
+	}
+
+	public void setLayOut(Layout layOut) {
+		this.layOut = layOut;
+	}
 
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
