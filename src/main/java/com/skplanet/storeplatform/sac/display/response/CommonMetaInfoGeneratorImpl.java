@@ -745,13 +745,15 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 * .sac.display.common.vo.TmembershipDcInfo)
 	 */
 	@Override
-	public Point generatePoint(TmembershipDcInfo metaInfo) {
+	public List<Point> generatePoint(TmembershipDcInfo metaInfo) {
+		List<Point> pointList = new ArrayList<Point>();
 		Point point = new Point();
 		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
 		if (metaInfo != null) {
 			point.setDiscountRate(metaInfo.getDcRate());
 		}
-		return point;
+		pointList.add(point);
+		return pointList;
 	}
 
 }

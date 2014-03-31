@@ -1657,7 +1657,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 티멤버십 DC 정보
 					TmembershipDcInfo info = this.commonService.getTmembershipDcRateForMenu(tenantHeader.getTenantId(),
 							shopping.getTopMenuId());
-					Point point = this.commonGenerator.generatePoint(info);
+					List<Point> pointList = this.commonGenerator.generatePoint(info);
 
 					// Title 생성
 					Title title = this.commonGenerator.generateTitle(shopping);
@@ -1934,7 +1934,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 채널 상품 판매 상태 코드
 					product.setProductExplain(shopping.getProdDtlDesc());
 					product.setMenuList(menuList);
-					product.setPoint(point);
+					product.setPointList(pointList);
 					product.setTitle(title);
 					product.setSourceList(sourceList);
 					product.setAccrual(accrual);

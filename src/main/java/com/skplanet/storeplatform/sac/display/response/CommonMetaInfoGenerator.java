@@ -441,5 +441,5 @@ public interface CommonMetaInfoGenerator {
 	 * @return Point
 	 */
 
-	public Point generatePoint(TmembershipDcInfo metaInfo);
+	public List<Point> generatePoint(TmembershipDcInfo metaInfo);
 }
