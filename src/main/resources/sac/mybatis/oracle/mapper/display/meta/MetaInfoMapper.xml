@@ -249,6 +249,8 @@
                            , TB_DP_TENANT_PROD_PRICE       O              
                        WHERE A.MENU_ID = B.MENU_ID
                          AND A.MENU_ID = C.MENU_ID
+                         AND A.TOP_MENU_ID = D.TOP_MENU_ID
+                         AND A.TOP_MENU_ID = J.TOP_MENU_ID
                          AND B.PROD_ID = D.PROD_ID
                          AND B.PROD_ID = E.PROD_ID
                          AND B.PROD_ID = F.PROD_ID
