@@ -121,9 +121,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         rights.setGrade(musicDetail.getProdGrdCd());
         product.setRights(rights);
         product.setSvcGrpCd(musicDetail.getSvcGrpCd());
-
-        if(!DisplayConstants.DP_SALE_STAT_ING.equals(musicDetail.getProdStatusCd()))
-            product.setSalesStatus("restricted");
+        product.setSalesStatus(musicDetail.getProdStatusCd());
 
         // Contributor
         Contributor contributor = new Contributor();
