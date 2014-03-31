@@ -40,13 +40,12 @@
     </select>
 
     <!-- 해상도 코드 조회 -->
-    <select id="getTmembershipDcRateForMenu" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo">
+    <select id="getTmembershipDcRateForMenu" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy">
         SELECT /* CommonMapper.xml, getTmembershipDcRateForMenu, SAC : 정희원 , 2014-01-24 */
-            TENANT_PROD_GRP_CD,
             NVL(SUBSTR(TENANT_PROD_GRP_CD,13,8),'OR006311') PROD_TP,
             DECODE(NVL(SUBSTR(TENANT_PROD_GRP_CD,13,8),'OR006311')
-            , 'OR006311', '단위상품'                    -- 일반상품
-            , 'OR006331', '권한상품'                    -- 정액권상품
+            , 'OR006311', 'normal'                    -- 일반상품 normal
+            , 'OR006331', 'freepass'                  -- 정액권상품 freepass
             ) PROD_TP_NM,
             REGEXP_REPLACE(REGEXP_REPLACE(APPLY_VALUE,'(.*)[;](.*)[;](.*)[;](.*)[;](.*)[;](.*)[;](.*)[;](.*)','\3'),'(.*)[:](.*)[:](.*)','\3') DC_RATE
         FROM

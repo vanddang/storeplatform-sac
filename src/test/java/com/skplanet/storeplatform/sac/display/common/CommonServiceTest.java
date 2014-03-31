@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.common;
 
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,8 +52,15 @@ public class CommonServiceTest {
 
     @Test
     public void testGetTmembershipDcRateForMenu() {
-        TmembershipDcInfo info = commonService.getTmembershipDcRateForMenu("S01", "DP01");
-        assert info.getDcRate() == 50;
+        TmembershipDcInfo tmembershipDcRateForMenu = commonService.getTmembershipDcRateForMenu("S01", "DP01");
+        assert tmembershipDcRateForMenu.getNormalDcRate() == 50;
+    }
+
+    @Test
+    public void testGetTmembershipDcRateForMenu02() {
+        TmembershipDcInfo tmembershipDcRateForMenu = commonService.getTmembershipDcRateForMenu("S01", "DP18");
+        assert tmembershipDcRateForMenu.getNormalDcRate() == 50;
+        assert tmembershipDcRateForMenu.getFreepassDcRate() == 50;
     }
 
 }

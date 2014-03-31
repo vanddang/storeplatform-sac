@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +21,6 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest;
-import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
-import com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq;
 
 /**
  * 전시 공통 서비스
@@ -155,12 +152,23 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
     @Override
     @Cacheable(value = "sac:display:tmembershipdcrate")
-    public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String menuId) {
+    public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String topMenuId) {
         Map<String, String> req = new HashMap<String, String>();
         req.put("tenantId", tenantId);
         req.put("policyId", "policy014");   // policy014 - TMembership 할인정책
-        req.put("menuId", menuId);
+        req.put("menuId", topMenuId);
 
-        return commonDAO.queryForObject("DisplayCommon.getTmembershipDcRateForMenu", req, TmembershipDcInfo.class);
+        List<TenantSalePolicy> tenantSalePolicies = commonDAO.queryForList("DisplayCommon.getTmembershipDcRateForMenu", req, TenantSalePolicy.class);
+        TmembershipDcInfo tmembershipDcInfo = new TmembershipDcInfo();
+        for (TenantSalePolicy tsp : tenantSalePolicies) {
+            if(tsp.getProdTp().equals("OR006311")) {
+                tmembershipDcInfo.setNormalDcRate(tsp.getDcRate());
+            }
+            else if(tsp.getProdTp().equals("OR006331")) {
+                tmembershipDcInfo.setFreepassDcRate(tsp.getDcRate());
+            }
+        }
+
+        return tmembershipDcInfo;
     }
 }

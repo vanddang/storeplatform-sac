@@ -17,21 +17,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * </p>
  * Updated on : 2014. 03. 31 Updated by : 정희원, SK 플래닛.
  */
-public class TmembershipDcInfo extends CommonInfo {
+public class TenantSalePolicy extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
-    private String tenantProdGrpCd;
     private String prodTp;
-    private String prodTpNm;
     private Integer dcRate;
-
-    public String getTenantProdGrpCd() {
-        return tenantProdGrpCd;
-    }
-
-    public void setTenantProdGrpCd(String tenantProdGrpCd) {
-        this.tenantProdGrpCd = tenantProdGrpCd;
-    }
 
     public String getProdTp() {
         return prodTp;
@@ -39,14 +29,6 @@ public class TmembershipDcInfo extends CommonInfo {
 
     public void setProdTp(String prodTp) {
         this.prodTp = prodTp;
-    }
-
-    public String getProdTpNm() {
-        return prodTpNm;
-    }
-
-    public void setProdTpNm(String prodTpNm) {
-        this.prodTpNm = prodTpNm;
     }
 
     public Integer getDcRate() {
