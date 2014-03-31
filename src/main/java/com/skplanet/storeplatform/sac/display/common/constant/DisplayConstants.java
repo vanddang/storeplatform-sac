@@ -645,4 +645,6 @@ public class DisplayConstants {
 	public static final String DP_LIST_NEWFREE = "ADM000000001";
 
 	public static final String DP_LIST_SHOPPING_POPULAR = "RNK000000006";
+
+	public static final String DP_TMEMBERSHIP_NAME = "tmembership";
 }
