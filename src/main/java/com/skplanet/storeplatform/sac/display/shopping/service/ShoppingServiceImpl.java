@@ -388,9 +388,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		String stdDt = "";
 		if (req.getOrderedBy().equals(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION)) {
 			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(req.getListId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
-			}
+			req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR);
 
 			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 					req.getListId());
@@ -1349,9 +1347,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		String stdDt = "";
 		if (req.getOrderedBy().equals(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION)) {
 			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(req.getListId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
-			}
+			req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR);
 
 			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 					req.getListId());
@@ -1492,9 +1488,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		String stdDt = "";
 		if (req.getOrderedBy().equals(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION)) {
 			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(req.getListId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
-			}
+			req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR);
 
 			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 					req.getListId());
