@@ -750,7 +750,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		Point point = new Point();
 		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
 		if (metaInfo != null) {
-			point.setDiscountRate(metaInfo.getDcRate());
+			point.setDiscountRate(metaInfo.getNormalDcRate());
 		}
 		pointList.add(point);
 		return pointList;
