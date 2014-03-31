@@ -146,9 +146,9 @@ public class ThemeController {
 	 *            themeZoneReq
 	 * @return ThemeZoneRes
 	 */
-	@RequestMapping(value = "/display/feature/theme/themeZone/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public ThemeThemeZoneSacRes searchThemeThemeZone(ThemeThemeZoneSacReq req, SacRequestHeader header) {
-		return this.themeThemeZoneService.searchThemeThemeZone(req, header);
-	}
+	// @RequestMapping(value = "/display/feature/theme/themeZone/v1", method = RequestMethod.GET)
+	// @ResponseBody
+	// public ThemeThemeZoneSacRes searchThemeThemeZone(ThemeThemeZoneSacReq req, SacRequestHeader header) {
+	// return this.themeThemeZoneService.searchThemeThemeZone(req, header);
+	// }
 }
