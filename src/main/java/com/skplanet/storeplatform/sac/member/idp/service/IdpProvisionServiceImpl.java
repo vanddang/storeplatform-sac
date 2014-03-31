@@ -825,7 +825,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				createDeviceReq.setUserKey(userKey);
 				createDeviceReq.setIsNew("N");
 				createDeviceReq.setUserMbrDevice(userMbrDevice);
-				LOGGER.info("::: createDeviceReq : {}", createDeviceReq.toString());
 				this.deviceSCI.createDevice(createDeviceReq);
 
 				/* 회원상태 업데이트 */
@@ -837,7 +836,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				updStatusUserReq.setKeySearchList(keySearchList);
 				updStatusUserReq.setUserMainStatus(MemberConstants.MAIN_STATUS_SECEDE); // 탈퇴
 				updStatusUserReq.setUserSubStatus(MemberConstants.SUB_STATUS_CHANGE_USER); // 변동성 대상
-				LOGGER.info("::: updStatusUserReq : {}", updStatusUserReq.toString());
 				this.userSCI.updateStatus(updStatusUserReq);
 
 			} else {
@@ -1112,7 +1110,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					userMbr.setUserEmail(userEmail);
 				}
 
-				//LOGGER.info(":::: adjustWiredProfile : {}", userMbr.toString());
 				if (StringUtil.equals(imIntSvcNo, "")) { // 통합회원이 아닌경우
 					/* 회원정보 변경 요청 */
 					UpdateUserRequest updateUserRequest = new UpdateUserRequest();
@@ -1261,6 +1258,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						Device device = this.mcc.getPhoneInfoByUacd(uaCd);
 						String deviceModelNo = null;
 						if (device == null) {
+							LOGGER.info("<executeAdjustWiredProfile> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", deviceId, uaCd,
+									svcMangNum);
 							uaCd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 							deviceModelNo = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 						} else {
