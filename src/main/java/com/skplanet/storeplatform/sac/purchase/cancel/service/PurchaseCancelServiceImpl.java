@@ -111,6 +111,20 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 							purchaseCancelDetailSacParam);
 				}
 
+				/** RO 삭제 처리. */
+				for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
+					if (!StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+							PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) {
+						// APP 상품이 아니면 통과.
+						continue;
+					}
+					try {
+						this.removeRO(purchaseCancelSacParam, purchaseCancelDetailSacParam, prchsDtlSacParam);
+					} catch (Exception e) {
+						this.logger.info("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
+					}
+				}
+
 			} catch (StorePlatformException e) {
 
 				purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
@@ -265,20 +279,6 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 구매 DB 취소 처리. */
 		this.purchaseCancelRepository.updatePurchaseCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam);
-
-		/** RO 삭제 처리. */
-		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
-			if (!StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
-					PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) {
-				// APP 상품이 아니면 통과.
-				continue;
-			}
-			try {
-				this.cancelRO(purchaseCancelSacParam, purchaseCancelDetailSacParam, prchsDtlSacParam);
-			} catch (Exception e) {
-				this.logger.info("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
-			}
-		}
 
 		purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
@@ -534,7 +534,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	 * @param purchaseCancelParamDetail
 	 *            purchaseCancelParamDetail
 	 */
-	private void cancelRO(PurchaseCancelSacParam purchaseCancelSacParam,
+	private void removeRO(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, PrchsDtlSacParam prchsDtlSacParam) {
 
 		/** 사용자 deviceId 조회. */
