@@ -15,7 +15,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.pdp.sentinel.shuttle.TstoreSentinelShuttle;
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
@@ -491,7 +491,7 @@ public class IdpServiceImpl implements IdpService {
 
 					new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
 						@Override
-						public void customize(TstoreSentinelShuttle shuttle) {
+						public void customize(TLogSentinelShuttle shuttle) {
 							shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
 									.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost);
 
@@ -2275,7 +2275,7 @@ public class IdpServiceImpl implements IdpService {
 
 						new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
 							@Override
-							public void customize(TstoreSentinelShuttle shuttle) {
+							public void customize(TLogSentinelShuttle shuttle) {
 								shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
 										.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost);
 

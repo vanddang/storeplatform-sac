@@ -21,7 +21,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.pdp.sentinel.shuttle.TstoreSentinelShuttle;
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
@@ -374,7 +374,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
 				@Override
-				public void customize(TstoreSentinelShuttle shuttle) {
+				public void customize(TLogSentinelShuttle shuttle) {
 					shuttle.log_id("TL00034").insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
 							.device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
 

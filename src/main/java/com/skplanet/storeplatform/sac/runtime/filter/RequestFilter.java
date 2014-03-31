@@ -1,7 +1,11 @@
 package com.skplanet.storeplatform.sac.runtime.filter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.LoggerFactory;
+
+import com.skplanet.storeplatform.framework.core.util.log.TLogThreadHolder;
 import com.skplanet.storeplatform.framework.integration.filter.AbstractStorePlatformRequestFilter;
 
 /**
@@ -16,15 +20,10 @@ public class RequestFilter extends AbstractStorePlatformRequestFilter {
 		return "SAC";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.framework.integration.filter.AbstractStorePlatformRequestFilter#getFdsLoggerName()
-	 */
 	@Override
-	protected String getFdsLoggerName() {
-		return "TLOG_SAC_LOGGER";
+	protected void initExtraRequestFilter(HttpServletRequest request, HttpServletResponse response) {
+		/* ShuttleThreadHolder 에 기본 Logger 를 지정 한다. */
+		TLogThreadHolder.setShuttleLogger(LoggerFactory.getLogger("TLOG_SAC_LOGGER"));
 	}
 
 	/*
