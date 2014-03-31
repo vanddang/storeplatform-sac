@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.purchase.common.util;
 import java.net.URLEncoder;
 
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -24,8 +23,6 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
  */
 @Component
 public class PayPlanetUtils {
-	@Value("#{propertiesForSac['purchase.payplanet.encrypt.key']}")
-	private static String payplanetEncryptKey;
 
 	public static String makeToken(String authKey, String orderId, String amtPurchase, String mid) {
 
@@ -77,20 +74,6 @@ public class PayPlanetUtils {
 	/**
 	 * 
 	 * <pre>
-	 * Pay Planet 과의 연동 시 필요한 암호화 작업을 한다 : 기본 설정 키 사용, URLEncoder.encode() 처리 함.
-	 * </pre>
-	 * 
-	 * @param plain
-	 *            암호화할 문자열
-	 * @return 암호화된 문자열
-	 */
-	public static String encrypt(String plain) {
-		return encrypt(plain, payplanetEncryptKey, true);
-	}
-
-	/**
-	 * 
-	 * <pre>
 	 * Pay Planet 과의 연동 시 필요한 암호화 작업을 한다 : URLEncoder.encode() 처리 함.
 	 * </pre>
 	 * 
@@ -102,22 +85,6 @@ public class PayPlanetUtils {
 	 */
 	public static String encrypt(String plain, String key) {
 		return encrypt(plain, key, true);
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Pay Planet 과의 연동 시 필요한 암호화 작업을 한다 : 기본 설정 키 사용.
-	 * </pre>
-	 * 
-	 * @param plain
-	 *            암호화할 문자열
-	 * @param urlEncode
-	 *            URLEncoder.encode() 처리 여부
-	 * @return 암호화된 문자열
-	 */
-	public static String encrypt(String plain, boolean urlEncode) {
-		return encrypt(plain, payplanetEncryptKey, urlEncode);
 	}
 
 	/**
