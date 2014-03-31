@@ -23,7 +23,6 @@ import com.skplanet.storeplatform.sac.client.purchase.product.count.vo.PurchaseP
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.product.count.service.PurchaseProductCountService;
 import com.skplanet.storeplatform.sac.purchase.product.count.vo.PurchaseProductCountSacParam;
-import com.skplanet.storeplatform.sac.purchase.product.count.vo.PurchaseProductCountSacResult;
 
 /**
  * 구매 상품 건수 처리 Controller.
@@ -67,13 +66,10 @@ public class PurchaseProductCountController {
 		purchaseProductCountSacParam.setUpdId(updId);
 		purchaseProductCountSacParam.setPerCount(perCnt);
 
-		PurchaseProductCountSacResult purchaseProductCountSacResult = this.purchaseProductCountService
-				.execPurchaseProductCount(purchaseProductCountSacParam);
+		this.purchaseProductCountService.execPurchaseProductCount(purchaseProductCountSacParam);
 
 		PurchaseProductCountSacRes purchaseProductCountSacRes = new PurchaseProductCountSacRes();
-		purchaseProductCountSacRes.setTotCnt(purchaseProductCountSacResult.getTotCnt());
-		purchaseProductCountSacRes.setSuccessCnt(purchaseProductCountSacResult.getSuccessCnt());
-		purchaseProductCountSacRes.setFailCnt(purchaseProductCountSacResult.getFailCnt());
+		purchaseProductCountSacRes.setUpdId(updId);
 
 		return purchaseProductCountSacRes;
 
