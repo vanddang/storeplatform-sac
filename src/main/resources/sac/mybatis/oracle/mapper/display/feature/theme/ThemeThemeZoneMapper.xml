@@ -257,6 +257,7 @@
             , ROW_NUMBER() OVER(ORDER BY TDL.EXPO_ORD, TDL.EXPO_ORD_SUB) AS RNUM
 	        FROM TB_DP_LIST TDL
             WHERE TDL.LIST_GRP_CD = 'TAR'
+            AND TDL.TENANT_ID = #{tenantId}
 	        AND TDL.EXPO_YN = 'Y'
 	        AND EXISTS (
 	            SELECT  
@@ -270,7 +271,7 @@
 	                  , TB_CM_DEVICE F
 	                  , TB_DP_SPRT_DEVICE G
 	            WHERE TDL.LIST_ID = TDLP.LIST_ID
-	            AND TDLP.EXPO_YN = 'Y'
+	              AND TDLP.EXPO_YN = 'Y'
 	              AND TDLP.PROD_ID = D.PROD_ID
 	              AND A.PART_PROD_ID = D.PROD_ID    
 	              AND A.PROD_RSHP_CD = 'DP010802'
