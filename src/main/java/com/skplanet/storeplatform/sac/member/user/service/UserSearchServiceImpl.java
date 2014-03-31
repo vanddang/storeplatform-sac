@@ -495,6 +495,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 				}
 			} else if (!req.getUserPhone().equals("")) {
 				/* UserId와 Phone이 일치하는지 체크 */
+
+				String opmdMdn = this.mcc.getOpmdMdnInfo(req.getUserPhone());
+				req.setUserPhone(opmdMdn);
+				LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+
 				ListDeviceReq scReq = new ListDeviceReq();
 				scReq.setUserKey(info.getUserKey());
 				scReq.setDeviceId(req.getUserPhone());
