@@ -271,7 +271,7 @@
 	                  , TB_CM_DEVICE F
 	                  , TB_DP_SPRT_DEVICE G
 	            WHERE TDL.LIST_ID = TDLP.LIST_ID
-                  AND TDLP.TENANT_ID = E.TENANT_ID
+                  AND TDLP.TENANT_ID = #{tenantId}
                   AND TDLP.TENANT_ID = #{tenantId}
 	              AND TDLP.EXPO_YN = 'Y'
 	              AND TDLP.PROD_ID = D.PROD_ID
