@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
-import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -122,9 +121,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private DeviceSCI deviceSCI;
-
-	@Autowired
-	private ImIdpSCI imIdpSCI;
 
 	@Autowired
 	private IdpSCI idpSCI;
