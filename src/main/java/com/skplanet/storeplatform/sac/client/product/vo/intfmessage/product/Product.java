@@ -328,6 +328,10 @@ public class Product extends CommonInfo implements Serializable {
      */
     private String partProductType;
 
+    
+    private Point point;
+    
+    
     public String getPartProductType() {
         return partProductType;
     }
@@ -1270,6 +1274,20 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setSvcGrpCd(String svcGrpCd) {
 		this.svcGrpCd = svcGrpCd;
+	}
+
+	/**
+	 * @return the point
+	 */
+	public Point getPoint() {
+		return point;
+	}
+
+	/**
+	 * @param point the point to set
+	 */
+	public void setPoint(Point point) {
+		this.point = point;
 	}
 
 }
