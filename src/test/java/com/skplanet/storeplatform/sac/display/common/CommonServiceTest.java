@@ -1,6 +1,7 @@
-package com.skplanet.storeplatform.sac.display;
+package com.skplanet.storeplatform.sac.display.common;
 
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -46,6 +47,12 @@ public class CommonServiceTest {
     @Test
     public void menuListTest() {
         commonService.getMenuItemList("", "");
+    }
+
+    @Test
+    public void testGetTmembershipDcRateForMenu() {
+        TmembershipDcInfo info = commonService.getTmembershipDcRateForMenu("S01", "DP01");
+        assert info.getDcRate() == 50;
     }
 
 }

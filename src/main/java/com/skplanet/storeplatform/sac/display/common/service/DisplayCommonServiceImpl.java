@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -46,14 +48,14 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Override
 	public String getBatchStandardDateString(String tenantId, String listId) {
 
-		return (String) this.commonDAO.queryForObject("Common.getBatchStandardDate", new BatchStandardDateRequest(
+		return (String) this.commonDAO.queryForObject("DisplayCommon.getBatchStandardDate", new BatchStandardDateRequest(
 				tenantId, listId));
 	}
 
 	@Override
 	public List<MenuItem> getMenuItemList(String prodId, String langCd) {
 
-		return this.commonDAO.queryForList("Common.getMenuItemList", new MenuItemReq(prodId, langCd), MenuItem.class);
+		return this.commonDAO.queryForList("DisplayCommon.getMenuItemList", new MenuItemReq(prodId, langCd), MenuItem.class);
 	}
 
 	@Override
@@ -66,7 +68,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		paramMap.put("pixel1", resolutionTemp[0]);
 		paramMap.put("pixel2", resolutionTemp[1]);
 
-		return (String) this.commonDAO.queryForObject("Common.getResolutionCode", paramMap);
+		return (String) this.commonDAO.queryForObject("DisplayCommon.getResolutionCode", paramMap);
 	}
 
 	@Override
@@ -149,5 +151,16 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
             return previewPrefix + phyPath;
         else
             return "";
+    }
+
+    @Override
+    @Cacheable(value = "sac:display:tmembershipdcrate")
+    public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String menuId) {
+        Map<String, String> req = new HashMap<String, String>();
+        req.put("tenantId", tenantId);
+        req.put("policyId", "policy014");   // policy014 - TMembership 할인정책
+        req.put("menuId", menuId);
+
+        return commonDAO.queryForObject("DisplayCommon.getTmembershipDcRateForMenu", req, TmembershipDcInfo.class);
     }
 }

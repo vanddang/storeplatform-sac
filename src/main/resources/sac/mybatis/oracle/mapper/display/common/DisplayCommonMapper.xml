@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="Common">
+<mapper namespace="DisplayCommon">
 
     <!--배치 완료 일시 조회-->
     <select id="getBatchStandardDate" parameterType="com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest" resultType="String">
@@ -37,6 +37,24 @@
        FROM TB_CM_CD
       WHERE (ADD_FIELD_01 =#{pixel1} OR ADD_FIELD_02=#{pixel1})
         AND (ADD_FIELD_01 =#{pixel2} OR ADD_FIELD_02=#{pixel2})                        
-    </select>        
+    </select>
+
+    <!-- 해상도 코드 조회 -->
+    <select id="getTmembershipDcRateForMenu" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo">
+        SELECT /* CommonMapper.xml, getTmembershipDcRateForMenu, SAC : 정희원 , 2014-01-24 */
+            TENANT_PROD_GRP_CD,
+            NVL(SUBSTR(TENANT_PROD_GRP_CD,13,8),'OR006311') PROD_TP,
+            DECODE(NVL(SUBSTR(TENANT_PROD_GRP_CD,13,8),'OR006311')
+            , 'OR006311', '단위상품'                    -- 일반상품
+            , 'OR006331', '권한상품'                    -- 정액권상품
+            ) PROD_TP_NM,
+            REGEXP_REPLACE(REGEXP_REPLACE(APPLY_VALUE,'(.*)[;](.*)[;](.*)[;](.*)[;](.*)[;](.*)[;](.*)[;](.*)','\3'),'(.*)[:](.*)[:](.*)','\3') DC_RATE
+        FROM
+            TB_CM_TENANT_SALE_POLICY
+        WHERE 1=1
+              AND TENANT_ID = #{tenantId}
+              AND POLICY_ID = #{policyId}
+              AND SUBSTR(TENANT_PROD_GRP_CD,9,4) = #{menuId}
+    </select>
 
 </mapper>

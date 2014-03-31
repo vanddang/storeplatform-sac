@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.common.service;
 
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 
 import java.util.List;
 
@@ -78,5 +79,15 @@ public interface DisplayCommonService {
      * @return
      */
     public String makePreviewUrl(String phyPath);
+
+    /**
+     * 메뉴에 해당하는 T멤버십 할인율 조회한다.
+     *
+     *
+     * @param tenantId
+     * @param menuId 메뉴ID
+     * @return
+     */
+    public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String menuId);
 
 }
