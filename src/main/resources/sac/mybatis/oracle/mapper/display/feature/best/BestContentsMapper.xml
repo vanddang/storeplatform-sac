@@ -17,7 +17,7 @@
                 SELECT KA.*
                   FROM 
                        (
-                        SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD) AS RNUM
+                        SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD_ALWAYS_YN DESC, JA.EXPO_ORD, JA.EXPO_ORD_SUB) AS RNUM
                           FROM 
                                (
                                 SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
@@ -27,20 +27,24 @@
                                              , B.TOP_MENU_ID
                                              , A.MENU_ID
                                              , A.PROD_ID
-                                             , I.PART_PROD_ID                                     
+                                             , I.PART_PROD_ID
+                                             , A.EXPO_ORD_ALWAYS_YN
                                              , A.EXPO_ORD
+                                             , A.EXPO_ORD_SUB
                                              , D.META_CLSF_CD
                                              , D.CONTENTS_TYPE_CD
                                              , J.DRM_YN
-                                          FROM (SELECT A.TENANT_ID
-                                                      ,A.PROD_ID
-                                                      ,A.MENU_ID
-                                                      ,A.EXPO_ORD
-                                                  FROM TB_DP_LIST_PROD A
-                                                 WHERE A.TENANT_ID = #{tenantId} /* header param : tenantId */
-                                                   AND A.LIST_ID = #{listId}     /* param : listId */
-                                                   AND A.EXPO_YN = 'Y'           /* 전시여부 */  
-                                                   AND A.STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
+                                          FROM (SELECT TENANT_ID
+                                                      ,PROD_ID
+                                                      ,MENU_ID
+                                                      ,EXPO_ORD_ALWAYS_YN
+                                                      ,EXPO_ORD
+                                                      ,EXPO_ORD_SUB
+                                                  FROM TB_DP_LIST_PROD
+                                                 WHERE TENANT_ID = #{tenantId} /* header param : tenantId */
+                                                   AND LIST_ID = #{listId}     /* param : listId */
+                                                   AND EXPO_YN = 'Y'           /* 전시여부 */  
+                                                   AND STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
                                                )                        A
                                              , TB_DP_MENU_CATEGORY      B
                                              , TB_DP_PROD               D
@@ -108,7 +112,7 @@
                 SELECT KA.*
                   FROM 
                        (
-                        SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD) AS RNUM
+                        SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD_ALWAYS_YN DESC, JA.EXPO_ORD, JA.EXPO_ORD_SUB) AS RNUM
                           FROM 
                                (
                                 SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
@@ -122,19 +126,23 @@
                                              , B.TOP_MENU_ID
                                              , A.MENU_ID
                                              , A.PROD_ID
-                                             , I.PART_PROD_ID                                     
+                                             , I.PART_PROD_ID
+                                             , A.EXPO_ORD_ALWAYS_YN
                                              , A.EXPO_ORD
+                                             , A.EXPO_ORD_SUB
                                              , D.META_CLSF_CD
                                              , D.CONTENTS_TYPE_CD
-                                          FROM (SELECT A.TENANT_ID
-                                                      ,A.PROD_ID
-                                                      ,A.MENU_ID
-                                                      ,A.EXPO_ORD
-                                                  FROM TB_DP_LIST_PROD A
-                                                 WHERE A.TENANT_ID = #{tenantId} /* header param : tenantId */
-                                                   AND A.LIST_ID = #{listId}     /* param : listId */
-                                                   AND A.EXPO_YN = 'Y'           /* 전시여부 */  
-                                                   AND A.STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
+                                          FROM (SELECT TENANT_ID
+                                                      ,PROD_ID
+                                                      ,MENU_ID
+                                                      ,EXPO_ORD_ALWAYS_YN
+                                                      ,EXPO_ORD
+                                                      ,EXPO_ORD_SUB
+                                                  FROM TB_DP_LIST_PROD
+                                                 WHERE TENANT_ID = #{tenantId} /* header param : tenantId */
+                                                   AND LIST_ID = #{listId}     /* param : listId */
+                                                   AND EXPO_YN = 'Y'           /* 전시여부 */  
+                                                   AND STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
                                                )                        A
                                              , TB_DP_MENU_CATEGORY      B
                                              , TB_DP_PROD               D

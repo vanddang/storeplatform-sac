@@ -19,7 +19,6 @@
                                (  
                                  SELECT /*+ USE_NL(K,I,H,F) ORDERED */
                                         COUNT(B.PROD_ID) OVER () AS TOTAL_COUNT
-                                       ,A.EXPO_ORD
                                        ,A.TENANT_ID
                                        ,A.PROD_ID 
                                        ,A.MENU_ID                                                        
@@ -27,15 +26,17 @@
                                        ,H.SUB_CONTENTS_ID
                                    FROM 
                                        (
-                                         SELECT A.TENANT_ID
-                                               ,A.PROD_ID
-                                               ,A.MENU_ID
-                                               ,A.EXPO_ORD
-                                           FROM TB_DP_LIST_PROD A
-                                          WHERE A.TENANT_ID = #{tenantId} /* header param : tenantId */ 
-                                            AND A.LIST_ID = #{listId}     /* param : listId */
-                                            AND A.EXPO_YN = 'Y'           /* 전시여부 */ 
-                                            AND A.STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
+                                         SELECT TENANT_ID
+                                               ,PROD_ID
+                                               ,MENU_ID
+                                               ,EXPO_ORD_ALWAYS_YN
+                                               ,EXPO_ORD
+                                               ,EXPO_ORD_SUB
+                                           FROM TB_DP_LIST_PROD
+                                          WHERE TENANT_ID = #{tenantId} /* header param : tenantId */ 
+                                            AND LIST_ID = #{listId}     /* param : listId */
+                                            AND EXPO_YN = 'Y'           /* 전시여부 */ 
+                                            AND STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
                                        ) A
                                        ,TB_DP_PROD B
                                        ,TB_DP_MENU_CATEGORY_PROD_MAPG E
@@ -64,7 +65,7 @@
                                     AND K.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
                                     AND K.USE_YN  = 'Y'
                                     AND I.EXPO_YN = 'Y' /* 노출여부 */
-                                  ORDER BY A.EXPO_ORD
+                                  ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB
                                ) IA
                       ) JA
                  WHERE JA.RNUM BETWEEN #{offset} AND #{count} /* param : offset, count */ 
@@ -94,7 +95,9 @@
                                          (  
                                            SELECT B.SELLER_MBR_NO
                                                  ,B.UPD_DT
+                                                 ,A.EXPO_ORD_ALWAYS_YN
                                                  ,A.EXPO_ORD
+                                                 ,A.EXPO_ORD_SUB
                                                  ,A.TENANT_ID
                                                  ,A.PROD_ID 
                                                  ,A.MENU_ID                                                     
@@ -102,15 +105,17 @@
                                                  ,H.SUB_CONTENTS_ID
                                                      FROM 
                                                  (
-                                                   SELECT A.TENANT_ID
-                                                         ,A.PROD_ID
-                                                         ,A.MENU_ID
-                                                         ,A.EXPO_ORD
-                                                     FROM TB_DP_LIST_PROD A                                       
-                                                    WHERE A.TENANT_ID = #{tenantId} /* header param : tenantId */ 
-                                                      AND A.LIST_ID = #{listId} /* param : listId */
-                                                      AND A.EXPO_YN = 'Y' /* 전시여부 */
-                                                      AND A.STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */                                             
+                                                   SELECT TENANT_ID
+                                                         ,PROD_ID
+                                                         ,MENU_ID
+                                                         ,EXPO_ORD_ALWAYS_YN
+                                                         ,EXPO_ORD
+                                                         ,EXPO_ORD_SUB
+                                                     FROM TB_DP_LIST_PROD                                       
+                                                    WHERE TENANT_ID = #{tenantId} /* header param : tenantId */ 
+                                                      AND LIST_ID = #{listId} /* param : listId */
+                                                      AND EXPO_YN = 'Y' /* 전시여부 */
+                                                      AND STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */                                             
                                                  ) A
                                                  ,TB_DP_PROD B
                                                  ,TB_DP_MENU_CATEGORY_PROD_MAPG E
@@ -140,7 +145,7 @@
                                               AND K.USE_YN = 'Y'
                                               AND I.EXPO_YN = 'Y' /* 노출여부 */
                                          ) IA
-                                         ORDER BY IA.EXPO_ORD
+                                         ORDER BY IA.EXPO_ORD_ALWAYS_YN DESC, IA.EXPO_ORD, IA.EXPO_ORD_SUB
                                  ) JA          
                             WHERE JA.RN <![CDATA[ <= ]]> 2 
                          ) TA
