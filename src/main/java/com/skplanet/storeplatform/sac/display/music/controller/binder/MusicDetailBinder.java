@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.music.controller.binder;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetail;
@@ -28,5 +29,5 @@ public interface MusicDetailBinder {
 
     void mapMenu(Product product, List<MenuItem> menuList);
 
-    void mapBasicInfo(Product product, MusicDetail musicDetail);
+    void mapBasicInfo(Product product, MusicDetail musicDetail, List<Point> pointList);
 }

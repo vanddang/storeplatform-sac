@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.music.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 
 import java.util.List;
@@ -20,7 +21,8 @@ public class MusicDetailComposite extends CommonInfo {
     private List<MenuItem> menuList;
     private List<SubContent> contentList;
     private List<RelatedProduct> relatedProductList;
-
+    private List<Point> pointList;
+    
     public MusicDetail getMusicDetail() {
         return musicDetail;
     }
@@ -52,4 +54,13 @@ public class MusicDetailComposite extends CommonInfo {
     public void setRelatedProductList(List<RelatedProduct> relatedProductList) {
         this.relatedProductList = relatedProductList;
     }
+
+	public List<Point> getPointList() {
+		return pointList;
+	}
+
+	public void setPointList(List<Point> pointList) {
+		this.pointList = pointList;
+	}
+    
 }

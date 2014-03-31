@@ -41,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chap
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
@@ -49,6 +50,7 @@ import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
 
@@ -369,6 +371,31 @@ public class EpubServiceImpl implements EpubService {
 		product.setBook(this.mapBook(mapperVO));
 		
 		product.setDateList(mapDateList(mapperVO, sdf));
+		
+        //tmembership 할인율
+        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(mapperVO.getTenantId(), mapperVO.getTopMenuId());
+        if(tmembershipDcInfo != null) {
+        	List<Point> pointList = null; 
+        	
+        	if(tmembershipDcInfo.getNormalDcRate() != null) {
+        		pointList = new ArrayList<Point>();
+		        Point point = new Point();
+		        point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
+		        point.setType(DisplayConstants.DC_RATE_TYPE_NORMAL);
+		        point.setDiscountRate(tmembershipDcInfo.getNormalDcRate());
+		        pointList.add(point);
+        	}
+        	if(tmembershipDcInfo.getFreepassDcRate() != null) {
+        		if(pointList == null) pointList = new ArrayList<Point>();
+        		Point point = new Point();
+        		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
+        		point.setType(DisplayConstants.DC_RATE_TYPE_FREEPASS);
+        		point.setDiscountRate(tmembershipDcInfo.getFreepassDcRate());
+        		pointList.add(point);
+        	}
+	        
+        	product.setPointList(pointList);
+        }
 	}
 
     /**

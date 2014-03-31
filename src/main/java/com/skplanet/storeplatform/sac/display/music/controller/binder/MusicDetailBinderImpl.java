@@ -98,7 +98,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
     }
 
     @Override
-    public void mapBasicInfo(Product product, MusicDetail musicDetail) {
+    public void mapBasicInfo(Product product, MusicDetail musicDetail, List<Point> pointList) {
 
         product.setIdentifierList(new ArrayList<Identifier>());
         product.getIdentifierList().add(new Identifier("channel", musicDetail.getChnlId()));
@@ -138,6 +138,11 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         product.setDateList(new ArrayList<Date>());
         if(StringUtils.isNotEmpty(musicDetail.getIssueDay())) {
             product.getDateList().add(new Date("date/issue", DateUtils.parseDate(musicDetail.getIssueDay())));
+        }
+        
+        // tmembership 할인율
+        if(pointList != null) {
+        	product.setPointList(pointList);
         }
     }
 }

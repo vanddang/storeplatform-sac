@@ -9,12 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.display.music.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.display.music.vo.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +26,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 
 /**
  * 음악 상세보기
@@ -71,6 +77,40 @@ public class MusicServiceImpl implements MusicService {
         relProdListReq.put("metaCodes", MUSIC_RELATED_PROD_META_CLS);
         List<RelatedProduct> relProdList = this.commonDAO.queryForList("MusicDetail.getRelatedProductList", relProdListReq, RelatedProduct.class);
 
+        
+        String topMenuId = "";
+        for (MenuItem mi : menuList) {
+            if(mi.isInfrMenu()) {
+            	topMenuId = mi.getMenuId();
+            	break;
+            }
+		}
+        
+        //tmembership 할인율
+        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), topMenuId);
+        if(tmembershipDcInfo != null) {
+        	List<Point> pointList = null; 
+        	
+        	if(tmembershipDcInfo.getNormalDcRate() != null) {
+        		pointList = new ArrayList<Point>();
+		        Point point = new Point();
+		        point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
+		        point.setType(DisplayConstants.DC_RATE_TYPE_NORMAL);
+		        point.setDiscountRate(tmembershipDcInfo.getNormalDcRate());
+		        pointList.add(point);
+        	}
+        	if(tmembershipDcInfo.getFreepassDcRate() != null) {
+        		if(pointList == null) pointList = new ArrayList<Point>();
+        		Point point = new Point();
+        		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
+        		point.setType(DisplayConstants.DC_RATE_TYPE_FREEPASS);
+        		point.setDiscountRate(tmembershipDcInfo.getFreepassDcRate());
+        		pointList.add(point);
+        	}
+	        
+        	detailComposite.setPointList(pointList);
+        }
+        
         detailComposite.setMusicDetail(musicDetail);
 		detailComposite.setMenuList(menuList);
 		detailComposite.setContentList(contentList);
