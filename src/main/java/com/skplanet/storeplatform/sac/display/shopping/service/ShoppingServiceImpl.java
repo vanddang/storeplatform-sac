@@ -55,6 +55,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Promotion;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
@@ -67,6 +68,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -105,6 +107,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 	@Autowired
 	private ShoppingInfoGenerator shoppingGenerator;
+
+	@Autowired
+	private DisplayCommonService commonService;
 
 	/**
 	 * 쇼핑 추천/인기 상품 리스트 조회.
@@ -1649,6 +1654,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// MenuList 생성
 					List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
 
+					// 티멤버십 DC 정보
+					TmembershipDcInfo info = this.commonService.getTmembershipDcRateForMenu(tenantHeader.getTenantId(),
+							shopping.getTopMenuId());
+					Point point = this.commonGenerator.generatePoint(info);
+
 					// Title 생성
 					Title title = this.commonGenerator.generateTitle(shopping);
 
@@ -1924,6 +1934,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 채널 상품 판매 상태 코드
 					product.setProductExplain(shopping.getProdDtlDesc());
 					product.setMenuList(menuList);
+					product.setPoint(point);
 					product.setTitle(title);
 					product.setSourceList(sourceList);
 					product.setAccrual(accrual);
