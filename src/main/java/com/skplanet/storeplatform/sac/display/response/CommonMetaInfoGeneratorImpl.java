@@ -747,7 +747,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Override
 	public Point generatePoint(TmembershipDcInfo metaInfo) {
 		Point point = new Point();
-		point.setName(DisplayConstants.DP_TMEMBERSHIP_NAME);
+		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
 		point.setDiscountRate(metaInfo.getDcRate());
 		return point;
 	}
