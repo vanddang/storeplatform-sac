@@ -24,8 +24,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Appzine;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.appzine.vo.AppzineDetail;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
 
 /**
  * AppzineDetailService 인터페이스(CoreStoreBusiness) 구현체
@@ -40,6 +42,12 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	CommonMetaInfoGeneratorImpl commonMetaInfo;
+
+	@Autowired
+	private DisplayCommonService commonService;
 
 	/**
 	 * <pre>
@@ -78,14 +86,8 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 			 * DateList
 			 */
 			dateList = new ArrayList<Date>();
-			date = new Date();
-			date.setType("date/issue");
-			date.setText(DateUtils.parseDate(appzineDetail.getIssuday()));
-			dateList.add(date);
-			date = new Date();
-			date.setType("date/reg");
-			date.setText(DateUtils.parseDate(appzineDetail.getRegDt()));
-			dateList.add(date);
+			dateList.add(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_ISSUE, appzineDetail.getIssuday()));
+			dateList.add(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_REG, appzineDetail.getRegDt()));
 			appzine.setDateList(dateList);
 
 			/*
@@ -121,5 +123,4 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 
 		return appzineDetailSacRes;
 	}
-
 }

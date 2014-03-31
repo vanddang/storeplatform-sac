@@ -76,6 +76,7 @@
 		        , A.REG_DT 
 		        , A.UPD_ID 
 		        , A.UPD_DT  
+                , ROWNUM AS RNK
 		    FROM 
 		        TB_DP_TENANT_MENU A
 		        , TB_DP_MENU_CATEGORY B
@@ -101,6 +102,7 @@
 		            AND  D.PROD_STATUS_CD = 'PD000403' /* PD000403 : 판매중 */
 		            AND  D.EXPO_YN = 'Y' /* Y : 노출 (노출여부) */
 		            AND  A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+                    AND  B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
 		            AND  D.TENANT_ID = #{tenantId} /* 테넌트ID */
 		            AND  E.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
 		            GROUP BY A.MENU_ID
@@ -118,13 +120,16 @@
 		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
 		    ORDER SIBLINGS BY EXPO_ORD
 		) A
+        ORDER BY A.RNK
     </select>
 
     <!-- 세부 카테고리정보 조회 - 뮤직 -->
     <select id="selectMusicSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT /* MenuCategoryMapper.xml, selectMusicSubCategoryList, SAC 전시 , 2014-03-07 */
 		    COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
-            , A.MENU_PROD_CNT
+            , DECODE(A.INFR_MENU_YN, 'Y'
+                , SUM(A.MENU_PROD_CNT) OVER ( PARTITION BY SUBSTR(A.MENU_ID, 0, 7 ) )
+                , A.MENU_PROD_CNT) MENU_PROD_CNT
             , A.TENANT_ID 
             , A.MENU_ID 
             , A.SYSTEM_ID 
@@ -194,6 +199,7 @@
 		        , A.REG_DT 
 		        , A.UPD_ID 
 		        , A.UPD_DT  
+                , ROWNUM AS RNK
 		    FROM 
 		        TB_DP_TENANT_MENU A
 		        , TB_DP_MENU_CATEGORY B
@@ -229,6 +235,7 @@
 		                    )
 		                AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
 		                AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+                        AND B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
 		                AND (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
 		                GROUP BY A.MENU_ID
 		            ) C
@@ -245,13 +252,16 @@
 		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
 		    ORDER SIBLINGS BY EXPO_ORD
 		) A
+        ORDER BY A.RNK
     </select>
 
     <!-- 세부 카테고리정보 조회 - 멀티미디어 -->
     <select id="selectMultiSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT /* MenuCategoryMapper.xml, selectMultiSubCategoryList, SAC 전시 , 2014-03-07 */
 		    COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
-            , A.MENU_PROD_CNT
+            , DECODE(A.INFR_MENU_YN, 'Y'
+                , SUM(A.MENU_PROD_CNT) OVER ( PARTITION BY SUBSTR(A.MENU_ID, 0, 7 ) )
+                , A.MENU_PROD_CNT) MENU_PROD_CNT
             , A.TENANT_ID 
             , A.MENU_ID 
             , A.SYSTEM_ID 
@@ -321,6 +331,7 @@
 		        , A.REG_DT 
 		        , A.UPD_ID 
 		        , A.UPD_DT  
+                , ROWNUM AS RNK
 		    FROM 
 		        TB_DP_TENANT_MENU A
 		        , TB_DP_MENU_CATEGORY B
@@ -371,6 +382,7 @@
 		                    
 		                    AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
 		                    AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+                            AND B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
 		                    AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
 		                ) A
 		                GROUP BY A.MENU_ID
@@ -388,6 +400,7 @@
 		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
 		    ORDER SIBLINGS BY EXPO_ORD
 		) A
+        ORDER BY A.RNK
     </select>
 
     <!-- 세부 카테고리정보 조회 - 쇼핑 -->
@@ -464,6 +477,7 @@
 		        , A.REG_DT 
 		        , A.UPD_ID 
 		        , A.UPD_DT  
+                , ROWNUM AS RNK
 		    FROM 
 		        TB_DP_TENANT_MENU A
 		        , TB_DP_MENU_CATEGORY B
@@ -507,6 +521,7 @@
                             AND (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
                             AND G.TENANT_ID = #{tenantId} /* 테넌트ID */
                             AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+                            AND C.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
 		                ) A
 		                GROUP BY A.MENU_ID
 		            ) C
@@ -523,6 +538,7 @@
 		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
 		    ORDER SIBLINGS BY EXPO_ORD
 		) A
+        ORDER BY A.RNK
     </select>
          
 </mapper>
