@@ -810,6 +810,7 @@ public class SellerServiceImpl implements SellerService {
 	/**
 	 * <pre>
 	 * 2.2.16. 판매자 회원 전환 신청.
+	 * [정산정보승인요청/전환신청]
 	 * </pre>
 	 * 
 	 * @param header
@@ -837,15 +838,6 @@ public class SellerServiceImpl implements SellerService {
 						.getSellerSubStatus())) {
 			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
 					searchSellerResponse.getSellerMbr().getSellerSubStatus());
-		}
-
-		// 법인 / BP
-		if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS, searchSellerResponse
-				.getSellerMbr().getSellerClass())
-				|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_BP, searchSellerResponse
-						.getSellerMbr().getSellerCategory())) {
-			throw new StorePlatformException("SAC_MEM_2004", searchSellerResponse.getSellerMbr().getSellerCategory(),
-					searchSellerResponse.getSellerMbr().getSellerClass());
 		}
 
 		UpgradeSellerRequest upgradeSellerRequest = new UpgradeSellerRequest();
