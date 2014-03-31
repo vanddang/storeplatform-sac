@@ -20,53 +20,21 @@ public class PurchaseProductCountSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private Integer totCnt;
-	private Integer successCnt;
-	private Integer failCnt;
+	private String updId;
 
 	/**
-	 * @return the totCnt
+	 * @return the updId
 	 */
-	public Integer getTotCnt() {
-		return this.totCnt;
+	public String getUpdId() {
+		return this.updId;
 	}
 
 	/**
-	 * @param totCnt
-	 *            the totCnt to set
+	 * @param updId
+	 *            the updId to set
 	 */
-	public void setTotCnt(Integer totCnt) {
-		this.totCnt = totCnt;
-	}
-
-	/**
-	 * @return the successCnt
-	 */
-	public Integer getSuccessCnt() {
-		return this.successCnt;
-	}
-
-	/**
-	 * @param successCnt
-	 *            the successCnt to set
-	 */
-	public void setSuccessCnt(Integer successCnt) {
-		this.successCnt = successCnt;
-	}
-
-	/**
-	 * @return the failCnt
-	 */
-	public Integer getFailCnt() {
-		return this.failCnt;
-	}
-
-	/**
-	 * @param failCnt
-	 *            the failCnt to set
-	 */
-	public void setFailCnt(Integer failCnt) {
-		this.failCnt = failCnt;
+	public void setUpdId(String updId) {
+		this.updId = updId;
 	}
 
 }
