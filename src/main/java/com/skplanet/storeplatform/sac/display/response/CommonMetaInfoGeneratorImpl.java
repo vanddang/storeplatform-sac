@@ -328,7 +328,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 */
 	@Override
 	public List<Source> generateDownloadSourceList(MetaInfo metaInfo) {
-		Source source = new Source();
+		Source source = null;
 		List<Source> sourceList = new ArrayList<Source>();
 
 		source = this.generateSource(metaInfo.getImagePath());
