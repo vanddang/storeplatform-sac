@@ -30,7 +30,9 @@
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
+                               ,M.EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
+                               ,M.EXPO_ORD_SUB
                                ,I.REG_DT   
                           FROM 
                                   TB_DP_SHPG_BRAND A
@@ -50,7 +52,9 @@
                                           , TDLP.LIST_ID
                                           , TDLP.MENU_ID
                                           , TDLP.PROD_ID
+                                          , TDLP.EXPO_ORD_ALWAYS_YN
                                           , TDLP.EXPO_ORD
+                                          , TDLP.EXPO_ORD_SUB
                                           , TDLP.PRCHS_QTY  
                                           , TDLP.DWLD_QTY                                      
                                       FROM  
@@ -130,7 +134,11 @@
                             )                      
                    ) 
                  WHERE NO =1
-                 ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
+                 ORDER BY 
+                      EXPO_ORD_ALWAYS_YN DESC
+                    , EXPO_ORD   
+                    , EXPO_ORD_SUB 
+                    , CATALOG_NM ASC
                ) 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>    
@@ -278,7 +286,9 @@
 				               ,'1' EXPO_ORD
 				               </if>
 				               <if test='req.orderedBy == "popular"'>                 
-				               ,M.EXPO_ORD
+                               ,M.EXPO_ORD_ALWAYS_YN
+                               ,M.EXPO_ORD
+                               ,M.EXPO_ORD_SUB   
 				               </if>                                                                                                                                                   
                           FROM 
                                   TB_DP_SHPG_BRAND A
@@ -299,7 +309,9 @@
                                           , TDLP.LIST_ID
                                           , TDLP.MENU_ID
                                           , TDLP.PROD_ID
+                                          , TDLP.EXPO_ORD_ALWAYS_YN
                                           , TDLP.EXPO_ORD
+                                          , TDLP.EXPO_ORD_SUB
                                           , TDLP.PRCHS_QTY  
                                           , TDLP.DWLD_QTY                                      
                                       FROM  
@@ -384,10 +396,16 @@
                    ) 
                  WHERE NO =1
                <if test='req.orderedBy == "recent"'>                 
-               ORDER BY REG_DT DESC, CATALOG_NM ASC
+               ORDER BY 
+                     REG_DT DESC
+                   , CATALOG_NM ASC
                </if>
                <if test='req.orderedBy == "popular"'>                 
-               ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
+               ORDER BY 
+                      EXPO_ORD_ALWAYS_YN DESC
+                    , EXPO_ORD   
+                    , EXPO_ORD_SUB 
+                    , CATALOG_NM ASC               
                </if>                   
                )
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
@@ -846,7 +864,9 @@
                                ,'1' EXPO_ORD
                                </if>
                                <if test='req.orderedBy == "popular"'>                 
+                               ,M.EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
+                               ,M.EXPO_ORD_SUB   
                                </if>                                    
                           FROM 
                                   TB_DP_SHPG_BRAND A
@@ -867,7 +887,9 @@
                                           , TDLP.LIST_ID
                                           , TDLP.MENU_ID
                                           , TDLP.PROD_ID
+                                          , TDLP.EXPO_ORD_ALWAYS_YN
                                           , TDLP.EXPO_ORD
+                                          , TDLP.EXPO_ORD_SUB
                                           , TDLP.PRCHS_QTY  
                                           , TDLP.DWLD_QTY                                      
                                       FROM  
@@ -952,10 +974,16 @@
                    ) 
                  WHERE NO =1
                <if test='req.orderedBy == "recent"'>                 
-               ORDER BY REG_DT DESC, CATALOG_NM ASC
+               ORDER BY 
+                      REG_DT DESC
+                    , CATALOG_NM ASC
                </if>
                <if test='req.orderedBy == "popular"'>                 
-               ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
+               ORDER BY 
+                      EXPO_ORD_ALWAYS_YN DESC
+                    , EXPO_ORD   
+                    , EXPO_ORD_SUB 
+                    , CATALOG_NM ASC               
                </if>                     
                ) 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
@@ -980,7 +1008,9 @@
                   <if test="themeId != null">
                    AND LIST_ID = #{themeId}
                   </if>                           
-                 ORDER BY EXPO_ORD     
+                 ORDER BY 
+                      EXPO_ORD   
+                    , EXPO_ORD_SUB                       
             )KK
         )
          <if test="themeId == null">
@@ -1016,7 +1046,9 @@
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
+                               ,M.EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
+                               ,M.EXPO_ORD_SUB      
                                ,I.REG_DT   
                           FROM 
                                   TB_DP_SHPG_BRAND A
@@ -1098,7 +1130,11 @@
                             )                      
                    ) 
                  WHERE NO =1
-                 ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
+                 ORDER BY 
+                      EXPO_ORD_ALWAYS_YN DESC
+                    , EXPO_ORD   
+                    , EXPO_ORD_SUB 
+                    , CATALOG_NM ASC                        
                ) 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>    
@@ -1135,7 +1171,9 @@
                                ,'1' EXPO_ORD
                                </if>
                                <if test='req.orderedBy == "popular"'>                 
+                               ,M.EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
+                               ,M.EXPO_ORD_SUB    
                                </if>                                                                                                                                                   
                           FROM 
                                   TB_DP_SHPG_BRAND A
@@ -1156,7 +1194,9 @@
                                           , TDLP.LIST_ID
                                           , TDLP.MENU_ID
                                           , TDLP.PROD_ID
+                                          , TDLP.EXPO_ORD_ALWAYS_YN
                                           , TDLP.EXPO_ORD
+                                          , TDLP.EXPO_ORD_SUB
                                           , TDLP.PRCHS_QTY  
                                           , TDLP.DWLD_QTY                                      
                                       FROM  
@@ -1242,10 +1282,16 @@
                    ) 
                  WHERE NO =1
                <if test='req.orderedBy == "recent"'>                 
-               ORDER BY REG_DT DESC, CATALOG_NM ASC
+               ORDER BY 
+                      REG_DT DESC
+                    , CATALOG_NM ASC
                </if>
                <if test='req.orderedBy == "popular"'>                 
-               ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
+               ORDER BY 
+                      EXPO_ORD_ALWAYS_YN DESC
+                    , EXPO_ORD   
+                    , EXPO_ORD_SUB 
+                    , CATALOG_NM ASC                   
                </if>                   
                )
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
@@ -1283,7 +1329,9 @@
                                ,'1' EXPO_ORD
                                </if>
                                <if test='req.orderedBy == "popular"'>                 
+                               ,M.EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
+                               ,M.EXPO_ORD_SUB     
                                </if>                                                                                                                                                   
                           FROM 
                                   TB_DP_SHPG_BRAND A
@@ -1305,7 +1353,9 @@
                                           , TDLP.LIST_ID
                                           , TDLP.MENU_ID
                                           , TDLP.PROD_ID
+                                          , TDLP.EXPO_ORD_ALWAYS_YN
                                           , TDLP.EXPO_ORD
+                                          , TDLP.EXPO_ORD_SUB
                                           , TDLP.PRCHS_QTY  
                                           , TDLP.DWLD_QTY                                      
                                       FROM  
@@ -1393,10 +1443,16 @@
                    ) 
                  WHERE NO =1
                <if test='req.orderedBy == "recent"'>                 
-               ORDER BY REG_DT DESC, CATALOG_NM ASC
+               ORDER BY 
+                      REG_DT DESC
+                    , CATALOG_NM ASC
                </if>
                <if test='req.orderedBy == "popular"'>                 
-               ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
+               ORDER BY 
+                      EXPO_ORD_ALWAYS_YN DESC
+                    , EXPO_ORD   
+                    , EXPO_ORD_SUB 
+                    , CATALOG_NM ASC                 
                </if>                   
                )
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
