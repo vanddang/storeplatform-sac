@@ -22,10 +22,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -428,4 +430,16 @@ public interface CommonMetaInfoGenerator {
 	 * @return Url
 	 */
 	public List<Url> generateUrlList(String type, String text);
+
+	/**
+	 * <pre>
+	 * 공통 tmembership 포인트.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Point
+	 */
+
+	public Point generatePoint(TmembershipDcInfo metaInfo);
 }

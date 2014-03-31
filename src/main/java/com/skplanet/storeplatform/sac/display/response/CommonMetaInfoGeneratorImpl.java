@@ -29,6 +29,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
@@ -37,6 +38,7 @@ import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -734,4 +736,20 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		urlList.add(url);
 		return urlList;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generatePoint(com.skplanet.storeplatform
+	 * .sac.display.common.vo.TmembershipDcInfo)
+	 */
+	@Override
+	public Point generatePoint(TmembershipDcInfo metaInfo) {
+		Point point = new Point();
+		point.setName("tmembership");
+		point.setDiscountRate(metaInfo.getDcRate());
+		return point;
+	}
+
 }
