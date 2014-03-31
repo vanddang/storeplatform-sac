@@ -552,7 +552,9 @@
                                              , PROD_ID
                                              , MENU_ID
                                              , REG_DT
+                                             , EXPO_ORD_ALWAYS_YN                                             
                                              , EXPO_ORD
+                                             , EXPO_ORD_SUB                                             
                                              , PRCHS_QTY
                                           FROM TB_DP_LIST_PROD          
                                          WHERE 1=1
@@ -603,7 +605,9 @@
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
-                                 ORDER BY A.EXPO_ORD
+                                 ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
+                                        , A.EXPO_ORD
+                                        , A.EXPO_ORD_SUB
                                         , B.REG_DT
                                         , D.PROD_NM
                                ) JA
@@ -680,7 +684,9 @@
                                              , PROD_ID
                                              , MENU_ID
                                              , REG_DT
+                                             , EXPO_ORD_ALWAYS_YN                                             
                                              , EXPO_ORD
+                                             , EXPO_ORD_SUB                                             
                                              , PRCHS_QTY
                                           FROM TB_DP_LIST_PROD          
                                          WHERE 1=1
@@ -731,7 +737,9 @@
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
-                                 ORDER BY A.EXPO_ORD
+                                 ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
+                                        , A.EXPO_ORD
+                                        , A.EXPO_ORD_SUB
                                         , B.REG_DT
                                         , D.PROD_NM
                                ) JA
@@ -808,7 +816,9 @@
                                              , PROD_ID
                                              , MENU_ID
                                              , REG_DT
+                                             , EXPO_ORD_ALWAYS_YN                                             
                                              , EXPO_ORD
+                                             , EXPO_ORD_SUB  
                                           FROM TB_DP_LIST_PROD          
                                          WHERE 1=1
                                            AND TENANT_ID = #{tenantId}
@@ -857,7 +867,9 @@
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
-                                 ORDER BY A.EXPO_ORD
+                                 ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
+                                        , A.EXPO_ORD
+                                        , A.EXPO_ORD_SUB
                                         , B.REG_DT
                                         , D.PROD_NM
                                ) JA
@@ -934,7 +946,9 @@
                                              , PROD_ID
                                              , MENU_ID
                                              , REG_DT
+                                             , EXPO_ORD_ALWAYS_YN                                             
                                              , EXPO_ORD
+                                             , EXPO_ORD_SUB  
                                              , STD_DT
                                           FROM TB_DP_LIST_PROD          
                                          WHERE 1=1
@@ -984,7 +998,9 @@
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
-                                 ORDER BY A.EXPO_ORD
+                                 ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
+                                        , A.EXPO_ORD
+                                        , A.EXPO_ORD_SUB 
                                         , B.REG_DT
                                         , D.PROD_NM
                                ) JA
@@ -1039,7 +1055,9 @@
 		                               (
 		                                SELECT ROW_NUMBER() OVER( PARTITION BY C.PROD_ID, C.PART_PROD_ID ORDER BY F.PROD_AMT DESC ) AS RN
 		                                     , A.TENANT_ID
+                                             , A.EXPO_ORD_ALWAYS_YN		                                     
 		                                     , A.EXPO_ORD
+                                             , A.EXPO_ORD_SUB		                                     
 		                                     , A.EXPO_START_DT
 		                                     , B.PROD_CHRG_YN
 		                                     , I.PROD_ID
@@ -1059,7 +1077,9 @@
 		                                                PROD_ID ,
 		                                                MENU_ID ,
 		                                                REG_DT ,
+                                                        EXPO_ORD_ALWAYS_YN ,		                                                
 		                                                EXPO_ORD ,
+                                                        EXPO_ORD_SUB ,		                                                
 		                                                EXPO_START_DT                        
 		                                          FROM  TB_DP_LIST_PROD
 		                                         WHERE  1=1
@@ -1135,14 +1155,18 @@
 		                          WHERE RN = 1
 		                          <if test ="topMenuId == 'DP13'">
 		                          /* 이북일때 정렬 */                          
-		                          ORDER BY EXPO_ORD
+		                          ORDER BY EXPO_ORD_ALWAYS_YN DESC
+                                         , EXPO_ORD
+                                         , EXPO_ORD_SUB
 		                                 , PRCHS_CNT
 		                                 , EXPO_START_DT DESC
 		                                 , PROD_NM DESC           
 		                          </if>
 		                          <if test ="topMenuId == 'DP14'">              
 		                          /* 코믹일때 정렬 */                          
-		                          ORDER BY EXPO_ORD
+		                          ORDER BY EXPO_ORD_ALWAYS_YN DESC
+		                                 , EXPO_ORD
+		                                 , EXPO_ORD_SUB
 		                                 , PRCHS_CNT DESC
 		                                 , EXPO_START_DT DESC
 		                                 , PROD_NM
@@ -1191,6 +1215,7 @@
 		                       , IA.*
 		                   FROM  (SELECT  ROW_NUMBER() OVER(PARTITION BY CH_A.PROD_ID ORDER BY EP_I.PROD_AMT DESC) AS RNUM
 		                                , CH_A.TENANT_ID
+		                                , CH_A.EXPO_ORD_ALWAYS_YN
 		                                , CH_A.EXPO_ORD
 		                                , CH_A.EXPO_ORD_SUB
 		                                , CH_B.MENU_ID
@@ -1279,6 +1304,9 @@
                                      </if>		                             
 		                             AND  EP_M.TENANT_ID = #{tenantId}
 		                             AND  EP_M.PROD_STATUS_CD = 'PD000403'
+		                           ORDER BY CH_A.EXPO_ORD_ALWAYS_YN DESC
+		                                  , CH_A.EXPO_ORD
+		                                  , CH_A.EXPO_ORD_SUB
 		                         ) IA
 		                  WHERE IA.RNUM = 1
 		                ) JA
@@ -1326,8 +1354,9 @@
 		                       , IA.*
 		                   FROM  (SELECT  ROW_NUMBER() OVER(PARTITION BY CH_A.PROD_ID ORDER BY EP_J.REG_DT DESC) AS RNUM
 		                                , CH_A.TENANT_ID
-		                                , CH_A.EXPO_ORD
-		                                , CH_A.EXPO_ORD_SUB
+                                        , CH_A.EXPO_ORD_ALWAYS_YN
+                                        , CH_A.EXPO_ORD
+                                        , CH_A.EXPO_ORD_SUB
 		                                , CH_B.MENU_ID
 		                                , CH_B.TOP_MENU_ID
 		                                , CH_A.PROD_ID
@@ -1405,6 +1434,9 @@
 		                             AND  (CASE WHEN (NVL(EP_I.DRM_YN, 'N') = 'Y' AND NVL(EP_L.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 ELSE 1 END) = 1
 		                             AND  EP_M.TENANT_ID = #{tenantId}
 		                             AND  EP_M.PROD_STATUS_CD = 'PD000403'
+                                   ORDER BY CH_A.EXPO_ORD_ALWAYS_YN DESC
+                                          , CH_A.EXPO_ORD
+                                          , CH_A.EXPO_ORD_SUB		                             
 		                         ) IA
 		                  WHERE IA.RNUM = 1
 		                ) JA

@@ -15,7 +15,9 @@
                          SELECT A.PROD_ID
                               , B.TOP_MENU_ID
                               , B.PROD_ID AS CHNL_PROD_ID
+                              , A.EXPO_ORD_ALWAYS_YN
                               , A.EXPO_ORD
+                              , A.EXPO_ORD_SUB
                               , A.REG_DT
 		                   FROM TB_DP_LIST_PROD         A
 		                      , TB_DP_PROD              B
@@ -96,14 +98,18 @@
                          SELECT PROD_ID
                               , TOP_MENU_ID
                               , CATALOG_ID AS CHNL_PROD_ID
+                              , EXPO_ORD_ALWAYS_YN                              
                               , EXPO_ORD
+                              , EXPO_ORD_SUB                              
                               , REG_DT
                            FROM
                                (
                                  SELECT PROD_ID
                                       , CATALOG_ID
                                       , TOP_MENU_ID
-                                      , EXPO_ORD
+                                      ,	EXPO_ORD_ALWAYS_YN
+                                      ,	EXPO_ORD
+                                      ,	EXPO_ORD_SUB
                                       , REG_DT
 		                           FROM 
 		                                (
@@ -114,8 +120,10 @@
 		                                       , ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
 		                                       , K.TENANT_ID 
 		                                       , H.PROD_ID 
-		                                       , H.PART_PROD_ID  
+		                                       , H.PART_PROD_ID
+                                               , M.EXPO_ORD_ALWAYS_YN		                                         
 		                                       , M.EXPO_ORD
+                                               , M.EXPO_ORD_SUB		                                       
 		                                       , I.REG_DT
 		                                       , J.TOP_MENU_ID
 		                                   FROM  TB_DP_SHPG_BRAND         A
@@ -135,7 +143,9 @@
 		                                                 , TDLP.LIST_ID
 		                                                 , TDLP.MENU_ID
 		                                                 , TDLP.PROD_ID
+		                                                 , TDLP.EXPO_ORD_ALWAYS_YN
 		                                                 , TDLP.EXPO_ORD
+		                                                 , TDLP.EXPO_ORD_SUB
 		                                                 , TDLP.PRCHS_QTY  
 		                                                 , TDLP.DWLD_QTY                                      
 		                                             FROM  TB_DP_LIST_PROD TDLP
@@ -205,6 +215,6 @@
 		               ) JA           
 		       ) KA
 		  WHERE KA.RNUM BETWEEN #{offset} AND #{count}
-          ORDER BY EXPO_ORD ASC, REG_DT DESC		          
+          ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD ASC,EXPO_ORD_SUB ASC, REG_DT DESC		          
     </select>
 </mapper>
