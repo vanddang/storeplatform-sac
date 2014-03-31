@@ -744,6 +744,7 @@ public class MemberCommonComponent {
 			 * 미지원 단말 setting
 			 */
 			LOGGER.debug("## 미지원 단말 세팅.");
+			LOGGER.info("<getDeviceBaseInfo> NOT SUPPORT DEVICE. mdn : {}, model : {}", deviceId, model);
 			majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
 			majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
 			majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
