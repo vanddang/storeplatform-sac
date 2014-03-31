@@ -83,7 +83,7 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		app.setVersion(prodVer);
 		app.setSize(fileSize);
 		app.setSupportedOs(supportOs);
-		app.setScId(scid);
+		app.setScid(scid);
 		app.setFilePath(filePath);
 
 		return app;
