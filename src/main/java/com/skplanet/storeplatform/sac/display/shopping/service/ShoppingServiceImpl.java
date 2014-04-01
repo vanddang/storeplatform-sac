@@ -1876,16 +1876,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 										if (optionShopping.getSubYn().equals("N")) { // 옵션 2 인 경우
 											subSelectOption = new SubSelectOption();
 											subSelectOption.setId(optionShopping.getPartProdId());
-											// 옵션2 상품 ID
-											subSelectOption.setSubId(optionShopping.getProdNm());
 
 											// 옵션2 상품 정보 (상품명)
 											option2Title = new Title();
 											option2Title.setText(optionShopping.getOptPdNm());
-											subSelectOption.setSubTitle(option2Title);
+											subSelectOption.setTitle(option2Title);
 											// 옵션2 상품 가격정보
 											Price option2Price = this.shoppingGenerator.generatePrice(optionShopping);
-											subSelectOption.setSubPrice(option2Price);
+											subSelectOption.setPrice(option2Price);
 											subSelectOption.setItemCode(optionShopping.getItemCode());
 											subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
 											subSelectOptionList.add(subSelectOption);
