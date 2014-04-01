@@ -69,6 +69,11 @@ public class DetailInformationForProductRes extends CommonInfo {
 		this.sellerMbrList = sellerMbrList;
 	}
 
+	/**
+	 * 판매자 정보.
+	 * 
+	 * Updated on : 2014. 4. 1. Updated by : 김다슬, 인크로스.
+	 */
 	@JsonSerialize(include = Inclusion.NON_NULL)
 	public static class SellerMbrAppSac {
 		/** 상하구분 . */
@@ -80,7 +85,7 @@ public class DetailInformationForProductRes extends CommonInfo {
 		/** 판매자 Email . */
 		public String sellerEmail;
 		/** 통신판매업 신고번호 . */
-		public String bizRegNumbe;
+		public String bizRegNumber;
 		/** 주소 . */
 		public String sellerAddress;
 		/** 연락처 . */
@@ -147,18 +152,18 @@ public class DetailInformationForProductRes extends CommonInfo {
 		}
 
 		/**
-		 * @return the bizRegNumbe
+		 * @return the bizRegNumber
 		 */
-		public String getBizRegNumbe() {
-			return this.bizRegNumbe;
+		public String getBizRegNumber() {
+			return this.bizRegNumber;
 		}
 
 		/**
-		 * @param bizRegNumbe
-		 *            the bizRegNumbe to set
+		 * @param bizRegNumber
+		 *            the bizRegNumber to set
 		 */
-		public void setBizRegNumbe(String bizRegNumbe) {
-			this.bizRegNumbe = bizRegNumbe;
+		public void setBizRegNumber(String bizRegNumber) {
+			this.bizRegNumber = bizRegNumber;
 		}
 
 		/**
