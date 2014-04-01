@@ -214,12 +214,23 @@
 		                    , TB_DP_TENANT_PROD D
 		                    , TB_DP_SPRT_DEVICE E
 		                    , TB_CM_DEVICE F
+        ,TB_DP_PROD G /* 추가 */
+        ,TB_DP_TENANT_PROD I /* 추가 */
+        ,TB_DP_PROD_RSHP J /* 추가 */
 		                WHERE A.MENU_ID = B.MENU_ID
+      AND C.PROD_ID = G.PROD_ID /* 추가 */
+      AND C.PROD_ID = I.PROD_ID /* 추가 */
+      AND C.PROD_ID = J.PART_PROD_ID /* 추가 */
+      AND G.META_CLSF_CD = 'CT25' /* 추가 */
+      AND G.CONTENTS_TYPE_CD = 'PD002502' /* 추가 */
+      AND G.SVC_GRP_CD = 'DP000203' /* 추가 */
+      AND I.PROD_STATUS_CD = 'PD000403' /* 추가 */
 		                AND A.MENU_ID = C.CHART_GENRE_CD
 		                AND B.PROD_ID = C.PROD_ID
 		                AND C.PROD_ID = D.PROD_ID
 		                AND B.PROD_ID = E.PROD_ID
 		                AND E.DEVICE_MODEL_CD = F.DEVICE_MODEL_CD
+        AND D.TENANT_ID = I.TENANT_ID  /* 추가 */
 		                AND A.MENU_DEPTH IN (2, 3)
 		                AND A.USE_YN = 'Y'
 		                AND B.USE_YN = 'Y'
@@ -227,17 +238,68 @@
 		                AND F.USE_YN = 'Y'
 		                AND F.MUSIC_SPRT_YN = 'Y'
 		                AND D.PROD_STATUS_CD = 'PD000403'
+        AND C.CHART_CLSF_CD = 'DP004905' /* 추가 */
 		                AND C.RANK_START_DAY = ( 
 		                    SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD')) 
 		                    FROM TB_DP_BATCH_COMPT A1
 		                    WHERE A1.TENANT_ID = D.TENANT_ID
-		                    AND A1.BATCH_ID = CONCAT('MELON_',C.CHART_CLSF_CD)
+		                    AND A1.BATCH_ID = 'MELON_DP004905' /* 추가 */
 		                    )
 		                AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
 		                AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
                         AND B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
 		                AND (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
 		                GROUP BY A.MENU_ID
+		                UNION ALL
+		                
+                        SELECT 
+                            'DP16003001'
+                            , COUNT(A.MENU_ID) MENU_PROD_CNT
+                        FROM
+                            TB_DP_MENU_CATEGORY A
+                            , TB_DP_MENU_CATEGORY_PROD_MAPG B
+                            , TB_DP_MUSIC_CHART C
+                            , TB_DP_TENANT_PROD D
+                            , TB_DP_SPRT_DEVICE E
+                            , TB_CM_DEVICE F
+        ,TB_DP_PROD G /* 추가 */
+        ,TB_DP_TENANT_PROD I /* 추가 */
+        ,TB_DP_PROD_RSHP J /* 추가 */
+                        WHERE A.MENU_ID = B.MENU_ID
+      AND C.PROD_ID = G.PROD_ID /* 추가 */
+      AND C.PROD_ID = I.PROD_ID /* 추가 */
+      AND C.PROD_ID = J.PART_PROD_ID /* 추가 */
+      AND G.META_CLSF_CD = 'CT25' /* 추가 */
+      AND G.CONTENTS_TYPE_CD = 'PD002502' /* 추가 */
+      AND G.SVC_GRP_CD = 'DP000203' /* 추가 */
+      AND I.PROD_STATUS_CD = 'PD000403' /* 추가 */
+                        /* AND A.MENU_ID = C.CHART_GENRE_CD */
+                        AND B.PROD_ID = C.PROD_ID
+                        AND C.PROD_ID = D.PROD_ID
+                        AND B.PROD_ID = E.PROD_ID
+                        AND E.DEVICE_MODEL_CD = F.DEVICE_MODEL_CD
+        AND D.TENANT_ID = I.TENANT_ID  /* 추가 */
+                        AND A.MENU_DEPTH IN (2, 3)
+                        AND A.USE_YN = 'Y'
+                        AND B.USE_YN = 'Y'
+                        AND D.EXPO_YN = 'Y'
+                        AND F.USE_YN = 'Y'
+                        AND F.MUSIC_SPRT_YN = 'Y'
+                        AND D.PROD_STATUS_CD = 'PD000403'
+        AND C.CHART_CLSF_CD = 'DP004904' /* 추가 */
+                        AND C.RANK_START_DAY = ( 
+                            SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD')) 
+                            FROM TB_DP_BATCH_COMPT A1
+                            WHERE A1.TENANT_ID = D.TENANT_ID
+                            AND A1.BATCH_ID = 'MELON_DP004904'
+                            )
+                        AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
+                        AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+                        AND B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
+                        AND (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
+                        
+                        
+                        
 		            ) C
 		    WHERE A.TENANT_MENU_ID = B.MENU_ID
 		    AND A.TENANT_MENU_ID = C.MENU_ID(+)
@@ -350,30 +412,30 @@
 		                        , TB_DP_PROD_RSHP E
 		                        , TB_DP_SPRT_DEVICE F
 		                        , TB_CM_DEVICE G
-                                , TB_DP_PROD H /* 채널 */ /* 추가 */
-                                , TB_DP_TENANT_PROD I /* 채널 */ /* 추가 */
+                                , TB_DP_PROD H /* 채널 */  /* 추가 */
+                                , TB_DP_TENANT_PROD I /* 채널 */  /* 추가 */
 		                    WHERE A.MENU_ID = B.MENU_ID
 		                    AND B.PROD_ID = E.PROD_ID
 		                    AND E.PART_PROD_ID = C.PROD_ID
 		                    AND E.PART_PROD_ID = D.PROD_ID
 		                    AND E.PART_PROD_ID = F.PROD_ID
-                            AND E.PROD_ID = H.PROD_ID /* 추가 */
-                            AND E.PROD_ID = I.PROD_ID /* 추가 */
+                            AND E.PROD_ID = H.PROD_ID  /* 추가 */
+                            AND E.PROD_ID = I.PROD_ID  /* 추가 */
 		                    AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
-                            AND D.TENANT_ID = I.TENANT_ID /* 추가 */
-                            AND A.TOP_MENU_ID = C.TOP_MENU_ID /* 추가 */
-                            AND A.TOP_MENU_ID = H.TOP_MENU_ID /* 추가 */
+                            AND D.TENANT_ID = I.TENANT_ID  /* 추가 */
+                            AND A.TOP_MENU_ID = C.TOP_MENU_ID  /* 추가 */
+                            AND A.TOP_MENU_ID = H.TOP_MENU_ID  /* 추가 */
 		                    AND A.USE_YN = 'Y'
 		                    AND B.USE_YN = 'Y'
 		                    AND G.USE_YN = 'Y'
 		                    AND D.EXPO_YN = 'Y'
-                            AND I.EXPO_YN = 'Y' /* 추가 */
+                            AND I.EXPO_YN = 'Y'  /* 추가 */
 		                    AND C.SVC_GRP_CD = 'DP000203'
-                            AND H.SVC_GRP_CD = 'DP000203' /* 추가 */
+                            AND H.SVC_GRP_CD = 'DP000203'  /* 추가 */
 		                    AND C.CONTENTS_TYPE_CD = 'PD002502'
-                            AND H.CONTENTS_TYPE_CD = 'PD002501' /* 추가 */
+                            AND H.CONTENTS_TYPE_CD = 'PD002501'  /* 추가 */
 		                    AND D.PROD_STATUS_CD = 'PD000403'
-                            AND I.PROD_STATUS_CD = 'PD000403' /* 추가 */
+                            AND I.PROD_STATUS_CD = 'PD000403'  /* 추가 */
 		                    AND E.PROD_RSHP_CD = 'DP010802'
 		                    
 		                    /* VOD */
@@ -512,37 +574,37 @@
                                 , TB_DP_PROD_RSHP E
                                 , TB_DP_SPRT_DEVICE F
                                 , TB_CM_DEVICE G
-                                , TB_DP_PROD H /* 채널 */ /* 추가 */
-                                , TB_DP_TENANT_PROD I /* 채널 */ /* 추가 */
-                                , TB_DP_LIST_PROD J /* 채널 */ /* 추가 */
+                                , TB_DP_PROD H /* 채널 */  /* 추가 */
+                                , TB_DP_TENANT_PROD I /* 채널 */  /* 추가 */
+                                , TB_DP_LIST_PROD J /* 채널 */  /* 추가 */
                             WHERE A.MENU_ID = B.MENU_ID
-                            AND A.MENU_ID = J.MENU_ID /* 추가 */
+                            AND A.MENU_ID = J.MENU_ID  /* 추가 */
                             AND B.PROD_ID = E.PROD_ID
                             AND E.PART_PROD_ID = C.PROD_ID
                             AND E.PART_PROD_ID = D.PROD_ID
                             AND E.PART_PROD_ID = F.PROD_ID
-                            AND E.PROD_ID = H.PROD_ID /* 추가 */
-                            AND E.PROD_ID = I.PROD_ID /* 추가 */
-                            AND E.PROD_ID = J.PROD_ID /* 추가 */
+                            AND E.PROD_ID = H.PROD_ID  /* 추가 */
+                            AND E.PROD_ID = I.PROD_ID  /* 추가 */
+                            AND E.PROD_ID = J.PROD_ID  /* 추가 */
                             AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
-                            AND D.TENANT_ID = J.TENANT_ID /* 추가 */
-                            AND D.TENANT_ID = I.TENANT_ID /* 추가 */
-                            AND A.TOP_MENU_ID = C.TOP_MENU_ID /* 추가 */
-                            AND A.TOP_MENU_ID = H.TOP_MENU_ID /* 추가 */
+                            AND D.TENANT_ID = J.TENANT_ID  /* 추가 */
+                            AND D.TENANT_ID = I.TENANT_ID  /* 추가 */
+                            AND A.TOP_MENU_ID = C.TOP_MENU_ID  /* 추가 */
+                            AND A.TOP_MENU_ID = H.TOP_MENU_ID  /* 추가 */
                             AND A.USE_YN = 'Y'
                             AND B.USE_YN = 'Y'
                             AND G.USE_YN = 'Y'
                             AND D.EXPO_YN = 'Y'
-                            AND I.EXPO_YN = 'Y' /* 추가 */
-                            AND J.EXPO_YN = 'Y' /* 추가 */
+                            AND I.EXPO_YN = 'Y'  /* 추가 */
+                            AND J.EXPO_YN = 'Y'  /* 추가 */
                             AND C.SVC_GRP_CD = 'DP000203'
-                            AND H.SVC_GRP_CD = 'DP000203' /* 추가 */
+                            AND H.SVC_GRP_CD = 'DP000203'  /* 추가 */
                             AND C.CONTENTS_TYPE_CD = 'PD002502'
-                            AND H.CONTENTS_TYPE_CD = 'PD002501' /* 추가 */
+                            AND H.CONTENTS_TYPE_CD = 'PD002501'  /* 추가 */
                             AND D.PROD_STATUS_CD = 'PD000403'
-                            AND I.PROD_STATUS_CD = 'PD000403' /* 추가 */
+                            AND I.PROD_STATUS_CD = 'PD000403'  /* 추가 */
                             AND E.PROD_RSHP_CD = 'DP010802'
-                            AND J.LIST_ID = 'TGR000000002' /* 추가 */
+                            AND J.LIST_ID = 'TGR000000002'  /* 추가 */
                             
                             /* VOD */
                             AND DECODE(NVL(C.DRM_YN, 'N'), 'N', 1, NVL(G.VIDEO_DRM_SPRT_YN, 'N'), 1, 0) = 1
