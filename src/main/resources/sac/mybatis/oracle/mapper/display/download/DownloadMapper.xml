@@ -620,7 +620,7 @@
 		                           AND  SYSDATE BETWEEN EP_J.APPLY_START_DT AND EP_J.APPLY_END_DT
                                    AND  (EP_K.DEVICE_MODEL_CD = #{deviceModelCd} OR EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd})
                                    AND  EP_L.DEVICE_MODEL_CD = #{deviceModelCd}
-		                           AND  DECODE(EP_L.EBOOK_SPRT_YN, 'Y', DECODE(CH_A.META_CLSF_CD, 'CT24', DECODE(EP_L.MAGAZINE_SPRT_YN, 'Y', 1, 0), 'CT26', DECODE(EP_L.MAGAZINE_SPRT_YN, 'Y', 1, 0), 1), 0) = 1
+		                           AND  EP_L.EBOOK_SPRT_YN = 'Y'
 		                           AND  EP_M.SALE_YN = 'Y'
                                    <if test='idType == "channel"'>
                                    AND  CH_A.PROD_ID = #{productId}
