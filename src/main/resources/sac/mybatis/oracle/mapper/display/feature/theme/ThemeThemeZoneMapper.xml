@@ -282,7 +282,8 @@
 	                  , TB_DP_MENU_CATEGORY C
 	                  , TB_DP_PROD D  
 	                  , TB_DP_TENANT_PROD E
-	                  , TB_DP_SPRT_DEVICE F
+                      , TB_CM_DEVICE F
+                      , TB_DP_SPRT_DEVICE G
 	            WHERE TDL.LIST_ID = TDLP.LIST_ID
                   AND TDLP.TENANT_ID = #{tenantId}
                   AND E.TENANT_ID = #{tenantId}
@@ -295,8 +296,10 @@
 	              AND B.MENU_ID = C.MENU_ID
 	              AND C.USE_YN = 'Y'
 	              AND D.PROD_ID = E.PROD_ID
-	              AND F.DEVICE_MODEL_CD = #{deviceModelCd}
-	              AND A.PART_PROD_ID = F.PROD_ID
+                  AND F.DEVICE_MODEL_CD = 'SHW-M110S'
+                  AND G.DEVICE_MODEL_CD = 'SHW-M110S'
+                  AND F.USE_YN = 'Y'
+                  AND A.PART_PROD_ID = G.PROD_ID
                   AND  (CASE WHEN D.TOP_MENU_ID = 'DP13' THEN CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
                              WHEN D.TOP_MENU_ID = 'DP14' THEN CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END
                              WHEN D.TOP_MENU_ID = 'DP15' THEN 0
