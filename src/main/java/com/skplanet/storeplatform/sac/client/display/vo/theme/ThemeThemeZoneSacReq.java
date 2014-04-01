@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class ThemeThemeZoneSacReq extends CommonInfo {
 
+	private static final long serialVersionUID = 1L;
 	private Integer offset = 1; // offset
 	private Integer count = 20; // count
 	private String tenantId; // 테넌트ID
@@ -35,6 +36,14 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 	private String prodGradeCd; // 상품 등급 코드
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
 	private String b2bProd; // B2B 상품 구분
+
+	// TB_CM_DEVICE 가능여부
+	private String ebookSprtYn;
+	private String magazineSprtYn;
+	private String comicSprtYn;
+	private String musicSprtYn;
+	private String hdvSprtYn;
+	private String videoDrmSprtYn;
 
 	// TODO osm1021 dummy data가 필요없어지면 삭제할것
 	private String dummy;
@@ -141,6 +150,96 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 
 	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
 		this.arrayProdGradeCd = arrayProdGradeCd;
+	}
+
+	/**
+	 * @return the ebookSprtYn
+	 */
+	public String getEbookSprtYn() {
+		return this.ebookSprtYn;
+	}
+
+	/**
+	 * @param ebookSprtYn
+	 *            the ebookSprtYn to set
+	 */
+	public void setEbookSprtYn(String ebookSprtYn) {
+		this.ebookSprtYn = ebookSprtYn;
+	}
+
+	/**
+	 * @return the magazineSprtYn
+	 */
+	public String getMagazineSprtYn() {
+		return this.magazineSprtYn;
+	}
+
+	/**
+	 * @param magazineSprtYn
+	 *            the magazineSprtYn to set
+	 */
+	public void setMagazineSprtYn(String magazineSprtYn) {
+		this.magazineSprtYn = magazineSprtYn;
+	}
+
+	/**
+	 * @return the comicSprtYn
+	 */
+	public String getComicSprtYn() {
+		return this.comicSprtYn;
+	}
+
+	/**
+	 * @param comicSprtYn
+	 *            the comicSprtYn to set
+	 */
+	public void setComicSprtYn(String comicSprtYn) {
+		this.comicSprtYn = comicSprtYn;
+	}
+
+	/**
+	 * @return the musicSprtYn
+	 */
+	public String getMusicSprtYn() {
+		return this.musicSprtYn;
+	}
+
+	/**
+	 * @param musicSprtYn
+	 *            the musicSprtYn to set
+	 */
+	public void setMusicSprtYn(String musicSprtYn) {
+		this.musicSprtYn = musicSprtYn;
+	}
+
+	/**
+	 * @return the hdvSprtYn
+	 */
+	public String getHdvSprtYn() {
+		return this.hdvSprtYn;
+	}
+
+	/**
+	 * @param hdvSprtYn
+	 *            the hdvSprtYn to set
+	 */
+	public void setHdvSprtYn(String hdvSprtYn) {
+		this.hdvSprtYn = hdvSprtYn;
+	}
+
+	/**
+	 * @return the videoDrmSprtYn
+	 */
+	public String getVideoDrmSprtYn() {
+		return this.videoDrmSprtYn;
+	}
+
+	/**
+	 * @param videoDrmSprtYn
+	 *            the videoDrmSprtYn to set
+	 */
+	public void setVideoDrmSprtYn(String videoDrmSprtYn) {
+		this.videoDrmSprtYn = videoDrmSprtYn;
 	}
 
 }

@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class ThemeThemeZoneListSacReq extends CommonInfo {
 
+	private static final long serialVersionUID = 1L;
 	private Integer offset = 1; // offset
 	private Integer count = 20; // count
 	private String tenantId; // 테넌트ID
