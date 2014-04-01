@@ -1158,18 +1158,6 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
-	 * 회원 상태코드 업데이트.
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param loginStatusCode
-	 *            로그인 상태코드
-	 * @param keyType
-	 *            조회타입
-	 * @param keyString
-	 *            조회값
-	 */
-	/**
 	 * <pre>
 	 * 회원 상태코드 업데이트.
 	 * </pre>
