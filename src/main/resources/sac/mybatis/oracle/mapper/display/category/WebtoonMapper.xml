@@ -219,6 +219,7 @@
 						            AND B1.CONTENTS_TYPE_CD = 'PD002502'
 						            AND B1.SVC_GRP_CD = 'DP000203'
 						            AND A1.PART_PROD_ID = C1.PROD_ID
+                                    AND C1.TENANT_ID = #{tenantId}
 						            AND C1.EXPO_YN = 'Y'
 						      ORDER BY TO_NUMBER(D1.CHAPTER)
 						        ) ZZ
@@ -236,9 +237,10 @@
                     AND C.PROD_RSHP_CD ='DP010802'
                     AND C.PART_PROD_ID = D.PROD_ID
                     AND C.PART_PROD_ID = F.PROD_ID
+                    AND C.PART_PROD_ID = E.PROD_ID
+                    AND E.TENANT_ID = #{tenantId}
                     AND D.CONTENTS_TYPE_CD = 'PD002501'
                     AND D.SVC_GRP_CD = 'DP000203'
-                    AND C.PART_PROD_ID = E.PROD_ID
                     AND E.EXPO_YN = 'Y'
                     ORDER BY TO_NUMBER(F.CHAPTER) DESC
                  ) AA
