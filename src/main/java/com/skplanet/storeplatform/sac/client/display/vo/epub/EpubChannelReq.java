@@ -28,15 +28,10 @@ public class EpubChannelReq extends CommonInfo {
     private String userKey;
     private String deviceKey;
 
-
     private String langCd;
     private String tenantId;
     private String deviceModel;
-    private String imgCd;
-    private String orderedBy;
 
-
-    private String chapter;
 
     public String getChannelId() {
         return channelId;
@@ -84,29 +79,5 @@ public class EpubChannelReq extends CommonInfo {
 
     public void setDeviceModel(String deviceModel) {
         this.deviceModel = deviceModel;
-    }
-
-    public String getImgCd() {
-        return imgCd;
-    }
-
-    public void setImgCd(String imgCd) {
-        this.imgCd = imgCd;
-    }
-
-    public String getOrderedBy() {
-        return orderedBy;
-    }
-
-    public void setOrderedBy(String orderedBy) {
-        this.orderedBy = orderedBy;
-    }
-
-    public String getChapter() {
-        return chapter;
-    }
-
-    public void setChapter(String chapter) {
-        this.chapter = chapter;
     }
 }

@@ -58,96 +58,130 @@ public class VodDetailReq extends CommonInfo {
      */
     private String deviceModel;
 
-    /**
-     * 대표이미지 코드
-     */
-    private String imgCd;
+    /** 기준 Chapter */
+    private Integer baseChapter;
 
     private String userKey;
     private String deviceKey;
-
-    public String getOrderedBy() {
-        return this.orderedBy;
-    }
-
-    public void setOrderedBy(String orderedBy) {
-        this.orderedBy = orderedBy;
-    }
-
-    public Integer getOffset() {
-        if(this.offset == null || this.offset < 0) return 1;
-        return this.offset;
-    }
-
-    public void setOffset(Integer offset) {
-        this.offset = offset;
-    }
-
-    public Integer getCount() {
-        if(this.count == null || this.count < 0) return 20;
-        return this.count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public String getLangCd() {
-        return this.langCd;
-    }
-
-    public void setLangCd(String langCd) {
-        this.langCd = langCd;
-    }
-
-    public String getTenantId() {
-        return this.tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public String getDeviceModel() {
-        return this.deviceModel;
-    }
-
-    public void setDeviceModel(String deviceModel) {
-        this.deviceModel = deviceModel;
-    }
-
-
-    public String getImgCd() {
-        return this.imgCd;
-    }
-
-    public void setImgCd(String imgCd) {
-        this.imgCd = imgCd;
-    }
-
-    public String getChannelId() {
-        return this.channelId;
-    }
-
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
-    }
-
-    public String getUserKey() {
-        return this.userKey;
-    }
-
-    public void setUserKey(String userKey) {
-        this.userKey = userKey;
-    }
-
-    public String getDeviceKey() {
-        return this.deviceKey;
-    }
-
-    public void setDeviceKey(String deviceKey) {
-        this.deviceKey = deviceKey;
-    }
-
+	/**
+	 * @return the channelId
+	 */
+	public String getChannelId() {
+		return channelId;
+	}
+	/**
+	 * @param channelId the channelId to set
+	 */
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
+	/**
+	 * @return the orderedBy
+	 */
+	public String getOrderedBy() {
+		return orderedBy;
+	}
+	/**
+	 * @param orderedBy the orderedBy to set
+	 */
+	public void setOrderedBy(String orderedBy) {
+		this.orderedBy = orderedBy;
+	}
+	/**
+	 * @return the offset
+	 */
+	public Integer getOffset() {
+		return offset;
+	}
+	/**
+	 * @param offset the offset to set
+	 */
+	public void setOffset(Integer offset) {
+		this.offset = offset;
+	}
+	/**
+	 * @return the count
+	 */
+	public Integer getCount() {
+		return count;
+	}
+	/**
+	 * @param count the count to set
+	 */
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+	/**
+	 * @return the langCd
+	 */
+	public String getLangCd() {
+		return langCd;
+	}
+	/**
+	 * @param langCd the langCd to set
+	 */
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+	/**
+	 * @return the tenantId
+	 */
+	public String getTenantId() {
+		return tenantId;
+	}
+	/**
+	 * @param tenantId the tenantId to set
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+	/**
+	 * @return the deviceModel
+	 */
+	public String getDeviceModel() {
+		return deviceModel;
+	}
+	/**
+	 * @param deviceModel the deviceModel to set
+	 */
+	public void setDeviceModel(String deviceModel) {
+		this.deviceModel = deviceModel;
+	}
+	/**
+	 * @return the baseChapter
+	 */
+	public Integer getBaseChapter() {
+		return baseChapter;
+	}
+	/**
+	 * @param baseChapter the baseChapter to set
+	 */
+	public void setBaseChapter(Integer baseChapter) {
+		this.baseChapter = baseChapter;
+	}
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return userKey;
+	}
+	/**
+	 * @param userKey the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+	/**
+	 * @return the deviceKey
+	 */
+	public String getDeviceKey() {
+		return deviceKey;
+	}
+	/**
+	 * @param deviceKey the deviceKey to set
+	 */
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
 
 }

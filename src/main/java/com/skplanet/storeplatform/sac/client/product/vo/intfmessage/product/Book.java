@@ -105,6 +105,17 @@ public class Book extends CommonInfo implements Serializable {
 
 	private String mallCd;
 
+	/** 
+	 * freeItem 정보를 위한 건수 조회 
+	 */
+	private Integer bookCount;
+	private Integer bookFreeCount;
+	private Integer serialCount;
+	private Integer serialFreeCount;
+	private Integer magazineCount;
+	private Integer magazineFreeCount;
+	
+	
 	/**
 	 * @return the type
 	 */
@@ -389,4 +400,89 @@ public class Book extends CommonInfo implements Serializable {
 	public void setMallCd(String mallCd) {
 		this.mallCd = mallCd;
 	}
+
+	/**
+	 * @return the bookCount
+	 */
+	public Integer getBookCount() {
+		return bookCount;
+	}
+
+	/**
+	 * @param bookCount the bookCount to set
+	 */
+	public void setBookCount(Integer bookCount) {
+		this.bookCount = bookCount;
+	}
+
+	/**
+	 * @return the bookFreeCount
+	 */
+	public Integer getBookFreeCount() {
+		return bookFreeCount;
+	}
+
+	/**
+	 * @param bookFreeCount the bookFreeCount to set
+	 */
+	public void setBookFreeCount(Integer bookFreeCount) {
+		this.bookFreeCount = bookFreeCount;
+	}
+
+	/**
+	 * @return the serialCount
+	 */
+	public Integer getSerialCount() {
+		return serialCount;
+	}
+
+	/**
+	 * @param serialCount the serialCount to set
+	 */
+	public void setSerialCount(Integer serialCount) {
+		this.serialCount = serialCount;
+	}
+
+	/**
+	 * @return the serialFreeCount
+	 */
+	public Integer getSerialFreeCount() {
+		return serialFreeCount;
+	}
+
+	/**
+	 * @param serialFreeCount the serialFreeCount to set
+	 */
+	public void setSerialFreeCount(Integer serialFreeCount) {
+		this.serialFreeCount = serialFreeCount;
+	}
+
+	/**
+	 * @return the magazineCount
+	 */
+	public Integer getMagazineCount() {
+		return magazineCount;
+	}
+
+	/**
+	 * @param magazineCount the magazineCount to set
+	 */
+	public void setMagazineCount(Integer magazineCount) {
+		this.magazineCount = magazineCount;
+	}
+
+	/**
+	 * @return the magazineFreeCount
+	 */
+	public Integer getMagazineFreeCount() {
+		return magazineFreeCount;
+	}
+
+	/**
+	 * @param magazineFreeCount the magazineFreeCount to set
+	 */
+	public void setMagazineFreeCount(Integer magazineFreeCount) {
+		this.magazineFreeCount = magazineFreeCount;
+	}
+	
 }

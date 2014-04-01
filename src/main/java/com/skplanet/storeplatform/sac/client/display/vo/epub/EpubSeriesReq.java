@@ -54,93 +54,151 @@ public class EpubSeriesReq extends CommonInfo {
     private String deviceModel;
 
     private String filteredBy;
+    /** 기준 Chapter */
+    private Integer baseChapter;
+	/**
+	 * @return the channelId
+	 */
+	public String getChannelId() {
+		return channelId;
+	}
+	/**
+	 * @param channelId the channelId to set
+	 */
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
+	/**
+	 * @return the bookTypeCd
+	 */
+	public String getBookTypeCd() {
+		return bookTypeCd;
+	}
+	/**
+	 * @param bookTypeCd the bookTypeCd to set
+	 */
+	public void setBookTypeCd(String bookTypeCd) {
+		this.bookTypeCd = bookTypeCd;
+	}
+	/**
+	 * @return the orderedBy
+	 */
+	public String getOrderedBy() {
+		return orderedBy;
+	}
+	/**
+	 * @param orderedBy the orderedBy to set
+	 */
+	public void setOrderedBy(String orderedBy) {
+		this.orderedBy = orderedBy;
+	}
+	/**
+	 * @return the offset
+	 */
+	public Integer getOffset() {
+		return offset;
+	}
+	/**
+	 * @param offset the offset to set
+	 */
+	public void setOffset(Integer offset) {
+		this.offset = offset;
+	}
+	/**
+	 * @return the count
+	 */
+	public Integer getCount() {
+		return count;
+	}
+	/**
+	 * @param count the count to set
+	 */
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return userKey;
+	}
+	/**
+	 * @param userKey the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+	/**
+	 * @return the deviceKey
+	 */
+	public String getDeviceKey() {
+		return deviceKey;
+	}
+	/**
+	 * @param deviceKey the deviceKey to set
+	 */
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+	/**
+	 * @return the langCd
+	 */
+	public String getLangCd() {
+		return langCd;
+	}
+	/**
+	 * @param langCd the langCd to set
+	 */
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+	/**
+	 * @return the tenantId
+	 */
+	public String getTenantId() {
+		return tenantId;
+	}
+	/**
+	 * @param tenantId the tenantId to set
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+	/**
+	 * @return the deviceModel
+	 */
+	public String getDeviceModel() {
+		return deviceModel;
+	}
+	/**
+	 * @param deviceModel the deviceModel to set
+	 */
+	public void setDeviceModel(String deviceModel) {
+		this.deviceModel = deviceModel;
+	}
+	/**
+	 * @return the filteredBy
+	 */
+	public String getFilteredBy() {
+		return filteredBy;
+	}
+	/**
+	 * @param filteredBy the filteredBy to set
+	 */
+	public void setFilteredBy(String filteredBy) {
+		this.filteredBy = filteredBy;
+	}
+	/**
+	 * @return the baseChapter
+	 */
+	public Integer getBaseChapter() {
+		return baseChapter;
+	}
+	/**
+	 * @param baseChapter the baseChapter to set
+	 */
+	public void setBaseChapter(Integer baseChapter) {
+		this.baseChapter = baseChapter;
+	}
 
-
-    public String getChannelId() {
-        return channelId;
-    }
-
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
-    }
-
-    public String getBookTypeCd() {
-        return bookTypeCd;
-    }
-
-    public void setBookTypeCd(String bookTypeCd) {
-        this.bookTypeCd = bookTypeCd;
-    }
-
-    public String getOrderedBy() {
-        return orderedBy;
-    }
-
-    public void setOrderedBy(String orderedBy) {
-        this.orderedBy = orderedBy;
-    }
-
-    public Integer getOffset() {
-        return offset;
-    }
-
-    public void setOffset(Integer offset) {
-        this.offset = offset;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public String getUserKey() {
-        return userKey;
-    }
-
-    public void setUserKey(String userKey) {
-        this.userKey = userKey;
-    }
-
-    public String getDeviceKey() {
-        return deviceKey;
-    }
-
-    public void setDeviceKey(String deviceKey) {
-        this.deviceKey = deviceKey;
-    }
-
-    public String getLangCd() {
-        return langCd;
-    }
-
-    public void setLangCd(String langCd) {
-        this.langCd = langCd;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public String getDeviceModel() {
-        return deviceModel;
-    }
-
-    public void setDeviceModel(String deviceModel) {
-        this.deviceModel = deviceModel;
-    }
-
-    public String getFilteredBy() {
-        return filteredBy;
-    }
-
-    public void setFilteredBy(String filteredBy) {
-        this.filteredBy = filteredBy;
-    }
 }
