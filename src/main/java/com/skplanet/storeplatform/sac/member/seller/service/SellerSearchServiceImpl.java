@@ -523,10 +523,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		// 파라미터 Setting. SC 쿼리에서 null check 하므로 전체 setting 해서 넘겨줘도 무관.
-		schReq.setSellerBizNumber(req.getSellerBizNumber());
-		schReq.setSellerCompany(req.getSellerCompany());
-		schReq.setSellerEmail(req.getSellerEmail());
-		schReq.setSellerPhone(req.getSellerPhone());
+		schReq.setSellerBizNumber(StringUtils.isNotBlank(req.getSellerBizNumber()) ? req.getSellerBizNumber() : null);
+		schReq.setSellerCompany(StringUtils.isNotBlank(req.getSellerCompany()) ? req.getSellerCompany() : null);
+		schReq.setSellerEmail(StringUtils.isNotBlank(req.getSellerEmail()) ? req.getSellerEmail() : null);
+		schReq.setSellerPhone(StringUtils.isNotBlank(req.getSellerPhone()) ? req.getSellerPhone() : null);
 
 		SearchIDSellerResponse searchIdSellerRes = this.sellerSCI.searchIDSeller(schReq);
 
