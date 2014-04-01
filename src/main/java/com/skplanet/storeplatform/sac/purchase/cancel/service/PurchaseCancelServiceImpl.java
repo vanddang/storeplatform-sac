@@ -142,14 +142,14 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			} catch (Exception e) {
 
-				this.logger.debug("SAC_PUR_9999 : {}", e);
+				this.logger.info("SAC_PUR_9999 : {}", e);
 
 				purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 				purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 				purchaseCancelDetailSacResult.setResultCd("SAC_PUR_9999");
 
 				purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_9999")
-						+ "cause : " + e.getMessage());
+						+ "cause : " + e);
 
 			}
 
