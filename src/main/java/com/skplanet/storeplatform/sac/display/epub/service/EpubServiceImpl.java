@@ -121,8 +121,7 @@ public class EpubServiceImpl implements EpubService {
 
 			// 단행인 경우 시리즈 정보를 제공
 			if(StringUtils.equals(sMetaClsCd, DisplayConstants.DP_BOOK_META_CLASS_CD)) {
-
-                param.put("orderedBy", org.apache.commons.lang3.StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT));
+                param.put("orderedBy", DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
                 param.put("offset", 1);
                 param.put("count", 1);
                 
@@ -169,6 +168,7 @@ public class EpubServiceImpl implements EpubService {
         param.put("bookTypeCd", StringUtils.defaultString(req.getBookTypeCd()));
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
         param.put("orderedBy", orderedBy);
+        param.put("baseChapter", req.getBaseChapter());
         param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
         param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
         param.put("count", req.getCount() == null ? 20 : req.getCount());
@@ -512,7 +512,23 @@ public class EpubServiceImpl implements EpubService {
         book.setStatus(mapperVO.getBookStatus());
         book.setType(mapperVO.getBookType());
         //book.setBookTypeCd(mapperVO.getBookType());
+        
+        // 채널 정보에서만 리턴
+        // freeItem 정보를 위한 건수 조회
+        if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_BOOK)) {
+        	book.setBookCount(mapperVO.getBookCnt());
+        	book.setBookFreeCount(mapperVO.getBookFreeCnt());
+        } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_SERIAL)) {
+        	book.setSerialCount(mapperVO.getSerialCnt());
+        	book.setSerialFreeCount(mapperVO.getSerialCnt());
+        } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_MAGAZINE)) {
+        	book.setSerialCount(mapperVO.getSerialCnt());
+        	book.setSerialFreeCount(mapperVO.getSerialCnt());
+        }
+        
 		book.setSupportList(this.mapSupportList(mapperVO));
+		
+		
 		
 		return book;
 	}

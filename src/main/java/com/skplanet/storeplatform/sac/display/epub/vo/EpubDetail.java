@@ -164,7 +164,6 @@ public class EpubDetail extends CommonInfo {
 	// Book
 	private String bookStatus;
 	private String bookType;
-	private Integer bookCount;
 	private String supportStore;
 	private String supportPlay;
 	private String mgzinSubscripCd;
@@ -172,9 +171,12 @@ public class EpubDetail extends CommonInfo {
 	private String chnlClsfCd;
 	private String comptYn;
 
-	private String bookCnt;
-	private String bookFreeCnt;
-	private String serialFreeCnt;
+	private Integer bookCnt;
+	private Integer serialCnt;
+	private Integer magazineCnt;
+	private Integer bookFreeCnt;
+	private Integer serialFreeCnt;
+	private Integer magazineFreeCnt;
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -697,14 +699,6 @@ public class EpubDetail extends CommonInfo {
 		this.bookType = bookType;
 	}
 
-	public Integer getBookCount() {
-		return this.bookCount;
-	}
-
-	public void setBookCount(Integer bookCount) {
-		this.bookCount = bookCount;
-	}
-
 	public String getSupportStore() {
 		return this.supportStore;
 	}
@@ -761,28 +755,88 @@ public class EpubDetail extends CommonInfo {
 		this.chnlClsfCd = chnlClsfCd;
 	}
 
-	public String getBookCnt() {
-		return this.bookCnt;
+	/**
+	 * @return the bookCnt
+	 */
+	public Integer getBookCnt() {
+		return bookCnt;
 	}
 
-	public void setBookCnt(String bookCnt) {
+	/**
+	 * @param bookCnt the bookCnt to set
+	 */
+	public void setBookCnt(Integer bookCnt) {
 		this.bookCnt = bookCnt;
 	}
 
-	public String getBookFreeCnt() {
-		return this.bookFreeCnt;
+	/**
+	 * @return the serialCnt
+	 */
+	public Integer getSerialCnt() {
+		return serialCnt;
 	}
 
-	public void setBookFreeCnt(String bookFreeCnt) {
+	/**
+	 * @param serialCnt the serialCnt to set
+	 */
+	public void setSerialCnt(Integer serialCnt) {
+		this.serialCnt = serialCnt;
+	}
+
+	/**
+	 * @return the magazineCnt
+	 */
+	public Integer getMagazineCnt() {
+		return magazineCnt;
+	}
+
+	/**
+	 * @param magazineCnt the magazineCnt to set
+	 */
+	public void setMagazineCnt(Integer magazineCnt) {
+		this.magazineCnt = magazineCnt;
+	}
+
+	/**
+	 * @return the bookFreeCnt
+	 */
+	public Integer getBookFreeCnt() {
+		return bookFreeCnt;
+	}
+
+	/**
+	 * @param bookFreeCnt the bookFreeCnt to set
+	 */
+	public void setBookFreeCnt(Integer bookFreeCnt) {
 		this.bookFreeCnt = bookFreeCnt;
 	}
 
-	public String getSerialFreeCnt() {
-		return this.serialFreeCnt;
+	/**
+	 * @return the serialFreeCnt
+	 */
+	public Integer getSerialFreeCnt() {
+		return serialFreeCnt;
 	}
 
-	public void setSerialFreeCnt(String serialFreeCnt) {
+	/**
+	 * @param serialFreeCnt the serialFreeCnt to set
+	 */
+	public void setSerialFreeCnt(Integer serialFreeCnt) {
 		this.serialFreeCnt = serialFreeCnt;
+	}
+
+	/**
+	 * @return the magazineFreeCnt
+	 */
+	public Integer getMagazineFreeCnt() {
+		return magazineFreeCnt;
+	}
+
+	/**
+	 * @param magazineFreeCnt the magazineFreeCnt to set
+	 */
+	public void setMagazineFreeCnt(Integer magazineFreeCnt) {
+		this.magazineFreeCnt = magazineFreeCnt;
 	}
 
 	public String getBookTbctns() {

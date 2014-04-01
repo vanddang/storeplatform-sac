@@ -46,7 +46,7 @@
 		                  ELSE ROUND(STAT.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
 		        , PI.FILE_PATH AS IMG_PATH, PI.FILE_NM AS IMG_NM, PI.FILE_SIZE AS IMG_SIZE
 		         ]]>
-		        , P.BOOK_CNT, P.BOOK_FREE_CNT, P.SERIAL_FREE_CNT
+		        , P.BOOK_CNT, P.SERIAL_CNT, P.MAGAZINE_CNT, P.BOOK_FREE_CNT, P.SERIAL_FREE_CNT, P.MAGAZINE_FREE_CNT
             	, TPP.CHNL_PERIOD_AMT AS PLAY_PROD_AMT, TPP.CHNL_UNLMT_AMT AS STORE_PROD_AMT
             	, CASE WHEN (TPP.CHNL_PERIOD_AMT >= 0  AND STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
                     ELSE NVL(TPP.CHNL_UNLMT_AMT, 0) END AS PROD_AMT /* 채널 대표 가격 */
@@ -55,8 +55,10 @@
 	              SELECT  TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
 	                    , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004301' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS BOOK_CNT
 	                    , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004302' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS SERIAL_CNT
+	                    , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004303' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS MAGAZINE_CNT
 	                    , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004301' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS BOOK_FREE_CNT
 	                    , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004302' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS SERIAL_FREE_CNT
+	                    , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004303' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS MAGAZINE_FREE_CNT
 	              FROM (
 	                  SELECT G.TENANT_ID, C.LANG_CD
 	                      , D.PROD_ID AS CHNL_PROD_ID
@@ -87,7 +89,6 @@
 						AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 						AND CD.DEVICE_MODEL_CD = #{deviceModel} AND CD.USE_YN = 'Y'
 	                    AND D.SVC_GRP_CD = 'DP000203' AND D.CONTENTS_TYPE_CD = 'PD002501' AND D.SVC_TYPE_CD = 'DP001116'
-	                    AND D.TOP_MENU_ID IN ('DP13', 'DP14')
 	                    AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') AND G.EXPO_YN = 'Y'
 	                    AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
 	                    GROUP BY G.TENANT_ID, C.LANG_CD, D.PROD_ID, A.MENU_ID, C.MENU_NM, E.BOOK_CLSF_CD
@@ -244,13 +245,13 @@
 		                      AND (SD.DEVICE_MODEL_CD = #{deviceModel} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 		                      AND DV.DEVICE_MODEL_CD = #{deviceModel} AND DV.USE_YN = 'Y'
 		                      AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
-		                      AND PD.SVC_GRP_CD = 'DP000203'   AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD = 'DP001116' AND PD.TOP_MENU_ID IN ('DP13', 'DP14')
+		                      AND PD.SVC_GRP_CD = 'DP000203'   AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD = 'DP001116'
 							  AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
 							  <if test="bookTypeCd != null and bookTypeCd !=''">
 							  AND MP.BOOK_CLSF_CD = #{bookTypeCd}
 		                      </if>
-		                      <if test="filteredBy == 'chapter'">
-		                      AND TO_NUMBER( REGEXP_REPLACE( NVL( P.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{chapter}
+		                      <if test="baseChapter != null">
+		                      AND TO_NUMBER( REGEXP_REPLACE( NVL( MP.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{baseChapter}
 		                      </if>
 							  <if test="orderedBy == 'nonPayment'">
 							  <if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">

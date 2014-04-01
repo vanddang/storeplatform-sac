@@ -99,9 +99,10 @@ public class VodServiceImpl implements VodService {
         param.put("channelId", req.getChannelId());
         param.put("langCd", req.getLangCd());
         param.put("tenantId", req.getTenantId());
+        param.put("baseChapter", req.getBaseChapter());
         param.put("orderedBy", orderedBy);
-        param.put("offset", req.getOffset());
-        param.put("count", req.getCount());
+        param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
+        param.put("count", req.getCount() == null ? 20 : req.getCount());
 
 		VodDetail vodDetail = getVodChanndel(param);
 

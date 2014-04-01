@@ -199,14 +199,21 @@ public class EpubServiceImplTest {
 
     //@Test
     public void searchEpub_dao_selectEpubSubscription() {
-    	EpubChannelReq req = new EpubChannelReq();
-    	req.setChannelId("H900063921");
-    	req.setLangCd("ko");
-    	req.setTenantId("S01");
-    	req.setDeviceModel("SHV-E110S");
-    	req.setImgCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-    	req.setOrderedBy("recent");
-    	MgzinSubscription result = this.commonDAO.queryForObject("EpubDetail.selectEpubSubscription", req, MgzinSubscription.class);
+    	Map<String, Object> param = new HashMap<String, Object>();
+    	param.put("tenantId", "S01");
+    	param.put("channelId", "H900063921");
+    	param.put("langCd", "ko");
+    	param.put("deviceModel", "SHV-E110S");
+    	param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+    	param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
+    	//param.put("bookTypeCd", "");
+    	param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
+    	param.put("orderedBy", "recent");
+    	param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+    	param.put("offset", 1);
+    	param.put("count", 20);
+    	
+    	MgzinSubscription result = this.commonDAO.queryForObject("EpubDetail.selectEpubSubscription", param, MgzinSubscription.class);
     	this.logger.debug("result={}", result);
     }
 
@@ -218,9 +225,6 @@ public class EpubServiceImplTest {
     	req.setLangCd("ko");
     	req.setTenantId("S01");
     	req.setDeviceModel("SHV-E110S");
-    	req.setImgCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-    	req.setOrderedBy("recent");
-
     	EpubChannelRes result = this.epubService.searchEpubChannel(req);
 
 		this.logger.debug("result={}", result);
