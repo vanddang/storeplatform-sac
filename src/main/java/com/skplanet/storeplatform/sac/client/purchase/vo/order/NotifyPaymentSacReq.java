@@ -15,7 +15,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -37,7 +36,6 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	private double totAmt; // 결제 총 금액
 	private String mctSpareParam; // 가맹점 파라미터
 
-	@NotEmpty
 	@Valid
 	private List<PaymentInfo> paymentInfoList; // 결제수단정보 리스트
 

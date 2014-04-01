@@ -34,6 +34,8 @@ public class PaymentInfo extends CommonInfo {
 	private String apprNo; // 승인번호
 	private String billKey; // 빌링키
 	private String cpnId; // 이용한 쿠폰 ID
+	private String cpnType; // 이용한 쿠폰 타입
+	private String cpnMakeHost; // 이용한 쿠폰 생성주체
 	private String moid; // 테넌트 결제수단 관리 정보
 
 	/**
@@ -139,6 +141,36 @@ public class PaymentInfo extends CommonInfo {
 	 */
 	public void setCpnId(String cpnId) {
 		this.cpnId = cpnId;
+	}
+
+	/**
+	 * @return the cpnType
+	 */
+	public String getCpnType() {
+		return this.cpnType;
+	}
+
+	/**
+	 * @param cpnType
+	 *            the cpnType to set
+	 */
+	public void setCpnType(String cpnType) {
+		this.cpnType = cpnType;
+	}
+
+	/**
+	 * @return the cpnMakeHost
+	 */
+	public String getCpnMakeHost() {
+		return this.cpnMakeHost;
+	}
+
+	/**
+	 * @param cpnMakeHost
+	 *            the cpnMakeHost to set
+	 */
+	public void setCpnMakeHost(String cpnMakeHost) {
+		this.cpnMakeHost = cpnMakeHost;
 	}
 
 	/**
