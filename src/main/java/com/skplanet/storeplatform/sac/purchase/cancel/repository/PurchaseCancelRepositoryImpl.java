@@ -227,11 +227,19 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			pay.setAmt(String.valueOf(paymentSacParam.getPaymentAmt()));
 
 			pay.setApplyNum(paymentSacParam.getApprNo());
-			pay.setApplyDate(paymentSacParam.getPaymentDt().substring(0, 8));
-			pay.setApplyTime(paymentSacParam.getPaymentDt().substring(8));
+			pay.setApplyDate((paymentSacParam.getPaymentDt() != null && paymentSacParam.getPaymentDt().length() >= 8) ? paymentSacParam
+					.getPaymentDt().substring(0, 8) : paymentSacParam.getPaymentDt());
+			pay.setApplyTime((paymentSacParam.getPaymentDt() != null && paymentSacParam.getPaymentDt().length() >= 8) ? paymentSacParam
+					.getPaymentDt().substring(8) : paymentSacParam.getPaymentDt());
 			pay.setProdId(prodIdList);
 
-			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_OCB, paymentSacParam.getPaymentMtdCd())) {
+			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_CREDIT_CARD, paymentSacParam.getPaymentMtdCd())) {
+				// 신용카드 결제이면
+				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_PAYPIN, paymentSacParam.getPaymentMtdCd())) {
+				// Paypin 결제이면
+				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_OCB, paymentSacParam.getPaymentMtdCd())) {
 				// OCB 결제이면
 				pay.setPaymentTypeCd(paymentSacParam.getResvCol02());
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER,
@@ -360,17 +368,23 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			String tenantProdGrpCd = prchsDtlSacParam.getTenantProdGrpCd();
 			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
 					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				prchsProdCnt.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd().substring(0, 12)
+				prchsProdCnt.setProdGrpCd((prchsDtlSacParam.getTenantProdGrpCd().length() > 12 ? prchsDtlSacParam
+						.getTenantProdGrpCd().substring(0, 12) : prchsDtlSacParam.getTenantProdGrpCd())
 						+ prchsDtlSacParam.getPrchsId());
 			} else {
-				prchsProdCnt.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd().substring(0, 12));
+				prchsProdCnt
+						.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd() == null ? "" : (prchsDtlSacParam
+								.getTenantProdGrpCd().length() > 12 ? prchsDtlSacParam.getTenantProdGrpCd().substring(
+								0, 12) : prchsDtlSacParam.getTenantProdGrpCd()));
 			}
 
 			prchsProdCnt.setProdGrpCd(tenantProdGrpCd);
 			prchsProdCnt.setProdId(prchsDtlSacParam.getProdId());
 			prchsProdCnt.setProdQty(prchsDtlSacParam.getProdQty());
 			prchsProdCnt.setStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
-			prchsProdCnt.setPrchsDt(prchsDtlSacParam.getPrchsDt().substring(0, 8));
+			prchsProdCnt
+					.setPrchsDt((prchsDtlSacParam.getPrchsDt() != null && prchsDtlSacParam.getPrchsDt().length() > 8) ? prchsDtlSacParam
+							.getPrchsDt().substring(0, 8) : prchsDtlSacParam.getPrchsDt());
 			prchsProdCnt
 					.setSprcProdYn(StringUtils.isBlank(prchsDtlSacParam.getSpecialSaleCouponId()) ? PurchaseConstants.USE_N : PurchaseConstants.USE_Y);
 
