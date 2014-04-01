@@ -746,21 +746,26 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 */
 	@Override
 	public List<Point> generatePoint(TmembershipDcInfo metaInfo) {
-		List<Point> pointList = new ArrayList<Point>();
-		Point point = new Point();
-		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
-		point.setType(DisplayConstants.DC_RATE_TYPE_NORMAL);
-		if (metaInfo != null) {
+		List<Point> pointList = null;
+
+		if (metaInfo.getNormalDcRate() != null) {
+			pointList = new ArrayList<Point>();
+			Point point = new Point();
+			point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
+			point.setType(DisplayConstants.DC_RATE_TYPE_NORMAL);
 			point.setDiscountRate(metaInfo.getNormalDcRate());
+			pointList.add(point);
 		}
-		pointList.add(point);
-		point = new Point();
-		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
-		point.setType(DisplayConstants.DC_RATE_TYPE_FREEPASS);
-		if (metaInfo != null) {
+		if (metaInfo.getFreepassDcRate() != null) {
+			if (pointList == null)
+				pointList = new ArrayList<Point>();
+			Point point = new Point();
+			point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
+			point.setType(DisplayConstants.DC_RATE_TYPE_FREEPASS);
 			point.setDiscountRate(metaInfo.getFreepassDcRate());
+			pointList.add(point);
 		}
-		pointList.add(point);
+
 		return pointList;
 	}
 
