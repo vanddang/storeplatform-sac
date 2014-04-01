@@ -227,10 +227,8 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			pay.setAmt(String.valueOf(paymentSacParam.getPaymentAmt()));
 
 			pay.setApplyNum(paymentSacParam.getApprNo());
-			pay.setApplyDate((paymentSacParam.getPaymentDt() != null && paymentSacParam.getPaymentDt().length() >= 8) ? paymentSacParam
-					.getPaymentDt().substring(0, 8) : paymentSacParam.getPaymentDt());
-			pay.setApplyTime((paymentSacParam.getPaymentDt() != null && paymentSacParam.getPaymentDt().length() >= 8) ? paymentSacParam
-					.getPaymentDt().substring(8) : paymentSacParam.getPaymentDt());
+			pay.setApplyDate(StringUtils.substring(paymentSacParam.getPaymentDt(), 0, 8));
+			pay.setApplyTime(StringUtils.substring(paymentSacParam.getPaymentDt(), 8));
 			pay.setProdId(prodIdList);
 
 			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_CREDIT_CARD, paymentSacParam.getPaymentMtdCd())) {
@@ -310,6 +308,8 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	public PurchaseCancelDetailSacParam updatePurchaseCancel(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
 
+		// 구매 상품 건수 업데이트 시 특가상품 여부 확인.
+		boolean specialSaleYn = false;
 		PurchaseCancelScReq purchaseCancelScReq = new PurchaseCancelScReq();
 		// 결제 취소 정보를 넣어준다.
 		List<PurchaseCancelPaymentDetailScReq> purchaseCancelPaymentDetailScReqList = new ArrayList<PurchaseCancelPaymentDetailScReq>();
@@ -337,6 +337,13 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			}
 
 			purchaseCancelPaymentDetailScReqList.add(purchaseCancelPaymentDetailScReq);
+
+			// 구매 상품 건수 업데이트 시 특가상품 여부 확인.
+			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_COUPON, paymentSacParam.getPaymentMtdCd())
+					&& StringUtils.equals(PurchaseConstants.COUPON_TYPE_SPECIAL_PRICE_PRODUCT,
+							paymentSacParam.getCpnType())) {
+				specialSaleYn = true;
+			}
 
 		}
 
@@ -368,25 +375,18 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			String tenantProdGrpCd = prchsDtlSacParam.getTenantProdGrpCd();
 			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
 					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				prchsProdCnt.setProdGrpCd((prchsDtlSacParam.getTenantProdGrpCd().length() > 12 ? prchsDtlSacParam
-						.getTenantProdGrpCd().substring(0, 12) : prchsDtlSacParam.getTenantProdGrpCd())
+				prchsProdCnt.setProdGrpCd(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 12)
 						+ prchsDtlSacParam.getPrchsId());
 			} else {
-				prchsProdCnt
-						.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd() == null ? "" : (prchsDtlSacParam
-								.getTenantProdGrpCd().length() > 12 ? prchsDtlSacParam.getTenantProdGrpCd().substring(
-								0, 12) : prchsDtlSacParam.getTenantProdGrpCd()));
+				prchsProdCnt.setProdGrpCd(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 12));
 			}
 
 			prchsProdCnt.setProdGrpCd(tenantProdGrpCd);
 			prchsProdCnt.setProdId(prchsDtlSacParam.getProdId());
 			prchsProdCnt.setProdQty(prchsDtlSacParam.getProdQty());
 			prchsProdCnt.setStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
-			prchsProdCnt
-					.setPrchsDt((prchsDtlSacParam.getPrchsDt() != null && prchsDtlSacParam.getPrchsDt().length() > 8) ? prchsDtlSacParam
-							.getPrchsDt().substring(0, 8) : prchsDtlSacParam.getPrchsDt());
-			prchsProdCnt
-					.setSprcProdYn(StringUtils.isBlank(prchsDtlSacParam.getSpecialSaleCouponId()) ? PurchaseConstants.USE_N : PurchaseConstants.USE_Y);
+			prchsProdCnt.setPrchsDt(StringUtils.substring(prchsDtlSacParam.getPrchsDt(), 0, 8));
+			prchsProdCnt.setSprcProdYn(specialSaleYn ? PurchaseConstants.USE_Y : PurchaseConstants.USE_N);
 
 			prchsProdCnt.setRegId(purchaseCancelSacParam.getSystemId());
 			prchsProdCnt.setUpdId(purchaseCancelSacParam.getSystemId());
@@ -561,6 +561,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		paymentSacParam.setApprNo(payment.getApprNo());
 		paymentSacParam.setBillKey(payment.getBillKey());
 		paymentSacParam.setCpnId(payment.getCpnId());
+		paymentSacParam.setCpnType(payment.getCpnType());
 		paymentSacParam.setMoid(payment.getMoid());
 
 		return paymentSacParam;

@@ -28,7 +28,6 @@ import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelSc
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
@@ -104,6 +103,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 			try {
 
+				/** 구매 취소 처리. */
 				if (purchaseCancelSacParam.getPrchsCancelServiceType() == PurchaseConstants.PRCHS_CANCEL_SERVICE_TCASH) {
 					this.executePurchaseCancelForTCash(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 				} else {
@@ -215,33 +215,20 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
 				prchsSacParam.getInsdDeviceId()));
 
-		/** 상품 정보 셋팅. 선물인 경우 동일 Tenant 인 경우만 선물 된다. */
-		PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
-		paymentInfoSacReq.setTenantId(prchsSacParam.getTenantId());
-		List<String> prodIdList = new ArrayList<String>();
-		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
-			prodIdList.add(prchsDtlSacParam.getProdId());
-		}
-		paymentInfoSacReq.setProdIdList(prodIdList);
-		paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
-		PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq);
-		if (paymentInfoSacRes == null || paymentInfoSacRes.getPaymentInfoList() == null
-				|| paymentInfoSacRes.getPaymentInfoList().size() < 1) {
-			throw new StorePlatformException("SAC_PUR_5101");
-		}
+		/**
+		 * 상품 정보 셋팅. 선물인 경우 동일 Tenant 인 경우만 선물 된다. PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
+		 * paymentInfoSacReq.setTenantId(prchsSacParam.getTenantId()); List<String> prodIdList = new
+		 * ArrayList<String>(); for (PrchsDtlSacParam prchsDtlSacParam :
+		 * purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) { prodIdList.add(prchsDtlSacParam.getProdId()); }
+		 * paymentInfoSacReq.setProdIdList(prodIdList); paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
+		 * PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq); if
+		 * (paymentInfoSacRes == null || paymentInfoSacRes.getPaymentInfoList() == null ||
+		 * paymentInfoSacRes.getPaymentInfoList().size() < 1) { throw new StorePlatformException("SAC_PUR_5101"); }
+		 */
 
 		/** 구매 상품 별 체크. */
 		boolean shoppingYn = false; // 쇼핑상품 구분.
 		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
-			for (PaymentInfo paymentInfo : paymentInfoSacRes.getPaymentInfoList()) {
-				if (!StringUtils.equals(prchsDtlSacParam.getProdId(), paymentInfo.getProdId())) {
-					continue;
-				}
-
-				prchsDtlSacParam.setAppId(paymentInfo.getAid());
-				prchsDtlSacParam.setSpecialSaleCouponId(paymentInfo.getSpecialSaleCouponId());
-			}
-
 			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
 					PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 				// 쇼핑상품이면 true 셋팅.
@@ -366,21 +353,6 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 구매 DB 취소 처리. */
 		this.purchaseCancelRepository.updatePurchaseCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam);
-
-		/**
-		 * 전시 상품 구매건수 -1. try { this.purchaseCancelRepository.updatePurchaseCount(purchaseCancelSacParam,
-		 * purchaseCancelDetailSacParam); } catch (Exception e) { this.logger.debug("구매 상품 개수 업데이트 실패! ========= {}",
-		 * e); }
-		 */
-
-		/** RO 삭제 처리. */
-		/*
-		 * for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) { if
-		 * (!StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_APP))
-		 * { // APP 상품이 아니면 통과. continue; } try { this.removeRO(purchaseCancelSacParam, purchaseCancelDetailSacParam,
-		 * prchsDtlSacParam); } catch (Exception e) { this.logger.debug("RO 삭제 실패! ========= {}, {}",
-		 * prchsDtlSacParam.getProdId(), e); } }
-		 */
 
 		purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
@@ -540,6 +512,22 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		/** 사용자 deviceId 조회. */
 		String deviceId = this.purchaseCancelRepository.getDeviceId(prchsDtlSacParam.getUseInsdUsermbrNo(),
 				prchsDtlSacParam.getUseInsdDeviceId());
+
+		/** appId 조회. */
+		PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
+		paymentInfoSacReq.setTenantId(prchsDtlSacParam.getUseTenantId());
+
+		List<String> prodIdList = new ArrayList<String>();
+		prodIdList.add(prchsDtlSacParam.getProdId());
+		paymentInfoSacReq.setProdIdList(prodIdList);
+
+		paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
+		PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq);
+		if (paymentInfoSacRes == null || paymentInfoSacRes.getPaymentInfoList() == null
+				|| paymentInfoSacRes.getPaymentInfoList().size() < 1) {
+			throw new StorePlatformException("SAC_PUR_5101");
+		}
+		prchsDtlSacParam.setAppId(paymentInfoSacRes.getPaymentInfoList().get(0).getAid());
 
 		String resultMsg = "";
 		/** AOM PUSH */

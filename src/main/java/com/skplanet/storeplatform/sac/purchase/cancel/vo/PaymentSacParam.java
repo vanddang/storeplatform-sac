@@ -50,6 +50,23 @@ public class PaymentSacParam extends CommonInfo {
 	private String mid;
 	private String authKey;
 
+	private String cpnType;
+
+	/**
+	 * @return the cpnType
+	 */
+	public String getCpnType() {
+		return this.cpnType;
+	}
+
+	/**
+	 * @param cpnType
+	 *            the cpnType to set
+	 */
+	public void setCpnType(String cpnType) {
+		this.cpnType = cpnType;
+	}
+
 	/**
 	 * @return the mid
 	 */
