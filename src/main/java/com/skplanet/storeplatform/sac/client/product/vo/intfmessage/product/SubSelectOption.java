@@ -27,8 +27,8 @@ public class SubSelectOption extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String id; // 에피소드 ID
 	private String subId; // 두번째 콤보에 들어갈 옵션 ID
-	private Title subTitle; // 두번째 콤보에 들어갈 제목
-	private Price subPrice; // 두번째 콤보에 들어갈 가격
+	private Title title; // 두번째 콤보에 들어갈 제목
+	private Price price; // 두번째 콤보에 들어갈 가격
 	private String itemCode; // 아이템 코드
 	private String salesStatus; // 판매상태
 
@@ -63,33 +63,33 @@ public class SubSelectOption extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return Title
+	 * @return the title
 	 */
-	public Title getSubTitle() {
-		return this.subTitle;
+	public Title getTitle() {
+		return this.title;
 	}
 
 	/**
-	 * @param subTitle
-	 *            subTitle
+	 * @param title
+	 *            the title to set
 	 */
-	public void setSubTitle(Title subTitle) {
-		this.subTitle = subTitle;
+	public void setTitle(Title title) {
+		this.title = title;
 	}
 
 	/**
-	 * @return Price
+	 * @return the price
 	 */
-	public Price getSubPrice() {
-		return this.subPrice;
+	public Price getPrice() {
+		return this.price;
 	}
 
 	/**
-	 * @param subPrice
-	 *            subPrice
+	 * @param price
+	 *            the price to set
 	 */
-	public void setSubPrice(Price subPrice) {
-		this.subPrice = subPrice;
+	public void setPrice(Price price) {
+		this.price = price;
 	}
 
 	/**
