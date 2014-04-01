@@ -1805,9 +1805,9 @@
                              ,TPP.PROD_AMT
                              ,P.PROD_GRD_CD
                              ,TO_CHAR(P.REG_DT, 'YYYYMMDDHH24MISS') AS REG_DT 
-                             ,NVL(TV.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE
-                             ,NVL(TV.PATICPERS_CNT, 0) AS PATICPERS_CNT
-                             ,NVL(TV.PRCHS_CNT, 0) AS PRCHS_CNT                             
+                             ,TV.AVG_EVLU_SCORE AS AVG_EVLU_SCORE
+                             ,TV.PATICPERS_CNT AS PATICPERS_CNT
+                             ,TV.PRCHS_CNT AS PRCHS_CNT                             
 						    FROM TB_DP_MENU_CATEGORY MCP ,
 						      TB_DP_MENU_CATEGORY_PROD_MAPG MCPM ,      
 						      TB_DP_MENU_CATEGORY_DESC MCD ,
