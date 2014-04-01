@@ -31,6 +31,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackageListRe
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackageListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -39,6 +41,7 @@ import com.skplanet.storeplatform.sac.display.other.service.OtherAIDListService;
 import com.skplanet.storeplatform.sac.display.other.service.OtherArtistService;
 import com.skplanet.storeplatform.sac.display.other.service.OtherPackageListService;
 import com.skplanet.storeplatform.sac.display.other.service.OtherServiceGroupService;
+import com.skplanet.storeplatform.sac.display.other.service.OtherTMembershipService;
 import com.skplanet.storeplatform.sac.display.other.service.OtherTagService;
 
 /**
@@ -50,6 +53,9 @@ import com.skplanet.storeplatform.sac.display.other.service.OtherTagService;
 @RequestMapping("/display/other")
 public class OtherController {
 	private transient Logger logger = LoggerFactory.getLogger(OtherController.class);
+
+	@Autowired
+	private OtherTMembershipService otherTMembershipService;
 
 	@Autowired
 	private OtherServiceGroupService otherServiceGroupService;
@@ -68,6 +74,28 @@ public class OtherController {
 
 	/**
 	 * <pre>
+	 * T Membership 할인율 조회
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return OtherTMembershipRes
+	 */
+	@RequestMapping(value = "/tmembership/get/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public OtherTMembershipRes searchTMembership(@Validated OtherTMembershipReq req, SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchTMembership Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.otherTMembershipService.searchTMembership(req, header);
+	}
+
+	/**
+	 * <pre>
 	 * 기타 카테고리 상품서비스군 상품 조회.
 	 * </pre>
 	 * 
@@ -81,11 +109,13 @@ public class OtherController {
 	@ResponseBody
 	public OtherServiceGroupSacRes searchServiceGroupList(@Validated OtherServiceGroupSacReq req,
 			SacRequestHeader header) {
-		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("searchServiceGroupList Controller started!!");
-		this.logger.debug("Input Parameters {}", req.toString());
-		this.logger.debug("----------------------------------------------------------------");
 
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("searchServiceGroupList Controller started!!");
+			this.logger.debug("Input Parameters {}", req.toString());
+			this.logger.debug("----------------------------------------------------------------");
+		}
 		return this.otherServiceGroupService.searchServiceGroupList(req, header);
 	}
 
@@ -136,8 +166,7 @@ public class OtherController {
 	 */
 	@RequestMapping(value = "/package/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public OtherPackageListRes searchProductListByPackageNm(@Validated OtherPackageListReq req,
-			SacRequestHeader header) {
+	public OtherPackageListRes searchProductListByPackageNm(@Validated OtherPackageListReq req, SacRequestHeader header) {
 		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
 		if (prodIdList.size() > DisplayConstants.DP_UPDATE_PARAM_LIMIT) {
 			throw new StorePlatformException("SAC_DSP_0004", "list", DisplayConstants.DP_UPDATE_PARAM_LIMIT);
