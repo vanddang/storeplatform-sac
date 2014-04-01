@@ -47,7 +47,6 @@ public class ImageResizing {
 	public boolean resize(File src, File dest, int width, int height) {
 		Image srcImg = null;
 		String suffix = src.getName().substring(src.getName().lastIndexOf('.') + 1).toLowerCase();
-		this.log.info("log8881");
 		if (suffix.equals("bmp") || suffix.equals("png") || suffix.equals("gif")) {
 			try {
 				srcImg = ImageIO.read(src);
@@ -65,13 +64,11 @@ public class ImageResizing {
 				return false;
 			}
 		}
-		this.log.info("log8882");
 
 		int srcWidth = srcImg.getWidth(null);
 		int srcHeight = srcImg.getHeight(null);
 
 		int destWidth = -1, destHeight = -1;
-		this.log.info("log8883");
 		if (width == SAME) {
 			destWidth = srcWidth;
 		} else if (width > 0) {
@@ -83,7 +80,6 @@ public class ImageResizing {
 		} else if (height > 0) {
 			destHeight = height;
 		}
-		this.log.info("log8884");
 		if (width == RATIO && height == RATIO) {
 			destWidth = srcWidth;
 			destHeight = srcHeight;
@@ -94,26 +90,21 @@ public class ImageResizing {
 			double ratio = ((double) destWidth) / ((double) srcWidth);
 			destHeight = (int) (srcHeight * ratio);
 		}
-		this.log.info("log8885");
 		Image imgTarget = srcImg.getScaledInstance(destWidth, destHeight, Image.SCALE_SMOOTH);
 		int pixels[] = new int[destWidth * destHeight];
 		PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, destWidth, destHeight, pixels, 0, destWidth);
-		this.log.info("log8886");
 		try {
 			pg.grabPixels();
 		} catch (InterruptedException e) {
 			return false;
 		}
-		this.log.info("log8887");
 		BufferedImage destImg = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
 		destImg.setRGB(0, 0, destWidth, destHeight, pixels, 0, destWidth);
-		this.log.info("log8888");
 		try {
 			ImageIO.write(destImg, "jpg", dest);
 		} catch (IOException e) {
 			return false;
 		}
-		this.log.info("log8889");
 		return true;
 	}
 
