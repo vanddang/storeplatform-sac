@@ -163,18 +163,12 @@
 		                    AND  C.PROD_RSHP_CD = 'DP010802'
 		                    AND  (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{anyDeviceModelCd})
 		                    AND  F.DEVICE_MODEL_CD = #{deviceModelCd}
-		                    AND  (CASE WHEN B.TOP_MENU_ID IN ('DP17', 'DP18') THEN (CASE WHEN (NVL(B.DRM_YN, 'N') = 'Y' AND NVL(F.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 ELSE 1 END)
+		                    AND  (CASE WHEN B.TOP_MENU_ID = 'DP13' THEN CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
+		                               WHEN B.TOP_MENU_ID = 'DP14' THEN CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END
+		                               WHEN B.TOP_MENU_ID = 'DP15' THEN 0
+		                               WHEN B.TOP_MENU_ID = 'DP16' THEN CASE WHEN B.META_CLSF_CD = 'CT25' THEN CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END ELSE 1 END
+		                               WHEN B.TOP_MENU_ID IN ('DP17', 'DP18') THEN CASE WHEN NVL(B.DRM_YN, 'N') = 'Y' AND #{videoDrmSprtYn} = 'N' THEN 0 ELSE 1 END
 		                               ELSE 1 END) = 1
-		                    AND  DECODE(B.TOP_MENU_ID
-		                               , 'DP13'
-		                               , DECODE(F.EBOOK_SPRT_YN, 'Y', 1, 0)
-		                               , 'DP14'
-		                               , DECODE(F.COMIC_SPRT_YN, 'Y', 1, 0)
-		                               , 'DP15'
-		                               , 0
-		                               , 'DP16'
-		                               , DECODE(B.META_CLSF_CD, 'CT25', DECODE(F.MUSIC_SPRT_YN, 'Y', 1, 0), 1)
-		                               , 1) = 1
 		                ) IA
 		         WHERE RNUM = 1
 		       ) JA
