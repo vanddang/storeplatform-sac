@@ -20,14 +20,10 @@ import java.net.MalformedURLException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * ImageResizing 이미지 리사이즈 기능을 제공한다.
  */
 public class ImageResizing {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	public static final int RATIO = 0;
 	public static final int SAME = -1;
 
