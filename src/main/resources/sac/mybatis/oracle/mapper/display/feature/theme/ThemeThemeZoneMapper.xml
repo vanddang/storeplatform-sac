@@ -270,7 +270,7 @@
             , COUNT(TDL.LIST_ID) OVER () AS TOTAL_COUNT
             , ROW_NUMBER() OVER(ORDER BY TDL.EXPO_ORD, TDL.EXPO_ORD_SUB) AS RNUM
 	        FROM TB_DP_LIST TDL
-            WHERE TDL.LIST_GRP_CD = 'TAR'
+            WHERE TDL.LIST_ID like 'TAR%'
             AND TDL.TENANT_ID = #{tenantId}
 	        AND TDL.EXPO_YN = 'Y'
 	        AND EXISTS (
