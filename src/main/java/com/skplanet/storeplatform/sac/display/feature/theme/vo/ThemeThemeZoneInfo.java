@@ -31,6 +31,14 @@ public class ThemeThemeZoneInfo {
 	private String listId;
 	private String listNm;
 
+	// TB_CM_DEVICE 가능여부
+	private String ebookSprtYn;
+	private String magazineSprtYn;
+	private String comicSprtYn;
+	private String musicSprtYn;
+	private String hdvSprtYn;
+	private String videoDrmSprtYn;
+
 	public int getTotalCount() {
 		return this.totalCount;
 	}
@@ -163,6 +171,96 @@ public class ThemeThemeZoneInfo {
 	 */
 	public void setListNm(String listNm) {
 		this.listNm = listNm;
+	}
+
+	/**
+	 * @return the ebookSprtYn
+	 */
+	public String getEbookSprtYn() {
+		return this.ebookSprtYn;
+	}
+
+	/**
+	 * @param ebookSprtYn
+	 *            the ebookSprtYn to set
+	 */
+	public void setEbookSprtYn(String ebookSprtYn) {
+		this.ebookSprtYn = ebookSprtYn;
+	}
+
+	/**
+	 * @return the magazineSprtYn
+	 */
+	public String getMagazineSprtYn() {
+		return this.magazineSprtYn;
+	}
+
+	/**
+	 * @param magazineSprtYn
+	 *            the magazineSprtYn to set
+	 */
+	public void setMagazineSprtYn(String magazineSprtYn) {
+		this.magazineSprtYn = magazineSprtYn;
+	}
+
+	/**
+	 * @return the comicSprtYn
+	 */
+	public String getComicSprtYn() {
+		return this.comicSprtYn;
+	}
+
+	/**
+	 * @param comicSprtYn
+	 *            the comicSprtYn to set
+	 */
+	public void setComicSprtYn(String comicSprtYn) {
+		this.comicSprtYn = comicSprtYn;
+	}
+
+	/**
+	 * @return the musicSprtYn
+	 */
+	public String getMusicSprtYn() {
+		return this.musicSprtYn;
+	}
+
+	/**
+	 * @param musicSprtYn
+	 *            the musicSprtYn to set
+	 */
+	public void setMusicSprtYn(String musicSprtYn) {
+		this.musicSprtYn = musicSprtYn;
+	}
+
+	/**
+	 * @return the hdvSprtYn
+	 */
+	public String getHdvSprtYn() {
+		return this.hdvSprtYn;
+	}
+
+	/**
+	 * @param hdvSprtYn
+	 *            the hdvSprtYn to set
+	 */
+	public void setHdvSprtYn(String hdvSprtYn) {
+		this.hdvSprtYn = hdvSprtYn;
+	}
+
+	/**
+	 * @return the videoDrmSprtYn
+	 */
+	public String getVideoDrmSprtYn() {
+		return this.videoDrmSprtYn;
+	}
+
+	/**
+	 * @param videoDrmSprtYn
+	 *            the videoDrmSprtYn to set
+	 */
+	public void setVideoDrmSprtYn(String videoDrmSprtYn) {
+		this.videoDrmSprtYn = videoDrmSprtYn;
 	}
 
 }

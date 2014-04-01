@@ -240,6 +240,19 @@
         ORDER BY RNUM
     </select>
     
+    <!-- Device 정보 조회 -->
+    <select id="ThemeThemeZoneDevice" parameterType="ThemeThemeZoneSacReq" resultType="ThemeThemeZone">
+       SELECT  /* ThemeThemeZoneMapper.XML, ThemeThemeZoneDevice, SAC 전시, 2014-04-01 */ 
+		        F.EBOOK_SPRT_YN,
+		        F.MAGAZINE_SPRT_YN,
+		        F.COMIC_SPRT_YN,
+		        F.MUSIC_SPRT_YN,
+		        F.HDV_SPRT_YN,
+		        F.VIDEO_DRM_SPRT_YN
+		FROM    TB_CM_DEVICE F
+		WHERE   DEVICE_MODEL_CD = #{deviceModelCd}
+    </select>
+    
     <!-- 테마존 테마 리스트 -->
     <select id="selectThemeThemeZone" parameterType="ThemeThemeZoneSacReq" resultType="ThemeThemeZone">
 	   SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZone, SAC 전시, 2014-03-24 */ 
@@ -256,7 +269,7 @@
             , COUNT(TDL.LIST_ID) OVER () AS TOTAL_COUNT
             , ROW_NUMBER() OVER(ORDER BY TDL.EXPO_ORD, TDL.EXPO_ORD_SUB) AS RNUM
 	        FROM TB_DP_LIST TDL
-            WHERE TDL.LIST_ID like 'TAR%'
+            WHERE TDL.LIST_GRP_CD = 'TAR'
             AND TDL.TENANT_ID = #{tenantId}
 	        AND TDL.EXPO_YN = 'Y'
 	        AND EXISTS (
@@ -286,49 +299,43 @@
 	              AND G.DEVICE_MODEL_CD = #{deviceModelCd}
 	              AND F.USE_YN = 'Y'
 	              AND A.PART_PROD_ID = G.PROD_ID
-	            AND DECODE( D.TOP_MENU_ID
-	                          , 'DP13'
-	                          , DECODE( F.EBOOK_SPRT_YN
-	                                  , 'Y'
-	                                  , DECODE( D.META_CLSF_CD
-	                                          , 'CT24'
-	                                          , DECODE( F.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-	                                          , 'CT26'
-	                                          , DECODE( F.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-	                                          , 1 )
-	                                  , 0 )
-	                          , 'DP14'
-	                          , DECODE( F.COMIC_SPRT_YN , 'Y', 1 , 0 )
-	                          , 'DP16'
-	                          , DECODE( D.META_CLSF_CD
-	                                  , 'CT25'
-	                                  , DECODE( F.MUSIC_SPRT_YN, 'Y', 1, 0)
-	                                  , 1 )
-	                          , 1 ) = 1
-	                AND ( CASE WHEN D.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-	                           THEN ( SELECT 1
-	                                    FROM TB_DP_SUB_CONTENTS SC
-	                                   WHERE SC.PROD_ID = A.PART_PROD_ID
-	                                     AND SC.SALE_YN = 'Y'
-	                                     AND DECODE( F.HDV_SPRT_YN
-	                                               , 'PD005201'
-	                                               , DECODE ( SC.DP_PG_QULT_CD
-	                                                        , 'PD009701', 1
-	                                                        , 'PD009702', 1
-	                                                        , 0)
-	                                               , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
-                                          AND ROWNUM <![CDATA[ <= ]]> 1  )
-	                           ELSE 1
-	                       END ) = 1
-	                AND ( CASE WHEN D.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-	                           THEN DECODE( F.VIDEO_DRM_SPRT_YN
-	                                      , 'N'
-	                                      , DECODE( NVL( D.DRM_YN, 'N' ), 'N', 1, 0 )
-	                                      , 'Y'
-	                                      , 1 )
-	                           ELSE 1
-	                       END ) = 1
-	                  )
+                  AND CASE
+                      WHEN D.TOP_MENU_ID = 'DP13' THEN
+                        CASE
+                          WHEN #{ebookSprtYn} = 'N' THEN 0 -- EBOOK_SPRT_YN
+                          WHEN D.META_CLSF_CD IN ('CT24','CT26') THEN
+                            CASE WHEN #{magazineSprtYn} = 'Y' THEN 1 ELSE 0 END -- MAGAZINE_SPRT_YN
+                          ELSE 1
+                        END
+                      WHEN D.TOP_MENU_ID = 'DP14' THEN
+                        CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END -- COMIC_SPRT_YN
+                      WHEN D.TOP_MENU_ID = 'DP16' THEN
+                        CASE
+                          WHEN D.META_CLSF_CD IN ('CT25') THEN
+                            CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END -- MUSIC_SPRT_YN
+                          ELSE 1
+                        END
+                      WHEN D.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN
+                        CASE
+                          WHEN #{videoDrmSprtYn} = 'Y' OR D.DRM_YN != 'Y' THEN  -- VIDEO_DRM_SPRT_YN
+                            CASE WHEN 
+                              ( SELECT 1
+                                FROM   TB_DP_SUB_CONTENTS SC
+                                WHERE  SC.PROD_ID = A.PART_PROD_ID
+                                AND    SC.SALE_YN = 'Y'
+                                AND    CASE  --  HDV_SPRT_YN
+                                         WHEN #{hdvSprtYn} = 'Y' THEN
+                                           CASE WHEN SC.DP_PG_QULT_CD IN ( 'PD009701', 'PD009702' ) THEN 1 ELSE 0 END
+                                         WHEN #{hdvSprtYn} = 'N' THEN
+                                           CASE WHEN SC.DP_PG_QULT_CD = 'PD009701' THEN 1 ELSE 0 END
+                                         END = 1
+                                AND    ROWNUM <![CDATA[ <= ]]>  1 ) = 1
+                             THEN 1 ELSE 0 END
+                          ELSE 0
+                        END
+                      ELSE 1
+                    END = 1
+                )
         ) AA
         WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>
