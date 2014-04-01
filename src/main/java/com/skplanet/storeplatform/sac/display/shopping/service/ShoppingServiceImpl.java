@@ -108,9 +108,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	@Autowired
 	private ShoppingInfoGenerator shoppingGenerator;
 
-	@Autowired
-	private DisplayCommonService commonService;
-
 	/**
 	 * 쇼핑 추천/인기 상품 리스트 조회.
 	 * 
@@ -1651,8 +1648,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 					List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
 
 					// 티멤버십 DC 정보
-					TmembershipDcInfo info = this.commonService.getTmembershipDcRateForMenu(tenantHeader.getTenantId(),
-							shopping.getTopMenuId());
+					TmembershipDcInfo info = this.displayCommonService.getTmembershipDcRateForMenu(
+							tenantHeader.getTenantId(), shopping.getTopMenuId());
 					List<Point> pointList = this.commonGenerator.generatePoint(info);
 
 					// Title 생성
