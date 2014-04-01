@@ -81,6 +81,7 @@ public class BestDownloadAppServiceImpl implements BestDownloadAppService {
 		String stdDt = null;
 		String listId = bestDownloadAppSacReq.getListId();
 		String orderedBy = bestDownloadAppSacReq.getOrderedBy();
+		String topMenuId = bestDownloadAppSacReq.getTopMenuId();
 
 		// if (( sOrder.equals("C") &&
 		// (sCateGoryType.equals("DP000509")||sCateGoryType.equals("DP000517")||sCateGoryType.equals("DP000518")) )
@@ -137,12 +138,13 @@ public class BestDownloadAppServiceImpl implements BestDownloadAppService {
 
 		bestDownloadAppSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
 
-		// OpenApi Best Download App 상품 조회
 		if (DisplayConstants.DP_ORDEREDBY_TYPE_RECENT.equals(orderedBy)
 				|| DisplayConstants.DP_ORDEREDBY_TYPE_POPULAR.equals(orderedBy)) {
+			// OpenApi Best Download 상품 조회 (최신, 평점순)
 			bestDownloadAppList = this.commonDAO.queryForList("OpenApi.searchBestDownloadAppListByOrder",
 					bestDownloadAppSacReq, MetaInfo.class);
 		} else {
+			// OpenApi Best Download 상품 조회 (유료, 무료, 신규, 추천)
 			bestDownloadAppList = this.commonDAO.queryForList("OpenApi.searchBestDownloadAppListByListId",
 					bestDownloadAppSacReq, MetaInfo.class);
 		}
@@ -166,7 +168,13 @@ public class BestDownloadAppServiceImpl implements BestDownloadAppService {
 				product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지
 				product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품가격
 				product.setAccrual(this.commonGenerator.generateAccrual(metaInfo)); // 참여자 정보
-				product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
+				if (DisplayConstants.DP_APPALL_TOP_MENU_ID.equals(topMenuId)
+						|| DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
+						|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
+						|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
+						|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
+					product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
+				}
 				product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
 				product.setProductExplain(metaInfo.getProdBaseDesc()); // 상품 설명
 				product.setRights(this.commonGenerator.generateRights(metaInfo)); // 상품 이용 등급

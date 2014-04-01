@@ -122,10 +122,10 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 
 		/** OpenApi Best Download 멀티미디어 상품 조회 **/
 		this.log.debug("---------------------------------------------------------------------");
-		this.log.debug("[BestDownloadMMServiceImpl] topMenuId : {}" + topMenuId);
-		this.log.debug("[BestDownloadMMServiceImpl] listId : {}" + listId);
-		this.log.debug("[BestDownloadMMServiceImpl] orderedBy : {}" + orderedBy);
-		this.log.debug("[BestDownloadMMServiceImpl] channelId : {}" + channelId);
+		this.log.debug("[BestDownloadMMServiceImpl] topMenuId : {}", topMenuId);
+		this.log.debug("[BestDownloadMMServiceImpl] listId : {}", listId);
+		this.log.debug("[BestDownloadMMServiceImpl] orderedBy : {}", orderedBy);
+		this.log.debug("[BestDownloadMMServiceImpl] channelId : {}", channelId);
 		this.log.debug("---------------------------------------------------------------------");
 
 		if (StringUtils.isEmpty(orderedBy) && StringUtils.isEmpty(channelId)) {
@@ -138,24 +138,31 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 					commonResponse.setTotalCount(0);
 					// throw new StorePlatformException("SAC_DSP_0016");
 				} else {
-					// 유/무료
-					if ("RNK000000006".equals(listId) || "RNK000000003".equals(listId)) {
+					if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
 						this.log.debug("---------------------------------------------------------------------");
-						this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchPayFreeList : {}");
+						this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchBestDownloadAppListByListId : {}");
 						this.log.debug("---------------------------------------------------------------------");
-						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchPayFreeList",
-								bestDownloadMMSacReq, MetaInfo.class);
-						// 추천/신규
-					} else if ("ADM000000013".equals(listId) || "TGR000000001".equals(listId)
-							|| "ADM000000001".equals(listId)) {
-						this.log.debug("---------------------------------------------------------------------");
-						this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchRecommendNewList : {}");
-						this.log.debug("---------------------------------------------------------------------");
-						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchRecommendNewList",
+						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchBestDownloadAppListByListId",
 								bestDownloadMMSacReq, MetaInfo.class);
 					} else {
-						commonResponse.setTotalCount(0);
+						// 유/무료
+						if ("RNK000000006".equals(listId) || "RNK000000003".equals(listId)) {
+							this.log.debug("---------------------------------------------------------------------");
+							this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchPayFreeList : {}");
+							this.log.debug("---------------------------------------------------------------------");
+							bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchPayFreeList",
+									bestDownloadMMSacReq, MetaInfo.class);
+							// 추천/신규
+						} else if ("ADM000000013".equals(listId) || "TGR000000001".equals(listId)) {
+							this.log.debug("---------------------------------------------------------------------");
+							this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchRecommendNewList : {}");
+							this.log.debug("---------------------------------------------------------------------");
+							bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchRecommendNewList",
+									bestDownloadMMSacReq, MetaInfo.class);
+						} else {
+							commonResponse.setTotalCount(0);
 
+						}
 					}
 				}
 

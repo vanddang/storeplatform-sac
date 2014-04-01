@@ -113,7 +113,7 @@ public class SearchSellerNameServiceImpl implements SearchSellerNameService {
 		List<MetaInfo> searchProductList = null;
 		List<MetaInfo> bestDownloadAppList = null;
 
-		// OpenApi 상품 검색 요청 조회(App) -- 상품명
+		// OpenApi 상품 검색 요청 조회(App) -- 판매자명
 		// App전체(DPAPP), 게임(DP01), FUN(DP03), 생활/위치(DP04), 어학/교육 (DP08)
 		if (DisplayConstants.DP_APPALL_TOP_MENU_ID.equals(topMenuId)
 				|| DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
@@ -184,7 +184,7 @@ public class SearchSellerNameServiceImpl implements SearchSellerNameService {
 			}
 
 		} else {
-			// OpenApi 상품 검색 요청 조회(멀티미디어) -- 상품명
+			// OpenApi 상품 검색 요청 조회(멀티미디어) -- 판매자명
 			// 멀티미디어 상품 조회
 			searchProductList = this.commonDAO.queryForList("OpenApi.searchProductList", searchSellerNameSacReq,
 					MetaInfo.class);

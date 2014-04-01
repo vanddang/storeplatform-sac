@@ -24,7 +24,6 @@
 		                      , TB_DP_PROD_RSHP         C
 		                      , TB_DP_PROD              D
 		                      , TB_DP_SPRT_DEVICE       E 
-		                      , TB_CM_DEVICE            F
 		                      , TB_DP_TENANT_PROD       G
 		                      , TB_DP_TENANT_PROD       H
 		                  WHERE A.TENANT_ID = #{tenantId} 
@@ -44,56 +43,19 @@
                             AND H.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                             /* 단말 프로비저닝 */
                             AND (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
-                            AND F.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
                             /* 상품 프로비저닝 시작 */
-                            /* 이북 코믹 일때 */
-                            AND DECODE( B.TOP_MENU_ID
-                                      , 'DP13'
-                                      , DECODE( F.EBOOK_SPRT_YN
-                                              , 'Y'
-                                              , DECODE( D.META_CLSF_CD
-                                                      , 'CT24'
-                                                      , DECODE( F.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                                      , 'CT26'
-                                                      , DECODE( F.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                                      , 1 )
-                                              , 0 )
-                                      , 'DP14'
-                                      , DECODE( F.COMIC_SPRT_YN , 'Y', 1 , 0 )
-                                      , 'DP15'
-                                      , 0
-                                      , 'DP16'
-                                      , DECODE( D.META_CLSF_CD
-                                              , 'CT25'
-                                              , DECODE( F.MUSIC_SPRT_YN, 'Y', 1, 0)
-                                              , 1 )
-                                      , 1 ) = 1
-                             /* 영화 방송 일때 */
-                             AND ( CASE WHEN B.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-                                        THEN ( SELECT 1
-                                                 FROM TB_DP_SUB_CONTENTS SC
-                                                WHERE SC.PROD_ID = D.PROD_ID
-                                                  AND SC.SALE_YN = 'Y'
-                                                  AND DECODE( F.SD_VIDEO_SPRT_YN
-                                                            , 'Y'
-                                                            , DECODE ( SC.DP_PG_QULT_CD
-                                                                     , 'PD009701', 1
-                                                                     , 'PD009702', 1
-                                                                     , DECODE( F.HDV_SPRT_YN , 'Y', 1 , 0 ) )
-                                                            , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
-                                                   AND ROWNUM <![CDATA[ <= ]]> 1  )
-                                        ELSE 1
-                                    END ) = 1                  
-                             /* 영화 방송 일때 */
-                             AND ( CASE WHEN B.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-                                        THEN DECODE( F.VIDEO_DRM_SPRT_YN
-                                                   , 'N'
-                                                   , DECODE( NVL( D.DRM_YN, 'N' ), 'N', 1, 0 )
-                                                   , 'Y'
-                                                   , 1 )
-                                        ELSE 1
-                                    END ) = 1                                      
-
+                            AND  (CASE WHEN B.TOP_MENU_ID = 'DP13' THEN
+                                            CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
+                                       WHEN B.TOP_MENU_ID = 'DP14' THEN
+                                            CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END
+                                       WHEN B.TOP_MENU_ID = 'DP15' THEN 0
+                                       WHEN B.TOP_MENU_ID = 'DP16' THEN
+                                            CASE WHEN B.META_CLSF_CD = 'CT25' THEN
+                                                      CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END ELSE 1 END
+                                       WHEN B.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+                                            CASE WHEN NVL(B.DRM_YN, 'N') = 'Y' AND #{videoDrmSprtYn} = 'N' THEN 0
+                                                 ELSE CASE WHEN #{sdVideoSprtYn} = 'Y' THEN 1 ELSE 0 END END
+                                       ELSE 1 END) = 1
 		                 UNION ALL
                          SELECT PROD_ID
                               , TOP_MENU_ID

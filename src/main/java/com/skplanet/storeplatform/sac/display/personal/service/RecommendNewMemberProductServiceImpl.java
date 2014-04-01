@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -85,10 +86,19 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 		}
 		count = offset + count - 1;
 		req.setCount(count); // set count
-
 		// 기준일시 조회
 		String stdDt = this.commonService.getBatchStandardDateString(tenantHeader.getTenantId(), req.getListId());
 		req.setStdDt(stdDt);
+
+		// 단말 지원정보 조회
+		SupportDevice supportDevice = this.commonService.getSupportDeviceInfo(header.getDeviceHeader().getModel());
+		if (supportDevice != null) {
+			req.setEbookSprtYn(supportDevice.getEbookSprtYn());
+			req.setComicSprtYn(supportDevice.getComicSprtYn());
+			req.setMusicSprtYn(supportDevice.getMusicSprtYn());
+			req.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
+			req.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+		}
 
 		List<MetaInfo> productIdList = this.commonDAO.queryForList(
 				"RecommendNewMemberProduct.searchRecommendNewMemberProductList", req, MetaInfo.class);

@@ -389,6 +389,8 @@
                                                          , 'DP14', 'DP000147'
                                                          , 'DP15', 'DP000102'
                                                          , 'DP16', 'DP000115'
+                                                         , 'DP17', 'DP000127'
+                                                         , 'DP18', 'DP000127'
                                                          , 'DP000125')
                    AND KC.LANG_CD = #{langCd}
                    AND ROWNUM = 1)        AS IMAGE_PATH
@@ -445,11 +447,20 @@
                                      AND B.SVC_GRP_CD       = 'DP000201'
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
                                    </if>
-                                   <if test ="topMenuId != 'DPAPP'">
-                                         <if test='topMenuId == "DP01" or topMenuId == "DP03" or topMenuId == "DP04" or topMenuId == "DP08"'>
-                                         AND B.SVC_GRP_CD       = 'DP000201'
-                                         </if>
-                                         AND B.TOP_MENU_ID  = #{topMenuId}
+                                   <if test ="topMenuId == 'DP09'">
+                                     AND B.SVC_GRP_CD       = 'DP000203'
+                                     AND B.TOP_MENU_ID IN ('DP09','DP17','DP18')
+                                   </if>                                   
+                                   <if test ="topMenuId != 'DPAPP' and topMenuId != 'DP09'">
+	                                <choose>
+	                                   <when test='topMenuId == "DP01" or topMenuId == "DP03" or topMenuId == "DP04" or topMenuId == "DP08"'>
+	                                   AND B.SVC_GRP_CD       = 'DP000201'
+	                                   </when>
+	                                   <otherwise>
+	                                   AND B.SVC_GRP_CD       = 'DP000203'
+	                                   </otherwise>
+                                    </choose>
+                                       AND B.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
                                    AND F.USE_YN = 'Y'
@@ -472,7 +483,23 @@
                                                                       ,'DP18', B.REG_ID
                                                                       ,'DP09', B.REG_ID, B.EXPO_SELLER_NM)) LIKE '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
                                     </if>
-                                   </if>                                       
+                                   </if>
+                                   <if test='topMenuId == "DP09" or topMenuId == "DP17" or topMenuId == "DP18"'>
+                                   AND (CASE WHEN (NVL(B.DRM_YN, 'N') = 'Y' AND NVL(K.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 
+                                        ELSE CASE WHEN K.SD_VIDEO_SPRT_YN = 'Y' THEN 1 
+                                             ELSE 0 END
+                                         END
+                                        ) = 1  
+                                   </if>
+                                   <if test='topMenuId == "DP13"'>
+                                   AND K.EBOOK_SPRT_YN ='Y' /* 이북 조회일때 */ 
+                                   </if>
+                                   <if test='topMenuId == "DP14"'> 
+                                   AND K.COMIC_SPRT_YN = 'Y'
+                                   </if>
+                                   <if test='topMenuId == "DP16"'>
+                                   AND (CASE WHEN B.META_CLSF_CD = 'CT25' THEN CASE WHEN K.MUSIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END ELSE 1 END) = 1                                                                                                                                                                                                            
+                                   </if>                                                                                                         
                                ) JA
                           WHERE RNUM = 1
                        ) 
@@ -588,13 +615,20 @@
                                    AND A.TENANT_ID = I.TENANT_ID
                                    AND A.TENANT_ID = L.TENANT_ID
                                    AND B.PROD_CHRG_YN     = 'Y'
-                                   AND B.SVC_GRP_CD       = 'DP000201'    /* 다운로드 BEST 일반앱일때만 조건 추가 */
+                                   <choose>
+                                   <when test ="topMenuId == 'DP16'">
+                                   AND B.SVC_GRP_CD       = 'DP000203'    /* 음악일 경우 멀티미디어 그룹에서 조회 */
+                                   </when>
+                                   <otherwise>
+                                   AND B.SVC_GRP_CD       = 'DP000201'    /* 앱 상품 조회 */
+                                   </otherwise>
+                                   </choose>
                                    AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
                                    </if>
                                    <if test ="topMenuId != 'DPAPP'">
-                                         AND B.TOP_MENU_ID  = #{topMenuId}
+                                     AND B.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
                                    AND F.USE_YN = 'Y'
@@ -605,6 +639,9 @@
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
+                                   <if test ="topMenuId == 'DP16'">
+                                   AND (CASE WHEN B.META_CLSF_CD = 'CT25' THEN CASE WHEN K.MUSIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END ELSE 1 END) = 1
+                                   </if>                                                             
                                  ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB
@@ -720,7 +757,14 @@
                                    AND A.TENANT_ID = I.TENANT_ID
                                    AND A.TENANT_ID = L.TENANT_ID
                                    AND B.PROD_CHRG_YN     = 'N'
-                                   AND B.SVC_GRP_CD       = 'DP000201'    /* 다운로드 BEST 일반앱일때만 조건 추가 */
+                                   <choose>
+                                   <when test ="topMenuId == 'DP16'">
+                                   AND B.SVC_GRP_CD       = 'DP000203'    /* 음악일 경우 멀티미디어 그룹에서 조회 */
+                                   </when>
+                                   <otherwise>
+                                   AND B.SVC_GRP_CD       = 'DP000201'    /* 앱 상품 조회 */
+                                   </otherwise>
+                                   </choose>
                                    AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
@@ -737,6 +781,9 @@
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
+                                   <if test ="topMenuId == 'DP16'">
+                                   AND (CASE WHEN B.META_CLSF_CD = 'CT25' THEN CASE WHEN K.MUSIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END ELSE 1 END) = 1
+                                   </if>                                   
                                  ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB
@@ -850,7 +897,14 @@
                                    AND A.TENANT_ID = H.TENANT_ID
                                    AND A.TENANT_ID = I.TENANT_ID
                                    AND A.TENANT_ID = L.TENANT_ID
-                                   AND B.SVC_GRP_CD       = 'DP000201'    /* 다운로드 BEST 일반앱일때만 조건 추가 */
+                                   <choose>
+                                   <when test ="topMenuId == 'DP16'">
+                                   AND B.SVC_GRP_CD       = 'DP000203'    /* 음악일 경우 멀티미디어 그룹에서 조회 */
+                                   </when>
+                                   <otherwise>
+                                   AND B.SVC_GRP_CD       = 'DP000201'    /* 앱 상품 조회 */
+                                   </otherwise>
+                                   </choose>
                                    AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
@@ -867,6 +921,9 @@
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
+                                   <if test ="topMenuId == 'DP16'">
+                                   AND (CASE WHEN B.META_CLSF_CD = 'CT25' THEN CASE WHEN K.MUSIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END ELSE 1 END) = 1
+                                   </if>                                   
                                  ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB
@@ -981,7 +1038,14 @@
                                    AND A.TENANT_ID = H.TENANT_ID
                                    AND A.TENANT_ID = I.TENANT_ID
                                    AND A.TENANT_ID = L.TENANT_ID
-                                   AND B.SVC_GRP_CD       = 'DP000201'    -- 다운로드 BEST 일반앱일때만 조건 추가
+                                   <choose>
+                                   <when test ="topMenuId == 'DP16'">
+                                   AND B.SVC_GRP_CD       = 'DP000203'    /* 음악일 경우 멀티미디어 그룹에서 조회 */
+                                   </when>
+                                   <otherwise>
+                                   AND B.SVC_GRP_CD       = 'DP000201'    /* 앱 상품 조회 */
+                                   </otherwise>
+                                   </choose>
                                    AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
@@ -998,6 +1062,9 @@
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
+                                   <if test ="topMenuId == 'DP16'">
+                                   AND (CASE WHEN B.META_CLSF_CD = 'CT25' THEN CASE WHEN K.MUSIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END ELSE 1 END) = 1
+                                   </if>
                                  ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB 
@@ -1013,7 +1080,7 @@
     </if>                    
     </select>
     
-    <!-- 2.15.1.10 멀티미디어 상품 목록 조회(이북, 코믹 유/무료) -->
+    <!-- 2.15.1.10 멀티미디어 상품 목록 조회(이북,코믹 유/무료) -->
     <select id="searchPayFreeList" parameterType="BestDownloadMMSacReq" resultType="MetaInfo">
 		SELECT /* OpenApiMapper.searchPayFreeList,멀티미디어 상품 목록 조회(Ebook, Comic, Music 유/무료) , 이석희/아이에스플러스, 2014-03-17 */
 		       COUNT(*) OVER() AS CUR_COUNT /*현재페이지의 상품갯수*/
@@ -1150,7 +1217,7 @@
 		                                   </if>
 		                                   <if test ="topMenuId == 'DP14'">
 		                                   AND L.COMIC_SPRT_YN ='Y' /* 코믹 조회일때 */
-		                                   </if>
+		                                   </if>                 		                                   
 		                               ) 
 		                          WHERE RN = 1
 		                          <if test ="topMenuId == 'DP13'">
@@ -1253,7 +1320,7 @@
 		                                  , TB_DP_PROD_DESC         CH_C
 		                                  , TB_DP_TENANT_PROD       CH_D
 		                                  , TB_DP_PROD              CH_E
-		                                  , UV_TB_DP_MULTIMDA_PROD  CH_F
+		                                  , TB_DP_EBOOK_PROD        CH_F
 		                                  , TB_DP_PROD_RSHP         MP_G
 		                                  , TB_DP_PROD              EP_H
 		                                  , TB_DP_TENANT_PROD_PRICE EP_I
@@ -1387,7 +1454,7 @@
 		                                  , TB_DP_TENANT_PROD       CH_D
 		                                  , TB_DP_TENANT_PROD_PRICE CH_E
 		                                  , TB_DP_PROD              CH_F
-		                                  , UV_TB_DP_MULTIMDA_PROD  CH_G
+		                                  , TB_DP_VOD_PROD          CH_G
 		                                  , TB_DP_PROD_RSHP         MP_H
 		                                  , TB_DP_PROD              EP_I
 		                                  , TB_DP_SUB_CONTENTS      EP_J
@@ -1431,7 +1498,11 @@
 			                         AND (EP_K.DEVICE_MODEL_CD = #{deviceModelCd} OR EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
 			                         AND  EP_L.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */      		                             
 		                             AND  EP_L.REP_DEVICE_YN = 'Y'
-		                             AND  (CASE WHEN (NVL(EP_I.DRM_YN, 'N') = 'Y' AND NVL(EP_L.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 ELSE 1 END) = 1
+                                     AND (CASE WHEN (NVL(EP_I.DRM_YN, 'N') = 'Y' AND NVL(EP_L.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 
+                                          ELSE CASE WHEN EP_L.SD_VIDEO_SPRT_YN = 'Y' THEN 1 
+                                               ELSE 0 END
+                                           END
+                                          ) = 1   		                             
 		                             AND  EP_M.TENANT_ID = #{tenantId}
 		                             AND  EP_M.PROD_STATUS_CD = 'PD000403'
                                    ORDER BY CH_A.EXPO_ORD_ALWAYS_YN DESC
@@ -1452,7 +1523,7 @@
 		   AND  KC.IMG_CD(+) = #{imageCd}      
     </select>    
     
-    <!-- 2.15.2.1 상품 검색 요청(By 상품명)  AS-IS getProductMMList-->
+    <!-- 2.15.2.1 상품 검색 요청 멀티미디어  AS-IS getProductMMList-->
     <select id="searchProductList" parameterType="SearchAppNameSacReq" resultType="MetaInfo">
         SELECT /* OpenApiMapper.searchProductList, 상품 검색 요청(상품명) , 이석희/아이에스플러스, 2014-03-03 */
                COUNT(*) OVER()                  AS CUR_COUNT                      /*현재페이지의 상품갯수*/
@@ -1503,7 +1574,7 @@
                   FROM TB_DP_PROD_IMG KC
                  WHERE KA.PROD_ID = KC.PROD_ID
                    AND KC.IMG_CD = DECODE(KA.TOP_MENU_ID , 'DP09', 'DP000127'
-                                                         , 'DP14', 'DP000127'
+                                                         , 'DP17', 'DP000127'
                                                          , 'DP18', 'DP000127'
                                                          , 'DP000147')
                    AND KC.LANG_CD = #{langCd}
@@ -1527,13 +1598,11 @@
                       , JA.PROD_GRD_CD
                       , NVL(JA.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE
                       , NVL(JA.PRCHS_CNT, 0) AS PRCHS_CNT
---                      , JA.CHNL_PROD_ID
                       , JA.EPSD_PROD_ID
                   FROM
                       (
                         <if test="channelId == null">
                         SELECT  ROW_NUMBER( ) OVER( PARTITION BY E.PROD_ID ORDER BY L.REG_DT DESC ) AS RNUM
---                              , A.PROD_ID AS PROD_ID
                               , A.META_CLSF_CD AS META_CLSF_CD
                               , B.PROD_NM AS PROD_NM
                               , B.PROD_BASE_DESC AS PROD_BASE_DESC
@@ -1554,7 +1623,6 @@
                         </if>
                         <if test="channelId != null">
                         SELECT  ROW_NUMBER( ) OVER( PARTITION BY E.PROD_ID, E.PART_PROD_ID ORDER BY L.REG_DT DESC ) AS RNUM
---                              , H.PROD_ID AS PROD_ID
                               , H.META_CLSF_CD AS META_CLSF_CD
                               , I.PROD_NM AS PROD_NM
                               , I.PROD_BASE_DESC AS PROD_BASE_DESC
@@ -1649,20 +1717,40 @@
                                 </if>
                             </if>    
                            </if>
-                           <if test='topMenuId == "DP09"'>
-                            AND DECODE( N.SD_VIDEO_SPRT_YN
-                                      , 'Y'
-                                      , DECODE ( L.DP_PG_QULT_CD
-                                              , 'PD009701', 1
-                                              , 'PD009702', 1
-                                              , DECODE( N.HDV_SPRT_YN , 'Y', 1 , 0 ) )
-                                      , DECODE( L.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
-                            AND DECODE( N.VIDEO_DRM_SPRT_YN
-                                      , 'N'
-                                      , DECODE( NVL( H.DRM_YN, 'N' ), 'N', 1, 0 )
-                                      , 'Y'
-                                      , 1 )  = 1
+                            <if test='topMenuId == "DP09" or topMenuId == "DP17" or topMenuId == "DP18"'>
+                            <choose>
+                                <when test="channelId != null">
+                                AND (CASE WHEN (NVL(H.DRM_YN, 'N') = 'Y' AND NVL(N.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 
+                                     ELSE CASE WHEN N.SD_VIDEO_SPRT_YN = 'Y' THEN 1 
+                                          ELSE 0 END
+                                      END
+                                     ) = 1                                  
+                                </when>
+                                <otherwise>
+                                AND (CASE WHEN (NVL(A.DRM_YN, 'N') = 'Y' AND NVL(N.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 
+                                     ELSE CASE WHEN N.SD_VIDEO_SPRT_YN = 'Y' THEN 1 
+                                          ELSE 0 END
+                                      END
+                                     ) = 1
+                                </otherwise> 
+                            </choose>
+                            </if>
+                            <if test='topMenuId == "DP13"'>
+                            AND N.EBOOK_SPRT_YN ='Y' /* 이북 조회일때 */ 
+                            </if>
+                            <if test='topMenuId == "DP14"'> 
+                            AND N.COMIC_SPRT_YN = 'Y'
                            </if>
+                            <if test='topMenuId == "DP16"'>
+                            <choose>
+                                <when test="channelId != null">
+                                AND (CASE WHEN H.META_CLSF_CD = 'CT25' THEN CASE WHEN N.MUSIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END ELSE 1 END) = 1
+                                </when>
+                                <otherwise>
+                                AND (CASE WHEN A.META_CLSF_CD = 'CT25' THEN CASE WHEN N.MUSIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END ELSE 1 END) = 1
+                                </otherwise>
+                            </choose>                                                                                                                                                                                                            
+                            </if>                               
                              <if test='channelId != null and channelId != ""'>
                             AND A.PROD_ID = #{channelId}
                              </if>      
