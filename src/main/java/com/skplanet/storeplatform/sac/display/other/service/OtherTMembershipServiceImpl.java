@@ -49,8 +49,8 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 	 * Tmembership 할인율 조회.
 	 * </pre>
 	 * 
-	 * @param OtherServiceGroupSacReq
-	 * @return OtherServiceGroupSacRes
+	 * @param OtherTMembershipReq
+	 * @return OtherTMembershipRes
 	 * 
 	 * @param req
 	 *            req
