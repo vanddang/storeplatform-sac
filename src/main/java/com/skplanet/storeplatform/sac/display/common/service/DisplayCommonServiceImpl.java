@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.display.common.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,12 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest;
+import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+import com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 
 /**
  * 전시 공통 서비스
@@ -39,20 +44,21 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Autowired
 	private ExistenceSCI existenceSCI;
 
-    @Value("#{propertiesForSac['display.previewUrlPrefix']}")
-    private String previewPrefix = "";
+	@Value("#{propertiesForSac['display.previewUrlPrefix']}")
+	private final String previewPrefix = "";
 
 	@Override
 	public String getBatchStandardDateString(String tenantId, String listId) {
 
-		return (String) this.commonDAO.queryForObject("DisplayCommon.getBatchStandardDate", new BatchStandardDateRequest(
-				tenantId, listId));
+		return (String) this.commonDAO.queryForObject("DisplayCommon.getBatchStandardDate",
+				new BatchStandardDateRequest(tenantId, listId));
 	}
 
 	@Override
 	public List<MenuItem> getMenuItemList(String prodId, String langCd) {
 
-		return this.commonDAO.queryForList("DisplayCommon.getMenuItemList", new MenuItemReq(prodId, langCd), MenuItem.class);
+		return this.commonDAO.queryForList("DisplayCommon.getMenuItemList", new MenuItemReq(prodId, langCd),
+				MenuItem.class);
 	}
 
 	@Override
@@ -142,33 +148,48 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		return existenceListRes;
 	}
 
-    @Override
-    public String makePreviewUrl(String phyPath) {
-        if(StringUtils.isNotEmpty(phyPath))
-            return previewPrefix + phyPath;
-        else
-            return "";
-    }
+	@Override
+	public String makePreviewUrl(String phyPath) {
+		if (StringUtils.isNotEmpty(phyPath))
+			return this.previewPrefix + phyPath;
+		else
+			return "";
+	}
 
-    @Override
-    @Cacheable(value = "sac:display:tmembershipdcrate")
-    public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String topMenuId) {
-        Map<String, String> req = new HashMap<String, String>();
-        req.put("tenantId", tenantId);
-        req.put("policyId", "policy014");   // policy014 - TMembership 할인정책
-        req.put("menuId", topMenuId);
+	@Override
+	@Cacheable(value = "sac:display:tmembershipdcrate")
+	public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String topMenuId) {
+		Map<String, String> req = new HashMap<String, String>();
+		req.put("tenantId", tenantId);
+		req.put("policyId", "policy014"); // policy014 - TMembership 할인정책
+		req.put("menuId", topMenuId);
 
-        List<TenantSalePolicy> tenantSalePolicies = commonDAO.queryForList("DisplayCommon.getTmembershipDcRateForMenu", req, TenantSalePolicy.class);
-        TmembershipDcInfo tmembershipDcInfo = new TmembershipDcInfo();
-        for (TenantSalePolicy tsp : tenantSalePolicies) {
-            if(tsp.getProdTp().equals("OR006311")) {
-                tmembershipDcInfo.setNormalDcRate(tsp.getDcRate());
-            }
-            else if(tsp.getProdTp().equals("OR006331")) {
-                tmembershipDcInfo.setFreepassDcRate(tsp.getDcRate());
-            }
-        }
+		List<TenantSalePolicy> tenantSalePolicies = this.commonDAO.queryForList(
+				"DisplayCommon.getTmembershipDcRateForMenu", req, TenantSalePolicy.class);
+		TmembershipDcInfo tmembershipDcInfo = new TmembershipDcInfo();
+		for (TenantSalePolicy tsp : tenantSalePolicies) {
+			if (tsp.getProdTp().equals("OR006311")) {
+				tmembershipDcInfo.setNormalDcRate(tsp.getDcRate());
+			} else if (tsp.getProdTp().equals("OR006331")) {
+				tmembershipDcInfo.setFreepassDcRate(tsp.getDcRate());
+			}
+		}
 
-        return tmembershipDcInfo;
-    }
+		return tmembershipDcInfo;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
+	 */
+	@Override
+	public SupportDevice getSupportDeviceInfo(String deviceModelCd) {
+		if (StringUtils.isEmpty(deviceModelCd)) {
+			return null;
+		}
+
+		return (SupportDevice) this.commonDAO.queryForObject("DisplayCommon.getSupportDeviceInfo", deviceModelCd);
+	}
 }

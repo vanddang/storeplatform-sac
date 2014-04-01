@@ -43,6 +43,7 @@ import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.feature.intimateMessage.vo.IntimateMessageDefault;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -313,29 +314,45 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		if (StringUtils.isNotEmpty(stdDt)) {
 			messageReq.setStdDt(stdDt);
 
-			// 앱코디 상품 리스트 조회
-			List<MetaInfo> prodList = this.commonDAO.queryForList("IntimateMessage.searchIntimateMessageAppCodiList",
-					messageReq, MetaInfo.class);
+			// 단말 지원정보 조회
+			SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
+					.getModel());
 
-			if (prodList != null && !prodList.isEmpty()) {
-				MetaInfo metaInfo = null;
-				List<Product> productList = new ArrayList<Product>();
+			if (supportDevice != null) {
+				messageReq.setEbookSprtYn(supportDevice.getEbookSprtYn());
+				messageReq.setComicSprtYn(supportDevice.getComicSprtYn());
+				messageReq.setMusicSprtYn(supportDevice.getMusicSprtYn());
+				messageReq.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
+				messageReq.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
 
-				for (int i = 0; i < prodList.size(); i++) {
-					metaInfo = prodList.get(i);
+				// 앱코디 상품 리스트 조회
+				List<MetaInfo> prodList = this.commonDAO.queryForList(
+						"IntimateMessage.searchIntimateMessageAppCodiList", messageReq, MetaInfo.class);
 
-					// 상품 메타 정보 조회
-					metaInfo = this.getMetaInfo(header, metaInfo.getProdId(), metaInfo.getTopMenuId());
+				if (prodList != null && !prodList.isEmpty()) {
+					MetaInfo metaInfo = null;
+					List<Product> productList = new ArrayList<Product>();
 
-					if (metaInfo != null) {
-						productList.add(this.generateProductVO(metaInfo));
+					for (int i = 0; i < prodList.size(); i++) {
+						metaInfo = prodList.get(i);
+
+						// 상품 메타 정보 조회
+						metaInfo = this.getMetaInfo(header, metaInfo.getProdId(), metaInfo.getTopMenuId());
+
+						if (metaInfo != null) {
+							productList.add(this.generateProductVO(metaInfo));
+						}
 					}
-				}
 
-				appCodiRes.setProductList(productList);
-				commonResponse.setTotalCount(prodList.get(0).getTotalCount());
+					appCodiRes.setProductList(productList);
+					commonResponse.setTotalCount(prodList.get(0).getTotalCount());
+				} else {
+					commonResponse.setTotalCount(0);
+				}
 			} else {
-				commonResponse.setTotalCount(0);
+				this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("[searchIntimateMessageAppCodiList] supportDevice is empty!");
+				this.logger.debug("----------------------------------------------------------------");
 			}
 		} else {
 			this.logger.debug("----------------------------------------------------------------");

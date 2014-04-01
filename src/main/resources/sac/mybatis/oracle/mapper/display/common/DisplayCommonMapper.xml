@@ -55,5 +55,17 @@
               AND POLICY_ID = #{policyId}
               AND SUBSTR(TENANT_PROD_GRP_CD,9,4) = #{menuId}
     </select>
-
+    
+    <!-- 단말 지원정보 조회 -->
+    <select id="getSupportDeviceInfo" parameterType="String" resultType="com.skplanet.storeplatform.sac.display.common.vo.SupportDevice">
+		SELECT  /* DisplayCommonMapper.getSupportDeviceInfo, 단말 지원정보 조회, 이태희/부르칸, 2014-04-01 */ 
+		        NVL(EBOOK_SPRT_YN, 'N') AS EBOOK_SPRT_YN
+		      , NVL(COMIC_SPRT_YN, 'N') AS COMIC_SPRT_YN
+		      , NVL(MUSIC_SPRT_YN, 'N') AS MUSIC_SPRT_YN
+		      , NVL(VIDEO_DRM_SPRT_YN, 'N') AS VIDEO_DRM_SPRT_YN
+		      , NVL(SD_VIDEO_SPRT_YN, 'N') AS SD_VIDEO_SPRT_YN
+		      , NVL(SCL_SHPG_SPRT_YN, 'N') AS SCL_SHPG_SPRT_YN
+		  FROM  TB_CM_DEVICE
+		 WHERE  DEVICE_MODEL_CD = #{deviceModelCd}
+    </select>
 </mapper>

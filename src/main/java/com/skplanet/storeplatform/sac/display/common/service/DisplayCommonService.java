@@ -1,11 +1,11 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
-import com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
-
-import java.util.List;
 
 /**
  * 전시 공통 서비스
@@ -54,46 +54,68 @@ public interface DisplayCommonService {
 	 */
 	public String getDeviceIdType(String deviceId);
 
-    /**
-     * 특정 상품의 구매 내역 유무를 확인한다.
-     * @param tenantId 테넌트ID
-     * @param userKey 사용자키
-     * @param deviceKey 디바이스키
-     * @param episodeId 에피소드ID
-     * @return 구매 내역이 있는 경우 true
-     */
-    public boolean checkPurchase(String tenantId, String userKey, String deviceKey, String episodeId);
+	/**
+	 * 특정 상품의 구매 내역 유무를 확인한다.
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param userKey
+	 *            사용자키
+	 * @param deviceKey
+	 *            디바이스키
+	 * @param episodeId
+	 *            에피소드ID
+	 * @return 구매 내역이 있는 경우 true
+	 */
+	public boolean checkPurchase(String tenantId, String userKey, String deviceKey, String episodeId);
 
-    /**
-     * 상품 목록의 구매 내역 유무를 확인한다.
-     * @param tenantId 테넌트ID
-     * @param userKey 사용자키
-     * @param deviceKey 디바이스키
-     * @param episodeIdList 에피소드ID List
-     * @return 구매 내역 List
-     */
-    public List<ExistenceScRes> checkPurchaseList(String tenantId, String userKey, String deviceKey, List<String> episodeIdList);
+	/**
+	 * 상품 목록의 구매 내역 유무를 확인한다.
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param userKey
+	 *            사용자키
+	 * @param deviceKey
+	 *            디바이스키
+	 * @param episodeIdList
+	 *            에피소드ID List
+	 * @return 구매 내역 List
+	 */
+	public List<ExistenceScRes> checkPurchaseList(String tenantId, String userKey, String deviceKey,
+			List<String> episodeIdList);
 
-    /**
-     * 미리보기 URL을 작성한다.
-     * @param phyPath 파일의 물리 경로
-     * @return
-     */
-    public String makePreviewUrl(String phyPath);
+	/**
+	 * 미리보기 URL을 작성한다.
+	 * 
+	 * @param phyPath
+	 *            파일의 물리 경로
+	 * @return
+	 */
+	public String makePreviewUrl(String phyPath);
 
-    /**
-     * 메뉴에 해당하는 T멤버십 할인율 조회한다.
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * @param tenantId
-     * @param topMenuId
-     * @return
-     */
-    public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String topMenuId);
+	/**
+	 * 메뉴에 해당하는 T멤버십 할인율 조회한다.
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * @param tenantId
+	 * @param topMenuId
+	 * @return
+	 */
+	public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String topMenuId);
 
+	/**
+	 * <pre>
+	 * 단말 지원정보 조회.
+	 * </pre>
+	 * 
+	 * @param deviceModelCd
+	 * @return HashMap
+	 */
+	public SupportDevice getSupportDeviceInfo(String deviceModelCd);
 }
