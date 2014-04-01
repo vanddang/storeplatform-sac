@@ -28,10 +28,29 @@
     
     <import resource="classpath*:purchase/spring/context-common.xml" /> 
     
-    <bean class="com.skplanet.storeplatform.framework.core.proxy.LocalSCIPostProcessor">
+    <bean id="allLocalSCIPostProcessor" class="com.skplanet.storeplatform.framework.core.proxy.LocalSCIPostProcessor">
         <property name="validator">
             <bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>  
         </property> 
     </bean>
     
+    <bean id="memberTlogLocalSCIPostProcessor" class="com.skplanet.storeplatform.framework.integration.interceptor.DefalutExpressionAdvisorPostProcessor">
+        <property name="userAdvice">
+            <bean class="com.skplanet.storeplatform.framework.integration.interceptor.TLogLocalSCIInterceptor">
+                <constructor-arg type="java.lang.String" name="componentId" value="MEMBER"/>
+                <constructor-arg type="java.lang.String" name="componentTLogLoggerName" value="TLOG_MEMBER_LOGGER"/>
+            </bean>
+        </property>      
+        <property name="expression" value="within(com.skplanet.storeplatform.member..*) and @within(com.skplanet.storeplatform.framework.integration.bean.LocalSCI)" />
+    </bean>
+    <bean id="purchaseTlogLocalSCIPostProcessor" class="com.skplanet.storeplatform.framework.integration.interceptor.DefalutExpressionAdvisorPostProcessor">
+        <property name="userAdvice">
+            <bean class="com.skplanet.storeplatform.framework.integration.interceptor.TLogLocalSCIInterceptor">
+                <constructor-arg type="java.lang.String" name="componentId" value="PURCHASE"/>
+                <constructor-arg type="java.lang.String" name="componentTLogLoggerName" value="TLOG_PURCHASE_LOGGER"/>
+            </bean>
+        </property>      
+        <property name="expression" value="within(com.skplanet.storeplatform.purchase..*) and @within(com.skplanet.storeplatform.framework.integration.bean.LocalSCI)" />
+    </bean>
+
 </beans>
