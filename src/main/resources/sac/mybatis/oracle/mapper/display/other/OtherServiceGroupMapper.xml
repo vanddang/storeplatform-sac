@@ -12,6 +12,8 @@
             , JA.TOP_MENU_NM
             , JA.SVC_GRP_CD
             , JA.META_CLSF_CD
+            , JA.PROD_GRD_CD
+            , JA.PROD_CHRG_YN
         FROM 
         (    
 			SELECT
@@ -22,6 +24,8 @@
 			      , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = TDP.TOP_MENU_ID AND LANG_CD = 'ko') TOP_MENU_NM
 			      , TDP.SVC_GRP_CD
 			      , TDP.META_CLSF_CD
+			      , TDP.PROD_GRD_CD
+                  , TDP.PROD_CHRG_YN
 			      , ROWNUM
 			FROM TB_DP_PROD TDP
 			WHERE 1=1
@@ -42,6 +46,8 @@
 		             , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = C.TOP_MENU_ID AND LANG_CD = 'ko') TOP_MENU_NM
 		             , C.SVC_GRP_CD
 		             , C.META_CLSF_CD
+	                 , C.PROD_GRD_CD
+	                 , C.PROD_CHRG_YN
 		             , ROW_NUMBER() OVER ( PARTITION BY A.CATALOG_ID ORDER BY B.PROD_ID) AS RNUM
 		        FROM TB_DP_PROD_CATALOG_MAPG A, 
 		             TB_DP_PROD_RSHP B, 

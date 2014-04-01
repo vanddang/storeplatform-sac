@@ -25,6 +25,8 @@ public class OtherServiceGroup {
 	private String menuNm;
 	private String svcGrpCd;
 	private String metaClsfCd;
+	private String prodGrdCd;
+	private String prodChrgYn;
 
 	public String getTopMenuNm() {
 		return this.topMenuNm;
@@ -132,6 +134,36 @@ public class OtherServiceGroup {
 	 */
 	public void setMetaClsfCd(String metaClsfCd) {
 		this.metaClsfCd = metaClsfCd;
+	}
+
+	/**
+	 * @return the prodGrdCd
+	 */
+	public String getProdGrdCd() {
+		return this.prodGrdCd;
+	}
+
+	/**
+	 * @param prodGrdCd
+	 *            the prodGrdCd to set
+	 */
+	public void setProdGrdCd(String prodGrdCd) {
+		this.prodGrdCd = prodGrdCd;
+	}
+
+	/**
+	 * @return the prodChrgYn
+	 */
+	public String getProdChrgYn() {
+		return this.prodChrgYn;
+	}
+
+	/**
+	 * @param prodChrgYn
+	 *            the prodChrgYn to set
+	 */
+	public void setProdChrgYn(String prodChrgYn) {
+		this.prodChrgYn = prodChrgYn;
 	}
 
 }

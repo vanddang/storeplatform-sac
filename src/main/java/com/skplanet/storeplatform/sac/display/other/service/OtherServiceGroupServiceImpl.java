@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.other.vo.OtherServiceGroup;
@@ -81,6 +82,8 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 			List<Identifier> identifierList;
 			Identifier identifier = null;
 			Product product = null;
+			// right 설정
+			Rights rights = null;
 
 			List<Menu> menuList;
 			List<Product> productList = new ArrayList<Product>();
@@ -124,6 +127,15 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 				menuList.add(menu);
 
 				product.setMenuList(menuList);
+
+				// right 설정
+				rights = new Rights();
+				rights.setGrade(otherServiceGroup.getProdGrdCd());
+
+				product.setRights(rights);
+
+				// 상품 유/무료 구분
+				product.setProdChrgYn(otherServiceGroup.getProdChrgYn());
 
 				// 데이터 매핑
 				productList.add(i, product);
