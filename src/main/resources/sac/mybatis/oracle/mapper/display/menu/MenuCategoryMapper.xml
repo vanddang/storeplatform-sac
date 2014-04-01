@@ -475,7 +475,7 @@
 
     <!-- 세부 카테고리정보 조회 - 영화 -->
     <select id="selectMovieSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
-        SELECT /* MenuCategoryMapper.xml, selectMultiSubCategoryList, SAC 전시 , 2014-03-07 */
+        SELECT /* MenuCategoryMapper.xml, selectMovieSubCategoryList, SAC 전시 , 2014-03-07 */
             COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
             , DECODE(A.INFR_MENU_YN, 'Y'
                 , SUM(A.MENU_PROD_CNT) OVER ( PARTITION BY SUBSTR(A.MENU_ID, 0, 7 ) )
@@ -723,7 +723,7 @@
                                 , TB_DP_PROD_RSHP E
                                 , TB_DP_SHPG_PROD F /* 에피 */
                                 , TB_DP_TENANT_PROD G /* 에피 */
-                                , TB_DP_SPRC_PROD H
+                                , TB_DP_TENANT_PROD_PRICE H /* 에피 */ /* 추가 */
                                 , TB_DP_SPRT_DEVICE I
                                 , TB_CM_DEVICE J
                             WHERE 1=1
@@ -736,6 +736,7 @@
                             AND E.PART_PROD_ID = H.PROD_ID
                             AND E.PART_PROD_ID = I.PROD_ID
                             AND I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
+                            AND G.TENANT_ID = H.TENANT_ID /* 추가 */
                             AND NVL(B.CHNL_CNT, 0) > 0
                             AND A.USE_YN ='Y'
                             AND C.USE_YN ='Y'
@@ -743,7 +744,7 @@
                             AND G.EXPO_YN = 'Y'
                             AND NVL(F.B2B_PROD_YN, 'N') != 'Y'
                             AND G.PROD_STATUS_CD = 'PD000403'
-                            AND SYSDATE BETWEEN  H.SPRC_APPLY_START_DT AND H.SPRC_APPLY_END_DT
+                            AND SYSDATE BETWEEN  H.APPLY_START_DT AND H.APPLY_END_DT /* 추가 */
                             AND J.SCL_SHPG_SPRT_YN = 'Y'
                             AND (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
                             AND G.TENANT_ID = #{tenantId} /* 테넌트ID */
