@@ -224,7 +224,9 @@
 		                         (
 		                            SELECT 
 		                                  AR.PROD_ID
-		                                , AR.EXPO_ORD
+                                        , AR.EXPO_ORD_ALWAYS_YN
+                                        , AR.EXPO_ORD
+                                        , AR.EXPO_ORD_SUB
 		                                , P.TOP_MENU_ID
 		                                , CP.MENU_ID
 		                                , P.SVC_GRP_CD
@@ -354,8 +356,8 @@
 		                             END ) = 1
 		                             ) S
 		                         WHERE S.RN = 1
-		                         ORDER BY S.EXPO_ORD
-		                                , S.PROD_NM                             
+                                 ORDER BY S.EXPO_ORD_ALWAYS_YN DESC, S.EXPO_ORD, S.EXPO_ORD_SUB
+                                        , S.PROD_NM
 		                    ) B
 		                 WHERE ROWNUM <![CDATA[<=]]> #{END_ROW}
 		               ) C
@@ -367,8 +369,8 @@
 		        AND PP.PROD_ID(+) = P.PROD_ID
 		        AND PP.TENANT_ID(+) = #{tenantHeader.tenantId}
 		        AND PI.IMG_CD IN (<foreach collection="imageCdList" item="imgCd" separator=",">#{imgCd}</foreach>)
-		     ORDER BY P.EXPO_ORD
-		            , P.PROD_NM
+             ORDER BY P.EXPO_ORD_ALWAYS_YN DESC, P.EXPO_ORD, P.EXPO_ORD_SUB
+                    , P.PROD_NM
     </select>
     
     <select id="getBasicAdminRecommandProdList" parameterType="Map" resultType="ProductBasicInfo">

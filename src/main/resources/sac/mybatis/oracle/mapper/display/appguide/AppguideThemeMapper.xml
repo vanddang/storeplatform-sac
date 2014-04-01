@@ -87,7 +87,7 @@
                      AND  PHI.REP_DEVICE_YN = 'Y'
                      AND  (PHI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
                      AND  PHI.USE_YN = 'Y'
-                     ORDER BY AP.EXPO_ORD, AP.REG_DT DESC
+                     ORDER BY AP.EXPO_ORD_ALWAYS_YN DESC, AP.EXPO_ORD, AP.EXPO_ORD_SUB, AP.REG_DT DESC
                   ) A
             WHERE RN = 1
             AND   DECODE( A.M_TOP_MENU_ID
@@ -154,10 +154,11 @@
 									,DECODE(A.IMG_PATH,NULL,2,1) THEME_TYPE
 									,A.IMG_PATH
 									,ROW_NUMBER() OVER( PARTITION BY A.LIST_ID
-									                         ORDER BY AP.EXPO_ORD, AP.REG_DT DESC ) AS RN
+									                        ORDER BY AP.EXPO_ORD_ALWAYS_YN, AP.EXPO_ORD, AP.EXPO_ORD_SUB, AP.REG_DT DESC ) AS RN
 									,A.EXPO_ORD
+									,A.EXPO_ORD_SUB
 									,A.REG_DT
-							FROM   TB_DP_LIST A
+							  FROM   TB_DP_LIST A
 									,TB_DP_LIST_PROD AP
 									,TB_DP_PROD_RSHP PR
 									,TB_DP_MENU_CATEGORY_PROD_MAPG CP
@@ -246,7 +247,7 @@
                           
                          ) A
                    WHERE RN = 1
-                    ORDER BY A.EXPO_ORD, A.REG_DT DESC
+                    ORDER BY A.EXPO_ORD, A.EXPO_ORD_SUB, A.REG_DT DESC
                ) AA
         WHERE  RNUM BETWEEN #{START_ROW} AND #{END_ROW}
     </select>
@@ -302,14 +303,16 @@
                               ,A.SUB_CONTENTS_ID
                               ,A.LCD_SIZE_CD
                               ,ROW_NUMBER( ) OVER( PARTITION BY A.THEME_ID
-                                                       ORDER BY A.EXPO_ORD, A.REG_DT DESC ) AS RNUM
+                                                       ORDER BY A.EXPO_ORD_ALWAYS_YN, A.EXPO_ORD, A.EXPO_ORD_SUB, A.REG_DT DESC ) AS RNUM
                         FROM   (
                                 SELECT 
                                        A.LIST_ID THEME_ID
                                       ,DECODE(A.IMG_PATH,NULL,2,1) THEME_TYPE
                                       ,AP.IMG_PATH
                                       ,AP.PROD_ID
+                                      ,AP.EXPO_ORD_ALWAYS_YN
                                       ,AP.EXPO_ORD
+                                      ,AP.EXPO_ORD_SUB
                                       ,AP.REG_DT
                                       ,PD2.PROD_NM
                                       ,P2.TOP_MENU_ID
