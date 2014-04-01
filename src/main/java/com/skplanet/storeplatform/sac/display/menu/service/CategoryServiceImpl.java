@@ -146,12 +146,14 @@ public class CategoryServiceImpl implements CategoryService {
 
 		// 카테고리 조회
 		this.log.debug("카테고리 조회");
-		if (requestVO.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)
-				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)
+		if (requestVO.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)
 				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)
 				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) { // 멀티미디어 카테고리 조회
 			this.log.debug("멀티미디어 카테고리 조회");
 			resultList = this.commonDAO.queryForList("MenuCategory.selectMultiSubCategoryList", requestVO, Menu.class);
+		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) { // 영화 카테고리 조회
+			this.log.debug("영화 카테고리 조회");
+			resultList = this.commonDAO.queryForList("MenuCategory.selectMovieSubCategoryList", requestVO, Menu.class);
 		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) { // 뮤직 카테고리 조회
 			this.log.debug("뮤직 카테고리 조회");
 			resultList = this.commonDAO.queryForList("MenuCategory.selectMusicSubCategoryList", requestVO, Menu.class);
