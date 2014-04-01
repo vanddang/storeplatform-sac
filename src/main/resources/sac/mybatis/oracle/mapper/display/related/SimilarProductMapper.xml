@@ -103,11 +103,16 @@
                 AND E.CONTENTS_TYPE_CD = 'PD002502'
                 AND F.PROD_STATUS_CD = 'PD000403'
                 AND B.PROD_RSHP_CD = 'DP010802'
-                AND 1 = CASE    WHEN D.TOP_MENU_ID = 'DP16' AND H.MUSIC_SPRT_YN = 'Y' THEN 1
-                        WHEN D.TOP_MENU_ID IN ('DP17','DP18') AND DECODE(NVL(E.DRM_YN, 'N'), 'N', 1, NVL(H.VIDEO_DRM_SPRT_YN, 'N'), 1, 0) = 1 THEN 1
+                AND 1 = CASE WHEN D.TOP_MENU_ID = 'DP16' THEN
+                            CASE WHEN E.META_CLSF_CD = 'CT25' THEN 
+                                CASE WHEN H.MUSIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END
+                            ELSE 1 END
+                        WHEN D.TOP_MENU_ID IN ('DP17', 'DP18') THEN 
+                            CASE WHEN NVL(E.DRM_YN, 'N') = 'Y' AND NVL(H.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
+                            ELSE 1 END
                         WHEN D.TOP_MENU_ID = 'DP13' AND H.EBOOK_SPRT_YN = 'Y' THEN 1
                         WHEN D.TOP_MENU_ID = 'DP14' AND H.COMIC_SPRT_YN = 'Y' THEN 1
-                        ELSE 0 END
+                        ELSE 1 END
                 AND A.STD_PROD_ID = #{productId} /* 상품ID */
                 AND F.TENANT_ID = #{tenantId}
                 AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{mmDeviceModelCd})

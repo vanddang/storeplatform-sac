@@ -228,7 +228,10 @@
 		        AND C.PROD_RSHP_CD = 'DP010802' /* 상품 관계 코드 */
                 AND E.USE_YN = 'Y' /* 사용 여부 */
 		        AND F.SALE_YN = 'Y' /* 판매 여부 */
-				AND DECODE(NVL(A.DRM_YN, 'N'), 'N', 1, NVL(E.VIDEO_DRM_SPRT_YN, 'N'), 1, 0) = 1
+		        
+				AND 1 = CASE WHEN NVL(A.DRM_YN, 'N') = 'Y' AND NVL(E.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
+                            ELSE 1 END
+				
 		        AND (D.DEVICE_MODEL_CD = #{deviceModelCd} OR D.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말 모델 코드 */
                 AND C.PROD_ID IN /* 채널 ID */
                 <foreach collection="arrayChannelId" item="channelId" separator="," open="(" close=")">

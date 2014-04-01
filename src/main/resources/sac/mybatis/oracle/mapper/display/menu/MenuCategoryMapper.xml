@@ -313,7 +313,7 @@
         ORDER BY A.RNK
     </select>
 
-    <!-- 세부 카테고리정보 조회 - 멀티미디어 -->
+    <!-- 세부 카테고리정보 조회 - 이북, 코믹, 방송 -->
     <select id="selectMultiSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT /* MenuCategoryMapper.xml, selectMultiSubCategoryList, SAC 전시 , 2014-03-07 */
 		    COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
@@ -403,7 +403,7 @@
 		                    FROM            
 		                        TB_DP_MENU_CATEGORY A
 		                        , TB_DP_MENU_CATEGORY_PROD_MAPG B
-		                        , TB_DP_PROD C /* 에피소드 상품 */
+		                        , TB_DP_PROD C /* 에피 */
 		                        , TB_DP_TENANT_PROD D
 		                        , TB_DP_PROD_RSHP E
 		                        , TB_DP_SPRT_DEVICE F
@@ -434,9 +434,10 @@
                             AND I.PROD_STATUS_CD = 'PD000403'  /* 추가 */
 		                    AND E.PROD_RSHP_CD = 'DP010802'
 		                    
-		                    /* VOD */
+		                    /* 방송 */
 		                    <if test="topMenuId == 'DP17' or topMenuId == 'DP18'">
-		                    AND DECODE(NVL(C.DRM_YN, 'N'), 'N', 1, NVL(G.VIDEO_DRM_SPRT_YN, 'N'), 1, 0) = 1
+		                    AND 1 = CASE WHEN NVL(C.DRM_YN, 'N') = 'Y' AND NVL(G.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
+                                ELSE 1 END
 		                    </if>
 		                    
 		                    /* 이북 */
@@ -603,7 +604,8 @@
                             AND J.LIST_ID = 'TGR000000002'  /* 추가 */
                             
                             /* VOD */
-                            AND DECODE(NVL(C.DRM_YN, 'N'), 'N', 1, NVL(G.VIDEO_DRM_SPRT_YN, 'N'), 1, 0) = 1
+                            AND 1 = CASE WHEN NVL(C.DRM_YN, 'N') = 'Y' AND NVL(G.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
+                                ELSE 1 END
                             
                             AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
                             AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
