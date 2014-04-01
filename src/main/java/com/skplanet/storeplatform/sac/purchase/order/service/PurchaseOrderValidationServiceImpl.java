@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -51,6 +52,9 @@ import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailabl
 @Service
 public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidationService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Value("#{systemProperties['spring.profiles.active']}")
+	private String envServerLevel;
 
 	@Autowired
 	private ExistenceSCI existenceSCI;
@@ -553,19 +557,24 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 		}
 
-		// 기구매 체크
-		if (existenceProdIdList.size() > 0) {
+		// TAKTEST:: 로컬 테스트
+		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL) == false) {
 
-			List<ExistenceScRes> checkPurchaseResultList = this.searchExistence(existTenantId, existUserKey,
-					existDeviceKey, existenceProdIdList);
+			// 기구매 체크
+			if (existenceProdIdList.size() > 0) {
 
-			for (ExistenceScRes checkRes : checkPurchaseResultList) {
-				if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
-					throw new StorePlatformException("SAC_PUR_6101");
+				List<ExistenceScRes> checkPurchaseResultList = this.searchExistence(existTenantId, existUserKey,
+						existDeviceKey, existenceProdIdList);
+
+				for (ExistenceScRes checkRes : checkPurchaseResultList) {
+					if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
+						throw new StorePlatformException("SAC_PUR_6101");
+					}
+
+					// TAKTODO:: 예약 상태 경우 해당 구매ID 사용... 복수 구매 시 일부 예약상태일 때 처리 방안?
 				}
-
-				// TAKTODO:: 예약 상태 경우 해당 구매ID 사용... 복수 구매 시 일부 예약상태일 때 처리 방안?
 			}
+
 		}
 
 	}

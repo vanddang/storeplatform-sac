@@ -415,7 +415,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 						sbTstoreCoupon.append(";");
 					}
 					sbTstoreCoupon.append(coupon.getCouponId()).append(":").append(coupon.getCouponName()).append(":")
-							.append(coupon.getCouponAmt());
+							.append(coupon.getCouponAmt()).append(":").append(coupon.getMakeHost()).append(":")
+							.append(coupon.getCouponType());
 				}
 
 				res.setNoCouponList(sbTstoreCoupon.toString());
@@ -659,19 +660,22 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 
 			// 결제 내역 저장
-			if (StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"))) { // 쇼핑 특가상품 쿠폰 정보 입력
-				PaymentInfo paymentInfo = new PaymentInfo();
-				paymentInfo.setPaymentAmt(Double.parseDouble(reservedDataMap.get("specialCouponAmt"))
-						* createPurchaseSc.getProdQty());
-				paymentInfo.setPaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_SHOPPING_SPECIAL_COUPON); // TAKTODO:: 특가상품
-																									   // 쿠폰
-																									   // 수단 추가 여부 확인
-				paymentInfo.setTid(createPurchaseSc.getPrchsId());
-				paymentInfo.setPaymentDt(createPurchaseSc.getPrchsDt());
-				paymentInfo.setCpnId(reservedDataMap.get("specialCouponId"));
+			// this.logger.debug("TAKTEST::{},", reservedDataMap.get("a").charAt(0));
 
-				notifyPaymentReq.getPaymentInfoList().add(paymentInfo);
-			}
+			// TAKTODO:: 특가 쿠폰 처리를 결제Noti 시 전달 받음
+			// if (StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"))) { // 쇼핑 특가상품 쿠폰 정보 입력
+			// PaymentInfo paymentInfo = new PaymentInfo();
+			// paymentInfo.setPaymentAmt(Double.parseDouble(reservedDataMap.get("specialCouponAmt"))
+			// * createPurchaseSc.getProdQty());
+			// paymentInfo.setPaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_SHOPPING_SPECIAL_COUPON); // TAKTODO:: 특가상품
+			// // 쿠폰
+			// // 수단 추가 여부 확인
+			// paymentInfo.setTid(createPurchaseSc.getPrchsId());
+			// paymentInfo.setPaymentDt(createPurchaseSc.getPrchsDt());
+			// paymentInfo.setCpnId(reservedDataMap.get("specialCouponId"));
+			//
+			// notifyPaymentReq.getPaymentInfoList().add(paymentInfo);
+			// }
 			CreatePaymentSacInfo createPaymentSacInfo = new CreatePaymentSacInfo();
 			createPaymentSacInfo.setTenantId(createPurchaseSc.getTenantId());
 			createPaymentSacInfo.setSystemId(createPurchaseSc.getSystemId());
@@ -857,21 +861,21 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		paymentPageParam.setImei(purchaseOrderInfo.getImei());
 		paymentPageParam.setUacd(purchaseOrderInfo.getUacd());
 		if (StringUtils.equals(purchaseOrderInfo.getNetworkTypeCd(), PurchaseConstants.NETWORK_TYPE_3G)) {
-			paymentPageParam.setTypeNetwork("1"); // 3G, LTE
+			paymentPageParam.setTypeNetwork(PurchaseConstants.PAYPLANET_NETWORK_TYPE_3GLTE); // 3G, LTE
 		} else if (StringUtils.equals(purchaseOrderInfo.getNetworkTypeCd(), PurchaseConstants.NETWORK_TYPE_WIFI)) {
-			paymentPageParam.setTypeNetwork("2"); // WIFI
+			paymentPageParam.setTypeNetwork(PurchaseConstants.PAYPLANET_NETWORK_TYPE_WIFI); // WIFI
 		} else {
-			paymentPageParam.setTypeNetwork("3");
+			paymentPageParam.setTypeNetwork(PurchaseConstants.PAYPLANET_NETWORK_TYPE_UNKNOWN);
 		}
 		if (StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_SKT)) {
-			paymentPageParam.setCarrier("S"); // SKT
+			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_SKT); // SKT
 		} else if (StringUtils
 				.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_UPLUS)) {
-			paymentPageParam.setCarrier("L"); // LGT
+			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_LGT); // LGT
 		} else if (StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_KT)) {
-			paymentPageParam.setCarrier("K"); // KT
+			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_KT); // KT
 		} else {
-			paymentPageParam.setCarrier("X"); // UKNOWN
+			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_UNKNOWN); // UKNOWN
 		}
 		paymentPageParam.setNoSim(purchaseOrderInfo.getSimNo());
 		paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
@@ -1237,6 +1241,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			payment.setApprNo(paymentInfo.getApprNo());
 			payment.setBillKey(paymentInfo.getBillKey());
 			payment.setCpnId(paymentInfo.getCpnId());
+			payment.setCpnMakeHost(paymentInfo.getCpnMakeHost());
+			payment.setCpnType(paymentInfo.getCpnType());
 			payment.setMoid(paymentInfo.getMoid());
 
 			payment.setPaymentMtdCd(PaymethodUtil.convert2StoreCode(paymentInfo.getPaymentMtdCd()));
@@ -1317,6 +1323,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 추가한 상품 갯수
 	 */
 	private int insertPurchaseProductCount(List<CreatePurchaseSc> createPurchaseScList, String prchsStatusCd) {
+		// TAKTEST:: 로컬 테스트
+		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL)) {
+			return 0;
+		}
+
 		try {
 			return this.purchaseCountService.insertPurchaseProductCount(createPurchaseScList, prchsStatusCd);
 		} catch (StorePlatformException e) {

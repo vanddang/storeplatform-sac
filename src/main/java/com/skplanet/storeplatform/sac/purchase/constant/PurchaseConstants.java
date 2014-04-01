@@ -135,6 +135,17 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_CASH = "25"; // T store 캐쉬
 	public static final String PAYPLANET_PAYMENT_METHOD_COUPON = "26"; // 쿠폰
 
+	/** Pay Planet 네트워크 타입 */
+	public static final String PAYPLANET_NETWORK_TYPE_3GLTE = "1"; // 3G, LTE
+	public static final String PAYPLANET_NETWORK_TYPE_WIFI = "2"; // WIFI
+	public static final String PAYPLANET_NETWORK_TYPE_UNKNOWN = "3"; // Unknown
+
+	/** Pay Planet 통신사 */
+	public static final String PAYPLANET_TELECOM_SKT = "S"; // SKT
+	public static final String PAYPLANET_TELECOM_KT = "K"; // KT
+	public static final String PAYPLANET_TELECOM_LGT = "L"; // LG U+
+	public static final String PAYPLANET_TELECOM_UNKNOWN = "X"; // Unknown
+
 	/** T Store 결제 성공 코드 */
 	public static final String TSTORE_PAYMENT_CANCEL_SUCCESS = "0000";
 
