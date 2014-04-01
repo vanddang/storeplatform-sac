@@ -350,19 +350,30 @@
 		                        , TB_DP_PROD_RSHP E
 		                        , TB_DP_SPRT_DEVICE F
 		                        , TB_CM_DEVICE G
+                                , TB_DP_PROD H /* 채널 */ /* 추가 */
+                                , TB_DP_TENANT_PROD I /* 채널 */ /* 추가 */
 		                    WHERE A.MENU_ID = B.MENU_ID
 		                    AND B.PROD_ID = E.PROD_ID
 		                    AND E.PART_PROD_ID = C.PROD_ID
 		                    AND E.PART_PROD_ID = D.PROD_ID
 		                    AND E.PART_PROD_ID = F.PROD_ID
+                            AND E.PROD_ID = H.PROD_ID /* 추가 */
+                            AND E.PROD_ID = I.PROD_ID /* 추가 */
 		                    AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
+                            AND D.TENANT_ID = I.TENANT_ID /* 추가 */
+                            AND A.TOP_MENU_ID = C.TOP_MENU_ID /* 추가 */
+                            AND A.TOP_MENU_ID = H.TOP_MENU_ID /* 추가 */
 		                    AND A.USE_YN = 'Y'
 		                    AND B.USE_YN = 'Y'
 		                    AND G.USE_YN = 'Y'
 		                    AND D.EXPO_YN = 'Y'
+                            AND I.EXPO_YN = 'Y' /* 추가 */
 		                    AND C.SVC_GRP_CD = 'DP000203'
+                            AND H.SVC_GRP_CD = 'DP000203' /* 추가 */
 		                    AND C.CONTENTS_TYPE_CD = 'PD002502'
+                            AND H.CONTENTS_TYPE_CD = 'PD002501' /* 추가 */
 		                    AND D.PROD_STATUS_CD = 'PD000403'
+                            AND I.PROD_STATUS_CD = 'PD000403' /* 추가 */
 		                    AND E.PROD_RSHP_CD = 'DP010802'
 		                    
 		                    /* VOD */
@@ -400,6 +411,162 @@
 		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
 		    ORDER SIBLINGS BY EXPO_ORD
 		) A
+        ORDER BY A.RNK
+    </select>
+
+    <!-- 세부 카테고리정보 조회 - 영화 -->
+    <select id="selectMovieSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
+        SELECT /* MenuCategoryMapper.xml, selectMultiSubCategoryList, SAC 전시 , 2014-03-07 */
+            COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
+            , DECODE(A.INFR_MENU_YN, 'Y'
+                , SUM(A.MENU_PROD_CNT) OVER ( PARTITION BY SUBSTR(A.MENU_ID, 0, 7 ) )
+                , A.MENU_PROD_CNT) MENU_PROD_CNT
+            , A.TENANT_ID 
+            , A.MENU_ID 
+            , A.SYSTEM_ID 
+            , A.MENU_NM 
+            , A.MENU_ENG_NM 
+            , A.MENU_DESC 
+            , A.MENU_DEPTH 
+            , A.INFR_MENU_YN 
+            , A.UP_MENU_ID 
+            , A.EXPO_ORD 
+            , A.TARGET_URL 
+            , A.SEARCH_FILE_PATH 
+            , A.SEARCH_FILE_NM 
+            , A.BODY_FILE_PATH 
+            , A.BODY_FILE_NM 
+            , A.BODY_FILE_SIZE
+            , A.MAIN_ON_FILE_PATH 
+            , A.MAIN_ON_FILE_NM 
+            , A.MAIN_OFF_FILE_PATH 
+            , A.MAIN_OFF_FILE_NM 
+            , A.RANK_FILE_PATH 
+            , A.RANK_FILE_NM 
+            , A.USE_YN 
+            , A.MENU_ID_TYPE
+            , A.LNB_FILE_PATH
+            , A.LNB_FILE_NM
+            , A.LNB_FILE_SIZE
+            , A.PRE_CATEGORY_INFO
+            , A.CATEGORY_MENU_YN
+            , A.REG_ID 
+            , A.REG_DT 
+            , A.UPD_ID 
+            , A.UPD_DT  
+        FROM (
+            SELECT 
+                 NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
+                , A.TENANT_ID 
+                , A.TENANT_MENU_ID AS MENU_ID 
+                , A.SYSTEM_ID 
+                , A.MENU_NM 
+                , A.MENU_ENG_NM 
+                , A.MENU_DESC 
+                , A.MENU_DEPTH 
+                , A.INFR_MENU_YN 
+                , A.UP_MENU_ID 
+                , A.EXPO_ORD 
+                , A.TARGET_URL 
+                , A.SEARCH_FILE_PATH 
+                , A.SEARCH_FILE_NM 
+                , A.BODY_FILE_PATH 
+                , A.BODY_FILE_NM 
+                , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+                , A.MAIN_ON_FILE_PATH 
+                , A.MAIN_ON_FILE_NM 
+                , A.MAIN_OFF_FILE_PATH 
+                , A.MAIN_OFF_FILE_NM 
+                , A.RANK_FILE_PATH 
+                , A.RANK_FILE_NM 
+                , A.USE_YN 
+                , A.MENU_ID_TYPE
+                , A.LNB_FILE_PATH
+                , A.LNB_FILE_NM
+                , A.LNB_FILE_SIZE
+                , A.PRE_CATEGORY_INFO
+                , A.CATEGORY_MENU_YN
+                , A.REG_ID 
+                , A.REG_DT 
+                , A.UPD_ID 
+                , A.UPD_DT  
+                , ROWNUM AS RNK
+            FROM 
+                TB_DP_TENANT_MENU A
+                , TB_DP_MENU_CATEGORY B
+                , (
+                        SELECT 
+                            A.MENU_ID
+                            , COUNT(A.MENU_ID) MENU_PROD_CNT
+                        FROM (
+                            SELECT
+			                    DISTINCT 
+			                    CASE WHEN ETC_CD IN ('DP003700','DP003701') THEN 'DP17001'
+			                        ELSE A.MENU_ID END MENU_ID
+			                    , B.PROD_ID
+                            FROM            
+                                TB_DP_MENU_CATEGORY A
+                                , TB_DP_MENU_CATEGORY_PROD_MAPG B
+                                , TB_DP_PROD C /* 에피소드 상품 */
+                                , TB_DP_TENANT_PROD D
+                                , TB_DP_PROD_RSHP E
+                                , TB_DP_SPRT_DEVICE F
+                                , TB_CM_DEVICE G
+                                , TB_DP_PROD H /* 채널 */ /* 추가 */
+                                , TB_DP_TENANT_PROD I /* 채널 */ /* 추가 */
+                                , TB_DP_LIST_PROD J /* 채널 */ /* 추가 */
+                            WHERE A.MENU_ID = B.MENU_ID
+                            AND A.MENU_ID = J.MENU_ID /* 추가 */
+                            AND B.PROD_ID = E.PROD_ID
+                            AND E.PART_PROD_ID = C.PROD_ID
+                            AND E.PART_PROD_ID = D.PROD_ID
+                            AND E.PART_PROD_ID = F.PROD_ID
+                            AND E.PROD_ID = H.PROD_ID /* 추가 */
+                            AND E.PROD_ID = I.PROD_ID /* 추가 */
+                            AND E.PROD_ID = J.PROD_ID /* 추가 */
+                            AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
+                            AND D.TENANT_ID = J.TENANT_ID /* 추가 */
+                            AND D.TENANT_ID = I.TENANT_ID /* 추가 */
+                            AND A.TOP_MENU_ID = C.TOP_MENU_ID /* 추가 */
+                            AND A.TOP_MENU_ID = H.TOP_MENU_ID /* 추가 */
+                            AND A.USE_YN = 'Y'
+                            AND B.USE_YN = 'Y'
+                            AND G.USE_YN = 'Y'
+                            AND D.EXPO_YN = 'Y'
+                            AND I.EXPO_YN = 'Y' /* 추가 */
+                            AND J.EXPO_YN = 'Y' /* 추가 */
+                            AND C.SVC_GRP_CD = 'DP000203'
+                            AND H.SVC_GRP_CD = 'DP000203' /* 추가 */
+                            AND C.CONTENTS_TYPE_CD = 'PD002502'
+                            AND H.CONTENTS_TYPE_CD = 'PD002501' /* 추가 */
+                            AND D.PROD_STATUS_CD = 'PD000403'
+                            AND I.PROD_STATUS_CD = 'PD000403' /* 추가 */
+                            AND E.PROD_RSHP_CD = 'DP010802'
+                            AND J.LIST_ID = 'TGR000000002' /* 추가 */
+                            
+                            /* VOD */
+                            AND DECODE(NVL(C.DRM_YN, 'N'), 'N', 1, NVL(G.VIDEO_DRM_SPRT_YN, 'N'), 1, 0) = 1
+                            
+                            AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
+                            AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
+                            AND B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
+                            AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
+                        ) A
+                        GROUP BY A.MENU_ID
+                    ) C
+            WHERE A.TENANT_MENU_ID = B.MENU_ID
+            AND A.TENANT_MENU_ID = C.MENU_ID(+)
+            AND A.USE_YN = 'Y'
+            AND B.USE_YN = 'Y'
+            AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
+            AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
+            <if test='featuredExposureYn == "N"'>
+            AND NVL(A.CATEGORY_MENU_YN, 'Y') = 'Y'
+            </if> 
+            START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
+            CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
+            ORDER SIBLINGS BY EXPO_ORD
+        ) A
         ORDER BY A.RNK
     </select>
 
