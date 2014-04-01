@@ -186,7 +186,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 법정대리인 setting.
 		 */
-		createUserRequest.setMbrLglAgent(this.getMbrLglAgent(req));
+		createUserRequest.setMbrLglAgent(this.getMbrLglAgent(sacHeader, req));
 
 		/**
 		 * SC 사용자 기본정보 setting
@@ -725,11 +725,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 * SC 법정대리인 정보 setting.
 	 * </pre>
 	 * 
+	 * @param sacHeader
+	 *            공통 헤더
 	 * @param req
 	 *            CreateByMdnReq
 	 * @return MbrLglAgent
 	 */
-	private MbrLglAgent getMbrLglAgent(CreateByMdnReq req) {
+	private MbrLglAgent getMbrLglAgent(SacRequestHeader sacHeader, CreateByMdnReq req) {
 
 		MbrLglAgent mbrLglAgent = new MbrLglAgent();
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
@@ -745,7 +747,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrLglAgent.setParentMDN(req.getParentPhone()); // 법정대리인 전화번호
 			mbrLglAgent.setParentCI(req.getParentCi()); // 법정대리인 CI
 			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
-			mbrLglAgent.setParentRealNameSite(req.getParentRealNameSite()); // 법정대리인 실명인증사이트 코드
+			mbrLglAgent.setParentRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 법정대리인 실명인증사이트 코드
 			if (StringUtils.equals(req.getParentIsDomestic(), "")) {
 				mbrLglAgent.setIsDomestic(MemberConstants.USE_Y); // 내외국인 여부
 			} else {
