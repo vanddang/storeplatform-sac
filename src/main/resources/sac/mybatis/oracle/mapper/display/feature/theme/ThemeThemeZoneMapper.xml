@@ -251,6 +251,7 @@
 		        F.VIDEO_DRM_SPRT_YN
 		FROM    TB_CM_DEVICE F
 		WHERE   DEVICE_MODEL_CD = #{deviceModelCd}
+        AND     F.USE_YN = 'Y'
     </select>
     
     <!-- 테마존 테마 리스트 -->
@@ -281,11 +282,10 @@
 	                  , TB_DP_MENU_CATEGORY C
 	                  , TB_DP_PROD D  
 	                  , TB_DP_TENANT_PROD E
-	                  , TB_CM_DEVICE F
-	                  , TB_DP_SPRT_DEVICE G
+	                  , TB_DP_SPRT_DEVICE F
 	            WHERE TDL.LIST_ID = TDLP.LIST_ID
                   AND TDLP.TENANT_ID = #{tenantId}
-                  AND TDLP.TENANT_ID = #{tenantId}
+                  AND E.TENANT_ID = #{tenantId}
 	              AND TDLP.EXPO_YN = 'Y'
 	              AND TDLP.PROD_ID = D.PROD_ID
 	              AND A.PART_PROD_ID = D.PROD_ID    
@@ -296,45 +296,13 @@
 	              AND C.USE_YN = 'Y'
 	              AND D.PROD_ID = E.PROD_ID
 	              AND F.DEVICE_MODEL_CD = #{deviceModelCd}
-	              AND G.DEVICE_MODEL_CD = #{deviceModelCd}
-	              AND F.USE_YN = 'Y'
-	              AND A.PART_PROD_ID = G.PROD_ID
-                  AND CASE
-                      WHEN D.TOP_MENU_ID = 'DP13' THEN
-                        CASE
-                          WHEN #{ebookSprtYn} = 'N' THEN 0 -- EBOOK_SPRT_YN
-                          WHEN D.META_CLSF_CD IN ('CT24','CT26') THEN
-                            CASE WHEN #{magazineSprtYn} = 'Y' THEN 1 ELSE 0 END -- MAGAZINE_SPRT_YN
-                          ELSE 1
-                        END
-                      WHEN D.TOP_MENU_ID = 'DP14' THEN
-                        CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END -- COMIC_SPRT_YN
-                      WHEN D.TOP_MENU_ID = 'DP16' THEN
-                        CASE
-                          WHEN D.META_CLSF_CD IN ('CT25') THEN
-                            CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END -- MUSIC_SPRT_YN
-                          ELSE 1
-                        END
-                      WHEN D.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN
-                        CASE
-                          WHEN #{videoDrmSprtYn} = 'Y' OR D.DRM_YN != 'Y' THEN  -- VIDEO_DRM_SPRT_YN
-                            CASE WHEN 
-                              ( SELECT 1
-                                FROM   TB_DP_SUB_CONTENTS SC
-                                WHERE  SC.PROD_ID = A.PART_PROD_ID
-                                AND    SC.SALE_YN = 'Y'
-                                AND    CASE  --  HDV_SPRT_YN
-                                         WHEN #{hdvSprtYn} = 'Y' THEN
-                                           CASE WHEN SC.DP_PG_QULT_CD IN ( 'PD009701', 'PD009702' ) THEN 1 ELSE 0 END
-                                         WHEN #{hdvSprtYn} = 'N' THEN
-                                           CASE WHEN SC.DP_PG_QULT_CD = 'PD009701' THEN 1 ELSE 0 END
-                                         END = 1
-                                AND    ROWNUM <![CDATA[ <= ]]>  1 ) = 1
-                             THEN 1 ELSE 0 END
-                          ELSE 0
-                        END
-                      ELSE 1
-                    END = 1
+	              AND A.PART_PROD_ID = F.PROD_ID
+                  AND  (CASE WHEN D.TOP_MENU_ID = 'DP13' THEN CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
+                             WHEN D.TOP_MENU_ID = 'DP14' THEN CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END
+                             WHEN D.TOP_MENU_ID = 'DP15' THEN 0
+                             WHEN D.TOP_MENU_ID = 'DP16' THEN CASE WHEN D.META_CLSF_CD = 'CT25' THEN CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END ELSE 1 END
+                             WHEN D.TOP_MENU_ID IN ('DP17', 'DP18') THEN CASE WHEN NVL(D.DRM_YN, 'N') = 'Y' AND #{videoDrmSprtYn} = 'N' THEN 0 ELSE 1 END
+                             ELSE 1 END) = 1
                 )
         ) AA
         WHERE RNUM BETWEEN #{offset} AND #{count}
