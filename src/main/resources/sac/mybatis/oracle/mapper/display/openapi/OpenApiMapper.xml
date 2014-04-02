@@ -385,8 +385,9 @@
                   FROM TB_DP_PROD_IMG KC
                  WHERE KA.PROD_ID = KC.PROD_ID
                    AND KC.IMG_CD = DECODE(KA.TOP_MENU_ID , 'DP09', 'DP000127'
-                                                         , 'DP13', 'DP000147'
-                                                         , 'DP14', 'DP000147'
+                                                         , 'DP13', 'DP006207'
+                                                         , 'DP14', 'DP006207'
+                                                         , 'DP16', 'DP000162'                    
                                                          , 'DP15', 'DP000102'
                                                          , 'DP16', 'DP000115'
                                                          , 'DP17', 'DP000127'
@@ -1550,7 +1551,7 @@
                    AND ROWNUM = 1) AS MENU_NM
 		     , NVL(CASE WHEN KA.PROD_CHRG_YN = 'N' THEN 0
 		                <if test="channelId == null">                                                                                                                                                                                                                                                                                        
-		                WHEN KA.TOP_MENU_ID = 'DP09'  OR KA.TOP_MENU_ID = 'DP17'   OR KA.TOP_MENU_ID = 'DP18' THEN CASE WHEN KA.CHNL_PERIOD_AMT >= 0 THEN KA.CHNL_PERIOD_AMT ELSE KA.CHNL_UNLMT_AMT END 
+		                WHEN KA.TOP_MENU_ID = 'DP09' OR KA.TOP_MENU_ID = 'DP17' OR KA.TOP_MENU_ID = 'DP18' THEN CASE WHEN KA.CHNL_PERIOD_AMT >= 0 THEN KA.CHNL_PERIOD_AMT ELSE KA.CHNL_UNLMT_AMT END 
 		                WHEN KA.TOP_MENU_ID = 'DP13' THEN KA.CHNL_UNLMT_AMT 
 		                WHEN KA.TOP_MENU_ID = 'DP14' THEN (SELECT MAX(KA.PROD_AMT) 
 		                                                     FROM SPSAC.TB_DP_PROD A, 
@@ -1574,6 +1575,9 @@
                   FROM TB_DP_PROD_IMG KC
                  WHERE KA.PROD_ID = KC.PROD_ID
                    AND KC.IMG_CD = DECODE(KA.TOP_MENU_ID , 'DP09', 'DP000127'
+                                                         , 'DP13', 'DP006207'
+                                                         , 'DP14', 'DP006207'
+                                                         , 'DP16', 'DP000162'                   
                                                          , 'DP17', 'DP000127'
                                                          , 'DP18', 'DP000127'
                                                          , 'DP000147')
@@ -1660,6 +1664,7 @@
                            AND A.PROD_ID = D.PROD_ID   
                            AND C.TENANT_ID = #{tenantId}
                            AND C.TENANT_ID = D.TENANT_ID
+                           AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
                            AND A.PROD_ID = E.PROD_ID
                            AND E.PROD_RSHP_CD     = 'DP010802'
                            AND A.PROD_ID = F.PROD_ID
@@ -1670,6 +1675,7 @@
                            AND H.PROD_ID = K.PROD_ID
                            AND J.TENANT_ID = #{tenantId}
                            AND J.TENANT_ID = K.TENANT_ID
+                           AND SYSDATE BETWEEN K.APPLY_START_DT AND K.APPLY_END_DT
                            AND H.PROD_ID = L.PROD_ID
                            AND H.PROD_ID = M.PROD_ID
                            AND (M.DEVICE_MODEL_CD = #{deviceModelCd} OR M.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
@@ -1740,7 +1746,7 @@
                             </if>
                             <if test='topMenuId == "DP14"'> 
                             AND N.COMIC_SPRT_YN = 'Y'
-                           </if>
+                            </if>
                             <if test='topMenuId == "DP16"'>
                             <choose>
                                 <when test="channelId != null">
