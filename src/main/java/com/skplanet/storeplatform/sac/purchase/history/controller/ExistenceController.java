@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.history.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
@@ -89,6 +91,15 @@ public class ExistenceController {
 		ExistenceScReq req = new ExistenceScReq();
 		List<ExistenceItemSc> productList = new ArrayList<ExistenceItemSc>();
 
+		if (StringUtils.isEmpty(existenceSacReq.getPrchsId())) {
+			if (StringUtils.isEmpty(existenceSacReq.getUserKey())) {
+				throw new StorePlatformException("SAC_PUR_0002", "UserKey");
+			}
+			if (StringUtils.isEmpty(existenceSacReq.getDeviceKey())) {
+				throw new StorePlatformException("SAC_PUR_0002", "DeviceKey");
+			}
+		}
+
 		req.setTenantId(header.getTenantId());
 		req.setUserKey(existenceSacReq.getUserKey());
 		req.setDeviceKey(existenceSacReq.getDeviceKey());
@@ -98,6 +109,9 @@ public class ExistenceController {
 		// 상품리스트가 없을시 제외
 		if (existenceSacReq.getProductList() != null) {
 			for (ExistenceItemSac existenceItemSac : existenceSacReq.getProductList()) {
+				if (StringUtils.isEmpty(existenceItemSac.getProdId())) {
+					throw new StorePlatformException("SAC_PUR_0002", "ProdId");
+				}
 				ExistenceItemSc existenceItemSc = new ExistenceItemSc();
 				existenceItemSc.setProdId(existenceItemSac.getProdId());
 				existenceItemSc.setTenantProdGrpCd(existenceItemSac.getTenantProdGrpCd());
