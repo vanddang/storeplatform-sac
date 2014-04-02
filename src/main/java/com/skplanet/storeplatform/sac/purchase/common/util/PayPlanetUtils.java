@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.purchase.common.util;
 
 import java.net.URLEncoder;
 
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -23,6 +22,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
  */
 @Component
 public class PayPlanetUtils {
+	private static final String ENCRYPT_ENCODING = "UTF-8";
 
 	public static String makeToken(String authKey, String orderId, String amtPurchase, String mid) {
 
@@ -105,10 +105,10 @@ public class PayPlanetUtils {
 		String encData = null;
 
 		try {
-			encData = Base64.encodeBase64String(CryptoManager.encryptToByteArray(key, plain));
+			encData = Seed128Utils.encrypt(plain, key, ENCRYPT_ENCODING);
 
 			if (urlEncode) {
-				encData = URLEncoder.encode(encData, "UTF-8");
+				encData = URLEncoder.encode(encData, ENCRYPT_ENCODING);
 			}
 
 		} catch (Exception e) {
