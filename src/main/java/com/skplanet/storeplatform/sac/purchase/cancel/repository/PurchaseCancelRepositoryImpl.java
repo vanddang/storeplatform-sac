@@ -308,10 +308,11 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	public PurchaseCancelDetailSacParam updatePurchaseCancel(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
 
+		PurchaseCancelScReq purchaseCancelScReq = new PurchaseCancelScReq();
+
+		// 결제 취소 정보를 넣어준다.
 		// 구매 상품 건수 업데이트 시 특가상품 여부 확인.
 		boolean specialSaleYn = false;
-		PurchaseCancelScReq purchaseCancelScReq = new PurchaseCancelScReq();
-		// 결제 취소 정보를 넣어준다.
 		List<PurchaseCancelPaymentDetailScReq> purchaseCancelPaymentDetailScReqList = new ArrayList<PurchaseCancelPaymentDetailScReq>();
 		for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
 			PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
@@ -347,22 +348,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		}
 
-		// 인입 된 사람의 정보를 넣어준다.
-		purchaseCancelScReq.setTenantId(purchaseCancelSacParam.getTenantId());
-		purchaseCancelScReq.setSystemId(purchaseCancelSacParam.getSystemId());
-		// 구매 취소 정보를 넣어준다.
-		purchaseCancelScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-		purchaseCancelScReq.setCancelReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
-		purchaseCancelScReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
-		purchaseCancelScReq.setPurchaseCancelPaymentDetailScReqList(purchaseCancelPaymentDetailScReqList);
-
-		PurchaseCancelScRes purchaseCancelScRes = this.purchaseCancelSCI.updatePurchaseCancel(purchaseCancelScReq);
-
-		purchaseCancelDetailSacParam.setPaymentCancelCnt(purchaseCancelScRes.getPaymentCancelCnt());
-		purchaseCancelDetailSacParam.setPrchsDtlCancelCnt(purchaseCancelScRes.getPrchsDtlCancelCnt());
-		purchaseCancelDetailSacParam.setPrchsCancelCnt(purchaseCancelScRes.getPrchsCancelCnt());
-
-		// 상품 구매수 차감 처리 해준다.
+		// 상품 구매수 업데이트 위한 정보 셋팅.
 		InsertPurchaseProductCountScReq insertPurchaseProductCountScReq = new InsertPurchaseProductCountScReq();
 		List<PrchsProdCnt> prchsProdCntList = new ArrayList<PrchsProdCnt>();
 		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
@@ -391,11 +377,25 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			prchsProdCnt.setRegId(purchaseCancelSacParam.getSystemId());
 			prchsProdCnt.setUpdId(purchaseCancelSacParam.getSystemId());
 			prchsProdCntList.add(prchsProdCnt);
-
 		}
-
 		insertPurchaseProductCountScReq.setPrchsProdCntList(prchsProdCntList);
-		this.purchaseCountSCI.insertPurchaseProductCount(insertPurchaseProductCountScReq);
+
+		// 인입 된 사람의 정보를 넣어준다.
+		purchaseCancelScReq.setTenantId(purchaseCancelSacParam.getTenantId());
+		purchaseCancelScReq.setSystemId(purchaseCancelSacParam.getSystemId());
+		// 구매 취소 정보를 넣어준다.
+		purchaseCancelScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+		purchaseCancelScReq.setCancelReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
+		purchaseCancelScReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+		purchaseCancelScReq.setPurchaseCancelPaymentDetailScReqList(purchaseCancelPaymentDetailScReqList);
+		purchaseCancelScReq.setInsertPurchaseProductCountScReq(insertPurchaseProductCountScReq);
+
+		PurchaseCancelScRes purchaseCancelScRes = this.purchaseCancelSCI.updatePurchaseCancel(purchaseCancelScReq);
+
+		purchaseCancelDetailSacParam.setPaymentCancelCnt(purchaseCancelScRes.getPaymentCancelCnt());
+		purchaseCancelDetailSacParam.setPrchsDtlCancelCnt(purchaseCancelScRes.getPrchsDtlCancelCnt());
+		purchaseCancelDetailSacParam.setPrchsCancelCnt(purchaseCancelScRes.getPrchsCancelCnt());
+		purchaseCancelDetailSacParam.setPrchsProdCntCnt(purchaseCancelScRes.getPrchsProdCntCnt());
 
 		return purchaseCancelDetailSacParam;
 

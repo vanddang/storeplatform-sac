@@ -45,14 +45,28 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	private Integer prchsCancelCnt;
 	private Integer prchsDtlCancelCnt;
 	private Integer paymentCancelCnt;
-
-	/** RO 삭제 데이터 */
+	private Integer prchsProdCntCnt;
 
 	/**
 	 * @return the prchsId
 	 */
 	public String getPrchsId() {
 		return this.prchsId;
+	}
+
+	/**
+	 * @return the prchsProdCntCnt
+	 */
+	public Integer getPrchsProdCntCnt() {
+		return this.prchsProdCntCnt;
+	}
+
+	/**
+	 * @param prchsProdCntCnt
+	 *            the prchsProdCntCnt to set
+	 */
+	public void setPrchsProdCntCnt(Integer prchsProdCntCnt) {
+		this.prchsProdCntCnt = prchsProdCntCnt;
 	}
 
 	/**

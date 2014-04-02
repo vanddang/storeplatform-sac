@@ -216,7 +216,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				prchsSacParam.getInsdDeviceId()));
 
 		/**
-		 * 상품 정보 셋팅. 선물인 경우 동일 Tenant 인 경우만 선물 된다. PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
+		 * 
+		 * ..................................구매 취소 시 상품 정보 확인 불필요하여 주석 처리..............................................
+		 * ..............................상품 정보 셋팅.선물인 경우 동일 Tenant 인 경우만 선물 된다........................................
+		 * PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
 		 * paymentInfoSacReq.setTenantId(prchsSacParam.getTenantId()); List<String> prodIdList = new
 		 * ArrayList<String>(); for (PrchsDtlSacParam prchsDtlSacParam :
 		 * purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) { prodIdList.add(prchsDtlSacParam.getProdId()); }
