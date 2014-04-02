@@ -1157,6 +1157,8 @@ public class ShoppingCouponSacController {
 	 *            couponInfo
 	 * @param itemInfoList
 	 *            itemInfoList
+	 * @param couponReq
+	 *            couponReq
 	 * @return
 	 */
 	private void couponItemchangeCud(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, CouponReq couponReq) {
