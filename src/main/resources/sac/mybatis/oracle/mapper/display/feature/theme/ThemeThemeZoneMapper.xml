@@ -76,8 +76,7 @@
                              , TB_DP_MENU_CATEGORY E
                              , TB_DP_PROD F  
                              , TB_DP_TENANT_PROD G
-                             , TB_CM_DEVICE H
-                             , TB_DP_SPRT_DEVICE I
+                             , TB_DP_SPRT_DEVICE H
                        WHERE 1=1
                        AND A.LIST_ID = #{themeZoneId}
                        AND A.LIST_ID = B.LIST_ID
@@ -105,62 +104,20 @@
                             </foreach>
                        </if>
                        AND G.EXPO_YN = 'Y'
-                       AND H.DEVICE_MODEL_CD = #{deviceModelCd}
-                       AND I.DEVICE_MODEL_CD = #{deviceModelCd}
-                       AND C.PART_PROD_ID = I.PROD_ID
-                       AND DECODE( F.TOP_MENU_ID
-                                    , 'DP13'
-                                    , DECODE( H.EBOOK_SPRT_YN
-                                            , 'Y'
-                                            , DECODE( F.META_CLSF_CD
-                                                    , 'CT24'
-                                                    , DECODE( H.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                                    , 'CT26'
-                                                    , DECODE( H.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                                    , 1 )
-                                            , 0 )
-                                    , 'DP14'
-                                    , DECODE( H.COMIC_SPRT_YN , 'Y', 1 , 0 )
-                                    , 'DP16'
-                                    , DECODE( F.META_CLSF_CD
-                                            , 'CT25'
-                                            , DECODE( H.MUSIC_SPRT_YN, 'Y', 1, 0)
-                                            , 1 )
-                                    , 1 ) = 1
-                          AND ( CASE WHEN F.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-                                     THEN ( SELECT 1
-                                              FROM TB_DP_SUB_CONTENTS SC
-                                             WHERE SC.PROD_ID = C.PART_PROD_ID
-                                               AND SC.SALE_YN = 'Y'
-                                               AND DECODE( H.HDV_SPRT_YN
-                                                         , 'PD005201'
-                                                         , DECODE ( SC.DP_PG_QULT_CD
-                                                                  , 'PD009701', 1
-                                                                  , 'PD009702', 1
-                                                                  , 0)
-                                                         , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
-                                               AND ROWNUM  <![CDATA[ <= ]]> 1  )
-                                     ELSE 1
-                                 END ) = 1
-                          AND ( CASE WHEN F.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-                                     THEN DECODE( H.VIDEO_DRM_SPRT_YN
-                                                , 'N'
-                                                , DECODE( NVL( F.DRM_YN, 'N' ), 'N', 1, 0 )
-                                                , 'Y'
-                                                , 1 )
-                                     ELSE 1
-                                 END ) = 1
-	                      AND ( CASE WHEN E.TOP_MENU_ID IN ( 'DP28' )
-	                            THEN ( SELECT 1
-	                                     FROM TB_DP_SHPG_PROD SP
-	                                    WHERE SP.PROD_ID = C.PROD_ID
-	                                      AND SP.SALE_YN = 'Y'
-	                                      <if test='b2bProd != "A"'>
-	                                      AND SP.B2B_PROD_YN = #{b2bProd}
-	                                      </if>
-	                                      AND ROWNUM <![CDATA[ <= ]]> 1  )
-	                            ELSE 1
-	                        END ) = 1
+                       AND (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                       AND C.PART_PROD_ID = H.PROD_ID
+		               AND (CASE WHEN F.TOP_MENU_ID = 'DP13' THEN
+		                                CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
+		                           WHEN F.TOP_MENU_ID = 'DP14' THEN
+		                                CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END
+		                           WHEN F.TOP_MENU_ID = 'DP15' THEN 0
+		                           WHEN F.TOP_MENU_ID = 'DP16' THEN
+		                                CASE WHEN F.META_CLSF_CD = 'CT25' THEN
+		                                          CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END ELSE 1 END
+		                           WHEN F.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+		                                CASE WHEN NVL(F.DRM_YN, 'N') = 'Y' AND #{videoDrmSprtYn} = 'N' THEN 0
+		                                     ELSE CASE WHEN #{sdVideoSprtYn} = 'Y' THEN 1 ELSE 0 END END
+		                           ELSE 1 END) = 1
 	                        UNION ALL
 	                        SELECT A.TENANT_ID
 					             , ESM.MENU_ID
@@ -282,8 +239,7 @@
 	                  , TB_DP_MENU_CATEGORY C
 	                  , TB_DP_PROD D  
 	                  , TB_DP_TENANT_PROD E
-                      , TB_CM_DEVICE F
-                      , TB_DP_SPRT_DEVICE G
+                      , TB_DP_SPRT_DEVICE F
 	            WHERE TDL.LIST_ID = TDLP.LIST_ID
                   AND TDLP.TENANT_ID = #{tenantId}
                   AND E.TENANT_ID = #{tenantId}
@@ -296,15 +252,19 @@
 	              AND B.MENU_ID = C.MENU_ID
 	              AND C.USE_YN = 'Y'
 	              AND D.PROD_ID = E.PROD_ID
-                  AND F.DEVICE_MODEL_CD = 'SHW-M110S'
-                  AND G.DEVICE_MODEL_CD = 'SHW-M110S'
-                  AND F.USE_YN = 'Y'
-                  AND A.PART_PROD_ID = G.PROD_ID
-                  AND  (CASE WHEN D.TOP_MENU_ID = 'DP13' THEN CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
-                             WHEN D.TOP_MENU_ID = 'DP14' THEN CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END
+                  AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                  AND A.PART_PROD_ID = F.PROD_ID
+                  AND  (CASE WHEN D.TOP_MENU_ID = 'DP13' THEN
+                                  CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
+                             WHEN D.TOP_MENU_ID = 'DP14' THEN
+                                  CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END
                              WHEN D.TOP_MENU_ID = 'DP15' THEN 0
-                             WHEN D.TOP_MENU_ID = 'DP16' THEN CASE WHEN D.META_CLSF_CD = 'CT25' THEN CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END ELSE 1 END
-                             WHEN D.TOP_MENU_ID IN ('DP17', 'DP18') THEN CASE WHEN NVL(D.DRM_YN, 'N') = 'Y' AND #{videoDrmSprtYn} = 'N' THEN 0 ELSE 1 END
+                             WHEN D.TOP_MENU_ID = 'DP16' THEN
+                                  CASE WHEN D.META_CLSF_CD = 'CT25' THEN
+                                            CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END ELSE 1 END
+                             WHEN D.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+                                  CASE WHEN NVL(D.DRM_YN, 'N') = 'Y' AND #{videoDrmSprtYn} = 'N' THEN 0
+                                       ELSE CASE WHEN #{sdVideoSprtYn} = 'Y' THEN 1 ELSE 0 END END
                              ELSE 1 END) = 1
                 )
         ) AA

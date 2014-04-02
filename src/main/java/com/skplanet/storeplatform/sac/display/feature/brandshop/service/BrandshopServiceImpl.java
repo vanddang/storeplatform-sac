@@ -35,6 +35,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.feature.brandshop.vo.BrandshopInfo;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -59,6 +61,9 @@ public class BrandshopServiceImpl implements BrandshopService {
 	@Autowired
 	private MetaInfoService metaInfoService;
 
+	@Autowired
+	private DisplayCommonService displayCommonService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -75,6 +80,7 @@ public class BrandshopServiceImpl implements BrandshopService {
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		BrandshopSacRes res = new BrandshopSacRes();
 
@@ -95,6 +101,17 @@ public class BrandshopServiceImpl implements BrandshopService {
 			count = offset + count - 1;
 			req.setCount(count);
 
+			// 단말 지원정보 조회
+			SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
+					.getModel());
+
+			if (supportDevice != null) {
+				req.setEbookSprtYn(supportDevice.getEbookSprtYn());
+				req.setComicSprtYn(supportDevice.getComicSprtYn());
+				req.setMusicSprtYn(supportDevice.getMusicSprtYn());
+				req.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
+				req.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+			}
 			CommonResponse commonResponse = new CommonResponse();
 			List<Product> productList = new ArrayList<Product>();
 			// 브렌드샵 테마 조회
@@ -194,6 +211,7 @@ public class BrandshopServiceImpl implements BrandshopService {
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		BrandshopSacRes res = new BrandshopSacRes();
 
@@ -218,6 +236,17 @@ public class BrandshopServiceImpl implements BrandshopService {
 				req.setOrderedBy("DP000701");
 			}
 
+			// 단말 지원정보 조회
+			SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
+					.getModel());
+
+			if (supportDevice != null) {
+				req.setEbookSprtYn(supportDevice.getEbookSprtYn());
+				req.setComicSprtYn(supportDevice.getComicSprtYn());
+				req.setMusicSprtYn(supportDevice.getMusicSprtYn());
+				req.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
+				req.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+			}
 			CommonResponse commonResponse = new CommonResponse();
 			List<Product> productList = new ArrayList<Product>();
 			// 브렌드샵 테마 조회

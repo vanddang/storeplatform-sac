@@ -40,6 +40,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeThemeZoneInfo;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -80,6 +82,9 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
+	@Autowired
+	private DisplayCommonService displayCommonService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -96,6 +101,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		ThemeThemeZoneListSacRes res = new ThemeThemeZoneListSacRes();
 
@@ -182,6 +188,17 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				menu.setName(themeThemeZoneInfo.getBnrMenuNm());
 				layout.setMenu(menu);
 
+			}
+			// 단말 지원정보 조회
+			SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
+					.getModel());
+
+			if (supportDevice != null) {
+				req.setEbookSprtYn(supportDevice.getEbookSprtYn());
+				req.setComicSprtYn(supportDevice.getComicSprtYn());
+				req.setMusicSprtYn(supportDevice.getMusicSprtYn());
+				req.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
+				req.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
 			}
 			// 테마상품 조회
 			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
@@ -332,6 +349,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		ThemeThemeZoneSacRes res = new ThemeThemeZoneSacRes();
 		if (req.getDummy() == null) {
@@ -354,16 +372,19 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 			CommonResponse commonResponse = new CommonResponse();
 			List<Product> productList = new ArrayList<Product>();
 			// Device 정보 조회
-			List<ThemeThemeZoneInfo> ThemeThemeZoneDevice = this.commonDAO.queryForList(
-					"ThemeThemeZone.ThemeThemeZoneDevice", req, ThemeThemeZoneInfo.class);
-			if (!ThemeThemeZoneDevice.isEmpty()) {
-				ThemeThemeZoneInfo ThemeThemeZoneDeviceInfo = ThemeThemeZoneDevice.get(0);
-				req.setEbookSprtYn(ThemeThemeZoneDeviceInfo.getEbookSprtYn());
-				req.setMagazineSprtYn(ThemeThemeZoneDeviceInfo.getMagazineSprtYn());
-				req.setComicSprtYn(ThemeThemeZoneDeviceInfo.getComicSprtYn());
-				req.setMusicSprtYn(ThemeThemeZoneDeviceInfo.getMusicSprtYn());
-				req.setHdvSprtYn(ThemeThemeZoneDeviceInfo.getHdvSprtYn());
-				req.setVideoDrmSprtYn(ThemeThemeZoneDeviceInfo.getVideoDrmSprtYn());
+			// List<ThemeThemeZoneInfo> ThemeThemeZoneDevice = this.commonDAO.queryForList(
+			// "ThemeThemeZone.ThemeThemeZoneDevice", req, ThemeThemeZoneInfo.class);
+
+			// 단말 지원정보 조회
+			SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
+					.getModel());
+
+			if (supportDevice != null) {
+				req.setEbookSprtYn(supportDevice.getEbookSprtYn());
+				req.setComicSprtYn(supportDevice.getComicSprtYn());
+				req.setMusicSprtYn(supportDevice.getMusicSprtYn());
+				req.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
+				req.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
 			}
 			// 테마존 테마 조회
 			List<ThemeThemeZoneInfo> ThemeThemeZoneList = this.commonDAO.queryForList(
