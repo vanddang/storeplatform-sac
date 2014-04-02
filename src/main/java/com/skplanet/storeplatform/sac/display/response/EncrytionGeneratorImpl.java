@@ -80,12 +80,11 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 			subContents.setPath(metaInfo.getHdFilePath());
 			subContentsList.add(subContents);
 		}
+
+		subContents = new EncryptionSubContents();
+		subContents.setType("");
+		subContents.setDeltaPath("");
 		if (StringUtils.isNotEmpty(metaInfo.getSubContentsId())) {
-			subContents = new EncryptionSubContents();
-			if (StringUtils.isNotEmpty(metaInfo.getAid())) {
-				subContents.setType("");
-				subContents.setDeltaPath("");
-			}
 			subContents.setScid(metaInfo.getSubContentsId());
 			subContents.setPath(metaInfo.getFilePath());
 			subContentsList.add(subContents);
