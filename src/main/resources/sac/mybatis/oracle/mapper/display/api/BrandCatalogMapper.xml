@@ -269,7 +269,7 @@
 	            ,UPD_DT   
             )
             VALUES(
-	             (SELECT (MAX(TAG_SEQ)+1) FROM TB_DP_PROD_TAG)
+	             SQ_DP_PROD_TAG.NEXTVAL
 	            ,#{cid}
 	            ,#{tagTypeCd}         /*DP004507: 쇼핑/쿠폰 태그*/
 	            ,#{tagCd}
