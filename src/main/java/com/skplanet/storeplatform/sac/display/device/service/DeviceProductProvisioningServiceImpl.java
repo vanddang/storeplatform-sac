@@ -67,8 +67,7 @@ public class DeviceProductProvisioningServiceImpl implements DeviceProductProvis
 		Product product = null;
 
 		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
-		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
-				.getModel());
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelNo());
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
