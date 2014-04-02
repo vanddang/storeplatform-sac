@@ -93,10 +93,10 @@ public class ExistenceController {
 
 		if (StringUtils.isEmpty(existenceSacReq.getPrchsId())) {
 			if (StringUtils.isEmpty(existenceSacReq.getUserKey())) {
-				throw new StorePlatformException("SAC_PUR_0002", "UserKey");
+				throw new StorePlatformException("SAC_PUR_0001", "UserKey");
 			}
 			if (StringUtils.isEmpty(existenceSacReq.getDeviceKey())) {
-				throw new StorePlatformException("SAC_PUR_0002", "DeviceKey");
+				throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
 			}
 		}
 
@@ -110,7 +110,7 @@ public class ExistenceController {
 		if (existenceSacReq.getProductList() != null) {
 			for (ExistenceItemSac existenceItemSac : existenceSacReq.getProductList()) {
 				if (StringUtils.isEmpty(existenceItemSac.getProdId())) {
-					throw new StorePlatformException("SAC_PUR_0002", "ProdId");
+					throw new StorePlatformException("SAC_PUR_0001", "ProdId");
 				}
 				ExistenceItemSc existenceItemSc = new ExistenceItemSc();
 				existenceItemSc.setProdId(existenceItemSac.getProdId());
