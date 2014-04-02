@@ -45,6 +45,7 @@
                                                    AND LIST_ID = #{listId}     /* param : listId */
                                                    AND EXPO_YN = 'Y'           /* 전시여부 */  
                                                    AND STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
+                                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                                )                        A
                                              , TB_DP_MENU_CATEGORY      B
                                              , TB_DP_PROD               D
@@ -143,6 +144,7 @@
                                                    AND LIST_ID = #{listId}     /* param : listId */
                                                    AND EXPO_YN = 'Y'           /* 전시여부 */  
                                                    AND STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
+                                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                                )                        A
                                              , TB_DP_MENU_CATEGORY      B
                                              , TB_DP_PROD               D
