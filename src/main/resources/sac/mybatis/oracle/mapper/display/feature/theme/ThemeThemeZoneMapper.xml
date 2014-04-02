@@ -241,6 +241,7 @@
 	                  , TB_DP_TENANT_PROD E
                       , TB_DP_SPRT_DEVICE F
 	            WHERE TDL.LIST_ID = TDLP.LIST_ID
+                  AND SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT
                   AND TDLP.TENANT_ID = #{tenantId}
                   AND E.TENANT_ID = #{tenantId}
 	              AND TDLP.EXPO_YN = 'Y'
