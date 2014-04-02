@@ -82,12 +82,12 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		// SC request/response VO
 		HistoryListScReq scRequest = new HistoryListScReq();
-		HistoryListScRes scResponse = new HistoryListScRes();
+		HistoryListScRes scResponse = null;
 
 		// SAC Response VO
 		HistoryListSacRes response = new HistoryListSacRes();
 		List<HistorySac> sacHistoryList = new ArrayList<HistorySac>();
-		HistorySac historySac = new HistorySac();
+		HistorySac historySac = null;
 
 		List<String> prodIdList = new ArrayList<String>();
 		List<SearchUserDeviceSac> deviceList = new ArrayList<SearchUserDeviceSac>();
@@ -350,14 +350,13 @@ public class HistoryListServiceImpl implements HistoryListService {
 			}
 		}
 
-		UserDeviceInfoSac deviceResult;
-		UserDeviceInfoSac sendDeviceResult;
+		UserDeviceInfoSac deviceResult = null;
+		UserDeviceInfoSac sendDeviceResult = null;
 
 		// member response set
 		for (HistorySac obj : sacHistoryList) {
 
 			if (useInfo) {
-				deviceResult = new UserDeviceInfoSac();
 				deviceResult = useDeviceMap.get(obj.getUseDeviceKey());
 
 				if (deviceResult != null) {
@@ -366,7 +365,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 			}
 
 			if (sendInfo) {
-				sendDeviceResult = new UserDeviceInfoSac();
 				sendDeviceResult = sendDeviceMap.get(obj.getSendDeviceKey());
 
 				if (sendDeviceResult != null) {
@@ -398,12 +396,12 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		// SC request/response VO
 		HistoryCountScReq scRequest = new HistoryCountScReq();
-		HistoryCountScRes scResponse = new HistoryCountScRes();
+		HistoryCountScRes scResponse = null;
 
 		// SAC Response VO
 		HistoryCountSacRes response = new HistoryCountSacRes();
 		List<ProductCountSac> sacProdList = new ArrayList<ProductCountSac>();
-		ProductCountSac productCountSac = new ProductCountSac();
+		ProductCountSac productCountSac = null;
 
 		/*************************************************
 		 * SC Request Setting Start

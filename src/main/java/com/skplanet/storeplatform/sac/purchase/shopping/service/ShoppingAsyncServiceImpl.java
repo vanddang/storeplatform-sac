@@ -23,7 +23,6 @@ import com.skplanet.storeplatform.purchase.client.shopping.sci.ShoppingAsyncSCI;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncItemSc;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncListSc;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncReq;
-import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncRes;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponItem;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublish;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
@@ -44,13 +43,13 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 	public BizCouponRes getShoppingAsync(BizCouponReq request) {
 
 		ShoppingAsyncReq reqSc = new ShoppingAsyncReq();
-		ShoppingAsyncRes resSc = new ShoppingAsyncRes();
+		// ShoppingAsyncRes resSc = new ShoppingAsyncRes();
 
-		ShoppingAsyncListSc listSc;
+		ShoppingAsyncListSc listSc = null;
 		List<ShoppingAsyncListSc> prchsList = new ArrayList<ShoppingAsyncListSc>();
 
-		ShoppingAsyncItemSc item;
-		List<ShoppingAsyncItemSc> itemList = new ArrayList<ShoppingAsyncItemSc>();
+		ShoppingAsyncItemSc item = null;
+		List<ShoppingAsyncItemSc> itemList = null;
 
 		System.out.println("" + request.getXmlData().getPublish().size());
 		System.out.println("" + request.getXmlData().getPublish().get(0).getItems().size());
@@ -86,7 +85,7 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 		System.out.println("###" + reqSc.getPublish().size());
 		System.out.println("###" + reqSc.getPublish().get(0).getItems().size());
 
-		resSc = this.shoppingAsyncSCI.updateShoppingAsync(reqSc);
+		this.shoppingAsyncSCI.updateShoppingAsync(reqSc);
 
 		return new BizCouponRes();
 
