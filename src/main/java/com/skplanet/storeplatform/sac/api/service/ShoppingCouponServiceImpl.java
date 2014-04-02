@@ -192,9 +192,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 							this.log.info("File DownLoad Start!!");
 							bytes = isList.get(i);
-							this.log.info("log1111111");
 							IOUtils.write(bytes, new FileOutputStream(downloadFilePath));
-							this.log.info("log2222222");
 							this.log.info("File DownLoad OK!!");
 							// Catalog 이미지가 두개라 처리.
 							if (i == 0) {
