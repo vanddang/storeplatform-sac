@@ -50,7 +50,7 @@
              , TB_DP_MENU_CATEGORY_PROD_MAPG D
              , TB_DP_PROD_RSHP E
              , TB_DP_PROD_DESC F /* 에피 */
-             , UV_TB_DP_MULTIMDA_PROD G /* 에피 */
+             , TB_DP_MUSIC_PROD G /* 에피 */
              , TB_DP_TENANT_PROD_PRICE H /* 에피 */
              , TB_DP_PROD I /* 에피 */
              , TB_DP_PROD_IMG J /* 에피 */
