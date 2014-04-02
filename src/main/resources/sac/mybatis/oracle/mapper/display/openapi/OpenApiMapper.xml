@@ -1279,7 +1279,7 @@
 		      , CONCAT(KC.FILE_PATH, KC.FILE_NM) AS IMAGE_PATH
 		  FROM  (SELECT JA.*
 		           FROM (SELECT  COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-		                       , ROW_NUMBER() OVER(ORDER BY IA.EXPO_ORD, IA.EXPO_ORD_SUB, IA.PROD_NM) AS R_NUM
+		                       , ROW_NUMBER() OVER(ORDER BY IA.EXPO_ORD_ALWAYS_YN DESC, IA.EXPO_ORD, IA.EXPO_ORD_SUB, IA.PROD_NM) AS R_NUM
 		                       , IA.*
 		                   FROM  (SELECT  ROW_NUMBER() OVER(PARTITION BY CH_A.PROD_ID ORDER BY EP_I.PROD_AMT DESC) AS RNUM
 		                                , CH_A.TENANT_ID
@@ -1372,9 +1372,9 @@
                                      </if>		                             
 		                             AND  EP_M.TENANT_ID = #{tenantId}
 		                             AND  EP_M.PROD_STATUS_CD = 'PD000403'
-		                           ORDER BY CH_A.EXPO_ORD_ALWAYS_YN DESC
-		                                  , CH_A.EXPO_ORD
-		                                  , CH_A.EXPO_ORD_SUB
+--		                           ORDER BY CH_A.EXPO_ORD_ALWAYS_YN DESC
+--		                                  , CH_A.EXPO_ORD
+--		                                  , CH_A.EXPO_ORD_SUB
 		                         ) IA
 		                  WHERE IA.RNUM = 1
 		                ) JA
@@ -1418,7 +1418,7 @@
 		      , CONCAT(KC.FILE_PATH, KC.FILE_NM) AS IMAGE_PATH
 		  FROM  (SELECT JA.*
 		           FROM (SELECT  COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-		                       , ROW_NUMBER() OVER(ORDER BY IA.EXPO_ORD, IA.EXPO_ORD_SUB, IA.UPD_DT DESC, IA.PROD_NM) AS R_NUM
+		                       , ROW_NUMBER() OVER(ORDER BY IA.EXPO_ORD_ALWAYS_YN DESC, IA.EXPO_ORD, IA.EXPO_ORD_SUB, IA.UPD_DT DESC, IA.PROD_NM) AS R_NUM
 		                       , IA.*
 		                   FROM  (SELECT  ROW_NUMBER() OVER(PARTITION BY CH_A.PROD_ID ORDER BY EP_J.REG_DT DESC) AS RNUM
 		                                , CH_A.TENANT_ID
@@ -1506,9 +1506,9 @@
                                           ) = 1   		                             
 		                             AND  EP_M.TENANT_ID = #{tenantId}
 		                             AND  EP_M.PROD_STATUS_CD = 'PD000403'
-                                   ORDER BY CH_A.EXPO_ORD_ALWAYS_YN DESC
-                                          , CH_A.EXPO_ORD
-                                          , CH_A.EXPO_ORD_SUB		                             
+--                                   ORDER BY CH_A.EXPO_ORD_ALWAYS_YN DESC
+--                                          , CH_A.EXPO_ORD
+--                                          , CH_A.EXPO_ORD_SUB		                             
 		                         ) IA
 		                  WHERE IA.RNUM = 1
 		                ) JA
