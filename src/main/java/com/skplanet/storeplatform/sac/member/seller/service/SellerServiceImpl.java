@@ -505,7 +505,10 @@ public class SellerServiceImpl implements SellerService {
 
 		/** 보안질문 리스트 주입 - [시작]. */
 		List<PWReminder> pWReminderList = null;
-		if (req.getPwReminderList() != null) {
+		if (req.getPwReminderList() != null
+				&& !(StringUtils.isBlank(req.getPwReminderList().get(0).getQuestionId())
+						&& StringUtils.isBlank(req.getPwReminderList().get(0).getQuestionMessage()) && StringUtils
+							.isBlank(req.getPwReminderList().get(0).getAnswerString()))) {
 			pWReminderList = new ArrayList<PWReminder>();
 			for (int i = 0; i < req.getPwReminderList().size(); i++) {
 				PWReminder pwReminder = new PWReminder();
