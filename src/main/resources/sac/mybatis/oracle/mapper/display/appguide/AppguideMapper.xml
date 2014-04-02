@@ -14,15 +14,18 @@
                                                    ORDER BY P.REG_DT DESC, SC.SUB_CONTENTS_ID DESC ) AS RNUM
                     FROM   TB_DP_PROD P
                           ,TB_DP_SUB_CONTENTS SC
-                          ,TB_DP_SPRT_DEVICE SH
-                          ,TB_CM_DEVICE PHI
                     WHERE  P.PROD_ID = SC.PROD_ID
-                    AND    SH.PROD_ID = P.PROD_ID
-                    AND    SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
-                    AND   (PHI.DEVICE_MODEL_CD = #{deviceHeader.model}
-                    OR     PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
-                    AND    PHI.REP_DEVICE_YN = 'Y'
-                    AND    PHI.USE_YN = 'Y'
+					AND EXISTS (
+					             SELECT 'X'
+					               FROM TB_DP_SPRT_DEVICE SH ,
+					                    TB_CM_DEVICE PHI
+					              WHERE 1 = 1
+					              AND   SH.PROD_ID = P.PROD_ID
+					              AND   SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
+					              AND   (PHI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
+                                  AND   PHI.REP_DEVICE_YN = 'Y'
+					              AND   PHI.USE_YN = 'Y'
+					           )
                     AND    SC.SALE_YN = 'Y'
                     AND    SC.APK_PKG_NM = #{packageName}
                     AND    SC.VM_VER LIKE '%'||#{osVersion}||'%'
