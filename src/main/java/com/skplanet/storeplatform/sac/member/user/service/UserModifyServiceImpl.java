@@ -477,7 +477,14 @@ public class UserModifyServiceImpl implements UserModifyService {
 						updateGuardianEcReq.setParentName(req.getUserName());
 						updateGuardianEcReq.setParentBirthday(req.getUserBirthDay());
 						updateGuardianEcReq.setParentEmail(req.getParentEmail());
-						updateGuardianEcReq.setParentApproveDate(req.getRealNameDate()); // 법정대리인동의일자 (YYYYMMDD)
+						if (req.getRealNameDate().length() == 14) {
+							// 법정대리인동의일자(YYYYMMDD)
+							updateGuardianEcReq.setParentApproveDate(DateUtil.changeDateStringtoEight(req.getRealNameDate()));
+							LOGGER.info("## >> 법정대리인동의일자 : {}", updateGuardianEcReq.getParentApproveDate());
+						} else {
+							updateGuardianEcReq.setParentApproveDate(req.getRealNameDate());
+							LOGGER.info("## >> 법정대리인동의일자 : {}", updateGuardianEcReq.getParentApproveDate());
+						}
 						this.imIdpSCI.updateGuardian(updateGuardianEcReq);
 
 						/**
