@@ -806,6 +806,15 @@ public class UserModifyServiceImpl implements UserModifyService {
 				oneIdRealNameType = "R";
 			}
 
+			// /**
+			// * 타사이트에서 실명인증을 하고 t-Store 에서 개명 신청을 시도할 경우.
+			// */
+			// if (StringUtils.equals(oneIdRealNameType, "R")) {
+			// if (!StringUtils.equals(idpResult.getModifySstCode(), MemberConstants.SSO_SST_CD_TSTORE)) {
+			// throw new StorePlatformException("SAC_MEM_1402", idpResult.getModifySstCode());
+			// }
+			// }
+
 		} else { // 최초 인증
 
 			SearchUserRequest searchUserRequest = new SearchUserRequest();
@@ -853,15 +862,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 		}
 
 		LOGGER.debug("### oneIdRealNameType : {}", oneIdRealNameType);
-
-		/**
-		 * 타사이트에서 실명인증을 하고 t-Store 에서 개명 신청을 시도할 경우.
-		 */
-		if (StringUtils.equals(oneIdRealNameType, "R")) {
-			if (!StringUtils.equals(idpResult.getModifySstCode(), MemberConstants.SSO_SST_CD_TSTORE)) {
-				throw new StorePlatformException("SAC_MEM_1402", idpResult.getModifySstCode());
-			}
-		}
 
 		return oneIdRealNameType;
 	}
