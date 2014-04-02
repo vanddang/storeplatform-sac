@@ -33,6 +33,7 @@ public class SelectOption extends CommonInfo implements Serializable {
 	private Price price; // 선택옵션 가격
 	private String itemCode; // 아이템 코드
 	private String salesStatus; // 판매 상태
+	private String subYn; // 서브 여부
 	private List<SubSelectOption> subSelectOptionList; // 두번째 옵션 리스트
 
 	/**
@@ -123,6 +124,21 @@ public class SelectOption extends CommonInfo implements Serializable {
 	 */
 	public void setSalesStatus(String salesStatus) {
 		this.salesStatus = salesStatus;
+	}
+
+	/**
+	 * @return the subYn
+	 */
+	public String getSubYn() {
+		return this.subYn;
+	}
+
+	/**
+	 * @param subYn
+	 *            the subYn to set
+	 */
+	public void setSubYn(String subYn) {
+		this.subYn = subYn;
 	}
 
 	/**
