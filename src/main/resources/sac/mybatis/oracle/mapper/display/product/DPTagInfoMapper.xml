@@ -55,7 +55,7 @@
 			,UPD_DT	
 		)
    		VALUES	(
-	   		#{tagSeq, jdbcType=INTEGER}
+            SQ_DP_PROD_TAG.NEXTVAL
 			,#{cid, jdbcType=VARCHAR}
 			,#{tagTypeCd, jdbcType=VARCHAR}
 			,#{tagCd, jdbcType=VARCHAR}
