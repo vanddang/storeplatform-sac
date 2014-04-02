@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipReq;
@@ -80,7 +81,21 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 
 		appReq.setList(req.getProductId());
 
-		OtherServiceGroupSacRes appRes = this.otherServiceGroupService.searchServiceGroupList(appReq, header);
+		OtherServiceGroupSacRes appRes = new OtherServiceGroupSacRes();
+		try {
+			appRes = this.otherServiceGroupService.searchServiceGroupList(appReq, header);
+		} catch (StorePlatformException se) {
+			throw se;
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_DSP_0005", "T Membership");
+		}
+
+		if (appRes.getCommonResponse().getTotalCount() <= 0) {
+			throw new StorePlatformException("SAC_DSP_0005", "T Membership");
+		}
+		if (appRes.getProductList().isEmpty()) {
+			throw new StorePlatformException("SAC_DSP_0005", "T Membership");
+		}
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("appRes {}", appRes);
 		}
