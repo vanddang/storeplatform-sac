@@ -8,7 +8,7 @@
         <!--</association>-->
     <!--</resultMap>-->
 
-    <select id="getAppInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.AppMetaInfo">
+    <select id="getAppInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.AppMeta">
         SELECT
             /* ProductInfoMapper.xml, getAppInfo, 정희원, 2014-03-05 */
               PROD.PROD_ID
@@ -57,7 +57,6 @@
         <if test='prodStatusCd != null'>
               AND TP.PROD_STATUS_CD = #{prodStatusCd} -- PD000403: 판매중
         </if>
-              AND TPP.SEQ = 1 -- Needed?
               AND IMG.IMG_CD = #{imageCd}  --'DP000101'
               AND IMG.EXPO_ORD = 1  -- 노출순서
               AND PROD.SVC_GRP_CD = #{svcGrpCd}  -- DP000201 : App
