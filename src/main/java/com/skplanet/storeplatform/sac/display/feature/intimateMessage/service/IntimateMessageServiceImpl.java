@@ -353,6 +353,8 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("[searchIntimateMessageAppCodiList] supportDevice is empty!");
 				this.logger.debug("----------------------------------------------------------------");
+				List<Product> productList = new ArrayList<Product>();
+				appCodiRes.setProductList(productList);
 			}
 		} else {
 			this.logger.debug("----------------------------------------------------------------");
