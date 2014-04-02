@@ -596,8 +596,12 @@ public class ShoppingCouponSacController {
 		String couponProdId = "";
 		String itemProdId = "";
 		boolean result = true;
+
 		DpCouponInfo couponInfo = couponReq.getDpCouponInfo(); // 쿠폰 정보
 		List<DpItemInfo> itemInfoList = couponReq.getDpItemInfo();
+
+		// 2014.04.02 이현남 매니저 요청 사항 C -> U로 수정 해달라고 요청옴.
+		this.couponItemchangeCud(couponInfo, itemInfoList, couponReq);
 
 		if ("C".equalsIgnoreCase(couponReq.getCudType())) {
 			couponProdId = this.couponItemService.couponGenerateId(); // 쿠폰 ID 생성
@@ -1144,6 +1148,32 @@ public class ShoppingCouponSacController {
 			return result;
 		}
 		return result;
+	}
+
+	/**
+	 * 2014.04.02 이현남 매니저 요청 사항 C -> U로 수정 해달라고 요청옴.
+	 * 
+	 * @param couponInfo
+	 *            couponInfo
+	 * @param itemInfoList
+	 *            itemInfoList
+	 * @return
+	 */
+	private void couponItemchangeCud(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, CouponReq couponReq) {
+
+		if (StringUtils.equalsIgnoreCase("C", couponReq.getCudType())) {
+			if (this.couponItemService.getCouponCountCudType(couponInfo.getCouponCode()) > 0) {
+				couponReq.setCudType("U");
+			}
+		}
+		for (int i = 0; i < itemInfoList.size(); i++) {
+			if (StringUtils.equalsIgnoreCase("C", itemInfoList.get(i).getCudType())) {
+				if (this.couponItemService.getItemCountCudType(itemInfoList.get(i).getItemCode()) > 0) {
+					itemInfoList.get(i).setCudType("U");
+					System.out.println("sdfjklsdfjk" + itemInfoList.get(i).getCudType());
+				}
+			}
+		}
 	}
 
 }
