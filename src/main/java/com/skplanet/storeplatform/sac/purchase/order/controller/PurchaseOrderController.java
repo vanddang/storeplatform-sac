@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseSc;
+import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateBizPurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateFreePurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
@@ -306,13 +306,12 @@ public class PurchaseOrderController {
 		// 쇼핑상품 쿠폰 발급요청
 		// 구매 확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장
 
-		List<CreatePurchaseSc> createPurchaseScList = this.orderService.executeConfirmPurchase(notifyPaymentReq,
-				tenantId);
+		List<PrchsDtlMore> prchsDtlMoreList = this.orderService.executeConfirmPurchase(notifyPaymentReq, tenantId);
 
 		// ------------------------------------------------------------------------------
 		// 구매 후 처리 - 씨네21/인터파크, 구매건수 증가 등등
 
-		this.orderService.postPurchase(createPurchaseScList);
+		this.orderService.postPurchase(prchsDtlMoreList);
 
 		// ------------------------------------------------------------------------------
 		// 응답

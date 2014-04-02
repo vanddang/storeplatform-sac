@@ -11,7 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.purchase.client.order.vo.CreatePurchaseSc;
+import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
@@ -71,7 +71,7 @@ public interface PurchaseOrderService {
 	 *            테넌트 ID
 	 * @return 구매예약했던 구매이력 목록
 	 */
-	public List<CreatePurchaseSc> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId);
+	public List<PrchsDtlMore> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId);
 
 	/**
 	 * 
@@ -79,7 +79,7 @@ public interface PurchaseOrderService {
 	 * 구매 후처리( 인터파크/씨네21, 구매건수 증가).
 	 * </pre>
 	 */
-	public void postPurchase(List<CreatePurchaseSc> createPurchaseScList);
+	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList);
 
 	/**
 	 * 
