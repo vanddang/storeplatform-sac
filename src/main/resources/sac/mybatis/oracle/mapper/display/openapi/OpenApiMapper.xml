@@ -1104,9 +1104,9 @@
 		        AND    LANG_CD = #{langCd}
 		        AND    ROWNUM = 1) AS MENU_NM 
 		     , KA.PROD_GRD_CD
-		     , KA.PROD_AMT
-		     , KA.PRCHS_CNT
-		     , KA.AVG_EVLU_SCORE 
+		     , NVL(KA.PROD_AMT, 0 ) AS PROD_AMT
+		     , NVL(KA.PRCHS_CNT, 0) AS PRCHS_CNT 
+		     , NVL(KA.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE 
 		     , CONCAT( KC.FILE_PATH, KC.FILE_NM ) AS IMAGE_PATH
 		  FROM
 		       (
@@ -1137,9 +1137,9 @@
 		                                     , D.PROD_BASE_DESC
 		                                     , D.PROD_DTL_DESC
 		                                     , H.MENU_ID AS MENU_ID                                         
-		                                     , NVL(F.PROD_AMT, 0 ) AS PROD_AMT
-		                                     , NVL(M.PRCHS_CNT, 0) AS PRCHS_CNT        
-		                                     , NVL(M.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE
+		                                     , F.PROD_AMT
+		                                     , M.PRCHS_CNT       
+		                                     , M.AVG_EVLU_SCORE
 		                                  FROM (
 		                                        SELECT TENANT_ID ,
 		                                                PROD_ID ,
@@ -1569,8 +1569,8 @@
 		                                                      AND C.USE_YN = 'Y')
 		               </if>
 		                ELSE KA.PROD_AMT END, 0) AS PROD_AMT                                              
-             , KA.AVG_EVLU_SCORE  AS AVG_EVLU_SCORE
-             , KA.PRCHS_CNT
+             , NVL(KA.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE
+             , NVL(KA.PRCHS_CNT, 0) AS PRCHS_CNT
              , NVL((SELECT DECODE(INSTR(KC.FILE_PATH, '.', 1, 1), 0, KC.FILE_PATH || KC.FILE_NM, KC.FILE_PATH)
                   FROM TB_DP_PROD_IMG KC
                  WHERE KA.PROD_ID = KC.PROD_ID
@@ -1600,8 +1600,8 @@
                       , JA.CHNL_PERIOD_AMT
                       , JA.PROD_AMT
                       , JA.PROD_GRD_CD
-                      , NVL(JA.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE
-                      , NVL(JA.PRCHS_CNT, 0) AS PRCHS_CNT
+                      , JA.AVG_EVLU_SCORE
+                      , JA.PRCHS_CNT
                       , JA.EPSD_PROD_ID
                   FROM
                       (
