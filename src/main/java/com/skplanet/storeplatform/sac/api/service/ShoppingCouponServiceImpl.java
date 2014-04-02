@@ -361,14 +361,12 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 		// TBL_DP_PROD_IMG 테이블에 DP_ORDER컬럼에 값 셋팅
 		int seq = 1;
-		this.log.info("log4444444");
 		try {
 			brandImgPath = dpBrandInfo.getBrandImgPath();
 			uploadDir = brandImgPath.substring(0, brandImgPath.lastIndexOf(File.separator) + 1);
 			srcFileName = brandImgPath.substring(brandImgPath.lastIndexOf(File.separator)).replace(File.separator, "");
 			tmpFileName = srcFileName.substring(0, srcFileName.lastIndexOf(".")); // 파일명
 			fileExt = srcFileName.substring(srcFileName.lastIndexOf(".") + 1); // 확장자
-			this.log.info("log5555555");
 			for (int i = 0; i < drivedFileNameForDrived.length; i++) {
 
 				targetFileName = tmpFileName + drivedFileNameForDrived[i] + "." + fileExt; // fileExt 대신 타입으로 확장자
@@ -376,17 +374,14 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				int width = imageSizeForDrived[i][0];
 				int height = imageSizeForDrived[i][1];
-				this.log.info("log666666");
 				// 이미지 리사이즈 처리
 				File srcFile = new File(uploadDir + srcFileName);
 				String outFile = uploadDir + targetFileName;
-				this.log.info("outFile11::::" + outFile);
 				// 이미지 리사이즈
 				if (!imgUtil.setImgScale(srcFile, outFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
 
-				this.log.info("outFile22::::" + outFile);
 				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
 
 				this.brandCatalogProdImgInfo.setProdId(dpBrandInfo.getCreateBrandId());
@@ -446,13 +441,10 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 			// 카탈로그 대표이미지 변수
 			brandImgPath = dpCatalogInfo.getTopImgPath(); // 이미지경로 + 이미지NAME
-			this.log.info("brandImgPath : " + brandImgPath);
 			uploadDir = brandImgPath.substring(0, brandImgPath.lastIndexOf(File.separator) + 1); // 이미지 경로
-			this.log.info("uploadDir : " + uploadDir);
 			srcFileName = brandImgPath.substring(brandImgPath.lastIndexOf(File.separator)).replace(File.separator, ""); // 이미지NAME
 			tmpFileName = srcFileName.substring(0, srcFileName.lastIndexOf(".")); // 파일명
 			fileExt = srcFileName.substring(srcFileName.lastIndexOf(".") + 1); // 확장자
-			this.log.info("log33333333");
 			// 카탈로그 상세이미지 변수
 			brandImgPath1 = dpCatalogInfo.getDtlImgPath(); // 이미지경로 + 이미지NAME
 			uploadDir1 = brandImgPath1.substring(0, brandImgPath1.lastIndexOf(File.separator) + 1); // 이미지 경로
