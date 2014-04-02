@@ -115,7 +115,7 @@
 			,#{mallCd, jdbcType=VARCHAR}
 			,#{feeCaseCd, jdbcType=VARCHAR}
 			,#{feeUnitCd, jdbcType=VARCHAR}    
-			,#{contentsTypeCd, jdbcType=VARCHAR}
+			,'PD002502'
 			,#{metaClsfCd, jdbcType=VARCHAR}
 			,#{topMenuId, jdbcType=VARCHAR}
 		 )
