@@ -362,7 +362,7 @@
 		                                         , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', NULL, O.PROD_AMT ) AS PLAY_PROD_AMT
 		                                         , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', J.DRM_YN ) AS STORE_DRM_YN
 		                                         , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', NULL, J.DRM_YN ) AS PLAY_DRM_YN              
-		                                         ,( SELECT CHAPTER FROM UV_TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID) AS CHAPTER     
+		                                         ,( SELECT CHAPTER FROM TB_DP_VOD_PROD WHERE PROD_ID = I.PART_PROD_ID) AS CHAPTER     
 		                                         , J.USE_PERIOD
 		                                         , J.PROD_GRD_CD 
 		                                         , J.SELLER_MBR_NO
