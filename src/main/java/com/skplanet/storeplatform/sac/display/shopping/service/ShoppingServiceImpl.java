@@ -1869,8 +1869,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 											selectOption.setPrice(option1Price);
 											selectOption.setItemCode(optionShopping.getItemCode());
 											selectOption.setSalesStatus(optionShopping.getProdStatusCd());
+											selectOption.setSubYn("N");
 										}
 										if (optionShopping.getSubYn().equals("N")) { // 옵션 2 인 경우
+											selectOption.setSubYn("Y");
 											subSelectOption = new SubSelectOption();
 											subSelectOption.setId(optionShopping.getPartProdId());
 
