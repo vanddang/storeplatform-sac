@@ -31,7 +31,8 @@
     <bean id="allLocalSCIPostProcessor" class="com.skplanet.storeplatform.framework.core.proxy.LocalSCIPostProcessor">
         <property name="validator">
             <bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>  
-        </property> 
+        </property>
+        <property name="order" value="10"/>
     </bean>
     
     <bean id="memberTlogLocalSCIPostProcessor" class="com.skplanet.storeplatform.framework.integration.interceptor.DefalutExpressionAdvisorPostProcessor">
@@ -42,6 +43,7 @@
             </bean>
         </property>      
         <property name="expression" value="within(com.skplanet.storeplatform.member..*) and @within(com.skplanet.storeplatform.framework.integration.bean.LocalSCI)" />
+        <property name="order" value="11"/>        
     </bean>
     <bean id="purchaseTlogLocalSCIPostProcessor" class="com.skplanet.storeplatform.framework.integration.interceptor.DefalutExpressionAdvisorPostProcessor">
         <property name="userAdvice">
@@ -51,6 +53,7 @@
             </bean>
         </property>      
         <property name="expression" value="within(com.skplanet.storeplatform.purchase..*) and @within(com.skplanet.storeplatform.framework.integration.bean.LocalSCI)" />
+        <property name="order" value="12"/>
     </bean>
 
 </beans>
