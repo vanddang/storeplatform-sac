@@ -144,4 +144,15 @@ public interface BrandCatalogService {
 	 */
 	public void deleteDpProdImg(String brandID);
 
+	/**
+	 * <pre>
+	 * 브랜드,카탈로그 정보(brandId) C->U 로 변경 가져오기.
+	 * </pre>
+	 * 
+	 * @param brandId
+	 *            brandId
+	 * @return int
+	 */
+	public int getBrandCatalogChangeCudType(String brandId, String catalogId);
+
 }

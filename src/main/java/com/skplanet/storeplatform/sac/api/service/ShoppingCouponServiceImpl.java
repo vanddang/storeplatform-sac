@@ -65,6 +65,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			decodeBrandImgPath = URLDecoder.decode(brandImgPath, "utf-8");
 			dpBrandInfo.setBrandImgPath(decodeBrandImgPath);
 
+			// 2014.04.02 이현남 매니저 요청 사항 C -> U로 수정 해달라고 요청옴
+			this.brandCatalogchangeCud(dpBrandInfo, null);
+
 			// CUD_TYPE에 따라 INSERT/UPDATE
 			if ("C".equalsIgnoreCase(dpBrandInfo.getCudType())) {
 				// 브랜드ID 생성
@@ -260,6 +263,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		try {
 
 			this.log.info("dpCatalogInfo.getCatalogId() = " + dpCatalogInfo.getCatalogId());
+
+			// 2014.04.02 이현남 매니저 요청 사항 C -> U로 수정 해달라고 요청옴
+			this.brandCatalogchangeCud(null, dpCatalogInfo);
 
 			topImgPath = dpCatalogInfo.getTopImgPath();
 			dtlImgPath = dpCatalogInfo.getDtlImgPath();
@@ -652,4 +658,32 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		return this.brandCatalogService.getCreateCatalogId(catalogId);
 	}
 
+	/**
+	 * 2014.04.02 이현남 매니저 요청 사항 C -> U로 수정 해달라고 요청옴.
+	 * 
+	 * @param dpBrandInfo
+	 *            dpBrandInfo
+	 * @param dpCatalogInfo
+	 *            dpCatalogInfo
+	 * @return
+	 */
+	private void brandCatalogchangeCud(DpBrandInfo dpBrandInfo, DpCatalogInfo dpCatalogInfo) {
+		// 브랜드 C->U 변경
+		if (dpBrandInfo != null) {
+			if ("C".equalsIgnoreCase(dpBrandInfo.getCudType())) {
+				if (this.brandCatalogService.getBrandCatalogChangeCudType(dpBrandInfo.getBrandId(), null) > 0) {
+					dpBrandInfo.setCudType("U");
+				}
+			}
+		}
+
+		// 카탈로그 C->U 변경
+		if (dpCatalogInfo != null) {
+			if ("C".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
+				if (this.brandCatalogService.getBrandCatalogChangeCudType(null, dpCatalogInfo.getCatalogId()) > 0) {
+					dpCatalogInfo.setCudType("U");
+				}
+			}
+		}
+	}
 }

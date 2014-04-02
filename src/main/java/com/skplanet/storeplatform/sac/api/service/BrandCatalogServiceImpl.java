@@ -374,4 +374,25 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * 브랜드,카탈로그 정보(brandId) C->U 로 변경 가져오기.
+	 * </pre>
+	 * 
+	 * @param brandId
+	 *            brandId
+	 * @return int
+	 */
+	@Override
+	public int getBrandCatalogChangeCudType(String brandId, String catalogId) {
+
+		int resuntCnt = 0;
+		if (brandId != null) {
+			resuntCnt = this.selectBrandCountCudType(brandId);
+		}
+		if (catalogId != null) {
+			resuntCnt = this.selectCatalogCountCudType(catalogId);
+		}
+		return resuntCnt;
+	}
 }
